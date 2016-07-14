@@ -67,8 +67,11 @@
               var layer = gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
               gnMap.feedLayerMd(layer);
               return layer;
-            }
-            else if ($scope.format == 'wmts') {
+            } else if ($scope.format == 'wfs') {
+              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer);
+              gnMap.feedLayerMd(layer);
+              return layer;
+            } else if ($scope.format == 'wmts') {
               return gnMap.addWmtsToMapFromCap($scope.map, getCapLayer,
                   $scope.capability);
             }
@@ -76,11 +79,26 @@
         }],
         link: function(scope, element, attrs) {
           scope.loading = false;
-          scope.format = attrs['gnWmsImport'];
+          scope.format = attrs['gnWmsImport'] != '' ?
+              attrs['gnWmsImport'] : 'all';
           scope.serviceDesc = null;
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
 
+          function addLinks(md, type) {
+            angular.forEach(md.getLinksByType(type), function(link) {
+              if (link.url) {
+                scope.catServicesList.push({
+                  title: md.title || md.defaultTitle,
+                  uuid: md.getUuid(),
+                  name: link.name,
+                  desc: link.desc,
+                  type: type,
+                  url: link.url
+                });
+              }
+            });
+          };
           // Get the list of services registered in the catalog
           if (attrs.servicesListFromCatalog) {
             // FIXME: Only load the first 100 services
@@ -89,21 +107,16 @@
               _content_type: 'json',
               from: 1,
               to: 100,
-              serviceType: 'OGC:WMS'
+              serviceType: 'OGC:WMS or OGC:WFS or OGC:WMTS'
             }).then(function(data) {
               angular.forEach(data.metadata, function(record) {
                 var md = new Metadata(record);
-                angular.forEach(md.getLinksByType('wms'), function(link) {
-                  if (link.url) {
-                    scope.catServicesList.push({
-                      title: md.title || md.defaultTitle,
-                      uuid: md.getUuid(),
-                      name: link.name,
-                      desc: link.desc,
-                      url: link.url
-                    });
-                  }
-                });
+                if (scope.format === 'all') {
+                  addLinks(md, 'wms');
+                  addLinks(md, 'wfs');
+                } else {
+                  addLinks(md, scope.format);
+                }
               });
             });
           }
@@ -132,6 +145,7 @@
 
           scope.setUrl = function(srv) {
             scope.url = angular.isObject(srv) ? srv.url : srv;
+            type = angular.isObject(srv) && srv.type || type;
             scope.serviceDesc = angular.isObject(srv) ? srv : null;
             scope.load();
           };
@@ -139,7 +153,7 @@
           scope.load = function() {
             if (scope.url) {
               scope.loading = true;
-              gnOwsCapabilities['get' + scope.format.toUpperCase() +
+              gnOwsCapabilities['get' + type.toUpperCase() +
                   'Capabilities'](scope.url).then(function(capability) {
                 scope.loading = false;
                 scope.capability = capability;

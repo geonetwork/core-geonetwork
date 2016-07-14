@@ -1,4 +1,4 @@
-  //=============================================================================
+//=============================================================================
 //===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
@@ -24,6 +24,9 @@
 package org.fao.geonet.services.metadata;
 
 import java.nio.file.Path;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -45,17 +48,19 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-  /**
+/**
  * Removes a metadata from the system.
  */
+@Deprecated
 public class Delete extends BackupFileService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
@@ -63,25 +68,25 @@ public class Delete extends BackupFileService {
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 
         boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
-		String id = Utils.getIdentifierFromParameters(params, context);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
         // If send a non existing uuid, Utils.getIdentifierFromParameters returns null
         if (id == null)
             throw new IllegalArgumentException("Metadata internal identifier or UUID not found.");
 
-		//-----------------------------------------------------------------------
-		//--- check access
+        //-----------------------------------------------------------------------
+        //--- check access
 
         IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
 		if (!metadataManager.existsMetadata(Integer.valueOf(id)))
 			throw new IllegalArgumentException("Metadata with identifier " + id + " not found.");
 
-		if (!accessMan.canEdit(context, id))
-			throw new OperationNotAllowedEx();
+        if (!accessMan.canEdit(context, id))
+            throw new OperationNotAllowedEx();
 
-		//-----------------------------------------------------------------------
-		//--- backup metadata in 'removed' folder
+        //-----------------------------------------------------------------------
+        //--- backup metadata in 'removed' folder
 
 		IMetadata metadata = metadataManager.getMetadataObject(Integer.valueOf(id));
 		if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && backupFile) {
@@ -89,19 +94,16 @@ public class Delete extends BackupFileService {
 			        "full", false, true, false));
 		}
 
-		//-----------------------------------------------------------------------
-		//--- remove the metadata directory including the public and private directories.
+        //-----------------------------------------------------------------------
+        //--- remove the metadata directory including the public and private directories.
         IO.deleteFileOrDirectory(Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), id));
-		
-		//-----------------------------------------------------------------------
-		//--- delete metadata and return status
 
 		metadataManager.deleteMetadata(context, id);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
 
-		return elResp;
-	}
+        return elResp;
+    }
 
 }

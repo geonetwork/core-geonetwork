@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class BadServerResponseEx extends BadResponseEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class BadServerResponseEx extends BadResponseEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BadServerResponseEx(Object response)
-	{
-		super("Bad server response: '"+response+"'", response);
+    public BadServerResponseEx(Object response) {
+        super("Bad server response: '" + response + "'", response);
 
-		id = "bad-server-response";
-	}
+        id = "bad-server-response";
+    }
 }
 
 //=============================================================================

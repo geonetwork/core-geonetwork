@@ -22,11 +22,14 @@
 //==============================================================================
 
 package org.fao.geonet.services.thesaurus;
+
 import com.google.common.collect.Sets;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
@@ -58,6 +61,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -66,166 +70,170 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class GetKeywords {
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
-	@RequestMapping(value = "/{uiLang}/xml.search.keywords")
-	@ResponseBody
-	public HttpEntity<byte[]> deprecatedAPI(
-			@PathVariable String uiLang,
-			@RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
-			@RequestParam(value = "pMode", defaultValue = "true") String mode,
-			@RequestParam(value = XmlParams.pKeyword, required = false) String searchTerm,
-			@RequestParam(value = XmlParams.maxResults, required = false, defaultValue = "1000") String maxResults,
-			@RequestParam(value = XmlParams.offset, required = false) String offset,
-			@RequestParam(value = XmlParams.pLang, defaultValue = "") java.util.List<String> targetLangs,
-			@RequestParam(value = XmlParams.pThesauri, required = false) java.util.List<String> thesauri,
-			@RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
-			@RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
-			@RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
-			NativeWebRequest webRequest) throws Exception {
-		return exec(uiLang, newSearch, mode, searchTerm, maxResults, offset, targetLangs, thesauri,
-				thesauriDomainName, typeSearch, keywordUriCode, webRequest);
-	}
-	@RequestMapping(value = "/{uiLang}/keywords")
-	@ResponseBody
-	public HttpEntity<byte[]> exec(
-			@PathVariable String uiLang,
-			@RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
-			@RequestParam(value = "pMode", defaultValue = "true") String mode,
-			@RequestParam(value = XmlParams.pKeyword, required = false) String searchTerm,
-			@RequestParam(value = XmlParams.maxResults, required = false, defaultValue = "1000") String maxResults,
-			@RequestParam(value = XmlParams.offset, required = false) String offset,
-			@RequestParam(value = XmlParams.pLang, defaultValue = "") java.util.List<String> targetLangs,
-			@RequestParam(value = XmlParams.pThesauri, required = false) java.util.List<String> thesauri,
-			@RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
-			@RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
-			@RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
-			NativeWebRequest webRequest)
-			throws Exception {
-		ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-		ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
-				webRequest.getNativeRequest(HttpServletRequest.class));
-		Element responseXml = new Element(Jeeves.Elem.RESPONSE);
-		UserSession session = context.getUserSession();
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
+    @RequestMapping(value = "/{uiLang}/xml.search.keywords")
+    @ResponseBody
+    public HttpEntity<byte[]> deprecatedAPI(
+        @PathVariable String uiLang,
+        @RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
+        @RequestParam(value = "pMode", defaultValue = "true") String mode,
+        @RequestParam(value = XmlParams.pKeyword, required = false) String searchTerm,
+        @RequestParam(value = XmlParams.maxResults, required = false, defaultValue = "1000") String maxResults,
+        @RequestParam(value = XmlParams.offset, required = false) String offset,
+        @RequestParam(value = XmlParams.pLang, defaultValue = "") java.util.List<String> targetLangs,
+        @RequestParam(value = XmlParams.pThesauri, required = false) java.util.List<String> thesauri,
+        @RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
+        @RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
+        @RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
+        @RequestParam(value = XmlParams.sort, required = false, defaultValue = "DESC") String sort,
+        NativeWebRequest webRequest) throws Exception {
+        return exec(uiLang, newSearch, mode, searchTerm, maxResults, offset, targetLangs, thesauri,
+            thesauriDomainName, typeSearch, keywordUriCode, sort, webRequest);
+    }
+
+    @RequestMapping(value = "/{uiLang}/keywords")
+    @ResponseBody
+    public HttpEntity<byte[]> exec(
+        @PathVariable String uiLang,
+        @RequestParam(value = "pNewSearch", defaultValue = "true") boolean newSearch,
+        @RequestParam(value = "pMode", defaultValue = "true") String mode,
+        @RequestParam(value = XmlParams.pKeyword, required = false) String searchTerm,
+        @RequestParam(value = XmlParams.maxResults, required = false, defaultValue = "1000") String maxResults,
+        @RequestParam(value = XmlParams.offset, required = false) String offset,
+        @RequestParam(value = XmlParams.pLang, defaultValue = "") java.util.List<String> targetLangs,
+        @RequestParam(value = XmlParams.pThesauri, required = false) java.util.List<String> thesauri,
+        @RequestParam(value = XmlParams.pType, required = false) String thesauriDomainName,
+        @RequestParam(value = XmlParams.pTypeSearch, defaultValue = "2") String typeSearch,
+        @RequestParam(value = XmlParams.pUri, required = false) String keywordUriCode,
+        @RequestParam(value = XmlParams.sort, required = false, defaultValue = "DESC") String sort,
+        NativeWebRequest webRequest)
+        throws Exception {
+        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+        ServiceContext context = applicationContext.getBean(ServiceManager.class).createServiceContext("keywords", uiLang,
+            webRequest.getNativeRequest(HttpServletRequest.class));
+        Element responseXml = new Element(Jeeves.Elem.RESPONSE);
+        UserSession session = context.getUserSession();
 
 
-		KeywordsSearcher searcher;
-		if (newSearch) {
-			// perform the search and save search result into session
-			ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
+        KeywordsSearcher searcher;
+        if (newSearch) {
+            // perform the search and save search result into session
+            ThesaurusManager thesaurusMan = applicationContext.getBean(ThesaurusManager.class);
 
-            if(Log.isDebugEnabled("KeywordsManager")) {
-				Log.debug("KeywordsManager","Creating new keywords searcher");
-			}
-			searcher = new KeywordsSearcher(context, thesaurusMan);
+            if (Log.isDebugEnabled("KeywordsManager")) {
+                Log.debug("KeywordsManager", "Creating new keywords searcher");
+            }
+            searcher = new KeywordsSearcher(context, thesaurusMan);
 
-			IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
-			KeywordSearchParamsBuilder builder = parseBuilder(uiLang, searchTerm, maxResults, offset,
-					targetLangs, thesauri, thesauriDomainName, typeSearch, keywordUriCode, languagesMapper);
+            IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
+            KeywordSearchParamsBuilder builder = parseBuilder(uiLang, searchTerm, maxResults, offset,
+                targetLangs, thesauri, thesauriDomainName, typeSearch, keywordUriCode, languagesMapper);
 
-			if (checkModified(webRequest, thesaurusMan, builder)) {
-				return null;
-			}
+            if (checkModified(webRequest, thesaurusMan, builder)) {
+                return null;
+            }
 
-			if (searchTerm == null || searchTerm.trim().isEmpty()) {
-				builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.DESC));
-			} else {
-				builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.DESC));
-			}
+            if (searchTerm == null || searchTerm.trim().isEmpty()) {
+                builder.setComparator(KeywordSort.defaultLabelSorter(SortDirection.parse(sort)));
+            } else {
+                builder.setComparator(KeywordSort.searchResultsSorter(searchTerm, SortDirection.parse(sort)));
+            }
 
-			searcher.search(builder.build());
-			session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
-					searcher);
-		} else {
-			searcher = (KeywordsSearcher) session
-					.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
-		}
+            searcher.search(builder.build());
+            session.setProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT,
+                searcher);
+        } else {
+            searcher = (KeywordsSearcher) session
+                .getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
+        }
 
-		// get the results
-		responseXml.addContent(searcher.getXmlResults());
+        // get the results
+        responseXml.addContent(searcher.getXmlResults());
 
-		// If editing
-		if (mode != null) {
-			if (mode.equals("edit") || mode.equals("consult")) {
-				responseXml.addContent(new Element("thesaurus")
-						.addContent(thesauri));
-				
-				responseXml.addContent((new Element("mode")).addContent(mode));
-			}
-		}
+        // If editing
+        if (mode != null) {
+            if (mode.equals("edit") || mode.equals("consult")) {
+                responseXml.addContent(new Element("thesaurus")
+                    .addContent(thesauri));
+
+                responseXml.addContent((new Element("mode")).addContent(mode));
+            }
+        }
         String[] acceptHeader = webRequest.getHeaderValues("Accept");
-		final Set<String> acceptContentType = Sets.newHashSet(
-                acceptHeader != null ? acceptHeader : new String[]{"text/plain"});
+        final Set<String> acceptContentType = Sets.newHashSet(
+            acceptHeader != null ? acceptHeader : new String[]{"text/plain"});
 
-		byte[] response;
-		String contentType;
-		if (acceptsType(acceptContentType, "json") || "json".equals(webRequest.getParameter("_content_type"))) {
-			response = Xml.getJSON(responseXml).getBytes(Constants.CHARSET);
-			contentType = "application/json";
-		} else if (acceptContentType.isEmpty() ||
-			acceptsType(acceptContentType, "xml") ||
-			acceptContentType.contains("*/*")||
-			acceptContentType.contains("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2")||
-			acceptContentType.contains("text/plain")) {
-			response = Xml.getString(responseXml).getBytes(Constants.CHARSET);
-			contentType = "application/xml";
-		} else {
-			throw new IllegalArgumentException(acceptContentType + " is not supported");
-		}
+        byte[] response;
+        String contentType;
+        if (acceptsType(acceptContentType, "json") ||
+            "json".equals(webRequest.getParameter("_content_type"))) {
+            response = Xml.getJSON(responseXml).getBytes(Constants.CHARSET);
+            contentType = "application/json";
+        } else if (acceptContentType.isEmpty() ||
+            acceptsType(acceptContentType, "xml") ||
+            acceptContentType.contains("*/*") ||
+            acceptContentType.contains("text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2") ||
+            acceptContentType.contains("text/plain")) {
+            response = Xml.getString(responseXml).getBytes(Constants.CHARSET);
+            contentType = "application/xml";
+        } else {
+            throw new IllegalArgumentException(acceptContentType + " is not supported");
+        }
 
-		MultiValueMap<String, String> headers = new HttpHeaders();
-		headers.add("Content-Type", contentType);
-		headers.add("Cache-Control", "no-cache");
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        headers.add("Content-Type", contentType);
+        headers.add("Cache-Control", "no-cache");
 
-		return new HttpEntity<>(response, headers);
-	}
+        return new HttpEntity<>(response, headers);
+    }
 
-	private boolean checkModified(NativeWebRequest webRequest, ThesaurusManager thesaurusMan, KeywordSearchParamsBuilder builder) {
-		long latestLastModified = -1;
-		for (String thesName : builder.getThesauriNames()) {
-			Thesaurus thesaurus = thesaurusMan.getThesaurusByName(thesName);
-			if (thesaurus == null) {
-				return false;
-			}
-			long thesLastModified = thesaurus.getLastModifiedTime().toMillis();
-			if (latestLastModified < thesLastModified) {
-				latestLastModified = thesLastModified;
-			}
-		}
+    private boolean checkModified(NativeWebRequest webRequest, ThesaurusManager thesaurusMan, KeywordSearchParamsBuilder builder) {
+        long latestLastModified = -1;
+        for (String thesName : builder.getThesauriNames()) {
+            Thesaurus thesaurus = thesaurusMan.getThesaurusByName(thesName);
+            if (thesaurus == null) {
+                return false;
+            }
+            long thesLastModified = thesaurus.getLastModifiedTime().toMillis();
+            if (latestLastModified < thesLastModified) {
+                latestLastModified = thesLastModified;
+            }
+        }
 
-		long roundedChangeDate = latestLastModified / 1000 * 1000;
-		return webRequest.checkNotModified(roundedChangeDate);
+        long roundedChangeDate = latestLastModified / 1000 * 1000;
+        return webRequest.checkNotModified(roundedChangeDate);
 
-	}
+    }
 
-	private KeywordSearchParamsBuilder parseBuilder(String uiLang, String searchTerm, String maxResults, String offset,
-													List<String> targetLangs, List<String> thesauri, String thesauriDomainName,
-													String typeSearch, String keywordUriCode, IsoLanguagesMapper mapper) {
-		KeywordSearchParamsBuilder parsedParams = new KeywordSearchParamsBuilder(mapper).lenient(true);
+    private KeywordSearchParamsBuilder parseBuilder(String uiLang, String searchTerm, String maxResults, String offset,
+                                                    List<String> targetLangs, List<String> thesauri, String thesauriDomainName,
+                                                    String typeSearch, String keywordUriCode, IsoLanguagesMapper mapper) {
+        KeywordSearchParamsBuilder parsedParams = new KeywordSearchParamsBuilder(mapper).lenient(true);
 
-		if(searchTerm != null) {
-			KeywordSearchType searchType = KeywordSearchType.parseString(typeSearch);
-			parsedParams.keyword(searchTerm, searchType, true);
-		}
+        if (searchTerm != null) {
+            KeywordSearchType searchType = KeywordSearchType.parseString(typeSearch);
+            parsedParams.keyword(searchTerm, searchType, true);
+        }
 
-		if(keywordUriCode != null) {
-			parsedParams.uri(keywordUriCode);
-		}
+        if (keywordUriCode != null) {
+            parsedParams.uri(keywordUriCode);
+        }
 
-		if(maxResults != null) {
-			parsedParams.maxResults(Integer.parseInt(maxResults));
-		}
+        if (maxResults != null) {
+            parsedParams.maxResults(Integer.parseInt(maxResults));
+        }
 
-		if(offset != null) {
-			parsedParams.offset(Integer.parseInt(offset));
-		}
+        if (offset != null) {
+            parsedParams.offset(Integer.parseInt(offset));
+        }
 
-		if(thesauriDomainName != null) {
-			parsedParams.thesauriDomainName(thesauriDomainName);
-		}
+        if (thesauriDomainName != null) {
+            parsedParams.thesauriDomainName(thesauriDomainName);
+        }
 
         if (thesauri == null) {
             ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -242,27 +250,28 @@ public class GetKeywords {
             }
         }
 
-		boolean addedLang = false;
-		for (String targetLang : targetLangs) {
-			if (!targetLang.trim().isEmpty()) {
-				parsedParams.addLang(targetLang.trim());
-				addedLang = true;
-			}
-		}
-		if (!addedLang) {
-			parsedParams.addLang(uiLang);
-		}
+        boolean addedLang = false;
+        for (String targetLang : targetLangs) {
+            if (!targetLang.trim().isEmpty()) {
+                parsedParams.addLang(targetLang.trim());
+                addedLang = true;
+            }
+        }
+        if (!addedLang) {
+            parsedParams.addLang(uiLang);
+        }
 
-		return parsedParams;
-	}
-	private boolean acceptsType(Set<String> acceptContentType, String toCheck) {
-		for (String acceptable : acceptContentType) {
-			if (acceptable.contains(toCheck)) {
-				return true;
-			}
-		}
-		return false;
-	}
+        return parsedParams;
+    }
+
+    private boolean acceptsType(Set<String> acceptContentType, String toCheck) {
+        for (String acceptable : acceptContentType) {
+            if (acceptable.contains(toCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
 

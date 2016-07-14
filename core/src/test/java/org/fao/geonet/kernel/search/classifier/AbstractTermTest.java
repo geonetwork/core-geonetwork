@@ -54,7 +54,7 @@ public abstract class AbstractTermTest {
     }
 
     private Thesaurus loadThesaurusFile(IsoLanguagesMapper isoLanguagesMapper, Path thesaurusFile)
-            throws ConfigurationException, IOException {
+        throws ConfigurationException, IOException {
         Thesaurus thesaurus = new Thesaurus(isoLanguagesMapper, thesaurusFile.getFileName().toString(), "external", "theme", thesaurusFile, "http://dummy.org/geonetwork");
         thesaurus.initRepository();
         return thesaurus;

@@ -1,7 +1,7 @@
 <Crosswalk scope="Global" sourceNamespace="cql">
 
   <!-- relations -->
- 
+
   <SourceAttr sourceAttrValue="&gt;=">
     <MapsTo targetNamespace="geo">2.4</MapsTo>
   </SourceAttr>
@@ -17,12 +17,12 @@
   <SourceAttr sourceAttrValue="&lt;">
     <MapsTo targetNamespace="geo">2.1</MapsTo>
   </SourceAttr>
- 
+
   <SourceAttr sourceAttrValue="&lt;=">
     <MapsTo targetNamespace="geo">2.2</MapsTo>
   </SourceAttr>
- 
-    <SourceAttr sourceAttrValue="le">
+
+  <SourceAttr sourceAttrValue="le">
     <MapsTo targetNamespace="geo">2.2</MapsTo>
   </SourceAttr>
 
@@ -41,32 +41,32 @@
   <SourceAttr sourceAttrValue="equals">
     <MapsTo targetNamespace="geo">2.3</MapsTo>
   </SourceAttr>
- 
+
   <SourceAttr sourceAttrValue="within">
     <MapsTo targetNamespace="geo">2.7</MapsTo>
   </SourceAttr>
- 
+
   <SourceAttr sourceAttrValue="overlaps">
     <MapsTo targetNamespace="geo">2.7</MapsTo>
   </SourceAttr>
- 
+
   <SourceAttr sourceAttrValue="partial">
     <MapsTo targetNamespace="geo">2.7</MapsTo>
   </SourceAttr>
 
-   <SourceAttr sourceAttrValue="within">
+  <SourceAttr sourceAttrValue="within">
     <MapsTo targetNamespace="geo">2.8</MapsTo>
   </SourceAttr>
 
-   <SourceAttr sourceAttrValue="encloses">
+  <SourceAttr sourceAttrValue="encloses">
     <MapsTo targetNamespace="geo">2.9</MapsTo>
   </SourceAttr>
- 
-   <SourceAttr sourceAttrValue="notWithin">
+
+  <SourceAttr sourceAttrValue="notWithin">
     <MapsTo targetNamespace="geo">2.10</MapsTo>
   </SourceAttr>
 
- <!-- attributes -->
+  <!-- attributes -->
 
   <SourceAttr sourceAttrValue="serverChoice">
     <MapsTo targetNamespace="cql">1.1016</MapsTo>

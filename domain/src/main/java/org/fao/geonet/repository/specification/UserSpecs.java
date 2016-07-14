@@ -28,6 +28,7 @@ import org.fao.geonet.repository.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
 import java.util.Collection;
 
 /**
@@ -136,7 +137,7 @@ public final class UserSpecs {
                 Path<String> lastLoginDateAttributePath = root.get(User_.lastLoginDate);
                 Path<Integer> userIdPath = root.get(User_.id);
                 Predicate userLastLoginBetweenPredicate = cb.between(lastLoginDateAttributePath,
-                        loginDateFrom.toString(), loginDateTo.toString());
+                    loginDateFrom.toString(), loginDateTo.toString());
 
                 if (!groups.isEmpty()) {
                     final Root<UserGroup> userGroupRoot = query.from(UserGroup.class);
@@ -146,7 +147,7 @@ public final class UserSpecs {
                     Predicate inGroups = groupGPath.in(groups);
 
                     userLastLoginBetweenPredicate = cb.and(cb.equal(userGPath,
-                            userIdPath), cb.and(userLastLoginBetweenPredicate, inGroups));
+                        userIdPath), cb.and(userLastLoginBetweenPredicate, inGroups));
                 }
 
 

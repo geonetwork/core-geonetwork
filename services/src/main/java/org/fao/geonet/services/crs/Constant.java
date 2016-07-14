@@ -30,15 +30,17 @@ import org.opengis.referencing.crs.VerticalCRS;
 
 import java.util.HashMap;
 
+@Deprecated
 public class Constant {
-	public final static HashMap<String, Class<? extends IdentifiedObject>> CRSType = 
-		new HashMap<String, Class<? extends IdentifiedObject>>();
-	static {
-		CRSType.put("CoordinateReferenceSystem",
-				CoordinateReferenceSystem.class);
-		CRSType.put("VerticalCRS", VerticalCRS.class);
-		CRSType.put("ProjectedCRS", ProjectedCRS.class);
-		CRSType.put("GeographicCRS", GeographicCRS.class);
-	}
+    public final static HashMap<String, Class<? extends IdentifiedObject>> CRSType =
+        new HashMap<String, Class<? extends IdentifiedObject>>();
+
+    static {
+        CRSType.put("CoordinateReferenceSystem",
+            CoordinateReferenceSystem.class);
+        CRSType.put("VerticalCRS", VerticalCRS.class);
+        CRSType.put("ProjectedCRS", ProjectedCRS.class);
+        CRSType.put("GeographicCRS", GeographicCRS.class);
+    }
 
 }

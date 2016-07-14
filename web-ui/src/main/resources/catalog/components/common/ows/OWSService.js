@@ -116,19 +116,17 @@
 
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
-                var proxyUrl = gnGlobalSettings.proxyUrl +
-                    encodeURIComponent(url);
-                $http.get(proxyUrl, {
+                $http.get(url, {
                   cache: true
                 })
-                  .success(function(data) {
+                    .success(function(data) {
                       try {
                         defer.resolve(displayFileContent(data));
                       } catch (e) {
                         defer.reject('capabilitiesParseError');
                       }
                     })
-                  .error(function(data, status) {
+                    .error(function(data, status) {
                       defer.reject(status);
                     });
               }
@@ -146,9 +144,7 @@
 
               if (gnUrlUtils.isValid(url)) {
 
-                var proxyUrl = gnGlobalSettings.proxyUrl +
-                    encodeURIComponent(url);
-                $http.get(proxyUrl, {
+                $http.get(url, {
                   cache: true
                 })
                     .success(function(data, status, headers, config) {

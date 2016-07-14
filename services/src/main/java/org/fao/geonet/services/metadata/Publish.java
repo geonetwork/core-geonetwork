@@ -38,6 +38,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.IMetadata;
@@ -70,6 +79,19 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -311,6 +333,7 @@ public class Publish {
         long count = operationAllowedRepository.count(Specifications
                 .where(hasMetadataId(mdId))
                 .and(OperationAllowedSpecs.isPublic(ReservedOperation.view)));
+
         if (count == 1) {
             report.incUnmodified();
         } else {

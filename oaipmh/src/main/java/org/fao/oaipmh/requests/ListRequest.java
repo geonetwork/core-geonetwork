@@ -38,43 +38,43 @@ import org.xml.sax.SAXException;
 
 public abstract class ListRequest extends AbstractRequest {
 
+    protected String resumpToken;
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+
     public ListRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
+
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
 
-	public String getResumptionToken() { return resumpToken; }
+    public String getResumptionToken() {
+        return resumpToken;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setResumptionToken(String token)
-	{
-		resumpToken = token;
-	}
+    public void setResumptionToken(String token) {
+        resumpToken = token;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public Element resume(ResumptionToken token) throws IOException, OaiPmhException,
-																		 JDOMException, SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public Element resume(ResumptionToken token) throws IOException, OaiPmhException,
+        JDOMException, SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		params.put("resumptionToken", token.getToken());
+        params.put("resumptionToken", token.getToken());
 
-		return sendRequest(params);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	protected String resumpToken;
+        return sendRequest(params);
+    }
 }
 
 //=============================================================================

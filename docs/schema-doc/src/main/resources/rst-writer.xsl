@@ -40,8 +40,8 @@
               encoding="utf-8"
               escape-uri-attributes="yes"/>
 
-  <xsl:function name="java:file-exists"
-                xmlns:file="java.io.File"
+  <xsl:function xmlns:file="java.io.File"
+                name="java:file-exists"
                 as="xs:boolean">
     <xsl:param name="file" as="xs:string"/>
     <xsl:param name="base-uri" as="xs:string"/>
@@ -67,7 +67,10 @@
       <xsl:text>&#xA;</xsl:text>
       <xsl:text>&#xA;</xsl:text>
       <!--<xsl:text>&#xA;  &lt;embed&gt;</xsl:text>-->
-      <xsl:for-each select="tokenize($line, '\n')"><xsl:text>&#xA;  </xsl:text><xsl:copy-of select="."/></xsl:for-each>
+      <xsl:for-each select="tokenize($line, '\n')">
+        <xsl:text>&#xA;  </xsl:text>
+        <xsl:copy-of select="."/>
+      </xsl:for-each>
       <!--<xsl:text>&#xA;  &lt;/embed&gt;</xsl:text>-->
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
@@ -85,7 +88,7 @@
     <xsl:text>&#xA;</xsl:text>
     <xsl:text>&#xA;:</xsl:text><xsl:value-of select="normalize-space($field)"/>:
     <xsl:text>&#xA;    </xsl:text><xsl:value-of
-                                      select="replace(normalize-space($value), '\*', '\\*')"/>
+    select="replace(normalize-space($value), '\*', '\\*')"/>
   </xsl:function>
 
   <!-- Write line and underline it -->
@@ -93,10 +96,10 @@
     <xsl:param name="line" as="xs:string?"/>
     <xsl:param name="underline" as="xs:string?"/>
     <xsl:text>&#xA;</xsl:text><xsl:value-of select="normalize-space($line)"/>
-    <xsl:text>&#xA;</xsl:text><xsl:value-of select="replace(normalize-space($line), '.', $underline)"/>
+    <xsl:text>&#xA;</xsl:text><xsl:value-of
+    select="replace(normalize-space($line), '.', $underline)"/>
     <xsl:text>&#xA;</xsl:text>
   </xsl:function>
-
 
 
   <!-- Create a RST reference. Prefixed by schema identifier to have them unique
@@ -109,7 +112,8 @@
     <xsl:choose>
       <xsl:when test="$hash">
         <xsl:variable name="hash" select="digest:md5Hex(normalize-space($id))"/>
-        <xsl:text>&#xA;.. _</xsl:text><xsl:value-of select="concat(replace($id, ':', '-'), '-', $hash)"/>:
+        <xsl:text>&#xA;.. _</xsl:text><xsl:value-of
+        select="concat(replace($id, ':', '-'), '-', $hash)"/>:
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>&#xA;.. _</xsl:text><xsl:value-of select="replace($id, ':', '-')"/>:
@@ -126,10 +130,11 @@
     <xsl:choose>
       <xsl:when test="$hash">
         <xsl:variable name="hash" select="digest:md5Hex(normalize-space($id))"/>
-        <xsl:text>:ref:`</xsl:text><xsl:value-of select="concat(replace($id, ':', '-'), '-', $hash)"/>`
+        <xsl:text>:ref:`</xsl:text><xsl:value-of
+        select="concat(replace($id, ':', '-'), '-', $hash)"/>`
       </xsl:when>
       <xsl:otherwise>
-      <xsl:text>:ref:`</xsl:text><xsl:value-of select="replace($id, ':', '-')"/>`
+        <xsl:text>:ref:`</xsl:text><xsl:value-of select="replace($id, ':', '-')"/>`
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
@@ -140,18 +145,17 @@
 
     <xsl:choose>
       <xsl:when
-              xmlns:file="java.io.File"
-              test="file:exists(file:new(concat($folder, '/', $image)))">
+        xmlns:file="java.io.File"
+        test="file:exists(file:new(concat($folder, '/', $image)))">
         <xsl:text>&#xA;.. figure:: </xsl:text><xsl:value-of select="$image"/><xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$verbose">
-          <xsl:message>  * Missing figure <xsl:value-of select="concat($folder, '/', $image, '. Not added to the doc.')"/></xsl:message>
+          <xsl:message>* Missing figure <xsl:value-of select="concat($folder, '/', $image, '. Not added to the doc.')"/></xsl:message>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
-
 
 
   <!-- max-line-length -->
@@ -161,7 +165,6 @@
                      for $line in $arg
                      return string-length($line))"/>
   </xsl:function>
-
 
 
   <!-- Table builder
@@ -192,7 +195,9 @@
           <xsl:variable name="colName" select="name()"/>
           <xsl:variable name="values">
             <xsl:copy-of select="$rows/*[name() = $colName]"/>
-            <label><xsl:value-of select="$colName"/></label>
+            <label>
+              <xsl:value-of select="$colName"/>
+            </label>
           </xsl:variable>
           <xsl:for-each select="1 to gndoc:mll($values)">=</xsl:for-each>
           <xsl:if test="position() != last()">
@@ -205,7 +210,9 @@
           <xsl:variable name="colName" select="name()"/>
           <xsl:variable name="values">
             <xsl:copy-of select="$rows/*[name() = $colName]"/>
-            <label><xsl:value-of select="$colName"/></label>
+            <label>
+              <xsl:value-of select="$colName"/>
+            </label>
           </xsl:variable>
           <xsl:variable name="maxColLength"
                         select="gndoc:mll($values)"/>
@@ -216,14 +223,18 @@
           <xsl:if test="position() != last()">
             <xsl:value-of select="$s"/>
           </xsl:if>
-          <xsl:for-each select="1 to $missingSpaces"><xsl:text> </xsl:text></xsl:for-each>
+          <xsl:for-each select="1 to $missingSpaces">
+            <xsl:text> </xsl:text>
+          </xsl:for-each>
         </xsl:for-each>
         <xsl:text>&#xA;</xsl:text>
         <xsl:for-each select="*">
           <xsl:variable name="colName" select="name()"/>
           <xsl:variable name="values">
             <xsl:copy-of select="$rows/*[name() = $colName]"/>
-            <label><xsl:value-of select="$colName"/></label>
+            <label>
+              <xsl:value-of select="$colName"/>
+            </label>
           </xsl:variable>
           <xsl:for-each select="1 to gndoc:mll($values)">=</xsl:for-each>
           <xsl:if test="position() != last()">
@@ -239,7 +250,9 @@
         <xsl:variable name="colValue" select="replace(normalize-space(), '\*', '\\*')"/>
         <xsl:variable name="values">
           <xsl:copy-of select="$rows/*[name() = $colName]"/>
-          <label><xsl:value-of select="$colName"/></label>
+          <label>
+            <xsl:value-of select="$colName"/>
+          </label>
         </xsl:variable>
         <xsl:variable name="maxColLength"
                       select="gndoc:mll($values)"/>
@@ -249,7 +262,9 @@
         <xsl:if test="position() != last()">
           <xsl:value-of select="$s"/>
         </xsl:if>
-        <xsl:for-each select="1 to $missingSpaces"><xsl:text> </xsl:text></xsl:for-each>
+        <xsl:for-each select="1 to $missingSpaces">
+          <xsl:text> </xsl:text>
+        </xsl:for-each>
       </xsl:for-each>
       <xsl:value-of select="gndoc:nl()"/>
 
@@ -259,7 +274,9 @@
           <xsl:variable name="colName" select="name()"/>
           <xsl:variable name="values">
             <xsl:copy-of select="$rows/*[name() = $colName]"/>
-            <label><xsl:value-of select="$colName"/></label>
+            <label>
+              <xsl:value-of select="$colName"/>
+            </label>
           </xsl:variable>
           <xsl:for-each select="1 to gndoc:mll($values)">=</xsl:for-each>
           <xsl:if test="position() != last()">

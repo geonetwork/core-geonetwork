@@ -50,11 +50,11 @@ var GeoNetworkSignInPage = function() {
 
     // Could be faster but does not work TODO
     // browser.driver.get('http://admin:admin@
-    //  localhost:8080/geonetwork/j_spring_security_check');
+    //  localhost:8080/geonetwork/signin');
   };
   this.signOut = function() {
     return browser.driver
-        .get('http://localhost:8080/geonetwork/j_spring_security_logout');
+        .get('http://localhost:8080/geonetwork/signout');
   };
 };
 

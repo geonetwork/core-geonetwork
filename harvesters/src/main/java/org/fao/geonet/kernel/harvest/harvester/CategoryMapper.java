@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 
@@ -31,62 +32,67 @@ import java.util.HashMap;
 
 //=============================================================================
 
-/** Loads all categories from the database and creates a mapping
-  * (categ name) -> (categ ID)
-  */
+/**
+ * Loads all categories from the database and creates a mapping (categ name) -> (categ ID)
+ */
 
-public class CategoryMapper
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class CategoryMapper {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public CategoryMapper(ServiceContext context) throws Exception
-	{
+    private HashMap<String, String> hmNameId = new HashMap<String, String>();
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
+    private HashMap<String, String> hmIdName = new HashMap<String, String>();
+
+    //--------------------------------------------------------------------------
+
+    public CategoryMapper(ServiceContext context) throws Exception {
 
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
 
 
-		for (MetadataCategory record : categoryRepository.findAll()) {
+        for (MetadataCategory record : categoryRepository.findAll()) {
             String id = "" + record.getId();
             String name = record.getName();
 
             add(name, id);
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    public void add(String name, String id) {
+        hmNameId.put(name, id);
+        hmIdName.put(id, name);
+    }
 
-	public void add(String name, String id)
-	{
-		hmNameId.put(name, id);
-		hmIdName.put(id, name);
-	}
+    /**
+     * Given a category name returns its id
+     */
 
-	//--------------------------------------------------------------------------
+    public String getID(String name) {
+        return hmNameId.get(name);
+    }
 
-	/** Given a category name returns its id */
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
 
-	public String getID(String name) { return hmNameId.get(name); }
+    public String getName(String id) {
+        return hmIdName.get(id);
+    }
 
-	public String getName(String id) { return hmIdName.get(id); }
-
-	public boolean exists(String id) { return hmIdName.containsKey(id); }
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private HashMap<String, String> hmNameId = new HashMap<String, String>();
-	private HashMap<String, String> hmIdName = new HashMap<String, String>();
+    public boolean exists(String id) {
+        return hmIdName.containsKey(id);
+    }
 }
 
 //=============================================================================

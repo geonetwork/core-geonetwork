@@ -25,6 +25,7 @@ package org.fao.geonet.utils.nio;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.Constants;
@@ -44,13 +45,14 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
 /**
-* @author Jesse on 11/4/2014.
-*/
+ * @author Jesse on 11/4/2014.
+ */
 public class NioPathAwareCatalogResolver extends CatalogResolver {
     private static final Map<Object, ResolverRewriteDirective> urlRewriteDirectives = Maps.newHashMap();
     private final Set<Path> catalogPaths = Sets.newHashSet();
@@ -70,6 +72,10 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
                 }
             }
         }
+    }
+
+    public static void addRewriteDirective(ResolverRewriteDirective urlRewrite) {
+        urlRewriteDirectives.put(urlRewrite.getKey(), urlRewrite);
     }
 
     @Override
@@ -112,9 +118,9 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
             } catch (URISyntaxException | IllegalArgumentException e) {
                 final Path basePath = IO.toPath(new URI(base));
                 Path parent = basePath.getParent();
-                if(parent == null) {
+                if (parent == null) {
                     throw new RuntimeException(basePath.getFileName() +
-                            " does not have parent");
+                        " does not have parent");
                 }
                 resolvedResource = parent.resolve(href);
 
@@ -136,9 +142,5 @@ public class NioPathAwareCatalogResolver extends CatalogResolver {
         final PathStreamSource pathInputSource = new PathStreamSource(resolvedResource);
         pathInputSource.setSystemId(resolvedResource.toUri().toASCIIString());
         return pathInputSource;
-    }
-
-    public static void addRewriteDirective(ResolverRewriteDirective urlRewrite) {
-        urlRewriteDirectives.put(urlRewrite.getKey(), urlRewrite);
     }
 }

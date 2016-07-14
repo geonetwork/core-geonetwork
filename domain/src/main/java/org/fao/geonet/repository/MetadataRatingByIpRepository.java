@@ -34,7 +34,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface MetadataRatingByIpRepository extends GeonetRepository<MetadataRatingByIp, MetadataRatingByIpId>,
-        MetadataRatingByIpRepositoryCustom {
+    MetadataRatingByIpRepositoryCustom {
     /**
      * Find all the ratings for the given Metadata.
      *

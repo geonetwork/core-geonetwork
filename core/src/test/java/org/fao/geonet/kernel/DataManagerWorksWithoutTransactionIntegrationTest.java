@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -92,20 +93,20 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
     @Test
     public void testSetHarvesterData() throws Exception {
         TransactionlessTesting.get().run
-                (new TestTask() {
-                    @Override
-                    public void run() throws Exception {
-                        final ServiceContext serviceContext = createServiceContext();
-                        loginAsAdmin(serviceContext);
+            (new TestTask() {
+                @Override
+                public void run() throws Exception {
+                    final ServiceContext serviceContext = createServiceContext();
+                    loginAsAdmin(serviceContext);
 
-                        final DataManagerWorksWithoutTransactionIntegrationTest test =
-                                DataManagerWorksWithoutTransactionIntegrationTest.this;
-                        final int metadataId =  DataManagerIntegrationTest.importMetadata(test, serviceContext);
+                    final DataManagerWorksWithoutTransactionIntegrationTest test =
+                        DataManagerWorksWithoutTransactionIntegrationTest.this;
+                    final int metadataId = DataManagerIntegrationTest.importMetadata(test, serviceContext);
 
-                        final DataManager dm = DataManagerWorksWithoutTransactionIntegrationTest.this.dataManager;
-                        DataManagerIntegrationTest.doSetHarvesterDataTest(DataManagerWorksWithoutTransactionIntegrationTest.this.metadataRepository, dm, metadataId);
-                    }
-                });
+                    final DataManager dm = DataManagerWorksWithoutTransactionIntegrationTest.this.dataManager;
+                    DataManagerIntegrationTest.doSetHarvesterDataTest(DataManagerWorksWithoutTransactionIntegrationTest.this.metadataRepository, dm, metadataId);
+                }
+            });
 
     }
 

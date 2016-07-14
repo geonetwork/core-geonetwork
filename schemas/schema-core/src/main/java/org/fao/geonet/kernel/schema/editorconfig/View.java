@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -27,6 +26,7 @@ package org.fao.geonet.kernel.schema.editorconfig;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -38,9 +38,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -50,18 +50,22 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element ref="{}flatModeExceptions" minOccurs="0"/>
  *         &lt;element ref="{}thesaurusList" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="disabled" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
- *       &lt;attribute name="upAndDownControlHidden" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
- *       &lt;attribute name="displayIfRecord" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="displayIfServiceInfo" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="hideTimeInCalendar" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true" />
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
+ *       &lt;attribute name="disabled" type="{http://www.w3.org/2001/XMLSchema}boolean" fixed="true"
+ * />
+ *       &lt;attribute name="upAndDownControlHidden" type="{http://www.w3.org/2001/XMLSchema}boolean"
+ * fixed="true" />
+ *       &lt;attribute name="displayIfRecord" type="{http://www.w3.org/2001/XMLSchema}anySimpleType"
+ * />
+ *       &lt;attribute name="displayIfServiceInfo" type="{http://www.w3.org/2001/XMLSchema}anySimpleType"
+ * />
+ *       &lt;attribute name="hideTimeInCalendar" type="{http://www.w3.org/2001/XMLSchema}boolean"
+ * fixed="true" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -92,28 +96,19 @@ public class View {
     protected Boolean hideTimeInCalendar;
 
     /**
-     * 
-     *               A tab is composed of a set of elements.
-     *               Gets the value of the tab property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the tab property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
+     * A tab is composed of a set of elements. Gets the value of the tab property.
+     *
+     * <p> This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is
+     * why there is not a <CODE>set</CODE> method for the tab property.
+     *
+     * <p> For example, to add a new item, do as follows:
      * <pre>
      *    getTab().add(newItem);
      * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Tab }
-     * 
-     * 
+     *
+     *
+     * <p> Objects of the following type(s) are allowed in the list {@link Tab }
      */
     public List<Tab> getTab() {
         if (tab == null) {
@@ -124,11 +119,8 @@ public class View {
 
     /**
      * Gets the value of the flatModeExceptions property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link FlatModeExceptions }
-     *     
+     *
+     * @return possible object is {@link FlatModeExceptions }
      */
     public FlatModeExceptions getFlatModeExceptions() {
         return flatModeExceptions;
@@ -136,11 +128,8 @@ public class View {
 
     /**
      * Sets the value of the flatModeExceptions property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link FlatModeExceptions }
-     *     
+     *
+     * @param value allowed object is {@link FlatModeExceptions }
      */
     public void setFlatModeExceptions(FlatModeExceptions value) {
         this.flatModeExceptions = value;
@@ -148,11 +137,8 @@ public class View {
 
     /**
      * Gets the value of the thesaurusList property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ThesaurusList }
-     *     
+     *
+     * @return possible object is {@link ThesaurusList }
      */
     public ThesaurusList getThesaurusList() {
         return thesaurusList;
@@ -160,11 +146,8 @@ public class View {
 
     /**
      * Sets the value of the thesaurusList property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ThesaurusList }
-     *     
+     *
+     * @param value allowed object is {@link ThesaurusList }
      */
     public void setThesaurusList(ThesaurusList value) {
         this.thesaurusList = value;
@@ -172,11 +155,8 @@ public class View {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getName() {
         return name;
@@ -184,11 +164,8 @@ public class View {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -196,11 +173,8 @@ public class View {
 
     /**
      * Gets the value of the disabled property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public boolean isDisabled() {
         if (disabled == null) {
@@ -212,11 +186,8 @@ public class View {
 
     /**
      * Sets the value of the disabled property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setDisabled(Boolean value) {
         this.disabled = value;
@@ -224,11 +195,8 @@ public class View {
 
     /**
      * Gets the value of the upAndDownControlHidden property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public boolean isUpAndDownControlHidden() {
         if (upAndDownControlHidden == null) {
@@ -240,11 +208,8 @@ public class View {
 
     /**
      * Sets the value of the upAndDownControlHidden property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setUpAndDownControlHidden(Boolean value) {
         this.upAndDownControlHidden = value;
@@ -252,11 +217,8 @@ public class View {
 
     /**
      * Gets the value of the displayIfRecord property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getDisplayIfRecord() {
         return displayIfRecord;
@@ -264,11 +226,8 @@ public class View {
 
     /**
      * Sets the value of the displayIfRecord property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setDisplayIfRecord(String value) {
         this.displayIfRecord = value;
@@ -276,11 +235,8 @@ public class View {
 
     /**
      * Gets the value of the displayIfServiceInfo property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getDisplayIfServiceInfo() {
         return displayIfServiceInfo;
@@ -288,11 +244,8 @@ public class View {
 
     /**
      * Sets the value of the displayIfServiceInfo property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setDisplayIfServiceInfo(String value) {
         this.displayIfServiceInfo = value;
@@ -300,11 +253,8 @@ public class View {
 
     /**
      * Gets the value of the hideTimeInCalendar property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public boolean isHideTimeInCalendar() {
         if (hideTimeInCalendar == null) {
@@ -316,11 +266,8 @@ public class View {
 
     /**
      * Sets the value of the hideTimeInCalendar property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setHideTimeInCalendar(Boolean value) {
         this.hideTimeInCalendar = value;

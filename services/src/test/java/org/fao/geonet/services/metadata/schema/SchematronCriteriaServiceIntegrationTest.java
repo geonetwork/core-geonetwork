@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.schema;
 
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -53,9 +54,9 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         Element result = createService(LIST).exec(params, context);
 
         int totalCriteria = _group1_Name1_SchematronId1.getCriteria().size() +
-                            _group2_Name2_SchematronId2.getCriteria().size() +
-                            _group3_Name3_SchemtronId1.getCriteria().size() +
-                            _group4_Name2_SchematronId4.getCriteria().size();
+            _group2_Name2_SchematronId2.getCriteria().size() +
+            _group3_Name3_SchemtronId1.getCriteria().size() +
+            _group4_Name2_SchematronId4.getCriteria().size();
 
         assertEquals(totalCriteria, result.getChildren().size());
         assertGroupOnlyId(result);
@@ -75,15 +76,15 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(SchematronCriteriaService.PARAM_INCLUDE_GROUP, true)
+            read(SchematronCriteriaService.PARAM_INCLUDE_GROUP, true)
         );
 
         Element result = createService(LIST).exec(params, context);
 
         int totalCriteria = _group1_Name1_SchematronId1.getCriteria().size() +
-                            _group2_Name2_SchematronId2.getCriteria().size() +
-                            _group3_Name3_SchemtronId1.getCriteria().size() +
-                            _group4_Name2_SchematronId4.getCriteria().size();
+            _group2_Name2_SchematronId2.getCriteria().size() +
+            _group3_Name3_SchemtronId1.getCriteria().size() +
+            _group4_Name2_SchematronId4.getCriteria().size();
 
         assertEquals(totalCriteria, result.getChildren().size());
         assertFullGroup(result);
@@ -95,13 +96,13 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(SchematronCriteriaService.PARAM_GROUP_NAME, _group2_Name2_SchematronId2.getId().getName())
+            read(SchematronCriteriaService.PARAM_GROUP_NAME, _group2_Name2_SchematronId2.getId().getName())
         );
 
         Element result = createService(LIST).exec(params, context);
 
         int totalCriteria = _group2_Name2_SchematronId2.getCriteria().size() +
-                            _group4_Name2_SchematronId4.getCriteria().size();
+            _group4_Name2_SchematronId4.getCriteria().size();
 
         assertEquals(totalCriteria, result.getChildren().size());
         assertGroupOnlyId(result);
@@ -113,13 +114,13 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(SchematronCriteriaService.PARAM_SCHEMATRON_ID, "" + _group1_Name1_SchematronId1.getId().getSchematronId())
+            read(SchematronCriteriaService.PARAM_SCHEMATRON_ID, "" + _group1_Name1_SchematronId1.getId().getSchematronId())
         );
 
         Element result = createService(LIST).exec(params, context);
 
         int totalCriteria = _group1_Name1_SchematronId1.getCriteria().size() +
-                            _group3_Name3_SchemtronId1.getCriteria().size();
+            _group3_Name3_SchemtronId1.getCriteria().size();
 
         assertEquals(totalCriteria, result.getChildren().size());
         assertGroupOnlyId(result);
@@ -131,7 +132,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(Params.ID, _group1_Name1_SchematronId1.getCriteria().get(0).getId())
+            read(Params.ID, _group1_Name1_SchematronId1.getCriteria().get(0).getId())
         );
 
         Element result = createService(LIST).exec(params, context);
@@ -140,8 +141,8 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         assertGroupOnlyId(result);
 
         params = createParams(
-                read(SchematronCriteriaService.PARAM_INCLUDE_GROUP, "true"),
-                read(Params.ID, _group1_Name1_SchematronId1.getCriteria().get(0).getId())
+            read(SchematronCriteriaService.PARAM_INCLUDE_GROUP, "true"),
+            read(Params.ID, _group1_Name1_SchematronId1.getCriteria().get(0).getId())
         );
 
         result = createService(LIST).exec(params, context);
@@ -156,14 +157,14 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         loginAsAdmin(context);
 
         Element params = createParams(
-                read(Params.ID, _group1_Name1_SchematronId1.getCriteria().get(0).getId())
+            read(Params.ID, _group1_Name1_SchematronId1.getCriteria().get(0).getId())
         );
 
         Element result = createService(EXISTS).exec(params, context);
         assertEquals(Boolean.TRUE.toString(), result.getText());
 
         params = createParams(
-                read(Params.ID, Integer.MAX_VALUE)
+            read(Params.ID, Integer.MAX_VALUE)
         );
 
         result = createService(EXISTS).exec(params, context);
@@ -180,12 +181,12 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         String uiCriteriaType = "uiType";
         String uiValue = "uiValue";
         Element params = createParams(
-                read(SchematronCriteriaService.PARAM_GROUP_NAME, _group1_Name1_SchematronId1.getId().getName()),
-                read(SchematronCriteriaService.PARAM_SCHEMATRON_ID, _group1_Name1_SchematronId1.getId().getSchematronId()),
-                read(SchematronCriteriaService.PARAM_TYPE, criteriaType),
-                read(SchematronCriteriaService.PARAM_VALUE, value),
-                read(SchematronCriteriaService.PARAM_UI_TYPE, uiCriteriaType),
-                read(SchematronCriteriaService.PARAM_UI_VALUE, uiValue)
+            read(SchematronCriteriaService.PARAM_GROUP_NAME, _group1_Name1_SchematronId1.getId().getName()),
+            read(SchematronCriteriaService.PARAM_SCHEMATRON_ID, _group1_Name1_SchematronId1.getId().getSchematronId()),
+            read(SchematronCriteriaService.PARAM_TYPE, criteriaType),
+            read(SchematronCriteriaService.PARAM_VALUE, value),
+            read(SchematronCriteriaService.PARAM_UI_TYPE, uiCriteriaType),
+            read(SchematronCriteriaService.PARAM_UI_VALUE, uiValue)
         );
 
         Element result = createService(ADD).exec(params, context);
@@ -193,7 +194,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         String id = result.getChildText("id");
 
         params = createParams(
-                read(Params.ID, id)
+            read(Params.ID, id)
         );
 
         result = createService(EXISTS).exec(params, context);
@@ -221,28 +222,28 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         final int schematronId = _group1_Name1_SchematronId1.getId().getSchematronId();
 
         Element params = createParams(
-                read(SchematronCriteriaService.PARAM_GROUP_NAME, newName),
-                read(SchematronCriteriaService.PARAM_SCHEMATRON_ID, schematronId),
-                read(SchematronCriteriaService.PARAM_TYPE, criteriaType),
-                read(SchematronCriteriaService.PARAM_VALUE, value),
-                read(SchematronCriteriaService.PARAM_UI_TYPE, uitype),
-                read(SchematronCriteriaService.PARAM_UI_VALUE, uivalue)
+            read(SchematronCriteriaService.PARAM_GROUP_NAME, newName),
+            read(SchematronCriteriaService.PARAM_SCHEMATRON_ID, schematronId),
+            read(SchematronCriteriaService.PARAM_TYPE, criteriaType),
+            read(SchematronCriteriaService.PARAM_VALUE, value),
+            read(SchematronCriteriaService.PARAM_UI_TYPE, uitype),
+            read(SchematronCriteriaService.PARAM_UI_VALUE, uivalue)
         );
 
         assertFalse(context.getBean(SchematronCriteriaGroupRepository.class).exists(new SchematronCriteriaGroupId(newName,
-                schematronId)));
+            schematronId)));
 
         Element result = createService(ADD).exec(params, context);
         assertSuccessfulAdd(result);
         String id = result.getChildText("id");
 
         final SchematronCriteriaGroup found = context.getBean(SchematronCriteriaGroupRepository.class).findOne(new
-                SchematronCriteriaGroupId(newName, schematronId));
+            SchematronCriteriaGroupId(newName, schematronId));
         assertTrue(found != null);
         assertEquals(SchematronRequirement.REQUIRED, found.getRequirement());
 
         params = createParams(
-                read(Params.ID, id)
+            read(Params.ID, id)
         );
 
         result = createService(EXISTS).exec(params, context);
@@ -270,11 +271,11 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         final int criteriaId = _group1_Name1_SchematronId1.getCriteria().get(0).getId();
 
         Element params = createParams(
-                read(Params.ID, criteriaId),
-                read(SchematronCriteriaService.PARAM_TYPE, criteriaType),
-                read(SchematronCriteriaService.PARAM_VALUE, value),
-                read(SchematronCriteriaService.PARAM_UI_TYPE, uiType),
-                read(SchematronCriteriaService.PARAM_UI_VALUE, uiValue)
+            read(Params.ID, criteriaId),
+            read(SchematronCriteriaService.PARAM_TYPE, criteriaType),
+            read(SchematronCriteriaService.PARAM_VALUE, value),
+            read(SchematronCriteriaService.PARAM_UI_TYPE, uiType),
+            read(SchematronCriteriaService.PARAM_UI_VALUE, uiValue)
         );
 
         assertEquals("ok", createService(EDIT).exec(params, context).getName());
@@ -295,10 +296,10 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
 
         final SchematronCriteria criteria = _group1_Name1_SchematronId1.getCriteria().get(0);
         final int criteriaId = criteria.getId();
-        final String newValue = "newValue"+_inc.incrementAndGet();
+        final String newValue = "newValue" + _inc.incrementAndGet();
         Element params = createParams(
-                read(Params.ID, criteriaId),
-                read(SchematronCriteriaService.PARAM_VALUE, newValue)
+            read(Params.ID, criteriaId),
+            read(SchematronCriteriaService.PARAM_VALUE, newValue)
         );
 
         assertEquals("ok", createService(EDIT).exec(params, context).getName());
@@ -322,8 +323,8 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
             newType = SchematronCriteriaType.ALWAYS_ACCEPT;
         }
         Element params = createParams(
-                read(Params.ID, criteriaId),
-                read(SchematronCriteriaService.PARAM_TYPE, newType.name())
+            read(Params.ID, criteriaId),
+            read(SchematronCriteriaService.PARAM_TYPE, newType.name())
         );
 
         assertEquals("ok", createService(EDIT).exec(params, context).getName());
@@ -344,7 +345,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         final int id = _group1_Name1_SchematronId1.getCriteria().get(0).getId();
 
         Element deleteParams = createParams(
-                read(Params.ID, id)
+            read(Params.ID, id)
         );
 
         assertEquals("ok", createService(DELETE).exec(deleteParams, context).getName());
@@ -353,15 +354,15 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
         Element result = createService(LIST).exec(listParams, context);
 
         int totalCriteria = _group1_Name1_SchematronId1.getCriteria().size() +
-                            _group2_Name2_SchematronId2.getCriteria().size() +
-                            _group3_Name3_SchemtronId1.getCriteria().size() +
-                            _group4_Name2_SchematronId4.getCriteria().size();
+            _group2_Name2_SchematronId2.getCriteria().size() +
+            _group3_Name3_SchemtronId1.getCriteria().size() +
+            _group4_Name2_SchematronId4.getCriteria().size();
 
         assertEquals(totalCriteria, result.getChildren().size());
         assertGroupOnlyId(result);
     }
 
-    @Test (expected = BadParameterEx.class)
+    @Test(expected = BadParameterEx.class)
     public void testExecDeleteBadId() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
@@ -373,7 +374,7 @@ public class SchematronCriteriaServiceIntegrationTest extends AbstractSchematron
             badId++;
         }
         Element deleteParams = createParams(
-                read(Params.ID, badId)
+            read(Params.ID, badId)
         );
 
         assertEquals("ok", createService(DELETE).exec(deleteParams, context).getName());

@@ -25,7 +25,9 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -52,8 +54,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
-* @author Jesse on 11/6/2014.
-*/
+ * @author Jesse on 11/6/2014.
+ */
 class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
     private final Logger log;
@@ -65,17 +67,17 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private final ServiceContext context;
     private final AtomicBoolean cancelMonitor;
     private final BaseAligner aligner;
-
-    private boolean transformIt = false;
-    private Path thisXslt;
     private final CategoryMapper localCateg;
     private final GroupMapper localGroups;
     private final Set<Integer> listOfRecords = Sets.newHashSet();
     private final Set<Integer> listOfRecordsToIndex = Sets.newHashSet();
+    private boolean transformIt = false;
+    private Path thisXslt;
     private long startTime;
 
     public LocalFsHarvesterFileVisitor(AtomicBoolean cancelMonitor, ServiceContext context, LocalFilesystemParams params, Logger log, LocalFilesystemHarvester harvester) throws Exception {
-        this.aligner = new BaseAligner(cancelMonitor) {};
+        this.aligner = new BaseAligner(cancelMonitor) {
+        };
 
         this.cancelMonitor = cancelMonitor;
         this.context = context;
@@ -93,7 +95,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.repo = context.getBean(MetadataRepository.class);
         this.startTime = System.currentTimeMillis();
         log.debug(String.format("Start visiting files at %d.",
-                this.startTime));
+            this.startTime));
     }
 
     @Override
@@ -104,16 +106,16 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
         try {
             if (file != null &&
-                    file.getFileName() != null && 
-                    file.getFileName().toString() != null && 
-                    file.getFileName().toString().endsWith(".xml")) {
+                file.getFileName() != null &&
+                file.getFileName().toString() != null &&
+                file.getFileName().toString().endsWith(".xml")) {
                 result.totalMetadata++;
                 if (log.isDebugEnabled() && result.totalMetadata % 1000 == 0) {
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
                     log.debug(String.format("%d records inserted in %d s (%d records/s).",
-                            result.totalMetadata,
-                            elapsedTime,
-                            result.totalMetadata / elapsedTime));
+                        result.totalMetadata,
+                        elapsedTime,
+                        result.totalMetadata / elapsedTime));
                 }
                 Element xml;
                 Path filePath = file.toAbsolutePath().normalize();
@@ -132,7 +134,6 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     result.unretrievable++;
                     return FileVisitResult.CONTINUE; // skip this one
                 }
-
 
 
                 // transform using importxslt if not none
@@ -168,22 +169,22 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                         uuid = dataMan.extractUUID(schema, xml);
                     } catch (Exception e) {
                         log.debug("Failed to extract metadata UUID for file " + filePath +
-                                " using XSL extract-uuid. The record is probably " +
-                                "a subtemplate. Will check uuid attribute on root element.");
+                            " using XSL extract-uuid. The record is probably " +
+                            "a subtemplate. Will check uuid attribute on root element.");
 
                         // Extract UUID from uuid attribute in subtemplates
                         String uuidAttribute = xml.getAttributeValue("uuid");
                         if (uuidAttribute != null) {
                             log.debug("Found uuid attribute " + uuidAttribute +
-                                    " for file " + filePath +
-                                    ".");
+                                " for file " + filePath +
+                                ".");
                             uuid = uuidAttribute;
                         } else {
                             // Assigning a new UUID
                             uuid = UUID.randomUUID().toString();
                             log.debug("No UUID found, the record will be assigned a random uuid " + uuid +
-                                    " for file " + filePath +
-                                    ".");
+                                " for file " + filePath +
+                                ".");
                         }
                     }
                     if (uuid == null || uuid.equals("")) {
@@ -203,7 +204,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 } catch (Exception ex) {
                                     log.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= " +
 
-                                              uuid + ", using current date for modified date");
+                                        uuid + ", using current date for modified date");
                                     createDate = new ISODate().toString();
                                 }
                             }
@@ -233,7 +234,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                 log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
 
                                 if (DateUtils.truncate(recordDate, Calendar.SECOND)
-                                        .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
+                                    .before(DateUtils.truncate(fileDate, Calendar.SECOND))) {
                                     log.debug("  Db record is older than file. Updating record with id: " + id);
                                     harvester.updateMetadata(xml, id, localGroups, localCateg, changeDate, aligner);
                                     listOfRecordsToIndex.add(Integer.valueOf(id));
@@ -251,8 +252,8 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                                     changeDate = dataMan.extractDateModified(schema, xml);
                                 } catch (Exception ex) {
                                     log.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for " +
-                                              "metadata id= " +
-                                              id + ", using current date for modified date");
+                                        "metadata id= " +
+                                        id + ", using current date for modified date");
                                     changeDate = new ISODate().toString();
                                 }
 
@@ -270,6 +271,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         }
         return FileVisitResult.CONTINUE;
     }
+
     public HarvestResult getResult() {
         return result;
     }

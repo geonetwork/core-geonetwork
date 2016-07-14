@@ -22,10 +22,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:geonet="http://www.fao.org/geonetwork"
-  xmlns:dc = "http://purl.org/dc/elements/1.1/"
-  xmlns:dct = "http://purl.org/dc/terms/">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                version="1.0"
+>
 
   <xsl:template name="metadata-csw-recordview-simple" match="metadata-csw-recordview-simple">
 
@@ -42,7 +42,7 @@
       <xsl:with-param name="tabs">
         <xsl:call-template name="complexElementSimpleGui">
           <xsl:with-param name="title"
-            select="/root/gui/schemas/iso19139/strings/understandResource"/>
+                          select="/root/gui/schemas/iso19139/strings/understandResource"/>
           <xsl:with-param name="content">
             <xsl:apply-templates mode="dublin-core" select=".">
               <xsl:with-param name="schema" select="'dublin-core'"/>

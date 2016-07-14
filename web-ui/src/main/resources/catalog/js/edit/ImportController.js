@@ -48,40 +48,41 @@
     function($scope, gnMetadataManager) {
       $scope.importMode = 'uploadFile';
       $scope.file_type = 'single';
-      $scope.uuidAction = 'nothing';
+      $scope.queue = [];
+      $scope.params = {
+        metadataType: 'METADATA',
+        uuidProcessing: 'NOTHING',
+        xml: '',
+        file: '',
+        url: '',
+        serverFolder: '',
+        recursiveSearch: false,
+        rejectIfInvalid: false,
+        assignToCatalog: true,
+        transformWith: '_none_',
+        group: null,
+        category: null
+      };
       $scope.importing = false;
 
       /** Upload management */
-      $scope.action = 'xml.mef.import.ui';
+      $scope.action = '../api/records';
       var uploadImportMdDone = function(evt, data) {
         $scope.importing = false;
-        var report = {
-          id: data.jqXHR.responseJSON.id,
-          uuid: data.jqXHR.responseJSON.uuid,
-          success: data.jqXHR.responseJSON.success,
-          message: data.jqXHR.responseJSON.msg
-        };
-        $scope.reports.push(report);
+        $scope.clear($scope.queue);
+        $scope.reports.push(data.jqXHR.responseJSON);
       };
       var uploadImportMdError = function(evt, data, o) {
         $scope.importing = false;
-        var response = new DOMParser().parseFromString(
-            data.jqXHR.responseText, 'text/xml');
-        var msgEl = response.getElementsByTagName('message')[0];
-        var report = {
-          message: msgEl.innerHTML ? msgEl.innerHTML : msgEl.textContent
-        };
-        $scope.reports.push(report);
+        $scope.reports.push(data.jqXHR.responseJSON);
       };
 
       // upload directive options
       $scope.mdImportUploadOptions = {
         autoUpload: false,
         done: uploadImportMdDone,
-        fail: uploadImportMdError,
-        singleUpload: true
+        fail: uploadImportMdError
       };
-      /** --- */
 
 
       var formatExceptionArray = function() {
@@ -108,9 +109,7 @@
       };
       var onErrorFn = function(error) {
         $scope.importing = false;
-        $scope.reports = [{
-          exception: error.data
-        }];
+        $scope.reports = error;
       };
 
       $scope.uploadScope = angular.element('#md-import-file').scope();
@@ -144,13 +143,10 @@
               message: 'noFileSelected'
             }];
           }
-        } else if ($scope.importMode == 'importFromDir') {
-          $scope.importing = true;
-          gnMetadataManager.importFromDir($(formId).serialize()).then(
-              onSuccessFn, onErrorFn);
         } else {
           $scope.importing = true;
-          gnMetadataManager.importFromXml($(formId).serialize()).then(
+          gnMetadataManager.importFromXml(
+              $(formId).serialize(), $scope.params.xml).then(
               onSuccessFn, onErrorFn);
         }
       };

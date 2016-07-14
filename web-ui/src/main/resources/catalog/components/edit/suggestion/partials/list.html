@@ -1,9 +1,10 @@
 <div class="panel panel-default">
-  <div class="panel-heading">
+  <div class="panel-heading"
+       data-gn-slide-toggle="">
     <i class="fa fa-cogs"/>&nbsp;
     <span data-translate="">suggestions</span>&nbsp;
     <button type="button" class="btn btn-default pull-right btn-xs"
-      data-ng-click="load()">
+            data-ng-click="load()">
       <i data-ng-hide="loading" class="fa fa-refresh"/>
       <i data-ng-show="loading" class="fa fa-spinner fa-spin"/>
     </button>
@@ -11,7 +12,7 @@
   <div class="panel-body" data-ng-show="suggestions.length !== 0">
     <div class="list-group">
       <a href="" class="list-group-item" data-ng-repeat="sugg in suggestions | orderBy:'name'"
-        data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name}} </a>
+         data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name}} </a>
     </div>
 
   </div>

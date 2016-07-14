@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
@@ -51,14 +52,13 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Test hierarchical facets
- *
  */
 public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTest {
 
     final private static String[] METADATA_KEYWORD = {
         "Australia",
-        "Zimbabwe", 
-        "All fishing areas", 
+        "Zimbabwe",
+        "All fishing areas",
         "Australia",
         "France"
     };
@@ -71,18 +71,11 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
     private ServiceContext serviceContext;
     private MetaSearcher luceneSearcher;
 
-    @After
-    public void closeSearcher() throws Exception {
-        if (this.luceneSearcher != null) {
-            this.luceneSearcher.close();
-        }
-    }
-
     @BeforeClass
     public static void loadTestMetadata() throws IOException, JDOMException {
         String metadataTemplate = loadTemplate();
 
-        for (String keyword: METADATA_KEYWORD) {
+        for (String keyword : METADATA_KEYWORD) {
             TEST_METADATA.add(metadataTemplate.replace("{keyword}", keyword));
         }
     }
@@ -90,6 +83,13 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
     private static String loadTemplate() throws IOException {
         URL url = AbstractLanguageSearchOrderIntegrationTest.class.getResource("templated-keyword.iso19139.xml");
         return IOUtils.toString(url, "UTF-8");
+    }
+
+    @After
+    public void closeSearcher() throws Exception {
+        if (this.luceneSearcher != null) {
+            this.luceneSearcher.close();
+        }
     }
 
     @Before
@@ -106,12 +106,13 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
         luceneSearcher = searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
     }
 
-    @Test @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
+    @Test
+    @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
     public void searchReturnsHierarchicalFacetCounts() throws Exception {
         Element request = new Element("request")
-        .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
-        .addContent(new Element("from").setText("1"))
-        .addContent(new Element("to").setText("50"));
+            .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
+            .addContent(new Element("from").setText("1"))
+            .addContent(new Element("to").setText("50"));
         ServiceConfig config = createServiceConfig("region_keyword");
 
         luceneSearcher.search(serviceContext, request, config);
@@ -120,13 +121,14 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
         assertEquals(loadExpectedResult("search-returns-hierarchical-facet-counts.xml"), getSummary(result));
     }
 
-    @Test @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
+    @Test
+    @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
     public void searchReturnsInternationalisedHierarchicalFacetCounts() throws Exception {
         Element request = new Element("request")
-        .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
-        .addContent(new Element("from").setText("1"))
-        .addContent(new Element("to").setText("50"))
-        .addContent(new Element("requestedLanguage").setText("fre"));
+            .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
+            .addContent(new Element("from").setText("1"))
+            .addContent(new Element("to").setText("50"))
+            .addContent(new Element("requestedLanguage").setText("fre"));
         ServiceConfig config = createServiceConfig("region_keyword");
 
         luceneSearcher.search(serviceContext, request, config);
@@ -139,10 +141,10 @@ public class HierarchicalFacetsIntegrationTest extends AbstractCoreIntegrationTe
     @Ignore("Test fails about 50% of the time in a multi-threaded maven build.  The facets are somehow not completely cleared between tests.")
     public void drilldownReturnsFilteredResults() throws Exception {
         Element request = new Element("request")
-        .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
-        .addContent(new Element(SearchParameter.FACET_QUERY).setText("regionKeyword/http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%23country/http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%231220"))
-        .addContent(new Element("from").setText("1"))
-        .addContent(new Element("to").setText("50"));
+            .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
+            .addContent(new Element(SearchParameter.FACET_QUERY).setText("regionKeyword/http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%23country/http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%231220"))
+            .addContent(new Element("from").setText("1"))
+            .addContent(new Element("to").setText("50"));
         ServiceConfig config = createServiceConfig("region_keyword");
 
         luceneSearcher.search(serviceContext, request, config);

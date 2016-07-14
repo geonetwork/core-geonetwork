@@ -24,10 +24,10 @@
 
 <geonet>
   <services package="org.fao.geonet">
-    <service name="crs.search">
+    <service name="crs.search" deprecated="true">
       <documentation><![CDATA[
         Search a CRS in EPSG database.
-        
+
         Parameters:
         * name
         * maxResults

@@ -24,153 +24,154 @@
   -->
 
 <installation version="1.0">
-	
-	<!-- =================================================================================== -->
-	
-	<info>
-		<appname>geonetwork</appname>
-		<appversion>@version@ @subVersion@</appversion>
-		<authors>
-			<author name="OSGeo"               email="geonetwork@osgeo.org"/>
-			<author name="FAO GeoNetwork Team" email="GeoNetwork@fao.org"/>
-			<author name="VAM WFP"             email="vamsie@wfp.org"/>
-			<author name="UNEP.net"            email="info@unep.net"/>
-			<author name="OCHA"                email="ochageodata@un.org"/>				 
-		</authors>
-		<url>http://geonetwork-opensource.org/</url>
-		<javaversion>@javaVersion@</javaversion>
-	</info>
-	
-	<!-- =================================================================================== -->
-		
-	<guiprefs width="800" height="600" resizable="yes">
-		<laf name="liquid">
-			<os family="unix"/>
-			<os family="windows"/>
-			<os family="mac"/>
-		</laf>
-		<modifier value="true" key="showDebugWindow" />
-	</guiprefs>
-	
-	<!-- =================================================================================== -->
-	
-	<locale>
-		<langpack iso3="eng"/>
-        <langpack iso3="fra"/>
-        <langpack iso3="spa"/>        
-	</locale>
 
-	<resources>
-		<res id="HTMLLicencePanel.licence"     src="license.html"/>
-		<res id="HTMLLicencePanel.licence_fra" src="license_fra.html"/>
-		<res id="HTMLLicencePanel.licence_spa" src="license_spa.html"/>
-		<res id="HTMLInfoPanel.info"           src="../.props/readme.html"/>
-		<res id="HTMLInfoPanel.info_fra"       src="../.props/readme_fra.html"/>
-		<res id="HTMLInfoPanel.info_spa"       src="../.props/readme_spa.html"/>
-		<res id="userInputLang.xml"            src="userInputLang.xml"/>
-		<res id="userInputLang.xml_fra"        src="userInputLang.xml_fra.xml"/>
-	 	<res id="userInputLang.xml_spa"        src="userInputLang.xml_spa.xml"/>
-		<res id="Installer.image"          	   src="installer.png"/>
-		<res id="shortcutSpec.xml"         	   src="windows-shortcuts.xml"/>
-		<res id="Unix_shortcutSpec.xml"        src="unix-shortcuts.xml"/>
-		<res id="Win_shortcutSpec.xml"         src="windows-shortcuts.xml"/>
-		<res id="packsLang.xml"                src="packsLang.xml"/>
-		<res id="packsLang.xml_fra"            src="packsLang.xml_fra"/>
-		<res id="packsLang.xml_spa"            src="packsLang.xml_spa"/>
-	</resources>
-	
-	<!-- =================================================================================== -->
-	
-	<panels>
-		<panel classname="HelloPanel" id="helloPanel"/>
-		<panel classname="HTMLLicencePanel" id="htmlLicensePanel"/>
-		<panel classname="TargetPanel" id="targetPanel"/>
-		<panel classname="PacksPanel" id="packsPanel"/>
-		<panel classname="InstallPanel" id="installPanel"/>
-		<panel classname="ShortcutPanel" id="shortcutPanel"/>
-		<panel classname="HTMLInfoPanel" id="htmlInfoPanel"/>
-		<panel classname="FinishPanel" id="finishPanel"/>
-	</panels>
-	
-	<!-- =================================================================================== -->
-	
-	<native type="izpack" name="ShellLink.dll" />
-	
-	<!-- =================================================================================== -->
-	
-	<packs>
-		<pack id="core" name="Core" required="yes" preselected="yes">
-			<description/>
-			
-			<fileset dir="../release/bin"   targetdir="$INSTALL_PATH/bin"/>
-			
-			<fileset dir="../release/jetty" targetdir="$INSTALL_PATH/jetty">
-				<exclude name="logs/*.log"/>
-				<exclude name="logs/archive/*.log"/>
-			</fileset>
+  <!-- =================================================================================== -->
 
-			<!--singlefile target="$INSTALL_PATH/web/geonetwork.war" 
-			src="../web/target/geonetwork.war" override="true"/-->
-			
-			<fileset dir="../web/target/geonetwork"  targetdir="$INSTALL_PATH/web/geonetwork" />
+  <info>
+    <appname>geonetwork</appname>
+    <appversion>@version@ @subVersion@</appversion>
+    <authors>
+      <author name="OSGeo" email="geonetwork@osgeo.org"/>
+      <author name="FAO GeoNetwork Team" email="GeoNetwork@fao.org"/>
+      <author name="VAM WFP" email="vamsie@wfp.org"/>
+      <author name="UNEP.net" email="info@unep.net"/>
+      <author name="OCHA" email="ochageodata@un.org"/>
+    </authors>
+    <url>http://geonetwork-opensource.org/</url>
+    <javaversion>@javaVersion@</javaversion>
+  </info>
 
-			<fileset dir="../release/data"   targetdir="$INSTALL_PATH/web/geonetwork/data" />
-			<fileset dir="../release/schemaPlugins"   targetdir="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins" />
-			
-            <fileset dir="../web-client/target/classes/apps" targetdir="$INSTALL_PATH/web/geonetwork/apps" />
-			
+  <!-- =================================================================================== -->
 
-			<executable targetfile="$INSTALL_PATH/bin/startup.sh" />
-			<executable targetfile="$INSTALL_PATH/bin/shutdown.sh" />
-		</pack>
+  <guiprefs width="800" height="600" resizable="yes">
+    <laf name="liquid">
+      <os family="unix"/>
+      <os family="windows"/>
+      <os family="mac"/>
+    </laf>
+    <modifier value="true" key="showDebugWindow"/>
+  </guiprefs>
+
+  <!-- =================================================================================== -->
+
+  <locale>
+    <langpack iso3="eng"/>
+    <langpack iso3="fra"/>
+    <langpack iso3="spa"/>
+  </locale>
+
+  <resources>
+    <res id="HTMLLicencePanel.licence" src="license.html"/>
+    <res id="HTMLLicencePanel.licence_fra" src="license_fra.html"/>
+    <res id="HTMLLicencePanel.licence_spa" src="license_spa.html"/>
+    <res id="HTMLInfoPanel.info" src="../.props/readme.html"/>
+    <res id="HTMLInfoPanel.info_fra" src="../.props/readme_fra.html"/>
+    <res id="HTMLInfoPanel.info_spa" src="../.props/readme_spa.html"/>
+    <res id="userInputLang.xml" src="userInputLang.xml"/>
+    <res id="userInputLang.xml_fra" src="userInputLang.xml_fra.xml"/>
+    <res id="userInputLang.xml_spa" src="userInputLang.xml_spa.xml"/>
+    <res id="Installer.image" src="installer.png"/>
+    <res id="shortcutSpec.xml" src="windows-shortcuts.xml"/>
+    <res id="Unix_shortcutSpec.xml" src="unix-shortcuts.xml"/>
+    <res id="Win_shortcutSpec.xml" src="windows-shortcuts.xml"/>
+    <res id="packsLang.xml" src="packsLang.xml"/>
+    <res id="packsLang.xml_fra" src="packsLang.xml_fra"/>
+    <res id="packsLang.xml_spa" src="packsLang.xml_spa"/>
+  </resources>
+
+  <!-- =================================================================================== -->
+
+  <panels>
+    <panel classname="HelloPanel" id="helloPanel"/>
+    <panel classname="HTMLLicencePanel" id="htmlLicensePanel"/>
+    <panel classname="TargetPanel" id="targetPanel"/>
+    <panel classname="PacksPanel" id="packsPanel"/>
+    <panel classname="InstallPanel" id="installPanel"/>
+    <panel classname="ShortcutPanel" id="shortcutPanel"/>
+    <panel classname="HTMLInfoPanel" id="htmlInfoPanel"/>
+    <panel classname="FinishPanel" id="finishPanel"/>
+  </panels>
+
+  <!-- =================================================================================== -->
+
+  <native type="izpack" name="ShellLink.dll"/>
+
+  <!-- =================================================================================== -->
+
+  <packs>
+    <pack id="core" name="Core" required="yes" preselected="yes">
+      <description/>
+
+      <fileset dir="../release/bin" targetdir="$INSTALL_PATH/bin"/>
+
+      <fileset dir="../release/jetty" targetdir="$INSTALL_PATH/jetty">
+        <exclude name="logs/*.log"/>
+        <exclude name="logs/archive/*.log"/>
+      </fileset>
+
+      <!--singlefile target="$INSTALL_PATH/web/geonetwork.war"
+            src="../web/target/geonetwork.war" override="true"/-->
+
+      <fileset dir="../web/target/geonetwork" targetdir="$INSTALL_PATH/web/geonetwork"/>
+
+      <fileset dir="../release/data" targetdir="$INSTALL_PATH/web/geonetwork/data"/>
+      <fileset dir="../release/schemaPlugins"
+               targetdir="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins"/>
+
+      <executable targetfile="$INSTALL_PATH/bin/startup.sh"/>
+      <executable targetfile="$INSTALL_PATH/bin/shutdown.sh"/>
+    </pack>
 
 
     <pack id="geoserver" name="GeoServer" required="no" preselected="yes">
       <description/>
-      
+
       <fileset dir="../geoserver/target/geoserver" targetdir="$INSTALL_PATH/web/geoserver"/>
-    	
-    	<!-- Unzipping when container start takes a long time on windows. 
+
+      <!-- Unzipping when container start takes a long time on windows.
         <singlefile target="$INSTALL_PATH/web/geoserver.war" src="../geoserver/target/geoserver.war"
         override="true"/>
       -->
     </pack>
 
 
-    <pack id="inspire" name="European Union INSPIRE Directive configuration pack" required="no" preselected="no">
-        <description/>
+    <pack id="inspire" name="European Union INSPIRE Directive configuration pack" required="no"
+          preselected="no">
+      <description/>
 
-        <!-- Enable schematron rules -->
-         <!-- Enable schematron rules -->
-        <singlefile src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.disabled.sch"
-                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch"
-                    override="true"/>
+      <!-- Enable schematron rules -->
+      <!-- Enable schematron rules -->
+      <singlefile
+        src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.disabled.sch"
+        target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch"
+        override="true"/>
 
-        <singlefile src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.disabled.sch"
-                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.sch"
+      <singlefile
+        src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.disabled.sch"
+        target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.sch"
+        override="true"/>
+
+      <!-- Inspire thesaurus files -->
+      <singlefile src="../web/target/thesauri/gemet.rdf"
+                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/gemet.rdf"
                   override="true"/>
 
-        <!-- Inspire thesaurus files -->
-        <singlefile src="../web/target/thesauri/gemet.rdf"
-                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/gemet.rdf"
-                    override="true"/>
+      <singlefile src="../web/target/thesauri/inspire-service-taxonomy.rdf"
+                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-service-taxonomy.rdf"
+                  override="true"/>
 
-        <singlefile src="../web/target/thesauri/inspire-service-taxonomy.rdf"
-                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-service-taxonomy.rdf"
-                    override="true"/>
+      <singlefile src="../web/target/thesauri/inspire-theme.rdf"
+                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-theme.rdf"
+                  override="true"/>
 
-        <singlefile src="../web/target/thesauri/inspire-theme.rdf"
-                    target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/codelist/external/thesauri/theme/inspire-theme.rdf"
-                    override="true"/>
-
-        <!-- SQL script with Inspire Settings enabled -->
-        <singlefile src="../web/target/inspire/data-db-default.sql"
-                    target="$INSTALL_PATH//web/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql"
-                    override="true"/>
+      <!-- SQL script with Inspire Settings enabled -->
+      <singlefile src="../web/target/inspire/data-db-default.sql"
+                  target="$INSTALL_PATH//web/geonetwork/WEB-INF/classes/setup/sql/data/data-db-default.sql"
+                  override="true"/>
     </pack>
 
-	</packs>
+  </packs>
 
-	<!-- =================================================================================== -->
+  <!-- =================================================================================== -->
 
 </installation>

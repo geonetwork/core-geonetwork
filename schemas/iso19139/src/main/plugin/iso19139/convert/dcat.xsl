@@ -23,39 +23,37 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-                  xmlns:gco="http://www.isotc211.org/2005/gco"
-                  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-                  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-                  xmlns:dcat="http://www.w3.org/ns/dcat#"
-                  xmlns:dct="http://purl.org/dc/terms/"
-                  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-                  xmlns:foaf="http://xmlns.com/foaf/0.1/"
-                  xmlns:void="http://www.w3.org/TR/void/"
-                  xmlns:xslUtils="java:org.fao.geonet.util.XslUtil">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:dcat="http://www.w3.org/ns/dcat#"
+                xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                xmlns:foaf="http://xmlns.com/foaf/0.1/"
+                xmlns:void="http://www.w3.org/TR/void/"
+                xmlns:xslUtils="java:org.fao.geonet.util.XslUtil"
+                version="1.0">
 
-  <xsl:import href="../present/metadata-rdf.xsl" />
+  <xsl:import href="../present/metadata-rdf.xsl"/>
 
-  <xsl:variable name="url" select="xslUtils:getSiteUrl()" />
+  <xsl:variable name="url" select="xslUtils:getSiteUrl()"/>
   <xsl:variable name="language" select="xslUtils:getLanguage()"/>
   <xsl:variable name="iso2letterLanguageCode" select="xslUtils:twoCharLangCode($language)"/>
 
   <!-- ============================================================================================ -->
 
   <xsl:template match="gmd:MD_Metadata">
-    <rdf:RDF xmlns:dct="http://purl.org/dc/terms/" xmlns:dctype="http://purl.org/dc/dcmitype/"
+    <rdf:RDF xmlns:dct="http://purl.org/dc/terms/"
              xmlns:skos="http://www.w3.org/2004/02/skos/core#"
              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
              xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-             xmlns:dc="http://purl.org/dc/elements/1.1/"
              xmlns:foaf="http://xmlns.com/foaf/0.1/"
              xmlns:void="http://www.w3.org/TR/void/"
              xmlns:dcat="http://www.w3.org/ns/dcat#">
 
       <xsl:call-template name="catalogue"/>
 
-      <xsl:apply-templates select="." mode="to-dcat" />
+      <xsl:apply-templates select="." mode="to-dcat"/>
 
       <xsl:apply-templates mode="references" select="."/>
 
@@ -80,14 +78,20 @@
       <dct:description/>
 
       <rdfs:label xml:lang="{$iso2letterLanguageCode}">
-        <xsl:value-of select="/root/gui/env/site/name"/> (<xsl:value-of select="/root/gui/env/site/organization"/>)</rdfs:label>
+        <xsl:value-of select="/root/gui/env/site/name"/> (<xsl:value-of
+        select="/root/gui/env/site/organization"/>)
+      </rdfs:label>
 
       <!-- The homepage of the catalog -->
-      <foaf:homepage><xsl:value-of select="$url"/></foaf:homepage>
+      <foaf:homepage>
+        <xsl:value-of select="$url"/>
+      </foaf:homepage>
 
       <!-- FIXME : void:Dataset -->
-      <void:openSearchDescription><xsl:value-of select="$url"/>/srv/eng/portal.opensearch</void:openSearchDescription>
-      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/rdf.search?any=</void:uriLookupEndpoint>
+      <void:openSearchDescription><xsl:value-of select="$url"/>/srv/eng/portal.opensearch
+      </void:openSearchDescription>
+      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/rdf.search?any=
+      </void:uriLookupEndpoint>
 
 
       <!-- The entity responsible for making the catalog online. -->
@@ -107,7 +111,9 @@
         Multiple values can be used. The publisher might also choose to describe
         the language on the dataset level (see dataset language).
       -->
-      <dct:language><xsl:value-of select="$language"/></dct:language>
+      <dct:language>
+        <xsl:value-of select="$language"/>
+      </dct:language>
 
 
       <!-- This describes the license under which the catalog can be used/reused and not the datasets.
@@ -134,7 +140,9 @@
     <!-- Organization in charge of the catalogue defined in the administration
     > system configuration -->
     <foaf:Organization rdf:about="{$url}/organization/0">
-      <foaf:name><xsl:value-of select="/root/gui/env/site/organization"></xsl:value-of></foaf:name>
+      <foaf:name>
+        <xsl:value-of select="/root/gui/env/site/organization"></xsl:value-of>
+      </foaf:name>
     </foaf:Organization>
 
     <!-- ConceptScheme describes all thesaurus available in the catalogue
@@ -142,7 +150,9 @@
     -->
     <xsl:for-each select="/root/gui/thesaurus/thesauri/thesaurus">
       <skos:ConceptScheme rdf:about="{$url}/thesaurus/{key}">
-        <dct:title><xsl:value-of select="title"/></dct:title>
+        <dct:title>
+          <xsl:value-of select="title"/>
+        </dct:title>
         <!-- TODO : add conceptSchemes
           <dc:description>Thesaurus name.</dc:description>
           <dc:creator>
@@ -150,7 +160,9 @@
           <foaf:name>Thesaurus org</foaf:name>
           </foaf:Organization>
           </dc:creator>-->
-        <dct:uri><xsl:value-of select="$url"/>/srv/eng/thesaurus.download?ref=<xsl:value-of select="key"/></dct:uri>
+        <dct:uri><xsl:value-of select="$url"/>/srv/eng/thesaurus.download?ref=<xsl:value-of
+          select="key"/>
+        </dct:uri>
         <!--
           <dct:issued>2008-06-01</dct:issued>
           <dct:modified>2008-06-01</dct:modified>-->

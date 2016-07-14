@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.jdom.Element;
 
@@ -31,20 +32,28 @@ import java.util.Map;
 
 //=============================================================================
 
-public interface CatalogService
-{
+public interface CatalogService {
     String BEAN_PREFIX = "CswService.";
-	/** Returns the name of the service for dispatching purposes */
-	public String  getName();
 
-	/** Executes the service on given input request */
-	public Element execute(Element request, ServiceContext context) throws CatalogException;
+    /**
+     * Returns the name of the service for dispatching purposes
+     */
+    public String getName();
 
-	/** Convert params in a GET request to a POST request */
-	public Element adaptGetRequest(Map<String, String> params) throws CatalogException;
-	
-	/** Return domain values information for specific parameters */
-	public Element retrieveValues(String parameterName) throws CatalogException;
+    /**
+     * Executes the service on given input request
+     */
+    public Element execute(Element request, ServiceContext context) throws CatalogException;
+
+    /**
+     * Convert params in a GET request to a POST request
+     */
+    public Element adaptGetRequest(Map<String, String> params) throws CatalogException;
+
+    /**
+     * Return domain values information for specific parameters
+     */
+    public Element retrieveValues(String parameterName) throws CatalogException;
 }
 
 //=============================================================================

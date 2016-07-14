@@ -22,21 +22,16 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gfc="http://www.isotc211.org/2005/gfc"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gml="http://www.opengis.net/gml"
-                xmlns:gts="http://www.isotc211.org/2005/gts"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
-                xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
-                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
@@ -55,8 +50,6 @@
   <!-- Define the metadata to be loaded for this schema plugin-->
   <xsl:variable name="metadata"
                 select="/root/(gfc:FC_FeatureType|gfc:FC_FeatureCatalogue)"/>
-
-
 
 
   <!-- Specific schema rendering -->
@@ -144,11 +137,6 @@
   </xsl:template>
 
 
-
-
-
-
-
   <!-- ########################## -->
   <!-- Render values for text ... -->
   <xsl:template mode="render-value" match="gco:CharacterString|gco:Integer|gco:Decimal|
@@ -166,7 +154,9 @@
 
   <!-- ... URL -->
   <xsl:template mode="render-value" match="gmd:URL">
-    <a href="{.}"><xsl:value-of select="."/></a>
+    <a href="{.}">
+      <xsl:value-of select="."/>
+    </a>
   </xsl:template>
 
   <!-- ... Dates -->
@@ -174,7 +164,8 @@
     <xsl:value-of select="format-date(., $dateFormats/date/for[@lang = $language]/text())"/>
   </xsl:template>
 
-  <xsl:template mode="render-value" match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
+  <xsl:template mode="render-value"
+                match="gco:DateTime[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
     <xsl:value-of select="format-dateTime(., $dateFormats/dateTime/for[@lang = $language]/text())"/>
   </xsl:template>
 

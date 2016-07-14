@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -251,7 +252,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     private Metadata newMetadata() {
         return newMetadata(_inc);
     }
-
+    
     /**
      * Create a new metadata entity with some default values and ready to save.
      *
@@ -267,5 +268,4 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         metadata.getHarvestInfo().setHarvested(val % 2 == 0);
         return metadata;
     }
-
 }

@@ -38,100 +38,95 @@ import java.util.List;
 
 //==============================================================================
 
-class ElementEntry
-{
-	public String  name;
-	public String  ns;
-	public String  type;
-	public int     min = 1;
-	public int     max = 1;
-	public String  substGroup;
-	public String  substGroupNS;
-	public String  ref;
-	public boolean abstrElem;
-	public boolean choiceElem;
-	public boolean groupElem;
-	public boolean sequenceElem;
-	public ArrayList<ElementEntry> alContainerElems = new ArrayList<ElementEntry>();
+class ElementEntry {
+    public String name;
+    public String ns;
+    public String type;
+    public int min = 1;
+    public int max = 1;
+    public String substGroup;
+    public String substGroupNS;
+    public String ref;
+    public boolean abstrElem;
+    public boolean choiceElem;
+    public boolean groupElem;
+    public boolean sequenceElem;
+    public ArrayList<ElementEntry> alContainerElems = new ArrayList<ElementEntry>();
 
-	public ComplexTypeEntry complexType;
-	public SimpleTypeEntry  simpleType;
+    public ComplexTypeEntry complexType;
+    public SimpleTypeEntry simpleType;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor - this class handles both <element> and <choice> entries 
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor - this class handles both <element> and <choice> entries
+    //---
+    //---------------------------------------------------------------------------
 
-	private ElementEntry() {}
+    private ElementEntry() {
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ElementEntry(Element el, Path file, String targetNS, String targetNSPrefix)
-	{
-		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
-	}
+    public ElementEntry(Element el, Path file, String targetNS, String targetNSPrefix) {
+        this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ElementEntry(ElementInfo ei)
-	{
-		ns = ei.targetNS;	
-		handleAttribs(ei);
-		if (choiceElem) handleContainerChildren(ei,alContainerElems);
-			 // if (groupElem) no need to do anything - read elements from group later
-		else if (sequenceElem) handleContainerChildren(ei,alContainerElems);
-		else handleChildren(ei);
-	}
+    public ElementEntry(ElementInfo ei) {
+        ns = ei.targetNS;
+        handleAttribs(ei);
+        if (choiceElem) handleContainerChildren(ei, alContainerElems);
+            // if (groupElem) no need to do anything - read elements from group later
+        else if (sequenceElem) handleContainerChildren(ei, alContainerElems);
+        else handleChildren(ei);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public ElementEntry copy()
-	{
-		ElementEntry ee = new ElementEntry();
+    public ElementEntry copy() {
+        ElementEntry ee = new ElementEntry();
 
-		ee.name        = name;
-		ee.ns					 = ns;
-		ee.type        = type;
-		ee.min         = min;
-		ee.max         = max;
-		ee.substGroup  = substGroup;
-		ee.substGroupNS= substGroupNS;
-		ee.ref         = ref;
-		ee.abstrElem   = abstrElem;
+        ee.name = name;
+        ee.ns = ns;
+        ee.type = type;
+        ee.min = min;
+        ee.max = max;
+        ee.substGroup = substGroup;
+        ee.substGroupNS = substGroupNS;
+        ee.ref = ref;
+        ee.abstrElem = abstrElem;
 
-		ee.complexType = complexType;
-		ee.simpleType  = simpleType;
-		ee.choiceElem	 = choiceElem;
-		ee.groupElem	 = groupElem;
-		ee.sequenceElem	 = sequenceElem;
-		ee.alContainerElems = alContainerElems;
+        ee.complexType = complexType;
+        ee.simpleType = simpleType;
+        ee.choiceElem = choiceElem;
+        ee.groupElem = groupElem;
+        ee.sequenceElem = sequenceElem;
+        ee.alContainerElems = alContainerElems;
 
-		return ee;
-	}
+        return ee;
+    }
 
-	public String toString()
-	{
-		return "ElementEntry name: " + name + " ref: " + ref + " type: " + type + " abstract: " + abstrElem + " choice: " + choiceElem + " group: " + groupElem + " sequence: " + sequenceElem;
-	}
+    public String toString() {
+        return "ElementEntry name: " + name + " ref: " + ref + " type: " + type + " abstract: " + abstrElem + " choice: " + choiceElem + " group: " + groupElem + " sequence: " + sequenceElem;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private void handleAttribs(ElementInfo ei)
-	{
-		if (ei.element.getName().equals("choice")) choiceElem = true;
-		else if (ei.element.getName().equals("group")) groupElem = true;
-		else if (ei.element.getName().equals("sequence")) sequenceElem = true;
+    private void handleAttribs(ElementInfo ei) {
+        if (ei.element.getName().equals("choice")) choiceElem = true;
+        else if (ei.element.getName().equals("group")) groupElem = true;
+        else if (ei.element.getName().equals("sequence")) sequenceElem = true;
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Attribute> attrs = ei.element.getAttributes();
 
         for (Attribute at : attrs) {
@@ -144,37 +139,24 @@ class ElementEntry
                     name = ei.targetNSPrefix + ":" + at.getValue();
                 }
                 // System.out.println("Doing Element "+name);
-            }
-            else if (attrName.equals("type")) {
+            } else if (attrName.equals("type")) {
                 type = value;
-            }
-
-            else if (attrName.equals("ref")) {
+            } else if (attrName.equals("ref")) {
                 ref = value;
-            }
-
-            else if (attrName.equals("substitutionGroup")) {
+            } else if (attrName.equals("substitutionGroup")) {
                 substGroup = value;
-            }
-
-            else if (attrName.equals("abstract")) {
+            } else if (attrName.equals("abstract")) {
                 abstrElem = "true".equals(value);
-            }
-            else if (attrName.equals("minOccurs")) {
+            } else if (attrName.equals("minOccurs")) {
                 min = Integer.parseInt(value);
-            }
-
-            else if (attrName.equals("maxOccurs")) {
+            } else if (attrName.equals("maxOccurs")) {
                 if (value.equals("unbounded")) {
                     max = 10000;
-                }
-                else {
+                } else {
                     max = Integer.parseInt(value);
                 }
-            }
-
-            else {
-// TODO: 
+            } else {
+// TODO:
 //                if (choiceElem) {
 //                    Logger.log();
 //                }
@@ -190,48 +172,38 @@ class ElementEntry
 
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleChildren(ElementInfo ei)
-	{
-		@SuppressWarnings("unchecked")
+    private void handleChildren(ElementInfo ei) {
+        @SuppressWarnings("unchecked")
         List<Element> children = ei.element.getChildren();
 
-        for ( Element elChild : children) {
+        for (Element elChild : children) {
             String elName = elChild.getName();
 
             if (elName.equals("complexType")) {
                 complexType = new ComplexTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-            }
-
-            else if (elName.equals("simpleType")) {
+            } else if (elName.equals("simpleType")) {
                 simpleType = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
                 if (simpleType.name == null) {
                     simpleType.name = name + "HASHS";
                 }
-            }
-
-            else if (elName.equals("key")) {
+            } else if (elName.equals("key")) {
                 Logger.log();
-            }
+            } else if (elName.equals("annotation")) {
 
-            else if (elName.equals("annotation")) {
-
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleContainerChildren(ElementInfo ei, ArrayList<ElementEntry> elements)
-	{
-		@SuppressWarnings("unchecked")
+    private void handleContainerChildren(ElementInfo ei, ArrayList<ElementEntry> elements) {
+        @SuppressWarnings("unchecked")
         List<Element> children = ei.element.getChildren();
 
         for (Element elChild : children) {
@@ -249,17 +221,13 @@ class ElementEntry
                         name = elElem.getText();
                     }
                 }
-            }
-
-            else if (elName.equals("element") || elName.equals("choice") || elName.equals("sequence") || elName.equals("group")) {
+            } else if (elName.equals("element") || elName.equals("choice") || elName.equals("sequence") || elName.equals("group")) {
                 elements.add(new ElementEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 }
 
 //==============================================================================

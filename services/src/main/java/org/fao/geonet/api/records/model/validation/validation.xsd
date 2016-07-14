@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="rules">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="report"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="rule"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="id"/>
+        <xs:element ref="displayPriority"/>
+        <xs:element ref="label"/>
+        <xs:element ref="error"/>
+        <xs:element ref="success"/>
+        <xs:element ref="total"/>
+        <xs:element ref="requirement"/>
+        <xs:element ref="patterns"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="id" type="xs:NCName"/>
+  <xs:element name="displayPriority" type="xs:integer"/>
+  <xs:element name="label" type="xs:string"/>
+  <xs:element name="error" type="xs:integer"/>
+  <xs:element name="success" type="xs:string"/>
+  <xs:element name="total" type="xs:string"/>
+  <xs:element name="requirement" type="xs:NCName"/>
+  <xs:element name="patterns">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="pattern"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="pattern">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="title"/>
+        <xs:element ref="rules"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="rule">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="test"/>
+        <xs:element ref="details"/>
+        <xs:element minOccurs="0" ref="msg"/>
+      </xs:sequence>
+      <xs:attribute name="group" type="xs:NCName"/>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="ref"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="test" type="xs:string"/>
+  <xs:element name="details" type="xs:string"/>
+  <xs:element name="msg" type="xs:string"/>
+</xs:schema>

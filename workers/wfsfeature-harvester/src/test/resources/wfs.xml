@@ -1,0 +1,29 @@
+<wfsList>
+  <!--<wfs url="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb"
+       featureType="SISMER_mesuresaa"/>
+  <wfs url="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/bgmb"
+       featureType="SISMER_prelevements"/>-->
+  <wfs url="http://visi-sextant.ifremer.fr/cgi-bin/sextant/wfs/mtreguer_co"
+       typeName="argo_shape">
+    <tokenize>
+      <entry>
+        <key>PARAMETER</key>
+        <value>,</value>
+      </entry>
+    </tokenize>
+  </wfs>
+  <!--<wfs url="http://localhost:8081/geoserver/ows"
+       featureType="tiger:poly_landmarks"/>-->
+  <!--<wfs url="http://geoservices.brgm.fr/risques"
+       featureType="BASIAS_LOCALISE"/>
+  <wfs url="http://sdi.georchestra.org/geoserver/geor/wfs"
+       featureType="menhirs"/>
+  <wfs url="http://services.sandre.eaufrance.fr/geo/zon_FXX"
+       featureType="menhirs"/>
+  <wfs url="http://dummyUrlShouldTriggerError"
+       featureType="menhirs"/>
+  <wfs url="http://emptyFeatureTypeShouldReportMissingFeatureType"
+       featureType=""/>
+  <wfs url=""
+       featureType="emptyUrlShouldReportMissingUrl"/>-->
+</wfsList>

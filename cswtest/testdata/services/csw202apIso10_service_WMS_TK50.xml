@@ -5,288 +5,314 @@
 <!--             Autor : Dr. Uwe Voges -->
 <!--             Stand: 18.12.2007 -->
 <!--             Firma: con terra GmbH (www.conterra.de) -->
-<MD_Metadata xmlns="http://www.isotc211.org/2005/gmd" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xmlns:gco="http://www.isotc211.org/2005/gco" xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
-	<fileIdentifier>
-		<gco:CharacterString>6CF2886F-0124-4A4C-B76B-38CC1D3D0D85</gco:CharacterString>
-	</fileIdentifier>
-	<language>
-		<gco:CharacterString>ger</gco:CharacterString>
-	</language>
-	<characterSet>
-		<MD_CharacterSetCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_CharacterSetCode" codeListValue="utf-8"/>
-	</characterSet>
-	<hierarchyLevel>
-		<MD_ScopeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_ScopeCode" codeListValue="service"/>
-	</hierarchyLevel>
-	<contact>
-		<CI_ResponsibleParty>
-			<individualName>
-				<gco:CharacterString>Dr. Uwe Voges</gco:CharacterString>
-			</individualName>
-			<organisationName>
-				<gco:CharacterString>con terra GmbH</gco:CharacterString>
-			</organisationName>
-			<positionName>
-				<gco:CharacterString>Geospatial Systems Architect</gco:CharacterString>
-			</positionName>
-			<contactInfo>
-				<CI_Contact>
-					<phone>
-						<CI_Telephone>
-							<voice>
-								<gco:CharacterString>++49 (0)251 7474100</gco:CharacterString>
-							</voice>
-						</CI_Telephone>
-					</phone>
-					<address>
-						<CI_Address>
-							<deliveryPoint>
-								<gco:CharacterString>Martin-Luther-King-Weg 24</gco:CharacterString>
-							</deliveryPoint>
-							<city>
-								<gco:CharacterString>Münster</gco:CharacterString>
-							</city>
-							<postalCode>
-								<gco:CharacterString>48155</gco:CharacterString>
-							</postalCode>
-							<country>
-								<gco:CharacterString>Germany</gco:CharacterString>
-							</country>
-							<electronicMailAddress>
-								<gco:CharacterString>voges@conterra.de</gco:CharacterString>
-							</electronicMailAddress>
-						</CI_Address>
-					</address>
-					<onlineResource>
-						<CI_OnlineResource>
-							<linkage>
-								<URL>http://www.conterra.de</URL>
-							</linkage>
-						</CI_OnlineResource>
-					</onlineResource>
-				</CI_Contact>
-			</contactInfo>
-			<role>
-				<CI_RoleCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?CI_RoleCode" codeListValue="pointOfContact"/>
-			</role>
-		</CI_ResponsibleParty>
-	</contact>
-	<dateStamp>
-		<gco:Date>2007-12-18</gco:Date>
-	</dateStamp>
-	<metadataStandardName>
-		<gco:CharacterString>ISO19119</gco:CharacterString>
-	</metadataStandardName>
-	<metadataStandardVersion>
-		<gco:CharacterString>2005/PDAM 1</gco:CharacterString>
-	</metadataStandardVersion>
-	<identificationInfo>
-		<srv:SV_ServiceIdentification xmlns:srv="http://www.isotc211.org/2005/srv">
-			<citation>
-				<CI_Citation>
-					<title>
-						<gco:CharacterString>WMS der DTK 50 von Hessen</gco:CharacterString>
-					</title>
-					<alternateTitle>
-						<gco:CharacterString>WMS der Digitalen Topographische Karte (DTK) 1:50000 von Hessen</gco:CharacterString>
-					</alternateTitle>
-					<date>
-						<CI_Date>
-							<date>
-								<gco:Date>2007-12-01</gco:Date>
-							</date>
-							<dateType>
-								<CI_DateTypeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?CI_DateTypeCode" codeListValue="publication"/>
-							</dateType>
-						</CI_Date>
-					</date>
-				</CI_Citation>
-			</citation>
-			<abstract>
-				<gco:CharacterString>OGC WMS für die Digitale Topographische Karte (DTK) 1:50000 von Hessen</gco:CharacterString>
-			</abstract>
-			<purpose>
-				<gco:CharacterString>Herstellungszweck des vorliegenden OGC WMS für die DTK 50 ist die Möglichkeit zur Nutzung der DTK 50 als Hintergrundkarte in Anwendungen mit Raumbezug.
-Der WMS kann natürlich auch wiederum von anderen WMS genutzt werden.</gco:CharacterString>
-			</purpose>
-			<status>
-				<MD_ProgressCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_ProgressCode" codeListValue="underDevelopment"/>
-			</status>
-			<resourceMaintenance>
-				<MD_MaintenanceInformation>
-					<maintenanceAndUpdateFrequency>
-						<MD_MaintenanceFrequencyCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_MaintenanceFrequencyCode" codeListValue="continual"/>
-					</maintenanceAndUpdateFrequency>
-				</MD_MaintenanceInformation>
-			</resourceMaintenance>
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<keyword>
-						<gco:CharacterString>DTK50</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Topographische Karte</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Geobasisdaten</gco:CharacterString>
-					</keyword>
-					<type>
-						<MD_KeywordTypeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode" codeListValue="theme"/>
-					</type>
-				</MD_Keywords>
-			</descriptiveKeywords>
-			<descriptiveKeywords>
-				<MD_Keywords>
-					<keyword>
-						<gco:CharacterString>Frankfurt am Main West</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Wiesbaden</gco:CharacterString>
-					</keyword>
-					<keyword>
-						<gco:CharacterString>Hessen</gco:CharacterString>
-					</keyword>
-					<type>
-						<MD_KeywordTypeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode" codeListValue="place"/>
-					</type>
-				</MD_Keywords>
-			</descriptiveKeywords>
-			<resourceConstraints>
-				<MD_LegalConstraints>
-					<accessConstraints>
-						<MD_RestrictionCode codeListValue="copyright" codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_LegalConstraints"/>
-					</accessConstraints>
-				</MD_LegalConstraints>
-			</resourceConstraints>
-			<resourceConstraints>
-				<MD_Constraints>
-					<useLimitation>
-						<gco:CharacterString>Die Daten sollten nicht bei einem Maßstab genutzt werden, der kleiner ist als 1:200.000</gco:CharacterString>
-					</useLimitation>
-				</MD_Constraints>
-			</resourceConstraints>
-			<srv:serviceType>
-				<gco:LocalName>WMS</gco:LocalName>
-			</srv:serviceType>
-			<srv:serviceTypeVersion>
-				<gco:CharacterString>1.1.1</gco:CharacterString>
-			</srv:serviceTypeVersion>
-			<srv:extent>
-				<EX_Extent>
-					<description>
-						<gco:CharacterString>Nutzungsbereich Hessen</gco:CharacterString>
-					</description>
-					<geographicElement>
-						<EX_GeographicDescription>
-							<geographicIdentifier>
-								<RS_Identifier>
-									<code>
-										<gco:CharacterString>Hessen</gco:CharacterString>
-									</code>
-								</RS_Identifier>
-							</geographicIdentifier>
-						</EX_GeographicDescription>
-					</geographicElement>
-					<geographicElement>
-						<EX_GeographicBoundingBox>
-							<extentTypeCode>
-								<gco:Boolean>1</gco:Boolean>
-							</extentTypeCode>
-							<westBoundLongitude>
-								<gco:Decimal>7.36</gco:Decimal>
-							</westBoundLongitude>
-							<eastBoundLongitude>
-								<gco:Decimal>10.67</gco:Decimal>
-							</eastBoundLongitude>
-							<southBoundLatitude>
-								<gco:Decimal>49.34</gco:Decimal>
-							</southBoundLatitude>
-							<northBoundLatitude>
-								<gco:Decimal>51.64</gco:Decimal>
-							</northBoundLatitude>
-						</EX_GeographicBoundingBox>
-					</geographicElement>
-					<verticalElement>
-						<EX_VerticalExtent>
-							<minimumValue>
-								<gco:Real>81.0</gco:Real>
-							</minimumValue>
-							<maximumValue>
-								<gco:Real>950.2</gco:Real>
-							</maximumValue>
-							<verticalCRS>
-								<gml:VerticalCRS gml:id="ID00018">
-									<gml:identifier codeSpace="http://www.altova.com">String</gml:identifier>
-									<gml:scope>String</gml:scope>
-									<gml:usesVerticalCS/>
-									<gml:verticalDatum>
-										<gml:VerticalDatum gml:id="ID00019">
-											<gml:identifier codeSpace="">Normaal Amsterdams Peil (NAP)</gml:identifier>
-											<gml:scope/>
-										</gml:VerticalDatum>
-									</gml:verticalDatum>
-								</gml:VerticalCRS>
-							</verticalCRS>
-						</EX_VerticalExtent>
-					</verticalElement>
-				</EX_Extent>
-			</srv:extent>
-			<srv:coupledResource>
-				<srv:SV_CoupledResource>
-					<srv:operationName>
-						<gco:CharacterString>GetMap</gco:CharacterString>
-					</srv:operationName>
-					<srv:identifier>
-						<gco:CharacterString>111c0076-b23f-76e5-c888-94327664111</gco:CharacterString>
-					</srv:identifier>
-					<gco:ScopedName codeSpace="http://someurl">DTK50Layer</gco:ScopedName>
-				</srv:SV_CoupledResource>
-			</srv:coupledResource>
-			<srv:coupledResource>
-				<srv:SV_CoupledResource>
-					<srv:operationName>
-						<gco:CharacterString>GetMap</gco:CharacterString>
-					</srv:operationName>
-					<srv:identifier>
-						<gco:CharacterString>550e8400-e29b-41d4-a716-44389665234</gco:CharacterString>
-					</srv:identifier>
-					<gco:ScopedName codeSpace="http://someurl">DTK50Layer</gco:ScopedName>
-				</srv:SV_CoupledResource>
-			</srv:coupledResource>
-			<srv:coupledResource>
-				<srv:SV_CoupledResource>
-					<srv:operationName>
-						<gco:CharacterString>GetMap</gco:CharacterString>
-					</srv:operationName>
-					<srv:identifier>
-						<gco:CharacterString>486d9622-c29d-44e5-b878-44389740011</gco:CharacterString>
-					</srv:identifier>
-					<gco:ScopedName codeSpace="http://someurl">DTK50Layer</gco:ScopedName>
-				</srv:SV_CoupledResource>
-			</srv:coupledResource>
-			<srv:couplingType>
-				<srv:SV_CouplingType codeList="http://someurl#SV_CouplingType" codeListValue="tight"/>
-			</srv:couplingType>
-			<srv:containsOperations>
-				<srv:SV_OperationMetadata>
-					<srv:operationName>
-						<gco:CharacterString>GetCapabilities</gco:CharacterString>
-					</srv:operationName>
-					<srv:DCP>
-						<srv:DCPList codeList="http://someurl#DCPList" codeListValue="HTTPGet"/>
-					</srv:DCP>
-					<srv:connectPoint>
-						<CI_OnlineResource>
-							<linkage>
-								<URL>http://...?</URL>
-							</linkage>
-						</CI_OnlineResource>
-					</srv:connectPoint>
-				</srv:SV_OperationMetadata>
-			</srv:containsOperations>
-			<srv:operatesOn uuidref="111c0076-b23f-76e5-c888-94327664111"/>
-			<srv:operatesOn uuidref="550e8400-e29b-41d4-a716-44389665234"/>
-			<srv:operatesOn uuidref="486d9622-c29d-44e5-b878-44389740011"/>
-		</srv:SV_ServiceIdentification>
-	</identificationInfo>
+<MD_Metadata xmlns:srv="http://www.isotc211.org/2005/srv"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:gml="http://www.opengis.net/gml"
+             xmlns:gco="http://www.isotc211.org/2005/gco" xmlns="http://www.isotc211.org/2005/gmd"
+             xsi:schemaLocation="http://www.isotc211.org/2005/gmd ../../apiso.xsd">
+  <fileIdentifier>
+    <gco:CharacterString>6CF2886F-0124-4A4C-B76B-38CC1D3D0D85</gco:CharacterString>
+  </fileIdentifier>
+  <language>
+    <gco:CharacterString>ger</gco:CharacterString>
+  </language>
+  <characterSet>
+    <MD_CharacterSetCode
+      codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_CharacterSetCode"
+      codeListValue="utf-8"/>
+  </characterSet>
+  <hierarchyLevel>
+    <MD_ScopeCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_ScopeCode"
+                  codeListValue="service"/>
+  </hierarchyLevel>
+  <contact>
+    <CI_ResponsibleParty>
+      <individualName>
+        <gco:CharacterString>Dr. Uwe Voges</gco:CharacterString>
+      </individualName>
+      <organisationName>
+        <gco:CharacterString>con terra GmbH</gco:CharacterString>
+      </organisationName>
+      <positionName>
+        <gco:CharacterString>Geospatial Systems Architect</gco:CharacterString>
+      </positionName>
+      <contactInfo>
+        <CI_Contact>
+          <phone>
+            <CI_Telephone>
+              <voice>
+                <gco:CharacterString>++49 (0)251 7474100</gco:CharacterString>
+              </voice>
+            </CI_Telephone>
+          </phone>
+          <address>
+            <CI_Address>
+              <deliveryPoint>
+                <gco:CharacterString>Martin-Luther-King-Weg 24</gco:CharacterString>
+              </deliveryPoint>
+              <city>
+                <gco:CharacterString>Münster</gco:CharacterString>
+              </city>
+              <postalCode>
+                <gco:CharacterString>48155</gco:CharacterString>
+              </postalCode>
+              <country>
+                <gco:CharacterString>Germany</gco:CharacterString>
+              </country>
+              <electronicMailAddress>
+                <gco:CharacterString>voges@conterra.de</gco:CharacterString>
+              </electronicMailAddress>
+            </CI_Address>
+          </address>
+          <onlineResource>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://www.conterra.de</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </onlineResource>
+        </CI_Contact>
+      </contactInfo>
+      <role>
+        <CI_RoleCode codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?CI_RoleCode"
+                     codeListValue="pointOfContact"/>
+      </role>
+    </CI_ResponsibleParty>
+  </contact>
+  <dateStamp>
+    <gco:Date>2007-12-18</gco:Date>
+  </dateStamp>
+  <metadataStandardName>
+    <gco:CharacterString>ISO19119</gco:CharacterString>
+  </metadataStandardName>
+  <metadataStandardVersion>
+    <gco:CharacterString>2005/PDAM 1</gco:CharacterString>
+  </metadataStandardVersion>
+  <identificationInfo>
+    <srv:SV_ServiceIdentification xmlns:srv="http://www.isotc211.org/2005/srv">
+      <citation>
+        <CI_Citation>
+          <title>
+            <gco:CharacterString>WMS der DTK 50 von Hessen</gco:CharacterString>
+          </title>
+          <alternateTitle>
+            <gco:CharacterString>WMS der Digitalen Topographische Karte (DTK) 1:50000 von Hessen
+            </gco:CharacterString>
+          </alternateTitle>
+          <date>
+            <CI_Date>
+              <date>
+                <gco:Date>2007-12-01</gco:Date>
+              </date>
+              <dateType>
+                <CI_DateTypeCode
+                  codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?CI_DateTypeCode"
+                  codeListValue="publication"/>
+              </dateType>
+            </CI_Date>
+          </date>
+        </CI_Citation>
+      </citation>
+      <abstract>
+        <gco:CharacterString>OGC WMS für die Digitale Topographische Karte (DTK) 1:50000 von
+          Hessen
+        </gco:CharacterString>
+      </abstract>
+      <purpose>
+        <gco:CharacterString>Herstellungszweck des vorliegenden OGC WMS für die DTK 50 ist die
+          Möglichkeit zur Nutzung der DTK 50 als Hintergrundkarte in Anwendungen mit Raumbezug.
+          Der WMS kann natürlich auch wiederum von anderen WMS genutzt werden.
+        </gco:CharacterString>
+      </purpose>
+      <status>
+        <MD_ProgressCode
+          codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_ProgressCode"
+          codeListValue="underDevelopment"/>
+      </status>
+      <resourceMaintenance>
+        <MD_MaintenanceInformation>
+          <maintenanceAndUpdateFrequency>
+            <MD_MaintenanceFrequencyCode
+              codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_MaintenanceFrequencyCode"
+              codeListValue="continual"/>
+          </maintenanceAndUpdateFrequency>
+        </MD_MaintenanceInformation>
+      </resourceMaintenance>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>DTK50</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Topographische Karte</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Geobasisdaten</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode
+              codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode"
+              codeListValue="theme"/>
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <keyword>
+            <gco:CharacterString>Frankfurt am Main West</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Wiesbaden</gco:CharacterString>
+          </keyword>
+          <keyword>
+            <gco:CharacterString>Hessen</gco:CharacterString>
+          </keyword>
+          <type>
+            <MD_KeywordTypeCode
+              codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_KeywordTypeCode"
+              codeListValue="place"/>
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+      <resourceConstraints>
+        <MD_LegalConstraints>
+          <accessConstraints>
+            <MD_RestrictionCode codeListValue="copyright"
+                                codeList="http://www.tc211.org/ISO19139/resources/codeList.xml?MD_LegalConstraints"/>
+          </accessConstraints>
+        </MD_LegalConstraints>
+      </resourceConstraints>
+      <resourceConstraints>
+        <MD_Constraints>
+          <useLimitation>
+            <gco:CharacterString>Die Daten sollten nicht bei einem Maßstab genutzt werden, der
+              kleiner ist als 1:200.000
+            </gco:CharacterString>
+          </useLimitation>
+        </MD_Constraints>
+      </resourceConstraints>
+      <srv:serviceType>
+        <gco:LocalName>WMS</gco:LocalName>
+      </srv:serviceType>
+      <srv:serviceTypeVersion>
+        <gco:CharacterString>1.1.1</gco:CharacterString>
+      </srv:serviceTypeVersion>
+      <srv:extent>
+        <EX_Extent>
+          <description>
+            <gco:CharacterString>Nutzungsbereich Hessen</gco:CharacterString>
+          </description>
+          <geographicElement>
+            <EX_GeographicDescription>
+              <geographicIdentifier>
+                <RS_Identifier>
+                  <code>
+                    <gco:CharacterString>Hessen</gco:CharacterString>
+                  </code>
+                </RS_Identifier>
+              </geographicIdentifier>
+            </EX_GeographicDescription>
+          </geographicElement>
+          <geographicElement>
+            <EX_GeographicBoundingBox>
+              <extentTypeCode>
+                <gco:Boolean>1</gco:Boolean>
+              </extentTypeCode>
+              <westBoundLongitude>
+                <gco:Decimal>7.36</gco:Decimal>
+              </westBoundLongitude>
+              <eastBoundLongitude>
+                <gco:Decimal>10.67</gco:Decimal>
+              </eastBoundLongitude>
+              <southBoundLatitude>
+                <gco:Decimal>49.34</gco:Decimal>
+              </southBoundLatitude>
+              <northBoundLatitude>
+                <gco:Decimal>51.64</gco:Decimal>
+              </northBoundLatitude>
+            </EX_GeographicBoundingBox>
+          </geographicElement>
+          <verticalElement>
+            <EX_VerticalExtent>
+              <minimumValue>
+                <gco:Real>81.0</gco:Real>
+              </minimumValue>
+              <maximumValue>
+                <gco:Real>950.2</gco:Real>
+              </maximumValue>
+              <verticalCRS>
+                <gml:VerticalCRS gml:id="ID00018">
+                  <gml:identifier codeSpace="http://www.altova.com">String</gml:identifier>
+                  <gml:scope>String</gml:scope>
+                  <gml:usesVerticalCS/>
+                  <gml:verticalDatum>
+                    <gml:VerticalDatum gml:id="ID00019">
+                      <gml:identifier codeSpace="">Normaal Amsterdams Peil (NAP)</gml:identifier>
+                      <gml:scope/>
+                    </gml:VerticalDatum>
+                  </gml:verticalDatum>
+                </gml:VerticalCRS>
+              </verticalCRS>
+            </EX_VerticalExtent>
+          </verticalElement>
+        </EX_Extent>
+      </srv:extent>
+      <srv:coupledResource>
+        <srv:SV_CoupledResource>
+          <srv:operationName>
+            <gco:CharacterString>GetMap</gco:CharacterString>
+          </srv:operationName>
+          <srv:identifier>
+            <gco:CharacterString>111c0076-b23f-76e5-c888-94327664111</gco:CharacterString>
+          </srv:identifier>
+          <gco:ScopedName codeSpace="http://someurl">DTK50Layer</gco:ScopedName>
+        </srv:SV_CoupledResource>
+      </srv:coupledResource>
+      <srv:coupledResource>
+        <srv:SV_CoupledResource>
+          <srv:operationName>
+            <gco:CharacterString>GetMap</gco:CharacterString>
+          </srv:operationName>
+          <srv:identifier>
+            <gco:CharacterString>550e8400-e29b-41d4-a716-44389665234</gco:CharacterString>
+          </srv:identifier>
+          <gco:ScopedName codeSpace="http://someurl">DTK50Layer</gco:ScopedName>
+        </srv:SV_CoupledResource>
+      </srv:coupledResource>
+      <srv:coupledResource>
+        <srv:SV_CoupledResource>
+          <srv:operationName>
+            <gco:CharacterString>GetMap</gco:CharacterString>
+          </srv:operationName>
+          <srv:identifier>
+            <gco:CharacterString>486d9622-c29d-44e5-b878-44389740011</gco:CharacterString>
+          </srv:identifier>
+          <gco:ScopedName codeSpace="http://someurl">DTK50Layer</gco:ScopedName>
+        </srv:SV_CoupledResource>
+      </srv:coupledResource>
+      <srv:couplingType>
+        <srv:SV_CouplingType codeList="http://someurl#SV_CouplingType" codeListValue="tight"/>
+      </srv:couplingType>
+      <srv:containsOperations>
+        <srv:SV_OperationMetadata>
+          <srv:operationName>
+            <gco:CharacterString>GetCapabilities</gco:CharacterString>
+          </srv:operationName>
+          <srv:DCP>
+            <srv:DCPList codeList="http://someurl#DCPList" codeListValue="HTTPGet"/>
+          </srv:DCP>
+          <srv:connectPoint>
+            <CI_OnlineResource>
+              <linkage>
+                <URL>http://...?</URL>
+              </linkage>
+            </CI_OnlineResource>
+          </srv:connectPoint>
+        </srv:SV_OperationMetadata>
+      </srv:containsOperations>
+      <srv:operatesOn uuidref="111c0076-b23f-76e5-c888-94327664111"/>
+      <srv:operatesOn uuidref="550e8400-e29b-41d4-a716-44389665234"/>
+      <srv:operatesOn uuidref="486d9622-c29d-44e5-b878-44389740011"/>
+    </srv:SV_ServiceIdentification>
+  </identificationInfo>
 </MD_Metadata>

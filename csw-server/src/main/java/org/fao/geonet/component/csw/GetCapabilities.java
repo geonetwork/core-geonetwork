@@ -25,8 +25,7 @@ package org.fao.geonet.component.csw;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -45,6 +44,7 @@ import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
@@ -65,78 +65,77 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
+
 /**
  * TODO javadoc.
  */
-@Component(CatalogService.BEAN_PREFIX+GetCapabilities.NAME)
-public class GetCapabilities extends AbstractOperation implements CatalogService
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+@Component(CatalogService.BEAN_PREFIX + GetCapabilities.NAME)
+public class GetCapabilities extends AbstractOperation implements CatalogService {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
     static final String NAME = "GetCapabilities";
     @Autowired
-	private LuceneConfig _luceneConfig;
+    private LuceneConfig _luceneConfig;
     @Autowired
     private CatalogConfiguration _catalogConfig;
     @Autowired
     private FieldMapper _fieldMapper;
     @Autowired
     private SchemaManager _schemaManager;
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public String getName() { return NAME; }
+    public String getName() {
+        return NAME;
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @param request
-     * @param context
-     * @return
-     * @throws CatalogException
      */
-	public Element execute(Element request, ServiceContext context) throws CatalogException {
+    public Element execute(Element request, ServiceContext context) throws CatalogException {
 
-		checkService(request);
-		checkAcceptVersions(request);
+        checkService(request);
+        checkAcceptVersions(request);
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean inspireEnabled = gc.getBean(SettingManager.class).getValueAsBool("system/inspire/enable", false);
+        boolean inspireEnabled = gc.getBean(SettingManager.class).getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
 
 
-		//--- return capabilities
+        //--- return capabilities
 
-		Path file;
+        Path file;
 
-        if (inspireEnabled){
+        if (inspireEnabled) {
             file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities_inspire.xml");
         } else {
             file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities.xml");
         }
 
-		try
-		{
-			Element capabilities = Xml.loadFile(file);
+        try {
+            Element capabilities = Xml.loadFile(file);
             ServletContext servletContext = null;
-            if(context.getServlet() != null) {
+            if (context.getServlet() != null) {
                 servletContext = context.getServlet().getServletContext();
             }
-			ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, context.getAppPath(), capabilities);
+            ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, context.getAppPath(), capabilities);
 
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
-			setKeywords(capabilities, context, cswServiceSpecificContraint);
-			setOperationsParameters(capabilities);
+            setKeywords(capabilities, context, cswServiceSpecificContraint);
+            setOperationsParameters(capabilities);
 
             String currentLanguage = "";
 
@@ -173,8 +172,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                     }
                 } catch (EmptyResultDataAccessException e) {
                     Log.error(Geonet.CSW, "No default language set in database languages table. " +
-                            "You MUST set one default language (using isDefault column). " +
-                            "Using session language as default. Error is: " + e.getMessage());
+                        "You MUST set one default language (using isDefault column). " +
+                        "Using session language as default. Error is: " + e.getMessage());
                     currentLanguage = context.getLanguage();
                 }
 
@@ -187,33 +186,31 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
 
             // Retrieve contact data from users table
-            String contactId = gc.getBean(SettingManager.class).getValue("system/csw/contactId");
+            String contactId = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CONTACT_ID);
             if ((contactId == null) || (contactId.equals(""))) {
                 contactId = "-1";
             }
             User user = context.getBean(UserRepository.class).findOne(contactId);
 
-            substitute(context, capabilities, cswCapabilitiesInfo,  user, currentLanguage);
+            substitute(context, capabilities, cswCapabilitiesInfo, user, currentLanguage);
 
-			handleSections(request, capabilities);
+            handleSections(request, capabilities);
 
             //
             // in read-only mode, remove publication services from capabilities
             //
-            if(gc.isReadOnly()) {
+            if (gc.isReadOnly()) {
                 capabilities = removePublicationServices(capabilities);
             }
 
-			return capabilities;
-		}
-		catch (Exception e)
-		{
-			Log.error(Geonet.CSW, "Cannot load/process capabilities");
-			Log.error(Geonet.CSW, " (C) StackTrace\n"+ Util.getStackTrace(e));
+            return capabilities;
+        } catch (Exception e) {
+            Log.error(Geonet.CSW, "Cannot load/process capabilities");
+            Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));
 
-			throw new NoApplicableCodeEx("Cannot load/process capabilities");
-		}
-	}
+            throw new NoApplicableCodeEx("Cannot load/process capabilities");
+        }
+    }
 
     /**
      * Removes CSW Harvest and CSW Transaction operations from Capabilities.
@@ -225,21 +222,20 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         Element operationsMetadata = capabilities.getChild(Csw.SECTION_OM, Csw.NAMESPACE_OWS);
         Element harvest = null;
         Element transaction = null;
-        if(operationsMetadata != null) {
+        if (operationsMetadata != null) {
             @SuppressWarnings("unchecked")
             List<Element> operations = operationsMetadata.getChildren(Csw.OPERATION, Csw.NAMESPACE_OWS);
-            for(Element operation : operations) {
-                if(operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME).equals(Csw.ConfigFile.Operation.Attr.Value.TRANSACTION)) {
+            for (Element operation : operations) {
+                if (operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME).equals(Csw.ConfigFile.Operation.Attr.Value.TRANSACTION)) {
                     transaction = operation;
-                }
-                else if(operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME).equals(Csw.ConfigFile.Operation.Attr.Value.HARVEST)) {
+                } else if (operation.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME).equals(Csw.ConfigFile.Operation.Attr.Value.HARVEST)) {
                     harvest = operation;
                 }
             }
-            if(harvest != null) {
+            if (harvest != null) {
                 operationsMetadata.removeContent(harvest);
             }
-            if(transaction != null) {
+            if (transaction != null) {
                 operationsMetadata.removeContent(transaction);
             }
         }
@@ -249,150 +245,128 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
     /**
      * TODO javadoc.
-     *
-     * @param params
-     * @return
      */
-	public Element adaptGetRequest(Map<String, String> params)
-	{
-		String service    = params.get("service");
-		String sections   = params.get("sections");
-		String sequence   = params.get("updatesequence");
-		String acceptVers = params.get("acceptversions");
-		String acceptForm = params.get("acceptformats");
-        String language   = params.get("language");
+    public Element adaptGetRequest(Map<String, String> params) {
+        String service = params.get("service");
+        String sections = params.get("sections");
+        String sequence = params.get("updatesequence");
+        String acceptVers = params.get("acceptversions");
+        String acceptForm = params.get("acceptformats");
+        String language = params.get("language");
 
-		Element request = new Element(getName(), Csw.NAMESPACE_CSW);
+        Element request = new Element(getName(), Csw.NAMESPACE_CSW);
 
-		setAttrib(request, "service",        service);
-		setAttrib(request, "updateSequence", sequence);
-        setAttrib(request, "language",       language);
+        setAttrib(request, "service", service);
+        setAttrib(request, "updateSequence", sequence);
+        setAttrib(request, "language", language);
 
-		fill(request, "AcceptVersions", "Version",      acceptVers, Csw.NAMESPACE_OWS);
-		fill(request, "Sections",       "Section",      sections,   Csw.NAMESPACE_OWS);
-		fill(request, "AcceptFormats",  "OutputFormat", acceptForm, Csw.NAMESPACE_OWS);
+        fill(request, "AcceptVersions", "Version", acceptVers, Csw.NAMESPACE_OWS);
+        fill(request, "Sections", "Section", sections, Csw.NAMESPACE_OWS);
+        fill(request, "AcceptFormats", "OutputFormat", acceptForm, Csw.NAMESPACE_OWS);
 
-		return request;
-	}
+        return request;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public Element retrieveValues(String parameterName) throws CatalogException {
-		// TODO
-		return null;
-	}
+    public Element retrieveValues(String parameterName) throws CatalogException {
+        // TODO
+        return null;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
-     *
-     * @param request
-     * @throws CatalogException
      */
-	private void checkAcceptVersions(Element request) throws CatalogException
-	{
-		Element versions = request.getChild("AcceptVersions", Csw.NAMESPACE_OWS);
+    private void checkAcceptVersions(Element request) throws CatalogException {
+        Element versions = request.getChild("AcceptVersions", Csw.NAMESPACE_OWS);
 
-		if (versions == null)
-			return;
+        if (versions == null)
+            return;
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         Iterator<Element> i = versions.getChildren().iterator();
 
-		StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer();
 
-		while (i.hasNext())
-		{
-			Element version = i.next();
+        while (i.hasNext()) {
+            Element version = i.next();
 
-			if (version.getText().equals(Csw.CSW_VERSION))
-				return;
+            if (version.getText().equals(Csw.CSW_VERSION))
+                return;
 
-			sb.append(version.getText());
+            sb.append(version.getText());
 
-			if (i.hasNext())
-				sb.append(",");
-		}
+            if (i.hasNext())
+                sb.append(",");
+        }
 
-		throw new VersionNegotiationFailedEx(sb.toString());
-	}
+        throw new VersionNegotiationFailedEx(sb.toString());
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @param request
-     * @param capabilities
      */
-	private void handleSections(Element request, Element capabilities)
-	{
-		Element sections = request.getChild("Sections", Csw.NAMESPACE_OWS);
+    private void handleSections(Element request, Element capabilities) {
+        Element sections = request.getChild("Sections", Csw.NAMESPACE_OWS);
 
-		if (sections == null)
-			return;
+        if (sections == null)
+            return;
 
-		//--- handle 'section' parameters
+        //--- handle 'section' parameters
 
-		HashSet<String> hsSections = new HashSet<String>();
+        HashSet<String> hsSections = new HashSet<String>();
 
         for (Object o : sections.getChildren()) {
             Element section = (Element) o;
             String sectionName = section.getText();
             // Handle recognized section names only, others are ignored. Case Sensitive.
             if (sectionName.equals(Csw.SECTION_SI) || sectionName.equals(Csw.SECTION_SP)
-                    || sectionName.equals(Csw.SECTION_OM)) {
+                || sectionName.equals(Csw.SECTION_OM)) {
                 hsSections.add(sectionName);
             }
         }
 
-		//--- remove not requested sections
+        //--- remove not requested sections
 
-		if (!hsSections.contains("ServiceIdentification"))
-			capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
+        if (!hsSections.contains("ServiceIdentification"))
+            capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS).detach();
 
-		if (!hsSections.contains("ServiceProvider"))
-			capabilities.getChild("ServiceProvider", Csw.NAMESPACE_OWS).detach();
+        if (!hsSections.contains("ServiceProvider"))
+            capabilities.getChild("ServiceProvider", Csw.NAMESPACE_OWS).detach();
 
-		if (!hsSections.contains("OperationsMetadata"))
-			capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
+        if (!hsSections.contains("OperationsMetadata"))
+            capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).detach();
 
-	}
+    }
 
     /**
      * TODO javadoc.
-     *
-     *
-     * @param context
-     * @param capab
-     * @param cswCapabilitiesInfo
-     * @param contact
-     * @param langId
-     * @throws Exception
      */
-	private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, User contact, String langId) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
+    private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, User contact, String langId) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
-		HashMap<String, String> vars = new HashMap<String, String>();
+        HashMap<String, String> vars = new HashMap<String, String>();
 
-        vars.put("$PROTOCOL", sm.getValue(Geonet.Settings.SERVER_PROTOCOL));
-		vars.put("$HOST",    sm.getValue(Geonet.Settings.SERVER_HOST));
-		String port = sm.getValue(Geonet.Settings.SERVER_PORT);
-		vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
+        vars.put("$PROTOCOL", sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL));
+        vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
+        String port = sm.getValue(Settings.SYSTEM_SERVER_PORT);
+        vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
         vars.put("$END-POINT", context.getService());
         vars.put("$NODE_ID", context.getNodeId());
 
-        String providerName = sm.getValue("system/site/organization");
-        vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName)?providerName:"GeoNetwork opensource");
+        String providerName = sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION);
+        vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName) ? providerName : "GeoNetwork opensource");
 
         vars.put("$SERVLET", context.getBaseUrl());
 
-		// Set CSW contact information
+        // Set CSW contact information
         if (contact != null) {
             vars.put("$IND_NAME", contact.getName() + " " + contact.getSurname());
             vars.put("$ORG_NAME", contact.getOrganisation());
@@ -407,7 +381,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             vars.put("$COUNTRY", address.getCountry());
             vars.put("$EMAIL", contact.getEmail());
             vars.put("$HOUROFSERVICE", "");
-            vars.put("$CONTACT_INSTRUCTION","");
+            vars.put("$CONTACT_INSTRUCTION", "");
         } else {
             vars.put("$IND_NAME", "");
             vars.put("$ORG_NAME", "");
@@ -421,7 +395,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             vars.put("$COUNTRY", "");
             vars.put("$EMAIL", "");
             vars.put("$HOUROFSERVICE", "");
-            vars.put("$CONTACT_INSTRUCTION","");
+            vars.put("$CONTACT_INSTRUCTION", "");
         }
 
         vars.put("$TITLE", cswCapabilitiesInfo.getTitle());
@@ -431,20 +405,15 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         vars.put("$LOCALE", langId);
 
-		Lib.element.substitute(capab, vars);
-	}
+        Lib.element.substitute(capab, vars);
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @param capabilities
-     * @param languages
-     * @param currLang
-     * @param defaultLang
      */
-    private void setInspireLanguages (Element capabilities, List<String> languages, String currLang, String defaultLang) {
+    private void setInspireLanguages(Element capabilities, List<String> languages, String currLang, String defaultLang) {
         Element inspireExtCapabilities = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS)
-                .getChild("ExtendedCapabilities", Csw.NAMESPACE_INSPIRE_DS);
+            .getChild("ExtendedCapabilities", Csw.NAMESPACE_INSPIRE_DS);
 
 
         Element inspireLanguages = inspireExtCapabilities.getChild("SupportedLanguages", Csw.NAMESPACE_INSPIRE_COM);
@@ -453,7 +422,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         try {
             // Add DefaultLanguage
-            for(String lang : languages) {
+            for (String lang : languages) {
                 Element defaultLanguage;
                 Element language;
 
@@ -474,7 +443,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             }
 
             // Add list of supported languages
-            for(String lang : languages) {
+            for (String lang : languages) {
                 Element supportedLanguage;
                 Element language;
 
@@ -513,30 +482,26 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     }
 
     /**
-     * Defines keyword section of the GetCapabilities document according to catalogue content. Reading  Lucene index,
-     * most popular keywords are added to the document.
-     *
-     * @param capabilities
-     * @param context
-     * @param cswServiceSpecificContraint
+     * Defines keyword section of the GetCapabilities document according to catalogue content.
+     * Reading  Lucene index, most popular keywords are added to the document.
      */
-	private void setKeywords (Element capabilities, ServiceContext context, String cswServiceSpecificContraint) {
-		Element serviceIdentificationEl = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
+    private void setKeywords(Element capabilities, ServiceContext context, String cswServiceSpecificContraint) {
+        Element serviceIdentificationEl = capabilities.getChild("ServiceIdentification", Csw.NAMESPACE_OWS);
         @SuppressWarnings("unchecked")
         List<Element> keywords = serviceIdentificationEl.getChildren("Keywords", Csw.NAMESPACE_OWS);
 
-		List<Element> values;
-		String[] properties = {"keyword"};
-		try {
+        List<Element> values;
+        String[] properties = {"keyword"};
+        try {
             values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords(),
-                    cswServiceSpecificContraint, _luceneConfig);
-		} catch (Exception e) {
+                cswServiceSpecificContraint, _luceneConfig);
+        } catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
-			// If GetDomain operation failed, just add nothing to the capabilities document template.
+            // If GetDomain operation failed, just add nothing to the capabilities document template.
             return;
         }
 
-		for (Element k : keywords) {
+        for (Element k : keywords) {
             Element keyword;
             int cpt = 0;
             for (Element v : values) {
@@ -552,39 +517,37 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             k.addContent(new Element("Type", Csw.NAMESPACE_OWS).setText("theme"));
             break; // only for first Keywords element in case of several.
         }
-	}
+    }
 
     /**
      * TODO javadoc.
-     *
-     * @param capabilities
      */
-	private void setOperationsParameters(Element capabilities) {
+    private void setOperationsParameters(Element capabilities) {
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> operations = capabilities.getChild("OperationsMetadata", Csw.NAMESPACE_OWS).getChildren("Operation", Csw.NAMESPACE_OWS);
 
-		for (Element op : operations) {
-			if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
-					.equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORDS)) {
-				fillGetRecordsParams(op);
-				continue;
-			}
+        for (Element op : operations) {
             if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
-                    .equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORD_BY_ID)) {
+                .equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORDS)) {
+                fillGetRecordsParams(op);
+                continue;
+            }
+            if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
+                .equals(Csw.ConfigFile.Operation.Attr.Value.GET_RECORD_BY_ID)) {
                 populateTypeNameAndOutputSchema(op);
                 continue;
             }
-			if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
-					.equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
+            if (op.getAttributeValue(Csw.ConfigFile.Operation.Attr.NAME)
+                .equals(Csw.ConfigFile.Operation.Attr.Value.DESCRIBE_RECORD)) {
                 populateTypeNameAndOutputSchema(op);
             }
-		}
-	}
+        }
+    }
 
     /**
-     * Based on loaded schema plugins populate the list of typeNames and outputSchema
-     * available in that catalog.
+     * Based on loaded schema plugins populate the list of typeNames and outputSchema available in
+     * that catalog.
      *
      * <pre>
      *   <ows:Parameter xmlns:gfc="http://www.isotc211.org/2005/gfc" name="outputSchema">
@@ -600,15 +563,13 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      *      <ows:Value>gmd:MD_Metadata</ows:Value>
      *    </ows:Parameter>
      * </pre>
-     *
-     * @param op
      */
     private void populateTypeNameAndOutputSchema(Element op) {
         Map<String, Namespace> typenames = _schemaManager.getHmSchemasTypenames();
         List<Element> operations = op.getChildren("Parameter", Csw.NAMESPACE_OWS);
         for (Element operation : operations) {
             if ("typeNames".equals(operation.getAttributeValue("name"))) {
-                for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+                for (Map.Entry<String, Namespace> entry : typenames.entrySet()) {
                     String typeName = entry.getKey();
                     Namespace ns = entry.getValue();
                     String typename = typeName;
@@ -617,7 +578,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                         .setText(typename));
                 }
             } else if ("outputSchema".equals(operation.getAttributeValue("name"))) {
-                for (Map.Entry< String, Namespace > entry : typenames.entrySet()) {
+                for (Map.Entry<String, Namespace> entry : typenames.entrySet()) {
                     Namespace ns = entry.getValue();
                     operation.addNamespaceDeclaration(ns);
                     operation.addContent(new Element("Value", Csw.NAMESPACE_OWS)
@@ -629,34 +590,32 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
     /**
      * TODO javadoc.
-     *
-     * @param op
      */
-	private void fillGetRecordsParams(Element op) {
-		Set<String> isoQueryableMap = _fieldMapper
-				.getPropertiesByType(Csw.ISO_QUERYABLES);
-		Element isoConstraint = new Element("Constraint", Csw.NAMESPACE_OWS)
-				.setAttribute("name", Csw.ISO_QUERYABLES);
+    private void fillGetRecordsParams(Element op) {
+        Set<String> isoQueryableMap = _fieldMapper
+            .getPropertiesByType(Csw.ISO_QUERYABLES);
+        Element isoConstraint = new Element("Constraint", Csw.NAMESPACE_OWS)
+            .setAttribute("name", Csw.ISO_QUERYABLES);
 
-		for (String params : isoQueryableMap) {
-			isoConstraint.addContent(new Element("Value", Csw.NAMESPACE_OWS)
-					.setText(params));
-		}
+        for (String params : isoQueryableMap) {
+            isoConstraint.addContent(new Element("Value", Csw.NAMESPACE_OWS)
+                .setText(params));
+        }
 
-		Set<String> additionalQueryableMap = _fieldMapper
-				.getPropertiesByType(Csw.ADDITIONAL_QUERYABLES);
-		Element additionalConstraint = new Element("Constraint",
-				Csw.NAMESPACE_OWS).setAttribute("name",
-				Csw.ADDITIONAL_QUERYABLES);
+        Set<String> additionalQueryableMap = _fieldMapper
+            .getPropertiesByType(Csw.ADDITIONAL_QUERYABLES);
+        Element additionalConstraint = new Element("Constraint",
+            Csw.NAMESPACE_OWS).setAttribute("name",
+            Csw.ADDITIONAL_QUERYABLES);
 
-		for (String params : additionalQueryableMap) {
-			additionalConstraint.addContent(new Element("Value",
-					Csw.NAMESPACE_OWS).setText(params));
-		}
-		op.addContent(isoConstraint);
-		op.addContent(additionalConstraint);
+        for (String params : additionalQueryableMap) {
+            additionalConstraint.addContent(new Element("Value",
+                Csw.NAMESPACE_OWS).setText(params));
+        }
+        op.addContent(isoConstraint);
+        op.addContent(additionalConstraint);
 
         populateTypeNameAndOutputSchema(op);
-	}
+    }
 
 }

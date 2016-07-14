@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -52,27 +53,20 @@ import javax.servlet.http.HttpServletResponse;
 
 
 public class WmcServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-
     public static final Logger LOGGER = Logger.getLogger(WmcServlet.class);
-
-    private final String WMC_CONTENT_TYPE = "application/vnd.ogc.context+xml";
-
-    private final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\" ?>";
-
-    private static final String CREATE_URL = "/create.wmc";
-    private static final String LOAD_URL = "/load.wmc";
-
     protected static final String TEMP_FILE_PREFIX = "geonetwork-wmc";
     protected static final String TEMP_FILE_SUFFIX = ".cml";
+    private static final long serialVersionUID = 1L;
+    private static final String CREATE_URL = "/create.wmc";
+    private static final String LOAD_URL = "/load.wmc";
     private static final int TEMP_FILE_PURGE_SECONDS = 600;
-
-    private File tempDir = null;
-
+    private final String WMC_CONTENT_TYPE = "application/vnd.ogc.context+xml";
+    private final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\" ?>";
     /**
      * Map of temporary files.
      */
     private final Map<String, TempFile> tempFiles = new HashMap<String, TempFile>();
+    private File tempDir = null;
 
     @Override
     public void init() throws ServletException {
@@ -83,7 +77,7 @@ public class WmcServlet extends HttpServlet {
             File file = files[i];
             final String name = file.getName();
             if (name.startsWith(TEMP_FILE_PREFIX) &&
-                    name.endsWith(TEMP_FILE_SUFFIX)) {
+                name.endsWith(TEMP_FILE_SUFFIX)) {
                 deleteFile(file);
             }
         }
@@ -127,7 +121,7 @@ public class WmcServlet extends HttpServlet {
 
             addTempFile(tempFile, id);
 
-        // Method call: Load Web Map Context
+            // Method call: Load Web Map Context
         } else if (additionalPath.equals(LOAD_URL)) {
 
             response.setContentType("text/html");
@@ -142,7 +136,7 @@ public class WmcServlet extends HttpServlet {
                 return;
             }
 
-             try {
+            try {
                 // Create a factory for disk-based file items
                 FileItemFactory factory = new DiskFileItemFactory();
 
@@ -174,17 +168,17 @@ public class WmcServlet extends HttpServlet {
 
                         }
                         addTempFile(tempFile, id);
-                        
+
                         break;
                     }
                 }
 
             } catch (Exception e) {
-               out.write("{success: false, error: '" + e.getMessage() + "'}");
+                out.write("{success: false, error: '" + e.getMessage() + "'}");
             }
 
 
-        // Unknow method call
+            // Unknow method call
         } else {
             out.write("{success: false, error: 'Unknown method: '" + additionalPath + "'}");
             //error(response, "Unknown method: " + additionalPath, 404);
@@ -214,13 +208,14 @@ public class WmcServlet extends HttpServlet {
     }
 
     /**
-     * Get the ID to use in function of the filename (filename without the prefix and the extension).
+     * Get the ID to use in function of the filename (filename without the prefix and the
+     * extension).
      */
     protected String generateId(File tempFile) {
         final String name = tempFile.getName();
         return name.substring(
-                TEMP_FILE_PREFIX.length(),
-                name.length() - TEMP_FILE_SUFFIX.length());
+            TEMP_FILE_PREFIX.length(),
+            name.length() - TEMP_FILE_SUFFIX.length());
     }
 
     protected String getBaseUrl(HttpServletRequest httpServletRequest) {
@@ -269,7 +264,7 @@ public class WmcServlet extends HttpServlet {
             IOUtils.copy(pdf, response);
             response.close();
         } finally {
-            if(pdf != null) {
+            if (pdf != null) {
                 IOUtils.closeQuietly(pdf);
             }
         }
@@ -313,7 +308,7 @@ public class WmcServlet extends HttpServlet {
     protected File getTempDir() {
         if (tempDir == null) {
             tempDir = (File) getServletContext().
-                    getAttribute("javax.servlet.context.tempdir");
+                getAttribute("javax.servlet.context.tempdir");
             LOGGER.debug("Using '" + tempDir.getAbsolutePath() + "' as temporary directory");
         }
         return tempDir;
@@ -366,6 +361,6 @@ public class WmcServlet extends HttpServlet {
                 return false;
             return true;
         }
-        
+
     }
 }

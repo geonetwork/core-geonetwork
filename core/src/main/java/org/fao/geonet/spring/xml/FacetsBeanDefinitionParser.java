@@ -37,16 +37,29 @@ import java.util.List;
 
 public class FacetsBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
+    private static void parseChildFacets(List<Element> childElements, ParserContext parserContext, BeanDefinitionBuilder facetsBeanDefn, boolean isMerge) {
+        ManagedList<BeanDefinition> children = new ManagedList<BeanDefinition>(childElements.size());
+        FacetBeanDefinitionParser facetParser = new FacetBeanDefinitionParser();
+
+        for (Element element : childElements) {
+            children.add(facetParser.parse(element, parserContext));
+        }
+
+        children.setMergeEnabled(isMerge);
+
+        facetsBeanDefn.addConstructorArgValue(children);
+    }
+
     @Override
     protected AbstractBeanDefinition parseInternal(Element element,
-            ParserContext parserContext) {
+                                                   ParserContext parserContext) {
         return parseFacetsElement(element, parserContext);
     }
 
     @Override
     protected String resolveId(Element element,
-            AbstractBeanDefinition definition, ParserContext parserContext)
-            throws BeanDefinitionStoreException {
+                               AbstractBeanDefinition definition, ParserContext parserContext)
+        throws BeanDefinitionStoreException {
         return "facets";
     }
 
@@ -59,19 +72,6 @@ public class FacetsBeanDefinitionParser extends AbstractBeanDefinitionParser {
         }
 
         return facetsBeanDefn.getBeanDefinition();
-    }
-
-    private static void parseChildFacets(List<Element> childElements, ParserContext parserContext, BeanDefinitionBuilder facetsBeanDefn, boolean isMerge) {
-        ManagedList<BeanDefinition> children = new ManagedList<BeanDefinition>(childElements.size());
-        FacetBeanDefinitionParser facetParser = new FacetBeanDefinitionParser();
-
-        for (Element element : childElements) {
-            children.add(facetParser.parse(element, parserContext));
-        }
-
-        children.setMergeEnabled(isMerge);
-
-        facetsBeanDefn.addConstructorArgValue(children);
     }
 
     private boolean isMerge(Element element) {

@@ -24,12 +24,11 @@
 package org.fao.geonet.monitor.gauge;
 
 /**
- * Gauge that gets the number of connections that the ResourceProvider reports as idle.  If unable to access
- * information or if the number is null (Like in case of JNDI) Integer.MIN_VALUE will be reported
+ * Gauge that gets the number of connections that the ResourceProvider reports as idle.  If unable
+ * to access information or if the number is null (Like in case of JNDI) Integer.MIN_VALUE will be
+ * reported
  *
- * User: jeichar
- * Date: 4/5/12
- * Time: 4:29 PM
+ * User: jeichar Date: 4/5/12 Time: 4:29 PM
  */
 public class ProcessCpuLoadGauge extends AbstractOSMxBeanGauge<Double> {
     public ProcessCpuLoadGauge() {

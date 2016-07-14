@@ -34,87 +34,85 @@ import org.jdom.Element;
 //=============================================================================
 
 public abstract class AbstractResponse {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public AbstractResponse()
-	{
-		responseDate = new ISODate();
-	}
+    private Element response;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private ISODate responseDate;
 
-	public AbstractResponse(Element response)
-	{
-		this.response = response;
-		build(response);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private Map<String, String> request = new HashMap<String, String>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public AbstractResponse() {
+        responseDate = new ISODate();
+    }
 
-	public Element getResponse()     { return response;     }
-	public ISODate getResponseDate() { return responseDate; }
+    public AbstractResponse(Element response) {
+        this.response = response;
+        build(response);
+    }
 
-	public abstract Element toXml();
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Element getResponse() {
+        return response;
+    }
 
-	public void setResponseDate(ISODate date)
-	{
-		responseDate = date;
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+    public ISODate getResponseDate() {
+        return responseDate;
+    }
 
-	protected void add(Element parent, String name, String value)
-	{
-		parent.addContent(new Element(name, OaiPmh.Namespaces.OAI_PMH).setText(value));
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public void setResponseDate(ISODate date) {
+        responseDate = date;
+    }
 
-	private void build(Element response)
-	{
-		//--- save response date
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		responseDate = new ISODate(response.getChildText("responseDate", OaiPmh.Namespaces.OAI_PMH));
+    public abstract Element toXml();
 
-		//--- save request parameters
+    protected void add(Element parent, String name, String value) {
+        parent.addContent(new Element(name, OaiPmh.Namespaces.OAI_PMH).setText(value));
+    }
 
-		Element req = response.getChild("request", OaiPmh.Namespaces.OAI_PMH);
+    private void build(Element response) {
+        //--- save response date
 
-		for (Object o : req.getAttributes())
-		{
-			Attribute attr = (Attribute) o;
-			request.put(attr.getName(), attr.getValue());
-		}
-	}
+        responseDate = new ISODate(response.getChildText("responseDate", OaiPmh.Namespaces.OAI_PMH));
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        //--- save request parameters
 
-	private Element response;
-	private ISODate responseDate;
+        Element req = response.getChild("request", OaiPmh.Namespaces.OAI_PMH);
 
-	private Map<String, String> request = new HashMap<String, String>();
+        for (Object o : req.getAttributes()) {
+            Attribute attr = (Attribute) o;
+            request.put(attr.getName(), attr.getValue());
+        }
+    }
 }
 
 //=============================================================================

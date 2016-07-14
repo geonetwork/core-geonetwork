@@ -32,6 +32,10 @@ import java.nio.file.Path;
  * @author heikki doeleman
  */
 public abstract class ShowViewBaseService implements Service {
+    protected boolean skipPopularity;
+    protected boolean skipInfo;
+    protected boolean addRefs;
+
     /**
      *
      * @param appPath
@@ -51,9 +55,5 @@ public abstract class ShowViewBaseService implements Service {
         skip = params.getValue("addRefs", "n");
         addRefs = skip.equals("y");
     }
-
-    protected boolean skipPopularity;
-    protected boolean skipInfo;
-    protected boolean addRefs;
 
 }

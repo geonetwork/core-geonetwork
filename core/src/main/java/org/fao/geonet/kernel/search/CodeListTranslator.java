@@ -31,7 +31,7 @@ import org.fao.geonet.kernel.SchemaManager;
 
 /**
  * Translates code list keys into a language
- * 
+ *
  * @author jesse
  */
 public class CodeListTranslator implements Translator {
@@ -40,7 +40,7 @@ public class CodeListTranslator implements Translator {
 
     public CodeListTranslator(final SchemaManager schemaManager, final String langCode, final String codeListName) throws Exception {
         _codeList = JeevesCacheManager.findInEternalCache(CodeListCacheLoader.cacheKey(langCode, codeListName), new CodeListCacheLoader(
-                langCode, codeListName, schemaManager));
+            langCode, codeListName, schemaManager));
     }
 
     public String translate(String key) {
@@ -49,7 +49,7 @@ public class CodeListTranslator implements Translator {
         }
 
         String value = _codeList.get(key);
-        if(value != null && !value.trim().isEmpty()) {
+        if (value != null && !value.trim().isEmpty()) {
             return value;
         } else {
             return key;

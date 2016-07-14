@@ -24,12 +24,12 @@
 package org.fao.geonet.services.region;
 
 import com.google.common.base.Optional;
+
 import com.vividsolutions.jts.awt.ShapeWriter;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
+
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
@@ -59,9 +60,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.NativeWebRequest;
 
-import javax.annotation.PostConstruct;
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -75,39 +73,41 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 //=============================================================================
 
 /**
- * Return an image of the region as a polygon against an optional background. If
- * the background is provided it is assumed to be a url with placeholders for
- * width, height, srs, minx,maxx,miny and maxy. For example:
- * 
- * http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble&LAYERS=Earth%20Image%2
- * CBorders
- * %2CCoastlines&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap
- * &STYLES
+ * Return an image of the region as a polygon against an optional background. If the background is
+ * provided it is assumed to be a url with placeholders for width, height, srs, minx,maxx,miny and
+ * maxy. For example:
+ *
+ * http://www2.demis.nl/wms/wms.ashx?WMS=BlueMarble&LAYERS=Earth%20Image%2 CBorders
+ * %2CCoastlines&FORMAT=image%2Fjpeg&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap &STYLES
  * =&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&SRS=EPSG%3A4326&BBOX={MINX
  * },{MINY},{MAXX},{MAXY}&WIDTH={WIDTH}&HEIGHT={HEIGHT}
- * 
+ *
  * the placeholders must either be all uppercase or all lowercase
- * 
+ *
  * The parameters to the service are:
- * 
- * id - id of the region to render srs - (optional) default is EPSG:4326
- * otherwise it is the project to use when rendering the image width -
- * (optional) width of the image that is created. Only one of width and height
- * are permitted height - (optional) height of the image that is created. Only
- * one of width and height are permitted background - URL for loading a
- * background image for regions. A WMS Getmap request is the typical example.
- * the URL must be parameterized with the following parameters: minx, maxx,
- * miny, maxy, width, height and optionally srs
- * 
+ *
+ * id - id of the region to render srs - (optional) default is EPSG:4326 otherwise it is the project
+ * to use when rendering the image width - (optional) width of the image that is created. Only one
+ * of width and height are permitted height - (optional) height of the image that is created. Only
+ * one of width and height are permitted background - URL for loading a background image for
+ * regions. A WMS Getmap request is the typical example. the URL must be parameterized with the
+ * following parameters: minx, maxx, miny, maxy, width, height and optionally srs
  */
 @Controller
-public class GetMap{
+public class GetMap {
     public static final String MAP_SRS_PARAM = "mapsrs";
     public static final String GEOM_SRS_PARAM = "geomsrs";
     public static final String WIDTH_PARAM = "width";
@@ -116,12 +116,8 @@ public class GetMap{
     public static final String HEIGHT_PARAM = "height";
     public static final String BACKGROUND_PARAM = "background";
     public static final String OUTPUT_FILE_NAME = "outputFileName";
-	private static final double WGS_DIAG = sqrt(pow(360, 2) + pow(180, 2));
     public static final String SETTING_BACKGROUND = "settings";
-    public static final String REGION_GETMAP_BACKGROUND = "region/getmap/background";
-    public static final String REGION_GETMAP_MAPPROJ = "region/getmap/mapproj";
-    public static final String REGION_GETMAP_WIDTH = "region/getmap/width";
-    public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
+    private static final double WGS_DIAG = sqrt(pow(360, 2) + pow(180, 2));
 
     @Autowired
     private ServiceManager serviceManager;
@@ -132,6 +128,55 @@ public class GetMap{
     private Map<String, String> regionGetMapBackgroundLayers;
     private SortedSet<ExpandFactor> regionGetMapExpandFactors;
 
+    /**
+     * Check if a geometry is in the domain of validity of a projection and if not return the
+     * intersection of the geometry with the coordinate system domain of validity.
+     */
+    private static Geometry computeGeomInDomainOfValidity(Geometry geom, CoordinateReferenceSystem mapCRS) {
+        final GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
+        final Extent domainOfValidity = mapCRS.getDomainOfValidity();
+        Geometry adjustedGeom = geom;
+        if (domainOfValidity != null) {
+            for (final GeographicExtent extent :
+                domainOfValidity.getGeographicElements()) {
+                if (Boolean.FALSE.equals(extent.getInclusion())) {
+                    continue;
+                }
+                if (extent instanceof GeographicBoundingBox) {
+                    if (extent != null) {
+                        GeographicBoundingBox box = (GeographicBoundingBox) extent;
+
+                        Envelope env = new Envelope(
+                            box.getWestBoundLongitude(),
+                            box.getEastBoundLongitude(),
+                            box.getSouthBoundLatitude(),
+                            box.getNorthBoundLatitude());
+                        if (env.contains(geom.getEnvelopeInternal())) {
+                            return geom;
+                        } else {
+                            adjustedGeom = geometryFactory.toGeometry(
+                                env.intersection(geom.getEnvelopeInternal())
+                            );
+                        }
+                    }
+                }
+            }
+            return adjustedGeom;
+        } else {
+            return geom;
+        }
+    }
+
+    public static AffineTransform worldToScreenTransform(Envelope mapExtent, Dimension screenSize) {
+        double scaleX = screenSize.getWidth() / mapExtent.getWidth();
+        double scaleY = screenSize.getHeight() / mapExtent.getHeight();
+
+        double tx = -mapExtent.getMinX() * scaleX;
+        double ty = (mapExtent.getMinY() * scaleY) + screenSize.getHeight();
+
+        return new AffineTransform(scaleX, 0.0d, 0.0d, -scaleY, tx, ty);
+    }
+
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
@@ -140,37 +185,40 @@ public class GetMap{
     }
 
     /**
-     * A rendering of the geometry as a png. If no background is specified the image will be transparent.
-     * In getMap the envelope of the geometry is calculated then
-     * it is expanded by a factor.  That factor is the size of the map.  This allows the
-     * map to be slightly bigger than the geometry allowing some context to be shown.
-     * This parameter allows different factors to be chosen per scale level
+     * A rendering of the geometry as a png. If no background is specified the image will be
+     * transparent. In getMap the envelope of the geometry is calculated then it is expanded by a
+     * factor.  That factor is the size of the map.  This allows the map to be slightly bigger than
+     * the geometry allowing some context to be shown. This parameter allows different factors to be
+     * chosen per scale level
      *
-     * Proportion is the proportion of the world that the geometry
-     * covers (bounds of WGS84)/(bounds of geometry in WGS84)
+     * Proportion is the proportion of the world that the geometry covers (bounds of WGS84)/(bounds
+     * of geometry in WGS84)
      *
-     * Named backgrounds allow the background parameter to be a simple key
-     * and the complete URL will be looked up from this list of named backgrounds
+     * Named backgrounds allow the background parameter to be a simple key and the complete URL will
+     * be looked up from this list of named backgrounds
      *
      * The name of the child elements is the key and the text is the url
      *
-     * @param lang UI lang
-     * @param imageFormat output image type.  eg. png/gif/etc...
-     * @param id required
-     * @param srs optional
-     * @param width (optional) width of the image that is created. Only one of width and height are permitted
-     * @param height (optional) height of the image that is created. Only one of width and height are permitted
-     * @param background (optional) URL for loading a background image for regions or a key that references the
-     *                   namedBackgrounds (configured in config-spring-geonetwork.xml).
-     *                   A WMS Getmap request is the typical example. The URL must be parameterized with the following parameters:
-     *                   minx, maxx, miny, maxy, width, height
-     * @param geomParam (optional) a wkt or gml encoded geometry.
-     * @param geomType (optional) defines if geom is wkt or gml. Allowed values are wkt and gml. if not specified the it is
-     *                 assumed the geometry is wkt
-     * @param geomSrs (optional)
+     * @param lang           UI lang
+     * @param imageFormat    output image type.  eg. png/gif/etc...
+     * @param id             required
+     * @param srs            optional
+     * @param width          (optional) width of the image that is created. Only one of width and
+     *                       height are permitted
+     * @param height         (optional) height of the image that is created. Only one of width and
+     *                       height are permitted
+     * @param background     (optional) URL for loading a background image for regions or a key that
+     *                       references the namedBackgrounds (configured in config-spring-geonetwork.xml).
+     *                       A WMS Getmap request is the typical example. The URL must be
+     *                       parameterized with the following parameters: minx, maxx, miny, maxy,
+     *                       width, height
+     * @param geomParam      (optional) a wkt or gml encoded geometry.
+     * @param geomType       (optional) defines if geom is wkt or gml. Allowed values are wkt and
+     *                       gml. if not specified the it is assumed the geometry is wkt
+     * @param geomSrs        (optional)
      * @param outputFileName the filename if the image is downloaded
      */
-    @RequestMapping(value="/{lang}/region.getmap.{imageFormat}")
+    @RequestMapping(value = "/{lang}/region.getmap.{imageFormat}")
     public HttpEntity<byte[]> exec(@PathVariable String lang,
                                    @PathVariable String imageFormat,
                                    @RequestParam(value = Params.ID, required = false) String id,
@@ -181,11 +229,11 @@ public class GetMap{
                                    @RequestParam(value = GEOM_PARAM, required = false) String geomParam,
                                    @RequestParam(value = GEOM_TYPE_PARAM, defaultValue = "WKT") String geomType,
                                    @RequestParam(value = GEOM_SRS_PARAM, defaultValue = "EPSG:4326") String geomSrs,
-                                   @RequestParam(value = OUTPUT_FILE_NAME, required=false) String outputFileName,
+                                   @RequestParam(value = OUTPUT_FILE_NAME, required = false) String outputFileName,
                                    NativeWebRequest request) throws Exception {
 
         ServiceContext context = serviceManager.createServiceContext("region.getmap." + imageFormat, lang,
-                request.getNativeRequest(HttpServletRequest.class));
+            request.getNativeRequest(HttpServletRequest.class));
 
         if (id == null && geomParam == null) {
             throw new BadParameterEx(Params.ID, "Either " + GEOM_PARAM + " or " + Params.ID + " is required");
@@ -253,8 +301,8 @@ public class GetMap{
         if (background != null) {
 
             if (background.equalsIgnoreCase(SETTING_BACKGROUND) &&
-                settingManager.getValue(REGION_GETMAP_BACKGROUND).startsWith("http://")) {
-                background = settingManager.getValue(REGION_GETMAP_BACKGROUND);
+                settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND).startsWith("http://")) {
+                background = settingManager.getValue(Settings.REGION_GETMAP_BACKGROUND);
             } else if (this.regionGetMapBackgroundLayers.containsKey(background)) {
                 background = this.regionGetMapBackgroundLayers.get(background);
             }
@@ -264,12 +312,12 @@ public class GetMap{
             String miny = Double.toString(bboxOfImage.getMinY());
             String maxy = Double.toString(bboxOfImage.getMaxY());
             background = background.replace("{minx}", minx).replace("{maxx}", maxx).replace("{miny}", miny)
-                    .replace("{maxy}", maxy).replace("{srs}", srs)
-                    .replace("{width}", Integer.toString(imageDimensions.width))
-                    .replace("{height}", Integer.toString(imageDimensions.height)).replace("{MINX}", minx)
-                    .replace("{MAXX}", maxx).replace("{MINY}", miny).replace("{MAXY}", maxy).replace("{SRS}", srs)
-                    .replace("{WIDTH}", Integer.toString(imageDimensions.width))
-                    .replace("{HEIGHT}", Integer.toString(imageDimensions.height));
+                .replace("{maxy}", maxy).replace("{srs}", srs)
+                .replace("{width}", Integer.toString(imageDimensions.width))
+                .replace("{height}", Integer.toString(imageDimensions.height)).replace("{MINX}", minx)
+                .replace("{MAXX}", maxx).replace("{MINY}", miny).replace("{MAXY}", maxy).replace("{SRS}", srs)
+                .replace("{WIDTH}", Integer.toString(imageDimensions.width))
+                .replace("{HEIGHT}", Integer.toString(imageDimensions.height));
 
             InputStream in = null;
             try {
@@ -281,8 +329,8 @@ public class GetMap{
             } catch (IOException e) {
                 image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);
                 error = e;
-            }finally {
-                if(in != null) {
+            } finally {
+                if (in != null) {
                     IOUtils.closeQuietly(in);
                 }
 
@@ -293,8 +341,8 @@ public class GetMap{
 
         Graphics2D graphics = image.createGraphics();
         try {
-            if(error != null) {
-                graphics.drawString(error.getMessage(), 0, imageDimensions.height/2);
+            if (error != null) {
+                graphics.drawString(error.getMessage(), 0, imageDimensions.height / 2);
             }
             ShapeWriter shapeWriter = new ShapeWriter();
             AffineTransform worldToScreenTransform = worldToScreenTransform(bboxOfImage, imageDimensions);
@@ -320,86 +368,42 @@ public class GetMap{
                 headers.add("Cache-Control", "public, max-age: " + TimeUnit.DAYS.toSeconds(5));
 
             }
-            headers.add("Content-Type", "image/"+imageFormat);
+            headers.add("Content-Type", "image/" + imageFormat);
             return new HttpEntity<>(out.toByteArray(), headers);
         }
     }
 
-    /**
-     * Check if a geometry is in the domain of validity of a projection
-     * and if not return the intersection of the geometry with the
-     * coordinate system domain of validity.
-     *
-     * @param geom
-     * @param mapCRS
-     * @return
-     */
-    private static Geometry computeGeomInDomainOfValidity(Geometry geom, CoordinateReferenceSystem mapCRS) {
-        final GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(null);
-        final Extent domainOfValidity = mapCRS.getDomainOfValidity();
-        Geometry adjustedGeom = geom;
-        if (domainOfValidity != null) {
-            for (final GeographicExtent extent :
-                            domainOfValidity.getGeographicElements()) {
-                if (Boolean.FALSE.equals(extent.getInclusion())) {
-                    continue;
-                }
-                if (extent instanceof GeographicBoundingBox) {
-                    if (extent != null) {
-                        GeographicBoundingBox box = (GeographicBoundingBox) extent;
+    private double calculateExpandFactor(Envelope bboxOfImage, String srs) throws Exception {
+        CoordinateReferenceSystem crs = Region.decodeCRS(srs);
+        ReferencedEnvelope env = new ReferencedEnvelope(bboxOfImage, crs);
+        env = env.transform(Region.WGS84, true);
 
-                        Envelope env = new Envelope(
-                                box.getWestBoundLongitude(),
-                                box.getEastBoundLongitude(),
-                                box.getSouthBoundLatitude(),
-                                box.getNorthBoundLatitude());
-                        if (env.contains(geom.getEnvelopeInternal())) {
-                            return geom;
-                        } else {
-                            adjustedGeom = geometryFactory.toGeometry(
-                                    env.intersection(geom.getEnvelopeInternal())
-                            );
-                        }
-                    }
-                }
+        double diag = sqrt(pow(env.getWidth(), 2) + pow(env.getHeight(), 2));
+
+        double scale = diag / WGS_DIAG;
+
+        for (ExpandFactor factor : regionGetMapExpandFactors) {
+            if (scale < factor.proportion) {
+                return factor.factor;
             }
-            return adjustedGeom;
-        } else {
-            return geom;
         }
+        return regionGetMapExpandFactors.last().factor;
     }
 
-    private double calculateExpandFactor(Envelope bboxOfImage, String srs) throws Exception {
-    	CoordinateReferenceSystem crs = Region.decodeCRS(srs);
-    	ReferencedEnvelope env = new ReferencedEnvelope(bboxOfImage, crs);
-    	env = env.transform(Region.WGS84, true);
-    	
-    	double diag = sqrt( pow(env.getWidth(), 2) + pow(env.getHeight(), 2));
-    	
-    	double scale = diag/WGS_DIAG;
-    	
-    	for (ExpandFactor factor : regionGetMapExpandFactors) {
-			if(scale < factor.proportion) {
-				return factor.factor;
-			}
-		}
-		return regionGetMapExpandFactors.last().factor;
-	}
-
-	private Dimension calculateImageSize(Envelope bboxOfImage, Integer width, Integer height) {
+    private Dimension calculateImageSize(Envelope bboxOfImage, Integer width, Integer height) {
 
         if (width != null && height != null) {
             throw new BadParameterEx(
-                    WIDTH_PARAM,
-                    "Only one of "
-                            + WIDTH_PARAM
-                            + " and "
-                            + HEIGHT_PARAM
-                            + " can be defined currently.  Future versions may support this but it is not supported at the moment");
+                WIDTH_PARAM,
+                "Only one of "
+                    + WIDTH_PARAM
+                    + " and "
+                    + HEIGHT_PARAM
+                    + " can be defined currently.  Future versions may support this but it is not supported at the moment");
         }
         if (width == null && height == null) {
             throw new BadParameterEx(WIDTH_PARAM, "One of " + WIDTH_PARAM + " or " + HEIGHT_PARAM
-                    + " parameters must be included in the request");
+                + " parameters must be included in the request");
 
         }
 
@@ -408,16 +412,6 @@ public class GetMap{
         } else {
             return new Dimension((int) Math.round(bboxOfImage.getWidth() / bboxOfImage.getHeight() * height), height);
         }
-    }
-
-    public static AffineTransform worldToScreenTransform(Envelope mapExtent, Dimension screenSize) {
-        double scaleX = screenSize.getWidth() / mapExtent.getWidth();
-        double scaleY = screenSize.getHeight() / mapExtent.getHeight();
-
-        double tx = -mapExtent.getMinX() * scaleX;
-        double ty = (mapExtent.getMinY() * scaleY) + screenSize.getHeight();
-
-        return new AffineTransform(scaleX, 0.0d, 0.0d, -scaleY, tx, ty);
     }
 
 }

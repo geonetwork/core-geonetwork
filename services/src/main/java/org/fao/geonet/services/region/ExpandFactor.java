@@ -26,13 +26,15 @@ package org.fao.geonet.services.region;
 import javax.annotation.Nonnull;
 
 /**
- * Represents how much zoom should be given around a geometry so that there is enough context to see where the geometry is.
+ * Represents how much zoom should be given around a geometry so that there is enough context to see
+ * where the geometry is.
  *
- * This is configured in web/webapp/WEB-INF/config-spring-geonetwork.xml in the regionGetMapExpandFactors bean.
+ * This is configured in web/webapp/WEB-INF/config-spring-geonetwork.xml in the
+ * regionGetMapExpandFactors bean.
  *
-* @author Jesse on 3/13/2015.
-*/
-public final class ExpandFactor implements Comparable<ExpandFactor>{
+ * @author Jesse on 3/13/2015.
+ */
+public final class ExpandFactor implements Comparable<ExpandFactor> {
     double proportion;
     double factor;
 

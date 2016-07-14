@@ -31,9 +31,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Test usergroup test.
  *
- * User: Jesse
- * Date: 10/15/13
- * Time: 4:19 PM
+ * User: Jesse Date: 10/15/13 Time: 4:19 PM
  */
 public class UserGroupTest {
     @Test
@@ -44,7 +42,7 @@ public class UserGroupTest {
 
         final Element element = userGroup.asXml();
 
-        assertEquals(""+group.getId(), element.getChildText("group"));
+        assertEquals("" + group.getId(), element.getChildText("group"));
         assertEquals("" + user.getId(), element.getChildText("user"));
         assertEquals(Profile.Editor.name(), element.getChildText("profile"));
     }

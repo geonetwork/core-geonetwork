@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -39,11 +40,8 @@ import java.nio.file.Path;
 
 
 /**
- * Activate a thesaurus. Parameters:
- * <ul>
- * <li>fname: thesaurus identifier</li>
- * <li>activated: "y" or "n"</li>
- * </ul>
+ * Activate a thesaurus. Parameters: <ul> <li>fname: thesaurus identifier</li> <li>activated: "y" or
+ * "n"</li> </ul>
  */
 public class Clear implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -53,7 +51,7 @@ public class Clear implements Service {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         String fname = Util.getParam(params, Params.REF);
-        
+
 
         ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
         Thesaurus t = tm.getThesaurusByName(fname);
@@ -66,8 +64,8 @@ public class Clear implements Service {
         }
 
         return new Element(Jeeves.Elem.RESPONSE)
-                .addContent(params.getChild(Params.REF).detach())
-                .addContent(params.getChild("cleared").detach());
+            .addContent(params.getChild(Params.REF).detach())
+            .addContent(params.getChild("cleared").detach());
     }
 }
 

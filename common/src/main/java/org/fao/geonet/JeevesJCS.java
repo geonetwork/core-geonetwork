@@ -38,46 +38,43 @@ import java.util.Properties;
 /**
  * @author jeichar
  */
-public class JeevesJCS extends GroupCacheAccess
-{
+public class JeevesJCS extends GroupCacheAccess {
 
-    /** The manager returns cache instances. */
+    /**
+     * The manager returns cache instances.
+     */
     private static CompositeCacheManager cacheMgr;
     private static Path configFilename;
 
-    protected JeevesJCS(CompositeCache cacheControl)
-    {
+    protected JeevesJCS(CompositeCache cacheControl) {
         super(cacheControl);
     }
+
     /**
-     * Get a GeonetworkJCS which accesses the provided region.
-     * <p>
+     * Get a GeonetworkJCS which accesses the provided region. <p>
+     *
      * @param region Region that return GeonetworkJCS will provide access to
      * @return A GeonetworkJCS which provides access to a given region.
-     * @exception CacheException
      */
-    public static JeevesJCS getInstance( String region )
-        throws CacheException
-    {
+    public static JeevesJCS getInstance(String region)
+        throws CacheException {
         ensureCacheManager();
 
-        return new JeevesJCS( cacheMgr.getCache( region ) );
+        return new JeevesJCS(cacheMgr.getCache(region));
     }
 
     /**
-     * Get a GeonetworkJCS which accesses the provided region.
-     * <p>
+     * Get a GeonetworkJCS which accesses the provided region. <p>
+     *
      * @param region Region that return GeonetworkJCS will provide access to
-     * @param icca CacheAttributes for region
+     * @param icca   CacheAttributes for region
      * @return A GeonetworkJCS which provides access to a given region.
-     * @exception CacheException
      */
-    public static JeevesJCS getInstance( String region, ICompositeCacheAttributes icca )
-        throws CacheException
-    {
+    public static JeevesJCS getInstance(String region, ICompositeCacheAttributes icca)
+        throws CacheException {
         ensureCacheManager();
 
-        return new JeevesJCS( cacheMgr.getCache( region, icca ) );
+        return new JeevesJCS(cacheMgr.getCache(region, icca));
     }
 
     /**
@@ -85,49 +82,41 @@ public class JeevesJCS extends GroupCacheAccess
      * not already set. Unlike the implementation in CacheAccess, the cache manager is a
      * CompositeCacheManager. NOTE: This can will be moved up into GroupCacheAccess.
      */
-    protected static synchronized void ensureCacheManager()
-    {
-        if ( cacheMgr == null )
-        {
-            if ( configFilename == null )
-            {
+    protected static synchronized void ensureCacheManager() {
+        if (cacheMgr == null) {
+            if (configFilename == null) {
                 cacheMgr = CompositeCacheManager.getInstance();
-            }
-            else
-            {
+            } else {
                 cacheMgr = CompositeCacheManager.getUnconfiguredInstance();
 
-                configure( );
+                configure();
             }
         }
     }
-    
 
-    private static void configure()
-    {
+
+    private static void configure() {
 
         Properties props = new Properties();
 
         try (Reader is = IO.newBufferedReader(configFilename, Constants.CHARSET)) {
-            props.load( is );
+            props.load(is);
         } catch (IOException e) {
-            throw new IllegalStateException( "Unable to load cache configuration from: "+configFilename, e);
+            throw new IllegalStateException("Unable to load cache configuration from: " + configFilename, e);
         }
 
-        cacheMgr.configure( props );
-            
+        cacheMgr.configure(props);
+
     }
+
     /**
      * Set the filename that the cache manager will be initialized with. Only matters before the
-     * instance is initialized.
-     * <p>
-     * @param configFilename
+     * instance is initialized. <p>
      */
-    public static void setConfigFilename( Path configFilename )
-    {
-        cacheMgr=null;
+    public static void setConfigFilename(Path configFilename) {
+        cacheMgr = null;
         JeevesJCS.configFilename = configFilename;
     }
-    
-    
+
+
 }

@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
@@ -55,40 +56,56 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-
 //=============================================================================
 
-class Harvester implements IHarvester<HarvestResult>
-{
+class Harvester implements IHarvester<HarvestResult> {
     private final AtomicBoolean cancelMonitor;
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    private Logger log;
 
-	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params)
-	{
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private GeoPRESTParams params;
+
+    //---------------------------------------------------------------------------
+    private ServiceContext context;
+
+    //---------------------------------------------------------------------------
+    private SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
+
+    //---------------------------------------------------------------------------
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params) {
 
         this.cancelMonitor = cancelMonitor;
-		this.log    = log;
-		this.context= context;
-		this.params = params;
+        this.log = log;
+        this.context = context;
+        this.params = params;
 
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public HarvestResult harvest(Logger log) throws Exception {
 
-	public HarvestResult harvest(Logger log) throws Exception {
+        this.log = log;
+        //--- perform all searches
 
-	    this.log = log;
-		//--- perform all searches
-
-		XmlRequest request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/find/document"));
+        XmlRequest request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl + "/rest/find/document"));
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
@@ -116,12 +133,12 @@ class Harvester implements IHarvester<HarvestResult>
             try {
                 log.debug("Doing an empty search");
                 records.addAll(search(request, Search.createEmptySearch()));
-            } catch(Exception t) {
+            } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 t.printStackTrace();
                 errors.add(new HarvestError(t, log));
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
@@ -129,62 +146,57 @@ class Harvester implements IHarvester<HarvestResult>
             }
         }
 
-		log.info("Total records processed in all searches :"+ records.size());
+        log.info("Total records processed in all searches :" + records.size());
 
-		//--- align local node
+        //--- align local node
 
-		Aligner aligner = new Aligner(cancelMonitor, log, context, params);
+        Aligner aligner = new Aligner(cancelMonitor, log, context, params);
 
-		return aligner.align(records, errors);
-	}
+        return aligner.align(records, errors);
+    }
 
-	//---------------------------------------------------------------------------
+    /**
+     * Does REST search request.
+     */
+    private Set<RecordInfo> search(XmlRequest request, Search s) throws Exception {
+        request.clearParams();
 
-	/**
-	 * Does REST search request.
-	 */
-	private Set<RecordInfo> search(XmlRequest request, Search s) throws Exception
-	{
-		request.clearParams();
-	
-		request.addParam("searchText", s.freeText);
-		request.addParam("max", params.maxResults);
-		Element response = doSearch(request);
+        request.addParam("searchText", s.freeText);
+        request.addParam("max", params.maxResults);
+        Element response = doSearch(request);
 
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
 
-		if (log.isDebugEnabled())
-			log.debug("Number of child elements in response: " + response.getChildren().size());
+        if (log.isDebugEnabled())
+            log.debug("Number of child elements in response: " + response.getChildren().size());
 
-		String rss = response.getName();
-		if (!rss.equals("rss")) {
-			throw new OperationAbortedEx("Missing 'rss' element in\n", Xml.getString(response));
-		}
+        String rss = response.getName();
+        if (!rss.equals("rss")) {
+            throw new OperationAbortedEx("Missing 'rss' element in\n", Xml.getString(response));
+        }
 
-		Element channel = response.getChild("channel");
-		if (channel == null) {
-			throw new OperationAbortedEx("Missing 'channel' element in \n", Xml.getString(response));
-		}
+        Element channel = response.getChild("channel");
+        if (channel == null) {
+            throw new OperationAbortedEx("Missing 'channel' element in \n", Xml.getString(response));
+        }
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = channel.getChildren();
 
-		for (Element record :list) {
+        for (Element record : list) {
             if (cancelMonitor.get()) {
                 return Collections.emptySet();
             }
 
             if (!record.getName().equals("item")) continue; // skip all the other crap
-			RecordInfo recInfo = getRecordInfo((Element)record.clone());
-			if (recInfo != null) records.add(recInfo);
-		}
+            RecordInfo recInfo = getRecordInfo((Element) record.clone());
+            if (recInfo != null) records.add(recInfo);
+        }
 
-		log.info("Records added to result list : "+ records.size());
+        log.info("Records added to result list : " + records.size());
 
-		return records;
-	}
-
-	//---------------------------------------------------------------------------
+        return records;
+    }
 
     private Element doSearch(XmlRequest request) throws OperationAbortedEx {
         try {
@@ -198,50 +210,47 @@ class Harvester implements IHarvester<HarvestResult>
         } catch (BadSoapResponseEx e) {
             errors.add(new HarvestError(e, log));
             throw new OperationAbortedEx("Raised exception when searching: "
-                    + e.getMessage(), e);
+                + e.getMessage(), e);
         } catch (BadXmlResponseEx e) {
             errors.add(new HarvestError(e, log));
             throw new OperationAbortedEx("Raised exception when searching: "
-                    + e.getMessage(), e);
+                + e.getMessage(), e);
         } catch (IOException e) {
             errors.add(new HarvestError(e, log));
             throw new OperationAbortedEx("Raised exception when searching: "
-                    + e.getMessage(), e);
+                + e.getMessage(), e);
         }
     }
 
-	//---------------------------------------------------------------------------
+    private RecordInfo getRecordInfo(Element record) {
+        if (log.isDebugEnabled()) log.debug("getRecordInfo : " + Xml.getString(record));
 
-	private RecordInfo getRecordInfo(Element record)
-	{
-    if (log.isDebugEnabled()) log.debug("getRecordInfo : " + Xml.getString(record));
+        String identif = "";
 
-		String identif = "";
+        // get uuid and date modified
+        try {
+            // uuid is in <guid> child
+            String guidLink = record.getChildText("guid");
+            if (guidLink != null) {
+                guidLink = URLDecoder.decode(guidLink, Constants.ENCODING);
+                identif = StringUtils.substringAfter(guidLink, "id=");
+            }
+            if (identif.length() == 0) {
+                log.warning("Record doesn't have a uuid : " + Xml.getString(record));
+                return null; // skip this one
+            }
 
-		// get uuid and date modified
-		try {
-			// uuid is in <guid> child
-			String guidLink = record.getChildText("guid");
-			if (guidLink != null) {
-				guidLink = URLDecoder.decode(guidLink, Constants.ENCODING);
-				identif = StringUtils.substringAfter(guidLink, "id=");
-			}
-			if (identif.length() == 0) {
-      	log.warning("Record doesn't have a uuid : "+ Xml.getString(record));
-				return null; // skip this one
-			}
+            String modified = record.getChildText("pubDate");
+            // modified is using in the form Mon, 04 Feb 2013 10:19:00 +1000
+            // it must be converted to ISODate,
+            // TODO: does it come in any other form??? Check geoportal stuff?
+            Date modDate = sdf.parse(modified);
+            modified = new ISODate(modDate.getTime(), false).toString();
+            if (modified != null && modified.length() == 0) modified = null;
 
-			String modified = record.getChildText("pubDate");
-			// modified is using in the form Mon, 04 Feb 2013 10:19:00 +1000 
-			// it must be converted to ISODate, 
-			// TODO: does it come in any other form??? Check geoportal stuff?
-			Date modDate = sdf.parse(modified);
-			modified = new ISODate(modDate.getTime(), false).toString(); 
-			if (modified != null && modified.length() == 0) modified = null;
-
-			if (log.isDebugEnabled())
-				log.debug("getRecordInfo: adding "+identif+" with modification date "+modified);
-      return new RecordInfo(identif, modified);
+            if (log.isDebugEnabled())
+                log.debug("getRecordInfo: adding " + identif + " with modification date " + modified);
+            return new RecordInfo(identif, modified);
         } catch (UnsupportedEncodingException e) {
             HarvestError harvestError = new HarvestError(e, log);
             harvestError.setDescription(harvestError.getDescription() + "\n record: " + Xml.getString(record));
@@ -252,28 +261,14 @@ class Harvester implements IHarvester<HarvestResult>
             errors.add(new HarvestError(e, log));
         }
 
-		// we get here if we couldn't get the UUID or date modified
-		return null;
+        // we get here if we couldn't get the UUID or date modified
+        return null;
 
-	}
-	
+    }
+
     public List<HarvestError> getErrors() {
         return errors;
     }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-	private Logger         log;
-	private GeoPRESTParams params;
-	private ServiceContext context;
-	private SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z");
-    /**
-     * Contains a list of accumulated errors during the executing of this harvest.
-     */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 // =============================================================================

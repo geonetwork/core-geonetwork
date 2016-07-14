@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -40,90 +41,90 @@ import java.util.UUID;
 //=============================================================================
 
 public class WebDavHarvester extends AbstractHarvester<HarvestResult> {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx {
-		params = new WebDavParams(dataMan);
+    private WebDavParams params;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new WebDavParams(dataMan);
         super.setParams(params);
 
         params.create(node);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
-	protected String doAdd(Element node) throws BadInputEx, SQLException {
-		params = new WebDavParams(dataMan);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new WebDavParams(dataMan);
         super.setParams(params);
 
         //--- retrieve/initialize information
-		params.create(node);
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
-		String id = settingMan.add("harvesting", "node", getType());
-		storeNode(params, "id:"+id);
+        params.create(node);
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
+        String id = settingMan.add("harvesting", "node", getType());
+        storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-		return id;
-	}
+        return id;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
-	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
-		WebDavParams copy = params.copy();
-		//--- update variables
-		copy.update(node);
-		String path = "harvesting/id:"+ id;
-		settingMan.removeChildren(path);
-		//--- update database
-		storeNode(copy, path);
-		//--- we update a copy first because if there is an exception CswParams
-		//--- could be half updated and so it could be in an inconsistent state
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
+    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        WebDavParams copy = params.copy();
+        //--- update variables
+        copy.update(node);
+        String path = "harvesting/id:" + id;
+        settingMan.removeChildren(path);
+        //--- update database
+        storeNode(copy, path);
+        //--- we update a copy first because if there is an exception CswParams
+        //--- could be half updated and so it could be in an inconsistent state
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-		
-		params = copy;
+
+        params = copy;
         super.setParams(params);
 
     }
 
-	//---------------------------------------------------------------------------
-	protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
-		WebDavParams params = (WebDavParams) p;
-		settingMan.add("id:"+siteId, "url",  params.url);
-		settingMan.add("id:"+siteId, "icon", params.icon);
-		settingMan.add("id:"+optionsId, "validate", params.getValidate());
-		settingMan.add("id:"+optionsId, "recurse",  params.recurse);
-		settingMan.add("id:"+optionsId, "subtype", params.subtype);
-	}
+    //---------------------------------------------------------------------------
+    protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
+        WebDavParams params = (WebDavParams) p;
+        settingMan.add("id:" + siteId, "url", params.url);
+        settingMan.add("id:" + siteId, "icon", params.icon);
+        settingMan.add("id:" + optionsId, "validate", params.getValidate());
+        settingMan.add("id:" + optionsId, "recurse", params.recurse);
+        settingMan.add("id:" + optionsId, "subtype", params.subtype);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
     public void doHarvest(Logger log) throws Exception {
-		log.info("WebDav doHarvest start");
-		Harvester h = new Harvester(cancelMonitor, log, context, params);
-		result = h.harvest(log);
-		log.info("WebDav doHarvest end");
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private WebDavParams params;
+        log.info("WebDav doHarvest start");
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        result = h.harvest(log);
+        log.info("WebDav doHarvest end");
+    }
 }

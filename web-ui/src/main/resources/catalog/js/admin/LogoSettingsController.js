@@ -47,11 +47,9 @@
        */
       loadLogo = function() {
         $scope.logos = [];
-        $http.get('admin.logo.list?_content_type=json&type=icons').
+        $http.get('../api/logos').
             success(function(data) {
-              $scope.logos = data[0];
-            }).error(function(data) {
-              // TODO
+              $scope.logos = data;
             });
       };
 
@@ -59,11 +57,15 @@
        * Callback when error uploading file.
        */
       loadLogoError = function(e, data) {
-        $rootScope.$broadcast('StatusUpdated', {
-          title: $translate('logoUploadError'),
-          error: data.jqXHR.responseJSON,
-          timeout: 0,
-          type: 'danger'});
+        if (data.jqXHR.status !== 201) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('logoUploadError'),
+            error: data.jqXHR.responseJSON,
+            timeout: 0,
+            type: 'danger'});
+        } else {
+          loadLogo();
+        }
       };
 
       /**
@@ -80,19 +82,17 @@
        * Set the catalog logo and optionnaly the favicon
        * if favicon parameter is set to true.
        */
-      $scope.setCatalogLogo = function(logoName, favicon) {
-        var setFavicon = favicon ? '1' : '0';
-
-        $http.get('admin.logo.update?fname=' + logoName +
-            '&favicon=' + setFavicon)
-          .success(function(data) {
+      $scope.setCatalogLogo = function(logoName, asFavicon) {
+        $http.put('../api/site/logo?file=' + logoName +
+            '&asFavicon=' + asFavicon)
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoUpdated'),
                 timeout: 2,
                 type: 'success'});
               $rootScope.$broadcast('loadCatalogInfo');
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('logoUpdateError'),
                 error: data,
@@ -106,15 +106,15 @@
        * Remove the logo and refresh the list when done.
        */
       $scope.removeLogo = function(logoName) {
-        $http.get('admin.logo.remove?fname=' + logoName)
-          .success(function(data) {
+        $http.delete('../api/logos/' + logoName)
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoRemoved'),
                 timeout: 2,
                 type: 'success'});
               loadLogo();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('logoRemoveError'),
                 error: data,

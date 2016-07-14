@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -44,98 +45,97 @@ import java.util.Set;
 
 //=============================================================================
 
-/** Given a metadata id returns all associated status records. Called by the
-  * metadata.status service
-  */
+/**
+ * Given a metadata id returns all associated status records. Called by the metadata.status service
+ */
 
-public class GetStatus implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class GetStatus implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
-		AccessManager am = gc.getBean(AccessManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
+        AccessManager am = gc.getBean(AccessManager.class);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		//-----------------------------------------------------------------------
-		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		
-		if (!dataMan.existsMetadata(iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        //-----------------------------------------------------------------------
+        //--- check access
+        int iLocalId = Integer.parseInt(id);
 
-		if (!am.isOwner(context,id)) 
-			throw new IllegalArgumentException("You are not the owner of metadata --> "+id);
+        if (!dataMan.existsMetadata(iLocalId))
+            throw new IllegalArgumentException("Metadata not found --> " + id);
 
-		//-----------------------------------------------------------------------
-		//--- retrieve metadata status
+        if (!am.isOwner(context, id))
+            throw new IllegalArgumentException("You are not the owner of metadata --> " + id);
 
-		MetadataStatus stats = dataMan.getStatus(iLocalId);
+        //-----------------------------------------------------------------------
+        //--- retrieve metadata status
 
-		String status = Params.Status.UNKNOWN;
-		String userId = "-1"; // no userId
-		if (stats != null) {
-		    status = String.valueOf(stats.getId().getStatusId());
+        MetadataStatus stats = dataMan.getStatus(iLocalId);
+
+        String status = Params.Status.UNKNOWN;
+        String userId = "-1"; // no userId
+        if (stats != null) {
+            status = String.valueOf(stats.getId().getStatusId());
             userId = String.valueOf(stats.getId().getUserId());
-		}
+        }
 
-		//-----------------------------------------------------------------------
-		//--- retrieve status values
+        //-----------------------------------------------------------------------
+        //--- retrieve status values
 
-		Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
+        Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> kids = elStatus.getChildren();
 
-		for (Element kid : kids) {
+        for (Element kid : kids) {
 
-			kid.setName(Geonet.Elem.STATUS);
+            kid.setName(Geonet.Elem.STATUS);
 
-			//--- set status value of this metadata to 'on'
+            //--- set status value of this metadata to 'on'
 
-			if (kid.getChildText("id").equals(status)) {
-				kid.addContent(new Element("on"));
+            if (kid.getChildText("id").equals(status)) {
+                kid.addContent(new Element("on"));
 
-				//--- set the userId of the submitter into the result
-				kid.addContent(new Element("userId").setText(userId));
-			}
-		}
+                //--- set the userId of the submitter into the result
+                kid.addContent(new Element("userId").setText(userId));
+            }
+        }
 
-		//-----------------------------------------------------------------------
-		//--- get the list of content reviewers for this metadata record
+        //-----------------------------------------------------------------------
+        //--- get the list of content reviewers for this metadata record
 
-		Set<Integer> ids = new HashSet<Integer>();
-		ids.add(Integer.valueOf(id));
+        Set<Integer> ids = new HashSet<Integer>();
+        ids.add(Integer.valueOf(id));
 
-		Element cRevs = am.getContentReviewers(context, ids);
-		cRevs.setName("contentReviewers");
+        Element cRevs = am.getContentReviewers(context, ids);
+        cRevs.setName("contentReviewers");
 
-		//-----------------------------------------------------------------------
-		//--- put it all together
+        //-----------------------------------------------------------------------
+        //--- put it all together
 
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(new Element(Geonet.Elem.ID).setText(id))
-										.addContent(new Element("hasEditPermission").setText(am.hasEditPermission(context, id) ? "true" : "false"))
-										.addContent(elStatus)
-										.addContent(cRevs);
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+            .addContent(new Element(Geonet.Elem.ID).setText(id))
+            .addContent(new Element("hasEditPermission").setText(am.hasEditPermission(context, id) ? "true" : "false"))
+            .addContent(elStatus)
+            .addContent(cRevs);
 
-		return elRes;
-	}
+        return elRes;
+    }
 }
 
 //=============================================================================

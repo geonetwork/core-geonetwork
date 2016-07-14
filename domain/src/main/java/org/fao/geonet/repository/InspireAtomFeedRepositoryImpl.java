@@ -63,7 +63,7 @@ public class InspireAtomFeedRepositoryImpl implements InspireAtomFeedRepositoryC
 
         InspireAtomFeed feed = null;
 
-        try{
+        try {
             feed = _entityManager.createQuery(cbQuery).getSingleResult();
         } catch (NoResultException nre) {
             //Ignore this
@@ -98,7 +98,7 @@ public class InspireAtomFeedRepositoryImpl implements InspireAtomFeedRepositoryC
         cbQuery.where(datasetIdCodePredicate);
 
         InspireAtomFeed feed = null;
-        try{
+        try {
             feed = _entityManager.createQuery(cbQuery).getSingleResult();
         } catch (NoResultException nre) {
             //Ignore this

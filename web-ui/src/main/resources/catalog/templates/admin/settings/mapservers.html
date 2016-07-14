@@ -89,7 +89,7 @@
               <div class="col-sm-9">
                 <input type="url" name="configurl" class="form-control"
                        required=""
-                       data-ng-model="mapserverSelected.adminUrl" placeholder="http://"/>
+                       data-ng-model="mapserverSelected.configurl" placeholder="http://"/>
               </div>
             </div>
 
@@ -113,7 +113,8 @@
 
                 <div class="col-sm-9">
                   <input type="password" class="form-control"
-                         required=""
+                         required="required"
+                         autocomplete="off"
                          data-ng-model="mapserverSelected.password"/>
                 </div>
               </div>
@@ -130,7 +131,7 @@
                 <span class="input-group-addon">:</span>
                 <input type="url" name="namespace" class="form-control"
                        required=""
-                       data-ng-model="mapserverSelected.namespaceUrl" placeholder="http://"/>
+                       data-ng-model="mapserverSelected.namespace" placeholder="http://"/>
 
               </div>
               <div class="col-sm-9 col-sm-offset-3">
@@ -143,7 +144,7 @@
               <div class="col-sm-9">
                 <input type="checkbox" name="pushstyleinworkspace"
                        data-ng-checked="mapserverSelected.pushStyleInWorkspace == 'true'"/>
-                </div>
+              </div>
             </div>
 
 
@@ -153,7 +154,7 @@
               <div class="col-sm-9">
                 <input type="url" name="wmsurl" class="form-control"
                        required=""
-                       data-ng-model="mapserverSelected.wmsUrl" placeholder="http://"/>
+                       data-ng-model="mapserverSelected.wmsurl" placeholder="http://"/>
               </div>
             </div>
 
@@ -163,7 +164,7 @@
               <div class="col-sm-9">
                 <input type="url" name="wfsurl" class="form-control"
                        required=""
-                       data-ng-model="mapserverSelected.wfsUrl" placeholder="http://"/>
+                       data-ng-model="mapserverSelected.wfsurl" placeholder="http://"/>
               </div>
             </div>
 
@@ -173,7 +174,7 @@
               <div class="col-sm-9">
                 <input type="url" name="wcsurl" class="form-control"
                        required=""
-                       data-ng-model="mapserverSelected.wcsUrl" placeholder="http://"/>
+                       data-ng-model="mapserverSelected.wcsurl" placeholder="http://"/>
               </div>
             </div>
 
@@ -183,7 +184,7 @@
               <div class="col-sm-9">
                 <input type="url" name="stylerurl" class="form-control"
                        required=""
-                       data-ng-model="mapserverSelected.stylerUrl" placeholder="http://"/>
+                       data-ng-model="mapserverSelected.stylerurl" placeholder="http://"/>
               </div>
             </div>
           </fieldset>
@@ -193,14 +194,13 @@
   </div>
 
 
-
   <div class="modal fade" id="passwordResetModal" tabindex="-1" role="dialog"
        aria-labelledby="{{'passwordReset' | translate}}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-              >&times;</button>
+          >&times;</button>
           <h4 class="modal-title" data-translate=""
               data-translate-values="{ user: '{{mapserverSelected.name}}'}">
             resetPasswordTitle</h4>
@@ -223,7 +223,8 @@
 
               <div class="col-sm-9">
                 <input type="password" class="form-control"
-                       required=""
+                       required="required"
+                       autocomplete="off"
                        data-ng-model="resetPassword"/>
               </div>
             </div>
@@ -233,7 +234,7 @@
           <button type="button" class="btn" data-dismiss="modal">
             <i class="fa fa-ban-circle"></i>&nbsp;
             <span data-translate=""
-                >cancel</span></button>
+            >cancel</span></button>
           <button type="button" class="btn btn-primary"
                   data-ng-click="saveNewPassword()">
             <i class="fa fa-lock"></i>&nbsp;

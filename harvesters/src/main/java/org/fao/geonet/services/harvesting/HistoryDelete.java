@@ -25,10 +25,12 @@ package org.fao.geonet.services.harvesting;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvestHistory;
@@ -41,6 +43,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -86,7 +89,7 @@ public class HistoryDelete implements Service {
                     if (f.exists() && f.canWrite()) {
                         if (!f.delete()) {
                             org.fao.geonet.utils.Log.warning(Geonet.HARVESTER,
-                                    "Removing history. Failed to delete file: " + f.getCanonicalPath());
+                                "Removing history. Failed to delete file: " + f.getCanonicalPath());
                         }
                     }
                 } catch (Exception e) {

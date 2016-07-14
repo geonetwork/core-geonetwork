@@ -25,20 +25,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class UserLoginEx extends NotAllowedEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class UserLoginEx extends NotAllowedEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public UserLoginEx(String name)
-	{
-		super("User login failed", name);
+    public UserLoginEx(String name) {
+        super("User login failed", name);
 
-		id = "user-login";
-	}
+        id = "user-login";
+    }
 }
 
 //=============================================================================

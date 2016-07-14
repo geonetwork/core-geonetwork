@@ -24,11 +24,14 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.UserNotFoundEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.repository.UserRepository;
@@ -41,59 +44,59 @@ import java.nio.file.Path;
  * Update the profile of logged user
  */
 public class InfoUpdate extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		String surname  = Util.getParam(params, Params.SURNAME);
-		String name     = Util.getParam(params, Params.NAME);
-		String address  = Util.getParam(params, Params.ADDRESS, "");
-		String city     = Util.getParam(params, Params.CITY,    "");
-		String state    = Util.getParam(params, Params.STATE,   "");
-		String zip      = Util.getParam(params, Params.ZIP,     "");
-		String country  = Util.getParam(params, Params.COUNTRY, "");
-		String email    = Util.getParam(params, Params.EMAIL,   "");
-		String organ    = Util.getParam(params, Params.ORG,     "");
-		String kind     = Util.getParam(params, Params.KIND,    "");
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String surname = Util.getParam(params, Params.SURNAME);
+        String name = Util.getParam(params, Params.NAME);
+        String address = Util.getParam(params, Params.ADDRESS, "");
+        String city = Util.getParam(params, Params.CITY, "");
+        String state = Util.getParam(params, Params.STATE, "");
+        String zip = Util.getParam(params, Params.ZIP, "");
+        String country = Util.getParam(params, Params.COUNTRY, "");
+        String email = Util.getParam(params, Params.EMAIL, "");
+        String organ = Util.getParam(params, Params.ORG, "");
+        String kind = Util.getParam(params, Params.KIND, "");
 
 
-		// check old password
-		UserSession session = context.getUserSession();
-		String      userId  = session.getUserId();
+        // check old password
+        UserSession session = context.getUserSession();
+        String userId = session.getUserId();
 
-		if (userId == null)
-			throw new UserNotFoundEx(null);
+        if (userId == null)
+            throw new UserNotFoundEx(null);
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         final User user = userRepository.findOne(userId);
 
         user.setName(name)
-                .setKind(kind)
-                .setOrganisation(organ)
-                .setSurname(surname);
+            .setKind(kind)
+            .setOrganisation(organ)
+            .setSurname(surname);
         user.getPrimaryAddress()
-                .setAddress(address)
-                .setCity(city)
-                .setCountry(country)
-                .setState(state)
-                .setZip(zip);
+            .setAddress(address)
+            .setCity(city)
+            .setCountry(country)
+            .setState(state)
+            .setZip(zip);
         user.getEmailAddresses().clear();
         user.getEmailAddresses().add(email);
 
         userRepository.save(user);
 
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
+        return new Element(Jeeves.Elem.RESPONSE);
+    }
 }

@@ -46,12 +46,12 @@
   <property name="appName" value="geonetwork"/>
   <property name="version" value="3.1.0"/>
   <property name="subVersion" value="SNAPSHOT"/>
-  <property name="javaVersion" value="1.7.0"/>
+  <property name="javaVersion" value="1.8.0"/>
   <!-- Minimum version required -->
   <property name="jre_url" value="http://openjdk.java.net/"/>
   <property name="OS" value="Compiled on ${os.name} (${osys})"/>
   <property name="propsdir" value="../.props"/>
-  <property name="ant.build.javac.target" value="1.7"/>
+  <property name="ant.build.javac.target" value="1.8"/>
   <property name="debugOn" value="on"/>
   <!-- on off true false yes no -->
   <property name="thesaurusUrl"
@@ -133,8 +133,8 @@
 
     <!-- Update the properties file -->
     <propertyfile
-            file="../web/src/main/webapp/WEB-INF/server.prop"
-            comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
+      file="../web/src/main/webapp/WEB-INF/server.prop"
+      comment="GeoNetwork opensource properties. These are also used by geonetwork at runtime">
       <!-- These are used by geonetwork at runtime -->
       <!-- Do not remove !! -->
       <entry key="version" value="${version}"/>
@@ -143,7 +143,7 @@
 
       <entry key="javaVersion" value="${javaVersion}"/>
       <entry key="jre_url" value="${jre_url}"/>
-      <entry key="ant.build.javac.target" value="1.5"/>
+      <entry key="ant.build.javac.target" value="1.8"/>
       <entry key="buildDate" type="date" value="now"
              pattern="yyyy-MM-dd'T'HH:mm:ssZ"/>
 
@@ -228,7 +228,7 @@
             basedir="${basedir}"/>
 
     <checksum
-            file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
-            forceOverwrite="yes"/>
+      file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
+      forceOverwrite="yes"/>
   </target>
 </project>

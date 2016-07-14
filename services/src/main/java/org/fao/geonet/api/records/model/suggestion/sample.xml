@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suggestions>
+  <suggestion process="add-extent-from-geokeywords" id="d2138e5" category="keyword" target="extent">
+    <name>Keyword field contains place keywords (ie.World). Try to compute metadata extent using thesaurus.</name>
+    <operational>true</operational>
+    <params>{gurl:{type:'string', defaultValue:'http://localhost:8080/geonetwork/srv/eng/'},
+      lang:{type:'string', defaultValue:'eng'},
+      replace:{type:'boolean', defaultValue:'0'}}</params>
+  </suggestion>
+  <suggestion process="add-resource-id" id="d2138e15" category="identification" target="identification">
+    <name>Current record does not contain resource identifier. Add the
+      following identifier:
+      http://localhost:8080/geonetwork/srv/metadata/8f089c32-d0ca-4af1-a56a-4cbf34ddcc75.</name>
+    <operational>true</operational>
+  </suggestion>
+</suggestions>
+

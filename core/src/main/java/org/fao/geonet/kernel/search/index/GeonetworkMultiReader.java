@@ -44,7 +44,7 @@ public class GeonetworkMultiReader extends MultiReader {
     }
 
     public void releaseToNRTManager() throws IOException {
-        for(Map.Entry<AcquireResult, GeonetworkNRTManager> entry: _searchers.entrySet()) {
+        for (Map.Entry<AcquireResult, GeonetworkNRTManager> entry : _searchers.entrySet()) {
             entry.getValue().release(entry.getKey().searcher);
         }
         _searchers.clear();

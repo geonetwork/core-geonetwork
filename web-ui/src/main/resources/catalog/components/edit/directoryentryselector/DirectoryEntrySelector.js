@@ -87,6 +87,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    any: '',
                     params: {
                       _isTemplate: 's',
                       any: '',
@@ -110,10 +111,9 @@
                   // Define type of XLinks: local:// or http:// based on
                   // catalog configuration.
                   var url =
-                 gnConfig[gnConfig.key.isXLinkLocal] === true ?
-                      'local://' + scope.$parent.lang + '/subtemplate' :
-                      gnConfigService.getServiceURL() + scope.$parent.lang +
-                      '/subtemplate';
+                 (gnConfig[gnConfig.key.isXLinkLocal] === true ?
+                      'local://' : gnConfigService.getServiceURL()) +
+                 'api/registries/entries/';
                   scope.gnConfig = gnConfig;
                   // If true, display button to add the element
                   // without using the subtemplate selector.
@@ -132,6 +132,12 @@
                     angular.extend(scope.searchObj.params,
                         angular.fromJson(scope.filter));
                   }
+
+                  // Append * for like search
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                   '*' + scope.searchObj.any + '*';
+                  };
 
                   scope.snippet = null;
                   scope.snippetRef = gnEditor.
@@ -187,7 +193,7 @@
                     angular.forEach(entry, function(c) {
                       var id = c['geonet:info'].id,
                           uuid = c['geonet:info'].uuid;
-                      var params = {uuid: uuid};
+                      var params = [];
 
                       // For the time being only contact role
                       // could be substitute in directory entry
@@ -199,30 +205,26 @@
                       // TODO: this could be applicable not only to contact role
                       // No use case identified for now.
                       if (scope.hasDynamicVariable && role) {
-                        params.process =
-                            scope.variables.replace('{role}', role);
+                        params.push('process=' +
+                            scope.variables.replace('{role}', role));
                       } else if (scope.variables) {
-                        params.process = scope.variables;
-                      } else {
-                        params.process = '';
+                        params.push('process=' + scope.variables);
                       }
 
                       if (angular.isString(scope.transformation) &&
                           scope.transformation !== '') {
-                        params.transformation = scope.transformation;
+                        params.push('transformation=' + scope.transformation);
                       }
 
-                      gnHttp.callService(
-                          'subtemplate', params).success(function(xml) {
+                      var urlParams = params.join('&');
+                      $http.get(
+                          '../api/registries/entries/' + uuid + '?' + urlParams)
+                        .success(function(xml) {
                        if (usingXlink) {
-                         var urlParams = '';
-                         angular.forEach(params, function(p, key) {
-                           urlParams += key + '=' + p + '&';
-                         });
                          snippets.push(gnEditorXMLService.
                                   buildXMLForXlink(scope.schema,
                          scope.elementName,
-                                      url +
+                                      url + uuid +
                                       '?' + urlParams));
                        } else {
                          snippets.push(gnEditorXMLService.
@@ -240,7 +242,7 @@
                   gnSchemaManagerService
                      .getCodelist(schemaId + '|' + 'roleCode')
                       .then(function(data) {
-                        scope.roles = data[0].entry;
+                        scope.roles = data.entry;
                       });
 
                   scope.openSelector = function() {
@@ -299,7 +301,7 @@
                    angular.extend(scope.searchObj.defaultParams, filter);
                  }
                  scope.modelOptions = angular.copy(
-                    gnGlobalSettings.modelOptions);
+                 gnGlobalSettings.modelOptions);
                },
                post: function postLink(scope, iElement, iAttrs) {
                  scope.defaultRoleCode = iAttrs['defaultRole'] || null;

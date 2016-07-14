@@ -24,6 +24,7 @@
 package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Optional;
+
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.OperationAllowed_;
@@ -163,7 +164,7 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
     @Test
     public void testHasOwnerIdAndSpec() {
         List<OperationAllowed> found = _opAllowRepo.findAllWithOwner(1, Optional.<Specification<OperationAllowed>>of
-                (OperationAllowedSpecs.hasGroupId(_intranetGroup.getId())));
+            (OperationAllowedSpecs.hasGroupId(_intranetGroup.getId())));
 
         assertEquals(found.size(), 2);
     }

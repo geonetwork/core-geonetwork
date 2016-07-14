@@ -23,7 +23,8 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.records.BatchEditsApi;
+
+import org.fao.geonet.api.records.editing.BatchEditsApi;
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
@@ -45,12 +46,11 @@ import static org.junit.Assert.assertSame;
 
 public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
-    @Autowired
-    private MetadataRepository repository;
-
     List<String> uuids = new ArrayList();
     String firstMetadataId = null;
     ServiceContext context;
+    @Autowired
+    private MetadataRepository repository;
 
     @Before
     public void loadSamples() throws Exception {
@@ -58,7 +58,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         loginAsAdmin(context);
 
         final MEFLibIntegrationTest.ImportMetadata importMetadata =
-                new MEFLibIntegrationTest.ImportMetadata(this, context);
+            new MEFLibIntegrationTest.ImportMetadata(this, context);
         importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
         importMetadata.invoke();
         List<String> importedRecordUuids = importMetadata.getMetadataIds();
@@ -82,12 +82,12 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         final BatchEditParameter[] parameters = new BatchEditParameter[]{};
 
         try {
-            batchEditsService.serviceSpecificExec(
-                    new String[]{firstMetadataId},
-                    parameters);
+            batchEditsService.batchEdit(
+                new String[]{firstMetadataId},
+                parameters);
         } catch (java.lang.IllegalArgumentException exception) {
             assertSame("Service MUST fail if no parameter are defined",
-                    exception.getClass(), IllegalArgumentException.class);
+                exception.getClass(), IllegalArgumentException.class);
         }
     }
 
@@ -98,29 +98,29 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         batchEditsService.setApplicationContext(context.getApplicationContext());
 
         final BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
-                new BatchEditParameter(
-                        "gmd:identificationInfo/gmd:MD_DataIdentification/" +
-                                "gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString",
-                        "## UPDATED TITLE ##"
-                ),
-                new BatchEditParameter(
-                        "gmd:identificationInfo/gmd:MD_DataIdentification/" +
-                                "gmd:abstract/gco:CharacterString",
-                        "## UPDATED ABSTRACT ##"
-                )
+            new BatchEditParameter(
+                "gmd:identificationInfo/gmd:MD_DataIdentification/" +
+                    "gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString",
+                "## UPDATED TITLE ##"
+            ),
+            new BatchEditParameter(
+                "gmd:identificationInfo/gmd:MD_DataIdentification/" +
+                    "gmd:abstract/gco:CharacterString",
+                "## UPDATED ABSTRACT ##"
+            )
         };
 
-        batchEditsService.serviceSpecificExec(
-                new String[]{firstMetadataId},
-                listOfupdates);
+        batchEditsService.batchEdit(
+            new String[]{firstMetadataId},
+            listOfupdates);
         Metadata updatedRecord = repository.findOneByUuid(firstMetadataId);
         Element xml = Xml.loadString(updatedRecord.getData(), false);
 
         for (BatchEditParameter p : listOfupdates) {
             assertEqualsText(p.getValue(),
-                    xml,
-                    p.getXpath(),
-                    GMD, GCO);
+                xml,
+                p.getXpath(),
+                GMD, GCO);
         }
 
     }

@@ -23,14 +23,17 @@
 package org.fao.geonet.services.inspireatom;
 
 import com.google.common.base.Joiner;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
@@ -53,8 +56,7 @@ import java.util.List;
  *
  * @author Jose García
  */
-public class AtomSearch implements Service
-{
+public class AtomSearch implements Service {
     private Search search = new Search();
     private Result result = new Result();
 
@@ -69,13 +71,12 @@ public class AtomSearch implements Service
     //---
     //--------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
-        DataManager dm   = context.getBean(DataManager.class);
+        DataManager dm = context.getBean(DataManager.class);
         InspireAtomService service = context.getBean(InspireAtomService.class);
 
-        boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
+        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
@@ -112,7 +113,7 @@ public class AtomSearch implements Service
 
 
         // Depending on INSPIRE atom format decide which service use.
-        String atomFormat = sm.getValue("system/inspire/atom");
+        String atomFormat = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM);
 
         search.exec(params, context);
 
@@ -128,10 +129,10 @@ public class AtomSearch implements Service
 
             // Loop over the results and retrieve feeds to add in results
             // First element in results (pos=0) is the summary, ignore it
-            for(int i = 1; i < results.getChildren().size(); i++) {
+            for (int i = 1; i < results.getChildren().size(); i++) {
                 String id = ((Element) results.getChildren().get(i)).getChild("info", Edit.NAMESPACE).getChildText("id");
 
-                InspireAtomFeed feed =  service.findByMetadataId(Integer.parseInt(id));
+                InspireAtomFeed feed = service.findByMetadataId(Integer.parseInt(id));
                 Element feedEl = Xml.loadString(feed.getAtom(), false);
                 feeds.addContent((Content) feedEl.clone());
             }

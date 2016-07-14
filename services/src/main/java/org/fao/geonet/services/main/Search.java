@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
@@ -42,91 +43,79 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** main.search service. Perform a search
-  */
+/**
+ * main.search service. Perform a search
+ */
 
-public class Search implements Service
-{
-	private ServiceConfig _config;
+public class Search implements Service {
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        _config = config;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
+        SearchManager searchMan = gc.getBean(SearchManager.class);
 
-		Element elData  = SearchDefaults.getDefaultSearch(context, params);
-		String  sRemote = elData.getChildText(Geonet.SearchResult.REMOTE);
-		boolean remote  = sRemote != null && sRemote.equals(Geonet.Text.ON);
+        Element elData = SearchDefaults.getDefaultSearch(context, params);
 
-		// Parse bbox & assign to four *BL params
-		Element bbox  = elData.getChild(Geonet.SearchResult.BBOX);
-		Element westBL = elData.getChild(Geonet.SearchResult.WEST_BL);
-		Element southBL = elData.getChild(Geonet.SearchResult.SOUTH_BL);
-		Element eastBL = elData.getChild(Geonet.SearchResult.EAST_BL);
-		Element northBL = elData.getChild(Geonet.SearchResult.NORTH_BL);
-		
-		if (bbox != null && westBL == null && southBL == null && eastBL == null && northBL == null) {
-			String bounds[] = bbox.getText().split(",");
-			if (bounds.length == 4) {
-				elData.addContent(new Element(Geonet.SearchResult.WEST_BL).addContent(bounds[0]));
-				elData.addContent(new Element(Geonet.SearchResult.SOUTH_BL).addContent(bounds[1]));
-				elData.addContent(new Element(Geonet.SearchResult.EAST_BL).addContent(bounds[2]));
-				elData.addContent(new Element(Geonet.SearchResult.NORTH_BL).addContent(bounds[3]));
-			}
-		}
-		
-		// possibly close old searcher
-		UserSession  session     = context.getUserSession();
-		Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
-		
- 		if (oldSearcher != null)
- 			if (oldSearcher instanceof LuceneSearcher)
- 				((LuceneSearcher)oldSearcher).close();
-		
-		// possibly close old selection
-		SelectionManager oldSelection = (SelectionManager)session.getProperty(Geonet.Session.SELECTED_RESULT);
-		
-		if (oldSelection != null){
-			oldSelection.close();
-		}
-		
+        // Parse bbox & assign to four *BL params
+        Element bbox = elData.getChild(Geonet.SearchResult.BBOX);
+        Element westBL = elData.getChild(Geonet.SearchResult.WEST_BL);
+        Element southBL = elData.getChild(Geonet.SearchResult.SOUTH_BL);
+        Element eastBL = elData.getChild(Geonet.SearchResult.EAST_BL);
+        Element northBL = elData.getChild(Geonet.SearchResult.NORTH_BL);
 
-		// perform the search and save search query into session
-		MetaSearcher searcher;
+        if (bbox != null && westBL == null && southBL == null && eastBL == null && northBL == null) {
+            String bounds[] = bbox.getText().split(",");
+            if (bounds.length == 4) {
+                elData.addContent(new Element(Geonet.SearchResult.WEST_BL).addContent(bounds[0]));
+                elData.addContent(new Element(Geonet.SearchResult.SOUTH_BL).addContent(bounds[1]));
+                elData.addContent(new Element(Geonet.SearchResult.EAST_BL).addContent(bounds[2]));
+                elData.addContent(new Element(Geonet.SearchResult.NORTH_BL).addContent(bounds[3]));
+            }
+        }
 
-		context.info("Creating searchers");
+        // possibly close old searcher
+        UserSession session = context.getUserSession();
+        Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
-		if (remote)	searcher = searchMan.newSearcher(SearcherType.Z3950,  Geonet.File.SEARCH_Z3950_CLIENT);
-		else        searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+        if (oldSearcher != null)
+            if (oldSearcher instanceof LuceneSearcher)
+                ((LuceneSearcher) oldSearcher).close();
 
-		searcher.search(context, elData, _config);
-		if (remote && (searcher.getSize() == 0)) { // do it again for Z3950
-			searcher.search(context, elData, _config);
-		}
-		session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-		session.removeProperty(Geonet.Session.SEARCH_REQUEST);
-		context.info("Getting summary");
+        // possibly close old selection
+        SelectionManager oldSelection = (SelectionManager) session.getProperty(Geonet.Session.SELECTED_RESULT);
 
-		return searcher.getSummary();
-	}
+        if (oldSelection != null) {
+            oldSelection.close();
+        }
+
+
+        // perform the search and save search query into session
+        MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+        searcher.search(context, elData, _config);
+        session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+        session.removeProperty(Geonet.Session.SEARCH_REQUEST);
+        context.info("Getting summary");
+
+        return searcher.getSummary();
+    }
 }
 
 //=============================================================================

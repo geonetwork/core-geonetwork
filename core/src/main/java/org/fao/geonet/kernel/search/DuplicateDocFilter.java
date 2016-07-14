@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 
 import bak.pcj.set.IntBitSet;
 import bak.pcj.set.IntSet;
+
 import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.search.Collector;
@@ -42,28 +43,27 @@ import java.io.IOException;
 import java.util.BitSet;
 
 /**
- * When there are multiple languages certain queries can match the same
- * "document" in each different language index. This filter allows the first
- * match but none of the later matches.
+ * When there are multiple languages certain queries can match the same "document" in each different
+ * language index. This filter allows the first match but none of the later matches.
  *
  * @author jeichar
  */
 public class DuplicateDocFilter extends Filter {
 
-	public Query getQuery() {
-		return _query;
-	}
+    final IntSet hits = new IntBitSet();
+    private Query _query;
 
-	public void setQuery(Query query) {
-		this._query = query;
-	}
+    public DuplicateDocFilter(Query query) {
+        this._query = query;
+    }
 
-	private Query _query;
-	final IntSet hits = new IntBitSet();
+    public Query getQuery() {
+        return _query;
+    }
 
-	public DuplicateDocFilter(Query query) {
-		this._query = query;
-	}
+    public void setQuery(Query query) {
+        this._query = query;
+    }
 
     @Override
     public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
@@ -74,15 +74,16 @@ public class DuplicateDocFilter extends Filter {
         new IndexSearcher(reader).search(_query, new Collector() {
 
             private int docBase;
+
             @Override
             public void setScorer(Scorer scorer) throws IOException {
             }
-            
+
             @Override
             public void setNextReader(AtomicReaderContext context) throws IOException {
                 this.docBase = context.docBase;
             }
-            
+
             @Override
             public void collect(int doc) throws IOException {
                 try {
@@ -96,14 +97,14 @@ public class DuplicateDocFilter extends Filter {
                     throw new RuntimeException(e);
                 }
             }
-            
+
             @Override
             public boolean acceptsDocsOutOfOrder() {
                 return true;
             }
         });
 
-		return new DocIdBitSet(bits);
-	}
+        return new DocIdBitSet(bits);
+    }
 
 }

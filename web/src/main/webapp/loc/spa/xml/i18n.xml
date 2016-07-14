@@ -2,9 +2,13 @@
 <i18n>
   <viewInGE>Ver en Google Earth</viewInGE>
   <warning>¡Alerta!</warning>
-  <addA>Añadir </addA>
-  <nojs>Javascript no habilitado. Habilítelo o vaya al <a
-    href="catalog.search.nojs">here to search</a> modo degradado.</nojs>
+  <addA>Añadir</addA>
+  <nojs>Javascript no habilitado. Habilítelo o vaya al
+    <a
+      href="catalog.search.nojs">here to search
+    </a>
+    modo degradado.
+  </nojs>
   <selectView>Elegir Vista</selectView>
   <moreTabs>Más información</moreTabs>
   <nodeChangeWarning>Alerta por Cambio de Nodo</nodeChangeWarning>
@@ -13,5 +17,8 @@
   <nodeChangeForward>Si quieres salir y volver a la url anterior, haz click:</nodeChangeForward>
   <serviceNotAllowedTitle>Servicio no disponible</serviceNotAllowedTitle>
   <serviceNotAllowed>El servicio {1} no existe o no tienes permiso para acceder.</serviceNotAllowed>
-  <linkToHome><span>Volver a la <a href="../..">página de búsqueda</a>.</span></linkToHome>
+  <linkToHome>
+    <span>Volver a la<a href="../..">página de búsqueda</a>.
+    </span>
+  </linkToHome>
 </i18n>

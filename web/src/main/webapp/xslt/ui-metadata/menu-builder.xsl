@@ -22,33 +22,31 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:saxon="http://saxon.sf.net/"
-  extension-element-prefixes="saxon"
-  exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
+                extension-element-prefixes="saxon"
+                exclude-result-prefixes="#all">
 
   <!--
-    Build the menu on top of the metadata  
-  to switch view mode and tabs in a view. 
+    Build the menu on top of the metadata
+  to switch view mode and tabs in a view.
   -->
   <xsl:template name="menu-builder">
     <xsl:param name="config" as="node()"/>
-
     <xsl:variable name="currentView" select="$config/editor/views/view[tab/@id = $tab]"/>
 
     <div class="gn-scroll-spy"
-      data-gn-scroll-spy="gn-editor-{$metadataId}"
-      data-watch=""
-      data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"/>
+         data-gn-scroll-spy="gn-editor-{$metadataId}"
+         data-watch=""
+         data-all-depth="{if ($isFlatMode) then 'true' else 'false'}"/>
 
     <ul class="nav nav-tabs">
       <!-- Make a drop down choice to swith to one view to another -->
       <li class="dropdown" id="gn-view-menu-{$metadataId}">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="" 
-          title="{$i18n/selectView}">
+        <a class="dropdown-toggle" data-toggle="dropdown" href=""
+           title="{$i18n/selectView}">
           <i class="fa fa-eye"></i>
           <b class="caret"/>
         </a>
@@ -91,46 +89,48 @@
                     </xsl:if>
                     <!-- When a view contains multiple tab, the one with
                   the default attribute is the one to open -->
-                    <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
+                    <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')"
+                       href="">
                       <xsl:variable name="viewName" select="@name"/>
                       <xsl:value-of select="$strings/*[name() = $viewName]"/>
                     </a>
                   </li>
                 </xsl:if>
               </xsl:for-each>
-              
+
               <li class="divider"/>
               <li>
                 <a data-ng-click="toggleAttributes(true)" href="">
                   <i class="fa"
-                    data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
-                  &#160;<span data-translate="">toggleAttributes</span>
+                     data-ng-class="gnCurrentEdit.displayAttributes ? 'fa-check-square-o' : 'fa-square-o'"/>
+                  &#160;
+                  <span data-translate="">toggleAttributes</span>
                 </a>
               </li>
               <li>
                 <a data-ng-click="toggleTooltips(true)" href="">
                   <i class="fa"
-                    data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
-                  &#160;<span data-translate="">toggleTooltips</span>
+                     data-ng-class="gnCurrentEdit.displayTooltips ? 'fa-check-square-o' : 'fa-square-o'"/>
+                  &#160;
+                  <span data-translate="">toggleTooltips</span>
                 </a>
               </li>
             </xsl:otherwise>
           </xsl:choose>
         </ul>
       </li>
-      
-      
+
       <!-- Make a tab switcher for all tabs of the current view -->
       <xsl:if test="count($currentView/tab) > 1">
         <xsl:apply-templates mode="menu-builder"
-          select="$config/editor/views/view[tab/@id = $tab]/tab[not(@toggle)]"/>
+                             select="$config/editor/views/view[tab/@id = $tab]/tab[not(@toggle)]"/>
 
 
         <!-- Some views may define tab to be grouped in an extra button -->
         <xsl:if test="count($config/editor/views/view[tab/@id = $tab]/tab[@toggle]) > 0">
           <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="" 
-              title="{$i18n/moreTabs}">
+            <a class="dropdown-toggle" data-toggle="dropdown" href=""
+               title="{$i18n/moreTabs}">
               <i class="fa fa-ellipsis-h"></i>
               <b class="caret"/>
             </a>
@@ -143,8 +143,8 @@
                   </xsl:if>
                   <a href="">
                     <xsl:if test="$tab != @id">
-                      <xsl:attribute name="data-ng-click" 
-                        select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
+                      <xsl:attribute name="data-ng-click"
+                                     select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
                     </xsl:if>
                     <xsl:variable name="tabId" select="@id"/>
                     <xsl:value-of select="$strings/*[name() = $tabId]"/>
@@ -155,7 +155,7 @@
           </li>
         </xsl:if>
       </xsl:if>
-      
+
     </ul>
   </xsl:template>
 
@@ -173,11 +173,12 @@
     <xsl:if test="$isTabDisplayed">
     </xsl:if>
     -->
-    <li class="{if ($tab = @id) then 'active' else ''} {if ($isTabDisplayed) then '' else 'disabled'}">
+    <li
+      class="{if ($tab = @id) then 'active' else ''} {if ($isTabDisplayed) then '' else 'disabled'}">
       <a href="">
         <xsl:if test="$tab != @id and $isTabDisplayed">
           <xsl:attribute name="data-ng-click"
-            select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
+                         select="concat('switchToTab(''', @id, ''', ''', @mode, ''')')"/>
         </xsl:if>
         <xsl:variable name="tabId" select="@id"/>
         <xsl:value-of select="$strings/*[name() = $tabId]"/>

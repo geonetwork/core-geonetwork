@@ -28,27 +28,25 @@ import org.jdom.Element;
 //=============================================================================
 
 public class BadArgumentException extends OaiPmhException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8359758323565369788L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 8359758323565369788L;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
-	public BadArgumentException(String message)
-	{
-		this(message, null);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
+    public BadArgumentException(String message) {
+        this(message, null);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public BadArgumentException(String message, Element response)
-	{
-		super(BAD_ARGUMENT, message, response);
-	}
+    public BadArgumentException(String message, Element response) {
+        super(BAD_ARGUMENT, message, response);
+    }
 }
 
 //=============================================================================

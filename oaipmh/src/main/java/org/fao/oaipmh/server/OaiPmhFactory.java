@@ -38,248 +38,235 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 //=============================================================================
 
-public class OaiPmhFactory
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+public class OaiPmhFactory {
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public static Map<String, String> extractParams(Element request) throws BadArgumentException
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public static Map<String, String> extractParams(Element request) throws BadArgumentException {
+        Map<String, String> params = new HashMap<String, String>();
 
-		for (Object o : request.getChildren())
-		{
-			Element elem = (Element) o;
-			String  name = elem.getName();
-			String  value= elem.getText();
+        for (Object o : request.getChildren()) {
+            Element elem = (Element) o;
+            String name = elem.getName();
+            String value = elem.getText();
 
-			if (params.containsKey(name))
-				throw new BadArgumentException("Parameter repeated : "+ name);
+            if (params.containsKey(name))
+                throw new BadArgumentException("Parameter repeated : " + name);
 
-			params.put(name, value);
-		}
+            params.put(name, value);
+        }
 
-		return params;
-	}
+        return params;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static AbstractRequest parse(ConfigurableApplicationContext applicationContext, Map<String, String> params) throws BadVerbException, BadArgumentException
-	{
-		//--- duplicate parameters because the below procedure will consume them
+    public static AbstractRequest parse(ConfigurableApplicationContext applicationContext, Map<String, String> params) throws BadVerbException, BadArgumentException {
+        //--- duplicate parameters because the below procedure will consume them
 
-		Map<String, String> params2 = new HashMap<String, String>();
+        Map<String, String> params2 = new HashMap<String, String>();
 
 
-        for (Map.Entry<String, String> param: params.entrySet()) {
+        for (Map.Entry<String, String> param : params.entrySet()) {
             params2.put(param.getKey(), param.getValue());
         }
 
-		params = params2;
+        params = params2;
 
-		//--- proper processing
+        //--- proper processing
 
-		String verb = consumeMan(params, "verb");
+        String verb = consumeMan(params, "verb");
 
-		if (verb.equals(IdentifyRequest.VERB)) {
+        if (verb.equals(IdentifyRequest.VERB)) {
             return handleIdentify(applicationContext, params);
         }
 
-		if (verb.equals(GetRecordRequest.VERB)) {
+        if (verb.equals(GetRecordRequest.VERB)) {
             return handleGetRecord(applicationContext, params);
         }
 
-		if (verb.equals(ListIdentifiersRequest.VERB)) {
+        if (verb.equals(ListIdentifiersRequest.VERB)) {
             return handleListIdentifiers(applicationContext, params);
         }
 
-		if (verb.equals(ListMetadataFormatsRequest.VERB)) {
+        if (verb.equals(ListMetadataFormatsRequest.VERB)) {
             return handleListMdFormats(applicationContext, params);
         }
 
-		if (verb.equals(ListRecordsRequest.VERB)) {
+        if (verb.equals(ListRecordsRequest.VERB)) {
             return handleListRecords(applicationContext, params);
         }
 
-		if (verb.equals(ListSetsRequest.VERB)) {
+        if (verb.equals(ListSetsRequest.VERB)) {
             return handleListSets(applicationContext, params);
         }
 
-		throw new BadVerbException("Unknown verb : " + verb);
-	}
+        throw new BadVerbException("Unknown verb : " + verb);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private static String consumeMan(Map<String, String> params, String name) throws BadArgumentException
-	{
-		String value = params.get(name);
+    private static String consumeMan(Map<String, String> params, String name) throws BadArgumentException {
+        String value = params.get(name);
 
-		if (value == null)
-			throw new BadArgumentException("Missing '"+name+"' parameter");
+        if (value == null)
+            throw new BadArgumentException("Missing '" + name + "' parameter");
 
-		if (value.trim().length() == 0)
-			throw new BadArgumentException("Empty '"+name+"' parameter");
+        if (value.trim().length() == 0)
+            throw new BadArgumentException("Empty '" + name + "' parameter");
 
-		params.remove(name);
+        params.remove(name);
 
-		return value;
-	}
+        return value;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static String consumeOpt(Map<String, String> params, String name) throws BadArgumentException
-	{
-		String value = params.get(name);
+    private static String consumeOpt(Map<String, String> params, String name) throws BadArgumentException {
+        String value = params.get(name);
 
-		if (value == null)
-			return null;
+        if (value == null)
+            return null;
 
-		if (value.trim().length() == 0)
-			throw new BadArgumentException("Empty '"+name+"' parameter");
+        if (value.trim().length() == 0)
+            throw new BadArgumentException("Empty '" + name + "' parameter");
 
-		params.remove(name);
+        params.remove(name);
 
-		return value;
-	}
+        return value;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static ISODate consumeDate(Map<String, String> params, String name) throws BadArgumentException
-	{
-		String date = consumeOpt(params, name);
+    private static ISODate consumeDate(Map<String, String> params, String name) throws BadArgumentException {
+        String date = consumeOpt(params, name);
 
-		if (date == null)
-			return null;
+        if (date == null)
+            return null;
 
-		try
-		{
-			return new ISODate(date);
-		}
-		catch(Exception e)
-		{
-			throw new BadArgumentException("Illegal date format : "+ date);
-		}
-	}
+        try {
+            return new ISODate(date);
+        } catch (Exception e) {
+            throw new BadArgumentException("Illegal date format : " + date);
+        }
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static void checkConsumption(Map<String, String> params) throws BadArgumentException
-	{
-		if (params.keySet().size() == 0)
-			return;
+    private static void checkConsumption(Map<String, String> params) throws BadArgumentException {
+        if (params.keySet().size() == 0)
+            return;
 
-		String extraParam = params.keySet().iterator().next();
+        String extraParam = params.keySet().iterator().next();
 
-		throw new BadArgumentException("Unknown extra parameter '"+ extraParam +"'");
-	}
+        throw new BadArgumentException("Unknown extra parameter '" + extraParam + "'");
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Dispatching methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Dispatching methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private static IdentifyRequest handleIdentify(ApplicationContext applicationContext, Map<String, String> params)
-            throws BadArgumentException {
-		checkConsumption(params);
+    private static IdentifyRequest handleIdentify(ApplicationContext applicationContext, Map<String, String> params)
+        throws BadArgumentException {
+        checkConsumption(params);
 
         return new IdentifyRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static GetRecordRequest handleGetRecord(ApplicationContext applicationContext, Map<String, String> params)
-            throws BadArgumentException {
+    private static GetRecordRequest handleGetRecord(ApplicationContext applicationContext, Map<String, String> params)
+        throws BadArgumentException {
         GetRecordRequest req = new GetRecordRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-		req.setIdentifier    (consumeMan(params, "identifier"    ));
-		req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
+        req.setIdentifier(consumeMan(params, "identifier"));
+        req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
 
-		checkConsumption(params);
+        checkConsumption(params);
 
-		return req;
-	}
+        return req;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static ListIdentifiersRequest handleListIdentifiers(ApplicationContext applicationContext, Map<String, String> params)
-            throws BadArgumentException {
+    private static ListIdentifiersRequest handleListIdentifiers(ApplicationContext applicationContext, Map<String, String> params)
+        throws BadArgumentException {
 
-		ListIdentifiersRequest req = new ListIdentifiersRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
+        ListIdentifiersRequest req = new ListIdentifiersRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-		if (params.containsKey("resumptionToken"))
-			req.setResumptionToken(consumeMan(params, "resumptionToken"));
-		else
-		{
-			req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
-			req.setSet           (consumeOpt(params, "set"));
+        if (params.containsKey("resumptionToken"))
+            req.setResumptionToken(consumeMan(params, "resumptionToken"));
+        else {
+            req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
+            req.setSet(consumeOpt(params, "set"));
 
-			req.setFrom (consumeDate(params, "from"));
-			req.setUntil(consumeDate(params, "until"));
-		}
+            req.setFrom(consumeDate(params, "from"));
+            req.setUntil(consumeDate(params, "until"));
+        }
 
-		checkConsumption(params);
+        checkConsumption(params);
 
-		return req;
-	}
+        return req;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static ListMetadataFormatsRequest handleListMdFormats(ApplicationContext applicationContext, Map<String, String> params)
-            throws BadArgumentException {
+    private static ListMetadataFormatsRequest handleListMdFormats(ApplicationContext applicationContext, Map<String, String> params)
+        throws BadArgumentException {
 
-		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
+        ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-		req.setIdentifier(consumeOpt(params, "identifier"));
-		checkConsumption(params);
+        req.setIdentifier(consumeOpt(params, "identifier"));
+        checkConsumption(params);
 
-		return req;
-	}
+        return req;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static ListRecordsRequest handleListRecords(ApplicationContext applicationContext, Map<String, String> params)
-            throws BadArgumentException {
+    private static ListRecordsRequest handleListRecords(ApplicationContext applicationContext, Map<String, String> params)
+        throws BadArgumentException {
 
-		ListRecordsRequest req = new ListRecordsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
+        ListRecordsRequest req = new ListRecordsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-		if (params.containsKey("resumptionToken"))
-			req.setResumptionToken(consumeMan(params, "resumptionToken"));
-		else
-		{
-			req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
-			req.setSet           (consumeOpt(params, "set"));
+        if (params.containsKey("resumptionToken"))
+            req.setResumptionToken(consumeMan(params, "resumptionToken"));
+        else {
+            req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
+            req.setSet(consumeOpt(params, "set"));
 
-			req.setFrom (consumeDate(params, "from"));
-			req.setUntil(consumeDate(params, "until"));
-		}
+            req.setFrom(consumeDate(params, "from"));
+            req.setUntil(consumeDate(params, "until"));
+        }
 
-		checkConsumption(params);
+        checkConsumption(params);
 
-		return req;
-	}
+        return req;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private static ListSetsRequest handleListSets(ApplicationContext applicationContext, Map<String, String> params)
-            throws BadArgumentException {
+    private static ListSetsRequest handleListSets(ApplicationContext applicationContext, Map<String, String> params)
+        throws BadArgumentException {
 
-		ListSetsRequest req = new ListSetsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
+        ListSetsRequest req = new ListSetsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
-		if (params.containsKey("resumptionToken"))
-			req.setResumptionToken(consumeMan(params, "resumptionToken"));
+        if (params.containsKey("resumptionToken"))
+            req.setResumptionToken(consumeMan(params, "resumptionToken"));
 
-		checkConsumption(params);
+        checkConsumption(params);
 
-		return req;
-	}
+        return req;
+    }
 }
 
 //=============================================================================

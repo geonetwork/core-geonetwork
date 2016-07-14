@@ -28,11 +28,10 @@ import jeeves.server.context.ScheduleContext;
 
 //=============================================================================
 
-public interface Schedule
-{
-	public void init(String appPath, ServiceConfig params) throws Exception;
+public interface Schedule {
+    public void init(String appPath, ServiceConfig params) throws Exception;
 
-	public void exec(ScheduleContext context) throws Exception;
+    public void exec(ScheduleContext context) throws Exception;
 }
 
 //=============================================================================

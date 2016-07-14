@@ -22,8 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:exslt="http://exslt.org/common">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+>
 
 
   <xsl:include href="../base-layout.xsl"/>
@@ -45,7 +45,7 @@
           <ul class="text-danger">
             <xsl:apply-templates mode="showError" select="/root/gui/startupError/error/Error"/>
             <xsl:apply-templates mode="showError"
-              select="/root/gui/startupError/error/*[name()!='Error' and name()!='Stack']"/>
+                                 select="/root/gui/startupError/error/*[name()!='Error' and name()!='Stack']"/>
             <xsl:apply-templates mode="showError" select="/root/gui/startupError/error/Stack"/>
           </ul>
         </p>

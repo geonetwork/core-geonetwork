@@ -25,6 +25,7 @@ package org.fao.geonet.inspireatom.util;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -53,25 +54,30 @@ import java.util.*;
  */
 public class InspireAtomUtil {
 
-    /** Xslt process to get the related datasets in service metadata. **/
+    /**
+     * Xslt process to get the related datasets in service metadata.
+     **/
     private static final String EXTRACT_DATASETS = "extract-datasets.xsl";
 
-    /** Xslt process to get if a metadata is a service or a dataset. **/
+    /**
+     * Xslt process to get if a metadata is a service or a dataset.
+     **/
     private static final String EXTRACT_MD_TYPE = "extract-type.xsl";
 
-    /** Xslt process to get the atom feed link from the metadata. **/
+    /**
+     * Xslt process to get the atom feed link from the metadata.
+     **/
     private static final String EXTRACT_ATOM_FEED = "extract-atom-feed.xsl";
 
     /**
      * Issue an http request to retrieve the remote Atom feed document.
      *
-     * @param context
-     * @param url           Atom document url.
-     * @return              Atom document content.
-     * @throws Exception    Exception.
+     * @param url Atom document url.
+     * @return Atom document content.
+     * @throws Exception Exception.
      */
     public static String retrieveRemoteAtomFeedDocument(final ServiceContext context,
-                                                       final String url) throws Exception {
+                                                        final String url) throws Exception {
         XmlRequest remoteRequest = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
 
         final SettingManager sm = context.getBean(SettingManager.class);
@@ -101,14 +107,13 @@ public class InspireAtomUtil {
      *
      * This method changes feed content.
      *
-     * @param feed          JDOM element with dataset feed content.
-     * @param crs           CRS to use in the filter.
-     *
-     * @throws Exception    Exception.
+     * @param feed JDOM element with dataset feed content.
+     * @param crs  CRS to use in the filter.
+     * @throws Exception Exception.
      */
     public static void filterDatasetFeedByCrs(final Element feed,
                                               final String crs)
-            throws Exception {
+        throws Exception {
 
         List<Element> elementsToRemove = new ArrayList<Element>();
 
@@ -146,15 +151,14 @@ public class InspireAtomUtil {
 
 
     /**
-     *
-     * @param schema        Metadata schema.
-     * @param md            JDOM element with metadata content.
-     * @param dataManager   DataManager.
-     * @return              Atom feed URL.
-     * @throws Exception    Exception.
+     * @param schema      Metadata schema.
+     * @param md          JDOM element with metadata content.
+     * @param dataManager DataManager.
+     * @return Atom feed URL.
+     * @throws Exception Exception.
      */
     public static List<String> extractRelatedDatasetsIdentifiers(final String schema, final Element md, final DataManager dataManager)
-            throws Exception {
+        throws Exception {
         java.nio.file.Path styleSheet = dataManager.getSchemaDir(schema).resolve(EXTRACT_DATASETS);
 
         List<Element> datasetsEl = Xml.transform(md, styleSheet).getChildren();
@@ -163,7 +167,7 @@ public class InspireAtomUtil {
         //--- needed to detach md from the document
         md.detach();
 
-        for (Element datasetEl: datasetsEl) {
+        for (Element datasetEl : datasetsEl) {
             String datasetId = datasetEl.getText();
 
             if (!StringUtils.isEmpty(datasetId)) datasets.add(datasetEl.getText());
@@ -176,7 +180,7 @@ public class InspireAtomUtil {
     public static Map<String, String> retrieveServiceMetadataWithAtomFeeds(final DataManager dataManager,
                                                                            final List<Metadata> iso19139Metadata,
                                                                            final String atomProtocol)
-            throws Exception {
+        throws Exception {
 
         return processAtomFeedsInternal(dataManager, iso19139Metadata, "service", atomProtocol);
     }
@@ -184,7 +188,7 @@ public class InspireAtomUtil {
     public static Map<String, String> retrieveServiceMetadataWithAtomFeed(final DataManager dataManager,
                                                                           final Metadata iso19139Metadata,
                                                                           final String atomProtocol)
-            throws Exception {
+        throws Exception {
 
         List<Metadata> iso19139MetadataList = new ArrayList<Metadata>();
         iso19139MetadataList.add(iso19139Metadata);
@@ -195,7 +199,7 @@ public class InspireAtomUtil {
     public static Map<String, String> retrieveDatasetMetadataWithAtomFeeds(final DataManager dataManager,
                                                                            final List<Metadata> iso19139Metadata,
                                                                            final String atomProtocol)
-            throws Exception {
+        throws Exception {
 
         return processAtomFeedsInternal(dataManager, iso19139Metadata, "dataset", atomProtocol);
     }
@@ -206,7 +210,7 @@ public class InspireAtomUtil {
 
         Map<String, String> metadataAtomFeeds = new HashMap<String, String>();
 
-        for (Metadata md: iso19139Metadata) {
+        for (Metadata md : iso19139Metadata) {
             int id = md.getId();
             String schema = md.getDataInfo().getSchemaId();
             Element mdEl = null;
@@ -227,17 +231,16 @@ public class InspireAtomUtil {
     }
 
     /**
-     *
-     * @param schema        Metadata schema.
-     * @param md            JDOM element with metadata content.
-     * @param dataManager   DataManager.
-     * @return              Atom feed URL.
-     * @throws Exception    Exception.
+     * @param schema      Metadata schema.
+     * @param md          JDOM element with metadata content.
+     * @param dataManager DataManager.
+     * @return Atom feed URL.
+     * @throws Exception Exception.
      */
     public static String extractAtomFeedUrl(final String schema,
                                             final Element md,
                                             final DataManager dataManager, String atomProtocol)
-            throws Exception {
+        throws Exception {
         java.nio.file.Path styleSheet = dataManager.getSchemaDir(schema).resolve(EXTRACT_ATOM_FEED);
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -265,7 +268,7 @@ public class InspireAtomUtil {
             searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
             searcher.search(context, request, new ServiceConfig());
 
-            Map<Integer,Metadata> allMdInfo = ((LuceneSearcher)searcher).getAllMdInfo(context, searcher.getSize());
+            Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
             return new ArrayList<Metadata>(allMdInfo.values());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -277,8 +280,8 @@ public class InspireAtomUtil {
 
 
     public static String retrieveDatasetUuidFromIdentifier(ServiceContext context,
-                                                      SearchManager searchMan,
-                                                      String datasetIdCode) {
+                                                           SearchManager searchMan,
+                                                           String datasetIdCode) {
 
         String uuid = "";
 
@@ -289,10 +292,10 @@ public class InspireAtomUtil {
 
         // perform the search and return the results read from the index
 
-        try ( MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             searcher.search(context, request, new ServiceConfig());
 
-            List<String> uuids = ((LuceneSearcher)searcher).getAllUuids(1, context);
+            List<String> uuids = ((LuceneSearcher) searcher).getAllUuids(1, context);
             if (uuids.size() > 0) {
                 uuid = uuids.get(0);
             }

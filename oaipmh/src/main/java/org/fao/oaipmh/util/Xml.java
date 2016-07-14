@@ -41,71 +41,71 @@ import org.xml.sax.SAXException;
 //=============================================================================
 
 /**
- * This is a portion of the jeeves.utils.Xml class and is replicated here just
- * to avoid the jeeves jar
- * 
+ * This is a portion of the jeeves.utils.Xml class and is replicated here just to avoid the jeeves
+ * jar
  */
 public class Xml {
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- API methods
-	// ---
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- API methods
+    // ---
+    // ---------------------------------------------------------------------------
 
-	/**
-	 * Loads an xml stream and returns its root node (validates the xml with a
-	 * dtd)
-	 */
+    private static SchemaFactory factory = SchemaFactory
+        .newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
-	public static Element loadStream(InputStream input) throws IOException,
-			JDOMException {
-		SAXBuilder builder = new SAXBuilder();
-		Document jdoc = builder.build(input);
+    // ---------------------------------------------------------------------------
+    private static SAXOutputter so;
 
-		return (Element) jdoc.getRootElement().detach();
-	}
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Variables
+    // ---
+    // ---------------------------------------------------------------------------
 
-	// ---------------------------------------------------------------------------
-	/** Converts an xml element to a string */
+    /**
+     * Loads an xml stream and returns its root node (validates the xml with a dtd)
+     */
 
-	// public static String getString(Element data)
-	// {
-	// XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-	//
-	// return outputter.outputString(data);
-	// }
+    public static Element loadStream(InputStream input) throws IOException,
+        JDOMException {
+        SAXBuilder builder = new SAXBuilder();
+        Document jdoc = builder.build(input);
 
-	// ---------------------------------------------------------------------------
+        return (Element) jdoc.getRootElement().detach();
+    }
 
-	// public static String getString(Document data)
-	// {
-	// XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-	//
-	// return outputter.outputString(data);
-	// }
+    /**
+     * Converts an xml element to a string
+     */
 
-	// ---------------------------------------------------------------------------
+    // public static String getString(Element data)
+    // {
+    // XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+    //
+    // return outputter.outputString(data);
+    // }
 
-	public static void validate(Element xml) throws IOException, SAXException,
-			JDOMException {
-		// NOTE: Create a schema object without schema file name so that schemas
-		// will be obtained from whatever locations are provided in the document
+    // ---------------------------------------------------------------------------
 
-		Schema schema = factory.newSchema();
-		ValidatorHandler vh = schema.newValidatorHandler();
-		so = new SAXOutputter(vh);
-		so.output(xml);
-	}
+    // public static String getString(Document data)
+    // {
+    // XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+    //
+    // return outputter.outputString(data);
+    // }
 
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Variables
-	// ---
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    public static void validate(Element xml) throws IOException, SAXException,
+        JDOMException {
+        // NOTE: Create a schema object without schema file name so that schemas
+        // will be obtained from whatever locations are provided in the document
 
-	private static SchemaFactory factory = SchemaFactory
-			.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-	private static SAXOutputter so;
+        Schema schema = factory.newSchema();
+        ValidatorHandler vh = schema.newValidatorHandler();
+        so = new SAXOutputter(vh);
+        so.output(xml);
+    }
 
 }
 

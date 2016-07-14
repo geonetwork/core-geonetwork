@@ -83,7 +83,8 @@ public class InspireAtomFeedRepositoryTest extends AbstractSpringDataTest {
         assertEquals(0, _repo.findAll().size());
     }
 
-    @Test @Ignore("Constraint exception occurs in H2.  Has to do with entry list referencing atom feed.")
+    @Test
+    @Ignore("Constraint exception occurs in H2.  Has to do with entry list referencing atom feed.")
     public void testCleanAtomDocumentsByMetadataId() {
         _repo.deleteAll();
 

@@ -24,6 +24,7 @@
 package org.fao.geonet.services.category;
 
 import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
@@ -45,14 +46,15 @@ import javax.annotation.Nonnull;
  */
 @Controller("admin.category.update")
 @ReadWriteController
+@Deprecated
 public class Update {
 
     @RequestMapping(value = "/{lang}/admin.category.update", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public CategoryUpdateResponse exec(
-            @RequestParam final Integer id,
-            @RequestParam final String name
+        @RequestParam final Integer id,
+        @RequestParam final String name
     ) throws Exception {
         if (name == null) {
             throw new MissingParameterEx("name");

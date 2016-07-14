@@ -24,6 +24,7 @@
 package org.fao.geonet.services.sources;
 
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
@@ -31,7 +32,7 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,7 +58,8 @@ import static org.fao.geonet.repository.HarvesterSettingRepository.SEPARATOR;
  *
  * @author Jesse on 2/3/2015.
  */
-@Controller("sources")
+@Controller("source")
+@Deprecated
 public class SourcesController {
 
     public static final String PREFIX = "translations-";
@@ -72,10 +75,10 @@ public class SourcesController {
     @RequestMapping("/{lang}/source/{uuid}")
     @ResponseBody
     public OkResponse updateTranslations(
-            @PathVariable String lang,
-            @PathVariable String uuid,
-            final HttpServletRequest request) {
-        if (settingRepository.findOne(SettingManager.SYSTEM_SITE_SITE_ID_PATH).getValue().equals(uuid)) {
+        @PathVariable String lang,
+        @PathVariable String uuid,
+        final HttpServletRequest request) {
+        if (settingRepository.findOne(Settings.SYSTEM_SITE_SITE_ID_PATH).getValue().equals(uuid)) {
             updateSite(request);
         }
 
@@ -86,7 +89,7 @@ public class SourcesController {
     }
 
     private void updateSite(HttpServletRequest request) {
-        settingRepository.deleteAll(SettingSpec.nameStartsWith(SettingManager.SYSTEM_SITE_LABEL_PREFIX));
+        settingRepository.deleteAll(SettingSpec.nameStartsWith(Settings.SYSTEM_SITE_LABEL_PREFIX));
 
         List<Setting> translationSettings = Lists.newArrayList();
         for (Map.Entry<String, String[]> stringEntry : request.getParameterMap().entrySet()) {
@@ -96,10 +99,10 @@ public class SourcesController {
                 String lang = paramName.substring(PREFIX.length());
                 if (values.length > 0) {
                     Setting setting = new Setting().
-                            setDataType(SettingDataType.STRING).
-                            setInternal(true).
-                            setName(SettingManager.SYSTEM_SITE_LABEL_PREFIX + lang).
-                            setValue(values[0]);
+                        setDataType(SettingDataType.STRING).
+                        setInternal(true).
+                        setName(Settings.SYSTEM_SITE_LABEL_PREFIX + lang).
+                        setValue(values[0]);
                     translationSettings.add(setting);
                 }
             }

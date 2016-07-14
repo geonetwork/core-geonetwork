@@ -24,12 +24,7 @@
 package org.fao.geonet.services.main;
 
 import com.google.common.collect.Maps;
-import jeeves.component.ProfileManager;
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Edit;
@@ -50,6 +45,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -66,7 +62,6 @@ import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
@@ -82,9 +77,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
-import static org.fao.geonet.kernel.setting.SettingManager.SYSTEM_SITE_LABEL_PREFIX;
+import jeeves.component.ProfileManager;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+
+@Deprecated
 public class Info implements Service {
     private static final String READ_ONLY = "readonly";
     private static final String INDEX = "index";
@@ -93,7 +95,6 @@ public class Info implements Service {
     public static final String STATUS = "status";
     public static final String AUTH = "auth";
     public static final String ME = "me";
-    public static final String Z_3950_REPOSITORIES = "z3950repositories";
     public static final String TEMPLATES = "templates";
     public static final String USERS = "users";
     public static final String SOURCES = "sources";
@@ -113,14 +114,14 @@ public class Info implements Service {
     private static final String STAGING_PROFILE = "stagingProfile";
 
     private Path xslPath;
-	private Path otherSheets;
-	private ServiceConfig _config;
+    private Path otherSheets;
+    private ServiceConfig _config;
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      *
@@ -128,18 +129,17 @@ public class Info implements Service {
      * @param config
      * @throws Exception
      */
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		xslPath = appPath.resolve(Geonet.Path.STYLESHEETS).resolve("xml");
-		otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
-		_config = config;
-	}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        xslPath = appPath.resolve(Geonet.Path.STYLESHEETS).resolve("xml");
+        otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
+        _config = config;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      *
@@ -148,50 +148,49 @@ public class Info implements Service {
      * @return
      * @throws Exception
      */
-	public Element exec(Element inParams, ServiceContext context) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
+    public Element exec(Element inParams, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
-		Element params = (Element)inParams.clone();
+        Element params = (Element) inParams.clone();
 
-		// --- if we have a parameter specified in the config then use it instead
-		// --- of the usual params 
-		String ptype = _config.getValue("type");
-		if (ptype != null) {
-			params.removeContent();
-			params.addContent(new Element("type").setText(ptype));
-		}
+        // --- if we have a parameter specified in the config then use it instead
+        // --- of the usual params
+        String ptype = _config.getValue("type");
+        if (ptype != null) {
+            params.removeContent();
+            params.addContent(new Element("type").setText(ptype));
+        }
 
-		Element result = new Element("root");
+        Element result = new Element("root");
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> types = params.getChildren("type");
-		for (Element el : types) {
-			String type = el.getText();
+        for (Element el : types) {
+            String type = el.getText();
 
-			if (type.equals(SITE)) {
-				result.addContent(gc.getBean(SettingManager.class).getValues(
-                        new String[]{
-                                SettingManager.SYSTEM_SITE_NAME_PATH,
-                                "system/site/organization", 
-                                SettingManager.SYSTEM_SITE_SITE_ID_PATH,
-                                "system/platform/version",
-                                "system/platform/subVersion"
-                                }));
-			} else if (type.equals(CONFIG)) {
-			  // Return a set of properties which define what
-			  // to display or not in the user interface
-              final List<Setting> publicSettings = context.getBean(SettingRepository.class).findAllByInternal(false);
-              List<String> publicSettingsKey = new ArrayList<String>();
-              for(Setting s : publicSettings) {
-                publicSettingsKey.add(s.getName());
-              }
-              Element configElement = new Element("config");
+            if (type.equals(SITE)) {
+                result.addContent(gc.getBean(SettingManager.class).getValues(
+                    new String[]{
+                        Settings.SYSTEM_SITE_NAME_PATH,
+                        Settings.SYSTEM_SITE_ORGANIZATION,
+                        Settings.SYSTEM_SITE_SITE_ID_PATH,
+                        Settings.SYSTEM_PLATFORM_VERSION,
+                        Settings.SYSTEM_PLATFORM_SUBVERSION
+                    }));
+            } else if (type.equals(CONFIG)) {
+                // Return a set of properties which define what
+                // to display or not in the user interface
+                final List<Setting> publicSettings = context.getBean(SettingRepository.class).findAllByInternal(false);
+                List<String> publicSettingsKey = new ArrayList<String>();
+                for (Setting s : publicSettings) {
+                    publicSettingsKey.add(s.getName());
+                }
+                Element configElement = new Element("config");
                 Element settingsElement = gc.getBean(SettingManager.class).getValues(
-                        publicSettingsKey.toArray(new String[0]));
+                    publicSettingsKey.toArray(new String[0]));
 
-                String mailServerHost = gc.getBean(SettingManager.class).getValue("system/feedback/mailServer/host");
+                String mailServerHost = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
                 Element mailServerElement = new Element("setting");
                 mailServerElement.setAttribute("name", "system/mail/enable");
                 mailServerElement.setAttribute("value", !StringUtils.isEmpty(mailServerHost) + "");
@@ -199,26 +198,26 @@ public class Info implements Service {
                 configElement.addContent(settingsElement);
                 result.addContent(configElement);
             } else if (type.equals(INSPIRE)) {
-				result.addContent(gc.getBean(SettingManager.class).getValues(
-				            new String[]{
-				                         "system/inspire/enableSearchPanel", 
-				                         "system/inspire/enable"
-				                         }));
-            } else if (type.equals(HARVESTER)) {
-			    result.addContent(gc.getBean(SettingManager.class).getValues(
-                        new String[]{ "system/harvester/enableEditing"}));
-			
-			} else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
-                        new String[]{"system/metadataprivs/usergrouponly"}));
+                    new String[]{
+                        "system/inspire/enableSearchPanel",
+                        "system/inspire/enable"
+                    }));
+            } else if (type.equals(HARVESTER)) {
+                result.addContent(gc.getBean(SettingManager.class).getValues(
+                    new String[]{"system/harvester/enableEditing"}));
+
+            } else if (type.equals(USER_GROUP_ONLY)) {
+                result.addContent(gc.getBean(SettingManager.class).getValues(
+                    new String[]{Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY}));
 
             } else if (type.equals(CATEGORIES)) {
-				result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
+                result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
 
-            } else if (type.equals(GROUPS))   {
+            } else if (type.equals(GROUPS)) {
                 String profile = params.getChildText("profile");
                 Element r = getGroups(context, Profile.findProfileIgnoreCase(profile), false, false);
-				result.addContent(r);
+                result.addContent(r);
 
             } else if (type.equals(GROUPS_INCLUDING_SYSTEM_GROUPS)) {
                 Element r = getGroups(context, null, true, false);
@@ -229,75 +228,68 @@ public class Info implements Service {
                 result.addContent(r);
 
             } else if (type.equals(OPERATIONS)) {
-				result.addContent(context.getBean(OperationRepository.class).findAllAsXml());
+                result.addContent(context.getBean(OperationRepository.class).findAllAsXml());
 
             } else if (type.equals(REGIONS)) {
-		        RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
-		        Element regions = dao.createSearchRequest(context).xmlResult();
-				result.addContent(regions);
-			} else if (type.equals(ISOLANGUAGES)) {
+                RegionsDAO dao = context.getApplicationContext().getBean(RegionsDAO.class);
+                Element regions = dao.createSearchRequest(context).xmlResult();
+                result.addContent(regions);
+            } else if (type.equals(ISOLANGUAGES)) {
                 result.addContent(context.getBean(IsoLanguageRepository.class).findAllAsXml());
 
-			} else if (type.equals(LANGUAGES)) {
+            } else if (type.equals(LANGUAGES)) {
                 result.addContent(context.getBean(LanguageRepository.class).findAllAsXml());
 
             } else if (type.equals(SOURCES)) {
-				result.addContent(getSources(context, sm));
+                result.addContent(getSources(context, sm));
 
             } else if (type.equals(USERS)) {
-				result.addContent(getUsers(context));
+                result.addContent(getUsers(context));
 
-            } else if (type.equals(TEMPLATES))   {
-				result.addContent(getTemplates(context));
-
-            } else if (type.equals(Z_3950_REPOSITORIES)) {
-				result.addContent(getZRepositories(context, sm));
+            } else if (type.equals(TEMPLATES)) {
+                result.addContent(getTemplates(context));
 
             } else if (type.equals(ME)) {
-				result.addContent(getMyInfo(context));
-			
+                result.addContent(getMyInfo(context));
+
             } else if (type.equals(AUTH)) {
-				result.addContent(getAuth(context));
+                result.addContent(getAuth(context));
 
             } else if (type.equals(READ_ONLY)) {
                 result.addContent(getReadOnly(gc));
             } else if (type.equals(INDEX)) {
                 result.addContent(getIndex(gc));
             } else if (type.equals(SCHEMAS)) {
-				result.addContent(getSchemas(gc.getBean(SchemaManager.class)));
+                result.addContent(getSchemas(gc.getBean(SchemaManager.class)));
 
             } else if (type.equals(STATUS)) {
-				result.addContent(context.getBean(StatusValueRepository.class).findAllAsXml());
+                result.addContent(context.getBean(StatusValueRepository.class).findAllAsXml());
             } else if (type.equals(SYSTEMINFO)) {
-				result.addContent(context.getBean(SystemInfo.class).toXml());
+                result.addContent(context.getBean(SystemInfo.class).toXml());
             } else if (type.equals(STAGING_PROFILE)) {
-				result.addContent(new Element(STAGING_PROFILE).setText(context.getBean(SystemInfo.class).getStagingProfile()));
+                result.addContent(new Element(STAGING_PROFILE).setText(context.getBean(SystemInfo.class).getStagingProfile()));
             } else {
-				throw new BadParameterEx("Unknown type parameter value.", type);
+                throw new BadParameterEx("Unknown type parameter value.", type);
             }
-		}
-		
-		result.addContent(getEnv(context));
-		Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
+        }
+
+        result.addContent(getEnv(context));
+        Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
 
         return response;
-	}
-
-   /**
-    * Returns whether GN is in indexing (true or false). 
-    * @param gc 
-    * @return 
-    */ 
-    private Element getIndex(GeonetContext gc) { 
-        Element isIndexing = new Element(INDEX); 
-        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing())); 
-        return isIndexing; 
     }
-    
+
+    /**
+     * Returns whether GN is in indexing (true or false).
+     */
+    private Element getIndex(GeonetContext gc) {
+        Element isIndexing = new Element(INDEX);
+        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing()));
+        return isIndexing;
+    }
+
     /**
      * Returns whether GN is in read-only mode (true or false).
-     * @param gc
-     * @return
      */
     private Element getReadOnly(GeonetContext gc) {
         Element readOnly = new Element(READ_ONLY);
@@ -310,38 +302,37 @@ public class Info implements Service {
      * @param context
      * @return
      */
-	private Element getAuth(ServiceContext context) {
-		Element auth = new Element("auth");
-		Element cas = new Element("casEnabled").setText(Boolean.toString(ProfileManager.isCasEnabled()));
-		auth.addContent(cas);
+    private Element getAuth(ServiceContext context) {
+        Element auth = new Element("auth");
+        Element cas = new Element("casEnabled").setText(Boolean.toString(ProfileManager.isCasEnabled()));
+        auth.addContent(cas);
 
-		return auth;
-	}
+        return auth;
+    }
 
-	
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      *
      * @param context
      * @return
      */
-	private Element getMyInfo(ServiceContext context) {
-		Element data = new Element("me");
-		UserSession userSession = context.getUserSession();
-		if (userSession.isAuthenticated()) {
-			data.setAttribute("authenticated","true");
+    private Element getMyInfo(ServiceContext context) {
+        Element data = new Element("me");
+        UserSession userSession = context.getUserSession();
+        if (userSession.isAuthenticated()) {
+            data.setAttribute("authenticated", "true");
             final String emailAddr = userSession.getEmailAddr();
             data.addContent(new Element(Geonet.Elem.PROFILE).setText(userSession.getProfile().name()))
-				.addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
-				.addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
-				.addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
-				.addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))
+                .addContent(new Element(Geonet.Elem.USERNAME).setText(userSession.getUsername()))
+                .addContent(new Element(Geonet.Elem.ID).setText(userSession.getUserId()))
+                .addContent(new Element(Geonet.Elem.NAME).setText(userSession.getName()))
+                .addContent(new Element(Geonet.Elem.SURNAME).setText(userSession.getSurname()))
                 .addContent(new Element(Geonet.Elem.EMAIL).setText(emailAddr))
                 .addContent(new Element(Geonet.Elem.ORGANISATION).setText(userSession.getOrganisation()));
 
@@ -350,53 +341,51 @@ public class Info implements Service {
             } else {
                 data.addContent(new Element(Geonet.Elem.HASH).setText(""));
             }
-		} else {
-			data.setAttribute("authenticated","false");
-		}
-		return data;
-	}
-
-	private Element getSchemas(SchemaManager schemaMan) throws Exception {
-
-    Element response = new Element(SCHEMAS);
-
-    for (String schema : schemaMan.getSchemas()) {
-      Element elem = new Element("schema")
-       .addContent(new Element("name")            .setText(schema))
-       .addContent(new Element("id")              .setText(schemaMan.getIdVersion(schema).one()))
-       .addContent(new Element("version")         .setText(schemaMan.getIdVersion(schema).two()))
-       .addContent(new Element("description")     .setText(schema))
-       .addContent(new Element("namespaces")      .setText(schemaMan.getNamespaceString(schema)));
-
-      // is it editable?
-      if (schemaMan.getSchema(schema).canEdit()) {
-        elem.addContent(new Element("edit").setText("true"));
-      } else {
-        elem.addContent(new Element("edit").setText("false"));
-      }
-
-      // get the conversion information and add it too
-      List<Element> convElems = schemaMan.getConversionElements(schema);
-      if (convElems.size() > 0) {
-        Element conv = new Element("conversions");
-        conv.addContent(convElems);
-        elem.addContent(conv);
-      }
-      response.addContent(elem);
+        } else {
+            data.setAttribute("authenticated", "false");
+        }
+        return data;
     }
 
-    return response;	
-	}
+    private Element getSchemas(SchemaManager schemaMan) throws Exception {
+
+        Element response = new Element(SCHEMAS);
+
+        for (String schema : schemaMan.getSchemas()) {
+            Element elem = new Element("schema")
+                .addContent(new Element("name").setText(schema))
+                .addContent(new Element("id").setText(schemaMan.getIdVersion(schema).one()))
+                .addContent(new Element("version").setText(schemaMan.getIdVersion(schema).two()))
+                .addContent(new Element("description").setText(schema))
+                .addContent(new Element("namespaces").setText(schemaMan.getNamespaceString(schema)));
+
+            // is it editable?
+            if (schemaMan.getSchema(schema).canEdit()) {
+                elem.addContent(new Element("edit").setText("true"));
+            } else {
+                elem.addContent(new Element("edit").setText("false"));
+            }
+
+            // get the conversion information and add it too
+            List<Element> convElems = schemaMan.getConversionElements(schema);
+            if (convElems.size() > 0) {
+                Element conv = new Element("conversions");
+                conv.addContent(convElems);
+                elem.addContent(conv);
+            }
+            response.addContent(elem);
+        }
+
+        return response;
+    }
 
     /**
      * Retrieves a user's groups.
      *
-     * @param context
-     * @param profile
-     * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet', 'all')
-     * @param all if true returns all the groups, even those the user doesn't belongs to
-     * @return
-     * @throws java.sql.SQLException
+     * @param includingSystemGroups if true, also returns the system groups ('GUEST', 'intranet',
+     *                              'all')
+     * @param all                   if true returns all the groups, even those the user doesn't
+     *                              belongs to
      */
     private Element getGroups(ServiceContext context, Profile profile, boolean includingSystemGroups,
                               boolean all) throws SQLException {
@@ -422,7 +411,7 @@ public class Info implements Service {
             Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
             // you're no Administrator
             // retrieve your groups
-			if (profile != null) {
+            if (profile != null) {
                 spec = spec.and(UserGroupSpecs.hasProfile(profile));
             }
             Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(spec));
@@ -461,10 +450,10 @@ public class Info implements Service {
             String siteName = sm.getSiteName();
 
             final SettingRepository settingRepository = context.getBean(SettingRepository.class);
-            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
+            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(Settings.SYSTEM_SITE_LABEL_PREFIX));
             Map<String, String> labels = Maps.newHashMap();
             for (Setting setting : labelSettings) {
-                labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
+                labels.put(setting.getName().substring(Settings.SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
             }
             element.addContent(buildRecord(siteId, siteName, labels, null, null));
         }
@@ -472,77 +461,51 @@ public class Info implements Service {
         return element;
     }
 
-	//--------------------------------------------------------------------------
-	//--- ZRepositories
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //--- Templates
+    //--------------------------------------------------------------------------
 
-	public Element getZRepositories(ServiceContext context, SettingManager sm) throws Exception
-	{
-		boolean z3950Enable   = sm.getValue("system/z3950/enable").equals("true");
+    private Element getTemplates(ServiceContext context) throws Exception {
+        Path styleSheet = otherSheets.resolve("portal-present.xsl");
+        Element result = search(context).setName(Jeeves.Elem.RESPONSE);
+        Element root = new Element("root");
 
-		List<RepositoryInfo> repoList = new ArrayList<RepositoryInfo>(RepositoryInfo.getRepositories(context));
+        root.addContent(result);
 
-		Element response = new Element("z3950repositories");
-
-		for (RepositoryInfo repo : repoList) {
-			if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet") ) {
-				continue; // skip Local GeoNetwork Z server if not enabled
-			} else {
-				response.addContent(buildRecord(repo.getDn(),repo.getName(), Collections.<String, String>emptyMap(),
-                        repo.getCode(), repo.getServerCode()));
-			}
-		}
-
-		return response;
-	}
-
-	//--------------------------------------------------------------------------
-	//--- Templates
-	//--------------------------------------------------------------------------
-
-	private Element getTemplates(ServiceContext context) throws Exception
-	{
-		Path styleSheet = otherSheets.resolve("portal-present.xsl");
-		Element result = search(context).setName(Jeeves.Elem.RESPONSE);
-		Element root   = new Element("root");
-
-		root.addContent(result);
-
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = Xml.transform(root, styleSheet).getChildren();
 
-		Element response = new Element("templates");
+        Element response = new Element("templates");
 
-		for (Element elem : list) {
-			Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+        for (Element elem : list) {
+            Element info = elem.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
-			if (!elem.getName().equals("metadata"))
-				continue;
+            if (!elem.getName().equals("metadata"))
+                continue;
 
-			String id       = info.getChildText(Edit.Info.Elem.ID);
-			String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
-			String schema   = info.getChildText(Edit.Info.Elem.SCHEMA);
+            String id = info.getChildText(Edit.Info.Elem.ID);
+            String template = info.getChildText(Edit.Info.Elem.IS_TEMPLATE);
+            String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
 
-			if (template.equals("y"))
-				response.addContent(buildTemplateRecord(id, elem.getChildText("title"), schema));
-		}
+            if (template.equals("y"))
+                response.addContent(buildTemplateRecord(id, elem.getChildText("title"), schema));
+        }
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Element search(ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    private Element search(ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		context.info("Creating searcher");
+        context.info("Creating searcher");
 
-		Element       params = buildParams();
-		ServiceConfig config = new ServiceConfig();
+        Element params = buildParams();
+        ServiceConfig config = new ServiceConfig();
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
-		try (MetaSearcher  searcher  = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
+        SearchManager searchMan = gc.getBean(SearchManager.class);
+        try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
 
             searcher.search(context, params, config);
 
@@ -552,157 +515,152 @@ public class Info implements Service {
             return searcher.present(context, params, config);
         }
 
-	}
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Element buildParams()
-	{
-		Element params = new Element(Jeeves.Elem.REQUEST);
-		String arParams[] = {
-			"extended", "off",
-			"remote",   "off",
-			"attrset",  "geo",
-			"template", "y",
-			"any",      "",
-		};
+    private Element buildParams() {
+        Element params = new Element(Jeeves.Elem.REQUEST);
+        String arParams[] = {
+            "extended", "off",
+            "remote", "off",
+            "attrset", "geo",
+            "template", "y",
+            "any", "",
+        };
 
-		for(int i=0; i<arParams.length/2; i++)
-			params.addContent(new Element(arParams[i*2]).setText(arParams[i*2 +1]));
+        for (int i = 0; i < arParams.length / 2; i++)
+            params.addContent(new Element(arParams[i * 2]).setText(arParams[i * 2 + 1]));
 
-		return params;
-	}
+        return params;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Element buildTemplateRecord(String id, String title, String schema)
-	{
-		return buildRecord(id, title, Collections.<String, String>emptyMap(), schema, null);
-	}
+    private Element buildTemplateRecord(String id, String title, String schema) {
+        return buildRecord(id, title, Collections.<String, String>emptyMap(), schema, null);
+    }
 
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode)
-	{
-		Element el = new Element("record");
+    private Element buildRecord(String id, String name, Map<String, String> labelTranslations, String code, String serverCode) {
+        Element el = new Element("record");
 
-		Element idE = new Element("id").setText(id);
-		if (code != null) idE.setAttribute("code", code);
-		if (serverCode != null) idE.setAttribute("serverCode", serverCode);
-		el.addContent(idE);
-		el.addContent(new Element("name").setText(name));
+        Element idE = new Element("id").setText(id);
+        if (code != null) idE.setAttribute("code", code);
+        if (serverCode != null) idE.setAttribute("serverCode", serverCode);
+        el.addContent(idE);
+        el.addContent(new Element("name").setText(name));
         Element translations = new Element("label");
         el.addContent(translations);
         for (Map.Entry<String, String> entry : labelTranslations.entrySet()) {
             translations.addContent(new Element(entry.getKey()).setText(xmlContentEscaper().escape(entry.getValue())));
         }
         return el;
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Users
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //--- Users
+    //--------------------------------------------------------------------------
 
-	private Element getUsers(ServiceContext context) throws SQLException
-	{
-		UserSession us   = context.getUserSession();
-		List<Element> list = getUsers(context, us);
+    private Element getUsers(ServiceContext context) throws SQLException {
+        UserSession us = context.getUserSession();
+        List<Element> list = getUsers(context, us);
 
-		Element users = new Element(USERS);
+        Element users = new Element(USERS);
 
-		for (Element user : list) {
-			user = (Element) user.clone();
-			user.removeChild("password");
-			user.setName("user");
+        for (Element user : list) {
+            user = (Element) user.clone();
+            user.removeChild("password");
+            user.setName("user");
 
-			users.addContent(user);
-		}
+            users.addContent(user);
+        }
 
-		return users;
-	}
+        return users;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private List<Element> getUsers(ServiceContext context, UserSession us) throws SQLException {
-		if (!us.isAuthenticated())
-			return new ArrayList<Element>();
+    private List<Element> getUsers(ServiceContext context, UserSession us) throws SQLException {
+        if (!us.isAuthenticated())
+            return new ArrayList<Element>();
 
-		int userId = Integer.parseInt(us.getUserId());
+        int userId = Integer.parseInt(us.getUserId());
 
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (us.getProfile() == Profile.Administrator) {
-			@SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<Element> allUsers = userRepository.findAllAsXml().getChildren();
             return allUsers;
-		}
+        }
 
-		if (us.getProfile() != Profile.UserAdmin) {
+        if (us.getProfile() != Profile.UserAdmin) {
             @SuppressWarnings("unchecked")
-            List<Element> identifiedUsers = userRepository.findAllAsXml(UserSpecs.hasUserId(userId)).getChildren();;
+            List<Element> identifiedUsers = userRepository.findAllAsXml(UserSpecs.hasUserId(userId)).getChildren();
+            ;
             return identifiedUsers;
         }
 
-		//--- we have a user admin
+        //--- we have a user admin
 
-		Set<Integer> hsMyGroups = getUserGroups(context, userId);
+        Set<Integer> hsMyGroups = getUserGroups(context, userId);
 
         Set<String> profileSet = us.getProfile().getAllNames();
 
-		//--- retrieve all users
+        //--- retrieve all users
 
-		Element elUsers = userRepository.findAllAsXml(null, SortUtils.createSort(User_.name));
+        Element elUsers = userRepository.findAllAsXml(null, SortUtils.createSort(User_.name));
 
-		//--- now filter them
+        //--- now filter them
 
-		ArrayList<Element> alToRemove = new ArrayList<Element>();
+        ArrayList<Element> alToRemove = new ArrayList<Element>();
 
-		for(Object o : elUsers.getChildren())
-		{
-			Element elRec = (Element) o;
+        for (Object o : elUsers.getChildren()) {
+            Element elRec = (Element) o;
 
-			String sUserId = elRec.getChildText("id");
-			String profile= elRec.getChildText("profile");
+            String sUserId = elRec.getChildText("id");
+            String profile = elRec.getChildText("profile");
 
-			if (!profileSet.contains(profile))
-				alToRemove.add(elRec);
+            if (!profileSet.contains(profile))
+                alToRemove.add(elRec);
 
-			else if (!hsMyGroups.containsAll(getUserGroups(context, Integer.parseInt(sUserId))))
-				alToRemove.add(elRec);
-		}
+            else if (!hsMyGroups.containsAll(getUserGroups(context, Integer.parseInt(sUserId))))
+                alToRemove.add(elRec);
+        }
 
-		//--- remove unwanted users
+        //--- remove unwanted users
 
-		for(int i=0; i<alToRemove.size(); i++)
-			alToRemove.get(i).detach();
+        for (int i = 0; i < alToRemove.size(); i++)
+            alToRemove.get(i).detach();
 
-		//--- return result
+        //--- return result
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> usersEls = elUsers.getChildren();
         return usersEls;
-	}
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Set<Integer> getUserGroups(ServiceContext context, int userId) throws SQLException {
+    private Set<Integer> getUserGroups(ServiceContext context, int userId) throws SQLException {
         final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
 
         return new HashSet<Integer>(userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(userId)));
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- General purpose methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- General purpose methods
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private Element getEnv(ServiceContext context)
-	{
-		return new Element("env")
-						.addContent(new Element("baseURL").setText(context.getBaseUrl()))
-                        .addContent(new Element("node").setText(context.getNodeId()));
-	}
+    private Element getEnv(ServiceContext context) {
+        return new Element("env")
+            .addContent(new Element("baseURL").setText(context.getBaseUrl()))
+            .addContent(new Element("node").setText(context.getNodeId()));
+    }
 }

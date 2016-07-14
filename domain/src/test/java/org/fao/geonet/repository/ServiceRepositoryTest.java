@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -42,6 +43,23 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     ServiceRepository _repo;
+
+    public static Service newService(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
+
+        Service service = new Service();
+
+        service.setId(val);
+        service.setName("name" + val);
+        service.setClassName("classname" + val);
+        service.setDescription("description" + val);
+        service.setExplicitQuery("+explicitQuery:" + val);
+
+        service.addParameter(new ServiceParam("name_1_" + val, "value_1_" + val)).
+            addParameter(new ServiceParam("name_2_" + val, "value_2_" + val));
+
+        return service;
+    }
 
     @Test
     public void testFindOne() throws Exception {
@@ -76,22 +94,6 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
 
     private Service newService() {
         return newService(_inc);
-    }
-    public static Service newService(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
-
-        Service service = new Service();
-
-        service.setId(val);
-        service.setName("name" + val);
-        service.setClassName("classname" + val);
-        service.setDescription("description" + val);
-        service.setExplicitQuery("+explicitQuery:" + val);
-
-        service.addParameter(new ServiceParam("name_1_" + val, "value_1_" + val)).
-                addParameter(new ServiceParam("name_2_" + val, "value_2_" + val));
-
-        return service;
     }
 
 }

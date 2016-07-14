@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import java.io.File;
 import java.util.Comparator;
 import java.util.Map;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
@@ -45,91 +46,25 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 /**
- * An entity representing a schematron. It contains the file to the schematron
- * definition, the schema it belongs and if it is required or just a
- * recommendation.
- * 
+ * An entity representing a schematron. It contains the file to the schematron definition, the
+ * schema it belongs and if it is required or just a recommendation.
+ *
  * @author delawen
  */
 @Entity
 @Table(name = "schematron",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"schemaName","filename"}))
+    uniqueConstraints = @UniqueConstraint(columnNames = {"schemaName", "filename"}))
 @Cacheable
 @Access(AccessType.PROPERTY)
-@SequenceGenerator(name= Schematron.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = Schematron.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Schematron extends Localized {
-    static final String ID_SEQ_NAME = "schematron_id_seq";
     public static final Comparator<? super Schematron> DISPLAY_PRIORITY_COMPARATOR = new Comparator<Schematron>() {
         @Override
         public int compare(Schematron o1, Schematron o2) {
             return Integer.compare(o1.getDisplayPriority(), o2.getDisplayPriority());
         }
     };
-
-    private int id;
-	private String schemaName;
-	private String file;
-	private int displayPriority = 0;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
-	@Column(nullable = false)
-	public int getId() {
-		return id;
-	}
-
-	public Schematron setId(int id) {
-		this.id = id;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return "Schematron [_id=" + id + ", isoschema=" + schemaName + ", filename="
-				+ file + ", description"
-				+ getLabelTranslations() + "]";
-	}
-
-	/**
-	 * @return the schema
-	 */
-	@Column(nullable = false, name = "schemaName")
-	public String getSchemaName() {
-		return schemaName;
-	}
-
-	/**
-	 * @param schemaName
-	 *            the schema to set
-	 */
-	public void setSchemaName(String schemaName) {
-		this.schemaName = schemaName;
-	}
-
-	/**
-	 * @return the file
-	 */
-	@Column(nullable = false, name = "filename")
-	public String getFile() {
-		return file;
-	}
-
-	/**
-	 * @param file
-	 *            the file to set
-	 */
-	public void setFile(String file) {
-		this.file = file;
-	}
-
-    @Override
-    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
-    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SchematronDes")
-    @MapKeyColumn(name = "langId", length = 5)
-    @Column(name = "label", nullable = false, length = 96)
-    public Map<String, String> getLabelTranslations() {
-        return super.getLabelTranslations();
-    }
+    static final String ID_SEQ_NAME = "schematron_id_seq";
     private final static int EXTENSION_LENGTH = ".xsl".length();
     private final static String SEPARATOR = File.separator;
     private final static String ALT_SEPARATOR;
@@ -140,6 +75,69 @@ public class Schematron extends Localized {
         } else {
             ALT_SEPARATOR = "\\";
         }
+    }
+
+    private int id;
+    private String schemaName;
+    private String file;
+    private int displayPriority = 0;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @Column(nullable = false)
+    public int getId() {
+        return id;
+    }
+
+    public Schematron setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Schematron [_id=" + id + ", isoschema=" + schemaName + ", filename="
+            + file + ", description"
+            + getLabelTranslations() + "]";
+    }
+
+    /**
+     * @return the schema
+     */
+    @Column(nullable = false, name = "schemaName")
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    /**
+     * @param schemaName the schema to set
+     */
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    /**
+     * @return the file
+     */
+    @Column(nullable = false, name = "filename")
+    public String getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    @Override
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @CollectionTable(joinColumns = @JoinColumn(name = "idDes"), name = "SchematronDes")
+    @MapKeyColumn(name = "langId", length = 5)
+    @Column(name = "label", nullable = false, length = 96)
+    public Map<String, String> getLabelTranslations() {
+        return super.getLabelTranslations();
     }
 
     /**
@@ -175,7 +173,7 @@ public class Schematron extends Localized {
         String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
         String lowerCaseRuleName = rule.toLowerCase();
         for (SchematronRequirement requirement : SchematronRequirement.values()) {
-            if (lowerCaseRuleName.endsWith("."+requirement.name().toLowerCase())) {
+            if (lowerCaseRuleName.endsWith("." + requirement.name().toLowerCase())) {
                 return rule.substring(0, rule.length() - requirement.name().length() - 1);
             }
         }
@@ -186,7 +184,7 @@ public class Schematron extends Localized {
     public SchematronRequirement getDefaultRequirement() {
         final String lowerCaseFile = getFile().toLowerCase();
         for (SchematronRequirement requirement : SchematronRequirement.values()) {
-            if (lowerCaseFile.endsWith("."+requirement.name().toLowerCase() + ".xsl")) {
+            if (lowerCaseFile.endsWith("." + requirement.name().toLowerCase() + ".xsl")) {
                 return requirement;
             }
         }
@@ -202,7 +200,8 @@ public class Schematron extends Localized {
 
         if (displayPriority != that.displayPriority) return false;
         if (file != null ? !file.equals(that.file) : that.file != null) return false;
-        if (schemaName != null ? !schemaName.equals(that.schemaName) : that.schemaName != null) return false;
+        if (schemaName != null ? !schemaName.equals(that.schemaName) : that.schemaName != null)
+            return false;
 
         return true;
     }

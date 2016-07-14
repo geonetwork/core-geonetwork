@@ -23,10 +23,10 @@
   -->
 
 <csw:DescribeRecord xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
-                    service="CSW" version="2.0.2"
+                    xmlns:gmd="http://www.isotc211.org/2005/gmd" service="CSW"
+                    version="2.0.2"
                     outputFormat="application/xml"
-                    schemaLanguage="http://www.w3.org/XML/Schema"
-                    xmlns:gmd="http://www.isotc211.org/2005/gmd">
-    <csw:TypeName>gmd:MD_Metadata</csw:TypeName>
-    <!--<csw:TypeName targetNamespace="http://www.opengis.net/cat/csw/2.0.2">Record</csw:TypeName>-->
+                    schemaLanguage="http://www.w3.org/XML/Schema">
+  <csw:TypeName>gmd:MD_Metadata</csw:TypeName>
+  <!--<csw:TypeName targetNamespace="http://www.opengis.net/cat/csw/2.0.2">Record</csw:TypeName>-->
 </csw:DescribeRecord>

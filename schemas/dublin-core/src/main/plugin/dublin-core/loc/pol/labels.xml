@@ -23,146 +23,157 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<labels xmlns:dc = "http://purl.org/dc/elements/1.1/">
-	<!-- ==================================================== -->
-	<element name="simpledc">
-		<label>Metadane</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:title">
-		<label>Tytuł</label>
-		<description>Nazwa zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:creator">
-		<label>Twórca lub autor</label>
-		<description>Osoba lub instytucja odpowiedzialna za utworzenie zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:subject">
-		<label>Temat i słowa kluczowe</label>
-		<description>Temat treści zasobu w postaci haseł i słów kluczowych.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:description">
-		<label>Opis</label>
-		<description>Opis zawartości zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:publisher">
-		<label>Wydawca</label>
-		<description>Osoba lub instytucja odpowiedzialna za udostępnianie zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:contributor">
-		<label>Współtwórca</label>
-		<description>Osoba lub instytucja współodpowiedzialna za tworzenie zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:date">
-		<label>Data</label>
-		<description>Data wydarzenia związanego z zasobem.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:type">
-		<label>Typ zasobu</label>
-		<description>Kategoria, rodzaje lub funkcje zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:format">
-		<label>Format</label>
-		<description>Fizyczny lub cyfrowy przejaw zasobu.Typowo format zawiera typ lub wymiary nośnika zasobu lub sposób zapisu zasobu cyfrowego. Format może być użyty do identyfikacji oprogramowania, sprzętu lub innego potrzebnego sprzętu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:identifier">
-		<label>Identyfikator zasobu</label>
-		<description>Jednoznaczny, niepowtarzalny odnośnik do zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:source">
-		<label>Źródło</label>
-		<description>Źródło, z którego pochodzi zasób.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:language">
-		<label>Język</label>
-		<description>Język, w którym zapisany jest zasób.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:relation">
-		<label>Relacja</label>
-		<description>Inny zasób będący w relacji zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:coverage">
-		<label>Lokalizacja i czas</label>
-		<description>Zasięg przestrzenny i zakres czasowy zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:rights">
-		<label>Prawa własności</label>
-		<description>Informacja o prawach własności do zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:modified">
-		<label>Data modyfikacji</label>
-		<description>Data przeprowadzenia zmian w zasobie.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:abstract">
-		<label>Streszczenie</label>
-		<description>Streszczenie treści zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:spatial">
-		<label>Lokalizacja</label>
-		<description>Przestrzenna lokalizacja zasobu.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:audience">
-		<label>Użytkownicy</label>
-		<description>Typ odbiorcy, dla którego zasób jest przeznaczony lub użyteczny.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualMethod">
-		<label>Metoda aktualizacji</label>
-		<description>Metoda aktualizowania obiektów w zasobie.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualPeriodicity">
-		<label>Częstotliwość aktualizacji</label>
-		<description>Częstotliwość, z którą obiekty są aktualizowane w zasobie.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualPolicy">
-		<label>Polityka aktualizacji</label>
-		<description>Polityka zarządzania związanego z aktualizacją obiektów w zasobie.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:instructionalMethod">
-		<label>Metoda szkolenia</label>
-		<description>Proces nabywania wiedzy, zachowań i umiejętności, do utrzymania którego zasób jest zaprojektowany.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:provenance">
-		<label>Pochodzenie</label>
-		<description>Zestawienie wszystkich zmian dotyczących posiadania i opieki nad zasobem od jego utworzenia, które są znaczące dla jego autentyczności, integralności i zrozumienia.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:rightsHolder">
-		<label>Posiadacz lub zarządca</label>
-		<description>Osoba lub organizacja posiadającą lub zarządzającą prawami do zasobu.</description>
-	</element>
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <!-- ==================================================== -->
+  <element name="simpledc">
+    <label>Metadane</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Tytuł</label>
+    <description>Nazwa zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Twórca lub autor</label>
+    <description>Osoba lub instytucja odpowiedzialna za utworzenie zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Temat i słowa kluczowe</label>
+    <description>Temat treści zasobu w postaci haseł i słów kluczowych.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Opis</label>
+    <description>Opis zawartości zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Wydawca</label>
+    <description>Osoba lub instytucja odpowiedzialna za udostępnianie zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Współtwórca</label>
+    <description>Osoba lub instytucja współodpowiedzialna za tworzenie zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Data</label>
+    <description>Data wydarzenia związanego z zasobem.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Typ zasobu</label>
+    <description>Kategoria, rodzaje lub funkcje zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Format</label>
+    <description>Fizyczny lub cyfrowy przejaw zasobu.Typowo format zawiera typ lub wymiary nośnika
+      zasobu lub sposób zapisu zasobu cyfrowego. Format może być użyty do identyfikacji
+      oprogramowania, sprzętu lub innego potrzebnego sprzętu.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Identyfikator zasobu</label>
+    <description>Jednoznaczny, niepowtarzalny odnośnik do zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Źródło</label>
+    <description>Źródło, z którego pochodzi zasób.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Język</label>
+    <description>Język, w którym zapisany jest zasób.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Relacja</label>
+    <description>Inny zasób będący w relacji zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Lokalizacja i czas</label>
+    <description>Zasięg przestrzenny i zakres czasowy zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Prawa własności</label>
+    <description>Informacja o prawach własności do zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Data modyfikacji</label>
+    <description>Data przeprowadzenia zmian w zasobie.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Streszczenie</label>
+    <description>Streszczenie treści zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Lokalizacja</label>
+    <description>Przestrzenna lokalizacja zasobu.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Użytkownicy</label>
+    <description>Typ odbiorcy, dla którego zasób jest przeznaczony lub użyteczny.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Metoda aktualizacji</label>
+    <description>Metoda aktualizowania obiektów w zasobie.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Częstotliwość aktualizacji</label>
+    <description>Częstotliwość, z którą obiekty są aktualizowane w zasobie.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Polityka aktualizacji</label>
+    <description>Polityka zarządzania związanego z aktualizacją obiektów w zasobie.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Metoda szkolenia</label>
+    <description>Proces nabywania wiedzy, zachowań i umiejętności, do utrzymania którego zasób jest
+      zaprojektowany.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Pochodzenie</label>
+    <description>Zestawienie wszystkich zmian dotyczących posiadania i opieki nad zasobem od jego
+      utworzenia, które są znaczące dla jego autentyczności, integralności i zrozumienia.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Posiadacz lub zarządca</label>
+    <description>Osoba lub organizacja posiadającą lub zarządzającą prawami do zasobu.</description>
+  </element>
   <!-- ==================================================== -->
   <element name="dct:references">
     <label>Related resource</label>
-    <description>A related resource that is referenced, cited, or otherwise pointed to by the described resource.</description>
+    <description>A related resource that is referenced, cited, or otherwise pointed to by the
+      described resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:accessRights">
     <label>Access Rights</label>
-    <description>Information about who can access the resource or an indication of its security status.</description>
+    <description>Information about who can access the resource or an indication of its security
+      status.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:alternative">
@@ -202,7 +213,9 @@
   <!-- ==================================================== -->
   <element name="dct:educationLevel">
     <label>Audience Education Level</label>
-    <description>A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.</description>
+    <description>A class of entity, defined in terms of progression through an educational or
+      training context, for which the described resource is intended.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:extent">
@@ -212,47 +225,65 @@
   <!-- ==================================================== -->
   <element name="dct:hasFormat">
     <label>Has Format</label>
-    <description>A related resource that is substantially the same as the pre-existing described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the pre-existing described
+      resource, but in another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasPart">
     <label>Has Part</label>
-    <description>A related resource that is included either physically or logically in the described resource.</description>
+    <description>A related resource that is included either physically or logically in the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasVersion">
     <label>Has Version</label>
-    <description>A related resource that is a version, edition, or adaptation of the described resource.</description>
+    <description>A related resource that is a version, edition, or adaptation of the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isFormatOf">
     <label>Is Format Of</label>
-    <description>A related resource that is substantially the same as the described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the described resource, but in
+      another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isPartOf">
     <label>Is Part Of</label>
-    <description>A related resource in which the described resource is physically or logically included.</description>
+    <description>A related resource in which the described resource is physically or logically
+      included.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReferencedBy">
     <label>Is Referenced By</label>
-    <description>A related resource that references, cites, or otherwise points to the described resource.</description>
+    <description>A related resource that references, cites, or otherwise points to the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReplacedBy">
     <label>Is Replaced By</label>
-    <description>A related resource that supplants, displaces, or supersedes the described resource.</description>
+    <description>A related resource that supplants, displaces, or supersedes the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isRequiredBy">
     <label>Is Required By</label>
-    <description>A related resource that requires the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that requires the described resource to support its function,
+      delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isVersionOf">
     <label>Is Version Of</label>
-    <description>A related resource of which the described resource is a version, edition, or adaptation.</description>
+    <description>A related resource of which the described resource is a version, edition, or
+      adaptation.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:issued">
@@ -262,12 +293,15 @@
   <!-- ==================================================== -->
   <element name="dct:license">
     <label>License</label>
-    <description>A legal document giving official permission to do something with the resource.</description>
+    <description>A legal document giving official permission to do something with the resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:mediator">
     <label>Mediator</label>
-    <description>An entity that mediates access to the resource and for whom the resource is intended or useful.</description>
+    <description>An entity that mediates access to the resource and for whom the resource is
+      intended or useful.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:medium">
@@ -277,12 +311,16 @@
   <!-- ==================================================== -->
   <element name="dct:replaces">
     <label>Replaces</label>
-    <description>A related resource that is supplanted, displaced, or superseded by the described resource.</description>
+    <description>A related resource that is supplanted, displaced, or superseded by the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:requires">
     <label>Requires</label>
-    <description>A related resource that is required by the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that is required by the described resource to support its
+      function, delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:tableOfContents">

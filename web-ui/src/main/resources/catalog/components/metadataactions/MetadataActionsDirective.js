@@ -63,10 +63,10 @@
           };
 
           scope.updateStatus = function() {
-            return $http.get('md.status.update?' +
-                '_content_type=json&id=' + metadataId +
-                '&changeMessage=' + scope.changeMessage +
-                '&status=' + scope.newStatus.value).then(
+            return $http.put('../api/records/' + metadataId +
+                '/status?status=' + scope.newStatus.value +
+                '&comment=' + scope.changeMessage
+            ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
@@ -115,7 +115,7 @@
             'metadatacategoryupdater.html',
         scope: {
           currentCategories: '=gnMetadataCategoryUpdater',
-          metadataId: '=',
+          metadataUuid: '=',
           groupOwner: '=gnGroupOwner'
         },
         link: function(scope) {
@@ -125,13 +125,12 @@
 
           scope.updateCategoriesAllowed = function() {
             if (angular.isDefined(scope.groupOwner)) {
-              $http.get('admin.group.get?id=' + scope.groupOwner + '&' +
-                  '_content_type=json', {cache: true}).
+              $http.get('../api/groups/' + scope.groupOwner, {cache: true}).
                   success(function(data) {
                     scope.enableallowedcategories =
-                        (data[0].enableallowedcategories == 'true');
+                        data.enableAllowedCategories;
                     scope.allowedcategories = [];
-                    angular.forEach(data[0].allowedcategories, function(c) {
+                    angular.forEach(data.allowedcategories, function(c) {
                       scope.allowedcategories.push(c.id);
                     });
                   });
@@ -144,15 +143,13 @@
           });
 
           var init = function() {
-            return $http.get('info?type=categories&' +
-                '_content_type=json', {cache: true}).
+            return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
-                  scope.categories =
-                     data !== 'null' ? data.metadatacategory : null;
+                  scope.categories = data;
                   if (angular.isDefined(scope.currentCategories)) {
                     angular.forEach(scope.categories, function(c) {
                       if (scope.currentCategories.indexOf(c.name) !== -1) {
-                        scope.ids.push(c['@id']);
+                        scope.ids.push(c.id);
                       }
                     });
                   }
@@ -163,17 +160,21 @@
             return c.label[scope.lang];
           };
 
+
           // Remove or add category to the set of ids
           scope.assign = function(c, event) {
             event.stopPropagation();
-            var existIndex = scope.ids.indexOf(c['@id']);
+            var existIndex = scope.ids.indexOf(c.id), method = '';
             if (existIndex === -1) {
-              scope.ids.push(c['@id']);
+              scope.ids.push(c.id);
+              method = 'put';
             } else {
               scope.ids.splice(existIndex, 1);
+              method = 'delete';
             }
-            gnMetadataActions.assignCategories(scope.metadataId, scope.ids)
-              .then(function() {
+            $http[method]('../api/records/' +
+                          scope.metadataUuid + '/tags?id=' + c.id)
+                .then(function() {
                   scope.currentCategories.push(c.name);
                 }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
@@ -218,10 +219,9 @@
           scope.groups = null;
 
           scope.init = function(event) {
-            return $http.get('info?_content_type=json&' +
-                'type=groups&profile=Editor', {cache: true}).
-                success(function(data) {
-                  scope.groups = data !== 'null' ? data.group : null;
+            return $http.get('../api/groups?profile=Editor', {cache: true}).
+                success(function(groups) {
+                  scope.groups = groups;
                 });
           };
 
@@ -231,9 +231,9 @@
 
           scope.assignGroup = function(g, event) {
             event.stopPropagation();
-            gnMetadataActions.assignGroup(scope.metadataId, g['@id'])
-              .then(function() {
-                  scope.groupOwner = g['@id'];
+            gnMetadataActions.assignGroup(scope.metadataId, g.id)
+                .then(function() {
+                  scope.groupOwner = g.id;
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate('changeCategoryError'),

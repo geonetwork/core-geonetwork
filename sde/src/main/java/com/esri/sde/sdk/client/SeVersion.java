@@ -7,19 +7,21 @@ public class SeVersion {
     public SeVersion(SeConnection conn, String versionName) throws SeException {
     }
 
-    public void create(boolean uniqueName, SeVersion newVersion) throws SeException{}
+    public void create(boolean uniqueName, SeVersion newVersion) throws SeException {
+    }
 
-    public void getInfo() throws SeException{}
+    public void getInfo() throws SeException {
+    }
 
     public SeObjectId getStateId() {
         return null;
     }
 
-    public void setName(String string) {
-    }
-
     public String getName() {
         return null;
+    }
+
+    public void setName(String string) {
     }
 
     public void setParentName(String name) {
@@ -28,7 +30,7 @@ public class SeVersion {
     public void setDescription(String string) {
     }
 
-    public void changeState(SeObjectId newStateId)throws SeException {
+    public void changeState(SeObjectId newStateId) throws SeException {
     }
 
 }

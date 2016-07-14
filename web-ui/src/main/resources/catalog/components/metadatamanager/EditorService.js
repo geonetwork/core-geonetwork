@@ -96,7 +96,7 @@
            if (previousElement !== undefined) {
              var findExp = 'div.gn-move';
              var previousElementCtrl = $(previousElement
-               .find(findExp).get(0)).children();
+             .find(findExp).get(0)).children();
 
              // Up control is enabled if the previous element is
              // not on top.
@@ -116,12 +116,13 @@
          };
          return {
            buildEditUrlPrefix: function(service) {
-             var params = [service, '?id=', gnCurrentEdit.id];
+             var params = ['../api/records/',
+               gnCurrentEdit.id, '/', service, '?'];
              gnCurrentEdit.tab ?
              params.push('&currTab=', gnCurrentEdit.tab) :
              params.push('&currTab=', 'default');
-             gnCurrentEdit.displayAttributes &&
-             params.push('&displayAttributes=',
+             gnCurrentEdit.withAttributes &&
+             params.push('&withAttributes=',
              gnCurrentEdit.displayAttributes);
              return params.join('');
            },
@@ -132,7 +133,7 @@
            * This is required while switching tab for example. Update the tab
            * value in the form and trigger save to update the view.
            */
-           save: function(refreshForm, silent) {
+           save: function(refreshForm, silent, terminate) {
              var defer = $q.defer();
              var scope = this;
              if (gnCurrentEdit.saving) {
@@ -144,8 +145,9 @@
              }
 
              gnCurrentEdit.working = true;
-             $http.post(
-             refreshForm ? 'md.edit.save' : 'md.edit.saveonly',
+             $http.post('../api/records/' + gnCurrentEdit.id + '/editor?' +
+             (refreshForm ? '' : '&commit=true') +
+             (terminate ? '&terminate=true' : ''),
              $(gnCurrentEdit.formId).serialize(),
              {
                headers: {'Content-Type':
@@ -181,15 +183,10 @@
                setStatus({msg: 'cancelling', saving: true});
              }
 
-             $http({
-               method: 'GET',
-               url: 'md.edit.cancel@json',
-               params: {
-                 id: gnCurrentEdit.id
-               }
-             }).success(function(data) {
+             $http.delete(
+             '../api/records/' + gnCurrentEdit.id + '/editor'
+             ).success(function(data) {
                setStatus({msg: 'allChangesCanceled', saving: false});
-
                defer.resolve(data);
              }).error(function(error) {
                setStatus({msg: 'cancelChangesError', saving: false});
@@ -246,7 +243,8 @@
                  angular.extend(params, {starteditingsession: 'yes'});
                  gnCurrentEdit.sessionStartTime = moment();
                }
-               gnHttp.callService('edit', params).then(function(data) {
+               $http.get('../api/records/' + gnCurrentEdit.id + '/editor',
+               params).then(function(data) {
                  refreshForm($(data.data));
                });
              }
@@ -312,7 +310,7 @@
              var attributeAction = attribute ? '&child=geonet:attribute' : '';
 
              var defer = $q.defer();
-             $http.get(this.buildEditUrlPrefix('md.element.add') +
+             $http.put(this.buildEditUrlPrefix('editor/elements') +
              '&ref=' + ref + '&name=' + name + attributeAction)
               .success(function(data) {
                // Append HTML snippet after current element - compile Angular
@@ -348,8 +346,7 @@
            addChoice: function(metadataId, ref, parent, name,
            insertRef, position) {
              var defer = $q.defer();
-             // md.elem.add?id=1250&ref=41&name=gmd:presentationForm
-             $http.get(this.buildEditUrlPrefix('md.element.add') +
+             $http.put(this.buildEditUrlPrefix('editor/elements') +
              '&ref=' + ref +
              '&name=' + parent +
              '&child=' + name).success(function(data) {
@@ -378,8 +375,8 @@
              // md.element.remove?id=<metadata_id>&ref=50&parent=41
              // Call service to remove element from metadata record in session
              var defer = $q.defer();
-             $http.get('md.element.remove@json?id=' + gnCurrentEdit.id +
-             '&ref=' + ref + '&parent=' + parent)
+             $http.delete('../api/records/' + gnCurrentEdit.id +
+             '/editor/elements?ref=' + ref + '&parent=' + parent)
               .success(function(data) {
                // For a fieldset, domref is equal to ref.
                // For an input, it may be different because
@@ -441,8 +438,8 @@
            },
            removeAttribute: function(metadataId, ref) {
              var defer = $q.defer();
-             $http.get('md.attribute.remove@json?id=' + gnCurrentEdit.id +
-             '&ref=' + ref.replace('COLON', ':'))
+             $http.delete('../api/records/' + gnCurrentEdit.id +
+             '/editor/attributes?ref=' + ref.replace('COLON', ':'))
               .success(function(data) {
                var target = $('#gn-attr-' + ref);
                target.slideUp(duration, function() { $(this).remove();});
@@ -467,7 +464,7 @@
                var switchWithElementCtrl = $(switchWithElement
                 .find(findExp).get(0)).children();
 
-               // For each existing up/down control transfert
+               // For each existing up/down control transfer
                // the hidden class between the two elements.
                angular.forEach(switchWithElementCtrl, function(ctrl, idx) {
                  var ctrl2 = currentElementCtrl[idx];
@@ -483,7 +480,7 @@
                switchWithElement.toggleClass('gn-extra-field', hasClass);
              };
 
-             $http.get(this.buildEditUrlPrefix('md.element.' + direction) +
+             $http.put(this.buildEditUrlPrefix('editor/elements/' + direction) +
              '&ref=' + ref)
               .success(function(data) {
                // Switch with previous element

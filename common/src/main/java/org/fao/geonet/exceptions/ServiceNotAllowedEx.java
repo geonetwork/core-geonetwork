@@ -26,21 +26,19 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class ServiceNotAllowedEx extends NotAllowedEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class ServiceNotAllowedEx extends NotAllowedEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public ServiceNotAllowedEx(String name)
-	{
-		super("Service not allowed", name);
+    public ServiceNotAllowedEx(String name) {
+        super("Service not allowed", name);
 
-		id   = "service-not-allowed";
-		code = 401;
-	}
+        id = "service-not-allowed";
+        code = 401;
+    }
 }
 
 //=============================================================================

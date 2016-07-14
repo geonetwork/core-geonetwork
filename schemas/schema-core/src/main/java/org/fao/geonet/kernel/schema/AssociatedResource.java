@@ -27,6 +27,10 @@ package org.fao.geonet.kernel.schema;
  * Created by francois on 8/19/14.
  */
 public class AssociatedResource {
+    private String uuid;
+    private String initiativeType;
+    private String associationType;
+
     public AssociatedResource(String uuid, String initiativeType, String associationType) {
         this.uuid = uuid;
         this.initiativeType = initiativeType;
@@ -67,8 +71,4 @@ public class AssociatedResource {
         this.associationType = associationType;
         return this;
     }
-
-    private String uuid;
-    private String initiativeType;
-    private String associationType;
 }

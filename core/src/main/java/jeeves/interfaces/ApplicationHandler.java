@@ -24,15 +24,17 @@
 package jeeves.interfaces;
 
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 //=============================================================================
 
-public interface ApplicationHandler
-{
-	public String getContextName();
-	public Object start(Element config, ServiceContext s) throws Exception;
-	public void   stop();
+public interface ApplicationHandler {
+    public String getContextName();
+
+    public Object start(Element config, ServiceContext s) throws Exception;
+
+    public void stop();
 }
 
 //=============================================================================

@@ -23,266 +23,234 @@
   -->
 
 <geonet>
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<general>
-		<!-- Size must be in megabyte (integer), 100MB by default -->
-		<maxUploadSize>100</maxUploadSize>
-		<uploadDir>./data/tmp</uploadDir>
-		<debug>true</debug>
-	</general>
+  <general>
+    <!-- Size must be in megabyte (integer), 100MB by default -->
+    <maxUploadSize>100</maxUploadSize>
+    <uploadDir>./data/tmp</uploadDir>
+    <debug>true</debug>
+  </general>
 
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<default>
-		<service>home</service>
-		<!-- the following service is called if there is an exception raised
-			during the initialization of resources or
-			the appHandler org.fao.geonet.Geonetwork
-		-->
-		<startupErrorService>error</startupErrorService>
-		<language>eng</language>
-		<localized>true</localized>
-		<contentType>text/html; charset=UTF-8</contentType>
+  <default>
+    <service>home</service>
+    <!-- the following service is called if there is an exception raised
+            during the initialization of resources or
+            the appHandler org.fao.geonet.Geonetwork
+        -->
+    <startupErrorService>error</startupErrorService>
+    <language>eng</language>
+    <localized>true</localized>
+    <contentType>text/html; charset=UTF-8</contentType>
 
-		<gui>
-			<xml name="strings" file="xml/strings.xml" />
+    <gui>
+      <xml name="strings" file="xml/strings.xml"/>
 
-			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
+      <call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
-			<call name="session" class="jeeves.guiservices.session.Get" />
-		  <call name="env" class="org.fao.geonet.guiservices.util.Env" />
-		  <call name="systemConfig" class="org.fao.geonet.services.config.Get" />
-			<call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo" />
-			<call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get" />
-			<call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
+      <call name="session" class="jeeves.guiservices.session.Get"/>
+      <call name="env" class="org.fao.geonet.guiservices.util.Env"/>
+      <call name="systemConfig" class="org.fao.geonet.services.config.Get"/>
+      <call name="results" class="org.fao.geonet.guiservices.search.GetResultsInfo"/>
+      <call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get"/>
+      <call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
 
-			<!-- this service adds labels and codelists from all schemas -->
-			<call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo" />
+      <!-- this service adds labels and codelists from all schemas -->
+      <call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo"/>
+    </gui>
 
-			<xml name="config" file="WEB-INF/config-gui.xml" localized="false" />
-		</gui>
+    <!-- no privileges to access the service -->
 
-		<!-- no privileges to access the service -->
+    <error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
+      <xml name="error" file="xml/privileges-error.xml"/>
+    </error>
 
-		<error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
-			<xml name="error" file="xml/privileges-error.xml" />
-		</error>
+    <!-- data in upload too big -->
 
-		<!-- data in upload too big -->
+    <error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
+      <xml name="error" file="xml/file-too-big-error.xml"/>
+    </error>
 
-		<error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
-			<xml name="error" file="xml/file-too-big-error.xml" />
-		</error>
+    <!-- general error -->
 
-		<!-- general error -->
+    <error sheet="../xslt/common/error.xsl">
+      <xml name="error" file="xml/error.xml"/>
+    </error>
 
-		<error sheet="../xslt/common/error.xsl">
-			<xml name="error" file="xml/error.xml" />
-		</error>
+  </default>
 
-	</default>
+  <!-- ====================================================================== -->
 
-	<!-- ====================================================================== -->
+  <appHandler class="org.fao.geonet.Geonetwork">
+    <!-- language profiles for automatic language detection -->
+    <param name="languageProfilesDir" value="resources/language-profiles"/>
 
-	<appHandler class="org.fao.geonet.Geonetwork">
-		<!-- language profiles for automatic language detection -->
-		<param name="languageProfilesDir" value="resources/language-profiles" />
+    <param name="licenseDir" value="WEB-INF/licenses"/>
+    <param name="summaryConfig" value="WEB-INF/config-summary.xml"/>
+    <param name="luceneConfig" value="WEB-INF/config-lucene.xml"/>
 
-		<param name="licenseDir" value="WEB-INF/licenses" />
-		<param name="summaryConfig" value="WEB-INF/config-summary.xml" />
-		<param name="guiConfig" value="WEB-INF/config-gui.xml" />
-		<param name="luceneConfig" value="WEB-INF/config-lucene.xml" />
+    <!-- Preferred schema parameter is used on import
+            when a ZIP or MEF file is imported with more than one
+            xml files. For example, export produce one file for
+            iso19139 and on file for the ISO profil (eg. fra, che).
 
-		<!-- Preferred schema parameter is used on import
-			when a ZIP or MEF file is imported with more than one
-			xml files. For example, export produce one file for
-			iso19139 and on file for the ISO profil (eg. fra, che).
+            Recommanded value is iso19139 if user is not
+            interested for having metadata in a specific
+            ISO profil.
+        -->
+    <param name="preferredSchema" value="iso19139"/>
+    <param name="jzkitConfig" value="JZkitApplicationContext.xml"/>
+    <param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml"/>
 
-			Recommanded value is iso19139 if user is not 
-			interested for having metadata in a specific
-			ISO profil.
-		-->
-		<param name="preferredSchema" value="iso19139" />
-		<param name="jzkitConfig" value="JZkitApplicationContext.xml" />
-		<param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml" />
+    <!-- search statistics stuff -->
+    <!-- true to log into DB WKT of spatial objects involved in a search operation
+        CAUTION ! this can lead to HUGE database and CSV export if detailed geo objects are used:
+        several Gb for instance...-->
+    <param name="statLogSpatialObjects" value="false"/>
+    <param name="statLogAsynch" value="true"/>
+    <!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
+    <param name="statLuceneTermsExclude"
+           value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type"/>
 
-		<!-- search statistics stuff -->
-		<!-- true to log into DB WKT of spatial objects involved in a search operation
-		CAUTION ! this can lead to HUGE database and CSV export if detailed geo objects are used:
-		several Gb for instance...-->
-		<param name="statLogSpatialObjects" value="false" />
-		<param name="statLogAsynch" value="true" />
-		<!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
-		<param name="statLuceneTermsExclude" value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type" />
+    <!-- The maximum number of writes in a transaction on the spatial index
 
-		<!-- The maximum number of writes in a transaction on the spatial index
+            Set to 1 forces the spatialIndexWriter to commit after each spatial
+            feature is written. Set to a large number and commits are delayed until
+            that number of spatial features is written (this should be faster than
+            committing after each write). Be aware that setting this
+            number to anything other than 1 can cause problems with indexing
+            if the connection to the database is closed whilst GeoNetwork is running
+            (eg. if the db admin shuts the database for maintenance reasons).
+        -->
+    <param name="maxWritesInTransaction" value="1"/>
 
-			Set to 1 forces the spatialIndexWriter to commit after each spatial
-			feature is written. Set to a large number and commits are delayed until
-			that number of spatial features is written (this should be faster than
-			committing after each write). Be aware that setting this 
-			number to anything other than 1 can cause problems with indexing 
-			if the connection to the database is closed whilst GeoNetwork is running
-			(eg. if the db admin shuts the database for maintenance reasons). 
-		-->
-		<param name="maxWritesInTransaction" value="1" />
+    <param name="DBHeartBeatEnabled" value="false"/>
+    <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
+    <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
 
-        <param name="DBHeartBeatEnabled" value="false"/>
-        <param name="DBHeartBeatInitialDelaySeconds" value="20"/>
-        <param name="DBHeartBeatFixedDelaySeconds" value="20"/>
-		
-		<!-- Define if the schema catalog should be updated on startup.
-		Default is true. -->
-		<param name="createOrUpdateSchemaCatalog" value="true"/>
-		
-		<!-- Define the class to use when metadata status change
-		-->
-        <param name="statusActionsClass" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
-	</appHandler>
+    <!-- Define if the schema catalog should be updated on startup.
+        Default is true. -->
+    <param name="createOrUpdateSchemaCatalog" value="true"/>
+  </appHandler>
 
-	<!-- ====================================================================== -->
+  <!-- ====================================================================== -->
 
-	<services package="org.fao.geonet">
+  <services package="org.fao.geonet">
 
-        <!-- Ext GUIs -->
-        <service name="feedback.send">
-            <class name=".services.feedback.Receptor" />
-            <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
-        </service>
-
-		<service name="util.ping">
-      <class name="jeeves.services.Ping" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Resources management services                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="file.disclaimer">
-			<class name=".services.feedback.AddLimitations" />
-			<output sheet="file-download-disclaimer.xsl" />
-		</service>
-
-
-		<service name="file.download">
-			<class name=".services.feedback.Insert" />
-
-			<output sheet="file-download.xsl" />
-		</service>
-
-		<service name="prepare.file.download">
-			<class name=".services.metadata.PrepareFileDownload" />
-			<output sheet="file-download-list.xsl" />
-		</service>
-
-		<service name="resources.get.archive">
-			<class name=".services.resources.DownloadArchive" />
-
-			<error id="file-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output file="true" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- KML services -->
-		<!-- Show WMS service in GE -->
-		<service name="google.kml">
-			<class name=".services.metadata.Show" />
-			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
-			</output>
-			<error id="operation-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
-				<xml name="error" file="xml/privileges-error.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- MEF services -->
-
-		<service name="mef.import">
-			<class name=".services.mef.Import" />
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-		</service>
-
-		<service name="xml.mef.import.ui">
-      <!-- TODO rename Catalogue.js -->
-			<class name=".services.mef.Import" />
-			<output sheet="metadata/md-insert-results.xsl"/>
-			
-			<error sheet="error-xml.xsl"/>
-		</service>
-
-		<service name="map.import">
-			<class name=".services.mef.ImportWebMap" />
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="mef.export">
-			<class name=".services.mef.Export" />
-			<output file="true" />
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-		</service>
-
-
-		<service name="crs.types" deprecated="true">
-      <!-- Still used by ExtJS editor -->
-			<class name=".services.crs.GetCRSTypes" />
-		</service>
-		<service name="crs.get" deprecated="true">
-      <!-- Still used by ExtJS editor -->
-      <class name=".services.crs.GetCRS" />
-			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
-		</service>
-		
-		
-		<service name="isolanguages" deprecated="true">
-      <!-- Still used by ExtJS search form criteria on language -->
-			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
-		</service>
-		
-		
-    <!-- HTML5UI
-    Enable to use ExtJS UI
-    <service name="search">
-        <class name=".services.main.Home" />
-        <output sheet="search.xsl">
-            <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-            <call name="isoLang" class=".guiservices.isolanguages.Get" />
-        </output>
+    <!-- Ext GUIs -->
+    <service name="feedback.send">
+      <class name=".services.feedback.Receptor"/>
+      <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8"/>
     </service>
 
-		<service name="find">
-			<output sheet="search-cat.xsl"/>
-		</service>
-    -->
+    <service name="util.ping">
+      <class name="jeeves.services.Ping"/>
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Resources management services                                 -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="file.disclaimer">
+      <class name=".services.feedback.AddLimitations"/>
+      <output sheet="file-download-disclaimer.xsl"/>
+    </service>
 
 
+    <service name="file.download">
+      <class name=".services.feedback.Insert"/>
 
-    <!--
-        tabsearch is turned off by default (no maintainer).
-        <service name="tabsearch">
-          <output sheet="search-tab.xsl"/>
-        </service>
-    -->
+      <output sheet="file-download.xsl"/>
+    </service>
 
-	</services>
+    <service name="prepare.file.download">
+      <class name=".services.metadata.PrepareFileDownload"/>
+      <output sheet="file-download-list.xsl"/>
+    </service>
 
-	<!-- ====================================================================== -->
+    <service name="resources.get.archive">
+      <class name=".services.resources.DownloadArchive"/>
 
-	<include>config-metadata.xml</include>
-	<include>config-metadata-experimental.xml</include>
-	<include>config-portal.xml</include>
-	<include>config-export.xml</include>
+      <error id="file-not-found" sheet="error-embedded.xsl" statusCode="404">
+        <xml name="error" file="xml/file-not-found-error.xml"/>
+      </error>
 
-	<!-- ====================================================================== -->
+      <output file="true"/>
+    </service>
 
-	<!-- New section of services based on refactoring
-	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- KML services -->
+    <!-- Show WMS service in GE -->
+    <service name="google.kml">
+      <class name=".services.metadata.Show"/>
+      <output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
+      </output>
+      <error id="operation-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
+        <xml name="error" file="xml/privileges-error.xml"/>
+      </error>
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- MEF services -->
+
+    <service name="mef.import">
+      <class name=".services.mef.Import"/>
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/>
+    </service>
+
+    <service name="xml.mef.import.ui">
+      <!-- TODO rename Catalogue.js -->
+      <class name=".services.mef.Import"/>
+      <output sheet="metadata/md-insert-results.xsl"/>
+
+      <error sheet="error-xml.xsl"/>
+    </service>
+
+    <service name="map.import">
+      <class name=".services.mef.ImportWebMap"/>
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/>
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="mef.export">
+      <class name=".services.mef.Export"/>
+      <output file="true"/>
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/>
+    </service>
+
+
+    <service name="crs.types" deprecated="true">
+      <!-- Still used by ExtJS editor -->
+      <class name=".services.crs.GetCRSTypes"/>
+    </service>
+    <service name="crs.get" deprecated="true">
+      <!-- Still used by ExtJS editor -->
+      <class name=".services.crs.GetCRS"/>
+      <output sheet="crs.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
+
+
+    <service name="isolanguages" deprecated="true">
+      <!-- Still used by ExtJS search form criteria on language -->
+      <class name="org.fao.geonet.guiservices.isolanguages.Get"/>
+    </service>
+  </services>
+
+  <!-- ====================================================================== -->
+
+  <include>config-metadata.xml</include>
+  <include>config-metadata-experimental.xml</include>
+  <include>config-portal.xml</include>
+  <include>config-export.xml</include>
+
+  <!-- ====================================================================== -->
+
+  <!-- New section of services based on refactoring
+    guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
 
   <include>config/config-service-xml-api.xml</include>
 
@@ -293,31 +261,31 @@
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
   <include>config/config-service-pdf.xml</include>
-  
+
   <include>config/config-service-thesaurus.xml</include>
   <include>config/config-service-region.xml</include>
-  
+
   <include>config/config-service-admin.xml</include>
-    <include>config/config-service-admin-harvesting.xml</include>
+  <include>config/config-service-admin-harvesting.xml</include>
 
-    <include>config/config-service-admin-schema.xml</include>
-    <include>config/config-service-admin-schematron.xml</include>
-    <include>config/config-service-batch.xml</include>
+  <include>config/config-service-admin-schema.xml</include>
+  <include>config/config-service-admin-schematron.xml</include>
+  <include>config/config-service-batch.xml</include>
 
-    <include>config/config-service-admin-notification.xml</include>
-    <include>config/config-service-admin-index.xml</include>
-    <include>config/config-service-admin-io.xml</include>
-    <include>config/config-service-admin-logo.xml</include>
-    <include>config/config-service-admin-user-and-group.xml</include>
-    <include>config/config-service-admin-geoserver-publication.xml</include>
-    <include>config/config-service-admin-transfert-privileges.xml</include>
-    <include>config/config-service-admin-formatter.xml</include>
+  <include>config/config-service-admin-notification.xml</include>
+  <include>config/config-service-admin-index.xml</include>
+  <include>config/config-service-admin-io.xml</include>
+  <include>config/config-service-admin-logo.xml</include>
+  <include>config/config-service-admin-user-and-group.xml</include>
+  <include>config/config-service-admin-geoserver-publication.xml</include>
+  <include>config/config-service-admin-transfert-privileges.xml</include>
+  <include>config/config-service-admin-formatter.xml</include>
 
   <include>config/config-service-statistics.xml</include>
 
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
-  
+
   <include>config/config-service-sitemap.xml</include>
 
   <include>config/config-service-crs.xml</include>
@@ -327,7 +295,7 @@
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>
-  
+
   <include>config/config-service-monitoring.xml</include>
 
   <include>config/config-service-reports.xml</include>

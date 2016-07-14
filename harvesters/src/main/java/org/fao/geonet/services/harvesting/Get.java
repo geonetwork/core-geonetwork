@@ -25,9 +25,11 @@ package org.fao.geonet.services.harvesting;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
@@ -37,35 +39,37 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 /**
  *
  */
 public class Get implements Service {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		//--- if 'id' is null all entries are returned
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        //--- if 'id' is null all entries are returned
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> idEls = params.getChildren("id");
-		boolean onlyInfo = org.fao.geonet.Util.getParam(params, "onlyInfo", false);
+        boolean onlyInfo = org.fao.geonet.Util.getParam(params, "onlyInfo", false);
         String sortField = org.fao.geonet.Util.getParam(params, "sortField", "site[1]/name[1]");
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         List<String> ids;
         if (idEls.isEmpty()) {
@@ -100,7 +104,7 @@ public class Get implements Service {
         }
 
         return result;
-	}
+    }
 
     private void removeAllDataExceptInfo(Element node) {
         final List<Element> toRemove = Lists.newArrayList();

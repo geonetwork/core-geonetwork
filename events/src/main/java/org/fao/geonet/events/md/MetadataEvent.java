@@ -28,9 +28,8 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * Abstract class for metadata events. Should not be used directly
- * 
- * @author delawen
  *
+ * @author delawen
  */
 public abstract class MetadataEvent extends ApplicationEvent {
 

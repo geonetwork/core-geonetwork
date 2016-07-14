@@ -32,24 +32,27 @@ import java.util.Properties;
 
 abstract class PropertyUpdater extends BeanUpdater {
 
+    protected ValueLoader valueLoader;
+    protected String propertyName;
+
     public static PropertyUpdater create(Element element) {
         PropertyUpdater updater;
-        if("set".equalsIgnoreCase(element.getName())) {
+        if ("set".equalsIgnoreCase(element.getName())) {
             updater = new SetPropertyUpdater();
         } else if ("add".equalsIgnoreCase(element.getName())) {
             updater = new AddPropertyUpdater();
         } else {
-            throw new IllegalArgumentException(element.getName()+" is not known type of updater");
+            throw new IllegalArgumentException(element.getName() + " is not known type of updater");
         }
         updater.setBeanName(element);
         updater.setPropertyName(element.getAttributeValue("property"));
         ValueLoader valueLoader;
-        if(element.getAttributeValue("ref") != null) {
+        if (element.getAttributeValue("ref") != null) {
             valueLoader = new RefValueLoader(element.getAttributeValue("ref"));
-        }else if(element.getAttributeValue("value") != null) {
+        } else if (element.getAttributeValue("value") != null) {
             valueLoader = new ValueValueLoader(element.getAttributeValue("value"));
         } else {
-            throw new IllegalArgumentException(Xml.getString(element)+" does not have a value associated with it that is recognized. Excepted ref or value attribute");
+            throw new IllegalArgumentException(Xml.getString(element) + " does not have a value associated with it that is recognized. Excepted ref or value attribute");
         }
         updater.setSetValueLoader(valueLoader);
         return updater;
@@ -64,15 +67,14 @@ abstract class PropertyUpdater extends BeanUpdater {
         }
         doUpdate(beanFactory, bean, value);
     }
+
     protected abstract void doUpdate(ConfigurableListableBeanFactory beanFactory, BeanDefinition bean, Object value);
-    
-    protected ValueLoader valueLoader;
-    protected String propertyName;
 
     private void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
     }
+
     private void setSetValueLoader(ValueLoader valueLoader) {
-        this.valueLoader = valueLoader;   
+        this.valueLoader = valueLoader;
     }
 }

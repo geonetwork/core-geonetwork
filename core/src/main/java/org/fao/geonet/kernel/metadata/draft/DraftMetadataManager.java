@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.SortUtils;
@@ -575,11 +576,11 @@ public class DraftMetadataManager extends DefaultMetadataManager {
 
         // add baseUrl of this site (from settings)
         String protocol = context.getBean(SettingManager.class)
-                .getValue(Geonet.Settings.SERVER_PROTOCOL);
+                .getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         String host = context.getBean(SettingManager.class)
-                .getValue(Geonet.Settings.SERVER_HOST);
+                .getValue(Settings.SYSTEM_SERVER_HOST);
         String port = context.getBean(SettingManager.class)
-                .getValue(Geonet.Settings.SERVER_PORT);
+                .getValue(Settings.SYSTEM_SERVER_PORT);
         if (port.equals("80")) {
             port = "";
         } else {

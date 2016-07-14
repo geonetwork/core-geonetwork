@@ -108,10 +108,10 @@ public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
         final String ruleTitle = createRuleTitle(previouslyLoadedNodes.getKey());
 
         String errorDescription = "A problem was found with the rules in the schematron :'" +
-                                  file.getFileName() + "' \n\n";
+            file.getFileName() + "' \n\n";
 
         String fixExplanation =
-                "Each rule in a pattern must select different nodes in the metadata because,\n" +
+            "Each rule in a pattern must select different nodes in the metadata because,\n" +
                 "due to the nature of the generated XSLT, only one of the rules will be \n" +
                 "executed.  Therefore the context attribute of each rule must be unique.  \n" +
                 "There are two ways to  fix this problem.  \n" +
@@ -119,8 +119,8 @@ public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
                 "        2. Put the rules in separate patterns\n\n";
 
         throw new AssertionError(errorDescription + titleOfRule + "\n\n\t selects one of the same nodes as" +
-                                 " another or the rules in the same " +
-                                 "pattern: \n\n\t" + ruleTitle + "\n\n" + fixExplanation);
+            " another or the rules in the same " +
+            "pattern: \n\n\t" + ruleTitle + "\n\n" + fixExplanation);
     }
 
     private String createRuleTitle(Element declaredRule) {

@@ -44,28 +44,28 @@ public class PathInputSource extends InputSource {
     }
 
     @Override
-    public void setByteStream(InputStream byteStream) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public InputStream getByteStream() {
         return this.pathSourceMixin.getInputStream();
     }
 
     @Override
-    public void setCharacterStream(Reader characterStream) {
+    public void setByteStream(InputStream byteStream) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Reader getCharacterStream() {
-            final Charset cs;
-            if (getEncoding() != null) {
-                cs = Charset.forName(getEncoding());
-            } else {
-                cs = Constants.CHARSET;
-            }
-            return this.pathSourceMixin.getReader(cs);
+        final Charset cs;
+        if (getEncoding() != null) {
+            cs = Charset.forName(getEncoding());
+        } else {
+            cs = Constants.CHARSET;
+        }
+        return this.pathSourceMixin.getReader(cs);
+    }
+
+    @Override
+    public void setCharacterStream(Reader characterStream) {
+        throw new UnsupportedOperationException();
     }
 }

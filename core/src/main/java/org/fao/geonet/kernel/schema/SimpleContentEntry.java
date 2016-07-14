@@ -35,82 +35,72 @@ import java.util.List;
 
 //==============================================================================
 
-class SimpleContentEntry
-{
-	public String base;
+class SimpleContentEntry {
+    public String base;
 
-    public ArrayList<AttributeEntry> alAttribs  = new ArrayList<AttributeEntry>();
-	public List<String> alAttribGroups = new ArrayList<String>();
-	public boolean restriction = false;
+    public ArrayList<AttributeEntry> alAttribs = new ArrayList<AttributeEntry>();
+    public List<String> alAttribGroups = new ArrayList<String>();
+    public boolean restriction = false;
 
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public SimpleContentEntry(Element el, Path file, String targetNS, String targetNSPrefix)
-	{
-		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
-	}
+    public SimpleContentEntry(Element el, Path file, String targetNS, String targetNSPrefix) {
+        this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public SimpleContentEntry(ElementInfo ei)
-	{
-		handleAttribs(ei);
-		handleChildren(ei);
-	}
+    public SimpleContentEntry(ElementInfo ei) {
+        handleAttribs(ei);
+        handleChildren(ei);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private void handleAttribs(ElementInfo ei)
-	{
-            // TODO; handle attributes
-	}
+    private void handleAttribs(ElementInfo ei) {
+        // TODO; handle attributes
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleChildren(ElementInfo ei)
-	{
-		@SuppressWarnings("unchecked")
+    private void handleChildren(ElementInfo ei) {
+        @SuppressWarnings("unchecked")
         List<Element> children = ei.element.getChildren();
 
         for (Element elChild : children) {
 
             if (elChild.getName().equals("extension")) {
                 handleExtension(elChild, ei);
-            }
-            else if (elChild.getName().equals("restriction")) {
+            } else if (elChild.getName().equals("restriction")) {
                 handleExtension(elChild, ei);
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleExtension(Element el, ElementInfo ei)
-	{
-		restriction = false;
-		base = el.getAttributeValue("base");
-		@SuppressWarnings("unchecked")
+    private void handleExtension(Element el, ElementInfo ei) {
+        restriction = false;
+        base = el.getAttributeValue("base");
+        @SuppressWarnings("unchecked")
         List<Element> extension = el.getChildren();
         for (Element elExt : extension) {
             String elName = elExt.getName();
 
             if (elName.equals("attribute")) {
                 alAttribs.add(new AttributeEntry(elExt, ei.file, ei.targetNS, ei.targetNSPrefix));
-            }
-            else if (elName.equals("attributeGroup")) {
+            } else if (elName.equals("attributeGroup")) {
                 String attribGroup = elExt.getAttributeValue("ref");
 
                 if (attribGroup == null) {
@@ -119,14 +109,11 @@ class SimpleContentEntry
 
                 alAttribGroups.add(attribGroup);
 
-            }
-
-
-            else {
+            } else {
                 Logger.log();
             }
 
         }
-	}
+    }
 }
 

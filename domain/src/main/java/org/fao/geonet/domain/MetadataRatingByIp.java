@@ -28,9 +28,8 @@ import org.fao.geonet.entitylistener.MetadataRatingByIpEntityListenerManager;
 import javax.persistence.*;
 
 /**
- * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so that each IP address can only rate a
- * given
- * metadata once.
+ * An entity that tracks which users have rated a metadata. It currently tracks by Ip address so
+ * that each IP address can only rate a given metadata once.
  *
  * @author Jesse
  */

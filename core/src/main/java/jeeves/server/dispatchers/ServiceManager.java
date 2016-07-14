@@ -88,8 +88,6 @@ public class ServiceManager {
     private Map<String, Object> htContexts = new HashMap<String, Object>();
     private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
     private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
-
-
     private String baseUrl;
     private int maxUploadSize;
     private String defaultLang;
@@ -97,15 +95,7 @@ public class ServiceManager {
     private boolean defaultLocal;
     private JeevesServlet servlet;
     private boolean startupError = false;
-    private Map<String, String> startupErrors;  
-    
-    /**
-     * Detect crawlers. Useful to avoid creating sessions for them.
-     */
-    public static final String BOT_REGEXP = ".*(bot|crawler|baiduspider|80legs|ia_archiver|"
-            + "voyager|yahoo! slurp|mediapartners-google).*";
-    private Pattern regex = Pattern.compile(BOT_REGEXP, Pattern.CASE_INSENSITIVE);
-    
+    private Map<String, String> startupErrors;
 
 
     @PersistenceContext
@@ -117,6 +107,14 @@ public class ServiceManager {
     //---
     //---------------------------------------------------------------------------
 
+    static void info(String message) {
+        Log.info(Log.SERVICE, message);
+    }
+
+    static void error(String message) {
+        Log.error(Log.SERVICE, message);
+    }
+
     public void setDefaultLang(String lang) {
         defaultLang = lang;
     }
@@ -124,7 +122,6 @@ public class ServiceManager {
     public void setDefaultContType(String type) {
         defaultContType = type;
     }
-
 
     public void setMaxUploadSize(int size) {
         maxUploadSize = size;
@@ -138,15 +135,18 @@ public class ServiceManager {
         servlet = serv;
     }
 
+    //---------------------------------------------------------------------------
+
     public void setStartupErrors(Map<String, String> errors) {
         startupErrors = errors;
         startupError = true;
     }
 
+    //---------------------------------------------------------------------------
+
     public boolean isStartupError() {
         return startupError;
     }
-
     //---------------------------------------------------------------------------
 
     public void setBaseUrl(String name) {
@@ -157,20 +157,22 @@ public class ServiceManager {
     }
 
     //---------------------------------------------------------------------------
+    //---
+    //--- Registering methods (service)
+    //---
+    //---------------------------------------------------------------------------
 
     public void registerContext(String name, Object context) {
         htContexts.put(name, context);
     }
+
     //---------------------------------------------------------------------------
 
     public void addDefaultGui(Element gui) throws Exception {
         vDefaultGui.add(getGuiService("", gui));
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Registering methods (service)
-    //---
+
     //---------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
@@ -250,7 +252,6 @@ public class ServiceManager {
         return service;
     }
 
-
     //---------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
@@ -283,6 +284,10 @@ public class ServiceManager {
         return outPage;
     }
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Registering methods (error)
+    //---
     //---------------------------------------------------------------------------
 
     private GuiService getGuiService(String pack, Element elem) throws Exception {
@@ -338,21 +343,13 @@ public class ServiceManager {
         return errPage;
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Registering methods (error)
-    //---
-    //---------------------------------------------------------------------------
-
     public void addErrorPage(Element err) throws Exception {
         vErrorPipe.add(buildErrorPage(err));
     }
 
-    //---------------------------------------------------------------------------
-
     public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext) {
         ServiceContext context = new ServiceContext(name, appContext, htContexts,
-                entityManager);
+            entityManager);
 
         context.setBaseUrl(baseUrl);
         context.setLanguage("?");
@@ -375,39 +372,26 @@ public class ServiceManager {
 
         String ip = request.getRemoteAddr();
 
-        boolean notCrawler = true;
-
-        String userAgent = request.getHeader("user-agent");
-        
-        if(StringUtils.isNotBlank(userAgent)) {
-            Matcher m = regex.matcher(userAgent);
-            notCrawler = !m.find();
-        }
-        
-        if(notCrawler) {
-            final HttpSession httpSession = request.getSession(true);
-            UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
-            if (session == null) {
-                session = new UserSession();
-    
-                httpSession.setAttribute(Jeeves.Elem.SESSION, session);
-                session.setsHttpSession(httpSession);
-    
-                if (Log.isDebugEnabled(Log.REQUEST)) {
-                    Log.debug(Log.REQUEST, "Session created for client : " + ip);
-                }
-            }
-    
+        // Session is created by ApiInterceptor when needed
+        // Save the session here in the ServiceContext (not used in the API package).
+        final HttpSession httpSession = request.getSession(false);
+        UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+        if (session != null) {
             context.setUserSession(session);
         }
+
         return context;
     }
 
     public void dispatch(ServiceRequest req, UserSession session) {
         ServiceContext context = new ServiceContext(req.getService(), ApplicationContextHolder.get(),
-                htContexts, entityManager);
+            htContexts, entityManager);
         dispatch(req, session, context);
     }
+
+    //---------------------------------------------------------------------------
+    //--- Handle error
+    //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
     //---
@@ -471,9 +455,9 @@ public class ServiceManager {
 
                 // Did we change some header on the service?
                 for (Entry<String, String> entry : context.getResponseHeaders()
-                        .entrySet()) {
+                    .entrySet()) {
                     ((HttpServiceRequest) req).getHttpServletResponse()
-                            .setHeader(entry.getKey(), entry.getValue());
+                        .setHeader(entry.getKey(), entry.getValue());
                 }
 
                 if (context.getStatusCode() != null) {
@@ -498,7 +482,7 @@ public class ServiceManager {
 
                         req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                         req2.getHttpServletResponse().setHeader("Location", baseUrl + "/" + context.getApplicationContext().getBean
-                                (NodeInfo.class).getId() + "/" + req.getLanguage() + "/" + forward);
+                            (NodeInfo.class).getId() + "/" + req.getLanguage() + "/" + forward);
 
                         return;
                     } else {
@@ -525,12 +509,16 @@ public class ServiceManager {
         }
     }
 
+    //---------------------------------------------------------------------------
+    //--- Dispatch output
+    //---------------------------------------------------------------------------
+
     private MonitorManager getMonitorManager() {
         return ApplicationContextHolder.get().getBean(MonitorManager.class);
     }
 
     //---------------------------------------------------------------------------
-    //--- Handle error
+    //--- Dispatch error
     //---------------------------------------------------------------------------
 
     private void handleError(ServiceRequest req, Element response, ServiceContext context,
@@ -551,7 +539,7 @@ public class ServiceManager {
                 req.beginStream("application/soap+xml; charset=UTF-8", cache);
 
                 error.setAttribute("encodingStyle", "http://www.geonetwork.org/encoding/error",
-                        SOAPUtil.NAMESPACE_ENV);
+                    SOAPUtil.NAMESPACE_ENV);
 
                 boolean sender = (code < 500);
                 String message = error.getChildText("class") + " : " + error.getChildText("message");
@@ -590,8 +578,6 @@ public class ServiceManager {
         }
     }
 
-    //---------------------------------------------------------------------------
-    //--- Dispatch output
     //---------------------------------------------------------------------------
 
     /**
@@ -635,7 +621,7 @@ public class ServiceManager {
                     // Did we set up a status code for the response?
                     if (context.getStatusCode() != null) {
                         ((ServiceRequest) req).setStatusCode(context
-                                .getStatusCode());
+                            .getStatusCode());
                     }
 
                     req.beginStream("application/soap+xml; charset=UTF-8", cache);
@@ -670,7 +656,7 @@ public class ServiceManager {
                     Path styleSheet = IO.toPath(outPage.getStyleSheet());
                     Element guiElem;
                     TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class)
-                            .time();
+                        .time();
                     try {
                         guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
                     } finally {
@@ -678,11 +664,11 @@ public class ServiceManager {
                     }
 
                     addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo
-                            .getId());
+                        .getId());
 
                     Element rootElem = new Element(Jeeves.Elem.ROOT)
-                            .addContent(guiElem)
-                            .addContent(response);
+                        .addContent(guiElem)
+                        .addContent(response);
 
                     Element reqElem = (Element) req.getParams().clone();
                     reqElem.setName(Jeeves.Elem.REQUEST);
@@ -700,7 +686,7 @@ public class ServiceManager {
 
                         try {
                             TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class)
-                                    .time();
+                                .time();
                             Path file;
                             try {
                                 //--- first we do the transformation
@@ -779,8 +765,8 @@ public class ServiceManager {
                 addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo.getId());
 
                 Element rootElem = new Element(Jeeves.Elem.ROOT)
-                        .addContent(guiElem)
-                        .addContent(response);
+                    .addContent(guiElem)
+                    .addContent(response);
 
                 Element reqElem = (Element) req.getParams().clone();
                 reqElem.setName(Jeeves.Elem.REQUEST);
@@ -807,7 +793,7 @@ public class ServiceManager {
                             if (req.hasJSONOutput()) {
                                 Element xsltResponse = null;
                                 TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
-                                        .class).time();
+                                    .class).time();
                                 try {
                                     //--- first we do the transformation
                                     xsltResponse = Xml.transform(rootElem, styleSheet);
@@ -820,7 +806,7 @@ public class ServiceManager {
                             } else {
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
-                                        .class).time();
+                                    .class).time();
                                 try {
                                     //--- first we do the transformation
                                     Xml.transform(rootElem, styleSheet, baos);
@@ -858,7 +844,9 @@ public class ServiceManager {
     }
 
     //---------------------------------------------------------------------------
-    //--- Dispatch error
+    //---
+    //--- Private methods
+    //---
     //---------------------------------------------------------------------------
 
     /**
@@ -880,8 +868,8 @@ public class ServiceManager {
         addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
 
         Element rootElem = new Element(Jeeves.Elem.ROOT)
-                .addContent(guiElem)
-                .addContent(response);
+            .addContent(guiElem)
+            .addContent(response);
 
         if (req.hasDebug()) {
             req.beginStream("application/xml; charset=UTF-8", cache);
@@ -924,18 +912,14 @@ public class ServiceManager {
     }
 
     //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
 
     private Element getError(ServiceRequest req, Throwable t, Element response) {
         Element params = new Element(Jeeves.Elem.REQUEST)
-                .addContent(new Element("language").setText(req.getLanguage()))
-                .addContent(new Element("service").setText(req.getService()));
+            .addContent(new Element("language").setText(req.getLanguage()))
+            .addContent(new Element("service").setText(req.getService()));
 
         Element error = JeevesException.toElement(t)
-                .addContent(params);
+            .addContent(params);
 
         //--- add response (if any)
 
@@ -968,8 +952,6 @@ public class ServiceManager {
         root.addContent(new Element(Jeeves.Elem.LOC_SERVICE).setText(baseUrl + "/" + nodeId + "/" + lang));
     }
 
-    //---------------------------------------------------------------------------
-
     @SuppressWarnings("unchecked")
     private void logParameters(Element params) {
         List<Element> paramsList = params.getChildren();
@@ -979,8 +961,6 @@ public class ServiceManager {
             else if (isDebug()) debug(" -> parameters are : \n" + Xml.getString(params));
     }
 
-    //---------------------------------------------------------------------------
-
     private boolean isDebug() {
         return Log.isDebugEnabled(Log.SERVICE);
     }
@@ -989,16 +969,8 @@ public class ServiceManager {
         Log.debug(Log.SERVICE, message);
     }
 
-    static void info(String message) {
-        Log.info(Log.SERVICE, message);
-    }
-
     private void warning(String message) {
         Log.warning(Log.SERVICE, message);
-    }
-
-    static void error(String message) {
-        Log.error(Log.SERVICE, message);
     }
 
     public ProfileManager getProfileManager() {

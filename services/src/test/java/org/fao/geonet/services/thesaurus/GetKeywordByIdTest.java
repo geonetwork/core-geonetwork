@@ -26,7 +26,9 @@ package org.fao.geonet.services.thesaurus;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.AllThesaurus;
@@ -36,6 +38,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -52,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
@@ -72,13 +76,13 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
 
     @After
     public void tearDown2() throws Exception {
-        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, false);
+        settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, false);
     }
 
     @Test
     public void testExecAllThesaurus() throws Exception {
         final String thesaurusKey = AllThesaurus.ALL_THESAURUS_KEY;
-        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, true);
+        settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, true);
         final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
 
         String uri1 = keywordBeans.get(0).getUriCode();
@@ -89,10 +93,10 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         assertEquals("gmd:descriptiveKeywords", keywordXml.getQualifiedName());
         String thes1 = new AllThesaurus.DecomposedAllUri(uri1).thesaurusKey;
         assertEqualsText("thesaurus::" + thes1, keywordXml, "*//gmd:keyword[1]/@gco:nilReason", ISO19139Namespaces.GCO,
-                ISO19139Namespaces.GMD);
+            ISO19139Namespaces.GMD);
         String thes2 = new AllThesaurus.DecomposedAllUri(uri2).thesaurusKey;
         assertEqualsText("thesaurus::" + thes2, keywordXml, "*//gmd:keyword[2]/@gco:nilReason", ISO19139Namespaces.GCO,
-                ISO19139Namespaces.GMD);
+            ISO19139Namespaces.GMD);
     }
 
     @Test
@@ -113,7 +117,7 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         });
 
         final java.util.List<?> charStrings = Xml.selectNodes(keywordXml, "*//gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList
-                (ISO19139Namespaces.GCO,
+            (ISO19139Namespaces.GCO,
                 ISO19139Namespaces.GMD));
         assertEquals(2, charStrings.size());
     }
@@ -137,11 +141,12 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
 
         assertEquals("gmd:MD_Keywords", keywordXml.getQualifiedName());
         assertTrue(Xml.getString(keywordXml), Xml.selectNodes(keywordXml, "gmd:keyword/gco:CharacterString[normalize-space(text()) != '']", Arrays.asList(ISO19139Namespaces.GCO,
-                ISO19139Namespaces.GMD)).size() > 0);
+            ISO19139Namespaces.GMD)).size() > 0);
     }
+
     @Test
     public void testExecMD_KeywordsAsXlinkAllThesaurus() throws Exception {
-        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, true);
+        settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, true);
         final String thesaurusKey = AllThesaurus.ALL_THESAURUS_KEY;
         final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
 
@@ -169,29 +174,29 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
         final GetKeywordById service = new GetKeywordById();
         final ServiceContext context = createServiceContext();
         final Element requestParams = createParams(
-                Pair.read("thesaurus", thesaurusKey),
-                Pair.read("id", uri1 + "," + uri2),
-                Pair.read("multiple", "true"),
-                Pair.read("lang", "eng,fre"));
+            Pair.read("thesaurus", thesaurusKey),
+            Pair.read("id", uri1 + "," + uri2),
+            Pair.read("multiple", "true"),
+            Pair.read("lang", "eng,fre"));
         updateRequestParams.apply(requestParams);
         requestParams.setName("request");
 
         Element thesaurusXml = new GetList().exec(createParams(), context).setName("thesaurus");
         final Element results = service.exec(requestParams, context);
         Element xmlForTransformation = new Element("root").addContent(Arrays.asList(
-                        new Element("gui").addContent(Arrays.asList(
-                                new Element("strings"),
-                                languageRepository.findAllAsXml(),
-                                thesaurusXml
-                        )),
-                        results,
-                        requestParams
-                )
+            new Element("gui").addContent(Arrays.asList(
+                new Element("strings"),
+                languageRepository.findAllAsXml(),
+                thesaurusXml
+            )),
+            results,
+            requestParams
+            )
         );
         final Element keywordXml;
         try {
             keywordXml = Xml.transform(xmlForTransformation, geonetworkDataDirectory.getWebappDir().resolve
-                    ("xslt/services/thesaurus/convert.xsl"));
+                ("xslt/services/thesaurus/convert.xsl"));
         } catch (Exception e) {
             throw new RuntimeException("Error transforming xml: " + Xml.getString(xmlForTransformation), e);
         }
@@ -199,12 +204,12 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
     }
 
     private java.util.List<KeywordBean> getExampleKeywords(String thesaurusKey, int maxResults) throws IOException, MalformedQueryException,
-            QueryEvaluationException, AccessDeniedException {
+        QueryEvaluationException, AccessDeniedException {
         final KeywordSearchParams searchParams = new KeywordSearchParamsBuilder(isoLanguagesMapper).
-                addThesaurus(thesaurusKey).
-                maxResults(1000).
-                addLang("eng").addLang("fre").
-                build();
+            addThesaurus(thesaurusKey).
+            maxResults(1000).
+            addLang("eng").addLang("fre").
+            build();
 
         final ArrayList<KeywordBean> finalResults = Lists.newArrayList();
         for (KeywordBean keywordBean : searchParams.search(thesaurusManager)) {

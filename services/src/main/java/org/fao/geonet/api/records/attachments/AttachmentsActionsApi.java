@@ -26,37 +26,45 @@
 package org.fao.geonet.api.records.attachments;
 
 import io.swagger.annotations.*;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.api.API;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.annotation.PostConstruct;
 import java.nio.file.Path;
+
+import javax.annotation.PostConstruct;
+
+import jeeves.server.context.ServiceContext;
+
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
 @EnableWebMvc
 @Controller
 @Service
 @Api(value = "records",
-     tags= "records",
-     description = "Metadata record operations")
+    tags = "records",
+    description = "Metadata record operations")
 public class AttachmentsActionsApi {
+    private final ApplicationContext appContext = ApplicationContextHolder.get();
+    private Store store;
+
     public AttachmentsActionsApi() {
     }
+
     public AttachmentsActionsApi(Store store) {
         this.store = store;
     }
-
-    private Store store;
 
     public Store getStore() {
         return store;
@@ -65,8 +73,6 @@ public class AttachmentsActionsApi {
     public void setStore(Store store) {
         this.store = store;
     }
-
-    private final ApplicationContext appContext = ApplicationContextHolder.get();
 
     @SuppressWarnings("unchecked")
     @PostConstruct
@@ -77,38 +83,36 @@ public class AttachmentsActionsApi {
     }
 
 
-    @ApiOperation(value = "Create a metadata overview using the mapprint module",
-                  notes = "Notes",
-                  response = MetadataResource.class,
-                  nickname = "createMetadataOverview")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Successful retrieval of user detail", response = User.class),
-//            @ApiResponse(code = 404, message = "User with given username does not exist"),
-//            @ApiResponse(code = 500, message = "Internal server error")}
-//    )
-    @RequestMapping(value = "/api/" + API.VERSION_0_1 +
-                                "/records/{metadataUuid}/attachments/actions/save-thumbnail",
-                    method = RequestMethod.PUT)
+    @ApiOperation(
+        value = "Create an overview using the map print module",
+        notes = "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/linking-thumbnail.html#generating-a-thumbnail-using-wms-layers'>More info</a>",
+        response = MetadataResource.class,
+        nickname = "createMetadataOverview")
+    @RequestMapping(
+        value = "/api/" + API.VERSION_0_1 +
+        "/records/{metadataUuid}/attachments/print-thumbnail",
+        method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Thumbnail created."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
     @ResponseBody
     public MetadataResource saveThumbnail(
-            @ApiParam(value = "The metadata UUID",
-                      required = true,
-                      examples = @Example(value = {
-                              @ExampleProperty(
-                                      mediaType = "string",
-                                      value = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-                      })
-            )
-            @PathVariable
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true
+        )
+        @PathVariable
             String metadataUuid,
-            @ApiParam(value = "The mapprint module JSON configuration",
-                    required = true)
-            @RequestParam()
+        @ApiParam(value = "The mapprint module JSON configuration",
+            required = true)
+        @RequestParam()
             String jsonConfig,
-            @ApiParam(value = "The rotation angle of the map")
-            @RequestParam(required = false, defaultValue = "0") int rotationAngle
-            )
-            throws Exception {
+        @ApiParam(value = "The rotation angle of the map")
+        @RequestParam(required = false, defaultValue = "0") int rotationAngle
+    )
+        throws Exception {
         ServiceContext context = ServiceContext.get();
         DataManager dataMan = appContext.getBean(DataManager.class);
 
@@ -118,8 +122,8 @@ public class AttachmentsActionsApi {
         ThumbnailMaker thumbnailMaker = appContext.getBean(ThumbnailMaker.class);
 
         Path thumbnailFile = thumbnailMaker.generateThumbnail(
-                jsonConfig,
-                rotationAngle);
+            jsonConfig,
+            rotationAngle);
 
         return store.putResource(metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
     }

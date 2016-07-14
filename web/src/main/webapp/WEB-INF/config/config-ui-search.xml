@@ -23,21 +23,22 @@
   -->
 
 <geonet>
-	<services package="org.fao.geonet">
-		<service name="catalog.search">
-			<documentation>Home page</documentation>
-			<output sheet="../xslt/ui-search/search.xsl">
-				<xml name="i18n" file="xml/i18n.xml"/>
-			</output>
-		</service>
-		
-		<service name="catalog.search.nojs">
-			<documentation>Provide search in degraded mode when Javascript is not available.</documentation>
-			<class name=".services.main.XmlSearch"/>
-			
-			<output sheet="../xslt/ui-search/search-nojs.xsl">
-				<xml name="i18n" file="xml/i18n.xml"/>
-			</output>
-		</service>
-	</services>
+  <services package="org.fao.geonet">
+    <service name="catalog.search">
+      <documentation>Home page</documentation>
+      <output sheet="../xslt/ui-search/search.xsl">
+        <xml name="i18n" file="xml/i18n.xml"/>
+      </output>
+    </service>
+
+    <service name="catalog.search.nojs">
+      <documentation>Provide search in degraded mode when Javascript is not available.
+      </documentation>
+      <class name=".services.main.XmlSearch"/>
+
+      <output sheet="../xslt/ui-search/search-nojs.xsl">
+        <xml name="i18n" file="xml/i18n.xml"/>
+      </output>
+    </service>
+  </services>
 </geonet>

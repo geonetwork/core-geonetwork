@@ -45,26 +45,34 @@ import com.yammer.metrics.core.HealthCheckRegistry;
  * An HTTP servlet which runs the health checks registered with a given {@link HealthCheckRegistry}
  * and prints the results as a {@code text/plain} entity. Only responds to {@code GET} requests.
  * <p/>
- * If the servlet context has an attribute named
- * {@code com.yammer.metrics.reporting.HealthCheckServlet.registry} which is a
- * {@link HealthCheckRegistry} instance, {@link GeonetworkHealthCheckServlet} will use it instead of
- * {@link HealthChecks}.
+ * If the servlet context has an attribute named {@code com.yammer.metrics.reporting.HealthCheckServlet.registry}
+ * which is a {@link HealthCheckRegistry} instance, {@link GeonetworkHealthCheckServlet} will use it
+ * instead of {@link HealthChecks}.
  */
 public class GeonetworkHealthCheckServlet extends HttpServlet {
-    private static final long serialVersionUID = 5367584489771010404L;
     /**
      * The attribute name of the {@link HealthCheckRegistry} instance in the servlet context.
      */
     public static final String REGISTRY_ATTRIBUTE_KEY = "REGISTRY_ATTRIBUTE_KEY";
+    private static final long serialVersionUID = 5367584489771010404L;
     private static final String CONTENT_TYPE = "application/json";
 
     private transient HealthCheckRegistry registry;
 
+    private static boolean isAllHealthy(Map<String, HealthCheck.Result> results) {
+        for (HealthCheck.Result result : results.values()) {
+            if (!result.isHealthy()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         String registryAttribute = config.getInitParameter(REGISTRY_ATTRIBUTE_KEY);
-        registry = (HealthCheckRegistry) config.getServletContext().getAttribute(registryAttribute );
-        if(registry == null) {
+        registry = (HealthCheckRegistry) config.getServletContext().getAttribute(registryAttribute);
+        if (registry == null) {
             throw new IllegalStateException("Expected a HealthCheckRegistery to be registered in the ServletContext attributes but there was none");
         }
     }
@@ -110,14 +118,5 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
             writer.println(Xml.getJSON(report));
         }
         writer.close();
-    }
-
-    private static boolean isAllHealthy(Map<String, HealthCheck.Result> results) {
-        for (HealthCheck.Result result : results.values()) {
-            if (!result.isHealthy()) {
-                return false;
-            }
-        }
-        return true;
     }
 }

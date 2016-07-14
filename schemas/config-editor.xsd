@@ -111,7 +111,7 @@ and XSL template. This approach is used for keywords in ISO19139 for example
 
 
         ]]>
-        </xs:documentation>
+      </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -212,7 +212,7 @@ In multilingual mode, define which mode the widget should have. If expanded, the
 language is displayed below each other. If not, then a button for each language allows to
 switch from one language to another.
         ]]>
-        </xs:documentation>
+      </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -297,7 +297,7 @@ To create a new view, use the following:
           </view>
 
         ]]>
-        </xs:documentation>
+      </xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -466,7 +466,7 @@ section which is not used often by the end-user. More than one tab could be grou
 
   <xs:element name="flatModeExceptions">
     <xs:annotation>
-    <xs:documentation><![CDATA[
+      <xs:documentation><![CDATA[
 Configuring complex element display
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -595,7 +595,9 @@ A section is a group of fields.
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="field">
           <xs:annotation>
-            <xs:documentation>A form field to insert in the section (if the section match no XPath).</xs:documentation>
+            <xs:documentation>A form field to insert in the section (if the section match no
+              XPath).
+            </xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element ref="action"/>
@@ -606,12 +608,16 @@ A section is a group of fields.
       <xs:attribute ref="mode"/>
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
-          <xs:documentation>An optional name to override the default one base on field name for the section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.</xs:documentation>
+          <xs:documentation>An optional name to override the default one base on field name for the
+            section. The name must be defined in ``{schema}/loc/{lang}/strings.xml``.
+          </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="xpath" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The xpath of the element to match. If an XPath is set for a section, it should not contains any field.</xs:documentation>
+          <xs:documentation>The xpath of the element to match. If an XPath is set for a section, it
+            should not contains any field.
+          </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute ref="or"/>
@@ -619,7 +625,9 @@ A section is a group of fields.
     </xs:complexType>
     <xs:unique name="avoidDuplicateFieldWithSameXPath">
       <xs:annotation>
-        <xs:documentation>If this happens, form fields will be displayed twice with same name and trigger issues when saving the record.</xs:documentation>
+        <xs:documentation>If this happens, form fields will be displayed twice with same name and
+          trigger issues when saving the record.
+        </xs:documentation>
       </xs:annotation>
       <xs:selector xpath="field"/>
       <xs:field xpath="@xpath"/>
@@ -634,7 +642,9 @@ A section is a group of fields.
 
   <xs:attribute name="in" type="xs:string">
     <xs:annotation>
-      <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually points to the parent of last element of the XPath attribute.</xs:documentation>
+      <xs:documentation>XPath of the geonet:child element with the or name to look for. Usually
+        points to the parent of last element of the XPath attribute.
+      </xs:documentation>
     </xs:annotation>
   </xs:attribute>
 
@@ -795,7 +805,25 @@ the remove control should remove the parent element gmd:onLine.
       del="../..">
       <template>
 
-Del attribute is not used when not in template mode.
+
+
+Del attribute can be used in template mode or not. Example to remove
+spatialResolution while only editing denominator or distance. Denominator or distance
+are mandatory but as the del element point to the spatialResolution
+ancestor, there is no mandatory flag displayed and the remove control
+remove the spatialResolution element.
+
+
+.. code-block:: xml
+
+
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/*/gmd:distance"
+           del="../.."/>
+    <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/
+                      */gmd:equivalentScale/*/gmd:denominator"
+           del="../../../.."/>
 
             ]]>
           </xs:documentation>
@@ -811,7 +839,9 @@ displayed based on the XML template snippet field configuration. Default is fals
       </xs:attribute>
       <xs:attribute name="notDisplayedIfMissing" fixed="true" type="xs:boolean">
         <xs:annotation>
-          <xs:documentation>If the field is found and a geonet child also, the geonet child to add a new one is not displayed.</xs:documentation>
+          <xs:documentation>If the field is found and a geonet child also, the geonet child to add a
+            new one is not displayed.
+          </xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
@@ -922,7 +952,8 @@ The fragment is defined in localization file strings.xml:
     <xs:complexType>
       <xs:attribute name="ref" use="required" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The tag name of the element to insert in the localization file.</xs:documentation>
+          <xs:documentation>The tag name of the element to insert in the localization file.
+          </xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
@@ -1010,8 +1041,11 @@ with ``add-resource-id`` identifier:
       </xs:attribute>
       <xs:attribute name="process" type="xs:string">
         <xs:annotation>
-          <xs:documentation>The process identifier (eg. add-resource-id) or the associated resource type to open
-            (eg. onlinesrc, fcats, parent, source, sibling, service, dataset, thumbnail) See onlinesrc directive.</xs:documentation>
+          <xs:documentation>The process identifier (eg. add-resource-id) or the associated resource
+            type to open
+            (eg. onlinesrc, fcats, parent, source, sibling, service, dataset, thumbnail) See
+            onlinesrc directive.
+          </xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="forceLabel" type="xs:boolean">
@@ -1044,6 +1078,16 @@ An XPath expression to evaluate. If true, the control is displayed. eg.
 will only displayed the action control if the resource identifier does not end
 with the metadata identifier.
           ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="btnLabel" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional label to be addded to the button.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="btnClass" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Optional CSS class to be added to the button.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
@@ -1111,14 +1155,16 @@ instead of the text input.
             <xs:enumeration value="date">
               <xs:annotation>
                 <xs:documentation>
-                  Use only if target browser support HTML5 date type (http://caniuse.com/input-datetime).
+                  Use only if target browser support HTML5 date type
+                  (http://caniuse.com/input-datetime).
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="datetime">
               <xs:annotation>
                 <xs:documentation>
-                  Use only if target browser support HTML5 date type (http://caniuse.com/input-datetime).
+                  Use only if target browser support HTML5 date type
+                  (http://caniuse.com/input-datetime).
                 </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
@@ -1126,7 +1172,8 @@ instead of the text input.
             <xs:enumeration value="data-gn-country-picker">
               <xs:annotation>
                 <xs:documentation>An autocompletion list for country (based on the region
-                  API).</xs:documentation>
+                  API).
+                </xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="data-gn-language-picker">
@@ -1224,7 +1271,8 @@ contains an XLink.
           <xs:complexType>
             <xs:attribute name="name" type="xs:string">
               <xs:annotation>
-                <xs:documentation>An existing codelist from codelist.xml for the schema.</xs:documentation>
+                <xs:documentation>An existing codelist from codelist.xml for the schema.
+                </xs:documentation>
               </xs:annotation>
             </xs:attribute>
           </xs:complexType>
@@ -1236,12 +1284,15 @@ contains an XLink.
           <xs:complexType>
             <xs:attribute name="name" type="xs:string">
               <xs:annotation>
-                <xs:documentation>An existing element name from labels.xml for the schema having an helper defined.</xs:documentation>
+                <xs:documentation>An existing element name from labels.xml for the schema having an
+                  helper defined.
+                </xs:documentation>
               </xs:annotation>
             </xs:attribute>
             <xs:attribute name="context" type="xs:string">
               <xs:annotation>
-                <xs:documentation>An optional context if the target element have many values.</xs:documentation>
+                <xs:documentation>An optional context if the target element have many values.
+                </xs:documentation>
               </xs:annotation>
             </xs:attribute>
           </xs:complexType>

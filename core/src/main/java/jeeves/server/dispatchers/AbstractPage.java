@@ -26,6 +26,7 @@ package jeeves.server.dispatchers;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.GuiService;
+
 import org.fao.geonet.Util;
 import org.jdom.Element;
 
@@ -34,98 +35,102 @@ import java.util.Vector;
 
 //=============================================================================
 
-public abstract class AbstractPage
-{
-	private String  sheet;
-	private String  contentType;
-	private String  testCondition;
+public abstract class AbstractPage {
+    private String sheet;
+    private String contentType;
+    private String testCondition;
 
-	private Vector<GuiService> vGuiServ = new Vector<GuiService>();
+    private Vector<GuiService> vGuiServ = new Vector<GuiService>();
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	/** Gets the stylesheet associated to this output page
-	  */
+    /**
+     * Gets the stylesheet associated to this output page
+     */
 
-	public String getStyleSheet() { return sheet; }
+    public String getStyleSheet() {
+        return sheet;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public String getContentType() { return contentType; }
+    public void setStyleSheet(String s) {
+        sheet = s;
+    }
 
-	//--------------------------------------------------------------------------
-	/** Return the xsl match condition
-	  */
+    //--------------------------------------------------------------------------
 
-	public String getTestCondition() { return testCondition; }
+    public String getContentType() {
+        return contentType;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setStyleSheet(String s)
-	{
-		sheet = s;
-	}
+    public void setContentType(String type) {
+        contentType = type;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setContentType(String type)
-	{
-		contentType = type;
-	}
+    /**
+     * Return the xsl match condition
+     */
 
-	//--------------------------------------------------------------------------
+    public String getTestCondition() {
+        return testCondition;
+    }
 
-	public void setTestCondition(String c)
-	{
-		testCondition = c;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void setTestCondition(String c) {
+        testCondition = c;
+    }
 
-	public void addGuiService(GuiService s)
-	{
-		vGuiServ.add(s);
-	}
+    //--------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	/** Invokes all gui services of this page (/root/gui tag)
-	  */
+    public void addGuiService(GuiService s) {
+        vGuiServ.add(s);
+    }
 
-	public Element invokeGuiServices(ServiceContext context, Element response, List<GuiService> defaults)
-	{
-		Element root = new Element(Jeeves.Elem.GUI);
+    //---------------------------------------------------------------------------
 
-		//--- invoke default elements
+    /**
+     * Invokes all gui services of this page (/root/gui tag)
+     */
 
-		invokeGuiService(context, response, root, defaults);
-		invokeGuiService(context, response, root, vGuiServ);
+    public Element invokeGuiServices(ServiceContext context, Element response, List<GuiService> defaults) {
+        Element root = new Element(Jeeves.Elem.GUI);
 
-		return root;
-	}
+        //--- invoke default elements
 
-	//---------------------------------------------------------------------------
+        invokeGuiService(context, response, root, defaults);
+        invokeGuiService(context, response, root, vGuiServ);
 
-	private void invokeGuiService(ServiceContext context,  Element response, Element root, List<GuiService> guiServices)
-	{
-		for (GuiService guiSrv : guiServices) {
-			try {
-				Element elGui = guiSrv.exec(response, context);
+        return root;
+    }
 
-				if (elGui != null) {
+    //---------------------------------------------------------------------------
+
+    private void invokeGuiService(ServiceContext context, Element response, Element root, List<GuiService> guiServices) {
+        for (GuiService guiSrv : guiServices) {
+            try {
+                Element elGui = guiSrv.exec(response, context);
+
+                if (elGui != null) {
                     root.addContent(elGui);
                 }
-			} catch (Exception e) {
-				ServiceManager.error("Exception executing gui service : "
-						+ e.toString());
-				ServiceManager.error(" (C) Stack trace is :\n"
-						+ Util.getStackTrace(e));
-			}
-		}
-	}
+            } catch (Exception e) {
+                ServiceManager.error("Exception executing gui service : "
+                    + e.toString());
+                ServiceManager.error(" (C) Stack trace is :\n"
+                    + Util.getStackTrace(e));
+            }
+        }
+    }
 }
 
 //=============================================================================

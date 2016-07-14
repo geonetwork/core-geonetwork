@@ -1,25 +1,28 @@
 <div class="container" data-ng-controller="GnLoginController">
   <div class="col-lg-6">
-      <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
-            method="post" role="form" data-ng-if="user['@authenticated'] != 'true'">
+    <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
+          method="post" role="form" data-ng-if="::user">
       <div class="form-group">
         <label class="col-sm-3 control-label"
                for="inputUsername" data-translate="">username</label>
         <div class="col-sm-9">
           <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
-            placeholder="{{'username' | translate}}" data-ng-model="signinUsername" required=""/>
+                 placeholder="{{'username' | translate}}" data-ng-model="signinUsername"
+                 required=""/>
         </div>
       </div>
-      
+
       <div class="form-group">
-        <label class="col-sm-3 control-label" 
-          for="inputPassword" data-translate="">password</label>
+        <label class="col-sm-3 control-label"
+               for="inputPassword" data-translate="">password</label>
         <div class="col-sm-9">
           <input type="password" class="form-control" id="inputPassword" name="password"
-            data-ng-model="signinPassword" placeholder="{{'password' | translate}}" required=""/>
+                 autocomplete="off"
+                 data-ng-model="signinPassword" placeholder="{{'password' | translate}}"
+                 required=""/>
         </div>
       </div>
-      
+
       <input type="hidden" name="redirectUrl" data-ng-model="redirectUrl" value="{{redirectUrl}}"/>
       <!--<div class="checkbox">
                 <label class="checkbox">
@@ -27,7 +30,8 @@
                 </label>
             </div>-->
 
-      <button type="submit" class="btn btn-primary pull-right" data-ng-disabled="!gnSigninForm.$valid">
+      <button type="submit" class="btn btn-primary pull-right"
+              data-ng-disabled="!gnSigninForm.$valid">
         <i class="fa fa-sign-in"/>
         <span data-translate="">signIn</span>
       </button>
@@ -42,7 +46,7 @@
          class="btn btn-link btn-danger"
          data-ng-click="setSendPassword(true)">
         <span
-         data-translate="">recoverPassword</span> ?</a>
+          data-translate="">recoverPassword</span> ?</a>
     </p>
   </div>
   <div class="col-lg-6">
@@ -63,7 +67,7 @@
           <p data-translate="">forgetDetailsInfo</p>
           <p>
             <a type="submit" class="btn btn-default" data-ng-click="setSendPassword(true)"
-              data-translate="">recoverPassword</a>
+               data-translate="">recoverPassword</a>
           </p>
         </div>
         <div data-ng-show="sendPassword === true">

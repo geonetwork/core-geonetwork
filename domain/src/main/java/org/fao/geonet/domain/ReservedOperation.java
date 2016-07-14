@@ -26,7 +26,8 @@ package org.fao.geonet.domain;
 import javax.annotation.Nullable;
 
 /**
- * The system reserved operations. Ids and names are hardcoded and have special meaning in Geonetwork.
+ * The system reserved operations. Ids and names are hardcoded and have special meaning in
+ * Geonetwork.
  *
  * @author Jesse Eichar
  */
@@ -64,15 +65,6 @@ public enum ReservedOperation {
     }
 
     /**
-     * Get the id of the operation.
-     *
-     * @return the id of the operation.
-     */
-    public int getId() {
-        return _id;
-    }
-
-    /**
      * Look up a reserved operation by id.  Returns null if not a reserved operation.
      *
      * @param opId the id of the operation to look up.
@@ -87,6 +79,15 @@ public enum ReservedOperation {
             }
         }
         return null;
+    }
+
+    /**
+     * Get the id of the operation.
+     *
+     * @return the id of the operation.
+     */
+    public int getId() {
+        return _id;
     }
 
     /**

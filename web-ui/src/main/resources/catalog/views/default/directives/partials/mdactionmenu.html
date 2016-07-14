@@ -1,7 +1,7 @@
 <div class="btn-group md-actions">
-  <button type="button" 
+  <button type="button"
           class="btn btn-default dropdown-toggle"
-          data-toggle="dropdown" 
+          data-toggle="dropdown"
           aria-expanded="false">
     <span class="caret"></span>
   </button>
@@ -31,11 +31,11 @@
       <span data-translate="">privileges</span>
     </a></li>
     <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
-        <a data-ng-href=""
-           data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
-      <i class="fa fa-user"></i>&nbsp;
-      <span data-translate="">transferOwnership</span>
-    </a></li>
+      <a data-ng-href=""
+         data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
+        <i class="fa fa-user"></i>&nbsp;
+        <span data-translate="">transferOwnership</span>
+      </a></li>
     <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()">
       <a data-ng-click="mdService.publish(md)">
         <i class="fa"
@@ -47,14 +47,14 @@
     <!-- TODO: Some installation only allows status update
     based on current status. -->
     <li><a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) && 
+           data-ng-if="user.canEditRecord(md) &&
                               md.isWorkflowEnabled()"
            data-ng-click="mdService.openUpdateStatusPanel(getScope())">
       <i class="fa fa-bell"></i>&nbsp;
       <span data-translate="">updateStatus</span>
     </a></li>
     <li><a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) && 
+           data-ng-if="user.canEditRecord(md) &&
                                 !md.isWorkflowEnabled()"
            data-ng-click="mdService.startWorkflow(md, getCatScope())">
       <i class="fa fa-bell"></i>&nbsp;
@@ -84,12 +84,12 @@
       <i class="fa fa-file-zip-o"></i>&nbsp;
       <span data-translate="">exportMEF</span>
     </a></li>
-    <li><a data-ng-href=""
-           data-ng-click="mdService.metadataPrint(md.getUuid())">
+    <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/pdf"
+           target="_blank">
       <i class="fa fa-file-pdf-o"></i>&nbsp;
       <span data-translate="">exportPDF</span>
     </a></li>
-    <li><a data-ng-href="../api/records/{{md.getUuid()}}"
+    <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
            target="_blank">
       <i class="fa fa-file-code-o"></i>&nbsp;
       <span data-translate="">exportXML</span>

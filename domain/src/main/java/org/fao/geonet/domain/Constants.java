@@ -29,9 +29,6 @@ package org.fao.geonet.domain;
  * @author Jesse
  */
 public final class Constants {
-    private Constants() {
-    }
-
     /**
      * The length to use for IP address columns.
      */
@@ -44,11 +41,18 @@ public final class Constants {
      * The character used by the JPAWorkaround columns that need a character for boolean true.
      */
     public static final char YN_TRUE = 'y';
+    /**
+     * The module name for logging domain information.
+     */
+    public static final String DOMAIN_LOG_MODULE = "geonetwork.domain";
 
+
+    private Constants() {
+    }
 
     /**
-     * Convert a boolean to the corresponding character to use for the boolean characters (A workaround for the API).
-     * Do a search for JPAWorkaround in domain package.
+     * Convert a boolean to the corresponding character to use for the boolean characters (A
+     * workaround for the API). Do a search for JPAWorkaround in domain package.
      *
      * @param enabled the value to convert
      * @return the corresponding char
@@ -64,6 +68,7 @@ public final class Constants {
         }
         return enabledChar;
     }
+    // CSON: MethodName
 
     /**
      * Convert a character from one of the JPAWorkaround columns to the corresponding boolean value.
@@ -75,10 +80,4 @@ public final class Constants {
     public static boolean toBoolean_fromYNChar(final char enabled) {
         return enabled == Constants.YN_TRUE;
     }
-    // CSON: MethodName
-
-    /**
-     * The module name for logging domain information.
-     */
-    public static final String DOMAIN_LOG_MODULE = "geonetwork.domain";
 }

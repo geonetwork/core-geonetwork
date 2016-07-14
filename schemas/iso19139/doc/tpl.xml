@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
   <gmd:fileIdentifier>
     <gco:CharacterString>e8a366b7-0029-44d7-ae33-7578253179c0</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:language>
-    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+    <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
   </gmd:language>
   <gmd:characterSet>
-    <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
+    <gmd:MD_CharacterSetCode
+      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+      codeListValue="utf8"/>
   </gmd:characterSet>
   <gmd:parentIdentifier>
     <gco:CharacterString>df69de7e-3af1-4b4d-94d4-8bebe84c80b0</gco:CharacterString>
   </gmd:parentIdentifier>
   <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
+    <gmd:MD_ScopeCode
+      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+      codeListValue="dataset"/>
   </gmd:hierarchyLevel>
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
@@ -47,7 +55,9 @@
         </gmd:CI_Contact>
       </gmd:contactInfo>
       <gmd:role>
-        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
+        <gmd:CI_RoleCode
+          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+          codeListValue="pointOfContact"/>
       </gmd:role>
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
@@ -55,10 +65,14 @@
     <gco:DateTime>2016-01-15T16:57:35</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv">ISO 19115:2003/19139</gco:CharacterString>
+    <gco:CharacterString xmlns:gmx="http://www.isotc211.org/2005/gmx"
+    >ISO 19115:2003/19139
+    </gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
-    <gco:CharacterString xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv">1.0</gco:CharacterString>
+    <gco:CharacterString xmlns:gmx="http://www.isotc211.org/2005/gmx"
+    >1.0
+    </gco:CharacterString>
   </gmd:metadataStandardVersion>
   <gmd:referenceSystemInfo>
     <gmd:MD_ReferenceSystem>
@@ -79,7 +93,9 @@
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>Ecosystem types of Europe based on EUNIS level 1 (raster 100m) - version 2.1, Dec. 2015</gco:CharacterString>
+            <gco:CharacterString>Ecosystem types of Europe based on EUNIS level 1 (raster 100m) -
+              version 2.1, Dec. 2015
+            </gco:CharacterString>
           </gmd:title>
           <gmd:date>
             <gmd:CI_Date>
@@ -87,7 +103,9 @@
                 <gco:Date>2015-12-08</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                <gmd:CI_DateTypeCode
+                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                  codeListValue="publication"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
@@ -97,7 +115,9 @@
                 <gco:Date>2015-12-08</gco:Date>
               </gmd:date>
               <gmd:dateType>
-                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation" />
+                <gmd:CI_DateTypeCode
+                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                  codeListValue="creation"/>
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
@@ -107,20 +127,36 @@
           <gmd:identifier>
             <gmd:RS_Identifier>
               <gmd:code>
-                <gco:CharacterString>eea_r_3035_100_m_ecosystem-types-l1_2006_rev2-1</gco:CharacterString>
+                <gco:CharacterString>eea_r_3035_100_m_ecosystem-types-l1_2006_rev2-1
+                </gco:CharacterString>
               </gmd:code>
             </gmd:RS_Identifier>
           </gmd:identifier>
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
-        <gco:CharacterString>The data set combines the Corine based MAES (Mapping and Assessment of Ecosystems and their Services) ecosystem classes with the non-spatial EUNIS habitat classification (LEVEL 1) for a better biological characterization of ecosystems across Europe (EEA-39). As such it represents probabilities of EUNIS habitat presence for each MAES ecosystem type.
+        <gco:CharacterString>The data set combines the Corine based MAES (Mapping and Assessment of
+          Ecosystems and their Services) ecosystem classes with the non-spatial EUNIS habitat
+          classification (LEVEL 1) for a better biological characterization of ecosystems across
+          Europe (EEA-39). As such it represents probabilities of EUNIS habitat presence for each
+          MAES ecosystem type.
 
-          The data set aims to combine spatially explicit land cover information with non-spatially referenced habitat information to improve our knowledge about ecosystems and their distribution across Europe. The work supports the MAES process, Target 2 Action 5 of the implementation of the EU Biodiversity Strategy to 2020, established to achieve the Aichi targets of the Convention of Biological Diversity (CBD).
+          The data set aims to combine spatially explicit land cover information with non-spatially
+          referenced habitat information to improve our knowledge about ecosystems and their
+          distribution across Europe. The work supports the MAES process, Target 2 Action 5 of the
+          implementation of the EU Biodiversity Strategy to 2020, established to achieve the Aichi
+          targets of the Convention of Biological Diversity (CBD).
 
-          The objective of the ecosystem data set produced by EEA and its Topic Centre ETC/SIA was to improve the biological description of land cover based ecosystem types. It represents probabilities of EUNIS habitat presence in ecosystem types at European level. Since it is not based on spatial explicit mapping the spatial and thematic accuracy is not of same quality as delineated maps.
+          The objective of the ecosystem data set produced by EEA and its Topic Centre ETC/SIA was
+          to improve the biological description of land cover based ecosystem types. It represents
+          probabilities of EUNIS habitat presence in ecosystem types at European level. Since it is
+          not based on spatial explicit mapping the spatial and thematic accuracy is not of same
+          quality as delineated maps.
 
-          The MAES ecosystem typology differentiates three levels: whereas the level 2 of the MAES proposal follows closely  the EUNIS level 1, the third level of the MAES typology corresponds to the EUNIS level 2. This level will be the base for the mapping approach.</gco:CharacterString>
+          The MAES ecosystem typology differentiates three levels: whereas the level 2 of the MAES
+          proposal follows closely the EUNIS level 1, the third level of the MAES typology
+          corresponds to the EUNIS level 2. This level will be the base for the mapping approach.
+        </gco:CharacterString>
       </gmd:abstract>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
@@ -160,31 +196,40 @@
                     <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
                   </gmd:protocol>
                   <gmd:name>
-                    <gco:CharacterString>Europen Environment Agency public website</gco:CharacterString>
+                    <gco:CharacterString>Europen Environment Agency public website
+                    </gco:CharacterString>
                   </gmd:name>
                   <gmd:function>
-                    <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
+                    <gmd:CI_OnLineFunctionCode
+                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                      codeListValue="information"/>
                   </gmd:function>
                 </gmd:CI_OnlineResource>
               </gmd:onlineResource>
             </gmd:CI_Contact>
           </gmd:contactInfo>
           <gmd:role>
-            <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
+            <gmd:CI_RoleCode
+              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+              codeListValue="pointOfContact"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
       <gmd:resourceMaintenance>
         <gmd:MD_MaintenanceInformation>
           <gmd:maintenanceAndUpdateFrequency>
-            <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded" />
+            <gmd:MD_MaintenanceFrequencyCode
+              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_MaintenanceFrequencyCode"
+              codeListValue="asNeeded"/>
           </gmd:maintenanceAndUpdateFrequency>
         </gmd:MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
       <gmd:graphicOverview>
         <gmd:MD_BrowseGraphic>
           <gmd:fileName>
-            <gco:CharacterString>http://sdi.eea.europa.eu/public/catalogue-graphic-overview/e8a366b7-0029-44d7-ae33-7578253179c0.png</gco:CharacterString>
+            <gco:CharacterString>
+              http://sdi.eea.europa.eu/public/catalogue-graphic-overview/e8a366b7-0029-44d7-ae33-7578253179c0.png
+            </gco:CharacterString>
           </gmd:fileName>
         </gmd:MD_BrowseGraphic>
       </gmd:graphicOverview>
@@ -197,7 +242,9 @@
             <gco:CharacterString>Habitats and biotopes</gco:CharacterString>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+            <gmd:MD_KeywordTypeCode
+              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -210,14 +257,19 @@
                     <gco:Date>2008-06-01</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                    <gmd:CI_DateTypeCode
+                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx" xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">
+                      geonetwork.thesaurus.external.theme.inspire-theme
+                    </gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -243,7 +295,9 @@
             <gco:CharacterString>habitat</gco:CharacterString>
           </gmd:keyword>
           <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+            <gmd:MD_KeywordTypeCode
+              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+              codeListValue="theme"/>
           </gmd:type>
           <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -256,14 +310,19 @@
                     <gco:Date>2010-01-13</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
-                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication" />
+                    <gmd:CI_DateTypeCode
+                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
                   </gmd:dateType>
                 </gmd:CI_Date>
               </gmd:date>
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx" xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/thesaurus.download?ref=external.theme.gemet">geonetwork.thesaurus.external.theme.gemet</gmx:Anchor>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/thesaurus.download?ref=external.theme.gemet">
+                      geonetwork.thesaurus.external.theme.gemet
+                    </gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -274,14 +333,26 @@
       <gmd:resourceConstraints>
         <gmd:MD_Constraints>
           <gmd:useLimitation>
-            <gco:CharacterString>Unless otherwise indicated, re-use of content on the EEA website for commercial or non-commercial purposes is permitted free of charge, provided that the source is acknowledged.  The EEA re-use policy follows Directive 2003/98/EC of the European Parliament and the Council on the re-use of public sector information throughout the European Union and Commission Decision 2006/291/EC, Euratom on the re-use of Commission information.  The EEA accepts no responsibility or liability whatsoever for the re-use of content accessible on its website.  Any inquiries about re-use of content on the EEA website should be addressed to Ove Caspersen, EEA, Kongens Nytorv 6, DK-1050 Copenhagen K, Tel +45 33 36 71 00, Fax +45 33 36 71 99, e-mail copyrights at eea.europa.eu</gco:CharacterString>
+            <gco:CharacterString>Unless otherwise indicated, re-use of content on the EEA website
+              for commercial or non-commercial purposes is permitted free of charge, provided that
+              the source is acknowledged. The EEA re-use policy follows Directive 2003/98/EC of the
+              European Parliament and the Council on the re-use of public sector information
+              throughout the European Union and Commission Decision 2006/291/EC, Euratom on the
+              re-use of Commission information. The EEA accepts no responsibility or liability
+              whatsoever for the re-use of content accessible on its website. Any inquiries about
+              re-use of content on the EEA website should be addressed to Ove Caspersen, EEA,
+              Kongens Nytorv 6, DK-1050 Copenhagen K, Tel +45 33 36 71 00, Fax +45 33 36 71 99,
+              e-mail copyrights at eea.europa.eu
+            </gco:CharacterString>
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
       <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
           <gmd:accessConstraints>
-            <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
+            <gmd:MD_RestrictionCode
+              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+              codeListValue="otherRestrictions"/>
           </gmd:accessConstraints>
           <gmd:otherConstraints>
             <gco:CharacterString>no limitations</gco:CharacterString>
@@ -289,7 +360,9 @@
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
-        <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="grid" />
+        <gmd:MD_SpatialRepresentationTypeCode
+          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+          codeListValue="grid"/>
       </gmd:spatialRepresentationType>
       <gmd:spatialResolution>
         <gmd:MD_Resolution>
@@ -299,7 +372,7 @@
         </gmd:MD_Resolution>
       </gmd:spatialResolution>
       <gmd:language>
-        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
       </gmd:language>
       <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>biota</gmd:MD_TopicCategoryCode>
@@ -343,12 +416,14 @@
       </gmd:extent>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
-  <gmd:contentInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:gts="http://www.isotc211.org/2005/gts">
+  <gmd:contentInfo
+  >
     <gmd:MD_FeatureCatalogueDescription>
       <gmd:includedWithDataset>
         <gco:Boolean>false</gco:Boolean>
       </gmd:includedWithDataset>
-      <gmd:featureCatalogueCitation uuidref="e38815ec-a386-45e5-9d1c-b13e0f6ca9e0" xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=e38815ec-a386-45e5-9d1c-b13e0f6ca9e0" />
+      <gmd:featureCatalogueCitation uuidref="e38815ec-a386-45e5-9d1c-b13e0f6ca9e0"
+                                    xlink:href="http://sdi.eea.europa.eu/internal-catalogue/srv/eng/csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=e38815ec-a386-45e5-9d1c-b13e0f6ca9e0"/>
     </gmd:MD_FeatureCatalogueDescription>
   </gmd:contentInfo>
   <gmd:distributionInfo>
@@ -359,7 +434,7 @@
             <gco:CharacterString>GTiff</gco:CharacterString>
           </gmd:name>
           <gmd:version gco:nilReason="missing">
-            <gco:CharacterString />
+            <gco:CharacterString/>
           </gmd:version>
         </gmd:MD_Format>
       </gmd:distributionFormat>
@@ -368,13 +443,17 @@
           <gmd:onLine>
             <gmd:CI_OnlineResource>
               <gmd:linkage>
-                <gmd:URL>http://www.eea.europa.eu/data-and-maps/data/ds_resolveuid/d851e1b7f678468b8f0b1b98930ba3e1</gmd:URL>
+                <gmd:URL>
+                  http://www.eea.europa.eu/data-and-maps/data/ds_resolveuid/d851e1b7f678468b8f0b1b98930ba3e1
+                </gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
                 <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
               </gmd:protocol>
               <gmd:function>
-                <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download" />
+                <gmd:CI_OnLineFunctionCode
+                  codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                  codeListValue="download"/>
               </gmd:function>
             </gmd:CI_OnlineResource>
           </gmd:onLine>
@@ -387,17 +466,41 @@
       <gmd:scope>
         <gmd:DQ_Scope>
           <gmd:level>
-            <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode" />
+            <gmd:MD_ScopeCode codeListValue="dataset"
+                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"/>
           </gmd:level>
         </gmd:DQ_Scope>
       </gmd:scope>
       <gmd:lineage>
         <gmd:LI_Lineage>
           <gmd:statement>
-            <gco:CharacterString>The data set production implied 2 steps. First re-classification of CORINE Land Cover 2006 and bathymetry data using the 7 terrestrial (urban, cropland, grassland, woodland and forest, heathland and shrub, sparsely vegetated land, wetland), 1 freshwater (river and lakes), and 4 marine (marine inlets and transitional waters, coastal, shelf, open ocean) classes of the MAES ecosystem typology (Maes et al., 2013). The classes also provide links to major policy lines such as agriculture, forestry, territorial cohesion, water and marine related policies. The second step comprised refinement of the ecosystem types by attributing EUNIS habitat information to each ecosystem type (see http://eunis.eea.europa.eu/habitats.jsp). The refinement process used reference data such as potential natural vegetation, elevation, slope, aspect, soil, geology, environmental regions and other spatial referenced information which allowed attribution of the EUNIS habitat characteristics to the spatial mapping units of the MAES ecosystem types. The geometric and thematic accuracy of EUNIS class presence was also estimated and mapped. The method is described in the EEA Technical Report 06/2015: European Ecosystem Assessment – Concept, Data, and Implementation.
-              The basis for the update was CORINE land cover 2006 (CLC 2006). It includes Albania, Austria, Belgium, Bosnia and Herzegovina, Bulgaria, Croatia, Cyprus, Czech Republic, Denmark, Estonia, Finland, France, Germany, Hungary, Iceland, Ireland, Italy, Kosovo (under UNSCR 1244/99), Latvia, Liechtenstein, Lithuania, Luxembourg, the former Yugoslavian Republic of Macedonia, Malta, Montenegro, the Netherlands, Norway, Poland, Portugal, Romania, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, Turkey and the United Kingdom. For Greece that has not participated in the CLC 2006 activity the CLC 2000 data was used instead.</gco:CharacterString>
+            <gco:CharacterString>The data set production implied 2 steps. First re-classification of
+              CORINE Land Cover 2006 and bathymetry data using the 7 terrestrial (urban, cropland,
+              grassland, woodland and forest, heathland and shrub, sparsely vegetated land,
+              wetland), 1 freshwater (river and lakes), and 4 marine (marine inlets and transitional
+              waters, coastal, shelf, open ocean) classes of the MAES ecosystem typology (Maes et
+              al., 2013). The classes also provide links to major policy lines such as agriculture,
+              forestry, territorial cohesion, water and marine related policies. The second step
+              comprised refinement of the ecosystem types by attributing EUNIS habitat information
+              to each ecosystem type (see http://eunis.eea.europa.eu/habitats.jsp). The refinement
+              process used reference data such as potential natural vegetation, elevation, slope,
+              aspect, soil, geology, environmental regions and other spatial referenced information
+              which allowed attribution of the EUNIS habitat characteristics to the spatial mapping
+              units of the MAES ecosystem types. The geometric and thematic accuracy of EUNIS class
+              presence was also estimated and mapped. The method is described in the EEA Technical
+              Report 06/2015: European Ecosystem Assessment – Concept, Data, and Implementation.
+              The basis for the update was CORINE land cover 2006 (CLC 2006). It includes Albania,
+              Austria, Belgium, Bosnia and Herzegovina, Bulgaria, Croatia, Cyprus, Czech Republic,
+              Denmark, Estonia, Finland, France, Germany, Hungary, Iceland, Ireland, Italy, Kosovo
+              (under UNSCR 1244/99), Latvia, Liechtenstein, Lithuania, Luxembourg, the former
+              Yugoslavian Republic of Macedonia, Malta, Montenegro, the Netherlands, Norway, Poland,
+              Portugal, Romania, Serbia, Slovakia, Slovenia, Spain, Sweden, Switzerland, Turkey and
+              the United Kingdom. For Greece that has not participated in the CLC 2006 activity the
+              CLC 2000 data was used instead.
+            </gco:CharacterString>
           </gmd:statement>
-          <gmd:source xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gts="http://www.isotc211.org/2005/gts" uuidref="bacb0dcd-dcb2-44a5-8b2c-4a569c5deafa" />
+          <gmd:source
+            uuidref="bacb0dcd-dcb2-44a5-8b2c-4a569c5deafa"/>
         </gmd:LI_Lineage>
       </gmd:lineage>
     </gmd:DQ_DataQuality>

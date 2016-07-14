@@ -66,8 +66,9 @@ public class MetadataNotification extends GeonetEntity {
     }
 
     /**
-     * For backwards compatibility we need the notified column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the notified column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "notified", length = 1, nullable = false)
     protected char getNotified_JPAWorkaround() {
@@ -153,7 +154,8 @@ public class MetadataNotification extends GeonetEntity {
      */
     @Lob
     @Column(name = "errormsg")
-    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.StringClobType")
+    // this is a work around for postgres so postgres can correctly load clobs
     public String getErrorMessage() {
         return _errorMessage;
     }

@@ -25,29 +25,23 @@
 
 package org.fao.geonet.api;
 
-import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Predicate;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.NodeInfo;
+
+import com.fasterxml.classmate.TypeResolver;
+
 import org.fao.geonet.domain.UserSecurity;
 import org.jdom.Element;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.ResponseMessageBuilder;
-import springfox.documentation.schema.ModelRef;
 import springfox.documentation.schema.WildcardType;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.BasicAuth;
@@ -55,15 +49,18 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import static com.google.common.collect.Lists.*;
-import static com.google.common.base.Predicates.*;
+import static com.google.common.base.Predicates.or;
+import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 @EnableWebMvc
 @Configuration
 @Service
-@ComponentScan(basePackages = {"org.fao.geonet.api"})
+@ComponentScan(basePackages = {
+    "org.fao.geonet.api",
+    "org.fao.geonet.monitor.service"
+})
 @EnableSwagger2 //Loads the spring beans required by the framework
 public class SwaggerConfig {
     @Autowired
@@ -73,41 +70,41 @@ public class SwaggerConfig {
 
     private Predicate<String> paths() {
         return or(
-                regex("/api/" + API.VERSION_0_1 + ".*")
-                );
+            regex("/api/" + API.VERSION_0_1 + ".*")
+        );
     }
 
     public void loadApi() {
         this.doc = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(new ApiInfo(
-                        "GeoNetwork Api Documentation (beta)",
-                        "Learn how to access the catalog using the GeoNetwork REST API.",
-                        API.VERSION_0_1,
-                        "urn:tos",
-                        API.CONTACT_EMAIL,
-                        "GPL 2.0",
-                        "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"))
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(paths())
-                .build()
-                .pathMapping("/srv/")
-                .directModelSubstitute(LocalDate.class, String.class)
-                .directModelSubstitute(UserSecurity.class, Object.class)
-                .directModelSubstitute(Element.class, Object.class)
-                .genericModelSubstitutes(ResponseEntity.class)
-                .alternateTypeRules(
-                        newRule(typeResolver.resolve(DeferredResult.class,
-                                typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-                                typeResolver.resolve(WildcardType.class)))
-                .useDefaultResponseMessages(false)
+            .apiInfo(new ApiInfo(
+                "GeoNetwork Api Documentation (beta)",
+                "Learn how to access the catalog using the GeoNetwork REST API.",
+                API.VERSION_0_1,
+                "urn:tos",
+                API.CONTACT_EMAIL,
+                "GPL 2.0",
+                "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"))
+            .select()
+            .apis(RequestHandlerSelectors.any())
+            .paths(paths())
+            .build()
+            .pathMapping("/srv/")
+            .directModelSubstitute(LocalDate.class, String.class)
+            .directModelSubstitute(UserSecurity.class, Object.class)
+            .directModelSubstitute(Element.class, Object.class)
+            .genericModelSubstitutes(ResponseEntity.class)
+            .alternateTypeRules(
+                newRule(typeResolver.resolve(DeferredResult.class,
+                    typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+                    typeResolver.resolve(WildcardType.class)))
+            .useDefaultResponseMessages(false)
 //                .globalResponseMessage(RequestMethod.GET,
 //                        newArrayList(new ResponseMessageBuilder()
 //                                .code(500)
 //                                .message("500 message")
 //                                .responseModel(new ModelRef("Error"))
 //                                .build()))
-                .securitySchemes(newArrayList(new BasicAuth("ba")))
+            .securitySchemes(newArrayList(new BasicAuth("basicAuth")))
 //                .securityContexts(newArrayList(securityContext()))
 //                .enableUrlTemplating(true)
 //                .globalOperationParameters(

@@ -14,7 +14,7 @@
         <div class="panel-heading">
           <i class="fa fa-list-ul"/>
           <span data-translate="">directoryEntries</span>
-          
+
           <div class="pull-right">
             <a href="" data-ng-click="startImportEntry()">
               <i class="fa fa-plus"/>
@@ -38,12 +38,12 @@
                 </button>
                 <ul class="dropdown-menu gn-facet-dropdown">
                   <li>
-                  <div data-gn-facet="searchResults.facet"
-                       data-current-facets="currentFacets"
-                       data-no-collapse="true"
-                       data-facet="groupOwners"
-                       data-index-key="_groupOwner"></div>
-                  <div data-gn-facet-breadcrumb=""></div>
+                    <div data-gn-facet="searchResults.facet"
+                         data-current-facets="currentFacets"
+                         data-no-collapse="true"
+                         data-facet="groupOwners"
+                         data-index-key="_groupOwner"></div>
+                    <div data-gn-facet-breadcrumb=""></div>
                   </li>
                 </ul>
               </div>
@@ -54,13 +54,13 @@
                             when="{'0 ': ('noRecordFound' | translate),
               'one': '1 ' +  ('record' | translate),
               'other': '{} ' +  ('records' | translate)}"
-                  > </ng-pluralize>
+              ></ng-pluralize>
             </div>
 
             <div class="list-group">
               <li class="list-group-item"
-                data-ng-repeat="e in searchResults.records"
-                data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
+                  data-ng-repeat="e in searchResults.records"
+                  data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
                 <a href="" data-ng-click="selectEntry(e)">{{e.title}}</a>
                 <div class="pull-right">
                   <a href=""
@@ -82,7 +82,8 @@
           </form>
 
 
-          <div data-gn-need-help="administrator-guide/managing-classification-systems/managing-directories.html"></div>
+          <div
+            data-gn-need-help="administrator-guide/managing-classification-systems/managing-directories.html"></div>
         </div>
       </div>
     </div>
@@ -96,26 +97,24 @@
             <div class="form-group">
               <label for="data" data-translate="">xmlSnippet</label>
               <textarea class="form-control"
-                id="data" name="data"
-                data-gn-autogrow=""
-                data-ng-model="importData.data"
-                data-ng-required=""
-                placeholder="<gmd:CI_ResponsibleParty xmlns:gmd= ..."
+                        id="data"
+                        data-gn-autogrow=""
+                        data-ng-model="xml"
+                        data-ng-required=""
+                        placeholder="<gmd:CI_ResponsibleParty xmlns:gmd= ..."
               />
-              
-              <input type="hidden" data-ng-model="importData.insert_mode"/>
-              <input type="hidden" data-ng-model="importData.template"/>
-              <input type="hidden" data-ng-model="importData.fullPrivileges"/>
             </div>
             <div class="form-group" data-ng-show="groups && groups.length > 1">
               <label class="control-label" data-translate="">inGroup</label>
-              <div data-groups-combo="" data-owner-group="importData.group" lang="lang" data-groups="groups" data-exclude-special-groups="false"/>
+              <div data-groups-combo="" data-owner-group="importData.group" lang="lang"
+                   data-groups="groups" data-exclude-special-groups="false"/>
             </div>
-            
+
             <div class="btn-toolbar">
               <button type="button" class="btn btn-primary pull-right"
-                data-ng-click="importEntry()" 
-                title="{{'importEntry' | translate}}">
+                      data-ng-click="importEntry(xml)"
+                      data-ng-disabled="xml === ''"
+                      title="{{'importEntry' | translate}}">
                 <i class="fa fa-plus"/>&nbsp;
               </button>
             </div>
@@ -146,7 +145,7 @@
             <button type="button" class="btn btn-default"
                     data-ng-click="close()"
                     data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
-              title="{{'closeEditor' | translate}}">
+                    title="{{'closeEditor' | translate}}">
               <i class="fa fa-sign-out"></i>&nbsp;
             </button>
           </div>

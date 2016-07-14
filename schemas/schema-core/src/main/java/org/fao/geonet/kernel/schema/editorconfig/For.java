@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -34,9 +33,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -44,15 +43,14 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element ref="{}directiveAttributes" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string"
+ * />
  *       &lt;attribute ref="{}use"/>
  *       &lt;attribute ref="{}addDirective"/>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -71,11 +69,8 @@ public class For {
 
     /**
      * Gets the value of the directiveAttributes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DirectiveAttributes }
-     *     
+     *
+     * @return possible object is {@link DirectiveAttributes }
      */
     public DirectiveAttributes getDirectiveAttributes() {
         return directiveAttributes;
@@ -83,11 +78,8 @@ public class For {
 
     /**
      * Sets the value of the directiveAttributes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DirectiveAttributes }
-     *     
+     *
+     * @param value allowed object is {@link DirectiveAttributes }
      */
     public void setDirectiveAttributes(DirectiveAttributes value) {
         this.directiveAttributes = value;
@@ -95,11 +87,8 @@ public class For {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getName() {
         return name;
@@ -107,11 +96,8 @@ public class For {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -119,11 +105,8 @@ public class For {
 
     /**
      * Gets the value of the use property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getUse() {
         return use;
@@ -131,11 +114,8 @@ public class For {
 
     /**
      * Sets the value of the use property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setUse(String value) {
         this.use = value;
@@ -143,11 +123,8 @@ public class For {
 
     /**
      * Gets the value of the addDirective property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getAddDirective() {
         return addDirective;
@@ -155,11 +132,8 @@ public class For {
 
     /**
      * Sets the value of the addDirective property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setAddDirective(String value) {
         this.addDirective = value;

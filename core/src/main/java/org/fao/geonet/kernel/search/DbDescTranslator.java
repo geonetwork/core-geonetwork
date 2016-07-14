@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.base.Optional;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
@@ -45,16 +46,15 @@ import java.lang.reflect.Method;
 public class DbDescTranslator implements Translator {
 
     private static final long serialVersionUID = 1L;
-
-    private ConfigurableApplicationContext _applicationContext;
     private final String _langCode;
-    private Class<? extends JpaRepository> _repositoryClass;
     private final String _methodName;
     private final String _parameterType;
+    private ConfigurableApplicationContext _applicationContext;
+    private Class<? extends JpaRepository> _repositoryClass;
     private String _beanName;
 
     public DbDescTranslator(ConfigurableApplicationContext applicationContext, String langCode, String param)
-            throws IOException, JDOMException, ClassNotFoundException {
+        throws IOException, JDOMException, ClassNotFoundException {
         String[] parts = param.split(":", 3);
         try {
             this._repositoryClass = (Class<? extends JpaRepository>) Class.forName(parts[0]);

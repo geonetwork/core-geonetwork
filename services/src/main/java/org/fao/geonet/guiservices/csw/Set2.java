@@ -41,16 +41,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Copy of Set - only takes care of saving GetCapabilities properties
- * and not settings. In order to save settings use the setting service.
- * 
+ * Copy of Set - only takes care of saving GetCapabilities properties and not settings. In order to
+ * save settings use the setting service.
  */
 @Controller("admin.config.csw.save")
 public class Set2 {
 
     @RequestMapping(value = "/{lang}/admin.config.csw.save", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     OkResponse exec(@RequestParam MultiValueMap parameters) throws Exception {
         // Process parameters and save capabilities information in database
         saveCswCapabilitiesInfo(parameters);
@@ -69,26 +69,26 @@ public class Set2 {
 
             String langId = lang.getId();
             if (parameters.get("csw.title_" + langId) != null) {
-                String title = (String)((LinkedList) parameters.get("csw.title_" + langId)).get(0);
+                String title = (String) ((LinkedList) parameters.get("csw.title_" + langId)).get(0);
                 if (StringUtils.isNotEmpty(title)) {
                     cswCapInfo.setTitle(title);
                 }
             }
             if (parameters.get("csw.abstract_" + langId) != null) {
-                String abs = (String)((LinkedList) parameters.get("csw.abstract_" + langId)).get(0);
+                String abs = (String) ((LinkedList) parameters.get("csw.abstract_" + langId)).get(0);
                 if (StringUtils.isNotEmpty(abs)) {
                     cswCapInfo.setAbstract(abs);
                 }
             }
 
             if (parameters.get("csw.fees_" + langId) != null) {
-                String fees = (String)((LinkedList) parameters.get("csw.fees_" + langId)).get(0);
+                String fees = (String) ((LinkedList) parameters.get("csw.fees_" + langId)).get(0);
                 if (StringUtils.isNotEmpty(fees)) {
                     cswCapInfo.setFees(fees);
                 }
             }
             if (parameters.get("csw.accessConstraints_" + langId) != null) {
-                String accessConstraints = (String)((LinkedList) parameters.get("csw.accessConstraints_" + langId)).get(0);
+                String accessConstraints = (String) ((LinkedList) parameters.get("csw.accessConstraints_" + langId)).get(0);
                 if (StringUtils.isNotEmpty(accessConstraints)) {
                     cswCapInfo.setAccessConstraints(accessConstraints);
                 }

@@ -22,14 +22,12 @@
   -->
 
 <sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="wro-sources.xsd" >
-  <include file="classpath:web-ui-wro-sources.xml" />
-  <!-- Enable to use ExtJS UI <include file="classpath:web-client-wro-sources.xml" />-->
-
+         xsi:noNamespaceSchemaLocation="wro-sources.xsd">
+  <include file="classpath:web-ui-wro-sources.xml"/>
   <require>
-    <jsSource webappPath="{{schemaPluginsDir}}" />
-    <jsSource webappPath="{{formatterDir}}" />
-    <cssSource webappPath="{{schemaPluginsDir}}" />
-    <cssSource webappPath="{{formatterDir}}" />
+    <jsSource webappPath="{{schemaPluginsDir}}"/>
+    <jsSource webappPath="{{formatterDir}}"/>
+    <cssSource webappPath="{{schemaPluginsDir}}"/>
+    <cssSource webappPath="{{formatterDir}}"/>
   </require>
 </sources>

@@ -73,7 +73,7 @@
            */
           scope.checkWFSUrl = function() {
             return gnWfsService.getCapabilities(scope.url)
-              .then(function(capabilities) {
+                .then(function(capabilities) {
                   scope.featureType =
                      gnWfsService.getTypeName(capabilities, scope.typename);
                   if (scope.featureType) {
@@ -82,7 +82,15 @@
                 });
           };
 
-          init();
+          if (scope.layer) {
+            init();
+          } else {
+            scope.$watch('layer', function(n, o) {
+              if (n && n != o) {
+                init();
+              }
+            });
+          }
         }
       };
     }

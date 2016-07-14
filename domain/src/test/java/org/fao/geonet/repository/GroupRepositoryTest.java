@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,6 +46,14 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
+
+    public static Group newGroup(AtomicInteger nextId) {
+        int id = nextId.incrementAndGet();
+        return new Group()
+            .setDescription("Desc " + id)
+            .setEmail(id + "@geonet.org")
+            .setName("Name " + id);
+    }
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
@@ -169,14 +178,6 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
 
     private Group newGroup() {
         return newGroup(_inc);
-    }
-
-    public static Group newGroup(AtomicInteger nextId) {
-        int id = nextId.incrementAndGet();
-        return new Group()
-                .setDescription("Desc " + id)
-                .setEmail(id + "@geonet.org")
-                .setName("Name " + id);
     }
 
 }

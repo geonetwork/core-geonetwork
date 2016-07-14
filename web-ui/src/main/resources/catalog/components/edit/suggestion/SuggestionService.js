@@ -30,9 +30,10 @@
   module.factory('gnSuggestion', [
     'gnBatchProcessing',
     'gnHttp',
+    '$http',
     'gnEditor',
     'gnCurrentEdit',
-    function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit) {
+    function(gnBatchProcessing, gnHttp, $http, gnEditor, gnCurrentEdit) {
 
       var reload = false;
       var current = undefined;
@@ -56,7 +57,7 @@
             $('#runsuggestion-popup').modal('show');
             this.dispatch();
           } else {
-            this.runProcess(sugg['@process']);
+            this.runProcess(sugg.process);
           }
         },
 
@@ -91,12 +92,7 @@
          * metadata
          */
         load: function(lang, gurl) {
-          return gnHttp.callService('suggestionsList', {
-            id: gnCurrentEdit.id,
-            action: 'analyze',
-            lang: lang,
-            gurl: gurl
-          });
+          return $http.get('../api/records/' + gnCurrentEdit.id + '/processes');
         },
 
         runProcess: function(service, params) {
@@ -106,6 +102,9 @@
           }
           params.process = service;
           return gnBatchProcessing.runProcessMd(params).then(function(data) {
+            scope.reload = true;
+          }, function(error) {
+            console.warn(error);
             scope.reload = true;
           });
         }

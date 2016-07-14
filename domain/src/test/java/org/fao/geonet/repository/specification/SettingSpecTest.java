@@ -25,6 +25,7 @@ package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SettingRepository;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;

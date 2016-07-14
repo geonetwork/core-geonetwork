@@ -22,7 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
 
   <xsl:include href="../base-layout.xsl"/>
 
@@ -33,10 +33,11 @@
           <xsl:value-of select="$i18n/serviceNotAllowedTitle"/>
         </h1>
         <p class="text-danger">
-            <xsl:variable name="referer" select="if (normalize-space(/root/request/referer) = 'UNKNOWN')
+          <xsl:variable name="referer" select="if (normalize-space(/root/request/referer) = 'UNKNOWN')
                         then '' else /root/request/referer"/>
 
-          <xsl:value-of select="replace($i18n/serviceNotAllowed, '\{1\}', concat('&quot;', $referer, '&quot;'))" />
+          <xsl:value-of
+            select="replace($i18n/serviceNotAllowed, '\{1\}', concat('&quot;', $referer, '&quot;'))"/>
           <xsl:copy-of select="$i18n/linkToHome"/>
         </p>
       </div>

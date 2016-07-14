@@ -24,6 +24,7 @@
 package org.fao.geonet.utils;
 
 import com.google.common.io.Resources;
+
 import org.fao.geonet.Constants;
 import org.junit.After;
 import org.junit.Rule;
@@ -99,6 +100,7 @@ public abstract class AbstractIOTest {
         assertTrue(Files.exists(to2.resolve("main").resolve("java")));
         assertTrue(Files.exists(to2.resolve("main").resolve("java").resolve("src.txt")));
     }
+
     @Test
     public final void testCopyIntoDirectory() throws Exception {
         final Path file = getRootPath().resolve("src.txt");

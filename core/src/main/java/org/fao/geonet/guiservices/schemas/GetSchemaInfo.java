@@ -25,6 +25,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -36,47 +37,46 @@ import java.util.Map;
 
 //=============================================================================
 
-public class GetSchemaInfo implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class GetSchemaInfo implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		Element schemas = new Element("schemas");
+        Element schemas = new Element("schemas");
 
-		for(String schema : schemaMan.getSchemas()) {
-			try {
-				Map<String, XmlFile> schemaInfo = schemaMan.getSchemaInfo(schema);
+        for (String schema : schemaMan.getSchemas()) {
+            try {
+                Map<String, XmlFile> schemaInfo = schemaMan.getSchemaInfo(schema);
 
-				for (Map.Entry<String, XmlFile> entry : schemaInfo.entrySet()) {
-					XmlFile xf = entry.getValue();
-					String fname = entry.getKey();
-					Element response = xf.exec(new Element("junk"), context);
-					response.setName(FilenameUtils.removeExtension(fname));
+                for (Map.Entry<String, XmlFile> entry : schemaInfo.entrySet()) {
+                    XmlFile xf = entry.getValue();
+                    String fname = entry.getKey();
+                    Element response = xf.exec(new Element("junk"), context);
+                    response.setName(FilenameUtils.removeExtension(fname));
                     response.removeAttribute("noNamespaceSchemaLocation", Geonet.Namespaces.XSI);
-					Element schemaElem = new Element(schema);
-					schemaElem.addContent(response);
-					schemas.addContent(schemaElem);
-				}
-			} catch (Exception e) {
-				context.error("Failed to load guiservices for schema "+schema+": "+e.getMessage());
-				e.printStackTrace();
-			}
-		}
+                    Element schemaElem = new Element(schema);
+                    schemaElem.addContent(response);
+                    schemas.addContent(schemaElem);
+                }
+            } catch (Exception e) {
+                context.error("Failed to load guiservices for schema " + schema + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
 
-		//Log.info(Geonet.SCHEMA_MANAGER, "The response was "+Xml.getString(schemas));
-		return schemas;
-	}
+        //Log.info(Geonet.SCHEMA_MANAGER, "The response was "+Xml.getString(schemas));
+        return schemas;
+    }
 }
 
 //=============================================================================

@@ -294,7 +294,7 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         // Schematron report is composed of one or more report(s)
         // for each set of rules.
         Element schemaTronXmlOut = new Element("schematronerrors",
-                Edit.NAMESPACE);
+            Edit.NAMESPACE);
         if (rules != null) {
             for (String rule : rules) {
                 // -- create a report for current rules.
@@ -303,56 +303,45 @@ public class DefaultMetadataValidator implements IMetadataValidator {
                     Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
                 String ruleId = rule.substring(0, rule.indexOf(".xsl"));
                 Element report = new Element("report", Edit.NAMESPACE);
-                report.setAttribute("rule", ruleId, Edit.NAMESPACE);
+                report.setAttribute("rule", ruleId,
+                    Edit.NAMESPACE);
 
-                java.nio.file.Path schemaTronXmlXslt = metadataSchema
-                        .getSchemaDir().resolve("schematron").resolve(rule);
+                java.nio.file.Path schemaTronXmlXslt = metadataSchema.getSchemaDir().resolve("schematron").resolve(rule);
                 try {
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("lang", lang);
                     params.put("rule", rule);
-                    params.put("thesaurusDir",
-                            ApplicationContextHolder.get()
-                                    .getBean(ThesaurusManager.class)
-                                    .getThesauriDirectory());
-                    Element xmlReport = Xml.transform(md, schemaTronXmlXslt,
-                            params);
+                    params.put("thesaurusDir", ApplicationContextHolder.get()
+                            .getBean(ThesaurusManager.class)
+                            .getThesauriDirectory());
+                    Element xmlReport = Xml.transform(md, schemaTronXmlXslt, params);
                     if (xmlReport != null) {
                         report.addContent(xmlReport);
                         // add results to persitent validation information
                         int firedRules = 0;
-                        Iterator<?> firedRulesElems = xmlReport
-                                .getDescendants(new ElementFilter("fired-rule",
-                                        Namespaces.SVRL));
+                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter("fired-rule", Namespaces.SVRL));
                         while (firedRulesElems.hasNext()) {
                             firedRulesElems.next();
                             firedRules++;
                         }
                         int invalidRules = 0;
-                        Iterator<?> faileAssertElements = xmlReport
-                                .getDescendants(new ElementFilter(
-                                        "failed-assert", Namespaces.SVRL));
+                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter("failed-assert",
+                            Namespaces.SVRL));
                         while (faileAssertElements.hasNext()) {
                             faileAssertElements.next();
                             invalidRules++;
                         }
-                        Integer[] results = { invalidRules != 0 ? 0 : 1,
-                                firedRules, invalidRules };
+                        Integer[] results = {invalidRules != 0 ? 0 : 1, firedRules, invalidRules};
                         if (valTypeAndStatus != null) {
                             valTypeAndStatus.put(ruleId, results);
                         }
                     }
                 } catch (Exception e) {
-                    Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt "
-                            + schemaTronXmlXslt + " failed");
+                    Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt " + schemaTronXmlXslt + " failed");
 
-                    // If an error occurs that prevents to verify schematron
-                    // rules, add to show in report
-                    Element errorReport = new Element(
-                            "schematronVerificationError", Edit.NAMESPACE);
-                    errorReport.addContent(
-                            "Schematron error ocurred, rules could not be verified: "
-                                    + e.getMessage());
+                    // If an error occurs that prevents to verify schematron rules, add to show in report
+                    Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+                    errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
                     report.addContent(errorReport);
 
                     e.printStackTrace();
@@ -376,14 +365,14 @@ public class DefaultMetadataValidator implements IMetadataValidator {
      * @throws Exception
      */
     private synchronized Element getXSDXmlReport(String schema, Element md) {
-        // NOTE: this method assumes that enumerateTree has NOT been run on the
-        // metadata
+        // NOTE: this method assumes that enumerateTree has NOT been run on the metadata
         ErrorHandler errorHandler = new ErrorHandler();
         errorHandler.setNs(Edit.NAMESPACE);
         Element xsdErrors;
 
         try {
-            xsdErrors = validateInfo(schema, md, errorHandler);
+            xsdErrors = validateInfo(schema,
+                md, errorHandler);
         } catch (Exception e) {
             xsdErrors = JeevesException.toElement(e);
             return xsdErrors;
@@ -393,39 +382,29 @@ public class DefaultMetadataValidator implements IMetadataValidator {
             MetadataSchema mds = schemaManager.getSchema(schema);
             List<Namespace> schemaNamespaces = mds.getSchemaNS();
 
-            // -- now get each xpath and evaluate it
-            // -- xsderrors/xsderror/{message,xpath}
+            //-- now get each xpath and evaluate it
+            //-- xsderrors/xsderror/{message,xpath}
             @SuppressWarnings("unchecked")
             List<Element> list = xsdErrors.getChildren();
             for (Element elError : list) {
                 String xpath = elError.getChildText("xpath", Edit.NAMESPACE);
-                String message = elError.getChildText("message",
-                        Edit.NAMESPACE);
+                String message = elError.getChildText("message", Edit.NAMESPACE);
                 message = "\\n" + message;
 
-                // -- get the element from the xpath and add the error message
-                // to it
+                //-- get the element from the xpath and add the error message to it
                 Element elem = null;
                 try {
                     elem = Xml.selectElement(md, xpath, schemaNamespaces);
                 } catch (JDOMException je) {
                     je.printStackTrace();
-                    Log.error(Geonet.DATA_MANAGER,
-                            "Attach xsderror message to xpath " + xpath
-                                    + " failed: " + je.getMessage());
+                    Log.error(Geonet.DATA_MANAGER, "Attach xsderror message to xpath " + xpath + " failed: " + je.getMessage());
                 }
                 if (elem != null) {
-                    String existing = elem.getAttributeValue("xsderror",
-                            Edit.NAMESPACE);
-                    if (existing != null)
-                        message = existing + message;
+                    String existing = elem.getAttributeValue("xsderror", Edit.NAMESPACE);
+                    if (existing != null) message = existing + message;
                     elem.setAttribute("xsderror", message, Edit.NAMESPACE);
                 } else {
-                    Log.warning(Geonet.DATA_MANAGER,
-                            "WARNING: evaluating XPath " + xpath
-                                    + " against metadata failed - XSD validation message: "
-                                    + message
-                                    + " will NOT be shown by the editor");
+                    Log.warning(Geonet.DATA_MANAGER, "WARNING: evaluating XPath " + xpath + " against metadata failed - XSD validation message: " + message + " will NOT be shown by the editor");
                 }
             }
         }
@@ -451,33 +430,28 @@ public class DefaultMetadataValidator implements IMetadataValidator {
 
         if (doc.getDocType() != null) {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER,
-                        "Validating against dtd " + doc.getDocType());
+                Log.debug(Geonet.DATA_MANAGER, "Validating against dtd " + doc.getDocType());
 
-            // if document has a doctype then validate using that (assuming that
-            // the
-            // dtd is either mapped locally or will be cached after first
-            // validate)
+            // if document has a doctype then validate using that (assuming that the
+            // dtd is either mapped locally or will be cached after first validate)
             try {
                 Xml.validate(doc);
-                validations
-                        .add(new MetadataValidation()
-                                .setId(new MetadataValidationId(intMetadataId,
-                                        "dtd"))
-                                .setStatus(MetadataValidationStatus.VALID)
-                                .setRequired(true).setNumTests(1)
-                                .setNumFailures(0));
+                validations.add(new MetadataValidation().
+                    setId(new MetadataValidationId(intMetadataId, "dtd")).
+                    setStatus(MetadataValidationStatus.VALID).
+                    setRequired(true).
+                    setNumTests(1).
+                    setNumFailures(0));
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
                 }
             } catch (Exception e) {
-                validations
-                        .add(new MetadataValidation()
-                                .setId(new MetadataValidationId(intMetadataId,
-                                        "dtd"))
-                                .setStatus(MetadataValidationStatus.INVALID)
-                                .setRequired(true).setNumTests(1)
-                                .setNumFailures(1));
+                validations.add(new MetadataValidation().
+                    setId(new MetadataValidationId(intMetadataId, "dtd")).
+                    setStatus(MetadataValidationStatus.INVALID).
+                    setRequired(true).
+                    setNumTests(1).
+                    setNumFailures(1));
 
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Invalid.", e);
@@ -486,8 +460,7 @@ public class DefaultMetadataValidator implements IMetadataValidator {
             }
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER,
-                        "Validating against XSD " + schema);
+                Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
             }
             // do XSD validation
             Element md = doc.getRootElement();
@@ -498,40 +471,34 @@ public class DefaultMetadataValidator implements IMetadataValidator {
                 xsdErrorCount = xsdErrors.getContent().size();
             }
             if (xsdErrorCount > 0) {
-                validations
-                        .add(new MetadataValidation()
-                                .setId(new MetadataValidationId(intMetadataId,
-                                        "xsd"))
-                                .setStatus(MetadataValidationStatus.INVALID)
-                                .setRequired(true).setNumTests(xsdErrorCount)
-                                .setNumFailures(xsdErrorCount));
+                validations.add(new MetadataValidation().
+                    setId(new MetadataValidationId(intMetadataId, "xsd")).
+                    setStatus(MetadataValidationStatus.INVALID).
+                    setRequired(true).
+                    setNumTests(xsdErrorCount).
+                    setNumFailures(xsdErrorCount));
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Invalid.");
                 valid = false;
             } else {
-                validations
-                        .add(new MetadataValidation()
-                                .setId(new MetadataValidationId(intMetadataId,
-                                        "xsd"))
-                                .setStatus(MetadataValidationStatus.VALID)
-                                .setRequired(true).setNumTests(1)
-                                .setNumFailures(0));
+                validations.add(new MetadataValidation().
+                    setId(new MetadataValidationId(intMetadataId, "xsd")).
+                    setStatus(MetadataValidationStatus.VALID).
+                    setRequired(true).
+                    setNumTests(1).
+                    setNumFailures(0));
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
             }
             try {
                 editLib.enumerateTree(md);
-                // Apply custom schematron rules
-                Element errors = applyCustomSchematronRules(schema,
-                        Integer.parseInt(metadataId), doc.getRootElement(),
-                        lang, validations);
+                //Apply custom schematron rules
+                Element errors = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), doc.getRootElement(), lang, validations);
                 valid = valid && errors == null;
                 editLib.removeEditingInfo(md);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER,
-                        "Could not run schematron validation on metadata "
-                                + metadataId + ": " + e.getMessage());
+                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
                 valid = false;
             }
         }
@@ -541,9 +508,7 @@ public class DefaultMetadataValidator implements IMetadataValidator {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.error(Geonet.DATA_MANAGER,
-                    "Could not save validation status on metadata " + metadataId
-                            + ": " + e.getMessage());
+            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage());
         }
 
         return valid;
@@ -555,16 +520,12 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         int intMetadataId = Integer.parseInt(metadataId);
         String version = null;
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER,
-                    "Creating validation report for record #" + metadataId
-                            + " [schema: " + schema + "].");
+            Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + metadataId + " [schema: " + schema + "].");
 
-        Element sessionReport = (Element) session
-                .getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
+        Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         if (sessionReport != null && !forEditing) {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER,
-                        "  Validation report available in session.");
+                Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");
             sessionReport.detach();
             return Pair.read(sessionReport, version);
         }
@@ -573,8 +534,8 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         Element errorReport = new Element("report", Edit.NAMESPACE);
         errorReport.setAttribute("id", metadataId, Edit.NAMESPACE);
 
-        // -- get an XSD validation report and add results to the metadata
-        // -- as geonet:xsderror attributes on the affected elements
+        //-- get an XSD validation report and add results to the metadata
+        //-- as geonet:xsderror attributes on the affected elements
         Element xsdErrors = getXSDXmlReport(schema, md);
         int xsdErrorCount = 0;
         if (xsdErrors != null) {
@@ -582,26 +543,23 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         }
         if (xsdErrorCount > 0) {
             errorReport.addContent(xsdErrors);
-            validations
-                    .add(new MetadataValidation()
-                            .setId(new MetadataValidationId(intMetadataId,
-                                    "xsd"))
-                            .setStatus(MetadataValidationStatus.INVALID)
-                            .setRequired(true).setNumTests(xsdErrorCount)
-                            .setNumFailures(xsdErrorCount));
+            validations.add(new MetadataValidation().
+                setId(new MetadataValidationId(intMetadataId, "xsd")).
+                setStatus(MetadataValidationStatus.INVALID).
+                setRequired(true).
+                setNumTests(xsdErrorCount).
+                setNumFailures(xsdErrorCount));
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER,
-                        "  - XSD error: " + Xml.getString(xsdErrors));
+                Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
             }
         } else {
-            validations
-                    .add(new MetadataValidation()
-                            .setId(new MetadataValidationId(intMetadataId,
-                                    "xsd"))
-                            .setStatus(MetadataValidationStatus.VALID)
-                            .setRequired(true).setNumTests(1)
-                            .setNumFailures(0));
+            validations.add(new MetadataValidation().
+                setId(new MetadataValidationId(intMetadataId, "xsd")).
+                setStatus(MetadataValidationStatus.VALID).
+                setRequired(true).
+                setNumTests(1).
+                setNumFailures(0));
 
             if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
                 Log.trace(Geonet.DATA_MANAGER, "Valid.");
@@ -613,34 +571,28 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         Element error = null;
         if (forEditing) {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER,
-                        "  - Schematron in editing mode.");
-            // -- now expand the elements and add the geonet: elements
+                Log.debug(Geonet.DATA_MANAGER, "  - Schematron in editing mode.");
+            //-- now expand the elements and add the geonet: elements
             editLib.expandElements(schema, md);
             version = editLib.getVersionForEditing(schema, metadataId, md);
 
-            // Apply custom schematron rules
-            error = applyCustomSchematronRules(schema,
-                    Integer.parseInt(metadataId), md, lang, validations);
+            //Apply custom schematron rules
+            error = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), md, lang, validations);
         } else {
             try {
-                // enumerate the metadata xml so that we can report any problems
-                // found
+                // enumerate the metadata xml so that we can report any problems found
                 // by the schematron_xml script to the geonetwork editor
                 editLib.enumerateTree(md);
 
-                // Apply custom schematron rules
-                error = applyCustomSchematronRules(schema,
-                        Integer.parseInt(metadataId), md, lang, validations);
+                //Apply custom schematron rules
+                error = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), md, lang, validations);
 
                 // remove editing info added by enumerateTree
                 editLib.removeEditingInfo(md);
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER,
-                        "Could not run schematron validation on metadata "
-                                + metadataId + ": " + e.getMessage());
+                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
             }
         }
 
@@ -652,10 +604,7 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         try {
             saveValidationStatus(intMetadataId, validations);
         } catch (Exception e) {
-            Log.error(Geonet.DATA_MANAGER,
-                    "Could not save validation status on metadata " + metadataId
-                            + ": " + e.getMessage(),
-                    e);
+            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage(), e);
         }
 
         return Pair.read(errorReport, version);

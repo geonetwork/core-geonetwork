@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2001-2016 Food and Agriculture Organization of the
@@ -34,9 +33,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -64,8 +63,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -96,11 +93,8 @@ public class Action {
 
     /**
      * Gets the value of the template property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Template }
-     *     
+     *
+     * @return possible object is {@link Template }
      */
     public Template getTemplate() {
         return template;
@@ -108,11 +102,8 @@ public class Action {
 
     /**
      * Sets the value of the template property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Template }
-     *     
+     *
+     * @param value allowed object is {@link Template }
      */
     public void setTemplate(Template value) {
         this.template = value;
@@ -120,11 +111,8 @@ public class Action {
 
     /**
      * Gets the value of the directiveAttributes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DirectiveAttributes }
-     *     
+     *
+     * @return possible object is {@link DirectiveAttributes }
      */
     public DirectiveAttributes getDirectiveAttributes() {
         return directiveAttributes;
@@ -132,11 +120,8 @@ public class Action {
 
     /**
      * Sets the value of the directiveAttributes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DirectiveAttributes }
-     *     
+     *
+     * @param value allowed object is {@link DirectiveAttributes }
      */
     public void setDirectiveAttributes(DirectiveAttributes value) {
         this.directiveAttributes = value;
@@ -144,11 +129,8 @@ public class Action {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getName() {
         return name;
@@ -156,11 +138,8 @@ public class Action {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -168,11 +147,8 @@ public class Action {
 
     /**
      * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getType() {
         return type;
@@ -180,11 +156,8 @@ public class Action {
 
     /**
      * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setType(String value) {
         this.type = value;
@@ -192,11 +165,8 @@ public class Action {
 
     /**
      * Gets the value of the process property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getProcess() {
         return process;
@@ -204,11 +174,8 @@ public class Action {
 
     /**
      * Sets the value of the process property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setProcess(String value) {
         this.process = value;
@@ -216,11 +183,8 @@ public class Action {
 
     /**
      * Gets the value of the forceLabel property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public Boolean isForceLabel() {
         return forceLabel;
@@ -228,11 +192,8 @@ public class Action {
 
     /**
      * Sets the value of the forceLabel property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setForceLabel(Boolean value) {
         this.forceLabel = value;
@@ -240,11 +201,8 @@ public class Action {
 
     /**
      * Gets the value of the or property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getOr() {
         return or;
@@ -252,11 +210,8 @@ public class Action {
 
     /**
      * Sets the value of the or property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setOr(String value) {
         this.or = value;
@@ -264,11 +219,8 @@ public class Action {
 
     /**
      * Gets the value of the in property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getIn() {
         return in;
@@ -276,11 +228,8 @@ public class Action {
 
     /**
      * Sets the value of the in property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setIn(String value) {
         this.in = value;
@@ -288,11 +237,8 @@ public class Action {
 
     /**
      * Gets the value of the addDirective property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getAddDirective() {
         return addDirective;
@@ -300,11 +246,8 @@ public class Action {
 
     /**
      * Sets the value of the addDirective property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setAddDirective(String value) {
         this.addDirective = value;
@@ -312,11 +255,8 @@ public class Action {
 
     /**
      * Gets the value of the if property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getIf() {
         return _if;
@@ -324,11 +264,8 @@ public class Action {
 
     /**
      * Sets the value of the if property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setIf(String value) {
         this._if = value;

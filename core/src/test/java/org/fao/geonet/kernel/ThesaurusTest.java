@@ -51,8 +51,12 @@ import static org.junit.Assert.assertTrue;
 
 public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
-    private Thesaurus writableThesaurus;
     private static final String TEST_KEYWORD = "http://test.com/keywords#testKeyword";
+    private Thesaurus writableThesaurus;
+
+    public ThesaurusTest() {
+        super(false);
+    }
 
     @Before
     public void prepareEmptyThesaurus() throws ConfigurationException, IOException {
@@ -60,18 +64,14 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         Files.deleteIfExists(file);
 
         this.writableThesaurus = new Thesaurus(isoLangMapper, file.getFileName().toString(), null, null, Geonet.CodeList.LOCAL,
-                file.getFileName().toString(), file, "http://test.com", true);
+            file.getFileName().toString(), file, "http://test.com", true);
         writableThesaurus.initRepository();
     }
-    
+
     @After
     public void deleteEmptyThesaurus() throws IOException {
         writableThesaurus.getRepository().shutDown();
         Files.deleteIfExists(writableThesaurus.getFile());
-    }
-    
-    public ThesaurusTest() {
-        super(false);
     }
 
     @SuppressWarnings("deprecation")
@@ -91,10 +91,10 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     }
 
     private KeywordBean assertElement(int words, String code, String label, String note, String coordEast, String coordWest, String coordSouth, String coordNorth) throws GraphException, IOException, AccessDeniedException,
-            MalformedQueryException, QueryEvaluationException {
+        MalformedQueryException, QueryEvaluationException {
         List<KeywordBean> keywords = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng", "fre").build().execute(writableThesaurus);
         assertEquals(words, keywords.size());
-        KeywordBean keywordBean = keywords.get(keywords.size()-1);
+        KeywordBean keywordBean = keywords.get(keywords.size() - 1);
         assertEquals(label, keywordBean.getDefaultValue());
         assertEquals(note, keywordBean.getDefaultDefinition());
         assertEquals("eng", keywordBean.getDefaultLang());
@@ -147,7 +147,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         writableThesaurus.addElement(keyword);
         keyword = assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
         assertEquals("labelf", keyword.getValues().get("fre"));
-        
+
         label = "Hello2";
         note = "note2";
         code = "http://thesaurus.test#1";
@@ -157,22 +157,22 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setValue(label, lang);
         writableThesaurus.addElement(keyword);
         keyword = assertElement(2, code, label, note, "", "", "", "");
-        assertEquals("",keyword.getValues().get("fre"));
+        assertEquals("", keyword.getValues().get("fre"));
         assertEquals(label, keyword.getDefaultValue());
         assertEquals(note, keyword.getDefaultDefinition());
         assertEquals(lang, keyword.getDefaultLang());
 
         code = "http://thesaurus.test#2";
         keyword = new KeywordBean(isoLangMapper)
-        .setUriCode(code)
-        .setCoordEast(null)
-        .setCoordNorth(null)
-        .setCoordSouth(null)
-        .setCoordWest(null)
-        .setDefinition(note, lang)
-        .setValue(label, lang);
-    writableThesaurus.addElement(keyword);
-    keyword = assertElement(3, code, label, note, "", "", "", "");
+            .setUriCode(code)
+            .setCoordEast(null)
+            .setCoordNorth(null)
+            .setCoordSouth(null)
+            .setCoordWest(null)
+            .setDefinition(note, lang)
+            .setValue(label, lang);
+        writableThesaurus.addElement(keyword);
+        keyword = assertElement(3, code, label, note, "", "", "", "");
 
     }
 
@@ -192,7 +192,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         Where idMatches = Wheres.ID(keyword.getUriCode());
         Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng").where(idMatches).build();
         assertEquals(1, query.execute(thesaurus).size());
-        
+
         thesaurus.removeElement(keyword.getNameSpaceCode(), keyword.getRelativeCode());
         assertEquals(0, query.execute(thesaurus).size());
     }
@@ -279,7 +279,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setValue("labelf", "fre");
         writableThesaurus.addElement(keyword);
         assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
-        
+
         coordEast = "0";
         coordWest = "-10";
         coordNorth = "20";
@@ -294,12 +294,12 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setCoordWest(coordWest)
             .setDefinition(note, lang)
             .setValue(label, lang);
-        
+
         writableThesaurus.updateElement(keyword, false);
         keyword = assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
         assertEquals("labelf", keyword.getValues().get("fre"));
         assertEquals("deff", keyword.getDefinitions().get("fre"));
-        
+
         label = "Hello3";
         note = "note3";
         keyword = new KeywordBean(isoLangMapper)
@@ -310,7 +310,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setCoordWest("")
             .setDefinition(note, lang)
             .setValue(label, lang);
-        
+
         writableThesaurus.updateElement(keyword, false);
         keyword = assertElement(1, code, label, note, coordEast, coordWest, coordSouth, coordNorth);
         assertEquals("labelf", keyword.getValues().get("fre"));
@@ -326,7 +326,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setCoordWest("")
             .setDefinition(note, lang)
             .setValue(label, lang);
-        
+
         writableThesaurus.updateElement(keyword, true);
         keyword = assertElement(1, code, label, note, "", "", "", "");
         assertEquals("", keyword.getValues().get("fre"));
@@ -342,7 +342,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setCoordWest(null)
             .setDefinition(note, lang)
             .setValue(label, lang);
-        
+
         writableThesaurus.updateElement(keyword, true);
         keyword = assertElement(1, code, label, note, "", "", "", "");
     }
@@ -366,40 +366,40 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
             .setUriCode(code)
             .setDefinition(note, lang)
             .setValue(label, lang);
-        
+
         writableThesaurus.addElement(keyword);
 
         QueryBuilder<KeywordBean> builder = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng").where(Wheres.ID(code));
         assertEquals(1, builder.build().execute(writableThesaurus).size());
-        
+
         writableThesaurus.updateCode(keyword.getNameSpaceCode(), keyword.getRelativeCode(), "10");
         assertEquals(0, builder.build().execute(writableThesaurus).size());
-        
-        builder.where(Wheres.ID(keyword.getNameSpaceCode()+10));
+
+        builder.where(Wheres.ID(keyword.getNameSpaceCode() + 10));
         assertEquals(1, builder.build().execute(writableThesaurus).size());
-        
+
         keyword.setRelativeCode("10");
         writableThesaurus.updateCode(keyword, "15");
         assertEquals(0, builder.build().execute(writableThesaurus).size());
-        
-        builder.where(Wheres.ID(keyword.getNameSpaceCode()+15));
+
+        builder.where(Wheres.ID(keyword.getNameSpaceCode() + 15));
         assertEquals(1, builder.build().execute(writableThesaurus).size());
-        
-        writableThesaurus.updateCodeByURI(keyword.getNameSpaceCode()+15, "http://thesaurus.test#101");
+
+        writableThesaurus.updateCodeByURI(keyword.getNameSpaceCode() + 15, "http://thesaurus.test#101");
         assertEquals(0, builder.build().execute(writableThesaurus).size());
-        
+
         builder.where(Wheres.ID("http://thesaurus.test#101"));
         assertEquals(1, builder.build().execute(writableThesaurus).size());
-        
+
         writableThesaurus.updateCodeByURI("http://thesaurus.test#101", "http://not.namespace.based.ids/101");
         assertEquals(0, builder.build().execute(writableThesaurus).size());
-        
+
         builder.where(Wheres.ID("http://not.namespace.based.ids/101"));
         assertEquals(1, builder.build().execute(writableThesaurus).size());
-        
-        
+
+
     }
-    
+
     @Test
     public void testAddRelationCode() throws Exception {
         String label = "Hello";
@@ -408,26 +408,26 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         String code2 = "http://thesaurus.test#1";
         String lang = "eng";
         KeywordBean keyword = new KeywordBean(isoLangMapper)
-        .setUriCode(code1)
-        .setDefinition(note, lang)
-        .setValue(label, lang);
+            .setUriCode(code1)
+            .setDefinition(note, lang)
+            .setValue(label, lang);
         writableThesaurus.addElement(keyword);
 
         keyword.setUriCode(code2);
         writableThesaurus.addElement(keyword);
-        
+
         writableThesaurus.addRelation(code1, KeywordRelation.BROADER, code2);
-        
+
         Query<KeywordBean> query = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng").
-                select(Selectors.related(code2, KeywordRelation.BROADER), true).build();
-        
+            select(Selectors.related(code2, KeywordRelation.BROADER), true).build();
+
         List<KeywordBean> result = query.execute(writableThesaurus);
         assertEquals(1, result.size());
         assertEquals(code1, result.get(0).getUriCode());
-        
+
         query = QueryBuilder.keywordQueryBuilder(isoLangMapper, "eng").
-                select(Selectors.related(code1, KeywordRelation.NARROWER), true).build();
-        
+            select(Selectors.related(code1, KeywordRelation.NARROWER), true).build();
+
         result = query.execute(writableThesaurus);
         assertEquals(1, result.size());
         assertEquals(code2, result.get(0).getUriCode());
@@ -460,7 +460,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
         assertEquals(result.getUriCode(), TEST_KEYWORD);
     }
 
-    @Test(expected=TermNotFoundException.class)
+    @Test(expected = TermNotFoundException.class)
     public void testGetKeywordNotFound() throws Exception {
         writableThesaurus.getKeyword("http://test.com/keywords#testKeyword");
     }
@@ -482,7 +482,7 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     }
 
     private void addKeywordToWritableThesaurus(String uri)
-            throws IOException, AccessDeniedException, GraphException {
+        throws IOException, AccessDeniedException, GraphException {
         KeywordBean keyword = new KeywordBean(isoLangMapper);
         keyword.setUriCode(uri);
         writableThesaurus.addElement(keyword);

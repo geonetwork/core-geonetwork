@@ -65,54 +65,45 @@
        */
       function loadCSWVirtual() {
         $scope.virtualCSWSelected = {};
-        $http.get('admin.config.virtualcsw.list?_content_type=json').
+        $http.get('../api/csw/virtuals').
             success(function(data) {
-              $scope.cswVirtual = data != 'null' ? data.record : [];
-            }).error(function(data) {
-              // TODO
+              $scope.cswVirtual = data;
             });
-
-        // TODO : load categories and sources
-        // to display combo in edit form
       }
 
 
       function loadFilterList() {
-        $http.get('admin.group.list?_content_type=json').
+        $http.get('../api/groups').
             success(function(data) {
               $scope.groupsFilter = data;
-            }).error(function(data) {
             });
       }
       function loadCategories() {
-        $http.get('info?_content_type=json&type=categories').
+        $http.get('../api/tags').
             success(function(data) {
-              $scope.categories = data.metadatacategory;
-            }).error(function(data) {
-              // TODO
+              $scope.categories = data;
             });
       }
 
       $scope.selectVirtualCSW = function(v) {
         operation = 'updateservice';
-        $http.get('admin.config.virtualcsw.get?' +
-            '_content_type=json&id=' + v.id)
-          .success(function(data) {
+        $http.get('../api/csw/virtuals/' + v.id)
+            .success(function(data) {
               var params = [], formParams = ['abstract', 'title',
                 '_source', '_cat', 'any', '_groupPublished', 'keyword',
                 'denominator', 'type'];
               angular.copy(data.parameter, params);
               $scope.virtualCSWSelected = data;
-              $scope.virtualCSWSelected.serviceParameters = {};
+              // $scope.virtualCSWSelected.serviceParameters = {};
               $scope.showExplicitQuery =
                   $scope.virtualCSWSelected.explicitQuery ? true : false;
-              angular.forEach(params,
-                  function(param) {
-                    $scope.virtualCSWSelected.
-                        serviceParameters[param.name] = {
-                          value: param.value,
-                          occur: param.occur};
-                  });
+              // angular.forEach(params,
+              //     function(param) {
+              //       $scope.virtualCSWSelected.
+              //           serviceParameters[param.name] = {
+              //             value: param.value,
+              //             occur: param.occur};
+              //     });
               $scope.virtualCSWUpdated = false;
 
               $timeout(function() {
@@ -124,22 +115,17 @@
       };
 
       $scope.addFilter = function() {
-        $scope.virtualCSWSelected.serviceParameters[$scope.newFilter.name] =
-            angular.copy($scope.newFilter);
-        $scope.newFilter.value = $scope.newFilter.name = null;
-        $scope.newFilter.occur = '+';
+        $scope.virtualCSWSelected.parameters.push(
+            angular.copy($scope.newFilter)
+        );
       };
       $scope.removeFilter = function(f) {
-        delete $scope.virtualCSWSelected.serviceParameters[f];
-      };
-      $scope.setFilter = function(f) {
-        $scope.newFilter.name = f;
-      };
-      $scope.setFilterValue = function(field, value) {
-        $scope.virtualCSWSelected.serviceParameters[field] = {
-          value: value,
-          occur: $scope.virtualCSWSelected.serviceParameters[field].occur || '+'
-        };
+        angular.forEach($scope.virtualCSWSelected.parameters,
+            function(idx, o) {
+              if (o.name === f) {
+                $scope.virtualCSWSelected.parameters.splice(idx, 1);
+              }
+            });
       };
 
       $scope.$watchCollection('virtualCSWSelected', function() {
@@ -152,26 +138,35 @@
           'id': '',
           'name': 'csw-servicename',
           'description': '',
+          'className': '.services.main.CswDiscoveryDispatcher',
           'explicitQuery': '',
-          'serviceParameters': {}
+          'parameters': []
         };
         $timeout(function() {
           $('#servicename').focus();
         }, 100);
       };
-      $scope.saveVirtualCSW = function(formId) {
+      $scope.saveVirtualCSW = function() {
 
-        $http.get('admin.config.virtualcsw.update?' +
-            '_content_type=json&operation=' + operation +
-            '&' + $(formId).serialize())
-          .success(function(data) {
-              loadCSWVirtual();
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('virtualCswUpdated'),
-                timeout: 2,
-                type: 'success'});
-            })
-          .error(function(data) {
+        $http.put('../api/csw/virtuals' + (
+            $scope.virtualCSWSelected.id !== '' ?
+            '/' + $scope.virtualCSWSelected.id : ''
+            ), $scope.virtualCSWSelected)
+            .then(function(r) {
+              if (r.status === 400) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate('virtualCswUpdateError'),
+                  error: r.data,
+                  timeout: 0,
+                  type: 'danger'});
+              } else {
+                loadCSWVirtual();
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: $translate('virtualCswUpdated'),
+                  timeout: 2,
+                  type: 'success'});
+              }
+            }, function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('virtualCswUpdateError'),
                 error: data,
@@ -181,12 +176,12 @@
       };
 
       $scope.deleteVirtualCSW = function() {
-        $http.get('admin.config.virtualcsw.remove?id=' +
+        $http.delete('../api/csw/virtuals/' +
             $scope.virtualCSWSelected.id)
-          .success(function(data) {
+            .success(function(data) {
               loadCSWVirtual();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('virtualCswDeleteError'),
                 error: data,

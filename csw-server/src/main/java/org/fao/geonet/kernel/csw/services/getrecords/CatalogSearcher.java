@@ -24,8 +24,10 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import com.vividsolutions.jts.geom.Geometry;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
@@ -98,68 +100,129 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import javax.annotation.Nonnull;
 
 //=============================================================================
 
 public class CatalogSearcher implements MetadataRecordSelector {
-	private static final class FindRegionFilterElements implements org.jdom.filter.Filter {
-        private static final Namespace namespace = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
-        private static final long serialVersionUID = 1L;
-
-        public boolean matches(Object obj)
-        {
-            if (obj instanceof Element) {
-                Element element = (Element) obj;
-                Attribute attribute = element.getAttribute("id", namespace);
-                return attribute != null && attribute.getValue() != null;
-            }
-            return false;
-        }
+    //	private final Set<String> _tokenizedFieldSet;
+    private final Set<String> _selector;
+    private final Set<String> _uuidselector;
+    private final GMLConfiguration _configuration;
+    private Query _query;
+    private Filter _filter;
+    private Sort _sort;
+    private LuceneSearcher.LanguageSelection _lang;
+    private long _searchToken;
+    private ApplicationContext _applicationContext;
+    public CatalogSearcher(GMLConfiguration configuration,
+                           Set<String> selector, Set<String> uuidselector, ApplicationContext applicationContext) {
+//		_tokenizedFieldSet = luceneConfig.getTokenizedField();
+        _selector = selector;
+        _configuration = configuration;
+        this._applicationContext = applicationContext;
+        _uuidselector = uuidselector;
+        _searchToken = -1L;  // means we will get a new IndexSearcher when we
+        // ask for it first time
     }
 
-//	private final Set<String> _tokenizedFieldSet;
-	private final Set<String> _selector;
-	private final Set<String> _uuidselector;
-	private Query         _query;
-	private Filter _filter;
-	private Sort          _sort;
-	private LuceneSearcher.LanguageSelection _lang;
-	private long          _searchToken;
-    private final GMLConfiguration   _configuration;
-    private ApplicationContext _applicationContext;
-	
-	public CatalogSearcher(GMLConfiguration  configuration, 
-			Set<String> selector, Set<String> uuidselector, ApplicationContext applicationContext) {
-//		_tokenizedFieldSet = luceneConfig.getTokenizedField();
-		_selector = selector;
-		_configuration = configuration;
-		this._applicationContext = applicationContext;
-		_uuidselector = uuidselector;
-		_searchToken = -1L;  // means we will get a new IndexSearcher when we
-		                     // ask for it first time
-	}
-	
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Main search method
-	// ---
-	// ---------------------------------------------------------------------------
+    /**
+     * Allow search on current user's groups only adding a BooleanClause to the search.
+     */
+    public static Query getGroupsQuery(ServiceContext context) throws Exception {
+        AccessManager am = context.getBean(AccessManager.class);
+        Set<Integer> hs = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-	/**
-	 * Convert a filter to a lucene search and run the search.
-	 * 
-	 * @return a list of id that match the given filter, ordered by sortFields
-	 */
-	public Pair<Element, List<ResultItem>> search(ServiceContext context,
+        BooleanQuery query = new BooleanQuery();
+
+
+        BooleanClause.Occur occur = LuceneUtils
+            .convertRequiredAndProhibitedToOccur(false, false);
+        for (Integer groupId : hs) {
+            TermQuery tq = new TermQuery(new Term(ReservedOperation.view.getLuceneIndexCode(), groupId.toString()));
+            query.add(tq, occur);
+        }
+
+        // If user is authenticated, add the current user to the query because
+        // if an editor unchecked all
+        // visible options in privileges panel for all groups, then the metadata
+        // records could not be found anymore, even by its editor.
+        if (context.getUserSession().getUserId() != null) {
+            TermQuery tq = new TermQuery(new Term("_owner", context
+                .getUserSession().getUserId()));
+            query.add(tq, occur);
+        }
+
+        return query;
+    }
+
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Main search method
+    // ---
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Creates a lucene Query object from a lucene query string using Lucene query syntax.
+     */
+    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
+//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
+        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
+        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
+        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
+            String name = field.getName();
+            int precisionStep = field.getPrecisionStep();
+            NumberFormat format = NumberFormat.getNumberInstance();
+            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
+            NumericConfig config = new NumericConfig(precisionStep, format, type);
+            numericMap.put(name, config);
+        }
+        parser.setNumericConfigMap(numericMap);
+        Query q = parser.parse(cswServiceSpecificConstraint, "title");
+
+        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
+        List<String> SECURITY_FIELDS = Arrays.asList(
+            LuceneIndexField.OWNER,
+            LuceneIndexField.GROUP_OWNER);
+
+        BooleanQuery bq;
+        if (q instanceof BooleanQuery) {
+            bq = (BooleanQuery) q;
+            List<BooleanClause> clauses = bq.clauses();
+
+            Iterator<BooleanClause> it = clauses.iterator();
+            while (it.hasNext()) {
+                BooleanClause bc = it.next();
+
+                for (String fieldName : SECURITY_FIELDS) {
+                    if (bc.getQuery().toString().contains(fieldName + ":")) {
+                        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                            Log.debug(Geonet.CSW_SEARCH, "LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+                        it.remove();
+
+                        break;
+                    }
+                }
+            }
+        }
+        return q;
+    }
+
+    /**
+     * Convert a filter to a lucene search and run the search.
+     *
+     * @return a list of id that match the given filter, ordered by sortFields
+     */
+    public Pair<Element, List<ResultItem>> search(ServiceContext context,
                                                   Element filterExpr, String filterVersion, String typeName,
                                                   Sort sort, ResultType resultType, int startPosition, int maxRecords,
                                                   int maxHitsInSummary, String cswServiceSpecificContraint) throws CatalogException {
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "CatalogSearch search");
-		Element luceneExpr = filterToLucene(context, filterExpr);
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-            Log.debug(Geonet.CSW_SEARCH, "after filter2lucene:\n"+ Xml.getString(luceneExpr));
+        Element luceneExpr = filterToLucene(context, filterExpr);
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "after filter2lucene:\n" + Xml.getString(luceneExpr));
 
         // OGC 07-045:
         // If typeName equals to “csw:Record” no ISO metadata profile specific queryables must be used. The handling of
@@ -173,14 +236,14 @@ public class CatalogSearcher implements MetadataRecordSelector {
 
         // TODO typeName is not enforced: restrict query to requested typeName (in remapFields)
 
-		if (luceneExpr != null) {
-			checkForErrors(luceneExpr);
-			remapFields(luceneExpr);
-		}
+        if (luceneExpr != null) {
+            checkForErrors(luceneExpr);
+            remapFields(luceneExpr);
+        }
 
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-            Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n"+ Xml.getString(luceneExpr));
-        
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
+            Log.debug(Geonet.CSW_SEARCH, "after remapfields:\n" + Xml.getString(luceneExpr));
+
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
         IndexAndTaxonomy indexAndTaxonomy = null;
@@ -200,11 +263,11 @@ public class CatalogSearcher implements MetadataRecordSelector {
             _searchToken = indexAndTaxonomy.version;
             GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
             return performSearch(context, luceneExpr, filterExpr, filterVersion, sort, resultType, startPosition, maxRecords,
-                    maxHitsInSummary, cswServiceSpecificContraint, reader, indexAndTaxonomy.taxonomyReader);
+                maxHitsInSummary, cswServiceSpecificContraint, reader, indexAndTaxonomy.taxonomyReader);
         } catch (Exception e) {
-			Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
-			Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
-			throw new NoApplicableCodeEx("Raised exception while searching metadata : " + e);
+            Log.error(Geonet.CSW_SEARCH, "Error while searching metadata ");
+            Log.error(Geonet.CSW_SEARCH, "  (C) StackTrace:\n" + Util.getStackTrace(e));
+            throw new NoApplicableCodeEx("Raised exception while searching metadata : " + e);
         } finally {
             try {
                 if (indexAndTaxonomy != null) {
@@ -216,28 +279,29 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 Log.error(Geonet.CSW_SEARCH, "Error while releasing index searcher ", ex);
             }
         }
-	}
+    }
 
-	// ---------------------------------------------------------------------------
-	private LuceneConfig getLuceneConfig() {
-	    return _applicationContext.getBean(LuceneConfig.class);
-	}
-	/**
-	 * <p>
-	 * Gets results in current searcher
-	 * </p>
-	 * @param context 
-	 * 
-	 * @return current searcher result in "fast" mode
-	 * 
-	 * @throws IOException
-	 * @throws CorruptIndexException
-	 */
-	public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
+    // ---------------------------------------------------------------------------
+    private LuceneConfig getLuceneConfig() {
+        return _applicationContext.getBean(LuceneConfig.class);
+    }
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getBean(SearchManager.class);
-		LuceneConfig luceneConfig = getLuceneConfig();
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Private methods
+    // ---
+    // ---------------------------------------------------------------------------
+
+    /**
+     * <p> Gets results in current searcher </p>
+     *
+     * @return current searcher result in "fast" mode
+     */
+    public List<String> getAllUuids(int maxHits, ServiceContext context) throws Exception {
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getBean(SearchManager.class);
+        LuceneConfig luceneConfig = getLuceneConfig();
         IndexAndTaxonomy indexAndTaxonomy = sm.getIndexReader(null, _searchToken);
 
         try {
@@ -247,8 +311,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
             Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
-                    luceneConfig.getSummaryTypes().get(ResultType.RESULTS.toString()), luceneConfig,
-                    _reader, _query, wrapSpatialFilter(), _sort, null, false);
+                luceneConfig.getSummaryTypes().get(ResultType.RESULTS.toString()), luceneConfig,
+                _reader, _query, wrapSpatialFilter(), _sort, null, false);
             TopDocs tdocs = searchResults.one();
             Element summary = searchResults.two();
 
@@ -268,201 +332,181 @@ public class CatalogSearcher implements MetadataRecordSelector {
             }
             return response;
         } finally {
-			sm.releaseIndexReader(indexAndTaxonomy);
-		}
-	}
+            sm.releaseIndexReader(indexAndTaxonomy);
+        }
+    }
 
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Private methods
-	// ---
-	// ---------------------------------------------------------------------------
+    /**
+     * Use filter-to-lucene stylesheet to create a Lucene search query to be used by
+     * LuceneSearcher.
+     *
+     * @return XML representation of Lucene query
+     */
+    private Element filterToLucene(ServiceContext context, Element filterExpr)
+        throws NoApplicableCodeEx {
+        if (filterExpr == null)
+            return null;
 
-	/**
-	 * Use filter-to-lucene stylesheet to create a Lucene search query to be
-	 * used by LuceneSearcher.
-	 * 
-	 * @return XML representation of Lucene query
-	 */
-	private Element filterToLucene(ServiceContext context, Element filterExpr)
-			throws NoApplicableCodeEx {
-		if (filterExpr == null)
-			return null;
+        Path styleSheet = context.getAppPath().resolve(Geonet.Path.CSW).resolve(Geonet.File.FILTER_TO_LUCENE);
 
-		Path styleSheet = context.getAppPath().resolve(Geonet.Path.CSW).resolve(Geonet.File.FILTER_TO_LUCENE);
-
-		try {
-			Element result = Xml.transform(filterExpr, styleSheet);
-			removeEmptyBranches(result);
-            Log.info(Geonet.CSW_SEARCH,"filterToLucene result:\n" + Xml.getString(result));
+        try {
+            Element result = Xml.transform(filterExpr, styleSheet);
+            removeEmptyBranches(result);
+            Log.info(Geonet.CSW_SEARCH, "filterToLucene result:\n" + Xml.getString(result));
             return result;
 
-		}
-        catch (Exception e) {
-			context.error("Error during Filter to Lucene conversion : " + e);
-			context.error("  (C) StackTrace\n" + Util.getStackTrace(e));
+        } catch (Exception e) {
+            context.error("Error during Filter to Lucene conversion : " + e);
+            context.error("  (C) StackTrace\n" + Util.getStackTrace(e));
 
-			throw new NoApplicableCodeEx(
-					"Error during Filter to Lucene conversion : " + e);
-		}
-	}
-	@SuppressWarnings("unchecked")
-    private void removeEmptyBranches( Element element ) {
+            throw new NoApplicableCodeEx(
+                "Error during Filter to Lucene conversion : " + e);
+        }
+    }
+    // ---------------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
+    private void removeEmptyBranches(Element element) {
         List<Element> children = new ArrayList<Element>(element.getChildren());
-        for( Element e : children ) {
+        for (Element e : children) {
             removeEmptyBranches(e);
         }
 
         if (element.getChildren().isEmpty() && element.getTextTrim().isEmpty()
-                && element.getAttribute("fld") == null) {
+            && element.getAttribute("fld") == null) {
             element.detach();
         }
-	}
-	// ---------------------------------------------------------------------------
+    }
 
-	private void checkForErrors(Element elem) throws InvalidParameterValueEx {
-		@SuppressWarnings("unchecked")
+
+    // ---------------------------------------------------------------------------
+
+    private void checkForErrors(Element elem) throws InvalidParameterValueEx {
+        @SuppressWarnings("unchecked")
         List<Element> children = elem.getChildren();
 
-		if (elem.getName().equals("error")) {
-			String type = elem.getAttributeValue("type");
-			String oper = "unknown";
-			if (!children.isEmpty()) {
-			    oper = Xml.getString((Element) children.get(0));
-			}
+        if (elem.getName().equals("error")) {
+            String type = elem.getAttributeValue("type");
+            String oper = "unknown";
+            if (!children.isEmpty()) {
+                oper = Xml.getString((Element) children.get(0));
+            }
 
-			throw new InvalidParameterValueEx(type, oper);
-		}
+            throw new InvalidParameterValueEx(type, oper);
+        }
 
         for (Element aChildren : children) {
             checkForErrors(aChildren);
         }
-	}
+    }
+
+    // ---------------------------------------------------------------------------
+
+    private void convertPhrases(Element elem)
+        throws InterruptedException, IOException {
+        if (elem.getName().equals("TermQuery")) {
+            String field = elem.getAttributeValue("fld");
+            String text = elem.getAttributeValue("txt");
 
 
-	// ---------------------------------------------------------------------------
-
-	private void convertPhrases(Element elem)
-			throws InterruptedException, IOException {
-		if (elem.getName().equals("TermQuery")) {
-			String field = elem.getAttributeValue("fld");
-			String text = elem.getAttributeValue("txt");
-
-			
-			Set<String> tokenizedFieldSet = getLuceneConfig().getTokenizedField();
+            Set<String> tokenizedFieldSet = getLuceneConfig().getTokenizedField();
             if (tokenizedFieldSet.contains(field) && text.indexOf(' ') != -1) {
-				elem.setName("PhraseQuery");
+                elem.setName("PhraseQuery");
 
-				StringTokenizer st = new StringTokenizer(text, " ");
+                StringTokenizer st = new StringTokenizer(text, " ");
 
-				while (st.hasMoreTokens()) {
-					Element term = new Element("TermQuery");
-					term.setAttribute("fld", field);
-					term.setAttribute("txt", st.nextToken());
+                while (st.hasMoreTokens()) {
+                    Element term = new Element("TermQuery");
+                    term.setAttribute("fld", field);
+                    term.setAttribute("txt", st.nextToken());
 
-					elem.addContent(term);
-				}
-			}
-		}
-
-		else {
-			@SuppressWarnings("unchecked")
+                    elem.addContent(term);
+                }
+            }
+        } else {
+            @SuppressWarnings("unchecked")
             List<Element> children = elem.getChildren();
 
             for (Element aChildren : children) {
                 convertPhrases((Element) aChildren);
             }
-		}
-	}
+        }
+    }
 
-	// ---------------------------------------------------------------------------
-	/**
-	 * Map OGC CSW search field names to Lucene field names using
-	 * {@link FieldMapper}. If a field name is not defined then the any (ie.
-	 * full text) criteria is used.
-	 * 
-	 */
-	private void remapFields(Element elem) {
-		String field = elem.getAttributeValue("fld");
+    /**
+     * Map OGC CSW search field names to Lucene field names using {@link FieldMapper}. If a field
+     * name is not defined then the any (ie. full text) criteria is used.
+     */
+    private void remapFields(Element elem) {
+        String field = elem.getAttributeValue("fld");
 
-		if (field != null) {
-			if (field.equals("")) {
+        if (field != null) {
+            if (field.equals("")) {
                 field = "any";
             }
 
-			String mapped = getFieldMapper().map(field);
+            String mapped = getFieldMapper().map(field);
 
-			if (mapped != null) {
+            if (mapped != null) {
                 elem.setAttribute("fld", mapped);
             } else {
                 Log.info(Geonet.CSW_SEARCH, "Unknown queryable field : "
-                                            + field); // FIXME log doesn't work
+                    + field); // FIXME log doesn't work
             }
-		}
+        }
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> children = elem.getChildren();
 
         for (Element aChildren : children) {
             remapFields(aChildren);
         }
-	}
+    }
+
+    // ---------------------------------------------------------------------------
 
     private FieldMapper getFieldMapper() {
         return _applicationContext.getBean(FieldMapper.class);
     }
-
     // ---------------------------------------------------------------------------
 
     /**
      * Executes a CSW search using a filter query.
      *
-     * If it is provided a service specific constraint in CswDispatcher service, the constraint is added
-     * to the final search query to restrict the search.
+     * If it is provided a service specific constraint in CswDispatcher service, the constraint is
+     * added to the final search query to restrict the search.
      *
-     * @param context
-     * @param luceneExpr
-     * @param filterExpr                    CSW Filter
-     * @param filterVersion
-     * @param sort
-     * @param resultType
-     * @param startPosition
-     * @param maxRecords
-     * @param maxHitsInSummary
-     * @param cswServiceSpecificContraint   Service specific constraint
-     * @param taxonomyReader 
-     * @return
-     * @throws Exception
+     * @param filterExpr                  CSW Filter
+     * @param cswServiceSpecificContraint Service specific constraint
      */
-	private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
+    private Pair<Element, List<ResultItem>> performSearch(ServiceContext context, Element luceneExpr,
                                                           @Nonnull Element filterExpr, String filterVersion, Sort sort,
                                                           ResultType resultType, int startPosition, int maxRecords,
                                                           int maxHitsInSummary, String cswServiceSpecificContraint,
                                                           GeonetworkMultiReader reader, TaxonomyReader taxonomyReader)
-            throws Exception {
+        throws Exception {
 
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
             Log.debug(Geonet.CSW_SEARCH, "CatalogSearcher performSearch()");
         }
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
-            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n"+ Xml.getString(filterExpr));
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
+            Log.debug(Geonet.CSW_SEARCH, "CatS performsearch: filterXpr:\n" + Xml.getString(filterExpr));
         }
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SearchManager sm = gc.getBean(SearchManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SearchManager sm = gc.getBean(SearchManager.class);
 
-		if (luceneExpr != null) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        if (luceneExpr != null) {
+            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "Search criteria:\n" + Xml.getString(luceneExpr));
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        } else {
+            if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                 Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
         }
 
 
-		boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
-		
+        boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
+
         Query data;
         LuceneConfig luceneConfig = getLuceneConfig();
         if (luceneExpr == null) {
@@ -477,135 +521,129 @@ public class CatalogSearcher implements MetadataRecordSelector {
         }
 
         Query cswCustomFilterQuery = null;
-        Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
+        Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilter:\n" + cswServiceSpecificContraint);
         if (StringUtils.isNotEmpty(cswServiceSpecificContraint)) {
             cswCustomFilterQuery = getCswServiceSpecificConstraintQuery(cswServiceSpecificContraint, luceneConfig);
-            Log.info(Geonet.CSW_SEARCH,"LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
+            Log.info(Geonet.CSW_SEARCH, "LuceneSearcher cswCustomFilterQuery:\n" + cswCustomFilterQuery);
         }
 
-		Query groups = getGroupsQuery(context);
-		if (sort == null) {
-			List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
+        Query groups = getGroupsQuery(context);
+        if (sort == null) {
+            List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
             sort = LuceneSearcher.makeSort(fields, _lang.presentationLanguage, requestedLanguageOnTop);
-		}
-
-		// --- put query on groups in AND with lucene query
-
-		BooleanQuery query = new BooleanQuery();
-
-		// FIXME : DO I need to fix that here ???
-		// BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE
-		// solve
-		// // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
-		// // problem.
-		// // Improve index content.
-
-		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-		if (data != null) {
-			query.add(data, occur);
         }
-		query.add(groups, occur);
+
+        // --- put query on groups in AND with lucene query
+
+        BooleanQuery query = new BooleanQuery();
+
+        // FIXME : DO I need to fix that here ???
+        // BooleanQuery.setMaxClauseCount(1024); // FIXME : using MAX_VALUE
+        // solve
+        // // partly the org.apache.lucene.search.BooleanQuery$TooManyClauses
+        // // problem.
+        // // Improve index content.
+
+        BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+        if (data != null) {
+            query.add(data, occur);
+        }
+        query.add(groups, occur);
 
         if (cswCustomFilterQuery != null) {
             query.add(cswCustomFilterQuery, occur);
         }
 
-		// --- proper search
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        // --- proper search
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "Lucene query: " + query.toString());
 
         int numHits = startPosition + maxRecords;
 
         updateRegionsInSpatialFilter(context, filterExpr);
-		// TODO Handle NPE creating spatial filter (due to constraint)
+        // TODO Handle NPE creating spatial filter (due to constraint)
         _filter = sm.getSpatial().filter(query, Integer.MAX_VALUE, filterExpr, filterVersion);
-        
+
         boolean buildSummary = resultType == ResultType.RESULTS_WITH_SUMMARY;
         // get as many results as instructed or enough for search summary
         if (buildSummary) {
             numHits = Math.max(maxHitsInSummary, numHits);
         }
-		// record globals for reuse
-		_query = query;
-		_sort = sort;
-		
-	    ServiceConfig config = new ServiceConfig();
-	    String geomWkt = null;
-	    LuceneSearcher.logSearch(context, config, _query, numHits, _sort, geomWkt, sm);
+        // record globals for reuse
+        _query = query;
+        _sort = sort;
 
-		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, _lang.presentationLanguage,
-                luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
-                reader, _query, wrapSpatialFilter(),
-                _sort, taxonomyReader, buildSummary
-		);
-		TopDocs hits = searchResults.one();
-		Element summary = searchResults.two();
+        ServiceConfig config = new ServiceConfig();
+        String geomWkt = null;
+        LuceneSearcher.logSearch(context, config, _query, numHits, _sort, geomWkt, sm);
 
-		numHits = Integer.parseInt(summary.getAttributeValue("count"));
-        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+        Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
+            maxRecords, _lang.presentationLanguage,
+            luceneConfig.getSummaryTypes().get(resultType.toString()), luceneConfig,
+            reader, _query, wrapSpatialFilter(),
+            _sort, taxonomyReader, buildSummary
+        );
+        TopDocs hits = searchResults.one();
+        Element summary = searchResults.two();
+
+        numHits = Integer.parseInt(summary.getAttributeValue("count"));
+        if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
             Log.debug(Geonet.CSW_SEARCH, "Records matched : " + numHits);
-		
-		// --- retrieve results
 
-		List<ResultItem> results = new ArrayList<ResultItem>();
+        // --- retrieve results
 
-		// Get hits according to request (when using summary topdocs returned by
-		// LuceneSearcher already contains all docs)
-		int i = 0;
-		int iMax = hits.scoreDocs.length;
-		for (;i < iMax; i++) {
-			Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
-			String id = doc.get("_id");
-			ResultItem ri = new ResultItem(id);
-			results.add(ri);
-			for (String field : getFieldMapper().getMappedFields()) {
-				String value = doc.get(field);
-				if (value != null) {
-					ri.add(field, value);
+        List<ResultItem> results = new ArrayList<ResultItem>();
+
+        // Get hits according to request (when using summary topdocs returned by
+        // LuceneSearcher already contains all docs)
+        int i = 0;
+        int iMax = hits.scoreDocs.length;
+        for (; i < iMax; i++) {
+            Document doc = reader.document(hits.scoreDocs[i].doc, _selector);
+            String id = doc.get("_id");
+            ResultItem ri = new ResultItem(id);
+            results.add(ri);
+            for (String field : getFieldMapper().getMappedFields()) {
+                String value = doc.get(field);
+                if (value != null) {
+                    ri.add(field, value);
                 }
-			}
-		}
-		summary.setName("Summary");
-		summary.setNamespace(Csw.NAMESPACE_GEONET);
-		return Pair.read(summary, results);
-	}
-    // ---------------------------------------------------------------------------
+            }
+        }
+        summary.setName("Summary");
+        summary.setNamespace(Csw.NAMESPACE_GEONET);
+        return Pair.read(summary, results);
+    }
 
     private Filter wrapSpatialFilter() {
         Filter duplicateRemovingFilter = new DuplicateDocFilter(_query);
         Filter cFilter = null;
         if (_filter == null) {
             cFilter = duplicateRemovingFilter;
-        }
-        else {
-            Filter[] filters = new Filter[]{duplicateRemovingFilter, _filter };
+        } else {
+            Filter[] filters = new Filter[]{duplicateRemovingFilter, _filter};
             cFilter = new ChainedFilter(filters, ChainedFilter.AND);
         }
         cFilter = new CachingWrapperFilter(cFilter);
         return cFilter;
     }
 
-	/**
-	 * Process all spatial filters by replacing the region placeholders (filters with gml:id starting with 'region:')
-	 * with the gml of the actual region geometry.
-	 * 
-	 * @param context
-	 * @param filterExpr
-	 * @throws Exception
-	 */
-	private void updateRegionsInSpatialFilter(ServiceContext context, Element filterExpr) throws Exception {
-	    Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
-        for( Element regionEl: (List<Element>) lookupGeoms(filterExpr)) {
+    /**
+     * Process all spatial filters by replacing the region placeholders (filters with gml:id
+     * starting with 'region:') with the gml of the actual region geometry.
+     */
+    private void updateRegionsInSpatialFilter(ServiceContext context, Element filterExpr) throws Exception {
+        Collection<RegionsDAO> regionDAOs = context.getApplicationContext().getBeansOfType(RegionsDAO.class).values();
+        for (Element regionEl : (List<Element>) lookupGeoms(filterExpr)) {
             Attribute attribute = regionEl.getAttribute("id", FindRegionFilterElements.namespace);
             Geometry unionedGeom = null;
             List<Geometry> geoms = new ArrayList<Geometry>();
             String[] regionIds = attribute.getValue().substring("region:".length()).split("\\s*,\\s*");
 
             for (String regionId : regionIds) {
-                for (RegionsDAO regionDAO: regionDAOs) {
+                for (RegionsDAO regionDAO : regionDAOs) {
                     Geometry geometry = regionDAO.getGeom(context, regionId, false, Region.WGS84);
-                    if(geometry!=null) {
+                    if (geometry != null) {
                         geoms.add(geometry);
                         if (unionedGeom == null) {
                             unionedGeom = geometry;
@@ -616,38 +654,38 @@ public class CatalogSearcher implements MetadataRecordSelector {
                     }
                 }
             }
-            
+
             updateWithinFilter(regionEl, geoms);
 
             setGeom(regionEl, unionedGeom);
         }
-        
+
     }
-	/**
-	 * If the filter is a within filter then we want to break the within into a few parts.  
-	 * 
-	 * <ul>
-	 * <li>A within filter where the geometry is the union of all the geometries that was in the gml:id</li>
-	 * <li>A within filter for each of the individual geometries</li>
-	 * </ul> 
-	 * 
-	 * The reason is the case of within 2 adjacent regions.  Suppose you have a within switzerland and france, if
-	 * a metadata crosses the border then within will fail in the normal case, the fixes that case.
-	 * 
-	 * The reason that the union and each individual geometry are or-d together is for the situation where a metadata's 
-	 * polygon extent is exactly the same as one of the individual geometries.  The within filter is a little dumb in
-	 * that it is true if the geometry is fully within or is exactly equals.  So if only the union is used then
-	 * the geometry is neither fully within (IE doesn't share boundary) nor exactly the same.  So
-	 * I use the work around of having several filters or'd together.  This is not a common case in practice
-	 * but must be handled. 
-	 */
+
+    /**
+     * If the filter is a within filter then we want to break the within into a few parts.
+     *
+     * <ul> <li>A within filter where the geometry is the union of all the geometries that was in
+     * the gml:id</li> <li>A within filter for each of the individual geometries</li> </ul>
+     *
+     * The reason is the case of within 2 adjacent regions.  Suppose you have a within switzerland
+     * and france, if a metadata crosses the border then within will fail in the normal case, the
+     * fixes that case.
+     *
+     * The reason that the union and each individual geometry are or-d together is for the situation
+     * where a metadata's polygon extent is exactly the same as one of the individual geometries.
+     * The within filter is a little dumb in that it is true if the geometry is fully within or is
+     * exactly equals.  So if only the union is used then the geometry is neither fully within (IE
+     * doesn't share boundary) nor exactly the same.  So I use the work around of having several
+     * filters or'd together.  This is not a common case in practice but must be handled.
+     */
     private void updateWithinFilter(Element regionEl, List<Geometry> geoms) throws IOException, JDOMException {
-        if(geoms.size() < 2) {
+        if (geoms.size() < 2) {
             return;
         }
         Element withinFilter = findWithinFilter(regionEl);
 
-        if(withinFilter!=null ){
+        if (withinFilter != null) {
             Element parentElement = withinFilter.getParentElement();
             int index = parentElement.indexOf(withinFilter);
 
@@ -663,7 +701,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 ors.add(newEl);
             }
 
-            Element or = new Element("Or","ogc", "http://www.opengis.net/ogc");
+            Element or = new Element("Or", "ogc", "http://www.opengis.net/ogc");
             parentElement.setContent(index, or);
 
             or.addContent(ors);
@@ -673,12 +711,11 @@ public class CatalogSearcher implements MetadataRecordSelector {
     /**
      * Check to see if there is a within filter in the element.
      */
-    private Element findWithinFilter(Element element)
-    {
-        if(element == null ){
+    private Element findWithinFilter(Element element) {
+        if (element == null) {
             return null;
         }
-        if(element.getName().equalsIgnoreCase("WITHIN")){
+        if (element.getName().equalsIgnoreCase("WITHIN")) {
             return element;
         }
         return findWithinFilter(element.getParentElement());
@@ -687,8 +724,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
     /**
      * Update the element with the gml encoded geometry
      */
-    private void setGeom(Element element, Geometry fullGeom) throws IOException, JDOMException
-    {
+    private void setGeom(Element element, Geometry fullGeom) throws IOException, JDOMException {
         Element parentElement = element.getParentElement();
         int index = parentElement.indexOf(element);
 
@@ -702,8 +738,9 @@ public class CatalogSearcher implements MetadataRecordSelector {
         parentElement.setContent(index, geomElem);
     }
 
-    private ArrayList<Element> lookupGeoms(Element filterExpr)
-    {
+    // ---------------------------------------------------------------------------
+
+    private ArrayList<Element> lookupGeoms(Element filterExpr) {
         org.jdom.filter.Filter filter = new FindRegionFilterElements();
         Iterator<?> children = filterExpr.getDescendants(filter);
         ArrayList<Element> elements = new ArrayList<Element>();
@@ -713,88 +750,18 @@ public class CatalogSearcher implements MetadataRecordSelector {
         return elements;
     }
 
-    // ---------------------------------------------------------------------------
+    private static final class FindRegionFilterElements implements org.jdom.filter.Filter {
+        private static final Namespace namespace = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        private static final long serialVersionUID = 1L;
 
-	/**
-	 * Allow search on current user's groups only adding a BooleanClause to the
-	 * search.
-	 */
-	public static Query getGroupsQuery(ServiceContext context) throws Exception {
-		AccessManager am = context.getBean(AccessManager.class);
-		Set<Integer> hs = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
-
-		BooleanQuery query = new BooleanQuery();
-
-
-		BooleanClause.Occur occur = LuceneUtils
-				.convertRequiredAndProhibitedToOccur(false, false);
-		for (Integer groupId : hs) {
-			TermQuery tq = new TermQuery(new Term(ReservedOperation.view.getLuceneIndexCode(), groupId.toString()));
-			query.add(tq, occur);
-		}
-
-		// If user is authenticated, add the current user to the query because
-		// if an editor unchecked all
-		// visible options in privileges panel for all groups, then the metadata
-		// records could not be found anymore, even by its editor.
-		if (context.getUserSession().getUserId() != null) {
-			TermQuery tq = new TermQuery(new Term("_owner", context
-					.getUserSession().getUserId()));
-			query.add(tq, occur);
-		}
-
-		return query;
-	}
-
-    /**
-     * Creates a lucene Query object from a lucene query string using Lucene query syntax.
-     *
-     * @param cswServiceSpecificConstraint
-     * @return
-     * @throws ParseException
-     * @throws QueryNodeException 
-     */
-    public static Query getCswServiceSpecificConstraintQuery(String cswServiceSpecificConstraint, LuceneConfig _luceneConfig) throws ParseException, QueryNodeException {
-//        MultiFieldQueryParser parser = new MultiFieldQueryParser(Geonet.LUCENE_VERSION, fields , SearchManager.getAnalyzer());
-        StandardQueryParser parser = new StandardQueryParser(SearchManager.getAnalyzer());
-        Map<String, NumericConfig> numericMap = new HashMap<String, NumericConfig>();
-        for (LuceneConfigNumericField field : _luceneConfig.getNumericFields().values()) {
-            String name = field.getName();
-            int precisionStep = field.getPrecisionStep();
-            NumberFormat format = NumberFormat.getNumberInstance();
-            NumericType type = NumericType.valueOf(field.getType().toUpperCase());
-            NumericConfig config = new NumericConfig(precisionStep, format, type);
-            numericMap.put(name, config);
-        }
-        parser.setNumericConfigMap(numericMap);
-        Query q = parser.parse(cswServiceSpecificConstraint, "title");
-
-        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
-        List<String> SECURITY_FIELDS = Arrays.asList(
-                LuceneIndexField.OWNER,
-                LuceneIndexField.GROUP_OWNER);
-        
-        BooleanQuery bq;
-        if (q instanceof BooleanQuery) {
-            bq = (BooleanQuery) q;
-            List<BooleanClause> clauses = bq.clauses();
-    
-            Iterator<BooleanClause> it = clauses.iterator();
-            while (it.hasNext()) {
-                BooleanClause bc = it.next();
-    
-                for (String fieldName : SECURITY_FIELDS){
-                    if (bc.getQuery().toString().contains(fieldName + ":")) {
-                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                            Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
-                        it.remove();
-    
-                        break;
-                    }
-                }
+        public boolean matches(Object obj) {
+            if (obj instanceof Element) {
+                Element element = (Element) obj;
+                Attribute attribute = element.getAttribute("id", namespace);
+                return attribute != null && attribute.getValue() != null;
             }
+            return false;
         }
-        return q;
     }
 
 }
@@ -805,45 +772,45 @@ public class CatalogSearcher implements MetadataRecordSelector {
  * Class containing result items with information retrieved from Lucene index.
  */
 class ResultItem {
-	/**
-	 * Metadata identifier
-	 */
-	private String id;
+    /**
+     * Metadata identifier
+     */
+    private String id;
 
-	/**
-	 * Other Lucene index information declared in {@link FieldMapper}
-	 */
-	private Map<String, String> hmFields = new HashMap<String, String>();
+    /**
+     * Other Lucene index information declared in {@link FieldMapper}
+     */
+    private Map<String, String> hmFields = new HashMap<String, String>();
 
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- Constructor
-	// ---
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- Constructor
+    // ---
+    // ---------------------------------------------------------------------------
 
-	public ResultItem(String id) {
-		this.id = id;
-	}
+    public ResultItem(String id) {
+        this.id = id;
+    }
 
-	// ---------------------------------------------------------------------------
-	// ---
-	// --- API methods
-	// ---
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- API methods
+    // ---
+    // ---------------------------------------------------------------------------
 
-	public String getID() {
-		return id;
-	}
+    public String getID() {
+        return id;
+    }
 
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-	public void add(String field, String value) {
-		hmFields.put(field, value);
-	}
+    public void add(String field, String value) {
+        hmFields.put(field, value);
+    }
 
-	// ---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-	public String getValue(String field) {
-		return hmFields.get(field);
-	}
+    public String getValue(String field) {
+        return hmFields.get(field);
+    }
 }

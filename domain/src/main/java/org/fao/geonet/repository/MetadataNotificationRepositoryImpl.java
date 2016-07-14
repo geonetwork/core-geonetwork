@@ -29,14 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+
 import java.util.List;
 
 /**
  * Implementation for methods in MetadataNotificationRepositoryCustom.
  * <p/>
- * User: Jesse
- * Date: 9/7/13
- * Time: 8:30 PM
+ * User: Jesse Date: 9/7/13 Time: 8:30 PM
  */
 public class MetadataNotificationRepositoryImpl implements MetadataNotificationRepositoryCustom {
     @PersistenceContext

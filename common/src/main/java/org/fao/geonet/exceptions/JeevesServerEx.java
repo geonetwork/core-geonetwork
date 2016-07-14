@@ -26,21 +26,19 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class JeevesServerEx extends JeevesException
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public abstract class JeevesServerEx extends JeevesException {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public JeevesServerEx(String message, Object object)
-	{
-		super(message, object);
+    public JeevesServerEx(String message, Object object) {
+        super(message, object);
 
-		id   = "server";
-		code = 500;
-	}
+        id = "server";
+        code = 500;
+    }
 }
 
 //=============================================================================

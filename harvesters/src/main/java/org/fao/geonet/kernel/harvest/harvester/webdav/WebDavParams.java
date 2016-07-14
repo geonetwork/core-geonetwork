@@ -31,106 +31,100 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class WebDavParams extends AbstractParams
-{
+public class WebDavParams extends AbstractParams {
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
-
-	public WebDavParams(DataManager dm)
-	{
-		super(dm);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
-
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
-
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
-
-		url      = Util.getParam(site, "url",  "");
-		icon     = Util.getParam(site, "icon", "");
-
-		recurse  = Util.getParam(opt, "recurse",  false);
-		
-		subtype  = Util.getParam(opt, "subtype","");
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
-
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
-
-		Element site = node.getChild("site");
-		Element opt  = node.getChild("options");
-
-		url      = Util.getParam(site,  "url",  url);
-		icon     = Util.getParam(site,  "icon", icon);
-
-		recurse  = Util.getParam(opt, "recurse",  recurse);
-		subtype  = Util.getParam(opt, "subtype",  subtype);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
-
-	public WebDavParams copy()
-	{
-		WebDavParams copy = new WebDavParams(dm);
-		copyTo(copy);
-
-		copy.url  = url;
-		copy.icon = icon;
-
-		copy.setValidate(getValidate());
-		copy.recurse  = recurse;
-
-		copy.subtype = subtype;
-		
-		return copy;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
     /**
      * url of webdav folder to harvest
      */
-	public String url;
+    public String url;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
     /**
      * Icon to use for harvester
      */
-	public String icon;
+    public String icon;
 
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
     /**
      * If true recurse into directories.
      */
-	public boolean recurse;
+    public boolean recurse;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
     /**
      * Flag indicating if WAFRetriever or WebDavRetriever should be used.
      */
-	public String subtype;
+    public String subtype;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+
+    public WebDavParams(DataManager dm) {
+        super(dm);
+    }
+
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
+
+        Element site = node.getChild("site");
+        Element opt = node.getChild("options");
+
+        url = Util.getParam(site, "url", "");
+        icon = Util.getParam(site, "icon", "");
+
+        recurse = Util.getParam(opt, "recurse", false);
+
+        subtype = Util.getParam(opt, "subtype", "");
+    }
+
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
+
+        Element site = node.getChild("site");
+        Element opt = node.getChild("options");
+
+        url = Util.getParam(site, "url", url);
+        icon = Util.getParam(site, "icon", icon);
+
+        recurse = Util.getParam(opt, "recurse", recurse);
+        subtype = Util.getParam(opt, "subtype", subtype);
+    }
+
+    public WebDavParams copy() {
+        WebDavParams copy = new WebDavParams(dm);
+        copyTo(copy);
+
+        copy.url = url;
+        copy.icon = icon;
+
+        copy.setValidate(getValidate());
+        copy.recurse = recurse;
+
+        copy.subtype = subtype;
+
+        return copy;
+    }
 }
 
 //=============================================================================

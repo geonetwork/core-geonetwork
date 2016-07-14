@@ -22,7 +22,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.fao.geonet.kernel.security;
 
@@ -31,14 +31,12 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 
 /**
  * trunk-core
- * 
+ *
  * @author delawen
- * 
- * 
  */
 public interface WritableUserDetailsContextMapper extends
-		UserDetailsContextMapper {
+    UserDetailsContextMapper {
 
-	void saveUser(LDAPUser userDetails);
+    void saveUser(LDAPUser userDetails);
 
 }

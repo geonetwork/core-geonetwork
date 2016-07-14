@@ -36,7 +36,7 @@ import org.junit.Test;
 
 public class DimensionFormatterTest {
 
-    private DimensionFormatter formatter; 
+    private DimensionFormatter formatter;
 
     @Before
     public void loadTestData() throws IOException, JDOMException {
@@ -64,7 +64,7 @@ public class DimensionFormatterTest {
         result.value = "oceans";
         result.label = "Oceans";
         result.count = 3;
-        
+
         Element categoryTag = formatter.buildCategoryTag(result);
 
         assertEquals("category", categoryTag.getName());

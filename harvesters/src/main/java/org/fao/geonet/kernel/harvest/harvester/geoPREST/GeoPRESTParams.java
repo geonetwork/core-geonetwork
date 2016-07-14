@@ -37,144 +37,138 @@ import java.util.List;
 
 //=============================================================================
 
-public class GeoPRESTParams extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class GeoPRESTParams extends AbstractParams {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public GeoPRESTParams(DataManager dm)
-	{
-		super(dm);
-	}
+    private static int MAX_HARVEST_RESULTS = 100000; // TODO: config param
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+    public String baseUrl;
 
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
+    public String icon;
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
+    public int maxResults;
 
-		baseUrl = Util.getParam(site, "baseUrl", "");
-		maxResults = MAX_HARVEST_RESULTS;
+    //---------------------------------------------------------------------------
+    private List<Search> alSearches = new ArrayList<Search>();
+
+    //---------------------------------------------------------------------------
+
+    public GeoPRESTParams(DataManager dm) {
+        super(dm);
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
+
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
+
+        baseUrl = Util.getParam(site, "baseUrl", "");
+        maxResults = MAX_HARVEST_RESULTS;
 
         try {
             baseUrl = URLDecoder.decode(baseUrl, Constants.ENCODING);
-        }
-        catch (UnsupportedEncodingException x) {
+        } catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
             x.printStackTrace();
             // TODO should not swallow
         }
-		icon     = Util.getParam(site, "icon",            "default.gif");
+        icon = Util.getParam(site, "icon", "default.gif");
 
-		addSearches(searches);
-	}
+        addSearches(searches);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
 
-		baseUrl = Util.getParam(site, "baseUrl", baseUrl);
-		maxResults = MAX_HARVEST_RESULTS;
+        baseUrl = Util.getParam(site, "baseUrl", baseUrl);
+        maxResults = MAX_HARVEST_RESULTS;
 
         try {
             baseUrl = URLDecoder.decode(baseUrl, Constants.ENCODING);
-        }
-        catch (UnsupportedEncodingException x) {
+        } catch (UnsupportedEncodingException x) {
             System.out.println(x.getMessage());
             x.printStackTrace();
             // TODO should not swallow
         }
 
-		icon     = Util.getParam(site, "icon",            icon);
+        icon = Util.getParam(site, "icon", icon);
 
-		//--- if some search queries are given, we drop the previous ones and
-		//--- set these new ones
+        //--- if some search queries are given, we drop the previous ones and
+        //--- set these new ones
 
-		if (searches != null)
-			addSearches(searches);
-	}
+        if (searches != null)
+            addSearches(searches);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+    public Iterable<Search> getSearches() {
+        return alSearches;
+    }
 
-	public Iterable<Search> getSearches() { return alSearches; }
+    public boolean isSearchEmpty() {
+        return alSearches.isEmpty();
+    }
 
-	//---------------------------------------------------------------------------
+    public GeoPRESTParams copy() {
+        GeoPRESTParams copy = new GeoPRESTParams(dm);
+        copyTo(copy);
 
-	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
+        copy.baseUrl = baseUrl;
+        copy.icon = icon;
 
-	//---------------------------------------------------------------------------
+        for (Search s : alSearches)
+            copy.alSearches.add(s.copy());
 
-	public GeoPRESTParams copy()
-	{
-		GeoPRESTParams copy = new GeoPRESTParams(dm);
-		copyTo(copy);
+        return copy;
+    }
 
-		copy.baseUrl = baseUrl;
-		copy.icon     = icon;
+    private void addSearches(Element searches) {
+        alSearches.clear();
 
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
-
-		return copy;
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private void addSearches(Element searches)
-	{
-		alSearches.clear();
-
-		if (searches == null)
-			return;
+        if (searches == null)
+            return;
 
         for (Object o : searches.getChildren("search")) {
             Element search = (Element) o;
 
             alSearches.add(new Search(search));
         }
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String baseUrl;
-	public String icon;
-	public int maxResults;
-	
-	private static int MAX_HARVEST_RESULTS = 100000; // TODO: config param
-
-	private List<Search> alSearches = new ArrayList<Search>();
+    }
 }
 
 //=============================================================================

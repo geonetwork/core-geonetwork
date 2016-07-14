@@ -26,6 +26,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.responses.CustomElementSetsListResponse;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
@@ -38,7 +39,6 @@ import java.util.List;
 
 /**
  * Retrieve custom element sets.
- *
  */
 @Controller("admin.config.csw.customelementset")
 public class Get {
@@ -49,21 +49,22 @@ public class Get {
      * @throws Exception hmmm
      */
     @RequestMapping(value = "/{lang}/admin.config.csw.customelementset", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     CustomElementSetsListResponse exec() throws Exception {
         ConfigurableApplicationContext context = ApplicationContextHolder.get();
         CustomElementSetRepository customElementSetRepository = context.getBean(CustomElementSetRepository.class);
         SettingManager sm = context.getBean(SettingManager.class);
 
-        boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
+        boolean cswEnabled = sm.getValueAsBool(Settings.SYSTEM_CSW_ENABLE);
 
         CustomElementSetsListResponse response = new CustomElementSetsListResponse();
         List<String> xpaths = new ArrayList<String>();
 
-        if(cswEnabled) {
+        if (cswEnabled) {
             List<CustomElementSet> records = customElementSetRepository.findAll();
-            for(CustomElementSet record : records) {
+            for (CustomElementSet record : records) {
                 xpaths.add(record.getXpath());
             }
         }
@@ -75,6 +76,6 @@ public class Get {
         //    Log.debug(Geonet.CUSTOM_ELEMENTSET, "get customelementset:\n" + Xml.getString(result));
 
         return response;
-	}
+    }
 
 }

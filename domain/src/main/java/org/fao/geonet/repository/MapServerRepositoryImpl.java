@@ -43,4 +43,5 @@ public class MapServerRepositoryImpl implements MapServerRepositoryCustom {
     public MapServer findOneById(final String id) {
         return _entityManager.find(MapServer.class, Integer.valueOf(id));
     }
+
 }

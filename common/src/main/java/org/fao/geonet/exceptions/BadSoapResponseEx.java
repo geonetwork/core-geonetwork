@@ -28,20 +28,18 @@ import org.jdom.Element;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class BadSoapResponseEx extends BadResponseEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class BadSoapResponseEx extends BadResponseEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BadSoapResponseEx(Element response)
-	{
-		super("Bad SOAP response", response);
+    public BadSoapResponseEx(Element response) {
+        super("Bad SOAP response", response);
 
-		id = "bad-soap-response";
-	}
+        id = "bad-soap-response";
+    }
 }
 
 //=============================================================================

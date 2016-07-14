@@ -29,6 +29,7 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
@@ -47,7 +48,6 @@ import jeeves.server.context.ServiceContext;
 
 /**
  * Export MEF file
- * 
  */
 class MEFExporter {
 	/**
@@ -77,9 +77,9 @@ class MEFExporter {
 			throw new Exception("Cannot export sub template");
         }
 
-		Path file = Files.createTempFile("mef-", ".mef");
-		Path pubDir = Lib.resource.getDir(context, "public", record.getId());
-		Path priDir = Lib.resource.getDir(context, "private", record.getId());
+        Path file = Files.createTempFile("mef-", ".mef");
+        Path pubDir = Lib.resource.getDir(context, "public", record.getId());
+        Path priDir = Lib.resource.getDir(context, "private", record.getId());
 
         try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
             // --- save metadata
@@ -88,7 +88,7 @@ class MEFExporter {
 
             // --- save info file
             binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
-                    skipUUID).getBytes(Constants.ENCODING);
+                skipUUID).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
 
 
@@ -112,8 +112,8 @@ class MEFExporter {
                 }
             }
         }
-		return file;
-	}
+        return file;
+    }
 }
 
 // =============================================================================

@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
@@ -16,11 +17,13 @@ import org.fao.geonet.domain.MetadataStatusId;
 import org.fao.geonet.domain.MetadataStatusId_;
 import org.fao.geonet.domain.MetadataStatus_;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 
 import jeeves.server.context.ServiceContext;
@@ -161,11 +164,12 @@ public class DefaultMetadataStatus implements IMetadataStatus {
         if (groupOwner == null) {
             return;
         }
-        String groupMatchingRegex = context.getBean(SettingManager.class)
-                .getValue("metadata/workflow/draftWhenInGroup");
+        String groupMatchingRegex =
+              ApplicationContextHolder.get().getBean(SettingManager.class).
+                getValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP);
         if (!StringUtils.isEmpty(groupMatchingRegex)) {
-            final Group group = groupRepository
-                    .findOne(Integer.valueOf(groupOwner));
+            final Group group = ApplicationContextHolder.get().getBean(GroupRepository.class)
+                .findOne(Integer.valueOf(groupOwner));
             String groupName = "";
             if (group != null) {
                 groupName = group.getName();
@@ -175,10 +179,10 @@ public class DefaultMetadataStatus implements IMetadataStatus {
             final Matcher matcher = pattern.matcher(groupName);
             if (matcher.find()) {
                 setStatus(context, Integer.valueOf(newId),
-                        Integer.valueOf(Params.Status.DRAFT), new ISODate(),
-                        String.format(
-                                "Workflow automatically enabled for record in group %s. Record status is set to %s.",
-                                groupName, Params.Status.DRAFT));
+                    Integer.valueOf(Params.Status.DRAFT),
+                    new ISODate(),
+                    String.format("Workflow automatically enabled for record in group %s. Record status is set to %s.",
+                        groupName, Params.Status.DRAFT));
             }
         }
     }

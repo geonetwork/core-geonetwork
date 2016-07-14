@@ -42,15 +42,13 @@
       $scope.mapserverSelected = null;
       $scope.mapserverUpdated = false;
       $scope.mapserverSearch = '';
-      $scope.operation = null;
+      $scope.isUpdate = null;
 
       function loadMapservers() {
         $scope.mapserverSelected = null;
-        $http.get('geoserver.publisher?_content_type=json&action=LIST')
-          .success(function(data) {
-              $scope.mapservers = data != 'null' ? data : [];
-            }).error(function(data) {
-              // TODO
+        $http.get('../api/mapservers')
+            .success(function(data) {
+              $scope.mapservers = data;
             });
       }
 
@@ -59,42 +57,42 @@
       };
 
       $scope.selectMapServer = function(v) {
-        $scope.operation = 'UPDATE_NODE';
+        $scope.isUpdate = true;
         $scope.mapserverUpdated = false;
         $scope.mapserverSelected = v;
       };
 
       $scope.addMapServer = function() {
-        $scope.operation = 'ADD_NODE';
+        $scope.isUpdate = false;
         $scope.mapserverSelected = {
           'id': '',
           'name': '',
           'description': '',
-          'adminUrl': '',
-          'wmsUrl': '',
-          'wfsUrl': '',
-          'wcsUrl': '',
-          'stylerUrl': '',
+          'configurl': '',
+          'wmsurl': '',
+          'wfsurl': '',
+          'wcsurl': '',
+          'stylerurl': '',
           'username': '',
           'password': '',
-          'namespaceUrl': '',
+          'namespace': '',
           'namespacePrefix': '',
           'pushStyleInWorkspace': ''
         };
       };
-      $scope.saveMapServer = function(formId) {
-
-        $http.get('geoserver.publisher?_content_type=json&action=' +
-            $scope.operation +
-            '&' + $(formId).serialize())
-          .success(function(data) {
+      $scope.saveMapServer = function() {
+        $http.put('../api/mapservers' +
+            ($scope.isUpdate ? '/' +
+            $scope.mapserverSelected.id : ''),
+            $scope.mapserverSelected)
+            .success(function(data) {
               loadMapservers();
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('mapserverUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('mapserverUpdateError'),
                 error: data,
@@ -112,14 +110,13 @@
       };
 
       $scope.saveNewPassword = function() {
-        var params = {action: 'UPDATE_NODE_ACCOUNT',
-          id: $scope.mapserverSelected.id,
-          username: $scope.resetUsername,
-          password: $scope.resetPassword
-        };
-
-        $http.post('geoserver.publisher@json', null, {params: params})
-          .success(function(data) {
+        $http.post('../api/mapservers/' +
+            $scope.mapserverSelected.id + '/auth', null, {params:
+                  {
+                    username: $scope.resetUsername,
+                    password: $scope.resetPassword
+                  }})
+            .success(function(data) {
               $scope.resetPassword = null;
               $('#passwordResetModal').modal('hide');
             }).error(function(data) {
@@ -128,13 +125,12 @@
 
       };
       $scope.deleteMapServer = function() {
-        $http.get('geoserver.publisher?_content_type=json&action=' +
-            'REMOVE_NODE&id=' +
-                  $scope.mapserverSelected.id)
-          .success(function(data) {
+        $http.delete('../api/mapservers/' +
+            $scope.mapserverSelected.id)
+            .success(function(data) {
               loadMapservers();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('mapserverDeleteError'),
                 error: data,

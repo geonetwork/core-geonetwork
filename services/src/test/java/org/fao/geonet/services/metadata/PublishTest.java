@@ -26,8 +26,10 @@ package org.fao.geonet.services.metadata;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
@@ -105,7 +107,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         dataManager.indexMetadata(metadataId, true);
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-
+        request.getSession();
         PublishReport report = publishService.publish("eng", request, metadataId, false);
         assertCorrectReport(report, 1, 0, 0, 0);
         assertPublishedInIndex(true, metadataId);
@@ -145,7 +147,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         allowedRepository.deleteAll();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-
+        request.getSession();
         String ids = Joiner.on(",").join(this.metadataIds);
 
         PublishReport report = publishService.publish("eng", request, ids, false);
@@ -171,7 +173,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
     @Test
     public void testUnpublishSingle() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
-
+        request.getSession();
         final String metadataId = metadataIds.get(0);
 
         PublishReport report = publishService.unpublish("eng", request, metadataId, false);
@@ -189,9 +191,11 @@ public class PublishTest extends AbstractServiceIntegrationTest {
         report = publishService.unpublish("eng", request, metadataId, false);
         assertCorrectReport(report, 0, 0, 0, 1);
     }
+
     @Test
     public void testUnpublishMultiple() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         String ids = Joiner.on(",").join(this.metadataIds);
 
         PublishReport report = publishService.unpublish("eng", request, ids, false);
@@ -218,6 +222,7 @@ public class PublishTest extends AbstractServiceIntegrationTest {
     @Test
     public void testUnpublishSelection() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
@@ -265,10 +270,10 @@ public class PublishTest extends AbstractServiceIntegrationTest {
             final TopDocs docs = searcher.search(new TermQuery(new Term(Geonet.IndexFieldNames.ID, metadataId)), 1);
             final Document document = indexReader.indexReader.document(docs.scoreDocs[0].doc);
             for (ReservedGroup reservedGroup : Lists.newArrayList(ReservedGroup.all, ReservedGroup.intranet)) {
-                    final String[] values = document.getValues(Geonet.IndexFieldNames.GROUP_PUBLISHED);
-                    final String expectedInIndex = Geonet.IndexFieldNames.GROUP_PUBLISHED + ":" + reservedGroup;
-                    assertEquals(expectedInIndex + " is not in " + Arrays.asList(values),
-                            published, Arrays.asList(values).contains("" + reservedGroup.name()));
+                final String[] values = document.getValues(Geonet.IndexFieldNames.GROUP_PUBLISHED);
+                final String expectedInIndex = Geonet.IndexFieldNames.GROUP_PUBLISHED + ":" + reservedGroup;
+                assertEquals(expectedInIndex + " is not in " + Arrays.asList(values),
+                    published, Arrays.asList(values).contains("" + reservedGroup.name()));
             }
         }
     }

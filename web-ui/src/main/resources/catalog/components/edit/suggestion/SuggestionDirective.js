@@ -31,7 +31,7 @@
    * - gnSuggestionList
    */
   angular.module('gn_suggestion_directive', [])
-    .directive('gnSuggestionList',
+      .directive('gnSuggestionList',
       ['gnSuggestion', 'gnCurrentEdit', '$rootScope',
         '$translate', '$interpolate',
        function(gnSuggestion, gnCurrentEdit, $rootScope,
@@ -56,7 +56,7 @@
                  if (data && !angular.isString(data)) {
                    scope.suggestions = data;
                    angular.forEach(scope.suggestions, function(sugg) {
-                     var value = sugg.name['#text'] || sugg.name;
+                     var value = sugg.name;
                      sugg.name = $interpolate(value)(scope.$parent);
                    });
                  }
@@ -90,7 +90,7 @@
            }
          };
        }])
-    .directive('gnRunSuggestion', ['gnSuggestion', '$interpolate',
+      .directive('gnRunSuggestion', ['gnSuggestion', '$interpolate',
         function(gnSuggestion, $interpolate) {
           return {
             restrict: 'A',
@@ -110,13 +110,15 @@
               var initParams = function() {
                 scope.params = {};
                 scope.currentSuggestion = gnSuggestion.getCurrent();
-                var p = scope.currentSuggestion.params;
-                for (key in p) {
-                  if (p[key].type == 'expression') {
+                scope.processParams =
+                    angular.fromJson(scope.currentSuggestion.params);
+                for (key in scope.processParams) {
+                  if (scope.processParams[key].type == 'expression') {
                     scope.params[key] =
-                        $interpolate(p[key].defaultValue)(scope);
+                        $interpolate(
+                        scope.processParams[key].defaultValue)(scope);
                   } else {
-                    scope.params[key] = p[key].defaultValue;
+                    scope.params[key] = scope.processParams[key].defaultValue;
                   }
                 }
               };
@@ -124,7 +126,7 @@
               scope.runProcess = function() {
                 scope.processing = true;
                 gnSuggestion.runProcess(
-                    gnSuggestion.getCurrent()['@process'],
+                    gnSuggestion.getCurrent()['process'],
                     scope.params).then(function() {
                   scope.processing = false;
                   scope.processed = true;

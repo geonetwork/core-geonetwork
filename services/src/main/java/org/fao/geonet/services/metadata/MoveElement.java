@@ -28,7 +28,9 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
@@ -37,48 +39,46 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** For editing : move a tag up or down. Access is restricted
-  */
+/**
+ * For editing : move a tag up or down. Access is restricted
+ */
+@Deprecated
+public class MoveElement implements Service {
+    private boolean down;
 
-public class MoveElement implements Service
-{
-	private boolean down;
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        String dir = params.getMandatoryValue(Geonet.Config.DIR);
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		String dir = params.getMandatoryValue(Geonet.Config.DIR);
+        down = dir.equals(Geonet.Text.DOWN);
+    }
 
-		down = dir.equals(Geonet.Text.DOWN);
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
+        String id = Util.getParam(params, Params.ID);
+        String ref = Util.getParam(params, Params.REF);
 
-		String id  = Util.getParam(params, Params.ID);
-		String ref = Util.getParam(params, Params.REF);
+        //-----------------------------------------------------------------------
+        //--- swap elements and return status
 
-		//-----------------------------------------------------------------------
-		//--- swap elements and return status
+        new AjaxEditUtils(context).swapElementEmbedded(session, id, ref, down);
 
-		new AjaxEditUtils(context).swapElementEmbedded(session, id, ref, down);
-
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        return elResp;
+    }
 }
 
 //=============================================================================

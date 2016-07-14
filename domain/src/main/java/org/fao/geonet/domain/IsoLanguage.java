@@ -23,9 +23,12 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.fao.geonet.entitylistener.IsoLanguageEntityListenerManager;
 
 import java.util.Map;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Cacheable;
@@ -44,9 +47,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * An entity representing the bi-directional mapping between the different iso language codes (de -> ger) and translations of the
- * languages.
- * (German, Deutsch, etc...)
+ * An entity representing the bi-directional mapping between the different iso language codes (de ->
+ * ger) and translations of the languages. (German, Deutsch, etc...)
  *
  * @author Jesse
  */
@@ -55,7 +57,7 @@ import javax.persistence.Table;
 @Table(name = "IsoLanguages")
 @EntityListeners(IsoLanguageEntityListenerManager.class)
 @Cacheable
-@SequenceGenerator(name=IsoLanguage.ID_SEQ_NAME, initialValue=10000, allocationSize=1)
+@SequenceGenerator(name = IsoLanguage.ID_SEQ_NAME, initialValue = 10000, allocationSize = 1)
 public class IsoLanguage extends Localized {
     static final String ID_SEQ_NAME = "iso_language_id_seq";
     private int id;
@@ -63,22 +65,22 @@ public class IsoLanguage extends Localized {
     private String shortCode;
 
     /**
-     * Get the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will
-     * simply
-     * be ignored and could result in reduced performance.
+     * Get the id for the lang code mapping. This is a generated value and as such new instances
+     * should not have this set as it will simply be ignored and could result in reduced
+     * performance.
      *
      * @return the id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return id;
     }
 
     /**
-     * Set the id for the lang code mapping. This is a generated value and as such new instances should not have this set as it will
-     * simply
-     * be ignored and could result in reduced performance.
+     * Set the id for the lang code mapping. This is a generated value and as such new instances
+     * should not have this set as it will simply be ignored and could result in reduced
+     * performance.
      *
      * @param id the id
      * @return this entity object
@@ -140,9 +142,9 @@ public class IsoLanguage extends Localized {
     @Override
     public String toString() {
         return "IsoLanguage{" +
-               "id=" + id +
-               ", code='" + code + '\'' +
-               ", shortCode='" + shortCode + '\'' +
-               '}';
+            "id=" + id +
+            ", code='" + code + '\'' +
+            ", shortCode='" + shortCode + '\'' +
+            '}';
     }
 }

@@ -25,6 +25,7 @@ package org.fao.geonet.schema.iso19110;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.ISOPlugin;
@@ -43,9 +44,9 @@ import java.util.*;
  * Created by francois on 6/15/14.
  */
 public class ISO19110SchemaPlugin
-        extends org.fao.geonet.kernel.schema.SchemaPlugin
-        implements
-                ISOPlugin {
+    extends org.fao.geonet.kernel.schema.SchemaPlugin
+    implements
+    ISOPlugin {
     public static final String IDENTIFIER = "iso19110";
 
     private static ImmutableSet<Namespace> allNamespaces;
@@ -53,20 +54,20 @@ public class ISO19110SchemaPlugin
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
-                .add(ISO19110Namespaces.GFC)
-                .add(ISO19139Namespaces.GCO)
-                .add(ISO19139Namespaces.GMD)
-                .build();
+            .add(ISO19110Namespaces.GFC)
+            .add(ISO19139Namespaces.GCO)
+            .add(ISO19139Namespaces.GMD)
+            .build();
 
         allTypenames = ImmutableMap.<String, Namespace>builder()
-                .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
-                .put("gfc:FC_FeatureCatalogue", ISO19110Namespaces.GFC)
-                .put("dcat", Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#"))
-                .build();
+            .put("csw:Record", Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2"))
+            .put("gfc:FC_FeatureCatalogue", ISO19110Namespaces.GFC)
+            .put("dcat", Namespace.getNamespace("dcat", "http://www.w3.org/ns/dcat#"))
+            .build();
     }
 
     public ISO19110SchemaPlugin() {
-        super(IDENTIFIER);
+        super(IDENTIFIER, allNamespaces);
     }
 
     @Override

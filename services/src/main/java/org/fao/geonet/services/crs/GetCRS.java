@@ -26,6 +26,7 @@ package org.fao.geonet.services.crs;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.geotools.referencing.ReferencingFactoryFinder;
@@ -41,120 +42,117 @@ import java.util.Set;
 
 /**
  * Get a Coordinate Reference System and return an ISO19139 fragment.
- * 
+ *
  * @author francois
  */
+@Deprecated
 public class GetCRS implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    protected static Element formatCRS(String authorityTitle, String authorityEdition,
+                                       String authorityCodeSpace, String code, String description) {
+        Element crs = new Element("crs");
+        crs.addContent(new Element("code").setText(code));
+        crs.addContent(new Element("authority")
+            .setText(authorityTitle));
+        crs.addContent(new Element("version")
+            .setText(authorityEdition));
+        crs.addContent(new Element("codeSpace")
+            .setText(authorityCodeSpace));
+        crs.addContent(new Element("description")
+            .setText(description));
+        return crs;
+    }
 
-	/**
-	 * Get CRS
-	 *
-	 * @param params
-	 *            Parameter "id" is a list of word separated by spaces.
-	 */
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-		String id = Util.getParam(params, Params.ID);
+    /**
+     * Get CRS
+     *
+     * @param params Parameter "id" is a list of word separated by spaces.
+     */
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
 
-		Element crs = get(id);
+        String id = Util.getParam(params, Params.ID);
 
-		return crs;
-	}
+        Element crs = get(id);
 
-	/**
-	 * Get CRS by code. Return the first CRS found.
-	 * 
-	 * @param crsId
-	 *            the CRS identifier to search for.
-	 * @return XML
-	 */
-	private Element get(String crsId) {
-		Element crsList = new Element("crsList");
+        return crs;
+    }
 
-		for (Object object : ReferencingFactoryFinder
-				.getCRSAuthorityFactories(null)) {
-			CRSAuthorityFactory factory = (CRSAuthorityFactory) object;
+    /**
+     * Get CRS by code. Return the first CRS found.
+     *
+     * @param crsId the CRS identifier to search for.
+     * @return XML
+     */
+    private Element get(String crsId) {
+        Element crsList = new Element("crsList");
 
-			try {
-				Set<String> codes = factory
-						.getAuthorityCodes(CoordinateReferenceSystem.class);
-				for (Object codeObj : codes) {
-					String code = (String) codeObj;
+        for (Object object : ReferencingFactoryFinder
+            .getCRSAuthorityFactories(null)) {
+            CRSAuthorityFactory factory = (CRSAuthorityFactory) object;
 
-					if (code.equals(crsId)) {
+            try {
+                Set<String> codes = factory
+                    .getAuthorityCodes(CoordinateReferenceSystem.class);
+                for (Object codeObj : codes) {
+                    String code = (String) codeObj;
 
-						String authorityTitle = (factory.getAuthority()
-								.getTitle() == null ? "" : factory
-								.getAuthority().getTitle().toString());
-						String authorityEdition = (factory.getAuthority()
-								.getEdition() == null ? "" : factory
-								.getAuthority().getEdition().toString());
+                    if (code.equals(crsId)) {
 
-						String authorityCodeSpace = "";
-						Collection<? extends Identifier> ids = factory
-								.getAuthority().getIdentifiers();
-						for (Identifier id : ids) {
-							authorityCodeSpace = id.getCode();
-						}
+                        String authorityTitle = (factory.getAuthority()
+                            .getTitle() == null ? "" : factory
+                            .getAuthority().getTitle().toString());
+                        String authorityEdition = (factory.getAuthority()
+                            .getEdition() == null ? "" : factory
+                            .getAuthority().getEdition().toString());
 
-						String description;
-						try {
-							description = factory.getDescriptionText(code)
-									.toString();
-						} catch (Exception e1) {
-							description = "-";
-						}
-						description += " (" + authorityCodeSpace + ":" + code
-								+ ")";
+                        String authorityCodeSpace = "";
+                        Collection<? extends Identifier> ids = factory
+                            .getAuthority().getIdentifiers();
+                        for (Identifier id : ids) {
+                            authorityCodeSpace = id.getCode();
+                        }
 
-						Element crs = formatCRS(authorityTitle,
-								authorityEdition, authorityCodeSpace, code,
-								description);
-						crsList.addContent(crs);
+                        String description;
+                        try {
+                            description = factory.getDescriptionText(code)
+                                .toString();
+                        } catch (Exception e1) {
+                            description = "-";
+                        }
+                        description += " (" + authorityCodeSpace + ":" + code
+                            + ")";
 
-						return crsList;
-					}
-				}
-			} catch (FactoryException e) {
-				// TODO : Use logger.
-				System.out.println("CRS Authority:" + e.getMessage());
-			}
-		}
-		return crsList;
-	}
+                        Element crs = formatCRS(authorityTitle,
+                            authorityEdition, authorityCodeSpace, code,
+                            description);
+                        crsList.addContent(crs);
 
+                        return crsList;
+                    }
+                }
+            } catch (FactoryException e) {
+                // TODO : Use logger.
+                System.out.println("CRS Authority:" + e.getMessage());
+            }
+        }
+        return crsList;
+    }
 
-	protected static Element formatCRS(String authorityTitle, String authorityEdition,
-			String authorityCodeSpace, String code, String description) {
-		Element crs = new Element("crs");
-		crs.addContent(new Element("code").setText(code));
-		crs.addContent(new Element("authority")
-				.setText(authorityTitle));
-		crs.addContent(new Element("version")
-				.setText(authorityEdition));
-		crs.addContent(new Element("codeSpace")
-				.setText(authorityCodeSpace));
-		crs.addContent(new Element("description")
-				.setText(description));
-		return crs;
-	}
-	/**
-	 * checks if all keywords in filter array are in input
-	 * 
-	 * @param input
-	 *            test string
-	 * @param filter
-	 *            array of keywords
-	 * @return true, if all keywords in filter are in the input, false otherwise
-	 */
-	protected boolean matchesFilter(String input, String[] filter) {
-		for (String match : filter) {
-			if (!input.contains(match))
-				return false;
-		}
-		return true;
-	}
+    /**
+     * checks if all keywords in filter array are in input
+     *
+     * @param input  test string
+     * @param filter array of keywords
+     * @return true, if all keywords in filter are in the input, false otherwise
+     */
+    protected boolean matchesFilter(String input, String[] filter) {
+        for (String match : filter) {
+            if (!input.contains(match))
+                return false;
+        }
+        return true;
+    }
 }

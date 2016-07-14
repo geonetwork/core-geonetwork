@@ -39,7 +39,7 @@ import java.util.Collection;
 /**
  * Returns a specific region and coordinates given its id
  */
-
+@Deprecated
 public class ListCategories implements Service {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

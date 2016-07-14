@@ -30,6 +30,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -51,45 +52,45 @@ import java.util.Set;
  */
 
 public class UpdateElement implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	/*
-	 * TODO
-	 */
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+    /*
+     * TODO
+     */
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        GeonetContext gc = (GeonetContext) context
+            .getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String ref = Util.getParam(params, Params.REF);
-		String oldid = Util.getParam(params, "oldid");
-		String newid = Util.getParam(params, "newid");
-		String namespace = Util.getParam(params, "namespace");
-		String thesaType = Util.getParam(params, "refType");
+        String ref = Util.getParam(params, Params.REF);
+        String oldid = Util.getParam(params, "oldid");
+        String newid = Util.getParam(params, "newid");
+        String namespace = Util.getParam(params, "namespace");
+        String thesaType = Util.getParam(params, "refType");
 
-		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
-		Thesaurus thesaurus = manager.getThesaurusByName(ref);
+        ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
+        Thesaurus thesaurus = manager.getThesaurusByName(ref);
 
-		if (!(oldid.equals(newid))) {
-			if (thesaurus.isFreeCode(null, newid)) {
-				thesaurus.updateCodeByURI(oldid, newid);
-			}else{
-				Element elResp = new Element(Jeeves.Elem.RESPONSE);
-				elResp.addContent(new Element("error").addContent(new Element("message").setText("Code value already exists in thesaurus")));
-				return elResp;
-			}
-		}
-		KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
-			.setNamespaceCode(namespace)
+        if (!(oldid.equals(newid))) {
+            if (thesaurus.isFreeCode(null, newid)) {
+                thesaurus.updateCodeByURI(oldid, newid);
+            } else {
+                Element elResp = new Element(Jeeves.Elem.RESPONSE);
+                elResp.addContent(new Element("error").addContent(new Element("message").setText("Code value already exists in thesaurus")));
+                return elResp;
+            }
+        }
+        KeywordBean bean = new KeywordBean(thesaurus.getIsoLanguageMapper())
+            .setNamespaceCode(namespace)
             .setUriCode(newid);
-    
+
         Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
         if (localizations.isEmpty()) {
             String prefLab = Util.getParam(params, PREF_LAB);
@@ -109,7 +110,7 @@ public class UpdateElement implements Service {
                     final String label = entry.getValue();
                     bean.setValue(label, lang);
                 } else {
-                    throw new IllegalArgumentException("Unknown localization type: "+entry.getKey().two());
+                    throw new IllegalArgumentException("Unknown localization type: " + entry.getKey().two());
                 }
 
             }
@@ -120,15 +121,15 @@ public class UpdateElement implements Service {
                 .setCoordNorth(Util.getParam(params, "north"))
                 .setCoordSouth(Util.getParam(params, "south"))
                 .setCoordWest(Util.getParam(params, "west"));
-        } 
-        
+        }
+
         thesaurus.updateElement(bean, false);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element("selected").setText(ref));
-		elResp.addContent(new Element("mode").setText("edit"));
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element("selected").setText(ref));
+        elResp.addContent(new Element("mode").setText("edit"));
+        return elResp;
+    }
 }
 
 // =============================================================================

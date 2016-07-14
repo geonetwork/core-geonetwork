@@ -23,7 +23,9 @@ package org.fao.geonet.languages;
 
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -36,25 +38,25 @@ import java.nio.file.Path;
  * @author heikki doeleman
  */
 public class LanguageDetector {
-    
+
     private static LanguageDetector instance;
 
     private static boolean profilesLoaded = false;
     private static boolean languageLevelSupported = false;
     private static String upgradeMessage;
 
-    private LanguageDetector() {}
-    
     static {
         String javaVersion = System.getProperty("java.version");
         // java < 1.6 not supported
-        if(StringUtils.isNotEmpty(javaVersion) && javaVersion.startsWith("1.5")) {
+        if (StringUtils.isNotEmpty(javaVersion) && javaVersion.startsWith("1.5")) {
             upgradeMessage = "You are running on Java " + javaVersion + ", auto-detecting languages is disabled. Upgrade to at least 1.6.";
             Log.warning(Geonet.LANGUAGEDETECTOR, LanguageDetector.upgradeMessage);
-        }    
-        else {
+        } else {
             LanguageDetector.languageLevelSupported = true;
         }
+    }
+
+    private LanguageDetector() {
     }
 
     /**
@@ -64,20 +66,38 @@ public class LanguageDetector {
      * @throws Exception hmm
      */
     public static synchronized LanguageDetector getInstance() throws Exception {
-        if(!LanguageDetector.languageLevelSupported) {
+        if (!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }
-        if(instance == null) {
+        if (instance == null) {
             instance = new LanguageDetector();
         }
         return instance;
     }
 
     /**
+     * Creates mapping to ISO 639-2 for all languages supported by this language detector.
+     *
+     * @param path path to profiles directory
+     * @throws Exception hmm
+     */
+    public static void init(Path path) throws Exception {
+        if (!LanguageDetector.languageLevelSupported) {
+            throw new Exception(LanguageDetector.upgradeMessage);
+        }
+        if (!LanguageDetector.profilesLoaded) {
+            //
+            // initialize DetectorFactory. NOTE this can only happen once, otherwise an exception is thrown.
+            //
+            DetectorFactory.loadProfile(path.toFile());
+            LanguageDetector.profilesLoaded = true;
+        }
+    }
+
+    /**
      * Helps ensure singleton-ness.
      *
      * @return nothing
-     * @throws CloneNotSupportedException
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -87,50 +107,26 @@ public class LanguageDetector {
     /**
      * Detects language of input string.
      *
-     *
-     * @param srvContext
      * @param input text to analyze
      * @return iso 639-2 code of detected language
      * @throws Exception hmm
      */
     public String detect(ServiceContext srvContext, String input) throws Exception {
-        if(!LanguageDetector.languageLevelSupported) {
+        if (!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }
         Detector detector = DetectorFactory.create();
         detector.append(input);
-        String detectedLanguage = detector.detect();  
+        String detectedLanguage = detector.detect();
         // this is to deal with zh-cn and zh-tw in languageprofiles. All other files have a 639-1 2-char filename.
-        if(detectedLanguage.length() > 2) {
+        if (detectedLanguage.length() > 2) {
             detectedLanguage = detectedLanguage.substring(0, 2);
         }
         String iso639_2 = srvContext.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(detectedLanguage);
         Log.debug(Geonet.LANGUAGEDETECTOR,
-                    "detected language: " + iso639_2 +
-                    " for text:" + input);
+            "detected language: " + iso639_2 +
+                " for text:" + input);
 
         return iso639_2;
-    }
-
-
-    /**
-     * Creates mapping to ISO 639-2 for all languages supported by this language detector.
-     *
-     *
-     *
-     * @param path path to profiles directory
-     * @throws Exception hmm
-     */
-    public static void init(Path path) throws Exception {
-        if(!LanguageDetector.languageLevelSupported) {
-            throw new Exception(LanguageDetector.upgradeMessage);
-        }
-        if(!LanguageDetector.profilesLoaded) {
-            //
-            // initialize DetectorFactory. NOTE this can only happen once, otherwise an exception is thrown.
-            //
-            DetectorFactory.loadProfile(path.toFile());
-            LanguageDetector.profilesLoaded = true;
-        }
     }
 }

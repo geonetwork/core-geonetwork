@@ -1,33 +1,40 @@
 <div class="panel panel-default" data-ng-class="getClass()">
-  <div class="panel-heading">
+  <div class="panel-heading"
+       data-gn-slide-toggle="">
     <i class="fa" data-ng-class="getClass('icon')"></i>&nbsp;
     <span data-translate="">validationReport</span>
-     <button type="button" class="btn btn-default pull-right btn-xs"
-     data-ng-click="load()" data-toggle="tooltip" data-placement="top" title="{{'runValidation' | translate}}">
+    <button type="button" class="btn btn-default pull-right btn-xs"
+            data-ng-click="load();$event.stopPropagation();"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="{{'runValidation' | translate}}">
       <i data-ng-hide="loading" class="fa fa-refresh"/>
       <i data-ng-show="loading" class="fa fa-spinner fa-spin"/>
-    </button>&nbsp;
-     <div class="btn-group pull-right btn-group-xs" role="group" aria-label="..." style="margin-right:5px">
+    </button>
+    &nbsp;
+    <div class="btn-group pull-right btn-group-xs" role="group" aria-label="..."
+         style="margin-right:5px">
       <button type="button" class="btn btn-default btn-xs"
               data-ng-class="showSuccess ? 'active' : ''"
-              data-ng-click="toggleShowSuccess()"
+              data-ng-click="toggleShowSuccess();$event.stopPropagation();"
               data-ng-show="hasSuccess"
               data-toggle="tooltip" data-placement="top" title="{{'showHideSuccess' | translate}}">
-      <span class="fa fa-thumbs-up text-success" aria-hidden="true"></span></button>
+        <span class="fa fa-thumbs-up text-success" aria-hidden="true"></span></button>
       <button type="button" class="btn btn-default btn-xs"
               data-ng-class="showErrors ? 'active' : ''"
-              data-ng-click="toggleShowErrors()"
+              data-ng-click="toggleShowErrors();$event.stopPropagation();"
               data-ng-show="hasErrors"
               data-toggle="tooltip" data-placement="top" title="{{'showHideErrors' | translate}}">
-      <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span></button>
+        <span class="fa fa-thumbs-down text-danger" aria-hidden="true"></span></button>
     </div>
   </div>
   <div class="panel-body" data-ng-show="ruleTypes.length !== 0">
     <div class="gn-validation-report">
-      <div data-ng-repeat="type in ruleTypes" data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
+      <div data-ng-repeat="type in ruleTypes"
+           data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
         <div class="row">
           <div class="col-md-9">
-            <h4 class="gn-schematron-title">{{type.label | translate}}</h4>
+            <h4 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h4>
           </div>
           <div class="col-md-3">
             <span class="label pull-right"
@@ -44,11 +51,11 @@
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
           </div>
         </div>
-        <div class="list-group" data-ng-repeat="pattern in type.patterns">
-          <li class="list-group-item" data-ng-repeat="rule in pattern.rules"
+        <div class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
+          <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
               title="{{rule.details}}"
-              data-ng-show="(showErrors && rule['@type'] === 'error') || (showSuccess && rule['@type'] === 'success')"
-              data-ng-class="rule['@type'] !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
+              data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
+              data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
             <strong>{{pattern.title}}</strong>
             <p>{{rule.msg}}</p>
           </li>

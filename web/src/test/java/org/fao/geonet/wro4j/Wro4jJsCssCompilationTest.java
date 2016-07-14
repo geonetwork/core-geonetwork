@@ -25,6 +25,7 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -36,6 +37,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.manager.WroManager;
 import ro.isdc.wro.manager.factory.standalone.StandaloneContext;
@@ -51,6 +53,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+
 import javax.servlet.FilterConfig;
 
 import static org.junit.Assert.assertTrue;
@@ -80,7 +83,7 @@ public class Wro4jJsCssCompilationTest {
         try (BufferedWriter writer = Files.newBufferedWriter(wroProperties, cs)) {
             for (String line : configuration) {
                 final String updatedLine = line.replace("${wroRefresh}", "-1").replace("${debugProcessors}", "").
-                        replace("${build.webapp.resources}", webDir.toString().replace("\\", "/"));
+                    replace("${build.webapp.resources}", webDir.toString().replace("\\", "/"));
                 writer.write(updatedLine);
                 writer.write("\n");
             }
@@ -104,10 +107,11 @@ public class Wro4jJsCssCompilationTest {
     public void testCssCompilation() throws Exception {
         createModel();
         testResourcesOfType(ResourceType.CSS, Predicates.not(Predicates.or(
-                Predicates.equalTo("gn_viewer") // currently broken
-                )));
+            Predicates.equalTo("gn_viewer") // currently broken
+        )));
         testResourcesOfType(ResourceType.CSS, Predicates.<String>alwaysTrue());
     }
+
     @Test
     public void testJsCompilation() throws Exception {
         createModel();
@@ -139,7 +143,7 @@ public class Wro4jJsCssCompilationTest {
                 } catch (Throwable t) {
                     if (errors.length() == 0) {
                         errors.append("\n\nThe following errors were encountered while compiling the ").
-                                append(resourceType).append(" resources");
+                            append(resourceType).append(" resources");
                     }
 
                     errors.append("\n* Group Name: ").append(group.getName());

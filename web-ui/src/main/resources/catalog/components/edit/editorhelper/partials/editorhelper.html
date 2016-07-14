@@ -25,11 +25,11 @@
         </label>
       </div>
       <div class="col-xs-10">
-        <input type="text" id="otherValue_{{ref}}" class="form-control"
-               data-ng-click="selectOtherRadio()"
-               data-gn-field-tooltip="{{tooltip}}"
-               data-ng-model="otherValue['@value']" value="{{otherValue['@value']}}"
-               data-ng-keyup="updateWithOtherValue()"/>
+        <textarea id="otherValue_{{ref}}" class="form-control"
+                  data-ng-click="selectOtherRadio()"
+                  data-gn-field-tooltip="{{tooltip}}"
+                  data-ng-model="otherValue['@value']" value="{{otherValue['@value']}}"
+                  data-ng-keyup="updateWithOtherValue()"/>
       </div>
     </div>
   </div>

@@ -25,6 +25,7 @@ package org.fao.geonet.services.search;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.facet.Dimension;
 import org.fao.geonet.kernel.search.facet.ItemConfig;
@@ -64,8 +65,8 @@ public class FacetsService {
     }
 
     /**
-     * Equivalent to the {@link org.fao.geonet.kernel.search.facet.SummaryType} but only has the essential information
-     * so that the output json is clean and only has the desired information.
+     * Equivalent to the {@link org.fao.geonet.kernel.search.facet.SummaryType} but only has the
+     * essential information so that the output json is clean and only has the desired information.
      */
     public static class FacetConfig {
         final String id;

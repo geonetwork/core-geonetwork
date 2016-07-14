@@ -35,9 +35,7 @@ import javax.persistence.criteria.Root;
 /**
  * Specifications for querying HarvestHistoryRepository.
  * <p/>
- * User: Jesse
- * Date: 9/20/13
- * Time: 3:34 PM
+ * User: Jesse Date: 9/20/13 Time: 3:34 PM
  */
 public final class HarvestHistorySpecs {
 

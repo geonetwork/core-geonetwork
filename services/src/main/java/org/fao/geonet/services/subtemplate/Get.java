@@ -21,6 +21,7 @@
 //===   Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 package org.fao.geonet.services.subtemplate;
+
 import com.google.common.collect.Sets;
 
 import com.google.common.collect.Lists;
@@ -41,6 +42,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 
 import java.util.Iterator;
+
 import org.jdom.Namespace;
 
 import java.nio.file.Path;
@@ -49,9 +51,10 @@ import java.util.List;
 
 /**
  * Retrieve sub template from metadata table
- * @author francois
  *
+ * @author francois
  */
+@Deprecated
 public class Get implements Service {
 
     public static final char SEPARATOR = '~';
@@ -62,25 +65,19 @@ public class Get implements Service {
     /**
      * Execute the service and return the sub template.
      *
-     * <p>
-     * Sub template are all public - no privileges check. Parameter "uuid" is mandatory.
-     * </p>
+     * <p> Sub template are all public - no privileges check. Parameter "uuid" is mandatory. </p>
      *
-     * <p>
-     * One or more "process" parameters could be added in order to alter the template extracted.
-     * This parameter is composed of one XPath expression pointing to a single {@link org.jdom.Element} or {@link org.jdom.Attribute}
-     * and a text value separated by "{@value #SEPARATOR}". Warning, when pointing to an element, the content
-     * of the element is removed before the value added (See {@link org.jdom.Element#setText(String)}).
-     * </p>
+     * <p> One or more "process" parameters could be added in order to alter the template extracted.
+     * This parameter is composed of one XPath expression pointing to a single {@link
+     * org.jdom.Element} or {@link org.jdom.Attribute} and a text value separated by "{@value
+     * #SEPARATOR}". Warning, when pointing to an element, the content of the element is removed
+     * before the value added (See {@link org.jdom.Element#setText(String)}). </p>
      *
-     * <p>
-     * For example, to return a contact template with a custom role use
-     * "&process=gmd:role/gmd:CI_RoleCode/@codeListValue~updatedRole".
-     * </p>
-     *
+     * <p> For example, to return a contact template with a custom role use
+     * "&process=gmd:role/gmd:CI_RoleCode/@codeListValue~updatedRole". </p>
      */
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
         String uuid = Util.getParam(params, Params.UUID);
 
         // Retrieve template
@@ -88,12 +85,12 @@ public class Get implements Service {
         final Metadata metadata = metadataRepository.findOneByUuid(uuid);
 
         if (metadata == null) {
-            Log.error(Geonet.DATA_MANAGER, String.format("Subtemplate '%s' not found. Check records related to this directory entry." , uuid));
+            Log.error(Geonet.DATA_MANAGER, String.format("Subtemplate '%s' not found. Check records related to this directory entry.", uuid));
             return new Element("subtemplateNotFound");
         }
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
-            throw new IllegalArgumentException("Metadata uuid="+uuid+" is not a subtemplate");
+            throw new IllegalArgumentException("Metadata uuid=" + uuid + " is not a subtemplate");
         }
 
         Element tpl = metadata.getXmlData(false);
@@ -131,9 +128,9 @@ public class Get implements Service {
 
                 Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
                 if (o instanceof Element) {
-                    ((Element)o).setText(value);        // Remove all content before adding the value.
+                    ((Element) o).setText(value);        // Remove all content before adding the value.
                 } else if (o instanceof Attribute) {
-                    ((Attribute)o).setValue(value);
+                    ((Attribute) o).setValue(value);
                 }
             }
         }

@@ -1,5 +1,5 @@
 {
-    "add-extent-from-geokeywords": "Calcular la extensión por las palabras clave",
+    "add-extent-from-geokeywords": "Calcular la extensión con las palabras clave",
     "add-extent-from-geokeywords-help": "Buscar todas las palabras clave del tesauro por localización y añadir las extensiones que coincidan.",
     "addCRS-help": "Añadir nuevo CRS",
     "contactId": "Identificador del contacto",
@@ -19,6 +19,7 @@
     "addKeywordNotFromThesaurus": "Añadir nuevas palabras clave",
     "addLinks": "Añadir enlaces",
     "addOnlinesrc": "Agregar enlace",
+    "updateOnlinesrc": "Actualizar enlace",
     "addOnlinesrcTitle": "Enlazar a un recurso en línea en el metadato",
     "addThumbnail": "Añadir miniatura",
     "addThumbnailTitle": "Añadir una visión general al metadato",
@@ -33,9 +34,11 @@
     "associationType": "Tipo de asociación",
     "chooseContactRole": "o elegir rol",
     "chooseEntry": "Directorio de búsqueda",
+    "clickToAddResource": "Pulsa para seleccionar este recurso.",
     "beforeUnloadEditor": "Puede que tengas cambios sin salvar desde la última vez que salvaste {{timeAgo}}",
     "batchEditing": "Edición por lotes",
     "fieldIsRemoved": "Se eliminará este campo",
+    "editRecords": "Edit selection",
     "removeField": "Eliminar este campo",
     "addXpath-help": "La actualización de registros utilizando XPath requiere una cuidadosa definición de los cambios. Un cambio se define por:",
     "addXpathTitle": "una tesela opcional",
@@ -215,6 +218,7 @@
     "onlyErrors": "Mostrar sólo errores",
     "areYouSureToAddALinkWithError": "El catálogo no pudo resolver la URL actual. Podría tratrarse de un problema con el catálogo de proxy, pero se aconseja comprobar el enlace manualmente antes de añadirlo al registro.",
     "addLinkAnyway": "Añadir enlace de todos modos",
+    "updateLinkAnyway": "Actualizar enlace de todas formas",
     "onlineFunction": "Función",
     "applicationProfile": "Perfil de aplicación",
     "fileStoreNoFileMatching": "No se ha encontrado ningún archivo aplicando el filtro ({{filtro}}). Suba uno si es necesario.",
@@ -290,6 +294,8 @@
     "xsltToApply": "Aplicar conversión XSLT",
     "yearAndMonthMode": "Año y mes",
     "yearMode": "Año sólo",
+    "uploadFileByUrl": "Upload a file from URL",
+    "noFileSelected": "Choose a file to load!",
     "yourMetadata": "Tus metadatos",
     "searchKeyword": "Buscar...",
     "searchOrTypeKeyword": "Escribe o busca...",
@@ -311,5 +317,6 @@
     "currentConcept": "Concepto actual",
     "parentConcept": "Concepto padre",
     "moreSpecificConcept": "Conceptos más específicos",
-    "associatedConcept": "Conceptos asociados"
+    "associatedConcept": "Conceptos asociados",
+    "xsd": "Schema validation"
 }

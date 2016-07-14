@@ -4,7 +4,9 @@
   <name>WFS</name>
   <title>GeoServer Web Feature Service</title>
   <maintainer>http://jira.codehaus.org/secure/BrowseProject.jspa?id=10311</maintainer>
-  <abstrct>This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WFS operations including Transaction.</abstrct>
+  <abstrct>This is the reference implementation of WFS 1.0.0 and WFS 1.1.0, supports all WFS
+    operations including Transaction.
+  </abstrct>
   <accessConstraints>NONE</accessConstraints>
   <fees>NONE</fees>
   <versions>

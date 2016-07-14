@@ -57,9 +57,8 @@ public class SelectionManager {
     // used to limit select all if get system setting maxrecords fails or
     // contains value we can't parse
 	public static final int DEFAULT_MAXHITS = 1000;
-
     public static final String ADD_ALL_SELECTED = "add-all";
-	public static final String REMOVE_ALL_SELECTED = "remove-all";
+    public static final String REMOVE_ALL_SELECTED = "remove-all";
     public static final String ADD_SELECTED = "add";
     public static final String REMOVE_SELECTED = "remove";
     public static final String CLEAR_ADD_SELECTED = "clear-add";
@@ -104,8 +103,9 @@ public class SelectionManager {
                 continue;
             }
             Element info = element.getChild(Edit.RootChild.INFO,
-                    Edit.NAMESPACE);
+                Edit.NAMESPACE);
             String uuid = info.getChildText(Edit.Info.Elem.UUID);
+
             if (!element.getChildTextTrim("draft").equalsIgnoreCase("Y")) {
                 if (selection.contains(uuid)) {
                     info.addContent(new Element(Edit.Info.Elem.SELECTED)
@@ -124,49 +124,38 @@ public class SelectionManager {
                 }
             }
         }
-		result.setAttribute(Edit.Info.Elem.SELECTED, Integer
-				.toString(selection.size()));
-	}
+        result.setAttribute(Edit.Info.Elem.SELECTED, Integer
+            .toString(selection.size()));
+    }
 
-	/**
-	 * <p>
-	 * Updates selected element in session.
-	 * <ul>
-	 * <li>[selected=add] : add selected element</li>
-	 * <li>[selected=remove] : remove non selected element</li>
-	 * <li>[selected=add-all] : select all elements</li>
-	 * <li>[selected=remove-all] : clear the selection</li>
-	 * <li>[selected=clear-add] : clear the selection and add selected element</li>
-	 * <li>[selected=status] : number of selected elements</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param type
-	 *            The type of selected element handled in session
-	 * @param session
-	 *            Current session
-	 * @param params
-	 *            Parameters
-	 * @param context
-	 * 
-	 * @return number of selected elements
-	 */
-	public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
+    /**
+     * <p> Updates selected element in session. <ul> <li>[selected=add] : add selected element</li>
+     * <li>[selected=remove] : remove non selected element</li> <li>[selected=add-all] : select all
+     * elements</li> <li>[selected=remove-all] : clear the selection</li> <li>[selected=clear-add] :
+     * clear the selection and add selected element</li> <li>[selected=status] : number of selected
+     * elements</li> </ul> </p>
+     *
+     * @param type    The type of selected element handled in session
+     * @param session Current session
+     * @param params  Parameters
+     * @return number of selected elements
+     */
+    public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
 
-		// Get ID of the selected/deselected metadata
-		List<Element> listOfIdentifiersElement = params.getChildren(Params.ID);
-		List<String> listOfIdentifiers = new ArrayList<>(listOfIdentifiersElement.size());
-		for (Element e : listOfIdentifiersElement) {
-			listOfIdentifiers.add(e.getText());
-		}
+        // Get ID of the selected/deselected metadata
+        List<Element> listOfIdentifiersElement = params.getChildren(Params.ID);
+        List<String> listOfIdentifiers = new ArrayList<>(listOfIdentifiersElement.size());
+        for (Element e : listOfIdentifiersElement) {
+            listOfIdentifiers.add(e.getText());
+        }
 
-		String selected = params.getChildText(Params.SELECTED);
+        String selected = params.getChildText(Params.SELECTED);
 
-		// Get the selection manager or create it
-		SelectionManager manager = getManager(session);
+        // Get the selection manager or create it
+        SelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
-	}
+        return manager.updateSelection(type, context, selected, listOfIdentifiers, session);
+    }
 
     public static int updateSelection(String type, UserSession session, String actionOnSelection, List<String> listOfIdentifiers, ServiceContext context) {
         // Get the selection manager or create it
@@ -174,7 +163,8 @@ public class SelectionManager {
 
         return manager.updateSelection(type, context, actionOnSelection, listOfIdentifiers, session);
     }
-
+    
+    
 	/**
 	 * <p>
 	 * Update selected element in session
@@ -215,12 +205,14 @@ public class SelectionManager {
 			this.selections.put(type, selection);
 		}
 
+
         if (selected != null) {
             if (selected.equals(ADD_ALL_SELECTED)) {
                 this.selectAll(type, context, session);
                 this.selectAll(SELECTION_METADATA_DRAFT, context, session);
             } else if (selected.equals(REMOVE_ALL_SELECTED)) {
                 this.close(type);
+
                 if (drafts != null) {
                     this.close(SELECTION_METADATA_DRAFT);
                 }
@@ -259,7 +251,7 @@ public class SelectionManager {
         }
         }
 
-		// Remove empty/null element from the selection
+        // Remove empty/null element from the selection
         Iterator<String> iter = selection.iterator();
         while (iter.hasNext()) {
             Object element = iter.next();
@@ -388,80 +380,59 @@ public class SelectionManager {
                 }
 
             } catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+                e.printStackTrace();
+            }
+        }
+    }
 
-	/**
-	 * <p>
-	 * Closes the current selection manager for the given element type.
-	 * </p>
-	 * 
-	 * @param type
-	 */
-	public void close(String type) {
-		Set<String> selection = selections.get(type);
-		if (selection != null)
-			selection.clear();
-	}
+    /**
+     * <p> Closes the current selection manager for the given element type. </p>
+     */
+    public void close(String type) {
+        Set<String> selection = selections.get(type);
+        if (selection != null)
+            selection.clear();
+    }
 
-	/**
-	 * <p>
-	 * Close the current selection manager
-	 * </p>
-	 * 
-	 */
-	public void close() {
+    /**
+     * <p> Close the current selection manager </p>
+     */
+    public void close() {
         for (Set<String> selection : selections.values()) {
             selection.clear();
         }
-	}
+    }
 
-	/**
-	 * <p>
-	 * Gets selection for given element type.
-	 * </p>
-	 * 
-	 * @param type
-	 *            The type of selected element handled in session
-	 * 
-	 * @return Set<String>
-	 */
-	public Set<String> getSelection(String type) {
-		return selections.get(type);
-	}
+    /**
+     * <p> Gets selection for given element type. </p>
+     *
+     * @param type The type of selected element handled in session
+     * @return Set<String>
+     */
+    public Set<String> getSelection(String type) {
+        return selections.get(type);
+    }
 
-	/**
-	 * <p>
-	 * Adds new element to the selection.
-	 * </p>
-	 * 
-	 * @param type
-	 *            The type of selected element handled in session
-	 * @param uuid
-	 *            Element identifier to select
-	 * 
-	 * @return boolean
-	 */
-	public boolean addSelection(String type, String uuid) {
-		return selections.get(type).add(uuid);
-	}
+    /**
+     * <p> Adds new element to the selection. </p>
+     *
+     * @param type The type of selected element handled in session
+     * @param uuid Element identifier to select
+     * @return boolean
+     */
+    public boolean addSelection(String type, String uuid) {
+        return selections.get(type).add(uuid);
+    }
 
-	/**
-	 * <p>
-	 * Adds a collection to the selection.
-	 * </p>
-	 * 
-	 * @param type
-	 *            The type of selected element handled in session
-	 * @param uuids
-	 *            Collection of uuids to select
-	 * 
-	 * @return boolean
-	 */
-	public boolean addAllSelection(String type, Set<String> uuids) {
-		return selections.get(type).addAll(uuids);
-	}
+    /**
+     * <p> Adds a collection to the selection. </p>
+     *
+     * @param type  The type of selected element handled in session
+     * @param uuids Collection of uuids to select
+     * @return boolean
+     */
+    public boolean addAllSelection(String type, Set<String> uuids) {
+        return selections.get(type).addAll(uuids);
+    }
 
 }

@@ -22,7 +22,7 @@
  */
 
 /**
- * 
+ *
  */
 package org.fao.geonet.events.user;
 
@@ -30,10 +30,9 @@ import org.fao.geonet.domain.User;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * Abstract class for user related events. Should not be used directly. 
- * 
- * @author delawen
+ * Abstract class for user related events. Should not be used directly.
  *
+ * @author delawen
  */
 public abstract class UserEvent extends ApplicationEvent {
 

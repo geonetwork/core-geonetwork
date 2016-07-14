@@ -25,7 +25,9 @@ package org.fao.geonet.services.subtemplate;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.standards.StandardsUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
@@ -33,7 +35,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.schema.Info;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 
@@ -42,15 +43,16 @@ import java.util.List;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasType;
 
+@Deprecated
 public class GetTypes implements Service {
 
-	private static String[] elementNames = {"label", "description"};
-	
+    private static String[] elementNames = {"label", "description"};
+
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
 
         final Sort sort = new Sort(Sort.Direction.ASC, Metadata_.dataInfo.getName() + "." + MetadataDataInfo_.root.getName());
 
@@ -67,22 +69,22 @@ public class GetTypes implements Service {
 
         for (Object e : subTemplateTypes.getChildren()) {
             if (e instanceof Element) {
-            	Element record = ((Element)e);
-            	try {
-            		String schema = record.getChildText("schemaid");
-            		String name = Info.findNamespace(record.getChildText("type"), scm, (schema==null?"iso19139":schema));
-            		Element info = Info.getHelp(scm, "labels.xml", schema, name, "", "", "", context);
-            		if (info != null) {
-            			for (String childName : elementNames) {
-            				Element child = info.getChild(childName);
-            				if (child != null) {
-            					record.addContent(child.detach());
-            				}
-            			}
-            		}
-            	} catch (Exception ex) {
-            		// Can't retrieve information for the type
-            	}
+                Element record = ((Element) e);
+                try {
+                    String schema = record.getChildText("schemaid");
+                    String name = StandardsUtils.findNamespace(record.getChildText("type"), scm, (schema == null ? "iso19139" : schema));
+                    Element info = StandardsUtils.getHelp(scm, "labels.xml", schema, name, "", "", "", context);
+                    if (info != null) {
+                        for (String childName : elementNames) {
+                            Element child = info.getChild(childName);
+                            if (child != null) {
+                                record.addContent(child.detach());
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    // Can't retrieve information for the type
+                }
             }
         }
 

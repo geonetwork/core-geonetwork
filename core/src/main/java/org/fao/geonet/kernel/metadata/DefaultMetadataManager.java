@@ -59,6 +59,7 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -689,25 +690,21 @@ public class DefaultMetadataManager implements IMetadataManager {
             String uuid, Element md, String parentUuid,
             UpdateDatestamp updateDatestamp, ServiceContext context)
                     throws Exception {
-        boolean autoFixing = context.getBean(SettingManager.class)
-                .getValueAsBool("system/autofixing/enable", true);
+        boolean autoFixing = getSettingManager().getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if (autoFixing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER,
-                        "Autofixing is enabled, trying update-fixed-info (updateDatestamp: "
-                                + updateDatestamp.name() + ")");
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
+            }
 
             Metadata metadata = null;
             if (metadataId.isPresent()) {
-                metadata = mdRepository.findOne(metadataId.get());
-                boolean isTemplate = metadata != null && metadata.getDataInfo()
-                        .getType() != MetadataType.METADATA;
+                metadata = getMetadataRepository().findOne(metadataId.get());
+                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() != MetadataType.METADATA;
 
                 // don't process templates
                 if (isTemplate) {
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER,
-                                "Not applying update-fixed-info for a template");
+                        Log.debug(Geonet.DATA_MANAGER, "Not applying update-fixed-info for a template");
                     }
                     return md;
                 }
@@ -717,46 +714,39 @@ public class DefaultMetadataManager implements IMetadataManager {
             String id = metadata != null ? metadata.getId() + "" : null;
             uuid = uuid == null ? currentUuid : uuid;
 
-            // --- setup environment
+            //--- setup environment
             Element env = new Element("env");
             env.addContent(new Element("id").setText(id));
             env.addContent(new Element("uuid").setText(uuid));
 
-            final ThesaurusManager thesaurusManager = context
-                    .getBean(ThesaurusManager.class);
+            final ThesaurusManager thesaurusManager = ApplicationContextHolder.get().getBean(ThesaurusManager.class);
             env.addContent(thesaurusManager.buildResultfromThTable(context));
 
             Element schemaLoc = new Element("schemaLocation");
-            schemaLoc.setAttribute(
-                    schemaManager.getSchemaLocation(schema, context));
+            schemaLoc.setAttribute(getSchemaManager().getSchemaLocation(schema, context));
             env.addContent(schemaLoc);
 
             if (updateDatestamp == UpdateDatestamp.YES) {
-                env.addContent(new Element("changeDate")
-                        .setText(new ISODate().toString()));
+                env.addContent(new Element("changeDate").setText(new ISODate().toString()));
             }
             if (parentUuid != null) {
                 env.addContent(new Element("parentUuid").setText(parentUuid));
             }
             if (metadataId.isPresent()) {
                 String metadataIdString = String.valueOf(metadataId.get());
-                final Path resourceDir = Lib.resource.getDir(context,
-                        Params.Access.PRIVATE, metadataIdString);
-                env.addContent(
-                        new Element("datadir").setText(resourceDir.toString()));
+                final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
+                env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 
             // add original metadata to result
             Element result = new Element("root");
             result.addContent(md);
             // add 'environment' to result
-            env.addContent(new Element("siteURL").setText(
-                    context.getBean(SettingManager.class).getSiteURL(context)));
+            env.addContent(new Element("siteURL").setText(getSettingManager().getSiteURL(context)));
 
             // Settings were defined as an XML starting with root named config
             // Only second level elements are defined (under system).
-            List<?> config = context.getBean(SettingManager.class)
-                    .getAllAsXML(true).cloneContent();
+            List<?> config = getSettingManager().getAllAsXML(true).cloneContent();
             for (Object c : config) {
                 Element settings = (Element) c;
                 env.addContent(settings);
@@ -764,14 +754,12 @@ public class DefaultMetadataManager implements IMetadataManager {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
-            Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
-                    .resolve(Geonet.File.UPDATE_FIXED_INFO);
+            Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
             return result;
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER,
-                        "Autofixing is disabled, not applying update-fixed-info");
+                Log.debug(Geonet.DATA_MANAGER, "Autofixing is disabled, not applying update-fixed-info");
             }
             return md;
         }
@@ -797,8 +785,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         String isTemplate = dataInfo.getType().codeString;
         String title = dataInfo.getTitle();
         String uuid = metadata.getUuid();
-        String isHarvested = "" + Constants
-                .toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());
+        String isHarvested = "" + Constants.toYN_EnabledChar(metadata.getHarvestInfo().isHarvested());
         String harvestUuid = metadata.getHarvestInfo().getUuid();
         String popularity = "" + dataInfo.getPopularity();
         String rating = "" + dataInfo.getRating();
@@ -884,11 +871,11 @@ public class DefaultMetadataManager implements IMetadataManager {
 
         // add baseUrl of this site (from settings)
         String protocol = context.getBean(SettingManager.class)
-                .getValue(Geonet.Settings.SERVER_PROTOCOL);
+                .getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         String host = context.getBean(SettingManager.class)
-                .getValue(Geonet.Settings.SERVER_HOST);
+                .getValue(Settings.SYSTEM_SERVER_HOST);
         String port = context.getBean(SettingManager.class)
-                .getValue(Geonet.Settings.SERVER_PORT);
+                .getValue(Settings.SYSTEM_SERVER_PORT);
         if (port.equals("80")) {
             port = "";
         } else {
@@ -1227,19 +1214,20 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @throws Exception
      */
     @Override
-    public void deleteMetadataOper(ServiceContext context, String metadataId,
-            boolean skipAllIntranet) throws Exception {
-        OperationAllowedRepository operationAllowedRepository = context
-                .getBean(OperationAllowedRepository.class);
+    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
-        if (skipAllIntranet) {
+        if (skipAllReservedGroup) {
+            int[] exclude = new int[] {
+                ReservedGroup.all.getId(),
+                    ReservedGroup.intranet.getId(),
+                    ReservedGroup.guest.getId()
+            };
             operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(
-                    Integer.parseInt(metadataId),
-                    ReservedGroup.intranet.getId());
+                Integer.parseInt(metadataId), exclude
+            );
         } else {
-            operationAllowedRepository.deleteAllByIdAttribute(
-                    OperationAllowedId_.metadataId,
-                    Integer.parseInt(metadataId));
+            operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
     }
 
@@ -1376,17 +1364,16 @@ public class DefaultMetadataManager implements IMetadataManager {
     @Override
     public void setNamespacePrefixUsingSchemas(String schema, Element md)
             throws Exception {
-        // --- if the metadata has no namespace or already has a namespace
-        // prefix
-        // --- then we must skip this phase
+        //--- if the metadata has no namespace or already has a namespace prefix
+        //--- then we must skip this phase
         Namespace ns = md.getNamespace();
         if (ns == Namespace.NO_NAMESPACE)
             return;
 
-        MetadataSchema mds = schemaManager.getSchema(schema);
+        MetadataSchema mds = getSchemaManager().getSchema(schema);
 
-        // --- get the namespaces and add prefixes to any that are
-        // --- default (ie. prefix is '') if namespace match one of the schema
+        //--- get the namespaces and add prefixes to any that are
+        //--- default (ie. prefix is '') if namespace match one of the schema
         ArrayList<Namespace> nsList = new ArrayList<Namespace>();
         nsList.add(ns);
         @SuppressWarnings("unchecked")
@@ -1397,11 +1384,7 @@ public class DefaultMetadataManager implements IMetadataManager {
             if (aNs.getPrefix().equals("")) { // found default namespace
                 String prefix = mds.getPrefix(aNs.getURI());
                 if (prefix == null) {
-                    Log.warning(Geonet.DATA_MANAGER,
-                            "Metadata record contains a default namespace "
-                                    + aNs.getURI()
-                                    + " (with no prefix) which does not match any "
-                                    + schema + " schema's namespaces.");
+                    Log.warning(Geonet.DATA_MANAGER, "Metadata record contains a default namespace " + aNs.getURI() + " (with no prefix) which does not match any " + schema + " schema's namespaces.");
                 }
                 ns = Namespace.getNamespace(prefix, aNs.getURI());
                 setNamespacePrefix(md, ns);
@@ -1422,11 +1405,11 @@ public class DefaultMetadataManager implements IMetadataManager {
         if (xsiType != null) {
             String xsiTypeValue = xsiType.getValue();
 
-            if (StringUtils.isNotEmpty(xsiTypeValue)
-                    && !xsiTypeValue.contains(":")) {
+            if (StringUtils.isNotEmpty(xsiTypeValue) && !xsiTypeValue.contains(":")) {
                 xsiType.setValue(ns.getPrefix() + ":" + xsiType.getValue());
             }
         }
+
 
         for (Object o : md.getChildren()) {
             setNamespacePrefix((Element) o, ns);
@@ -1457,5 +1440,21 @@ public class DefaultMetadataManager implements IMetadataManager {
     @Override
     public IMetadata getMetadataObject(String uuid) throws Exception {
         return mdRepository.findOneByUuid(uuid);
+    }
+
+    private SettingManager getSettingManager() {
+        return ApplicationContextHolder.get().getBean(SettingManager.class);
+    }
+    
+    private MetadataRepository getMetadataRepository() {
+        return mdRepository;
+    }
+    
+    private SchemaManager getSchemaManager() {
+        return schemaManager;
+    }
+
+    public Path getSchemaDir(String name) {
+        return getSchemaManager().getSchemaDir(name);
     }
 }

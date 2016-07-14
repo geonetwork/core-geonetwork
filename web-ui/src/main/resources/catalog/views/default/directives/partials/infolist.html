@@ -1,19 +1,19 @@
 <ul class="row gn-info-list">
   <li
-      data-ng-repeat="md in searchResults.records"
-      data-ng-click="openRecord($index, md, searchResults.records)"
-      data-ng-mouseenter="showMore(true)"
-      data-ng-mouseleave="showMore(false)"
-      id="gn-info-list-mw-{{md.getUuid()}}">
+    data-ng-repeat="md in searchResults.records"
+    data-ng-click="openRecord($index, md, searchResults.records)"
+    data-ng-mouseenter="showMore(true)"
+    data-ng-mouseleave="showMore(false)"
+    id="gn-info-list-mw-{{md.getUuid()}}">
     <section class="quickresultcard">
       <div class="flip">
-        <div class="front">       
-          <div class="top"> 
+        <div class="front">
+          <div class="top">
             <div class="gn-md-thumbnail">
               <img class="gn-img-thumbnail"
-                 data-ng-src="{{md.getThumbnails().list[0].url}}"
-                 data-ng-if="md.getThumbnails().list[0].url"/>
-            </div>              
+                   data-ng-src="{{md.getThumbnails().list[0].url}}"
+                   data-ng-if="md.getThumbnails().list[0].url"/>
+            </div>
           </div>
           <div class="rigth">
             <div class="header-card">
@@ -23,15 +23,15 @@
                 <span data-ng-if="!$last">, </span>
                 </span>
               </div>
-            </div>  
-            <div class="content-card">                    
+            </div>
+            <div class="content-card">
               <div class="abstract">
                 {{md.abstract}}
               </div>
             </div>
-            <div class="footer-card"> 
+            <div class="footer-card">
             </div>
-          </div>             
+          </div>
         </div>
         <div class="back"></div>
       </div>

@@ -37,7 +37,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public interface MetadataResource {
     String getId();
+
     String getUrl();
+
     String getType();
+
     double getSize();
 }

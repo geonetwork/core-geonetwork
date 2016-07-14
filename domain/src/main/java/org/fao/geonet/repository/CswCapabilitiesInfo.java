@@ -27,23 +27,19 @@ import org.fao.geonet.domain.CswCapabilitiesInfoField;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Represents all the fields required for Csw Capabilities Info in a given language.
- * <p>
- * The data for Csw Capabilities info is stored in the database as one row per field.  This allows the database to be
- * flexible in the face of future requirements.  However this class makes it simpler (and type safe) to access the fields.
- * </p>
- * <p>
- * When loaded by the CswCapabilitiesInfoFieldRepository, all the required fields are loaded and this class provides easy access
- * to the fields.
- * </p>
- * <p>
- * It also provides a simple way to modify and save the fields.
+ * Represents all the fields required for Csw Capabilities Info in a given language. <p> The data
+ * for Csw Capabilities info is stored in the database as one row per field.  This allows the
+ * database to be flexible in the face of future requirements.  However this class makes it simpler
+ * (and type safe) to access the fields. </p> <p> When loaded by the
+ * CswCapabilitiesInfoFieldRepository, all the required fields are loaded and this class provides
+ * easy access to the fields. </p> <p> It also provides a simple way to modify and save the fields.
  * </p>
  */
 public class CswCapabilitiesInfo {
@@ -172,6 +168,7 @@ public class CswCapabilitiesInfo {
 
     /**
      * Get all the fields that this info object encapsulates.
+     *
      * @return all the fields that this info object encapsulates.
      */
     public Collection<CswCapabilitiesInfoField> getFields() {

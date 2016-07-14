@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>Error de validación</heading>
-	<message>El metadato no es válido.</message>
+  <heading>Error de validación</heading>
+  <message>El metadato no es válido.</message>
 </strings>
 

@@ -28,6 +28,7 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Nonnull;
+
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ import java.util.List;
  * @author Jesse
  */
 public interface HarvestHistoryRepository extends GeonetRepository<HarvestHistory, Integer>, HarvestHistoryRepositoryCustom,
-        JpaSpecificationExecutor<HarvestHistory> {
+    JpaSpecificationExecutor<HarvestHistory> {
     /**
      * Find all the HarvestHistory objects of the given type.
      *

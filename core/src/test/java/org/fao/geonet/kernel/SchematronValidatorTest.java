@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.domain.SchematronCriteria;
@@ -49,16 +50,15 @@ import static org.junit.Assert.assertEquals;
  */
 public class SchematronValidatorTest extends AbstractCoreIntegrationTest {
     @Autowired
-    private SchematronRepository schematronRepository;
-    @Autowired
-    private SchematronCriteriaGroupRepository criteriaGroupRepository;
-    @Autowired
     SchematronValidator schematronValidator;
     @Autowired
     DataManager dataManager;
     @Autowired
     SchemaManager schemaManager;
-
+    @Autowired
+    private SchematronRepository schematronRepository;
+    @Autowired
+    private SchematronCriteriaGroupRepository criteriaGroupRepository;
     private int id;
     private Element metadata;
     private MetadataSchema schema;
@@ -114,7 +114,7 @@ public class SchematronValidatorTest extends AbstractCoreIntegrationTest {
     public void testGetApplicableSchematronList() throws Exception {
         List<ApplicableSchematron> applicableSchematron = schematronValidator.getApplicableSchematronList(id, metadata, schema);
 
-       boolean found = false;
+        boolean found = false;
         for (ApplicableSchematron applicable : applicableSchematron) {
             found |= applicable.schematron.getId() == schematron.getId();
         }

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -45,113 +46,113 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
- * Stores all operations allowed for a metadata for each groups. 
- * 
+ * Stores all operations allowed for a metadata for each groups.
+ *
  * In order to set a value for a group use _<groupId>_<operationId>.
- * 
- * By default, all operations are removed and then added according to the parameter.
- * In order to set or unset existing operations, add the update parameter
- * with value true and set the off/on status for each operations (eg. _<groupId>_<operationId>=<off|on>.
- * 
+ *
+ * By default, all operations are removed and then added according to the parameter. In order to set
+ * or unset existing operations, add the update parameter with value true and set the off/on status
+ * for each operations (eg. _<groupId>_<operationId>=<off|on>.
+ *
  * Called by the metadata.admin service (ie. privileges panel).
- * 
+ *
  * Sample URL: http://localhost:8080/geonetwork/srv/eng/metadata.admin?update=true&id=13962&_1_0=off&_1_1=off&_1_5=off&_1_6=off
- * 
  */
+@Deprecated
 public class UpdateAdminOper extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
-		UserSession   us = context.getUserSession();
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        UserSession us = context.getUserSession();
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		boolean update = Util.getParam(params, Params.UPDATEONLY, "false").equals("true");
+        String id = Utils.getIdentifierFromParameters(params, context);
+        boolean update = Util.getParam(params, Params.UPDATEONLY, "false").equals("true");
 
-		//-----------------------------------------------------------------------
-		//--- check access
+        //-----------------------------------------------------------------------
+        //--- check access
 
-		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
 
-		if (info == null)
-			throw new MetadataNotFoundEx(id);
+        if (info == null)
+            throw new MetadataNotFoundEx(id);
 
-		//-----------------------------------------------------------------------
-		//--- remove old operations
+        //-----------------------------------------------------------------------
+        //--- remove old operations
 
-		boolean skip = false;
+        boolean skip = false;
 
-		//--- in case of owner, privileges for groups 0,1 and GUEST are disabled 
-		//--- and are not sent to the server. So we cannot remove them
+        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
+        //--- and are not sent to the server. So we cannot remove them
 
-		boolean isAdmin   = Profile.Administrator == us.getProfile();
-		boolean isReviewer= Profile.Reviewer == us.getProfile();
+        boolean isAdmin = Profile.Administrator == us.getProfile();
+        boolean isReviewer = Profile.Reviewer == us.getProfile();
 
 
-		if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
-			skip = true;
+        if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
+            skip = true;
         }
 
-		if (!update) {
-			dm.deleteMetadataOper(context, id, skip);
-		}
-		
-		//-----------------------------------------------------------------------
-		//--- set new ones
+        if (!update) {
+            dm.deleteMetadataOper(context, id, skip);
+        }
 
-		@SuppressWarnings("unchecked")
+        //-----------------------------------------------------------------------
+        //--- set new ones
+
+        @SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 
-		for (Element el : list) {
-			String name  = el.getName();
-
-			if (name.startsWith("_") &&
-                    !Params.CONTENT_TYPE.equals(name)) {
-				StringTokenizer st = new StringTokenizer(name, "_");
-
-				String groupId = st.nextToken();
-				String operId  = st.nextToken();
+        Pattern opParamPatter = Pattern.compile("_([0-9]+)_([0-9]+)");
+        for (Element el : list) {
+            String name  = el.getName();
+            Matcher matcher = opParamPatter.matcher(name);
+            if (matcher.matches()) {
+                String groupId = matcher.group(1);
+                String operId  = matcher.group(2);
 
                 // Never set editing for reserved group
                 if (Integer.parseInt(operId) == ReservedOperation.editing.getId() &&
-                        ReservedGroup.isReserved(Integer.valueOf(groupId))) {
+                    ReservedGroup.isReserved(Integer.valueOf(groupId))) {
                     continue;
                 }
 
-				if (!update) {
-					dm.setOperation(context, id, groupId, operId);
-				} else {
-					boolean publish = "on".equals(el.getTextTrim());
-					if (publish) {
-						dm.setOperation(context, id, groupId, operId);
-					} else {
-						dm.unsetOperation(context, id, groupId, operId);
-					}
-				}
-			}
-		}
+                if (!update) {
+                    dm.setOperation(context, id, groupId, operId);
+                } else {
+                    boolean publish = "on".equals(el.getTextTrim());
+                    if (publish) {
+                        dm.setOperation(context, id, groupId, operId);
+                    } else {
+                        dm.unsetOperation(context, id, groupId, operId);
+                    }
+                }
+            }
+        }
 
-		//--- index metadata
+        //--- index metadata
         dm.indexMetadata(id, true);
 
         //--- return id for showing
-		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
-	}
+        return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+    }
 }

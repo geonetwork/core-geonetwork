@@ -24,11 +24,7 @@
 (function() {
   goog.provide('gn_viewer_directive');
 
-  goog.require('gn_gfi_directive');
-
-  var module = angular.module('gn_viewer_directive', [
-    'gn_gfi_directive', 'gfiFilters'
-  ]);
+  var module = angular.module('gn_viewer_directive', []);
 
   /**
    * @ngdoc directive
@@ -84,6 +80,7 @@
               scope.init3dMode = function(map) {
                 if (map) {
                   scope.ol3d = new olcs.OLCesium({map: map});
+                  scope.ol3d.enableAutoRenderLoop();
                 } else {
                   console.warning('3D mode can be only by activated' +
                       ' on a map instance.');

@@ -32,11 +32,11 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TermUriTest extends AbstractTermTest{
+public class TermUriTest extends AbstractTermTest {
 
     private TermUri termUriClassifier;
 
-    @Before 
+    @Before
     public void setup() throws Exception {
         ThesaurusManager manager = mockThesaurusManagerWith("BroaderTerm.rdf");
         termUriClassifier = new TermUri(manager, "scheme");

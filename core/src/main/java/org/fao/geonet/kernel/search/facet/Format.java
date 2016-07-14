@@ -26,16 +26,14 @@ package org.fao.geonet.kernel.search.facet;
 public enum Format {
     DIMENSION {
         @Override
-        public Formatter getFormatter(Dimension dimension)
-        {
+        public Formatter getFormatter(Dimension dimension) {
             return new DimensionFormatter(dimension);
         }
     },
 
     FACET_NAME {
         @Override
-        public Formatter getFormatter(Dimension dimension)
-        {
+        public Formatter getFormatter(Dimension dimension) {
             return new FacetNameFormatter(dimension);
         }
     };

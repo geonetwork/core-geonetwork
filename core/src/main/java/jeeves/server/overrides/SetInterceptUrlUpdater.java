@@ -45,9 +45,9 @@ class SetInterceptUrlUpdater extends AbstractInterceptUrlUpdater {
                 // this is exception is ignored.
             }
         }
-        
+
         if (!found) {
-            throw new IllegalArgumentException("Unable to find an existing url mapping "+patternString);
+            throw new IllegalArgumentException("Unable to find an existing url mapping " + patternString);
         }
     }
 

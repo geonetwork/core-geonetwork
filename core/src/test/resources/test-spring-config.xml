@@ -22,57 +22,60 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns="http://www.springframework.org/schema/beans"
 
        xsi:schemaLocation="
-		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<bean id="testBeanFull" class="jeeves.server.overrides.ExampleBean">
-        <property name="basicProp" value="basicPropOriginalValue" />
-        <property name="basicProp2" value="basicProp2OriginalValue" />
-        <property name="collectionProp">
-            <list>
-                <value>value1</value>
-            </list>
-        </property>
-        <property name="collectionRef">
-            <list>
-                <ref bean="testBean" />
-            </list>
-        </property>
-        <property name="simpleRef" ref="testBean" />
-    </bean>
+  <bean id="testBeanFull" class="jeeves.server.overrides.ExampleBean">
+    <property name="basicProp" value="basicPropOriginalValue"/>
+    <property name="basicProp2" value="basicProp2OriginalValue"/>
+    <property name="collectionProp">
+      <list>
+        <value>value1</value>
+      </list>
+    </property>
+    <property name="collectionRef">
+      <list>
+        <ref bean="testBean"/>
+      </list>
+    </property>
+    <property name="simpleRef" ref="testBean"/>
+  </bean>
 
-	<bean id="testBean" class="jeeves.server.overrides.ExampleBean"/>
-    <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">
-        <property name="authenticationManager" ref="authenticationManager"></property>
-        <property name="accessDecisionManager" ref="accessDecisionManager"></property>
-        <property name="securityMetadataSource">
-            <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
-                <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
-                <sec:intercept-url pattern="/toremove/.*" access="hasRole('REMOVE')"></sec:intercept-url>
-                <sec:intercept-url pattern="/toset/.*" access="hasRole('SET')"></sec:intercept-url>
-            </sec:filter-security-metadata-source>
-        </property>
-    </bean>
+  <bean id="testBean" class="jeeves.server.overrides.ExampleBean"/>
+  <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor"
+        id="filterSecurityInterceptor">
+    <property name="authenticationManager" ref="authenticationManager"></property>
+    <property name="accessDecisionManager" ref="accessDecisionManager"></property>
+    <property name="securityMetadataSource">
+      <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
+        <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
+        <sec:intercept-url pattern="/toremove/.*" access="hasRole('REMOVE')"></sec:intercept-url>
+        <sec:intercept-url pattern="/toset/.*" access="hasRole('SET')"></sec:intercept-url>
+      </sec:filter-security-metadata-source>
+    </property>
+  </bean>
 
-	<bean id="authenticationManager"
-		class="org.springframework.security.authentication.ProviderManager">
-		<property name="providers">
-			<list>
-				<!-- Check if the preAuthenticationFilter has already authenticated user -->
-				<ref bean="nullFilterAuthenticationProvider" />
-			</list>
-		</property>
-	</bean>
-	
-    <bean class="org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider" id="nullFilterAuthenticationProvider">
-    </bean>
-	
+  <bean id="authenticationManager"
+        class="org.springframework.security.authentication.ProviderManager">
+    <property name="providers">
+      <list>
+        <!-- Check if the preAuthenticationFilter has already authenticated user -->
+        <ref bean="nullFilterAuthenticationProvider"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean
+    class="org.springframework.security.config.authentication.AuthenticationManagerBeanDefinitionParser.NullAuthenticationProvider"
+    id="nullFilterAuthenticationProvider">
+  </bean>
+
 
 </beans>

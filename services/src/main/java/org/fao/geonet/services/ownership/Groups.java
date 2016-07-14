@@ -24,10 +24,12 @@
 package org.fao.geonet.services.ownership;
 
 import com.google.common.collect.Iterables;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -52,7 +54,7 @@ import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 //=============================================================================
-
+@Deprecated
 public class Groups implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

@@ -45,21 +45,32 @@ import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
  * @author Jose García
  */
 public class InspireAtomHarvesterScheduler {
-    /** Quartz Scheduler identifier **/
+    /**
+     * Quartz Scheduler identifier
+     **/
     private static final String SCHEDULER_ID = "inspireAtomHarvester";
-    /** Quartz Scheduler group name **/
+    /**
+     * Quartz Scheduler group name
+     **/
     private static final String ATOM_HARVESTER_GROUP_NAME = "atomharvester";
+
+    /**
+     * Private constructor, to avoid instantiate the class.
+     */
+    private InspireAtomHarvesterScheduler() {
+
+    }
 
     /**
      * Method to schedule the atom harvest process.
      *
-     * @param cronSchedule      Schedule in cron format.
-     * @param context           Jeeves context.
-     * @param gc                GeoNetwork context.
-     * @throws org.quartz.SchedulerException   SchedulerException
+     * @param cronSchedule Schedule in cron format.
+     * @param context      Jeeves context.
+     * @param gc           GeoNetwork context.
+     * @throws org.quartz.SchedulerException SchedulerException
      */
     public static void schedule(final String cronSchedule, final ServiceContext context, final GeonetContext gc)
-            throws SchedulerException {
+        throws SchedulerException {
         //ResourceManager rm = context.getResourceManager();
 
         // Unschedule previous job
@@ -68,33 +79,32 @@ public class InspireAtomHarvesterScheduler {
         Scheduler scheduler = getScheduler();
 
         JobDetail job = JobBuilder.newJob(InspireAtomHarvesterJob.class)
-                .withIdentity("atomHarvesterId", ATOM_HARVESTER_GROUP_NAME).build();
+            .withIdentity("atomHarvesterId", ATOM_HARVESTER_GROUP_NAME).build();
 
         Trigger trigger = TriggerBuilder
-                .newTrigger()
-                .withIdentity("atomTriggerName", ATOM_HARVESTER_GROUP_NAME)
-                .withSchedule(
-                        CronScheduleBuilder.cronSchedule(cronSchedule))
-                        // Uncomment for faster testing than cron scheduler
-                        //SimpleScheduleBuilder.simpleSchedule()
-                        //    .withIntervalInSeconds(15).repeatForever())
-                .build();
+            .newTrigger()
+            .withIdentity("atomTriggerName", ATOM_HARVESTER_GROUP_NAME)
+            .withSchedule(
+                CronScheduleBuilder.cronSchedule(cronSchedule))
+            // Uncomment for faster testing than cron scheduler
+            //SimpleScheduleBuilder.simpleSchedule()
+            //    .withIntervalInSeconds(15).repeatForever())
+            .build();
 
 
         scheduler.start();
         scheduler.scheduleJob(job, trigger);
         if (scheduler.getListenerManager().getJobListener(
-                InspireAtomHarvesterJobListener.ATOM_HARVESTER_JOB_CONFIGURATION_LISTENER) == null) {
+            InspireAtomHarvesterJobListener.ATOM_HARVESTER_JOB_CONFIGURATION_LISTENER) == null) {
             scheduler.getListenerManager().addJobListener(
-                    new InspireAtomHarvesterJobListener(new InspireAtomHarvester(gc)), jobGroupEquals(ATOM_HARVESTER_GROUP_NAME));
+                new InspireAtomHarvesterJobListener(new InspireAtomHarvester(gc)), jobGroupEquals(ATOM_HARVESTER_GROUP_NAME));
         }
 
         Log.info(Geonet.ATOM, "ATOM feed harvester scheduled");
     }
 
     /**
-     *
-     * @throws SchedulerException   SchedulerException
+     * @throws SchedulerException SchedulerException
      */
     public static void unSchedule() throws SchedulerException {
         Scheduler scheduler = getScheduler();
@@ -108,18 +118,10 @@ public class InspireAtomHarvesterScheduler {
      * Returns the scheduler for atom harvester.
      *
      * @return Scheduler for atom harvester.
-     * @throws SchedulerException   SchedulerException
+     * @throws SchedulerException SchedulerException
      */
     private static Scheduler getScheduler() throws SchedulerException {
         return QuartzSchedulerUtils.getScheduler(SCHEDULER_ID, true);
-    }
-
-
-    /**
-     * Private constructor, to avoid instantiate the class.
-     */
-    private InspireAtomHarvesterScheduler() {
-
     }
 
 }

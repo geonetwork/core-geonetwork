@@ -60,8 +60,8 @@ public class SearchTypeStats {
     @Override
     public String toString() {
         return "SearchTypeStats{" +
-               "service='" + service + '\'' +
-               ", nbsearch=" + nbsearch +
-               '}';
+            "service='" + service + '\'' +
+            ", nbsearch=" + nbsearch +
+            '}';
     }
 }

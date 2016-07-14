@@ -28,17 +28,17 @@
     <service name="q">
       <documentation><![CDATA[
         Main search services.
-        
+
         Parameters:
         * All Lucene search field
-        * fast: (optional) if "index" the index is used to return the results 
-        (see dumpfields for output format configuration). if "false", the database 
+        * fast: (optional) if "index" the index is used to return the results
+        (see dumpfields for output format configuration). if "false", the database
         is used to return the results in their original formats.
         * hitsperpage: (optional) The number of hits to return
         * summaryOnly: (optional) if "true", only the facets are retruned
         * sortBy: (optional) Default relevance.
         * sortOrder: (optional) reverse or empty.
-        
+
         // TODO : improve
         ]]></documentation>
       <class name=".services.main.XmlSearch"/>
@@ -46,9 +46,9 @@
 
     <service name="qi">
       <documentation>
-      <![CDATA[
+        <![CDATA[
       Same as q service but used internally by the application
-      in order to make distinction between user search and 
+      in order to make distinction between user search and
       application search in statistics.
       ]]>
       </documentation>
@@ -58,7 +58,7 @@
     <service name="lang">
       <documentation><![CDATA[
         Return all ISO languages.
-        
+
         Response:
         ```
         <isolanguage>
@@ -87,13 +87,13 @@
           </record>
         ```
         ]]></documentation>
-      <class name="org.fao.geonet.guiservices.isolanguages.Get" />
+      <class name="org.fao.geonet.guiservices.isolanguages.Get"/>
     </service>
 
     <service name="suggest">
       <class name=".services.main.SearchSuggestion">
         <!-- Minimum frequency for a term value to be proposed in suggestion. -->
-        <param name="threshold" value="1" />
+        <param name="threshold" value="1"/>
         <!--
           Max number of term's values to look in the index. For large catalogue
           this value should be increased in order to get better results. If this
@@ -101,12 +101,13 @@
           of good analyzer should allow to reduce the number of useless values like
           (a, the, ...).
         -->
-        <param name="max_number_of_terms" value="100000" />
+        <param name="max_number_of_terms" value="100000"/>
         <!-- Default field to search in. any is full-text search field. -->
-        <param name="default_search_field" value="any" />
+        <param name="default_search_field" value="any"/>
       </class>
 
-      <output sheet="../xslt/services/suggestions.xsl" contentType="application/json; charset=UTF-8" />
+      <output sheet="../xslt/services/suggestions.xsl"
+              contentType="application/json; charset=UTF-8"/>
     </service>
   </services>
 </geonet>

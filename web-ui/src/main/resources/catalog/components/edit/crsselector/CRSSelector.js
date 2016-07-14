@@ -51,15 +51,18 @@
            'crsselector.html',
            link: function(scope, element, attrs) {
              scope.snippet = null;
+             scope.crsResults = [];
              scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
-             // Replace the name attribute with id since this textarea is used only to store the template, we don't wanna submit it
-             var textarea = $.find("textarea[name="+scope.snippetRef+"]")[0];
+             // Replace the name attribute with id since this textarea is
+             // used only to store the template, we don't wanna submit it
+             var textarea = $.find('textarea[name=' + scope.snippetRef +
+             ']')[0];
              var elemValue = $(textarea).attr('name');
              $(textarea).removeAttr('name');
              $(textarea).attr('id', elemValue);
-             
+
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,
                scope.elementRef, scope.elementName, scope.domId, 'before');
@@ -69,7 +72,7 @@
 
              scope.search = function() {
                if (scope.filter) {
-                 $http.get('crs.search@json?type=&maxResults=50&name=' +
+                 $http.get('../api/registries/crs?type=&rows=50&q=' +
                  scope.filter).success(
                  function(data) {
                    scope.crsResults = data;
@@ -82,9 +85,11 @@
 
              scope.addCRS = function(crs) {
 
-               var textarea = $.find("textarea[id="+scope.snippetRef+"]")[0];
+               var textarea = $.find('textarea[id=' + scope.snippetRef +
+               ']')[0];
                var xmlSnippet = textarea ? $(textarea).text() : undefined;
-               scope.snippet = gnEditorXMLService.buildCRSXML(crs, gnCurrentEdit.schema, xmlSnippet);
+               scope.snippet = gnEditorXMLService.buildCRSXML(crs,
+               gnCurrentEdit.schema, xmlSnippet);
                scope.crsResults = [];
 
                $timeout(function() {

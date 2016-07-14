@@ -30,9 +30,7 @@ import org.fao.geonet.domain.Setting;
 /**
  * The custom setting repository methods that can't be implemented by the spring-data api.
  * <p/>
- * User: francois
- * Date: 8/28/13
- * Time: 7:30 AM
+ * User: francois Date: 8/28/13 Time: 7:30 AM
  */
 public interface SettingRepositoryCustom {
     /**

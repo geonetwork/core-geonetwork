@@ -22,8 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -33,11 +32,11 @@
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
 
   <!-- A set of templates use to convert thesaurus concept to ISO19139 fragments. -->
-
 
 
   <xsl:include href="../process/process-utility.xsl"/>
@@ -86,7 +85,7 @@
                           else false()"/>
 
 
-    <xsl:apply-templates mode="to-iso19139-keyword" select="." >
+    <xsl:apply-templates mode="to-iso19139-keyword" select=".">
       <xsl:with-param name="withAnchor" select="$withAnchor"/>
       <xsl:with-param name="withXlink" select="$withXlink"/>
       <xsl:with-param name="withThesaurusAnchor" select="$withThesaurusAnchor"/>
@@ -111,15 +110,15 @@
                         select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
-																then  concat('local://', /root/gui/language)
-																else $serviceUrl"/>
+                                then  concat('local://', /root/gui/language)
+                                else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
                          select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
-							                '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
-							                '&amp;amp;multiple=', $multiple,
-							                if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
-							                if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
+                              '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
+                              '&amp;amp;multiple=', $multiple,
+                              if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
+                              if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
           <xsl:attribute name="xlink:show">replace</xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
@@ -156,7 +155,8 @@
 
     <gmd:MD_Keywords>
       <!-- Get thesaurus ID from keyword or from request parameter if no keyword found. -->
-      <xsl:variable name="currentThesaurus" select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus" />
+      <xsl:variable name="currentThesaurus"
+                    select="if (thesaurus/key) then thesaurus/key else /root/request/thesaurus"/>
       <!-- Loop on all keyword from the same thesaurus -->
       <xsl:for-each select="//keyword[thesaurus/key = $currentThesaurus]">
         <gmd:keyword>
@@ -165,29 +165,33 @@
                 if 'all' thesaurus we need to encode the thesaurus name so that update-fixed-info can re-organize the
                 keywords into the correct thesaurus sections.
             -->
-            <xsl:variable name="keywordThesaurus" select="replace(./uri, 'http://org.fao.geonet.thesaurus.all/([^@]+)@@@.+', '$1')" />
-            <xsl:attribute name="gco:nilReason" select="concat('thesaurus::', $keywordThesaurus)" />
+            <xsl:variable name="keywordThesaurus"
+                          select="replace(./uri, 'http://org.fao.geonet.thesaurus.all/([^@]+)@@@.+', '$1')"/>
+            <xsl:attribute name="gco:nilReason" select="concat('thesaurus::', $keywordThesaurus)"/>
           </xsl:if>
 
           <!-- Multilingual output if more than one requested language -->
           <xsl:choose>
             <xsl:when test="count($listOfLanguage) > 1">
               <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
-              <xsl:variable name="keyword" select="." />
+              <xsl:variable name="keyword" select="."/>
 
               <xsl:if test="not($textgroupOnly)">
                 <gco:CharacterString>
-                  <xsl:value-of select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
+                  <xsl:value-of
+                    select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
                 </gco:CharacterString>
               </xsl:if>
 
               <gmd:PT_FreeText>
                 <xsl:for-each select="$listOfLanguage">
-                  <xsl:variable name="lang" select="." />
+                  <xsl:variable name="lang" select="."/>
                   <xsl:if test="$textgroupOnly or $lang != $listOfLanguage[1]">
                     <gmd:textGroup>
-                      <gmd:LocalisedCharacterString locale="#{upper-case(util:twoCharLangCode($lang))}">
-                        <xsl:value-of select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
+                      <gmd:LocalisedCharacterString
+                        locale="#{upper-case(util:twoCharLangCode($lang))}">
+                        <xsl:value-of
+                          select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
                       </gmd:LocalisedCharacterString>
                     </gmd:textGroup>
                   </xsl:if>
@@ -199,13 +203,14 @@
               <xsl:choose>
                 <xsl:when test="$withAnchor">
                   <!-- TODO multilingual Anchor ? -->
-                  <gmx:Anchor xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
-                    <xsl:value-of select="value" />
+                  <gmx:Anchor
+                    xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
+                    <xsl:value-of select="value"/>
                   </gmx:Anchor>
                 </xsl:when>
                 <xsl:otherwise>
                   <gco:CharacterString>
-                    <xsl:value-of select="value" />
+                    <xsl:value-of select="value"/>
                   </gco:CharacterString>
                 </xsl:otherwise>
               </xsl:choose>
@@ -221,7 +226,8 @@
         </gmd:keyword>
       </xsl:if>
 
-      <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
+      <xsl:copy-of
+        select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))"/>
     </gmd:MD_Keywords>
   </xsl:template>
 
@@ -233,20 +239,21 @@
 
     <!-- Add thesaurus theme -->
     <gmd:type>
-      <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
-                              codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}" />
+      <gmd:MD_KeywordTypeCode
+        codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+        codeListValue="{$thesauri/thesaurus[key = $currentThesaurus]/dname}"/>
     </gmd:type>
     <xsl:if test="$thesaurusInfo">
       <gmd:thesaurusName>
         <gmd:CI_Citation>
           <gmd:title>
             <gco:CharacterString>
-              <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title" />
+              <xsl:value-of select="$thesauri/thesaurus[key = $currentThesaurus]/title"/>
             </gco:CharacterString>
           </gmd:title>
 
           <xsl:variable name="thesaurusDate"
-                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)" />
+                        select="normalize-space($thesauri/thesaurus[key = $currentThesaurus]/date)"/>
 
           <xsl:if test="$thesaurusDate != ''">
             <gmd:date>
@@ -255,20 +262,20 @@
                   <xsl:choose>
                     <xsl:when test="contains($thesaurusDate, 'T')">
                       <gco:DateTime>
-                        <xsl:value-of select="$thesaurusDate" />
+                        <xsl:value-of select="$thesaurusDate"/>
                       </gco:DateTime>
                     </xsl:when>
                     <xsl:otherwise>
                       <gco:Date>
-                        <xsl:value-of select="$thesaurusDate" />
+                        <xsl:value-of select="$thesaurusDate"/>
                       </gco:Date>
                     </xsl:otherwise>
                   </xsl:choose>
                 </gmd:date>
                 <gmd:dateType>
                   <gmd:CI_DateTypeCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                          codeListValue="publication" />
+                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                    codeListValue="publication"/>
                 </gmd:dateType>
               </gmd:CI_Date>
             </gmd:date>
@@ -278,8 +285,9 @@
             <gmd:identifier>
               <gmd:MD_Identifier>
                 <gmd:code>
-                  <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/url}">geonetwork.thesaurus.<xsl:value-of
-                          select="$currentThesaurus" />
+                  <gmx:Anchor xlink:href="{$thesauri/thesaurus[key = $currentThesaurus]/url}">
+                    geonetwork.thesaurus.<xsl:value-of
+                    select="$currentThesaurus"/>
                   </gmx:Anchor>
                 </gmd:code>
               </gmd:MD_Identifier>
@@ -300,12 +308,14 @@
       <xsl:choose>
         <xsl:when test="$isService">
           <srv:extent>
-            <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
+            <xsl:copy-of
+              select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
           </srv:extent>
         </xsl:when>
         <xsl:otherwise>
           <gmd:extent>
-            <xsl:copy-of select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
+            <xsl:copy-of
+              select="geonet:make-iso-extent(geo/west, geo/south, geo/east, geo/north, value)"/>
           </gmd:extent>
         </xsl:otherwise>
       </xsl:choose>

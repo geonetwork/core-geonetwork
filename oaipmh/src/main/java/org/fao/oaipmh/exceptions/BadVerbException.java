@@ -28,28 +28,26 @@ import org.jdom.Element;
 //=============================================================================
 
 public class BadVerbException extends OaiPmhException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 216677937166834039L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 216677937166834039L;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public BadVerbException(String message)
-	{
-		this(message, null);
-	}
+    public BadVerbException(String message) {
+        this(message, null);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public BadVerbException(String message, Element response)
-	{
-		super(BAD_VERB, message, response);
-	}
+    public BadVerbException(String message, Element response) {
+        super(BAD_VERB, message, response);
+    }
 }
 
 //=============================================================================

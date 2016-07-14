@@ -33,9 +33,7 @@ import javax.persistence.criteria.*;
 /**
  * Specifications for makeing queries on {@link SearchRequest} Entities.
  * <p/>
- * User: Jesse
- * Date: 10/2/13
- * Time: 7:37 AM
+ * User: Jesse Date: 10/2/13 Time: 7:37 AM
  */
 public final class SearchRequestSpecs {
     private SearchRequestSpecs() {

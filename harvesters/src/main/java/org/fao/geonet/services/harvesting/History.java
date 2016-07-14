@@ -28,6 +28,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
 import org.fao.geonet.kernel.harvest.HarvestManager;
@@ -43,32 +44,31 @@ import static org.fao.geonet.repository.SortUtils.createPath;
 import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
 
 
-public class History  implements Service {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class History implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
+    public void init(Path appPath, ServiceConfig config) throws Exception {
 
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		int page = org.fao.geonet.Util.getParam(params, "page", 0);
-		int pageSize = org.fao.geonet.Util.getParam(params, "size", Integer.MAX_VALUE);
-		String uuid = params.getChildText("uuid");
-		String sort = params.getChildText("sort");
-		String sortCriteria = "date";
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        int page = org.fao.geonet.Util.getParam(params, "page", 0);
+        int pageSize = org.fao.geonet.Util.getParam(params, "size", Integer.MAX_VALUE);
+        String uuid = params.getChildText("uuid");
+        String sort = params.getChildText("sort");
+        String sortCriteria = "date";
 
-		if ((sort != null) && (sort.equals("type"))) {
+        if ((sort != null) && (sort.equals("type"))) {
             sortCriteria = "type";
         }
 
@@ -91,7 +91,7 @@ public class History  implements Service {
         if ((uuid == null) || (uuid.equals(""))) {
             result = historyRepository.findAllAsXml(pageRequest);
             totalRecords = historyRepository.count();
-		} else {
+        } else {
             final Specification<HarvestHistory> specification = hasHarvesterUuid(uuid);
             result = historyRepository.findAllAsXml(specification, pageRequest);
             totalRecords = historyRepository.count(specification);
@@ -117,6 +117,6 @@ public class History  implements Service {
             response.addContent(harvesterInfo.detach());
         }
         return response;
-	}
+    }
 
 }

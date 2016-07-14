@@ -52,7 +52,7 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     @Before
     public void before() {
         super.before();
-        Pair<Element,Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-iso.sch"));
+        Pair<Element, Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-iso.sch"));
         schematron = compiledResult.one();
         schematronXsl = compiledResult.two();
     }
@@ -73,8 +73,8 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     public void testMissingAbstract() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
         final Element charStringEl = testMetadata.getChild("identificationInfo", GMD)
-                .getChild("MD_DataIdentification", GMD)
-                .getChild("abstract", GMD);
+            .getChild("MD_DataIdentification", GMD)
+            .getChild("abstract", GMD);
         testEmptyStringErrors(testMetadata, charStringEl);
     }
 
@@ -82,10 +82,10 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     public void testMissingTitle() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
         final Element charStringEl = testMetadata.getChild("identificationInfo", GMD)
-                .getChild("MD_DataIdentification", GMD)
-                .getChild("citation", GMD)
-                .getChild("CI_Citation", GMD)
-                .getChild("title", GMD);
+            .getChild("MD_DataIdentification", GMD)
+            .getChild("citation", GMD)
+            .getChild("CI_Citation", GMD)
+            .getChild("title", GMD);
         testEmptyStringErrors(testMetadata, charStringEl);
     }
 
@@ -93,9 +93,9 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     public void testMissingCitation() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
         final Element citationEl = testMetadata.getChild("identificationInfo", GMD)
-                .getChild("MD_DataIdentification", GMD)
-                .getChild("citation", GMD)
-                .getChild("CI_Citation", GMD);
+            .getChild("MD_DataIdentification", GMD)
+            .getChild("citation", GMD)
+            .getChild("CI_Citation", GMD);
 
         citationEl.detach();
 
@@ -103,8 +103,8 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
         assertEquals(1, countFailures(results));
 
         testMetadata.getChild("identificationInfo", GMD)
-                .getChild("MD_DataIdentification", GMD)
-                .getChild("citation", GMD).setAttribute("nilReason","missing", GCO);
+            .getChild("MD_DataIdentification", GMD)
+            .getChild("citation", GMD).setAttribute("nilReason", "missing", GCO);
 
         results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(0, countFailures(results));
@@ -129,8 +129,8 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     public void testMissingDataIdentificationLanguage() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
         final Element element = testMetadata.getChild("identificationInfo", GMD)
-                .getChild("MD_DataIdentification", GMD)
-                .getChild("language", GMD);
+            .getChild("MD_DataIdentification", GMD)
+            .getChild("language", GMD);
         testNoStringErrors(testMetadata, element);
     }
 
@@ -138,7 +138,7 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     public void testMissingDataIdentificationCitationDate() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
         final Element dateEl = Xml.selectElement(testMetadata, "gmd:identificationInfo/*/gmd:citation/*/gmd:date/*/gmd:date",
-                Arrays.asList(GMD, GCO));
+            Arrays.asList(GMD, GCO));
         testNoStringErrors(testMetadata, dateEl);
     }
 
@@ -146,7 +146,7 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
     public void testMissingDataIdentificationCitationDateType() throws Exception {
         final Element testMetadata = Xml.loadStream(SchematronRulesIsoTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
         final Element dateTypeEl = Xml.selectElement(testMetadata, "gmd:identificationInfo/*/gmd:citation/*/gmd:date/*/gmd:dateType",
-                Arrays.asList(GMD, GCO));
+            Arrays.asList(GMD, GCO));
         testNoStringErrors(testMetadata, dateTypeEl);
     }
 
@@ -173,10 +173,10 @@ public class SchematronRulesIsoTest extends AbstractSchematronTest {
         assertEquals(1, countFailures(results));
 
         charStringEl.addContent(
-                new Element("PT_FreeText", GMD).addContent(
-                        new Element("textGroup", GMD).addContent(
-                                new Element("LocalisedCharacterString", GMD).setAttribute("locale", "#DE").setText(" ")
-                        )));
+            new Element("PT_FreeText", GMD).addContent(
+                new Element("textGroup", GMD).addContent(
+                    new Element("LocalisedCharacterString", GMD).setAttribute("locale", "#DE").setText(" ")
+                )));
 
 
         results = Xml.transform(testMetadata, getSchematronXsl(), params);

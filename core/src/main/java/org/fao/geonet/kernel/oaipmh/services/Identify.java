@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -43,45 +44,44 @@ import java.util.List;
 
 //=============================================================================
 
-public class Identify implements OaiPmhService
-{
-	public String getVerb() { return IdentifyRequest.VERB; }
+public class Identify implements OaiPmhService {
+    public String getVerb() {
+        return IdentifyRequest.VERB;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
 
-	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
-	{
-		IdentifyResponse res = new IdentifyResponse();
-		SettingInfo      si  = context.getBean(SettingInfo.class);
+    public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
+        IdentifyResponse res = new IdentifyResponse();
+        SettingInfo si = context.getBean(SettingInfo.class);
 
-		String baseUrl = si.getSiteUrl() + context.getBaseUrl() +"/"+ Jeeves.Prefix.SERVICE +"/en/"+ context.getService();
+        String baseUrl = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + context.getService();
 
-		res.setRepositoryName(si.getSiteName());
-		res.setBaseUrl(baseUrl);
-		res.setEarliestDateStamp(getEarliestDS(context));
-		res.setDeletedRecord(DeletedRecord.NO);
-		res.setGranularity(Granularity.LONG);
-		res.addAdminEmail(si.getFeedbackEmail());
+        res.setRepositoryName(si.getSiteName());
+        res.setBaseUrl(baseUrl);
+        res.setEarliestDateStamp(getEarliestDS(context));
+        res.setDeletedRecord(DeletedRecord.NO);
+        res.setGranularity(Granularity.LONG);
+        res.addAdminEmail(si.getFeedbackEmail());
 
-		return res;
-	}
+        return res;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private ISODate getEarliestDS(ServiceContext context) throws Exception
-	{
+    private ISODate getEarliestDS(ServiceContext context) throws Exception {
         final Metadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
 
-		//--- if we don't have metadata, just return 'now'
-		if (oldestByChangeDate == null)
-			return new ISODate();
+        //--- if we don't have metadata, just return 'now'
+        if (oldestByChangeDate == null)
+            return new ISODate();
 
-		return oldestByChangeDate.getDataInfo().getChangeDate();
-	}
+        return oldestByChangeDate.getDataInfo().getChangeDate();
+    }
 }
 
 //=============================================================================

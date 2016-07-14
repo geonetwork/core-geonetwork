@@ -1,42 +1,44 @@
-<div class="col-lg-12" data-ng-hide="!processing && !processReport">
+<div class="col-lg-12">
+
+  <div data-ng-show="processing">
+    <i class="fa fa-spinner fa-spin"/>
+  </div>
+
   <div class="panel panel-default"
+       data-ng-hide="processing"
        data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
     <div class="panel-heading">
       <span data-translate="">processReportFor</span>
-      {{processReport['@process'] | translate}}<br/>
+      {{processReport.processId | translate}}<br/>
       <p>
-        {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
-        ({{processReport['@startDate']}}
-        <span data-ng-show="processReport['@running'] == 'true'">...</span>
-        <span data-ng-show="processReport['@running'] != 'true'"> -
-            {{processReport['@reportDate']}}</span>)
+        {{processReport.processedRecords}} <span data-translate="">recordsProcessed</span>
+        ({{processReport.startIsoDateTime}}
+        <span data-ng-show="processReport.running">...</span>
+        <span data-ng-hide="processReport.running"> -
+            {{processReport.endIsoDateTime}}</span> =
+        {{processReport.totalTimeInSeconds}}s
+        )
       </p>
     </div>
     <div class="panel-body">
-      <div class="progress progress-striped active"
-           data-ng-show="processReport['@running'] == 'true'">
-        <div class="progress-bar" style="width: 100%"/>
-      </div>
-
       <table class="table table-striped">
         <tr>
           <td>{{('processReportTotalRecords') | translate}}</td>
-          <td class="text-right">{{processReport['@total']}}</td>
+          <td class="text-right">{{processReport.numberOfRecords}}</td>
         </tr>
         <tr>
           <td>{{('processReportChangedRecords') | translate}}</td>
-          <td class="text-right">{{processReport.changed.length}}
-
-            <ul class="text-left" data-ng-show="processReport.changed.length > 0">
+          <td class="text-right">{{processReport.numberOfRecordsProcessed}}
+            <ul class="text-left">
               <li class="animate-repeat"
-                  data-ng-repeat="changed in processReport.changed">
-                {{changed['@title']}} ({{changed['@uuid']}})<br/>
+                  data-ng-repeat="(key, value) in processReport.metadataChanges">
+                #{{key}} <br/>
 
                 <ul>
-                  <li data-ng-repeat="c in changed.change">
+                  <li data-ng-repeat="c in value.elementChanges">
                     <span data-translate="">field</span>
-                    <strong>{{'batchreplacer-el-' + c.fieldid | translate}}</strong><br/>
-                    {{c.originalval}} >> {{c.changedval}}
+                    <strong>{{'batchreplacer-el-' + c.fieldId | translate}}</strong><br/>
+                    {{c.originalVal}} >> {{c.changedVal}}
                   </li>
                 </ul>
               </li>
@@ -46,47 +48,37 @@
         </tr>
         <tr>
           <td>{{('processReportNotChangedRecords') | translate}}</td>
-          <td class="text-right">{{processReport.notChanged.length}}
-
-            <ul class="text-left" data-ng-show="processReport.notChanged.length > 0">
-              <li class="animate-repeat" ng-repeat="notchanged in processReport.notChanged">
-                {{notchanged['@title']}} ({{notchanged['@uuid']}})
-
+          <td class="text-right">
+            <ul class="text-left" data-ng-show="processReport.metadataInfos">
+              <li class="animate-repeat" ng-repeat="(key, value) in processReport.metadataInfos">
+                #{{key}}: {{value.message}}
               </li>
             </ul>
           </td>
         </tr>
         <tr>
           <td>{{('processReportNoProcessFound') | translate}}</td>
-          <td class="text-right">{{processReport['noProcessFound'].length}}
-
-            <ul class="text-left" data-ng-show="processReport.noProcessFound.length > 0">
-              <li class="animate-repeat" ng-repeat="noProcessFound in processReport.noProcessFound">
-                {{noProcessFound['@title']}} ({{noProcessFound['@uuid']}})
-
-              </li>
-            </ul>
-          </td>
+          <td class="text-right">{{processReport.noProcessFoundCount}}</td>
         </tr>
         <tr>
           <td>{{('processReportNotOwner') | translate}}</td>
-          <td class="text-right">{{processReport['notOwner'].length}}</td>
+          <td class="text-right">{{processReport.numberOfRecordsNotEditable}}</td>
         </tr>
       </table>
 
 
-      <div data-ng-hide="processReport.metadataErrorReport.length == 0">
+      <div data-ng-show="Object.keys(processReport.metadataErrors).length > 0">
         <h2 data-translate="">metadataErrorReport</h2>
         <table class="table table-striped">
           <tr>
             <th data-transalte="">identifier</th>
             <th data-translate="">error</th>
           </tr>
-          <tr data-ng-repeat="m in processReport.metadataErrorReport">
-            <td>{{m['@id']}}</td>
+          <tr data-ng-repeat="(key, value) in processReport.metadataErrors">
+            <td>{{key}}</td>
             <td>
-              <h4>{{m.message}}</h4>
-              <pre>{{m.stack}}</pre>
+              <h4>{{value.message}}</h4>
+              <pre>{{value.stack}}</pre>
             </td>
           </tr>
         </table>

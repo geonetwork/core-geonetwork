@@ -40,7 +40,6 @@ public class WhereClause extends Where {
     public String toString() {
         return "WhereClause [clause=" + clause + "]";
     }
-    
-    
+
 
 }

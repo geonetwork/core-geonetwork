@@ -22,58 +22,69 @@
  */
 package org.fao.geonet.api.selections;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.kernel.SelectionManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Arrays;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
+
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 
 /**
  * Select a list of elements stored in session.
  */
 @RequestMapping(value = {
-        "/api/selections",
-        "/api/" + API.VERSION_0_1 +
-                "/selections"
+    "/api/selections",
+    "/api/" + API.VERSION_0_1 +
+        "/selections"
 })
 @Api(value = "selections",
-        tags = "selections",
-        description = "Selection related operations")
+    tags = "selections",
+    description = "Selection related operations")
 @Controller("selections")
 public class SelectionsApi {
 
     @ApiOperation(value = "Get current selection",
-            nickname = "get")
+        nickname = "get")
     @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/{bucket}",
-            produces = {
-                    MediaType.APPLICATION_JSON_VALUE
-            })
+        method = RequestMethod.GET,
+        value = "/{bucket}",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
     public
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     Set<String> get(
-            @ApiParam(value = "Bucket name",
-                    required = true,
-                    example = "metadata")
-            @PathVariable
-            String bucket
+        @ApiParam(value = "Bucket name",
+            required = true,
+            example = "metadata")
+        @PathVariable
+            String bucket,
+        HttpSession httpSession
     )
-            throws Exception {
-        ServiceContext serviceContext = ServiceContext.get();
-
+        throws Exception {
         SelectionManager selectionManager =
-                SelectionManager.getManager(serviceContext.getUserSession());
+            SelectionManager.getManager(ApiUtils.getUserSession(httpSession));
 
         synchronized (selectionManager.getSelection(bucket)) {
             return selectionManager.getSelection(bucket);
@@ -82,75 +93,77 @@ public class SelectionsApi {
 
 
     @ApiOperation(value = "Select one or more items",
-            nickname = "add")
+        nickname = "add")
     @RequestMapping(
-            method = RequestMethod.PUT,
-            value = "/{bucket}",
-            produces = {
-                    MediaType.APPLICATION_JSON_VALUE
-            })
+        method = RequestMethod.PUT,
+        value = "/{bucket}",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
     public
     @ResponseBody
     ResponseEntity<Integer> add(
-            @ApiParam(value = "Bucket name",
-                    required = true,
-                    example = "metadata")
-            @PathVariable
+        @ApiParam(value = "Bucket name",
+            required = true,
+            example = "metadata")
+        @PathVariable
             String bucket,
-            @ApiParam(value = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
-                      required = false)
-            @RequestParam(required = false)
-            String[] uuid
+        @ApiParam(value = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
+            required = false)
+        @RequestParam(required = false)
+            String[] uuid,
+        HttpSession httpSession,
+        HttpServletRequest request
     )
-            throws Exception {
-        ServiceContext serviceContext = ServiceContext.get();
-
+        throws Exception {
+        UserSession session = ApiUtils.getUserSession(httpSession);
         int nbSelected = SelectionManager.updateSelection(bucket,
-                serviceContext.getUserSession(),
-                uuid != null ?
-                        SelectionManager.ADD_SELECTED :
-                        SelectionManager.ADD_ALL_SELECTED,
-                uuid != null ?
-                        Arrays.asList(uuid) : null,
-                serviceContext);
+            session,
+            uuid != null ?
+                SelectionManager.ADD_SELECTED :
+                SelectionManager.ADD_ALL_SELECTED,
+            uuid != null ?
+                Arrays.asList(uuid) : null,
+            ApiUtils.createServiceContext(request));
 
         return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
     }
 
 
-
     @ApiOperation(value = "Clear selection or remove items",
-            nickname = "clear")
+        nickname = "clear")
     @RequestMapping(
-            method = RequestMethod.DELETE,
-            value = "/{bucket}",
-            produces = {
-                    MediaType.APPLICATION_JSON_VALUE
-            })
+        method = RequestMethod.DELETE,
+        value = "/{bucket}",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
     public
     @ResponseBody
     ResponseEntity<Integer> clear(
-            @ApiParam(value = "Bucket name",
-                    required = true,
-                    example = "metadata")
-            @PathVariable
+        @ApiParam(value = "Bucket name",
+            required = true,
+            example = "metadata")
+        @PathVariable
             String bucket,
-            @ApiParam(value = "One or more record UUIDs",
-                      required = false)
-            @RequestParam(required = false)
-            String[] uuid
+        @ApiParam(
+            value = API_PARAM_RECORD_UUIDS,
+            required = false)
+        @RequestParam(required = false)
+            String[] uuid,
+        HttpSession httpSession,
+        HttpServletRequest request
     )
-            throws Exception {
-        ServiceContext serviceContext = ServiceContext.get();
+        throws Exception {
 
         int nbSelected = SelectionManager.updateSelection(bucket,
-                serviceContext.getUserSession(),
-                uuid != null ?
-                        SelectionManager.REMOVE_SELECTED :
-                        SelectionManager.REMOVE_ALL_SELECTED,
-                uuid != null ?
-                        Arrays.asList(uuid) : null,
-                serviceContext);
+            ApiUtils.getUserSession(httpSession),
+            uuid != null ?
+                SelectionManager.REMOVE_SELECTED :
+                SelectionManager.REMOVE_ALL_SELECTED,
+            uuid != null ?
+                Arrays.asList(uuid) : null,
+            ApiUtils.createServiceContext(request));
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);
     }

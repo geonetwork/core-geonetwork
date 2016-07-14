@@ -22,20 +22,16 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gml="http://www.opengis.net/gml"
-                xmlns:gts="http://www.isotc211.org/2005/gts"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
-                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
   <!-- This formatter render an ISO19139 record based on the
@@ -67,8 +63,6 @@
   <!-- Define the metadata to be loaded for this schema plugin-->
   <xsl:variable name="metadata"
                 select="/root/gmd:MD_Metadata"/>
-
-
 
 
   <!-- Specific schema rendering -->
@@ -111,7 +105,6 @@
       </dd>
     </dl>
   </xsl:template>
-
 
 
   <!-- Some elements are only containers so bypass them -->
@@ -164,16 +157,18 @@
                 match="*[gmd:CI_ResponsibleParty]"
                 priority="100">
     <xsl:variable name="email">
-      <xsl:apply-templates mode="render-value"
-                           select="*/gmd:contactInfo/
-                                      */gmd:address/*/gmd:electronicMailAddress"/>
+      <xsl:for-each select="*/gmd:contactInfo/
+                                      */gmd:address/*/gmd:electronicMailAddress">
+        <xsl:apply-templates mode="render-value"
+                             select="."/><xsl:if test="position() != last()">, </xsl:if>
+      </xsl:for-each>
     </xsl:variable>
 
     <!-- Display name is <org name> - <individual name> (<position name> -->
     <xsl:variable name="displayName">
       <xsl:choose>
         <xsl:when
-                test="*/gmd:organisationName and */gmd:individualName">
+          test="*/gmd:organisationName and */gmd:individualName">
           <!-- Org name may be multilingual -->
           <xsl:apply-templates mode="render-value"
                                select="*/gmd:organisationName"/>
@@ -202,18 +197,22 @@
             <strong>
               <xsl:choose>
                 <xsl:when test="$email">
-                  <a href="mailto:{normalize-space($email)}"><xsl:value-of select="$displayName"/></a>
+                  <a href="mailto:{normalize-space($email)}">
+                    <xsl:value-of select="$displayName"/>
+                  </a>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="$displayName"/>
                 </xsl:otherwise>
               </xsl:choose>
-            </strong><br/>
+            </strong>
+            <br/>
             <xsl:for-each select="*/gmd:contactInfo/*">
               <xsl:for-each select="gmd:address/*/(
                                           gmd:deliveryPoint|gmd:city|
                                           gmd:administrativeArea|gmd:postalCode|gmd:country)">
-                <xsl:apply-templates mode="render-value" select="."/><br/>
+                <xsl:apply-templates mode="render-value" select="."/>
+                <br/>
               </xsl:for-each>
             </xsl:for-each>
           </address>
@@ -315,8 +314,9 @@
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:code"/>
         <xsl:if test="*/gmd:version">
-          / <xsl:apply-templates mode="render-value"
-                                 select="*/gmd:version"/>
+          /
+          <xsl:apply-templates mode="render-value"
+                               select="*/gmd:version"/>
         </xsl:if>
         <p>
           <xsl:apply-templates mode="render-field"
@@ -506,10 +506,12 @@
         <dd>
           <ul>
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
-              <li><a href="#uuid={@uuidref}">
-                <i class="fa fa-link"></i>
-                <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
-              </a></li>
+              <li>
+                <a href="#uuid={@uuidref}">
+                  <i class="fa fa-link"></i>
+                  <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
+                </a>
+              </li>
             </xsl:for-each>
           </ul>
         </dd>
@@ -522,11 +524,6 @@
                 match="*">
     <xsl:apply-templates mode="render-field"/>
   </xsl:template>
-
-
-
-
-
 
 
   <!-- ########################## -->
@@ -567,7 +564,9 @@
   <!-- ... URL -->
   <xsl:template mode="render-value"
                 match="gmd:URL">
-    <a href="{.}"><xsl:value-of select="."/></a>
+    <a href="{.}">
+      <xsl:value-of select="."/>
+    </a>
   </xsl:template>
 
   <!-- ... Dates - formatting is made on the client side by the directive  -->
@@ -598,7 +597,9 @@
 
   <xsl:template mode="render-value"
                 match="gmd:language/gco:CharacterString">
-    <span data-translate=""><xsl:value-of select="."/></span>
+    <span data-translate="">
+      <xsl:value-of select="."/>
+    </span>
   </xsl:template>
 
   <!-- ... Codelists -->
@@ -616,7 +617,9 @@
                       select="tr:codelist-value-desc(
                             tr:create($schema),
                             parent::node()/local-name(), $id)"/>
-        <span title="{$codelistDesc}"><xsl:value-of select="$codelistTranslation"/></span>
+        <span title="{$codelistDesc}">
+          <xsl:value-of select="$codelistTranslation"/>
+        </span>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$id"/>
@@ -641,7 +644,9 @@
                       select="tr:codelist-value-desc(
                             tr:create($schema),
                             local-name(), $id)"/>
-        <span title="{$codelistDesc}"><xsl:value-of select="$codelistTranslation"/></span>
+        <span title="{$codelistDesc}">
+          <xsl:value-of select="$codelistTranslation"/>
+        </span>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$id"/>

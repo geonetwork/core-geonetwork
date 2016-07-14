@@ -1,7 +1,7 @@
 <div class="gn-bbox-input">
 
   <div class="row">
-    <div class="col-sm-offset-3 col-sm-6">
+    <div class="col-sm-12">
       <div class="form-group">
         <input type="number" step="any"
                data-ng-model="extent[3]"
@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <div class="form-group">
         <input type="number" step="any"
                data-ng-model="extent[0]"
@@ -21,15 +21,15 @@
     </div>
     <!--Draw buttons-->
     <div ngeo-btn-group class="col-sm-4">
-      <button class="btn btn-default" ng-model="dragboxInteraction.active" ngeo-btn>
-        <span class="fa fa-pencil-square-o"></span>
+      <button class="btn btn-default btn-sm" ng-model="dragboxInteraction.active" ngeo-btn>
+        <span class="fa fa-pencil-square-o fa-fw"></span>
       </button>
-      <button class="btn btn-default" data-ng-click="clear()">
-        <span class="fa fa-trash-o"></span>
+      <button class="btn btn-default btn-sm" data-ng-click="clear()">
+        <span class="fa fa-trash-o fa-fw"></span>
       </button>
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <div class="form-group">
         <input type="number" step="any"
                data-ng-model="extent[2]"
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-offset-3 col-sm-6">
+    <div class="col-sm-12">
       <div class="form-group">
         <input type="number" step="any"
                data-ng-model="extent[1]"

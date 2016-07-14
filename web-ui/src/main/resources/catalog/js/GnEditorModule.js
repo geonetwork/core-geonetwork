@@ -57,6 +57,8 @@
     function($LOCALES) {
       $LOCALES.push('search');
       $LOCALES.push('editor');
-      $LOCALES.push('/../api/0.1/tools/i18n/db?type=StatusValue');
+      $LOCALES.push('/../api/0.1/tools/i18n/db?' +
+          'type=StatusValue&type=Operation&type=Group');
+
     }]);
 })();

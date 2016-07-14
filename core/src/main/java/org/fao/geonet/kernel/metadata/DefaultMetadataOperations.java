@@ -19,6 +19,7 @@ import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -88,20 +89,17 @@ public class DefaultMetadataOperations implements IMetadataOperations {
         UserGroupRepository userGroupRepo = context
                 .getBean(UserGroupRepository.class);
         final OperationAllowed operationAllowed = operationAllowedRepository
-                .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId,
-                        mdId, opId);
+                .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
-        if (operationAllowed == null) {
-            checkOperationPermission(context, grpId, userGroupRepo);
-        }
+            if (operationAllowed == null) {
+                checkOperationPermission(context, grpId, userGroupRepo);
+            }
 
-        if (operationAllowed == null) {
-            return Optional.of(new OperationAllowed(
-                    new OperationAllowedId().setGroupId(grpId)
-                            .setMetadataId(mdId).setOperationId(opId)));
-        } else {
-            return Optional.absent();
-        }
+            if (operationAllowed == null) {
+                return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
+            } else {
+                return Optional.absent();
+            }
     }
 
     public void checkOperationPermission(ServiceContext context, int grpId,
@@ -110,38 +108,29 @@ public class DefaultMetadataOperations implements IMetadataOperations {
         // Session may not be defined when a harvester is running
         if (context.getUserSession() != null) {
             Profile userProfile = context.getUserSession().getProfile();
-            if (!(userProfile == Profile.Administrator
-                    || userProfile == Profile.UserAdmin)) {
+            if (!(userProfile == Profile.Administrator || userProfile == Profile.UserAdmin)) {
                 int userId = context.getUserSession().getUserIdAsInt();
                 // Reserved groups
                 if (ReservedGroup.isReserved(grpId)) {
 
-                    Specification<UserGroup> hasUserIdAndProfile = where(
-                            UserGroupSpecs.hasProfile(Profile.Reviewer))
-                                    .and(UserGroupSpecs.hasUserId(userId));
-                    List<Integer> groupIds = userGroupRepo
-                            .findGroupIds(hasUserIdAndProfile);
+                    Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                        .and(UserGroupSpecs.hasUserId(userId));
+                    List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
 
                     if (groupIds.isEmpty()) {
-                        throw new ServiceNotAllowedEx(
-                                "User can't set operation for group " + grpId
-                                        + " because the user in not a "
-                                        + "Reviewer of any group.");
+                        throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not a "
+                            + "Reviewer of any group.");
                     }
                 } else {
                     String userGroupsOnly = context
                             .getBean(SettingManager.class)
-                            .getValue("system/metadataprivs/usergrouponly");
+                            .getValue(Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY);
                     if (userGroupsOnly.equals("true")) {
-                        // If user is member of the group, user can set
-                        // operation
+                        // If user is member of the group, user can set operation
 
-                        if (userGroupRepo.exists(new UserGroupId()
-                                .setGroupId(grpId).setUserId(userId))) {
-                            throw new ServiceNotAllowedEx(
-                                    "User can't set operation for group "
-                                            + grpId + " because the user in not"
-                                            + " member of this group.");
+                        if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
+                            throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
+                                + " member of this group.");
                         }
                     }
                 }

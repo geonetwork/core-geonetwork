@@ -23,152 +23,159 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<labels xmlns:dc = "http://purl.org/dc/elements/1.1/" xmlns:dct = "http://purl.org/dc/terms/">
-	<!-- ==================================================== -->
-	<element name="simpledc">
-		<label>Метаданные</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:title">
-		<label>Название</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:creator">
-		<label>Автор</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:subject">
-		<label>Тема и ключевые слова</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:description">
-		<label>Описание</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:publisher">
-		<label>Издатель</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:contributor">
-		<label>Участник</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:date">
-		<label>Дата</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:type">
-		<label>Тип ресурса</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:format">
-		<label>Формат</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:identifier">
-		<label>Идентификатор ресурса</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:source">
-		<label>Источник</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:language">
-		<label>Язык</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:relation">
-		<label>Relation</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:coverage">
-		<label>Покрытие</label>
-		<description>Например: "Север 90, Юг -90, Восток 180, Запад -180. Глобальное"
-		</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dc:rights">
-		<label>Управление правами</label>
-		<description/>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:modified">
-		<label>Дата измененния</label>
-		<description>Дата, когда были изменены метаданные</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:abstract">
-		<label>Реферат</label>
-		<description>Краткое описание содержимого описываемого ресурса.
-</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:spatial">
-		<label>Территориально</label>
-		<description>Пространственные характеристики содержимого ресурса.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:audience">
-		<label>Целевая аудитория</label>
-		<description>Класс лиц, для которых ресурс может быть интересен или полезен.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualMethod">
-		<label>Метод пополнения</label>
-		<description>Метод, которым элементы добавляются в коллекцию.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualPeriodicity">
-		<label>Периодичность пополнения</label>
-		<description>Частота, с которой элементы добавляются в коллекцию.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:accrualPolicy">
-		<label>Политика пополнения</label>
-		<description>Политика руководства по добавлению элементов в коллекцию.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:instructionalMethod">
-		<label>Учебный метод</label>
-		<description>Процесс, используемый инженером знаний, навыки и установки,
-		разработанные для поддержания ресурса..</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:provenance">
-		<label>Происхождение</label>
-		<description>Утверждение любых изменений в собственности и пепечении
-		ресурса с момента его создания, которые были обозначены для его подлинности,
-		целостности и интерпретации.</description>
-	</element>
-	<!-- ==================================================== -->
-	<element name="dct:rightsHolder">
-		<label>Правообладатель</label>
-		<description>Человек или организация вледеющие или управляющие
-		правами над ресурсом.</description>
-	</element>
+<labels xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+  <!-- ==================================================== -->
+  <element name="simpledc">
+    <label>Метаданные</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:title">
+    <label>Название</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:creator">
+    <label>Автор</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:subject">
+    <label>Тема и ключевые слова</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:description">
+    <label>Описание</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:publisher">
+    <label>Издатель</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:contributor">
+    <label>Участник</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:date">
+    <label>Дата</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:type">
+    <label>Тип ресурса</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:format">
+    <label>Формат</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:identifier">
+    <label>Идентификатор ресурса</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:source">
+    <label>Источник</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:language">
+    <label>Язык</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:relation">
+    <label>Relation</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:coverage">
+    <label>Покрытие</label>
+    <description>Например: "Север 90, Юг -90, Восток 180, Запад -180. Глобальное"
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dc:rights">
+    <label>Управление правами</label>
+    <description/>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:modified">
+    <label>Дата измененния</label>
+    <description>Дата, когда были изменены метаданные</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:abstract">
+    <label>Реферат</label>
+    <description>Краткое описание содержимого описываемого ресурса.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:spatial">
+    <label>Территориально</label>
+    <description>Пространственные характеристики содержимого ресурса.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:audience">
+    <label>Целевая аудитория</label>
+    <description>Класс лиц, для которых ресурс может быть интересен или полезен.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualMethod">
+    <label>Метод пополнения</label>
+    <description>Метод, которым элементы добавляются в коллекцию.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPeriodicity">
+    <label>Периодичность пополнения</label>
+    <description>Частота, с которой элементы добавляются в коллекцию.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accrualPolicy">
+    <label>Политика пополнения</label>
+    <description>Политика руководства по добавлению элементов в коллекцию.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:instructionalMethod">
+    <label>Учебный метод</label>
+    <description>Процесс, используемый инженером знаний, навыки и установки,
+      разработанные для поддержания ресурса..
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:provenance">
+    <label>Происхождение</label>
+    <description>Утверждение любых изменений в собственности и пепечении
+      ресурса с момента его создания, которые были обозначены для его подлинности,
+      целостности и интерпретации.
+    </description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:rightsHolder">
+    <label>Правообладатель</label>
+    <description>Человек или организация вледеющие или управляющие
+      правами над ресурсом.
+    </description>
+  </element>
   <!-- ==================================================== -->
   <element name="dct:references">
     <label>Related resource</label>
-    <description>A related resource that is referenced, cited, or otherwise pointed to by the described resource.</description>
+    <description>A related resource that is referenced, cited, or otherwise pointed to by the
+      described resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:accessRights">
     <label>Access Rights</label>
-    <description>Information about who can access the resource or an indication of its security status.</description>
+    <description>Information about who can access the resource or an indication of its security
+      status.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:alternative">
@@ -208,7 +215,9 @@
   <!-- ==================================================== -->
   <element name="dct:educationLevel">
     <label>Audience Education Level</label>
-    <description>A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.</description>
+    <description>A class of entity, defined in terms of progression through an educational or
+      training context, for which the described resource is intended.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:extent">
@@ -218,47 +227,65 @@
   <!-- ==================================================== -->
   <element name="dct:hasFormat">
     <label>Has Format</label>
-    <description>A related resource that is substantially the same as the pre-existing described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the pre-existing described
+      resource, but in another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasPart">
     <label>Has Part</label>
-    <description>A related resource that is included either physically or logically in the described resource.</description>
+    <description>A related resource that is included either physically or logically in the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:hasVersion">
     <label>Has Version</label>
-    <description>A related resource that is a version, edition, or adaptation of the described resource.</description>
+    <description>A related resource that is a version, edition, or adaptation of the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isFormatOf">
     <label>Is Format Of</label>
-    <description>A related resource that is substantially the same as the described resource, but in another format.</description>
+    <description>A related resource that is substantially the same as the described resource, but in
+      another format.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isPartOf">
     <label>Is Part Of</label>
-    <description>A related resource in which the described resource is physically or logically included.</description>
+    <description>A related resource in which the described resource is physically or logically
+      included.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReferencedBy">
     <label>Is Referenced By</label>
-    <description>A related resource that references, cites, or otherwise points to the described resource.</description>
+    <description>A related resource that references, cites, or otherwise points to the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReplacedBy">
     <label>Is Replaced By</label>
-    <description>A related resource that supplants, displaces, or supersedes the described resource.</description>
+    <description>A related resource that supplants, displaces, or supersedes the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isRequiredBy">
     <label>Is Required By</label>
-    <description>A related resource that requires the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that requires the described resource to support its function,
+      delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isVersionOf">
     <label>Is Version Of</label>
-    <description>A related resource of which the described resource is a version, edition, or adaptation.</description>
+    <description>A related resource of which the described resource is a version, edition, or
+      adaptation.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:issued">
@@ -268,12 +295,15 @@
   <!-- ==================================================== -->
   <element name="dct:license">
     <label>License</label>
-    <description>A legal document giving official permission to do something with the resource.</description>
+    <description>A legal document giving official permission to do something with the resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:mediator">
     <label>Mediator</label>
-    <description>An entity that mediates access to the resource and for whom the resource is intended or useful.</description>
+    <description>An entity that mediates access to the resource and for whom the resource is
+      intended or useful.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:medium">
@@ -283,12 +313,16 @@
   <!-- ==================================================== -->
   <element name="dct:replaces">
     <label>Replaces</label>
-    <description>A related resource that is supplanted, displaced, or superseded by the described resource.</description>
+    <description>A related resource that is supplanted, displaced, or superseded by the described
+      resource.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:requires">
     <label>Requires</label>
-    <description>A related resource that is required by the described resource to support its function, delivery, or coherence.</description>
+    <description>A related resource that is required by the described resource to support its
+      function, delivery, or coherence.
+    </description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:tableOfContents">

@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
+  <!-- All URL parameters could be available as params -->
   <xsl:param name="view" select="'default'"/>
 
   <!-- TODO: schema is not part of the XML -->
@@ -10,7 +11,9 @@
   <xsl:variable name="metadataId"
                 select="/root/info/record/id"/>
 
-  <xsl:variable name="schemaCodelists"><null/></xsl:variable>
+  <xsl:variable name="schemaCodelists">
+    <null/>
+  </xsl:variable>
 
   <xsl:variable name="metadata"
                 select="/root/undefined"/>
@@ -30,7 +33,6 @@
       <for lang="fre">[D1] [MNn] [Y]</for>
     </date>
   </xsl:variable>
-
 
 
   <xsl:variable name="schemaStrings"

@@ -67,7 +67,7 @@
           '       <gco:CharacterString>{{description}}</gco:CharacterString>' +
           '     </mcc:description>' +
           '   </mcc:MD_Identifier>' +
-          ' </mrs:referenceSystemIdentifier>'  
+          ' </mrs:referenceSystemIdentifier>'
     }});
 
   module.factory('gnEditorXMLService',
@@ -93,7 +93,8 @@
            buildCRSXML: function(crs, schema, xmlSnippet) {
              var replacement = ['description', 'codeSpace',
                'authority', 'code', 'version'];
-             var xml = xmlSnippet || gnXmlTemplates.CRS[schema] || gnXmlTemplates.CRS['iso19139'];
+             var xml = xmlSnippet || gnXmlTemplates.CRS[schema] ||
+             gnXmlTemplates.CRS['iso19139'];
              angular.forEach(replacement, function(key) {
                xml = xml.replace(new RegExp('{{' + key + '}}', 'g'), crs[key]);
              });

@@ -30,7 +30,7 @@
     <schema-dm>Schema detection mode</schema-dm>
     <schema-dme>Schema detection elements</schema-dme>
     <schema-details>Schema technical details</schema-details>
-    <schema-url>More details: </schema-url>
+    <schema-url>More details:</schema-url>
     <editor-config>Metadata editor</editor-config>
     <glossary>Standard elements</glossary>
     <glossary-help>List of all elements available in the standard.
@@ -41,19 +41,19 @@
     <disabled>Disabled</disabled>
     <noCodelist>No codelist defined.</noCodelist>
     <view>View:</view>
-    <nbOfTabs>This view is composed of </nbOfTabs>
-    <tabs> tab(s).</tabs>
+    <nbOfTabs>This view is composed of</nbOfTabs>
+    <tabs>tab(s).</tabs>
     <domain>Domain</domain>
-    <tab>Tab: </tab>
-    <section>Section: </section>
-    <field>Field: </field>
+    <tab>Tab:</tab>
+    <section>Section:</section>
+    <field>Field:</field>
     <actionName>Name</actionName>
     <actionType>Type</actionType>
     <nodename>Name</nodename>
-    <undefined>Undefined field: </undefined>
-    <tag>Tag: </tag>
+    <undefined>Undefined field:</undefined>
+    <tag>Tag:</tag>
     <desc>Description</desc>
-    <more>More details: </more>
+    <more>More details:</more>
     <helper>Recommended values</helper>
     <cond>Condition</cond>
     <codelist>Standard codelists</codelist>
@@ -63,13 +63,15 @@
     <xpath>XPath</xpath>
     <flatMode>This tab display elements from the XML metadata record.</flatMode>
     <notFlatMode>This tab display elements from the XML metadata record and
-      also provide controls to add all elements defined in the schema (XSD).</notFlatMode>
+      also provide controls to add all elements defined in the schema (XSD).
+    </notFlatMode>
     <displayIf>Displayed only if</displayIf>
-    <cf>See </cf>
-    <hiddenInEditMode>Those values are defined in the standard but hidden when editing.</hiddenInEditMode>
+    <cf>See</cf>
+    <hiddenInEditMode>Those values are defined in the standard but hidden when editing.
+    </hiddenInEditMode>
     <instruction>Instruction</instruction>
-    <nbOfViews>This standard can be encoded using </nbOfViews>
-    <views> view(s).</views>
+    <nbOfViews>This standard can be encoded using</nbOfViews>
+    <views>view(s).</views>
     <context>Context</context>
   </eng>
   <fre>
@@ -80,7 +82,7 @@
     <schema-dm>Mode de détection</schema-dm>
     <schema-dme>Eléments détectés</schema-dme>
     <schema-details>Informations techniques sur le schéma</schema-details>
-    <schema-url>Plus d'information : </schema-url>
+    <schema-url>Plus d'information :</schema-url>
     <editor-config>Encodage des fiches</editor-config>
     <glossary>Éléments du standard</glossary>
     <glossary-help>Liste des descripteurs définis dans le standard de
@@ -97,16 +99,16 @@
     <noCodelist>Aucune liste de valeurs.</noCodelist>
     <view>Vue :</view>
     <nodename>Nom</nodename>
-    <nbOfTabs>Cette vue est composée de </nbOfTabs>
-    <tabs> onglet(s).</tabs>
-    <tab>Onglet : </tab>
-    <section>Section : </section>
-    <field>Descripteur : </field>
-    <undefined>Non défini : </undefined>
-    <tag>Balise XML : </tag>
+    <nbOfTabs>Cette vue est composée de</nbOfTabs>
+    <tabs>onglet(s).</tabs>
+    <tab>Onglet :</tab>
+    <section>Section :</section>
+    <field>Descripteur :</field>
+    <undefined>Non défini :</undefined>
+    <tag>Balise XML :</tag>
     <desc>Description</desc>
-    <more>Information complémentaire : </more>
-    <helper>Valeurs recommandées : </helper>
+    <more>Information complémentaire :</more>
+    <helper>Valeurs recommandées :</helper>
     <cond>Condition</cond>
     <codelist>Liste de valeurs</codelist>
     <flatModeExceptions>Cette vue permet la saisie des éléments suivant même
@@ -114,13 +116,15 @@
     </flatModeExceptions>
     <xpath>XPath</xpath>
     <flatMode>Cet onglet affiche des élements du document XML.</flatMode>
-    <notFlatMode>Cet onglet affiche des élements du document XML et permet également l'ajout d'élément définis dans le standard (Schéma XSD).</notFlatMode>
+    <notFlatMode>Cet onglet affiche des élements du document XML et permet également l'ajout
+      d'élément définis dans le standard (Schéma XSD).
+    </notFlatMode>
     <displayIf>Afficher uniquement si</displayIf>
-    <cf>Cf. </cf>
+    <cf>Cf.</cf>
     <instruction>Instruction</instruction>
     <hiddenInEditMode>Ces valeurs sont définies dans le standard</hiddenInEditMode>
-    <nbOfViews>Ce standard peut être encodé en utilisant </nbOfViews>
-    <views> vue(s).</views>
+    <nbOfViews>Ce standard peut être encodé en utilisant</nbOfViews>
+    <views>vue(s).</views>
     <context>Contexte de l'élément</context>
   </fre>
 </i18n>

@@ -24,8 +24,10 @@
 package org.fao.geonet.component.csw;
 
 import com.vividsolutions.jts.util.Assert;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -47,6 +49,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -70,11 +73,11 @@ public class Transaction extends AbstractOperation implements CatalogService {
     //---------------------------------------------------------------------------
 
     static final String NAME = "Transaction";
+    @Autowired
+    SchemaManager _schemaManager;
     private SearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
-    @Autowired
-    SchemaManager _schemaManager;
 
     @Autowired
     public Transaction(ApplicationContext context) {
@@ -241,7 +244,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         String docType = null, title = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+            isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
         // Privileges for the first group of the user that inserts the metadata
         // (same permissions as when inserting xml file from UI)
@@ -253,7 +256,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getBean(SettingManager.class);
-        boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
+        boolean metadataPublic = sm.getValueAsBool(Settings.SYSTEM_CSW_METADATA_PUBLIC, false);
 
         if (metadataPublic) {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.view);
@@ -376,7 +379,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 EditLib editLib = new EditLib(_schemaManager);
 
                 MetadataSchema metadataSchema = _schemaManager.getSchema(schemaId);
-                final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
+                final String settingId = Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
                 boolean createXpathNodeIfNotExists = gc.getBean(SettingManager.class).getValueAsBool(settingId);
 
                 // Process properties to update
@@ -400,16 +403,16 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     if (children.isEmpty()) {
                         propertyValue = new AddElemValue(propertyValueEl.getText());
                         metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
-                                createXpathNodeIfNotExists);
+                            createXpathNodeIfNotExists);
                     } else {
                         for (Element child : children) {
                             propertyValue = new AddElemValue((Element) child.clone());
                             metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
-                                    createXpathNodeIfNotExists);
+                                createXpathNodeIfNotExists);
                         }
                     }
 
-                    Log.info(Geonet.CSW, "Metadata has been updated: "+metadataChanged);
+                    Log.info(Geonet.CSW, "Metadata has been updated: " + metadataChanged);
 
                 }
 
@@ -493,7 +496,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         ElementSetName setName = ElementSetName.BRIEF;
 
         Pair<Element, Element> results = _searchController.search(context, 1, 100, ResultType.RESULTS,
-                OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null, null);
+            OutputSchema.DEFAULT.toString(), setName, filterExpr, filterVersion, null, null, null, 0, null, null);
 
         @SuppressWarnings("unchecked")
         List<Element> children = results.two().getChildren();
@@ -547,7 +550,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
     private Element getTransactionSummary(int totalInserted, int totalUpdated, int totalDeleted) {
         Element transactionSummary = new Element("TransactionSummary", Csw.NAMESPACE_CSW);
 //		if( totalInserted>0 )
-//		{			
+//		{
         Element insert = new Element("totalInserted", Csw.NAMESPACE_CSW);
         insert.setText(Integer.toString(totalInserted));
         transactionSummary.addContent(insert);
@@ -571,10 +574,6 @@ public class Transaction extends AbstractOperation implements CatalogService {
 
     /**
      * Retrieves namespaces based on metadata schema
-     *
-     * @param mdSchema
-     * @return
-     * @throws NoApplicableCodeEx
      */
     private Map<String, String> retrieveNamepacesForSchema(MetadataSchema mdSchema) throws NoApplicableCodeEx {
         Map<String, String> mapNs = new HashMap<String, String>();

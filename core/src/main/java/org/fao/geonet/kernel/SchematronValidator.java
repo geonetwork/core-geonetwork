@@ -25,6 +25,7 @@ package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -80,7 +81,7 @@ public class SchematronValidator {
             schemaTronXmlOut.addContent(errorReport);
         }
 
-        if(schemaTronXmlOut.getChildren().isEmpty()) {
+        if (schemaTronXmlOut.getChildren().isEmpty()) {
             schemaTronXmlOut = null;
         }
 
@@ -103,8 +104,8 @@ public class SchematronValidator {
             final ApplicableSchematron applicable = getApplicableSchematron(metadataId, md, metadataSchema, schematron);
 
 
-            if(applicable.requirement != SchematronRequirement.DISABLED) {
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            if (applicable.requirement != SchematronRequirement.DISABLED) {
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, " - rule:" + schematron.getRuleName());
                 }
 
@@ -131,10 +132,10 @@ public class SchematronValidator {
         for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
             List<SchematronCriteria> criteriaList = criteriaGroup.getCriteria();
             boolean apply = false;
-            for(SchematronCriteria criteria : criteriaList) {
+            for (SchematronCriteria criteria : criteriaList) {
                 boolean tmpApply = criteria.accepts(applicationContext, metadataId, md, metadataSchema.getSchemaNS());
 
-                if(!tmpApply) {
+                if (!tmpApply) {
                     apply = false;
                     break;
                 } else {
@@ -143,9 +144,9 @@ public class SchematronValidator {
             }
 
             if (apply) {
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() +
-                                                   " for schematron: "+schematron.getRuleName());
+                        " for schematron: " + schematron.getRuleName());
                 }
                 requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
             } else {
@@ -166,14 +167,14 @@ public class SchematronValidator {
 
         Element report = new Element("report", Edit.NAMESPACE);
         report.setAttribute("rule", ruleId,
-                Edit.NAMESPACE);
-        report.setAttribute("displayPriority", ""+schematron.getDisplayPriority(),
-                Edit.NAMESPACE);
+            Edit.NAMESPACE);
+        report.setAttribute("displayPriority", "" + schematron.getDisplayPriority(),
+            Edit.NAMESPACE);
         report.setAttribute("dbident", String.valueOf(schematron.getId()), Edit.NAMESPACE);
         report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
 
         try {
-            Map<String,Object> params = new HashMap<String,Object>();
+            Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", lang);
             params.put("rule", ruleId);
             params.put("thesaurusDir", thesaurusManager.getThesauriDirectory().toString());
@@ -188,27 +189,27 @@ public class SchematronValidator {
                 Iterator<Element> i = xmlReport.getDescendants(new ElementFilter("fired-rule", Geonet.Namespaces.SVRL));
                 while (i.hasNext()) {
                     i.next();
-                    firedRules ++;
+                    firedRules++;
                 }
                 int invalidRules = 0;
-                i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Geonet.Namespaces.SVRL));
+                i = xmlReport.getDescendants(new ElementFilter("failed-assert", Geonet.Namespaces.SVRL));
                 while (i.hasNext()) {
                     i.next();
-                    invalidRules ++;
+                    invalidRules++;
                 }
 
                 if (validations != null) {
                     validations.add(new MetadataValidation().
-                            setId(new MetadataValidationId(metadataId, ruleId)).
-                            setStatus(invalidRules!=0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID).
-                            setRequired(requirement == SchematronRequirement.REQUIRED).
-                            setNumTests(firedRules).
-                            setNumFailures(invalidRules));
+                        setId(new MetadataValidationId(metadataId, ruleId)).
+                        setStatus(invalidRules != 0 ? MetadataValidationStatus.INVALID : MetadataValidationStatus.VALID).
+                        setRequired(requirement == SchematronRequirement.REQUIRED).
+                        setNumTests(firedRules).
+                        setNumFailures(invalidRules));
 
                 }
             }
         } catch (Exception e) {
-            Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+ruleId+" failed", e);
+            Log.error(Geonet.DATA_MANAGER, "WARNING: schematron xslt " + ruleId + " failed", e);
 
             // If an error occurs that prevents to verify schematron rules, add to show in report
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);

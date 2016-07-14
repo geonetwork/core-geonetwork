@@ -67,8 +67,8 @@ public class ItemBuilder {
     private Element buildDimensionElement(FacetResult facetResults) {
         if (facetResults == null) {
             Log.debug(
-                    Geonet.FACET_ENGINE,
-                    "Null facet results for field " + config.getDimension().getIndexKey());
+                Geonet.FACET_ENGINE,
+                "Null facet results for field " + config.getDimension().getIndexKey());
             return formatter.buildDimensionTag(0);
         }
 
@@ -87,8 +87,8 @@ public class ItemBuilder {
         List<CategorySummary> subCategories = toSubCategories(facetResult.labelValues);
         List<CategorySummary> sortedSubCategories = sort(subCategories);
 
-        for (CategorySummary subCategory: sortedSubCategories) {
-            addSubCategoryToElement(subCategory, dimensionElement, path );
+        for (CategorySummary subCategory : sortedSubCategories) {
+            addSubCategoryToElement(subCategory, dimensionElement, path);
         }
     }
 
@@ -108,7 +108,7 @@ public class ItemBuilder {
     private List<CategorySummary> toSubCategories(LabelAndValue[] labelValues) {
         List<CategorySummary> result = new ArrayList<CategorySummary>();
 
-        for (LabelAndValue labelAndValue: labelValues) {
+        for (LabelAndValue labelAndValue : labelValues) {
             result.add(toCategoryResult(labelAndValue));
         }
 
@@ -138,8 +138,8 @@ public class ItemBuilder {
     private List<CategorySummary> sort(List<CategorySummary> categories) {
         if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
             Log.debug(Geonet.FACET_ENGINE, config.getDimension().getName()
-                    + ":\tSorting facet by " + config.getSortBy().toString()
-                    + " (" + config.getSortOrder().toString() + ")");
+                + ":\tSorting facet by " + config.getSortBy().toString()
+                + " (" + config.getSortOrder().toString() + ")");
         }
 
         // No need for a custom comparator Lucene facet request is
@@ -156,14 +156,14 @@ public class ItemBuilder {
 
         if (SortBy.LABEL == config.getSortBy()) {
             comparator = labelComparator();
-        } else if (SortBy.NUMVALUE == config.getSortBy()) { 
+        } else if (SortBy.NUMVALUE == config.getSortBy()) {
             comparator = numericComparator();
         } else {
             comparator = valueComparator();
         }
-        
+
         if (SortOrder.DESCENDING == config.getSortOrder()) {
-            comparator = descendingComparator(comparator); 
+            comparator = descendingComparator(comparator);
         }
 
         return comparator;
@@ -173,7 +173,7 @@ public class ItemBuilder {
 
         if (Log.isDebugEnabled(Geonet.FACET_ENGINE)) {
             Log.debug(Geonet.FACET_ENGINE, " - " + result.value
-                    + " (" + result.count + ")");
+                + " (" + result.count + ")");
         }
 
         return formatter.buildCategoryTag(result);
@@ -206,14 +206,14 @@ public class ItemBuilder {
                 } catch (NumberFormatException e) {
                     // String comparison
                     Log.warning(
-                            Geonet.FACET_ENGINE,
-                            "Failed to compare numeric values ("
-                                    + e1.value
-                                    + " / "
-                                    + e2.value
-                                    + ") for facet. Check sortBy option in summary configuration.");
+                        Geonet.FACET_ENGINE,
+                        "Failed to compare numeric values ("
+                            + e1.value
+                            + " / "
+                            + e2.value
+                            + ") for facet. Check sortBy option in summary configuration.");
                     return e1.value.compareTo(
-                            e2.value);
+                        e2.value);
                 }
             }
         };
@@ -240,8 +240,8 @@ public class ItemBuilder {
     @Override
     public String toString() {
         return "ItemBuilder{" +
-               "Item Config =" + config +
-               ", langCode='" + langCode + '\'' +
-               '}';
+            "Item Config =" + config +
+            ", langCode='" + langCode + '\'' +
+            '}';
     }
 }

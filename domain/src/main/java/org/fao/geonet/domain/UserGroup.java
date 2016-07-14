@@ -23,15 +23,19 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.fao.geonet.entitylistener.UserGroupEntityListenerManager;
 import org.jdom.Element;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.IdentityHashMap;
 
 /**
- * The mapping between user, the groups a user is a part of and the profiles the user has for each group.
+ * The mapping between user, the groups a user is a part of and the profiles the user has for each
+ * group.
  *
  * @author Jesse
  */
@@ -39,7 +43,7 @@ import java.util.IdentityHashMap;
 @Access(AccessType.PROPERTY)
 @Table(name = UserGroupNamedQueries.TABLE_NAME)
 @EntityListeners(UserGroupEntityListenerManager.class)
-public class UserGroup extends GeonetEntity  implements Serializable {
+public class UserGroup extends GeonetEntity implements Serializable {
     private UserGroupId _id = new UserGroupId();
     private Group _group;
     private User _user;
@@ -137,8 +141,8 @@ public class UserGroup extends GeonetEntity  implements Serializable {
     @Override
     protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
         return new Element("record")
-                .addContent(new Element("group").setText(""+getId().getGroupId()))
-                .addContent(new Element("user").setText(""+getId().getUserId()))
-                .addContent(new Element("profile").setText(getProfile().name()));
+            .addContent(new Element("group").setText("" + getId().getGroupId()))
+            .addContent(new Element("user").setText("" + getId().getUserId()))
+            .addContent(new Element("profile").setText(getProfile().name()));
     }
 }

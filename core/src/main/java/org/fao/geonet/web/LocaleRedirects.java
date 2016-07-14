@@ -25,6 +25,7 @@ package org.fao.geonet.web;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
@@ -49,6 +50,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -56,8 +58,9 @@ import javax.servlet.http.HttpServletRequest;
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
 
 /**
- * Handles requests where there is no locale and a redirect to a correct (and localized) service is needed.  For example
- * index.html redirects to /srv/eng/home but that redirect should depend on the language of the users browser.
+ * Handles requests where there is no locale and a redirect to a correct (and localized) service is
+ * needed.  For example index.html redirects to /srv/eng/home but that redirect should depend on the
+ * language of the users browser.
  * <p/>
  * Created by Jesse on 12/4/13.
  */
@@ -80,9 +83,9 @@ public class LocaleRedirects {
         SPECIAL_HEADERS = Collections.unmodifiableSet(headers);
     }
 
-    private String _homeRedirectUrl;
+    private String _homeRedirectUrl = "catalog.search";
 
-    private String _defaultLanguage;
+    private String _defaultLanguage = Geonet.DEFAULT_LANGUAGE;
 
     @RequestMapping(value = "/home")
     public ModelAndView home(final HttpServletRequest request,
@@ -143,7 +146,7 @@ public class LocaleRedirects {
                         headers.append('&');
                     }
                     headers.append(paramName);
-                    if (!value.isEmpty()){
+                    if (!value.isEmpty()) {
                         headers.append('=').append(value);
                     }
                 }
@@ -211,38 +214,5 @@ public class LocaleRedirects {
         }
 
         return userLang;
-    }
-
-
-    @Autowired
-    private ApplicationContext _appContext;
-
-    @PostConstruct
-    public void init() throws BeansException {
-        final String configPath = _appContext.getBean("configPath", String.class);
-        final ServletContext servletContext = _appContext.getBean(ServletContext.class);
-        try {
-            final Element guiConfig = ConfigurationOverrides.DEFAULT.loadXmlFileAndUpdate(configPath + "config-gui.xml", servletContext);
-            final String xpath = "client/@url";
-            this._homeRedirectUrl = Xml.selectString(guiConfig, xpath);
-            if (_homeRedirectUrl == null) {
-                throw new FatalBeanException("No redirect URL was found in " + configPath + "config-gui.xml" + " at xpath: " + xpath);
-            }
-        } catch (Exception e) {
-            throw new FatalBeanException("Error loading guiConfig: " + configPath + "config-gui.xml", e);
-        }
-
-        try {
-            final Element config = ConfigurationOverrides.DEFAULT.loadXmlFileAndUpdate(configPath + "config.xml", servletContext);
-            final String xpath = "default/language";
-            this._defaultLanguage = Xml.selectString(config, xpath);
-            if (_defaultLanguage == null) {
-                _defaultLanguage = Geonet.DEFAULT_LANGUAGE;
-            }
-        } catch (Exception e) {
-            throw new FatalBeanException("Error loading config.xml: " + configPath + "config-gui.xml", e);
-        }
-
-
     }
 }

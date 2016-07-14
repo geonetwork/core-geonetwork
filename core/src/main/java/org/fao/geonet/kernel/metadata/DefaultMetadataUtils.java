@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.MetadataRatingByIpRepository;
@@ -64,6 +65,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
 
@@ -160,15 +162,13 @@ public class DefaultMetadataUtils implements IMetadataUtils {
      */
     @Override
     public String extractUUID(String schema, Element md) throws Exception {
-        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
-                .resolve(Geonet.File.EXTRACT_UUID);
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_UUID);
         String uuid = Xml.transform(md, styleSheet).getText().trim();
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '" + uuid
-                    + "' for schema '" + schema + "'");
+            Log.debug(Geonet.DATA_MANAGER, "Extracted UUID '" + uuid + "' for schema '" + schema + "'");
 
-        // --- needed to detach md from the document
+        //--- needed to detach md from the document
         md.detach();
 
         return uuid;
@@ -185,15 +185,13 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public String extractDateModified(String schema, Element md)
             throws Exception {
-        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
-                .resolve(Geonet.File.EXTRACT_DATE_MODIFIED);
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DATE_MODIFIED);
         String dateMod = Xml.transform(md, styleSheet).getText().trim();
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Extracted Date Modified '" + dateMod
-                    + "' for schema '" + schema + "'");
+            Log.debug(Geonet.DATA_MANAGER, "Extracted Date Modified '" + dateMod + "' for schema '" + schema + "'");
 
-        // --- needed to detach md from the document
+        //--- needed to detach md from the document
         md.detach();
 
         return dateMod;
@@ -211,23 +209,23 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public Element setUUID(String schema, String uuid, Element md)
             throws Exception {
-        // --- setup environment
+        //--- setup environment
 
         Element env = new Element("env");
         env.addContent(new Element("uuid").setText(uuid));
 
-        // --- setup root element
+        //--- setup root element
 
         Element root = new Element("root");
         root.addContent(md.detach());
         root.addContent(env.detach());
 
-        // --- do an XSL transformation
+        //--- do an XSL  transformation
 
-        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema)
-                .resolve(Geonet.File.SET_UUID);
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.SET_UUID);
 
         return Xml.transform(root, styleSheet);
+
     }
 
     /**
@@ -238,16 +236,14 @@ public class DefaultMetadataUtils implements IMetadataUtils {
      */
     @Override
     public Element extractSummary(Element md) throws Exception {
-
         Path stylePath = dataDirectory
                 .resolveWebResource(Geonet.Path.STYLESHEETS);
         Path styleSheet = stylePath.resolve(Geonet.File.METADATA_BRIEF);
         Element summary = Xml.transform(md, styleSheet);
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER,
-                    "Extracted summary '\n" + Xml.getString(summary));
+            Log.debug(Geonet.DATA_MANAGER, "Extracted summary '\n" + Xml.getString(summary));
 
-        // --- needed to detach md from the document
+        //--- needed to detach md from the document
         md.detach();
 
         return summary;
@@ -262,8 +258,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public @Nullable String getMetadataId(@Nonnull String uuid)
             throws Exception {
-        final List<Integer> idList = mdRepository
-                .findAllIdsBy(hasMetadataUuid(uuid));
+        final List<Integer> idList = getMetadataRepository().findAllIdsBy(hasMetadataUuid(uuid));
         if (idList.isEmpty()) {
             return null;
         }
@@ -279,7 +274,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public @Nullable String getMetadataUuid(@Nonnull String id)
             throws Exception {
-        Metadata metadata = mdRepository.findOne(id);
+        Metadata metadata = getMetadataRepository().findOne(id);
 
         if (metadata == null)
             return null;
@@ -333,7 +328,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplateExt(final int id, final MetadataType metadataType)
             throws Exception {
-        mdRepository.update(id, new Updater<Metadata>() {
+        getMetadataRepository().update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata metadata) {
                 final MetadataDataInfo dataInfo = metadata.getDataInfo();
@@ -381,7 +376,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvestedExt(final int id, final String harvestUuid,
             final Optional<String> harvestUri) throws Exception {
-        mdRepository.update(id, new Updater<Metadata>() {
+        getMetadataRepository().update(id, new Updater<Metadata>() {
             @Override
             public void apply(Metadata metadata) {
                 MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
@@ -403,11 +398,10 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     @Override
     public void updateDisplayOrder(final String id, final String displayOrder)
             throws Exception {
-        mdRepository.update(Integer.valueOf(id), new Updater<Metadata>() {
+        getMetadataRepository().update(Integer.valueOf(id), new Updater<Metadata>() {
             @Override
             public void apply(Metadata entity) {
-                entity.getDataInfo()
-                        .setDisplayOrder(Integer.parseInt(displayOrder));
+                entity.getDataInfo().setDisplayOrder(Integer.parseInt(displayOrder));
             }
         });
     }
@@ -427,7 +421,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             // Update the popularity in database
             int iId = Integer.parseInt(id);
-            mdRepository.incrementPopularity(iId);
+            getMetadataRepository().incrementPopularity(iId);
             _entityManager.flush();
             _entityManager.clear();
 
@@ -436,8 +430,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
             list.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER,
-                        "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
+                Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
             }
         }
     }
@@ -459,6 +452,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         ratingEntity.setRating(rating);
         ratingEntity.setId(new MetadataRatingByIpId(metadataId, ipAddress));
 
+        final MetadataRatingByIpRepository ratingByIpRepository = getApplicationContext().getBean(MetadataRatingByIpRepository.class);
         ratingByIpRepository.save(ratingEntity);
 
         //
@@ -467,10 +461,10 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         final int newRating = ratingByIpRepository.averageRating(metadataId);
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:" + metadataId
-                    + " --> rating is:" + newRating);
+            Log.debug(Geonet.DATA_MANAGER, "Setting rating for id:" + metadataId + " --> rating is:" + newRating);
 
-        mdRepository.update(metadataId, new Updater<Metadata>() {
+
+        getMetadataRepository().update(metadataId, new Updater<Metadata>() {
             @Override
             public void apply(Metadata entity) {
                 entity.getDataInfo().setRating(newRating);
@@ -582,10 +576,8 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         env.addContent(new Element("file").setText(file));
         env.addContent(new Element("ext").setText(ext));
 
-        SettingManager sm = context.getBean(SettingManager.class);
-
-        String host = sm.getValue(Geonet.Settings.SERVER_HOST);
-        String port = sm.getValue(Geonet.Settings.SERVER_PORT);
+        String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         String baseUrl = context.getBaseUrl();
 
         env.addContent(new Element("host").setText(host));
@@ -594,10 +586,9 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         // TODO: Remove host, port, baseUrl and simplify the
         // URL created in the XSLT. Keeping it for the time
         // as many profiles depend on it.
-        env.addContent(new Element("url").setText(sm.getSiteURL(context)));
+        env.addContent(new Element("url").setText(getSettingManager().getSiteURL(context)));
 
-        manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL,
-                indexAfterChange);
+        manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange);
     }
 
     /**
@@ -664,40 +655,36 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     private void transformMd(ServiceContext context, String metadataId,
             Element md, Element env, String schema, String styleSheet,
             boolean indexAfterChange) throws Exception {
-        SettingManager sm = context.getBean(SettingManager.class);
 
         if (env.getChild("host") == null) {
-            String host = sm.getValue(Geonet.Settings.SERVER_HOST);
-            String port = sm.getValue(Geonet.Settings.SERVER_PORT);
-
+            String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+            String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
             env.addContent(new Element("host").setText(host));
             env.addContent(new Element("port").setText(port));
         }
 
-        // --- setup root element
+        //--- setup root element
         Element root = new Element("root");
         root.addContent(md);
         root.addContent(env);
 
-        // --- do an XSL transformation
-        Path styleSheetPath = metadataSchemaUtils.getSchemaDir(schema)
-                .resolve(styleSheet);
+        //--- do an XSL  transformation
+        Path styleSheetPath = getSchemaDir(schema).resolve(styleSheet);
 
         md = Xml.transform(root, styleSheetPath);
         String changeDate = null;
         String uuid = null;
-        if (metadataSchemaUtils.getSchema(schema).isReadwriteUUID()) {
+        if (getSchemaManager().getSchema(schema).isReadwriteUUID()) {
             uuid = extractUUID(schema, md);
         }
 
-        context.getBean(XmlSerializer.class).update(metadataId, md, changeDate,
-                true, uuid, context);
+        getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(md, metadataId);
 
-            // --- update search criteria
+            //--- update search criteria
             metadataIndexer.indexMetadata(metadataId, true);
         }
     }
@@ -841,15 +828,12 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         String parentSchema = (String) params.get(Params.SCHEMA);
 
         // --- get parent metadata in read/only mode
-        boolean forEditing = false, withValidationErrors = false,
-                keepXlinkAttributes = false;
-        Element parent = metadataManager.getMetadata(srvContext, parentId,
-                forEditing, withValidationErrors, keepXlinkAttributes);
+        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+        Element parent = metadataManager.getMetadata(srvContext, parentId, forEditing, withValidationErrors, keepXlinkAttributes);
 
         Element env = new Element("update");
         env.addContent(new Element("parentUuid").setText(parentUuid));
-        env.addContent(new Element("siteURL").setText(srvContext
-                .getBean(SettingManager.class).getSiteURL(srvContext)));
+        env.addContent(new Element("siteURL").setText(getSettingManager().getSiteURL(srvContext)));
         env.addContent(new Element("parent").addContent(parent));
 
         // Set of untreated children (out of privileges, different schemas)
@@ -859,39 +843,34 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         for (String childId : children) {
 
             // Check privileges
-            if (!srvContext.getBean(AccessManager.class).canEdit(srvContext,
-                    childId)) {
+            if (!getAccessManager().canEdit(srvContext, childId)) {
                 untreatedChildSet.add(childId);
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
-                            + childId + ") because of privileges.");
+                        + childId + ") because of privileges.");
                 continue;
             }
 
-            Element child = metadataManager.getMetadata(srvContext, childId,
-                    forEditing, withValidationErrors, keepXlinkAttributes);
+            Element child = metadataManager.getMetadata(srvContext, childId, forEditing, withValidationErrors, keepXlinkAttributes);
 
-            String childSchema = child
-                    .getChild(Edit.RootChild.INFO, Edit.NAMESPACE)
-                    .getChildText(Edit.Info.Elem.SCHEMA);
+            String childSchema = child.getChild(Edit.RootChild.INFO,
+                Edit.NAMESPACE).getChildText(Edit.Info.Elem.SCHEMA);
 
             // Check schema matching. CHECKME : this suppose that parent and
             // child are in the same schema (even not profil different)
             if (!childSchema.equals(parentSchema)) {
                 untreatedChildSet.add(childId);
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER,
-                            "Could not update child (" + childId
-                                    + ") because schema (" + childSchema
-                                    + ") is different from the parent one ("
-                                    + parentSchema + ").");
+                    Log.debug(Geonet.DATA_MANAGER, "Could not update child ("
+                        + childId + ") because schema (" + childSchema
+                        + ") is different from the parent one (" + parentSchema
+                        + ").");
                 }
                 continue;
             }
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER,
-                        "Updating child (" + childId + ") ...");
+                Log.debug(Geonet.DATA_MANAGER, "Updating child (" + childId + ") ...");
 
             // --- setup xml element to be processed by XSLT
 
@@ -902,13 +881,11 @@ public class DefaultMetadataUtils implements IMetadataUtils {
 
             // --- do an XSL transformation
 
-            Path styleSheet = metadataSchemaUtils.getSchemaDir(parentSchema)
-                    .resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
+            Path styleSheet = getSchemaDir(parentSchema).resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
             Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
 
-            srvContext.getBean(XmlSerializer.class).update(childId,
-                    childForUpdate, new ISODate().toString(), true, null,
-                    srvContext);
+            getXmlSerializer().update(childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
+
 
             // Notifies the metadata change to metatada notifier service
             notifyMetadataChange(childForUpdate, childId);
@@ -1015,16 +992,12 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     private SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(
             ServiceContext context,
             Specification<OperationAllowed> operationAllowedSpec) {
-        final OperationAllowedRepository operationAllowedRepo = context
-                .getBean(OperationAllowedRepository.class);
-        List<OperationAllowed> operationsAllowed = operationAllowedRepo
-                .findAll(operationAllowedSpec);
-        SetMultimap<Integer, ReservedOperation> operationsPerMetadata = HashMultimap
-                .create();
+        final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
+        List<OperationAllowed> operationsAllowed = operationAllowedRepo.findAll(operationAllowedSpec);
+        SetMultimap<Integer, ReservedOperation> operationsPerMetadata = HashMultimap.create();
         for (OperationAllowed allowed : operationsAllowed) {
             final OperationAllowedId id = allowed.getId();
-            operationsPerMetadata.put(id.getMetadataId(),
-                    ReservedOperation.lookup(id.getOperationId()));
+            operationsPerMetadata.put(id.getMetadataId(), ReservedOperation.lookup(id.getOperationId()));
         }
         return operationsPerMetadata;
     }
@@ -1076,5 +1049,38 @@ public class DefaultMetadataUtils implements IMetadataUtils {
                     }
                 });
 
+    }
+
+    public Path getSchemaDir(String name) {
+        return getSchemaManager().getSchemaDir(name);
+    }
+    
+    private MetadataRepository getMetadataRepository() {
+        return mdRepository;
+    }
+    
+    private SettingManager getSettingManager() {
+        return getBean(SettingManager.class);
+    }
+    
+    private AccessManager getAccessManager() {
+        return getBean(AccessManager.class);
+    }
+    
+    private ApplicationContext getApplicationContext() {
+        return ApplicationContextHolder.get();
+    }
+
+    private <T> T getBean(Class<T> requiredType) {
+        return getApplicationContext().getBean(requiredType);
+    }
+    
+    private XmlSerializer getXmlSerializer() {
+        return ApplicationContextHolder.get()
+                .getBean(XmlSerializer.class);
+    }
+    
+    private SchemaManager getSchemaManager() {
+        return schemaManager;
     }
 }

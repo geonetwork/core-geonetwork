@@ -32,7 +32,7 @@
   angular.module('gn_validation_report_directive', [
     'gn_utility'
   ])
-  .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
+      .directive('gnValidationReport', ['gnValidation', 'gnCurrentEdit',
         function(gnValidation, gnCurrentEdit) {
           return {
             restrict: 'A',
@@ -54,8 +54,9 @@
                 scope.hasSuccess = false;
                 scope.loading = true;
 
-                gnValidation.get().then(function(ruleTypes) {
+                gnValidation.get().then(function(response) {
                   var optional = [];
+                  var ruleTypes = response.data.report;
                   angular.forEach(ruleTypes, function(ruleType) {
                     if (ruleType.requirement !== 'REQUIRED') {
                       optional.push(ruleType);
@@ -63,7 +64,6 @@
                       scope.ruleTypes.push(ruleType);
                     }
 
-                    ruleType.error = parseInt(ruleType.error);
                     ruleType.expanded = false;
 
                     scope.hasRequiredErrors = scope.hasRequiredErrors ||

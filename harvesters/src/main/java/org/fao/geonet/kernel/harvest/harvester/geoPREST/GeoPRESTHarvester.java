@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -40,118 +41,111 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class GeoPRESTHarvester extends AbstractHarvester<HarvestResult>
-{
+public class GeoPRESTHarvester extends AbstractHarvester<HarvestResult> {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx
-	{
-		params = new GeoPRESTParams(dataMan);
+    private GeoPRESTParams params;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new GeoPRESTParams(dataMan);
         super.setParams(params);
         params.create(node);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
 
-	protected String doAdd(Element node) throws BadInputEx, SQLException
-	{
-		params = new GeoPRESTParams(dataMan);
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new GeoPRESTParams(dataMan);
         super.setParams(params);
 
         //--- retrieve/initialize information
-		params.create(node);
+        params.create(node);
 
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
 
-		String id = settingMan.add("harvesting", "node", getType());
+        String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(params, "id:"+id);
+        storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-		
-		return id;
-	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
+        return id;
+    }
 
-	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException
-	{
-		GeoPRESTParams copy = params.copy();
+    //---------------------------------------------------------------------------
 
-		//--- update variables
-		copy.update(node);
+    protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
+        GeoPRESTParams copy = params.copy();
 
-		String path = "harvesting/id:"+ id;
+        //--- update variables
+        copy.update(node);
 
-		settingMan.removeChildren(path);
+        String path = "harvesting/id:" + id;
 
-		//--- update database
-		storeNode(copy, path);
+        settingMan.removeChildren(path);
 
-		//--- we update a copy first because if there is an exception GeoPRESTParams
-		//--- could be half updated and so it could be in an inconsistent state
+        //--- update database
+        storeNode(copy, path);
+
+        //--- we update a copy first because if there is an exception GeoPRESTParams
+        //--- could be half updated and so it could be in an inconsistent state
 
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
 
-		params = copy;
+        params = copy;
         super.setParams(params);
 
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
-		GeoPRESTParams params = (GeoPRESTParams) p;
+    protected void storeNodeExtra(AbstractParams p, String path,
+                                  String siteId, String optionsId) throws SQLException {
+        GeoPRESTParams params = (GeoPRESTParams) p;
 
-		settingMan.add("id:"+siteId, "baseUrl", params.baseUrl);
-		settingMan.add("id:"+siteId, "icon",     params.icon);
+        settingMan.add("id:" + siteId, "baseUrl", params.baseUrl);
+        settingMan.add("id:" + siteId, "icon", params.icon);
 
-		//--- store search nodes
+        //--- store search nodes
 
-		for (Search s : params.getSearches())
-		{
-			String  searchID = settingMan.add(path, "search", "");
+        for (Search s : params.getSearches()) {
+            String searchID = settingMan.add(path, "search", "");
 
-			settingMan.add("id:"+searchID, "freeText", s.freeText);
-		}
-	}
+            settingMan.add("id:" + searchID, "freeText", s.freeText);
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public void doHarvest(Logger log) throws Exception
-	{
-		Harvester h = new Harvester(cancelMonitor, log, context, params);
-		result = h.harvest(log);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private GeoPRESTParams params;
+    public void doHarvest(Logger log) throws Exception {
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        result = h.harvest(log);
+    }
 }

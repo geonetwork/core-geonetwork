@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
+
 import java.io.Serializable;
 
 /**

@@ -24,9 +24,9 @@
   -->
 
 <fields>
-<!--	
-	<field name="">
-		<suggest name=""/>
-	</field>
--->
+  <!--
+      <field name="">
+          <suggest name=""/>
+      </field>
+  -->
 </fields>

@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -38,11 +39,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Returns a list of keywords given a list of thesaurus. Keywords are returned
- * in raw format and XSL output may process the output according to the
- * transformation parameter which must match a template name provided in a 
- * schema plugin.
- * 
+ * Returns a list of keywords given a list of thesaurus. Keywords are returned in raw format and XSL
+ * output may process the output according to the transformation parameter which must match a
+ * template name provided in a schema plugin.
+ *
  * @author mcoudert
  */
 public class GetKeywordById implements Service {
@@ -50,7 +50,7 @@ public class GetKeywordById implements Service {
     }
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
         String sThesaurusName = Util.getParam(params, "thesaurus");
         String uri = Util.getParam(params, "id", null);
         String[] lang = Util.getParam(params, "lang", context.getLanguage()).split(",");
@@ -66,7 +66,7 @@ public class GetKeywordById implements Service {
         ThesaurusManager thesaurusMan = context.getBean(ThesaurusManager.class);
 
         Element root;
-        
+
         if (uri == null) {
             root = new Element("descKeys");
         } else {
@@ -95,7 +95,7 @@ public class GetKeywordById implements Service {
                 }
             }
         }
-        
+
         return root;
     }
 }

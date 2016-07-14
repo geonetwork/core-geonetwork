@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<heading>Palaute</heading>
-	<message>Palaute on lähetetty.</message>
-	<text>Kiitos.</text>
+  <heading>Palaute</heading>
+  <message>Palaute on lähetetty.</message>
+  <text>Kiitos.</text>
 </strings>

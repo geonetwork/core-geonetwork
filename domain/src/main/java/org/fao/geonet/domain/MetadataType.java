@@ -28,9 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * The type of metadata.
  * <p/>
- * User: Jesse
- * Date: 9/12/13
- * Time: 9:21 AM
+ * User: Jesse Date: 9/12/13 Time: 9:21 AM
  */
 public enum MetadataType {
     /**
@@ -42,10 +40,9 @@ public enum MetadataType {
      */
     TEMPLATE('y'),
     /**
-     * Indicates the associated {@link Metadata} entity is a sub-template metadata.
-     * <p></p>
-     * A sub-template is a metadata fragment that can be inserted into another metadata.  It can also be
-     * shared as an xlink in multiple metadata to reduce duplication.
+     * Indicates the associated {@link Metadata} entity is a sub-template metadata. <p></p> A
+     * sub-template is a metadata fragment that can be inserted into another metadata.  It can also
+     * be shared as an xlink in multiple metadata to reduce duplication.
      */
     SUB_TEMPLATE('s');
 
@@ -62,6 +59,7 @@ public enum MetadataType {
         this.code = code;
         this.codeString = String.valueOf(code);
     }
+
     @Nonnull
     public static MetadataType lookup(final char code) {
         for (MetadataType type : values()) {
@@ -75,16 +73,23 @@ public enum MetadataType {
 
     /**
      * Look up the MetadataType from a string.
-     * @param code the 1 character long string representing the type.
      *
+     * @param code the 1 character long string representing the type.
      * @return the metadata type.
      */
     @Nonnull
     public static MetadataType lookup(@Nonnull final String code) {
         final String trimmedCode = code.trim();
-        if (trimmedCode.length() != 1) {
-            throw new IllegalArgumentException("Not a known MetadataType code: " + trimmedCode);
+        if (trimmedCode.length() == 1) {
+            return lookup(trimmedCode.charAt(0));
+        } else {
+            for (MetadataType type : values()) {
+                if (type.toString().equalsIgnoreCase(trimmedCode.toLowerCase())) {
+                    return type;
+                }
+            }
         }
-        return lookup(trimmedCode.charAt(0));
+        throw new IllegalArgumentException(String.format(
+            "'%s' is not a known metadata type code. Values are: %s", trimmedCode, values()));
     }
 }

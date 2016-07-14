@@ -24,6 +24,7 @@ package org.fao.geonet.services.statistics;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.statistic.SearchRequestParam;
@@ -42,10 +43,10 @@ import java.util.List;
  */
 public class SearchTermsStatistics extends NotInReadOnlyModeService {
 
+    public static final int DEFAULT_LIMIT = 25;
     private static final String FIELD_PARAM = "field";
     private static final String SERVICE_PARAM = "service";
     private static final String LIMIT_PARAM = "limit";
-    public static final int DEFAULT_LIMIT = 25;
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
@@ -64,7 +65,7 @@ public class SearchTermsStatistics extends NotInReadOnlyModeService {
         }
 
         final List<Pair<String, Integer>> termTextToRequestCount = paramRepository.getTermTextToRequestCount(limit,
-                specification);
+            specification);
         return toElement(termTextToRequestCount);
     }
 
@@ -72,9 +73,9 @@ public class SearchTermsStatistics extends NotInReadOnlyModeService {
         final Element param = new Element("params");
         for (Pair<String, Integer> summary : termTextToRequestCount) {
             param.addContent(
-                    new Element("record")
-                            .addContent(new Element("termtext").setText(summary.one()))
-                            .addContent(new Element("total").setText("" + summary.two()))
+                new Element("record")
+                    .addContent(new Element("termtext").setText(summary.one()))
+                    .addContent(new Element("total").setText("" + summary.two()))
             );
         }
         return param;

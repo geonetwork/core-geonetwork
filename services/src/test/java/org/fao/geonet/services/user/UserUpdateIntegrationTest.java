@@ -26,6 +26,7 @@ package org.fao.geonet.services.user;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.JeevesServlet;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
@@ -47,6 +48,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.servlet.http.HttpSession;
 
 import static junit.framework.Assert.assertEquals;
@@ -84,10 +86,9 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
     GroupRepository _groupRepository;
     @Autowired
     PasswordEncoder _encoder;
-    private AtomicInteger _inc = new AtomicInteger();
-
     @Autowired
     Update update;
+    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testExecResetPassword() throws Exception {
@@ -95,10 +96,11 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
         User admin = _userRepo.findOneByUsername("admin");
         assertFalse(_encoder.matches(password, admin.getPassword()));
 
@@ -107,23 +109,25 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         admin = _userRepo.findOneByUsername("admin");
         assertTrue(_encoder.matches(password, admin.getPassword()));
     }
+
     @Test
     public void testExecAddNewUserCompatibilityModeAsAdmin() throws Exception {
 
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         request.addParameter("groups_RegisteredUser", "2");
         request.addParameter("groups_Reviewer", "2");
 
         update.run(session, request, Params.Operation.NEWUSER, null, username,
-                password, profile, surname, name, address, city, state, zip,
-                country, email, organization, kind, enabled);
+            password, profile, surname, name, address, city, state, zip,
+            country, email, organization, kind, enabled);
 
         assertEquals(2, _userRepo.count());
         List<User> users = _userRepo.findAllByProfile(Profile.UserAdmin);
@@ -134,29 +138,29 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         assertExpectedUser(user);
 
         assertNotNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.Editor)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.Editor)));
         assertNotNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.RegisteredUser)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.RegisteredUser)));
         assertNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.UserAdmin)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.UserAdmin)));
         assertNotNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.Reviewer)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.Reviewer)));
         assertNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2)
-                .setUserId(user.getId()).setProfile(Profile.Administrator)));
+            .setUserId(user.getId()).setProfile(Profile.Administrator)));
 
     }
 
     @Test
     public void testExecFullUpdateUserCompatibilityModeAsAdmin()
-            throws Exception {
+        throws Exception {
 
         User startUser = new User().setName("abc").setKind("abc")
-                .setOrganisation("abc").setProfile(Profile.Guest)
-                .setSurname("abc").setUsername("abc");
+            .setOrganisation("abc").setProfile(Profile.Guest)
+            .setSurname("abc").setUsername("abc");
         startUser.getSecurity().setPassword("abc");
 
         startUser = _userRepo.save(startUser);
@@ -167,18 +171,19 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         request.addParameter("groups_RegisteredUser", "2");
         request.addParameter("groups_Reviewer", "2");
 
         update.run(session, request, Params.Operation.FULLUPDATE,
-                Integer.toString(startUser.getId()), username, password,
-                profile, surname, name, address, city, state, zip, country,
-                email, organization, kind, enabled);
+            Integer.toString(startUser.getId()), username, password,
+            profile, surname, name, address, city, state, zip, country,
+            email, organization, kind, enabled);
 
         assertEquals(2, _userRepo.count());
         User user = _userRepo.findOne(startUser.getId());
@@ -188,19 +193,19 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         assertExpectedUser(user);
 
         assertNotNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.Editor)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.Editor)));
         assertNotNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.RegisteredUser)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.RegisteredUser)));
         assertNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.UserAdmin)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.UserAdmin)));
         assertNotNull(_userGroupRepository.findOne(new UserGroupId()
-                .setGroupId(2).setUserId(user.getId())
-                .setProfile(Profile.Reviewer)));
+            .setGroupId(2).setUserId(user.getId())
+            .setProfile(Profile.Reviewer)));
         assertNull(_userGroupRepository.findOne(new UserGroupId().setGroupId(2)
-                .setUserId(user.getId()).setProfile(Profile.Administrator)));
+            .setUserId(user.getId()).setProfile(Profile.Administrator)));
 
     }
 
@@ -216,14 +221,15 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.RESETPW,
-                Integer.toString(startUser.getId()), username, password, null,
-                null, null, null, null, null, null, null, null, null, null, null);
+            Integer.toString(startUser.getId()), username, password, null,
+            null, null, null, null, null, null, null, null, null, null, null);
 
         User user = _userRepo.findOne(startUser.getId());
         assertExpectedUser(user);
@@ -242,14 +248,15 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(startUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.RESETPW,
-                Integer.toString(startUser.getId()), username, password, null,
-                null, null, null, null, null, null, null, null, null, null, null);
+            Integer.toString(startUser.getId()), username, password, null,
+            null, null, null, null, null, null, null, null, null, null, null);
 
         User user = _userRepo.findOne(startUser.getId());
         assertExpectedUser(user);
@@ -268,15 +275,16 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(startUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.EDITINFO,
-                Integer.toString(startUser.getId()), username, null, null,
-                null, "firstname", null, null, null, null, null, null, null,
-                null, null);
+            Integer.toString(startUser.getId()), username, null, null,
+            null, "firstname", null, null, null, null, null, null, null,
+            null, null);
 
         User user = _userRepo.findOne(startUser.getId());
         assertExpectedUser(user);
@@ -312,7 +320,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUseradminCannotEscalateOthersPrivilegesToAdministrator()
-            throws Exception {
+        throws Exception {
 
         final Group one = _groupRepository.findOne(2);
         User toUpdateUser = getUser();
@@ -324,24 +332,25 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser = _userRepo.save(updatingUser);
 
         _userGroupRepository.save(Arrays.asList(
-                new UserGroup().setProfile(Profile.Editor)
-                        .setUser(toUpdateUser).setGroup(one), new UserGroup()
-                        .setProfile(Profile.UserAdmin).setUser(updatingUser)
-                        .setGroup(one)));
+            new UserGroup().setProfile(Profile.Editor)
+                .setUser(toUpdateUser).setGroup(one), new UserGroup()
+                .setProfile(Profile.UserAdmin).setUser(updatingUser)
+                .setGroup(one)));
 
         final UserSession userSession = new UserSession();
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.EDITINFO,
-                Integer.toString(updatingUser.getId()), null, null,
-                Profile.Administrator.name(), null, null, null, null, null,
-                null, null, null, null, null, null);
+            Integer.toString(updatingUser.getId()), null, null,
+            Profile.Administrator.name(), null, null, null, null, null,
+            null, null, null, null, null, null);
 
     }
 
@@ -358,7 +367,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
     }
 
     private void assertCannotEscalateOwnPrivileges(Profile profile)
-            throws Exception {
+        throws Exception {
         User startUser = getUser();
         startUser.setProfile(Profile.RegisteredUser);
         startUser = _userRepo.save(startUser);
@@ -369,15 +378,16 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(startUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.EDITINFO,
-                Integer.toString(startUser.getId()), null, null,
-                profile.name(), null, "newname", null, null, null, null, null,
-                null, null, null, null);
+            Integer.toString(startUser.getId()), null, null,
+            profile.name(), null, "newname", null, null, null, null, null,
+            null, null, null, null);
 
     }
 
@@ -391,26 +401,27 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser.setProfile(Profile.Editor);
         updatingUser.setUsername("updater");
         updatingUser = _userRepo.save(updatingUser);
-        
+
         final UserSession userSession = new UserSession();
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.RESETPW,
-                Integer.toString(toUpdateUser.getId()), null, password, null,
-                null, null, null, null, null, null, null, null, null, null, null);
+            Integer.toString(toUpdateUser.getId()), null, password, null,
+            null, null, null, null, null, null, null, null, null, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateUserInOtherGroup() throws Exception {
         final Group one = _groupRepository.findOne(2);
         final Group two = _groupRepository.save(GroupRepositoryTest
-                .newGroup(_inc));
+            .newGroup(_inc));
         User toUpdateUser = getUser();
         toUpdateUser = _userRepo.save(toUpdateUser);
 
@@ -420,23 +431,24 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser = _userRepo.save(updatingUser);
 
         _userGroupRepository.save(Arrays.asList(
-                new UserGroup().setProfile(Profile.Editor)
-                        .setUser(toUpdateUser).setGroup(one), new UserGroup()
-                        .setProfile(Profile.UserAdmin).setUser(updatingUser)
-                        .setGroup(two)));
+            new UserGroup().setProfile(Profile.Editor)
+                .setUser(toUpdateUser).setGroup(one), new UserGroup()
+                .setProfile(Profile.UserAdmin).setUser(updatingUser)
+                .setGroup(two)));
 
         final UserSession userSession = new UserSession();
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.RESETPW,
-                Integer.toString(toUpdateUser.getId()), null, password, null,
-                null, null, null, null, null, null, null, null, null, null, null);
+            Integer.toString(toUpdateUser.getId()), null, password, null,
+            null, null, null, null, null, null, null, null, null, null, null);
 
     }
 
@@ -452,37 +464,38 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         updatingUser = _userRepo.save(updatingUser);
 
         _userGroupRepository.save(Arrays.asList(
-                new UserGroup().setProfile(Profile.Editor)
-                        .setUser(toUpdateUser).setGroup(one), new UserGroup()
-                        .setProfile(Profile.UserAdmin).setUser(updatingUser)
-                        .setGroup(one)));
+            new UserGroup().setProfile(Profile.Editor)
+                .setUser(toUpdateUser).setGroup(one), new UserGroup()
+                .setProfile(Profile.UserAdmin).setUser(updatingUser)
+                .setGroup(one)));
 
 
         final UserSession userSession = new UserSession();
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
-                serviceContext.getUserSession());
+            serviceContext.getUserSession());
 
         update.run(session, request, Params.Operation.RESETPW,
-                Integer.toString(toUpdateUser.getId()), null, password, null,
-                null, null, null, null, null, null, null, null, null, null, null);
-        
+            Integer.toString(toUpdateUser.getId()), null, password, null,
+            null, null, null, null, null, null, null, null, null, null, null);
+
         User user = _userRepo.findOne(toUpdateUser.getId());
         assertExpectedUser(user);
     }
 
     private User getUser() {
         User startUser = new User().setName("firstname").setKind("consultant")
-                .setOrganisation("c2c").setProfile(Profile.UserAdmin)
-                .setSurname("lastname").setUsername("newuser");
+            .setOrganisation("c2c").setProfile(Profile.UserAdmin)
+            .setSurname("lastname").setUsername("newuser");
         startUser.getSecurity().setPassword(_encoder.encode("password"));
         startUser.getAddresses().add(
-                new Address().setAddress("address1").setCity("city1")
-                        .setCountry("ca").setState("state1").setZip("zip1"));
+            new Address().setAddress("address1").setCity("city1")
+                .setCountry("ca").setState("state1").setZip("zip1"));
         startUser.getEmailAddresses().add("newuser@email.com");
 
         return startUser;

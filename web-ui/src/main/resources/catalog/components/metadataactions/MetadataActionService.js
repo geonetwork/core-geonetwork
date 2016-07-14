@@ -41,12 +41,13 @@
     'gnAlertService',
     'gnSearchSettings',
     'gnPopup',
+    'gnMdFormatter',
     '$translate',
     '$q',
     '$http',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnPopup,
+             gnPopup, gnMdFormatter,
              $translate, $q, $http) {
 
       var windowName = 'geonetwork';
@@ -114,16 +115,16 @@
           if (params.sortOrder) {
             url += '&sortOrder=' + params.sortOrder;
           }
-        }
-        else if (angular.isString(params)) {
-          // TODO: May depend on schema
-          url = gnSearchSettings.formatter.defaultPdfUrl + params;
-        }
-        if (url) {
           location.replace(url);
         }
-        else {
-          console.error('Error while exporting PDF');
+        else if (angular.isString(params)) {
+          gnMdFormatter.getFormatterUrl(null, null, params).then(function(url) {
+            $http.get(url, {
+              headers: {
+                Accept: 'text/html'
+              }
+            });
+          });
         }
       };
 
@@ -160,7 +161,11 @@
           });
         }
         else {
-          return callBatch('mdValidateBatch').then(function() {
+          return gnHttp.callService('../api/records/validate', null,
+                                    {
+                                      method: 'PUT'
+                                    }).then(function(data) {
+            alertResult(data.data);
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('search');
           });
@@ -178,9 +183,8 @@
           });
         }
         else {
-          return callBatch('mdDeleteBatch').then(function() {
+          return $http.delete('../api/records').then(function() {
             $rootScope.$broadcast('mdSelectNone');
-            // TODO: Same here.
             $rootScope.$broadcast('search');
           });
         }
@@ -202,10 +206,8 @@
       };
 
       this.startWorkflow = function(md, scope) {
-        return $http.get('md.status.update?' +
-            '_content_type=json&id=' + md.getId() +
-            '&changeMessage=Enable workflow' +
-            '&status=1').then(
+        return $http.put('../api/records/' + md.getId() +
+            '/status?status=1&comment=Enable workflow').then(
             function(data) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
@@ -230,7 +232,7 @@
         }, scope, 'PrivilegesUpdated');
       };
       this.openBatchEditing = function(scope) {
-        $location.path('/batchedit');
+        $location.path('/batchediting');
       };
       this.openCategoriesBatchPanel = function(scope) {
         openModal({
@@ -324,27 +326,25 @@
 
       this.assignGroup = function(metadataId, groupId) {
         var defer = $q.defer();
-        $http.get('md.group.update?id=' + metadataId +
-            '&groupid=' + groupId)
-          .success(function(data) {
+        $http.put('../api/records/' + metadataId +
+            '/group', groupId)
+            .success(function(data) {
               defer.resolve(data);
             })
-          .error(function(data) {
+            .error(function(data) {
               defer.reject(data);
             });
         return defer.promise;
       };
 
       this.assignCategories = function(metadataId, categories) {
-        var defer = $q.defer(), ids = '';
-        angular.forEach(categories, function(value) {
-          ids += '&_' + value + '=on';
-        });
-        $http.get('md.category.update?id=' + metadataId + ids)
-          .success(function(data) {
+        var defer = $q.defer();
+        $http.get('../records/' + metadataId +
+                  '/tags?id=' + categories.join('&id='))
+            .success(function(data) {
               defer.resolve(data);
             })
-          .error(function(data) {
+            .error(function(data) {
               defer.reject(data);
             });
         return defer.promise;
@@ -353,10 +353,10 @@
       this.startVersioning = function(metadataId) {
         var defer = $q.defer();
         $http.get('md.versioning.start?id=' + metadataId)
-          .success(function(data) {
+            .success(function(data) {
               defer.resolve(data);
             })
-          .error(function(data) {
+            .error(function(data) {
               defer.reject(data);
             });
         return defer.promise;

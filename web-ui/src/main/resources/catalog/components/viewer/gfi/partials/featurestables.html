@@ -1,0 +1,23 @@
+<div class="gn-features-table" data-ng-show="ctrl.tables.length > 0">
+
+  <button class="btn btn-default close" ng-click="ctrl.clear()">&times;</button>
+
+  <ul class="nav nav-tabs">
+    <li data-ng-repeat="table in ctrl.tables"
+        data-ng-class="{active: table == ctrl.currentTable}">
+      <a role="tab" data-ng-click="ctrl.currentTable = table"
+         title="{{::table.name}}">
+        <span class="layername">{{table.name}}</span>&nbsp;
+        <span ng-if="table.loader.isLoading()" class="badge">
+          <i class="fa fa-spin fa-spinner"></i>
+        </span>
+        <span ng-if="!table.loader.isLoading() && table.loader.getCount() > 0" class="badge">{{table.loader.getCount()}}</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content" data-ng-show="ctrl.currentTable == table" ng-repeat="table in ctrl.tables" data-ng-init="ctrl.currentTable = ctrl.tables[0]">
+    <gn-features-table gn-features-table-loader="table.loader" gn-features-table-loader-map="ctrl.map"></gn-features-table>
+  </div>
+
+</div>

@@ -25,10 +25,10 @@
 <!--
 Stylesheet used to remove a reference to a parent record.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:dct="http://purl.org/dc/terms/"
+<xsl:stylesheet xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:geonet="http://www.fao.org/geonetwork">
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                version="2.0">
   <!-- Parent metadata record UUID -->
   <xsl:param name="parentUuid"/>
 
