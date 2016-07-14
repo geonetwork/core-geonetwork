@@ -400,6 +400,7 @@ public class DownloadArchive implements Service {
                                 sm.getValue("system/feedback/mailServer/password"),
                                 sm.getValueAsBool("system/feedback/mailServer/ssl"),
                                 sm.getValueAsBool("system/feedback/mailServer/tls"),
+                                sm.getValueAsBool("system/feedback/mailServer/ingoreSslCertificateErrors", false),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
                             e.printStackTrace();

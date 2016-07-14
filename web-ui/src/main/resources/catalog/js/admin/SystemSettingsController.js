@@ -125,6 +125,14 @@
 
               var sectionsLevel1 = [];
               var sectionsLevel2 = [];
+
+              // Stringify JSON for editing in text area
+              angular.forEach(data, function(s) {
+                if (s.dataType === 'JSON') {
+                  s.value = angular.toJson(s.value);
+                }
+              });
+
               $scope.settings = data;
               angular.copy(data, $scope.initalSettings);
 

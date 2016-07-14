@@ -30,10 +30,15 @@ import jeeves.server.overrides.ConfigurationOverrides;
 
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.utils.Log;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.File;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
@@ -45,6 +50,8 @@ import javax.servlet.ServletContextListener;
  */
 public class JeevesContextLoaderListener implements ServletContextListener {
 
+
+    private JeevesApplicationContext parentAppContext;
 
     public static String[] getNodeIds(final ServletContext servletContext) {
         final File[] nodeConfigurationFiles = getNodeConfigurationFiles(servletContext);
@@ -85,7 +92,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
             String parentConfigFile = "/WEB-INF/config-spring-geonetwork-parent.xml";
 
-            JeevesApplicationContext parentAppContext = new JeevesApplicationContext(null, null, parentConfigFile);
+            parentAppContext = new JeevesApplicationContext(null, null, parentConfigFile);
             parentAppContext.setServletContext(servletContext);
             parentAppContext.refresh();
 
@@ -143,11 +150,27 @@ public class JeevesContextLoaderListener implements ServletContextListener {
     public void contextDestroyed(final ServletContextEvent sce) {
         final ServletContext servletContext = sce.getServletContext();
 
+        /**
+         * Destroy all the Spring contexts
+         */
         for (String node : getNodeIds(sce.getServletContext())) {
             if (!node.trim().isEmpty()) {
+                Log.info(Log.ENGINE, "Destroying the appContext for " + node);
                 JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
                     User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
                 jeevesAppContext.destroy();
+            }
+        }
+        Log.info(Log.ENGINE, "Destroying the parent appContext");
+        parentAppContext.destroy();
+
+        // De-register JDBC drivers to avoid warnings
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            try {
+                DriverManager.deregisterDriver(drivers.nextElement());
+            } catch (SQLException e) {
+                Log.warning(Log.ENGINE, "Cannot de-register driver", e);
             }
         }
     }

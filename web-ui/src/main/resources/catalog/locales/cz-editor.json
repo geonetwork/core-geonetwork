@@ -284,7 +284,6 @@
     "unsupportedSchemaAlert": "Metadata <strong>{{title}}</strong> používají <strong>{{schema}}</strong> standard. Ten není podporován editorem. <a href='#'>Návrat na editor board</a>.",
     "uploadFile": "Nahrát soubor z vašeho počítače",
     "uuidAction": "Zpracovávám identifikátor záznamu",
-    "validate": "Ověřit",
     "validate-help": "Zkontrolovat, zda je záznam v souladu s pravidly standardního ověřování",
     "validationReport": "Ověřování",
     "runValidation": "Spustit kontrolu validace",

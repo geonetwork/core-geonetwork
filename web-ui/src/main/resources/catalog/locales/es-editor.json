@@ -284,7 +284,6 @@
     "unsupportedSchemaAlert": "El metadato <strong>{{title}}</strong> usa el estandar <strong>{{schema}}</strong>. Este estandar no está soportado por el editor. <a href='#'>Volver a la página principal del editor</a>.",
     "uploadFile": "Upload a file from your computer",
     "uuidAction": "Procesando identificador de la entrada",
-    "validate": "Validar",
     "validate-help": "Comprobar la entrada con las reglas de validación estándar",
     "validationReport": "Validación",
     "runValidation": "Ejecutar validación",

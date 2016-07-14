@@ -71,7 +71,7 @@
       $scope.$watchCollection('groups', function() {
         if (!angular.isUndefined($scope.groups)) {
           if ($scope.groups.length == 1) {
-            $scope.ownerGroup = $scope.groups[0]['@id'];
+            $scope.ownerGroup = $scope.groups[0].id;
           }
         }
       });
@@ -346,7 +346,7 @@
       function loadMetadataIdentifierTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get('metadataIdentifierTemplates?_content_type=json')
+        $http.get('../api/identifiers')
             .success(function(data) {
               $scope.mdIdentifierTemplates = data;
 

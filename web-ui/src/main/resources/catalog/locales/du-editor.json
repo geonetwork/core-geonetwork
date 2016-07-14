@@ -284,7 +284,6 @@
     "unsupportedSchemaAlert": "Metadata <strong> {{title}} < / strong > gebruikt <strong> {{schema}} < / strong > standaard . Deze wordt niet ondersteund door de editor. <a href='#'> Terug naar editor scherm </a> .",
     "uploadFile": "Upload een document van uw computer",
     "uuidAction": "Record identifier verwerking",
-    "validate": "Valideren",
     "validate-help": "Controleer metadata met de standaard validatieregels",
     "validationReport": "Validatie",
     "runValidation": "Start validatieproces",

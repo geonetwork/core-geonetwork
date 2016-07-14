@@ -17,7 +17,7 @@
              data-ng-class="u.id === userSelected.id ? 'active' : ''"
              data-ng-click="selectUser(u)">
             <img class="img-circle"
-                 ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
+                 ng-src="http://gravatar.com/avatar/{{u.emailAddresses[0] | md5}}?s=18"/>
             <span class='badge' data-ng-show="u.enabled === false"
                   data-translate="">disabled</span> {{u.name}} {{u.surname}}
             ({{u.profile | translate}})
@@ -59,6 +59,7 @@
             <i class="fa fa-lock"></i> <span data-translate=""
           >resetPassword</span></button>
           <button type="button" class="btn btn-primary pull-right"
+                  data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
                   data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
             <i class="fa fa-save"></i> <span data-translate=""
           >saveUser</span></button>
@@ -158,7 +159,7 @@
               <label class="control-label col-sm-3" data-translate="">email</label>
               <div class="col-sm-9">
                 <input type="email" name="email" class="form-control"
-                       data-ng-model="userSelected.email" data-ng-required="true"/>
+                       data-ng-model="userSelected.emailAddresses[0]" data-ng-required="true"/>
               </div>
             </div>
             <div class="form-group">
@@ -177,7 +178,7 @@
                 <label class="control-label col-sm-3" data-translate="">address</label>
                 <div class="col-sm-9">
                   <input type="text" name="address" class="form-control"
-                         data-ng-model="userSelected.primaryaddress.address"/>
+                         data-ng-model="userSelected.addresses[0].address"/>
                 </div>
               </div>
 
@@ -185,7 +186,7 @@
                 <label class="control-label col-sm-3" data-translate="">zip</label>
                 <div class="col-sm-9">
                   <input type="text" name="zip" class="form-control"
-                         data-ng-model="userSelected.primaryaddress.zip"/>
+                         data-ng-model="userSelected.addresses[0].zip"/>
                 </div>
               </div>
 
@@ -194,7 +195,7 @@
                 <label class="control-label col-sm-3" data-translate="">state</label>
                 <div class="col-sm-9">
                   <input type="text" name="state" class="form-control"
-                         data-ng-model="userSelected.primaryaddress.state"/>
+                         data-ng-model="userSelected.addresses[0].state"/>
                 </div>
               </div>
 
@@ -203,7 +204,7 @@
                 <label class="control-label col-sm-3" data-translate="">city</label>
                 <div class="col-sm-9">
                   <input type="text" name="city" class="form-control"
-                         data-ng-model="userSelected.primaryaddress.city"/>
+                         data-ng-model="userSelected.addresses[0].city"/>
                 </div>
               </div>
 
@@ -212,7 +213,7 @@
                 <label class="control-label col-sm-3" data-translate="">country</label>
                 <div class="col-sm-9">
                   <input type="text" name="country" class="form-control"
-                         data-ng-model="userSelected.primaryaddress.country"
+                         data-ng-model="userSelected.addresses[0].country"
                          data-gn-country-picker=""/>
                 </div>
               </div>

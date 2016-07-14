@@ -46,9 +46,9 @@
           <label for="{{system.csw.contactId}}">{{'system/csw/contactId' | translate}}</label>
           <select data-ng-model="cswSettings['system/csw/contactId']" name="system.csw.contactId"
                   required="" class="form-control">
-            <option data-ng-repeat="u in users.users" value="{{u.value.id}}"
-                    ng-selected="u.value.id == cswSettings['system/csw/contactId']">
-              {{u.value.name + ' ' + u.value.surname}}</option>
+            <option data-ng-repeat="u in users" value="{{u.id}}"
+                    ng-selected="u.id == cswSettings['system/csw/contactId']">
+              {{u.name + ' ' + u.surname}}</option>
           </select>
           <p class="help-block">{{'system/csw/contactId-help' | translate}}</p>
         </div>

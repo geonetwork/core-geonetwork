@@ -244,10 +244,12 @@
       this.openTransferOwnership = function(md, scope) {
         var uuid = md ? md.getUuid() : '';
         var ownerId = md ? md.getOwnerId() : '';
+        var groupOwner = md ? md.getGroupOwner() : '';
         openModal({
           title: 'transferOwnership',
           content: '<div gn-transfer-ownership="' + uuid +
-              '" gn-transfer-md-owner="' + ownerId + '"></div>'
+              '" gn-transfer-md-owner="' + ownerId + '" ' +
+              '" gn-transfer-md-group-owner="' + groupOwner + '"></div>'
         }, scope, 'TransferOwnership');
       };
       /**

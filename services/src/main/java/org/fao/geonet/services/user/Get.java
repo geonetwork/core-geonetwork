@@ -49,6 +49,7 @@ import static org.springframework.data.jpa.domain.Specifications.*;
  * Retrieves a particular user
  */
 
+@Deprecated
 public class Get implements Service {
     //--------------------------------------------------------------------------
     //---

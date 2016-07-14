@@ -27,18 +27,15 @@ import org.fao.geonet.events.user.UserEvent;
 
 /**
  * Check that the username is correctly scaped.
- * 
+ *
  * @author delawen
- * 
- * 
  */
-
 public class CheckUsername {
 
     public void check(UserEvent event) {
         User user = event.getUser();
 
-        if (user.getUsername().contains("<")) {
+        if (user.getUsername() != null && user.getUsername().contains("<")) {
             user.setUsername(user.getUsername().replaceAll("<", ""));
         }
 
@@ -54,5 +51,4 @@ public class CheckUsername {
             user.setOrganisation(user.getOrganisation().replaceAll("<", ""));
         }
     }
-
 }

@@ -83,7 +83,20 @@ public class ThreadPool {
 
     @PreDestroy
     public void shutDown() {
+        Log.info(Geonet.THREADPOOL, "Stopping the ThreadPool");
         threadPool.shutdown();
+        try {
+            threadPool.awaitTermination(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Log.warning(Geonet.THREADPOOL, "Error while stopping threadPool", e);
+        }
+        timer.shutdown();
+        try {
+            timer.awaitTermination(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Log.warning(Geonet.THREADPOOL, "Error while stopping threadPool", e);
+        }
+        Log.info(Geonet.THREADPOOL, "Stopped the ThreadPool");
     }
 
     public String toString() {

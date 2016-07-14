@@ -43,6 +43,7 @@ import java.nio.file.Path;
 /**
  * Update the password of logged user.
  */
+@Deprecated
 public class PwUpdate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

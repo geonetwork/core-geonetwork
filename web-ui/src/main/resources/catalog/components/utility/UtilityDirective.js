@@ -392,7 +392,7 @@
       return {
         restrict: 'A',
         template: '<button title="{{\'gnToggle\' | translate}}">' +
-            '<i class="fa fa-fw fa-angle-double-left"/>&nbsp;' +
+            '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
             '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
@@ -402,6 +402,8 @@
             $(selector).each(function(idx, elem) {
               $(elem).trigger(event);
             });
+            $(this).find('i').toggleClass(
+                'fa-angle-double-up fa-angle-double-down');
           });
         }
       };
@@ -984,7 +986,13 @@
           return ioFn(input, 'parse');
         }
         function out(input) {
-          return ioFn(input, 'stringify');
+          // If model value is a string
+          // No need to stringify it.
+          if (attr['gnJsonIsJson']) {
+            return ioFn(input, 'stringify');
+          } else {
+            return input;
+          }
         }
         function ioFn(input, method) {
           var json;

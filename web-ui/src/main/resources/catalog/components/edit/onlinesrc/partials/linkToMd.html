@@ -8,9 +8,9 @@
             <span class="input-group-addon"><i
               class="fa fa-search"/></span>
             <input class="form-control"
-                   data-ng-change="triggerSearch()"
+                   data-ng-change="updateParams();triggerSearch()"
                    type="text"
-                   data-ng-model="searchObj.params.any"
+                   data-ng-model="searchObj.any"
                    data-ng-model-options="modelOptions"
                    placeholder="{{'search' | translate}}" autofocus=""/>
           </div>

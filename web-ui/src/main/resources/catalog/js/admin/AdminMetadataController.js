@@ -64,7 +64,7 @@
               href: '#/metadata/schematron'
             },{
               type: 'metadata-identifier-templates',
-              icon: 'fa-icon-list',
+              icon: 'fa-key',
               label: 'manageMetadataIdentifierTemplates',
               href: '#/metadata/metadata-identifier-templates'
             }]
@@ -140,10 +140,11 @@
       };
 
       $scope.selectAllSchemas = function(selectAll) {
+        $scope.selectedSchemas = [];
         if (selectAll) {
-          $scope.selectedSchemas = $scope.schemas;
-        } else {
-          $scope.selectedSchemas = [];
+          $.each($scope.schemas, function(index, value) {
+            selectSchema(value.name);
+          });
         }
         $scope.loadReport = null;
         $scope.loadTplReport = null;

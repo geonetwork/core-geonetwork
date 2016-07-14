@@ -40,5 +40,10 @@
     'gn_module',
     'gn_admin_controller'
   ]);
+
+
+  module.config(['$LOCALES',
+    function($LOCALES) {
+      $LOCALES.push('admin');
     }]);
 })();

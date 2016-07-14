@@ -27,6 +27,7 @@ import com.yammer.metrics.core.HealthCheckRegistry;
 import com.yammer.metrics.core.MetricsRegistry;
 
 import jeeves.monitor.MonitorManager;
+import org.fao.geonet.utils.Log;
 
 import javax.servlet.*;
 
@@ -39,6 +40,8 @@ import java.io.IOException;
  * User: jeichar Date: 4/17/12 Time: 5:32 PM
  */
 public class MetricsRegistryInitializerFilter implements Filter {
+    private MetricsRegistry metricsRegistry;
+
     public void init(FilterConfig filterConfig) throws ServletException {
         ServletContext context = filterConfig.getServletContext();
         context.setAttribute(MonitorManager.HEALTH_CHECK_REGISTRY, new HealthCheckRegistry());
@@ -46,7 +49,7 @@ public class MetricsRegistryInitializerFilter implements Filter {
         context.setAttribute(MonitorManager.WARNING_HEALTH_CHECK_REGISTRY, new HealthCheckRegistry());
         context.setAttribute(MonitorManager.EXPENSIVE_HEALTH_CHECK_REGISTRY, new HealthCheckRegistry());
 
-        MetricsRegistry metricsRegistry = new MetricsRegistry();
+        metricsRegistry = new MetricsRegistry();
         context.setAttribute(MonitorManager.METRICS_REGISTRY, metricsRegistry);
         context.setAttribute(DefaultWebappMetricsFilter.REGISTRY_ATTRIBUTE, metricsRegistry);
     }
@@ -56,5 +59,7 @@ public class MetricsRegistryInitializerFilter implements Filter {
     }
 
     public void destroy() {
+        Log.info(Log.WEBAPP, "Shutdown metricsRegistry");
+        metricsRegistry.shutdown();
     }
 }

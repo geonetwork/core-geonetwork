@@ -284,7 +284,6 @@
     "unsupportedSchemaAlert": "Metadatensatz <strong>{{title}}</strong> braucht <strong>{{schema}}</strong> als Standard. Das wird von diesem Editor nicht unterstützt. <a href='#'>Zurück zum Editor Board</a>.",
     "uploadFile": "Laden Sie eine Datei von Ihrem Computer hoch.",
     "uuidAction": "Datensatzidentifikator in Bearbeitung",
-    "validate": "Überprüfen",
     "validate-help": "Datensatz gemäss Stadard-Validierungsregeln überprüfen",
     "validationReport": "Validierung",
     "runValidation": "Validierung starten",

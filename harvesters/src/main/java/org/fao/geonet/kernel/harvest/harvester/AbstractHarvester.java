@@ -174,7 +174,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * TODO Javadoc.
      */
     public static void shutdownScheduler() throws SchedulerException {
-        getScheduler().shutdown(false);
+        getScheduler().shutdown(true);
     }
 
     /**
