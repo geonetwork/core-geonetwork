@@ -35,6 +35,7 @@ public class ApiParams {
     public static final String API_CLASS_REGISTRIES_TAG = "registries";
 
 
+    public static final String API_PARAM_RECORD_ID = "Record ID.";
     public static final String API_PARAM_RECORD_UUID = "Record UUID.";
     public static final String API_PARAM_RECORD_UUIDS = "One or more record UUIDs";
     public static final String API_PARAM_RECORD_UUIDS_OR_SELECTION = "Record UUIDs. If null current selection is used.";

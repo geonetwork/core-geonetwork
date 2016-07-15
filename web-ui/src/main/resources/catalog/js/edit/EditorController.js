@@ -171,7 +171,7 @@
               if($scope.metadataFound) {
                 $http({
                   method: 'GET',
-                  url: 'metadata/' + $routeParams.id + '/lock'
+                  url: '../api/records/' + $routeParams.id + '/checkLock'
                 }).then(function successCallback(response) {
                     $scope.metadataLocked = response.data;
                   }, function errorCallback(response) {
