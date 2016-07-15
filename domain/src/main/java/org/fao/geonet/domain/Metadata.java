@@ -23,7 +23,6 @@
 
 package org.fao.geonet.domain;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -61,8 +60,6 @@ public class Metadata extends IMetadata {
         transform(doc, metadata);
         return metadata;
     }
-    
-    private Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
     
     /**
      * Get the set of metadata categories this metadata is part of.  This is lazily loaded and all operations are
