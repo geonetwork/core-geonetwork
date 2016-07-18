@@ -1,24 +1,24 @@
 //==============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
+//===   Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===   and United Nations Environment Programme (UNEP)
 //===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
+//===   This program is free software; you can redistribute it and/or modify
+//===   it under the terms of the GNU General Public License as published by
+//===   the Free Software Foundation; either version 2 of the License, or (at
+//===   your option) any later version.
 //===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
+//===   This program is distributed in the hope that it will be useful, but
+//===   WITHOUT ANY WARRANTY; without even the implied warranty of
+//===   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===   General Public License for more details.
 //===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===   You should have received a copy of the GNU General Public License
+//===   along with this program; if not, write to the Free Software
+//===   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
+//===   Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===   Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
 package org.fao.geonet.kernel.search;
@@ -536,36 +536,36 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
                 returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
             }
-		}
-		else if (name.equals("RangeQuery"))
-		{
-			String  fld        = xmlQuery.getAttributeValue("fld");
-			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
-			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
-			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
-			boolean inclusive  = "true".equals(sInclusive);
+        }
+        else if (name.equals("RangeQuery"))
+        {
+            String  fld        = xmlQuery.getAttributeValue("fld");
+            String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+            String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+            String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+            boolean inclusive  = "true".equals(sInclusive);
 
-			LuceneConfigNumericField fieldConfig = numericFieldSet .get(fld);
-			if (fieldConfig != null) {
-				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType(), fieldConfig.getPrecisionStep());
-			} else {
-				lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
-				upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
+            LuceneConfigNumericField fieldConfig = numericFieldSet .get(fld);
+            if (fieldConfig != null) {
+                returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType(), fieldConfig.getPrecisionStep());
+            } else {
+                lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
+                upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));
 
-				returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
-			}
-		}
-		else if (name.equals("DateRangeQuery"))
-		{
-			String  fld        = xmlQuery.getAttributeValue("fld");
-			String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
-			String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
-			String  sInclusive = xmlQuery.getAttributeValue("inclusive");
-			returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
-		}
-		else if (name.equals("BooleanQuery"))
-		{
-			BooleanQuery query = new BooleanQuery();
+                returnValue = TermRangeQuery.newStringRange(fld, lowerTxt, upperTxt, inclusive, inclusive);
+            }
+        }
+        else if (name.equals("DateRangeQuery"))
+        {
+            String  fld        = xmlQuery.getAttributeValue("fld");
+            String  lowerTxt   = xmlQuery.getAttributeValue("lowerTxt");
+            String  upperTxt   = xmlQuery.getAttributeValue("upperTxt");
+            String  sInclusive = xmlQuery.getAttributeValue("inclusive");
+            returnValue = new DateRangeQuery(fld, lowerTxt, upperTxt, sInclusive);
+        }
+        else if (name.equals("BooleanQuery"))
+        {
+            BooleanQuery query = new BooleanQuery();
             for (Object o : xmlQuery.getChildren()) {
                 Element xmlBooleanClause = (Element) o;
                 String sRequired = xmlBooleanClause.getAttributeValue("required");
@@ -1322,7 +1322,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (next instanceof Element) {
                     Element element = (Element) next;
 
-                    if (element.getContentSize() == 0 && element.getAttribute("name") != null) {
+                    if (element.getContentSize() == 0 && element.getAttribute("name") != null
+                         && element.getName().equalsIgnoreCase(searchField)) {
                         final String value = element.getAttributeValue("name");
 
                         if (!encountered.contains(value)) {
@@ -1384,7 +1385,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
     private void computeQuery(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
 
-//		resultType is not specified in search params - it's in config?
+//      resultType is not specified in search params - it's in config?
         Content child = request.getChild(Geonet.SearchResult.RESULT_TYPE);
         String resultType;
         if (child == null) {

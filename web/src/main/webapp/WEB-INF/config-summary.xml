@@ -230,6 +230,20 @@
     </summaryType>
     <summaryType name="suggestions">
       <item facet="anylight" max="-1"/>
+      <item facet="keyword" max="-1"/>
+      <item facet="title" max="-1"/>
+      <item facet="inspireTheme" max="-1"/>
+      <item facet="denominator" max="-1"/>
+      <item facet="spatialRepresentationType"
+            translator="codelist:gmd:MD_SpatialRepresentationTypeCode"
+             max="-1"/>
+      <item facet="orgName" max="-1"/>
+      <item facet="metadataPOC" max="-1"/>
+      <item facet="serviceType" max="-1"/>
+      <item facet="type" 
+      	translator="codelist:gmd:MD_ScopeCode"
+      	 max="-1"/>
+      <item facet="createDateYear" max="-1"/>
     </summaryType>
   </summaryTypes>
 
