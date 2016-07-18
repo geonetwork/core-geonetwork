@@ -101,7 +101,7 @@
           of good analyzer should allow to reduce the number of useless values like
           (a, the, ...).
         -->
-        <param name="max_number_of_terms" value="100000"/>
+        <param name="max_number_of_terms" value="100" />
         <!-- Default field to search in. any is full-text search field. -->
         <param name="default_search_field" value="any"/>
       </class>
