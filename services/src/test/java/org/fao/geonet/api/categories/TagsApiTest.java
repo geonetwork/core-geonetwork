@@ -22,10 +22,10 @@
  */
 package org.fao.geonet.api.categories;
 
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
+import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -38,7 +38,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -140,7 +139,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
         newCategory.setName("newcategory");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new TagFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(newCategory);
 
@@ -167,7 +166,7 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
         category.setName(category.getName() + "-2");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new TagFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(category);
 
@@ -191,16 +190,4 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404));
     }
-
-    /**
-     * Strategy for Gson to remove _ from field names when serializing to JSON.
-     */
-    private class TagFieldNamingStrategy implements FieldNamingStrategy {
-        @Override
-        public String translateName(Field field) {
-            return field.getName().replace("_", "");
-        }
-
-    }
-
 }

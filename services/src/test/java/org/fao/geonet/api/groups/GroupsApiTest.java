@@ -22,11 +22,11 @@
  */
 package org.fao.geonet.api.groups;
 
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
 
+import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -43,9 +43,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.lang.reflect.Field;
-
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -198,7 +195,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         groupToUpdate.setWebsite("http://link");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new GroupFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(groupToUpdate);
 
@@ -227,7 +224,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         groupToUpdate.setWebsite("http://link");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new GroupFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(groupToUpdate);
 
@@ -257,7 +254,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         groupToAdd.setWebsite("http://link");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new GroupFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(groupToAdd);
 
@@ -291,7 +288,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         groupToAdd.setWebsite("http://link");
 
         Gson gson = new GsonBuilder()
-            .setFieldNamingStrategy(new GroupFieldNamingStrategy())
+            .setFieldNamingStrategy(new JsonFieldNamingStrategy())
             .create();
         String json = gson.toJson(groupToAdd);
 
@@ -337,16 +334,5 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
         UserGroup userGroupUserAdmin = new UserGroup().setGroup(sampleGroup)
             .setProfile(Profile.Editor).setUser(testUserUserAdmin);
         _userGroupRepo.save(userGroupUserAdmin);
-    }
-
-    /**
-     * Strategy for Gson to remove _ from field names when serializing to JSON.
-     */
-    private class GroupFieldNamingStrategy implements FieldNamingStrategy {
-        @Override
-        public String translateName(Field field) {
-            return field.getName().replace("_", "");
-        }
-
     }
 }
