@@ -21606,6 +21606,10 @@ yx-axis
 .g .gn-features-table .dropdown-menu {
   line-height: 2.5em;
 }
+.gn .gn-metadata-display .dl-horizontal dt,
+.g .gn-metadata-display .dl-horizontal dt {
+  clear: left;
+}
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
   margin-top: -4em;
