@@ -164,7 +164,7 @@ public class MapServersApi {
     @PreAuthorize("hasRole('Reviewer')")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Mapserver created."),
-        @ApiResponse(code = 404, message = "Bad parameters.") ,
+        @ApiResponse(code = 400, message = "Bad parameters.") ,
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
     @ResponseStatus(HttpStatus.CREATED)
