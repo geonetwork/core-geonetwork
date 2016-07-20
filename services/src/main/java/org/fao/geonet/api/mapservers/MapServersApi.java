@@ -71,7 +71,7 @@ public class MapServersApi {
 
     public static final String API_PARAM_MAPSERVER_IDENTIFIER = "Mapserver identifier";
     public static final String API_PARAM_MAPSERVER_DETAILS = "Mapserver details";
-    public static final String MSG_MAPSERVER_WITH_ID_NOT_FOUND = "Mapserver with id '%d' not found.";
+    public static final String MSG_MAPSERVER_WITH_ID_NOT_FOUND = "Mapserver with id '%s' not found.";
     @Autowired
     LanguageUtils languageUtils;
 

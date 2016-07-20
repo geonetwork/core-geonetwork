@@ -25,7 +25,6 @@ package org.fao.geonet.api.mapservers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -97,12 +96,10 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getNonExistingMapserver() throws Exception {
-        // TODO: Check why returns 400 instead of 404
-        /*MapServer mapServer = mapServerRepo.findOneById(100);
+        MapServer mapServer = mapServerRepo.findOneById(100);
         Assert.assertNull(mapServer);
 
         this.mockHttpSession = loginAsAdmin();
-
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(get("/api/mapservers/100")
@@ -110,7 +107,6 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andExpect(content().contentType("application/json"));
-            */
     }
 
     @Test
