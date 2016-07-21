@@ -64,6 +64,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -124,7 +125,13 @@ public class ApiUtils {
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         Metadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
         if (metadata == null) {
-            metadata = metadataRepository.findOne(uuidOrInternalId);
+            try {
+                metadata = metadataRepository.findOne(uuidOrInternalId);
+            } catch (InvalidDataAccessApiUsageException e) {
+                throw new ResourceNotFoundException(String.format(
+                    "Record with UUID '%s' not found in this catalog",
+                    uuidOrInternalId));
+            }
             if (metadata == null) {
                 throw new ResourceNotFoundException(String.format(
                     "Record with UUID '%s' not found in this catalog",

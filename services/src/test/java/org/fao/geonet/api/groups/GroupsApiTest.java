@@ -79,10 +79,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(get("/api/groups")
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 
     @Test
