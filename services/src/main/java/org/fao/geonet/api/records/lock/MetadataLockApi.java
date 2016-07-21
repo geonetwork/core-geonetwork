@@ -23,13 +23,24 @@
 
 package org.fao.geonet.api.records.lock;
 
-import io.swagger.annotations.*;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_ID;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.MetadataLock;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.repository.MetadataLockRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,26 +51,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-
-import javax.servlet.http.HttpServletRequest;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_ID;
-
-@RequestMapping(value = {
-    "/api/records",
-    "/api/" + API.VERSION_0_1 +
-        "/records"
-})
-@Api(value = API_CLASS_RECORD_TAG,
-    tags = API_CLASS_RECORD_TAG,
-    description = API_CLASS_RECORD_OPS)
+@RequestMapping(value = { "/api/records",
+        "/api/" + API.VERSION_0_1 + "/records" })
+@Api(value = API_CLASS_RECORD_TAG, tags = API_CLASS_RECORD_TAG, description = API_CLASS_RECORD_OPS)
 @Controller("recordLock")
 @PreAuthorize("hasRole('Editor')")
 @ReadWriteController
@@ -70,51 +78,101 @@ public class MetadataLockApi {
 
     @Autowired
     private MetadataLockRepository mdLockRepo;
-    
+
     @Autowired
     private UserRepository userRepository;
-    
+
+    @Autowired
+    private IMetadataManager mdManager;
+
     protected AccessManager accessMan;
 
-
-    @ApiOperation(value = "Check if a record is locked for editing.",
-        notes = "Returns the record is locked.",
-        nickname = "editor")
-    @RequestMapping(value = "/{id}/checkLock",
-        method = RequestMethod.GET,
-        consumes = {
-            MediaType.ALL_VALUE
-        },
-        produces = {
-            MediaType.APPLICATION_JSON_VALUE
-        })
+    @ApiOperation(value = "Check if a record is locked for editing.", notes = "Returns the record is locked.", nickname = "editor")
+    @RequestMapping(value = "/{id}/checkLock", method = RequestMethod.GET, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "If the record is locked."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
-    })
+            @ApiResponse(code = 200, message = "If the record is locked."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
     @ResponseBody
     public Boolean startEditing(
-        @ApiParam(value = API_PARAM_RECORD_ID,
-            required = true)
-        @PathVariable
-            Integer id,
-        HttpServletRequest request
-        ) throws Exception {
-            final SecurityContext context = SecurityContextHolder.getContext();
+            @ApiParam(value = API_PARAM_RECORD_ID, required = true) @PathVariable Integer id,
+            HttpServletRequest request) throws Exception {
+        final SecurityContext context = SecurityContextHolder.getContext();
 
-            ApplicationContext applicationContext = ApplicationContextHolder.get();
-            this.accessMan = applicationContext.getBean(AccessManager.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        this.accessMan = applicationContext.getBean(AccessManager.class);
 
-            String md = Integer.toString(id);
-            if (!accessMan.canEdit(ServiceContext.get(), md)) {
-                throw new SecurityException("The user cannot edit this metadata.");
+        String md = Integer.toString(id);
+        if (!accessMan.canEdit(ServiceContext.get(), md)) {
+            throw new SecurityException("The user cannot edit this metadata.");
+        }
+
+        User me = userRepository
+                .findOneByUsername(context.getAuthentication().getName());
+
+        return mdLockRepo.isLocked(md, me);
+    }
+
+    @ApiOperation(value = "Release the lock over a record.", nickname = "editor")
+    @RequestMapping(value = "/{id}/releaseLock", method = RequestMethod.DELETE, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "If the record is unlocked."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ResponseBody
+    public Boolean releaseLock(
+            @ApiParam(value = API_PARAM_RECORD_ID, required = true) @PathVariable Integer id,
+            HttpServletRequest request) throws Exception {
+        final SecurityContext context = SecurityContextHolder.getContext();
+
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        this.accessMan = applicationContext.getBean(AccessManager.class);
+
+        String md = Integer.toString(id);
+        if (!accessMan.canEdit(ServiceContext.get(), md)) {
+            throw new SecurityException("The user cannot edit this metadata.");
+        }
+
+        User me = userRepository
+                .findOneByUsername(context.getAuthentication().getName());
+
+        return mdLockRepo.unlock(Integer.toString(id), me);
+    }
+
+    @ApiOperation(value = "Get all locks on metadata.", nickname = "editor")
+    @RequestMapping(value = "/all/locks", method = RequestMethod.GET, consumes = {
+            MediaType.ALL_VALUE }, produces = {
+                    MediaType.APPLICATION_JSON_VALUE })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Returns the list of locks."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT) })
+    @ResponseBody
+    public List<Lock> getAllLocks(HttpServletRequest request) throws Exception {
+
+        List<MetadataLock> locks = mdLockRepo.findAll();
+        List<Lock> response = new LinkedList<Lock>();
+
+        for (MetadataLock mdLock : locks) {
+            IMetadata md = mdManager
+                    .getMetadataObject(mdLock.getMetadata());
+            if (md != null) {
+                Lock lock = new Lock();
+                lock.setDate(mdLock.getTimestamp().toString());
+                lock.setUsername(mdLock.getUser().getUsername());
+                lock.setUuid(md.getUuid());
+                lock.setId(md.getId());
+                response.add(lock);
             }
-            
-            User me = userRepository
-                    .findOneByUsername(context.getAuthentication().getName());
+        }
 
-            return mdLockRepo.isLocked(md, me);
+        return response;
     }
 }

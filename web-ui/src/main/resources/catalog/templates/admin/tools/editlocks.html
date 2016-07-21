@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading" data-translate="">editLocks</div>
+			<div class="panel-body">
+				<div class="row" style="font-weight: bolder;">
+					<div class="col-lg-2" data-translate="">releaseLock</div>
+					<div class="col-lg-3" data-translate="">UUID</div>
+					<div class="col-lg-4" data-translate="">username</div>
+					<div class="col-lg-3" data-translate="">date</div>
+				</div>
+				<br/>
+				<div data-ng-repeat="(key, value) in locks track by $index">
+					<div class="row">
+						<div class="col-lg-1">
+							<button type="button" class="btn btn-danger btn-lg btn-block"
+								autofocus="" data-ng-click="releaseLock(value.id)">
+								<i class="fa fa-user-times">&nbsp;</i>
+							</button>
+						</div>
+						<div class="col-lg-4" data-translate="">{{value.uuid}}</div>
+						<div class="col-lg-4" data-translate="">{{value.username}}</div>
+						<div class="col-lg-3" data-translate="">{{value.date}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

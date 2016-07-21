@@ -94,6 +94,11 @@
               type: 'transferownership',
               label: 'transfertPrivs',
               href: '#/tools/transferownership'
+            },{
+              type: 'editlocks',
+              label: 'editlocks',
+              icon: 'fa-lock',
+              href: '#/tools/editlocks'
             }]
       };
 
@@ -525,7 +530,26 @@
             });
       };
 
+      $scope.releaseLock = function(metadataId) {
+        if(confirm($translate('releaseLockMessage'))) {
+          return $http.delete('../api/records/' + metadataId +
+              '/releaseLock'
+          ).then(
+              function(data) {
+                $http.get('../api/records/all/locks'
+                ).then(
+                    function(response) {
+                      $scope.locks = response.data;
+                      });
+              });
+        }
+      };
 
+      $http.get('../api/records/all/locks'
+      ).then(
+          function(response) {
+            $scope.locks = response.data;
+            });
 
 
 
