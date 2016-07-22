@@ -23,25 +23,8 @@
 
 package org.fao.geonet.api;
 
-import com.google.common.collect.Sets;
-
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.XmlRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,12 +36,30 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
+import com.google.common.collect.Sets;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
@@ -118,13 +119,17 @@ public class ApiUtils {
         }
         return id;
     }
-    public static Metadata getRecord(String uuidOrInternalId)
+    public static IMetadata getRecord(String uuidOrInternalId)
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        IMetadataManager metadataRepository = appContext.getBean(IMetadataManager.class);
+        IMetadata metadata = metadataRepository.getMetadataObject(uuidOrInternalId);
         if (metadata == null) {
-            metadata = metadataRepository.findOne(uuidOrInternalId);
+            try {
+                metadata = metadataRepository.getMetadataObject(Integer.parseInt(uuidOrInternalId));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("id parameter of findByIdString must be parsable to an integer.  It was '" + uuidOrInternalId + "'");
+            }
             if (metadata == null) {
                 throw new ResourceNotFoundException(String.format(
                     "Record with UUID '%s' not found in this catalog",
@@ -203,9 +208,9 @@ public class ApiUtils {
     /**
      * Check if the current user can edit this record.
      */
-    static public Metadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+    static public IMetadata canEditRecord(String metadataUuid, HttpServletRequest request) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Metadata metadata = getRecord(metadataUuid);
+        IMetadata metadata = getRecord(metadataUuid);
         AccessManager accessManager = appContext.getBean(AccessManager.class);
         if (!accessManager.canEdit(createServiceContext(request), String.valueOf(metadata.getId()))) {
             throw new SecurityException(String.format(
@@ -217,9 +222,8 @@ public class ApiUtils {
     /**
      * Check if the current user can view this record.
      */
-    public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        Metadata metadata = getRecord(metadataUuid);
+    public static IMetadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
+        IMetadata metadata = getRecord(metadataUuid);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
         } catch (Exception e) {

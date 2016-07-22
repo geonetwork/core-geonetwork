@@ -78,8 +78,6 @@ public class MetadataLockRepositoryImpl
             return false;
         }
 
-        user = getUser(user);
-
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<MetadataLock> cquery = cb.createQuery(MetadataLock.class);
         Root<MetadataLock> root = cquery.from(MetadataLock.class);

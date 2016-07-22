@@ -1430,6 +1430,15 @@ public class DefaultMetadataManager implements IMetadataManager {
             return null;
         }
     }
+    
+    /**
+     * @see org.fao.geonet.kernel.metadata.IMetadataManager#save(org.fao.geonet.domain.IMetadata)
+     * @param md
+     */
+    @Override
+    public void save(IMetadata md) {
+        mdRepository.save((Metadata)md);
+    }
 
     /**
      * @see org.fao.geonet.kernel.metadata.IMetadataManager#getMetadataObject(java.lang.String)

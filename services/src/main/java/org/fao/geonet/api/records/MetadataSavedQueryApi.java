@@ -23,35 +23,46 @@
 
 package org.fao.geonet.api.records;
 
-import io.swagger.annotations.*;
-import org.fao.geonet.ApplicationContextHolder;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.api.exception.NoResultsFoundException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.api.API;
-import org.fao.geonet.api.exception.NoResultsFoundException;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * Created by francois on 29/01/16.
@@ -89,7 +100,7 @@ public class MetadataSavedQueryApi {
             @PathVariable final String metadataUuid,
             HttpServletRequest request
             ) throws Exception {
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
         if (schemaPlugin == null) {
@@ -134,7 +145,7 @@ public class MetadataSavedQueryApi {
             @ApiParam(value = "The query parameters")
             @RequestBody(required = false) final HashMap<String,String> parameters) throws Exception {
 
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();

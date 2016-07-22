@@ -30,16 +30,20 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.repository.MetadataLockRepository;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 
@@ -105,6 +109,28 @@ public class XmlSearch implements Service {
                 // Update result elements to present
                 SelectionManager.updateMDResult(context.getUserSession(), result);
 
+                //Check if the metadata is locked
+                MetadataLockRepository mdLockRepo = gc.getBean(MetadataLockRepository.class);
+                @SuppressWarnings("unchecked")
+                List<Element> elList = result.getChildren();
+
+                for (Element element : elList) {
+                    if (element.getName().equals(Geonet.Elem.SUMMARY)) {
+                        continue;
+                    }
+                    Element info = element.getChild(Edit.RootChild.INFO,
+                        Edit.NAMESPACE);
+                    String id = info.getChildText(Edit.Info.Elem.ID);
+
+                    if (mdLockRepo.isLocked(id, null)) {
+                        info.addContent(new Element(Edit.Info.Elem.IS_LOCKED)
+                            .setText("true"));
+                    } else {
+                        info.addContent(new Element(Edit.Info.Elem.IS_LOCKED)
+                                .setText("false"));
+                    }
+                }
+                
                 return result;
             }
         } finally {

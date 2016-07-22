@@ -631,4 +631,17 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         }
         return md;
     }
+    
+    /**
+     * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#save(org.fao.geonet.domain.IMetadata)
+     * @param md
+     */
+    @Override
+    public void save(IMetadata md) {
+        if(md instanceof Metadata) {
+            super.save(md);
+        } else {
+            mdDraftRepository.save((MetadataDraft)md);
+        }
+    }
 }
