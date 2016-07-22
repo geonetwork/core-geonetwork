@@ -602,6 +602,7 @@ A section is a group of fields.
         </xs:element>
         <xs:element ref="action"/>
         <xs:element ref="text"/>
+        <xs:element ref="xsl"/>
         <xs:element ref="section"/>
         <xs:element ref="fieldset"/>
       </xs:choice>
@@ -958,6 +959,10 @@ The fragment is defined in localization file strings.xml:
       </xs:attribute>
     </xs:complexType>
   </xs:element>
+
+
+
+
 
   <xs:element name="action">
     <xs:annotation>
@@ -1507,6 +1512,23 @@ Translations are set on client side.
           </xs:complexType>
         </xs:element>
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <xs:element name="xsl">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+Trigger an XSL rendering mode. In some circunstances, you may want
+to customize a lot the editor. In such case, delegate to XSL template.
+]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="xpath" use="required" type="xs:string"/>
+      <xs:attribute name="mode" use="required" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

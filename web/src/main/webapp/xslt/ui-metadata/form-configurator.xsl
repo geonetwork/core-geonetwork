@@ -128,6 +128,28 @@
     </xsl:if>
   </xsl:template>
 
+
+  <!-- Call an XSL template by name.  -->
+  <xsl:template mode="form-builder" match="xsl">
+    <xsl:param name="base" as="node()"/>
+
+    <xsl:variable name="nodes">
+      <saxon:call-template name="{concat('evaluate-', $schema)}">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="in" select="concat('/../', @xpath)"/>
+      </saxon:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="mode" select="@mode"/>
+    <xsl:for-each select="$nodes/*">
+      <saxon:call-template name="{$mode}">
+        <xsl:with-param name="base" select="$base"/>
+      </saxon:call-template>
+    </xsl:for-each>
+  </xsl:template>
+
+
+
   <!-- Element to ignore in that mode -->
   <xsl:template mode="form-builder" match="@name"/>
 
