@@ -67,6 +67,7 @@
     </a>
     <a class="btn btn-primary gn-md-edit-btn pull-right" href
        data-ng-show="user.canEditRecord(mdView.current.record)"
+       data-ng-disabled="mdView.current.record.isLocked()"
        data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
        title="{{'edit' | translate}}">
       <i class="fa fa-pencil"></i>
