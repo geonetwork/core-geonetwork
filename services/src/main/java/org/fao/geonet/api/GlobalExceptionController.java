@@ -25,10 +25,7 @@ package org.fao.geonet.api;
 
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.ArrayUtils;
-import org.fao.geonet.api.exception.GeoPublisherException;
-import org.fao.geonet.api.exception.NoResultsFoundException;
-import org.fao.geonet.api.exception.ResourceAlreadyExistException;
-import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.exception.*;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -62,6 +59,19 @@ import java.util.Set;
  */
 @ControllerAdvice
 public class GlobalExceptionController {
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler({
+        NotAllowedException.class
+    })
+    public ApiError notAllowedHandler(final Exception exception, final HttpServletRequest request) {
+        ApiError response = null;
+        if (contentTypeNeedsBody(request)) {
+            response = new ApiError("forbidden", exception.getMessage());
+        }
+        return response;
+    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -125,6 +135,7 @@ public class GlobalExceptionController {
         List<MediaType> requestMediaTypes = resolveMediaTypes(new ServletWebRequest(request));
         Set<MediaType> allowedContentTypes = Sets.newHashSet(
             MediaType.APPLICATION_XML,
+            MediaType.APPLICATION_XHTML_XML,
             MediaType.APPLICATION_JSON
         );
         needsBody = !Collections.disjoint(allowedContentTypes, requestMediaTypes);

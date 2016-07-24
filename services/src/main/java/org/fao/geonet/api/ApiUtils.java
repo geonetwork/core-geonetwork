@@ -225,7 +225,6 @@ public class ApiUtils {
      * Check if the current user can view this record.
      */
     public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
         Metadata metadata = getRecord(metadataUuid);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);
