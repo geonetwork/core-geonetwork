@@ -120,35 +120,37 @@ public class DirectoryEntriesApi {
 
         // Processing parameters process=xpath~value.
         // xpath must point to an Element or an Attribute.
-        List<String> replaceList = Arrays.asList(process);
-        for (String parameters : replaceList) {
-            int endIndex = parameters.indexOf(SEPARATOR);
-            if (endIndex == -1) {
-                continue;
-            }
-            String xpath = parameters.substring(0, endIndex);
-            String value = parameters.substring(endIndex + 1);
+        if(process != null) {
+            List<String> replaceList = Arrays.asList(process);
+            for (String parameters : replaceList) {
+                int endIndex = parameters.indexOf(SEPARATOR);
+                if (endIndex == -1) {
+                    continue;
+                }
+                String xpath = parameters.substring(0, endIndex);
+                String value = parameters.substring(endIndex + 1);
 
-            Set<Namespace> allNamespaces = Sets.newHashSet();
-            final Iterator descendants = tpl.getDescendants();
-            while (descendants.hasNext()) {
-                Object next = descendants.next();
-                if (next instanceof Element) {
-                    Element element = (Element) next;
-                    allNamespaces.add(element.getNamespace());
-                    for (Object o : tpl.getAdditionalNamespaces()) {
-                        if (o instanceof Namespace) {
-                            Namespace namespace = (Namespace) o;
-                            allNamespaces.add(namespace);
+                Set<Namespace> allNamespaces = Sets.newHashSet();
+                final Iterator descendants = tpl.getDescendants();
+                while (descendants.hasNext()) {
+                    Object next = descendants.next();
+                    if (next instanceof Element) {
+                        Element element = (Element) next;
+                        allNamespaces.add(element.getNamespace());
+                        for (Object o : tpl.getAdditionalNamespaces()) {
+                            if (o instanceof Namespace) {
+                                Namespace namespace = (Namespace) o;
+                                allNamespaces.add(namespace);
+                            }
                         }
                     }
                 }
-            }
-            Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
-            if (o instanceof Element) {
-                ((Element) o).setText(value);
-            } else if (o instanceof Attribute) {
-                ((Attribute) o).setValue(value);
+                Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
+                if (o instanceof Element) {
+                    ((Element) o).setText(value);
+                } else if (o instanceof Attribute) {
+                    ((Attribute) o).setValue(value);
+                }
             }
         }
         return tpl;
