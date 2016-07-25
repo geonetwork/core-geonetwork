@@ -61,7 +61,8 @@
       'kor': 'ko',
       'spa': 'es',
       'cze': 'cz',
-      'cat': 'ca'
+      'cat': 'ca',
+      'fin': 'fi'
     },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang];
@@ -116,7 +117,7 @@
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech', 'fin': 'Suomi'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
