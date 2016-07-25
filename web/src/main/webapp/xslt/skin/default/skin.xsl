@@ -7,14 +7,13 @@
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-
   <xsl:template name="header">
-
     <div class="navbar navbar-default gn-top-bar ng-scope" role="navigation">
       <div class="container-fluid ng-scope">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                   data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <!-- FIXME: i18n -->
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -25,14 +24,16 @@
           <ul class="nav navbar-nav">
             <li class="active">
               <a href=".">
+                <!-- FIXME: Should point to catalog logo -->
                 <img class="gn-logo"
-                     src="../../images/harvesting/GN3.png"/>
+                     src="{/root/gui/url}/images/harvesting/GN3.png"/>&#160;
+                <!-- FIXME: Replace by node name -->
                 <span class="visible-lg ng-binding">GeoNetwork</span>
               </a>
             </li>
             <li>
               <a title="Search" href=".">
-                <i class="fa fa-search"></i>
+                <i class="fa fa-search"></i>&#160;
                 <span class="visible-lg ng-scope">Search</span>
               </a>
             </li>
