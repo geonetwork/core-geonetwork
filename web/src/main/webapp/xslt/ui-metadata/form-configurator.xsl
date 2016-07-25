@@ -141,9 +141,11 @@
     </xsl:variable>
 
     <xsl:variable name="mode" select="@mode"/>
+    <xsl:variable name="config" select="."/>
     <xsl:for-each select="$nodes/*">
       <saxon:call-template name="{$mode}">
         <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="config" select="$config"/>
       </saxon:call-template>
     </xsl:for-each>
   </xsl:template>

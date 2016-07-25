@@ -1354,7 +1354,7 @@
 
   <xsl:template name="render-table">
     <xsl:param name="values" as="node()"/>
-    <xsl:param name="addRowTpl" as="node()?"/>
+    <xsl:param name="addControl" as="node()?"/>
 
     <table class="table table-striped">
       <xsl:for-each select="$values/header">
@@ -1419,9 +1419,18 @@
             </xsl:for-each>
           </tr>
         </xsl:for-each>
-        <!-- TODO: Add an extra row for adding new one -->
+
+        <!-- Add an extra row for adding new one -->
+        <xsl:if test="$addControl">
+          <tr>
+            <td colspan="{max($values/row/count(col))}">
+              <xsl:copy-of select="$addControl"/>
+            </td>
+          </tr>
+        </xsl:if>
       </tbody>
     </table>
     <!--<textarea><xsl:copy-of select="$values"/></textarea>-->
+    <!--<textarea><xsl:copy-of select="$addControl"/></textarea>-->
   </xsl:template>
 </xsl:stylesheet>
