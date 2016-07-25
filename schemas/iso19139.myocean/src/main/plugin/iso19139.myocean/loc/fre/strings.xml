@@ -47,6 +47,8 @@
     <oceanVariables>Ocean variables</oceanVariables>
     <refArea>MyOcean reference areas</refArea>
     <processingLevel>Processing level</processingLevel>
+    <resolutionColumn>Resolution longitude (x)</resolutionColumn>
+    <resolutionRow>Resolution latitude (y)</resolutionRow>
     
     <orgAdd>Add organisation</orgAdd>
     <orgCustodianAdd>Add product manager</orgCustodianAdd>

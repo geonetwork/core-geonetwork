@@ -52,6 +52,42 @@
 	<gmd:metadataStandardVersion>
 		<gco:CharacterString>0.2</gco:CharacterString>
 	</gmd:metadataStandardVersion>
+	<gmd:spatialRepresentationInfo>
+		<gmd:MD_GridSpatialRepresentation>
+			<gmd:numberOfDimensions>
+				<gco:Integer>2</gco:Integer>
+			</gmd:numberOfDimensions>
+			<gmd:axisDimensionProperties>
+				<gmd:MD_Dimension>
+					<gmd:dimensionName>
+						<gmd:MD_DimensionNameTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_DimensionNameTypeCode"
+													  codeListValue="row"/>
+					</gmd:dimensionName>
+					<gmd:resolution>
+						<gco:Measure uom="km"></gco:Measure>
+					</gmd:resolution>
+				</gmd:MD_Dimension>
+			</gmd:axisDimensionProperties>
+			<gmd:axisDimensionProperties>
+				<gmd:MD_Dimension>
+					<gmd:dimensionName>
+						<gmd:MD_DimensionNameTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_DimensionNameTypeCode"
+													  codeListValue="column"/>
+					</gmd:dimensionName>
+					<gmd:resolution>
+						<gco:Measure uom="km"></gco:Measure>
+					</gmd:resolution>
+				</gmd:MD_Dimension>
+			</gmd:axisDimensionProperties>
+			<gmd:cellGeometry>
+				<gmd:MD_CellGeometryCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CellGeometryCode"
+										 codeListValue="area"/>
+			</gmd:cellGeometry>
+			<gmd:transformationParameterAvailability>
+				<gco:Boolean>false</gco:Boolean>
+			</gmd:transformationParameterAvailability>
+		</gmd:MD_GridSpatialRepresentation>
+	</gmd:spatialRepresentationInfo>
 	<gmd:referenceSystemInfo>
 		<gmd:MD_ReferenceSystem>
 			<gmd:referenceSystemIdentifier>
@@ -327,13 +363,6 @@
 					</gmd:otherConstraints>
 				</gmd:MD_LegalConstraints>
 			</gmd:resourceConstraints>
-			<gmd:spatialResolution>
-				<gmd:MD_Resolution>
-					<gmd:distance>
-						<gco:Distance uom="km">1</gco:Distance>
-					</gmd:distance>
-				</gmd:MD_Resolution>
-			</gmd:spatialResolution>
 			<gmd:language>
 				<gco:CharacterString>eng</gco:CharacterString>
 			</gmd:language>

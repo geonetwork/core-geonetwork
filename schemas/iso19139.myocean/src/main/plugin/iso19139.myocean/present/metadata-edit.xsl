@@ -125,7 +125,7 @@
 	</xsl:template>
 	
 	<!--
-		A custom myocean control for distance
+		A custom myocean control for distance or resolution
 		
 		As of now the user can chose a unit: we do not want this. Instead the
 		user chooses between only two choices: kilometers or degrees. 
@@ -133,54 +133,66 @@
 		So for both cases (kilometers or degrees) the input type is a float. 
 		
 		-->
-	<xsl:template mode="iso19139.myocean" match="gmd:distance" priority="2">
+	<xsl:template mode="iso19139.myocean" match="gmd:distance|gmd:resolution" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
-		
+
+		<xsl:variable name="title"
+					  select="
+						if (name() = 'gmd:resolution' and ../gmd:dimensionName/*/@codeListValue = 'row')
+						then /root/gui/schemas/*[name()=$schema]/strings/resolutionRow
+						else if (name() = 'gmd:resolution' and ../gmd:dimensionName/*/@codeListValue = 'column')
+						then /root/gui/schemas/*[name()=$schema]/strings/resolutionColumn
+						else ''"/>
+
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:variable name="text">
-					<xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
+					<xsl:variable name="ref" select="gco:*/geonet:element/@ref"/>
 					
 					<input type="number" class="md" name="_{$ref}" id="_{$ref}"  
 						onkeyup="validateNumber(this,true,true);"
 						onchange="validateNumber(this,true,true);"
-						value="{gco:Distance}" size="30"/>
+						value="{gco:*/text()}" size="30"/>
 					
 					<!--&#160;
 					<xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
 					&#160;-->
-					<label><input type="radio" name="ditance_uom_{$ref}" onclick="if (this.checked) document.getElementById('_{$ref}_uom').value = 'degree';">
-						<xsl:if test="gco:Distance/@uom = 'degree'">
+					<label><input type="radio" name="ditance_uom_{$ref}"
+								  onclick="if (this.checked) document.getElementById('_{$ref}_uom').value = 'degree';">
+						<xsl:if test="gco:*/@uom = 'degree'">
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>Degree</label>
-					<label><input type="radio" name="ditance_uom_{$ref}" onclick="if (this.checked) document.getElementById('_{$ref}_uom').value = 'km';">
-						<xsl:if test="gco:Distance/@uom = 'km' or gco:Distance/@uom = ''">
+					<label><input type="radio" name="ditance_uom_{$ref}"
+								  onclick="if (this.checked) document.getElementById('_{$ref}_uom').value = 'km';">
+						<xsl:if test="gco:*/@uom = 'km' or gco:*/@uom = ''">
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
 					</input>Kilometers</label>
 					<input type="hidden" class="md" name="_{$ref}_uom" id="_{$ref}_uom"  
-						value="{gco:Distance/@uom}" style="width:30px;"/>
+						value="{gco:*/@uom}" style="width:30px;"/>
 				</xsl:variable>
 				
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema" select="$schema"/>
 					<xsl:with-param name="edit"   select="true()"/>
+					<xsl:with-param name="title"  select="$title"/>
 					<xsl:with-param name="text"   select="$text"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="title" select="$title"/>
 					<xsl:with-param name="text">
-						<xsl:value-of select="gco:Distance"/>
-						<xsl:if test="gco:Distance/@uom"><xsl:text>&#160;</xsl:text>
+						<xsl:value-of select="gco:*"/>
+						<xsl:if test="gco:*/@uom"><xsl:text>&#160;</xsl:text>
 							<xsl:choose>
-								<xsl:when test="contains(gco:Distance/@uom, '#')">
-									<a href="{gco:Distance/@uom}"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
+								<xsl:when test="contains(gco:*/@uom, '#')">
+									<a href="{gco:*/@uom}"><xsl:value-of select="substring-after(gco:*/@uom, '#')"/></a>
 								</xsl:when>
-								<xsl:otherwise><xsl:value-of select="gco:Distance/@uom"/></xsl:otherwise>
+								<xsl:otherwise><xsl:value-of select="gco:*/@uom"/></xsl:otherwise>
 							</xsl:choose>
 						</xsl:if>
 					</xsl:with-param>
@@ -706,12 +718,21 @@
 							<xsl:with-param name="edit"   select="$edit"/>
 						</xsl:apply-templates>
 						
+						<!--
+						Old style: https://forge.ifremer.fr/mantis/view.php?id=31033
 						<xsl:apply-templates mode="iso19139.myocean" select="gmd:identificationInfo/gmd:MD_DataIdentification/
 							gmd:spatialResolution/gmd:MD_Resolution/gmd:distance">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
+						</xsl:apply-templates>-->
+						<xsl:apply-templates mode="iso19139.myocean"
+											 select="gmd:spatialRepresentationInfo/*/
+														gmd:axisDimensionProperties/*/gmd:resolution">
+							<xsl:with-param name="schema" select="$schema"/>
+							<xsl:with-param name="edit"   select="$edit"/>
 						</xsl:apply-templates>
-						
+
+
 						<xsl:apply-templates mode="iso19139.myocean" select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
 							gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
 							<xsl:with-param name="schema" select="$schema"/>
