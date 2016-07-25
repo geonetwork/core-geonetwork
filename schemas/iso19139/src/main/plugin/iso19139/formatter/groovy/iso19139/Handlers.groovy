@@ -588,16 +588,23 @@ public class Handlers {
         }
 
         def replacements = [
-                useLimitation : useLimitation,
-                accessConstraints : accessConstraints,
-                useConstraints : useConstraints,
-                otherConstraints : otherConstraints,
                 useLimitationLabel : useLimitationLabel,
                 accessConstraintsLabel : accessConstraintsLabel,
                 useConstraintsLabel : useConstraintsLabel,
                 otherConstraintsLabel : otherConstraintsLabel
         ]
-
+        if (accessConstraints != '') {
+            replacements.accessConstraints = accessConstraints
+        }
+        if (useLimitation != '') {
+            replacements.useLimitation = useLimitation
+        }
+        if (useConstraints != '') {
+            replacements.useConstraints = useConstraints
+        }
+        if (otherConstraints.size() > 0) {
+            replacements.otherConstraints = otherConstraints
+        }
         return handlers.fileResult("html/sxt-constraints.html", replacements)
     }
 }
