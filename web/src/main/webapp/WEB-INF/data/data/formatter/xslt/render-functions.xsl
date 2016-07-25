@@ -27,8 +27,6 @@
       <entry key="collectionSession" value="http://schema.org/Thing"/>
     </xsl:variable>
 
-    <xsl:message>aa<xsl:value-of select="$type"/> </xsl:message>
-    <xsl:message>aa<xsl:value-of select="$map/entry"/> </xsl:message>
     <xsl:variable name="match"
                   select="$map/entry[@key = $type]/@value"/>
     <xsl:value-of select="if ($match != '')
