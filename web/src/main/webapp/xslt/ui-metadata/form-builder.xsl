@@ -1372,7 +1372,7 @@
       </xsl:for-each>
       <tbody>
         <xsl:for-each select="$values/row">
-          <tr>
+          <tr id="gn-el-{col[@remove]/gn:element/@ref}">
             <xsl:if test="@title != ''">
               <xsl:attribute name="title" select="@title"/>
             </xsl:if>
@@ -1382,6 +1382,7 @@
                   <xsl:attribute name="colspan" select="@colspan"/>
                 </xsl:if>
 
+                <!-- TODO: Add move up/down control? -->
                 <xsl:choose>
                   <xsl:when test="@remove">
                     <xsl:call-template name="render-form-field-control-remove">
@@ -1421,6 +1422,6 @@
         <!-- TODO: Add an extra row for adding new one -->
       </tbody>
     </table>
-    <textarea><xsl:copy-of select="$values"/></textarea>
+    <!--<textarea><xsl:copy-of select="$values"/></textarea>-->
   </xsl:template>
 </xsl:stylesheet>
