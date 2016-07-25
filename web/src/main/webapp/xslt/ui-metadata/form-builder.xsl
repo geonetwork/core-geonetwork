@@ -1349,4 +1349,88 @@
       </div>
     </div>
   </xsl:template>
+
+
+
+  <xsl:template name="render-table">
+    <xsl:param name="values" as="node()"/>
+    <xsl:param name="addControl" as="node()?"/>
+
+    <table class="table table-striped">
+      <xsl:for-each select="$values/header">
+        <thead>
+          <tr>
+            <xsl:for-each select="col">
+              <th>
+                <div class="th-inner ">
+                  <xsl:value-of select="."/>
+                </div>
+              </th>
+            </xsl:for-each>
+          </tr>
+        </thead>
+      </xsl:for-each>
+      <tbody>
+        <xsl:for-each select="$values/row">
+          <tr id="gn-el-{col[@remove]/gn:element/@ref}">
+            <xsl:if test="@title != ''">
+              <xsl:attribute name="title" select="@title"/>
+            </xsl:if>
+            <xsl:for-each select="col">
+              <td>
+                <xsl:if test="@colspan">
+                  <xsl:attribute name="colspan" select="@colspan"/>
+                </xsl:if>
+
+                <!-- TODO: Add move up/down control? -->
+                <xsl:choose>
+                  <xsl:when test="@remove">
+                    <xsl:call-template name="render-form-field-control-remove">
+                      <xsl:with-param name="editInfo" select="gn:element"/>
+                    </xsl:call-template>
+                  </xsl:when>
+                  <xsl:when test="@readonly">
+                    <xsl:value-of select="."/>
+                  </xsl:when>
+                  <xsl:when test="count(*) = 0">
+                    <!-- Empty col -->
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:choose>
+                      <xsl:when test="@type = 'textarea'">
+                        <!-- TODO: Multilingual -->
+                        <textarea class="form-control"
+                                  name="_{*/gn:element/@ref}">
+                          <xsl:value-of select="*/text()"/>
+                        </textarea>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <input class="form-control"
+                               type="{if (@type = 'Real' or @type = 'Integer' or @type = 'Percentage')
+                                  then 'number'
+                                  else 'text'}"
+                               name="_{*/gn:element/@ref}"
+                               value="{*/normalize-space()}"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </td>
+            </xsl:for-each>
+          </tr>
+        </xsl:for-each>
+
+        <!-- Add an extra row for adding new one -->
+        <xsl:if test="$addControl">
+          <tr>
+            <td colspan="{max($values/row/count(col))}">
+              <xsl:copy-of select="$addControl"/>
+            </td>
+          </tr>
+        </xsl:if>
+      </tbody>
+    </table>
+    <!--<textarea><xsl:copy-of select="$values"/></textarea>-->
+    <!--<textarea><xsl:copy-of select="$addControl"/></textarea>-->
+  </xsl:template>
 </xsl:stylesheet>
