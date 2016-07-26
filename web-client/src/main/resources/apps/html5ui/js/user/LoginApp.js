@@ -114,7 +114,7 @@ GeoNetwork.loginApp = function() {
         },
         /**
          * Error message in case of bad login
-         * 
+         *
          * @param cat
          * @param user
          * @return
@@ -139,9 +139,9 @@ GeoNetwork.loginApp = function() {
             if (catalogueNode) {
             	params.node = catalogueNode;
             }
-            
+
             Ext.Ajax.request({
-                url : '../../j_spring_security_check',
+                url : '../../signin',
                 params : params,
                 headers : {
                     "Content-Type" : "application/x-www-form-urlencoded"
@@ -156,19 +156,19 @@ GeoNetwork.loginApp = function() {
 	         if (catalogueNode) {
 	         	params.node = catalogueNode;
 	         }
-             
+
             Ext.Ajax.request({
-                url : catalogue.services.rootUrl + '../../j_spring_security_logout',
+                url : catalogue.services.rootUrl + '../../signout',
                 params : params,
                 headers : {
                     "Content-Type" : "application/x-www-form-urlencoded"
                 },
                 success : function() {
-                    catalogue.fireEvent('afterLogout', 
+                    catalogue.fireEvent('afterLogout',
                                 catalogue, catalogue.identifiedUser);
                 },
                 failure : function() {
-                    catalogue.fireEvent('afterBadLogout', 
+                    catalogue.fireEvent('afterBadLogout',
                             catalogue, catalogue.identifiedUser);
             },
                 scope : this
@@ -176,7 +176,7 @@ GeoNetwork.loginApp = function() {
         },
         /**
          * api: method[isLoggedIn]
-         * 
+         *
          * Get the xml.info for me. If user is not identified response xml will
          * have a me element with an authenticated attribute. If catalogue URL
          * is wrong, response status is 404 (check catalogue URL). In case of

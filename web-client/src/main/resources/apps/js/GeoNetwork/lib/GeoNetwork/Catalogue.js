@@ -2,21 +2,21 @@
  * Copyright (C) 2001-2011 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
- * 
+ *
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
@@ -27,7 +27,7 @@ Ext.namespace('GeoNetwork');
  *  class = Catalogue
  *  base_link = `Ext.util.Observable <http://extjs.com/deploy/dev/docs/?class=Ext.util.Observable>`_
  */
-/** api: example 
+/** api: example
  *
  *  Sample code to create a GeoNetwork catalogue connection on the
  *  same host as the web page (ig. http://localhost/geonetwork will be the
@@ -41,7 +41,7 @@ Ext.namespace('GeoNetwork');
  *    });
  *
  */
-/** api: constructor 
+/** api: constructor
  *  .. class:: GeoNetwork(config)
  *
  *     Create a GeoNetwork catalogue client.
@@ -73,52 +73,52 @@ Ext.namespace('GeoNetwork');
  *     To be improved & discussed :
  *
  *      * i18n : generate from GeoNetwork file ?
- *      
+ *
  *      * memory usage (eg. destroy calls)
- *      
+ *
  *      * massive action : hack made embedded existing HTML page in a panel
- *      
+ *
  *      and overriding JS in Old.js
- *      
+ *
  *      * search form : remote & Z39.50
- *      
+ *
  *      * global var named catalogue required (eg. Templates) should be improved, How ?
- *      
+ *
  *      * add more events to component in order to reduce dependencies
- *      
+ *
  *      * session state ? using localStorage or cookie ?
- *      
+ *
  */
 GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
-    /** api: property[SERVERURL] 
+    /** api: property[SERVERURL]
      * ``String`` GeoNetwork catalogue host URL.
      */
     SERVERURL: null,
-    
-    /** api: property[URL] 
+
+    /** api: property[URL]
      * ``String`` GeoNetwork catalogue URL.
      */
     URL: null,
-    
-    /** api: property[LANG] 
+
+    /** api: property[LANG]
      *  ``String`` Optional GeoNetwork language
      *  parameter use for all services (eg.
      *  http://localhost/geonetwork/en/xml.search).
      *  ``DEFAULT_LANG`` by default.
      */
     LANG: "en",
-    
-    /** api: property[LANG] 
+
+    /** api: property[LANG]
      * ``String`` Default language
      */
     DEFAULT_LANG: "en",
-    
-    
+
+
     EDITOR_MODE : {
         IN_OTHER_WINDOW : 1,
         IN_EDITOR_POPUP : 2
     },
-    
+
     editMode : 1,
 
     /**
@@ -126,8 +126,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
       *
       **/
     reseting: false,
-    
-    /** api: config[hostUrl] 
+
+    /** api: config[hostUrl]
      * ``String`` Optional GeoNetwork host name.
      *  Default value is web page host name.
      *
@@ -142,26 +142,26 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *
      */
     hostUrl: null,
-    
-    /** api: config[servlet] 
+
+    /** api: config[servlet]
      *  ``String`` Optional GeoNetwork servlet name.
      *  Default value is ``geonetwork``.
      */
     servlet: null,
-    
+
     extentMap: null,
-    
-    /** api: property[services] 
+
+    /** api: property[services]
      *  ``Object`` The list of GeoNetwork services
      */
     services: {},
-    
-    /** api: property[windowOption] 
+
+    /** api: property[windowOption]
      *  ``String`` Configuration of popup windows
      */
     windowOption: "menubar=no,location=no,toolbar=no,directories=no,scrollbars=yes",
-    
-    /** api: property[windowName] 
+
+    /** api: property[windowName]
      *  ``String`` Name of popup windows
      *
      *  FIXME : this is always the same, assumming the main app will
@@ -169,48 +169,48 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  in order to allow multi editors for example.
      */
     windowName: "",
-    
-    /** api: property[startRecord] 
+
+    /** api: property[startRecord]
      *  ``Number`` Index of the first record for current search
      */
     startRecord: 1,
-    
+
     /** api: config[mdStore]
      *  ``GeoNetwork.data.MetadataResultsStore`` A store holding
      *  search results (see :class:`GeoNetwork.data.MetadataResultsStore` )
      */
     mdStore: null,
-    
+
     /** api: config[summaryStore]
      *  ``GeoNetwork.data.MetadataSummaryStore`` The store
      *  for search summary results  (see :class:`GeoNetwork.data.MetadataSummaryStore` ).
      */
     summaryStore: null,
-    
-    /** api: config[statusBarId] 
+
+    /** api: config[statusBarId]
      *  ``String`` Optional identifier of an ``Ext.Element`` or a DOM element
      *  to be use to display status information.
      */
     statusBarId: null,
-    
-    /** api: config[mdDisplayPanelId] 
+
+    /** api: config[mdDisplayPanelId]
      *  ``String`` Optional identifier of a panel to use to display metadata
      */
     mdDisplayPanelId: undefined,
-    /** api: config[resultsView] 
+    /** api: config[resultsView]
      *  ``String`` Optional metadata results view panel
      */
     resultsView: undefined,
-    /** api: config[mdOverlayedCmpId] 
+    /** api: config[mdOverlayedCmpId]
      *  ``String`` Not used for now
      */
     mdOverlayedCmpId: undefined,
-    
+
     /** api: property[identifiedUser]
      *  ``Object`` Current user information and role.
      */
     identifiedUser: undefined,
-    
+
     metadataEditFn: undefined,
     /** api: config[adminAppUrl]
      *  ``String`` URL to the administration interface
@@ -222,14 +222,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  ``Number``	Number of selected records
      */
     selectedRecords: 0,
-    
+
     /**
      * private: property[casEnabled]
      *  ``Boolean``	If is cas is the authentication
      *  mechanism. getInfo will set this property
      */
     casEnabled : false,
-    
+
     /** private: property[info]
      *  ``Object``  Information about the catalog retrieved from xml.info service
      */
@@ -242,8 +242,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     constructor: function(config){
         config = config || {};
         Ext.apply(this, config);
-        
-        
+
+
         if (this.hostUrl) {
             // relative path
             if (this.hostUrl.indexOf('http') === -1) {
@@ -253,7 +253,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         } else {
             this.SERVERURL = 'http://' + window.location.host + '/';
         }
-        
+
         // Set catalogue URL based on hostUrl first
         if (this.hostUrl) {
             this.URL = this.SERVERURL;
@@ -262,13 +262,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         } else {
             this.URL = this.SERVERURL + 'geonetwork';
         }
-        
+
         if (!this.node) {
         	this.node = 'srv';
         }
-        
+
         this.LANG = (this.lang ? this.lang : this.DEFAULT_LANG);
-        
+
         // Register GeoNetwork services URL
         var serviceUrl = this.URL + '/' + this.node + '/' + this.LANG + "/";
         this.services = {
@@ -329,8 +329,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             fileDisclaimer: serviceUrl + 'file.disclaimer',
             fileDownload: serviceUrl + 'file.download',
             geopublisher: serviceUrl + 'geoserver.publisher',
-            login: this.URL + '/j_spring_security_check',
-            logout: this.URL + '/j_spring_security_logout',
+            login: this.URL + '/signin',
+            logout: this.URL + '/signout',
             mef: serviceUrl + 'mef.export?format=full&version=2',
             csv: serviceUrl + 'csv.search',
             pdf: serviceUrl + 'pdf.selection.search',
@@ -397,27 +397,27 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             getImportXSL: serviceUrl + 'get.conversions.xsl',
             proxy: this.URL + '/proxy'
         };
-        
+
         // TODO : init only once required (ie. metadata show)
         this.extentMap = new GeoNetwork.map.ExtentMap();
-        
-        /** private: event[onSelectionChange] 
+
+        /** private: event[onSelectionChange]
          *  Fires after the selection change.
          */
-        /** private: event[afterLogin] 
+        /** private: event[afterLogin]
          *  Fires after the user logged in.
          */
-        /** private: event[afterLogout] 
+        /** private: event[afterLogout]
          *  Fires after the user logged out.
          */
-        /** private: event[afterBadLogin] 
+        /** private: event[afterBadLogin]
          *  Fires after bad user logged in.
          */
-        /** private: event[afterBadLogout] 
+        /** private: event[afterBadLogout]
          *  Fires after bad user logged out.
          */
         this.addEvents('selectionchange', 'afterLogin', 'afterLogout', 'afterBadLogin', 'afterBadLogout', 'afterDelete', 'afterReset');
-        
+
         GeoNetwork.Catalogue.superclass.constructor.call(this, config);
     },
     setServiceUrl: function(serviceName, url) {
@@ -511,9 +511,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
-     *    
+     *
      *    * ``user`` : Current user   FIXME
-     *    
+     *
      */
     onAfterLogin: function(){
         this.fireEvent('afterLogin', this, this.identifiedUser);
@@ -551,11 +551,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
-     *    
+     *
      */
     onAfterDelete: function(){
         this.fireEvent('afterDelete', this);
-    }, 
+    },
     /** api: method[onAfterRating]
      *  :param e: ``Object``
      *
@@ -564,7 +564,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
-     *    
+     *
      */
     onAfterRating: function(){
         this.fireEvent('afterRating', this);
@@ -577,7 +577,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Listeners will be called with the following arguments:
      *
      *    * ``this`` : GeoNetwork.Catalogue
-     *    
+     *
      */
     onAfterStatus: function(){
         this.fireEvent('afterStatus', this);
@@ -599,7 +599,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     /** api: method[getInfo]
      *  :param refresh: ``boolean`` force refreshing the catalog info if not available.
-     *  
+     *
      *  Return catalogue information (site name, organization, id, casEnabled).
      */
     getInfo: function (refresh) {
@@ -672,7 +672,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 el.update(msg);
                 return;
             }
-            
+
             el = Ext.getDom(this.statusBarId);
             if (el) {
                 el.innerHTML = msg;
@@ -695,17 +695,17 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  :param metadataStore: ``GeoNetwork.data.MetadataResultsStore or GeoNetwork.data.MetadataResultsFastStore`` the metadata store to use. If undefined, catalogue metadata store
      *  :param summaryStore: ``GeoNetwork.data.MetadataSummaryStore`` the summary store to use. If undefined, the catalogue summary store.
      *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
-     *  
+     *
      *  Run a search operation using GeoNetwork xml.search service.
      *  Initialize results and summary stores.
      */
     search: function(formOrParams, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async){
-        
+
         var isCatalogueMdStore = this.metadataStore === metadataStore;
         if (isCatalogueMdStore) {
             this.updateStatus(OpenLayers.i18n('searching'));
         }
-        
+
         if (updateStore !== false) {
             updateStore = true;
         }
@@ -747,14 +747,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *   not default value is used.
      *  :param updateStore: ``Boolean``	true to update catalogue attached stores.
      *  :param async: ``Boolean``   false to run in synchrone mode. Default is true.
-     *  
+     *
      *  Run a search operation based on KVP query using GeoNetwork
      *  xml.search service. Initialize results and summary stores.
      *  KVP search could be used in fast mode in order to quickly
      *  populate a summary store (for a TagCloud for example).
      */
     kvpSearch: function(query, onSuccess, onFailure, startRecord, updateStore, metadataStore, summaryStore, async){
-    
+
         if (updateStore !== false) {
             updateStore = true;
         }
@@ -814,7 +814,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         this.setSelectedRecords(0);
         var app = this;
         var i = 0;
-        
+
         for (i = 0; i < uuids.length; i++) {
             OpenLayers.Request.GET({
                 url: this.services.mdSelect,
@@ -841,7 +841,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Update metadata record rating information
      */
     metadataRate: function(uuid, rating, onSuccess){
-    
+
         OpenLayers.Request.GET({
             url: this.services.rate,
             params: {
@@ -853,9 +853,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 if (onSuccess) {
                     onSuccess(nb);
                 }
-                
+
                 catalogue.onAfterRating();
-                
+
                 return nb;
             },
             failure: function(response){
@@ -889,7 +889,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataSelection: function(type, onSuccess){
         // CHECKME : is this a good option ?
         var app = this;
-        
+
         OpenLayers.Request.GET({
             url: this.services.mdSelect,
             params: {
@@ -900,7 +900,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 if (nb) {
                     app.setSelectedRecords(nb);
                 }
-                
+
                 if (onSuccess) {
                     onSuccess();
                 }
@@ -948,21 +948,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  :param uuid: ``String`` uuid of the metadata to dislay
      *
      *  Display a metadata record in a Ext.Panel or a Ext.Window.
-     *  Defined GeoNetwork.defaultViewMode variable to change default view mode. 
+     *  Defined GeoNetwork.defaultViewMode variable to change default view mode.
      *  If not set, simple mode is used.
-     *  
+     *
      *  Define metadataShowFn in order to override metadata show default behavior::
-     *  
+     *
      *    this.metadataShowFn(uuid, record, url, maximized, width, height);
      */
     metadataShow: function(uuid, maximized, width, height){
         // UUID may contains special character like #
         var url = this.services.mdView + '?uuid=' + escape(uuid);
         var bd = Ext.getBody();
-        
-        if (this.resultsView) { 
+
+        if (this.resultsView) {
             var record = this.metadataStore.getAt(this.metadataStore.find('uuid', uuid));
-            
+
             // No current search available with this record information
             if (!record) {
                 // Retrieve information in synchrone mode
@@ -970,7 +970,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 this.kvpSearch("fast=index&_uuid=" + uuid, null, null, null, true, store, null, false);
                 record = store.getAt(store.find('uuid', uuid));
             }
-            
+
             // metadata deleted or not visible to current user
             if (record !== undefined) {
                 if (this.metadataShowFn) {
@@ -993,11 +993,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }
             } else {
                 GeoNetwork.Message().msg({
-                    title: OpenLayers.i18n('error'), 
-                    msg: OpenLayers.i18n('metadata-not-found'), 
+                    title: OpenLayers.i18n('error'),
+                    msg: OpenLayers.i18n('metadata-not-found'),
                     tokens: {
                         uuid: uuid
-                    }, 
+                    },
                     status: 'warning',
                     target: Ext.getBody()
                 });
@@ -1006,7 +1006,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
      metadataShowById: function(id, maximized, width, height){
         var url = this.services.mdView + '?id=' + id, record;
-        
+
         if (this.resultsView) {
             // No current search available with this record information
             if (!record) {
@@ -1028,8 +1028,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataXMLShow: function(uuid, schema){
         // Default GeoNetwork XML service
         var service = this.services.mdXMLGet;
-        
-        // ISO 19139 or ISO profil will be displayed in ISO19139 
+
+        // ISO 19139 or ISO profil will be displayed in ISO19139
         if (schema === 'iso19139') {
             service = this.services.mdXMLGet19139;
         } else if (schema === 'dublin-core') {
@@ -1039,7 +1039,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         } else if (schema === 'iso19115') {
             service = this.services.mdXMLGet19115; // Force ISO19115 record to 19139
         }
-        
+
         var url = service + '?uuid=' + uuid;
         window.open(url, this.windowName, this.windowOption);
     },
@@ -1083,14 +1083,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  FIXME : metadata.edit service does not support uuid param
      */
     metadataEdit: function(id, create, group, child, isTemplate, schema, record){
-        
+
         switch(this.editMode) {
         case this.EDITOR_MODE.IN_EDITOR_POPUP:
             if (this.metadataEditFn) {
                 this.metadataEditFn(id, create, group, child, isTemplate, schema, record);
             }
         break;
-        default: 
+        default:
             var url;
             if (create) {
                 child = child ? 'y' : 'n';
@@ -1169,9 +1169,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             var params = {
                 uuid: this
             };
-            catalogue.doAction(catalogue.services.mdDelete, params, 
-                                    OpenLayers.i18n('deleteRecordSuccess'), 
-                                    OpenLayers.i18n('deleteRecordFailure'), 
+            catalogue.doAction(catalogue.services.mdDelete, params,
+                                    OpenLayers.i18n('deleteRecordSuccess'),
+                                    OpenLayers.i18n('deleteRecordFailure'),
                                     catalogue.onAfterDelete.bind(catalogue));
         }
     },
@@ -1193,7 +1193,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         if (url.indexOf('http') === -1) {
             url = this.services.rootUrl + url;
         }
-        
+
         OpenLayers.Request.GET({
             url: url,
             params: params,
@@ -1206,7 +1206,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                         target: Ext.getBody()
                     });
                 }
-                
+
                 if (onSuccess) {
                     onSuccess(response);
                 }
@@ -1229,9 +1229,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         }
     },
     /** api: method[isLoggedIn]
-     * 
+     *
      *  Get the xml.info for me. If user is not identified
-     *  response xml will have a me element with an authenticated attribute. 
+     *  response xml will have a me element with an authenticated attribute.
      *  If catalogue URL is wrong, response status is 404 (check catalogue URL).
      *  In case of exception continue catalogue connection validation
      *  using the xml.main.error service (@see checkError).
@@ -1249,25 +1249,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 
        me = response.responseXML.getElementsByTagName('me')[0];
        authenticated = me.getAttribute('authenticated') == 'true';
-       
+
         // Check status and also check than an Exception is not described in the HTML response
         // in case of bad startup
         exception = response.responseText.indexOf('Exception') !== -1;
-        
+
         if (response.status === 200 && authenticated) {
             this.identifiedUser = {
                 id: this.getNodeText(me.getElementsByTagName('id')[0]),
                 username: this.getNodeText(me.getElementsByTagName('username')[0]),
                 name: this.getNodeText(me.getElementsByTagName('name')[0]),
                 surname: this.getNodeText(me.getElementsByTagName('surname')[0]),
-                email: this.getNodeText(me.getElementsByTagName('email')[0]), 
+                email: this.getNodeText(me.getElementsByTagName('email')[0]),
                 hash: this.getNodeText(me.getElementsByTagName('hash')[0]),
                 role: this.getNodeText(me.getElementsByTagName('profile')[0])
             };
             this.onAfterLogin();
             return true;
         } else if (response.status === 404) {
-            this.showError(OpenLayers.i18n('connectIssue'), 
+            this.showError(OpenLayers.i18n('connectIssue'),
                 OpenLayers.i18n('connectIssueMsg') + this.services.rootUrl + '.');
         } else if (exception) {
             this.checkError();
@@ -1280,7 +1280,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
 
             this.identifiedUser = undefined;
             this.onAfterBadLogin();
-            
+
             return false;
         }
     },
@@ -1321,12 +1321,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     login: function(username, password){
         var app = this, user;
         if (this.casEnabled) {
-            
+
             var onCasCheck = function() {
-                
+
                 var intervalID;
                 var loginAttempts = 0;
-                
+
                 intervalID = setInterval(function (){
                     loginAttempts += 1;
                     if(loginAttempts > (25)) {
@@ -1338,24 +1338,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                         var innerDoc = undefined;
                         var loginEvent = undefined;
                         try {
-                        
+
                             var iframe = document.getElementById('casLoginFrame');
                             innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-                            
+
                             // Test if the CAS login form is in the iframe
                             if(innerDoc.forms.length == 1 && innerDoc.forms[0].id == 'fm1') {
                                 clearInterval (intervalID);
                                 app.identifiedUser = undefined;
                                 loginEvent = false;
                             }
-                            
+
                             // Test if the auth have been made
                             var connectedDiv = innerDoc.getElementById('userinfo');
                             if(connectedDiv) {
                                 clearInterval (intervalID);
                                 loginEvent = true;
                             }
-                            
+
                             // If we find bad credentials, we reload the iframe
                             var badCred = innerDoc.getElementsByTagName("h1");
                             if(badCred && badCred.length==1 && badCred[0].innerHTML.indexOf('HTTP Status 401') >= 0) {
@@ -1373,11 +1373,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                                 url: app.services.getMyInfo,
                                 async: false
                             }), exception, authenticated, me;
-                           
+
                            me = response.responseXML.getElementsByTagName('me')[0];
                            authenticated = me.getAttribute('authenticated') == 'true';
                            exception = response.responseText.indexOf('Exception') !== -1;
-                           
+
                            if (response.status === 200 && authenticated) {
                                app.isLoggedIn();
                            }
@@ -1391,14 +1391,14 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     }
                 }, 200);
             };
-            
+
             var casLoginFrame = document.createElement('iframe');
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
             casLoginFrame.setAttribute('src',this.URL+'/srv/'+this.LANG+'/catalog.signin?casLogin');
             casLoginFrame.setAttribute('style','display:none');
             document.body.appendChild(casLoginFrame);
-            
+
         } else {
         	var params = {username: username, password: password};
         	if (this.node) {
@@ -1461,7 +1461,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     checkError: function(successCb){
         var app = this, error, msg;
-        
+
         OpenLayers.Request.GET({
             url: this.services.xmlError,
             success: function(response){
@@ -1498,7 +1498,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     parseError: function(xml){
          var error = xml.getElementsByTagName('error')[0];
-                
+
         return {
             stack: error.getElementsByTagName('Stack')[0].firstChild.nodeValue,
             exc: error.getElementsByTagName('Exception')[0].firstChild.nodeValue,
@@ -1558,12 +1558,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         }
     },
     /** private: method[modalAction]
-     *  
+     *
      *  Create a modal window and load the URL content or add the panel
      *  in the modal window.
-     *  
+     *
      *  If no callback provided, default callback on error, close the window.
-     *  
+     *
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
@@ -1614,7 +1614,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             });
             win.show(this);
             win.alignTo(Ext.getBody(), 't-t');
-            
+
         }
     },
     /** api: method[metadataAdmin]
@@ -1635,21 +1635,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     metadataPublish: function(record, messageTarget){
         var published = record.get('isPublishedToAll') === 'true',
             flag = published ? 'off' : 'on',
-            pivileges = ['_1_0=' + flag, '_1_1=' + flag, '_1_5=' + flag, '_1_6=' + flag], 
+            pivileges = ['_1_0=' + flag, '_1_1=' + flag, '_1_5=' + flag, '_1_6=' + flag],
             // View, Interactive Map, Download, Featured
             service = this.services.mdAdminSave + '?update=true&id=' + record.get('id') + '&',
             url = service + pivileges.join('&'),
-            app = this; 
-        
+            app = this;
+
         OpenLayers.Request.GET({
             url: url,
             success: function(response){
                 if (messageTarget) {
                     GeoNetwork.Message().msg({
-                        title: OpenLayers.i18n('metadataRecordPublishedTitle'), 
-                        msg: published ? 
-                                OpenLayers.i18n('metadataRecordUnPublished') : 
-                                OpenLayers.i18n('metadataRecordPublished'), 
+                        title: OpenLayers.i18n('metadataRecordPublishedTitle'),
+                        msg: published ?
+                                OpenLayers.i18n('metadataRecordUnPublished') :
+                                OpenLayers.i18n('metadataRecordPublished'),
                         tokens: {
                             title: record.get('title')
                         },
@@ -1680,9 +1680,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                                     id: id,
                                     status: status,
                                     changeMessage: msg
-                                }, 
-                                undefined, 
-                                OpenLayers.i18n('error'), 
+                                },
+                                undefined,
+                                OpenLayers.i18n('error'),
                                 function () {
                                     GeoNetwork.Message().msg({
                                         title: OpenLayers.i18n('enableWorkflow'),
