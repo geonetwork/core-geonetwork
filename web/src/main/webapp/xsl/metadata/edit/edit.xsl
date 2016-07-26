@@ -41,7 +41,8 @@
           <input type="hidden" name="editTab" value="true"/>
           <input type="hidden" id="minor" name="minor">
             <xsl:attribute name="value">
-              <xsl:value-of select="java:encodeForJavaScript(/root/request/minor)"/>
+              <xsl:value-of select="/root/request/minor"/>
+              <!--<xsl:value-of select="java:encodeForJavaScript(/root/request/minor)"/>-->
             </xsl:attribute>
           </input>
           <input type="hidden" name="ref"/>
@@ -60,7 +61,8 @@
                    pressed - default is false -->
           <input type="hidden" name="showvalidationerrors">
             <xsl:attribute name="value">
-              <xsl:value-of select="java:encodeForJavaScript(/root/request/showvalidationerrors)"/>
+              <xsl:value-of select="/root/request/showvalidationerrors"/>
+              <!--<xsl:value-of select="java:encodeForJavaScript(/root/request/showvalidationerrors)"/>-->
             </xsl:attribute>
           </input>
 
