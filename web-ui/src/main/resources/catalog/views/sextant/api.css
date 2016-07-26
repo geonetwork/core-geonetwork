@@ -19917,7 +19917,7 @@ yx-axis
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
-  src: local('Roboto'), local('Roboto-Regular'), url(http://fonts.gstatic.com/s/roboto/v15/oMMgfZMQthOryQo9n22dcuvvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(http://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+  src: local('Roboto'), local('Roboto-Regular'), url(https://fonts.gstatic.com/s/roboto/v15/oMMgfZMQthOryQo9n22dcuvvDin1pK8aKteLpeZ5c0A.woff2) format('woff2'), url(https://fonts.gstatic.com/s/roboto/v15/CrYjSnGjrRCn0pd9VQsnFOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
 }
 @font-face {
   font-family: 'Sextant';
@@ -20605,10 +20605,6 @@ yx-axis
 .gn .tab-pane .container-fluid .gn-md-side:after,
 .g .tab-pane .container-fluid .gn-md-side:after {
   clear: both;
-}
-.gn .sxt-md-container,
-.g .sxt-md-container {
-  background: url(http://sextant.ifremer.fr/record/images/bg_page.gif) top left repeat;
 }
 .gn .gn-md-view,
 .g .gn-md-view {
@@ -21537,6 +21533,10 @@ yx-axis
 .g ul.gn-resultview li.gn-grid .gn-md-links button {
   height: 2.3em;
 }
+.gn .gn-md-links button,
+.g .gn-md-links button {
+  height: 2.3em;
+}
 .gn .metadata.panel-default,
 .g .metadata.panel-default {
   border-bottom-color: #fff;
@@ -21605,6 +21605,10 @@ yx-axis
 .gn .gn-features-table .dropdown-menu,
 .g .gn-features-table .dropdown-menu {
   line-height: 2.5em;
+}
+.gn .gn-metadata-display .dl-horizontal dt,
+.g .gn-metadata-display .dl-horizontal dt {
+  clear: left;
 }
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;

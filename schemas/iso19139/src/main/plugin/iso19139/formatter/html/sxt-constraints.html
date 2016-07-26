@@ -19,9 +19,11 @@
   </li>
 
   <li fmt-repeat="oc in otherConstraints">
-    <strong>{{otherConstraintsLabel}}</strong>
-    <ul class="md-value-list">
-      <li>{{oc}}</li>
-    </ul>
+    <span data-fmt-if="oc">
+      <strong>{{otherConstraintsLabel}}</strong>
+      <ul class="md-value-list">
+        <li>{{oc}}</li>
+      </ul>
+    </span>
   </li>
 </ul>

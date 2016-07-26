@@ -534,9 +534,13 @@ public class Handlers {
         def idx = 0
         els.each { el ->
             def name = el.'gmd:individualName'
-            def mail = el.'gmd:contactInfo'.'gmd:CI_Contact'.'gmd:address'.'gmd:CI_Address'.'gmd:electronicMailAddress'
+            def mails = []
+            el.'gmd:contactInfo'.'gmd:CI_Contact'
+                    .'gmd:address'.'gmd:CI_Address'.'gmd:electronicMailAddress'.each {
+                m -> mails.push(m)
+            }
             def org = el.'gmd:organisationName'
-            def contact = [name : name, mail : mail]
+            def contact = [name : name, mail : mails.join(',')]
 
             if(name && name != "" && contacts.indexOf(name) < 0) {
                 contacts.push(contact)
@@ -584,16 +588,23 @@ public class Handlers {
         }
 
         def replacements = [
-                useLimitation : useLimitation,
-                accessConstraints : accessConstraints,
-                useConstraints : useConstraints,
-                otherConstraints : otherConstraints,
                 useLimitationLabel : useLimitationLabel,
                 accessConstraintsLabel : accessConstraintsLabel,
                 useConstraintsLabel : useConstraintsLabel,
                 otherConstraintsLabel : otherConstraintsLabel
         ]
-
+        if (accessConstraints != '') {
+            replacements.accessConstraints = accessConstraints
+        }
+        if (useLimitation != '') {
+            replacements.useLimitation = useLimitation
+        }
+        if (useConstraints != '') {
+            replacements.useConstraints = useConstraints
+        }
+        if (otherConstraints.size() > 0) {
+            replacements.otherConstraints = otherConstraints
+        }
         return handlers.fileResult("html/sxt-constraints.html", replacements)
     }
 }

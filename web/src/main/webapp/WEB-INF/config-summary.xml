@@ -77,7 +77,6 @@
           max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
 
   -->
-
   <facets>
     <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
     <facet name="keywordType-parameter" indexKey="keywordType-parameter" label="keywordType-parameter"/>
@@ -111,17 +110,17 @@
     <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
     <facet name="standard" indexKey="_schema" label="standards"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
-    <facet name="thesaurus-external.parameter.NVS.P01"
-           label="thesaurus-external.parameter.NVS.P01"
+    <facet name="p01"
+           label="p01"
            indexKey="thesaurus-external.parameter.NVS.P01"/>
-    <facet name="thesaurus-external.parameter.NVS.P02"
-           label="thesaurus-external.parameter.NVS.P02"
+    <facet name="p02"
+           label="p02"
            indexKey="thesaurus-external.parameter.NVS.P02"/>
-    <facet name="thesaurus-external.parameter.NVS.P03"
-           label="thesaurus-external.parameter.NVS.P03"
+    <facet name="p03"
+           label="p03"
            indexKey="thesaurus-external.parameter.NVS.P03"/>
-    <facet name="thesaurus-external.parameter.NVS.P35"
-           label="thesaurus-external.parameter.NVS.P35"
+    <facet name="p35"
+           label="p35"
            indexKey="thesaurus-external.parameter.NVS.P35"/>
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
@@ -129,6 +128,7 @@
     <!--
     Example configuration for hierarchical facet based on
     the GeoNetwork region thesaurus or GEMET.
+
 
     Do not forget to add classifier configuration on config-spring-geonetwork.xml
 
@@ -167,6 +167,10 @@
       <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="p01" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="p03" max="300"/>
+      <item facet="p35" max="300"/>
       <!--
       <item facet="region"
             translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
@@ -174,6 +178,7 @@
             translator="term:http://geonetwork-opensource.org/gemet"/>
       -->
     </summaryType>
+
 
     <summaryType name="manager" format="DIMENSION">
       <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
@@ -270,6 +275,10 @@
       <item facet="thesaurus-external.parameter.NVS.P35" max="300"/>
       <item facet="_groupPublished" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="p01" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="p03" max="300"/>
+      <item facet="p35" max="300"/>
     </summaryType>
   </summaryTypes>
 </bean:beans>

@@ -370,9 +370,9 @@
         }
       }, {
         key: 'keyword'
-      },{
+      }, {
         key: 'orgName'
-      },{
+      }, {
         key: 'createDateYear'
       }];
 

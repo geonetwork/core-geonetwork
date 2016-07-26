@@ -468,7 +468,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
         // To count the number of values added and stop if maxNumberOfTerms reach
         if (_language == null) {
-            final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
+            final Element request = new Element("request").addContent(
+                new Element("any").setText(searchValue));
             _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
         }
 
@@ -494,6 +495,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         elData.addContent(new Element(Geonet.SearchResult.SUMMARY_ITEMS).setText(searchField));
         search(srvContext, elData, config);
 
+        String[] facetToExclude = new String[] {
+                "publishedForGroup", "_groupPublished"
+        };
+        List<String> facetToExcludeList = Arrays.asList(facetToExclude);
         if (getTo() > 0) {
             Set<String> encountered = new LinkedHashSet<String>();
             final Iterator descendants = _elSummary.getDescendants();
@@ -503,6 +508,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 if (next instanceof Element) {
                     Element element = (Element) next;
 
+                    if (facetToExcludeList.contains(element.getName())) {
+                        continue;
+                    }
                     if (element.getContentSize() == 0 && element.getAttribute("name") != null) {
                         final String value = element.getAttributeValue("name");
 

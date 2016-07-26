@@ -137,6 +137,7 @@
         var i, j, olLayer, bgLayers = [];
         var self = this;
         var promises = [];
+        var overlays = [];
         for (i = 0; i < layers.length; i++) {
           var type, layer = layers[i];
           if (layer.name) {
@@ -179,7 +180,11 @@
             } else if (layer.server) {
               var server = layer.server[0];
               if (server.service == 'urn:ogc:serviceType:WMS') {
-                self.createLayer(layer, map);
+                var p = self.createLayer(layer, map, undefined, i);
+                promises.push(p);
+                p.then(function(layer) {
+                  overlays[layer.get('tree_index')] = layer;
+                });
               }
             }
           }
@@ -219,6 +224,11 @@
               map.getLayers().insertAt(0, l);
               firstVisibleBgLayer = false;
             }
+          }
+          if (overlays.length > 0) {
+            map.getLayers().extend(overlays.filter(function(l) {
+              return !!l;
+            }));
           }
         });
       };
@@ -409,15 +419,16 @@
        * @param {ol.map} map map
        * @param {numeric} bgIdx if it is a background layer, index in the
        * dropdown
+       * @param {numeric} index of the layer in the tree
        */
-      this.createLayer = function(layer, map, bgIdx) {
+      this.createLayer = function(layer, map, bgIdx, index) {
 
         var server = layer.server[0];
         var res = server.onlineResource[0];
         var reT = /type\s*=\s*([^,|^}|^\s]*)/;
         var reL = /name\s*=\s*([^,|^}|^\s]*)/;
 
-        var createOnly = angular.isDefined(bgIdx);
+        var createOnly = angular.isDefined(bgIdx) || angular.isDefined(index);
 
         if (layer.name.match(reT)) {
           var type = reT.exec(layer.name)[1];
@@ -454,6 +465,7 @@
                   } catch (e) {}
                   olL.set('group', layer.group);
                   olL.set('groupcombo', layer.groupcombo);
+                  olL.set('tree_index', index);
                   olL.setOpacity(layer.opacity);
                   olL.setVisible(!layer.hidden);
                   if (layer.title) {

@@ -178,10 +178,12 @@
    */
 
   module.directive('gnKmlImport', [
+    '$translate',
     'ngeoDecorateLayer',
     'gnAlertService',
     'kmlimportTemplateURL',
-    function(ngeoDecorateLayer, gnAlertService, kmlimportTemplateURL) {
+    function($translate, ngeoDecorateLayer, gnAlertService,
+        kmlimportTemplateURL) {
       return {
         restrict: 'A',
         replace: true,

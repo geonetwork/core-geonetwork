@@ -66,14 +66,6 @@
           </form>
         </div>
       </tab>
-      <!--
-            <tab heading="{{mainTabs.metadata.title}}"
-                 active="mainTabs.metadata.active">
-              <div class="container-fluid sxt-md-container">
-                <div data-ng-include="'../../catalog/views/sextant/templates/mdview/recordView.html'"></div>
-              </div>
-            </tab>
-      -->
       <tab ng-if="mainTabs.map" select="displayMapTab()" active="mainTabs.map.active">
         <tab-heading>
           {{mainTabs.map.title}}
