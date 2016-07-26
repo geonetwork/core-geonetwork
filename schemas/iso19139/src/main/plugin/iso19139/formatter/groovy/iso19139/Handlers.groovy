@@ -588,6 +588,10 @@ public class Handlers {
         }
 
         def replacements = [
+                accessConstraints: '',
+                useLimitation: '',
+                useConstraints: '',
+                otherConstraints: '',
                 useLimitationLabel : useLimitationLabel,
                 accessConstraintsLabel : accessConstraintsLabel,
                 useConstraintsLabel : useConstraintsLabel,
