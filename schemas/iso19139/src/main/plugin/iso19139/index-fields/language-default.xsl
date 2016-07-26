@@ -592,7 +592,7 @@
     <!-- === Free text search === -->
     <Field name="any" store="false" index="true">
       <xsl:attribute name="string">
-        <xsl:value-of select="normalize-space(//node()[@locale=$langId])"/>
+        <xsl:value-of select="string-join(//node()[@locale = $langId]/normalize-space(), ' ')"/>
         <xsl:text> </xsl:text>
         <xsl:for-each select="//@codeListValue">
           <xsl:value-of select="concat(., ' ')"/>

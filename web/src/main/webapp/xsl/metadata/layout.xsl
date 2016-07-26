@@ -8,6 +8,7 @@
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0" extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">

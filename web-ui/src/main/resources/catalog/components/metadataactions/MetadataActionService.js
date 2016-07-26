@@ -42,14 +42,13 @@
     'gnAlertService',
     'gnSearchSettings',
     'gnPopup',
-    'gnMdFormatter',
     '$translate',
     '$q',
     '$http',
     'gnGlobalSettings',
     function($window, $rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnPopup, gnMdFormatter,
+             gnPopup,
              $translate, $q, $http, gnGlobalSettings) {
 
       var windowName = 'geonetwork';
@@ -129,14 +128,17 @@
         if (url) {
           $window.open(url, '_blank');
         }
-        else if (angular.isString(params)) {
-          gnMdFormatter.getFormatterUrl(null, null, params).then(function(url) {
-            $http.get(url, {
-              headers: {
-                Accept: 'text/html'
-              }
-            });
-          });
+        // else if (angular.isString(params)) {
+        //   gnMdFormatter.getFormatterUrl(null, null, params).then(function(url) {
+        //     $http.get(url, {
+        //       headers: {
+        //         Accept: 'text/html'
+        //       }
+        //     });
+        //   });
+        // }
+        else {
+          console.error('Error while exporting PDF');
         }
       };
 
