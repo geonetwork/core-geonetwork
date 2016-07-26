@@ -1506,7 +1506,19 @@
                 _content_type: 'json'
               }).then(function(data) {
                 if (data.metadata.length == 1) {
-                  layer.set('md', new Metadata(data.metadata[0]));
+                  var md = new Metadata(data.metadata[0]);
+                  layer.set('md', md);
+                  
+                  var mdLinks = md.getLinksByType('#OGC:WMTS',
+                      '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
+
+                  angular.forEach(mdLinks, function(link) {
+                    if (layer.get('url').indexOf(link.url) >= 0 &&
+                        link.name == layer.getSource().getParams().LAYERS) {
+                      this.feedLayerWithRelated(layer, link.group);
+                      return;
+                    }
+                  }, $this);
                 }
                 return layer;
               });
@@ -1561,7 +1573,7 @@
          * appear in the layer manager
          */
         selected: function(layer) {
-          return layer.displayInLayerManager;
+          return layer.displayInLayerManager && !layer.get('fromWps');
         },
         visible: function(layer) {
           return layer.displayInLayerManager && layer.visible;
