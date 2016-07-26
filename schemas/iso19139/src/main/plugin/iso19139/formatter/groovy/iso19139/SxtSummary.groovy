@@ -1,12 +1,12 @@
 package iso19139
 
 import com.google.common.collect.Maps
-import org.fao.geonet.services.metadata.format.FormatType
-import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.util.*
-import org.fao.geonet.services.metadata.format.groovy.Functions
-import org.fao.geonet.services.metadata.format.groovy.Handlers
-import org.fao.geonet.services.metadata.format.groovy.template.*
+import org.fao.geonet.api.records.formatters.FormatType
+import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.fao.geonet.api.records.formatters.groovy.util.*
+import org.fao.geonet.api.records.formatters.groovy.Functions
+import org.fao.geonet.api.records.formatters.groovy.Handlers
+import org.fao.geonet.api.records.formatters.groovy.template.*
 
 /**
  *

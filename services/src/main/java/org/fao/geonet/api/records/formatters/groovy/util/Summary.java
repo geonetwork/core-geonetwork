@@ -61,18 +61,19 @@ public class Summary {
     protected final Functions functions;
     public List<LinkBlock> links = Lists.newArrayList();
     public List<LinkBlock> associated = Lists.newArrayList();
-    private String logo;
-    private List<String> thumbnails = Lists.newArrayList();
-    private String title = "";
-    private String abstr = "";
-    private List<NavBarItem> navBar = Lists.newArrayList();
-    private List<NavBarItem> navBarOverflow = Lists.newArrayList();
-    private String content = "";
-    private boolean addCompleteNavItem = true;
-    private boolean addOverviewNavItem = true;
-    private String keywords = "";
-    private String extent = "";
-    private String formats = "";
+
+    protected String logo;
+    protected List<String> thumbnails = Lists.newArrayList();
+    protected String title = "";
+    protected String abstr = "";
+    protected List<NavBarItem> navBar = Lists.newArrayList();
+    protected List<NavBarItem> navBarOverflow = Lists.newArrayList();
+    protected String content = "";
+    protected boolean addCompleteNavItem = true;
+    protected boolean addOverviewNavItem = true;
+    protected String keywords = "";
+    protected String extent = "";
+    protected String formats = "";
 
     public Summary(Handlers handlers, Environment env, Functions functions) throws Exception {
         this.handlers = handlers;
