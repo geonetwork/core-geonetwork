@@ -29,7 +29,6 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataIdentifierTemplate;
 import org.fao.geonet.repository.MetadataIdentifierTemplateRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataIdentifierTemplateSpecs;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 @RequestMapping(value = {
@@ -54,9 +52,8 @@ import java.util.List;
 @PreAuthorize("hasRole('Editor')")
 public class IdentifiersApi {
 
-    public static final String API_PARAM_IDENTIFIER_TEMPLATE_NAME = "Identifier template name";
-    private static final String API_PARAM_IDENTIFIER_TEMPLATE = "Identifier template";
     private static final String API_PARAM_IDENTIFIER = "Identifier template identifier";
+    private static final String API_PARAM_IDENTIFIER_TEMPLATE_DETAILS = "Identifier template details";
     public static final String MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID = "No metadata identifier found with id '%d'.";
 
     @ApiOperation(
@@ -77,6 +74,7 @@ public class IdentifiersApi {
         @ApiResponse(code = 200, message = "List of identifier templates.") ,
         @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
     })
+    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
     public List<MetadataIdentifierTemplate> getIdentifiers(
         @ApiParam(
@@ -118,39 +116,33 @@ public class IdentifiersApi {
         @ApiResponse(code = 201, message = "Identifier template created.") ,
         @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
     })
+    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     @ResponseBody
-    public Integer addIdentifier(
+    public  ResponseEntity<Integer> addIdentifier(
         @ApiParam(
-            value = API_PARAM_IDENTIFIER_TEMPLATE_NAME,
-            required = false
+            value = API_PARAM_IDENTIFIER_TEMPLATE_DETAILS
         )
-        @RequestParam(
-            required = false,
-            defaultValue = "false"
-        )
-            String name,
-        @ApiParam(
-            value = API_PARAM_IDENTIFIER_TEMPLATE,
-            required = false
-        )
-        @RequestParam(
-            required = false,
-            defaultValue = "false"
-        )
-            String template
+        @RequestBody
+            MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
             appContext.getBean(MetadataIdentifierTemplateRepository.class);
 
-        MetadataIdentifierTemplate metadataIdentifierTemplate = new MetadataIdentifierTemplate();
-        metadataIdentifierTemplate.setName(name);
-        metadataIdentifierTemplate.setTemplate(template);
+        final MetadataIdentifierTemplate existingId = metadataIdentifierTemplateRepository
+            .findOne(metadataIdentifierTemplate.getId());
+
+        if (existingId != null) {
+            throw new IllegalArgumentException(String.format(
+                "A metadata identifier template with id '%d' already exist.",
+                metadataIdentifierTemplate.getId()
+            ));
+        }
 
         metadataIdentifierTemplate =
             metadataIdentifierTemplateRepository.save(metadataIdentifierTemplate);
 
-        return metadataIdentifierTemplate.getId();
+        return new ResponseEntity<>(metadataIdentifierTemplate.getId(), HttpStatus.CREATED);
     }
 
     @ApiOperation(
@@ -171,31 +163,19 @@ public class IdentifiersApi {
         @ApiResponse(code = 404, message = "Resource not found.") ,
         @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
     })
+    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
+    @ResponseBody
     public void updateIdentifier(
         @ApiParam(
-            value = API_PARAM_IDENTIFIER,
-            required = true
+            value = API_PARAM_IDENTIFIER
         )
         @PathVariable
-            int identifier,
+            Integer identifier,
         @ApiParam(
-            value = API_PARAM_IDENTIFIER_TEMPLATE_NAME,
-            required = false
+            value = API_PARAM_IDENTIFIER_TEMPLATE_DETAILS
         )
-        @RequestParam(
-            required = false,
-            defaultValue = "false"
-        )
-            String name,
-        @ApiParam(
-            value = API_PARAM_IDENTIFIER_TEMPLATE,
-            required = false
-        )
-        @RequestParam(
-            required = false,
-            defaultValue = "false"
-        )
-            String template
+        @RequestBody
+            MetadataIdentifierTemplate metadataIdentifierTemplate
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataIdentifierTemplateRepository metadataIdentifierTemplateRepository =
@@ -203,20 +183,13 @@ public class IdentifiersApi {
 
         MetadataIdentifierTemplate existing =
             metadataIdentifierTemplateRepository.findOne(identifier);
-        if (existing != null) {
+        if (existing == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
                 identifier
             ));
         } else {
-            metadataIdentifierTemplateRepository.update(identifier,
-                new Updater<MetadataIdentifierTemplate>() {
-                    @Override
-                    public void apply(@Nonnull MetadataIdentifierTemplate entity) {
-                        entity.setName(name);
-                        entity.setTemplate(template);
-                    }
-                });
+            metadataIdentifierTemplateRepository.save(metadataIdentifierTemplate);
         }
     }
 
@@ -240,6 +213,7 @@ public class IdentifiersApi {
         @ApiResponse(code = 404, message = "Resource not found.") ,
         @ApiResponse(code = 403, message = "Operation not allowed. Only Editor can access it.")
     })
+    @PreAuthorize("hasRole('Editor') or hasRole('Reviewer') or hasRole('UserAdmin') or hasRole('Administrator')")
     public void deleteIdentifier(
         @ApiParam(
             value = API_PARAM_IDENTIFIER,
@@ -254,7 +228,7 @@ public class IdentifiersApi {
 
         MetadataIdentifierTemplate existing =
             metadataIdentifierTemplateRepository.findOne(identifier);
-        if (existing != null) {
+        if (existing == null) {
             throw new ResourceNotFoundException(String.format(
                 MSG_NO_METADATA_IDENTIFIER_FOUND_WITH_ID,
                 identifier
