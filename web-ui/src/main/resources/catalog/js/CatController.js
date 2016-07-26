@@ -184,9 +184,7 @@
         timeout: -1
       };
 
-      $scope.isCasEnabled = function() {
-        return $scope.info.auth[0] == 'true';
-      };
+      $scope.isCasEnabled = false;
 
       $scope.loadCatalogInfo = function() {
         var promiseStart = $q.when('start');
@@ -211,6 +209,12 @@
                      msg: $translate('msgNoCatalogInfo'),
                      type: 'danger'});
               });
+        });
+        var casInfo = promiseStart.then(function(value) {
+          return $http.get('../api/site/info/isCasEnabled').
+              success(function(data, status) {
+                $scope.isCasEnabled = data;
+              })
         });
 
 
@@ -265,9 +269,9 @@
         var casDefer = $q.defer();
         // After we get all infos, we get user (depending on if cas is enabled
         // or not
-        catInfo.then(function() {
+        casInfo.then(function() {
 
-          if ($scope.isCasEnabled() && isSearch) {
+          if ($scope.isCasEnabled && isSearch) {
             var onCasCheck = function() {
 
               var intervalID;

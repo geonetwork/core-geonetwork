@@ -195,7 +195,7 @@
 
       // Manage sextantTheme thesaurus translation
       gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
-          200, 1).then(function(data) {
+        gnGlobalSettings.locale.iso3lang, 200).then(function(data) {
             sxtGlobals.sextantTheme = data;
             $scope.$broadcast('sextantThemeLoaded');
           });

@@ -127,12 +127,13 @@
 
   module.directive('gnFacetMultiselect', [
     '$q',
+    '$http',
     '$filter',
     'gnFacetService',
     'gnFacetConfigService',
     'gnHttp',
     'gnSearchSettings',
-    function($q, $filter, gnFacetService, gnFacetConfigService, gnHttp,
+    function($q, $http, $filter, gnFacetService, gnFacetConfigService, gnHttp,
              gnSearchSettings) {
 
       var updateLabelFromInfo = function(facets, groups, lang) {
@@ -181,11 +182,12 @@
 
                     // Load groups label for 'publishedForGroup'
                     if (scope.facetConfig.label == 'publishedForGroup') {
-                      promises.push(gnHttp.callService('info', {
-                        type: 'groupsAll'}).
-                          success(function(data) {
-                            groups = data.group;
-                          }));
+                      promises.push($http.get('../api/groups').
+                          then(function(r) {
+                            groups = r.data;
+                          }, function (r) {
+                            console.log(r);
+                      }));
                     }
 
                     // When everything is loaded, watch the summary response

@@ -78,8 +78,10 @@
           [
         'gnRelatedService',
         'gnGlobalSettings',
+        'gnSearchSettings',
         'gnRelatedResources',
-        function(gnRelatedService, gnGlobalSettings, gnRelatedResources) {
+        function(gnRelatedService, gnGlobalSettings,
+                 gnSearchSettings, gnRelatedResources) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {

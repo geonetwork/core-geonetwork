@@ -51,7 +51,7 @@
     <link href="{/root/gui/url}/static/{$customFilename}.css{$minimizedParam}" rel="stylesheet"
           media="screen"/>
 
-    <link href="{/root/gui/url}/static/bootstrap-table.min.css" rel="stylesheet"
+    <link href="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.min.css" rel="stylesheet"
           media="screen"></link>
     <link href="{/root/gui/url}/static/ng-skos.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
@@ -147,8 +147,8 @@
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
-        <script src="{$uiResourcesPath}/lib/bootstrap-table/dist/bootstrap-table.js"></script>
-        <script src="{$uiResourcesPath}/lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
         <!--</xsl:if>-->
 
       </xsl:when>
