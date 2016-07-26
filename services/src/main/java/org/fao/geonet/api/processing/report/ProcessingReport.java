@@ -34,21 +34,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 /**
  * A report about a processing.
  */
 @XmlRootElement(name = "report")
-@XmlType(propOrder = {
-    "uuid", "startIsoDateTime", "endIsoDateTime",
-    "ellapsedTimeInSeconds", "totalTimeInSeconds"
-})
+//@XmlType(propOrder = {
+//    "uuid", "startIsoDateTime", "endIsoDateTime",
+//    "ellapsedTimeInSeconds", "totalTimeInSeconds"
+//})
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public abstract class ProcessingReport
     implements IProcessingReport, IRegisteredProcess {
@@ -152,7 +147,8 @@ public abstract class ProcessingReport
         unregister();
     }
 
-    @XmlElement(name = "errors")
+//    @XmlElement(name = "errors")
+    @XmlAnyElement(lax=true)
     public List<Report> getErrors() {
         return errors;
     }
@@ -161,7 +157,8 @@ public abstract class ProcessingReport
         this.errors.add(new ErrorReport(error));
     }
 
-    @XmlElement(name = "infos")
+//    @XmlElement(name = "infos")
+    @XmlAnyElement(lax=true)
     public List<InfoReport> getInfos() {
         return infos;
     }

@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * A report about XSLT processing.
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlAttribute;
  * This report also advertised the XSL used (based on process identifier), and the records in a
  * standard not providing the process.
  */
+@XmlRootElement(name = "report")
 public class XsltMetadataProcessingReport extends MetadataProcessingReport {
 
     protected final String processId;
@@ -42,6 +44,11 @@ public class XsltMetadataProcessingReport extends MetadataProcessingReport {
      * process id
      */
     protected Set<Integer> noProcessFound = new HashSet<Integer>();
+
+    public XsltMetadataProcessingReport() {
+        super();
+        this.processId = null;
+    }
 
     public XsltMetadataProcessingReport(String processId) {
         super();
