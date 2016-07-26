@@ -16,10 +16,6 @@
       <ows:Title xmlns:ows="http://www.opengis.net/ows">OpenStreetMap
       </ows:Title>
     </ows-context:Layer>
-    <ows-context:Layer name="{type=mapquest}" group="Background layers"
-                       hidden="true" opacity="1">
-      <ows:Title xmlns:ows="http://www.opengis.net/ows">MapQuest</ows:Title>
-    </ows-context:Layer>
     <ows-context:Layer name="{type=wmts,name=sextant}" group="Background layers"
                        hidden="false" opacity="1">
       <ows:Title xmlns:ows="http://www.opengis.net/ows">Sextant</ows:Title>

@@ -16,10 +16,6 @@
       <ows:Title xmlns:ows="http://www.opengis.net/ows">OpenStreetMap
       </ows:Title>
     </ows-context:Layer>
-    <ows-context:Layer name="{type=mapquest}" group="Background layers"
-                       hidden="true" opacity="1">
-      <ows:Title xmlns:ows="http://www.opengis.net/ows">MapQuest</ows:Title>
-    </ows-context:Layer>
     <ows-context:Layer name="{type=wmts,name=web_mercator_etopo1_hillshade}"
                        group="Background layers"
                        hidden="true" opacity="1">
