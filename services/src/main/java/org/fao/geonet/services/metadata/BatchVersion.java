@@ -46,7 +46,7 @@ import java.util.Set;
 /**
  * Versions all selected metadata by adding to subversion repo.
  */
-
+@Deprecated
 public class BatchVersion implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

@@ -66,12 +66,7 @@
            * @return {HttpPromise} Future object
            */
         remove: function(id) {
-          var url = gnUrlUtils.append('md.delete?_content_type=json&',
-              gnUrlUtils.toKeyValue({
-                id: id
-              })
-              );
-          return $http.get(url);
+          return $http.delete('../api/records/' + id);
         },
 
         /**
@@ -86,12 +81,7 @@
          * @return {HttpPromise} Future object
          */
         validate: function(id) {
-          var url = gnUrlUtils.append('md.validate?_content_type=json&',
-              gnUrlUtils.toKeyValue({
-                id: id
-              })
-              );
-          return $http.get(url);
+          return $http.put('../api/records/' + id + '/validate');
         },
 
         /**
@@ -100,9 +90,9 @@
            * @methodOf gnMetadataManager
            *
            * @description
-           * Create a copy of a metadata. The copy will belong to the
-           * same group of the original metadata and will be of the
-           * same type (isTemplate, isChild, fullPrivileges).
+           * Create a copy of a metadata. The copy will belong to the same group
+           * of the original metadata and will be of the same type (isTemplate,
+           * isChild, fullPrivileges).
            *
            * @param {string} id Internal id of the metadata to be copied.
            * @param {string} groupId Internal id of the group of the metadata
@@ -115,62 +105,19 @@
            */
         copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
-          var url = gnUrlUtils.append('md.create',
-              gnUrlUtils.toKeyValue({
-                _content_type: 'json',
-                group: groupId,
-                id: id,
-                template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
-                child: isChild ? 'y' : 'n',
-                fullPrivileges: withFullPrivileges ? 'true' : 'false',
-                metadataUuid: metadataUuid
-              })
-              );
-          return $http.get(url);
-        },
-
-        /**
-           * @ngdoc method
-           * @name gnMetadataManager#import
-           * @methodOf gnMetadataManager
-           *
-           * @description
-           * Import a new from metadata from an XML snippet.
-           *
-           * @param {Object} data Params to send to md.insert service
-           * @return {HttpPromise} Future object
-           */
-        importMd: function(data) {
-          return $http({
-            url: 'md.insert?_content_type=json',
-            method: 'POST',
-            data: $.param(data),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          var url = gnUrlUtils.toKeyValue({
+            metadataType: isTemplate ?
+                (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
+                'METADATA',
+            sourceUuid: id,
+            isChildOfSource: isChild,
+            group: groupId,
+            isVisibleByAllGroupMembers: withFullPrivileges,
+            targetUuid: metadataUuid
           });
-        },
-
-        /**
-         * @ngdoc method
-         * @name gnMetadataManager#importFromDir
-         * @methodOf gnMetadataManager
-         *
-         * @description
-         * Import records from a directory on the server.
-         *
-         * @param {Object} data Params to send to md.import service
-         * @return {HttpPromise} Future object
-         */
-        importFromDir: function(data) {
-          return $http({
-            url: 'md.import?_content_type=json&' + data,
-            method: 'GET',
-            transformResponse: function(defaults) {
-              try {
-                return JSON.parse(defaults);
-              }
-              catch (e) {
-                return defaults;
-              }
+          return $http.put('../api/records/duplicate?' + url, {
+            headers: {
+              'Accept': 'application/json'
             }
           });
         },
@@ -186,17 +133,10 @@
          * @param {Object} data Params to send to md.insert service
          * @return {HttpPromise} Future object
          */
-        importFromXml: function(data) {
-          return $http.post('md.insert?_content_type=json', data, {
-            headers: {'Content-Type':
-                  'application/x-www-form-urlencoded'},
-            transformResponse: function(defaults) {
-              try {
-                return JSON.parse(defaults);
-              }
-              catch (e) {
-                return defaults;
-              }
+        importFromXml: function(urlParams, xml) {
+          return $http.put('../api/records?' + urlParams, xml, {
+            headers: {
+              'Content-Type': 'application/xml'
             }
 
           });
@@ -224,19 +164,19 @@
         create: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, tab, metadataUuid, useExtEditor) {
           return this.copy(id, groupId, withFullPrivileges,
-              isTemplate, isChild, metadataUuid).success(function(data) {
+              isTemplate, isChild, metadataUuid).success(function(id) {
             // Sextant / use ExtJS editor for all but not MedSea
             if (useExtEditor) {
-              window.location.replace('../../apps/sextant/?edit=' + data.id);
+              window.location.replace('../../apps/sextant/?edit=' + id);
             } else {
-              var path = '/metadata/' + data.id;
+              var path = '/metadata/' + id;
+
               if (tab) {
                 path += '/tab/' + tab;
               }
               $location.path(path);
             }
           });
-          // TODO : handle creation error
         },
 
         /**
@@ -289,110 +229,35 @@
    * @description
    * The `gnHttpServices` service provides KVP for all geonetwork
    * services used in the UI.
-   *
-   *  FIXME : links are too long for JSLint.
-   *
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdview mdView}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdinsert mdInsert}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mddelete mdDelete}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdedit mdEdit}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdeditsave mdEditSave}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-
-   * mdeditsaveonly mdEditSaveonly}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-
-   * mdeditsaveandclose mdEditSaveandclose}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
-   * {@link service/config-ui-metadata#services-
-   * documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
-   *
-   * {@link service/config-service-admin-batchprocess
-   * #services-documentation-config-service-admin-
-   * batchprocessxml_-service-mdprocessing processMd}
-   * {@link service/config-service-admin-batchprocess
-   * #services-documentation-config-service-admin-
-   * batchprocessxml_-service-mdprocessingbatch processAll}
-   * {@link service/config-service-admin-batchprocess
-   * #services-documentation-config-service-admin-
-   * batchprocessxml_-service-mdprocessingbatchreport processReport}
-   *
-   * {@link service/config-service-admin#services-
-   * documentation-config-service-adminxml_-service-info info}
-   *
-   * {@link service/config-service-region#services-
-   * documentation-config-service-regionxml_-
-   * service-regionscategory regionsList}
-   * {@link service/config-service-region#services-
-   * documentation-config-service-regionxml_-service-regionslist region}
    */
 
   module.value('gnHttpServices', {
-    mdCreate: 'md.create?_content_type=json&',
-    mdView: 'md.view?_content_type=json&',
-    mdInsert: 'md.insert?_content_type=json&',
-    mdDelete: 'md.delete?_content_type=json&',
-    mdDeleteBatch: 'md.delete.batch',
-    mdEdit: 'md.edit?_content_type=json&',
-    mdEditSave: 'md.edit.save?_content_type=json&',
-    mdEditSaveonly: 'md.edit.saveonly?_content_type=json&',
-    mdEditSaveandclose: 'md.edit.save.and.close?_content_type=json&',
-    mdEditCancel: 'md.edit.cancel?_content_type=json&',
-    suggestionsList: 'md.suggestion?_content_type=json&',
-    getValidation: 'md.validate?_content_type=json&',
-
     mdGetPDFSelection: 'pdf.selection.search', // TODO: CHANGE
     mdGetRDF: 'rdf.metadata.get',
     mdGetMEF: 'mef.export',
     mdGetXML19139: 'xml_iso19139',
     csv: 'csv.search',
 
-    mdPrivileges: 'md.privileges.update?_content_type=json&',
-    mdPrivilegesBatch: 'md.privileges.batch.update?_content_type=json&',
-    mdValidateBatch: 'md.validation',
     publish: 'md.publish',
     unpublish: 'md.unpublish',
 
-    processMd: 'md.processing',
     processAll: 'md.processing.batch',
     processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing',
 
-    info: 'info?_content_type=json',
-
-    country: 'regions.list?_content_type=json&categoryId=' +
-        'http://geonetwork-opensource.org/regions%23country',
-    regionsList: 'regions.category.list?_content_type=json&',
-    region: 'regions.list?_content_type=json&',
-
     suggest: 'suggest',
 
-    edit: 'md.edit',
     search: 'q',
     internalSearch: 'qi',
     subtemplate: 'subtemplate',
     lang: 'lang?_content_type=json&',
     removeThumbnail: 'md.thumbnail.remove?_content_type=json&',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    geoserverNodes: 'geoserver.publisher?_content_type=json&',
     suggest: 'suggest',
     facetConfig: 'search/facet/config',
     selectionLayers: 'selection.layers',
 
     // wfs indexing
-    generateSLD: 'generateSLD',
     solrproxy: '../api/0.1/search'
   });
 
@@ -538,10 +403,9 @@
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
-    '$q',
-    'gnHttp',
+    '$http',
     'gnConfig',
-    function($q, gnHttp, gnConfig) {
+    function($http, gnConfig) {
       return {
 
         /**
@@ -556,25 +420,21 @@
          * @return {HttpPromise} Future object
          */
         load: function() {
-          var defer = $q.defer();
-          gnHttp.callService('info',
-              {type: 'config'},
-              {cache: true}).then(function(response) {
-            angular.forEach(response.data, function(value, key) {
-              if (value == 'true' || value == 'false') {
-                response.data[key] = value === 'true';
-              }
-            });
-            angular.extend(gnConfig, response.data);
-
-            // Override parameter if set in URL
-            if (window.location.search.indexOf('with3d') !== -1) {
-              gnConfig['map.is3DModeAllowed'] = true;
-            }
-
-            defer.resolve(gnConfig);
-          });
-          return defer.promise;
+          return $http.get('../api/site/settings', {cache: true})
+            .then(function(response) {
+                angular.extend(gnConfig, response.data);
+                // Replace / by . in settings name
+                angular.forEach(gnConfig, function(value, key) {
+                  if (key.indexOf('/') !== -1) {
+                    gnConfig[key.replace(/\//g, '.')] = value;
+                    delete gnConfig[key];
+                  }
+                });
+                // Override parameter if set in URL
+                if (window.location.search.indexOf('with3d') !== -1) {
+                  gnConfig['map.is3DModeAllowed'] = true;
+                }
+              });
         },
 
         /**
@@ -673,6 +533,9 @@
       },
       getOwnerId: function() {
         return this['geonet:info'].ownerId;
+      },
+      getGroupOwner: function() {
+        return this['geonet:info'].owner;
       },
       getSchema: function() {
         return this['geonet:info'].schema;

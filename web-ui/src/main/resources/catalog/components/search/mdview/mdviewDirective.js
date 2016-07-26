@@ -102,10 +102,9 @@
 
 
           scope.rateForRecord = function() {
-            return $http.get('md.rate?_content_type=json&' +
-                'uuid=' + scope.md['geonet:info'].uuid +
-                '&rating=' + scope.rate).success(function(data) {
-              scope.rate = data[0];
+            return $http.put('../api/records/' + scope.md['geonet:info'].uuid +
+                             '/rate', scope.rate).success(function(data) {
+              scope.rate = data;
             });
           };
         }

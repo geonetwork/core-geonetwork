@@ -23,25 +23,26 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
+import org.fao.oaipmh.responses.GeonetworkResumptionToken;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.oaipmh.responses.GeonetworkResumptionToken;
-
 public class ResumptionTokenCache extends Thread {
+
 
     public final static int CACHE_EXPUNGE_DELAY = 10 * 1000; // 10 seconds
 
     private Map<String, GeonetworkResumptionToken> map;
-    private boolean running = true;
+    private static Object stopper = new Object();
+    private volatile boolean running = true;
     private SettingManager settingMan;
 
     /**
@@ -93,15 +94,19 @@ public class ResumptionTokenCache extends Thread {
     }
 
     public void run() {
-
-        while (running && !isInterrupted()) {
-            try {
-                Thread.sleep(CACHE_EXPUNGE_DELAY);
-                expunge();
-            } catch (java.lang.InterruptedException ie) {
-                ie.printStackTrace();
+        synchronized (stopper) {
+            while (running && !isInterrupted()) {
+                try {
+                    stopper.wait(CACHE_EXPUNGE_DELAY);
+                    if (running) {
+                        expunge();
+                    }
+                } catch (java.lang.InterruptedException ie) {
+                    ie.printStackTrace();
+                }
             }
         }
+        Log.info(Geonet.OAI_HARVESTER, "ResumptionTokenCache thread end");
     }
 
     private synchronized void expunge() {
@@ -158,7 +163,15 @@ public class ResumptionTokenCache extends Thread {
     }
 
     public void stopRunning() {
-        this.running = false;
+        synchronized (stopper) {
+            this.running = false;
+            stopper.notify();
+        }
+        try {
+            this.join();
+            Log.info(Geonet.OAI_HARVESTER, "ResumptionTokenCache thread stopped");
+        } catch (InterruptedException ignored) {
+        }
     }
 
 }

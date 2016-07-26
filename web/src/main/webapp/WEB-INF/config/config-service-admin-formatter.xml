@@ -28,7 +28,7 @@
       <documentation><![CDATA[
         Remove a formatter.
         ]]></documentation>
-      <class name=".services.metadata.format.Remove">
+      <class name=".api.records.formatters.Remove">
         <param name="user_xsl_dir" value="user_xsl"/>
       </class>
       <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
@@ -38,7 +38,7 @@
       <documentation><![CDATA[
         Download ZIP package containaing the formmatter.
         ]]></documentation>
-      <class name=".services.metadata.format.Download">
+      <class name=".api.records.formatters.Download">
         <param name="user_xsl_dir" value="user_xsl"/>
       </class>
       <output file="true"/>
@@ -50,7 +50,7 @@
       <documentation><![CDATA[
         Return all files contained in a formatter package.
         ]]></documentation>
-      <class name=".services.metadata.format.ListBundleFiles">
+      <class name=".api.records.formatters.ListBundleFiles">
         <param name="user_xsl_dir" value="user_xsl"/>
       </class>
       <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
@@ -60,7 +60,7 @@
       <documentation><![CDATA[
         Return a file contained in a formatter package.
         ]]></documentation>
-      <class name=".services.metadata.format.EditFile">
+      <class name=".api.records.formatters.EditFile">
         <param name="user_xsl_dir" value="user_xsl"/>
       </class>
       <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
@@ -76,7 +76,7 @@
         * fname: The file path in the formatter
         * data: The file content
         ]]></documentation>
-      <class name=".services.metadata.format.UpdateFile">
+      <class name=".api.records.formatters.UpdateFile">
         <param name="user_xsl_dir" value="user_xsl"/>
       </class>
       <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>

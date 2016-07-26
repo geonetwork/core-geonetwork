@@ -73,9 +73,9 @@
     <xsl:param name="type" as="xs:string"/>
     <xsl:param name="version" as="xs:string"/>
     <xsl:variable name="sep" select="if (contains($url, '?')) then '&amp;' else '?'"/>
+
     <xsl:copy-of
       select="document(concat($url, $sep, 'SERVICE=', $type, '&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities'))"/>
-
   </xsl:function>
 
   <!-- Create a GetMap request for the layer which could be used to set a thumbnail.

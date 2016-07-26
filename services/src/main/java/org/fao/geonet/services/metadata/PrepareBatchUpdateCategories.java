@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * Returns all categories.
  */
-
+@Deprecated
 public class PrepareBatchUpdateCategories implements Service {
     //--------------------------------------------------------------------------
     //---

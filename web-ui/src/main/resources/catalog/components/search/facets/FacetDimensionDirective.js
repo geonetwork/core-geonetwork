@@ -47,6 +47,8 @@
           scope.collapseAll = function() {
             $timeout(function() {
               element.parent().find('div.gn-facet > h4').click();
+              element.parent().find('div.gn-facet > a > i')
+                .toggleClass('fa-angle-double-up fa-angle-double-down');
             });
           };
 

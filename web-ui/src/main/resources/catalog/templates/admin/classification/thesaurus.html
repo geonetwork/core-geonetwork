@@ -150,8 +150,8 @@
         <ul>
           <li data-ng-repeat="k in keywords">
             <a href="" data-ng-click="editKeyword(k)"
-               data-ng-class="k.value['#text'] ? '' : 'text-warning'">
-              {{k.value['#text'] || ('keywordNotAvailableInThisLanguage' | translate)}}
+               data-ng-class="k.value ? '' : 'text-warning'">
+              {{k.value[lang] || k.value || ('keywordNotAvailableInThisLanguage' | translate)}}
               <i class="fa fa-edit pull-right"
                  data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
             </a>

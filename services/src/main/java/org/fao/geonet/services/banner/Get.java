@@ -41,7 +41,7 @@ import java.nio.file.Path;
 /**
  * This service returns all information needed to build the banner with XSL
  */
-
+@Deprecated
 public class Get implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

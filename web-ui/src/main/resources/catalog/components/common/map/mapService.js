@@ -449,10 +449,9 @@
               return;
             }
 
-            var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
             var kmlSource = new ol.source.KML({
               projection: map.getView().getProjection(),
-              url: proxyUrl
+              url: url
             });
 
             var vector = new ol.layer.Vector({
@@ -819,8 +818,7 @@
 
                   var parts = url.split('?');
 
-                  var proxyUrl = gnGlobalSettings.proxyUrl +
-                      encodeURIComponent(gnUrlUtils.append(parts[0],
+                  var url = gnUrlUtils.append(parts[0],
                       gnUrlUtils.toKeyValue({
                         service: 'WFS',
                         request: 'GetFeature',
@@ -828,10 +826,10 @@
                         srsName: map.getView().getProjection().getCode(),
                         bbox: extent.join(','),
                         typename: getCapLayer.name.prefix + ':' +
-                                   getCapLayer.name.localPart})));
+                                   getCapLayer.name.localPart}));
 
                   $.ajax({
-                    url: proxyUrl
+                    url: url
                   })
                       .done(function(response) {
                         // TODO: Check WFS exception
@@ -1025,6 +1023,7 @@
                   olL.get('errors').push(errors);
 
                   gnWmsQueue.error(o);
+                  o.layer = olL;
                   defer.reject(o);
                 } else {
                   olL = $this.createOlWMSFromCap(map, capL, url);
@@ -1080,7 +1079,36 @@
                   var layers = capObj.layers || capObj.Layer;
                   for (var i = 0, len = layers.length; i < len; i++) {
                     var capL = layers[i];
-                    if (capL.Layer) continue; // Process only leaves
+                    var olL = $this.createOlWMSFromCap(map, capL);
+                    if (!createOnly) {
+                      map.addLayer(olL);
+                    }
+                    createdLayers.push(olL);
+                  }
+                  return createdLayers;
+                });
+          },
+
+          /**
+           * Call a WMS getCapabilities and create ol3 layers for all items.
+           * Add them to the map if `createOnly` is false;
+           *
+           * @param {ol.Map} map to add the layer
+           * @param {string} url of the service
+           * @param {string} name of the layer
+           * @param {boolean} createOnly or add it to the map
+           */
+          addWmsAllLayersFromCap: function(map, url, createOnly) {
+            var $this = this;
+
+            return gnOwsCapabilities.getWMSCapabilities(url).
+                then(function(capObj) {
+
+                  var createdLayers = [];
+
+                  var layers = capObj.layers || capObj.Layer;
+                  for (var i = 0, len = layers.length; i < len; i++) {
+                    var capL = layers[i];
                     var olL = $this.createOlWMSFromCap(map, capL);
                     if (!createOnly) {
                       map.addLayer(olL);

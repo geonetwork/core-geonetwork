@@ -23,12 +23,12 @@
 
 package iso19139
 
-import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.MapConfig
+import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.fao.geonet.api.records.formatters.groovy.MapConfig
 
 public class Handlers {
-    protected org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
-    protected org.fao.geonet.services.metadata.format.groovy.Functions f
+    protected org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
+    protected org.fao.geonet.api.records.formatters.groovy.Functions f
     protected Environment env
     Matchers matchers
     iso19139.Functions isofunc

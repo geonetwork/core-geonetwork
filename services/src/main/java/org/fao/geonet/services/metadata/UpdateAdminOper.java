@@ -63,6 +63,7 @@ import java.util.regex.Pattern;
  *
  * Sample URL: http://localhost:8080/geonetwork/srv/eng/metadata.admin?update=true&id=13962&_1_0=off&_1_1=off&_1_5=off&_1_6=off
  */
+@Deprecated
 public class UpdateAdminOper extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

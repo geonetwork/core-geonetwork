@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Retrieves a particular service
  */
 @Controller("admin.config.virtualcsw.get")
+@Deprecated
 public class Get {
 
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.get", produces = {

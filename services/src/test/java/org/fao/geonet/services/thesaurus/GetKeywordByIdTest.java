@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParams;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -75,13 +76,13 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
 
     @After
     public void tearDown2() throws Exception {
-        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, false);
+        settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, false);
     }
 
     @Test
     public void testExecAllThesaurus() throws Exception {
         final String thesaurusKey = AllThesaurus.ALL_THESAURUS_KEY;
-        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, true);
+        settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, true);
         final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
 
         String uri1 = keywordBeans.get(0).getUriCode();
@@ -145,7 +146,7 @@ public class GetKeywordByIdTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExecMD_KeywordsAsXlinkAllThesaurus() throws Exception {
-        settingManager.setValue(SettingManager.ENABLE_ALL_THESAURUS, true);
+        settingManager.setValue(Settings.SYSTEM_ENABLE_ALL_THESAURUS, true);
         final String thesaurusKey = AllThesaurus.ALL_THESAURUS_KEY;
         final java.util.List<KeywordBean> keywordBeans = getExampleKeywords(thesaurusKey, 2);
 

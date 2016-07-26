@@ -23,6 +23,8 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.UserEntityListenerManager;
 import org.springframework.security.core.GrantedAuthority;
@@ -127,6 +129,7 @@ public class User extends GeonetEntity implements UserDetails {
      */
     @Transient
     @Override
+    @JsonIgnore
     public String getPassword() {
         return new String(getSecurity().getPassword());
     }

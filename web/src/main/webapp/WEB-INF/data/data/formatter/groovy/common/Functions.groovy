@@ -1,11 +1,11 @@
 package common
 
-import org.fao.geonet.services.metadata.format.FormatType
-import org.fao.geonet.services.metadata.format.groovy.Environment
+import org.fao.geonet.api.records.formatters.FormatType
+import org.fao.geonet.api.records.formatters.groovy.Environment
 
 public class Functions {
-    org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
-    def org.fao.geonet.services.metadata.format.groovy.Functions f
+    org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
+    def org.fao.geonet.api.records.formatters.groovy.Functions f
     def Environment env
 
     def isHtmlOutput = {

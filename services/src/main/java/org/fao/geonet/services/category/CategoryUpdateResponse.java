@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jesse on 6/4/2014.
  */
 @XmlRootElement(name = "response")
+@Deprecated
 public class CategoryUpdateResponse {
     private java.util.List<Operation> operations = Lists.newArrayList();
 

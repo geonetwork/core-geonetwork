@@ -1,5 +1,6 @@
 @import "../../../style/gn_search.less";
 @import "../../../style/gn_metadata.less";
+@import "gn_feedback_default.less";
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
@@ -136,7 +137,7 @@ ul.gn-resultview {
         &.gn-md-edit-btn {
           width: 12px;
           margin-left: 10px;
-          
+
         }
       }
       h4 {
@@ -178,7 +179,7 @@ ul.gn-resultview {
       overflow: hidden;
       cursor: pointer;
       h3 {
-        
+
         /* Leave space for selection checkbox */
         //padding-left: 20px;
         margin-top: 0px;
@@ -188,7 +189,7 @@ ul.gn-resultview {
           font-size: 80%;
           color: #333333;
           max-height: 82px;
-          text-overflow: ellipsis; 
+          text-overflow: ellipsis;
           overflow: hidden;
           display: block;
         }
@@ -394,13 +395,6 @@ ul.gn-resultview {
   }
 }
 
-.gn-minimap-toggle {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 999;
-}
-
 .gn-results-switch {
   float: left;
 }
@@ -530,7 +524,7 @@ html, body {
 
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: @screen-md-min) {
-  
+
   ul.gn-resultview li.gn-grid {
     width: calc(~"50% - 15px");
   }
@@ -538,7 +532,7 @@ html, body {
 
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: @screen-lg-min) {
-  
+
   ul.gn-resultview li.gn-grid {
     //width: calc(~"33% - 15px");
   }
@@ -546,10 +540,10 @@ html, body {
 
 @import "gn_view.less";
 
-.socialmedia-text {
+.gn-footer-text {
   margin-top: 15px;
 }
-.socialmedia-text > span {
+.gn-footer-text > span {
   padding-right: 5px;
   padding-left: 15px;
   color: #777;
@@ -564,4 +558,40 @@ html, body {
   padding-left: 4px !important;
   padding-right: 4px !important;
   color: #777;
+}
+
+.gn-toggle {
+  background-color: @brand-primary;
+  color: white !important;
+  -webkit-border-radius: 25px;
+  border-width: 0px;
+  &:hover {
+    background-color: darken(@link-color, 15%);
+    color: white !important;
+  }
+}
+.gn-minimap-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 999;
+}
+.gn-minimap-button {
+  padding: 7px;
+  right: 0px;
+  bottom: 52px;
+}
+.gn-minimap-text {
+  text-decoration: blink;
+  transform: translate(100%) rotate(270deg);
+  transform-origin: left bottom;
+  bottom: 87px;
+  color: @brand-primary;
+  right:0;
+  text-transform: uppercase;
+}
+.gn-facet-toggle {
+  padding: 2px;
+  margin-top: -4px;
+  left: -5px;
 }

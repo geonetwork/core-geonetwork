@@ -38,9 +38,8 @@
     <constructor-arg value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
   </bean>
 
-  <bean id="jdbcURL" class="java.lang.String">
-    <constructor-arg
-      value="jdbc:sqlserver://SERVER;database=${jdbc.database};integratedSecurity=false;"/>
-  </bean>
+    <bean id="jdbcURL" class="java.lang.String">
+        <constructor-arg value="jdbc:sqlserver://${jdbc.host};database=${jdbc.database};integratedSecurity=false;"/>
+    </bean>
 
 </beans>

@@ -25,7 +25,7 @@ package dublincore;
 
 import com.google.common.collect.Lists;
 
-import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
+import org.fao.geonet.api.records.formatters.AbstractFormatterTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -39,7 +39,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
+import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
 
 /**
  * @author Jesse on 10/17/2014.
@@ -50,6 +50,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     public void testBasicFormat() throws Exception {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         request.addParameter("html", "true");
 
         final String formatterId = "full_view";

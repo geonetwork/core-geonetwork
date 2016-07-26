@@ -46,6 +46,7 @@ import javax.annotation.Nonnull;
  */
 @Controller("admin.category.update")
 @ReadWriteController
+@Deprecated
 public class Update {
 
     @RequestMapping(value = "/{lang}/admin.category.update", produces = {

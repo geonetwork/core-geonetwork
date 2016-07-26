@@ -384,15 +384,8 @@
 
         // TODO: Apply changes to a mix of records is maybe not the best
         // XPath will be applied whatever the standard is.
-        return $http.put('../api/records/actions/batchedit',
+        return $http.put('../api/records/batchediting',
             params
-            //headers: {'Content-Type':
-            //return $http({
-            // method: 'PUT',
-            // url: '../api/records/actions/batchedit',
-            // data: $.param(params),
-            // headers: {'Content-Type':
-            //   'application/x-www-form-urlencoded'}
         ).success(function(data) {
           $scope.processReport = data;
         }).error(function(response) {
@@ -403,7 +396,7 @@
 
 
       function init() {
-        $http.get('../api/standard/actions/batchconfiguration').
+        $http.get('../api/standards/batchconfiguration').
             success(function(data) {
               $scope.fieldConfig = data;
               gnSchemaManagerService.getNamespaces();

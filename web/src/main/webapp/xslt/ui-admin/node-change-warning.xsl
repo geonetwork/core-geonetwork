@@ -22,17 +22,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:import href="../base-layout.xsl"/>
 
   <xsl:variable name="oldNode" select="/root/request/oldNodeId"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
   <xsl:variable name="baseUrl" select="/root/gui/url"/>
-  <xsl:variable name="oldNodeHomeUrl"><xsl:value-of select="$baseUrl"/>/<xsl:value-of
-    select="$oldNode"/>/<xsl:value-of select="$lang"/>/home
-  </xsl:variable>
+  <xsl:variable name="oldNodeHomeUrl" select="concat($baseUrl, '/', $oldNode, '/', $lang, '/home')"/>
   <xsl:variable name="redirectedFrom" select="/root/request/redirectedFrom"/>
 
 

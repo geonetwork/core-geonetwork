@@ -36,6 +36,7 @@ import org.jdom.Element;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Deprecated
 public class Delete implements Service {
     private volatile Path logoDirectory;
 

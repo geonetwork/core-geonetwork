@@ -44,7 +44,7 @@
           ctrl: 'gnFeaturesTable'
         },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-            'featurestable.html',
+        'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find('table'), scope);
         }
@@ -113,11 +113,11 @@
               );
             }
 
-            }.bind(this),
-            showExport: true,
-            exportTypes: ['csv'],
-            exportDataType: 'all'
-          },bstConfig)
+          }.bind(this),
+          showExport: true,
+          exportTypes: ['csv'],
+          exportDataType: 'all'
+        },bstConfig)
       );
       scope.$watch('ctrl.active', function() {
         element.bootstrapTable('resetWidth');

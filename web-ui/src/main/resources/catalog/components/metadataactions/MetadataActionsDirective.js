@@ -63,10 +63,10 @@
           };
 
           scope.updateStatus = function() {
-            return $http.get('md.status.update?' +
-                '_content_type=json&id=' + metadataId +
-                '&changeMessage=' + scope.changeMessage +
-                '&status=' + scope.newStatus.value).then(
+            return $http.put('../api/records/' + metadataId +
+                '/status?status=' + scope.newStatus.value +
+                '&comment=' + scope.changeMessage
+            ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
@@ -115,7 +115,7 @@
             'metadatacategoryupdater.html',
         scope: {
           currentCategories: '=gnMetadataCategoryUpdater',
-          metadataId: '=',
+          metadataUuid: '=',
           groupOwner: '=gnGroupOwner'
         },
         link: function(scope) {
@@ -125,13 +125,12 @@
 
           scope.updateCategoriesAllowed = function() {
             if (angular.isDefined(scope.groupOwner)) {
-              $http.get('admin.group.get?id=' + scope.groupOwner + '&' +
-                  '_content_type=json', {cache: true}).
+              $http.get('../api/groups/' + scope.groupOwner, {cache: true}).
                   success(function(data) {
                     scope.enableallowedcategories =
-                        (data[0].enableallowedcategories == 'true');
+                        data.enableAllowedCategories;
                     scope.allowedcategories = [];
-                    angular.forEach(data[0].allowedcategories, function(c) {
+                    angular.forEach(data.allowedcategories, function(c) {
                       scope.allowedcategories.push(c.id);
                     });
                   });
@@ -144,15 +143,13 @@
           });
 
           var init = function() {
-            return $http.get('info?type=categories&' +
-                '_content_type=json', {cache: true}).
+            return $http.get('../api/tags', {cache: true}).
                 success(function(data) {
-                  scope.categories =
-                     data !== 'null' ? data.metadatacategory : null;
+                  scope.categories = data;
                   if (angular.isDefined(scope.currentCategories)) {
                     angular.forEach(scope.categories, function(c) {
                       if (scope.currentCategories.indexOf(c.name) !== -1) {
-                        scope.ids.push(c['@id']);
+                        scope.ids.push(c.id);
                       }
                     });
                   }
@@ -163,16 +160,20 @@
             return c.label[scope.lang];
           };
 
+
           // Remove or add category to the set of ids
           scope.assign = function(c, event) {
             event.stopPropagation();
-            var existIndex = scope.ids.indexOf(c['@id']);
+            var existIndex = scope.ids.indexOf(c.id), method = '';
             if (existIndex === -1) {
-              scope.ids.push(c['@id']);
+              scope.ids.push(c.id);
+              method = 'put';
             } else {
               scope.ids.splice(existIndex, 1);
+              method = 'delete';
             }
-            gnMetadataActions.assignCategories(scope.metadataId, scope.ids)
+            $http[method]('../api/records/' +
+                          scope.metadataUuid + '/tags?id=' + c.id)
                 .then(function() {
                   scope.currentCategories.push(c.name);
                 }, function(response) {
@@ -218,10 +219,9 @@
           scope.groups = null;
 
           scope.init = function(event) {
-            return $http.get('info?_content_type=json&' +
-                'type=groups&profile=Editor', {cache: true}).
-                success(function(data) {
-                  scope.groups = data !== 'null' ? data.group : null;
+            return $http.get('../api/groups?profile=Editor', {cache: true}).
+                success(function(groups) {
+                  scope.groups = groups;
                 });
           };
 
@@ -231,9 +231,9 @@
 
           scope.assignGroup = function(g, event) {
             event.stopPropagation();
-            gnMetadataActions.assignGroup(scope.metadataId, g['@id'])
+            gnMetadataActions.assignGroup(scope.metadataId, g.id)
                 .then(function() {
-                  scope.groupOwner = g['@id'];
+                  scope.groupOwner = g.id;
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate('changeCategoryError'),
@@ -294,119 +294,52 @@
             'transferownership.html',
         link: function(scope, element, attrs) {
           var ownerId = parseInt(attrs['gnTransferMdOwner']);
+          var groupOwner = parseInt(attrs['gnTransferMdGroupOwner']);
           var mdUuid = attrs['gnTransferOwnership'];
-          scope.users = [];
-          scope.selectedUser = null;
-          scope.groups = [];
-          scope.selectedGroup = null;
-          scope.userLoading = true;
-          scope.groupLoading = false;
+          scope.selectedUserGroup = null;
 
           scope.selectUser = function(user) {
             scope.selectedUser = user;
-            scope.groupLoading = true;
-            $http.get('admin.usergroups.list?_content_type=json&id=' +
-                user.id).success(function(groups) {
-              scope.groups = [];
-              var added = {};
-              angular.forEach(groups, function(g) {
-                if (!angular.isDefined(added[g.id]) && g.reserved !== 'true') {
-                  added[g.id] = true;
-                  scope.groups.push({
-                    name: g.name,
-                    id: g.id,
-                    desc: g.description
+            scope.editorSelectedId = user.id;
+            $http.get('../api/users/' + id + '/groups')
+              .success(function(data) {
+                  var uniqueGroup = {};
+                  angular.forEach(data, function(g) {
+                    if (!uniqueGroup[g.group.id]) {
+                      uniqueGroup[g.group.id] = g.group;
+                    }
                   });
-                }
-              });
-            }).error(function(error) {
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('loadUserGroupsError'),
-                timeout: 0,
-                type: 'danger'});
-            }).then(function() {
-              scope.groupLoading = false;
-            });
+                  $scope.editorGroups = uniqueGroup;
+                });
           };
 
           scope.selectGroup = function(group) {
             scope.selectedGroup = group;
           };
-          $http.get('admin.user.list?_content_type=json').
-              success(function(data) {
-                var isEditor = function(user) {
-                  var hasEditorAuth = false;
-                  var auths = user.authorities;
-                  if (!angular.isArray(auths)) {
-                    auths = [auths];
-                  }
-                  angular.forEach(auths, function(auth) {
-                    if (!hasEditorAuth && auth.authority === 'Editor') {
-                      hasEditorAuth = true;
-                    }
-                  });
-
-                  return hasEditorAuth;
-                };
-                angular.forEach(data.users, function(user) {
-                  user = user.value;
-                  if (isEditor(user)) {
-                    var userObj = {
-                      name: user.name + ' ' + user.surname,
-                      username: user.username,
-                      id: user.id
-                    };
-                    scope.users.push(userObj);
-
-                    if (user.id === ownerId) {
-                      scope.selectUser(userObj);
-                    }
+          $http.get('../api/users/groups')
+            .success(function(data) {
+                var uniqueUserGroups = {};
+                angular.forEach(data, function(g) {
+                  var key = g.groupId + '-' + g.userId;
+                  if (!uniqueUserGroups[key]) {
+                    uniqueUserGroups[key] = g;
                   }
                 });
-              }).error(function(error) {
-                $rootScope.$broadcast('StatusUpdated', {
-                  msg: $translate('loadUsersError'),
-                  timeout: 0,
-                  type: 'danger'});
-              }).then(function() {
-                scope.userLoading = false;
+                scope.userGroups = uniqueUserGroups;
               });
 
-          var updateSelection = function() {
-            return $http({
-              method: 'GET',
-              url: 'metadata.batch.newowner?userId=' + scope.selectedUser.id +
-                  '&groupId=' + scope.selectedGroup.id,
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }).success(function(result) {
-              scope.$emit('TransferOwnership', true);
-              var msg = $translate('transferOwnershipSuccessMsg', result);
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: msg,
-                timeout: 2,
-                type: 'success'});
-            }).error(function() {
-              scope.$emit('TransferOwnership', false);
-              $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('transferOwnershipError'),
-                timeout: 0,
-                type: 'danger'});
-            });
-          };
           scope.save = function() {
-            if (scope.selectedUser && scope.selectedGroup) {
-              if (angular.isDefined(mdUuid)) {
-                return $http.put('../api/selections/metadata', {
-                  uuids: mdUuid
-                }).success(function() {
-                  updateSelection();
+            return $http.put('../api/records/' + mdUuid +
+                '/ownership?userIdentifier=' + scope.selectedUserGroup.userId +
+                '&groupIdentifier=' + scope.selectedUserGroup.groupId)
+              .then(function(r) {
+                  $rootScope.$broadcast('StatusUpdated', {
+                    msg: $translate('transfertPrivilegesFinished', {
+                      metadata: r.data.numberOfRecordsProcessed
+                    }),
+                    timeout: 2,
+                    type: 'success'});
                 });
-              } else {
-                return updateSelection();
-              }
-            }
           };
         }
       };

@@ -39,6 +39,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.util.FileUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author bmaire
  */
+@Deprecated
 @Controller("/log")
 public class LogConfig {
     private static final String fileAppenderName = "fileAppender";
@@ -63,7 +65,7 @@ public class LogConfig {
     }
 
 
-    private boolean isAppenderLogFileLoaded() {
+    boolean isAppenderLogFileLoaded() {
         if (fileAppender == null || fileAppender.getFile() == null) {
             fileAppender = (FileAppender) Logger.getLogger(Geonet.GEONETWORK).getAppender(fileAppenderName);
 
@@ -150,7 +152,7 @@ public class LogConfig {
         String lastActivity = null;
 
         if (isAppenderLogFileLoaded()) {
-            lastActivity = readLastLines(new File(fileAppender.getFile()),
+            lastActivity = FileUtil.readLastLines(new File(fileAppender.getFile()),
                 Math.min(lines, maxLines));
         } else {
             throw new RuntimeException("No log file found. Check logger configuration.");
@@ -158,49 +160,4 @@ public class LogConfig {
         return lastActivity;
     }
 
-    private String readLastLines(File file, int lines) {
-        RandomAccessFile fileHandler = null;
-        try {
-            fileHandler = new RandomAccessFile(file, "r");
-            long fileLength = fileHandler.length() - 1;
-            StringBuilder sb = new StringBuilder();
-
-            int line = 0;
-            int readByte;
-            long filePointer;
-            for (filePointer = fileLength; filePointer != -1; filePointer--) {
-                fileHandler.seek(filePointer);
-                readByte = fileHandler.readByte();
-                if (readByte == 0xA) {
-                    if (filePointer < fileLength) {
-                        line = line + 1;
-                    }
-                } else if (readByte == 0xD) {
-                    if (filePointer < fileLength - 1) {
-                        line = line + 1;
-                    }
-                }
-                if (line >= lines) {
-                    break;
-                }
-                sb.append((char) readByte);
-            }
-
-            String lastLine = sb.reverse().toString();
-            return lastLine;
-        } catch (java.io.FileNotFoundException e) {
-            Log.error(Geonet.GEONETWORK, e.getMessage());
-            return null;
-        } catch (java.io.IOException e) {
-            Log.error(Geonet.GEONETWORK, e.getMessage());
-            return null;
-        } finally {
-            if (fileHandler != null)
-                try {
-                    fileHandler.close();
-                } catch (IOException e) {
-                    Log.error(Geonet.GEONETWORK, e.getMessage());
-                }
-        }
-    }
 }

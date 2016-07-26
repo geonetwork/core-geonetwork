@@ -42,7 +42,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 
 //=============================================================================
-
+@Deprecated
 public class SelectionSearch implements Service {
     private ServiceConfig _config;
 

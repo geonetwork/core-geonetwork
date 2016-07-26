@@ -44,6 +44,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -109,7 +110,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
-        String catalogAdminEmail = sm.getValue("system/feedback/email");
+        String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String thisSite = sm.getSiteName();
 
 
@@ -190,6 +191,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
         return MailUtil.sendMail(email, subject, message, sm);
     }
 
+
     /**
      * Send the profile request to the catalog administrator.
      */
@@ -222,6 +224,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
     Group getGroup(ServiceContext context) throws SQLException {
         final GroupRepository bean = context.getBean(GroupRepository.class);
         return bean.findOne(ReservedGroup.guest.getId());
+
     }
 
     // --------------------------------------------------------------------------
@@ -233,5 +236,4 @@ public class SelfRegister extends NotInReadOnlyModeService {
         StringKeyGenerator generator = KeyGenerators.string();
         return generator.generateKey().substring(0, 8);
     }
-
 }

@@ -30,6 +30,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.site.SiteApi;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
@@ -38,6 +39,7 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -55,6 +57,7 @@ import javax.persistence.criteria.Root;
 /**
  * TODO javadoc.
  */
+@Deprecated
 public class Set implements Service {
     /**
      * Reload services or not once settings are updated. Some service use DoAction as forward
@@ -87,7 +90,7 @@ public class Set implements Service {
             throw new OperationAbortedEx("Cannot set all values");
 
         // And reload services
-        String newUuid = values.get(SettingManager.SYSTEM_SITE_SITE_ID_PATH);
+        String newUuid = values.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
@@ -112,7 +115,7 @@ public class Set implements Service {
 
         // Reload services affected by updated settings
         if (reloadServices) {
-            DoActions.doActions(context);
+            SiteApi.reloadServices(context);
         }
 
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");

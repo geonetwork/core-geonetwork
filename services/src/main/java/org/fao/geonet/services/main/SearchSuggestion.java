@@ -128,7 +128,7 @@ public class SearchSuggestion implements Service {
 
         // Search index term and/or index records
         String origin = Util.getParam(params, PARAM_ORIGIN, "");
-        // The max number of terms to return - only apply while searching terms
+        // The max number of terms to look into - only apply while searching terms
         int maxNumberOfTerms = Util.getParam(params, PARAM_MAX_NUMBER_OF_TERMS,
             _maxNumberOfTerms);
         // The minimum frequency for a term value to be proposed in suggestion -
@@ -174,7 +174,8 @@ public class SearchSuggestion implements Service {
             // Begin Sepecific SextantV5
             // Send _groupPublished to suggestion in order to filter on catalogue if configwhat is set
             String groupPublished = Util.getParam(params, "groupPublished", "");
-            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, groupPublished, listOfSuggestions);
+            searcher.getSuggestionForFields(context, fieldName, searchValue, _config,
+                maxNumberOfTerms, threshold, groupPublished, listOfSuggestions);
             // End Sepecific SextantV5
 
         }

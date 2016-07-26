@@ -57,6 +57,7 @@ import jeeves.server.context.ServiceContext;
  *
  * @author francois
  */
+@Deprecated
 public class GetInfo implements Service {
     final Properties properties = System.getProperties();
     private HashMap<String, String> catProperties = new HashMap<String, String>();

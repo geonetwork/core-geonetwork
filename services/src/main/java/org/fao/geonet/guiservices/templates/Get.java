@@ -50,7 +50,7 @@ import java.util.List;
  *
  * see search parameters
  */
-
+@Deprecated
 public class Get implements Service {
     private String arParams[] =
         {

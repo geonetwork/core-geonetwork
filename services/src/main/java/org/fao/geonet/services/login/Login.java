@@ -44,6 +44,6 @@ public class Login implements Service {
 
     public Element exec(Element params, ServiceContext context)
         throws Exception {
-        throw new RuntimeException("user.login service is no longer supported. Use j_spring_security_check to sign in.");
+        throw new RuntimeException("user.login service is no longer supported. Use /signin.");
     }
 }

@@ -41,8 +41,9 @@
     'gn_admin_controller'
   ]);
 
+
   module.config(['$LOCALES',
-                 function($LOCALES) {
-                   $LOCALES.push('admin');
+    function($LOCALES) {
+      $LOCALES.push('admin');
     }]);
 })();

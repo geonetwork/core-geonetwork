@@ -39,6 +39,7 @@
     proxyUrl: '../../proxy?url=',
     locale: {},
     isMapViewerEnabled: false,
+    requireProxy: [],
     is3DModeAllowed: false,
     docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
     //docUrl: '../../doc/',
@@ -60,7 +61,8 @@
       'kor': 'ko',
       'spa': 'es',
       'cze': 'cz',
-      'cat': 'ca'
+      'cat': 'ca',
+      'fin': 'fi'
     },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang];
@@ -112,10 +114,11 @@
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = gnLangs.langs;
+
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech', 'fin': 'Suomi'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
@@ -142,8 +145,8 @@
        * An ordered list of profiles
        */
       $scope.profiles = ['RegisteredUser', 'Editor',
-        'Reviewer', 'UserAdmin',
-        'Administrator'];
+                         'Reviewer', 'UserAdmin',
+                         'Administrator'];
       $scope.info = {};
       $scope.user = {};
       $rootScope.user = $scope.user;
@@ -191,23 +194,22 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function(value) {
-          var url = $scope.url + 'info?_content_type=json&type=site&type=auth';
-          return $http.get(url).
+          return $http.get('../api/site').
               success(function(data, status) {
                 $scope.info = data;
                 // Add the last time catalog info where updated.
                 // That could be useful to append to catalog image URL
                 // in order to trigger a reload of the logo when info are
                 // reloaded.
-                $scope.info.site.lastUpdate = new Date().getTime();
+                $scope.info['system/site/lastUpdate'] = new Date().getTime();
                 $scope.initialized = true;
               }).
               error(function(data, status, headers, config) {
                 $rootScope.$broadcast('StatusUpdated',
-                    {
-                      title: $translate('somethingWrong'),
-                      msg: $translate('msgNoCatalogInfo'),
-                      type: 'danger'});
+                   {
+                     title: $translate('somethingWrong'),
+                     msg: $translate('msgNoCatalogInfo'),
+                     type: 'danger'});
               });
         });
 
@@ -216,13 +218,13 @@
         // Utility functions for user
         var userFn = {
           isAnonymous: function() {
-            return this['@authenticated'] === 'false';
+            return angular.isUndefined(this);
           },
           isConnected: function() {
             return !this.isAnonymous();
           },
           canEditRecord: function(md) {
-            if (!md || this['@authenticated'] == 'false') {
+            if (!md || this.isAnonymous()) {
               return false;
             }
 
@@ -338,19 +340,16 @@
 
         // Retrieve user information if catalog is online
         var userLogin = casDefer.promise.finally(function(value) {
-          var url = $scope.url + 'info?_content_type=json&type=me';
-          return $http.get(url).
-              success(function(data, status) {
-                angular.extend($scope.user, data.me);
-                angular.extend($scope.user, userFn);
-
-                $scope.authenticated = data.me['@authenticated'] !== 'false';
-              }).
-              error(function(data, status, headers, config) {
-                // TODO : translate
-                $rootScope.$broadcast('StatusUpdated',
-                    {msg: $translate('msgNoUserInfo')}
-                );
+          return $http.get('../api/me').
+              success(function(me, status) {
+                if (angular.isObject(me)) {
+                  angular.extend($scope.user, me);
+                  angular.extend($scope.user, userFn);
+                  $scope.authenticated = true;
+                } else {
+                  $scope.authenticated = false;
+                  $scope.user = undefined;
+                }
               });
         });
         $scope.userLoginPromise = userLogin;

@@ -29,6 +29,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.specification.InspireAtomFeedSpecs;
@@ -97,7 +98,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest started");
 
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-            String atomProtocol = sm.getValue("system/inspire/atomProtocol");
+            String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             logger.info("ATOM feed harvest: remove existing metadata feeds");
@@ -157,7 +158,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest started for metadata: " + metadataId);
 
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-            String atomProtocol = sm.getValue("system/inspire/atomProtocol");
+            String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             logger.info("ATOM feed harvest: remove existing metadata feed");
@@ -276,7 +277,7 @@ public class InspireAtomHarvester {
         // Retrieve the metadata referencing atom feed documents.
 
         // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-        String atomProtocol = gc.getBean(SettingManager.class).getValue("system/inspire/atomProtocol");
+        String atomProtocol = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 

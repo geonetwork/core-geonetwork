@@ -62,21 +62,18 @@
   <xsl:template mode="mode-iso19139" priority="2000" match="*[gco:*/@uom]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-    <xsl:param name="refToDelete" select="''" required="no"/>
+    <xsl:param name="refToDelete" select="gn:element" required="no"/>
 
     <xsl:variable name="labelConfig"
                   select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')"/>
     <xsl:variable name="labelMeasureType"
                   select="gn-fn-metadata:getLabel($schema, name(gco:*), $labels, name(), '', '')"/>
 
-    <xsl:variable name="parentEditInfo"
-                  select="if (exists($refToDelete)) then $refToDelete else gn:element"/>
-
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
-          (not($parentEditInfo) and gn:element/@min = 1 and gn:element/@max = 1)">
+          test="($refToDelete and $refToDelete/@min = 1 and $refToDelete/@max = 1) or
+          (not($refToDelete) and gn:element/@min = 1 and gn:element/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
@@ -114,7 +111,7 @@
       <div class="col-sm-1 gn-control">
         <xsl:call-template name="render-form-field-control-remove">
           <xsl:with-param name="editInfo" select="*/gn:element"/>
-          <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+          <xsl:with-param name="parentEditInfo" select="$refToDelete"/>
         </xsl:call-template>
       </div>
     </div>

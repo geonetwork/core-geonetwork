@@ -100,8 +100,8 @@
 
           if (angular.isDefined(attrs.enableEvents)) {
             var events = ['first', 'previous', 'next', 'last'];
-            angular.forEach(events, function (key) {
-              scope.$on(key + 'Page', function (evt, cbFn) {
+            angular.forEach(events, function(key) {
+              scope.$on(key + 'Page', function(evt, cbFn) {
                 scope[key]();
                 if (angular.isFunction(cbFn)) {
                   cbFn();

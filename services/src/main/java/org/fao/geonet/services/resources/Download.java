@@ -25,7 +25,6 @@ package org.fao.geonet.services.resources;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -36,6 +35,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -49,11 +49,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 //=============================================================================
 
@@ -121,11 +120,11 @@ public class Download {
             dm.increasePopularity(context, id);
 
         //--- send email notification
-
         if (doNotify) {
-            String host = sm.getValue("system/feedback/mailServer/host");
-            String port = sm.getValue("system/feedback/mailServer/port");
-            String from = sm.getValue("system/feedback/email");
+            String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+            String from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+
 
             String fromDescr = "GeoNetwork administrator";
 
@@ -163,10 +162,11 @@ public class Download {
                         try {
                             MailSender sender = new MailSender(context);
                             sender.send(host, Integer.parseInt(port),
-                                sm.getValue("system/feedback/mailServer/username"),
-                                sm.getValue("system/feedback/mailServer/password"),
-                                sm.getValueAsBool("system/feedback/mailServer/ssl"),
-                                sm.getValueAsBool("system/feedback/mailServer/tls"),
+                                sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME),
+                                sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD),
+                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL),
+                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS),
+                                sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS),
                                 from, fromDescr, email, null, subject, message);
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -25,6 +25,8 @@ package org.fao.geonet.api.directory;
 
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.registries.CollectResults;
+import org.fao.geonet.api.registries.DirectoryUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;

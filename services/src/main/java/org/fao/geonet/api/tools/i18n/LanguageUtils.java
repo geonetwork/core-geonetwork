@@ -61,10 +61,22 @@ public class LanguageUtils {
     public Locale parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
         while (listOfLocales.hasMoreElements()) {
             Locale l = listOfLocales.nextElement();
-            if (iso3code.contains(l.getISO3Language())) {
+            if (iso3code.contains(locale2gnCode(l.getISO3Language()))) {
                 return l;
             }
         }
         return Locale.forLanguageTag(defaultLanguage);
+    }
+
+    public String getIso3langCode(Enumeration<Locale> locales) {
+        Locale l = parseAcceptLanguage(locales);
+        return locale2gnCode(l.getISO3Language());
+    }
+    private String locale2gnCode (String code) {
+        if (code.equals("fra")) {
+            return "fre";
+        } else {
+            return code;
+        }
     }
 }

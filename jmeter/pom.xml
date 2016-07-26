@@ -162,7 +162,7 @@
           </plugin>
           <!-- start jetty before integration tests and shut it down after -->
           <plugin>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>

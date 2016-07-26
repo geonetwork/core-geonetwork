@@ -28,6 +28,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.users.transfer.OwnershipUtils;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -35,6 +36,7 @@ import java.util.List;
 
 //=============================================================================
 
+@Deprecated
 public class Editors implements Service {
     //--------------------------------------------------------------------------
     //---

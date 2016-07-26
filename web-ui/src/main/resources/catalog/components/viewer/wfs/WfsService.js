@@ -97,9 +97,7 @@
           });
 
           if (gnUrlUtils.isValid(url)) {
-            var proxyUrl = gnGlobalSettings.proxyUrl +
-                encodeURIComponent(url);
-            $http.get(proxyUrl, {
+            $http.get(url, {
               cache: true
             }).then(function(response) {
               //First cleanup not supported INSPIRE extensions:

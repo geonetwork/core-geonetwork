@@ -44,7 +44,7 @@ import java.util.Map;
 @Access(AccessType.PROPERTY)
 @EntityListeners(MapServerEntityListenerManager.class)
 @SequenceGenerator(name = MapServer.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
-public class MapServer {
+public class MapServer extends GeonetEntity {
     static final String ID_SEQ_NAME = "mapserver_id_seq";
 
     private int _id;

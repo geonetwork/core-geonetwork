@@ -42,13 +42,14 @@
     'gnAlertService',
     'gnSearchSettings',
     'gnPopup',
+    'gnMdFormatter',
     '$translate',
     '$q',
     '$http',
     'gnGlobalSettings',
     function($window, $rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnPopup,
+             gnPopup, gnMdFormatter,
              $translate, $q, $http, gnGlobalSettings) {
 
       var windowName = 'geonetwork';
@@ -128,8 +129,14 @@
         if (url) {
           $window.open(url, '_blank');
         }
-        else {
-          console.error('Error while exporting PDF');
+        else if (angular.isString(params)) {
+          gnMdFormatter.getFormatterUrl(null, null, params).then(function(url) {
+            $http.get(url, {
+              headers: {
+                Accept: 'text/html'
+              }
+            });
+          });
         }
       };
 
@@ -166,7 +173,11 @@
           });
         }
         else {
-          return callBatch('mdValidateBatch').then(function() {
+          return gnHttp.callService('../api/records/validate', null,
+                                    {
+                                      method: 'PUT'
+                                    }).then(function(data) {
+            alertResult(data.data);
             $rootScope.$broadcast('mdSelectNone');
             $rootScope.$broadcast('search');
           });
@@ -184,7 +195,7 @@
           });
         }
         else {
-          return callBatch('mdDeleteBatch').then(function() {
+          return $http.delete('../api/records').then(function() {
             $rootScope.$broadcast('mdSelectNone');
             // TODO: Same here.
             $rootScope.$broadcast('search');
@@ -208,10 +219,8 @@
       };
 
       this.startWorkflow = function(md, scope) {
-        return $http.get('md.status.update?' +
-            '_content_type=json&id=' + md.getId() +
-            '&changeMessage=Enable workflow' +
-            '&status=1').then(
+        return $http.put('../api/records/' + md.getId() +
+            '/status?status=1&comment=Enable workflow').then(
             function(data) {
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
@@ -232,11 +241,11 @@
       this.openPrivilegesBatchPanel = function(scope) {
         openModal({
           title: 'privileges',
-          content: '<div gn-share="" gn-share-batch="true" ></div>'
+          content: '<div gn-share="" gn-share-batch="true"></div>'
         }, scope, 'PrivilegesUpdated');
       };
       this.openBatchEditing = function(scope) {
-        $location.path('/batchedit');
+        $location.path('/batchediting');
       };
       this.openCategoriesBatchPanel = function(scope) {
         openModal({
@@ -248,10 +257,12 @@
       this.openTransferOwnership = function(md, scope) {
         var uuid = md ? md.getUuid() : '';
         var ownerId = md ? md.getOwnerId() : '';
+        var groupOwner = md ? md.getGroupOwner() : '';
         openModal({
           title: 'transferOwnership',
           content: '<div gn-transfer-ownership="' + uuid +
-              '" gn-transfer-md-owner="' + ownerId + '"></div>'
+              '" gn-transfer-md-owner="' + ownerId + '" ' +
+              '" gn-transfer-md-group-owner="' + groupOwner + '"></div>'
         }, scope, 'TransferOwnership');
       };
       /**
@@ -330,8 +341,8 @@
 
       this.assignGroup = function(metadataId, groupId) {
         var defer = $q.defer();
-        $http.get('md.group.update?id=' + metadataId +
-            '&groupid=' + groupId)
+        $http.put('../api/records/' + metadataId +
+            '/group', groupId)
             .success(function(data) {
               defer.resolve(data);
             })
@@ -342,11 +353,9 @@
       };
 
       this.assignCategories = function(metadataId, categories) {
-        var defer = $q.defer(), ids = '';
-        angular.forEach(categories, function(value) {
-          ids += '&_' + value + '=on';
-        });
-        $http.get('md.category.update?id=' + metadataId + ids)
+        var defer = $q.defer();
+        $http.get('../records/' + metadataId +
+                  '/tags?id=' + categories.join('&id='))
             .success(function(data) {
               defer.resolve(data);
             })

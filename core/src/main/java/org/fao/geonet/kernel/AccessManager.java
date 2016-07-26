@@ -40,6 +40,7 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
 import org.fao.geonet.repository.MetadataRepository;
@@ -477,9 +478,9 @@ public class AccessManager {
 
         // IPv4
 
-        SettingRepository settingRepository = ApplicationContextHolder.get().getBean(SettingRepository.class);
-        Setting network = settingRepository.findOne("system/intranet/network");
-        Setting netmask = settingRepository.findOne("system/intranet/netmask");
+        SettingRepository settingRepository= ApplicationContextHolder.get().getBean(SettingRepository.class);
+        Setting network = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
+        Setting netmask = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
 
         try {
             if (network != null && netmask != null) {

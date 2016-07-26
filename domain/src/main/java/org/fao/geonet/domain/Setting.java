@@ -23,6 +23,9 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.fao.geonet.entitylistener.SettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
@@ -41,6 +44,7 @@ import javax.persistence.*;
 @Cacheable
 @Access(AccessType.PROPERTY)
 @EntityListeners(SettingEntityListenerManager.class)
+@JsonSerialize(using = SettingToObjectSerializer.class)
 public class Setting extends GeonetEntity {
     private String name;
     private String value;

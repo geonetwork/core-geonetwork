@@ -28,6 +28,9 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.api.mapservers.GeoFile;
+import org.fao.geonet.api.mapservers.GeoServerNode;
+import org.fao.geonet.api.mapservers.GeoServerRest;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -40,7 +43,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -61,6 +63,7 @@ import java.util.HashMap;
  *
  * TODO : Support multi file publication
  */
+@Deprecated
 public class Do implements Service {
     /**
      * Module name

@@ -23,14 +23,12 @@
 
 package org.fao.geonet.constants;
 
-import javax.xml.XMLConstants;
-
-import jeeves.constants.Jeeves;
-
 import org.apache.lucene.util.Version;
 import org.jdom.Namespace;
 
-import java.util.List;
+import javax.xml.XMLConstants;
+
+import jeeves.constants.Jeeves;
 
 /**
  * TODO javadoc.
@@ -46,7 +44,56 @@ public final class Geonet {
 
     public static final String CC_API_REST_URL = "http://api.creativecommons.org/rest/1.5/simple/chooser";
     public static final String LUCENE_LOCALE_KEY = "_locale";
-    
+    //
+    //--- logging
+    //
+    public static final String LANGUAGEDETECTOR = "LanguageDetector";
+    public static final String GEONETWORK = "geonetwork";
+    public static final String HARVEST_MAN = GEONETWORK + ".harvest-man";
+    public static final String HARVESTER = GEONETWORK + ".harvester";
+    public static final String SETTINGS = GEONETWORK + ".settings";
+    public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
+    public static final String ACCESS_MANAGER = GEONETWORK + ".accessmanager";
+    public static final String SVN_MANAGER = GEONETWORK + ".svnmanager";
+    public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
+    public static final String DB = GEONETWORK + ".database";
+    public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
+    public static final String THESAURUS = GEONETWORK + ".thesaurus";
+    public static final String SEARCH_ENGINE = GEONETWORK + ".search";
+    public static final String FACET_ENGINE = GEONETWORK + ".facet";
+    public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
+    public static final String INDEX_ENGINE = GEONETWORK + ".index";
+    public static final String LUCENE = GEONETWORK + ".lucene";
+    public static final String LUCENE_TRACKING = LUCENE + ".tracking";
+    public static final String MEF = GEONETWORK + ".mef";
+    public static final String CSW = GEONETWORK + ".csw";
+    public static final String LDAP = GEONETWORK + ".ldap";
+    public static final String RESOURCES = GEONETWORK + ".resources";
+    public static final String EDITOR = GEONETWORK + ".editor";
+    public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
+    public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
+    public static final String EDITORFILLELEMENT = GEONETWORK + ".editorfillelement";
+    public static final String SPATIAL = GEONETWORK + ".spatial";
+    public static final String REGION = GEONETWORK + ".region";
+    public static final String CSW_SEARCH = CSW + ".search";
+    public static final String CSW_HARVEST = CSW + ".harvest";
+    public static final String SRU = GEONETWORK + ".sru";
+    public static final String SRU_SEARCH = SRU + ".search";
+    public static final String OAI = GEONETWORK + ".oai";
+    public static final String OAI_HARVESTER = OAI + ".provider";
+    // keys for logging search log
+    public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
+    public static final String THREADPOOL = GEONETWORK + ".threadpool";
+    public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
+    public static final Version LUCENE_VERSION = Version.LUCENE_4_9;
+    public static final String FEEDBACK = GEONETWORK + ".feedback";
+    public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
+    public static final String FORMATTER = GEONETWORK + ".formatter";
+    // key for inspire atom log
+    public static final String ATOM = GEONETWORK + ".atom";
+    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
+    public static final String CLASSIFIER = GEONETWORK + ".classifier";
+
     /**
      * Container for file names.
      */
@@ -189,25 +236,6 @@ public final class Geonet {
          */
         public static final String METADATA_UUIDS = "metadata.uuids";
 
-    }
-
-    public static final class Settings {
-        public static final String SERVER_HOST = "system/server/host";
-        public static final String SERVER_PORT = "system/server/port";
-        public static final String SERVER_SECURE_PORT = "system/server/securePort";
-        public static final String SERVER_PROTOCOL = "system/server/protocol";
-        public static final String WIKI_SYNTAX = "system/wiki/markup";
-        public static final String WIKI_MEFOUTPUT = "system/wiki/mefoutput";
-        public static final String WIKI_OUTPUT = "system/wiki/output";
-        public static final String WYSIWYG_EDITOR = "system/wysiwyg/enable";
-
-        public static final class Values {
-            public static final String STRIP_MARKUP = "strip";
-            public static final String KEEP_MARKUP = "keep";
-
-        }
-        public static final String VERSION = "system/platform/version";
-        public static final String SUBVERSION = "system/platform/subVersion";
     }
 
     /**
@@ -573,57 +601,6 @@ public final class Geonet {
         public static final String CRS = "crs";
     }
 
-	//
-	//--- logging
-    //
-    public static final String LANGUAGEDETECTOR = "LanguageDetector";
-	public static final String GEONETWORK   = "geonetwork";
-	public static final String HARVEST_MAN  = GEONETWORK + ".harvest-man";
-	public static final String HARVESTER    = GEONETWORK + ".harvester";
-	public static final String SETTINGS     = GEONETWORK + ".settings";
-    public static final String DATA_MANAGER = GEONETWORK + ".datamanager";
-    public static final String ACCESS_MANAGER = GEONETWORK + ".accessmanager";
-	public static final String SVN_MANAGER = GEONETWORK + ".svnmanager";
-	public static final String SCHEMA_MANAGER = GEONETWORK + ".schemamanager";
-	public static final String DB			= GEONETWORK + ".database";
-	public static final String THESAURUS_MAN = GEONETWORK + ".thesaurus-man";
-    public static final String THESAURUS    = GEONETWORK + ".thesaurus";
-	public static final String SEARCH_ENGINE = GEONETWORK + ".search";
-    public static final String FACET_ENGINE = GEONETWORK + ".facet";
-    public static final String CUSTOM_ELEMENTSET = GEONETWORK + ".customelementset";
-	public static final String Z3950_SERVER = GEONETWORK + ".z3950server";
-	public static final String Z3950        = GEONETWORK + ".z3950";
-    public static final String INDEX_ENGINE = GEONETWORK + ".index";
-    public static final String LUCENE = GEONETWORK + ".lucene";
-    public static final String LUCENE_TRACKING = LUCENE + ".tracking";
-	public static final String MEF          = GEONETWORK + ".mef";
-	public static final String CSW          = GEONETWORK + ".csw";
-	public static final String LDAP         = GEONETWORK + ".ldap";
-	public static final String RESOURCES        =  GEONETWORK + ".resources";
-	public static final String EDITOR				= GEONETWORK + ".editor";
-	public static final String EDITORADDELEMENT = GEONETWORK + ".editoraddelement";
-	public static final String EDITOREXPANDELEMENT = GEONETWORK + ".editorexpandelement";
-	public static final String EDITORFILLELEMENT = GEONETWORK + ".editorfillelement";
-	public static final String SPATIAL      = GEONETWORK + ".spatial";
-	public static final String REGION      = GEONETWORK + ".region";
-    public static final String CSW_SEARCH   = CSW + ".search";
-    public static final String CSW_HARVEST   = CSW + ".harvest";
-	public static final String SRU          = GEONETWORK + ".sru";
-	public static final String SRU_SEARCH   = SRU + ".search";
-	public static final String OAI          = GEONETWORK + ".oai";
-	public static final String OAI_HARVESTER = OAI + ".provider";
-  // keys for logging search log
-	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
-	public static final String THREADPOOL = GEONETWORK + ".threadpool";
-	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
-    public static final Version LUCENE_VERSION = Version.LUCENE_4_9;
-    public static final String FEEDBACK = GEONETWORK + ".feedback";
-    public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
-    public static final String FORMATTER = GEONETWORK + ".formatter";
-    // key for inspire atom log
-    public static final String ATOM    = GEONETWORK + ".atom";
-    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
-    public static final String CLASSIFIER = GEONETWORK + ".classifier";
     /**
      * Services.
      */

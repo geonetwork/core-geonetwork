@@ -97,8 +97,8 @@ public class LuceneSearcherGeomTest extends AbstractServiceIntegrationTest {
         RegionsDAO regionDAO = Mockito.mock(RegionsDAO.class);
         Mockito.when(regionDAO.getGeom(Mockito.<ServiceContext>anyObject(), anyString(), anyBoolean(), Mockito.<CoordinateReferenceSystem>anyObject())).thenReturn(geom);
 //        final ThesaurusBasedRegionsDAO thesaurusBasedRegionsDAO = new ThesaurusBasedRegionsDAO(languages);
-        Object languages = Sets.newHashSet("eng");
-        this.serviceContext.getApplicationContext().getBeanFactory().registerSingleton("languages", languages);
+//        Object languages = Sets.newHashSet("eng");
+//        this.serviceContext.getApplicationContext().getBeanFactory().registerSingleton("languages", languages);
         this.serviceContext.getApplicationContext().getBeanFactory().registerSingleton("thesRegions", regionDAO);
         final Element element = doGeomSearch("region:testRegion");
 

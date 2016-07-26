@@ -77,8 +77,8 @@
           <xsl:value-of select="geonet:i18n($linked-data-checker-loc, 'b', $guiLang)"/>
         </name>
         <operational>true</operational>
-        <params>{ linkUrl:{type:'string', defaultValue:'<xsl:value-of
-          select="normalize-space($url)"/>'}
+        <params>{ "linkUrl":{"type":"string", "defaultValue":"<xsl:value-of
+          select="normalize-space($url)"/>"}
           }
         </params>
       </suggestion>

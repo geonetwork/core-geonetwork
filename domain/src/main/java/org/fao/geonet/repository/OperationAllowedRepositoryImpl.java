@@ -35,6 +35,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
@@ -60,8 +61,9 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
         int iMdId = Integer.parseInt(metadataId);
         Root<OperationAllowed> root = query.from(OperationAllowed.class);
 
-        query.where(builder.equal(builder.literal(iMdId), root.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId)));
-        return _entityManager.createQuery(query).getResultList();
+        ParameterExpression<Integer> idParameter = builder.parameter(Integer.class, "id");
+        query.where(builder.equal(idParameter, root.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId)));
+        return _entityManager.createQuery(query).setParameter("id", iMdId).getResultList();
     }
 
     @Override
@@ -100,12 +102,19 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
 
     @Transactional
     @Override
-    public int deleteAllByMetadataIdExceptGroupId(int metadataId, int groupId) {
+    public int deleteAllByMetadataIdExceptGroupId(int metadataId, int[] groupId) {
         final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
         final String metadataIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.metadataId);
         final String groupIdPath = SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.groupId);
+        StringBuffer groupExcluded = new StringBuffer();
+        for (int g : groupId) {
+            groupExcluded.append(" and ");
+            groupExcluded.append(groupIdPath);
+            groupExcluded.append(" != ");
+            groupExcluded.append(g);
+        }
         final Query query = _entityManager.createQuery("DELETE FROM " + opAllowedEntityName + " where " + metadataIdPath + " = "
-            + metadataId + "and " + groupIdPath + " != " + groupId);
+            + metadataId + groupExcluded.toString());
 
         final int affected = query.executeUpdate();
         _entityManager.flush();

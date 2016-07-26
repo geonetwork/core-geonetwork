@@ -80,8 +80,6 @@
   <facets>
     <facet name="keyword" indexKey="keyword" label="keywords" localized="true"/>
     <facet name="keywordType-parameter" indexKey="keywordType-parameter" label="keywordType-parameter"/>
-    <facet name="p02" indexKey="thesaurus-parameter.seadatanet-ocean-discovery-parameter" label="p02"/>
-    <facet name="p35" indexKey="thesaurus-parameter.seadatanet-ocean-chemistry-variable" label="p35"/>
     <facet name="sextantTheme" indexKey="sextantTheme" label="sextantThemes"/>
     <facet name="topicCat" indexKey="topicCat" label="topicCats" localized="true"/>
     <facet name="category" indexKey="_cat" label="categories" localized="true"/>
@@ -221,6 +219,10 @@
       <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
+      <item facet="p01" max="300"/>
+      <item facet="p02" max="300"/>
+      <item facet="p03" max="300"/>
+      <item facet="p35" max="300"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
     <summaryType name="subtemplates">
@@ -261,18 +263,12 @@
       <item facet="serviceType"/>
       <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
       <item facet="createDateYear" sortOrder="asc"/>
-      <item facet="p02" max="300"/>
-      <item facet="p02" max="300"/>
       <item facet="keywordType-parameter" max="300"/>
       <item facet="inspireTheme_fr" max="35"/>
       <item facet="inspireTheme_en" max="35"/>
       <item facet="sextantTheme" max="300"/>
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
-      <item facet="thesaurus-external.parameter.NVS.P01" max="300"/>
-      <item facet="thesaurus-external.parameter.NVS.P02" max="300"/>
-      <item facet="thesaurus-external.parameter.NVS.P03" max="300"/>
-      <item facet="thesaurus-external.parameter.NVS.P35" max="300"/>
       <item facet="_groupPublished" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="p01" max="300"/>

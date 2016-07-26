@@ -2,9 +2,14 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0">
 
+  <!-- All URL parameters could be available as params -->
   <xsl:param name="view" select="'default'"/>
 
   <xsl:param name="css" select="''"/>
+
+  <!-- Formatter will render a full HTML page. If not set,
+  then it will render an HTML DIV only. -->
+  <xsl:param name="root" select="'html'"/>
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"

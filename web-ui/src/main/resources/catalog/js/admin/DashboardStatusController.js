@@ -77,14 +77,14 @@
         return '';
       };
       $scope.toggleThreadContentionMonitoring = function() {
-        $http.get('thread/debugging/true/' +
+        $http.get('../api/site/threads/debugging/true/' +
             $scope.threadStatus.threadContentionMonitoringEnabled).
             success(function(data) {
               $scope.threadStatus = data;
             });
       };
       $scope.toggleThreadCpuTime = function() {
-        $http.get('thread/debugging/false/' +
+        $http.get('../api/site/threads/debugging/false/' +
             $scope.threadStatus.threadCpuTimeEnabled).
             success(function(data) {
               $scope.threadStatus = data;
@@ -96,7 +96,7 @@
           threadActivityEl.collapse('toggle');
         }
         $scope.threadInfoLoading = true;
-        $http.get('thread/status').success(function(data) {
+        $http.get('../api/site/threads/status').success(function(data) {
           $scope.threadInfoLoading = false;
           $scope.threadStatus = data;
 
@@ -119,7 +119,8 @@
         $scope.selectedThread = thread;
         $scope.threadStackTrace = 'Loading...';
         $('#stackTrace').modal('toggle');
-        $http.get('thread/trace/' + thread.id).success(function(data) {
+        $http.get('../api/site/threads/trace/' +
+            thread.id).success(function(data) {
           $scope.threadStackTrace = data.stackTrace;
         });
       };
@@ -146,7 +147,7 @@
           logActivityEl.collapse('toggle');
         }
         $scope.logInfoLoading = true;
-        $http.get('log/activity').success(function(data) {
+        $http.get('../api/site/logging/activity').success(function(data) {
           $scope.logInfoLoading = false;
           $scope.logActivity = data;
 
@@ -163,6 +164,14 @@
           }, 2000);
         }).error(function() {
           $scope.logInfoLoading = false;
+        });
+      };
+
+      $scope.downloadLog = function() {
+        $http.get('../api/site/logging/activity', null, {
+          headers: {
+            'Content-Type': 'application/zip'
+          }
         });
       };
 

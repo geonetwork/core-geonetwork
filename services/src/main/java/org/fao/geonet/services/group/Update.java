@@ -59,6 +59,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Update the information of a group.
  */
+@Deprecated
 public class Update extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

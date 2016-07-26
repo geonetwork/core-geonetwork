@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Delete a virual CSW service configurations
  */
 @Controller("admin.config.virtualcsw.remove")
+@Deprecated
 public class Delete {
 
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.remove", produces = {

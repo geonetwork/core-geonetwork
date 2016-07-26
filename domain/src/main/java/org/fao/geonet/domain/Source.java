@@ -23,6 +23,8 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
 
 import java.util.Map;
@@ -122,6 +124,7 @@ public class Source extends Localized {
      * controlling how types are mapped to the database.
      */
     @Column(name = "isLocal", nullable = false, length = 1)
+    @JsonIgnore
     protected char getIsLocal_JpaWorkaround() {
         return _local;
     }
@@ -141,6 +144,7 @@ public class Source extends Localized {
      * @return true is the source refers to the local geonetwork.
      */
     @Transient
+    @JsonIgnore
     public boolean isLocal() {
         return Constants.toBoolean_fromYNChar(getIsLocal_JpaWorkaround());
     }

@@ -24,9 +24,8 @@
 package org.fao.geonet.services.user;
 
 import com.google.common.collect.Sets;
-
 import jeeves.server.ServiceConfig;
-
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
@@ -48,16 +47,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+
 
 //=============================================================================
 
@@ -65,35 +64,9 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
  * Retrieves all users in the system
  */
 @Controller("admin.user.list")
+@Deprecated
 public class List {
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Init
-    // ---
-    // --------------------------------------------------------------------------
 
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Private methods
-    // ---
-    // --------------------------------------------------------------------------
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserGroupRepository userGroupRepo;
-    @Autowired
-    private UserRepository userRepository;
 
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
@@ -107,6 +80,7 @@ public class List {
         if (context == null || context.getAuthentication() == null) {
             throw new AuthenticationCredentialsNotFoundException("User needs to log in");
         }
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
         User me = userRepository.findOneByUsername(context.getAuthentication().getName());
 
         if (me == null) {
@@ -177,7 +151,8 @@ public class List {
     private Set<Integer> getGroups(final int id, final Profile profile)
         throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
-
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+        UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
         if (profile == Profile.Administrator) {
             hs.addAll(groupRepository.findIds());
         } else if (profile == Profile.UserAdmin) {
@@ -189,7 +164,6 @@ public class List {
 
         return hs;
     }
-
 }
 
 // =============================================================================

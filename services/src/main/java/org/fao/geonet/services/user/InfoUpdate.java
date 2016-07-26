@@ -43,6 +43,7 @@ import java.nio.file.Path;
 /**
  * Update the profile of logged user
  */
+@Deprecated
 public class InfoUpdate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

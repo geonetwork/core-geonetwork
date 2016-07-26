@@ -34,7 +34,7 @@
            data-ng-class="'schematron-result-list-' + labelImportanceClass(type)">
         <div class="row">
           <div class="col-md-9">
-            <h4 class="gn-schematron-title">{{type.label | translate}}</h4>
+            <h4 class="gn-schematron-title">{{(type.label || type.id) | translate}}</h4>
           </div>
           <div class="col-md-3">
             <span class="label pull-right"
@@ -51,11 +51,11 @@
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
           </div>
         </div>
-        <div class="list-group" data-ng-repeat="pattern in type.patterns">
-          <li class="list-group-item" data-ng-repeat="rule in pattern.rules"
+        <div class="list-group" data-ng-repeat="pattern in type.patterns.pattern">
+          <li class="list-group-item" data-ng-repeat="rule in pattern.rules.rule"
               title="{{rule.details}}"
-              data-ng-show="(showErrors && rule['@type'] === 'error') || (showSuccess && rule['@type'] === 'success')"
-              data-ng-class="rule['@type'] !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
+              data-ng-show="(showErrors && rule.type === 'error') || (showSuccess && rule.type === 'success')"
+              data-ng-class="rule.type !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
             <strong>{{pattern.title}}</strong>
             <p>{{rule.msg}}</p>
           </li>

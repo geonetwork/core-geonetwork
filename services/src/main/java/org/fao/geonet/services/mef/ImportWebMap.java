@@ -48,6 +48,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -126,7 +127,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         md.add(transformedMd);
 
         // Import record
-        Importer.importRecord(uuid, uuidAction, md, "iso19139", 0, sm.getSiteId(),
+        Importer.importRecord(uuid, MEFLib.UuidAction.parse(uuidAction), md, "iso19139", 0, sm.getSiteId(),
             sm.getSiteName(), null, context, id, date, date, groupId,
             MetadataType.METADATA);
 

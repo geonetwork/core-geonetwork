@@ -383,7 +383,7 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             solrObject.pushState();
-            if(!extentFilter) {
+            if (!extentFilter) {
               scope.layer.setExtent();
             }
             else {
@@ -483,7 +483,7 @@
             if (scope.source) {
               scope.source.clear();
             }
-            while(hmEventKeys.length) {
+            while (hmEventKeys.length) {
               map.unByKey(hmEventKeys.pop());
             }
           }

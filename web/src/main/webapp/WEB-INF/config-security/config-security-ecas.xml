@@ -80,7 +80,7 @@ geonetwork.https.url=https://ec.europa.eu:8443/geonetwork
   <!-- End overrides -->
 
   <bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
-    <property name="service" value="${geonetwork.https.url}/j_spring_cas_security_check"/>
+    <property name="service" value="${geonetwork.https.url}/signin-cas"/>
     <property name="sendRenew" value="false"/>
     <property name="artifactParameter" value="ticket"/>
     <property name="authenticateAllArtifacts" value="true"/>
@@ -90,7 +90,7 @@ geonetwork.https.url=https://ec.europa.eu:8443/geonetwork
         class="org.springframework.security.cas.web.CasAuthenticationFilter">
     <property name="authenticationManager" ref="authenticationManager"/>
     <!--        <property name="proxyGrantingTicketStorage" ref="pgtStorage"/> -->
-    <!--        <property name="proxyReceptorUrl" value="${geonetwork.https.url}/j_spring_cas_security_proxyreceptor"/> -->
+    <!--        <property name="proxyReceptorUrl" value="${geonetwork.https.url}/cas-security-proxyreceptor"/> -->
     <property name="serviceProperties" ref="serviceProperties"/>
     <property name="authenticationDetailsSource">
       <bean
@@ -142,7 +142,7 @@ geonetwork.https.url=https://ec.europa.eu:8443/geonetwork
     <!-- Geonetwork class in start method will update the baseurl with the one in the settings table -->
     <!-- If baseurlTag is not set then the proxyCallbackURL will not be updated -->
     <constructor-arg index="0" value="${cas.ticket.validator.url}"/>
-    <!--        <property name="proxyCallbackUrl" value="${geonetwork.https.url}/j_spring_cas_security_proxyreceptor" /> -->
+    <!--        <property name="proxyCallbackUrl" value="${geonetwork.https.url}/cas-security-proxyreceptor" /> -->
     <!--        <property name="proxyGrantingTicketStorage" ref="pgtStorage" /> -->
     <!--        <property name="acceptAnyProxy" value="true"/> -->
   </bean>
@@ -163,7 +163,7 @@ geonetwork.https.url=https://ec.europa.eu:8443/geonetwork
           class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
       </array>
     </constructor-arg>
-    <property name="filterProcessesUrl" value="/j_spring_security_logout"/>
+    <property name="filterProcessesUrl" value="/signout"/>
   </bean>
   <bean id="logoutSuccessHandler"
         class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">

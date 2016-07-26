@@ -26,6 +26,7 @@ package jeeves.component;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -103,12 +104,7 @@ public class ProfileManager {
      * @param beanId id of the bean to look up
      */
     public static boolean existsBean(String beanId) {
-        ServiceContext serviceContext = ServiceContext.get();
-        if (serviceContext == null) return true;
-        ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        ConfigurableApplicationContext springContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
-        if (springContext == null) return true;
-        return springContext.containsBean(beanId);
+        return ApplicationContextHolder.get().containsBean(beanId);
     }
     //--------------------------------------------------------------------------
 

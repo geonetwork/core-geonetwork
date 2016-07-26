@@ -169,7 +169,8 @@ public class GetKeywords {
 
         byte[] response;
         String contentType;
-        if (acceptsType(acceptContentType, "json") || "json".equals(webRequest.getParameter("_content_type"))) {
+        if (acceptsType(acceptContentType, "json") ||
+            "json".equals(webRequest.getParameter("_content_type"))) {
             response = Xml.getJSON(responseXml).getBytes(Constants.CHARSET);
             contentType = "application/json";
         } else if (acceptContentType.isEmpty() ||

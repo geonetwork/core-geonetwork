@@ -84,11 +84,6 @@ import jeeves.server.sources.http.JeevesServlet;
 
 //=============================================================================
 public class ServiceManager {
-    /**
-     * Detect crawlers. Useful to avoid creating sessions for them.
-     */
-    public static final String BOT_REGEXP = ".*(bot|crawler|baiduspider|80legs|ia_archiver|"
-        + "voyager|yahoo! slurp|mediapartners-google).*";
     private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
     private Map<String, Object> htContexts = new HashMap<String, Object>();
     private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
@@ -101,7 +96,6 @@ public class ServiceManager {
     private JeevesServlet servlet;
     private boolean startupError = false;
     private Map<String, String> startupErrors;
-    private Pattern regex = Pattern.compile(BOT_REGEXP, Pattern.CASE_INSENSITIVE);
 
 
     @PersistenceContext
@@ -378,31 +372,15 @@ public class ServiceManager {
 
         String ip = request.getRemoteAddr();
 
-        boolean notCrawler = true;
-
-        String userAgent = request.getHeader("user-agent");
-
-        if (StringUtils.isNotBlank(userAgent)) {
-            Matcher m = regex.matcher(userAgent);
-            notCrawler = !m.find();
-        }
-
-        if (notCrawler) {
-            final HttpSession httpSession = request.getSession(true);
-            UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
-            if (session == null) {
-                session = new UserSession();
-
-                httpSession.setAttribute(Jeeves.Elem.SESSION, session);
-                session.setsHttpSession(httpSession);
-
-                if (Log.isDebugEnabled(Log.REQUEST)) {
-                    Log.debug(Log.REQUEST, "Session created for client : " + ip);
-                }
-            }
+        // Session is created by ApiInterceptor when needed
+        // Save the session here in the ServiceContext (not used in the API package).
+        final HttpSession httpSession = request.getSession(false);
+        UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+        if (session != null) {
 
             context.setUserSession(session);
         }
+
         return context;
     }
 

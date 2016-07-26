@@ -25,13 +25,13 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-  <bean id="fsStore" class="org.fao.geonet.services.metadata.format.cache.FilesystemStore"
+  <bean id="fsStore" class="org.fao.geonet.api.records.formatters.cache.FilesystemStore"
         lazy-init="true">
     <property name="maxSizeGb" value="500"/>
     <property name="testing" value="true"/>
   </bean>
 
-  <bean id="formatterCache" class="org.fao.geonet.services.metadata.format.cache.FormatterCache"
+  <bean id="formatterCache" class="org.fao.geonet.api.records.formatters.cache.FormatterCache"
         lazy-init="true">
     <constructor-arg index="0" ref="fsStore"/>
     <constructor-arg index="1" value="500000"/>

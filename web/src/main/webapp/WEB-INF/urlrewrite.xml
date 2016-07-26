@@ -123,41 +123,38 @@
     <to type="permanent-redirect" last="true">%{context-path}/home?hl=$2&amp;node=$1</to>
   </rule>
 
-    <!-- Use redirects to handle the initial entry points -->
-    <rule>
-        <from>^/$</from>
-        <to type="permanent-redirect" last="true">%{context-path}/home</to>
-    </rule>
-    <rule>
-      <from>^/\?(.*)$</from>
-      <to type="permanent-redirect" last="true">%{context-path}/home?$1</to>
-    </rule>
-    <rule>
-        <from>^/index.html$</from>
-        <to type="permanent-redirect" last="true">%{context-path}/home</to>
-    </rule>
-    <rule>
-        <from>^/index.jsp$</from>
-        <to type="permanent-redirect" last="true">%{context-path}/home</to>
-    </rule>
-    <rule>
-      <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)(?!swagger-resources.*$)([a-zA-Z0-9_\-]+)$</from>
-      <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
-    </rule>
-    <rule>
-      <note>old formatter URL</note>
-      <from>^(.*)/metadata.formatter.html(.*)</from>
-      <to type="permanent-redirect" last="true">%{context-path}$1/md.format.html$2</to>
-    </rule>
-    <!-- Rules for RESTful urls for metadata retrieve -->
-    <rule>
-        <note>
-            Retrieves mef format for a metadata.
-            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8.zip
-        </note>
-        <from>^/metadata/(.*)/(.*).zip$</from>
-        <to type="forward">/srv/$1/mef.export?uuid=$2</to>
-    </rule>
+  <!-- Use redirects to handle the initial entry points -->
+  <rule>
+    <from>^/$</from>
+    <to type="permanent-redirect" last="true">%{context-path}/home</to>
+  </rule>
+  <rule>
+    <from>^/\?(.*)$</from>
+    <to type="permanent-redirect" last="true">%{context-path}/home?$1</to>
+  </rule>
+  <rule>
+    <from>^/index.html$</from>
+    <to type="permanent-redirect" last="true">%{context-path}/home</to>
+  </rule>
+  <rule>
+    <from>^/index.jsp$</from>
+    <to type="permanent-redirect" last="true">%{context-path}/home</to>
+  </rule>
+  <rule>
+    <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)(?!swagger-resources.*$)([a-zA-Z0-9_\-]+)$
+    </from>
+    <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
+  </rule>
+  <!-- Rules for RESTful urls for metadata retrieve -->
+  <rule>
+    <note>
+      Retrieves mef format for a metadata.
+      Example URL:
+      http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8.zip
+    </note>
+    <from>^/metadata/(.*)/(.*).zip$</from>
+    <to type="forward">/srv/$1/mef.export?uuid=$2</to>
+  </rule>
 
   <rule>
     <note>
@@ -243,7 +240,7 @@
       map the old xml.user.login to the new login url
     </note>
     <from>^.*/.*/xml.user.login(\?.*)</from>
-    <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
+    <to type="permanent-redirect" last="true">%{context-path}/signin$1</to>
   </rule>
 
   <!-- Rule for rss.latest to rss.search?sortBt=changeDate -->
@@ -256,13 +253,13 @@
   </rule>
 
 
-    <rule>
-        <note>
-          INSPIRE Atom OpenSearchDescription
-        </note>
-        <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
-        <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
-    </rule>
+  <rule>
+    <note>
+      INSPIRE Atom OpenSearchDescription
+    </note>
+    <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
+    <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
+  </rule>
 
   <rule>
     <note>

@@ -57,6 +57,7 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
@@ -560,9 +561,9 @@ public final class XslUtil
         GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager settingManager = gc.getBean(SettingManager.class);
         String mefOutput = settingManager.getValue(outputParamPath);
-        String wysiwygEnabled = settingManager.getValue(Geonet.Settings.WYSIWYG_EDITOR);
-        String markupType = settingManager.getValue(Geonet.Settings.WIKI_SYNTAX);
-        if(Geonet.Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
+        String wysiwygEnabled = settingManager.getValue(Settings.WYSIWYG_EDITOR);
+        String markupType = settingManager.getValue(Settings.WIKI_SYNTAX);
+        if(Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
             Path styleSheetPath =  context.getAppPath().resolve("xsl").resolve("strip-wiki-markup.xsl");
 
             Map<String, Object> params = new HashMap<String, Object>();

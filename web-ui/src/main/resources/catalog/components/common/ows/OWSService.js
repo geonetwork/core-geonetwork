@@ -116,9 +116,7 @@
 
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
-                var proxyUrl = gnGlobalSettings.proxyUrl +
-                    encodeURIComponent(url);
-                $http.get(proxyUrl, {
+                $http.get(url, {
                   cache: true
                 })
                     .success(function(data) {
@@ -146,9 +144,7 @@
 
               if (gnUrlUtils.isValid(url)) {
 
-                var proxyUrl = gnGlobalSettings.proxyUrl +
-                    encodeURIComponent(url);
-                $http.get(proxyUrl, {
+                $http.get(url, {
                   cache: true
                 })
                     .success(function(data, status, headers, config) {

@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.oaipmh.services.ListRecords;
 import org.fao.geonet.kernel.oaipmh.services.ListSets;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
@@ -46,6 +47,7 @@ import org.fao.oaipmh.server.OaiPmhFactory;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
 
+import javax.annotation.PreDestroy;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +58,7 @@ public class OaiPmhDispatcher {
 
     public static final int MODE_MODIFIDATE = 2;
     public static final int MODE_TEMPEXTEND = 1;
+    private ResumptionTokenCache cache;
 
     //---------------------------------------------------------------------------
     //---
@@ -67,7 +70,7 @@ public class OaiPmhDispatcher {
     //---------------------------------------------------------------------------
 
     public OaiPmhDispatcher(SettingManager sm, SchemaManager scm) {
-        ResumptionTokenCache cache = new ResumptionTokenCache(sm);
+        cache = new ResumptionTokenCache(sm);
 
         register(new GetRecord());
         register(new Identify());
@@ -151,6 +154,13 @@ public class OaiPmhDispatcher {
         } catch (Exception e) {
             context.warning("OAI-PMH response does not validate : " + e.getMessage());
         }
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        Log.info(Log.ENGINE, "OaiPmhDispatcher#shutdown");
+        cache.stopRunning();
+        cache = null;
     }
 }
 

@@ -26,8 +26,10 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -46,11 +48,11 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Retrieves a particular metadata. Access is restricted
+/**
+ * Retrieves a particular metadata. Access is restricted
  */
-
-public class Show extends ShowViewBaseService
-{
+@Deprecated
+public class Show extends ShowViewBaseService {
     //--------------------------------------------------------------------------
     //---
     //--- Init
@@ -127,7 +129,7 @@ public class Show extends ShowViewBaseService
         }
 
         if (isExport || Util.getParam(params, "isExport", false)) {
-            elMd = XslUtil.controlForMarkup(context, elMd, Geonet.Settings.WIKI_OUTPUT);
+            elMd = XslUtil.controlForMarkup(context, elMd, Settings.WIKI_OUTPUT);
         }
         //
         // setting schemaLocation - if there isn't one then use the schemaLocation
@@ -151,7 +153,7 @@ public class Show extends ShowViewBaseService
         if (!skipPopularity)
             dm.increasePopularity(context, id);
 
-        if(cache) {
+        if (cache) {
             cache(context.getUserSession(), elMd, id);
         }
         if (removeSchemaLocation) {

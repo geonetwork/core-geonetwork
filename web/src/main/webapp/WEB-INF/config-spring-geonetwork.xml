@@ -26,11 +26,13 @@
        xmlns:util="http://www.springframework.org/schema/util"
        default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 ">
-
+  <context:annotation-config/>
   <import resource="config-spring-env.xml"/>
   <import resource="config-security/config-security.xml"/>
   <import resource="config-summary.xml"/>
@@ -43,6 +45,11 @@
 
   <!-- Import the versioning configuration (subversion etc...) -->
   <import resource="config-versioning.xml"/>
+
+  <bean name="statusActionFactory"
+        class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
+    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
+  </bean>
 
 
   <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -78,7 +85,6 @@
     <value>spa</value>
     <value>tur</value>
   </util:set>
-
 
   <util:map id="jpaPropertyMap">
     <entry key="shared-cache-mode" value="ENABLE_SELECTIVE"/>

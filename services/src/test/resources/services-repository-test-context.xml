@@ -59,7 +59,7 @@
   </util:set>
 
   <bean id="formatterCache"
-        class="org.fao.geonet.services.metadata.format.cache.NoCachingStore">
+        class="org.fao.geonet.api.records.formatters.cache.NoCachingStore">
   </bean>
 
 </beans>

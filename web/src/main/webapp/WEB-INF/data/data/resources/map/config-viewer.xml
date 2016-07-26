@@ -8,12 +8,6 @@
     </ows:BoundingBox>
   </ows-context:General>
   <ows-context:ResourceList>
-    <ows-context:Layer name="{type=mapquest}"
-                       group="Background layers"
-                       hidden="true"
-                       opacity="1">
-      <ows:Title>MapQuest</ows:Title>
-    </ows-context:Layer>
     <ows-context:Layer name="{type=osm}"
                        group="Background layers"
                        hidden="false"

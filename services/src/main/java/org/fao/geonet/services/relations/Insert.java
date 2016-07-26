@@ -50,6 +50,7 @@ import java.nio.file.Path;
  * TODO : Should we add a relation type to store different kind of relation. For the time being,
  * relation table is used to store link between iso19139 and iso19110 metadata records.
  */
+@Deprecated
 public class Insert extends NotInReadOnlyModeService {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

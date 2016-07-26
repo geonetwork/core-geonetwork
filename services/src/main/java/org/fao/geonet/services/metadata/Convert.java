@@ -36,6 +36,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.XslUtil;
@@ -80,7 +81,7 @@ public class Convert implements Service
         if (elMd == null) throw new MetadataNotFoundEx(id);
 
         if (isExport) {
-            elMd = XslUtil.controlForMarkup(context, elMd, Geonet.Settings.WIKI_OUTPUT);
+            elMd = XslUtil.controlForMarkup(context, elMd, Settings.WIKI_OUTPUT);
         }
 
         //--- get XSLT converter name from params

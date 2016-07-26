@@ -23,14 +23,15 @@
 
 package org.fao.geonet.services.config;
 
-import static org.junit.Assert.*;
-
-import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
+
+import jeeves.server.context.ServiceContext;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the get config service User: Jesse Date: 11/6/13 Time: 12:15 PM
@@ -45,10 +46,10 @@ public class GetTest extends AbstractServiceIntegrationTest {
 
         final Element result = getService.exec(createParams(), context);
 
-        assertEqualsText("false", result, "system/csw/metadataPublic");
-        assertEqualsText("", result, "system/csw/contactId");
-        assertEquals("system/csw/contactId", Xml.selectElement(result, "system/csw/contactId").getAttributeValue("name"));
+        assertEqualsText("false", result, Settings.SYSTEM_CSW_METADATA_PUBLIC);
+        assertEqualsText("", result, Settings.SYSTEM_CSW_CONTACT_ID);
+        assertEquals(Settings.SYSTEM_CSW_CONTACT_ID, Xml.selectElement(result, Settings.SYSTEM_CSW_CONTACT_ID).getAttributeValue("name"));
         assertEquals("system/csw", Xml.selectElement(result, "system/csw").getAttributeValue("name"));
-        assertEqualsText("true", result, "system/csw/enable");
+        assertEqualsText("true", result, Settings.SYSTEM_CSW_ENABLE);
     }
 }

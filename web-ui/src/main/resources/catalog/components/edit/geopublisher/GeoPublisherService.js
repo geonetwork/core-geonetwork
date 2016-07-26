@@ -30,56 +30,40 @@
 
   module.factory('gnGeoPublisher', [
     'gnCurrentEdit',
-    'gnHttp',
-    function(gnCurrentEdit, gnHttp) {
+    '$http',
+    function(gnCurrentEdit, $http) {
 
       return {
 
         getList: function() {
-          return gnHttp.callService('geoserverNodes', {
-            action: 'LIST'
-          });
+          return $http.get('../api/mapservers');
         },
 
         checkNode: function(node, fileName) {
-          if (node) {
-            return gnHttp.callService('geoserverNodes', {
-              metadataId: gnCurrentEdit.id,
-              access: 'public',
-              action: 'GET',
-              nodeId: node,
-              file: fileName
-            });
-          }
+          return $http.get('../api/mapservers/' + node +
+              '/records/' + gnCurrentEdit.uuid, {
+                params: {
+                  resource: fileName
+                }});
         },
 
         publishNode: function(node, fileName,
                               title, moreInfo) {
-          if (node) {
-            return gnHttp.callService('geoserverNodes', {
-              metadataId: gnCurrentEdit.id,
-              metadataUuid: gnCurrentEdit.uuid,
-              metadataTitle: title,
-              metadataAbstract: moreInfo,
-              access: 'public',
-              action: 'CREATE',
-              nodeId: node,
-              file: fileName
-            });
-          }
+          return $http.put('../api/mapservers/' + node +
+              '/records/' + gnCurrentEdit.uuid, null, {
+                params: {
+                  metadataTitle: title,
+                  metadataAbstract: moreInfo,
+                  resource: fileName
+                }});
         },
 
         unpublishNode: function(node, fileName) {
-          if (node) {
-            return gnHttp.callService('geoserverNodes', {
-              metadataId: gnCurrentEdit.id,
-              access: 'public',
-              action: 'DELETE',
-              nodeId: node,
-              file: fileName
-            }).success(function(data) {
-            });
-          }
+          return $http.delete('../api/mapservers/' + node +
+              '/records/' + gnCurrentEdit.uuid, {
+                params: {
+                  resource: fileName
+                }});
         }
       };
     }]);
