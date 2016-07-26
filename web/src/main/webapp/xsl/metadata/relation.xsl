@@ -10,6 +10,9 @@
                 version="2.0"
                 exclude-result-prefixes="geonet exslt">
 
+
+  <xsl:variable name="lang" select="/root/gui/language"/>
+
   <xsl:include href="common.xsl"/>
   <xsl:include href="../schema-xsl-relations-loader.xsl"/>
 

@@ -48,7 +48,7 @@
 
   <bean name="statusActionFactory"
         class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
-    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
+    <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.SextantStatusActions"/>
   </bean>
 
 

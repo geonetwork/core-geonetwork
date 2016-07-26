@@ -243,7 +243,7 @@ public class GetRelated implements Service, RelatedMetadata {
             )),
             getRelated(context, id, uuid, type, from, to, fast)
         ));
-        Path relatedXsl = dataDirectory.getWebappDir().resolve("xslt/services/metadata/relation.xsl");
+        Path relatedXsl = dataDirectory.getWebappDir().resolve("xsl/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
         final Set<String> acceptContentType = Sets.newHashSet(Iterators.forEnumeration(request.getHeaders("Accept")));

@@ -92,7 +92,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
         //--- use StatusActionsFactory and StatusActions class to
         //--- change status and carry out behaviours for status changes
-        StatusActionsFactory saf = new StatusActionsFactory();
+        StatusActionsFactory saf = gc.getBean(StatusActionsFactory.class);
 
         StatusActions sa = saf.createStatusActions(context);
 
