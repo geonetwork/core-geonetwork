@@ -104,7 +104,7 @@
             $scope.mdIdentifierTemplateSelected.id !== '-99' ?
             '/' + $scope.mdIdentifierTemplateSelected.id : ''
             ),
-          $scope.mdIdentifierTemplateSelected)
+            $scope.mdIdentifierTemplateSelected)
             .success(function(data) {
               $('.ng-dirty').removeClass('ng-dirty');
               loadMetadataUrnTemplates();
