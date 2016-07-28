@@ -16827,6 +16827,10 @@ yx-axis
 .g [sxt-main-viewer] #importLayer .panel-carousel-container {
   height: 100%;
 }
+.gn [sxt-main-viewer] #importLayer .alert,
+.g [sxt-main-viewer] #importLayer .alert {
+  word-break: normal;
+}
 .gn [sxt-main-viewer] .sxt-hidden,
 .g [sxt-main-viewer] .sxt-hidden {
   visibility: hidden;
