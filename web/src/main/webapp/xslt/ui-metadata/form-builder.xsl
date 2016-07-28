@@ -264,6 +264,23 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <!-- When building the form with an element having cardinality 0..1,
+    add a hidden add action in case the element is removed. If removed,
+    the client app take care of displaying this control. -->
+    <xsl:if test="$service = 'md.edit' and $parentEditInfo and $parentEditInfo/@min = 0 and $parentEditInfo/@max = 1">
+      <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
+
+      <xsl:call-template name="render-element-to-add">
+        <xsl:with-param name="label"
+                        select="gn-fn-metadata:getLabel($schema, name(.), $labels, name(..), '', '')/label"/>
+        <xsl:with-param name="directive" select="$directive"/>
+        <xsl:with-param name="childEditInfo" select="$parentEditInfo"/>
+        <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+        <xsl:with-param name="isFirst" select="false()"/>
+        <xsl:with-param name="isHidden" select="true()"/>
+        <xsl:with-param name="name" select="name()"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
 
@@ -668,6 +685,8 @@
     <!-- Hide add element if child of an XLink section. -->
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
+    <xsl:param name="isHidden" required="no" as="xs:boolean" select="false()"/>
+    <xsl:param name="name" required="no" as="xs:string" select="''"/>
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
@@ -681,8 +700,9 @@
 
       <!-- This element is replaced by the content received when clicking add -->
       <div
-        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field gn-add-field'} "
+        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field {if ($isHidden) then 'hidden' else ''}"
         id="gn-el-{$id}"
+        data-gn-cardinality="{$childEditInfo/@min}-{$childEditInfo/@max}"
         data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
                data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
@@ -760,7 +780,7 @@
                 -->
                 <a class="btn btn-default"
                    title="{$i18n/addA} {$label}"
-                   data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                   data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{if ($name != '') then $name else concat(@prefix, ':', @name)}', '{$id}', 'before');">
                   <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"/>
                   <xsl:if test="$btnLabel != ''">&#160;
                     <span>

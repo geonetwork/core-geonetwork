@@ -1090,36 +1090,6 @@
           },
 
           /**
-           * Call a WMS getCapabilities and create ol3 layers for all items.
-           * Add them to the map if `createOnly` is false;
-           *
-           * @param {ol.Map} map to add the layer
-           * @param {string} url of the service
-           * @param {string} name of the layer
-           * @param {boolean} createOnly or add it to the map
-           */
-          addWmsAllLayersFromCap: function(map, url, createOnly) {
-            var $this = this;
-
-            return gnOwsCapabilities.getWMSCapabilities(url).
-                then(function(capObj) {
-
-                  var createdLayers = [];
-
-                  var layers = capObj.layers || capObj.Layer;
-                  for (var i = 0, len = layers.length; i < len; i++) {
-                    var capL = layers[i];
-                    var olL = $this.createOlWMSFromCap(map, capL);
-                    if (!createOnly) {
-                      map.addLayer(olL);
-                    }
-                    createdLayers.push(olL);
-                  }
-                  return createdLayers;
-                });
-          },
-
-          /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#addWmtsFromScratch
@@ -1544,13 +1514,13 @@
                 if (data.metadata.length == 1) {
                   var md = new Metadata(data.metadata[0]);
 
-                  var mdLayers = md.getLinksByType('#OGC:WMTS',
+                  var mdLinks = md.getLinksByType('#OGC:WMTS',
                       '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
 
                   layer.set('md', md);
 
                   // TODO: the url is not the same in capabilities and metadata
-                  angular.forEach(mdLayers, function(link) {
+                  angular.forEach(mdLinks, function(link) {
                     if (layer.get('url').indexOf(link.url) >= 0 &&
                         link.name == layer.getSource().getParams().LAYERS) {
                       this.feedLayerWithRelated(layer, link.group);

@@ -42,16 +42,13 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -155,7 +152,7 @@ public class MetadataEditingApi {
             currTab, session, allRequestParams,
             request, metadata.getId(), elMd, metadata.getDataInfo().getSchemaId(),
             showValidationErrors,
-            context, applicationContext, false);
+            context, applicationContext, false, false);
     }
 
 
@@ -313,7 +310,7 @@ public class MetadataEditingApi {
             tab, httpSession, forwardedParams,
             request, metadata.getId(), elMd, metadata.getDataInfo().getSchemaId(),
             withValidationErrors,
-            context, applicationContext, false);
+            context, applicationContext, false, false);
     }
 
 
@@ -438,7 +435,7 @@ public class MetadataEditingApi {
             allRequestParams.get("currTab"), httpSession, allRequestParams,
             request, metadata.getId(), md, metadata.getDataInfo().getSchemaId(),
             false,
-            context, applicationContext, true);
+            context, applicationContext, true, true);
     }
 
 
@@ -615,7 +612,7 @@ public class MetadataEditingApi {
         String schema,
         boolean showValidationErrors,
         ServiceContext context,
-        ApplicationContext applicationContext, boolean isEmbedded) throws Exception {
+        ApplicationContext applicationContext, boolean isEmbedded, boolean embedded) throws Exception {
 
 
         UserSession userSession = ApiUtils.getUserSession(session);
@@ -626,7 +623,7 @@ public class MetadataEditingApi {
             new Element("currTab").setText(tab));
         // This flag is used to generate top tool bar or not
         gui.addContent(
-            new Element("reqService").setText("md.edit"));
+            new Element("reqService").setText(embedded ? "embedded" : "md.edit"));
         String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
         gui.addContent(
             new Element("language").setText(iso3langCode));

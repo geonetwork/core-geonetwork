@@ -226,9 +226,11 @@
   geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
       geonetwork.GnFeaturesLoader);
 
+
   geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
+    var $filter = this.$injector.get('$filter');
 
     var pageList = [5, 10, 50, 100],
         columns = [],
@@ -247,8 +249,8 @@
             var text = (val) ? val.toString() : '';
             text = $filter('linky')(text, '_blank');
             text = text.replace(/>(.)*</,
-              ' ' + 'target="_blank">' + linkTpl + '<'
-            );
+                ' ' + 'target="_blank">' + linkTpl + '<'
+                );
             return text;
           }
         });
