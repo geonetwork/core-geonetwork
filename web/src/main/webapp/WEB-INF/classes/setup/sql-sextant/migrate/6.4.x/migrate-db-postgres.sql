@@ -4,3 +4,7 @@ DELETE FROM Settings WHERE name = 'system/z3950/enable';
 DELETE FROM Settings WHERE name = 'system/z3950/port';
 
 DELETE FROM Settings WHERE name = 'system/removedMetadata/dir';
+
+UPDATE Settings SET datatype = 3 WHERE name = 'map/config';
+UPDATE Settings SET datatype = 3 WHERE name = 'map/proj4js';
+UPDATE Settings SET datatype = 3 WHERE name = 'metadata/editor/schemaConfig';
