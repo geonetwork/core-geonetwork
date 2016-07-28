@@ -544,6 +544,10 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- === General stuff === -->
 
+    <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
+        <Field name="standardName" string="{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+
     <xsl:choose>
       <xsl:when test="gmd:hierarchyLevel">
         <xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
