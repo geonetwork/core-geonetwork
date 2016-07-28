@@ -471,6 +471,20 @@
           record[field] = [record[field]];
         }
       });
+
+      // Create a structure that reflects the transferOption/onlinesrc tree
+      var links = [];
+      angular.forEach(this.link, function(link) {
+        var linkInfo = formatLink(link);
+        var idx = linkInfo.group - 1;
+        if (!links[idx]) {
+          links[idx] = [linkInfo];
+        }
+        else if (angular.isArray(links[idx])) {
+          links[idx].push(linkInfo);
+        }
+      });
+      this.linksTree = links;
     };
 
     function formatLink(sLink) {
@@ -481,7 +495,8 @@
         desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4],
-        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined
+        group: linkInfos[5] ? parseInt(linkInfos[5]) : undefined,
+        applicationProfile: linkInfos[6]
       };
     }
     function parseLink(sLink) {
