@@ -368,8 +368,9 @@
           var defer = $q.defer();
 
           $http.get('../api/regions', {
-            categoryId: type.id
-          }, {
+            params: {
+              categoryId: type.id
+            },
             cache: true
           }).success(function(response) {
             var data = response.region;
