@@ -404,7 +404,9 @@
         }
         var xml = this.writeContext(map);
         var xmlString = (new XMLSerializer()).serializeToString(xml);
-        storage.setItem('owsContext', xmlString);
+        var key = 'owsContext_' +
+          window.location.host + window.location.pathname;
+        storage.setItem(key, xmlString);
       };
 
       /**

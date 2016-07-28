@@ -525,7 +525,6 @@
       </xsl:for-each>
     </xsl:for-each>
 
-
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- === Service stuff ===  -->
     <!-- Service type           -->
@@ -540,6 +539,11 @@
       <Field name="serviceTypeVersion" string="{string(.)}" store="true" index="true"/>
     </xsl:for-each>
 
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- === General stuff === -->
+    <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
+      <Field name="standardName" string="{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- === General stuff === -->
