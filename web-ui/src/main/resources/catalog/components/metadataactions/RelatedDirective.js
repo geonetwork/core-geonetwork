@@ -130,8 +130,8 @@
               scope.config = gnRelatedResources;
 
               if (gnSearchSettings.displayChildrenBtn === undefined ||
-                gnSearchSettings.displayChildrenBtn === true) {
-                scope.$watchCollection('md', function (n, o) {
+                 gnSearchSettings.displayChildrenBtn === true) {
+                scope.$watchCollection('md', function(n, o) {
                   if (n && n !== o || angular.isUndefined(scope.uuid)) {
                     if (promise && angular.isFunction(promise.abort)) {
                       promise.abort();

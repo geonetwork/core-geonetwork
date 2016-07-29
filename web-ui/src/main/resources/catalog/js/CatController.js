@@ -214,7 +214,7 @@
           return $http.get('../api/site/info/isCasEnabled').
               success(function(data, status) {
                 $scope.isCasEnabled = data;
-              })
+              });
         });
 
 

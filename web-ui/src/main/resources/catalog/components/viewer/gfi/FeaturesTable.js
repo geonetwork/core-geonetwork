@@ -44,7 +44,7 @@
           ctrl: 'gnFeaturesTable'
         },
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
-        'featurestable.html',
+            'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
           ctrls.ctrl.initTable(element.find('table'), scope);
         }

@@ -185,9 +185,9 @@
                       promises.push($http.get('../api/groups').
                           then(function(r) {
                             groups = r.data;
-                          }, function (r) {
+                          }, function(r) {
                             console.log(r);
-                      }));
+                          }));
                     }
 
                     // When everything is loaded, watch the summary response

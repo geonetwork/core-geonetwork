@@ -129,7 +129,8 @@
           $window.open(url, '_blank');
         }
         // else if (angular.isString(params)) {
-        //   gnMdFormatter.getFormatterUrl(null, null, params).then(function(url) {
+        //   gnMdFormatter.getFormatterUrl(null,
+        // null, params).then(function(url) {
         //     $http.get(url, {
         //       headers: {
         //         Accept: 'text/html'
