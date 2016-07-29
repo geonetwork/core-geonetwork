@@ -497,7 +497,10 @@
               source = new ol.source.ImageWMS({
                 params: layerParams,
                 url: options.url,
-                ratio: getImageSourceRatio(map, 2048)
+                ratio: getImageSourceRatio(map, 2048),
+                imageLoadFunction: function(image, src) {
+                  image.getImage().src = src.replace(/STYLES&/, 'STYLES=&');
+                }
               });
             } else {
               source = new ol.source.TileWMS({
