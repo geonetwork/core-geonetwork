@@ -53,17 +53,17 @@
               </div>
               <div ng-if="::input.boundingBoxData">
                 <gn-bbox-input ng-if="input.minOccurs" id="{{::input.identifier.value}}"
-                    data-crs="input._default.crs"
-                    data-value="input.value"
-                    data-map="map"
-                    data-required="true"
-                    />
+                  data-crs="input._default.crs"
+                  data-value="input.value"
+                  data-map="map"
+                  data-required="true">
+                </gn-bbox-input>
                 <gn-bbox-input ng-if="!input.minOccurs" id="{{::input.identifier.value}}"
                     data-crs="input._default.crs"
                     data-value="input.value"
                     data-map="map"
-                    data-ng-required="input.minOccurs"
-                />
+                    data-required="false">
+                </gn-bbox-input>
               </div>
               <div ng-if="input.invalid">
                 <p class="text-danger">{{input.invalid}}</p>

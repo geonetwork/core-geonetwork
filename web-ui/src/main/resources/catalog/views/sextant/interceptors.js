@@ -20,7 +20,8 @@
               if(isChrome && config.cache != true
                   && config.url != 'q'
                   && config.url.indexOf('qi?') != 0
-                  && config.url.indexOf('q?') != 0 ) {
+                  && config.url.indexOf('q?') != 0
+                  && config.url.indexOf('GetFeatureInfo') < 0 ) {
 
                 var param = {
                   __id: Math.floor(Math.random() * (99999999999 - 0))

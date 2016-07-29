@@ -150,7 +150,7 @@
               };
 
               var setInputData = function(input, data) {
-                if (input.literalData) {
+                if (input.literalData && data) {
                   request.value.dataInputs.input.push({
                     identifier: {
                       value: input.identifier.value
