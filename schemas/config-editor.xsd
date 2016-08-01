@@ -957,6 +957,14 @@ The fragment is defined in localization file strings.xml:
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="if" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[
+An XPath expression to evaluate. If true, the text is displayed.
+          ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 
