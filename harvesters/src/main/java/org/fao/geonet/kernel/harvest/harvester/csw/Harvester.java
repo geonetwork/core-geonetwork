@@ -144,11 +144,11 @@ class Harvester implements IHarvester<HarvestResult> {
             log.error("Unknown error trying to harvest");
             log.error(t.getMessage());
             log.error(t);
-            errors.add(new HarvestError(t, log));
+            errors.add(new HarvestError(context, t, log));
         } catch (Throwable t) {
             log.fatal("Something unknown and terrible happened while harvesting");
             log.fatal(t.getMessage());
-            errors.add(new HarvestError(t, log));
+            errors.add(new HarvestError(context, t, log));
         }
 
         log.info("Total records processed in all searches :" + records.size());
@@ -175,7 +175,7 @@ class Harvester implements IHarvester<HarvestResult> {
         if (params.capabUrl.contains("GetCapabilities")) {
             req = requestFactory.createXmlRequest(new URL(params.capabUrl));
         } else {
-            req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
+          req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
         }
 
         Lib.net.setupProxy(context, req);
@@ -183,11 +183,11 @@ class Harvester implements IHarvester<HarvestResult> {
         if (params.isUseAccount())
             req.setCredentials(params.getUsername(), params.getPassword());
         CswServer server = null;
-        try {
+        try{
             Element capabil = req.execute();
 
-            if (log.isDebugEnabled())
-                log.debug("Capabilities:\n" + Xml.getString(capabil));
+            if(log.isDebugEnabled())
+                log.debug("Capabilities:\n"+Xml.getString(capabil));
 
             if (capabil.getName().equals("ExceptionReport"))
                 CatalogException.unmarshal(capabil);
@@ -200,8 +200,8 @@ class Harvester implements IHarvester<HarvestResult> {
             if (!checkOperation(log, server, "GetRecordById"))
                 throw new OperationAbortedEx("GetRecordById operation not found");
 
-        } catch (BadXmlResponseEx e) {
-            errors.add(new HarvestError(e, log, params.capabUrl));
+        } catch(BadXmlResponseEx e) {
+            errors.add(new HarvestError(context, e, log, params.capabUrl));
             throw e;
         }
 
@@ -260,7 +260,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.debug(ex.getMessage());
                 log.debug(String.format("Due to errors, changing CSW harvester method to HTTP %s method.", PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET"));
             }
-            errors.add(new HarvestError(ex, log));
+            errors.add(new HarvestError(context, ex, log));
 
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
         }
@@ -301,7 +301,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
 
                 } catch (Exception ex) {
-                    errors.add(new HarvestError(ex, log));
+                    errors.add(new HarvestError(context, ex, log));
                     log.error("Unable to process record from csw (" + this.params.getName() + ")");
                     log.error("   Record failed: " + foundCnt);
                     log.debug("   Record: " + ((Element) record).getName());
@@ -593,13 +593,15 @@ class Harvester implements IHarvester<HarvestResult> {
             }
 
             return response;
-        } catch (Exception e) {
-            errors.add(new HarvestError(e, log));
-            log.warning("Raised exception when searching : " + e);
-            log.warning("Url: " + request.getHost());
-            log.warning("Method: " + request.getMethod());
-            log.warning("Sent request " + request.getSentData());
-            throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
+        }
+        catch(Exception e)
+        {
+          errors.add(new HarvestError(context, e, log));
+          log.warning("Raised exception when searching : "+ e);
+          log.warning("Url: " + request.getHost());
+          log.warning("Method: " + request.getMethod());
+          log.warning("Sent request " + request.getSentData());
+          throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
         }
     }
 
