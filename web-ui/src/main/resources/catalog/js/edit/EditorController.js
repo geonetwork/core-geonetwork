@@ -217,8 +217,11 @@
                 // in custom view based on the standard.
                 var firstTabDispatcher = function(md) {
                   if (md.standardName &&
-                      md.standardName.match(/targeted product/i)) {
-                    return 'medsea-what';
+                      md.standardName.match(/targeted data product/i)) {
+                    return 'checkpoint-tdp-characteristics';
+                  } else if (md.standardName &&
+                    md.standardName.match(/data product specification/i)) {
+                    return 'checkpoint-dps-characteristics';
                   } else if (md.standardName &&
                       md.standardName.match(/emodnet checkpoint/i)) {
                     return 'characteristics';
