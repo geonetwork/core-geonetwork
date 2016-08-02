@@ -1,0 +1,43 @@
+<span>
+  <div class="input-group">
+    <input type="text"
+           class="form-control"
+           placeholder="{{'sourceRecord' | translate}}"
+           data-ng-model="sourceRecord"/>
+    <div class="input-group-btn"
+         title="{{'chooseASourceRecord' | translate}}"
+         data-ng-show="sourceRecords.length > 0">
+      <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li data-ng-repeat="r in sourceRecords">
+          <a data-ng-click="setSource(r)">{{r}}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="input-group-btn"
+         data-ng-show="fragments">
+      <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+        <span data-translate="">chooseAFragment</span>&nbsp;
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li href="" class="list-group-item"
+            data-ng-repeat="(key, value) in fragments">{{key}}<span
+          class="pull-right">
+            <a href="" data-ng-click="addFragment(value)"
+               class="fa fa-plus pull-right"/>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <input name="{{snippetRef}}" type="hidden"/>
+  </div>
+</span>

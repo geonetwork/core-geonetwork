@@ -661,7 +661,6 @@
       <xsl:variable name="btnLabel" select="@btnLabel"/>
       <xsl:variable name="btnClass" select="@btnClass"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
-      <xsl:variable name="directive" select="."/>
 
       <xsl:choose>
         <xsl:when test="template">
@@ -690,6 +689,8 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
+          <xsl:variable name="directive" select="."/>
+
           <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
             <xsl:call-template name="render-element-to-add">
               <xsl:with-param name="label" select="$name"/>
