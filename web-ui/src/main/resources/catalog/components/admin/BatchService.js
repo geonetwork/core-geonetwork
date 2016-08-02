@@ -73,7 +73,7 @@
           var defer = $q.defer();
           gnEditor.save(false, true)
               .then(function() {
-                $http.post('../api/records/' + params.id +
+                $http.post('../api/records/' + (params.id || params.uuid) +
                     '/processes/' + params.process + '?' +
                     gnUrlUtils.toKeyValue(params)
                 ).then(function(data) {
@@ -88,19 +88,7 @@
                 defer.reject(error);
               });
           return defer.promise;
-        },
-
-        runProcessMdXml: function(params) {
-          if (!params._content_type) {
-            angular.extend(params, {
-              _content_type: 'json'
-            });
-          }
-          return gnHttp.callService('processXml', params);
         }
-
-        // TODO : write batch processing service here
-        // from adminTools controller
       };
     }]);
 })();
