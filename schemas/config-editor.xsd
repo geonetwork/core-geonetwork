@@ -1021,7 +1021,7 @@ with ``add-resource-id`` identifier:
 
 .. code-block:: xml
 
-          <action type="batch"
+          <action type="process"
                   process="add-resource-id"
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/
                                 gmd:citation/*/gmd:identifier[
@@ -1063,8 +1063,8 @@ XPath:
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
-            <xs:enumeration value="batch"/>
             <xs:enumeration value="add"/>
+            <xs:enumeration value="process"/>
             <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>
