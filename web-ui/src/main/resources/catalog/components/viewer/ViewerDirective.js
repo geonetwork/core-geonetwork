@@ -34,8 +34,8 @@
    * @description
    */
   module.directive('gnMainViewer', [
-    'gnMap', 'gnConfig', 'gnSearchLocation',
-    function(gnMap, gnConfig, gnSearchLocation) {
+    'gnMap', 'gnConfig', 'gnSearchLocation', 'gnSearchSettings',
+    function(gnMap, gnConfig, gnSearchLocation, gnSearchSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -76,7 +76,21 @@
               scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
 
 
-
+              // Synch only background layer between main map and search map
+              scope.synAllLayers = false;
+              scope.map.getLayers().on('add', function() {
+                if (angular.isDefined(gnSearchSettings.searchMap)) {
+                  var layers = gnSearchSettings.searchMap.getLayers();
+                  scope.map.getLayers().forEach(function(l) {
+                    if (scope.synAllLayers === false &&
+                        l.get('group') === 'Background layers') {
+                      layers.removeAt(0);
+                      layers.insertAt(0, l);
+                    }
+                    // TODO: Synchronize all layers
+                  });
+                }
+              });
               scope.init3dMode = function(map) {
                 if (map) {
                   scope.ol3d = new olcs.OLCesium({map: map});
