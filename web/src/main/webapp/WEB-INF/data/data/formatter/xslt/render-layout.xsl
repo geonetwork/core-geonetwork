@@ -52,6 +52,10 @@
         <link rel="stylesheet" type="text/css" href="../../apps/sextant/css/metadata-view.css"/>
       </xsl:if>
 
+      <xsl:variable name="type">
+        <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
+      </xsl:variable>
+
       <article id="gn-metadata-view-{$metadataId}"
                itemscope="itemscope"
                itemtype="{gn-fn-render:get-schema-org-class($type)}">
