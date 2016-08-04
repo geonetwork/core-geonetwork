@@ -61,24 +61,19 @@
       <groupId>org.fusesource.wikitext</groupId>
       <artifactId>twiki-core</artifactId>
     </dependency>
-
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache-core</artifactId>
     </dependency>
-
-    <!-- rewrite url servletfilter -->
     <dependency>
       <groupId>org.tuckey</groupId>
       <artifactId>urlrewritefilter</artifactId>
       <version>3.2.0</version>
     </dependency>
-
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
     </dependency>
-
     <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>

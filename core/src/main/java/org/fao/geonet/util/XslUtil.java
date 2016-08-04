@@ -23,34 +23,15 @@
 
 package org.fao.geonet.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.Source;
-import javax.xml.xpath.XPathException;
-
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.sf.saxon.om.DocumentInfo;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SingletonIterator;
+import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -73,15 +54,30 @@ import org.geotools.referencing.CRS;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.DOMOutputter;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
-
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Node;
+
+import javax.annotation.Nonnull;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.xpath.XPathException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
@@ -90,14 +86,14 @@ import org.w3c.dom.Node;
  *
  * @author jesse
  */
-public final class XslUtil
-{
+public final class XslUtil {
 
     private static final char TS_DEFAULT = ' ';
     private static final char CS_DEFAULT = ',';
     private static final char TS_WKT = ',';
     private static final char CS_WKT = ' ';
     private static final Whitelist WHITE_LIST;
+
     static {
         WHITE_LIST = Whitelist.relaxed();
         // add tags to allow in output html as we find the ones we require
@@ -108,12 +104,12 @@ public final class XslUtil
         WHITE_LIST.addAttributes("a", "target", "href", "title");
         WHITE_LIST.addAttributes("a", "target", "href", "title");
     }
+
     /**
      * clean the src of ' and <>
      */
-    public static String clean(Object src)
-    {
-        String result = src.toString().replaceAll("'","\'").replaceAll("[><\n\r]", " ");
+    public static String clean(Object src) {
+        String result = src.toString().replaceAll("'", "\'").replaceAll("[><\n\r]", " ");
         return result;
     }
 
@@ -144,61 +140,9 @@ public final class XslUtil
         }
     }
 
-    /**
-     * Retrieve a metadata record. Use this function only
-     * to retrieve records visible for current user. This
-     * does not make any security checks.
-     */
-    public static Node getRecord(String uuid) {
-        ApplicationContext applicationContext = ApplicationContextHolder.get();
-        DataManager dataManager = applicationContext.getBean(DataManager.class);
-        try {
-            String id = dataManager.getMetadataId(uuid);
-            if (id != null) {
-                Element metadata = dataManager.getMetadata(id);
-
-                DOMOutputter outputter = new DOMOutputter();
-                return outputter.output(new Document(metadata));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    /**
-     *
-     * @param formula Math expression to evaluate
-     * @param parameters List of parameters and values used in the expression
-     *                   to evaluate. PARAM_KEY1=VALUE|PARAM_KEY2=VALUE
-     * @return
-     */
-    public static Double evaluate(String formula, String parameters) {
-        try {
-            // Tokenize parameter
-            Map<String, Double> variables = new HashMap();
-            Arrays.stream(parameters.split("\\|")).forEach(e -> {
-                String[] tokens = e.trim().split("=");
-                if (tokens.length == 2) {
-                    variables.put(tokens[0], Double.valueOf(tokens[1].trim()));
-                }
-            });
-            Expression e = new ExpressionBuilder(formula)
-                .variables(variables.keySet())
-                .build()
-                .setVariables(variables);
-
-            return e.evaluate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public static String parseMarkupToText(String src, MarkupParser markupParser) {
         String html;
-        if(markupParser != null) {
+        if (markupParser != null) {
             try {
                 html = markupParser.parseToHtml(src.toString());
                 html = extractFromFullHtml(html);
@@ -213,7 +157,7 @@ public final class XslUtil
         String cleanedHtml = Jsoup.clean(html, WHITE_LIST);
         // span is needed so that the case where there is text before or after html
         // the xml is valid and order of text elements is maintained
-        return "<span>"+cleanedHtml+"</span>";
+        return "<span>" + cleanedHtml + "</span>";
     }
 
     private static String extractFromFullHtml(String html) {
@@ -222,16 +166,17 @@ public final class XslUtil
         html = html.substring(startIndex, endIndex).replace("<body", "<span").replace("</body", "</span");
         return html;
     }
+
     public static String markupToolTip(String template, String name, String syntaxLink) {
-        String link = "<a href=\"javascript:window.open('"+syntaxLink+"', '_markupHelp')\">"+syntaxLink+"</a>";
+        String link = "<a href=\"javascript:window.open('" + syntaxLink + "', '_markupHelp')\">" + syntaxLink + "</a>";
         return template.replace("@@markupName@@", name).replace("@@syntaxLink@@", link);
     }
+
     /**
      * Returns 'true' if the pattern matches the src
      */
-    public static String countryMatch(Object src, Object pattern)
-    {
-        if( src.toString().trim().length()==0){
+    public static String countryMatch(Object src, Object pattern) {
+        if (src.toString().trim().length() == 0) {
             return "false";
         }
         boolean result = src.toString().toLowerCase().contains(pattern.toString().toLowerCase());
@@ -241,8 +186,7 @@ public final class XslUtil
     /**
      * Replace the pattern with the substitution
      */
-    public static String replace(Object src, Object pattern, Object substitution)
-    {
+    public static String replace(Object src, Object pattern, Object substitution) {
         String result = src.toString().replaceAll(pattern.toString(), substitution.toString());
         return result;
     }
@@ -253,9 +197,10 @@ public final class XslUtil
 
     /**
      * Return a service handler config parameter
-     * @see org.fao.geonet.constants.Geonet.Config.
+     *
      * @param key
      * @return
+     * @see org.fao.geonet.constants.Geonet.Config.
      */
     public static String getConfigValue(String key) {
         if (key == null) {
@@ -279,6 +224,7 @@ public final class XslUtil
 
     /**
      * Get a setting value
+     *
      * @param key
      * @return
      */
@@ -306,6 +252,7 @@ public final class XslUtil
         }
         return "";
     }
+
     /**
      * Check if bean is defined in the context
      *
@@ -314,36 +261,36 @@ public final class XslUtil
     public static boolean existsBean(String beanId) {
         return ProfileManager.existsBean(beanId);
     }
+
     /**
      * Optimistically check if user can access a given url.  If not possible to determine then
      * the methods will return true.  So only use to show url links, not check if a user has access
      * for certain.  Spring security should ensure that users cannot access restricted urls though.
      *
      * @param serviceName the raw services name (main.home) or (admin)
-     *
      * @return true if accessible or system is unable to determine because the current
-     * 				thread does not have a ServiceContext in its thread local store
+     * thread does not have a ServiceContext in its thread local store
      */
     public static boolean isAccessibleService(Object serviceName) {
         return ProfileManager.isAccessibleService(serviceName);
     }
+
     /**
      * Takes the characters until the pattern is matched
      */
-    public static String takeUntil(Object src, Object pattern)
-    {
+    public static String takeUntil(Object src, Object pattern) {
         String src2 = src.toString();
         Matcher matcher = Pattern.compile(pattern.toString()).matcher(src2);
 
-        if( !matcher.find() )
+        if (!matcher.find())
             return src2;
 
         int index = matcher.start();
 
-        if( index==-1 ){
+        if (index == -1) {
             return src2;
         }
-        return src2.substring(0,index);
+        return src2.substring(0, index);
     }
 
     /**
@@ -365,61 +312,61 @@ public final class XslUtil
      * Converts the seperators of the coords to the WKT from ts and cs
      *
      * @param coords the coords string to convert
-     * @param ts the separator that separates 2 coordinates
-     * @param cs the separator between 2 numbers in a coordinate
+     * @param ts     the separator that separates 2 coordinates
+     * @param cs     the separator between 2 numbers in a coordinate
      */
-    public static String toWktCoords(Object coords, Object ts, Object cs){
+    public static String toWktCoords(Object coords, Object ts, Object cs) {
         String coordsString = coords.toString();
         char tsString;
-        if( ts==null || ts.toString().length()==0){
+        if (ts == null || ts.toString().length() == 0) {
             tsString = TS_DEFAULT;
-        }else{
+        } else {
             tsString = ts.toString().charAt(0);
         }
         char csString;
-        if( cs==null || cs.toString().length()==0){
+        if (cs == null || cs.toString().length() == 0) {
             csString = CS_DEFAULT;
-        }else{
+        } else {
             csString = cs.toString().charAt(0);
         }
 
-        if( tsString == TS_WKT && csString == CS_WKT ){
+        if (tsString == TS_WKT && csString == CS_WKT) {
             return coordsString;
         }
 
-        if( tsString == CS_WKT ){
-            tsString=';';
+        if (tsString == CS_WKT) {
+            tsString = ';';
             coordsString = coordsString.replace(CS_WKT, tsString);
         }
         coordsString = coordsString.replace(csString, CS_WKT);
         String result = coordsString.replace(tsString, TS_WKT);
-        char lastChar = result.charAt(result.length()-1);
-        if(result.charAt(result.length()-1)==TS_WKT || lastChar==CS_WKT ){
-            result = result.substring(0, result.length()-1);
+        char lastChar = result.charAt(result.length() - 1);
+        if (result.charAt(result.length() - 1) == TS_WKT || lastChar == CS_WKT) {
+            result = result.substring(0, result.length() - 1);
         }
         return result;
     }
 
 
-    public static String posListToWktCoords(Object coords, Object dim){
+    public static String posListToWktCoords(Object coords, Object dim) {
         String[] coordsString = coords.toString().split(" ");
 
         int dimension;
-        if( dim==null ){
+        if (dim == null) {
             dimension = 2;
-        }else{
-            try{
-                dimension=Integer.parseInt(dim.toString());
-            }catch (NumberFormatException e) {
-                dimension=2;
+        } else {
+            try {
+                dimension = Integer.parseInt(dim.toString());
+            } catch (NumberFormatException e) {
+                dimension = 2;
             }
         }
         StringBuilder results = new StringBuilder();
 
         for (int i = 0; i < coordsString.length; i++) {
-            if( i>0 && i%dimension==0 ){
+            if (i > 0 && i % dimension == 0) {
                 results.append(',');
-            }else if( i>0 ){
+            } else if (i > 0) {
                 results.append(' ');
             }
             results.append(coordsString[i]);
@@ -432,11 +379,10 @@ public final class XslUtil
     /**
      * Get field value for metadata identified by uuid.
      *
-     * @param appName 	Web application name to access Lucene index from environment variable
-     * @param uuid 		Metadata uuid
-     * @param field 	Lucene field name
-     * @param lang 		Language of the index to search in
-     *
+     * @param appName Web application name to access Lucene index from environment variable
+     * @param uuid    Metadata uuid
+     * @param field   Lucene field name
+     * @param lang    Language of the index to search in
      * @return metadata title or an empty string if Lucene index or uuid could not be found
      */
     public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
@@ -445,8 +391,8 @@ public final class XslUtil
         String language = (lang.toString().equals("") ? null : lang.toString());
         try {
             String fieldValue = LuceneSearcher.getMetadataFromIndex(language, id, fieldname);
-            if(fieldValue == null) {
-                return getIndexFieldById(appName,uuid,field,lang);
+            if (fieldValue == null) {
+                return getIndexFieldById(appName, uuid, field, lang);
             } else {
                 return fieldValue;
             }
@@ -473,9 +419,9 @@ public final class XslUtil
      * Return a translation for a codelist or enumeration element.
      *
      * @param codelist The codelist name (eg. gmd:MD_TopicCategoryCode)
-     * @param value The value to search for in the translation file
-     * @param langCode  The language
-     * @return  The translation, the code list value if not found or an empty string
+     * @param value    The value to search for in the translation file
+     * @param langCode The language
+     * @return The translation, the code list value if not found or an empty string
      * if no codelist value provided.
      */
     public static String getCodelistTranslation(Object codelist, Object value, Object langCode) {
@@ -503,33 +449,38 @@ public final class XslUtil
     /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *
-     * @param iso3LangCode   The 2 iso lang code
+     * @param iso3LangCode The 2 iso lang code
      * @return The related 3 iso lang code
      */
-    public static @Nonnull String twoCharLangCode(String iso3LangCode) {
+    public static
+    @Nonnull
+    String twoCharLangCode(String iso3LangCode) {
         return twoCharLangCode(iso3LangCode, twoCharLangCode(Geonet.DEFAULT_LANGUAGE, null));
     }
+
     /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *
-     * @param iso3LangCode   The 2 iso lang code
+     * @param iso3LangCode The 2 iso lang code
      * @return The related 3 iso lang code
      */
-    public static @Nonnull String twoCharLangCode(String iso3LangCode, String defaultValue) {
-        if(iso3LangCode==null || iso3LangCode.length() == 0) {
+    public static
+    @Nonnull
+    String twoCharLangCode(String iso3LangCode, String defaultValue) {
+        if (iso3LangCode == null || iso3LangCode.length() == 0) {
             return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
         } else {
-            if(iso3LangCode.equalsIgnoreCase("FRA")) {
+            if (iso3LangCode.equalsIgnoreCase("FRA")) {
                 return "FR";
             }
 
-            if(iso3LangCode.equalsIgnoreCase("DEU")) {
+            if (iso3LangCode.equalsIgnoreCase("DEU")) {
                 return "DE";
             }
             String iso2LangCode = null;
 
             try {
-                if (iso3LangCode.length() == 2){
+                if (iso3LangCode.length() == 2) {
                     iso2LangCode = iso3LangCode;
                 } else {
                     if (ServiceContext.get() != null) {
@@ -542,21 +493,22 @@ public final class XslUtil
 
             }
 
-            if(iso2LangCode == null) {
+            if (iso2LangCode == null) {
                 Log.error(Geonet.GEONETWORK, "Cannot convert " + iso3LangCode + " to 2 char iso lang code", new Error());
-                return iso3LangCode.substring(0,2);
+                return iso3LangCode.substring(0, 2);
             } else {
                 return iso2LangCode;
             }
         }
     }
+
     /**
      * Return '' or error message if error occurs during URL connection.
      *
-     * @param url   The URL to ckeck
+     * @param url The URL to ckeck
      * @return
      */
-    public static String getUrlStatus(String url){
+    public static String getUrlStatus(String url) {
         URL u;
         URLConnection conn;
         int connectionTimeout = 500;
@@ -619,13 +571,13 @@ public final class XslUtil
 
 
     public static Element controlForMarkup(ServiceContext context, Element metadata, String outputParamPath) throws Exception {
-        GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager settingManager = gc.getBean(SettingManager.class);
         String mefOutput = settingManager.getValue(outputParamPath);
         String wysiwygEnabled = settingManager.getValue(Settings.WYSIWYG_EDITOR);
         String markupType = settingManager.getValue(Settings.WIKI_SYNTAX);
-        if(Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
-            Path styleSheetPath =  context.getAppPath().resolve("xsl").resolve("strip-wiki-markup.xsl");
+        if (Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
+            Path styleSheetPath = context.getAppPath().resolve("xsl").resolve("strip-wiki-markup.xsl");
 
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("markupType", markupType);
@@ -637,9 +589,11 @@ public final class XslUtil
     }
 
     private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
+
     public static void setNoScript() {
         allowScripting.set(false);
     }
+
     public static boolean allowScripting() {
         return allowScripting.get() == null || allowScripting.get();
     }
@@ -649,7 +603,7 @@ public final class XslUtil
         int contactId = Integer.parseInt((String) contactIdentifier);
         final ServiceContext serviceContext = ServiceContext.get();
         if (serviceContext != null) {
-            User user= serviceContext.getBean(UserRepository.class).findOne(contactId);
+            User user = serviceContext.getBean(UserRepository.class).findOne(contactId);
             if (user != null) {
                 contactDetails = Xml.getString(user.asXml());
             }
@@ -709,6 +663,57 @@ public final class XslUtil
         return ret;
     }
 
+    /**
+     * Retrieve a metadata record. Use this function only
+     * to retrieve records visible for current user. This
+     * does not make any security checks.
+     */
+    public static Node getRecord(String uuid) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        DataManager dataManager = applicationContext.getBean(DataManager.class);
+        try {
+            String id = dataManager.getMetadataId(uuid);
+            if (id != null) {
+                Element metadata = dataManager.getMetadata(id);
+
+                DOMOutputter outputter = new DOMOutputter();
+                return outputter.output(new Document(metadata));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param formula    Math expression to evaluate
+     * @param parameters List of parameters and values used in the expression
+     *                   to evaluate. PARAM_KEY1=VALUE|PARAM_KEY2=VALUE
+     * @return
+     */
+    public static Double evaluate(String formula, String parameters) {
+        try {
+            // Tokenize parameter
+            Map<String, Double> variables = new HashMap();
+            Arrays.stream(parameters.split("\\|")).forEach(e -> {
+                String[] tokens = e.trim().split("=");
+                if (tokens.length == 2) {
+                    variables.put(tokens[0], Double.valueOf(tokens[1].trim()));
+                }
+            });
+            Expression e = new ExpressionBuilder(formula)
+                .variables(variables.keySet())
+                .build()
+                .setVariables(variables);
+
+            return e.evaluate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static String getSiteUrl() {
         ServiceContext context = ServiceContext.get();
         String baseUrl = "";
@@ -733,7 +738,7 @@ public final class XslUtil
 
     public static String encodeForURL(String str) {
         try {
-            return DefaultEncoder.getInstance().encodeForURL(str) ;
+            return DefaultEncoder.getInstance().encodeForURL(str);
         } catch (EncodingException ex) {
             ex.printStackTrace();
             return str;

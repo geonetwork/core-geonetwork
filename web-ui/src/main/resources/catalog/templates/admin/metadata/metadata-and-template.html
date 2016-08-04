@@ -23,30 +23,32 @@
         </div>
 
         <div class="list-group">
-          <a href=""
-             class="list-group-item"
-             data-ng-repeat="s in schemas"
-             data-ng-class="isSchemaSelected(s.name) ? 'active' : ''"
-             data-ng-click="selectSchema(s.name)">
-            <h4 class="list-group-item-heading">{{s.name | translate}}</h4>
-            <p> {{(s.name + '-help') | translate}} </p>
-          </a>
+          <li class="list-group-item"
+              data-ng-repeat="s in schemas"
+              data-ng-click="selectSchema(s.name)">
+            <h4 class="list-group-item-heading">
+              <i class="fa"
+                 data-ng-class="isSchemaSelected(s.name) ? 'fa-check-square-o' : 'fa-square-o'"/>&nbsp
+                 {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
+            </h4>
+            <p> {{s.descriptions[iso2lang] || s.descriptions['en'] || ''}} </p>
+            <a data-ng-if="s.standardUrl" data-ng-href="{{s.standardUrl}}" data-translate="">moreStandardInfo</a>
+          </li>
         </div>
 
         <div class="row">
-          <div class="col-lg-6">
+          <div class="col-lg-12">
             <button type="button" class="btn btn-primary btn-block"
                     data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
                     data-ng-click="loadTemplates()">
-              <i class="fa fa-upload"/>
+              <i class="fa gn-recordtype-y"/>&nbsp;
               <span data-translate="">loadTemplatesForSelectedSchema</span>
             </button>
-          </div>
-          <div class="col-lg-6">
+            <br/>
             <button type="button" class="btn btn-primary btn-block"
                     data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
                     data-ng-click="loadSamples()">
-              <i class="fa fa-upload"/>
+              <i class="fa gn-recordtype-n"/>&nbsp;
               <span data-translate="">loadSamplesForSelectedSchema</span>
             </button>
           </div>

@@ -214,8 +214,8 @@
     </xsl:if>
 
     <xsl:if test="$angularApp = 'gn_editor'">
-      <script type="text/javascript" src="{$uiResourcesPath}/lib/ace/ace.js"></script>
-      <script type="text/javascript" src="{$uiResourcesPath}/lib/angular.ext/ui-ace.js"></script>
+      <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js"></script>
+      <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js"></script>
 
       <script type="text/javascript">
         var module = angular.module('gn_editor');
