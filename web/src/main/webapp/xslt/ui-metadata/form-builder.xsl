@@ -1332,12 +1332,15 @@
   <xsl:template name="render-batch-process-button">
     <xsl:param name="process-name"/>
     <xsl:param name="process-params"/>
+    <xsl:param name="btnClass" required="no"/>
+
     <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
               data-params="{$process-params}"
+              data-icon="{$btnClass}"
               data-name="{$strings/*[name() = $process-name]}"
               data-help="{$strings/*[name() = concat($process-name, 'Help')]}"/>
       </div>
@@ -1400,6 +1403,9 @@
               <td>
                 <xsl:if test="@colspan">
                   <xsl:attribute name="colspan" select="@colspan"/>
+                </xsl:if>
+                <xsl:if test="@title">
+                  <xsl:attribute name="title" select="@title"/>
                 </xsl:if>
 
                 <!-- TODO: Add move up/down control? -->
