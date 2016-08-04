@@ -37,7 +37,7 @@
     // on top of the privileges panel.
     // TODO: Move config to DB using isTopGroups in groups table
     // or using reserved column ?
-    topGroups: ['82']
+    topGroups: [82]
   });
 
 
