@@ -8,3 +8,5 @@ DELETE FROM Settings WHERE name = 'system/removedMetadata/dir';
 UPDATE Settings SET datatype = 3 WHERE name = 'map/config';
 UPDATE Settings SET datatype = 3 WHERE name = 'map/proj4js';
 UPDATE Settings SET datatype = 3 WHERE name = 'metadata/editor/schemaConfig';
+
+UPDATE OperationsDes SET label = 'Traitement' WHERE iddes = 7 AND langid = 'fre';
