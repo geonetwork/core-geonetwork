@@ -116,6 +116,7 @@ public class MetadataProcessApi {
         Map<String, Object> xslParameter = new HashMap<String, Object>();
         xslParameter.put("guiLang", request.getLocale().getISO3Language());
         xslParameter.put("siteUrl", sm.getSiteURL(context));
+        xslParameter.put("nodeUrl", sm.getNodeURL());
         xslParameter.put("baseUrl", context.getBaseUrl());
         xslParameter.put("action", "analyze");
 
