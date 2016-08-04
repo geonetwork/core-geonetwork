@@ -71,7 +71,7 @@ import javax.xml.bind.Unmarshaller;
 //==============================================================================
 
 @JsonPropertyOrder({
-    "name", "targetNamespace", "namespaces",
+    "name", "titles", "descriptions", "standardUrl", "targetNamespace", "namespaces",
     "readwriteUUID", "schematronRules"
 })
 public class MetadataSchema {
@@ -90,6 +90,9 @@ public class MetadataSchema {
         new HashMap<String, Pair<String, Element>>();
     private String schemaName;
     private Path schemaDir;
+    private String standardUrl;
+    private Map<String, String> titles = new HashMap<>();
+    private Map<String, String> descriptions = new HashMap<>();
     private String primeNS;
     private String[] schematronRules;
     private boolean canEdit = false;
@@ -558,6 +561,30 @@ public class MetadataSchema {
 
     public void setReadwriteUUID(boolean readwriteUUID) {
         this.readwriteUUID = readwriteUUID;
+    }
+
+    public String getStandardUrl() {
+        return standardUrl;
+    }
+
+    public void setStandardUrl(String standardUrl) {
+        this.standardUrl = standardUrl;
+    }
+
+    public Map<String, String> getTitles() {
+        return titles;
+    }
+
+    public void setTitles(Map<String, String> titles) {
+        this.titles = titles;
+    }
+
+    public Map<String, String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(Map<String, String> descriptions) {
+        this.descriptions = descriptions;
     }
 
     /**
