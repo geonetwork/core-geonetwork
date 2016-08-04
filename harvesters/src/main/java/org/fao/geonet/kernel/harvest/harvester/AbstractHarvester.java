@@ -553,7 +553,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                     + this.getType()
                     + "] didn't accept some of the parameters sent.");
 
-                errors.add(new HarvestError(e, logger));
+                errors.add(new HarvestError(context, e, logger));
                 error = e;
                 operResult = OperResult.ERROR;
             } catch (Throwable t) {
@@ -562,8 +562,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
                 logger.warning(" (C) Message : " + t.getMessage());
                 error = t;
-                t.printStackTrace();
-                errors.add(new HarvestError(t, logger));
+                errors.add(new HarvestError(context, t, logger));
             } finally {
                 List<HarvestError> harvesterErrors = getErrors();
                 if (harvesterErrors != null) {
