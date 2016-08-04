@@ -23,22 +23,16 @@
 
 package org.fao.geonet.util;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Nonnull;
-
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -52,10 +46,25 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.output.DOMOutputter;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.owasp.esapi.errors.EncodingException;
 import org.owasp.esapi.reference.DefaultEncoder;
+import org.springframework.context.ApplicationContext;
+import org.w3c.dom.Node;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -536,6 +545,57 @@ public final class XslUtil {
         }
 
         return ret;
+    }
+
+    /**
+     * Retrieve a metadata record. Use this function only
+     * to retrieve records visible for current user. This
+     * does not make any security checks.
+     */
+    public static Node getRecord(String uuid) {
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        DataManager dataManager = applicationContext.getBean(DataManager.class);
+        try {
+            String id = dataManager.getMetadataId(uuid);
+            if (id != null) {
+                Element metadata = dataManager.getMetadata(id);
+
+                DOMOutputter outputter = new DOMOutputter();
+                return outputter.output(new Document(metadata));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param formula    Math expression to evaluate
+     * @param parameters List of parameters and values used in the expression
+     *                   to evaluate. PARAM_KEY1=VALUE|PARAM_KEY2=VALUE
+     * @return
+     */
+    public static Double evaluate(String formula, String parameters) {
+        try {
+            // Tokenize parameter
+            Map<String, Double> variables = new HashMap();
+            Arrays.stream(parameters.split("\\|")).forEach(e -> {
+                String[] tokens = e.trim().split("=");
+                if (tokens.length == 2) {
+                    variables.put(tokens[0], Double.valueOf(tokens[1].trim()));
+                }
+            });
+            Expression e = new ExpressionBuilder(formula)
+                .variables(variables.keySet())
+                .build()
+                .setVariables(variables);
+
+            return e.evaluate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String getSiteUrl() {
