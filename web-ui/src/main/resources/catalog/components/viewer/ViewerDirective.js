@@ -76,36 +76,23 @@
               scope.is3DModeAllowed = gnConfig['map.is3DModeAllowed'] || false;
               scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
 
-              // Synch only background layer between main map and search map
+              // By default, synch only background layer between main map and search map
               scope.synAllLayers = false;
 
               scope.map.getLayers().on('add', function() {
-                if (angular.isDefined(gnSearchSettings.searchMap)) {
-
-                  var layers = gnSearchSettings.searchMap.getLayers();
-
-                  scope.map.getLayers().forEach(function(l) {
-                    if (scope.synAllLayers === false &&
-                        l.get('group') === 'Background layers') {
-                      layers.removeAt(0);
-                      layers.insertAt(0, l);
-                    }
-                    // TODO: Synchronize all layers
-
-                  });
-
-                }
+                if (angular.isDefined(gnSearchSettings.searchMap))
+                  scope.doSync(map);
               });
 
               scope.syncMod = function(map) {
-
                 scope.synAllLayers=!scope.synAllLayers;
+                scope.doSync(map);
+              }
 
+              scope.doSync = function(map) {
                 var layers = gnSearchSettings.searchMap.getLayers();
                 layers.clear();
-
                 scope.map.getLayers().forEach(function(l) {
-
                 if ( scope.synAllLayers==true || (scope.synAllLayers === false &&
                     l.get('group') === 'Background layers') )
                       layers.push(l);
