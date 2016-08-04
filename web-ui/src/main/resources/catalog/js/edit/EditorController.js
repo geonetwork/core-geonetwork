@@ -220,7 +220,7 @@
                       md.standardName.match(/targeted data product/i)) {
                     return 'checkpoint-tdp-characteristics';
                   } else if (md.standardName &&
-                    md.standardName.match(/data product specification/i)) {
+                      md.standardName.match(/data product specification/i)) {
                     return 'checkpoint-dps-characteristics';
                   } else if (md.standardName &&
                       md.standardName.match(/emodnet checkpoint/i)) {
