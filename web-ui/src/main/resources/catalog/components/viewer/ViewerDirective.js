@@ -84,6 +84,11 @@
                   scope.doSync(map);
               });
 
+              scope.map.getLayers().on('change:length', function() {
+                if (angular.isDefined(gnSearchSettings.searchMap))
+                  scope.doSync(map);
+              });
+
               scope.syncMod = function(map) {
                 scope.synAllLayers=!scope.synAllLayers;
                 scope.doSync(map);
