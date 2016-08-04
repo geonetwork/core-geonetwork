@@ -348,7 +348,7 @@
   "fbQuestion": "Question",
   "fbError": "Error",
   "fbCatMetadataContents": "Metadata Contents",
-  "fbCatDataContents": "Data Contents", 
+  "fbCatDataContents": "Data Contents",
   "fbCatServiceContents": "Service Contents",
   "fbCatSupport": "Support",
   "fbCatMapViewer": "Map Viewer",
@@ -359,5 +359,6 @@
   "fbCatMetadataEditing": "Metadata Editing",
   "fbCatHarvesting": "Harvesting",
   "fbCatValidator": "Validator",
-  "fbCatOthers": "Others"
+  "fbCatOthers": "Others",
+  "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map"
 }
