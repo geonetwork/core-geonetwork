@@ -1589,7 +1589,7 @@
                       standardName: 'ISO 19115-3 / Emodnet Checkpoint' +
                           ' - Data Product Specification'
                     },
-                    'crossReference-targetDataProduct': {
+                    'crossReference-targetedDataProduct': {
                       standardName: 'ISO 19115-3 / Emodnet Checkpoint' +
                           ' - Targeted Data Product'
                     }
