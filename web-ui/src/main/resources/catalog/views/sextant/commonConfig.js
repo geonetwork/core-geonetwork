@@ -6,7 +6,7 @@
 
   module.run(['gnShareConstants', function(gnShareConstants) {
 
-    gnShareConstants.columnOrder= ['0', '5', '1', '7', '2'];
+    gnShareConstants.columnOrder= ['view', 'dynamic', 'download', 'process', 'editing'];
     gnShareConstants.disableAllCol = true;
     gnShareConstants.displayProfile = true;
 
