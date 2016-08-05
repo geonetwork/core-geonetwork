@@ -32,9 +32,9 @@
    * SavedQuery API.
    */
   module.directive('gnRecordFragmentSelector',
-      ['$http',
+      ['$http', 'gnGlobalSettings',
        'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit',
-       function($http,
+       function($http, gnGlobalSettings,
                gnEditor, gnEditorXMLService, gnCurrentEdit) {
 
          return {
@@ -49,60 +49,98 @@
            templateUrl: '../../catalog/components/edit/' +
            'recordfragmentselector/partials/' +
            'rfselector.html',
-           link: function(scope, element, attrs) {
-             scope.snippet = null;
+           compile: function compile(tElement, tAttrs, transclude) {
+             return {
+               pre: function preLink(scope) {
+                 scope.searchObj = {
+                   any: '',
+                   params: {
+                     any: '',
+                     from: 1,
+                     to: 50,
+                     sortBy: 'title',
+                     sortOrder: 'reverse'
+                   }
+                 };
 
-             // TODO: Retrieve title of source records
-             // to be displayed in the selector.
-             scope.sourceRecords =
-             (attrs['sourceRecords'] &&
-             attrs['sourceRecords'].split(',')) || [];
-             scope.query = 'dq-sections';
-             scope.snippetRef = gnEditor.
-             buildXMLFieldName(scope.elementRef, scope.elementName);
+                 scope.modelOptions = angular.copy(
+                   gnGlobalSettings.modelOptions);
+               },
+               post: function(scope, element, attrs) {
+                 scope.snippet = null;
+                 scope.sourceRecord = null;
 
-             scope.getFragments = function() {
-               scope.fragments = [];
-               $http.post(
-               '../api/0.1/records/' + scope.sourceRecord +
-               '/query/' + scope.query, {}).then(function(r) {
-                 if (r.status === 200) {
-                   scope.fragments = r.data;
+                 // Source records define a list of UUIDs to choose from
+                 // TODO: Retrieve title of source records
+                 // to be displayed in the selector.
+                 scope.sourceRecords =
+                 (attrs['sourceRecords'] &&
+                 attrs['sourceRecords'].split(',')) || [];
+
+                 // Define a search query to choose from
+                 if (scope.sourceRecords.length > 0) {
+                   scope.searchQuery = {
+                     _uuid: scope.sourceRecords.join(' or ')
+                   };
+                 } else {
+                   scope.searchQuery =
+                     (attrs['searchQuery'] &&
+                     angular.fromJson(
+                       attrs['searchQuery']
+                         .replace('{uuid}', gnCurrentEdit.uuid)
+                         .replace(/'/g, "\"")
+                     )) || {};
                  }
-               });
-             };
 
-             scope.setSource = function(r) {
-               scope.sourceRecord = r;
-             };
+                 angular.extend(scope.searchObj.params, scope.searchQuery);
 
-             scope.$watch('sourceRecord', function(n, o) {
-               if (n && n !== o) {
-                 scope.getFragments();
+                 scope.query = 'dq-sections';
+                 scope.snippetRef = gnEditor.
+                 buildXMLFieldName(scope.elementRef, scope.elementName);
+
+                 scope.setSource = function (r) {
+                   scope.sourceRecord =
+                     angular.isObject(r) ? r['geonet:info'].uuid : null;
+                 };
+                 scope.getFragments = function() {
+                   scope.fragments = [];
+                   $http.post(
+                   '../api/0.1/records/' + scope.sourceRecord +
+                   '/query/' + scope.query, {}).then(function(r) {
+                     if (r.status === 200) {
+                       scope.fragments = r.data;
+                     }
+                   });
+                 };
+
+                 // Append * for like search
+                 scope.updateParams = function() {
+                   scope.searchObj.params.any =
+                     '*' + scope.searchObj.any + '*';
+                 };
+
+                 scope.$watch('sourceRecord', function(n, o) {
+                   if (n && n !== o) {
+                     scope.getFragments();
+                   }
+                 });
+
+                 scope.add = function() {
+                   gnEditor.add(gnCurrentEdit.id,
+                   scope.elementRef, scope.elementName, scope.domId, 'before');
+                   return false;
+                 };
+
+                 scope.addFragment = function(f) {
+                   var field = $.find('input[name=' + scope.snippetRef +
+                   ']')[0];
+                   $(field).val(f);
+                   scope.fragments = [];
+                   gnEditor.save(gnCurrentEdit.id, true);
+                   return false;
+                 };
                }
-             });
-
-             scope.add = function() {
-               gnEditor.add(gnCurrentEdit.id,
-               scope.elementRef, scope.elementName, scope.domId, 'before');
-               return false;
-             };
-
-             scope.search = function() {
-               if (angular.isUndefined(scope.sourceRecord)) {
-                 //
-               }
-             };
-
-             scope.addFragment = function(f) {
-               var field = $.find('input[name=' + scope.snippetRef +
-               ']')[0];
-               $(field).val(f);
-               scope.fragments = [];
-               gnEditor.save(gnCurrentEdit.id, true);
-               return false;
              };
            }
-         };
-       }]);
+         }}]);
 })();
