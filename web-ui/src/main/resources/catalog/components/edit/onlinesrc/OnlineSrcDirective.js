@@ -1592,6 +1592,9 @@
                     'crossReference-targetedDataProduct': {
                       standardName: 'ISO 19115-3 - Emodnet Checkpoint' +
                           ' - Targeted Data Product'
+                    },
+                    'crossReference-upstreamData': {
+                      standardName: 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data'
                     }
                   };
 

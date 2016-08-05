@@ -10,3 +10,10 @@ UPDATE Settings SET datatype = 3 WHERE name = 'map/proj4js';
 UPDATE Settings SET datatype = 3 WHERE name = 'metadata/editor/schemaConfig';
 
 UPDATE OperationsDes SET label = 'Traitement' WHERE iddes = 7 AND langid = 'fre';
+
+
+
+UPDATE metadata SET data = replace(data,
+  'ISO 19115-3 - Emodnet Checkpoint<',
+  'ISO 19115-3 - Emodnet Checkpoint - Upstream Data<')
+  WHERE data like '%ISO 19115-3 - Emodnet Checkpoint<%';
