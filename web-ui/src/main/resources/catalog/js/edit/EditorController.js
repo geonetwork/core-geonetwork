@@ -216,6 +216,9 @@
                 // like standardName and would like to open the editor
                 // in custom view based on the standard.
                 var firstTabDispatcher = function(md) {
+                  if (angular.isArray(md.standardName)) {
+                    md.standardName = md.standardName[0];
+                  }
                   if (md.standardName &&
                       md.standardName.match(/targeted data product/i)) {
                     return 'checkpoint-tdp-characteristics';
