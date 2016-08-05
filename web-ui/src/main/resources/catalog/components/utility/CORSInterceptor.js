@@ -89,7 +89,7 @@
                   }]);
 
                 } else {
-                  defer.resolve(response);
+                  return $q.reject(response);
                 }
 
                 return defer.promise;
