@@ -144,10 +144,15 @@
     <xsl:variable name="mode" select="@mode"/>
     <xsl:variable name="config" select="."/>
     <xsl:for-each select="$nodes/*">
-      <saxon:call-template name="{$mode}">
-        <xsl:with-param name="base" select="$base"/>
-        <xsl:with-param name="config" select="$config"/>
-      </saxon:call-template>
+      <xsl:variable name="originalNode"
+                    select="gn-fn-metadata:getOriginalNode($base, .)"/>
+
+      <xsl:for-each select="$originalNode">
+        <saxon:call-template name="{$mode}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="config" select="$config"/>
+        </saxon:call-template>
+      </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
 
