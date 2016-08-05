@@ -120,6 +120,17 @@
     <facet name="p35"
            label="p35"
            indexKey="thesaurus-external.parameter.NVS.P35"/>
+
+    <facet name="portail-donnees-facette-discipline"
+           label="portail-donnees-facette-discipline"
+           indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline "/>
+    <facet name="portail-donnees-facette-type"
+           label="portail-donnees-facette-type"
+           indexKey="thesaurus-local.theme.portail-donnees-facette-type"/>
+    <facet name="portail-donnees-facette-comment"
+           label="portail-donnees-facette-comment"
+           indexKey="thesaurus-local.theme.portail-donnees-facette-comment"/>
+
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
     <facet name="_groupPublished" indexKey="_groupPublished" label="publishedForGroup"/>
@@ -169,6 +180,9 @@
       <item facet="p02" max="300"/>
       <item facet="p03" max="300"/>
       <item facet="p35" max="300"/>
+      <item facet="portail-donnees-facette-discipline" max="300"/>
+      <item facet="portail-donnees-facette-type" max="300"/>
+      <item facet="portail-donnees-facette-comment" max="300"/>
       <!--
       <item facet="region"
             translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
@@ -223,6 +237,9 @@
       <item facet="p02" max="300"/>
       <item facet="p03" max="300"/>
       <item facet="p35" max="300"/>
+      <item facet="portail-donnees-facette-discipline" max="300"/>
+      <item facet="portail-donnees-facette-type" max="300"/>
+      <item facet="portail-donnees-facette-comment" max="300"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
     <summaryType name="subtemplates">
