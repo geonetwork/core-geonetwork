@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<skos:ConceptScheme rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/">
+<dc:title>SIH - Categories Engins</dc:title>
+<dc:description/>
+<dcterms:issued>2015-02-19</dcterms:issued>
+<dcterms:modified>2015-02-19</dcterms:modified>
+</skos:ConceptScheme>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/SR">
+<skos:prefLabel xml:lang="en">Filets tournants - SR</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Filets tournants - SR</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/S">
+<skos:prefLabel xml:lang="en">Sennes - S</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Sennes - S</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/T">
+<skos:prefLabel xml:lang="en">Chaluts - T</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Chaluts - T</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/D">
+<skos:prefLabel xml:lang="en">Dragues - D</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Dragues - D</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/LN">
+<skos:prefLabel xml:lang="en">Filets soulevés - LN</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Filets soulevés - LN</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/F">
+<skos:prefLabel xml:lang="en">Engins retombants - F</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Engins retombants - F</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/N">
+<skos:prefLabel xml:lang="en">Filets maillants et filets emmelants - N</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Filets maillants et filets emmelants - N</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/TR">
+<skos:prefLabel xml:lang="en">Pièges - TR</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Pièges - TR</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/L">
+<skos:prefLabel xml:lang="en">Lignes et hameçons - L</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Lignes et hameçons - L</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/G">
+<skos:prefLabel xml:lang="en">Engins de pêche par accrochage ou par blessure - G</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Engins de pêche par accrochage ou par blessure - G</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/H">
+<skos:prefLabel xml:lang="en">Engins de récolte - H</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Engins de récolte - H</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/M">
+<skos:prefLabel xml:lang="en">Divers - M</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Divers - M</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/R">
+<skos:prefLabel xml:lang="en">Engins de pêche récréative - R</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Engins de pêche récréative - R</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+	<skos:Concept rdf:about="http://sih.ifremer.fr/thesaurus/SIH_Categories_Engins/O">
+<skos:prefLabel xml:lang="en">Engins inconnus ou non spécifiés - O</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">Engins inconnus ou non spécifiés - O</skos:prefLabel>
+<skos:definition xml:lang="en"/>
+<skos:definition xml:lang="fr"/>
+</skos:Concept>
+</rdf:RDF>
