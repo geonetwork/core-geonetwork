@@ -1,22 +1,30 @@
 <span>
-  <div class="input-group">
+  <div data-ng-search-form="" class="input-group">
     <input type="text"
            class="form-control"
-           placeholder="{{'sourceRecord' | translate}}"
-           data-ng-model="sourceRecord"/>
-    <div class="input-group-btn"
-         title="{{'chooseASourceRecord' | translate}}"
-         data-ng-show="sourceRecords.length > 0">
-      <button type="button" class="btn btn-default dropdown-toggle"
-              data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right">
-        <li data-ng-repeat="r in sourceRecords">
-          <a data-ng-click="setSource(r)">{{r}}</a>
-        </li>
-      </ul>
+           placeholder="{{'search' | translate}}"
+           data-ng-model="searchObj.any"
+           data-ng-model-options="modelOptions"
+           data-ng-change="updateParams();triggerSearch()"/>
+
+     <div class="input-group-btn"
+          data-ng-show="fragments">
+       <a class="btn btn-default"
+          data-ng-click="setSource()">
+         <i class="fa fa-times"></i>
+       </a>
+     </div>
+
+    <!-- The autocomplete list -->
+    <div class="list-group tt-dropdown-menu gn-autocomplete-list"
+         data-ng-show="searchResults.records.length > 0 && sourceRecord === null">
+      <span class="tt-suggestions">
+        <div class="tt-suggestion"
+             data-ng-repeat="r in searchResults.records"
+             data-ng-click="setSource(r)">
+          {{r.title}}
+        </div>
+      </span>
     </div>
 
     <div class="input-group-btn"
