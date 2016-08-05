@@ -1374,6 +1374,28 @@
 
 
 
+  <!-- Create a table based on the values param which contains a table structure.
+
+  values structure should be:
+  <header>
+   <col>colName</col>
+   <col..
+  </header>
+  <row (title='')>
+   <col (readonly='')
+        (title='xs:string')
+        (colspan='xs:int')
+        (type='textarea|Real|Integer|Percentage')>
+     text value for readonly cols or element for editing.
+   </col>
+   <col remove=''>
+     Element containing gn:element containing removal config.
+   </col>
+   <col...
+  </row>
+  <row...
+
+  -->
   <xsl:template name="render-table">
     <xsl:param name="values" as="node()"/>
     <xsl:param name="addControl" as="node()?"/>
@@ -1423,7 +1445,7 @@
                   <xsl:otherwise>
                     <xsl:choose>
                       <xsl:when test="@type = 'textarea'">
-                        <!-- TODO: Multilingual -->
+                        <!-- TODO: Multilingual, codelist, date ... -->
                         <textarea class="form-control"
                                   name="_{*/gn:element/@ref}">
                           <xsl:value-of select="*/text()"/>
@@ -1438,6 +1460,15 @@
                                value="{*/normalize-space()}"/>
                       </xsl:otherwise>
                     </xsl:choose>
+
+                    <!-- TODO call schema render mode of the field without
+                    label and controls.
+
+                    <saxon:call-template name="{concat('dispatch-', $schema)}">
+                      <xsl:with-param name="base" select="."/>
+                      <xsl:with-param name="overrideLabel"
+                                      select="''"/>
+                    </saxon:call-template> -->
                   </xsl:otherwise>
                 </xsl:choose>
               </td>
