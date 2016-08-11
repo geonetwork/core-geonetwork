@@ -127,7 +127,7 @@
                indexKey="thesaurus-external.parameter.NVS.P35"/>
         <facet name="portail-donnees-facette-discipline"
                label="portail-donnees-facette-discipline"
-               indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline "/>
+               indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline"/>
         <facet name="portail-donnees-facette-type"
                label="portail-donnees-facette-type"
                indexKey="thesaurus-local.theme.portail-donnees-facette-type"/>
