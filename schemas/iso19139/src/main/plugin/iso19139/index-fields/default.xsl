@@ -47,80 +47,80 @@
          added to the GeoNetwork constants in the Java source code.
          Please keep indexes consistent among metadata standards if they should
          work across different metadata resources -->
-        <!-- ========================================================================================= -->
+    <!-- ========================================================================================= -->
 
-        <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no" />
-
-
-        <!-- ========================================================================================= -->
-
-  <xsl:param name="thesauriDir"/>
-  <xsl:param name="inspire">false</xsl:param>
-
-  <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
-  <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
-  <xsl:variable name="sextant-thesaurus" select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
-  <xsl:variable name="sextant-theme" select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
-
-  <!-- If identification creation, publication and revision date
-    should be indexed as a temporal extent information (eg. in INSPIRE
-    metadata implementing rules, those elements are defined as part
-    of the description of the temporal extent). -->
-  <xsl:variable name="useDateAsTemporalExtent" select="true()"/>
-
-  <!-- Define the way keyword and thesaurus are indexed. If false
-  only keyword, thesaurusName and thesaurusType field are created.
-  If true, advanced field are created to make more details query
-  on keyword type and search by thesaurus. Index size is bigger
-  but more detailed facet can be configured based on each thesaurus.
-  -->
-  <xsl:variable name="indexAllKeywordDetails" select="true()"/>
-
-  <!-- For record not having status obsolete, flag them as non
-  obsolete records. Some catalog like to restrict to non obsolete
-  records only the default search. -->
-  <xsl:variable name="flagNonObseleteRecords" select="false()"/>
+    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no" />
 
 
-  <!-- The main metadata language -->
-  <xsl:variable name="isoLangId">
-      <xsl:call-template name="langId19139"/>
-  </xsl:variable>
+    <!-- ========================================================================================= -->
 
-  <!-- ========================================================================================= -->
-  <xsl:template match="/">
-      <Document locale="{$isoLangId}">
-          <Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
+    <xsl:param name="thesauriDir"/>
+    <xsl:param name="inspire">false</xsl:param>
 
-          <Field name="_docLocale" string="{$isoLangId}" store="true" index="true"/>
+    <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
+    <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
+    <xsl:variable name="sextant-thesaurus" select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
+    <xsl:variable name="sextant-theme" select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
 
-          <xsl:variable name="_defaultTitle">
-              <xsl:call-template name="defaultTitle">
-                  <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
-              </xsl:call-template>
-          </xsl:variable>
+    <!-- If identification creation, publication and revision date
+      should be indexed as a temporal extent information (eg. in INSPIRE
+      metadata implementing rules, those elements are defined as part
+      of the description of the temporal extent). -->
+    <xsl:variable name="useDateAsTemporalExtent" select="true()"/>
 
-          <Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true"/>
+    <!-- Define the way keyword and thesaurus are indexed. If false
+    only keyword, thesaurusName and thesaurusType field are created.
+    If true, advanced field are created to make more details query
+    on keyword type and search by thesaurus. Index size is bigger
+    but more detailed facet can be configured based on each thesaurus.
+    -->
+    <xsl:variable name="indexAllKeywordDetails" select="true()"/>
 
-          <xsl:variable name="_defaultAbstract">
-              <xsl:call-template name="defaultAbstract">
-                  <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
-              </xsl:call-template>
-          </xsl:variable>
+    <!-- For record not having status obsolete, flag them as non
+    obsolete records. Some catalog like to restrict to non obsolete
+    records only the default search. -->
+    <xsl:variable name="flagNonObseleteRecords" select="false()"/>
 
-          <Field name="_defaultAbstract" string="{string($_defaultAbstract)}" store="true" index="true" token="false" />
 
-          <!-- not tokenized title for sorting, needed for multilingual sorting -->
-          <xsl:if test="geonet:info/isTemplate != 's'">
-              <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
-          </xsl:if>
+    <!-- The main metadata language -->
+    <xsl:variable name="isoLangId">
+        <xsl:call-template name="langId19139"/>
+    </xsl:variable>
 
-          <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
+    <!-- ========================================================================================= -->
+    <xsl:template match="/">
+        <Document locale="{$isoLangId}">
+            <Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
-          <xsl:apply-templates mode="index" select="*"/>
+            <Field name="_docLocale" string="{$isoLangId}" store="true" index="true"/>
 
-      </Document>
-  </xsl:template>
+            <xsl:variable name="_defaultTitle">
+                <xsl:call-template name="defaultTitle">
+                    <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true"/>
+
+            <xsl:variable name="_defaultAbstract">
+                <xsl:call-template name="defaultAbstract">
+                    <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <Field name="_defaultAbstract" string="{string($_defaultAbstract)}" store="true" index="true" token="false" />
+
+            <!-- not tokenized title for sorting, needed for multilingual sorting -->
+            <xsl:if test="geonet:info/isTemplate != 's'">
+                <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
+            </xsl:if>
+
+            <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
+
+            <xsl:apply-templates mode="index" select="*"/>
+
+        </Document>
+    </xsl:template>
 
 
     <!-- Add index mode template in order to easily add new field in the index (eg. in profiles).
@@ -144,13 +144,13 @@
         </xsl:template>
     -->
     <xsl:template mode="index" match="*|@*">
-            <xsl:apply-templates mode="index" select="*|@*"/>
+        <xsl:apply-templates mode="index" select="*|@*"/>
     </xsl:template>
 
 
     <xsl:template mode="index"
-            match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
-            <Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
+                  match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
+        <Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
     </xsl:template>
 
 
@@ -279,7 +279,7 @@
             <xsl:for-each select="//gmd:MD_Keywords">
                 <!-- Index all keywords as text or anchor -->
                 <xsl:variable name="listOfKeywords"
-                                select="gmd:keyword/gco:CharacterString|
+                              select="gmd:keyword/gco:CharacterString|
                                         gmd:keyword/gmx:Anchor"/>
                 <xsl:for-each select="$listOfKeywords">
                     <xsl:variable name="keyword" select="string(.)"/>
@@ -287,12 +287,12 @@
                     <!--<Field name="keyword" string="{$keyword}" store="true" index="true"/>-->
                     <!-- Add Sextant theme -->
                     <xsl:variable name="sextantThemeKey">
-                      <xsl:call-template name="getSextantThemeKey">
-                        <xsl:with-param name="keyword" select="string(.)"/>
-                      </xsl:call-template>
+                        <xsl:call-template name="getSextantThemeKey">
+                            <xsl:with-param name="keyword" select="string(.)"/>
+                        </xsl:call-template>
                     </xsl:variable>
                     <xsl:if test="normalize-space($sextantThemeKey)">
-                      <Field name="sextantTheme" string="{normalize-space($sextantThemeKey)}" store="true" index="true"/>
+                        <Field name="sextantTheme" string="{normalize-space($sextantThemeKey)}" store="true" index="true"/>
                     </xsl:if>
 
 
@@ -363,13 +363,13 @@
 
                     <xsl:if test="$thesaurusIdentifier != ''">
                         <Field name="thesaurusIdentifier"
-                                string="{substring-after($thesaurusIdentifier,'geonetwork.thesaurus.')}"
-                                store="true" index="true"/>
+                               string="{substring-after($thesaurusIdentifier,'geonetwork.thesaurus.')}"
+                               store="true" index="true"/>
                     </xsl:if>
                     <xsl:if test="gmd:title/gco:CharacterString/text() != ''">
                         <Field name="thesaurusName"
-                                string="{gmd:title/gco:CharacterString/text()}"
-                                store="true" index="true"/>
+                               string="{gmd:title/gco:CharacterString/text()}"
+                               store="true" index="true"/>
                     </xsl:if>
 
                     <xsl:variable name="fieldName" select="if ($thesaurusIdentifier != '') then $thesaurusIdentifier else $thesaurusTitle"/>
@@ -409,28 +409,11 @@
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-            <xsl:variable name="email" select="/gmd:MD_Metadata/gmd:contact[1]/gmd:CI_ResponsibleParty[1]/gmd:contactInfo[1]/gmd:CI_Contact[1]/gmd:address[1]/gmd:CI_Address[1]/gmd:electronicMailAddress[1]/gco:CharacterString[1]"/>
-
-            <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString|gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor">
-
-                <Field name="orgName" string="{string(.)}" store="true" index="true"/>
-                <Field name="orgNameTree" string="{string(.)}" store="true" index="true"/>
-
-                <xsl:variable name="role"    select="../../gmd:role/*/@codeListValue"/>
-                <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
-                <xsl:variable name="logo"    select="../..//gmx:FileName/@src"/>
-                <xsl:variable name="email"   select="../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
-                <xsl:variable name="phone"   select="../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
-                <xsl:variable name="individualName" select="../../gmd:individualName/gco:CharacterString/text()"/>
-                <xsl:variable name="positionName"   select="../../gmd:positionName/gco:CharacterString/text()"/>
-                <xsl:variable name="address" select="string-join(../../gmd:contactInfo/*/gmd:address/*/(
-                                          gmd:deliveryPoint|gmd:postalCode|gmd:city|
-                                          gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
-
-                    <Field name="responsibleParty"
-                           string="{concat($roleTranslation, '|resource|', ., '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
-                           store="true" index="false"/>
-            </xsl:for-each>
+            <xsl:apply-templates mode="index-contact"
+                                 select="gmd:pointOfContact/gmd:CI_ResponsibleParty">
+                <xsl:with-param name="type" select="'resource'"/>
+                <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
+            </xsl:apply-templates>
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -455,17 +438,17 @@
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-          <!--Sextant specific add comments -->
-          <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
-            <Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-            <!--
-                    <Field name="keyword"
-                           string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
-                           store="true"
-                           index="true"/>
-            -->
-          </xsl:for-each>
-          <!--End of sextant specific-->
+            <!--Sextant specific add comments -->
+            <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
+                <Field name="topicCat" string="{string(.)}" store="true" index="true"/>
+                <!--
+                        <Field name="keyword"
+                               string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+                               store="true"
+                               index="true"/>
+                -->
+            </xsl:for-each>
+            <!--End of sextant specific-->
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -754,7 +737,7 @@
 
         <!-- Metadata on maps -->
         <xsl:variable name="isDataset"
-                  select="
+                      select="
                   count(gmd:hierarchyLevel[gmd:MD_ScopeCode/@codeListValue='dataset']) > 0 or
                   count(gmd:hierarchyLevel) = 0"/>
 
@@ -834,7 +817,7 @@
         <Field name="isChild" string="{exists(gmd:parentIdentifier)}" store="true" index="true"/>
 
 
-      <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
+        <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
             <Field name="standardName" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
@@ -845,24 +828,14 @@
         </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <xsl:for-each select="gmd:contact/*/gmd:organisationName/gco:CharacterString|gmd:contact/*/gmd:organisationName/gmx:Anchor">
-            <Field name="metadataPOC" string="{string(.)}" store="true" index="true"/>
-
-            <xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
-            <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
-            <xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
-            <xsl:variable name="email" select="../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
-            <xsl:variable name="phone" select="../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
-            <xsl:variable name="individualName" select="../../gmd:individualName/gco:CharacterString/text()"/>
-            <xsl:variable name="positionName" select="../../gmd:positionName/gco:CharacterString/text()"/>
-            <xsl:variable name="address" select="string-join(../../gmd:contactInfo/*/gmd:address/*/(
-                                          gmd:deliveryPoint|gmd:postalCode|gmd:city|
-                                          gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
-
-            <Field name="responsibleParty"
-                               string="{concat($roleTranslation, '|metadata|', ., '|', $logo, '|', string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
-                               store="true" index="false"/>
+        <xsl:for-each select="gmd:contact/*">
+            <Field name="metadataPOC"
+                   string="{string(gmd:organisationName/(gco:CharacterString|gmx:Anchor))}"
+                   store="true" index="true"/>
+            <xsl:apply-templates mode="index-contact" select=".">
+                <xsl:with-param name="type" select="'metadata'"/>
+                <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
+            </xsl:apply-templates>
         </xsl:for-each>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -907,7 +880,7 @@
         <Field name="anylight" store="false" index="true">
             <xsl:attribute name="string">
                 <xsl:for-each
-                    select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|
+                        select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|
                     $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString|
                     $identification/gmd:abstract/gco:CharacterString|
                     $identification/gmd:credit/gco:CharacterString|
@@ -924,36 +897,59 @@
         <!-- Index all codelist -->
         <xsl:for-each select=".//*[*/@codeListValue != '']">
             <Field name="cl_{local-name()}"
-             string="{*/@codeListValue}"
-             store="true" index="true"/>
+                   string="{*/@codeListValue}"
+                   store="true" index="true"/>
             <Field name="cl_{concat(local-name(), '_text')}"
-             string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
-             store="true" index="true"/>
+                   string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
+                   store="true" index="true"/>
         </xsl:for-each>
     </xsl:template>
 
-  <!--<xsl:template name="indexContact">
-    <xsl:param name="contact"/>
-    <xsl:param name="fieldName"/>
+    <xsl:template mode="index-contact" match="gmd:CI_ResponsibleParty">
+        <xsl:param name="type"/>
+        <xsl:param name="fieldPrefix"/>
 
-    <Field name="metadataPOC" string="{string(.)}" store="true" index="true"/>
+        <xsl:variable name="orgName" select="gmd:organisationName/(gco:CharacterString|gmx:Anchor)"/>
 
-    <xsl:variable name="role" select="../../gmd:role/*/@codeListValue"/>
-    <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
-    <xsl:variable name="logo" select="../..//gmx:FileName/@src"/>
-    <xsl:variable name="email" select="../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
-    <xsl:variable name="phone" select="../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
-    <xsl:variable name="individualName" select="../../gmd:individualName/*/text()"/>
-    <xsl:variable name="positionName" select="../../gmd:positionName/*/text()"/>
-    <xsl:variable name="address" select="string-join(../../gmd:contactInfo/*/gmd:address/*/(
-                                          gmd:deliveryPoint|gmd:postalCode|gmd:city|
-                                          gmd:administrativeArea|gmd:country)/*/text(), ', ')"/>
+        <Field name="orgName" string="{string($orgName)}" store="true" index="true"/>
+        <Field name="orgNameTree" string="{string($orgName)}" store="true" index="true"/>
 
+        <xsl:variable name="role" select="gmd:role/*/@codeListValue"/>
+        <xsl:variable name="roleTranslation"
+                      select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
+        <xsl:variable name="logo" select=".//gmx:FileName/@src"/>
+        <xsl:variable name="email"
+                      select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
+        <xsl:variable name="phone"
+                      select="gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
+        <xsl:variable name="individualName"
+                      select="gmd:individualName/gco:CharacterString/text()"/>
+        <xsl:variable name="positionName"
+                      select="gmd:positionName/gco:CharacterString/text()"/>
+        <xsl:variable name="address" select="string-join(gmd:contactInfo/*/gmd:address/*/(
+                                        gmd:deliveryPoint|gmd:postalCode|gmd:city|
+                                        gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
 
-      <Field name="{$fieldName}"
-             string="{concat($roleTranslation, '|metadata|', ., '|', $logo, '|', $email, '|', $individualName, '|', $positionName, '|', $address, '|', $phone)}"
-             store="true" index="false"/>
-    </xsl:template>-->
+        <Field name="{$fieldPrefix}"
+               string="{concat($roleTranslation, '|', $type,'|',
+                             $orgName, '|',
+                             $logo, '|',
+                             string-join($email, ','), '|',
+                             $individualName, '|',
+                             $positionName, '|',
+                             $address, '|',
+                             string-join($phone, ','))}"
+               store="true" index="false"/>
+
+        <xsl:for-each select="$email">
+            <Field name="{$fieldPrefix}Email" string="{string(.)}" store="true" index="true"/>
+            <Field name="{$fieldPrefix}RoleAndEmail" string="{$role}|{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+        <xsl:for-each select="@uuid">
+            <Field name="{$fieldPrefix}Uuid" string="{string(.)}" store="true" index="true"/>
+            <Field name="{$fieldPrefix}RoleAndUuid" string="{$role}|{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+    </xsl:template>
 
     <!-- ========================================================================================= -->
 
@@ -964,7 +960,6 @@
     <xsl:template name="translateInspireThemeToEnglish">
         <xsl:param name="keyword"/>
         <xsl:param name="inspireThemes"/>
-
         <xsl:value-of select="$inspireThemes/skos:prefLabel[@xml:lang='en' and ../skos:prefLabel = $keyword]/text()"/>
     </xsl:template>
 
@@ -974,14 +969,14 @@
         <xsl:value-of select="$inspire-theme/skos:altLabel[../skos:prefLabel = $keyword]/text()"/>
     </xsl:template>
 
-      <xsl:template name="translateInspireThemeToFrench">
+    <xsl:template name="translateInspireThemeToFrench">
         <xsl:param name="keyword"/>
         <xsl:param name="inspireThemes"/>
 
         <xsl:value-of select="$inspireThemes/skos:prefLabel[
                 @xml:lang='fr' and
                 ../skos:prefLabel = $keyword]/text()"/>
-      </xsl:template>
+    </xsl:template>
 
 
     <xsl:template name="determineInspireAnnex">
@@ -1030,14 +1025,14 @@
 
 
 
-      <xsl:template name="getSextantThemeKey">
+    <xsl:template name="getSextantThemeKey">
         <xsl:param name="keyword"/>
 
         <xsl:for-each select="$sextant-theme/skos:prefLabel">
-          <xsl:if test="text() = $keyword">
-            <xsl:value-of select="../@rdf:about"/>
-          </xsl:if>
+            <xsl:if test="text() = $keyword">
+                <xsl:value-of select="../@rdf:about"/>
+            </xsl:if>
         </xsl:for-each>
-      </xsl:template>
+    </xsl:template>
 
 </xsl:stylesheet>
