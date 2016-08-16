@@ -404,7 +404,7 @@
                     select="/gmd:MD_Metadata/gmd:contact[1]/gmd:CI_ResponsibleParty[1]/gmd:contactInfo[1]/gmd:CI_Contact[1]/gmd:address[1]/gmd:CI_Address[1]/gmd:electronicMailAddress[1]/gco:CharacterString[1]"/>
 
       <xsl:for-each
-        select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString|gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gmx:Anchor">
+        select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/(gco:CharacterString|gmx:Anchor)">
 
         <Field name="orgName" string="{string(.)}" store="true" index="true"/>
         <Field name="orgNameTree" string="{string(.)}" store="true" index="true"/>
@@ -428,6 +428,15 @@
         <Field name="responsibleParty"
                string="{concat($roleTranslation, '|resource|', ., '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
                store="true" index="false"/>
+
+        <xsl:for-each select="$email">
+          <Field name="responsiblePartyEmail" string="{string(.)}" store="true" index="true"/>
+          <Field name="responsiblePartyRoleAndEmail" string="{$role}|{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+        <xsl:for-each select="../../@uuid">
+          <Field name="responsiblePartyUuid" string="{string(.)}" store="true" index="true"/>
+          <Field name="responsiblePartyRoleAndUuid" string="{$role}|{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
       </xsl:for-each>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
