@@ -387,72 +387,7 @@
       </tab>
       <tab id="sextant-contact" mode="flat">
         <section name="sextantrespOrgaTitle">
-          <!--<field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
-                 or="pointOfContact"
-                 in="/gmd:MD_Metadata/gmd:identificationInfo/*"/>
--->
-          <field name="pointOfContact"
-                 templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
-                 del=".">
-            <template>
-              <values readonlyIf="count(@xlink:href) > 0">
-                <key label="individualName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString"/>
-                <key label="organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                <key label="electronicMailAddress"
-                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
-                    gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                     use="email"/>
-                <key label="role"
-                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
-                  <codelist name="gmd:CI_RoleCode"/>
-                </key>
-              </values>
-              <snippet>
-                <gmd:pointOfContact>
-                  <gmd:CI_ResponsibleParty>
-                    <gmd:individualName>
-                      <gco:CharacterString>{{individualName}}</gco:CharacterString>
-                      <gn:copy select="gmd:PT_FreeText"/>
-                    </gmd:individualName>
-                    <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                      <gn:copy select="gmd:PT_FreeText"/>
-                    </gmd:organisationName>
-                    <gn:copy select="gmd:positionName"/>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gn:copy select="gmd:phone"/>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gn:copy select="gmd:deliveryPoint"/>
-                            <gn:copy select="gmd:city"/>
-                            <gn:copy select="gmd:administrativeArea"/>
-                            <gn:copy select="gmd:postalCode"/>
-                            <gn:copy select="gmd:country"/>
-                            <gmd:electronicMailAddress>
-                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                              <gn:copy select="gmd:PT_FreeText"/>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                        <gn:copy select="gmd:onlineResource"/>
-                        <gn:copy select="gmd:hoursOfService"/>
-                        <gn:copy select="gmd:contactInstructions"/>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode
-                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                              codeListValue="{{role}}"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:pointOfContact>
-              </snippet>
-            </template>
-          </field>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"/>
 
           <action type="add"
                   name="pointOfContact"
