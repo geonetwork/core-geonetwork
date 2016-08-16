@@ -258,7 +258,7 @@
                   // Select by default the first group.
                   if ((angular.isUndefined(scope.ownerGroup) ||
                       scope.ownerGroup === '') && data) {
-                    scope.ownerGroup = data[0].id;
+                    scope.ownerGroup = scope.groups[0].id;
                   }
                 });
           }

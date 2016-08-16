@@ -36,7 +36,6 @@
    * Provide directives for online resources
    * <ul>
    * <li>gnOnlinesrcList</li>
-   * <li>gnAddThumbnail</li>
    * <li>gnAddOnlinesrc</li>
    * <li>gnLinkServiceToDataset</li>
    * <li>gnLinkToMetadata</li>
