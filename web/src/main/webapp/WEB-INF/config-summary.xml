@@ -134,21 +134,6 @@
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
     <facet name="_groupPublished" indexKey="_groupPublished" label="publishedForGroup"/>
-    <!--
-    Example configuration for hierarchical facet based on
-    the GeoNetwork region thesaurus or GEMET.
-
-
-    Do not forget to add classifier configuration on config-spring-geonetwork.xml
-
-    Then add facet in one summaryType having format="DIMENSION" attribute.
-    <facet name="region" label="regions"
-           indexKey="keyword"
-           classifier="regionKeywordClassifier"/>
-    <facet name="gemetKeyword" label="gemetKeywords"
-           indexKey="keyword"
-           classifier="gemetKeywordClassifier"/>
-         -->
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
