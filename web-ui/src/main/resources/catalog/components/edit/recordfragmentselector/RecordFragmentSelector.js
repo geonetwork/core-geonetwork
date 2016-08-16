@@ -134,6 +134,15 @@
                  scope.addFragment = function(f) {
                    var field = $.find('input[name=' + scope.snippetRef +
                    ']')[0];
+
+                   // Add current record UUID in component ID.
+                   // Only required for Checkpoint
+                   if (f.indexOf('<mdb:dataQualityInf') === 0 &&
+                       f.indexOf("/CP") != -1) {
+                     f = f.replace(
+                       / uuid="(.*)"/,
+                       ' uuid="$1/' + gnCurrentEdit.uuid + '"');
+                   }
                    $(field).val(f);
                    scope.fragments = [];
                    gnEditor.save(gnCurrentEdit.id, true);
