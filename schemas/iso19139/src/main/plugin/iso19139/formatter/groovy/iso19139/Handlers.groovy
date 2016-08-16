@@ -540,10 +540,23 @@ public class Handlers {
                 m -> mails.push(m)
             }
             def org = el.'gmd:organisationName'
-            def contact = [name : name, mail : mails.join(',')]
-
-            if(name && name != "" && contacts.indexOf(name) < 0) {
-                contacts.push(contact)
+            def contact = [
+              name : name,
+              emptyName : name == '',
+              mail : mails.join(','),
+              org : org
+            ]
+            // Check that name already in list
+            def exist = false;
+            contacts.each {c ->
+              if (c.name == contact.name) {
+                exist = true;
+              }
+            }
+            if (!exist) {
+              if(contact.name != "" || contact.org != '') {
+                  contacts.push(contact)
+              }
             }
             if(org && orgs.indexOf(org) < 0) {
                 orgs.push(org)
