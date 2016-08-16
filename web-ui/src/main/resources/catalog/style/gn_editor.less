@@ -488,6 +488,22 @@ form.gn-tab-xml {
     display:none;
   }
 }
+
+.gn-table {
+  /* Compact gn-fields displayed in table mode.
+  Label and remove control are hidden. */
+  div.gn-field {
+    padding: 0px !important;
+    label,
+    .col-sm-1.gn-control {
+      display: none;
+    }
+    .col-sm-9 {
+      width: 100%;
+    }
+  }
+}
+
 .skos-btn-icons {
   text-decoration: none !important;
   color: @gray;

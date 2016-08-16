@@ -898,7 +898,7 @@ eg. The gmd:MD_Identifier may contain a gmd:authority node which needs to be pre
       </gmd:identifier>
     </snippet>
 
-Warning: Template based field does not support multilingual editing for ISO standards (ie. only the main language is edited - therefore, multilingual elements will be preserved). 
+Warning: Template based field does not support multilingual editing for ISO standards (ie. only the main language is edited - therefore, multilingual elements will be preserved).
 
         ]]></xs:documentation>
     </xs:annotation>
@@ -1572,6 +1572,13 @@ the layout:
       <xsl:template name="iso19115-3-qm">
         <h1><xsl:value-of select="$strings/qualityMeasures"/></h1>
 
+
+For example, create a table of contact:
+
+.. code-block:: xml
+
+      <xsl xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
+           mode="iso19139-table-contact"/>
 
 ]]>
       </xs:documentation>
