@@ -131,6 +131,7 @@
   <field name="gmd:CI_ResponsibleParty">
     <suggest name="gmd:individualName"/>
     <suggest name="gmd:organisationName"/>
+    <suggest name="gmd:individualName"/>
     <suggest name="gmd:contactInfo"/>
   </field>
 

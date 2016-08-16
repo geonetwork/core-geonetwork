@@ -950,7 +950,7 @@
       <Field name="{$fieldPrefix}RoleAndUuid" string="{$role}|{string(.)}" store="true" index="true"/>
     </xsl:for-each>
   </xsl:template>
-  
+
   <!-- ========================================================================================= -->
 
   <!-- inspireThemes is a nodeset consisting of skos:Concept elements -->
