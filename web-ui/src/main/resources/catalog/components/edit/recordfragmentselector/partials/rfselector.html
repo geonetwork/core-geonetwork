@@ -5,6 +5,7 @@
            placeholder="{{'search' | translate}}"
            data-ng-model="searchObj.any"
            data-ng-model-options="modelOptions"
+           data-ng-focus="updateParams();triggerSearch()"
            data-ng-change="updateParams();triggerSearch()"/>
 
      <div class="input-group-btn"

@@ -29,6 +29,39 @@
   var module = angular.module('gn_fields_directive',
       []);
 
+  module.directive('gnCheckpointCptCovered',
+      function() {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/edit/partials/' +
+              'checkpoint-cpt-not-covered.html',
+          scope: {
+            id: '@id',
+            titleId: '@',
+            abstractId: '@'
+          },
+          link: function(scope, element, attrs) {
+            function update() {
+              $('#' + scope.id).toggleClass('hidden', scope.covered);
+              $('#' + scope.id + '-table')
+                .toggleClass('hidden', !scope.covered);
+              $('#gn-field-' + scope.titleId)
+                .val(scope.covered ? '' : 'Component not covered');
+              $('#gn-field-' + scope.abstractId)
+               .val(scope.covered ? '' : '-- Explain why --');
+            }
+            scope.$watch('covered', function(n, o) {
+              if (n !== o) {
+                update();
+              }
+            });
+
+            // parse boolean
+            scope.covered = attrs.gnCheckpointCptCovered == 'true';
+            update();
+          }
+        };
+      });
   /**
    * Note: ng-model and angular checks could not be applied to
    * the editor form as it would require to init the model
