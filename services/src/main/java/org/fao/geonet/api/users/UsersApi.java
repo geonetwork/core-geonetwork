@@ -23,7 +23,6 @@
 
 package org.fao.geonet.api.users;
 
-import com.vividsolutions.jts.util.Assert;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -412,7 +411,6 @@ public class UsersApi {
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
         UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
-
         if (profile == Profile.Administrator) {
             // Check at least 1 administrator is enabled
             if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
@@ -434,6 +432,15 @@ public class UsersApi {
         if (user == null) {
             throw new IllegalArgumentException("No user found with id: "
                 + userDto.getId());
+        }
+
+        // Check no duplicated username
+        User userWithUsername = userRepository.findOneByUsername(userDto.getUsername());
+
+        if ((userWithUsername !=null) && (user.getId() != userWithUsername.getId())) {
+            throw new IllegalArgumentException(String.format(
+                "Another user with username '%s' already exists",
+                user.getUsername()));
         }
 
         if (!myProfile.getAll().contains(profile)) {
