@@ -283,7 +283,7 @@ public class HttpProxyServlet extends HttpServlet {
 
                     out.flush();
                     out.close();
-						
+
                 } else {
                     returnExceptionMessage(response,
                         httpResponse.getStatusLine().getStatusCode(),
@@ -328,7 +328,7 @@ public class HttpProxyServlet extends HttpServlet {
             }
         }
         if (paramString.length() > 0) {
-            url += "?" + paramString;
+            url += (url.contains("?") ? "&" : "?") + paramString;
         }
         return url;
     }
