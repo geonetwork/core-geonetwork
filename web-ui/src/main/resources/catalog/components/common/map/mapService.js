@@ -111,7 +111,8 @@
         };
 
         var getImageSourceRatio = function(map, maxWidth) {
-          var width = map.getSize()[0] || $('.gn').width();
+          var scrollBarWidth = 22;
+          var width = map.getSize()[0] || $('.gn').width() + scrollBarWidth;
           var ratio = maxWidth / width;
           ratio = Math.floor(ratio * 100) / 100;
           return Math.min(1.5, Math.max(1, ratio));
