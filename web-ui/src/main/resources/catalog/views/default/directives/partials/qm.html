@@ -1,0 +1,22 @@
+<table class="table table-striped">
+  <tr>
+    <th data-translate="">Measure</th>
+    <th data-translate="">Value</th>
+    <!--<th data-translate="">Quality error</th>
+    <th data-translate="">Fitness for use</th>-->
+  </tr>
+  <tr data-ng-repeat="q in qm track by $index">
+    <td>
+      {{q[3]}} ({{q[2]}})
+    </td>
+    <td>
+      {{q[5]}} {{q[6]}}
+    </td>
+    <!--<td>
+
+    </td>
+    <td>
+
+    </td>-->
+  </tr>
+</table>

@@ -69,6 +69,36 @@
     }
   ]);
 
+  module.directive('gnDataQualityMeasureRenderer', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/views/default/directives/' +
+        'partials/qm.html',
+        scope: {
+          recordId: '=gnDataQualityMeasureRenderer'
+        },
+        link: function linkFn(scope, element, attrs) {
+          if (angular.isDefined(scope.recordId)) {
+            loadValues();
+          }
+          function loadValues() {
+            $http.get('qi?_content_type=json&fast=index&_id=' +
+              scope.recordId).then(
+              function (r) {
+                scope.qm = r.data.metadata.dqValues;
+                angular.forEach(scope.qm, function (value, idx) {
+                  scope.qm[idx] = value.split('|');
+                });
+              }
+            )
+          }
+        }
+      };
+    }
+  ]);
+
   module.directive('gnLinksBtn', [ 'gnTplResultlistLinksbtn',
     function(gnTplResultlistLinksbtn) {
       return {
@@ -90,7 +120,7 @@
         link: function linkFn(scope, element, attrs) {
           scope.mdService = gnMetadataActions;
           scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          
+
           scope.$watch(attrs.gnMdActionsMenu, function(a) {
             scope.md = a;
           });

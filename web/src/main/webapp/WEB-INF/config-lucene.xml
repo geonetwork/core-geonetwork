@@ -172,6 +172,7 @@
       <field name="geoBox" tagName="geoBox"/>
       <field name="extentDesc" tagName="geoDesc"/>
       <field name="geoDescCode" tagName="geoDescCode"/>
+      <field name="dqValues" tagName="dqValues"/>
       <field name="_indexingError" tagName="idxError"/>
       <field name="_indexingErrorMsg" tagName="idxMsg"/>
       <field name="_op2" tagName="editableForGroup"/>

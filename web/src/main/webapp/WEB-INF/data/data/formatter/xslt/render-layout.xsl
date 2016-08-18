@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
+                xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
@@ -70,6 +71,8 @@
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
         </header>
         <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
+
+        <div data-gn-data-quality-measure-renderer="{$metadataId}"/>
         <!--
         TODO: scrollspy or tabs on header ?
         <div class="gn-scroll-spy"
