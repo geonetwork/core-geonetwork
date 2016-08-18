@@ -111,6 +111,8 @@
         <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
         <facet name="standard" indexKey="_schema" label="standards"/>
         <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
+        
+        <!-- facet for Sextant - Ifremer -->
         <facet name="p01"
                label="p01"
                indexKey="thesaurus-external.parameter.NVS.P01"/>
@@ -123,6 +125,17 @@
         <facet name="p35"
                label="p35"
                indexKey="thesaurus-external.parameter.NVS.P35"/>
+        <facet name="portail-donnees-facette-discipline"
+               label="portail-donnees-facette-discipline"
+               indexKey="thesaurus-local.discipline.portail-donnees-facette-discipline"/>
+        <facet name="portail-donnees-facette-type"
+               label="portail-donnees-facette-type"
+               indexKey="thesaurus-local.theme.portail-donnees-facette-type"/>
+        <facet name="portail-donnees-facette-comment"
+               label="portail-donnees-facette-comment"
+               indexKey="thesaurus-local.theme.portail-donnees-facette-comment"/>
+        <!-- END facet for Sextant - Ifremer -->
+        
         <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
         <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
         <facet name="_groupPublished" indexKey="_groupPublished" label="publishedForGroup"/>
@@ -167,10 +180,6 @@
           <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
           <item facet="publishedForGroup" max="199" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
-          <item facet="p01" max="300"/>
-          <item facet="p02" max="300"/>
-          <item facet="p03" max="300"/>
-          <item facet="p35" max="300"/>
           <!--
           <item facet="region"
                 translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
@@ -225,6 +234,9 @@
           <item facet="p02" max="300"/>
           <item facet="p03" max="300"/>
           <item facet="p35" max="300"/>
+          <item facet="portail-donnees-facette-discipline" max="300"/>
+          <item facet="portail-donnees-facette-type" max="300"/>
+          <item facet="portail-donnees-facette-comment" max="300"/>
         </summaryType>
         <summaryType name="subtemplates">
             <item facet="subTemplateType"/>

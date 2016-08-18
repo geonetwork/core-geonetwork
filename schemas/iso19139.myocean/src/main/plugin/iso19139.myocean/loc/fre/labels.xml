@@ -50,6 +50,7 @@
             <option value="daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
             <option value="daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
             <option value="daily mean, weekly mean">Daily mean, weekly mean</option>
+            <option value="daily mean, weekly mean, monthly mean">Daily mean, weekly mean, monthly mean</option>
             <option value="weekly mean">Weekly mean</option>
             <option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
             <option value="monthly mean">Monthly mean</option>

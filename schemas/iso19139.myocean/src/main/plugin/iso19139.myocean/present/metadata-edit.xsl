@@ -143,7 +143,7 @@
 						then /root/gui/schemas/*[name()=$schema]/strings/resolutionRow
 						else if (name() = 'gmd:resolution' and ../gmd:dimensionName/*/@codeListValue = 'column')
 						then /root/gui/schemas/*[name()=$schema]/strings/resolutionColumn
-						else ''"/>
+						else 'Resolution'"/>
 
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
@@ -720,11 +720,12 @@
 						
 						<!--
 						Old style: https://forge.ifremer.fr/mantis/view.php?id=31033
+						-->
 						<xsl:apply-templates mode="iso19139.myocean" select="gmd:identificationInfo/gmd:MD_DataIdentification/
 							gmd:spatialResolution/gmd:MD_Resolution/gmd:distance">
 							<xsl:with-param name="schema" select="$schema"/>
 							<xsl:with-param name="edit"   select="$edit"/>
-						</xsl:apply-templates>-->
+						</xsl:apply-templates>
 						<xsl:apply-templates mode="iso19139.myocean"
 											 select="gmd:spatialRepresentationInfo/*/
 														gmd:axisDimensionProperties/*/gmd:resolution">
