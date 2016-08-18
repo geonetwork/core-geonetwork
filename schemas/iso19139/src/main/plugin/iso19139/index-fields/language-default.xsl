@@ -255,6 +255,43 @@
         </xsl:for-each>
       </xsl:for-each>
 
+
+      <xsl:if test="count(//gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']) > 0">
+        <xsl:variable name="listOfKeywords">{
+          <xsl:variable name="keywordWithNoThesaurus"
+                        select="//gmd:MD_Keywords[
+                                  not(gmd:thesaurusName) or gmd:thesaurusName/*/gmd:title/*/text() = '']/
+                                    gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId][*/text() != '']"/>
+          <xsl:if test="count($keywordWithNoThesaurus) > 0">
+            'keywords': [
+            <xsl:for-each select="$keywordWithNoThesaurus/(gco:CharacterString|gmx:Anchor)">
+              <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]
+            <xsl:if test="//gmd:MD_Keywords[gmd:thesaurusName]">,</xsl:if>
+          </xsl:if>
+          <xsl:for-each-group select="//gmd:MD_Keywords[
+                                        gmd:thesaurusName/*/gmd:title/*/text() != '' and
+                                        count(gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']) > 0]"
+                              group-by="gmd:thesaurusName/*/gmd:title/*/text()">
+
+            '<xsl:value-of select="replace(current-grouping-key(), '''', '\\''')"/>' :[
+            <xsl:for-each select="gmd:keyword//gmd:LocalisedCharacterString[@locale = $langId and text() != '']">
+              <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each-group>
+          }
+        </xsl:variable>
+
+        <Field name="keywordGroup"
+               string="{normalize-space($listOfKeywords)}"
+               store="true"
+               index="false"/>
+      </xsl:if>
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each

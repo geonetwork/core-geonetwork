@@ -140,6 +140,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
+
         <div
           class="form-group gn-field gn-{substring-after(name(), ':')} {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
           id="gn-el-{$editInfo/@ref}"

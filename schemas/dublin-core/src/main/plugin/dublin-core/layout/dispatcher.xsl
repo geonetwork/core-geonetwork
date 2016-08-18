@@ -44,6 +44,7 @@
   <!-- Dispatching to the profile mode  -->
   <xsl:template name="dispatch-dublin-core">
     <xsl:param name="base" as="node()"/>
+
     <xsl:apply-templates mode="mode-dublin-core" select="$base"/>
   </xsl:template>
 

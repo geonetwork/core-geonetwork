@@ -462,6 +462,7 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link'];
+      var listOfJsonFields = ['keywordGroup'];
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
@@ -469,6 +470,14 @@
         if (angular.isDefined(record[field]) &&
             !angular.isArray(record[field])) {
           record[field] = [record[field]];
+        }
+      });
+      $.each(listOfJsonFields, function(idx) {
+        var field = listOfJsonFields[idx];
+        if (angular.isDefined(record[field])) {
+          try {
+          record[field] = angular.fromJson(record[field]);
+          } catch (e) {}
         }
       });
 
