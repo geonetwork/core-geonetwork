@@ -180,13 +180,6 @@
           <item facet="format" max="15" sortBy="value" sortOrder="asc"/>
           <item facet="publishedForGroup" max="199" sortBy="value"
                 translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
-          <item facet="p01" max="300"/>
-          <item facet="p02" max="300"/>
-          <item facet="p03" max="300"/>
-          <item facet="p35" max="300"/>
-          <item facet="portail-donnees-facette-discipline" max="300"/>
-          <item facet="portail-donnees-facette-type" max="300"/>
-          <item facet="portail-donnees-facette-comment" max="300"/>
           <!--
           <item facet="region"
                 translator="term:http://geonetwork-opensource.org/thesaurus/naturalearth-and-seavox"/>
