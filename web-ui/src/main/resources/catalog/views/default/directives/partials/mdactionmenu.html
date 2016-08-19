@@ -36,17 +36,27 @@
       <i class="fa fa-user"></i>&nbsp;
       <span data-translate="">transferOwnership</span>
     </a></li>
-    <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()">
+    <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+        data-ng-class="(md.isPublished() || (info['metadata.workflow.allowPublishInvalidMd'] === 'true') || 
+          (!md.isPublished() && (info['metadata.workflow.allowPublishInvalidMd'] === 'false') &&
+          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
+        title="{{(!md.isPublished() ? (md.isValid() ? 'mdvalid' : (!md.hasValidation() ? 'mdnovalidation': 'mdinvalid')) : '') | translate }}"
+        >
       <a data-ng-click="mdService.publish(md)">
         <i class="fa"
            data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
+        <i class="fa" data-ng-if="!md.isPublished() && md.hasValidation()"
+           data-ng-class="md.isValid() ? 'fa-check' : 'fa-close fa-minus-circle'"></i>
+        <i class="fa fa-question" data-ng-if="!md.isPublished() && !md.hasValidation()"></i>
         <span data-ng-if="md.isPublished()" data-translate="">unpublish</span>
         <span data-ng-if="!md.isPublished()" data-translate="">publish</span>
       </a>
     </li>
     <!-- TODO: Some installation only allows status update
     based on current status. -->
-    <li><a data-ng-href=""
+    <li data-ng-class="((info['metadata.workflow.allowPublishInvalidMd'] === 'true') || 
+          ((info['metadata.workflow.allowPublishInvalidMd'] === 'false') &&
+          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) && 
                               md.isWorkflowEnabled()"
            data-ng-click="mdService.openUpdateStatusPanel(getScope())">

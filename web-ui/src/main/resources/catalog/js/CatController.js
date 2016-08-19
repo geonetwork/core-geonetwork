@@ -121,7 +121,7 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function(value) {
-          var url = $scope.url + 'info?_content_type=json&type=site&type=auth';
+          var url = $scope.url + 'info?_content_type=json&type=site&type=auth&type=config';
           return $http.get(url).
               success(function(data, status) {
                 $scope.info = data;

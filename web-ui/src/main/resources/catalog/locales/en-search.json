@@ -195,6 +195,7 @@
   "mdUnpublished": "Metadata Unpublished",
   "mdUnmodified": "Unaffected Metadata",
   "mdDisallowed": "Restricted Metadata",
+  "mdNovalid": "Metadata not valid",
   "metadataUnchanged": "Metadata unmodified",
   "accessRestricted": "You do not have permission to change this metadata",
   "copiedToClip": "Text copied in clipboard !",
@@ -307,5 +308,8 @@
   "wpsDescribeProcessFailed": "DescribeProcess failed",
   "wpsExecute": "Execute",
   "wpsExecuteFailed": "Execute failed",
-  "wpsErrorCodeReturned": "The server returned status code"
+  "wpsErrorCodeReturned": "The serveur returned status code",
+  "mdvalid": "Metadata is valid",
+  "mdinvalid": "Metadata is invalid",
+  "mdnovalidation": "Metadata has no validation information."
 }
