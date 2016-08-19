@@ -80,9 +80,36 @@
           recordId: '=gnDataQualityMeasureRenderer'
         },
         link: function linkFn(scope, element, attrs) {
+          scope.components = {};
+
           if (angular.isDefined(scope.recordId)) {
             loadValues();
           }
+
+          function getQe(cptId, qm) {
+            return getDerivatedValues(cptId, qm, 'APE');
+          };
+          function getFu(cptId, qm) {
+            return getDerivatedValues(cptId, qm, 'FU');
+          };
+          function getDerivatedValues(cptId, qm, codePrefix) {
+              var qmId = qm.replace('AP', '');
+            for (var i = 0; i < scope.qm.length; i++) {
+              if (scope.qm[i][0].replace('#QE', '') === cptId &&
+                scope.qm[i][2].indexOf(codePrefix + qmId) !== -1) {
+                return {
+                  name: scope.qm[i][3] + ' (' + scope.qm[i][2] + ')',
+                  value: scope.qm[i][5] !== '' ?
+                    scope.qm[i][5] + ' ' + scope.qm[i][6] : ''
+                };
+              }
+            }
+            return {
+              name: null,
+              value: null
+            };
+          };
+
           function loadValues() {
             $http.get('qi?_content_type=json&fast=index&_id=' +
               scope.recordId).then(
@@ -90,6 +117,38 @@
                 scope.qm = r.data.metadata.dqValues;
                 angular.forEach(scope.qm, function (value, idx) {
                   scope.qm[idx] = value.split('|');
+                });
+
+                scope.components = {};
+                // Group by component
+                // Group by QM+QE+FU
+                angular.forEach(scope.qm, function (value, idx) {
+                  var isQeOrFu = value[0].indexOf('#QE') !== -1,
+                      cptId = value[0];
+
+
+                  if (!isQeOrFu) {
+                    if (!scope.components[cptId]) {
+                      scope.components[cptId] = {
+                        id: cptId,
+                        name: value[1],
+                        measures: []
+                      };
+                    }
+
+                    var qe = getQe(cptId, value[2]);
+                    var fu = getFu(cptId, value[2]);
+                    scope.components[cptId].measures.push(
+                      {
+                        qmName: value[3] + ' (' + value[2] + ')',
+                        qm: value[5] + ' ' + value[6],
+                        qeName: qe.name,
+                        qe: qe.value,
+                        fuName: fu.name,
+                        fu: fu.value
+                      }
+                    );
+                  }
                 });
               }
             )

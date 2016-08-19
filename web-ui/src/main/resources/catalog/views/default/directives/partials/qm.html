@@ -1,22 +1,28 @@
-<table class="table table-striped">
-  <tr>
-    <th data-translate="">Measure</th>
-    <th data-translate="">Value</th>
-    <!--<th data-translate="">Quality error</th>
-    <th data-translate="">Fitness for use</th>-->
-  </tr>
-  <tr data-ng-repeat="q in qm track by $index">
-    <td>
-      {{q[3]}} ({{q[2]}})
-    </td>
-    <td>
-      {{q[5]}} {{q[6]}}
-    </td>
-    <!--<td>
-
-    </td>
-    <td>
-
-    </td>-->
-  </tr>
-</table>
+<div>
+  <h2>Component description</h2>
+  <div data-ng-repeat="c in components">
+    <h3>{{c.name}}</h3>
+    <table class="table table-striped">
+      <tr>
+        <th data-translate="">Measure</th>
+        <th data-translate="">Value</th>
+        <th data-translate="">Quality error</th>
+        <th data-translate="">Fitness for use</th>
+      </tr>
+      <tr data-ng-repeat="q in c.measures track by $index">
+        <td>
+          {{q.qmName}}
+        </td>
+        <td>
+          {{q.qm}}
+        </td>
+        <td title="{{q.qeName}}">
+          {{q.qe}}
+        </td>
+        <td title="{{q.fuName}}">
+          {{q.fu}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
