@@ -553,11 +553,14 @@ public class Handlers {
                 exist = true;
               }
             }
-            if (!exist) {
-              if(contact.name != "" || contact.org != '') {
-                  contacts.push(contact)
-              }
-            }
+//          TODO: Could be relevant to group contact with same name and
+//          different roles or orgs
+//            if (!exist) {
+//              if(contact.name != "" || contact.org != '') {
+//                  contacts.push(contact)
+//              }
+//            }
+            contacts.push(contact)
             if(org && orgs.indexOf(org) < 0) {
                 orgs.push(org)
             }
