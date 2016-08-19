@@ -82,6 +82,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
+        ServiceContext context = createServiceContext();
         createTestData();
     }
 
@@ -362,8 +363,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getRecordAsZip() throws Exception {
 
-        // FIXME a NullPointerException is thrown by ExportFormat.getFormats when the call is made inside the tests
-        // FIXME context.getHandlerContext(Geonet.CONTEXT_NAME) returns null
+        final String zipMagicNumber = "PK\u0003\u0004";
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -376,7 +376,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType("application/zip"))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
-            .andExpect(content().string(containsString("PKZIP")));
+            .andExpect(content().string(startsWith(zipMagicNumber)));
 
         mockMvc.perform(get("/api/records/" + this.uuid + "/formatters/zip")
             .session(mockHttpSession)
@@ -386,17 +386,17 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
-            .andExpect(content().string(containsString("PKZIP")));
+            .andExpect(content().string(startsWith(zipMagicNumber)));
 
         mockMvc.perform(get("/api/records/" + this.uuid + "/formatters/zip")
             .session(mockHttpSession)
             .accept(MEF_V1_ACCEPT_TYPE))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MEF_V2_ACCEPT_TYPE))
+            .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
-            .andExpect(content().string(containsString("PKZIP")));
+            .andExpect(content().string(startsWith(zipMagicNumber)));
 
     }
 
@@ -496,25 +496,23 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getRelated() throws Exception {
-
-        // FIXME can't test. A NPE is thrown in test time because context.getHandlerContext(Geonet.CONTEXT_NAME) returns null.
-        // FIXME same problem as in getRecordAsZip test method.
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
+
 
         mockMvc.perform(get("/api/records/" + this.uuid + "/related")
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.children").exists());
+            .andExpect(jsonPath("$").value(hasKey("onlines")));
 
         mockMvc.perform(get("/api/records/" + this.uuid + "/related")
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
-            .andExpect(xpath("/related/children").exists());
+            .andExpect(xpath("/related/onlines").exists());
 
         // TODO test others getRelated parameters.
 
