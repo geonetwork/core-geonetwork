@@ -23,12 +23,150 @@
   -->
 
 <strings>
-  <understandResource>Information about the dataset</understandResource>
-  <relatedResources>Related services and linked data</relatedResources>
-  <techInfo>Technical information</techInfo>
-  <contactInfo>Contact information</contactInfo>
-  <mdContactInfo>Metadata contact</mdContactInfo>
-  <refDate>Reference date</refDate>
-  <temporalRef>Temporal information</temporalRef>
-  <constraintInfo>Access constraint information</constraintInfo>
+  <understandResource>Tietoa aineistosta</understandResource>
+  <relatedResources>Aineistoa tarjoavat palvelut ja muut lisätiedot</relatedResources>
+  <techInfo>Tekniset tiedot</techInfo>
+  <contactInfo>Yhteystiedot</contactInfo>
+  <mdContactInfo>Metatiedon yhteystaho</mdContactInfo>
+  <refDate>Viitepäivämäärä</refDate>
+  <temporalRef>Aikaviite</temporalRef>
+  <constraintInfo>Saatavuus- ja käyttörajoitukset</constraintInfo>
+  <xml_iso19139>Tallenna tämä metatieto ISO19139 XML -tiedostona</xml_iso19139>
+  <xml_iso19139Tooai_dc>Tallenna tämä metatieto OAI Dublin Core XML -tiedostona</xml_iso19139Tooai_dc>
+
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Kaikki JHS158/ISO19139 -elementit</advanced>
+  <default>Oletus</default>
+  <simple>Yksinkertainen</simple>
+  <inspire>INSPIRE</inspire>
+  <inspire_sds>INSPIRE-SDS</inspire_sds>
+
+  <resource>Resurssi</resource>
+  <xml>XML</xml>
+  <metadata>Metatieto</metadata>
+  <identificationInfo>Yksilöiminen</identificationInfo>
+  <distributionInfo>Jakelu</distributionInfo>
+  <dataQualityInfo>Laatu</dataQualityInfo>
+  <spatialRepresentationInfo>Sijaintitiedon esitystapa</spatialRepresentationInfo>
+  <referenceSystemInfo>Vertausjärjestelmä</referenceSystemInfo>
+  <contentInfo>Sisältö</contentInfo>
+  <portrayalCatalogueInfo>Esitystapaluettelo</portrayalCatalogueInfo>
+  <metadataConstraints>Metatiedon rajoitteet</metadataConstraints>
+  <metadataMaintenance>Metatiedon ylläpito</metadataMaintenance>
+  <applicationSchemaInfo>Skeeman tiedot</applicationSchemaInfo>
+  <noThesaurusName>Avainsanat</noThesaurusName>
+  <bboxesSection>Maantieteellinen kattavuus</bboxesSection>
+
+  <!-- XSD error translation -->
+  <invalidElement>Virheellinen sisältö elementissä:</invalidElement>
+  <onElementOf>Jokin seuraavista elementeistä</onElementOf>
+  <isExpected>vaaditaan.</isExpected>
+  <isNotComplete>on virheellinen.</isNotComplete>
+  <elementLocated>Yläelementti on</elementLocated>
+  <missingElement>Puuttuva elementti. Elementin sisältö tulisi olla:</missingElement>
+  <invalidValue>Virheellinen tai puuttuva arvo.</invalidValue>
+  <notValidFor>ei ole sallittu arvo elementille</notValidFor>
+  <xsdErrorIs>XSD-virhe on:</xsdErrorIs>
+  <inElement>elementissä</inElement>
+  <enum1>Arvo</enum1>
+  <enum2>ei ole sallittu kentälle</enum2>
+  <enum3>Luettelo sallituista arvoista :</enum3>
+
+  <!-- INSPIRE view labels and help -->
+  <url>Resurssin osoite</url>
+  <identifier>Yksilöivä resurssitunniste</identifier>
+  <rsIdentifier>Projektio</rsIdentifier>
+  <referenceDate>Aikaviite</referenceDate>
+  <creationDate>Luontipäivä</creationDate>
+  <hierarchyLevel>Hierarkiataso</hierarchyLevel>
+  <publicationDate>Julkaisupäivä</publicationDate>
+  <revisionDate>Viimeisin päivitysajankohta</revisionDate>
+  <temporalRangeSection>Ajallinen kattavuus</temporalRangeSection>
+  <beginPosition>Alku</beginPosition>
+  <endPosition>Loppu</endPosition>
+  <conformity>Sääntöjenmukaisuus</conformity>
+  <conformity_title>Otsikko</conformity_title>
+  <conformity_date>Päivämäärä</conformity_date>
+  <explanation>Selitys</explanation>
+  <pass>Sääntöjenmukainen</pass>
+  <indeterminatePosition>Ei määritetty</indeterminatePosition>
+  <pointOfContact>Resurssin yhteystaho</pointOfContact>
+  <metadataPointOfContact>Metatiedon yhteystaho</metadataPointOfContact>
+  <organisationName>Organisaation nimi</organisationName>
+  <electronicMailAddress>Sähköposti</electronicMailAddress>
+  <role>Rooli</role>
+  <encoding>Koodaus</encoding>
+  <inspireTheme>INSPIRE-teemat</inspireTheme>
+  <inspireThemeURI>INSPIRE-teemat</inspireThemeURI>
+  <format>Formaatti</format>
+  <format_version>Versio</format_version>
+  <lineage>Historiatiedot</lineage>
+  <spatialResolution>Sijaintitiedon erotuskyky (mittakaava)</spatialResolution>
+  <spatialDistance>Sijaintitiedon erotuskyky (näytetiheys)</spatialDistance>
+  <accessConstraints>Saatavuuden rajoitteet</accessConstraints>
+  <useConstraints>Käyttörajoitteet</useConstraints>
+  <useLimitation>Käytön rajoitukset</useLimitation>
+  <add-resource-id>Luo resurssitunniste</add-resource-id>
+  <add-resource-idHelp>Luo resurssitunnisteen käyttäen katalogin URL-osoitetta ja metatiedon yksilöivää UUID-tunnusta (esim. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Tuo kattavuus avainsanoista</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Määrittelee kattavuuden annettujen avainsanojen perusteella, jos mahdollista.
+  </add-extent-from-geokeywordsHelp>
+
+  <!-- String for INSPIRE SDS tab -->
+
+  <inspire_sds_cc1>Luokka 1: Kutsuttavissa (invocable)</inspire_sds_cc1>
+  <inspire_sds_cc2>Luokka 2: Yhteentoimiva (interoperable)</inspire_sds_cc2>
+  <inspire_sds_cc3>Luokka 3: Yhdenmukaistettu (harmonized)</inspire_sds_cc3>
+
+  <sds-category>Luokitus</sds-category>
+  <inspire_add_pass>Lisää sääntöjenmukaisuus</inspire_add_pass>
+  <sds-add-dataquality>Lisää laatutiedot</sds-add-dataquality>
+  <sds-add-dataqualityHelp>INSPIRE-paikkatietopalvelulle tulee määritellä laatutiedot dataQualityInfo-elementissä.
+  </sds-add-dataqualityHelp>
+  <sds-add-tech-spec>Lisää tekninen määrittely</sds-add-tech-spec>
+  <sds-add-tech-specHelp>INSPIRE-paikkatietopalvelun metatiedoissa tulee viitata teknisiin eritelmiin (esim. INSPIRE TG tai muu määrittely), joiden vaatimukset kutsuttavissa oleva paikkatietopalvelu täyttää kaikilta osin ja jotka sisältävät kaikki tekniset elementit, joita sen kutsuminen edellyttää.
+  </sds-add-tech-specHelp>
+  <sds-tech-spec>Tekninen määrittely</sds-tech-spec>
+  <conformity_desc>Teknisen määrittelyn otsikko</conformity_desc>
+  <conformity_linkage>Teknisen määrittelyn URL</conformity_linkage>
+
+
+  <sds-section-qos>Palvelun laatu</sds-section-qos>
+  <sds-add-qualityofservice>Lisää puuttuvat palvelun laatukriteerit</sds-add-qualityofservice>
+  <sds-add-qualityofserviceHelp>INSPIRE-paikkatietopalvelun metatiedoissa tulee raportoida seuraavat laatukriteerit: saatavuus, suoritustaso ja kapasiteetti. Paina tästä lisätäksesi puuttuvat kriteerit.
+  </sds-add-qualityofserviceHelp>
+  <qos_measure>Mittaus:</qos_measure>
+  <qos_uom>UOM</qos_uom>
+  <qos_description>Kuvaus</qos_description>
+  <qos_value>Arvo</qos_value>
+  <sds-section-crs>Koordinaattijärjestelmä</sds-section-crs>
+
+  <sds-fix-category>Korjaa Luokitus-elementti</sds-fix-category>
+  <sds-fix-categoryHelp>(Rec1) Korvaa gco:CharacterString -elementin gmx:Anchor -elementillä dokumentissa.
+  </sds-fix-categoryHelp>
+
+  <sds-accesspoint>Palvelun kuvauksen URL</sds-accesspoint>
+  <sds-add-accesspoint>Lisää palvelun kuvauksen URL</sds-add-accesspoint>
+
+  <sds-endpoint>Palvelun URL</sds-endpoint>
+  <sds-add-endpoint>Lisää palvelun URL</sds-add-endpoint>
+
+  <sds-addNoConstraints>Ei rajoituksia</sds-addNoConstraints>
+  <sds-addNoConstraintsHelp>Lisää tämä elementti, jos palvelun käyttöä ei ole rajoitettu.
+  </sds-addNoConstraintsHelp>
+  <sds-addUnknownConstraints>Rajoitukset tuntemattomat</sds-addUnknownConstraints>
+  <sds-addConstraints>Rajoitukset mukautettavissa</sds-addConstraints>
+
+  <sds>
+    <noConditionsApply>Ei käyttöehtoja</noConditionsApply>
+    <conditionsUnknown>Käyttöehdot tuntemattomat</conditionsUnknown>
+  </sds>
+
+  <sds-limitation>Julkisen saatavuuden rajoitukset</sds-limitation>
+
+  <sds-section-custodian>Vastuutaho</sds-section-custodian>
+  <sds-addOperation>Lisää toiminto</sds-addOperation>
+
 </strings>

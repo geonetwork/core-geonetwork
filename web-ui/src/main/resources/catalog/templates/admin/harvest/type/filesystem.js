@@ -9,7 +9,6 @@ var gnHarvesterfilesystem = {
             "ownerGroup" : [],
             "site" : {
                 "name" : "",
-                "translations": {},
                 "uuid" : "",
                 "directory" : "/filesystem/path",
                 "recurse" : true,
@@ -43,28 +42,27 @@ var gnHarvesterfilesystem = {
         };
     },
     buildResponse : function(h, $scope) {
-        var body = '<node id="' + h['@id'] + '" ' 
-                + '    type="' + h['@type'] + '">' 
-                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
-                + '  <site>' 
+        var body = '<node id="' + h['@id'] + '" '
+                + '    type="' + h['@type'] + '">'
+                + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
-                + $scope.buildTranslations(h)
                 + '    <recurse>' + h.site.recurse + '</recurse>'
                 + '    <nodelete>' + h.site.nodelete + '</nodelete>'
                 + '    <checkFileLastModifiedForUpdate>' + h.site.checkFileLastModifiedForUpdate + '</checkFileLastModifiedForUpdate>'
                 + '    <directory>' + h.site.directory + '</directory>'
                 + '    <recordType>' + h.site.recordType + '</recordType>'
                 + '    <icon>' + h.site.icon + '</icon>'
-                + '  </site>' 
-                + '  <options>' 
-                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>' 
-                + '    <every>' + h.options.every + '</every>' 
+                + '  </site>'
+                + '  <options>'
+                + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '  </options>'
                 + '  <content>'
                 + '    <validate>' + h.content.validate + '</validate>'
                 + '    <importxslt>' + h.content.importxslt + '</importxslt>'
-                + '  </content>' 
+                + '  </content>'
                 + $scope.buildResponseGroup(h)
                 + $scope.buildResponseCategory(h) + '</node>';
         return body;

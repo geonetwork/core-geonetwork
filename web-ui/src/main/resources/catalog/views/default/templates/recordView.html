@@ -65,7 +65,7 @@
 
       <i class="fa fa-times"></i>
     </a>
-    
+
     <a class="btn btn-primary gn-md-edit-btn pull-right"
        data-ng-show="user.canEditRecord(mdView.current.record)"
        data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
@@ -74,7 +74,7 @@
     </a>
 
     <div class="gnMdfeedback"></div>
-  
+
     <div data-ng-show="usingFormatter"
          id="gn-metadata-display"
          class="gn-metadata-display">
@@ -129,7 +129,7 @@
               <div data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
                    data-ng-click="search({'inspirethemewithac': cat})"
                    class="iti-box full {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
-                   title="{{cat.split('|')[1]}}">
+                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}} ...">
                 <div class="icon"><span class="iti-{{cat.split('|')[0]}}"></span></div>
                 <p class="label"></p>
               </div>
@@ -142,7 +142,7 @@
               <div data-ng-repeat="cat in mdView.current.record.category"
                    data-ng-click="search({'_cat': cat})"
                    class="iti-box full gn-iti"
-                   title="{{('cat-' + cat) | translate}}">
+                   title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}} ...">
                 <div class="icon">
                   <span class="fa gn-icon-{{cat}}"></span></div>
                 <p class="label">{{('cat-' + cat) | translate}}</p>
@@ -151,7 +151,7 @@
               <div data-ng-repeat="cat in mdView.current.record.topicCat track by $index"
                    data-ng-click="search({'topicCat': cat})"
                    class="iti-box full gn-iti"
-                   title="{{cat | translate}}">
+                   title="{{'clickToFilterOn' | translate}} {{cat | translate}} ...">
                 <div class="icon">
                   <span class="fa gn-icon-{{cat}}"></span>
                 </div>
@@ -159,16 +159,14 @@
               </div>
             </td>
           </tr>
-          <tr data-ng-if="mdView.current.record.keyword">
-            <th data-translate="">keywords</th>
+          <tr data-ng-repeat="(thesaurus, keywords) in mdView.current.record.keywordGroup">
+            <th>{{thesaurus | translate}}</th>
             <td>
-
               <ul>
-                <li data-ng-repeat="k in mdView.current.record.keyword track by $index">
-                  {{k}}
-                </li>
+                <li data-ng-repeat="k in keywords track by $index"
+                    title="{{'clickToFilterOn' | translate}} {{k}} ..."
+                    data-ng-click="search({'keyword': k})">{{k}}</li>
               </ul>
-              <!--<span class="badge" data-ng-repeat="k in mdView.current.record.keyword track by $index">{{k}}</span>-->
             </td>
           </tr>
           <tr data-ng-if="mdView.current.record.datasetLang">

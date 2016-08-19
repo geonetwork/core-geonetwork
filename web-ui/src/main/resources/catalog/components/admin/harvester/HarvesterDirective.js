@@ -40,25 +40,10 @@
         transclude: true,
         scope: {
           harvester: '=gnHarvesterIdentification'
-          //               lang: '@lang'
         },
         templateUrl: '../../catalog/components/admin/harvester/partials/' +
             'identification.html',
         link: function(scope, element, attrs) {
-          scope.lang = 'eng'; // FIXME
-          scope.openTranslationModal = function() {
-            if (scope.harvester.site.translations === undefined) {
-              scope.harvester.site.translations = {};
-              for (var i = 0; i < scope.languages.length; i++) {
-                if (scope.harvester.site.translations[scope.languages[i].id] ===
-                    undefined) {
-                  scope.harvester.site.translations[scope.languages[i].id] =
-                      scope.harvester.site.name;
-                }
-              }
-            }
-            $('#translationModal').modal('show');
-          };
           $http.get('admin.harvester.info?type=icons&_content_type=json',
               {cache: true})
               .success(function(data) {

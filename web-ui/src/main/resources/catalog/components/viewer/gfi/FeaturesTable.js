@@ -33,7 +33,8 @@
         restrict: 'E',
         scope: {
           loader: '=?gnFeaturesTableLoader',
-          map: '=?gnFeaturesTableLoaderMap'
+          map: '=?gnFeaturesTableLoaderMap',
+          active: '=gnActive'
         },
         controllerAs: 'ctrl',
         bindToController: true,
@@ -45,7 +46,7 @@
         templateUrl: '../../catalog/components/viewer/gfi/partials/' +
             'featurestable.html',
         link: function(scope, element, attrs, ctrls) {
-          ctrls.ctrl.initTable(element.find('table'));
+          ctrls.ctrl.initTable(element.find('table'), scope);
         }
       };
     }]);
@@ -54,13 +55,14 @@
     this.promise = this.loader.loadAll();
   };
 
-  GnFeaturesTableController.prototype.initTable = function(element) {
+  GnFeaturesTableController.prototype.initTable = function(element, scope) {
 
     this.loader.getBsTableConfig().then(function(bstConfig) {
+      var once = true;
       element.bootstrapTable('destroy');
       element.bootstrapTable(
           angular.extend({
-            height: 300,
+            height: 250,
             sortable: true,
             onPostBody: function() {
               var trs = element.find('tbody').children();
@@ -68,29 +70,31 @@
                 $(trs[i]).mouseenter(function(e) {
                   // Hackish over event from:
                   // https://github.com/wenzhixin/bootstrap-table/issues/782
-                  var row = $(e.currentTarget).parents('table')
-                    .data()['bootstrap.table']
-                    .data[$(e.currentTarget).data('index')];
+                  var row = $(e.currentTarget)
+                  .parents('table')
+                  .data()['bootstrap.table']
+                  .data[$(e.currentTarget).data('index')];
                   if (!row) { return; }
                   var feature = this.loader.getFeatureFromRow(row);
                   var source = this.featuresTablesCtrl.fOverlay.getSource();
+                  source.clear();
                   if (feature && feature.getGeometry()) {
                     source.addFeature(feature);
                   }
                 }.bind(this));
-                $(trs[i]).mouseout(function(e) {
-                  // Hackish over event from:
-                  // https://github.com/wenzhixin/bootstrap-table/issues/782
-                  var row = $(e.currentTarget).parents('table')
-                      .data()['bootstrap.table']
-                    .data[$(e.currentTarget).data('index')];
-                  if (!row) { return; }
-                  var source = this.featuresTablesCtrl.fOverlay.getSource();
-                  source.clear();
+                $(trs[i]).mouseleave(function(e) {
+                  this.featuresTablesCtrl.fOverlay.getSource().clear();
                 }.bind(this));
-
               }
+              element.parents('gn-features-table').find('.clearfix')
+              .addClass('sxt-clearfix')
+              .removeClass('clearfix');
             }.bind(this),
+            onPostHeader: function() { // avoid resizing issue on page change
+              if (!once) { return; }
+              element.bootstrapTable('resetView');
+              once = false;
+            },
             onDblClickRow: function(row, elt) {
               if (!this.map) {
                 return;
@@ -113,10 +117,16 @@
             showExport: true,
             exportTypes: ['csv'],
             exportDataType: 'all'
-          },bstConfig));
+          },bstConfig)
+      );
+      scope.$watch('ctrl.active', function() {
+        element.bootstrapTable('resetWidth');
+        element.bootstrapTable('resetView');
+      });
     }.bind(this));
   };
 
   module.controller('gnFeaturesTableController', GnFeaturesTableController);
 
 })();
+

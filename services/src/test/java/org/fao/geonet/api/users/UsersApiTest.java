@@ -41,6 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -399,6 +400,68 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(204));
     }
 
+    @Test
+    public void updateUser() throws Exception {
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName() + "-updated");
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+    }
+
+
+    @Test
+    public void updateUserDuplicatedUsername() throws Exception {
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        User userToReuseUsername = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertNotNull(userToReuseUsername);
+
+        UserDto user = new UserDto();
+        // Try to set the username of other existing user
+        user.setUsername(userToReuseUsername.getUsername());
+        user.setName(userToUpdate.getName());
+        user.setProfile(userToUpdate.getProfile().toString());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is duplicated
+        this.mockMvc.perform(put("/api/users/" + userToUpdate.getId())
+            .content(json)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.description", is("Another user with username 'testuser-editor' already exists")))
+            .andExpect(status().is(400));
+    }
 
     /**
      * Create sample data for the tests.

@@ -25,7 +25,6 @@ package org.fao.geonet.api.registries;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -33,6 +32,7 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -42,14 +42,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -98,7 +94,15 @@ public class DirectoryEntriesApi {
         @RequestParam(
             required = false
         )
-            String[] process)
+            String[] process,
+        @ApiParam(
+            value = "Transformation",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String transformation)
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
@@ -120,37 +124,52 @@ public class DirectoryEntriesApi {
 
         // Processing parameters process=xpath~value.
         // xpath must point to an Element or an Attribute.
-        List<String> replaceList = Arrays.asList(process);
-        for (String parameters : replaceList) {
-            int endIndex = parameters.indexOf(SEPARATOR);
-            if (endIndex == -1) {
-                continue;
-            }
-            String xpath = parameters.substring(0, endIndex);
-            String value = parameters.substring(endIndex + 1);
+        if (process != null) {
+            List<String> replaceList = Arrays.asList(process);
+            for (String parameters : replaceList) {
+                int endIndex = parameters.indexOf(SEPARATOR);
+                if (endIndex == -1) {
+                    continue;
+                }
+                String xpath = parameters.substring(0, endIndex);
+                String value = parameters.substring(endIndex + 1);
 
-            Set<Namespace> allNamespaces = Sets.newHashSet();
-            final Iterator descendants = tpl.getDescendants();
-            while (descendants.hasNext()) {
-                Object next = descendants.next();
-                if (next instanceof Element) {
-                    Element element = (Element) next;
-                    allNamespaces.add(element.getNamespace());
-                    for (Object o : tpl.getAdditionalNamespaces()) {
-                        if (o instanceof Namespace) {
-                            Namespace namespace = (Namespace) o;
-                            allNamespaces.add(namespace);
+                Set<Namespace> allNamespaces = Sets.newHashSet();
+                final Iterator descendants = tpl.getDescendants();
+                while (descendants.hasNext()) {
+                    Object next = descendants.next();
+                    if (next instanceof Element) {
+                        Element element = (Element) next;
+                        allNamespaces.add(element.getNamespace());
+                        for (Object o : tpl.getAdditionalNamespaces()) {
+                            if (o instanceof Namespace) {
+                                Namespace namespace = (Namespace) o;
+                                allNamespaces.add(namespace);
+                            }
                         }
                     }
                 }
-            }
-            Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
-            if (o instanceof Element) {
-                ((Element) o).setText(value);
-            } else if (o instanceof Attribute) {
-                ((Attribute) o).setValue(value);
+                Object o = Xml.selectSingle(tpl, xpath, Lists.newArrayList(allNamespaces));
+                if (o instanceof Element) {
+                    ((Element) o).setText(value);
+                } else if (o instanceof Attribute) {
+                    ((Attribute) o).setValue(value);
+                }
             }
         }
-        return tpl;
+        if (transformation != null) {
+            Element root = new Element("root");
+            Element request = new Element("request");
+            request.addContent(new Element("transformation").setText(transformation));
+            root.addContent(request);
+            root.addContent(tpl);
+
+            GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+            Path xslt = dataDirectory.getWebappDir()
+                .resolve("xslt/services/subtemplate/convert.xsl");
+            return Xml.transform(root, xslt);
+        } else {
+            return tpl;
+        }
     }
 }

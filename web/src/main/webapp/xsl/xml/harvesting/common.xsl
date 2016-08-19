@@ -32,14 +32,6 @@
         <name>
           <xsl:value-of select="$site/name/value"/>
         </name>
-        <translations>
-          <xsl:for-each select="$site/translations/children/node()">
-            <xsl:element name="{name()}">
-              <xsl:value-of select="."/>
-            </xsl:element>
-          </xsl:for-each>
-        </translations>
-
         <uuid>
           <xsl:value-of select="$site/uuid/value"/>
         </uuid>

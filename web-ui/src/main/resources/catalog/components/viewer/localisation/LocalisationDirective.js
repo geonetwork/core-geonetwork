@@ -123,7 +123,7 @@
                           formattedName: formatter(loc),
                           extent: ol.proj.transformExtent([loc.bbox.west,
                             loc.bbox.south, loc.bbox.east, loc.bbox.north],
-                          'EPSG:4326', 'EPSG:3857')
+                          'EPSG:4326', $scope.map.getView().getProjection())
                         });
                       }
                     }

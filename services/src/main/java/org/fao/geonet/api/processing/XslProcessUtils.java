@@ -106,6 +106,7 @@ public class XslProcessUtils {
 
                 xslParameter.put("guiLang", context.getLanguage());
                 xslParameter.put("baseUrl", context.getBaseUrl());
+                xslParameter.put("nodeUrl", settingsMan.getNodeURL());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
                 xslParameter.put("nodeId", context.getNodeId());
 
