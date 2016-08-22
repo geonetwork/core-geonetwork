@@ -358,5 +358,6 @@
     "fbCatMetadataEditing": "Édition de fiches",
     "fbCatHarvesting": "Moissonnage",
     "fbCatValidator": "Validation",
-    "fbCatOthers": "Autre"
+    "fbCatOthers": "Autre",
+    "syncAllLayers": "Synchroniser toutes les couches (ou seulement le fond de carte) entre le visualiseur et la minicarte d'aperçu."
 }
