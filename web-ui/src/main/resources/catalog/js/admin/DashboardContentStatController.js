@@ -93,12 +93,12 @@
       function getMetadataStat(by, isTemplate) {
         isTemplate = isTemplate || 'n';
         // Search by service type statistics
-        $http.get('statistics-content-metadata?_content_type=json?' +
+        $http.get('statistics-content-metadata?_content_type=json&' +
                 'by=' + by +
                 '&isTemplate=' + encodeURIComponent(isTemplate))
                   .success(function(data) {
 
-              if (data == 'null') { // Null response returned
+              if ((data == 'null') || (data == null)) { // Null response returned
                 // TODO : Add no data message
                 return;
               }
