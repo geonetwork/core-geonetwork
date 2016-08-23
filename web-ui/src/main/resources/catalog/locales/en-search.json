@@ -311,5 +311,6 @@
   "wpsErrorCodeReturned": "The serveur returned status code",
   "mdvalid": "Metadata is valid",
   "mdinvalid": "Metadata is invalid",
-  "mdnovalidation": "Metadata has no validation information."
+  "mdinvalidcantpublish": "Invalid metadata can't be publish",
+  "mdnovalidation": "Metadata has no validation information"
 }

@@ -151,6 +151,8 @@ public class Update extends NotInReadOnlyModeService {
 
 			boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
 
+			boolean reindex = false;
+
 			// Save validation if the forceValidationOnMdSave is enabled
 			if (forceValidationOnMdSave && !showValidationErrors.equals("true")) {
 				final MetadataRepository metadataRepository = gc.getBean(MetadataRepository.class);
@@ -158,7 +160,7 @@ public class Update extends NotInReadOnlyModeService {
 
 				dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
 						new Document(metadata.getXmlData(false)), context.getLanguage());
-				dataMan.indexMetadata(id, true);
+				reindex = true;
 			}
 
 			boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
@@ -180,9 +182,14 @@ public class Update extends NotInReadOnlyModeService {
 					if (isInvalid) {
 						operationAllowedRepo.deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
 					}
-					dataMan.indexMetadata(id, true);
+
+					reindex = true;
 				}
 
+			}
+
+			if (reindex) {
+				dataMan.indexMetadata(id, true);
 			}
 
 
