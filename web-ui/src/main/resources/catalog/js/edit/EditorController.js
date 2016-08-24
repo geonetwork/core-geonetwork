@@ -423,7 +423,7 @@
       };
 
       $scope.close = function() {
-        var promise = gnEditor.save(false)
+        var promise = gnEditor.save(false, false, true)
           .then(function(form) {
               closeEditor();
             }, function(error) {
