@@ -71,7 +71,7 @@ public class LDAPUtils {
         User toSave = getUser(user, importPrivilegesFromLdap, userName);
 
         // Add user groups
-        if (importPrivilegesFromLdap) {
+        if (user.getPrivileges().size() > 0) {
             entityManager.flush();
             entityManager.clear();
             List<UserGroup> ug = getPrivilegesAndCreateGroups(user,

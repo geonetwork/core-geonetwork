@@ -26,9 +26,9 @@ package iso19139;
 import groovy.util.slurpersupport.GPathResult;
 
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
-import org.fao.geonet.services.metadata.format.groovy.Handler;
-import org.fao.geonet.services.metadata.format.groovy.Handlers;
+import org.fao.geonet.api.records.formatters.AbstractFormatterTest;
+import org.fao.geonet.api.records.formatters.groovy.Handler;
+import org.fao.geonet.api.records.formatters.groovy.Handlers;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -52,6 +52,7 @@ public class IsoMatchersTest extends AbstractFormatterTest {
     @Test
     public void testTextMatcher() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         request.addParameter("html", "true");
 
         final String formatterId = "full_view";

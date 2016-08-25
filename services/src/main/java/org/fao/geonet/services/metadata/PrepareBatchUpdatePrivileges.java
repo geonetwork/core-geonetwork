@@ -46,7 +46,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Return all groups of the current user with operations included.
  */
-
+@Deprecated
 public class PrepareBatchUpdatePrivileges implements Service {
     //--------------------------------------------------------------------------
     //---

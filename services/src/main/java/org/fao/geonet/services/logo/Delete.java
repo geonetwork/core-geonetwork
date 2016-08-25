@@ -23,6 +23,10 @@
 
 package org.fao.geonet.services.logo;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -32,10 +36,7 @@ import org.jdom.Element;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
+@Deprecated
 public class Delete implements Service {
     private volatile Path logoDirectory;
 

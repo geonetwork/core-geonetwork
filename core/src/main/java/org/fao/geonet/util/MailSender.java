@@ -23,20 +23,18 @@
 
 package org.fao.geonet.util;
 
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 
+import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.internet.InternetAddress;
-
-import jeeves.server.context.ServiceContext;
-
 /**
- * see {@link MailUtil} *
+ * see {@link MailUtil}
  */
 @Deprecated
 public class MailSender extends Thread {
@@ -53,6 +51,7 @@ public class MailSender extends Thread {
      * @param useSSL   TODO
      */
     private void setUp(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
+                       boolean ignoreSslCertificateErrors,
                        String from, String fromDescr, String to, String subject, String message) throws EmailException {
         _mail.setHostName(server);
         _mail.setSmtpPort(port);
@@ -74,6 +73,9 @@ public class MailSender extends Thread {
             throw new EmailException("Invalid message supplied");
         }
         _mail.setContent(message, "text/plain; charset=UTF-8");
+        if (ignoreSslCertificateErrors) {
+            _mail.getMailSession().getProperties().setProperty("mail.smtp.ssl.trust", "*");
+        }
     }
 
     /**
@@ -84,10 +86,12 @@ public class MailSender extends Thread {
      * @param useSSL   TODO
      */
     public void send(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
-                     String from, String fromDescr, String to, String toDescr, String subject, String message) {
+                     boolean ignoreSslCertificateErrors, String from, String fromDescr, String to, String toDescr, String
+                         subject, String message) {
         _mail = new SimpleEmail();
         try {
-            setUp(server, port, username, password, useSSL, useTLS, from, fromDescr, to, subject, message);
+            setUp(server, port, username, password, useSSL, useTLS, ignoreSslCertificateErrors, from, fromDescr, to,
+                subject, message);
             start();
         } catch (EmailException e) {
             logEx(e);
@@ -98,11 +102,12 @@ public class MailSender extends Thread {
      * Better use through MailUtil, as it takes the settings directly from the BBDD.
      */
     public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
-                                String from, String fromDescr, String to, String toDescr,
-                                String replyTo, String replyToDesc, String subject, String message) {
+                                boolean ignoreSslCertificateErrors, String from, String fromDescr, String to,
+                                String toDescr, String replyTo, String replyToDesc, String subject, String message) {
         _mail = new SimpleEmail();
         try {
-            setUp(server, port, username, password, useSSL, useTLS, from, fromDescr, to, subject, message);
+            setUp(server, port, username, password, useSSL, useTLS, ignoreSslCertificateErrors, from, fromDescr, to,
+                subject, message);
             List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
             addressColl.add(new InternetAddress(replyTo, replyToDesc));
             _mail.setReplyTo(addressColl);

@@ -23,22 +23,19 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.apache.http.HttpException;
-import org.apache.jcs.access.exception.CacheException;
-import org.fao.geonet.Logger;
-import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
-import org.fao.geonet.exceptions.BadServerResponseEx;
-import org.fao.geonet.exceptions.BadSoapResponseEx;
-import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.exceptions.SchemaMatchConflictException;
-import org.fao.geonet.exceptions.UserNotFoundEx;
-import org.jdom.JDOMException;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+
+import org.apache.http.HttpException;
+import org.apache.jcs.access.exception.CacheException;
+import org.fao.geonet.Logger;
+import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
+import org.fao.geonet.exceptions.*;
+import org.jdom.JDOMException;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * <p> Master class for harvesting errors. </p> <p> Example of usage: </p> <code> SQLException e =
@@ -49,7 +46,7 @@ import java.sql.SQLException;
  *
  * @author delawen
  */
-public class HarvestError {
+public class HarvestError extends AbstractHarvestError {
 
     /**
      * Exception that caused the harvest error.
@@ -68,8 +65,8 @@ public class HarvestError {
      */
     private String hint = "Check with your administrator the error.";
 
-    public HarvestError(InvalidParameterValueEx ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, InvalidParameterValueEx ex, Logger log) {
+    	super(context);
 
         this.origin = ex;
         this.description = "The server didn't accept one of the parameters"
@@ -81,8 +78,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(Throwable ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, Throwable ex, Logger log) {
+        super(context);
 
         this.origin = ex;
         this.description = ex.getMessage();
@@ -92,25 +89,24 @@ public class HarvestError {
         // Do not print log, as it is a very generic exception
         // leave it to main caller
     }
-
-    public HarvestError(CacheException ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, CacheException ex, Logger log) {
+        super(context);
 
         this.origin = ex;
         this.description = "Failed to update Jeeves cache: " + ex.getMessage();
         printLog(log);
     }
 
-    public HarvestError(JDOMException ex, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, JDOMException ex, Logger log) {
+        super(context);
 
         this.origin = ex;
         this.description = "There was an error processing the response. " + ex.getMessage();
         printLog(log);
     }
 
-    public HarvestError(BadServerResponseEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, BadServerResponseEx e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "The server returned an answer that could not be processed: "
@@ -119,8 +115,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(BadSoapResponseEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, BadSoapResponseEx e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "The server returned an answer that could not be processed.";
@@ -128,24 +124,24 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(HttpException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, HttpException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error trying to reach some URL. " + e.getMessage();
         printLog(log);
     }
 
-    public HarvestError(IOException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, IOException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error trying to reach an URI. " + e.getMessage();
         printLog(log);
     }
 
-    public HarvestError(MalformedURLException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, MalformedURLException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error trying to reach an URL. ";
@@ -153,8 +149,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(UnsupportedEncodingException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, UnsupportedEncodingException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "The metadata is defined on an unsupported encoding: "
@@ -163,8 +159,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(java.text.ParseException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, java.text.ParseException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "Unable to parse the metadata.";
@@ -173,8 +169,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(SQLException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, SQLException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "There was an error while updating the database: "
@@ -183,8 +179,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(UserNotFoundEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, UserNotFoundEx e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't log in to harvest using " + e.getObject();
@@ -192,17 +188,16 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(SchemaMatchConflictException e, Logger log, String name) {
-        super();
+    public HarvestError(ServiceContext context, SchemaMatchConflictException e, Logger log, String name) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't match the schema for " + name;
         this.hint = "Check that the schemas used are defined on geonetwork.";
         printLog(log);
     }
-
-    public HarvestError(SchemaMatchConflictException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, SchemaMatchConflictException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't match the schema.";
@@ -210,8 +205,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(NoSchemaMatchesException e, Logger log, String name) {
-        super();
+    public HarvestError(ServiceContext context, NoSchemaMatchesException e, Logger log, String name) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't recognize the schema for " + name;
@@ -219,8 +214,8 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(NoSchemaMatchesException e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, NoSchemaMatchesException e, Logger log) {
+        super(context);
 
         this.origin = e;
         this.description = "Couldn't recognize the schema.";
@@ -228,16 +223,16 @@ public class HarvestError {
         printLog(log);
     }
 
-    public HarvestError(BadXmlResponseEx e, Logger log, String capabUrl) {
-        super();
+    public HarvestError(ServiceContext context, BadXmlResponseEx e, Logger log, String capabUrl) {
+        super(context);
         this.origin = e;
         this.description = "The response returned from the server doesn't look like XML";
         this.hint = "Check the URL is ok: " + capabUrl;
         printLog(log);
     }
 
-    public HarvestError(BadXmlResponseEx e, Logger log) {
-        super();
+    public HarvestError(ServiceContext context, BadXmlResponseEx e, Logger log) {
+        super(context);
         this.origin = e;
         this.description = "The response returned from the server doesn't look like XML. " + e.getMessage();
         this.hint = "Check the URL is ok.";

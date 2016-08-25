@@ -28,11 +28,13 @@
   xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     ">
-  <bean id="timerThreadPool" class="java.util.concurrent.ScheduledThreadPoolExecutor">
+  <bean id="timerThreadPool" class="org.fao.geonet.domain.SpringScheduledThreadPoolExecutor">
     <constructor-arg value="2"/>
     <constructor-arg>
       <bean class="org.fao.geonet.utils.TimerThreadFactory"/>
     </constructor-arg>
+    <property name="executeExistingDelayedTasksAfterShutdownPolicy" value="false"/>
+    <property name="continueExistingPeriodicTasksAfterShutdownPolicy" value="false"/>
   </bean>
 
 </beans>

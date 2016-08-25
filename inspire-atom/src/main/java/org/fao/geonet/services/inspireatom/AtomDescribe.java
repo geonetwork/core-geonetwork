@@ -23,25 +23,26 @@
 package org.fao.geonet.services.inspireatom;
 
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.InspireAtomService;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.utils.Log;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.inspireatom.InspireAtomService;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.lib.Lib;
+import org.jdom.Element;
+
+import java.nio.file.Path;
 
 /**
  * Service to get Atom feed.
@@ -78,7 +79,7 @@ public class AtomDescribe implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         SettingManager sm = context.getBean(SettingManager.class);
 
-        boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
+        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");

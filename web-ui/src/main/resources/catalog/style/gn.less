@@ -695,3 +695,11 @@ button, .btn, .btn:active, a {
 input.ng-invalid {
   border-color: #a94442;
 }
+
+/* Highlight updated checkboxes in sharing form */
+.gn-sharing-batch {
+  input.ng-dirty:after {
+    content: "*";
+    padding-left: 12px;
+  }
+}

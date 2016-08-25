@@ -51,7 +51,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Retrieves a particular metadata. Access is restricted
  */
-
+@Deprecated
 public class Show extends ShowViewBaseService {
     //--------------------------------------------------------------------------
     //---

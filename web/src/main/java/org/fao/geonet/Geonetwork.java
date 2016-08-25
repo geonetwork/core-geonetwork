@@ -23,32 +23,33 @@
 
 package org.fao.geonet;
 
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
+import jeeves.interfaces.ApplicationHandler;
+import jeeves.server.JeevesEngine;
+import jeeves.server.JeevesProxyInfo;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterApi;
+import org.fao.geonet.api.records.formatters.FormatterWidth;
+import org.fao.geonet.api.site.LogUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.Source;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SvnManager;
-import org.fao.geonet.kernel.ThesaurusManager;
-import org.fao.geonet.kernel.XmlSerializer;
-import org.fao.geonet.kernel.XmlSerializerSvn;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
@@ -56,10 +57,6 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.services.config.LogUtils;
-import org.fao.geonet.services.metadata.format.Format;
-import org.fao.geonet.services.metadata.format.FormatType;
-import org.fao.geonet.services.metadata.format.FormatterWidth;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -69,7 +66,9 @@ import org.fao.geonet.wro4j.GeonetWro4jFilter;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockFilterChain;
@@ -77,6 +76,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -85,18 +86,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javax.servlet.ServletContext;
-import javax.sql.DataSource;
-
-import jeeves.config.springutil.ServerBeanPropertyUpdater;
-import jeeves.interfaces.ApplicationHandler;
-import jeeves.server.JeevesEngine;
-import jeeves.server.JeevesProxyInfo;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.http.ServletPathFinder;
-import jeeves.xlink.Processor;
 
 /**
  * This is the main class, it handles http connections and inits the system.
@@ -107,6 +96,7 @@ public class Geonetwork implements ApplicationHandler {
     private ISearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
     private ConfigurableApplicationContext _applicationContext;
+    private OaiPmhDispatcher oaipmhDis;
 
     //---------------------------------------------------------------------------
     //---
@@ -176,11 +166,6 @@ public class Geonetwork implements ApplicationHandler {
 
         importDatabaseData(context);
 
-        // Status actions class - load it
-        String statusActionsClassName = handlerConfig.getMandatoryValue(Geonet.Config.STATUS_ACTIONS_CLASS);
-        @SuppressWarnings("unchecked")
-        Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
-
         JeevesJCS.setConfigFilename(appPath.resolve("WEB-INF/classes/cache.ccf"));
 
         // force caches to be config'd so shutdown hook works correctly
@@ -206,6 +191,26 @@ public class Geonetwork implements ApplicationHandler {
             }
         }
 
+        //------------------------------------------------------------------------
+        //--- initialize SRU
+
+        logger.info("  - SRU...");
+
+        try {
+            String[] configs = {Geonet.File.JZKITAPPLICATIONCONTEXT};
+            ApplicationContext app_context = new ClassPathXmlApplicationContext(configs, _applicationContext);
+
+            // to have access to the GN context in spring-managed objects
+            ContextContainer cc = (ContextContainer) _applicationContext.getBean("ContextGateway");
+            cc.setSrvctx(context);
+
+
+        } catch (Exception e) {
+            logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        //------------------------------------------------------------------------
         //--- initialize SchemaManager
 
         logger.info("  - Schema manager...");
@@ -263,10 +268,10 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Open Archive Initiative (OAI-PMH) server...");
 
-        OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
+        oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
-        GeonetContext gnContext = new GeonetContext(_applicationContext, false, statusActionsClass);
+        GeonetContext gnContext = new GeonetContext(_applicationContext, false);
 
         //------------------------------------------------------------------------
         //--- return application context
@@ -294,10 +299,10 @@ public class Geonetwork implements ApplicationHandler {
         SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
             final Source source = sourceRepository.save(
-                new Source()
-                    .setLocal(true)
-                    .setName(settingMan.getSiteName())
-                    .setUuid(settingMan.getSiteId()));
+                new Source(settingMan.getSiteId(),
+                    settingMan.getSiteName(),
+                    null,
+                    true));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists
@@ -315,22 +320,22 @@ public class Geonetwork implements ApplicationHandler {
         //--- load proxy information from settings into Jeeves for observers such
         //--- as jeeves.utils.XmlResolver to use
         ProxyInfo pi = JeevesProxyInfo.getInstance();
-        boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+        boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
         if (useProxy) {
-            String proxyHost = settingMan.getValue("system/proxy/host");
-            String proxyPort = settingMan.getValue("system/proxy/port");
-            String username = settingMan.getValue("system/proxy/username");
-            String password = settingMan.getValue("system/proxy/password");
+            String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
+            String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
+            String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
+            String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
             pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
         }
 
 
-        boolean inspireEnable = settingMan.getValueAsBool("system/inspire/enable", false);
+        boolean inspireEnable = settingMan.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
 
         if (inspireEnable) {
 
-            String atomType = settingMan.getValue("system/inspire/atom");
-            String atomSchedule = settingMan.getValue("system/inspire/atomSchedule");
+            String atomType = settingMan.getValue(Settings.SYSTEM_INSPIRE_ATOM);
+            String atomSchedule = settingMan.getValue(Settings.SYSTEM_INSPIRE_ATOM_SCHEDULE);
 
 
             if (StringUtils.isNotEmpty(atomType) && StringUtils.isNotEmpty(atomSchedule)
@@ -360,7 +365,7 @@ public class Geonetwork implements ApplicationHandler {
     }
 
     private void fillCaches(final ServiceContext context) {
-        final Format formatService = context.getBean(Format.class); // this will initialize the formatter
+        final FormatterApi formatService = context.getBean(FormatterApi.class); // this will initialize the formatter
 
         Thread fillCaches = new Thread(new Runnable() {
             @Override
@@ -552,18 +557,7 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("shutting down CSW HarvestResponse executionService");
         CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();
 
-        //------------------------------------------------------------------------
-        //--- end search
-        logger.info("  - search...");
-
-        try {
-            searchMan.end();
-        } catch (Exception e) {
-            logger.error("Raised exception while stopping search");
-            logger.error("  Exception : " + e);
-            logger.error("  Message   : " + e.getMessage());
-            logger.error("  Stack     : " + Util.getStackTrace(e));
-        }
+        InspireAtomHarvesterScheduler.shutdown();
 
         logger.info("  - MetadataNotifier ...");
         try {
@@ -578,5 +572,10 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Harvest Manager...");
         _applicationContext.getBean(HarvestManager.class).shutdown();
+
+
+        // Beans registered using SingletonBeanRegistry#registerSingleton don't have their
+        // @PreDestroy called. So do it manually.
+        oaipmhDis.shutdown();
     }
 }

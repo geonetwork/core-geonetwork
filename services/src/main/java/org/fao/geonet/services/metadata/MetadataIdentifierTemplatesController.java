@@ -46,6 +46,7 @@ import javax.annotation.Nonnull;
  *
  * @author Jose García
  */
+@Deprecated
 @Controller("metadataIdentifierTemplates")
 public class MetadataIdentifierTemplatesController {
     @RequestMapping(value = "/{lang}/metadataIdentifierTemplates", method = RequestMethod.POST)

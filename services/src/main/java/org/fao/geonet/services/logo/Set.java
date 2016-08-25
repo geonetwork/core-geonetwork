@@ -50,6 +50,7 @@ import jeeves.server.context.ServiceContext;
  *
  * @author francois
  */
+@Deprecated
 public class Set implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

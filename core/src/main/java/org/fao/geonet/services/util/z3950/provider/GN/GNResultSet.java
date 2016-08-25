@@ -20,6 +20,8 @@
 
 package org.fao.geonet.services.util.z3950.provider.GN;
 
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.ISearchManager;
@@ -34,18 +36,10 @@ import org.jzkit.search.util.RecordModel.ExplicitRecordFormatSpecification;
 import org.jzkit.search.util.RecordModel.InformationFragment;
 import org.jzkit.search.util.RecordModel.InformationFragmentImpl;
 import org.jzkit.search.util.RecordModel.RecordFormatSpecification;
-import org.jzkit.search.util.ResultSet.AbstractIRResultSet;
-import org.jzkit.search.util.ResultSet.IFSNotificationTarget;
-import org.jzkit.search.util.ResultSet.IRResultSet;
-import org.jzkit.search.util.ResultSet.IRResultSetException;
-import org.jzkit.search.util.ResultSet.IRResultSetInfo;
-import org.jzkit.search.util.ResultSet.IRResultSetStatus;
+import org.jzkit.search.util.ResultSet.*;
 
 import java.util.List;
 import java.util.Observer;
-
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 
 /**
  * interface between JZKit and GN. Retrieves XML content from the GN backend and makes it available
@@ -55,12 +49,14 @@ import jeeves.server.context.ServiceContext;
  */
 public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
-    public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
     private GNXMLQuery query;
     private ServiceContext srvxtx;
     private int status;
+
     private int fragmentcount;
+
     private MetaSearcher metasearcher;
+    public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
 
     public GNResultSet(GNXMLQuery query, Object userInfo, Observer[] observers,
                        ServiceContext srvctx) throws Exception {
@@ -73,9 +69,7 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
             GeonetContext gc = (GeonetContext) this.srvxtx
                 .getHandlerContext(Geonet.CONTEXT_NAME);
             ISearchManager searchMan = gc.getBean(ISearchManager.class);
-
-            metasearcher = searchMan.newSearcher(
-                SEARCH_Z3950_SERVER);
+            metasearcher = searchMan.newSearcher(SEARCH_Z3950_SERVER);
 
         } catch (Exception e) {
             if (Log.isDebugEnabled(Geonet.SRU))
@@ -184,7 +178,8 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
 
             }
 
-            if (Log.isDebugEnabled(Geonet.SRU)) Log.debug(Geonet.SRU, "Fragment returned");
+            if (Log.isDebugEnabled(Geonet.SRU))
+                Log.debug(Geonet.SRU, "Fragment returned");
         } catch (Throwable e) {
             if (Log.isDebugEnabled(Geonet.SRU))
                 Log.debug(Geonet.SRU, "Exception: " + e.getClass().getName() + " " + e);

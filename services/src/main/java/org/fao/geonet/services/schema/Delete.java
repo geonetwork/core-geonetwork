@@ -23,6 +23,11 @@
 
 package org.fao.geonet.services.schema;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -34,13 +39,8 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.List;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-/**
- * Delete a schema and check first if any records related.
- */
+//=============================================================================
+@Deprecated
 public class Delete implements Service {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -104,4 +104,8 @@ public class Delete implements Service {
         }
         return response;
     }
+
 }
+
+// =============================================================================
+

@@ -273,7 +273,7 @@ public class Info implements Service {
     }
 
     //--------------------------------------------------------------------------
-
+    @Deprecated
     private Element getStylesheets(Path xslPath) throws Exception {
         try (DirectoryStream<Path> sheets = Files.newDirectoryStream(xslPath)) {
             Element elRoot = new Element("stylesheets");

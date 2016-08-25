@@ -29,6 +29,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.JavaMailer;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -67,7 +68,7 @@ public class Receptor implements Service {
         try {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             SettingManager sm = gc.getBean(SettingManager.class);
-            String NOREPLY = sm.getValue("system/feedback/email");
+            String NOREPLY = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
             //
             // user-supplied params
@@ -123,9 +124,9 @@ public class Receptor implements Service {
                 subject = "Metadata feedback GeoNetwork catalog: " + feedbackFunction;
             }
 
-            String host = sm.getValue("system/feedback/mailServer/host");
-            String port = sm.getValue("system/feedback/mailServer/port");
-            String to = sm.getValue("system/feedback/email");
+            String host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            String port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+            String to = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
 
             Log.debug(Geonet.FEEDBACK, "email settings.. host: " + host + " port: " + port + " email: " + to);
 

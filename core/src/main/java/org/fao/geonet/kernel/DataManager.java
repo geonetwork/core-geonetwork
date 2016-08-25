@@ -31,13 +31,12 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-
+import com.google.common.collect.*;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
@@ -47,72 +46,18 @@ import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Constants;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.domain.MetadataDataInfo_;
-import org.fao.geonet.domain.MetadataFileUpload;
-import org.fao.geonet.domain.MetadataFileUpload_;
-import org.fao.geonet.domain.MetadataHarvestInfo;
-import org.fao.geonet.domain.MetadataRatingByIp;
-import org.fao.geonet.domain.MetadataRatingByIpId;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.MetadataStatusId;
-import org.fao.geonet.domain.MetadataStatusId_;
-import org.fao.geonet.domain.MetadataStatus_;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.MetadataValidation;
-import org.fao.geonet.domain.MetadataValidationId;
-import org.fao.geonet.domain.MetadataValidationStatus;
-import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.OperationAllowedId;
-import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
-import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.exceptions.SchemaMatchConflictException;
-import org.fao.geonet.exceptions.SchematronValidationErrorEx;
-import org.fao.geonet.exceptions.ServiceNotAllowedEx;
-import org.fao.geonet.exceptions.XSDValidationErrorEx;
+import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.SolrSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataStatusRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.StatusValueRepository;
-import org.fao.geonet.repository.Updater;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
-import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.specification.MetadataStatusSpecs;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.*;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
@@ -120,11 +65,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -139,21 +80,16 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -161,19 +97,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -483,13 +406,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
     }
 
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Schema management API
-    //---
-    //--------------------------------------------------------------------------
-
     /**
      * Index multiple metadata in a separate thread.  Wait until the current transaction commits
      * before starting threads (to make sure that all metadata are committed).
@@ -551,6 +467,13 @@ public class DataManager implements ApplicationEventPublisherAware {
             indexLock.unlock();
         }
     }
+
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Schema management API
+    //---
+    //--------------------------------------------------------------------------
 
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
@@ -672,7 +595,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                 final Group group = groupRepository.findOne(groupOwner);
                 if (group != null) {
                     moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner)));
-                    final boolean preferGroup = getSettingManager().getValueAsBool(SettingManager.SYSTEM_PREFER_GROUP_LOGO, true);
+                    final boolean preferGroup = getSettingManager().getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
                     if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
                         moreFields.add(SolrSearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite()));
                     }
@@ -1542,16 +1465,16 @@ public class DataManager implements ApplicationEventPublisherAware {
         newMetadata.getSourceInfo()
             .setOwner(owner)
             .setSourceId(source);
-        if (groupOwner != null) {
+        if (StringUtils.isNotEmpty(groupOwner)) {
             newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner));
         }
-        if (category != null) {
+        if (StringUtils.isNotEmpty(category)) {
             MetadataCategory metadataCategory = getApplicationContext().getBean(MetadataCategoryRepository.class).findOneByName(category);
             if (metadataCategory == null) {
                 throw new IllegalArgumentException("No category found with name: " + category);
             }
             newMetadata.getCategories().add(metadataCategory);
-        } else if (groupOwner != null) {
+        } else if (StringUtils.isNotEmpty(groupOwner)) {
             //If the group has a default category, use it
             Group group = getApplicationContext()
                 .getBean(GroupRepository.class)
@@ -2088,11 +2011,18 @@ public class DataManager implements ApplicationEventPublisherAware {
     /**
      * Removes all operations stored for a metadata.
      */
-    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllIntranet) throws Exception {
+    public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
-        if (skipAllIntranet) {
-            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), ReservedGroup.intranet.getId());
+        if (skipAllReservedGroup) {
+            int[] exclude = new int[] {
+                ReservedGroup.all.getId(),
+                    ReservedGroup.intranet.getId(),
+                    ReservedGroup.guest.getId()
+            };
+            operationAllowedRepository.deleteAllByMetadataIdExceptGroupId(
+                Integer.parseInt(metadataId), exclude
+            );
         } else {
             operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
         }
@@ -2139,8 +2069,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         env.addContent(new Element("file").setText(file));
         env.addContent(new Element("ext").setText(ext));
 
-        String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+        String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         String baseUrl = context.getBaseUrl();
 
         env.addContent(new Element("host").setText(host));
@@ -2209,9 +2139,8 @@ public class DataManager implements ApplicationEventPublisherAware {
     private void transformMd(ServiceContext context, String metadataId, Element md, Element env, String schema, String styleSheet, boolean indexAfterChange) throws Exception {
 
         if (env.getChild("host") == null) {
-            String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-            String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
-
+            String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+            String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
             env.addContent(new Element("host").setText(host));
             env.addContent(new Element("port").setText(port));
         }
@@ -2394,7 +2323,7 @@ public class DataManager implements ApplicationEventPublisherAware {
                             + "Reviewer of any group.");
                     }
                 } else {
-                    String userGroupsOnly = getSettingManager().getValue("system/metadataprivs/usergrouponly");
+                    String userGroupsOnly = getSettingManager().getValue(Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY);
                     if (userGroupsOnly.equals("true")) {
                         // If user is member of the group, user can set operation
 
@@ -2592,7 +2521,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
         String groupMatchingRegex =
             getApplicationContext().getBean(SettingManager.class).
-                getValue("metadata/workflow/draftWhenInGroup");
+                getValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP);
         if (!StringUtils.isEmpty(groupMatchingRegex)) {
             final Group group = getApplicationContext().getBean(GroupRepository.class)
                 .findOne(Integer.valueOf(groupOwner));
@@ -2705,10 +2634,11 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param updateDatestamp FIXME ? updateDatestamp is not used when running XSL transformation
      */
     public Element updateFixedInfo(String schema, Optional<Integer> metadataId, String uuid, Element md, String parentUuid, UpdateDatestamp updateDatestamp, ServiceContext context) throws Exception {
-        boolean autoFixing = getSettingManager().getValueAsBool("system/autofixing/enable", true);
+        boolean autoFixing = getSettingManager().getValueAsBool(Settings.SYSTEM_AUTOFIXING_ENABLE, true);
         if (autoFixing) {
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "Autofixing is enabled, trying update-fixed-info (updateDatestamp: " + updateDatestamp.name() + ")");
+            }
 
             Metadata metadata = null;
             if (metadataId.isPresent()) {
@@ -2962,9 +2892,9 @@ public class DataManager implements ApplicationEventPublisherAware {
         }
 
         // add baseUrl of this site (from settings)
-        String protocol = getSettingManager().getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host = getSettingManager().getValue(Geonet.Settings.SERVER_HOST);
-        String port = getSettingManager().getValue(Geonet.Settings.SERVER_PORT);
+        String protocol = getSettingManager().getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        String host = getSettingManager().getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getSettingManager().getValue(Settings.SYSTEM_SERVER_PORT);
         if (port.equals("80")) {
             port = "";
         } else {

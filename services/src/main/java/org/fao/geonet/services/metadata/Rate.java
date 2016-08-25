@@ -51,6 +51,8 @@ import java.nio.file.Path;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
+
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the
  * system setting "localrating/enable" is false (the default), the user's rating is shared between
@@ -61,6 +63,7 @@ import jeeves.server.context.ServiceContext;
  * When a remote rating is applied, the local rating is not updated. It will be updated on the next
  * harvest run (FIXME ?).
  */
+@Deprecated
 public class Rate extends NotInReadOnlyModeService {
 
     //--------------------------------------------------------------------------
@@ -108,7 +111,7 @@ public class Rate extends NotInReadOnlyModeService {
 
         // look up value of localrating/enable
         SettingManager settingManager = gc.getBean(SettingManager.class);
-        boolean localRating = settingManager.getValueAsBool("system/localrating/enable", false);
+        boolean localRating = settingManager.getValueAsBool(SYSTEM_LOCALRATING_ENABLE, false);
 
         if (localRating || harvUuid == null)
             //--- metadata is local, just rate it

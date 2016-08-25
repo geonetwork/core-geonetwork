@@ -23,6 +23,9 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -31,12 +34,13 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.IO;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.nio.file.Path;
 import java.util.Set;
-
-import jeeves.server.context.ServiceContext;
 
 /**
  * Utility class to deal with data and removed directory. Also provide user privileges checking
@@ -143,6 +147,7 @@ public class ResourceLib {
     /**
      * @return the absolute path of the folder choosen to store all deleted metadata
      */
+    @Deprecated
     public Path getRemovedDir(ServiceContext context) {
         GeonetContext gc = (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME);
@@ -152,8 +157,15 @@ public class ResourceLib {
     /**
      * See {@link #getRemovedDir(Path, String)}
      */
+    @Deprecated
     public Path getRemovedDir(ServiceContext context, String id) {
         return getRemovedDir(getRemovedDir(context), id);
+    }
+
+    public Path getRemovedDir(int id) {
+        ApplicationContext appContext = ApplicationContextHolder.get();
+        GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        return getRemovedDir(dataDirectory.getBackupDir(), String.valueOf(id));
     }
 
     /**

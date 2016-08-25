@@ -31,18 +31,15 @@ import org.springframework.context.ApplicationContext;
 
 public class GeonetContext {
     private final ApplicationContext _springAppContext;
-    private final Class<StatusActions> _statusActionsClass;
     private final ThreadPool _threadPool;
     private final NodeInfo nodeInfo;
 
     // ---------------------------------------------------------------------------
     @VisibleForTesting
-    public GeonetContext(ApplicationContext springAppContext, boolean readOnly,
-                         Class<StatusActions> statusActionsClass) {
+    public GeonetContext(ApplicationContext springAppContext, boolean readOnly) {
         this._springAppContext = springAppContext;
         this.nodeInfo = springAppContext.getBean(NodeInfo.class);
         nodeInfo.setReadOnly(readOnly);
-        this._statusActionsClass = statusActionsClass;
         this._threadPool = springAppContext.getBean(ThreadPool.class);
     }
 
@@ -61,11 +58,6 @@ public class GeonetContext {
         return _springAppContext.getBean(beanClass);
     }
 
-    // ---------------------------------------------------------------------------
-
-    public Class<StatusActions> getStatusActionsClass() {
-        return _statusActionsClass;
-    }
 
     public boolean isReadOnly() {
         return nodeInfo.isReadOnly();

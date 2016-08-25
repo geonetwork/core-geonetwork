@@ -29,16 +29,18 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         {{mdIdentifierTemplateSelected.name}}
-        <div class="btn-toolbar pull-right">
-          <button type="button" class="btn btn-primary btn-danger"
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-primary btn-danger pull-right"
                   data-ng-hide="mdIdentifierTemplateSelected.id == ''"
                   data-ng-click="deleteMetadataIdentifierTemplate(mdIdentifierTemplateSelected.id)">
             <i class="fa fa-times"></i>&nbsp;
             <span data-translate="">delete</span>
           </button>
-          <button type="button" class="btn btn-primary pull-right fa fa-floppy-o"
+          <button type="button" class="btn btn-primary pull-right"
                   data-ng-disabled="!gnMetadataIdentifierTemplateEdit.$valid && !gnMetadataIdentifierTemplateEdit.$valid"
-                  data-ng-click="saveMetadataIdentifierTemplate()" data-translate="">save
+                  data-ng-click="saveMetadataIdentifierTemplate()">
+            <i class="fa fa-floppy-o"></i>&nbsp;
+            <span data-translate="">save</span>
           </button>
         </div>
 

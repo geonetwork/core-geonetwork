@@ -34,7 +34,7 @@
 
   <!-- i18n information -->
   <xsl:variable name="wms-info-loc">
-    <msg id="a" xml:lang="eng">WMS service</msg>
+    <msg id="a" xml:lang="eng">WMS service </msg>
     <msg id="b" xml:lang="eng">is described in online resource section. Run to update extent, CRS or
       graphic overview
       for this WMS service for the layer named:
@@ -103,16 +103,16 @@
           select="./gmd:name/gco:CharacterString"/>.
         </name>
         <operational>true</operational>
-        <params>{ setExtent:{type:'boolean', defaultValue:'<xsl:value-of select="$setExtent"/>'},
-          setAndReplaceExtent:{type:'boolean', defaultValue:'<xsl:value-of
-            select="$setAndReplaceExtent"/>'}, setCRS:{type:'boolean', defaultValue:'<xsl:value-of
-            select="$setCRS"/>'},
+        <params>{"setExtent":{"type":"boolean", "defaultValue":"<xsl:value-of select="$setExtent"/>"},
+          "setAndReplaceExtent":{"type":"boolean", "defaultValue":"<xsl:value-of
+            select="$setAndReplaceExtent"/>"}, "setCRS":{"type":"boolean", "defaultValue":"<xsl:value-of
+            select="$setCRS"/>"},
           <xsl:if test="not($srv)">
-            setDynamicGraphicOverview:{type:'boolean',
-            defaultValue:'<xsl:value-of select="$setDynamicGraphicOverview"/>'},
+            "setDynamicGraphicOverview":{"type":"boolean",
+            "defaultValue":"<xsl:value-of select="$setDynamicGraphicOverview"/>"},
           </xsl:if>
-          wmsServiceUrl:{type:'string', defaultValue:'<xsl:value-of
-            select="normalize-space(gmd:linkage/gmd:URL)"/>'}
+          "wmsServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of
+            select="normalize-space(gmd:linkage/gmd:URL)"/>"}
           }
         </params>
       </suggestion>
@@ -156,7 +156,6 @@
         gmd:resourceMaintenance|
         gmd:graphicOverview
         "/>
-
       <!-- graphic overview-->
       <xsl:if test="$setDynamicGraphicOverviewMode and $wmsServiceUrl!='' and $layerName!=''">
         <xsl:variable name="wmsBbox"

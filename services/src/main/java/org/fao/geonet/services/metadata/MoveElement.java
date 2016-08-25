@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
@@ -41,7 +42,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * For editing : move a tag up or down. Access is restricted
  */
-
+@Deprecated
 public class MoveElement implements Service {
     private boolean down;
 

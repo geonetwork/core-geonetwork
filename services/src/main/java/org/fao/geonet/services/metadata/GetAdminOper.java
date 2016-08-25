@@ -58,7 +58,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Given a metadata id returns all operation allowed on it. Called by the metadata.admin service
  */
-
+@Deprecated
 public class GetAdminOper implements Service {
     //--------------------------------------------------------------------------
     //---

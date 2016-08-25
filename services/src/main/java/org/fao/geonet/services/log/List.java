@@ -23,9 +23,12 @@
 
 package org.fao.geonet.services.log;
 
+import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.site.model.ListLogFilesResponse;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.services.log.ListLogFilesResponse.LogFileResponse;
+import org.fao.geonet.api.site.model.ListLogFilesResponse.LogFileResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
@@ -39,12 +42,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jeeves.server.ServiceConfig;
-
 /**
  * Retrieves all log4j file in folder
  */
 @Controller("admin.log.list")
+@Deprecated
 public class List {
     private final String regexp = "log4j(-(.*?))?\\.xml";
 

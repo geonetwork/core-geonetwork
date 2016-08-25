@@ -51,6 +51,7 @@ import jeeves.server.context.ServiceContext;
  *
  * @author francois
  */
+@Deprecated
 public class Get implements Service {
 
     public static final char SEPARATOR = '~';

@@ -118,8 +118,10 @@
 
           var searchMap = new ol.Map({
             controls:[],
-            layers: viewerMap.getLayers(),
-            view: new ol.View(mapsConfig)
+            layers: [new ol.layer.Tile({
+              source: new ol.source.OSM()
+            })],
+            view: new ol.View(angular.extend({}, mapsConfig))
           });
 
 
@@ -184,22 +186,13 @@
           // }
           searchSettings.formatter = {
             // defaultUrl: 'md.format.xml?xsl=full_view&id='
-            defaultUrl: 'md.format.xml?xsl=xsl-view&uuid=',
-            defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
+            // defaultUrl: 'md.format.xml?xsl=xsl-view&uuid=',
+            // defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
             list: [{
-            //  label: 'inspire',
-            //  url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
-            //}, {
-            //  label: 'full',
-            //  url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
-            //}, {
               label: 'full',
-              url: 'md.format.xml?xsl=full_view&uuid='
-              /*
-              // You can use a function to choose formatter
               url : function(md) {
-                return 'md.format.xml?xsl=full_view&uuid=' + md.getUuid();
-              }*/
+                return '../api/records/' + md.getUuid() + '/formatters/xsl-view?root=div&view=advanced';
+              }
             }]
           };
 

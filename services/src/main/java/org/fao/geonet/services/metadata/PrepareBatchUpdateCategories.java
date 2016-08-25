@@ -40,7 +40,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Returns all categories.
  */
-
+@Deprecated
 public class PrepareBatchUpdateCategories implements Service {
     //--------------------------------------------------------------------------
     //---

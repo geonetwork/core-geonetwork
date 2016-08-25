@@ -45,7 +45,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 //=============================================================================
-
+@Deprecated
 public class Get implements Service {
     /**
      * TODO : should we move relation management in DataManager or in a specific relation management

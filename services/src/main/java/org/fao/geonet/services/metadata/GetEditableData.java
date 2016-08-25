@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
@@ -42,7 +43,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Retrieves a particular metadata with editing information. Access is restricted
  */
-
+@Deprecated
 public class GetEditableData implements Service {
     boolean useEditTab = false;
 

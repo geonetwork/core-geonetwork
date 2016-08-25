@@ -23,10 +23,10 @@
 
 package iso19110
 
-import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.Functions
-import org.fao.geonet.services.metadata.format.groovy.util.NavBarItem
-import org.fao.geonet.services.metadata.format.groovy.util.Summary
+import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.fao.geonet.api.records.formatters.groovy.Functions
+import org.fao.geonet.api.records.formatters.groovy.util.NavBarItem
+import org.fao.geonet.api.records.formatters.groovy.util.Summary
 
 /**
  * @author Jesse on 6/24/2015.
@@ -34,7 +34,7 @@ import org.fao.geonet.services.metadata.format.groovy.util.Summary
 class Handlers extends iso19139.Handlers {
     def iso19139RootPackageEl;
 
-    public Handlers(org.fao.geonet.services.metadata.format.groovy.Handlers handlers, Functions f, Environment env) {
+    public Handlers(org.fao.geonet.api.records.formatters.groovy.Handlers handlers, Functions f, Environment env) {
         super(handlers, f, env);
         rootEl = 'gfc:FC_FeatureCatalogue'
         packageViews = [rootEl]

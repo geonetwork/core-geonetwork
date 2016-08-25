@@ -29,13 +29,7 @@ import org.apache.log4j.PatternLayout;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.HarvestHistory_;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.JeevesException;
@@ -171,7 +165,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * TODO Javadoc.
      */
     public static void shutdownScheduler() throws SchedulerException {
-        getScheduler().shutdown(false);
+        getScheduler().shutdown(true);
     }
 
     /**
@@ -556,7 +550,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                     + this.getType()
                     + "] didn't accept some of the parameters sent.");
 
-                errors.add(new HarvestError(e, logger));
+                errors.add(new HarvestError(context, e, logger));
                 error = e;
                 operResult = OperResult.ERROR;
             } catch (Throwable t) {
@@ -565,8 +559,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 logger.warning(" (C) Class   : " + t.getClass().getSimpleName());
                 logger.warning(" (C) Message : " + t.getMessage());
                 error = t;
-                t.printStackTrace();
-                errors.add(new HarvestError(t, logger));
+                errors.add(new HarvestError(context, t, logger));
             } finally {
                 List<HarvestError> harvesterErrors = getErrors();
                 if (harvesterErrors != null) {

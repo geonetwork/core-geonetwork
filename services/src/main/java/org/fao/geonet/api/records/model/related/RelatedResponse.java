@@ -1,6 +1,5 @@
 package org.fao.geonet.api.records.model.related;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -480,7 +479,6 @@ public class RelatedResponse {
     @XmlType(name = "", propOrder = {
         "item"
     })
-    @JsonIgnoreType
     public static class Children implements IListOnlyClassToArray {
 
         protected List<RelatedMetadataItem> item;

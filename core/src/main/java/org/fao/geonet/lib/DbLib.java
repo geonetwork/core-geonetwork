@@ -64,7 +64,11 @@ public class DbLib {
             Log.debug(Geonet.DB, "Filling database tables");
 
         final List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
-        TransactionManager.runInTransaction("insert data into database from file", context.getApplicationContext(),
+        runSQL(context, data);
+    }
+
+    static public void runSQL(final ServiceContext context, final List<String> data) {
+        TransactionManager.runInTransaction("Apply SQL statements in database", context.getApplicationContext(),
             TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
             new TransactionTask<Object>() {
                 @Override
@@ -84,7 +88,7 @@ public class DbLib {
         runSQL(statement, data, true);
     }
 
-    private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
+    static private void runSQL(EntityManager entityManager, List<String> data, boolean failOnError) throws Exception {
         StringBuffer sb = new StringBuffer();
 
         boolean inBlock = false;

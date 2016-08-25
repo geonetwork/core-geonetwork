@@ -1,26 +1,4 @@
 <fieldset>
-  <div class="modal fade" id="translationModal" tabindex="-1" role="dialog"
-       aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="translationModalLabel" translate>harvesterName</h4>
-        </div>
-        <div class="modal-body">
-          <div data-ng-repeat="lang in languages | orderBy : 'name'">
-            <label class="control-label">{{lang.name}}</label>
-            <input class="form-control" data-ng-model="harvester.site.translations[lang.id]"/>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <legend data-translate="">harvesterIdentification</legend>
   <div data-ng-class="harvester.site.name == '' ? 'has-error' : ''">
     <label class="control-label">
@@ -33,8 +11,13 @@
 
     <div class="input-group">
       <div class="input-group margin-bottom-sm">
-              <span class="input-group-addon highlight" data-ng-click="openTranslationModal()"><i
-                class="fa fa-pencil fa-fw"></i></span>
+        <a class="input-group-addon highlight"
+           target="_blank"
+           href="#/settings/sources"
+           title="{{'sourceTranslations' | translate}}">
+          <i
+           class="fa fa-database fa-fw"></i>
+        </a>
         <input type="text" class="form-control" data-ng-model="harvester.site.name"/>
       </div>
       <div class="input-group-btn" gn-logo-picker="harvester.site.icon"

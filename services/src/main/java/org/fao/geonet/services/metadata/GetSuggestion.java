@@ -67,6 +67,7 @@ import jeeves.server.context.ServiceContext;
  * org.fao.geonet.services.metadata.XslProcessing} service metadata.processing?id=41&process=keywords-comma-exploder
  * </li> </ul>
  */
+@Deprecated
 public class GetSuggestion implements Service {
 
     private static final String XSL_SUGGEST = "suggest.xsl";

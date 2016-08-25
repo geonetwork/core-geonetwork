@@ -97,16 +97,12 @@
             <div class="form-group">
               <label for="data" data-translate="">xmlSnippet</label>
               <textarea class="form-control"
-                        id="data" name="data"
+                        id="data"
                         data-gn-autogrow=""
-                        data-ng-model="importData.data"
+                        data-ng-model="xml"
                         data-ng-required=""
                         placeholder="<gmd:CI_ResponsibleParty xmlns:gmd= ..."
               />
-
-              <input type="hidden" data-ng-model="importData.insert_mode"/>
-              <input type="hidden" data-ng-model="importData.template"/>
-              <input type="hidden" data-ng-model="importData.fullPrivileges"/>
             </div>
             <div class="form-group" data-ng-show="groups && groups.length > 1">
               <label class="control-label" data-translate="">inGroup</label>
@@ -116,7 +112,8 @@
 
             <div class="btn-toolbar">
               <button type="button" class="btn btn-primary pull-right"
-                      data-ng-click="importEntry()"
+                      data-ng-click="importEntry(xml)"
+                      data-ng-disabled="xml === ''"
                       title="{{'importEntry' | translate}}">
                 <i class="fa fa-plus"/>&nbsp;
               </button>

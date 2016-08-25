@@ -23,6 +23,7 @@
 package org.fao.geonet.inspireatom.harvester;
 
 
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -34,6 +35,7 @@ import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.InspireAtomFeedSpecs;
@@ -47,8 +49,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jeeves.server.context.ServiceContext;
 
 /**
  * Class to harvest the Atom documents referenced in the iso19139 in the catalog.
@@ -97,7 +97,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest started");
 
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-            String atomProtocol = sm.getValue("system/inspire/atomProtocol");
+            String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             logger.info("ATOM feed harvest: remove existing metadata feeds");
@@ -157,7 +157,7 @@ public class InspireAtomHarvester {
             logger.info("ATOM feed harvest started for metadata: " + metadataId);
 
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-            String atomProtocol = sm.getValue("system/inspire/atomProtocol");
+            String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             logger.info("ATOM feed harvest: remove existing metadata feed");
@@ -276,7 +276,7 @@ public class InspireAtomHarvester {
         // Retrieve the metadata referencing atom feed documents.
 
         // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-        String atomProtocol = gc.getBean(SettingManager.class).getValue("system/inspire/atomProtocol");
+        String atomProtocol = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 

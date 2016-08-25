@@ -80,9 +80,16 @@ public enum MetadataType {
     @Nonnull
     public static MetadataType lookup(@Nonnull final String code) {
         final String trimmedCode = code.trim();
-        if (trimmedCode.length() != 1) {
-            throw new IllegalArgumentException("Not a known MetadataType code: " + trimmedCode);
+        if (trimmedCode.length() == 1) {
+            return lookup(trimmedCode.charAt(0));
+        } else {
+            for (MetadataType type : values()) {
+                if (type.toString().equalsIgnoreCase(trimmedCode.toLowerCase())) {
+                    return type;
+                }
+            }
         }
-        return lookup(trimmedCode.charAt(0));
+        throw new IllegalArgumentException(String.format(
+            "'%s' is not a known metadata type code. Values are: %s", trimmedCode, values()));
     }
 }

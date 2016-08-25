@@ -38,6 +38,7 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,27 +62,6 @@ import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
  */
 public class SettingManager {
 
-    public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
-    public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
-    public static final String SYSTEM_SITE_LABEL_PREFIX = "system/site/labels/";
-    public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
-
-    public static final String SYSTEM_PROXY_USE = "system/proxy/use";
-    public static final String SYSTEM_PROXY_HOST = "system/proxy/host";
-    public static final String SYSTEM_PROXY_PORT = "system/proxy/port";
-    public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
-    public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
-
-    public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
-    public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
-    public static final String SYSTEM_SERVER_LOG = "system/server/log";
-
-    public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
-    public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
-    public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
-    public static final String SYSTEM_PREFER_GROUP_LOGO = "system/metadata/prefergrouplogo";
-    public static final String ENABLE_ALL_THESAURUS = "system/metadata/allThesaurus";
-
     @PersistenceContext
     private EntityManager _entityManager;
     @Autowired
@@ -92,6 +72,11 @@ public class SettingManager {
     @PostConstruct
     private void init() {
         this.pathFinder = new ServletPathFinder(servletContext);
+    }
+
+    public List<Setting> getAll() {
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+        return repo.findAll(SortUtils.createSort(Setting_.name));
     }
 
     /**
@@ -189,6 +174,27 @@ public class SettingManager {
             Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + path + " but null value found. Check the settings table.");
         }
         return value;
+    }
+
+    /**
+     * Return a set of values
+     *
+     * @param keys A list of setting's key to retrieve
+     */
+    public List<Setting> getSettings(String[] keys) {
+        SettingRepository repo = ApplicationContextHolder.get().getBean(SettingRepository.class);
+
+        List<Setting> settings = new ArrayList<>();
+        for (int i = 0; i < keys.length; i++) {
+            String key = keys[i];
+            Setting se = repo.findOne(key);
+            if (se == null) {
+                Log.warning(Geonet.SETTINGS, "  Requested setting with name: " + key + " not found. Add it to the settings table.");
+            } else {
+                settings.add(se);
+            }
+        }
+        return settings;
     }
 
     /**
@@ -322,15 +328,15 @@ public class SettingManager {
     }
 
     public final String getSiteId() {
-        return getValue(SYSTEM_SITE_SITE_ID_PATH);
+        return getValue(Settings.SYSTEM_SITE_SITE_ID_PATH);
     }
 
     public final String getSiteName() {
-        return getValue(SYSTEM_SITE_NAME_PATH);
+        return getValue(Settings.SYSTEM_SITE_NAME_PATH);
     }
 
     public void setSiteUuid(String siteUuid) {
-        setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
+        setValue(Settings.SYSTEM_SITE_SITE_ID_PATH, siteUuid);
     }
 
     /**
@@ -365,9 +371,9 @@ public class SettingManager {
         NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
 
         String baseURL = pathFinder.getBaseUrl();
-        String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
-        String host = getValue(Geonet.Settings.SERVER_HOST);
-        String port = getValue(Geonet.Settings.SERVER_PORT);
+        String protocol = getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        String host = getValue(Settings.SYSTEM_SERVER_HOST);
+        String port = getValue(Settings.SYSTEM_SERVER_PORT);
         String locServ = baseURL + "/" + nodeInfo.getId() + "/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;

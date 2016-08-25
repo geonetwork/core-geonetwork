@@ -24,16 +24,9 @@
 package org.fao.geonet.kernel.setting;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
 
 //=============================================================================
 public class SettingInfo {
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     public String getSiteName() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -49,7 +42,7 @@ public class SettingInfo {
     public String getSiteUrl() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
-        String protocol = settingManager.getValue(Geonet.Settings.SERVER_PROTOCOL);
+        String protocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         return getSiteUrl(protocol.equalsIgnoreCase("https"));
     }
 
@@ -61,9 +54,9 @@ public class SettingInfo {
 
         String protocol;
         Integer port;
-        String host = settingManager.getValue(Geonet.Settings.SERVER_HOST);
-        Integer secureport = toIntOrNull(Geonet.Settings.SERVER_SECURE_PORT);
-        Integer insecureport = toIntOrNull(Geonet.Settings.SERVER_PORT);
+            String host = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
+            Integer secureport = toIntOrNull(Settings.SYSTEM_SERVER_SECURE_PORT);
+            Integer insecureport = toIntOrNull(Settings.SYSTEM_SERVER_PORT);
         if (secureUrl) {
             protocol = "https";
             if (secureport == null && insecureport == null) {
@@ -111,7 +104,7 @@ public class SettingInfo {
 
     public String getSelectionMaxRecords() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String value = settingManager.getValue("system/selectionmanager/maxrecords");
+    String value = settingManager.getValue(Settings.SYSTEM_SELECTIONMANAGER_MAXRECORDS);
         if (value == null) value = "10000";
         return value;
     }
@@ -121,7 +114,7 @@ public class SettingInfo {
 
     public boolean isXLinkResolverEnabled() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        String value = settingManager.getValue("system/xlinkResolver/enable");
+        String value = settingManager.getValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE);
         if (value == null) return false;
         else return value.equals("true");
     }
@@ -135,6 +128,6 @@ public class SettingInfo {
 
     public boolean getInspireEnabled() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        return settingManager.getValueAsBool("system/inspire/enable");
+        return settingManager.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
     }
 }

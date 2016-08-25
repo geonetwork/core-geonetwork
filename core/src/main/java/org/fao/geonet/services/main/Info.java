@@ -42,6 +42,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -58,7 +59,6 @@ import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
@@ -82,15 +82,16 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
-import static org.fao.geonet.kernel.setting.SettingManager.SYSTEM_SITE_LABEL_PREFIX;
 
 @Deprecated
 public class Info implements Service {
+    private static final String READ_ONLY = "readonly";
+    private static final String INDEX = "index";
+    private static final String SCHEMAS = "schemas";
     public static final String SYSTEMINFO = "systeminfo";
     public static final String STATUS = "status";
     public static final String AUTH = "auth";
     public static final String ME = "me";
-    public static final String Z_3950_REPOSITORIES = "z3950repositories";
     public static final String TEMPLATES = "templates";
     public static final String USERS = "users";
     public static final String SOURCES = "sources";
@@ -107,9 +108,6 @@ public class Info implements Service {
     public static final String INSPIRE = "inspire";
     public static final String CONFIG = "config";
     public static final String SITE = "site";
-    private static final String READ_ONLY = "readonly";
-    private static final String INDEX = "index";
-    private static final String SCHEMAS = "schemas";
     private static final String STAGING_PROFILE = "stagingProfile";
 
     private Path xslPath;
@@ -171,11 +169,11 @@ public class Info implements Service {
             if (type.equals(SITE)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
                     new String[]{
-                        SettingManager.SYSTEM_SITE_NAME_PATH,
-                        "system/site/organization",
-                        SettingManager.SYSTEM_SITE_SITE_ID_PATH,
-                        "system/platform/version",
-                        "system/platform/subVersion"
+                        Settings.SYSTEM_SITE_NAME_PATH,
+                        Settings.SYSTEM_SITE_ORGANIZATION,
+                        Settings.SYSTEM_SITE_SITE_ID_PATH,
+                        Settings.SYSTEM_PLATFORM_VERSION,
+                        Settings.SYSTEM_PLATFORM_SUBVERSION
                     }));
             } else if (type.equals(CONFIG)) {
                 // Return a set of properties which define what
@@ -189,7 +187,7 @@ public class Info implements Service {
                 Element settingsElement = gc.getBean(SettingManager.class).getValues(
                     publicSettingsKey.toArray(new String[0]));
 
-                String mailServerHost = gc.getBean(SettingManager.class).getValue("system/feedback/mailServer/host");
+                String mailServerHost = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
                 Element mailServerElement = new Element("setting");
                 mailServerElement.setAttribute("name", "system/mail/enable");
                 mailServerElement.setAttribute("value", !StringUtils.isEmpty(mailServerHost) + "");
@@ -208,7 +206,7 @@ public class Info implements Service {
 
             } else if (type.equals(USER_GROUP_ONLY)) {
                 result.addContent(gc.getBean(SettingManager.class).getValues(
-                    new String[]{"system/metadataprivs/usergrouponly"}));
+                    new String[]{Settings.SYSTEM_METADATAPRIVS_USERGROUPONLY}));
 
             } else if (type.equals(CATEGORIES)) {
                 result.addContent(context.getBean(MetadataCategoryRepository.class).findAllAsXml());
@@ -247,9 +245,6 @@ public class Info implements Service {
 
             } else if (type.equals(TEMPLATES)) {
                 result.addContent(getTemplates(context));
-
-            } else if (type.equals(Z_3950_REPOSITORIES)) {
-                result.addContent(getZRepositories(context, sm));
 
             } else if (type.equals(ME)) {
                 result.addContent(getMyInfo(context));
@@ -452,38 +447,15 @@ public class Info implements Service {
             String siteName = sm.getSiteName();
 
             final SettingRepository settingRepository = context.getBean(SettingRepository.class);
-            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(SYSTEM_SITE_LABEL_PREFIX));
+            final List<Setting> labelSettings = settingRepository.findAll(SettingSpec.nameStartsWith(Settings.SYSTEM_SITE_LABEL_PREFIX));
             Map<String, String> labels = Maps.newHashMap();
             for (Setting setting : labelSettings) {
-                labels.put(setting.getName().substring(SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
+                labels.put(setting.getName().substring(Settings.SYSTEM_SITE_LABEL_PREFIX.length()), setting.getValue());
             }
             element.addContent(buildRecord(siteId, siteName, labels, null, null));
         }
 
         return element;
-    }
-
-    //--------------------------------------------------------------------------
-    //--- ZRepositories
-    //--------------------------------------------------------------------------
-
-    public Element getZRepositories(ServiceContext context, SettingManager sm) throws Exception {
-        boolean z3950Enable = sm.getValue("system/z3950/enable").equals("true");
-
-        List<RepositoryInfo> repoList = new ArrayList<RepositoryInfo>(RepositoryInfo.getRepositories(context));
-
-        Element response = new Element("z3950repositories");
-
-        for (RepositoryInfo repo : repoList) {
-            if (!z3950Enable && repo.getClassName().startsWith("org.fao.geonet")) {
-                continue; // skip Local GeoNetwork Z server if not enabled
-            } else {
-                response.addContent(buildRecord(repo.getDn(), repo.getName(), Collections.<String, String>emptyMap(),
-                    repo.getCode(), repo.getServerCode()));
-            }
-        }
-
-        return response;
     }
 
     //--------------------------------------------------------------------------

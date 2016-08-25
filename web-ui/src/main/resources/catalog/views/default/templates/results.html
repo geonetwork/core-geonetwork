@@ -13,7 +13,8 @@
       <div class="pull-right"
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"
-           data-enable-hot-keys=""></div>
+           data-enable-hot-keys=""
+           data-enable-events=""></div>
 
       <div class="pull-right"
            data-sortby-combo=""
@@ -64,6 +65,17 @@
     </div>
   </div>
 
+  <div class="row"
+       data-ng-show="searchResults.records.length > 0">
+    <div class="col-md-offset-3 col-md-9">
+      <div class=""
+           data-gn-pagination="paginationInfo"
+           data-hits-values="searchObj.hitsperpageValues"
+           data-enable-hot-keys=""></div>
+      <br/>
+    </div>
+  </div>
+
   <div data-gn-map-field="searchObj.searchMap"
        data-gn-map-field-geom="searchObj.params.geometry"
        data-gn-map-field-opt="searchObj.mapfieldOption"
@@ -72,7 +84,8 @@
 
   <button data-ng-click="toggleMap()"
           title="{{'toggleMiniMap' | translate}}"
-          class="gn-minimap-toggle btn btn-link">
-    <i class="fa fa-angle-double-right"></i>
+          class="gn-toggle gn-minimap-toggle btn btn-link gn-minimap-button">
+    <i class="fa fa-angle-double-right" ></i>
+    <b class="gn-minimap-toggle gn-minimap-text" data-translate="">map</b>
   </button>
 </div>

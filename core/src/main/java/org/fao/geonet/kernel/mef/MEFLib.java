@@ -32,6 +32,7 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
@@ -57,6 +58,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -95,6 +97,20 @@ public class MEFLib {
             return true;
         }
     };
+
+    public static List<String> doImport(String fileType,
+                                        final MEFLib.UuidAction uuidAction,
+                                        final String style,
+                                        final String source,
+                                        final MetadataType isTemplate,
+                                        final String[] category,
+                                        final String groupId,
+                                        final boolean validate,
+                                        final boolean assign,
+                                        final ServiceContext context,
+                                        final Path mefFile) throws Exception {
+        return Importer.doImport(fileType, uuidAction, style, source, isTemplate, category, groupId, validate, assign, context, mefFile);
+    }
 
     public static List<String> doImport(Element params, ServiceContext context, Path mefFile, Path stylePath) throws Exception {
         return Importer.doImport(params, context, mefFile, stylePath);
@@ -439,6 +455,27 @@ public class MEFLib {
         throw new Exception("File not found in info.xml : " + fileName);
     }
 
+    public enum UuidAction {
+        GENERATEUUID("generateUUID"),
+        NOTHING("nothing"),
+        OVERWRITE("overwrite");
+        String name;
+
+        UuidAction(String name) {
+            this.name = name;
+        }
+
+        public static UuidAction parse(String value) {
+            for (UuidAction v : values()) {
+                if (v.name.equalsIgnoreCase(value)) {
+                    return v;
+                }
+            }
+            return UuidAction.NOTHING;
+        }
+
+    }
+
     public enum Format {
         /**
          * Only metadata record and infomation
@@ -460,11 +497,11 @@ public class MEFLib {
                 return FULL;
             // throw new MissingParameterEx("format");
 
-            if (format.equals("simple"))
+            if (format.equalsIgnoreCase("simple"))
                 return SIMPLE;
-            if (format.equals("partial"))
+            if (format.equalsIgnoreCase("partial"))
                 return PARTIAL;
-            if (format.equals("full"))
+            if (format.equalsIgnoreCase("full"))
                 return FULL;
 
             throw new BadParameterEx("format", format);
@@ -481,9 +518,9 @@ public class MEFLib {
      * MEF file version.
      *
      * MEF file is composed of one or more metadata record with extra information managed by
-     * GeoNetwork. Metadata is in XML format. An information file (info.xml) is used to transfert
+     * GeoNetwork. Metadata is in XML format. An information file (info.xml) is used to transfer
      * general informations, categories, privileges and file references information. A public and
-     * private directories allows data transfert (eg. thumbnails, data upload).
+     * private directories allows data transfer (eg. thumbnails, data upload).
      */
     public enum Version {
         /**
@@ -498,7 +535,7 @@ public class MEFLib {
          *      +---- all private documents and thumbnails
          * </pre>
          */
-        V1,
+        V1(Constants.MEF_V1_ACCEPT_TYPE),
         /**
          * Version 2 is composed of one or more metadata records. Each records are stored in a
          * directory named using record's uuid.
@@ -519,10 +556,59 @@ public class MEFLib {
          *          +---- all private documents and thumbnails
          * </pre>
          */
-        V2
+        V2(Constants.MEF_V2_ACCEPT_TYPE);
+
+        String acceptType;
+
+        Version(String acceptType) {
+            this.acceptType = acceptType;
+        }
+
+        /**
+         * Return version 2 by default.
+         */
+        static public Version find(String acceptType) {
+            for (Version v : values()) {
+                if (v.acceptType.equalsIgnoreCase(acceptType)) {
+                    return v;
+                }
+            }
+            return V2;
+        }
+
+        @Override
+        public String toString() {
+            return this.acceptType;
+        }
+
+        public static class Constants {
+            public static final String MEF_V1_ACCEPT_TYPE = "application/x-gn-mef-1-zip";
+            public static final String MEF_V2_ACCEPT_TYPE = "application/x-gn-mef-2-zip";
+        }
     }
 
+    /**
+     * Search for XML, MEF or ZIP file.
+     */
+    public static class MefOrXmlFileFilter implements DirectoryStream.Filter<Path> {
+        @Override
+        public boolean accept(Path file) throws IOException {
+            String name = file.getFileName().toString();
+            return (name.toLowerCase().endsWith(".xml") ||
+                name.toLowerCase().endsWith(".mef") ||
+                name.toLowerCase().endsWith(".zip"));
+        }
+    }
+
+    public static boolean isValidArchiveExtensionForMEF(String filename) {
+        String lowercasedFileName = filename.toLowerCase();
+        return lowercasedFileName.endsWith(".zip") ||
+            lowercasedFileName.endsWith(".mef");
+    }
+
+    public static boolean isValidExtensionForMEF(String filename) {
+        String lowercasedFileName = filename.toLowerCase();
+        return lowercasedFileName.endsWith(".xml") ||
+            isValidArchiveExtensionForMEF(lowercasedFileName);
+    }
 }
-
-// =============================================================================
-

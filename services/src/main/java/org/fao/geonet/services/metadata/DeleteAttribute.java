@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -38,6 +39,7 @@ import jeeves.server.context.ServiceContext;
  * For editing : removes an attribute from a metadata. Access is restricted Metadata must be in
  * current user session in edit mode.
  */
+@Deprecated
 public class DeleteAttribute extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

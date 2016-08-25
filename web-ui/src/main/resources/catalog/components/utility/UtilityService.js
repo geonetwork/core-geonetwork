@@ -342,9 +342,8 @@
 
   module.factory('gnRegionService', [
     '$q',
-    'gnHttp',
-    '$translate',
-    function($q, gnHttp, $translate) {
+    '$http',
+    function($q, $http) {
 
       /**
       * Array of available region type
@@ -368,9 +367,10 @@
         loadRegion: function(type, lang) {
           var defer = $q.defer();
 
-          gnHttp.callService('region', {
-            categoryId: type.id
-          }, {
+          $http.get('../api/regions', {
+            params: {
+              categoryId: type.id
+            },
             cache: true
           }).success(function(response) {
             var data = response.region;
@@ -398,14 +398,13 @@
         loadList: function() {
           if (!listDefer) {
             listDefer = $q.defer();
-            gnHttp.callService('regionsList').success(function(data) {
+            $http.get('../api/regions/types').success(function(data) {
               angular.forEach(data, function(value, key) {
-                var id = value['@id'];
-                if (id && id.indexOf('#') >= 0) {
+                if (value.id && value.id.indexOf('#') >= 0) {
                   regionsList.push({
-                    id: id,
-                    name: id.split('#')[1],
-                    label: value['@label'] || id.split('#')[1]
+                    id: value.id,
+                    name: value.id.split('#')[1],
+                    label: value.label || value.id.split('#')[1]
                   });
                 }
               });

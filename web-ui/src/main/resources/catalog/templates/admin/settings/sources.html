@@ -24,25 +24,24 @@
       <div class="panel-heading">
         {{sourcesSelected.name}}
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right fa fa-floppy-o"
-                  data-ng-click="saveSources()" data-translate="">save
+          <button type="button" class="btn btn-primary pull-right"
+                  data-ng-click="saveSources()">
+            <i class="fa fa-floppy-o"></i>&nbsp;
+            <span data-translate="">save</span>
           </button>
         </div>
       </div>
       <div class="panel-body">
-        <form id="source{{sourcesSelected.name}}" class="form-horizontal">
-          <div class="form-group" data-ng-repeat="lang in languages | orderBy:'name'">
-            <label for="translations-{{lang.id}}"
-                   class="col-sm-2 control-label">{{lang.name}}</label>
-            <div class="col-sm-10">
-              <input id="translations-{{lang.id}}"
-                     data-ng-model="sourcesSelected.label[lang.id]"
-                     type="text"
-                     class="form-control"
-                     placeholder="{{lang.name}}"></input>
-            </div>
-          </div>
-        </form>
+        <table class="table table-striped">
+          <tr
+            data-ng-repeat="(key, value) in sourcesSelected.label">
+            <td>{{key | translate}}</td>
+            <td><input type="text" class="form-control"
+                       value="{{value}}"
+                       data-ng-model="sourcesSelected.label[key]"
+            /></td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>

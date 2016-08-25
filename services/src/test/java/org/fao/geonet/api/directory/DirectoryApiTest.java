@@ -23,6 +23,10 @@
 
 package org.fao.geonet.api.directory;
 
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.api.registries.CollectResults;
+import org.fao.geonet.api.registries.DirectoryUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
@@ -40,8 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import jeeves.server.context.ServiceContext;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

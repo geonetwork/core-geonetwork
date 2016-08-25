@@ -23,7 +23,7 @@
 
 package org.fao.geonet.domain;
 
-import org.fao.geonet.entitylistener.GroupEntityListenerManager;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -52,6 +52,8 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.fao.geonet.entitylistener.GroupEntityListenerManager;
 
 /**
  * An entity representing group of users. Groups in conjunction with {@link Operation}s control what

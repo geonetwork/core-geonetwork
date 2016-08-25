@@ -170,7 +170,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
         boolean recurse = Util.getParam(params, Params.RECURSE, "off").equals("on");
 
         final List<Path> files = Lists.newArrayList();
-        final MefOrXmlFileFilter predicate = new MefOrXmlFileFilter();
+        final MEFLib.MefOrXmlFileFilter predicate = new MEFLib.MefOrXmlFileFilter();
         if (recurse) {
             Files.walkFileTree(IO.toPath(dir), new SimpleFileVisitor<Path>() {
                 @Override
@@ -225,7 +225,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
                             context.debug("   Scanning category : " + categ);
                         }
 
-                        try (DirectoryStream<Path> paths = Files.newDirectoryStream(categ, new MefOrXmlFileFilter())) {
+                        try (DirectoryStream<Path> paths = Files.newDirectoryStream(categ, new MEFLib.MefOrXmlFileFilter())) {
                             for (Path file : paths) {
                                 Element xml = Xml.loadFile(file);
 
@@ -342,16 +342,6 @@ public class ImportFromDir extends NotInReadOnlyModeService {
     //--- Config import
     //---
     //--------------------------------------------------------------------------
-
-    private static class MefOrXmlFileFilter implements DirectoryStream.Filter<Path> {
-        @Override
-        public boolean accept(Path file) throws IOException {
-            String name = file.getFileName().toString();
-            return (name.toLowerCase().endsWith(".xml") ||
-                name.toLowerCase().endsWith(".mef") ||
-                name.toLowerCase().endsWith(".zip"));
-        }
-    }
 
     //--------------------------------------------------------------------------
     //---

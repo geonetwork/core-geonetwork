@@ -23,27 +23,32 @@
         </div>
 
         <div class="list-group">
-          <a href="" class="list-group-item" data-ng-repeat="s in schemas"
-             data-ng-class="isSchemaSelected(s) ? 'active' : ''" data-ng-click="selectSchema(s)">
-            <h4 class="list-group-item-heading">{{s | translate}}</h4>
-            <p> {{(s + '-help') | translate}} </p>
-          </a>
+          <li class="list-group-item"
+              data-ng-repeat="s in schemas"
+              data-ng-click="selectSchema(s.name)">
+            <h4 class="list-group-item-heading">
+              <i class="fa"
+                 data-ng-class="isSchemaSelected(s.name) ? 'fa-check-square-o' : 'fa-square-o'"/>&nbsp
+                 {{s.titles[iso2lang] || s.titles['en'] || s.name}} ({{s.name}})
+            </h4>
+            <p> {{s.descriptions[iso2lang] || s.descriptions['en'] || ''}} </p>
+            <a data-ng-if="s.standardUrl" data-ng-href="{{s.standardUrl}}" data-translate="">moreStandardInfo</a>
+          </li>
         </div>
 
         <div class="row">
-          <div class="col-lg-6">
+          <div class="col-lg-12">
             <button type="button" class="btn btn-primary btn-block"
                     data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
                     data-ng-click="loadTemplates()">
-              <i class="fa fa-upload"/>
+              <i class="fa gn-recordtype-y"/>&nbsp;
               <span data-translate="">loadTemplatesForSelectedSchema</span>
             </button>
-          </div>
-          <div class="col-lg-6">
+            <br/>
             <button type="button" class="btn btn-primary btn-block"
                     data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
                     data-ng-click="loadSamples()">
-              <i class="fa fa-upload"/>
+              <i class="fa gn-recordtype-n"/>&nbsp;
               <span data-translate="">loadSamplesForSelectedSchema</span>
             </button>
           </div>
@@ -59,41 +64,43 @@
       <div class="progress-bar" style="width: 100%"/>
     </div>
 
-    <div class="panel panel-default" id="reportStatus" data-ng-hide="!loadReport && !loadTplReport"
-         data-ng-class="loadReport['@status'] == 'true' || loadTplReport['@status'] == 'true' ?
-                        'panel-success' : 'panel-danger'">
-      <div class="panel-heading" data-translate="">loadReport</div>
+    <div class="panel panel-default"
+         data-ng-show="loadReport"
+         data-ng-class="loadReport.errors.length === 0 ?
+                        'panel-success' : 'panel-warning'">
+      <div class="panel-heading" data-translate="">loadSampleReport</div>
       <div class="panel-body">
         <div data-ng-show="loadReport">
-          <h2 data-translate="">loadSampleReport</h2>
-
-          <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
+          <ul class="icons-ul">
+            <li data-ng-repeat="i in loadReport.errors">
+              {{i}}
+            </li>
+          </ul>
 
           <ul class="icons-ul">
-            <li data-ng-repeat="schema in selectedSchemas">{{schema | translate}}
-              <ul class="icons-ul">
-                <li data-ng-repeat="record in loadReport[schema]">
-                  {{record}} {{'records' | translate}}
-                </li>
-              </ul>
+            <li data-ng-repeat="i in loadReport.infos">
+              {{i.message}}
             </li>
           </ul>
         </div>
-
+      </div>
+    </div>
+    <div class="panel panel-default" id="reportStatus"
+         data-ng-show="loadTplReport"
+         data-ng-class="loadTplReport.errors.length === 0?
+                        'panel-success' : 'panel-warning'">
+      <div class="panel-heading" data-translate="">loadTemplatesReport</div>
+      <div class="panel-body">
         <div data-ng-show="loadTplReport">
-          <h2 data-translate="">loadTemplatesReport</h2>
-
-          <p data-ng-show="loadTplReport['@error']">{{loadTplReport['@error']}}</p>
+          <ul class="icons-ul">
+            <li data-ng-repeat="i in loadTplReport.errors">
+              {{i}}
+            </li>
+          </ul>
 
           <ul class="icons-ul">
-            <li data-ng-repeat="schema in selectedSchemas">{{schema | translate}}
-              <ul class="icons-ul">
-                <li data-ng-repeat="record in loadTplReport[schema]">
-                  <i class=""
-                     data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-times'"/>
-                  {{record['@name']}}
-                </li>
-              </ul>
+            <li data-ng-repeat="i in loadTplReport.infos">
+              {{i.message}}
             </li>
           </ul>
         </div>

@@ -49,6 +49,7 @@ import jeeves.server.context.ServiceContext;
  *
  * For batch update see BatchNewOwner.
  */
+@Deprecated
 public class UpdateGroupOwner extends NotInReadOnlyModeService {
 
     /**

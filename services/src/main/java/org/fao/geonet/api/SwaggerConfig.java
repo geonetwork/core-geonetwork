@@ -57,7 +57,10 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 @EnableWebMvc
 @Configuration
 @Service
-@ComponentScan(basePackages = {"org.fao.geonet.api"})
+@ComponentScan(basePackages = {
+    "org.fao.geonet.api",
+    "org.fao.geonet.monitor.service"
+})
 @EnableSwagger2 //Loads the spring beans required by the framework
 public class SwaggerConfig {
     @Autowired
@@ -101,7 +104,7 @@ public class SwaggerConfig {
 //                                .message("500 message")
 //                                .responseModel(new ModelRef("Error"))
 //                                .build()))
-            .securitySchemes(newArrayList(new BasicAuth("ba")))
+            .securitySchemes(newArrayList(new BasicAuth("basicAuth")))
 //                .securityContexts(newArrayList(securityContext()))
 //                .enableUrlTemplating(true)
 //                .globalOperationParameters(

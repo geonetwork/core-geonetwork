@@ -30,9 +30,13 @@
 	">
 
   <bean id="jdbcDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    <property name="jndiName" value="java:/comp/env"/>
+    <!-- comp/env/jdbc/geonetwork works with WEB-INF/jetty-env.xml supplied with GN -->
+    <property name="jndiName" value="java:comp/env/jdbc/geonetwork"/>
     <property name="cache" value="true"/>
     <property name="exposeAccessContext" value="false"/>
   </bean>
 
+  <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+    <constructor-arg value="POSTGRESQL"/>
+  </bean>
 </beans>

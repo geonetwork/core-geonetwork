@@ -31,6 +31,10 @@
 
   <bean id="httpRequestFactory" class="org.fao.geonet.MockRequestFactoryGeonet"/>
 
+  <bean id="defaultLanguage" class="java.lang.String">
+    <constructor-arg index="0" value="eng"/>
+  </bean>
+
   <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
     <value>FormatIntegrationTest.com</value>
   </util:set>

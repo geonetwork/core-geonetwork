@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import org.fao.geonet.api.records.MetadataValidateApi;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
@@ -250,9 +251,9 @@ public class ValidateTest {
     @Test
     public void testRestructureReport() throws Exception {
         final Element report = Xml.loadString(REPORT, false);
-        Validate.restructureReportToHavePatternRuleHierarchy(report);
+        MetadataValidateApi.restructureReportToHavePatternRuleHierarchy(report);
 
-        final Iterator patternsIter = report.getDescendants(new ElementFilter(Validate.EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
+        final Iterator patternsIter = report.getDescendants(new ElementFilter(MetadataValidateApi.EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
         while (patternsIter.hasNext()) {
             Object next = patternsIter.next();
 
@@ -265,22 +266,24 @@ public class ValidateTest {
         List<Element> children = patternUnderTest.getParentElement().getChildren();
 
         for (Element pattern : children) {
-            assertFalse(pattern.getName().equals(Validate.EL_FIRED_RULE));
-            assertFalse(pattern.getName().equals(Validate.EL_FAILED_ASSERT));
-            assertFalse(pattern.getName().equals(Validate.EL_SUCCESS_REPORT));
+            assertFalse(pattern.getName().equals(MetadataValidateApi.EL_FIRED_RULE));
+            assertFalse(pattern.getName().equals(MetadataValidateApi.EL_FAILED_ASSERT));
+            assertFalse(pattern.getName().equals(MetadataValidateApi.EL_SUCCESS_REPORT));
         }
 
         final List<Element> rules = patternUnderTest.getChildren();
 
         for (Element rule : rules) {
-            assertEquals(Validate.EL_FIRED_RULE, rule.getName());
-            assertFalse(rule.getAttributeValue(Validate.ATT_CONTEXT).equals(Validate.DEFAULT_CONTEXT));
+            assertEquals(MetadataValidateApi.EL_FIRED_RULE, rule.getName());
+            assertFalse(rule
+                .getAttributeValue(MetadataValidateApi.ATT_CONTEXT)
+                .equals(MetadataValidateApi.DEFAULT_CONTEXT));
             List<Element> ruleChildren = rule.getChildren();
             for (Element ruleChild : ruleChildren) {
                 final String name = ruleChild.getName();
                 assertTrue(name,
-                    name.equals(Validate.EL_FAILED_ASSERT) ||
-                        name.equals(Validate.EL_SUCCESS_REPORT));
+                    name.equals(MetadataValidateApi.EL_FAILED_ASSERT) ||
+                        name.equals(MetadataValidateApi.EL_SUCCESS_REPORT));
             }
         }
     }

@@ -26,6 +26,11 @@ package org.fao.geonet.services.region;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+
+import org.fao.geonet.api.regions.ListRegionsResponse;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
@@ -44,15 +49,14 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
+import static org.fao.geonet.api.regions.RegionsApi.createRequest;
 
 //=============================================================================
 
 /**
  * Returns a specific region and coordinates given its id
  */
+@Deprecated
 @Controller
 public class List {
 
@@ -182,20 +186,6 @@ public class List {
         nativeResponse.setHeader("Cache-Control", "no-cache");
 
         return new ListRegionsResponse(regions);
-    }
-
-    private Request createRequest(@RequestParam(required = false) String label, @RequestParam(required = false) String categoryId, @RequestParam(defaultValue = "-1") int maxRecords, ServiceContext context, RegionsDAO dao) throws Exception {
-        Request request = dao.createSearchRequest(context);
-        if (label != null) {
-            request.label(label);
-        }
-        if (categoryId != null) {
-            request.categoryId(categoryId);
-        }
-        if (maxRecords > 0) {
-            request.maxRecords(maxRecords);
-        }
-        return request;
     }
 
 }

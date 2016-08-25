@@ -164,8 +164,10 @@
                 // same URL as WMS
                 scope.wfsUrl ? 'WFS' : 'WMS').then(
                 function(response) {
-                  appProfile = response.data;
-                  return appProfile;
+                  if (response.status == 200) {
+                    appProfile = angular.fromJson(response.data['0']);
+                    return appProfile;
+                  }
                 }).catch (function() {});
 
             solrObject =
@@ -250,7 +252,7 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.data ? 'solrAccessError': error.statusText;
+              scope.status = error.data ? 'solrAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
             });
           };
@@ -354,7 +356,7 @@
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
-            if(boxElt.length) {
+            if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
 
@@ -384,7 +386,7 @@
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             solrObject.pushState();
-            if(!extentFilter) {
+            if (!extentFilter) {
               scope.layer.setExtent();
             }
             else {
@@ -484,7 +486,7 @@
             if (scope.source) {
               scope.source.clear();
             }
-            while(hmEventKeys.length) {
+            while (hmEventKeys.length) {
               map.unByKey(hmEventKeys.pop());
             }
           }

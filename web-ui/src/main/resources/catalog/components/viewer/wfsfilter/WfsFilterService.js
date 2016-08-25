@@ -206,7 +206,7 @@
        * @param {string} wfsUrl url of the wfs service
        */
       this.getApplicationProfile = function(uuid, ftName, wfsUrl, protocol) {
-        return $http.post('../api/0.1/metadata/' + uuid +
+        return $http.post('../api/0.1/records/' + uuid +
             '/query/wfs-indexing-config', {
               url: wfsUrl,
               name: ftName,

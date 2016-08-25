@@ -23,6 +23,9 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * The datatype of a setting value.
  *
@@ -52,6 +55,22 @@ public enum SettingDataType {
         public boolean validate(String value) {
             try {
                 Boolean.parseBoolean(value);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+    },
+    JSON {
+        @Override
+        public boolean validate(String json) {
+            try {
+                final JsonParser parser =
+                    new ObjectMapper()
+                        .getJsonFactory()
+                        .createJsonParser(json);
+                while (parser.nextToken() != null) {
+                }
                 return true;
             } catch (Exception e) {
                 return false;

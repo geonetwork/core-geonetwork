@@ -23,8 +23,9 @@
 
 package org.fao.geonet.harvester.wfsfeatures;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
@@ -36,49 +37,41 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * Created by fgravin on 10/29/15.
  */
 @Controller
 @RequestMapping(value = {
-    "/api/workers/data/wfs/actions",
-    "/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
+        "/api/workers/data/wfs/actions",
+        "/api/" + API.VERSION_0_1 + "/workers/data/wfs/actions"
 })
 @Api(value = "workers",
-    tags = "workers",
-    description = "Metadata resource related operations")
+        tags= "workers",
+        description = "Workers related operations")
 public class WFSHarvesterApi {
     @Autowired
     private JMSMessager jmsMessager;
 
     @ApiOperation(value = "Index a WFS feature type",
-        nickname = "getAllMetadataResources")
+            nickname = "getAllMetadataResources")
     @RequestMapping(value = "start",
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.PUT)
+                    consumes = MediaType.APPLICATION_JSON_VALUE,
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public JSONObject indexWfs(
-        @RequestBody WFSHarvesterParameter config) throws Exception {
+            @RequestBody WFSHarvesterParameter config) throws Exception {
 
         // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("indexedFeatures",
-            sendMessage(config));
+                sendMessage(config));
 
         return result;
     }
@@ -100,13 +93,13 @@ public class WFSHarvesterApi {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-        Exception.class})
+            Exception.class})
     public Object exceptionHandler(final Exception exception) {
-        exception.printStackTrace();
-        return new HashMap() {{
-            put("result", "failed");
-            put("type", "file_not_found");
-            put("message", exception.getClass() + " " + exception.getMessage());
-        }};
-    }
+            exception.printStackTrace();
+            return  new HashMap() {{
+                    put("result", "failed");
+                    put("type", "file_not_found");
+                    put("message", exception.getClass() + " " + exception.getMessage());
+                }};
+        }
 }

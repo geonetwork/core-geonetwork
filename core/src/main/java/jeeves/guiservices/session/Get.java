@@ -74,6 +74,24 @@ public class Get implements Service {
     @SuppressWarnings("unchecked")
     public Element exec(Element params, ServiceContext context) throws Exception {
         UserSession session = context.getUserSession();
+        Element sEl = getSessionAsXML(session);
+        if (session != null) {
+            if (groupName != null) {
+                Map<?, Element> group = (Map<?, Element>) session.getProperty(groupName);
+                if (group != null) {
+                    Element gEl = new Element(groupName);
+                    for (Element child : group.values()) {
+                        if (outFields == null || outFields.contains(child.getName()))
+                            gEl.addContent((Element) child.clone());
+                    }
+                    sEl.addContent(gEl);
+                }
+            }
+        }
+        return sEl;
+    }
+
+    public static Element getSessionAsXML(UserSession session) {
         Element sEl = new Element(Jeeves.Elem.SESSION);
 
         if (session != null) {
@@ -107,18 +125,6 @@ public class Get implements Service {
                 .addContent(name)
                 .addContent(surname)
                 .addContent(profile);
-
-            if (groupName != null) {
-                Map<?, Element> group = (Map<?, Element>) session.getProperty(groupName);
-                if (group != null) {
-                    Element gEl = new Element(groupName);
-                    for (Element child : group.values()) {
-                        if (outFields == null || outFields.contains(child.getName()))
-                            gEl.addContent((Element) child.clone());
-                    }
-                    sEl.addContent(gEl);
-                }
-            }
         }
         return sEl;
     }

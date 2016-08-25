@@ -41,6 +41,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Adds a metadata to the subversion repository.
  */
+@Deprecated
 public class Version extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

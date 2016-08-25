@@ -25,40 +25,27 @@ package org.fao.geonet.kernel.metadata;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.StatusValue;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.fao.geonet.util.XslUtil;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -73,6 +60,7 @@ public class DefaultStatusActions implements StatusActions {
     private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
     private boolean useSSL;
     private boolean useTLS;
+    private boolean ignoreSslCertificateErrors;
     private StatusValueRepository _statusValueRepository;
 
     /**
@@ -87,20 +75,21 @@ public class DefaultStatusActions implements StatusActions {
     public void init(ServiceContext context) throws Exception {
 
         this.context = context;
-        this._statusValueRepository = context.getBean(StatusValueRepository.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        this._statusValueRepository = applicationContext.getBean(StatusValueRepository.class);
         this.language = context.getLanguage();
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager sm = gc.getBean(SettingManager.class);
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         siteName = sm.getSiteName();
-        host = sm.getValue("system/feedback/mailServer/host");
-        port = sm.getValue("system/feedback/mailServer/port");
-        from = sm.getValue("system/feedback/email");
-        username = sm.getValue("system/feedback/mailServer/username");
-        password = sm.getValue("system/feedback/mailServer/password");
-        useSSL = sm.getValueAsBool("system/feedback/mailServer/ssl");
-        useTLS = sm.getValueAsBool("system/feedback/mailServer/tls");
+        host = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+        port = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PORT);
+        from = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
+        username = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_USERNAME);
+        password = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_PASSWORD);
+        useSSL = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_SSL);
+        useTLS = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_TLS);
+        ignoreSslCertificateErrors = sm.getValueAsBool(Settings.SYSTEM_FEEDBACK_MAILSERVER_IGNORE_SSL_CERTIFICATE_ERRORS);
 
         if (host == null || host.length() == 0) {
             context.error("Mail server host not configure");
@@ -117,7 +106,8 @@ public class DefaultStatusActions implements StatusActions {
             emailNotes = false;
         }
 
-        fromDescr = siteName + LangUtils.translate(context.getApplicationContext(), "statusTitle").get(this.language);
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        fromDescr = siteName + messages.getString("status_email_title");
 
         session = context.getUserSession();
         replyTo = session.getEmailAddr();
@@ -128,8 +118,8 @@ public class DefaultStatusActions implements StatusActions {
             replyToDescr = fromDescr;
         }
 
-        dm = gc.getBean(DataManager.class);
-        siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
+        dm = applicationContext.getBean(DataManager.class);
+        siteUrl = sm.getSiteURL(context);
     }
 
     /**
@@ -139,14 +129,12 @@ public class DefaultStatusActions implements StatusActions {
      * @param minorEdit If true then the edit was a minor edit.
      */
     public void onEdit(int id, boolean minorEdit) throws Exception {
-
         if (!minorEdit && dm.getCurrentStatus(id).equals(Params.Status.APPROVED)) {
-            String changeMessage = String.format(LangUtils.translate(context.getApplicationContext(),
-                "statusUserEdit").get(this.language), replyToDescr, replyTo, id);
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+            String changeMessage = String.format(messages.getString("status_email_text"), replyToDescr, replyTo, id);
             unsetAllOperations(id);
             dm.setStatus(context, id, Integer.valueOf(Params.Status.DRAFT), new ISODate(), changeMessage);
         }
-
     }
 
     // -------------------------------------------------------------------------
@@ -233,19 +221,23 @@ public class DefaultStatusActions implements StatusActions {
         });
         String mdChanged = buildMetadataChangedMessage(metadata);
         String translatedStatusName = getTranslatedStatusName(Params.Status.SUBMITTED);
-        String subject = String.format(LangUtils.translate(context.getApplicationContext(), "statusInform").get(this.language), siteName,
-            translatedStatusName, replyToDescr, replyTo, changeDate);
-
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        String subject = String.format(messages.getString(
+            "status_email_change_title"),
+            siteName, translatedStatusName, replyToDescr, replyTo, changeDate
+        );
         processList(users, subject, Params.Status.SUBMITTED,
             changeDate, changeMessage, mdChanged);
     }
 
+
     private String buildMetadataChangedMessage(Set<Integer> metadata) {
         String statusMetadataDetails = null;
         String message = "";
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
 
         try {
-            statusMetadataDetails = LangUtils.translate(context.getApplicationContext(), "statusMetadataDetails").get(this.language);
+            statusMetadataDetails = messages.getString("status_email_change_details");
         } catch (Exception e) {
         }
         // Fallback on a default value if statusMetadataDetails not resolved
@@ -299,8 +291,11 @@ public class DefaultStatusActions implements StatusActions {
 
         String translatedStatusName = getTranslatedStatusName(status);
         // --- get metadata owners (sorted on owner userid)
-        String subject = String.format(LangUtils.translate(context.getApplicationContext(), "statusInform").get(this.language), siteName,
-            translatedStatusName, replyToDescr, replyTo, changeDate);
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        String subject = String.format(messages.getString(
+            "status_email_change_title"),
+            siteName, translatedStatusName, replyToDescr, replyTo, changeDate
+        );
         String mdChanged = buildMetadataChangedMessage(metadataIds);
 
         Iterable<Metadata> metadata = this.context.getBean(MetadataRepository.class).findAll(metadataIds);
@@ -343,15 +338,17 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeMessage The message indicating why the status has changed
      */
     protected void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage, String mdChanged) throws Exception {
-        String message = String.format(LangUtils.translate(context.getApplicationContext(), "statusSendEmail").get(this.language),
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", new Locale(this.language));
+        String message = String.format(messages.getString(
+            "status_email_change_text"),
             changeMessage, mdChanged, siteUrl, status, changeDate);
 
         if (!emailNotes) {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
             MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS, from, fromDescr,
-                sendTo, null, replyTo, replyToDescr, subject, message);
+            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, useTLS,
+                ignoreSslCertificateErrors, from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
         }
     }
 }

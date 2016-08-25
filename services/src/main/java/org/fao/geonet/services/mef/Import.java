@@ -48,6 +48,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Import MEF file.
  */
+@Deprecated
 public class Import extends NotInReadOnlyModeService {
     private static final Set<String> UUID_FIELD_LOADER = Sets.newHashSet(Geonet.IndexFieldNames.UUID);
     private Path stylePath;

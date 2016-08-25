@@ -40,7 +40,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Returns a specific category given its id
  */
-
+@Deprecated
 public class Get implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

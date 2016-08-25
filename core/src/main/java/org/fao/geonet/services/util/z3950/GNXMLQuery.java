@@ -20,15 +20,13 @@
 
 package org.fao.geonet.services.util.z3950;
 
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jzkit.search.provider.iface.IRQuery;
-import org.jzkit.search.util.QueryModel.Internal.AttrPlusTermNode;
-import org.jzkit.search.util.QueryModel.Internal.AttrValue;
-import org.jzkit.search.util.QueryModel.Internal.ComplexNode;
-import org.jzkit.search.util.QueryModel.Internal.InternalModelRootNode;
-import org.jzkit.search.util.QueryModel.Internal.QueryNodeVisitor;
+import org.jzkit.search.util.QueryModel.Internal.*;
 import org.jzkit.search.util.QueryModel.InvalidQueryException;
 import org.jzkit.search.util.QueryModel.QueryModel;
 import org.springframework.context.ApplicationContext;
@@ -127,7 +125,8 @@ class GNRemoteQueryDecoder {
 
                 @Override
                 public void onAttrPlusTermNode(AttrPlusTermNode aptn) {
-
+                    if (Log.isDebugEnabled(Geonet.SRU))
+                        Log.debug(Geonet.SRU, "doing nothing..." + aptn); //TODO: find out how this is supposed to be used
                 }
 
 
@@ -181,6 +180,5 @@ class GNRemoteQueryDecoder {
                 return op + "";
         }
     }
-
 
 }

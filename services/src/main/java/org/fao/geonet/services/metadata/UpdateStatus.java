@@ -49,6 +49,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Stores status on a metadata.
  */
+@Deprecated
 public class UpdateStatus extends NotInReadOnlyModeService {
 
     /**
@@ -90,7 +91,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
         //--- use StatusActionsFactory and StatusActions class to
         //--- change status and carry out behaviours for status changes
-        StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
+        StatusActionsFactory saf = new StatusActionsFactory();
 
         StatusActions sa = saf.createStatusActions(context);
 

@@ -22,6 +22,9 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -35,6 +38,7 @@ import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.InspireAtomFeedRepository;
 import org.fao.geonet.utils.Log;
@@ -44,10 +48,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 
 /**
  * INSPIRE OpenSearchDescription atom service.
@@ -76,7 +76,7 @@ public class AtomServiceDescription implements Service {
         DataManager dm = context.getBean(DataManager.class);
         SettingManager sm = context.getBean(SettingManager.class);
 
-        boolean inspireEnable = sm.getValueAsBool("system/inspire/enable");
+        boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
 
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
@@ -114,7 +114,7 @@ public class AtomServiceDescription implements Service {
 
         // If no atom document indexed, check if still metadata has feed url --> no processed by atom harvester yet
         if (StringUtils.isEmpty(atomUrl)) {
-            String atomProtocol = sm.getValue("system/inspire/atomProtocol");
+            String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
             atomUrl = InspireAtomUtil.extractAtomFeedUrl(schema, md, dm, atomProtocol);
             if (StringUtils.isEmpty(atomUrl)) throw new Exception("Metadata has no atom feed");
 

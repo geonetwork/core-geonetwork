@@ -27,9 +27,11 @@
 
 package org.fao.geonet.util;
 
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.utils.Log;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Log;
 
 public class ThreadUtils {
 
@@ -47,7 +49,7 @@ public class ThreadUtils {
      */
     private static int setCountFromSettings() {
         int threadCount = 1;
-        String nrThreadsStr = settingMan.getValue("system/threadedindexing/maxthreads");
+        String nrThreadsStr = settingMan.getValue(Settings.SYSTEM_THREADEDINDEXING_MAXTHREADS);
         if (nrThreadsStr == null) {
             Log.error(Geonet.GEONETWORK, "Number of Threads for indexing setting is missing from settings table. Using *one* thread");
             nrThreadsStr = "1";

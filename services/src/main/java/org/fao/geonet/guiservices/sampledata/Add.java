@@ -48,6 +48,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * A simple service that adds sample data mef files from each schemas sample-data directory.
  */
+@Deprecated
 public class Add implements Service {
 
     public void init(Path appPath, ServiceConfig params) throws Exception {

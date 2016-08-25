@@ -54,8 +54,9 @@
                 scope.hasSuccess = false;
                 scope.loading = true;
 
-                gnValidation.get().then(function(ruleTypes) {
+                gnValidation.get().then(function(response) {
                   var optional = [];
+                  var ruleTypes = response.data.report;
                   angular.forEach(ruleTypes, function(ruleType) {
                     if (ruleType.requirement !== 'REQUIRED') {
                       optional.push(ruleType);
@@ -63,7 +64,6 @@
                       scope.ruleTypes.push(ruleType);
                     }
 
-                    ruleType.error = parseInt(ruleType.error);
                     ruleType.expanded = false;
 
                     scope.hasRequiredErrors = scope.hasRequiredErrors ||

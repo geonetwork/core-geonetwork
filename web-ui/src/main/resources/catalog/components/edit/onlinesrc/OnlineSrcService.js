@@ -361,7 +361,7 @@
         linkToService: function(params, popupid) {
           var qParams = setParams('dataset-add', params);
           var scope = this;
-          return gnBatchProcessing.runProcessMdXml({
+          return gnBatchProcessing.runProcessMd({
             scopedName: qParams.name,
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
@@ -403,7 +403,7 @@
           var qParams = setParams('onlinesrc-add', params);
           var scope = this;
 
-          return gnBatchProcessing.runProcessMdXml({
+          return gnBatchProcessing.runProcessMd({
             name: qParams.name,
             desc: qParams.desc,
             url: qParams.url,
@@ -497,11 +497,11 @@
          */
         removeService: function(onlinesrc) {
           var params = {
-            uuid: onlinesrc['geonet:info'].uuid,
+            uuid: onlinesrc.id,
             uuidref: gnCurrentEdit.uuid
           }, service = this;
 
-          gnBatchProcessing.runProcessMdXml(
+          gnBatchProcessing.runProcessMd(
               setParams('services-remove', params)).
               then(function(data) {
                 $rootScope.$broadcast('StatusUpdated', {
@@ -532,7 +532,7 @@
         removeDataset: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc['geonet:info'].uuid
+            uuidref: onlinesrc.id
           };
           runProcess(this,
               setParams('datasets-remove', params));
@@ -551,7 +551,7 @@
          */
         removeMdLink: function(mode, onlinesrc) {
           var params = {};
-          params[mode + 'Uuid'] = onlinesrc['geonet:info'].uuid;
+          params[mode + 'Uuid'] = onlinesrc.id;
           runProcess(this,
               setParams(mode + '-remove', params));
         },
@@ -571,7 +571,7 @@
           var params = {
             uuid: gnCurrentEdit.uuid,
             uuidref: onlinesrc['@subtype'] ? onlinesrc.url :
-                onlinesrc['geonet:info'].uuid
+                onlinesrc.id
           };
           runProcess(this,
               setParams('fcats-remove', params));
@@ -591,7 +591,7 @@
         removeSibling: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc.uuid
+            uuidref: onlinesrc.id
           };
           runProcess(this,
               setParams('sibling-remove', params));
@@ -644,7 +644,7 @@
           for (var p in protocols) {
             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
               // TODO : define default description
-              var key = p + 'Url';
+              var key = p + 'url';
               xml +=
                   this.buildOnLineResource(node[key], protocols[p].label,
                   layerName, title + ' (' + protocols[p].label + ')') +

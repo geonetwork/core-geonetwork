@@ -23,11 +23,15 @@
 
 package org.fao.geonet.api;
 
+import org.fao.geonet.api.exception.GeoPublisherException;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -38,7 +42,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 import java.io.FileNotFoundException;
-import java.util.LinkedHashMap;
 import java.util.MissingResourceException;
 
 /**
@@ -49,14 +52,10 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({
-        SecurityException.class
+        ServiceNotAllowedEx.class
     })
     public Object unauthorizedHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "unauthorized");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+        return new ApiError("unauthorized", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
@@ -64,61 +63,51 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         MaxUploadSizeExceededException.class
     })
-    public Object maxFileExceededHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "max_file_exceeded");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError maxFileExceededHandler(final Exception exception) {
+        return new ApiError("max_file_exceeded", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({
+        HttpMessageNotReadableException.class
+    })
+    public ApiError runtimeExceptionHandler(final Exception exception) {
+        return new ApiError("runtime_exception", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
         FileNotFoundException.class,
+        GeoPublisherException.class,
         NoResultsFoundException.class})
-    public Object NotFoundHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "not_found");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError NotFoundHandler(final Exception exception) {
+        return new ApiError("not_found", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
         UserNotFoundEx.class,
         ResourceNotFoundException.class})
-    public Object resourceNotFoundHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "resource_not_found");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError resourceNotFoundHandler(final Exception exception) {
+        return new ApiError("resource_not_found", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
         ResourceAlreadyExistException.class})
-    public Object resourceAlreadyExistHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "resource_already_exist");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError resourceAlreadyExistHandler(final Exception exception) {
+        return new ApiError("resource_already_exist", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public Object missingParameterHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "required_parameter_missing");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError missingParameterHandler(final Exception exception) {
+        return new ApiError("required_parameter_missing", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
@@ -126,14 +115,12 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         UnsatisfiedServletRequestParameterException.class,
         IllegalArgumentException.class,
+        XSDValidationErrorEx.class,
         MultipartException.class
     })
-    public Object unsatisfiedParameterHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "unsatisfied_request_parameter");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError unsatisfiedParameterHandler(final Exception exception) {
+        return new ApiError("unsatisfied_request_parameter", exception.getClass().getSimpleName(),
+            exception.getMessage());
     }
 
     @ResponseBody
@@ -141,11 +128,8 @@ public class GlobalExceptionController {
     @ExceptionHandler({
         MissingResourceException.class
     })
-    public Object missingResourceHandler(final Exception exception) {
-        return new LinkedHashMap<String, String>() {{
-            put("code", "missing_resource_parameter");
-            put("message", exception.getClass().getSimpleName());
-            put("description", exception.getMessage());
-        }};
+    public ApiError missingResourceHandler(final Exception exception) {
+        return new ApiError("missing_resource_parameter", exception.getClass().getSimpleName(),
+            exception.getMessage());
     }
 }

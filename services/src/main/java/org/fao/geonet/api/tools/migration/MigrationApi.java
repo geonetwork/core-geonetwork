@@ -31,6 +31,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,19 +64,13 @@ public class MigrationApi {
         produces = MediaType.TEXT_PLAIN_VALUE,
         method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
+    @PreAuthorize("hasRole('Administrator')")
     public ResponseEntity<String> callStep(
         @ApiParam(value = "Class name to execute corresponding to a migration step. See DatabaseMigrationTask.",
             example = "org.fao.geonet.api.records.attachments.MetadataResourceDatabaseMigration",
             required = true)
         @PathVariable
             String stepName) throws Exception {
-        Profile profile = ServiceContext.get().getUserSession().getProfile();
-        if (profile != Profile.Administrator) {
-            throw new SecurityException(String.format(
-                "Only administrator can run migration steps. Your profile is '%s'.",
-                profile == null ? "Anonymous" : profile
-            ));
-        }
 
         ApplicationContext appContext = ApplicationContextHolder.get();
         final DataSource dataSource = appContext.getBean(DataSource.class);

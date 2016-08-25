@@ -248,7 +248,7 @@
         });
       };
       var unselect = function(uuid) {
-        return $http.delete('../api/selections/metadata', null, {
+        return $http.delete('../api/selections/metadata', {
           params: {
             uuid: uuid
           }

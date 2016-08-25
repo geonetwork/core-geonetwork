@@ -57,15 +57,16 @@
    * TODO: This could be used in other places
    * probably. Move to another common or language module ?
    */
-  module.directive('gnCountryPicker', ['gnHttp', 'gnUtilityService',
-    function(gnHttp, gnUtilityService) {
+  module.directive('gnCountryPicker', ['$http',
+    function($http) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          gnHttp.callService('country', {}, {
-            cache: true
-          }).success(function(response) {
+          $http.get('../api/regions?categoryId=' +
+              'http://geonetwork-opensource.org/regions%23country', {}, {
+                cache: true
+              }).success(function(response) {
             var data = response.region;
 
             // Compute default name and add a
@@ -221,13 +222,13 @@
    * like admin > harvesting > OGC WxS
    * probably. Move to another common or language module ?
    */
-  module.directive('gnLanguagePicker', ['gnHttp',
-    function(gnHttp) {
+  module.directive('gnLanguagePicker', ['$http',
+    function($http) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
-          gnHttp.callService('lang', {}, {
+          $http.get('../api/isolanguages', {}, {
             cache: true
           }).success(function(data) {
             // Compute default name and add a
@@ -391,7 +392,7 @@
       return {
         restrict: 'A',
         template: '<button title="{{\'gnToggle\' | translate}}">' +
-            '<i class="fa fa-fw fa-angle-double-left"/>&nbsp;' +
+            '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
             '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
@@ -401,6 +402,8 @@
             $(selector).each(function(idx, elem) {
               $(elem).trigger(event);
             });
+            $(this).find('i').toggleClass(
+                'fa-angle-double-up fa-angle-double-down');
           });
         }
       };
@@ -983,7 +986,13 @@
           return ioFn(input, 'parse');
         }
         function out(input) {
-          return ioFn(input, 'stringify');
+          // If model value is a string
+          // No need to stringify it.
+          if (attr['gnJsonIsJson']) {
+            return ioFn(input, 'stringify');
+          } else {
+            return input;
+          }
         }
         function ioFn(input, method) {
           var json;

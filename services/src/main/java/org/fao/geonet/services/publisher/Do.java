@@ -24,26 +24,29 @@
 package org.fao.geonet.services.publisher;
 
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.api.mapservers.GeoFile;
+import org.fao.geonet.api.mapservers.GeoServerNode;
+import org.fao.geonet.api.mapservers.GeoServerRest;
 import org.fao.geonet.domain.MapServer;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
 
 /**
  * Service to manage GeoServer dataset publication. Dataset could be <ul> <li>ESRI Shapefile
@@ -60,6 +63,7 @@ import jeeves.server.context.ServiceContext;
  *
  * TODO : Support multi file publication
  */
+@Deprecated
 public class Do implements Service {
     /**
      * Module name

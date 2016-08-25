@@ -41,6 +41,8 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
@@ -61,6 +63,7 @@ import jeeves.server.context.ServiceContext;
  *
  * Sample URL: http://localhost:8080/geonetwork/srv/eng/metadata.admin?update=true&id=13962&_1_0=off&_1_1=off&_1_5=off&_1_6=off
  */
+@Deprecated
 public class UpdateAdminOper extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---
@@ -119,15 +122,13 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
         @SuppressWarnings("unchecked")
         List<Element> list = params.getChildren();
 
+        Pattern opParamPatter = Pattern.compile("_([0-9]+)_([0-9]+)");
         for (Element el : list) {
-            String name = el.getName();
-
-            if (name.startsWith("_") &&
-                !Params.CONTENT_TYPE.equals(name)) {
-                StringTokenizer st = new StringTokenizer(name, "_");
-
-                String groupId = st.nextToken();
-                String operId = st.nextToken();
+            String name  = el.getName();
+            Matcher matcher = opParamPatter.matcher(name);
+            if (matcher.matches()) {
+                String groupId = matcher.group(1);
+                String operId  = matcher.group(2);
 
                 // Never set editing for reserved group
                 if (Integer.parseInt(operId) == ReservedOperation.editing.getId() &&

@@ -6,7 +6,7 @@
           <span data-translate="">currentCatalogLogo</span>
         </div>
         <div class="panel-body thumbnail gn-thumbnail">
-          <img data-ng-src="../../images/logos/{{info.site.siteId}}.png?{{info.site.lastUpdate}}"/>
+          <img data-ng-src="../../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"/>
         </div>
       </div>
     </div>
@@ -16,13 +16,16 @@
           <span data-translate="">addNewLogo</span>
         </div>
         <div class="panel-body">
-          <form id="fileupload" action="admin.logo.upload?_content_type=json" method="POST"
+          <form id="fileupload" action="../api/logos" method="POST"
                 enctype="multipart/form-data" data-file-upload="logoUploadOptions">
             <span class="btn btn-success btn-block fileinput-button"
                   ng-class="{disabled: disabled}">
               <i class="fa fa-plus fa-white"/>
               <span data-translate="">chooseLogos</span>
-              <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
+              <input type="file"
+                     name="file"
+                     multiple="true"
+                     autofocus="" ng-disabled="disabled"/>
             </span>
 
             <div class="col-lg-5 fade" data-ng-class="{in: active()}">

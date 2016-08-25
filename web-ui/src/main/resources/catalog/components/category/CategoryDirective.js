@@ -46,11 +46,9 @@
         templateUrl: '../../catalog/components/category/partials/' +
             'category.html',
         link: function(scope, element, attrs) {
-          $http.get('info?_content_type=json&type=categories', {cache: true}).
+          $http.get('../api/tags', {cache: true}).
               success(function(data) {
-                scope.categories = data.metadatacategory;
-              }).error(function(data) {
-                // TODO
+                scope.categories = data;
               });
         }
       };
@@ -69,29 +67,24 @@
         link: function(scope, element, attrs) {
           scope.report = null;
 
-          $http.get('info?_content_type=json&type=categories', {cache: true}).
+          $http.get('../api/tags', {cache: true}).
               success(function(data) {
-                scope.categories = data.metadatacategory;
-              }).error(function(data) {
-                // TODO
+                scope.categories = data;
               });
 
           scope.save = function(replace) {
             scope.report = null;
             var defer = $q.defer();
-            var params = {};
-            var url = 'md.category.batch.update?_content_type=json';
-
-            if (replace) {
-              url += '&mode=add';
-            }
+            var params = [];
+            var url = '../api/records/tags?' +
+                      (replace ? 'clear=true&id=' : 'id=');
 
             angular.forEach(scope.categories, function(c) {
               if (c.checked === true) {
-                params['_' + c['@id']] = 'on';
+                params.push(c.id);
               }
             });
-            $http.get(url, {params: params})
+            $http.put(url + params.join('&id='))
                 .success(function(data) {
                   scope.report = data;
                   defer.resolve(data);

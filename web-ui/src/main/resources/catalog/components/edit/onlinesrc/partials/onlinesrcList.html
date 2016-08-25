@@ -106,7 +106,7 @@
       </ul>
 
       <!-- ******* List of online resources ******* -->
-      <h4 class="onlinesrc-title" data-ng-show="relations.onlines">
+      <h4 class="onlinesrc-title" data-ng-show="relations.onlines && relations.onlines.length > 0">
         <a href=""
            data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')">
           <i class="fa fa-link"></i><i class="icon-external-link"></i>&nbsp;
@@ -352,7 +352,7 @@
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
               <a target="_blank"
-                 data-ng-href="{{resource.url}}">
+                 data-ng-href="{{'../metadata/' + resource.id}}">
                 {{resource.title | gnLocalized: lang}}
                 <span>{{'(' + resource.associationType.toUpperCase() + ')'}}</span>
               </a>

@@ -22,21 +22,21 @@
  */
 
 package iso19139
-import org.fao.geonet.services.metadata.format.FormatType
-import org.fao.geonet.services.metadata.format.groovy.Environment
-import org.fao.geonet.services.metadata.format.groovy.util.*
+import org.fao.geonet.api.records.formatters.FormatType
+import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.fao.geonet.api.records.formatters.groovy.util.*
 
 import java.util.regex.Pattern
 
 /**
- * Creates the {@link org.fao.geonet.services.metadata.format.groovy.util.Summary} instance for the iso19139 class.
+ * Creates the {@link org.fao.geonet.api.records.formatters.groovy.util.Summary} instance for the iso19139 class.
  *
  * @author Jesse on 11/18/2014.
  */
 class SummaryFactory {
     def isoHandlers;
-    org.fao.geonet.services.metadata.format.groovy.Handlers handlers
-    org.fao.geonet.services.metadata.format.groovy.Functions f
+    org.fao.geonet.api.records.formatters.groovy.Handlers handlers
+    org.fao.geonet.api.records.formatters.groovy.Functions f
     Environment env
 
     def navBarItems

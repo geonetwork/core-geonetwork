@@ -80,7 +80,7 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
             "CREATE TABLE IF NOT EXISTS " + TABLE + "(" + GROUPNAME + "  VARCHAR(128) NOT NULL, " + TYPE + " VARCHAR(3) NOT NULL, " +
                 HASH + " VARCHAR(256) NOT NULL, " + RAW_DATA + " CLOB NOT NULL, PRIMARY KEY (" + GROUPNAME + ", " + TYPE + "))"
         };
-        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";";
+        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_ON_EXIT=FALSE;";
 
         try {
             this.dbConnection = DriverManager.getConnection("jdbc:h2:" + path + init, "wro4jcache", "");

@@ -23,18 +23,20 @@
 
 package org.fao.geonet.api.processing;
 
+import io.swagger.annotations.*;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
 import org.fao.geonet.api.processing.report.ProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.DataManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,14 +48,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
 
-import static org.fao.geonet.api.ApiParams.APIPARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 @RequestMapping(value = {
     "/api/processes",
@@ -69,52 +70,51 @@ public class ProcessApi {
     @Autowired
     IProcessingReportRegistry registry;
 
-    @ApiOperation(value = "Get current process reports",
-        nickname = "getProcess")
+    @ApiOperation(
+        value = "Get current process reports",
+        notes = "When processing, the report is stored in memory and allows to retrieve " +
+            "progress repport during processing. Usually, process reports are returned by " +
+            "the synchronous processing operation.",
+        nickname = "getProcessReport")
     @RequestMapping(
+        path = "/reports",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "List of reports returned."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_AUTHENTICATED)
+    })
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    List<ProcessingReport> get() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to retrieve processing reports.");
-        }
-
+    @PreAuthorize("isAuthenticated()")
+    public List<ProcessingReport> getProcessReport() throws Exception {
         return registry.get();
     }
 
-    @ApiOperation(value = "Clear process reports list",
+    @ApiOperation(
+        value = "Clear process reports list",
         nickname = "deleteProcess")
     @RequestMapping(
+        path = "/reports",
         method = RequestMethod.DELETE,
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
-    public
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Report registry cleared."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_AUTHENTICATED)
+    })
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    void delete() throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to retrieve processing reports.");
-        }
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("isAuthenticated()")
+    public void delete() throws Exception {
         registry.clear();
     }
 
 
-    @ApiOperation(value = "Search and replace process",
+    @ApiOperation(value = "Search and replace values in one or more records",
         nickname = "searchAndReplace",
         notes = "Service to apply replacements to one or more records." +
             "\n" +
@@ -124,7 +124,8 @@ public class ProcessApi {
             " * replaceValue-1398155513728=Juan\n" +
             " * searchValue-1398155513728=Jose\n\n" +
             "TODO: Would be good to provide a simple object to define list of changes " +
-            "instead of group of parameters.")
+            "instead of group of parameters.<br/>" +
+            "Batch editing can also be used for similar works.")
     @RequestMapping(
         value = "/search-and-replace",
         method = RequestMethod.POST,
@@ -134,15 +135,22 @@ public class ProcessApi {
     )
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('Editor')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Replacements applied."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
     public MetadataReplacementProcessingReport searchAndReplace(
-        @RequestParam(defaultValue = "massive-content-update")
+        @RequestParam(
+            defaultValue = "massive-content-update")
             String process,
-        @ApiParam(value = APIPARAM_RECORD_UUIDS_OR_SELECTION,
+        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
         @RequestParam(required = false)
             String[] uuids,
-        @ApiParam(value = "Test only (ie. metadata are not saved). Return the report only.",
+        @ApiParam(
+            value = ApiParams.API_PARAM_PROCESS_TEST_ONLY,
             required = false)
         @RequestParam(defaultValue = "false")
             boolean isTesting,
@@ -158,15 +166,13 @@ public class ProcessApi {
             String vacuumMode,
         @ApiIgnore
         @RequestParam
-            Map<String, String> allParams
+            Map<String, String> allParams,
+        @ApiIgnore
+            HttpSession session,
+        @ApiIgnore
+            HttpServletRequest request
     ) throws Exception {
-        ServiceContext context = ServiceContext.get();
-        UserSession session = context.getUserSession();
-        Profile profile = session.getProfile();
-        if (profile == null) {
-            throw new SecurityException(
-                "You are not allowed to run a search and replace process.");
-        }
+        UserSession userSession = ApiUtils.getUserSession(session);
 
         MetadataReplacementProcessingReport report =
             new MetadataReplacementProcessingReport("massive-content-update");
@@ -174,7 +180,7 @@ public class ProcessApi {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             DataManager dataMan = applicationContext.getBean(DataManager.class);
 
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, context.getUserSession());
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, userSession);
 
             report.setTotalRecords(records.size());
             MetadataSearchAndReplace m = new MetadataSearchAndReplace(
@@ -182,7 +188,7 @@ public class ProcessApi {
                 process,
                 isTesting, isCaseInsensitive, vacuumMode,
                 allParams,
-                context, records, report);
+                ApiUtils.createServiceContext(request), records, report);
             m.process();
         } catch (Exception e) {
             throw e;

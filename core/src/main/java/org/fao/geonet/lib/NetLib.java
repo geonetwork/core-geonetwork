@@ -34,6 +34,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
 
@@ -49,21 +50,7 @@ import java.util.regex.PatternSyntaxException;
 
 import jeeves.server.context.ServiceContext;
 
-//=============================================================================
-
 public class NetLib {
-    public static final String ENABLED = "system/proxy/use";
-    public static final String HOST = "system/proxy/host";
-    public static final String PORT = "system/proxy/port";
-    public static final String USERNAME = "system/proxy/username";
-    public static final String PASSWORD = "system/proxy/password";
-    public static final String IGNOREHOSTLIST = "system/proxy/ignorehostlist";
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     public void setupProxy(ServiceContext context, XmlRequest req) {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -79,12 +66,12 @@ public class NetLib {
      */
 
     public void setupProxy(SettingManager sm, XmlRequest req) {
-        boolean enabled = sm.getValueAsBool(ENABLED, false);
-        String host = sm.getValue(HOST);
-        String port = sm.getValue(PORT);
-        String username = sm.getValue(USERNAME);
-        String password = sm.getValue(PASSWORD);
-        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
+        boolean enabled = sm.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+        String host = sm.getValue(Settings.SYSTEM_PROXY_HOST);
+        String port = sm.getValue(Settings.SYSTEM_PROXY_PORT);
+        String username = sm.getValue(Settings.SYSTEM_PROXY_USERNAME);
+        String password = sm.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+        String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
 
         if (!enabled) {
             req.setUseProxy(false);
@@ -117,18 +104,16 @@ public class NetLib {
         return setupProxy(sm, client, requestHost);
     }
 
-    //---------------------------------------------------------------------------
-
     /**
      * Setup proxy for http client
      */
     public CredentialsProvider setupProxy(SettingManager sm, HttpClientBuilder client, String requestHost) {
-        boolean enabled = sm.getValueAsBool(ENABLED, false);
-        String host = sm.getValue(HOST);
-        String port = sm.getValue(PORT);
-        String username = sm.getValue(USERNAME);
-        String password = sm.getValue(PASSWORD);
-        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
+        boolean enabled = sm.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+        String host = sm.getValue(Settings.SYSTEM_PROXY_HOST);
+        String port = sm.getValue(Settings.SYSTEM_PROXY_PORT);
+        String username = sm.getValue(Settings.SYSTEM_PROXY_USERNAME);
+        String password = sm.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+        String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
 
         CredentialsProvider provider = new BasicCredentialsProvider();
         if (enabled) {
@@ -168,10 +153,10 @@ public class NetLib {
      * Setup proxy for http client
      */
     public void setupProxy(SettingManager sm) {
-        String host = sm.getValue(HOST);
-        String port = sm.getValue(PORT);
-        String username = sm.getValue(USERNAME);
-        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
+        String host = sm.getValue(Settings.SYSTEM_PROXY_HOST);
+        String port = sm.getValue(Settings.SYSTEM_PROXY_PORT);
+        String username = sm.getValue(Settings.SYSTEM_PROXY_USERNAME);
+        String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
 
         Properties props = System.getProperties();
         props.put("http.proxyHost", host);
@@ -193,12 +178,12 @@ public class NetLib {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
-        boolean enabled = sm.getValueAsBool(ENABLED, false);
-        String host = sm.getValue(HOST);
-        String port = sm.getValue(PORT);
-        String username = sm.getValue(USERNAME);
-        String password = sm.getValue(PASSWORD);
-        String ignoreHostList = sm.getValue(IGNOREHOSTLIST);
+        boolean enabled = sm.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+        String host = sm.getValue(Settings.SYSTEM_PROXY_HOST);
+        String port = sm.getValue(Settings.SYSTEM_PROXY_PORT);
+        String username = sm.getValue(Settings.SYSTEM_PROXY_USERNAME);
+        String password = sm.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+        String ignoreHostList = sm.getValue(Settings.SYSTEM_PROXY_IGNOREHOSTLIST);
 
         URLConnection conn = null;
         if (enabled) {
@@ -259,6 +244,3 @@ public class NetLib {
         return false;
     }
 }
-
-//=============================================================================
-

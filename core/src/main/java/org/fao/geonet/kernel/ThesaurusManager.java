@@ -31,6 +31,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
@@ -308,12 +309,9 @@ public class ThesaurusManager implements ThesaurusFinder {
         return thesauriDirectory;
     }
 
-    // =============================================================================
-    // PUBLIC SERVICES
-
     @Override
     public Map<String, Thesaurus> getThesauriMap() {
-        if (this.settingManager.getValueAsBool(SettingManager.ENABLE_ALL_THESAURUS)) {
+        if (this.settingManager.getValueAsBool(Settings.SYSTEM_ENABLE_ALL_THESAURUS)) {
             final HashMap<String, Thesaurus> all = Maps.newHashMap(this.thesauriMap);
             all.put(this.allThesaurus.getKey(), this.allThesaurus);
             return all;
@@ -364,7 +362,6 @@ public class ThesaurusManager implements ThesaurusFinder {
      * @return id of thesaurus created/updated
      */
     public String createUpdateThesaurusFromRegister(String uuid, String type, ServiceContext context) throws Exception {
-
         String root = Geonet.CodeList.REGISTER;
 
         // check whether we have created a thesaurus for this register already

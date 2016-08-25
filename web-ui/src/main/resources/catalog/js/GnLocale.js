@@ -31,6 +31,28 @@
     'gn_cat_controller'
   ]);
 
+  module.constant('$LOCALE_MAP', function(threeCharLang) {
+    var specialCases = {
+      'spa' : 'es',
+      'ger' : 'de',
+      'bra' : 'pt_BR',
+      'swe' : 'sv',
+      'tur' : 'tr',
+      'por' : 'pt',
+      'gre' : 'el',
+      'per' : 'fa',
+      'chi' : 'zh',
+      'pol' : 'pl',
+      'wel' : 'cy',
+      'dut' : 'nl'
+    };
+    var lang = specialCases[threeCharLang];
+    if (angular.isDefined(lang)) {
+      return lang;
+    }
+
+    return threeCharLang.substring(0, 2) || 'en';
+  });
   module.constant('$LOCALES', ['core']);
 
   module.factory('localeLoader', ['$http', '$q', 'gnLangs',
@@ -62,13 +84,15 @@
             deferredInst.resolve(data);
           }).error(function() {
             // Load english locale file if not available
+            var url = buildUrl(options.prefix, 'en', value, options.suffix);
             $http({
               method: 'GET',
-              url: buildUrl(options.prefix, 'en', value, options.suffix)
+              url: url
             }).success(function(data) {
               deferredInst.resolve(data);
             }).error(function() {
-              deferredInst.reject(options.key);
+              console.warn('Error loading ' + url);
+              deferredInst.resolve({});
             });
           });
         });
@@ -95,6 +119,7 @@
           location.href.split('/')[5] || 'eng';
       gnGlobalSettings.lang = gnLangs.getIso2Lang(gnGlobalSettings.iso3lang);
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
+
       moment.lang(gnGlobalSettings.lang);
     }]);
 

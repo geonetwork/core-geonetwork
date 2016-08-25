@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
@@ -108,7 +109,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
         checkAcceptVersions(request);
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean inspireEnabled = gc.getBean(SettingManager.class).getValueAsBool("system/inspire/enable", false);
+        boolean inspireEnabled = gc.getBean(SettingManager.class).getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE, false);
 
 
         //--- return capabilities
@@ -182,7 +183,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
 
             // Retrieve contact data from users table
-            String contactId = gc.getBean(SettingManager.class).getValue("system/csw/contactId");
+            String contactId = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_CSW_CONTACT_ID);
             if ((contactId == null) || (contactId.equals(""))) {
                 contactId = "-1";
             }
@@ -350,14 +351,14 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
         HashMap<String, String> vars = new HashMap<String, String>();
 
-        vars.put("$PROTOCOL", sm.getValue(Geonet.Settings.SERVER_PROTOCOL));
-        vars.put("$HOST", sm.getValue(Geonet.Settings.SERVER_HOST));
-        String port = sm.getValue(Geonet.Settings.SERVER_PORT);
+        vars.put("$PROTOCOL", sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL));
+        vars.put("$HOST", sm.getValue(Settings.SYSTEM_SERVER_HOST));
+        String port = sm.getValue(Settings.SYSTEM_SERVER_PORT);
         vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
         vars.put("$END-POINT", context.getService());
         vars.put("$NODE_ID", context.getNodeId());
 
-        String providerName = sm.getValue("system/site/organization");
+        String providerName = sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION);
         vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName) ? providerName : "GeoNetwork opensource");
 
         vars.put("$SERVLET", context.getBaseUrl());

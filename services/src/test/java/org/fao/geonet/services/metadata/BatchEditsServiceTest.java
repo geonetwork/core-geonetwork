@@ -22,7 +22,9 @@
  */
 package org.fao.geonet.services.metadata;
 
-import org.fao.geonet.api.records.BatchEditsApi;
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.api.records.editing.BatchEditsApi;
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Metadata;
@@ -36,8 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import jeeves.server.context.ServiceContext;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
@@ -82,7 +82,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
         final BatchEditParameter[] parameters = new BatchEditParameter[]{};
 
         try {
-            batchEditsService.serviceSpecificExec(
+            batchEditsService.batchEdit(
                 new String[]{firstMetadataId},
                 parameters);
         } catch (java.lang.IllegalArgumentException exception) {
@@ -110,7 +110,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
             )
         };
 
-        batchEditsService.serviceSpecificExec(
+        batchEditsService.batchEdit(
             new String[]{firstMetadataId},
             listOfupdates);
         Metadata updatedRecord = repository.findOneByUuid(firstMetadataId);

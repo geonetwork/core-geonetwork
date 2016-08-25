@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataType;
@@ -46,6 +47,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * For editing : update leaves information. Access is restricted.
  */
+@Deprecated
 public class Update extends NotInReadOnlyModeService {
     private ServiceConfig config;
 
@@ -89,7 +91,7 @@ public class Update extends NotInReadOnlyModeService {
 
             //--- use StatusActionsFactory and StatusActions class to possibly
             //--- change status as a result of this edit (use onEdit method)
-            StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
+            StatusActionsFactory saf = context.getBean(StatusActionsFactory.class);
             StatusActions sa = saf.createStatusActions(context);
             sa.onEdit(iLocalId, minor.equals("true"));
 

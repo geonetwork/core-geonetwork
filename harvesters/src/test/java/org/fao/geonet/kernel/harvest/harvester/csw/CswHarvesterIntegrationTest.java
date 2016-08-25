@@ -45,13 +45,13 @@ import javax.annotation.Nullable;
  * User: Jesse Date: 10/18/13 Time: 4:01 PM
  */
 public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTest {
-    public static final String CAPABILITIES_QUERY_STRING = "?service=CSW&request=GetCapabilities";
-    public static final String CAPABILITIES_URL = REQUEST + CAPABILITIES_QUERY_STRING;
     public static final String OUTPUT_SCHEMA = "http://www.isotc211.org/2005/gmd";
     private static final String PROTOCOL = "http";
     private static final String HOST = "localhost";
     private static final int PORT = 8080;
     public static final String REQUEST = PROTOCOL + "://" + HOST + ":" + PORT + "/geonetwork/srv/eng/csw";
+    public static final String CAPABILITIES_QUERY_STRING = "?service=CSW&request=GetCapabilities";
+    public static final String CAPABILITIES_URL = REQUEST + CAPABILITIES_QUERY_STRING;
 
     public CswHarvesterIntegrationTest() {
         super("csw");

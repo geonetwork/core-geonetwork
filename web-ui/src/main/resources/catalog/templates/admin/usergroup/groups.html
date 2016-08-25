@@ -45,7 +45,7 @@
         <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
         <span><strong>{{groupSelected.name}}</strong></span>
         <div class="btn-toolbar"
-             data-ng-show="user.isAdministratorOrMore() || groupSelected['@editable'] == 'true'">
+             data-ng-show="user.isUserAdminOrMore()">
           <button type="button" class="btn btn-primary pull-right"
                   data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
                   data-ng-click="saveGroup('#gn-group-edit', '#group-logo-upload')"
@@ -65,8 +65,8 @@
 
 
       <div class="panel-body">
-        <form id="gn-group-edit" name="gnGroupEdit" data-ng-keypress="updatingGroup()" method="POST"
-              action="admin.group.update?_content_type=json"
+        <form id="gn-group-edit" name="gnGroupEdit"
+              data-ng-keypress="updatingGroup()" method="POST"
               data-file-upload="mdImportUploadOptions" role="form">
           <fieldset>
             <input type="hidden" name="id" data-ng-model="groupSelected.id"
@@ -85,11 +85,11 @@
 
             <label data-translate="">category</label>
             <select name="category"
-                    data-ng-model="groupSelected.defaultcategory.id"
+                    data-ng-model="groupSelected.defaultCategory"
                     class="form-control">
               <option value="none">&nbsp;</option>
-              <option value="{{category['@id']}}"
-                      data-ng-selected="category['@id']==groupSelected.defaultcategory.id"
+              <option value="{{category.id}}"
+                      data-ng-selected="category.id==groupSelected.defaultCategory"
                       data-ng-repeat="category in categories track by $index">
                 {{category.label[lang]}}
               </option>
@@ -117,7 +117,8 @@
 
               <!--Display saved logo-->
               <div data-ng-show="groupSelected.logo">
-                <img data-ng-show="groupSelected.logo" src="{{groupSelected.logo}}"
+                <img data-ng-show="groupSelected.logo"
+                     src="../../images/harvesting/{{groupSelected.logo}}"
                      style="max-width:128px; max-height:128px">
                 <a href="" data-ng-click="deleteGroupLogo()"
                    class="text-danger">
@@ -132,35 +133,21 @@
                 <div class="row" data-ng-show="queue.length == 0">
                   <div class="col-md-5" translate>selectExistingLogo</div>
                   <div class="col-md-3">
-                    <a href="" data-ng-click="groupSelected.logoFromHarvest = undefined"
+                    <a href="" data-ng-click="groupSelected.logo = undefined"
                        class="text-danger pull-right">
-                      <i data-ng-show="groupSelected.logoFromHarvest"
+                      <i data-ng-show="groupSelected.logo"
                          class="fa fa-times delete"></i>
                     </a>
-                    <div class="" gn-logo-picker="groupSelected.logoFromHarvest"></div>
+                    <div class="" gn-logo-picker="groupSelected.logo"></div>
                   </div>
                 </div>
 
-                <!--Display logo upload input-->
-                <div class="row" data-ng-show="!groupSelected.logoFromHarvest"
-                     id="group-logo-upload">
-                  <div class="col-md-5" translate>upload</div>
-                  <div class="col-md-7 panel panel-default">
-                    <div class="panel-body">
-
-                        <span class="btn btn-success btn-block fileinput-button">
-                            <i class="fa fa-plus fa-white"></i>
-                            <span data-translate="">chooseOrDropResource</span>
-                            <input type="file" id="group-logo" name="logofile" multiple="false">
-                        </span>
-                      <ul style="list-style: none">
-                        <li data-ng-repeat="file in queue">
-                          <div class="preview" data-file-upload-preview="file"></div>
-                          {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
-                          <i class="fa fa-trash-o" data-ng-click="clear(file)"></i>
-                        </li>
-                      </ul>
-                    </div>
+                <div class="row" data-ng-show="!groupSelected.logo">
+                  <div class="col-md-5">
+                    <a href="#/settings/logo">
+                      <i class="fa fa-plus"></i>&nbsp;
+                      <span data-translate="">addNewLogo</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -171,20 +158,17 @@
                 <span data-translate="">enableAllowedCategories</span>
                 <input type="checkbox"
                        name="enableAllowedCategories"
-                       data-ng-model="groupSelected.enableallowedcategories"/>
+                       data-ng-model="groupSelected.enableAllowedCategories"/>
               </label>
             </div>
             <div>
               <label data-translate="">allowedCategories</label>
               <select class="form-control"
-                      name="allowedCategories" multiple="multiple"
-                      data-ng-disabled="!groupSelected.enableallowedcategories"
-                      data-ng-model="groupSelected.allowedcategoriessimp">
-                <option value="{{category['@id']}}"
-                        data-ng-selected="category['@id']==groupSelected.defaultcategory.id || groupSelected.allowedcategoriessimp.indexOf(category['@id']) != -1"
-                        data-ng-repeat="category in categories track by $index">
-                  {{category.label[lang]}}
-                </option>
+                      name="allowedCategories"
+                      multiple="multiple"
+                      data-ng-disabled="!groupSelected.enableAllowedCategories"
+                      data-ng-model="groupSelected.allowedCategories"
+                      data-ng-options="c as c.label[lang] for c in categories track by c.id">
               </select>
               <p class="help-block" data-translate="">allowedCategoriesDescriptionHelp</p>
 

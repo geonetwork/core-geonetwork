@@ -52,6 +52,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Removes a group from the system. Note that the group MUST NOT have operations associated.
  */
+@Deprecated
 public class Remove extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

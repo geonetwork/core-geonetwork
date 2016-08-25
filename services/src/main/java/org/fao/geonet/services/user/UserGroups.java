@@ -52,7 +52,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 /**
  * Retrieves the groups for a particular user
  */
-
+@Deprecated
 public class UserGroups implements Service {
     //--------------------------------------------------------------------------
     //---

@@ -23,56 +23,30 @@
 
 package org.fao.geonet.services.config;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.ProxyInfo;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-
 import java.nio.file.Path;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.api.site.SiteApi;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 
 //=============================================================================
 
 /**
  * do any immediate actions resulting from changes to settings
  */
+@Deprecated
 public class DoActions implements Service {
     //--------------------------------------------------------------------------
     //---
     //--- Init
     //---
     //--------------------------------------------------------------------------
-
-    public static void doActions(ServiceContext context) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        SettingManager settingMan = gc.getBean(SettingManager.class);
-        LogUtils.refreshLogConfiguration();
-
-        try {
-            // Load proxy information into Jeeves
-            ProxyInfo pi = JeevesProxyInfo.getInstance();
-            boolean useProxy = settingMan.getValueAsBool(SettingManager.SYSTEM_PROXY_USE, false);
-            if (useProxy) {
-                String proxyHost = settingMan.getValue(SettingManager.SYSTEM_PROXY_HOST);
-                String proxyPort = settingMan.getValue(SettingManager.SYSTEM_PROXY_PORT);
-                String username = settingMan.getValue(SettingManager.SYSTEM_PROXY_USERNAME);
-                String password = settingMan.getValue(SettingManager.SYSTEM_PROXY_PASSWORD);
-                pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
-        }
-        // FIXME: should also restart the Z server?
-    }
 
     //--------------------------------------------------------------------------
     //---
@@ -86,7 +60,7 @@ public class DoActions implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
 
         if (params.getText().equals("ok")) {
-            doActions(context);
+            SiteApi.reloadServices(context);
         } else {
             // else what? Exceptions don't get this far so must be "ok" response
             throw new OperationAbortedEx("DoActions received unexpected request: " + Xml.getString(params));

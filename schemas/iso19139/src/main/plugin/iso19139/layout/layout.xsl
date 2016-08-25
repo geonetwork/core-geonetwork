@@ -162,7 +162,7 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
-    <xsl:param name="refToDelete" select="''" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
     <xsl:variable name="exclusionMatchesParent">
@@ -325,7 +325,7 @@
       <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
       <xsl:with-param name="parentEditInfo"
-                      select="if (exists($refToDelete)) then $refToDelete else gn:element"/>
+                      select="if ($refToDelete) then $refToDelete else gn:element"/>
       <!-- TODO: Handle conditional helper -->
       <xsl:with-param name="listOfValues" select="$helper"/>
       <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>

@@ -47,6 +47,7 @@ import jeeves.services.ReadWriteController;
 //=============================================================================
 @Controller("admin.category.update.labels")
 @ReadWriteController
+@Deprecated
 public class XmlUpdate {
 
     @RequestMapping(value = "/{lang}/admin.category.update.labels", produces = {

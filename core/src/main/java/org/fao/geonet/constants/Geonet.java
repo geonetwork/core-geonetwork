@@ -101,6 +101,8 @@ public final class Geonet {
         public static final String SCHEMATRON_XML = "schematron_xml.xsl";
         public static final String SCHEMATRON_VERBID = "schematron_verbid.xsl";
         public static final String SEARCH_LUCENE = "lucene.xsl";
+        public static final String SEARCH_Z3950_CLIENT = "z3950Client.xsl";
+        public static final String SEARCH_Z3950_SERVER = "z3950Server.xsl";
         public static final String UPDATE_FIXED_INFO = "update-fixed-info.xsl";
         public static final String UPDATE_CHILD_FROM_PARENT_INFO = "update-child-from-parent-info.xsl";
         public static final String EXTRACT_UUID = "extract-uuid.xsl";
@@ -119,7 +121,6 @@ public final class Geonet {
         public static final String SCHEMA_OASIS = "oasis-catalog.xml";
         public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
-        public static final String JZKITCONFIG_TEMPLATE = "JZKitConfig.xml.tem";
         public static final String JZKITAPPLICATIONCONTEXT = "JZkitApplicationContext.xml";
 
         /**
@@ -231,15 +232,6 @@ public final class Geonet {
          */
         public static final String METADATA_UUIDS = "metadata.uuids";
 
-    }
-
-    public static final class Settings {
-        public static final String SERVER_HOST = "system/server/host";
-        public static final String SERVER_PORT = "system/server/port";
-        public static final String SERVER_SECURE_PORT = "system/server/securePort";
-        public static final String SERVER_PROTOCOL = "system/server/protocol";
-        public static final String VERSION = "system/platform/version";
-        public static final String SUBVERSION = "system/platform/subVersion";
     }
 
     /**
@@ -468,6 +460,14 @@ public final class Geonet {
          * Parameter name: {@value #UUID} - Text field that search for specific uuid given
          */
         public static final String UUID = "uuid";
+        /**
+         * Attrset used in Z39.50 search
+         */
+        public static final String ATTRSET = "attrset";
+        /**
+         * Parameter name: {@value #ZQUERY} - A Z3950 query as specified in the Z3950 harvester
+         */
+        public static final String ZQUERY = "zquery";
 
 
         public static final String RESULT_TYPE = "resultType";
@@ -629,6 +629,7 @@ public final class Geonet {
         public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
         public static final Namespace SLD = Namespace.getNamespace("sld", "http://www.opengis.net/sld");
         public static final Namespace SE = Namespace.getNamespace("se", "http://www.opengis.net/se");
+        public static final Namespace XML = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
     }
 
     public static class IndexFieldNames {

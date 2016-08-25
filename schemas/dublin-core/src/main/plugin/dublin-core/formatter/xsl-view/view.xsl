@@ -25,7 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 version="2.0"
                 exclude-result-prefixes="#all">
@@ -50,6 +50,10 @@
   <!-- Specific schema rendering -->
   <xsl:template mode="getMetadataTitle" match="simpledc">
     <xsl:value-of select="dc:title"/>
+  </xsl:template>
+
+  <xsl:template mode="getMetadataHierarchyLevel" match="simpledc">
+    <xsl:value-of select="'dataset'"/>
   </xsl:template>
 
   <xsl:template mode="getMetadataAbstract" match="simpledc">

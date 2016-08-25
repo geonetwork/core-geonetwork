@@ -42,6 +42,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * @author heikki doeleman
  */
+@Deprecated
 public abstract class BackupFileService extends NotInReadOnlyModeService {
 
     /**

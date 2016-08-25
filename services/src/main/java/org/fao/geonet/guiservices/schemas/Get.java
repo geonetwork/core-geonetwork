@@ -37,7 +37,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 //=============================================================================
-
+@Deprecated
 public class Get implements Service {
     private String FS = File.separator;
 

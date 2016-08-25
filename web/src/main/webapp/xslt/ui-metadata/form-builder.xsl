@@ -140,6 +140,7 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
+
         <div
           class="form-group gn-field gn-{substring-after(name(), ':')} {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
           id="gn-el-{$editInfo/@ref}"
@@ -264,6 +265,23 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <!-- When building the form with an element having cardinality 0..1,
+    add a hidden add action in case the element is removed. If removed,
+    the client app take care of displaying this control. -->
+    <xsl:if test="$service = 'md.edit' and $parentEditInfo and $parentEditInfo/@min = 0 and $parentEditInfo/@max = 1">
+      <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
+
+      <xsl:call-template name="render-element-to-add">
+        <xsl:with-param name="label"
+                        select="gn-fn-metadata:getLabel($schema, name(.), $labels, name(..), '', '')/label"/>
+        <xsl:with-param name="directive" select="$directive"/>
+        <xsl:with-param name="childEditInfo" select="$parentEditInfo"/>
+        <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+        <xsl:with-param name="isFirst" select="false()"/>
+        <xsl:with-param name="isHidden" select="true()"/>
+        <xsl:with-param name="name" select="name()"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
 
@@ -668,6 +686,8 @@
     <!-- Hide add element if child of an XLink section. -->
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
     <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
+    <xsl:param name="isHidden" required="no" as="xs:boolean" select="false()"/>
+    <xsl:param name="name" required="no" as="xs:string" select="''"/>
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
@@ -681,8 +701,9 @@
 
       <!-- This element is replaced by the content received when clicking add -->
       <div
-        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field gn-add-field'} "
+        class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field {if ($isHidden) then 'hidden' else ''}"
         id="gn-el-{$id}"
+        data-gn-cardinality="{$childEditInfo/@min}-{$childEditInfo/@max}"
         data-gn-field-highlight="">
         <label class="col-sm-2 control-label"
                data-gn-field-tooltip="{$schema}|{$qualifiedName}|{$parentName}|">
@@ -760,7 +781,7 @@
                 -->
                 <a class="btn btn-default"
                    title="{$i18n/addA} {$label}"
-                   data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                   data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{if ($name != '') then $name else concat(@prefix, ':', @name)}', '{$id}', 'before');">
                   <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"/>
                   <xsl:if test="$btnLabel != ''">&#160;
                     <span>
@@ -1312,12 +1333,15 @@
   <xsl:template name="render-batch-process-button">
     <xsl:param name="process-name"/>
     <xsl:param name="process-params"/>
+    <xsl:param name="btnClass" required="no"/>
+
     <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
               data-params="{$process-params}"
+              data-icon="{$btnClass}"
               data-name="{$strings/*[name() = $process-name]}"
               data-help="{$strings/*[name() = concat($process-name, 'Help')]}"/>
       </div>
@@ -1348,5 +1372,123 @@
         </a>
       </div>
     </div>
+  </xsl:template>
+
+
+
+  <!-- Create a table based on the values param which contains a table structure.
+
+  values structure should be:
+  <header>
+   <col>colName</col>
+   <col..
+  </header>
+  <row (title='')>
+   <col (readonly='')
+        (title='xs:string')
+        (colspan='xs:int')
+        (type='textarea|Real|Integer|Percentage')>
+     text value for readonly cols or element for editing.
+   </col>
+   <col remove=''>
+     Element containing gn:element containing removal config.
+   </col>
+   <col...
+  </row>
+  <row...
+
+  -->
+  <xsl:template name="render-table">
+    <xsl:param name="values" as="node()"/>
+    <xsl:param name="addControl" as="node()?"/>
+
+    <table class="table table-striped">
+      <xsl:for-each select="$values/header">
+        <thead>
+          <tr>
+            <xsl:for-each select="col">
+              <th>
+                <div class="th-inner ">
+                  <xsl:value-of select="."/>
+                </div>
+              </th>
+            </xsl:for-each>
+          </tr>
+        </thead>
+      </xsl:for-each>
+      <tbody>
+        <xsl:for-each select="$values/row">
+          <tr id="gn-el-{col[@remove]/gn:element/@ref}">
+            <xsl:if test="@title != ''">
+              <xsl:attribute name="title" select="@title"/>
+            </xsl:if>
+            <xsl:for-each select="col">
+              <td>
+                <xsl:if test="@colspan">
+                  <xsl:attribute name="colspan" select="@colspan"/>
+                </xsl:if>
+                <xsl:if test="@title">
+                  <xsl:attribute name="title" select="@title"/>
+                </xsl:if>
+
+                <!-- TODO: Add move up/down control? -->
+                <xsl:choose>
+                  <xsl:when test="@remove">
+                    <xsl:call-template name="render-form-field-control-remove">
+                      <xsl:with-param name="editInfo" select="gn:element"/>
+                    </xsl:call-template>
+                  </xsl:when>
+                  <xsl:when test="@readonly">
+                    <xsl:value-of select="."/>
+                  </xsl:when>
+                  <xsl:when test="count(*) = 0">
+                    <!-- Empty col -->
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:choose>
+                      <xsl:when test="@type = 'textarea'">
+                        <!-- TODO: Multilingual, codelist, date ... -->
+                        <textarea class="form-control"
+                                  name="_{*/gn:element/@ref}">
+                          <xsl:value-of select="*/text()"/>
+                        </textarea>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <input class="form-control"
+                               type="{if (@type = 'Real' or @type = 'Integer' or @type = 'Percentage')
+                                  then 'number'
+                                  else 'text'}"
+                               name="_{*/gn:element/@ref}"
+                               value="{*/normalize-space()}"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+
+                    <!-- TODO call schema render mode of the field without
+                    label and controls.
+
+                    <saxon:call-template name="{concat('dispatch-', $schema)}">
+                      <xsl:with-param name="base" select="."/>
+                      <xsl:with-param name="overrideLabel"
+                                      select="''"/>
+                    </saxon:call-template> -->
+                  </xsl:otherwise>
+                </xsl:choose>
+              </td>
+            </xsl:for-each>
+          </tr>
+        </xsl:for-each>
+
+        <!-- Add an extra row for adding new one -->
+        <xsl:if test="$addControl">
+          <tr>
+            <td colspan="{max($values/row/count(col))}">
+              <xsl:copy-of select="$addControl"/>
+            </td>
+          </tr>
+        </xsl:if>
+      </tbody>
+    </table>
+    <!--<textarea><xsl:copy-of select="$values"/></textarea>-->
+    <!--<textarea><xsl:copy-of select="$addControl"/></textarea>-->
   </xsl:template>
 </xsl:stylesheet>

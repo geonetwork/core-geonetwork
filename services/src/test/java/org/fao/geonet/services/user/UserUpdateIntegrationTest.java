@@ -96,6 +96,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -115,6 +116,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -169,6 +171,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -218,6 +221,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -244,6 +248,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(startUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -270,6 +275,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(startUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -335,6 +341,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -371,6 +378,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(startUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -398,6 +406,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -431,6 +440,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,
@@ -464,6 +474,7 @@ public class UserUpdateIntegrationTest extends AbstractServiceIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         userSession.loginAs(updatingUser);
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.getSession();
         HttpSession session = new MockHttpSession();
 
         session.setAttribute(JeevesServlet.USER_SESSION_ATTRIBUTE_KEY,

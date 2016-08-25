@@ -55,6 +55,7 @@ import jeeves.server.context.ServiceContext;
  * See 
  */
 @Controller("metadata/validate")
+@Deprecated
 public class ValidationService implements ApplicationContextAware {
 
     private ApplicationContext context;

@@ -31,6 +31,7 @@ import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
@@ -48,9 +49,11 @@ import java.util.List;
 
 import jeeves.server.context.ServiceContext;
 
+
 public abstract class AbstractTokenLister implements OaiPmhService {
 
     protected ResumptionTokenCache cache;
+
     private SettingManager settingMan;
     private SchemaManager schemaMan;
 
@@ -64,7 +67,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
      * @return the mode
      */
     public int getMode() {
-        return settingMan.getValueAsInt("system/oai/mdmode");
+        return settingMan.getValueAsInt(Settings.SYSTEM_OAI_MDMODE);
     }
 
     /**
@@ -72,7 +75,7 @@ public abstract class AbstractTokenLister implements OaiPmhService {
      * @return
      */
     public int getMaxRecords() {
-        return settingMan.getValueAsInt("system/oai/maxrecords");
+        return settingMan.getValueAsInt(Settings.SYSTEM_OAI_MAXRECORDS);
     }
 
     /**

@@ -23,7 +23,11 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.entitylistener.SourceEntityListenerManager;
+import org.fao.geonet.repository.LanguageRepository;
 
 import java.util.Map;
 
@@ -70,8 +74,21 @@ public class Source extends Localized {
      */
     public Source(String uuid, String name, Map<String, String> translations, boolean local) {
         this._uuid = uuid;
-        this._name = name;
-        setLabelTranslations(translations);
+        setName(name);
+        if (translations != null && translations.size() != 0) {
+            setLabelTranslations(translations);
+        } else {
+            LanguageRepository langRepository =
+                ApplicationContextHolder.get().getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            Map<String, String> labelTranslations = getLabelTranslations();
+            for (Language l : allLanguages) {
+                String label = labelTranslations.get(l.getId());
+                if (label == null) {
+                    getLabelTranslations().put(l.getId(), this.getName());
+                }
+            }
+        }
         this._local = Constants.toYN_EnabledChar(local);
     }
 
@@ -122,6 +139,7 @@ public class Source extends Localized {
      * controlling how types are mapped to the database.
      */
     @Column(name = "isLocal", nullable = false, length = 1)
+    @JsonIgnore
     protected char getIsLocal_JpaWorkaround() {
         return _local;
     }
@@ -141,6 +159,7 @@ public class Source extends Localized {
      * @return true is the source refers to the local geonetwork.
      */
     @Transient
+    @JsonIgnore
     public boolean isLocal() {
         return Constants.toBoolean_fromYNChar(getIsLocal_JpaWorkaround());
     }

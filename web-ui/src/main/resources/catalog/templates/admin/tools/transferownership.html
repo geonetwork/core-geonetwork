@@ -4,31 +4,28 @@
     <label data-translate="">chooseSourceEditor</label>
     <select class="form-control" data-ng-model="editorsSelectedId"
             autofocus="" data-ng-change="selectUser(editorsSelectedId)">
-      <option data-ng-repeat="e in editors | orderBy:'name'" value="{{e.id}}">{{e.name
-        + ' ' + e.surname}}
+      <option data-ng-repeat="e in editors | orderBy:'name'" value="{{e.id}}">{{e.name}}
+        ({{e.records}} {{'records' | translate}})
       </option>
     </select>
     <table class="table" data-ng-hide="editorsSelectedId == null">
       <tr>
         <th data-translate="">sourceGroup</th>
         <th data-translate="">targetGroup</th>
-        <th data-translate="">targetEditor</th>
       </tr>
-      <tr data-ng-repeat="g in editorGroups | orderBy:'name'"
+      <tr data-ng-repeat="(key, g) in editorGroups"
           data-ng-init="transfertList[g.id] = {sourceGroup: g.id};">
         <td>{{g.label[lang]|empty:g.name}}</td>
+        <!--TODO: Only list group with records. -->
         <td><select class="form-control"
                     data-ng-model="transfertList[g.id].targetGroup"
-                    data-ng-options="g as g.label[lang] for g in groupinfo.targetGroup | orderBy:'name'">
-        </select></td>
-        <td><select class="form-control"
-                    data-ng-model="transfertList[g.id].targetEditor"
-                    data-ng-options="e.id as (e.name + ' ' + e.surname) for e in transfertList[g.id].targetGroup.editor | orderBy:'name'">
+                    data-ng-options="g.userName group by g.groupName
+                    for (key, g) in userGroups">
         </select></td>
         <td>
           <button type="button" class="btn btn-primary btn-block"
                   data-ng-click="tranferOwnership(g.id)"
-                  data-ng-disabled="!transfertList[g.id].targetEditor">
+                  data-ng-disabled="!transfertList[g.id].targetGroup">
             <span data-translate="">transfertPriv</span> <i
             data-ng-class="isRunning(g.id) ? 'fa fa-plus' : ''"></i>
           </button>

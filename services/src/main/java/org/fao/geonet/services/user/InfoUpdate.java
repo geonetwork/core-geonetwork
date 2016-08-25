@@ -41,6 +41,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Update the profile of logged user
  */
+@Deprecated
 public class InfoUpdate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

@@ -53,6 +53,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Assigns categories to metadata.
  */
+@Deprecated
 public class BatchUpdateCategories extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
     //---

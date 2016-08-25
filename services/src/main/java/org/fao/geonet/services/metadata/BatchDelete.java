@@ -53,6 +53,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Removes a metadata from the system.
  */
+@Deprecated
 public class BatchDelete extends BackupFileService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);

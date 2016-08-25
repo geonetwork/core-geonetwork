@@ -217,7 +217,7 @@ class Harvester implements IHarvester<HarvestResult> {
         try {
             wfsQuery = Xml.loadString(params.query, false);
         } catch (JDOMException e) {
-            errors.add(new HarvestError(e, log));
+            errors.add(new HarvestError(context, e, log));
             throw new BadParameterEx("GetFeature Query failed to parse\n", params.query);
         }
 
@@ -358,10 +358,10 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                 }
             } catch (CacheException e) {
-                HarvestError error = new HarvestError(e, log);
+                HarvestError error = new HarvestError(context, e, log);
                 this.errors.add(error);
             } catch (Exception e) {
-                HarvestError error = new HarvestError(e, log);
+                HarvestError error = new HarvestError(context, e, log);
                 this.errors.add(error);
             }
         }

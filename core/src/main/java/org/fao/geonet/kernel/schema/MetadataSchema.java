@@ -30,6 +30,10 @@ package org.fao.geonet.kernel.schema;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -63,8 +67,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+
 //==============================================================================
 
+@JsonPropertyOrder({
+    "name", "titles", "descriptions", "standardUrl", "targetNamespace", "namespaces",
+    "readwriteUUID", "schematronRules"
+})
 public class MetadataSchema {
     public static final String SCHEMATRON_DIR = "schematron";
     private static final String XSL_FILE_EXTENSION = ".xsl";
@@ -81,6 +90,9 @@ public class MetadataSchema {
         new HashMap<String, Pair<String, Element>>();
     private String schemaName;
     private Path schemaDir;
+    private String standardUrl;
+    private Map<String, String> titles = new HashMap<>();
+    private Map<String, String> descriptions = new HashMap<>();
     private String primeNS;
     private String[] schematronRules;
     private boolean canEdit = false;
@@ -132,6 +144,7 @@ public class MetadataSchema {
         this.schemaPlugin = SchemaManager.getSchemaPlugin(schemaName);
     }
 
+    @JsonIgnore
     public Editor getConfigEditor() {
         Path metadataSchemaConfig =
             getSchemaDir().resolve("layout").resolve("config-editor.xml");
@@ -151,6 +164,7 @@ public class MetadataSchema {
     /**
      * Get schema directory
      */
+    @JsonIgnore
     public Path getSchemaDir() {
         return schemaDir;
     }
@@ -163,7 +177,7 @@ public class MetadataSchema {
     }
 
     //---------------------------------------------------------------------------
-
+    @JsonProperty(value = "targetNamespace")
     public String getPrimeNS() {
         return primeNS;
     }
@@ -322,7 +336,7 @@ public class MetadataSchema {
     }
 
     //---------------------------------------------------------------------------
-
+    @JsonIgnore
     public String getNS(String targetNSPrefix) {
         Namespace ns = hmNameSpaces.get(targetNSPrefix);
         if (ns != null) {
@@ -332,9 +346,11 @@ public class MetadataSchema {
         }
     }
 
+
     /**
      * Return the list of namespaces for the schema.
      */
+    @JsonIgnore
     public List<Namespace> getNamespaces() {
         List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
         for (Namespace ns : hmNameSpaces.values()) {
@@ -355,11 +371,12 @@ public class MetadataSchema {
     }
 
     //---------------------------------------------------------------------------
-
+    @JsonIgnore
     public List<Namespace> getSchemaNS() {
         return new ArrayList<Namespace>(hmPrefixes.values());
     }
 
+    @JsonProperty(value = "namespaces")
     public Map<String, String> getSchemaNSWithPrefix() {
         Map<String, String> mapNs = new HashMap<String, String>();
         List<Namespace> schemaNsList = getSchemaNS();
@@ -502,6 +519,7 @@ public class MetadataSchema {
         return hmOperationFilters.get(operation.name());
     }
 
+    @JsonIgnore
     public SchemaPlugin getSchemaPlugin() {
         return schemaPlugin;
     }
@@ -528,7 +546,7 @@ public class MetadataSchema {
     }
 
     // -- this info for profile detection methods
-
+    @JsonIgnore
     public List<Element> getSchemaAppInfoElements() {
         return rootAppInfoElements;
     }
@@ -543,6 +561,30 @@ public class MetadataSchema {
 
     public void setReadwriteUUID(boolean readwriteUUID) {
         this.readwriteUUID = readwriteUUID;
+    }
+
+    public String getStandardUrl() {
+        return standardUrl;
+    }
+
+    public void setStandardUrl(String standardUrl) {
+        this.standardUrl = standardUrl;
+    }
+
+    public Map<String, String> getTitles() {
+        return titles;
+    }
+
+    public void setTitles(Map<String, String> titles) {
+        this.titles = titles;
+    }
+
+    public Map<String, String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(Map<String, String> descriptions) {
+        this.descriptions = descriptions;
     }
 
     /**

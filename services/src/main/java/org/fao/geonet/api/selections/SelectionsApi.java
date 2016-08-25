@@ -22,26 +22,25 @@
  */
 package org.fao.geonet.api.selections;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.SelectionManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Set;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 
 /**
  * Select a list of elements stored in session.
@@ -73,13 +72,12 @@ public class SelectionsApi {
             required = true,
             example = "metadata")
         @PathVariable
-            String bucket
+            String bucket,
+        HttpSession httpSession
     )
         throws Exception {
-        ServiceContext serviceContext = ServiceContext.get();
-
         SelectionManager selectionManager =
-            SelectionManager.getManager(serviceContext.getUserSession());
+            SelectionManager.getManager(ApiUtils.getUserSession(httpSession));
 
         synchronized (selectionManager.getSelection(bucket)) {
             return selectionManager.getSelection(bucket);
@@ -110,19 +108,20 @@ public class SelectionsApi {
         @ApiParam(value = "One or more record UUIDs. If null, select all in current search if bucket name is 'metadata' (TODO: remove this limitation?).",
             required = false)
         @RequestParam(required = false)
-            String[] uuid
+            String[] uuid,
+        HttpSession httpSession,
+        HttpServletRequest request
     )
         throws Exception {
-        ServiceContext serviceContext = ServiceContext.get();
-
+        UserSession session = ApiUtils.getUserSession(httpSession);
         int nbSelected = SelectionManager.updateSelection(bucket,
-            serviceContext.getUserSession(),
+            session,
             uuid != null ?
                 SelectionManager.ADD_SELECTED :
                 SelectionManager.ADD_ALL_SELECTED,
             uuid != null ?
                 Arrays.asList(uuid) : null,
-            q, serviceContext);
+            q, ApiUtils.createServiceContext(request));
 
         return new ResponseEntity<>(nbSelected, HttpStatus.CREATED);
     }
@@ -144,22 +143,24 @@ public class SelectionsApi {
             example = "metadata")
         @PathVariable
             String bucket,
-        @ApiParam(value = "One or more record UUIDs",
+        @ApiParam(
+            value = API_PARAM_RECORD_UUIDS,
             required = false)
         @RequestParam(required = false)
-            String[] uuid
+            String[] uuid,
+        HttpSession httpSession,
+        HttpServletRequest request
     )
         throws Exception {
-        ServiceContext serviceContext = ServiceContext.get();
 
         int nbSelected = SelectionManager.updateSelection(bucket,
-            serviceContext.getUserSession(),
+            ApiUtils.getUserSession(httpSession),
             uuid != null ?
                 SelectionManager.REMOVE_SELECTED :
                 SelectionManager.REMOVE_ALL_SELECTED,
             uuid != null ?
                 Arrays.asList(uuid) : null,
-            null, serviceContext);
+            null, ApiUtils.createServiceContext(request));
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);
     }

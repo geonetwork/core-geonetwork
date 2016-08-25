@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Get the list of service define in DB configuration
  */
 @Controller("admin.config.virtualcsw.list")
+@Deprecated
 public class List {
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.list", produces = {
         MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})

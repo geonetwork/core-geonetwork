@@ -23,16 +23,16 @@
 
 package org.fao.geonet.services.metadata;
 
-import org.fao.geonet.services.ownership.OwnershipUtils;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.List;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.api.users.transfer.OwnershipUtils;
+import org.jdom.Element;
+
+import java.nio.file.Path;
+import java.util.List;
 
 //=============================================================================
 

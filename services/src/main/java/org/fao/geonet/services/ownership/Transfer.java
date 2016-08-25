@@ -54,6 +54,7 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasG
 /**
  *
  */
+@Deprecated
 public class Transfer extends NotInReadOnlyModeService {
     /**
      *
