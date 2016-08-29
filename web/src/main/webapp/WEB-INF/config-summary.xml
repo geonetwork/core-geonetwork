@@ -102,6 +102,7 @@
     <facet name="title" indexKey="title" label="titles"/>
     <facet name="metadataType" indexKey="_isTemplate" label="metadataTypes"/>
     <facet name="isValid" indexKey="_valid" label="isValid"/>
+    <facet name="hasDqMeasures" indexKey="hasDqMeasures" label="hasDqMeasures"/>
     <facet name="isHarvested" indexKey="_isHarvested" label="isHarvested"/>
     <facet name="mdStatus" indexKey="_status" label="mdStatus"/>
     <facet name="status" indexKey="cl_status" label="status"/>
@@ -190,6 +191,7 @@
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
+      <item facet="hasDqMeasures" max="3" sortBy="value" translator="apploc:"/>
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
       <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
     </summaryType>
