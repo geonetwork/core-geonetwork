@@ -181,6 +181,26 @@
         <xsl:with-param name="store" select="'true'"/>
       </xsl:apply-templates>
 
+      <xsl:variable name="listOfKeywords">{
+        <xsl:variable name="keywordWithNoThesaurus"
+                      select="/simpledc/dc:subject[text() != '']"/>
+        <xsl:if test="count($keywordWithNoThesaurus) > 0">
+          'keywords': [
+          <xsl:for-each select="$keywordWithNoThesaurus">
+            <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
+        </xsl:if>
+        }
+      </xsl:variable>
+
+      <Field name="keywordGroup"
+             string="{normalize-space($listOfKeywords)}"
+             store="true"
+             index="false"/>
+
+
       <xsl:for-each select="/simpledc/dct:isPartOf">
         <Field name="parentUuid" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>

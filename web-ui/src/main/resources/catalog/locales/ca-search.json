@@ -305,7 +305,7 @@
     "Locations": "Llocs",
     "clear": "netejar",
     "msgCanDropFileOnMap": "També pots deixar anar un fitxer sobre el mapa",
-    "UploadKMZfile": "Pujar un fitxer KMZ",
+    "UploadKMZfile": "Upload a KMZ file",
     "or": "o",
     "KMLfileURL": "URL d'un fitxer KML",
     "refineSearch": "Refinar Cerca",
@@ -330,7 +330,7 @@
     "wpsDescribeProcessFailed": "Ha fallat el DescribeProcess",
     "wpsExecute": "Executar",
     "wpsExecuteFailed": "Execució fallida",
-    "wpsErrorCodeReturned": "El servidor ha retornat el codi d'estat",
+    "wpsErrorCodeReturned": "The server returned status code",
     "time": "Temps",
     "features": "feature(s)",
     "downloadLayer": "Descarregar dades",
@@ -358,5 +358,6 @@
     "fbCatMetadataEditing": "Edició de metadades",
     "fbCatHarvesting": "Harvesting",
     "fbCatValidator": "Validador",
-    "fbCatOthers": "Altres"
+    "fbCatOthers": "Altres",
+    "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map"
 }

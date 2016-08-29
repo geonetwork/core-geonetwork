@@ -169,7 +169,7 @@
               not($isFlatMode) or
               gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)
             ) and
-            $service != 'md.element.add' and
+            $service != 'embedded' and
             count(following-sibling::node()[name() = $name]) = 0">
 
       <!-- Create configuration to add action button for this element. -->

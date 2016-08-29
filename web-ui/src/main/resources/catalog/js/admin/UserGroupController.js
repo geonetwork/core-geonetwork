@@ -99,7 +99,7 @@
 
       $http.get('../api/tags').
           success(function(data) {
-            $scope.categories = data;
+            $scope.categories = [{id: null, name: ''}].concat(data);
           });
 
       function loadGroups() {
@@ -510,12 +510,15 @@
       };
 
       $scope.saveGroup = function() {
+        if ($scope.groupSelected.defaultCategory === '') {
+          $scope.groupSelected.defaultCategory = null;
+        }
         $http.put('../api/groups' + (
             $scope.groupSelected.id != -99 ?
             '/' + $scope.groupSelected.id : ''
-            ), $scope.groupSelected)
-            .success(uploadImportMdDone)
-            .error(uploadImportMdError);
+          ), $scope.groupSelected)
+          .success(uploadImportMdDone)
+          .error(uploadImportMdError);
       };
 
       $scope.deleteGroup = function(formId) {

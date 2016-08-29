@@ -142,6 +142,7 @@
       <field name="revisionDate" tagName="revisionDate"/>
       <field name="publicationDate" tagName="publicationDate"/>
       <field name="keyword" tagName="keyword"/>
+      <field name="keywordGroup" tagName="keywordGroup"/>
       <field name="parentUuid" tagName="parentId"/>
       <field name="type" tagName="type"/>
       <field name="identifier" tagName="identifier"/>
