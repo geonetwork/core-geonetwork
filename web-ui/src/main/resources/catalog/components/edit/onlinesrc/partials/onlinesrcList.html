@@ -70,6 +70,22 @@
             <span data-translate="">linkToSibling</span>
           </a>
         </li>
+        <li data-ng-show="isCategoryEnable('sibling')">
+          <a href=""
+             data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'crossReference', initiativeType: 'specification'})">
+            <i class="fa gn-icon-sibling"></i>
+            <i class="icon-external-link"></i>&nbsp;
+            <span data-translate="">linkToDPS</span>
+          </a>
+        </li>
+        <li data-ng-show="isCategoryEnable('sibling')">
+          <a href=""
+             data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'crossReference', initiativeType: 'upstreamData'})">
+            <i class="fa gn-icon-sibling"></i>
+            <i class="icon-external-link"></i>&nbsp;
+            <span data-translate="">linkToUD</span>
+          </a>
+        </li>
       </ul>
     </div>
 

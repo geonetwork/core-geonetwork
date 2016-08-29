@@ -1548,13 +1548,14 @@
      * then the form
      * and online resource list are refreshed.
      */
-      .directive('gnLinkToSibling', ['gnOnlinesrc', 'gnGlobalSettings',
-        function(gnOnlinesrc, gnGlobalSettings) {
+      .directive('gnLinkToSibling', [
+        'gnOnlinesrc', 'gnGlobalSettings', 'gnCurrentEdit', '$http',
+        function(gnOnlinesrc, gnGlobalSettings, gnCurrentEdit, $http) {
           return {
             restrict: 'A',
             scope: {},
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
-                'partials/linktosibling.html',
+                'partials/linktosibling-sextant.html',
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope) {
@@ -1604,13 +1605,30 @@
                 post: function postLink(scope, iElement, iAttrs) {
                   scope.popupid = iAttrs['gnLinkToSibling'];
 
+                  scope.cpt = null;
+                  scope.getFragments = function() {
+                    scope.fragments = [];
+                    $http.post(
+                      '../api/0.1/records/' + gnCurrentEdit.uuid +
+                      '/query/dq-sections', {}).then(function(r) {
+                      if (r.status === 200) {
+                        scope.fragments = r.data;
+                      }
+                    });
+                  };
+
                   /**
                    * Register a method on popup open to reset
                    * the search form and trigger a search.
                    */
-                  gnOnlinesrc.register('sibling', function() {
+                  gnOnlinesrc.register('sibling', function(config) {
                     $(scope.popupid).modal('show');
 
+                    scope.cpt = null;
+                    scope.config = {
+                      associationType: (config && config.associationType) || null,
+                      initiativeType: (config && config.initiativeType) || null
+                    };
                     scope.$broadcast('resetSearch');
                     scope.selection = [];
                   });
@@ -1646,6 +1664,7 @@
                   scope.$watchCollection('config', function(n, o) {
                     if (n && n !== o) {
                       setSearchParamsPerType();
+                      scope.getFragments();
                     }
                   });
 
@@ -1698,23 +1717,42 @@
                     }
                   };
 
+                  function injectComponentInUD(uuids) {
+                    if (scope.cpt != '') {
+                      $http.put('../api/0.1/records/batchediting', [{
+                          xpath: 'mdb:dataQualityInfo',
+                          value: '<gn_create>' + scope.cpt + '</gn_create>'
+                        }], {
+                          params: {
+                            uuids: uuids
+                          }
+                      });
+                    }
+                  };
+
                   /**
                    * Call the batch process to add the sibling
                    * to the current edited metadata.
                    */
                   scope.linkToResource = function() {
                     var uuids = [];
+                    var recordUuids = [];
                     for (i = 0; i < scope.selection.length; ++i) {
                       var obj = scope.selection[i];
                       uuids.push(obj.md['geonet:info'].uuid + '#' +
                           obj.associationType + '#' +
                           obj.initiativeType);
+                      recordUuids.push(obj.md['geonet:info'].uuid);
                     }
                     var params = {
                       initiativeType: scope.config.initiativeType,
                       associationType: scope.config.associationType,
                       uuids: uuids.join(',')
                     };
+
+                    if (scope.config.initiativeType === 'upstreamData') {
+                      injectComponentInUD(recordUuids);
+                    }
                     return gnOnlinesrc.linkToSibling(params, scope.popupid);
                   };
                 }
