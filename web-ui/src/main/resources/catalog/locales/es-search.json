@@ -305,7 +305,7 @@
     "Locations": "Lugares",
     "clear": "limpiar",
     "msgCanDropFileOnMap": "También puedes soltar un fichero sobre el mapa",
-    "UploadKMZfile": "Subir un fichero KMZ",
+    "UploadKMZfile": "Upload a KMZ file",
     "or": "o",
     "KMLfileURL": "URL de un fichero KML",
     "refineSearch": "Refinar Búsqueda",
@@ -330,7 +330,7 @@
     "wpsDescribeProcessFailed": "Falló el DescribeProcess",
     "wpsExecute": "Ejecutar",
     "wpsExecuteFailed": "Ejecución fallida",
-    "wpsErrorCodeReturned": "El servidor devolvió el código de estado ",
+    "wpsErrorCodeReturned": "The server returned status code",
     "time": "Tiempo",
     "features": "feature(s)",
     "downloadLayer": "Descargar datos",
@@ -358,5 +358,6 @@
     "fbCatMetadataEditing": "Edición de metadatos",
     "fbCatHarvesting": "Harvesting",
     "fbCatValidator": "Validador",
-    "fbCatOthers": "Otros"
+    "fbCatOthers": "Otros",
+    "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map"
 }

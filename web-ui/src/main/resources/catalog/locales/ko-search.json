@@ -305,7 +305,7 @@
     "Locations": "위치",
     "clear": "지우기",
     "msgCanDropFileOnMap": "또한 지도에 파일을 끌어다 놓을 수 있습니다",
-    "UploadKMZfile": "KMZ 파일 업로드",
+    "UploadKMZfile": "Upload a KMZ file",
     "or": "또는",
     "KMLfileURL": "KML 파일 URL 설정",
     "refineSearch": "검색 수정",
@@ -330,7 +330,7 @@
     "wpsDescribeProcessFailed": "DescribeProcess 실패",
     "wpsExecute": "실행",
     "wpsExecuteFailed": "실행 실패",
-    "wpsErrorCodeReturned": "서버가 상태 코드를 반환헀습니다",
+    "wpsErrorCodeReturned": "The server returned status code",
     "time": "시간",
     "features": "피처(들)",
     "downloadLayer": "데이터 다운로드",
@@ -358,5 +358,6 @@
     "fbCatMetadataEditing": "메타데이터 편집",
     "fbCatHarvesting": "수집",
     "fbCatValidator": "유효성 검사기",
-    "fbCatOthers": "기타"
+    "fbCatOthers": "기타",
+    "syncAllLayers": "지도 뷰어와 검색 미리보기 지도간의 모든 레이어 (또는 백그라운드 레이어만) 동기화"
 }
