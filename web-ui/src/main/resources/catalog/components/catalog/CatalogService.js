@@ -491,7 +491,7 @@
         var field = listOfJsonFields[idx];
         if (angular.isDefined(record[field])) {
           try {
-          record[field] = angular.fromJson(record[field]);
+            record[field] = angular.fromJson(record[field]);
           } catch (e) {}
         }
       });
