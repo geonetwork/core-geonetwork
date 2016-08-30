@@ -40,10 +40,13 @@
         '$q',
         '$injector',
         'gnGlobalSettings',
-        function($q, $injector, gnGlobalSettings) {
+        'gnLangs',
+        function($q, $injector, gnGlobalSettings, gnLangs) {
           return {
             request: function(config) {
-
+              if (gnLangs.current) {
+                config.headers['Accept-Language'] = gnLangs.current;
+              }
               if (config.url.indexOf('http', 0) === 0) {
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';

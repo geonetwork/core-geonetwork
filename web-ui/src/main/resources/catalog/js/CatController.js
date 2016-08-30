@@ -49,7 +49,8 @@
         default: 300,
         blur: 0
       }
-    }
+    },
+    current: null
   });
 
   module.constant('gnLangs', {
@@ -110,6 +111,7 @@
       var tokens = location.href.split('/');
       $scope.service = tokens[6].split('?')[0];
       $scope.lang = tokens[5];
+      gnLangs.current = $scope.lang;
       $scope.iso2lang = gnLangs.getIso2Lang(tokens[5]);
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
