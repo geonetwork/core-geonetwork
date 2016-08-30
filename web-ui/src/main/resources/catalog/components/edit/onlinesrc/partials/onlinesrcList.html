@@ -22,7 +22,8 @@
         <li class="dropdown-header"
             data-translate>linkMetadata
         </li>
-        <li data-ng-show="isCategoryEnable('parent')">
+        <li data-ng-show="isCategoryEnable('parent') &&
+                gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('parent')">
             <i class="fa gn-icon-parent"></i>
@@ -30,7 +31,8 @@
             <span data-translate="">linkToParent</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('service') && !gnCurrentEdit.isService">
+        <li data-ng-show="isCategoryEnable('service') && !gnCurrentEdit.isService &&
+                gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('service')">
             <i class="fa gn-icon-service"></i>
@@ -38,7 +40,8 @@
             <span data-translate="">linkToService</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('dataset') && gnCurrentEdit.isService">
+        <li data-ng-show="isCategoryEnable('dataset') && gnCurrentEdit.isService &&
+                gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('dataset')">
             <i class="fa gn-icon-dataset"></i>
@@ -46,7 +49,8 @@
             <span data-translate="">linkToDataset</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('source')">
+        <li data-ng-show="isCategoryEnable('source') &&
+                gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('source')">
             <i class="fa gn-icon-source"></i>
@@ -54,7 +58,8 @@
             <span data-translate="">linkToSource</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('fcats')">
+        <li data-ng-show="isCategoryEnable('fcats') &&
+                gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('fcats')">
             <i class="fa gn-icon-fcats"></i>
@@ -62,7 +67,8 @@
             <span data-translate="">linkToFeatureCatalog</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('sibling')">
+        <li data-ng-show="isCategoryEnable('sibling') &&
+                gnCurrentEdit.metadata.standardName.indexOf('ISO 19115-3 - Emodnet Checkpoint') !== 0">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('sibling')">
             <i class="fa gn-icon-sibling"></i>

@@ -218,7 +218,7 @@
 
                       var urlParams = params.join('&');
                       $http.get(
-                          '../api/registries/entries/' + uuid + '?' + urlParams)
+                          '../api/registries/entries?uuid=' + encodeURIComponent(uuid) + '&' + urlParams)
                         .success(function(xml) {
                        if (usingXlink) {
                          snippets.push(gnEditorXMLService.

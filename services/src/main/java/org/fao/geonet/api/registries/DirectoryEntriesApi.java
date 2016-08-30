@@ -44,6 +44,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -70,7 +71,7 @@ public class DirectoryEntriesApi {
             "inserted in metadata records using XLinks. XLinks can be remote or " +
             "local (TODO: support local XLink in API).")
     @RequestMapping(
-        value = "/{uuid}",
+        value = "/{uuid:.*}",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE
@@ -171,5 +172,49 @@ public class DirectoryEntriesApi {
         } else {
             return tpl;
         }
+    }
+
+
+    @ApiOperation(value = "Get a directory entry",
+        nickname = "getEntry",
+        notes = "Workaroung for Sextant which is using URL as UUIDs" +
+            " and Spring MVC does not match path param URL encoded." +
+            "https://jira.spring.io/browse/SPR-11101")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Directory entry."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+    })
+    @ApiIgnore
+    @ResponseBody
+    public Element getEntryWithUuidAsParam(
+        @ApiParam(
+            value = "Directory entry UUID.",
+            required = true)
+        @RequestParam
+            String uuid,
+        @ApiParam(
+            value = "Process",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String[] process,
+        @ApiParam(
+            value = "Transformation",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String transformation)
+        throws Exception {
+        return getEntry(uuid, process, transformation);
     }
 }

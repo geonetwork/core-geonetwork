@@ -3,6 +3,23 @@
         data-ng-search-form="">
     <div class="onlinesrc-container">
 
+      <!-- Choose a component when linking UD -->
+      <div class="form-group"
+           data-ng-if="config.initiativeType == 'upstreamData'">
+        <label class="col-sm-3 control-label">
+          <span data-translate="">Component</span>
+        </label>
+        <div class="col-sm-5">
+          <select name="cpt"
+                  data-ng-options="value as key for (key, value) in fragments"
+                  data-ng-model="$parent.$parent.cpt"/>
+
+          <div class="alert alert-warning"
+               data-ng-if="fragments.length === 0"
+               data-translate="">noComponentDefined</div>
+        </div>
+      </div>
+
       <div class="form-group"
            data-ng-hide="config.associationTypeForced">
         <label class="col-sm-3 control-label">
@@ -71,22 +88,6 @@
       </div>
 
 
-      <!-- Choose a component when linking UD -->
-      <div class="form-group"
-           data-ng-if="config.initiativeType == 'upstreamData'">
-        <label class="col-sm-3 control-label">
-          <span data-translate="">Component</span>
-        </label>
-        <div class="col-sm-5">
-          <select name="cpt"
-                  data-ng-options="value as key for (key, value) in fragments"
-                  data-ng-model="$parent.$parent.cpt"/>
-
-          <div class="alert alert-warning"
-               data-ng-if="fragments.length === 0"
-               data-translate="">noComponentDefined</div>
-        </div>
-      </div>
 
       <div class="">
         <button type="button" class="btn navbar-btn btn-success"
