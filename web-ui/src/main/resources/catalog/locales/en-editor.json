@@ -326,5 +326,7 @@
     "parentConcept":"Parent concept",
     "moreSpecificConcept":"More specific concepts",
     "associatedConcept":"Associated concepts",
-    "xsd": "Schema validation"
+    "xsd": "Schema validation",
+    "linkToDPS": "Link data product specfication",
+    "linkToUD": "Link to upstream data"
 }

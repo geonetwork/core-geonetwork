@@ -70,7 +70,8 @@
             <span data-translate="">linkToSibling</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('sibling')">
+        <li data-ng-show="isCategoryEnable('sibling') &&
+                gnCurrentEdit.metadata.standardName == 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'crossReference', initiativeType: 'specification'})">
             <i class="fa gn-icon-sibling"></i>
@@ -78,7 +79,8 @@
             <span data-translate="">linkToDPS</span>
           </a>
         </li>
-        <li data-ng-show="isCategoryEnable('sibling')">
+        <li data-ng-show="isCategoryEnable('sibling') &&
+                gnCurrentEdit.metadata.standardName == 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'">
           <a href=""
              data-ng-click="onlinesrcService.onOpenPopup('sibling', {associationType: 'crossReference', initiativeType: 'upstreamData'})">
             <i class="fa gn-icon-sibling"></i>

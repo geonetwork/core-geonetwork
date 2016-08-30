@@ -72,7 +72,6 @@
         </header>
         <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
 
-        <div data-gn-data-quality-measure-renderer="{$metadataId}"/>
         <!--
         TODO: scrollspy or tabs on header ?
         <div class="gn-scroll-spy"

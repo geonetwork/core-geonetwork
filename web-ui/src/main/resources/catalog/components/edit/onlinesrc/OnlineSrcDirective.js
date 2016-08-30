@@ -1549,8 +1549,10 @@
      * and online resource list are refreshed.
      */
       .directive('gnLinkToSibling', [
-        'gnOnlinesrc', 'gnGlobalSettings', 'gnCurrentEdit', '$http',
-        function(gnOnlinesrc, gnGlobalSettings, gnCurrentEdit, $http) {
+        'gnOnlinesrc', 'gnGlobalSettings', 'gnCurrentEdit',
+        '$http', '$timeout',
+        function(gnOnlinesrc, gnGlobalSettings, gnCurrentEdit,
+                 $http, $timeout) {
           return {
             restrict: 'A',
             scope: {},
@@ -1609,8 +1611,8 @@
                   scope.getFragments = function() {
                     scope.fragments = [];
                     $http.post(
-                      '../api/0.1/records/' + gnCurrentEdit.uuid +
-                      '/query/dq-sections', {}).then(function(r) {
+                        '../api/0.1/records/' + gnCurrentEdit.uuid +
+                        '/query/dq-sections', {}).then(function(r) {
                       if (r.status === 200) {
                         scope.fragments = r.data;
                       }
@@ -1626,10 +1628,16 @@
 
                     scope.cpt = null;
                     scope.config = {
-                      associationType: (config && config.associationType) || null,
-                      initiativeType: (config && config.initiativeType) || null
+                      associationTypeForced:
+                          angular.isDefined(config && config.associationType),
+                      associationType:
+                          (config && config.associationType) || null,
+                      initiativeTypeForced:
+                          angular.isDefined(config && config.initiativeType),
+                      initiativeType:
+                          (config && config.initiativeType) || null
                     };
-                    scope.$broadcast('resetSearch');
+
                     scope.selection = [];
                   });
 
@@ -1719,13 +1727,13 @@
 
                   function injectComponentInUD(uuids) {
                     if (scope.cpt != '') {
-                      $http.put('../api/0.1/records/batchediting', [{
-                          xpath: 'mdb:dataQualityInfo',
-                          value: '<gn_create>' + scope.cpt + '</gn_create>'
-                        }], {
-                          params: {
-                            uuids: uuids
-                          }
+                      return $http.put('../api/0.1/records/batchediting', [{
+                        xpath: 'mdb:dataQualityInfo',
+                        value: '<gn_create>' + scope.cpt + '</gn_create>'
+                      }], {
+                        params: {
+                          uuids: uuids
+                        }
                       });
                     }
                   };

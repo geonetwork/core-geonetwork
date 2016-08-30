@@ -3,7 +3,8 @@
         data-ng-search-form="">
     <div class="onlinesrc-container">
 
-      <div class="form-group">
+      <div class="form-group"
+           data-ng-hide="config.associationTypeForced">
         <label class="col-sm-3 control-label">
           <span data-translate="">associationType</span>
         </label>
@@ -14,7 +15,8 @@
                data-gn-schema-info="associationType" lang="lang"></div>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group"
+           data-ng-hide="config.initiativeTypeForced">
         <label class="col-sm-3 control-label">
           <span data-translate="">initiativeType</span>
         </label>
@@ -52,6 +54,7 @@
           </div>
         </div>
       </div>
+      <!-- TODO add facet -->
       <div>
         <ul class="list-group">
           <li class="list-group-item gn-record"
@@ -93,9 +96,6 @@
                 (selection.length > 0 && config.initiativeType == 'upstreamData' && $parent.cpt == null)}">
           <i class="fa gn-icon-sibling"/>&nbsp;
           <span data-translate="">linkToSibling</span>
-          {{selection.length < 1}}
-          = {{selection.length > 0 && config.initiativeType == 'upstreamData' && $parent.cpt == null}}
-          = {{$parent.cpt == null}}
         </button>
         <div data-gn-need-help="user-guide/associating-resources/linking-others.html"
              class="pull-right"></div>
