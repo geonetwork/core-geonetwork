@@ -95,11 +95,11 @@ class SummaryFactory {
         /*
          * TODO fix the xslt transform required by loadHierarchyLinkBlocks when running tests.
          */
-        if (env.formatType == FormatType.pdf/* || env.formatType == FormatType.testpdf */) {
-            summary.associated.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
-        } else {
-            summary.associated.add(createDynamicAssociatedHtml(summary))
-        }
+//        if (env.formatType == FormatType.pdf/* || env.formatType == FormatType.testpdf */) {
+//            summary.associated.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
+//        } else {
+//            summary.associated.add(createDynamicAssociatedHtml(summary))
+//        }
 
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
