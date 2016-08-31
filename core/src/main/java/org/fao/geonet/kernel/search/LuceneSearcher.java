@@ -716,6 +716,27 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 Facets facets = new TaxonomyFacetCounts(ordsReader, taxonomyReader, facetConfiguration, facetCollector);
                 ItemBuilder builder = new ItemBuilder(itemConfig, langCode, facets, format);
                 Element facetSummary = builder.build();
+
+//                EXPERIMENTAL: Workaround to fix https://forge.ifremer.fr/mantis/view.php?id=29137
+//                in case a localized facet return empty results, try to get
+//                facet value in default language. This could happen when there
+//                is no translation for a field. It depends on the content of the
+//                catalogue if only some records contains translations for a field
+//                for example. This will help in case a search match a set of records
+//                with no translation for orgName to return possible values in default
+//                language. This is not perfect. Maybe a combination of facets should
+//                be investigated - or migration to one field per language instead of
+//                multi index architecture.
+                if (facetSummary.getChildren().size() == 0 &&
+                    itemConfig.getDimension().isLocalized() &&
+                    itemConfig.getDimension().getLocales().contains(Geonet.DEFAULT_LANGUAGE)) {
+                    ordsReader = new DocValuesOrdinalsReader(
+                        itemConfig.getDimension().getFacetFieldName(Geonet.DEFAULT_LANGUAGE));
+                    facets = new TaxonomyFacetCounts(ordsReader, taxonomyReader,
+                        facetConfiguration, facetCollector);
+                    builder = new ItemBuilder(itemConfig, Geonet.DEFAULT_LANGUAGE, facets, format);
+                    facetSummary = builder.build();
+                }
                 elSummary.addContent(facetSummary);
             } catch (ArrayIndexOutOfBoundsException e) {
                 configurationErrors.put(itemConfig.getDimension().getFacetFieldName(langCode), e);
