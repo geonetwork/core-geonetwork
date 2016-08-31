@@ -380,9 +380,7 @@ form.gn-tab-inspire {
 form.gn-tab-characteristics, form.gn-tab-datasources,
 form.gn-tab-overview, form.gn-tab-spatialCoverage,
 form.gn-tab-timeCoverage, form.gn-tab-accessibility,
-form.gn-tab-medsea-metadata,
-form.gn-tab-checkpoint-dps-dq,
-form.gn-tab-checkpoint-tdp-dq {
+form.gn-tab-medsea-metadata {
   /* Do not highlight ISO mandatory fields */
   .control-label {
     color: inherit;
@@ -462,6 +460,16 @@ form.gn-tab-datasources {
   .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
     display: block;
   }
+}
+
+
+form.gn-tab-checkpoint-dps-dq,
+form.gn-tab-checkpoint-tdp-dq {
+
+  .gn-required > label:after {
+    display: none;
+  }
+
 }
 
 form.gn-tab-timeCoverage div[data-tooltip='iso19139|gmd:resolution||/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution'] + .well,
