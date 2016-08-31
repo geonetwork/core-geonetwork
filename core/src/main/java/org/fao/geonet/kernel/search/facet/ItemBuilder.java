@@ -128,7 +128,11 @@ public class ItemBuilder {
             if (config.getDimension().isLocalized() && !config.getDimension().getLocales().contains(langCode)) {
                 return new FacetResult(config.getDimension().getName(langCode), path, 0, new LabelAndValue[0], 0);
             } else {
-                return facets.getTopChildren(config.getMax(), config.getDimension().getName(langCode), path);
+                FacetResult facetResult = facets.getTopChildren(
+                    config.getMax(),
+                    config.getDimension().getName(langCode),
+                    path);
+                return facetResult;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
