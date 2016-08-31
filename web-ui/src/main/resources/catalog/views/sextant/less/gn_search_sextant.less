@@ -1087,13 +1087,16 @@ ul.gn-resultview {
     height: 3.8em;
     line-height: 2.6em;
     background: white;
-    .fa {
+    button > .fa, & .gn-title > .fa {
       margin: .8em .6em 0 0;
     }
-    .pull-right .fa {
+    .pull-right button > .fa {
       margin: 0;
     }
-    span {
+    ul.dropdown-menu i.fa {
+      margin-right: .4em;
+    }
+    span.gn-title {
       color: @sxt-base-color;
       display: inline-block;
       max-width: ~"calc(100% - 3.5em)";

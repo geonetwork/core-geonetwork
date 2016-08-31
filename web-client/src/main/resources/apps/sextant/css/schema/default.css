@@ -1,4 +1,4 @@
-/* .tpl-sextant .ui-layout-content { 	
+/* .tpl-sextant .ui-layout-content {
 	height: 100% !important;
 } */
 div.ui-dialog-titlebar .ui-state-hover, div.ui-dialog-titlebar .ui-state-active, div.ui-dialog-titlebar .ui-state-focus {
@@ -218,7 +218,7 @@ div.result-metadata-modal-content table td {
     height: 16px;
     position: absolute;
     right: 60px;
-    top: 14px;
+    top: 60px;
     width: 19px;
     z-index: 99;
     cursor:pointer;
@@ -230,7 +230,7 @@ div.result-metadata-modal-content table td {
     height: 16px;
     position: absolute;
     right: 90px;
-    top: 14px;
+    top: 60px;
     width: 16px;
     z-index: 99;
     cursor:pointer;
@@ -245,7 +245,10 @@ div.result-metadata-modal-content table td {
 .mdshow-tabpanel .file-link:hover {
   background-position:-16px 0;
 }
-
+/* Hide default GN top toolbar */
+.gn-top-bar {
+  display:none;
+}
 .ui-widget-content .button {
   background-image: none !important;
   border: none !important;
@@ -269,16 +272,16 @@ div.result-metadata-modal-content table td {
   background-color: #efefef;
 }
 
-.folder-open{ 
-	background-image:url("themes/classic/d.png"); 
-	background-repeat:no-repeat; 
-	background-color:transparent; 
+.folder-open{
+	background-image:url("themes/classic/d.png");
+	background-repeat:no-repeat;
+	background-color:transparent;
 	background-position:-56px -36px;
 }
-.folder-closed{ 
-	background-image:url("themes/classic/d.png"); 
-	background-repeat:no-repeat; 
-	background-color:transparent; 
+.folder-closed{
+	background-image:url("themes/classic/d.png");
+	background-repeat:no-repeat;
+	background-color:transparent;
 	background-position:-56px -19px;
 }
 
@@ -288,11 +291,11 @@ div.result-metadata-modal-content div.result-metadata-modal-content a {
 }
 
 div.result-metadata-modal-content div.result-metadata-modal-content ul {
-	list-style: disc inside;	
+	list-style: disc inside;
 }
 
 div.result-metadata-modal-content div.result-metadata-modal-content ol {
-	list-style: decimal inside;	
+	list-style: decimal inside;
 }
 
 div.result-metadata-modal-content div.result-metadata-modal-content li {
