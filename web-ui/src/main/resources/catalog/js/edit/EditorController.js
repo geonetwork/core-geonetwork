@@ -160,7 +160,7 @@
           if ($routeParams.id) {
             // Check requested metadata exists
             gnSearchManagerService.gnSearch({
-              _id: $routeParams.id,
+              _id_OR__uuid: $routeParams.id,
               _content_type: 'json',
               _isTemplate: 'y or n or s',
               fast: 'index'
