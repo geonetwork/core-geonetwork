@@ -1,7 +1,5 @@
 <ul class="md-value-list nocolon">
-  <li fmt-repeat="c in contacts">
-    {{c.name}}
-    <span fmt-if="c.org">
+  <li fmt-repeat="c in contacts">{{c.name}}<span fmt-if="c.org">
       <span fmt-if="!c.emptyName">(</span>{{c.org}}<span fmt-if="!c.emptyName">)</span>
     </span>
     <a fmt-if="c.mail" href="mailto:{{c.mail}}" target="_top">
