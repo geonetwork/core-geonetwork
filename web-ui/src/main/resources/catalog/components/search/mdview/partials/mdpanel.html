@@ -1,6 +1,7 @@
 <div class="panel panel-default metadata">
   <div class="panel-heading">
     <div class="pull-right">
+
       <!--admin button-->
       <div class="btn-group md-actions" ng-if="::user.canEditRecord(md)">
         <button type="button" class="btn btn-default dropdown-toggle"
@@ -63,6 +64,7 @@
         </ul>
       </div>
 
+      <div sxt-md-actions-menu="md"></div>
 
       <button class="btn btn-default" ng-click="dismiss()" translate>
         <i class="fa fa-share fa-flip-horizontal"></i>
