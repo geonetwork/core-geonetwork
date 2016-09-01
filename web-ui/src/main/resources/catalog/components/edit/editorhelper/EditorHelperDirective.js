@@ -28,6 +28,54 @@
 
   /**
    * @ngdoc directive
+   * @name gn_fields.directive:gnFieldSuggestions
+   * @function
+   *
+   * @description
+   * Create a list of values based on index field name
+   */
+  module.directive('gnFieldSuggestions', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/edit/' +
+        'editorhelper/partials/fieldsuggestions.html',
+        scope: {
+          ref: '@',
+          field: '@'
+        },
+        link: function(scope, element, attrs) {
+          scope.suggestions = [];
+          if (scope.field != '') {
+            $http.get('suggest?origin=INDEX_TERM_VALUES&field=' +
+              scope.field, {cache: true}).then(
+              function(r) {
+                scope.suggestions = r.data[1];
+              }
+            );
+          }
+
+          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(O);
+          $(field).removeClass('hidden');
+
+          var populateField = function(field, value) {
+            if (field && value !== undefined) {
+              field.value = field.type === 'number' ? parseFloat(value) : value;
+              $(field).change();
+              $(field).keyup();
+            }
+          };
+
+          scope.$watch('selected', function(n, o) {
+            if (n && n !== o) {
+              populateField(field, n);
+            }
+          });
+        }
+      };
+    }]);
+  /**
+   * @ngdoc directive
    * @name gn_editor_helper.directive:gnEditorHelper
    * @restrict A
    *

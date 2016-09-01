@@ -63,7 +63,14 @@
     <!-- The input type eg. number, date, datetime, email-->
     <xsl:param name="type" required="no" as="xs:string" select="''"/>
 
-    <!-- The AngularJS directive name eg. gn-field-duration -->
+    <!-- The AngularJS directive name eg. gn-field-duration. This creates
+     a div with a ref to the element (eg. _304) with the value and label.
+     eg.
+     <div class="col-lg-10"
+          data-gn-field-suggestions="Lineage value"
+          data-ref="_303"
+          data-label="Lineage"></div>
+     -->
     <xsl:param name="directive" required="no" as="xs:string" select="''"/>
 
     <xsl:param name="hidden" required="no" as="xs:boolean" select="false()"/>
@@ -79,7 +86,13 @@
     are important for the element. eg. gmx:FileName -->
     <xsl:param name="forceDisplayAttributes" required="no" as="xs:boolean" select="false()"/>
 
-    <!-- A list of values - could be an helper list for example. -->
+    <!-- A list of values - could be an helper list for example.
+
+    It could also be a directive
+    <xsl:with-param name="listOfValues">
+      <directive name="gn-field-suggestions" data-field="checkpointUdLineageDesc"/>
+    </xsl:with-param>
+    -->
     <xsl:param name="listOfValues" select="''"/>
 
     <!-- Disable all form fields included in a section based on an XLink.
@@ -874,7 +887,10 @@
     ListOfValues could be a codelist (with entry children) or
     helper (with option).
     -->
-    <xsl:variable name="hasHelper" select="$listOfValues and count($listOfValues/option) > 0"/>
+    <xsl:variable name="hasHelper"
+                  select="$listOfValues and (
+                            count($listOfValues/option) > 0 or
+                            count($listOfValues/directive) > 0)"/>
 
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
@@ -1139,21 +1155,32 @@
     <!--
     The helper config to pass to the directive in JSON format
     -->
-    <textarea id="{$elementRef}_config" class="hidden">
-      <xsl:copy-of select="java-xsl-util:xmlToJson(
+    <xsl:choose>
+      <xsl:when test="$listOfValues/directive">
+        <div data-ref="{$elementRef}"
+             data-type="{$dataType}">
+          <xsl:attribute name="{$listOfValues/directive/@name}"/>
+          <xsl:copy-of select="$listOfValues/directive/@*[name() != 'name']"/>
+        </div>
+      </xsl:when>
+      <xsl:otherwise>
+        <textarea id="{$elementRef}_config" class="hidden">
+          <xsl:copy-of select="java-xsl-util:xmlToJson(
         saxon:serialize($listOfValues, 'default-serialize-mode'))"/>
-    </textarea>
-    <div
-      data-gn-editor-helper="{$listOfValues/@editorMode}"
-      data-ref="{$elementRef}"
-      data-type="{$dataType}"
-      data-related-element="{if ($listOfValues/@rel != '')
+        </textarea>
+        <div
+          data-gn-editor-helper="{$listOfValues/@editorMode}"
+          data-ref="{$elementRef}"
+          data-type="{$dataType}"
+          data-related-element="{if ($listOfValues/@rel != '')
       then $relatedElement else ''}"
-      data-related-attr="{if ($listOfValues/@relAtt)
+          data-related-attr="{if ($listOfValues/@relAtt)
       then $relatedElementRef else ''}"
-      data-tooltip="{$tooltip}"
-      data-multilingual-field="{$multilingualField}">
-    </div>
+          data-tooltip="{$tooltip}"
+          data-multilingual-field="{$multilingualField}">
+        </div>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Display the remove control
