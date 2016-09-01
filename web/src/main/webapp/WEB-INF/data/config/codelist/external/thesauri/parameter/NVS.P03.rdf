@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/VocabV2/skosrdf2html.xsl" type="text/xsl" media="screen"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P03/current/">
 <skos:prefLabel>Agreed Parameter Groups (P03)</skos:prefLabel>
 <dc:title>Agreed Parameter Groups (P03)</dc:title>
 <skos:altLabel>SeaDataNet APG</skos:altLabel>
 <dc:alternative>SeaDataNet APG</dc:alternative>
 <dc:description>Terms agreed within the EU SeaDataNet community to describe coarse-grained groupings of related measurement phenomena.</dc:description>
-<dc:date>2011-07-28 02:00:05.0</dc:date>
-<owl:versionInfo>21</owl:versionInfo>
+<dc:date>2015-02-04 02:00:02.0</dc:date>
+<owl:versionInfo>22</owl:versionInfo>
 <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
 <dc:publisher>Natural Environment Research Council</dc:publisher>
 <dc:creator>SeaDataNet</dc:creator>
@@ -81,8 +81,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TFAA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HAAC/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ICHM/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -98,27 +98,27 @@
 <dc:date>2008-01-30 08:12:52.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP001/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BABI/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/LITT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMBI/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMPW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMWC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PEWB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSE/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PESD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHBI/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PEBI/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHWB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OCAA/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IDIS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CFTM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATEM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP050/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP048/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDBO/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RMIN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RVDS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RMIN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDBO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP048/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATEM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CFTM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IDIS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OCAA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHWB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PEBI/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHBI/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PESD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSE/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PEWB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMWC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMBI/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/LITT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BABI/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BCMT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BCOC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SCOC/"/>
@@ -133,12 +133,12 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BCAH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SCAH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/QDMD/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTWT/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WQBI/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP012/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP010/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WQBI/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTWP/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTWD/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTWT/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD008/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -156,28 +156,28 @@
 <dc:date>2010-04-20 16:37:41.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AORG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATDP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SUAT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CXAA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OCAA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP048/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OZON/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTAT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ISAT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RGAS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HLAT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AORG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SIAT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AALK/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FDMS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AEYN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AAMN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OHAT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RWCH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHAT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SUAT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATDP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AALK/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATPC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SIAT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HLAT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTAT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ACO2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RGAS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OZON/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS05/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -196,7 +196,7 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BATC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BNTC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/UPTH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BATT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WDNA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BDWC/"/>
@@ -208,11 +208,11 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BAUC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TBGZ/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BNTC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CBCC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/UPTH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BNTX/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -228,8 +228,9 @@
 <dc:date>2011-07-27 14:02:49.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BNUC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/INVD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BNTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BRDD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/D000/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FABD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FATX/"/>
@@ -283,7 +284,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BDRV/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BATX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BAUC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BRDD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BNUC/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -312,13 +314,14 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BCPB/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BCAH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BRAD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMBI/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/LIBI/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD008/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/INVD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMBI/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD008/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -334,8 +337,9 @@
 <dc:date>2010-05-04 08:27:01.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STGC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP067/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BRDD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FOCA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CETA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BRDA/"/>
@@ -351,7 +355,7 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP025/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP068/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP069/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BRDD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -411,14 +415,15 @@
 <dc:date>2003-06-10 15:23:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ALKY/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TCO2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHLT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CCPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCO2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ALKY/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TCO2/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ACO2/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ICHM/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -439,8 +444,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HZNV/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MMST/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD010/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD012/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MARC/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD012/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -457,13 +462,13 @@
 <dc:date>2006-02-28 08:58:25.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTIC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IAGE/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ICEM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RBSC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CRYS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ICHM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IPHY/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RBSC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ICEM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IAGE/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTIC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CRYS/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD009/"/>
 <owl:sameAs rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS09/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -546,18 +551,18 @@
 <dc:date>2003-06-10 15:23:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OXYC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OGPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OXYC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HEXC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SCOX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DGPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RGAS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DOXY/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DGPW/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPWC/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DMST/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DALK/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -594,17 +599,18 @@
 <dc:date>2010-10-22 13:04:00.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PASR/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SDAC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRFL/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SR2D/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STMP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SR3D/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GERA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SR2D/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RSIS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GERA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRFL/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SDAC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ACSR/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PASR/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MMAN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GRAV/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STMP/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -621,18 +627,19 @@
 <dc:date>2003-06-10 15:23:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STGC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FATM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FREP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAF/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAB/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FNTM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FNTX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FCNT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FATX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FIBM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP085/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP005/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FATM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FREP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD004/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
@@ -652,18 +659,18 @@
 <dc:date>2008-12-09 10:13:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP087/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FCST/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FIBM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP080/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FEFF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SREP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SATM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FREP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP087/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SABB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SREP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FEFF/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FIBM/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD004/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS11/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -681,10 +688,12 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CFTM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MLFX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AAFX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PNFX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RVDS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HFLX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATDP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATEM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AAFX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MLFX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/A01X/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SAMO/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SCDO/"/>
@@ -697,13 +706,11 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TCFX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MSFX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FDMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATEM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OPFX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PNFX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RVDS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HFLX/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD003/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD005/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS06/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -720,9 +727,9 @@
 <dc:date>2010-10-01 08:51:58.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SAGE/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RAGE/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPAG/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SAGE/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G020/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G025/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
@@ -743,10 +750,11 @@
 <dc:date>2010-10-01 09:10:34.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STCO/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RTCO/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HFLW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STMP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RTCO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STCO/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -763,11 +771,11 @@
 <dc:date>2010-10-01 09:01:32.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/XMGS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MMAN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/XMGS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GRAV/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MBAN/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD007/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MBAN/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -786,15 +794,15 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HBEX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HBCH/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD007/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD004/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HBEX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD007/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD004/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS11/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS11/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -834,11 +842,11 @@
 <dc:date>2008-12-09 10:13:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TRAN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MLES/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MARC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IACT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MARC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MLES/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD010/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD008/"/>
@@ -868,8 +876,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SALK/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AEYN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCAH/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS02/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -929,11 +937,12 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PU02/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP012/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ACNT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BEPP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -984,21 +993,21 @@
 <dc:date>2010-09-28 10:31:35.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CAPH/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMET/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CHUM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RBSC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/VSRA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CHUM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CHEX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CLTY/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMET/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATVS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPRP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CAPH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CDTA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CSLR/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/EWSB/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WSTR/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/UVRD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/LWRD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPRP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ATVS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RBSC/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD003/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS05/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1017,16 +1026,16 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MZBN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/A999/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MZBC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/V999/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MZCT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/A999/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MATC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MZBC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MZCT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PYTT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CYEU/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1105,21 +1114,21 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RBHY/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DVLP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FPFX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BLEN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCFX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PNFX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/EXUV/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/EXCR/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WDNA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BLUM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BPRP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SATM/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SREP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DVLP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FPFX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BLEN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCFX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PNFX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FREP/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/EXCR/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/EXUV/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1268,18 +1277,18 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCLM/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS09/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IRSP/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IAGE/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPAG/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SAGE/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSTB/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SIPW/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ICHM/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD009/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SIPW/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSTB/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SAGE/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IRSP/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IAGE/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS10/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS09/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPAG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -1289,25 +1298,26 @@
 <dc:identifier>SDN:P03::B030</dc:identifier>
 <dce:identifier>SDN:P03::B030</dce:identifier>
 <skos:notation>SDN:P03::B030</skos:notation>
-<skos:prefLabel xml:lang="en">Phytoplankton</skos:prefLabel>
+<skos:prefLabel xml:lang="en">Phytoplankton and microphytobenthos</skos:prefLabel>
 <skos:altLabel/>
-<skos:definition xml:lang="en">This group incorporates all state variables pertaining to phytoplankton (defined as free-floating autotrophic organisms smaller than 200 microns).  Most parameters in this group express the abundance, either as cell counts or biomass, of various species, genera or less rigorous classifications of phytoplankton. However, the group also includes parameters that describe other properties of these entities that are  not rates or fluxes , such as cell surface area or volume.  The grouping includes phytoplankton abundance parameters in the water column, in sediment samples or in sediment trap samples.</skos:definition>
-<owl:versionInfo>1</owl:versionInfo>
-<dc:date>2003-06-10 15:23:21.0</dc:date>
+<skos:definition xml:lang="en">Parameters related to autotrophic organisms smaller than 200 microns that are free-floating in water bodies, live in sediment or on the seabed.</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2015-02-03 10:29:38.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/D000/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PNTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BEPP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CNTX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PNTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/D000/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AATX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/VATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CATX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CYEU/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PYTT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PPRD/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PYTT/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1323,20 +1333,21 @@
 <dc:date>2003-06-10 15:23:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STGC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHYC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPWC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AXFX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GPIG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FVLT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CARS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CARO/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OPWC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHWC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPCN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CARO/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPSD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FVLT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GPIG/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CARS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPWC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHYC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AXFX/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CMFL/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -1353,12 +1364,18 @@
 <dc:date>2003-06-10 15:23:21.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHYG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHUP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BEPP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTUP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TNRP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/UPTH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GOXP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CMFL/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GRZO/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FPRT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SHTA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FPRT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GRZO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CMFL/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IS4R/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHYG/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AMOX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FCRT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MZCT/"/>
@@ -1370,13 +1387,10 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DOCU/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GREF/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PPRD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTUP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AMUP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHUP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TNRP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/UPTH/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IS4R/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS06/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1392,33 +1406,33 @@
 <dc:date>2007-09-24 10:56:01.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SHTA/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B040/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FABD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAF/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZBTX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZFIT/"/>
+<dc:replaces rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/B040/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZOOB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZWTX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IALZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/INLZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IWAB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IWDX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFLZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFWW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZADX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPOL/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GHDX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFAB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZFIT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZBTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FBAB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/FABD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFAZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFAB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GHDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPOL/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SHTA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ADUN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZADX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFWW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MFLZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IWDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IWAB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/INLZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IALZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZWTX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BLEN/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DVLP/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1434,8 +1448,22 @@
 <dc:date>2007-09-24 10:56:01.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CD10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPSD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HAAC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTSD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STOM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSTB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPRO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPCB/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SHTA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SDNA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AASD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PESD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSE/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SCOC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SCAH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SALK/"/>
@@ -1445,30 +1473,15 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPCN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CARS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IRSP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MINC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/HAAC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CPSD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMPW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RMIN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/AASD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PESD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PHSE/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CD10/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CBSD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CASD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSTB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STOM/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPCB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTSD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRAD/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPRO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MINC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RMIN/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G025/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G010/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G020/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1487,9 +1500,8 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CLAY/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/LITH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MINC/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G010/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -1506,19 +1518,19 @@
 <dc:date>2007-09-24 10:56:01.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MNGS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/XMGS/"/>
+<dc:replaces rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RTCO/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WCWT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DBDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/XMGS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RPER/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ROGS/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/GTCH/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RTCO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DBDX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STCO/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G010/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MNGS/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1534,9 +1546,10 @@
 <dc:date>2010-09-28 10:37:07.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSTR/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DPEV/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSTR/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1573,18 +1586,17 @@
 <dc:date>2007-09-24 10:56:01.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTPW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OCPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SIPW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DGPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DGPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CCPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTPW/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/REFF/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CCPW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OMPW/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G010/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OCPW/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD006/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1600,10 +1612,7 @@
 <dc:date>2007-09-24 10:49:24.0</dc:date>
 <skos:note xml:lang="en">deprecated</skos:note>
 <owl:deprecated>true</owl:deprecated>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G045/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G050/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G035/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G040/"/>
+<dc:isReplacedBy rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G040/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1619,8 +1628,8 @@
 <dc:date>2007-09-24 10:49:24.0</dc:date>
 <skos:note xml:lang="en">deprecated</skos:note>
 <owl:deprecated>true</owl:deprecated>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G035/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G030/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G035/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1636,11 +1645,11 @@
 <dc:date>2007-09-24 10:56:01.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RACC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RALT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/BEST/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/RACC/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS08/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
@@ -1657,15 +1666,15 @@
 <dc:date>2010-10-01 08:57:07.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSCN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRFR/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRFL/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SDAC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SR2D/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SR3D/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/XMGS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PASR/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SSCN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SDAC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRFL/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SRFR/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ACSR/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PASR/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/XMGS/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD007/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
@@ -1684,25 +1693,26 @@
 <dc:date>2010-10-01 09:08:16.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTWP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDWP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TVLT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPGS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDSV/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DENS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OPCN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PXSP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TD00/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTSP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ABAG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PPCB/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCAH/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCOC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SXCN/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/EXUV/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CBSP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCOC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PCAH/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PPCB/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ABAG/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/NTSP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TD00/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PXSP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/OPCN/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DENS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDSV/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SPGS/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TVLT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/TSED/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MDWP/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MTWP/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1745,8 +1755,8 @@
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/WCPH/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/SBPH/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD007/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD001/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS04/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
@@ -1812,7 +1822,8 @@
 <dc:date>2007-09-24 10:49:24.0</dc:date>
 <skos:note xml:lang="en">deprecated</skos:note>
 <owl:deprecated>true</owl:deprecated>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G055/"/>
+<dc:isReplacedBy rdf:resource="http://vocab.nerc.ac.uk/collection/P03/current/G055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STGC/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1838,7 +1849,7 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/DVLP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IATC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/IATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZNTC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MSIC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZCTC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZNTX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZATX/"/>
@@ -1851,11 +1862,12 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZV00/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MSBD/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MSBO/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/MSIC/"/>
-<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CYEU/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/STGC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/ZNTC/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/PYTT/"/>
-<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P02/current/CYEU/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P23/current/MD002/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P08/current/DS01/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
