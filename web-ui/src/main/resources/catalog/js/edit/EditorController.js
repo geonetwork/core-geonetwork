@@ -258,8 +258,8 @@
                 $scope.layout.hideTopToolBar = true;
 
                 angular.extend(gnCurrentEdit, {
-                  id: $routeParams.id,
-                  formId: '#gn-editor-' + $routeParams.id,
+                  id: gnCurrentEdit.metadata.getId(),
+                  formId: '#gn-editor-' + gnCurrentEdit.metadata.getId(),
                   tab: $routeParams.tab || defaultTab,
                   displayAttributes: $routeParams.displayAttributes === 'true',
                   displayTooltips:
