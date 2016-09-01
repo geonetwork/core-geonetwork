@@ -1355,12 +1355,13 @@
   <!-- Render associated resource action -->
   <xsl:template name="render-associated-resource-button">
     <xsl:param name="type"/>
+    <xsl:param name="options"/>
     <xsl:param name="label"/>
 
     <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <a class="btn gn-associated-resource-btn"
-           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}')">
+           data-ng-click="gnOnlinesrc.onOpenPopup('{$type}'{if ($options != '') then concat(', ''', $options, '''') else ''})">
           <i class="fa gn-icon-{$type}"></i>&#160;
           <span data-translate="">
             <xsl:choose>

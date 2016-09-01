@@ -1626,6 +1626,9 @@
                   gnOnlinesrc.register('sibling', function(config) {
                     $(scope.popupid).modal('show');
 
+                    if (config && !angular.isObject(config)) {
+                      config = angular.fromJson(config);
+                    }
                     scope.cpt = null;
                     scope.config = {
                       associationTypeForced:
