@@ -1,17 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/VocabV2/skosrdf2html.xsl" type="text/xsl" media="screen"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/">
 <skos:prefLabel>EMODNET chemistry lot aggregated parameter names</skos:prefLabel>
 <dc:title>EMODNET chemistry lot aggregated parameter names</dc:title>
 <skos:altLabel>EMODNET chemistry aggregations</skos:altLabel>
 <dc:alternative>EMODNET chemistry aggregations</dc:alternative>
 <dc:description>Labels used for aggregated parameters in the EMODNET chemistry lot</dc:description>
-<dc:date>2014-10-01 02:00:03.0</dc:date>
-<owl:versionInfo>7</owl:versionInfo>
+<dc:date>2016-06-03 02:00:02.0</dc:date>
+<owl:versionInfo>9</owl:versionInfo>
 <grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
 <dc:publisher>Natural Environment Research Council</dc:publisher>
 <dc:creator>EMODNet Chemistry Lot</dc:creator>
 <grg:RE_RegisterOwner>EMODNet Chemistry Lot</grg:RE_RegisterOwner>
 <rdfs:comment>A European project consortium aimed at the creation of data products using chemical data amassed through SeaDataNet. The governance is loosely defined as the scientific expertise within the consortium with no formal processes defined.</rdfs:comment>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00180/">
+<dc:identifier>SDN:P35::EPC00180</dc:identifier>
+<dce:identifier>SDN:P35::EPC00180</dce:identifier>
+<skos:notation>SDN:P35::EPC00180</skos:notation>
+<skos:prefLabel xml:lang="en">Ammonium in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONPWD1/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00182/">
+<dc:identifier>SDN:P35::EPC00182</dc:identifier>
+<dce:identifier>SDN:P35::EPC00182</dce:identifier>
+<skos:notation>SDN:P35::EPC00182</skos:notation>
+<skos:prefLabel xml:lang="en">Anthracene in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACDWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACMMCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACWW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMUSANTH/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00187/">
+<dc:identifier>SDN:P35::EPC00187</dc:identifier>
+<dce:identifier>SDN:P35::EPC00187</dce:identifier>
+<skos:notation>SDN:P35::EPC00187</skos:notation>
+<skos:prefLabel xml:lang="en">Anthracene in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCZN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ANTDWT01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ANTDWT02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCAN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHSD05/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
 <skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00109/">
 <dc:identifier>SDN:P35::EPC00109</dc:identifier>
@@ -24,9 +85,9 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ASSEDBD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ASCNXTXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ASCNICXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ASSEDBD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MASSP012/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
@@ -53,6 +114,104 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00140/">
+<dc:identifier>SDN:P35::EPC00140</dc:identifier>
+<dce:identifier>SDN:P35::EPC00140</dce:identifier>
+<skos:notation>SDN:P35::EPC00140</skos:notation>
+<skos:prefLabel xml:lang="en">Benzo(a)pyrene in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPAH19/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BPDWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BPYW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BPMMCF14/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00171/">
+<dc:identifier>SDN:P35::EPC00171</dc:identifier>
+<dce:identifier>SDN:P35::EPC00171</dce:identifier>
+<skos:notation>SDN:P35::EPC00171</skos:notation>
+<skos:prefLabel xml:lang="en">Benzo(a)pyrene in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAPSEDBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHSD07/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCBAPY/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCZAPY/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00188/">
+<dc:identifier>SDN:P35::EPC00188</dc:identifier>
+<dce:identifier>SDN:P35::EPC00188</dce:identifier>
+<skos:notation>SDN:P35::EPC00188</skos:notation>
+<skos:prefLabel xml:lang="en">Cadmium in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMUSCDXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL13/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOCDM2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL09/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOCDM3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOCDM4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL11/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOCDM5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDWW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDDWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOCDM1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL08/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00167/">
+<dc:identifier>SDN:P35::EPC00167</dc:identifier>
+<dce:identifier>SDN:P35::EPC00167</dce:identifier>
+<skos:notation>SDN:P35::EPC00167</skos:notation>
+<skos:prefLabel xml:lang="en">Cadmium in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTSDM001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXISPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONCDS02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MCDSP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONCDS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCNAAWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCNICXT/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00110/">
 <dc:identifier>SDN:P35::EPC00110</dc:identifier>
 <dce:identifier>SDN:P35::EPC00110</dce:identifier>
@@ -64,9 +223,9 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONCDS01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MCDSP012/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCNICXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONCDS01/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -89,6 +248,24 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTSDM001/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00177/">
+<dc:identifier>SDN:P35::EPC00177</dc:identifier>
+<dce:identifier>SDN:P35::EPC00177</dce:identifier>
+<skos:notation>SDN:P35::EPC00177</skos:notation>
+<skos:prefLabel xml:lang="en">Caesium-137 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/C37CGSXT/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UBQK/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/RADNUC/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -147,9 +324,9 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MCOSP012/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNICXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNPEXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COSEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNPEXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNICXT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -175,6 +352,51 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00143/">
+<dc:identifier>SDN:P35::EPC00143</dc:identifier>
+<dce:identifier>SDN:P35::EPC00143</dce:identifier>
+<skos:notation>SDN:P35::EPC00143</skos:notation>
+<skos:prefLabel xml:lang="en">Copper in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRMET21/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CF002DME/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUWW6569/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00144/">
+<dc:identifier>SDN:P35::EPC00144</dc:identifier>
+<dce:identifier>SDN:P35::EPC00144</dce:identifier>
+<skos:notation>SDN:P35::EPC00144</skos:notation>
+<skos:prefLabel xml:lang="en">Copper in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNICXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNXTXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNPEXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNAAWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED30/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MCUSP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUSEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXISPW/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00112/">
 <dc:identifier>SDN:P35::EPC00112</dc:identifier>
 <dce:identifier>SDN:P35::EPC00112</dce:identifier>
@@ -186,12 +408,12 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MCUSP012/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUSEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MCUSP012/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNXTXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNICXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNPEXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNSTXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNPEXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNICXT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -214,6 +436,112 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED30/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00152/">
+<dc:identifier>SDN:P35::EPC00152</dc:identifier>
+<dce:identifier>SDN:P35::EPC00152</dce:identifier>
+<skos:notation>SDN:P35::EPC00152</skos:notation>
+<skos:prefLabel xml:lang="en">Dissolved inorganic nitrogen (DIN) in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/INCNCIWF/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00161/">
+<dc:identifier>SDN:P35::EPC00161</dc:identifier>
+<dce:identifier>SDN:P35::EPC00161</dce:identifier>
+<skos:notation>SDN:P35::EPC00161</skos:notation>
+<skos:prefLabel xml:lang="en">Fluoranthene in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FADWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FLDW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FAMMCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FLWW6569/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00162/">
+<dc:identifier>SDN:P35::EPC00162</dc:identifier>
+<dce:identifier>SDN:P35::EPC00162</dce:identifier>
+<skos:notation>SDN:P35::EPC00162</skos:notation>
+<skos:prefLabel xml:lang="en">Fluoranthene in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FLXXSD01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FLUSED01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCFLAN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHSD01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FLUSED02/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00207/">
+<dc:identifier>SDN:P35::EPC00207</dc:identifier>
+<dce:identifier>SDN:P35::EPC00207</dce:identifier>
+<skos:notation>SDN:P35::EPC00207</skos:notation>
+<skos:prefLabel xml:lang="en">Hexachlorobenzene {HCB} in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HCBWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMUSHCBX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CBIOM020/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HCBW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCBME05/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCBME04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCBME03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCBME02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCBME01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PESTBI/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00208/">
+<dc:identifier>SDN:P35::EPC00208</dc:identifier>
+<dce:identifier>SDN:P35::EPC00208</dce:identifier>
+<skos:notation>SDN:P35::EPC00208</skos:notation>
+<skos:prefLabel xml:lang="en">Hexachlorobenzene {HCB} in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HXCLBSED/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED28/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PESTBI/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -300,6 +628,25 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00178/">
+<dc:identifier>SDN:P35::EPC00178</dc:identifier>
+<dce:identifier>SDN:P35::EPC00178</dce:identifier>
+<skos:notation>SDN:P35::EPC00178</skos:notation>
+<skos:prefLabel xml:lang="en">Inorganic carbon in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CAPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2PWCL/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UGKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00114/">
 <dc:identifier>SDN:P35::EPC00114</dc:identifier>
 <dce:identifier>SDN:P35::EPC00114</dce:identifier>
@@ -311,13 +658,13 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNSTXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNXIXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNXMXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FESEDBD1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNPEXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MFESP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FESEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNXMXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNXIXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNSTXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNPEXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNPEXT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -343,6 +690,64 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00155/">
+<dc:identifier>SDN:P35::EPC00155</dc:identifier>
+<dce:identifier>SDN:P35::EPC00155</dce:identifier>
+<skos:notation>SDN:P35::EPC00155</skos:notation>
+<skos:prefLabel xml:lang="en">Lead in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBWW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL30/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOFEM5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOFEM4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL28/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOFEM3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL27/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOFEM2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL26/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOFEM1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMUSPBXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL31/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL24/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL29/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBDWCF14/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00197/">
+<dc:identifier>SDN:P35::EPC00197</dc:identifier>
+<dce:identifier>SDN:P35::EPC00197</dce:identifier>
+<skos:notation>SDN:P35::EPC00197</skos:notation>
+<skos:prefLabel xml:lang="en">Lead in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONPBS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNICXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNXTXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNPEXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MPBSP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBXXISPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONPBS02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTSDM004/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNAAWF/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00115/">
 <dc:identifier>SDN:P35::EPC00115</dc:identifier>
 <dce:identifier>SDN:P35::EPC00115</dce:identifier>
@@ -354,12 +759,12 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNPEXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNICXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONPBS01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNICXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MPBSP012/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONPBS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNICXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNXTXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNPEXT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -397,13 +802,13 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNSEDBD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNXTXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNXMXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNSEDBD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNSTXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNXMXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNPEXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNPEXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMNSP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNPEXT/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -429,6 +834,28 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00158/">
+<dc:identifier>SDN:P35::EPC00158</dc:identifier>
+<dce:identifier>SDN:P35::EPC00158</dce:identifier>
+<skos:notation>SDN:P35::EPC00158</skos:notation>
+<skos:prefLabel xml:lang="en">Mercury (total chemical species) in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGCNCFXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGCNAAWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONHGS02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONHGS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MHGSP012/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00117/">
 <dc:identifier>SDN:P35::EPC00117</dc:identifier>
 <dce:identifier>SDN:P35::EPC00117</dce:identifier>
@@ -440,9 +867,9 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONHGS01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGCNCFXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MHGSP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGCNCFXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONHGS01/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -469,6 +896,74 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00189/">
+<dc:identifier>SDN:P35::EPC00189</dc:identifier>
+<dce:identifier>SDN:P35::EPC00189</dce:identifier>
+<skos:notation>SDN:P35::EPC00189</skos:notation>
+<skos:prefLabel xml:lang="en">Mercury in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/D2930515/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL32/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/XMETAL33/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/D2930561/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOHGM1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOHGM2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOHGM3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/W2930193/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOHGM5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBTOHGM4/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00202/">
+<dc:identifier>SDN:P35::EPC00202</dc:identifier>
+<dce:identifier>SDN:P35::EPC00202</dce:identifier>
+<skos:notation>SDN:P35::EPC00202</skos:notation>
+<skos:prefLabel xml:lang="en">Naphthalene in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPAH53/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPAH52/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CF101WME/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/W2930279/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00214/">
+<dc:identifier>SDN:P35::EPC00214</dc:identifier>
+<dce:identifier>SDN:P35::EPC00214</dce:identifier>
+<skos:notation>SDN:P35::EPC00214</skos:notation>
+<skos:prefLabel xml:lang="en">Naphthalene in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NAPSEDBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NAPSEDXD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHSD15/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00118/">
 <dc:identifier>SDN:P35::EPC00118</dc:identifier>
 <dce:identifier>SDN:P35::EPC00118</dce:identifier>
@@ -480,11 +975,11 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNISP012/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNICXT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNPEXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNXTXT/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NISEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNPEXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNICXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNISP012/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -507,6 +1002,525 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED31/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00199/">
+<dc:identifier>SDN:P35::EPC00199</dc:identifier>
+<dce:identifier>SDN:P35::EPC00199</dce:identifier>
+<skos:notation>SDN:P35::EPC00199</skos:notation>
+<skos:prefLabel xml:lang="en">Nitrate in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIPWD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAAADC/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00139/">
+<dc:identifier>SDN:P35::EPC00139</dc:identifier>
+<dce:identifier>SDN:P35::EPC00139</dce:identifier>
+<skos:notation>SDN:P35::EPC00139</skos:notation>
+<skos:prefLabel xml:lang="en">Nitrate plus nitrite in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:46:59.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZPWD3/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00170/">
+<dc:identifier>SDN:P35::EPC00170</dc:identifier>
+<dce:identifier>SDN:P35::EPC00170</dce:identifier>
+<skos:notation>SDN:P35::EPC00170</skos:notation>
+<skos:prefLabel xml:lang="en">Nitrogen in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NSEDXD01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UGKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00173/">
+<dc:identifier>SDN:P35::EPC00173</dc:identifier>
+<dce:identifier>SDN:P35::EPC00173</dce:identifier>
+<skos:notation>SDN:P35::EPC00173</skos:notation>
+<skos:prefLabel xml:lang="en">Organic carbon in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OCCNCIWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OCCNXXXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGSE01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HCMR0021/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGSE02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OCCNCAXT/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UGKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ORGMAT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00200/">
+<dc:identifier>SDN:P35::EPC00200</dc:identifier>
+<dce:identifier>SDN:P35::EPC00200</dce:identifier>
+<skos:notation>SDN:P35::EPC00200</skos:notation>
+<skos:prefLabel xml:lang="en">Organic nitrogen in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ONCNCIWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TNCNCNXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TNCNCNWF/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UGKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00219/">
+<dc:identifier>SDN:P35::EPC00219</dc:identifier>
+<dce:identifier>SDN:P35::EPC00219</dce:identifier>
+<skos:notation>SDN:P35::EPC00219</skos:notation>
+<skos:prefLabel xml:lang="en">PCB101 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P1016569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB24/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB23/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00164/">
+<dc:identifier>SDN:P35::EPC00164</dc:identifier>
+<dce:identifier>SDN:P35::EPC00164</dce:identifier>
+<skos:notation>SDN:P35::EPC00164</skos:notation>
+<skos:prefLabel xml:lang="en">PCB101 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD128/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD161/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD066/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB101SAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB101SBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD022/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00149/">
+<dc:identifier>SDN:P35::EPC00149</dc:identifier>
+<dce:identifier>SDN:P35::EPC00149</dce:identifier>
+<skos:notation>SDN:P35::EPC00149</skos:notation>
+<skos:prefLabel xml:lang="en">PCB105 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:42:30.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB42/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB41/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00166/">
+<dc:identifier>SDN:P35::EPC00166</dc:identifier>
+<dce:identifier>SDN:P35::EPC00166</dce:identifier>
+<skos:notation>SDN:P35::EPC00166</skos:notation>
+<skos:prefLabel xml:lang="en">PCB105 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:42:30.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD136/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB105SAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB105SBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD030/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00204/">
+<dc:identifier>SDN:P35::EPC00204</dc:identifier>
+<dce:identifier>SDN:P35::EPC00204</dce:identifier>
+<skos:notation>SDN:P35::EPC00204</skos:notation>
+<skos:prefLabel xml:lang="en">PCB118 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:42:30.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CF039WME/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB48/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P1186569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB47/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00174/">
+<dc:identifier>SDN:P35::EPC00174</dc:identifier>
+<dce:identifier>SDN:P35::EPC00174</dce:identifier>
+<skos:notation>SDN:P35::EPC00174</skos:notation>
+<skos:prefLabel xml:lang="en">PCB118 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:42:30.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD026/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD165/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD070/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD132/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB118SAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB118SBD/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00191/">
+<dc:identifier>SDN:P35::EPC00191</dc:identifier>
+<dce:identifier>SDN:P35::EPC00191</dce:identifier>
+<skos:notation>SDN:P35::EPC00191</skos:notation>
+<skos:prefLabel xml:lang="en">PCB138 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P1386569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB11/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00216/">
+<dc:identifier>SDN:P35::EPC00216</dc:identifier>
+<dce:identifier>SDN:P35::EPC00216</dce:identifier>
+<skos:notation>SDN:P35::EPC00216</skos:notation>
+<skos:prefLabel xml:lang="en">PCB138 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB138SAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD114/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD147/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD052/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD008/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB138SBD/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00192/">
+<dc:identifier>SDN:P35::EPC00192</dc:identifier>
+<dce:identifier>SDN:P35::EPC00192</dce:identifier>
+<skos:notation>SDN:P35::EPC00192</skos:notation>
+<skos:prefLabel xml:lang="en">PCB153 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P1536569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CF029WME/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB17/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB18/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00218/">
+<dc:identifier>SDN:P35::EPC00218</dc:identifier>
+<dce:identifier>SDN:P35::EPC00218</dce:identifier>
+<skos:notation>SDN:P35::EPC00218</skos:notation>
+<skos:prefLabel xml:lang="en">PCB153 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD063/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD158/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD125/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB153SAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB153SBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD019/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00184/">
+<dc:identifier>SDN:P35::EPC00184</dc:identifier>
+<dce:identifier>SDN:P35::EPC00184</dce:identifier>
+<skos:notation>SDN:P35::EPC00184</skos:notation>
+<skos:prefLabel xml:lang="en">PCB180 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P1806569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB05/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00217/">
+<dc:identifier>SDN:P35::EPC00217</dc:identifier>
+<dce:identifier>SDN:P35::EPC00217</dce:identifier>
+<skos:notation>SDN:P35::EPC00217</skos:notation>
+<skos:prefLabel xml:lang="en">PCB180 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB180SBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB180SAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD115/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD053/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD148/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD009/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00205/">
+<dc:identifier>SDN:P35::EPC00205</dc:identifier>
+<dce:identifier>SDN:P35::EPC00205</dce:identifier>
+<skos:notation>SDN:P35::EPC00205</skos:notation>
+<skos:prefLabel xml:lang="en">PCB28 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:42:30.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB53/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB54/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P0286569/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00206/">
+<dc:identifier>SDN:P35::EPC00206</dc:identifier>
+<dce:identifier>SDN:P35::EPC00206</dce:identifier>
+<skos:notation>SDN:P35::EPC00206</skos:notation>
+<skos:prefLabel xml:lang="en">PCB28 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2016-06-02 14:42:30.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB28SDAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD076/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD032/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD171/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB28SDBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD138/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00165/">
+<dc:identifier>SDN:P35::EPC00165</dc:identifier>
+<dce:identifier>SDN:P35::EPC00165</dce:identifier>
+<skos:notation>SDN:P35::EPC00165</skos:notation>
+<skos:prefLabel xml:lang="en">PCB52 in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB29/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPCB30/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/P0526569/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00193/">
+<dc:identifier>SDN:P35::EPC00193</dc:identifier>
+<dce:identifier>SDN:P35::EPC00193</dce:identifier>
+<skos:notation>SDN:P35::EPC00193</skos:notation>
+<skos:prefLabel xml:lang="en">PCB52 in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD067/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD129/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB52SDAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CB52SDBD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD023/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCBSD162/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00203/">
+<dc:identifier>SDN:P35::EPC00203</dc:identifier>
+<dce:identifier>SDN:P35::EPC00203</dce:identifier>
+<skos:notation>SDN:P35::EPC00203</skos:notation>
+<skos:prefLabel xml:lang="en">Phenanthrene in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHMMCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHWW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPAH57/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHDWCF14/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00142/">
+<dc:identifier>SDN:P35::EPC00142</dc:identifier>
+<dce:identifier>SDN:P35::EPC00142</dce:identifier>
+<skos:notation>SDN:P35::EPC00142</skos:notation>
+<skos:prefLabel xml:lang="en">Phenanthrene in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PASEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHSD16/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCPHAN/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HDCCZHAN/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00181/">
+<dc:identifier>SDN:P35::EPC00181</dc:identifier>
+<dce:identifier>SDN:P35::EPC00181</dce:identifier>
+<skos:notation>SDN:P35::EPC00181</skos:notation>
+<skos:prefLabel xml:lang="en">Phosphate in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSPWD1/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00211/">
+<dc:identifier>SDN:P35::EPC00211</dc:identifier>
+<dce:identifier>SDN:P35::EPC00211</dce:identifier>
+<skos:notation>SDN:P35::EPC00211</skos:notation>
+<skos:prefLabel xml:lang="en">Silicate in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SICNPWD3/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/KGUM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -935,10 +1949,286 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM023/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNAAP2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNAAPC/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNICP2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNXXP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNICP2/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00209/">
+<dc:identifier>SDN:P35::EPC00209</dc:identifier>
+<dce:identifier>SDN:P35::EPC00209</dce:identifier>
+<skos:notation>SDN:P35::EPC00209</skos:notation>
+<skos:prefLabel xml:lang="en">Total alkalinity in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NEWCXX10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SEDPWALK/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00169/">
+<dc:identifier>SDN:P35::EPC00169</dc:identifier>
+<dce:identifier>SDN:P35::EPC00169</dce:identifier>
+<skos:notation>SDN:P35::EPC00169</skos:notation>
+<skos:prefLabel xml:lang="en">Tribultin (TBT) in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMUSTTBT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TBDWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ICES0594/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TBMMCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ICES0616/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ANTIFL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00210/">
+<dc:identifier>SDN:P35::EPC00210</dc:identifier>
+<dce:identifier>SDN:P35::EPC00210</dce:identifier>
+<skos:notation>SDN:P35::EPC00210</skos:notation>
+<skos:prefLabel xml:lang="en">Tribultin (TBT) in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TBTSNSD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CONTBTS2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGMZZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TBTXSD63/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ANTIFL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00137/">
+<dc:identifier>SDN:P35::EPC00137</dc:identifier>
+<dce:identifier>SDN:P35::EPC00137</dce:identifier>
+<skos:notation>SDN:P35::EPC00137</skos:notation>
+<skos:prefLabel xml:lang="en">Triphenyltin (TPT) in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CBIOM026/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ICES0595/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPMMCF14/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ANTIFL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00151/">
+<dc:identifier>SDN:P35::EPC00151</dc:identifier>
+<dce:identifier>SDN:P35::EPC00151</dce:identifier>
+<skos:notation>SDN:P35::EPC00151</skos:notation>
+<skos:prefLabel xml:lang="en">Triphenyltin (TPT) in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGM012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SDCTM005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGM006/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGMXXX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ANTIFL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00195/">
+<dc:identifier>SDN:P35::EPC00195</dc:identifier>
+<dce:identifier>SDN:P35::EPC00195</dce:identifier>
+<skos:notation>SDN:P35::EPC00195</skos:notation>
+<skos:prefLabel xml:lang="en">Water body Hexachlorobenzene {HCB}</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/WTCTM016/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HCBAFW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HCBUFW02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGM026/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PESTBI/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00148/">
+<dc:identifier>SDN:P35::EPC00148</dc:identifier>
+<dce:identifier>SDN:P35::EPC00148</dce:identifier>
+<skos:notation>SDN:P35::EPC00148</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB101</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0022/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00175/">
+<dc:identifier>SDN:P35::EPC00175</dc:identifier>
+<dce:identifier>SDN:P35::EPC00175</dce:identifier>
+<skos:notation>SDN:P35::EPC00175</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB105</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM002/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00220/">
+<dc:identifier>SDN:P35::EPC00220</dc:identifier>
+<dce:identifier>SDN:P35::EPC00220</dce:identifier>
+<skos:notation>SDN:P35::EPC00220</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB118</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0027/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AI18GCD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM003/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00146/">
+<dc:identifier>SDN:P35::EPC00146</dc:identifier>
+<dce:identifier>SDN:P35::EPC00146</dce:identifier>
+<skos:notation>SDN:P35::EPC00146</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB138</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0032/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM004/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00163/">
+<dc:identifier>SDN:P35::EPC00163</dc:identifier>
+<dce:identifier>SDN:P35::EPC00163</dce:identifier>
+<skos:notation>SDN:P35::EPC00163</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB153</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0036/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM005/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00147/">
+<dc:identifier>SDN:P35::EPC00147</dc:identifier>
+<dce:identifier>SDN:P35::EPC00147</dce:identifier>
+<skos:notation>SDN:P35::EPC00147</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB180</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM008/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0045/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00221/">
+<dc:identifier>SDN:P35::EPC00221</dc:identifier>
+<dce:identifier>SDN:P35::EPC00221</dce:identifier>
+<skos:notation>SDN:P35::EPC00221</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB28</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0006/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM010/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00194/">
+<dc:identifier>SDN:P35::EPC00194</dc:identifier>
+<dce:identifier>SDN:P35::EPC00194</dce:identifier>
+<skos:notation>SDN:P35::EPC00194</skos:notation>
+<skos:prefLabel xml:lang="en">Water body PCB52</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSPMM013/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0011/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PCBSXX/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -954,11 +2244,6 @@
 <dc:date>2014-03-12 08:23:35.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMAD3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD4/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONFID2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAZX/"/>
@@ -970,10 +2255,74 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONZZXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAATX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAADZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMPD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONFSG1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMPD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONFID2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD4/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00154/">
+<dc:identifier>SDN:P35::EPC00154</dc:identifier>
+<dce:identifier>SDN:P35::EPC00154</dce:identifier>
+<skos:notation>SDN:P35::EPC00154</skos:notation>
+<skos:prefLabel xml:lang="en">Water body anthracene</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ANAFWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PAHSM001/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/WTCTM010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHWC05/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00141/">
+<dc:identifier>SDN:P35::EPC00141</dc:identifier>
+<dce:identifier>SDN:P35::EPC00141</dce:identifier>
+<skos:notation>SDN:P35::EPC00141</skos:notation>
+<skos:prefLabel xml:lang="en">Water body benzo(a)pyrene</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHWC07/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PAHSM003/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00196/">
+<dc:identifier>SDN:P35::EPC00196</dc:identifier>
+<dce:identifier>SDN:P35::EPC00196</dce:identifier>
+<skos:notation>SDN:P35::EPC00196</skos:notation>
+<skos:prefLabel xml:lang="en">Water body caesium-137</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CS37GSTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACTVM002/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UBQL/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/RADNUC/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -990,14 +2339,14 @@
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2TU01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2XXXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2EG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2TK01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2SS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2IG02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2XXXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2TK02/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2GC01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2IERR/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2IG02/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2SS01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2TK01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PCO2TK02/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UATM/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/DISGAS/"/>
@@ -1016,25 +2365,29 @@
 <dc:date>2014-08-20 16:19:02.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLADMFA/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLAMSAT/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLMEAL1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLMEOC5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLMOOC5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFEP1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP4/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP6/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLPC/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLPZ/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFMP1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLHPP1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLHPP2/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLHPP4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP6/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFLP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLFEP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLMOOC5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLMEOC5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLMEAL1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLAMSAT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLADMFA/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLHPP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLYMP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLUW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLUT01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLHPPZ/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLMHP1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLPL01/"/>
@@ -1058,10 +2411,6 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLULTF/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLUMAQ/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLUMTF/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLUT01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLUW01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLYMP1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPHLZZXX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMMC/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/CHPHYL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -1079,10 +2428,10 @@
 <dc:date>2014-08-20 16:19:12.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBHPP5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBHPP1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBMHP1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBSSP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBMHP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBHPP5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLBXXPX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMMC/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/CHPHYL/"/>
@@ -1107,6 +2456,25 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHLCXXPX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMMC/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/CHPHYL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00156/">
+<dc:identifier>SDN:P35::EPC00156</dc:identifier>
+<dce:identifier>SDN:P35::EPC00156</dce:identifier>
+<skos:notation>SDN:P35::EPC00156</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved Mercury</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/WTCTM017/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGRXAAD1/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1336,19 +2704,38 @@
 <dc:date>2014-09-30 14:05:49.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2MSXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2POTX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2MATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2KG01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CPD5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CBTX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CBD5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CBD2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2ZZXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NZTW0009/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CBD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CBD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CBTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2CPD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2KG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2MATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2MSXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2POTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TCO2ZZXX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00198/">
+<dc:identifier>SDN:P35::EPC00198</dc:identifier>
+<dce:identifier>SDN:P35::EPC00198</dce:identifier>
+<skos:notation>SDN:P35::EPC00198</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved inorganic nitrogen (DIN)</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DINXZZZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM017/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -1510,6 +2897,46 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00160/">
+<dc:identifier>SDN:P35::EPC00160</dc:identifier>
+<dce:identifier>SDN:P35::EPC00160</dce:identifier>
+<skos:notation>SDN:P35::EPC00160</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved nitrogen</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTWCD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTZZD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTWCDZ/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00190/">
+<dc:identifier>SDN:P35::EPC00190</dc:identifier>
+<dce:identifier>SDN:P35::EPC00190</dce:identifier>
+<skos:notation>SDN:P35::EPC00190</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved organic carbon {DOC}</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGZZZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGWCDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGZZTL/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ORGMAT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00002/">
 <dc:identifier>SDN:P35::EPC00002</dc:identifier>
 <dce:identifier>SDN:P35::EPC00002</dce:identifier>
@@ -1533,6 +2960,7 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYZZ01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYZZXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXMZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOKGWITX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSE01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYAAOP/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYPR01/"/>
@@ -1571,6 +2999,26 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSSU01/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPCT/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/DISGAS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00186/">
+<dc:identifier>SDN:P35::EPC00186</dc:identifier>
+<dce:identifier>SDN:P35::EPC00186</dce:identifier>
+<skos:notation>SDN:P35::EPC00186</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved phosphorus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSWCDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSDSZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSWCD1/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -2315,6 +3763,47 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00213/">
+<dc:identifier>SDN:P35::EPC00213</dc:identifier>
+<dce:identifier>SDN:P35::EPC00213</dce:identifier>
+<skos:notation>SDN:P35::EPC00213</skos:notation>
+<skos:prefLabel xml:lang="en">Water body fluoranthene</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FLAFWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLAGCD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PAHSM009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/WTCTM015/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00183/">
+<dc:identifier>SDN:P35::EPC00183</dc:identifier>
+<dce:identifier>SDN:P35::EPC00183</dce:identifier>
+<skos:notation>SDN:P35::EPC00183</skos:notation>
+<skos:prefLabel xml:lang="en">Water body naphthalene</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHWC15/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00110/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00004/">
 <dc:identifier>SDN:P35::EPC00004</dc:identifier>
 <dce:identifier>SDN:P35::EPC00004</dce:identifier>
@@ -2378,6 +3867,7 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAAZX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMAZX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP006/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAMS01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAA01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZNNTX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
@@ -2419,6 +3909,91 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAZX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00159/">
+<dc:identifier>SDN:P35::EPC00159</dc:identifier>
+<dce:identifier>SDN:P35::EPC00159</dce:identifier>
+<skos:notation>SDN:P35::EPC00159</skos:notation>
+<skos:prefLabel xml:lang="en">Water body organic nitrogen</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP008/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00153/">
+<dc:identifier>SDN:P35::EPC00153</dc:identifier>
+<dce:identifier>SDN:P35::EPC00153</dce:identifier>
+<skos:notation>SDN:P35::EPC00153</skos:notation>
+<skos:prefLabel xml:lang="en">Water body organic phosphorus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ORGPDSZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OPHSVLPT/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00185/">
+<dc:identifier>SDN:P35::EPC00185</dc:identifier>
+<dce:identifier>SDN:P35::EPC00185</dce:identifier>
+<skos:notation>SDN:P35::EPC00185</skos:notation>
+<skos:prefLabel xml:lang="en">Water body p,p'-DDT/DDD/DDE</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SCES0056/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DDTDISUF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDTUF02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/WTCTM014/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00050/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DDEPPAF1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TDEPPAF1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00049/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PESTBI/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00168/">
+<dc:identifier>SDN:P35::EPC00168</dc:identifier>
+<dce:identifier>SDN:P35::EPC00168</dce:identifier>
+<skos:notation>SDN:P35::EPC00168</skos:notation>
+<skos:prefLabel xml:lang="en">Water body pH</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHXXZZYY/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ACIDZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHMASSXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHXXZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHXXPR01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUPH/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -2665,6 +4240,71 @@
 </skos:Concept>
 </skos:member>
 <skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00212/">
+<dc:identifier>SDN:P35::EPC00212</dc:identifier>
+<dce:identifier>SDN:P35::EPC00212</dce:identifier>
+<skos:notation>SDN:P35::EPC00212</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate nitrogen</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TNCNCNP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTCAP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTCN10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTZZZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP013/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM018/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00157/">
+<dc:identifier>SDN:P35::EPC00157</dc:identifier>
+<dce:identifier>SDN:P35::EPC00157</dce:identifier>
+<skos:notation>SDN:P35::EPC00157</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate organic carbon {POC}</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OCCNCAP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OCCNGCPZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGCAP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHEMM017/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CORGCA53/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP010/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ORGMAT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00201/">
+<dc:identifier>SDN:P35::EPC00201</dc:identifier>
+<dce:identifier>SDN:P35::EPC00201</dce:identifier>
+<skos:notation>SDN:P35::EPC00201</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate phosphorus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSVLPT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSWCPZ/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
 <skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00078/">
 <dc:identifier>SDN:P35::EPC00078</dc:identifier>
 <dce:identifier>SDN:P35::EPC00078</dce:identifier>
@@ -2798,18 +4438,37 @@
 <dc:date>2014-07-16 12:02:56.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLP3/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLP3/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLP4/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEZZXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAESPPZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAESPP3/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLP5/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFLPZ/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEFMP1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAESPP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAEZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAESPPZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHAESPP3/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMMC/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/CHPHYL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00172/">
+<dc:identifier>SDN:P35::EPC00172</dc:identifier>
+<dce:identifier>SDN:P35::EPC00172</dce:identifier>
+<skos:notation>SDN:P35::EPC00172</skos:notation>
+<skos:prefLabel xml:lang="en">Water body phenanthrene</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PAHSM012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CPAHWC16/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HCARBS/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -2825,26 +4484,28 @@
 <dc:date>2014-03-12 08:23:35.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAA01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSXXDZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMADZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSYYDZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSZZXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOS04LW/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP906/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAZX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMA12/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAZX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD2/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHKGAATX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMA12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAA01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP906/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOS04LW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSYYDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAZX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -2862,6 +4523,11 @@
 <dc:date>2014-03-12 08:23:35.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALPR02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSG02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC03/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALST01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCU01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCC01/"/>
@@ -2890,11 +4556,6 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALST02/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCU02/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCC02/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALPR02/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC02/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSG02/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC06/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC03/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSLTZZ01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSCLCCL1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM021/"/>
@@ -2916,22 +4577,23 @@
 <dc:date>2014-03-12 08:23:35.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD5/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAKGD1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMAZX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAZX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAZZXX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCANS01/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD1/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMAD3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAA01/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMA12/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMATX/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAADZ/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD3/"/>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCANS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAKGD1/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAA01/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/SLCATE/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
@@ -2949,13 +4611,91 @@
 <dc:date>2014-09-30 12:26:53.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP014/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALKYZZYY/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALKYZZXX/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALKYSPTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDMAP014/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALKYPOTX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/MEQL/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00134/">
+<dc:identifier>SDN:P35::EPC00134</dc:identifier>
+<dce:identifier>SDN:P35::EPC00134</dce:identifier>
+<skos:notation>SDN:P35::EPC00134</skos:notation>
+<skos:prefLabel xml:lang="en">Water body total nitrogen</skos:prefLabel>
+<skos:altLabel>TotN</skos:altLabel>
+<skos:definition xml:lang="en">The amount of organic plus inorganic nitrogen in the dissolved phase plus the particulate phase in a given volume of a sample from any body of salt or fresh water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-11-11 10:17:52.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTWCTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTOTZZXX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00135/">
+<dc:identifier>SDN:P35::EPC00135</dc:identifier>
+<dce:identifier>SDN:P35::EPC00135</dce:identifier>
+<skos:notation>SDN:P35::EPC00135</skos:notation>
+<skos:prefLabel xml:lang="en">Water body total phosphorus</skos:prefLabel>
+<skos:altLabel>TotP</skos:altLabel>
+<skos:definition xml:lang="en">The amount of organic plus inorganic phosphorus in the dissolved phase plus the particulate phase in a given volume of a sample from any body of salt or fresh water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-11-11 10:17:52.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSPP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TPHSZZXX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00179/">
+<dc:identifier>SDN:P35::EPC00179</dc:identifier>
+<dce:identifier>SDN:P35::EPC00179</dce:identifier>
+<skos:notation>SDN:P35::EPC00179</skos:notation>
+<skos:prefLabel xml:lang="en">Water body tribultin (TBT)</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/POLLM010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ADISSTBT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGM013/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ANTIFL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00138/">
+<dc:identifier>SDN:P35::EPC00138</dc:identifier>
+<dce:identifier>SDN:P35::EPC00138</dce:identifier>
+<skos:notation>SDN:P35::EPC00138</skos:notation>
+<skos:prefLabel xml:lang="en">Water body triphenyltin (TPT)</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ADISSTPT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGM014/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AFLGM020/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPNM/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ANTIFL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -2980,6 +4720,51 @@
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAAZX/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/FERTIL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00215/">
+<dc:identifier>SDN:P35::EPC00215</dc:identifier>
+<dce:identifier>SDN:P35::EPC00215</dce:identifier>
+<skos:notation>SDN:P35::EPC00215</skos:notation>
+<skos:prefLabel xml:lang="en">Zinc in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNWW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNDWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MYTGAL02/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00145/">
+<dc:identifier>SDN:P35::EPC00145</dc:identifier>
+<dce:identifier>SDN:P35::EPC00145</dce:identifier>
+<skos:notation>SDN:P35::EPC00145</skos:notation>
+<skos:prefLabel xml:lang="en">Zinc in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNXTXT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNXXISPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNSEDBD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MZNSP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED32/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTSDM008/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNAAWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNPEXT/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
@@ -3017,11 +4802,81 @@
 <dc:date>2014-08-20 09:18:48.0</dc:date>
 <skos:note xml:lang="en">accepted</skos:note>
 <owl:deprecated>false</owl:deprecated>
-<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED32/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTSDM008/"/>
 <skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNAAWF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWSSED32/"/>
 <skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UMKG/"/>
 <skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/HVYMTL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00176/">
+<dc:identifier>SDN:P35::EPC00176</dc:identifier>
+<dce:identifier>SDN:P35::EPC00176</dce:identifier>
+<skos:notation>SDN:P35::EPC00176</skos:notation>
+<skos:prefLabel xml:lang="en">p,p'-DDT/DDD/DDE in Mytilus</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPST04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDTWCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDTW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDDCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDADCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MUM13142/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MUM13134/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMUSDDTP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDTDCF14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDEW6569/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/IFRPST07/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PESTBI/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00150/">
+<dc:identifier>SDN:P35::EPC00150</dc:identifier>
+<dce:identifier>SDN:P35::EPC00150</dce:identifier>
+<skos:notation>SDN:P35::EPC00150</skos:notation>
+<skos:prefLabel xml:lang="en">p,p'-DDT/DDD/DDE in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDDDTSD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDEDTSD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SED00009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PDDTDTSD/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUKG/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/PESTBI/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00136/">
+<dc:identifier>SDN:P35::EPC00136</dc:identifier>
+<dce:identifier>SDN:P35::EPC00136</dce:identifier>
+<skos:notation>SDN:P35::EPC00136</skos:notation>
+<skos:prefLabel xml:lang="en">pH in the sediment</skos:prefLabel>
+<skos:altLabel/>
+<skos:definition xml:lang="en">Unavailable</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2016-06-02 14:19:21.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHNBSSPW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NEWCXX07/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UUPH/"/>
+<skos:broader rdf:resource="http://vocab.nerc.ac.uk/collection/P36/current/ACIDIT/"/>
 <void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
 </skos:Concept>
 </skos:member>
