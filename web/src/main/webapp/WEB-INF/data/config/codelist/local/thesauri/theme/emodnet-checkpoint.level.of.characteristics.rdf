@@ -19,6 +19,13 @@
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
   <skos:Concept
+    rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/level-of-characteristics#satellite-observation">
+    <skos:prefLabel xml:lang="en">Satellite observation</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">Satellite observation</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
+  <skos:Concept
       rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/level-of-characteristics#high-level-analyzed">
     <skos:prefLabel xml:lang="en">High level analyzed</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
