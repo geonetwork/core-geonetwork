@@ -1130,4 +1130,50 @@
       }
     };
   }]);
+
+
+
+  module.directive('gnQmValue', ['$http',
+    function($http) {
+      return {
+        restrict: 'A',
+        template: '{{value}}',
+        scope: {
+          key: '@gnQmValue'
+        },
+        link: function linkFn(scope, element, attr) {
+          var isTdp = angular.isDefined(attr['tdp']);
+
+          function init() {
+            if (angular.isDefined(scope.key)) {
+              var tokens = scope.key.split('|');
+              var cptKey = tokens[0];
+              var mId = tokens[1];
+              var cptTokens = cptKey.split('/');
+              var dpsOrTdpId = isTdp ? cptTokens[2] : cptTokens[0];
+              var cptId = cptTokens[0] + '/' + cptTokens[1];
+
+              $http.get('q?fast=index&_content_type=json&_uuid=' + dpsOrTdpId, {
+                cache: true
+              }).then(function (r) {
+                if (r.data.metadata && r.data.metadata.dqValues) {
+                  var values = r.data.metadata.dqValues;
+                  for(var i = 0; i < values.length; i ++) {
+                    var v = values[i];
+                    if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
+                      var t = v.split('|');
+                      scope.value = t[5] + ' ' + t[6];
+                      return;
+                    }
+                  }
+                }
+              });
+            }
+          };
+
+          init();
+        }
+      };
+    }
+  ]);
 })();

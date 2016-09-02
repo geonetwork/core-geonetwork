@@ -6,8 +6,10 @@
       <tr>
         <th data-translate="">Measure</th>
         <th data-translate="">Value</th>
-        <th data-translate="">Quality error</th>
-        <th data-translate="">Fitness for use</th>
+        <th data-translate="" data-ng-show="isTdp || isUd">Quality error</th>
+        <th data-translate="" data-ng-show="isUd">Fitness for use</th>
+        <th data-translate="" data-ng-show="isTdp || isUd">DPS value</th>
+        <th data-translate="" data-ng-show="isUd">TDP value</th>
       </tr>
       <tr data-ng-repeat="q in c.measures track by $index">
         <td>
@@ -16,11 +18,17 @@
         <td>
           {{q.qm}}
         </td>
-        <td title="{{q.qeName}}">
+        <td title="{{q.qeName}}" data-ng-show="isTdp || isUd">
           {{q.qe}}
         </td>
-        <td title="{{q.fuName}}">
+        <td title="{{q.fuName}}" data-ng-show="isUd">
           {{q.fu}}
+        </td>
+        <td data-ng-show="(isTdp || isUd) && q.dps">
+          {{q.dps}}
+        </td>
+        <td data-ng-show="isUd && q.tdp">
+          {{q.tdp}}
         </td>
       </tr>
     </table>

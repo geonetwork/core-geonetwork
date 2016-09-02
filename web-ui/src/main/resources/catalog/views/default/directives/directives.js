@@ -69,8 +69,8 @@
     }
   ]);
 
-  module.directive('gnDataQualityMeasureRenderer', ['$http',
-    function($http) {
+  module.directive('gnDataQualityMeasureRenderer', ['$http', '$q',
+    function($http, $q) {
       return {
         restrict: 'A',
         replace: true,
@@ -110,10 +110,74 @@
             };
           };
 
+
+          function getDpsOrTdpValues(cptId, mId, qm) {
+            var tokens = cptId.split('/');
+            var dpsKey = tokens[0];
+            var q1 = $q.defer();
+            var q2 = $q.defer();
+
+            if (scope.isUd || scope.isTdp) {
+              $http.get('q?fast=index&_content_type=json&_uuid=' + dpsKey, {
+                cache: true
+              }).then(function (r) {
+                if (r.data.metadata && r.data.metadata.dqValues) {
+                  var values = r.data.metadata.dqValues;
+                  for(var i = 0; i < values.length; i ++) {
+                    var v = values[i];
+                    if (v.indexOf(tokens[0] + '/' + tokens[1]) === 0 &&
+                        v.indexOf(mId) !== -1) {
+                      var t = v.split('|');
+                      qm.dps = t[5] + ' ' + t[6];
+                      q1.resolve(qm);
+                      break;
+                    }
+                  }
+                }
+                q1.resolve(qm);
+              });
+            } else {
+              q1.resolve(qm);
+            }
+
+
+            if (scope.isUd) {
+              if (tokens.length === 3) {
+                var tdpKey = tokens[2];
+                $http.get('q?fast=index&_content_type=json&_uuid=' + tdpKey, {
+                  cache: true
+                }).then(function (r) {
+                  if (r.data.metadata && r.data.metadata.dqValues) {
+                    var values = r.data.metadata.dqValues;
+                    for(var i = 0; i < values.length; i ++) {
+                      var v = values[i];
+                      if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
+                        var t = v.split('|');
+                        qm.tdp = t[5] + ' ' + t[6];
+                        q2.resolve(qm);
+                        break;
+                      }
+                    }
+                  }
+                  q2.resolve(qm);
+                });
+              }
+            } else {
+              q2.resolve(qm);
+            }
+            return $q.all([q1.promise, q2.promise]);
+          };
+
           function loadValues() {
+            scope.isUd = false;
+            scope.isTdp = false;
             $http.get('qi?_content_type=json&fast=index&_id=' +
               scope.recordId).then(
               function (r) {
+                scope.isUd = r.data.metadata.standardName
+                              .indexOf('Upstream Data') !== -1;
+                scope.isTdp = r.data.metadata.standardName
+                              .indexOf('Targeted Data Product') !== -1;
                 scope.qm = r.data.metadata.dqValues;
                 angular.forEach(scope.qm, function (value, idx) {
                   scope.qm[idx] = value.split('|');
@@ -138,16 +202,16 @@
 
                     var qe = getQe(cptId, value[2]);
                     var fu = getFu(cptId, value[2]);
-                    scope.components[cptId].measures.push(
-                      {
-                        qmName: value[3] + ' (' + value[2] + ')',
-                        qm: value[5] + ' ' + value[6],
-                        qeName: qe.name,
-                        qe: qe.value,
-                        fuName: fu.name,
-                        fu: fu.value
-                      }
-                    );
+                    getDpsOrTdpValues(cptId, value[2], {
+                      qmName: value[3] + ' (' + value[2] + ')',
+                      qm: value[5] + ' ' + value[6],
+                      qeName: qe.name,
+                      qe: qe.value,
+                      fuName: fu.name,
+                      fu: fu.value
+                    }).then(function (values) {
+                      scope.components[cptId].measures.push(values[0]);
+                    });
                   }
                 });
               }
