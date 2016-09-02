@@ -123,9 +123,6 @@
                   if (tab == 'wps') {
                     iElement.find('.panel-wps').remove();
                   }
-                  if (tab == 'wfsfilter') {
-                    iElement.find('[name="wfsFilterForm"]').remove();
-                  }
                   scope.active.layersTools = false;
                   scope.layerTabs[tab].active = false;
                   activeTab = null;
@@ -168,6 +165,9 @@
                     activeTab = null;
                   }
                 });
+                if (e.element.get('wfsfilter-el')) {
+                  e.element.get('wfsfilter-el').remove();
+                }
               });
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
