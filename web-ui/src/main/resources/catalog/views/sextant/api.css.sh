@@ -1,3 +1,8 @@
+#!/usr/bin/env bash
+
+# install less with node first.
+# sudo npm install -g less
+
 lessc less/gn_search_sextant.less api.css
 sed 's/calc(\(.*\))/~"calc(\1)"/' api.css > less/tmp.css
 lessc less/sxt-api.less tmp.css
