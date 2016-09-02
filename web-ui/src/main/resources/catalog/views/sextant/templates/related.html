@@ -1,18 +1,25 @@
-<div class="btn-group" ng-if="relations.length > 0">
-  <button type="button" class="btn dropdown-toggle btn-sm btn-default" data-toggle="dropdown" title="Relations">
+<div class="btn-group" ng-if="relationFound">
+  <button type="button"
+          class="btn dropdown-toggle btn-sm btn-default"
+          data-toggle="dropdown"
+          title="Relations">
     <span class="fa fa-code-fork"></span>
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li ng-repeat="r in ::relations | gnRelationsFilter:'parent'">
-      <a href="#/metadata/{{r['geonet:info']['uuid']}}" title="{{getTitle(r)}}">
-        {{getTitle(r)}}
+    <li data-ng-repeat="r in ::relations.parent track by $index">
+      <a href="#/metadata/{{r.id}}"
+         title="{{r.description | gnLocalized: lang}}">
+        {{r.title | gnLocalized: lang}}
       </a>
     </li>
-    <li data-ng-if="getByTypes('parent').length > 0 && getByTypes('children').length > 0" role="presentation" class="divider"></li>
-    <li ng-repeat="r in ::relations | gnRelationsFilter:'children'">
-      <a href="#/metadata/{{r['geonet:info']['uuid']}}" title="{{getTitle(r)}}">
-        {{getTitle(r)}}
+    <li data-ng-if="relations.parent.length > 0 && relations.children.length > 0"
+        role="presentation"
+        class="divider"></li>
+    <li data-ng-repeat="r in ::relations.children track by $index">
+      <a href="#/metadata/{{r.id}}"
+         title="{{r.description | gnLocalized: lang}}">
+        {{r.title | gnLocalized: lang}}
       </a>
     </li>
   </ul>
