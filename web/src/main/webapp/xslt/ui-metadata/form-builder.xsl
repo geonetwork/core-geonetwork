@@ -1470,7 +1470,14 @@
                     </xsl:call-template>
                   </xsl:when>
                   <xsl:when test="@readonly">
-                    <xsl:value-of select="."/>
+                    <xsl:choose>
+                      <xsl:when test="count(*) > 0">
+                        <xsl:copy-of select="*"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </xsl:when>
                   <xsl:when test="count(*) = 0">
                     <!-- Empty col -->
