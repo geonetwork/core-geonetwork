@@ -1550,9 +1550,9 @@
      */
       .directive('gnLinkToSibling', [
         'gnOnlinesrc', 'gnGlobalSettings', 'gnCurrentEdit',
-        '$http', '$timeout',
+        '$http', '$timeout', 'Metadata',
         function(gnOnlinesrc, gnGlobalSettings, gnCurrentEdit,
-                 $http, $timeout) {
+                 $http, $timeout, Metadata) {
           return {
             restrict: 'A',
             scope: {},
@@ -1568,7 +1568,8 @@
                       from: 1,
                       to: 50,
                       sortBy: 'title',
-                      sortOrder: 'reverse'
+                      sortOrder: 'reverse',
+                      resultType: 'checkpoint'
                       // resultType: 'hits'
                     }
                   };
@@ -1726,6 +1727,12 @@
                     if (idx >= 0) {
                       scope.selection.splice(idx, 1);
                     }
+                    for (var i = 0; i < scope.stateObj.selectRecords.length; i++) {
+                      var o = scope.stateObj.selectRecords[i];
+                      if (o.getUuid() === obj.md.getUuid()) {
+                        scope.stateObj.selectRecords.splice([i], 1);
+                      }
+                    }
                   };
 
                   function injectComponentInUD(uuids) {
@@ -1740,6 +1747,21 @@
                       });
                     }
                   };
+                  scope.stateObj = {};
+
+                  scope.$watchCollection('stateObj.selectRecords',
+                    function(n, o) {
+                      if (!angular.isUndefined(scope.stateObj.selectRecords) &&
+                        scope.stateObj.selectRecords.length > 0 &&
+                        n != o) {
+                        scope.selection = [];
+                        angular.forEach(scope.stateObj.selectRecords, function (o) {
+                          scope.addToSelection(new Metadata(o),
+                            scope.config.initiativeType,
+                            scope.config.associationType);
+                        });
+                      }
+                    });
 
                   /**
                    * Call the batch process to add the sibling

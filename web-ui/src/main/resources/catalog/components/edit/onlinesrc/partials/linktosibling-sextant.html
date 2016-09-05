@@ -50,7 +50,7 @@
 
       <div class="form-group">
         <div class="col-sm-10">
-          <div class="input-group dropdown" id="siblingdd">
+          <div class="input-group" id="siblingdd">
             <span class="input-group-addon">
               <i class="fa fa-search"/>
             </span>
@@ -60,31 +60,49 @@
                    data-ng-model="searchObj.any"
                    data-ng-model-options="modelOptions"
                    placeholder="{{'search' | translate}}"/>
-            <ul class="dropdown-menu" role="menu">
+            <!--<ul class="dropdown-menu" role="menu">
               <li data-ng-repeat="md in searchResults.records">
                 <a href=""
                    data-ng-click="addToSelection(md, config.associationType, config.initiativeType)">
                   {{md.title || md.defaultTitle}}
                 </a>
               </li>
-            </ul>
+            </ul>-->
           </div>
         </div>
       </div>
-      <!-- TODO add facet -->
-      <div>
-        <ul class="list-group">
-          <li class="list-group-item gn-record"
-              data-ng-repeat="obj in selection">
-            {{obj.md.title || obj.md.defaultTitle}}
-              <span><i>({{obj.associationType}}
-                <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
-              </i></span>
-            <a data-ng-click="removeFromSelection(obj)" href="">
-              <i class="btn fa fa-times text-danger pull-right"></i>
-            </a>
-          </li>
-        </ul>
+      <div class="row">
+        <div class="col-md-2">
+          <div data-ng-show="searchResults.records.length > 0"
+               data-gn-facet-dimension-list="searchResults.dimension"
+               data-params="searchObj.params"
+               data-facet-type="'checkpoint'"
+               data-current-facets="currentFacets">
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div data-gn-search-form-results=""
+               data-gn-search-form-results-mode="title"
+               data-gn-search-form-results-selection-mode="local multiple"
+               data-search-results="searchResults"
+               data-select-records="stateObj.selectRecords"
+               data-pagination-info="paginationInfo">
+          </div>
+        </div>
+        <div class="col-md-5">
+          <ul class="list-group">
+            <li class="list-group-item gn-record"
+                data-ng-repeat="obj in selection">
+              {{obj.md.title || obj.md.defaultTitle}}
+                <span><i>({{obj.associationType}}
+                  <span data-ng-show="obj.initiativeType">/ {{obj.initiativeType}}</span>)
+                </i></span>
+              <a data-ng-click="removeFromSelection(obj)" href="">
+                <i class="btn fa fa-times text-danger pull-right"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
 
 
