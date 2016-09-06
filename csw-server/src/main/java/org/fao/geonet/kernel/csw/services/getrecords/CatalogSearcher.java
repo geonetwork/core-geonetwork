@@ -40,6 +40,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
 import org.apache.lucene.queryparser.flexible.standard.config.NumericConfig;
+import org.apache.lucene.queryparser.surround.query.NotQuery;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.CachingWrapperFilter;
@@ -569,9 +570,15 @@ public class CatalogSearcher implements MetadataRecordSelector {
         if (buildSummary) {
             numHits = Math.max(maxHitsInSummary, numHits);
         }
+        
+        //Hide drafts    
+        query.add(new TermQuery(new Term("draft", "Y")), BooleanClause.Occur.MUST_NOT);
+        
         // record globals for reuse
         _query = query;
         _sort = sort;
+        
+        System.out.println(query);
 
         ServiceConfig config = new ServiceConfig();
         String geomWkt = null;

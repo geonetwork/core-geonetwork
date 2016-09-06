@@ -41,6 +41,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -111,7 +112,7 @@ public class SearchController {
             //--- get metadata from DB
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            Element res = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            Element res = gc.getBean(IMetadataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
             SchemaManager scm = gc.getBean(SchemaManager.class);
             if (res == null) {
                 return null;
