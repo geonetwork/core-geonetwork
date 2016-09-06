@@ -131,6 +131,18 @@
     <facet name="portail-donnees-facette-comment"
            label="portail-donnees-facette-comment"
            indexKey="thesaurus-local.theme.portail-donnees-facette-comment"/>
+           
+    <facet name="SIH_Especes_commerciales" indexKey="thesaurus-external.theme.SIH_Especes_commerciales" label="SIH_Especes_commerciales"/>
+    <facet name="SIH_Groupes_Especes" indexKey="thesaurus-external.theme.SIH_Groupes_Especes" label="SIH_Groupes_Especes"/>
+    <facet name="SIH_Engins_valides" indexKey="thesaurus-external.theme.SIH_Engins_valides" label="SIH_Engins_valides"/>
+    <facet name="SIH_Categories_Engins" indexKey="thesaurus-external.theme.SIH_Categories_Engins" label="SIH_Categories_Engins"/>
+
+    <facet name="emodnet-checkpoint.environmental.matrix" indexKey="thesaurus-local.theme.emodnet-checkpoint.environmental.matrix" label="emodnet-checkpoint.environmental.matrix"/>
+    <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
+	
+    <facet name="dcsmm-descripteur" indexKey="thesaurus-local.theme.dcsmm-descripteur" label="dcsmm-descripteur"/>
+    <facet name="dcssm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcssm-methode"/>
+    <facet name="dcssm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcssm-type-espace"/>
 
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
@@ -227,6 +239,15 @@
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
+      <item facet="SIH_Especes_commerciales" max="300"/>		
+      <item facet="SIH_Groupes_Especes" max="300"/>	
+      <item facet="SIH_Engins_valides" max="300"/>	
+      <item facet="SIH_Categories_Engins" max="300"/>	
+      <item facet="emodnet-checkpoint.environmental.matrix" max="300"/>	
+      <item facet="emodnet-checkpoint.challenges" max="300"/>		   
+      <item facet="dcsmm-descripteur" max="300"/>	
+      <item facet="dcssm-methode" max="300"/>	
+      <item facet="dcssm-type-espace" max="300"/>	
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
     <summaryType name="subtemplates">
