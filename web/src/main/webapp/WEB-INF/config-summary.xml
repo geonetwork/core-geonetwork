@@ -121,6 +121,9 @@
     <facet name="p35"
            label="p35"
            indexKey="thesaurus-external.parameter.NVS.P35"/>
+    <facet name="challenge"
+           label="challenge"
+           indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges"/>
 
     <facet name="portail-donnees-facette-discipline"
            label="portail-donnees-facette-discipline"
@@ -166,6 +169,7 @@
       <item facet="p02" max="300"/>
       <item facet="p03" max="300"/>
       <item facet="p35" max="300"/>
+      <item facet="challenge" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
@@ -191,6 +195,7 @@
       <item facet="publishedForGroup" max="199" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
+      <item facet="challenge" max="300"/>
       <item facet="hasDqMeasures" max="3" sortBy="value" translator="apploc:"/>
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
       <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
@@ -224,6 +229,7 @@
       <item facet="p02" max="300"/>
       <item facet="p03" max="300"/>
       <item facet="p35" max="300"/>
+      <item facet="challenge" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
@@ -236,6 +242,12 @@
     </summaryType>
     <summaryType name="contact" format="DIMENSION">
       <item facet="orgNameTree" max="99"/>
+      <item facet="groupOwner" max="99" sortBy="value"
+            translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+    </summaryType>
+    <summaryType name="checkpoint" format="DIMENSION">
+      <item facet="challenge" max="300"/>
+      <item facet="p02" max="300"/>
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
     </summaryType>
