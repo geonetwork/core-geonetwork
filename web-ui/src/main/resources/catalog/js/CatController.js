@@ -295,6 +295,10 @@
         $('.gn-info').hide();
       };
 
+      $scope.allowPublishInvalidMd = function() {
+        return gnConfig['metadata.workflow.allowPublishInvalidMd'];
+      };
+
       $scope.$on('StatusUpdated', function(event, status) {
         $scope.status = {};
         $.extend($scope.status, defaultStatus, status);

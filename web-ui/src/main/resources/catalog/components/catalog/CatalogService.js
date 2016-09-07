@@ -522,6 +522,12 @@
       isPublished: function() {
         return this['geonet:info'].isPublishedToAll === 'true';
       },
+      isValid: function() {
+        return this.valid === '1';
+      },
+      hasValidation: function() {
+        return (this.valid > -1);
+      },
       isOwned: function() {
         return this['geonet:info'].owner === 'true';
       },
