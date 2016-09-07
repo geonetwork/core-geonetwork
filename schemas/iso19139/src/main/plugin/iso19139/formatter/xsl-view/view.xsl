@@ -12,6 +12,7 @@
                 xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -33,9 +34,14 @@
   <xsl:variable name="configuration"
                 select="document('../../layout/config-editor.xml')"/>
 
+ <!-- Required for utility-fn.xsl -->
+  <xsl:variable name="editorConfig"
+                select="document('../../layout/config-editor.xml')"/>
+
   <!-- Some utility -->
   <xsl:include href="../../layout/evaluate.xsl"/>
   <xsl:include href="../../layout/utility-tpl-multilingual.xsl"/>
+  <xsl:include href="../../layout/utility-fn.xsl"/>
 
   <!-- The core formatter XSL layout based on the editor configuration -->
   <xsl:include href="sharedFormatterDir/xslt/render-layout.xsl"/>
@@ -45,20 +51,25 @@
   <xsl:variable name="metadata"
                 select="/root/gmd:MD_Metadata"/>
 
+  <xsl:variable name="langId" select="gn-fn-iso19139:getLangId($metadata, $language)"/>
 
 
 
   <!-- Specific schema rendering -->
   <xsl:template mode="getMetadataTitle" match="gmd:MD_Metadata">
-    <xsl:variable name="value"
-                  select="gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
-    <xsl:value-of select="$value/gco:CharacterString"/>
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:citation/*/gmd:title">
+      <xsl:call-template name="localised">
+        <xsl:with-param name="langId" select="$langId"/>
+      </xsl:call-template>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template mode="getMetadataAbstract" match="gmd:MD_Metadata">
-    <xsl:variable name="value"
-                  select="gmd:identificationInfo/*/gmd:abstract"/>
-    <xsl:value-of select="$value/gco:CharacterString"/>
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:abstract">
+      <xsl:call-template name="localised">
+        <xsl:with-param name="langId" select="$langId"/>
+      </xsl:call-template>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
@@ -67,7 +78,7 @@
 
   <!-- Most of the elements are ... -->
   <xsl:template mode="render-field"
-                match="*[gco:CharacterString|gco:Integer|gco:Decimal|
+                match="*[gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|
        gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
@@ -89,11 +100,28 @@
     </dl>
   </xsl:template>
 
+  <xsl:template mode="render-field"
+                match="*[gco:CharacterString]"
+                priority="50">
+    <xsl:param name="fieldName" select="''" as="xs:string"/>
+
+    <dl>
+      <dt>
+        <xsl:value-of select="if ($fieldName)
+                                then $fieldName
+                                else tr:node-label(tr:create($schema), name(), null)"/>
+      </dt>
+      <dd>
+        <xsl:apply-templates mode="render-value" select="."/>
+        <xsl:apply-templates mode="render-value" select="@*"/>
+      </dd>
+    </dl>
+  </xsl:template>
 
 
   <!-- Some elements are only containers so bypass them -->
   <xsl:template mode="render-field"
-                match="*[count(gmd:*) = 1]"
+                match="*[count(gmd:*[name() != 'gmd:PT_FreeText']) = 1]"
                 priority="50">
 
     <xsl:apply-templates mode="render-value" select="@*"/>
@@ -322,8 +350,10 @@
         <div>
           <ul>
             <li>
-              <xsl:apply-templates mode="render-value"
-                                   select="*/gmd:keyword/*"/>
+              <xsl:for-each select="*/gmd:keyword">
+                <xsl:apply-templates mode="render-value"
+                                     select="."/><xsl:if test="position() != last()">, </xsl:if>
+              </xsl:for-each>
             </li>
           </ul>
         </div>
@@ -347,8 +377,10 @@
         <div>
           <ul>
             <li>
-              <xsl:apply-templates mode="render-value"
-                                   select="*/gmd:keyword/*"/>
+              <xsl:for-each select="*/gmd:keyword">
+                <xsl:apply-templates mode="render-value"
+                                     select="."/><xsl:if test="position() != last()">, </xsl:if>
+              </xsl:for-each>
             </li>
           </ul>
         </div>
@@ -494,6 +526,9 @@
     </xsl:if>
   </xsl:template>
 
+ <!-- Elements to avoid render -->
+  <xsl:template mode="render-field" match="gmd:PT_Locale" priority="100"/>
+
   <!-- Traverse the tree -->
   <xsl:template mode="render-field"
                 match="*">
@@ -508,8 +543,16 @@
 
   <!-- ########################## -->
   <!-- Render values for text ... -->
+   <xsl:template mode="render-value"
+                match="*[gco:CharacterString]">
+
+    <xsl:apply-templates mode="localised" select=".">
+      <xsl:with-param name="langId" select="$langId"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
   <xsl:template mode="render-value"
-                match="gco:CharacterString|gco:Integer|gco:Decimal|
+                match="gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
        gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|
        gco:LocalName|gml:beginPosition|gml:endPosition">
@@ -532,13 +575,6 @@
         <xsl:value-of select="normalize-space(.)"/>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
-
-  <xsl:template mode="render-value"
-                match="gmd:PT_FreeText">
-    <xsl:apply-templates mode="localised" select="../node()">
-      <xsl:with-param name="langId" select="$language"/>
-    </xsl:apply-templates>
   </xsl:template>
 
   <!-- ... URL -->
