@@ -25,11 +25,16 @@ package org.fao.geonet.api.records;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -46,13 +51,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.List;
 
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -74,21 +88,25 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     private SourceRepository sourceRepository;
 
     @Autowired private MetadataRepository metadataRepository;
+    @Autowired
+    private MetadataRelationRepository metadataRelationRepository;
 
     private String uuid;
     private int id;
     private Metadata md;
+    private String childUuid;
+    private int childId;
+    private ServiceContext context;
 
 
     @Before
     public void setUp() throws Exception {
-        ServiceContext context = createServiceContext();
+        this.context = createServiceContext();
         createTestData();
     }
 
     private void createTestData() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
+        loginAsAdmin(context);
 
         final Element sampleMetadataXml = getSampleMetadataXml();
         this.uuid = UUID.randomUUID().toString();
@@ -102,8 +120,10 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         metadata.getSourceInfo().setOwner(1).setSourceId(source);
         metadata.getHarvestInfo().setHarvested(false);
 
-        this.id = dataManager.insertMetadata(serviceContext, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
+
+        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, false, false, false, UpdateDatestamp.NO,
             false, false).getId();
+
 
         dataManager.indexMetadata(Lists.newArrayList("" + this.id));
         this.md = metadataRepository.findOne(this.id);
@@ -498,24 +518,126 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     public void getRelated() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
+        addThumbnails(this.context);
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().add("/org/fao/geonet/api/records/samples/mef2-related.zip");
+        importMetadata.invoke();
+        final String MAIN_UUID = "655bb8a1-0324-470f-8dff-bb64e849291c";
+        final String DATASET_UUID = "842f9143-fd7d-452c-96b4-425ca1281642";
 
 
-        mockMvc.perform(get("/api/records/" + this.uuid + "/related")
+        mockMvc.perform(get("/api/records/" + MAIN_UUID + "/related")
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$").value(hasKey("onlines")));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        mockMvc.perform(get("/api/records/" + this.uuid + "/related")
+        mockMvc.perform(get("/api/records/" + MAIN_UUID + "/related")
             .session(mockHttpSession)
             .accept(MediaType.APPLICATION_XML))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/related/onlines").exists());
 
-        // TODO test others getRelated parameters.
+        mockMvc.perform(get("/api/records/" + this.uuid + "/related")
+            .param("type", RelatedItemType.thumbnails.toString())
+            .session(mockHttpSession)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            //.andExpect(jsonPath("$.children").isNotEmpty())
+            .andExpect(jsonPath("$." + RelatedItemType.thumbnails, notNullValue()));
 
+        // Request each type
+        for (RelatedItemType type : RelatedItemType.values()) {
+            if (type == RelatedItemType.hassources || type == RelatedItemType.related
+                || type == RelatedItemType.thumbnails) {
+                // TODO modify mef2-related.zip test metadata to contain a valid hassources value
+                continue;
+            }
+            String uuidToTest = MAIN_UUID;
+            if (type == RelatedItemType.datasets) {
+                uuidToTest = DATASET_UUID;
+            }
+            mockMvc.perform(get("/api/records/" + uuidToTest + "/related")
+                .param("type", type.toString())
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$." + type).isNotEmpty())
+                .andExpect(jsonPath("$").value(hasKey(type.toString())));
+
+            mockMvc.perform(get("/api/records/" + uuidToTest + "/related")
+                .param("type", type.toString())
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_XML))
+                .andExpect(xpath("/related/" + type.toString() + "/item").exists());
+        }
+
+        // Check start and row parameters
+
+
+        mockMvc.perform(get("/api/records/" + MAIN_UUID + "/related")
+            .param("type", RelatedItemType.children.toString())
+            .param("start", "2")
+            .param("rows", "1")
+            .session(mockHttpSession)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$." + RelatedItemType.children).isArray())
+            .andExpect(jsonPath("$." + RelatedItemType.children, hasSize(1)));
+
+        mockMvc.perform(get("/api/records/" + MAIN_UUID + "/related")
+            .param("type", RelatedItemType.children.toString())
+            .param("start", "2")
+            .param("rows", "1")
+            .session(mockHttpSession)
+            .accept(MediaType.APPLICATION_XML))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_XML))
+            .andExpect(xpath("/related/" + RelatedItemType.children + "/item").exists())
+            .andExpect(xpath("/related/" + RelatedItemType.children + "/item").nodeCount(1));
+
+    }
+
+    private void addThumbnails(ServiceContext context) throws Exception {
+        Path mdPublicDataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        Path mdPrivateDataDir = Lib.resource.getDir(context, Params.Access.PRIVATE, id);
+        final Path smallImage = mdPublicDataDir.resolve("small.gif");
+        final Path largeImage = mdPublicDataDir.resolve("large.gif");
+        createImage("gif", smallImage);
+        createImage("gif", largeImage);
+
+        final Path privateImage = mdPrivateDataDir.resolve("privateFile.gif");
+        createImage("gif", privateImage);
+
+        dataManager.setThumbnail(context, Integer.toString(this.id), true,
+            smallImage.toAbsolutePath().normalize().toString(), false);
+        dataManager.setThumbnail(context, Integer.toString(this.id), false,
+            largeImage.toAbsolutePath().normalize().toString(), false);
+    }
+
+    private String createImage(String format, Path outFile) throws IOException {
+
+        BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics2D g2d = image.createGraphics();
+        g2d.drawRect(1, 1, 5, 5);
+        g2d.dispose();
+        Files.createDirectories(outFile.getParent());
+        Files.createFile(outFile);
+        try (OutputStream out = Files.newOutputStream(outFile)) {
+            final boolean writerWasFound = ImageIO.write(image, format, out);
+            assertTrue(writerWasFound);
+        }
+
+        return outFile.toAbsolutePath().normalize().toString();
     }
 
 
