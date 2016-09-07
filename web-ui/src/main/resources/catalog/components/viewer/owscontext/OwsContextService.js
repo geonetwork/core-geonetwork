@@ -449,6 +449,8 @@
                   }
                   if (bgIdx) {
                     olL.set('bgIdx', bgIdx);
+                  } else if (index) {
+                    olL.set('tree_index', index);
                   }
                   return olL;
                 }).catch (function() {});
