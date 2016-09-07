@@ -164,8 +164,10 @@
                 // same URL as WMS
                 scope.wfsUrl ? 'WFS' : 'WMS').then(
                 function(response) {
-                  appProfile = response.data;
-                  return appProfile;
+                  if (response.status == 200) {
+                    appProfile = angular.fromJson(response.data['0']);
+                    return appProfile;
+                  }
                 }).catch (function() {});
 
             solrObject =

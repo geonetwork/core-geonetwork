@@ -132,7 +132,9 @@
                   if (promise && angular.isFunction(promise.abort)) {
                     promise.abort();
                   }
-                  scope.uuid = scope.md.getUuid();
+                  if (scope.md != null) {
+                    scope.uuid = scope.md.getUuid();
+                  }
                   scope.updateRelations();
                 }
               });

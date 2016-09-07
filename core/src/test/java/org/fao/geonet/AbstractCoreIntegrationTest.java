@@ -26,6 +26,7 @@ package org.fao.geonet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import jeeves.constants.Jeeves;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -38,7 +39,9 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -50,6 +53,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
@@ -81,6 +85,8 @@ import jeeves.server.sources.ServiceRequest;
 
 import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;
+import static org.owasp.esapi.crypto.CryptoToken.ANONYMOUS_USER;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data
@@ -101,6 +107,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected GeonetTestFixture testFixture;
     @Autowired
     protected UserRepository _userRepo;
+    @Autowired
+    protected UserGroupRepository _userGroupRepo;
+    @Autowired
+    protected GroupRepository _groupRepo;
 
     protected static Element createServiceConfigParam(String name, String value) {
         return new Element("param")
@@ -242,14 +252,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     public MockHttpSession loginAsAdmin() {
         final User user = _userRepo.findAllByProfile(Profile.Administrator)
             .get(0);
-        MockHttpSession session = new MockHttpSession();
 
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-            user, null, user.getAuthorities());
-        auth.setDetails(user);
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-        return session;
+        return loginAs(user);
     }
 
     public MockHttpSession loginAs(User user) {
@@ -260,8 +264,29 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         auth.setDetails(user);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
+        UserSession userSession = new UserSession();
+        userSession.loginAs(user);
+        session.setAttribute(Jeeves.Elem.SESSION, userSession);
+        userSession.setsHttpSession(session);
+
         return session;
     }
+
+    public MockHttpSession loginAsAnonymous() {
+        MockHttpSession session = new MockHttpSession();
+
+        AnonymousAuthenticationToken auth = new AnonymousAuthenticationToken( ANONYMOUS_USER, ANONYMOUS_USER,
+            createAuthorityList( "ROLE_ANONYMOUS" ) );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        UserSession userSession = new UserSession();
+        session.setAttribute(Jeeves.Elem.SESSION, userSession);
+        userSession.setsHttpSession(session);
+
+        return session;
+    }
+
 
     public Element getSampleMetadataXml() throws IOException, JDOMException {
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");

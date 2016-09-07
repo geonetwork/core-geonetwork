@@ -5,7 +5,7 @@
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
 body {
-  
+
 }
 
 .gn-line-height {
@@ -38,7 +38,7 @@ input[type=text], input[type=number], select {
    height: 300px;
    width: 100%;
   }
-  
+
   .gn-proj-select {
     width: 250px;
     vertical-align: top;
@@ -110,12 +110,12 @@ form.gn-editor {
   @editor-fieldset-padding-left: 5px;
 
   /**
-   * Make space on the following element of a well 
+   * Make space on the following element of a well
    */
   div.well + fieldset, div.well + div {
     padding-top: 10px;
   }
-  
+
   div.well {
     margin-bottom: 0px;
   }
@@ -167,11 +167,11 @@ form.gn-editor {
   fieldset fieldset {
     padding-left: @editor-fieldset-padding-left;
   }
-  
+
   .form-group {
     margin-bottom: 0px;
   }
-  
+
   legend {
     margin-bottom: 10px;
   }
@@ -181,7 +181,7 @@ form.gn-editor {
     font-size: 12px;
     min-height: 700px;
   }
-  
+
   .gn-autocomplete-list {
     position: absolute;
     margin-top: 35px;
@@ -196,11 +196,11 @@ form.gn-editor {
       background-color: #0097cf;
     }
   }
-  
+
   .gn-debug {
     display: none;
   }
-  
+
   .control-label {
       color: #6a6a6a;
       font-weight: 200;
@@ -208,26 +208,26 @@ form.gn-editor {
       line-height: 22px;
 
   }
-  
+
   .gn-required > label {
  //   color: #333333;
   }
-  
+
   .gn-move {
 //    .pull-right();
   }
-  
+
   legend > div.gn-move {
     position: absolute;
   }
-  
+
   /* text danger takes priority above colors
    */
   .text-danger label,
   .text-danger legend {
     .text-danger();
   }
-  
+
   .gn-has-xlink {
     label, fieldset > legend {
   //    opacity: .7;
@@ -278,14 +278,14 @@ form.gn-editor {
     margin-top: 0px;
     margin-bottom: 0px;
   }
-  
-  
+
+
   /* Avoid white on white when i:hover
    */
   .btn:hover {
     color: #000;
   }
-  
+
   /**
    * Keyword selector directive
    */
@@ -345,7 +345,7 @@ form.gn-editor {
   }
   .show {
       visibility: visible;
-  } 
+  }
   .gn-value .col-xs-8 {
       padding-left: 0px;
   }
@@ -494,4 +494,13 @@ form.gn-tab-xml {
   &:hover {
     color: @brand-success;
   }
+}
+
+#xmleditor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 800px;
 }

@@ -352,7 +352,7 @@
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
               <a target="_blank"
-                 data-ng-href="{{resource.url}}">
+                 data-ng-href="{{'../metadata/' + resource.id}}">
                 {{resource.title | gnLocalized: lang}}
                 <span>{{'(' + resource.associationType.toUpperCase() + ')'}}</span>
               </a>

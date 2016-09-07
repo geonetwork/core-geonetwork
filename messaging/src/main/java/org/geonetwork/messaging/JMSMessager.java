@@ -27,26 +27,29 @@ public class JMSMessager {
             // Create a Connection
             Connection connection = connectionFactory.createConnection();
             connection.start();
+            try {
+                // Create a Session
+                Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-            // Create a Session
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                try {
+                    // Create the destination (Topic or Queue)
+                    Destination destination = session.createQueue(queue);
 
-            // Create the destination (Topic or Queue)
-            Destination destination = session.createQueue(queue);
+                    // Create a MessageProducer from the Session to the Topic or Queue
+                    MessageProducer producer = session.createProducer(destination);
+                    producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-            // Create a MessageProducer from the Session to the Topic or Queue
-            MessageProducer producer = session.createProducer(destination);
-            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+                    // Create a messages
+                    ObjectMessage message = session.createObjectMessage(event);
 
-            // Create a messages
-            ObjectMessage message = session.createObjectMessage(event);
-
-            // Tell the producer to send the message
-            producer.send(message);
-
-            // Clean up
-            session.close();
-            connection.close();
+                    // Tell the producer to send the message
+                    producer.send(message);
+                } finally {
+                    session.close();
+                }
+            } finally {
+                connection.close();
+            }
         } catch (Exception e) {
             // TODO : dedicated logger needed
             System.out.println("Caught: " + e);

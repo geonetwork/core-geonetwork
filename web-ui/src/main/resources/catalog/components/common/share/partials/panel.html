@@ -14,9 +14,11 @@
 
 <!-- TODO: simplify layout if only one group -->
 <div class="gn-share-grid">
+  <i class="fa fa-spinner fa-spin" data-ng-hide="privileges.length > 0"></i>
+
   <form name="opsForm" id="opsForm"
         data-ng-class="{'gn-sharing-batch': batch}">
-    <table class="table table-striped">
+    <table class="table table-striped" data-ng-show="privileges.length > 0">
       <thead>
       <tr>
         <th><a href="" ng-click="setSorter('g')">
@@ -25,14 +27,15 @@
              ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
         </a>
         </th>
-        <th data-ng-repeat="(key, value) in privileges[0].operations">
-          <a href="" ng-click="setSorter(o.id)">
+        <th data-ng-repeat="key in operations">
+          <a href="" ng-click="setSorter(key)">
+            <i class="fa {{icons[key] || fa-fw}}"/>&nbsp;
             <span>{{('op-' + key) | translate}}</span>&nbsp;
-            <i data-ng-if="sorter.predicate == o.id" class="fa"
+            <i data-ng-if="sorter.predicate == key" class="fa"
                data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
           </a>
         </th>
-        <th/>
+        <th data-ng-if="!disableAllCol"/>
         <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
           <span translate>profile</span>&nbsp;
           <i data-ng-if="sorter.predicate == 'p'" class="fa"
@@ -45,7 +48,7 @@
       <tr class="info"
           data-ng-repeat="g in privileges | filter:{reserved: true} | orderBy:'id':true">
         <td><strong>{{('group-' + g.group) | translate}}</strong></td>
-        <td data-ng-repeat="(key, value) in g.operations" class="text-center">
+        <td data-ng-repeat="key in operations" class="text-center">
           <input type="checkbox"
                  name="{{g.group + '-' + key}}"
                  data-ng-disabled="!isAdminOrReviewer"
@@ -68,10 +71,10 @@
         data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
                        onlyUserGroup == false">
         <td><strong>{{('group-' + g.group) | translate}}</strong></td>
-        <td data-ng-repeat="(key, value) in g.operations" class="text-center">
+        <td data-ng-repeat="key in operations" class="text-center">
           <input type="checkbox"
                  name="{{g.group + '-' + key}}"
-                 data-ng-disabled="g.privileges[o.id].disabled"
+                 data-ng-disabled="g.privileges[key].disabled"
                  data-ng-model="g.operations[key]"/>
         </td>
         <td data-ng-if="!disableAllCol">
@@ -79,8 +82,9 @@
                  data-ng-click="checkAll(g)"
                  data-ng-model="g.isCheckedAll"/>
         </td>
-        <td class="text-center" data-ng-if="displayProfile">
-          <span data-ng-repeat="p in g.userProfiles">
+        <td class="text-center">
+          <span data-ng-if="displayProfile"
+                data-ng-repeat="p in g.userProfiles">
             {{user.isAdministrator() ? ('Administrator' | translate) : (p | translate)}}&nbsp;
           </span>
         </td>

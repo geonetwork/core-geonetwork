@@ -48,7 +48,8 @@
     'gn_ows',
     'gn_geopublisher',
     'gn_batch_service',
-    'gn_mdactions_directive'
+    'gn_mdactions_directive',
+    'ui.ace'
   ]);
 
   module.constant('gnViewerSettings', {});

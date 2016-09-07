@@ -316,7 +316,7 @@ public class HttpProxyServlet extends HttpServlet {
             }
         }
         if (paramString.length() > 0) {
-            url += "?" + paramString;
+            url += (url.contains("?") ? "&" : "?") + paramString;
         }
         return url;
     }

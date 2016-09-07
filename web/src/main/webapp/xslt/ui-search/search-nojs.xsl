@@ -33,8 +33,12 @@
       <div class="col-md-push-3 col-md-6">
         <form action="catalog.search.nojs" class="form-inline">
           <div class="form-group">
-            <input type="text" name="any" id="fldAny"
-                   class="form-control input-large gn-search-text" autofocus=""/>
+            <input type="text"
+                   name="any"
+                   id="fldAny"
+                   value="{/root/request/any}"
+                   class="form-control input-large gn-search-text"
+                   autofocus=""/>
           </div>
           <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Search"/>

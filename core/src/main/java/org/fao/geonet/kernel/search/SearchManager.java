@@ -558,19 +558,10 @@ public class SearchManager {
 
     @PreDestroy
     public void end() throws Exception {
-        ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        if (applicationContext != null) {
-            LuceneIndexLanguageTracker tracker = applicationContext.getBean(LuceneIndexLanguageTracker.class);
-            if (tracker != null) {
-                tracker.close(TimeUnit.MINUTES.toMillis(1), true);
-            } else {
-                Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the LuceneIndexLanguageTracker bean (already destroyed ?");
-            }
-        } else {
-            Log.error(Geonet.SEARCH_ENGINE, "Unable to get a hook on the application context (already destroyed ?).");
-        }
+        // the tracker is closed when the ApplicationContext is closed.
+
         _spatial.end();
-        _luceneOptimizerManager.cancel();
+        _luceneOptimizerManager.shutdown();
     }
 
     /**

@@ -87,9 +87,8 @@
             <select name="category"
                     data-ng-model="groupSelected.defaultCategory"
                     class="form-control">
-              <option value="none">&nbsp;</option>
               <option value="{{category.id}}"
-                      data-ng-selected="category.id==groupSelected.defaultCategory"
+                      data-ng-selected="category.id == groupSelected.defaultCategory"
                       data-ng-repeat="category in categories track by $index">
                 {{category.label[lang]}}
               </option>
@@ -168,7 +167,7 @@
                       multiple="multiple"
                       data-ng-disabled="!groupSelected.enableAllowedCategories"
                       data-ng-model="groupSelected.allowedCategories"
-                      data-ng-options="c as c.label[lang] for c in categories track by c.id">
+                      data-ng-options="c as (c.label[lang] || '') for c in categories track by c.id">
               </select>
               <p class="help-block" data-translate="">allowedCategoriesDescriptionHelp</p>
 

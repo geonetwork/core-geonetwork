@@ -138,7 +138,7 @@ public class GroupsApi {
     @PreAuthorize("hasRole('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Group created.") ,
-        @ApiResponse(code = 404, message = "Group with that id already exist.") ,
+        @ApiResponse(code = 400, message = "Group with that id or name already exist.") ,
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
@@ -151,24 +151,37 @@ public class GroupsApi {
     ) throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GroupRepository groupRepository = appContext.getBean(GroupRepository.class);
-        final Group existing = groupRepository.findOne(group.getId());
-        if (existing != null) {
+
+        final Group existingId = groupRepository
+            .findOne(group.getId());
+
+        if (existingId != null) {
             throw new IllegalArgumentException(String.format(
                 "A group with id '%d' already exist.",
                 group.getId()
             ));
-        } else {
-            // Populate languages if not already set
-            LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
-            java.util.List<Language> allLanguages = langRepository.findAll();
-            Map<String, String> labelTranslations = group.getLabelTranslations();
-            for (Language l : allLanguages) {
-                String label = labelTranslations.get(l.getId());
-                group.getLabelTranslations().put(l.getId(),
-                    label == null ? group.getName() : label);
-            }
-            groupRepository.save(group);
         }
+
+        final Group existingName = groupRepository
+            .findByName(group.getName());
+        if (existingName != null) {
+            throw new IllegalArgumentException(String.format(
+                "A group with name '%s' already exist.",
+                group.getName()
+            ));
+        }
+
+        // Populate languages if not already set
+        LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
+        java.util.List<Language> allLanguages = langRepository.findAll();
+        Map<String, String> labelTranslations = group.getLabelTranslations();
+        for (Language l : allLanguages) {
+            String label = labelTranslations.get(l.getId());
+            group.getLabelTranslations().put(l.getId(),
+                label == null ? group.getName() : label);
+        }
+        groupRepository.save(group);
+
         return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
     }
 

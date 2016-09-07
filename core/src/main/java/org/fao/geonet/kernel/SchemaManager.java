@@ -55,20 +55,13 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -978,6 +971,7 @@ public class SchemaManager {
 
         Pair<String, String> idInfo = extractIdInfo(xmlIdFile, schemaName);
 
+        extractMetadata(mds, xmlIdFile);
         mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
         mds.setOperationFilters(extractOperationFilters(xmlIdFile));
         Log.debug(Geonet.SCHEMA_MANAGER, "  UUID is read/write mode: " + mds.isReadwriteUUID());
@@ -1399,6 +1393,31 @@ public class SchemaManager {
             }
         }
         return false;
+    }
+
+
+    /**
+     * Extract metadata schema informations (eg. title, description, url).
+     */
+    private void extractMetadata(MetadataSchema mds, Path xmlIdFile) throws JDOMException, NoSuchFileException {
+        Element root = Xml.loadFile(xmlIdFile);
+        mds.setStandardUrl(root.getChildText("standardUrl", GEONET_SCHEMA_NS));
+        mds.setTitles(getSchemaIdentMultilingualProperty(root, "title"));
+        mds.setDescriptions(getSchemaIdentMultilingualProperty(root, "description"));
+    }
+
+    private Map<String, String> getSchemaIdentMultilingualProperty(Element root, String propName) {
+        Map<String, String> props = new HashMap<>();
+        root.getChildren(propName, GEONET_SCHEMA_NS).forEach(o -> {
+            if (o instanceof Element) {
+                Element e = (Element) o;
+                String lang = e.getAttributeValue("lang", Namespaces.XML);
+                if (lang != null) {
+                    props.put(lang, e.getTextNormalize());
+                }
+            }
+        });
+        return props;
     }
 
     /**

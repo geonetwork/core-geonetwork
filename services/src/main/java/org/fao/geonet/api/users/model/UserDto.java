@@ -2,6 +2,7 @@ package org.fao.geonet.api.users.model;
 
 import org.fao.geonet.domain.Address;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,12 @@ public class UserDto {
     private boolean enabled;
 
     public UserDto() {
+        this.emailAddresses = new ArrayList<>();
+        this.addresses = new ArrayList<>();
+        this.groupsRegisteredUser = new ArrayList<>();
+        this.groupsEditor = new ArrayList<>();
+        this.groupsReviewer = new ArrayList<>();
+        this.groupsUserAdmin = new ArrayList<>();
     }
 
     public String getId() {

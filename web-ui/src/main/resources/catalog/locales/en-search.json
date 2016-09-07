@@ -218,6 +218,7 @@
   "mdUnpublished": "Metadata Unpublished",
   "mdUnmodified": "Unaffected Metadata",
   "mdDisallowed": "Restricted Metadata",
+  "mdNovalid": "Metadata not valid",
   "metadataUnchanged": "Metadata unmodified",
   "accessRestricted": "You do not have permission to change this metadata",
   "copiedToClip": "Text copied in clipboard !",
@@ -305,7 +306,7 @@
   "Locations":"Locations",
   "clear":"clear",
   "msgCanDropFileOnMap":"Note that you can also drop a file on the map",
-  "UploadKMZfile":"Upoad a KMZ file",
+  "UploadKMZfile":"Upload a KMZ file",
   "or":"or",
   "KMLfileURL":"URL of a KML file",
   "refineSearch" : "Refine Search",
@@ -330,7 +331,7 @@
   "wpsDescribeProcessFailed": "DescribeProcess failed",
   "wpsExecute": "Execute",
   "wpsExecuteFailed": "Execute failed",
-  "wpsErrorCodeReturned": "The serveur returned status code",
+  "wpsErrorCodeReturned": "The server returned status code",
   "time" : "Time",
   "features": "feature(s)",
   "downloadLayer": "Download data",
@@ -348,7 +349,7 @@
   "fbQuestion": "Question",
   "fbError": "Error",
   "fbCatMetadataContents": "Metadata Contents",
-  "fbCatDataContents": "Data Contents", 
+  "fbCatDataContents": "Data Contents",
   "fbCatServiceContents": "Service Contents",
   "fbCatSupport": "Support",
   "fbCatMapViewer": "Map Viewer",
@@ -359,5 +360,10 @@
   "fbCatMetadataEditing": "Metadata Editing",
   "fbCatHarvesting": "Harvesting",
   "fbCatValidator": "Validator",
-  "fbCatOthers": "Others"
+  "fbCatOthers": "Others",
+  "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map"
+  "mdvalid": "Metadata is valid",
+  "mdinvalid": "Metadata is invalid",
+  "mdinvalidcantpublish": "Invalid metadata can't be publish",
+  "mdnovalidation": "Metadata has no validation information"
 }

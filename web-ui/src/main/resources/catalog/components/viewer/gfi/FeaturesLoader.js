@@ -181,13 +181,26 @@
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getFeatureFromRow = function(row) {
-    var geoms = ['the_geom', 'thegeom'];
-    for (var i = 0; i < 2; i++) {
-      if (row[geoms[i]] instanceof ol.geom.Geometry) {
-        return new ol.Feature();
-        // return new ol.Feature({ // FIXME WMS-GFI doesnt guess dataProjection
-        //   geometry: row[geoms[i]]
-        // });
+    var geoms = ['the_geom', 'thegeom', 'boundedBy'];
+    for (var i = 0; i < geoms.length; i++) {
+      var geom = row[geoms[i]];
+      if (geoms[i] == 'boundedBy' && jQuery.isArray(geom)) {
+        if (geom[0] == geom[2] && geom[1] == geom[3]) {
+          geom = new ol.geom.Point([geom[0], geom[1]]);
+        } else {
+          geom = new ol.geom.Polygon.fromExtent(geom);
+        }
+        if (this.projection) {
+          geom = geom.transform(
+              this.projection,
+              this.map.getView().getProjection()
+              );
+        }
+      }
+      if (geom instanceof ol.geom.Geometry) {
+        return new ol.Feature({
+          geometry: geom
+        });
       }
     }
   };
@@ -207,9 +220,11 @@
   geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
       geonetwork.GnFeaturesLoader);
 
+
   geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
+    var $filter = this.$injector.get('$filter');
 
     var pageList = [5, 10, 50, 100],
         columns = [],
@@ -223,7 +238,15 @@
           field: field.idxName,
           title: field.label,
           titleTooltip: field.label,
-          sortable: true
+          sortable: true,
+          formatter: function(val, row, index) {
+            var text = (val) ? val.toString() : '';
+            text = $filter('linky')(text, '_blank');
+            text = text.replace(/>(.)*</,
+                ' ' + 'target="_blank">' + linkTpl + '<'
+                );
+            return text;
+          }
         });
       }
     });

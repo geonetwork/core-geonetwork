@@ -30,6 +30,13 @@
     // Customize column to be displayed and the order
     // TODO: Move config to DB using order in operations table
     columnOrder: ['view', 'dynamic', 'download', 'editing', 'notify'],
+    icons: {
+      'view': 'fa-share-alt',
+      'dynamic': 'fa-globe',
+      'download': 'fa-download',
+      'notify': 'fa-envelope',
+      'process': 'fa-cog',
+      'editing': 'fa-pencil'},
     internalOperations: ['editing', 'notify'],
     internalGroups: [-1, 0, 1],
     internalGroupsProfiles: ['Administrator', 'Reviewer'],
@@ -142,8 +149,19 @@
                   }
                 });
 
+                var operations = [];
+                if (angular.isArray(gnShareConstants.columnOrder)) {
+                  operations = gnShareConstants.columnOrder;
+                } else {
+                  angular.forEach(data.privileges[0].operations,
+                      function(value, key) {
+                        ops.push(key);
+                      });
+                }
+
                 defer.resolve({
                   privileges: groups,
+                  operations: operations,
                   isAdminOrReviewer:
                       isAdminOrReviewer(userProfile, data.groupOwner,
                       groups, angular.isUndefined(metadataId))});

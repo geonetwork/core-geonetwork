@@ -9,7 +9,7 @@
         </label>
         <div class="col-sm-5">
           <div data-schema-info-combo="codelist"
-               data-selected-info="associationType"
+               data-selected-info="config.associationType"
                data-gn-schema-info="associationType" lang="lang"></div>
         </div>
       </div>
@@ -19,27 +19,31 @@
         </label>
         <div class="col-sm-5">
           <div data-schema-info-combo="codelist"
-               data-selected-info="initiativeType"
+               data-selected-info="config.initiativeType"
                data-gn-schema-info="initiativeType"
                lang="lang"
                data-allow-blank=""></div>
         </div>
       </div>
-
       <div class="form-group">
         <div class="col-sm-10">
           <div class="input-group dropdown" id="siblingdd">
-            <span class="input-group-addon"><i
-              class="fa fa-search"/></span> <input class="form-control"
-                                                   data-ng-change="triggerSearch()" type="text"
-                                                   data-toggle="dropdown"
-                                                   data-ng-model="searchObj.params.any"
-                                                   data-ng-model-options="modelOptions"
-                                                   placeholder="{{'search' | translate}}"/>
+            <span class="input-group-addon">
+              <i class="fa fa-search"/>
+            </span>
+            <input class="form-control"
+                   data-ng-change="updateParams();triggerSearch();" type="text"
+                   data-toggle="dropdown"
+                   data-ng-model="searchObj.any"
+                   data-ng-model-options="modelOptions"
+                   placeholder="{{'search' | translate}}"/>
             <ul class="dropdown-menu" role="menu">
-              <li data-ng-repeat="md in searchResults.records"><a
-                href="" data-ng-click="addToSelection(md, associationType, initiativeType)"
-              > {{md.title || md.defaultTitle}} </a></li>
+              <li data-ng-repeat="md in searchResults.records">
+                <a href=""
+                   data-ng-click="addToSelection(md, config.associationType, config.initiativeType)">
+                  {{md.title || md.defaultTitle}}
+                </a>
+              </li>
             </ul>
           </div>
         </div>

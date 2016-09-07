@@ -294,7 +294,10 @@
               $translate('mdUnmodified') + '</dt><dd>' +
               data.data.unmodified + '</dd><dt>' +
               $translate('mdDisallowed') + '</dt><dd>' +
-              data.data.disallowed + '</dd></dl>';
+              data.data.disallowed + '</dd><dt>' +
+              $translate('mdNovalid') + '<dd>' +
+              data.data.novalid + '</dd>' +
+              '</dt></dl>';
 
           var success = 'success';
           if (md) {

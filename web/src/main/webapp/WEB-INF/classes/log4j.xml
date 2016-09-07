@@ -219,7 +219,6 @@
     <appender-ref ref="fileAppender"/>
   </logger>
 
-
   <!-- Turn off logging except when explicitly declared below -->
   <root>
     <level value="OFF"></level>

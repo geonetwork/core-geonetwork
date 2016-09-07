@@ -65,7 +65,8 @@
   <standardUrl>http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=53798
   </standardUrl>
   <schemaLocation>http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd
-    http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd
+                  http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd
+                  http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd
   </schemaLocation>
   <autodetect xmlns:gmd="http://www.isotc211.org/2005/gmd"
               xmlns:gco="http://www.isotc211.org/2005/gco">

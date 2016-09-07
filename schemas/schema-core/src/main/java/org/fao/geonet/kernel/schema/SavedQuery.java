@@ -18,6 +18,15 @@ public class SavedQuery {
      * XPath to use for the query
      */
     private String xpath;
+    /**
+     * Optional XPath to use to identify each matching element.
+     * This is only relevant if the xpath match nodes.
+     */
+    private String label;
+    /**
+     * When retrieving element, any sub children to clean up ?
+     */
+    private String cleanValues;
 
     public String getXpath() {
         return xpath;
@@ -42,5 +51,21 @@ public class SavedQuery {
             parameters.add(m.group(1));
         }
         return parameters;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setCleanValues(String cleanValues) {
+        this.cleanValues = cleanValues;
+    }
+
+    public String getCleanValues() {
+        return cleanValues;
     }
 }

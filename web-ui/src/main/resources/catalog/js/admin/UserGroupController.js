@@ -99,14 +99,14 @@
 
       $http.get('../api/tags').
           success(function(data) {
-            $scope.categories = data;
+            $scope.categories = [{id: null, name: ''}].concat(data);
           });
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
-        var profile = ($scope.user.profile)?
-            "?profile=" +$scope.user.profile:"";
+        var profile = ($scope.user.profile) ?
+            '?profile=' + $scope.user.profile : '';
 
         $http.get('../api/groups' + profile).
             success(function(data) {
@@ -510,12 +510,15 @@
       };
 
       $scope.saveGroup = function() {
+        if ($scope.groupSelected.defaultCategory === '') {
+          $scope.groupSelected.defaultCategory = null;
+        }
         $http.put('../api/groups' + (
             $scope.groupSelected.id != -99 ?
             '/' + $scope.groupSelected.id : ''
-            ), $scope.groupSelected)
-            .success(uploadImportMdDone)
-            .error(uploadImportMdError);
+          ), $scope.groupSelected)
+          .success(uploadImportMdDone)
+          .error(uploadImportMdError);
       };
 
       $scope.deleteGroup = function(formId) {

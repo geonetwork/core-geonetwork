@@ -94,6 +94,14 @@ public class LuceneOptimizerManager {
 
     }
 
+    public void shutdown() {
+        try {
+            scheduler.shutdown(true);
+        } catch (SchedulerException e) {
+            Log.warning(Geonet.INDEX_ENGINE, "Error stopping the scheduler", e);
+        }
+    }
+
     public void reschedule(Calendar beginAt, int interval) throws SchedulerException {
         if (_dateFormat.format(beginAt.getTime()).equals(_dateFormat.format(_beginAt.getTime())) &&
             (interval == _intervalInMinutes)) {

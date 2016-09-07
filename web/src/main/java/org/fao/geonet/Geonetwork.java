@@ -111,6 +111,7 @@ public class Geonetwork implements ApplicationHandler {
     private SearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
     private ConfigurableApplicationContext _applicationContext;
+    private OaiPmhDispatcher oaipmhDis;
 
     //---------------------------------------------------------------------------
     //---
@@ -208,6 +209,7 @@ public class Geonetwork implements ApplicationHandler {
         }
 
         //------------------------------------------------------------------------
+        //--- initialize SRU
 
         logger.info("  - SRU...");
 
@@ -328,7 +330,7 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Open Archive Initiative (OAI-PMH) server...");
 
-        OaiPmhDispatcher oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
+        oaipmhDis = new OaiPmhDispatcher(settingMan, schemaMan);
 
 
         GeonetContext gnContext = new GeonetContext(_applicationContext, false);
@@ -351,10 +353,10 @@ public class Geonetwork implements ApplicationHandler {
         SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
             final Source source = sourceRepository.save(
-                new Source()
-                    .setLocal(true)
-                    .setName(settingMan.getSiteName())
-                    .setUuid(settingMan.getSiteId()));
+                new Source(settingMan.getSiteId(),
+                    settingMan.getSiteName(),
+                    null,
+                    true));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists
@@ -609,18 +611,7 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("shutting down CSW HarvestResponse executionService");
         CswHarvesterResponseExecutionService.getExecutionService().shutdownNow();
 
-        //------------------------------------------------------------------------
-        //--- end search
-        logger.info("  - search...");
-
-        try {
-            searchMan.end();
-        } catch (Exception e) {
-            logger.error("Raised exception while stopping search");
-            logger.error("  Exception : " + e);
-            logger.error("  Message   : " + e.getMessage());
-            logger.error("  Stack     : " + Util.getStackTrace(e));
-        }
+        InspireAtomHarvesterScheduler.shutdown();
 
         logger.info("  - MetadataNotifier ...");
         try {
@@ -635,6 +626,10 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Harvest Manager...");
         _applicationContext.getBean(HarvestManager.class).shutdown();
+
+        // Beans registered using SingletonBeanRegistry#registerSingleton don't have their
+        // @PreDestroy called. So do it manually.
+        oaipmhDis.shutdown();
     }
 
     //---------------------------------------------------------------------------

@@ -23,8 +23,8 @@
 
 package org.fao.geonet.api.users;
 
-import com.vividsolutions.jts.util.Assert;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
@@ -227,11 +227,13 @@ public class UsersApi {
 
         if (myProfile == Profile.UserAdmin) {
             final Integer iMyUserId = Integer.parseInt(myUserId);
-            final List<Integer> groupIds = userGroupRepository
-                .findGroupIds(where(hasUserId(iMyUserId)).or(
-                    hasUserId(userIdentifier)));
+            final List<Integer> groupIdsSessionUser = userGroupRepository
+                .findGroupIds(where(hasUserId(iMyUserId)));
 
-            if (groupIds.isEmpty()) {
+            final List<Integer> groupIdsUserToDelete = userGroupRepository
+                .findGroupIds(where(hasUserId(userIdentifier)));
+
+            if (CollectionUtils.intersection(groupIdsSessionUser, groupIdsUserToDelete).isEmpty()) {
                 throw new IllegalArgumentException(
                     "You don't have rights to delete this user because the user is not part of your group");
             }
@@ -409,7 +411,6 @@ public class UsersApi {
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
         UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
-
         if (profile == Profile.Administrator) {
             // Check at least 1 administrator is enabled
             if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
@@ -431,6 +432,15 @@ public class UsersApi {
         if (user == null) {
             throw new IllegalArgumentException("No user found with id: "
                 + userDto.getId());
+        }
+
+        // Check no duplicated username
+        User userWithUsername = userRepository.findOneByUsername(userDto.getUsername());
+
+        if ((userWithUsername !=null) && (user.getId() != userWithUsername.getId())) {
+            throw new IllegalArgumentException(String.format(
+                "Another user with username '%s' already exists",
+                user.getUsername()));
         }
 
         if (!myProfile.getAll().contains(profile)) {
@@ -502,7 +512,10 @@ public class UsersApi {
         @ApiIgnore
             HttpSession httpSession
     ) throws Exception {
-        Assert.equals(password, password2);
+
+        if (!password.equals(password2)) {
+            throw new IllegalArgumentException("Passwords should be equal");
+        }
 
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
@@ -516,8 +529,7 @@ public class UsersApi {
 
         User user = userRepository.findOne(userIdentifier);
         if (user == null) {
-            throw new IllegalArgumentException("No user found with id: "
-                + userIdentifier);
+            throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
         user.getSecurity().setPassword(

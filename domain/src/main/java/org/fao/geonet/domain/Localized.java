@@ -23,19 +23,16 @@
 
 package org.fao.geonet.domain;
 
-import com.google.common.collect.Maps;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.google.common.collect.Maps;
 import org.jdom.Element;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Common superclass of entities that are have translated labels.

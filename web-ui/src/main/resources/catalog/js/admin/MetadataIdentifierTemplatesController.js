@@ -72,7 +72,7 @@
 
       $scope.addMetadataIdentifierTemplate = function() {
         $scope.mdIdentifierTemplateSelected = {
-          'id': '',
+          'id': '-99',
           'name': '',
           'template': ''
         };
@@ -100,16 +100,11 @@
 
       $scope.saveMetadataIdentifierTemplate = function() {
 
-        var params = {
-          name: $scope.mdIdentifierTemplateSelected.name,
-          template: $scope.mdIdentifierTemplateSelected.template
-        };
-
         $http.put('../api/identifiers' + (
-            $scope.mdIdentifierTemplateSelected.id !== '' ?
+            $scope.mdIdentifierTemplateSelected.id !== '-99' ?
             '/' + $scope.mdIdentifierTemplateSelected.id : ''
             ),
-            null, {params: params})
+            $scope.mdIdentifierTemplateSelected)
             .success(function(data) {
               $('.ng-dirty').removeClass('ng-dirty');
               loadMetadataUrnTemplates();
