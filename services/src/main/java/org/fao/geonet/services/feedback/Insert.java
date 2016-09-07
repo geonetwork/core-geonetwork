@@ -31,8 +31,10 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.MailSender;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
@@ -74,7 +76,7 @@ public class Insert implements Service {
         String gender = Util.getParam(params, "gender", "-");
         String phone = Util.getParam(params, "phone", null);
 
-        String comments = Util.getParam(params, Params.COMMENTS);
+        String comments = Util.getParam(params, Params.COMMENTS, "");
         String subject = Util.getParam(params, Params.SUBJECT, "New feedback");
 
         String function = Util.getParam(params, "function", "-");
@@ -92,7 +94,12 @@ public class Insert implements Service {
         List<String> toAddress = new LinkedList<String>();
         toAddress.add(to);
         if (metadataEmail != null) {
-            toAddress.add(metadataEmail);
+            //Check metadata email belongs to metadata
+            //security!!
+            Metadata md = gc.getBean(MetadataRepository.class).findOneByUuid(uuid);
+            if(md.getData().indexOf(metadataEmail) > 0) {
+                toAddress.add(metadataEmail);
+            }
         }
 
         StringBuilder message = new StringBuilder();
