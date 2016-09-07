@@ -600,6 +600,10 @@
       scope.downloads = [];
       scope.layers = [];
 
+      var orderedDownloadTypes = ['#FILE', '#DB', '#COPYFILE',
+        '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
+        '#WWW:FTP', '#OGC:WFS', '#OGC:WCS'];
+
       angular.forEach(md.linksTree, function(transferOptions, i) {
 
         // get all layers and downloads for this transferOptions
@@ -611,9 +615,22 @@
 
         if(downloads.length > 0) {
           // If only one layer, we get only one download (we bind them later)
-          // We take the first one cause there is a priority on the types
+          // We take the first one cause based on types priority
+          // https://github.com/camptocamp/sextant-geonetwork/wiki/Catalogue#les-protocoles
           if(layers.length == 1) {
-            scope.downloads.push(downloads[0]);
+            loopType:
+            for (var i = 0; i < orderedDownloadTypes.length; i ++) {
+              var t = orderedDownloadTypes[i];
+              loopLink:
+              for (var j = 0; j < downloads.length; j ++) {
+                var l = downloads[j];
+                if (l.protocol == t.substr(1, t.length - 1)) {
+                  scope.downloads.push(l);
+                  break loopType;
+                }
+              }
+            }
+            // scope.downloads.push(downloads[0]);
           }
           else {
             scope.downloads = scope.downloads.concat(downloads);
