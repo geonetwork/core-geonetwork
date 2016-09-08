@@ -1757,8 +1757,8 @@
                         scope.selection = [];
                         angular.forEach(scope.stateObj.selectRecords, function (o) {
                           scope.addToSelection(new Metadata(o),
-                            scope.config.initiativeType,
-                            scope.config.associationType);
+                            scope.config.associationType,
+                            scope.config.initiativeType);
                         });
                       }
                     });
