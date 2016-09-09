@@ -23,14 +23,14 @@
   -->
 
 <editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:gco="http://www.isotc211.org/2005/gco"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:gmx="http://www.isotc211.org/2005/gmx"
-  xmlns:srv="http://www.isotc211.org/2005/srv"
-  xmlns:gml="http://www.opengis.net/gml"
-  xmlns:xlink="http://www.w3.org/1999/xlink">
+        xmlns:gn="http://www.fao.org/geonetwork"
+        xmlns:gco="http://www.isotc211.org/2005/gco"
+        xmlns:gmd="http://www.isotc211.org/2005/gmd"
+        xmlns:gmx="http://www.isotc211.org/2005/gmx"
+        xmlns:srv="http://www.isotc211.org/2005/srv"
+        xmlns:gml="http://www.opengis.net/gml"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xsi:noNamespaceSchemaLocation="../../../../../../config-editor.xsd">
 
   <!-- Form field type configuration. Default is text. -->
   <fields>
@@ -64,7 +64,6 @@
     <for name="gco:DateTime" use="data-gn-date-picker"/>
 
 
-
     <!-- gmx:FileName/@src attribute -->
     <for name="src" use="data-gn-logo-selector"/>
 
@@ -80,43 +79,43 @@
 
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
-              data-search-action="true"
-              data-popup-action="true"
-              data-template-type="contact"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
-              data-search-action="true"
-              data-popup-action="true"
-              data-template-type="contact"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
-              data-search-action="true"
-              data-popup-action="true"
-              data-template-type="contact"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
-              data-search-action="true"
-              data-popup-action="true"
-              data-template-type="contact"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
-              data-template-add-action="true"
-              data-search-action="true"
-              data-popup-action="true"
-              data-template-type="contact"
-              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="contact"
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
 
 
@@ -296,8 +295,8 @@
               <snippet>
                 <gmd:hierarchyLevel>
                   <gmd:MD_ScopeCode
-                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
-                      codeListValue="dataset"/>
+                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                    codeListValue="dataset"/>
                 </gmd:hierarchyLevel>
               </snippet>
             </template>
@@ -310,14 +309,14 @@
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
             gmd:descriptiveKeywords
-            [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']"> </field>
+            [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString = 'INSPIRE Service taxonomy']"></field>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
 
 
           <field name="url" templateModeOnly="true" notDisplayedIfMissing="true"
-            xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions
             /gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
-            del="../..">
+                 del="../..">
             <template>
               <values>
                 <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
@@ -331,7 +330,7 @@
           </field>
 
           <action type="add" name="url" or="onLine"
-            in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions">
             <template>
               <snippet>
                 <gmd:onLine>
@@ -348,9 +347,9 @@
           <!-- Resource identifier for dataset, service
           and add action to compute it if not defined. -->
           <field name="identifier" templateModeOnly="true" notDisplayedIfMissing="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
-            del="."
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
                 <key label="code"
@@ -371,9 +370,9 @@
             </template>
           </field>
           <field name="identifier" templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
-            del="."
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <values>
                 <key label="code"
@@ -408,17 +407,14 @@
             </template>
           </action>
 
-          <action type="batch" process="add-resource-id"
+          <action type="process" process="add-resource-id"
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
             gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0"/>
 
 
-
-
-
           <field name="encoding" templateModeOnly="true" notDisplayedIfMissing="true"
-            xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
-            del=".">
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 del=".">
             <template>
               <values>
                 <key label="format"
@@ -449,7 +445,7 @@
           </field>
 
           <action type="add" name="encoding" or="distributionFormat"
-            in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution">
             <template>
               <snippet>
                 <gmd:distributionFormat>
@@ -505,13 +501,15 @@
                       <gco:CharacterString></gco:CharacterString>
                     </gmd:keyword>
                     <gmd:type>
-                      <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
-                                              codeListValue="theme"/>
+                      <gmd:MD_KeywordTypeCode
+                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                        codeListValue="theme"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                       <gmd:CI_Citation>
                         <gmd:title>
-                          <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
+                          <gco:CharacterString>GEMET - INSPIRE themes, version 1.0
+                          </gco:CharacterString>
                         </gmd:title>
                         <gmd:date>
                           <gmd:CI_Date>
@@ -519,15 +517,19 @@
                               <gco:Date>2008-06-01</gco:Date>
                             </gmd:date>
                             <gmd:dateType>
-                              <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                                   codeListValue="publication"/>
+                              <gmd:CI_DateTypeCode
+                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
                         </gmd:date>
                         <gmd:identifier>
                           <gmd:MD_Identifier>
                             <gmd:code>
-                              <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                              <gmx:Anchor
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">
+                                geonetwork.thesaurus.external.theme.inspire-theme
+                              </gmx:Anchor>
                             </gmd:code>
                           </gmd:MD_Identifier>
                         </gmd:identifier>
@@ -549,7 +551,7 @@
           </section>
 
           <action type="add" name="extent" or="extent"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:extent>
@@ -577,7 +579,7 @@
           </action>
 
           <action type="add" name="extent" or="extent"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
             <template>
               <snippet>
                 <srv:extent>
@@ -605,8 +607,8 @@
           </action>
 
           <field name="rsIdentifier" templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
-            del="../..">
+                 xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
+                 del="../..">
             <template>
               <values>
                 <key label="code"
@@ -631,7 +633,7 @@
 
 
           <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
-            or="referenceSystemInfo" in="/gmd:MD_Metadata">
+                  or="referenceSystemInfo" in="/gmd:MD_Metadata">
             <template>
               <snippet>
                 <gmd:referenceSystemInfo>
@@ -650,8 +652,6 @@
           </action>
 
 
-
-
           <section name="referenceDate">
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
               gmd:date"/>
@@ -666,8 +666,8 @@
                       </gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
-                                codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
-                                codeListValue="revision"/>
+                          codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                          codeListValue="revision"/>
                       </gmd:dateType>
                     </gmd:CI_Date>
                   </gmd:date>
@@ -678,25 +678,25 @@
 
 
           <field name="temporalRangeSection" templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
                 <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                 <key label="beginPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
-                  use="gn-date-picker"
-                  tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
                   <directiveAttributes data-tag-name="gml:beginPosition"/>
                 </key>
                 <key label="endPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
-                  use="gn-date-picker"
-                  tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
                 >
                   <directiveAttributes
-                      data-tag-name="gml:endPosition"
-                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                    data-tag-name="gml:endPosition"
+                    data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
                 </key>
               </values>
               <snippet>
@@ -715,8 +715,8 @@
           </field>
 
           <field name="temporalRangeSection" templateModeOnly="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <values>
                 <key label="beginPosition"
@@ -727,7 +727,7 @@
                      xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                      use="gn-date-picker"
                      tooltip="gmd:extent|gmd:EX_TemporalExtent"
-                    />
+                />
                 <key label="indeterminatePosition"
                      xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"
                      use="codelist"/>
@@ -738,7 +738,9 @@
                     <gmd:extent>
                       <gml:TimePeriod gml:id="">
                         <gml:beginPosition>{{beginPosition}}</gml:beginPosition>
-                        <gml:endPosition indeterminatePosition="{{indeterminatePosition}}">{{endPosition}}</gml:endPosition>
+                        <gml:endPosition indeterminatePosition="{{indeterminatePosition}}">
+                          {{endPosition}}
+                        </gml:endPosition>
                       </gml:TimePeriod>
                     </gmd:extent>
                   </gmd:EX_TemporalExtent>
@@ -748,7 +750,7 @@
           </field>
 
           <field name="lineage"
-            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
 
           <action type="add" name="lineage" or="statement"
                   in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage">
@@ -774,18 +776,19 @@
               </snippet>
             </template>
           </action>
-          <!--<field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution"
-            or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
-          </field>-->
-          <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:equivalentScale]"/>
 
-          <action type="add"
-                  name="spatialResolution"
-                  forceLabel="true"
-                  or="spatialResolution"
-                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/
+                      */gmd:equivalentScale/*/gmd:denominator"
+                 del="../../../.."/>
+
+
+          <!--
+          if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'vector']) = 1"
+          -->
+          <action type="add" btnLabel="spatialResolution" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -803,12 +806,17 @@
             </template>
           </action>
 
-          <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:distance]"/>
-          <action type="add"
-                  name="spatialDistance"
-                  forceLabel="true"
-                  or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/
+                    */gmd:spatialResolution/*/gmd:distance"
+                 del="../.."/>
+
+
+          <!--
+          if="count(gmd:MD_Metadata/gmd:identificationInfo[*/gmd:spatialRepresentationType/*/@codeListValue = 'grid']) = 1"
+          -->
+          <action type="add" btnLabel="spatialDistance" or="spatialResolution"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -823,7 +831,6 @@
           </action>
 
 
-
           <field name="conformity" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
                     gmd:report/gmd:DQ_DomainConsistency/gmd:result"
@@ -835,7 +842,8 @@
                      xpath="gmd:DQ_ConformanceResult/
                           gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"
                      tooltip="gmd:pass">
-                  <helper name="gmd:title" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                  <helper name="gmd:title"
+                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date"
                      xpath="gmd:DQ_ConformanceResult/
@@ -849,9 +857,9 @@
                      xpath="gmd:DQ_ConformanceResult/gmd:pass/gco:Boolean"
                      use="gn-checkbox-with-nilreason">
                   <directiveAttributes
-                          data-tag-name="gmd:pass"
-                          data-nilreason="eval#gmd:DQ_ConformanceResult/gmd:pass/@gco:nilReason"
-                          data-labels='{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}'/>
+                    data-tag-name="gmd:pass"
+                    data-nilreason="eval#gmd:DQ_ConformanceResult/gmd:pass/@gco:nilReason"
+                    data-labels='{"true": "conformant", "false": "notConformant", "unknown": "notEvaluated"}'/>
                 </key>
               </values>
               <snippet>
@@ -871,8 +879,8 @@
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
-                                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                      codeListValue="publication"/>
+                                codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                codeListValue="publication"/>
                             </gmd:dateType>
                           </gmd:CI_Date>
                         </gmd:date>
@@ -922,8 +930,8 @@
                                 </gmd:date>
                                 <gmd:dateType>
                                   <gmd:CI_DateTypeCode
-                                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
-                                          codeListValue="publication"/>
+                                    codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                    codeListValue="publication"/>
                                 </gmd:dateType>
                               </gmd:CI_Date>
                             </gmd:date>
@@ -944,16 +952,14 @@
           </action>
 
 
-
-
           <field
-              name="useLimitation"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+            name="useLimitation"
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
           <action type="add" name="useLimitation" or="resourceConstraints"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -968,13 +974,13 @@
           </action>
 
           <field
-              name="useLimitation"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
+            name="useLimitation"
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
                 gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
           <action type="add" name="useLimitation" or="resourceConstraints"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -992,13 +998,13 @@
           <!-- Access constraints for metadata about data.
                Services have their own format, defined in the SDS tab -->
           <field name="accessConstraints"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
             gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
 
           <action type="add" name="accessConstraints" or="resourceConstraints"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <snippet>
                 <gmd:resourceConstraints>
@@ -1020,23 +1026,23 @@
 
 
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet"> </field>
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet"></field>
 
 
           <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
-            del="."
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
-                  xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
-                  xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                  use="email"/>
+                     use="email"/>
                 <key label="role"
-                  xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
                   <codelist name="gmd:CI_RoleCode"/>
                 </key>
               </values>
@@ -1083,12 +1089,12 @@
 
 
           <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
-            or="pointOfContact"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <directiveAttributes
-                    data-template-add-action="true"
-                    data-template-type="contact"
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
 
         </section>
@@ -1096,16 +1102,16 @@
         <section name="metadata">
 
           <field name="metadataPointOfContact" templateModeOnly="true"
-            notDisplayedIfMissing="true"
-            xpath="/gmd:MD_Metadata/gmd:contact" del=".">
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:contact" del=".">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
-                  xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
-                  xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                  use="email"/>
+                     use="email"/>
                 <key label="role"
                      xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
                   <codelist name="gmd:CI_RoleCode"/>
@@ -1153,11 +1159,12 @@
           </field>
 
           <action type="add" name="metadataPointOfContact"
-            addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
+                  addDirective="data-gn-directory-entry-selector" or="contact"
+                  in="/gmd:MD_Metadata">
             <directiveAttributes
-                    data-template-add-action="true"
-                    data-template-type="contact"
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
 
 
@@ -1169,648 +1176,703 @@
            mode="flat"
            displayIfRecord="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
 
-          <section name="inspire_sds_cc1">
+        <section name="inspire_sds_cc1">
 
-              <!-- 4.4.1 TG4 : ensure gmd:DQ_DataQuality for service exists -->
-              <action type="process"
-                      process="sds-add-dataquality"
-                      if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])=0"/>
+          <!-- 4.4.1 TG4 : ensure gmd:DQ_DataQuality for service exists -->
+          <action type="process"
+                  process="sds-add-dataquality"
+                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])=0"/>
 
-              <!-- 4.4.1 rec 1 : replace CharacterString with Anchor-->
-              <action type="process"
-                      process="sds-fix-category"
-                      if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString)>0"/>
+          <!-- 4.4.1 rec 1 : replace CharacterString with Anchor-->
+          <action type="process"
+                  process="sds-fix-category"
+                  if="count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString)>0"/>
 
-              <!-- 4.4.1 category -->
-              <field name="sds-category"
-                     xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+          <!-- 4.4.1 category -->
+          <field name="sds-category"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
 
-              <!-- 4.4.1 pass -->
-              <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"/>
+          <!-- 4.4.1 pass -->
+          <field
+            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:pass"/>
 
-              <action type="add"
-                      name="inspire_add_pass"
-                      forceLabel="true"
-                      or="pass" in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult">
-                  <template>
-                      <snippet>
-                          <gmd:pass>
-                              <gco:Boolean>true</gco:Boolean>
-                          </gmd:pass>
-                      </snippet>
-                  </template>
-              </action>
-
-
-              <!-- 4.4.2 Resource locator -->
-              <!-- 4.4.2 Function -->
-              <!-- *** accessPoint *** -->
-
-              <field name="sds-accesspoint"
-                     templateModeOnly="true"
-                     xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'accessPoint']"
-
-                     del=".">
-                  <template>
-                      <values>
-                          <key label="linkage" xpath="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
-                      </values>
-                      <snippet>
-                          <gmd:onLine>
-                              <gmd:CI_OnlineResource>
-                                  <gmd:linkage>
-                                      <gmd:URL>{{linkage}}</gmd:URL>
-                                  </gmd:linkage>
-                                  <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/accessPoint">accessPoint</gmx:Anchor>
-                                  </gmd:description>
-                                  <gmd:function>
-                                      <gmd:CI_OnLineFunctionCode
-                                          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
-                                          codeListValue="information">
-                                      </gmd:CI_OnLineFunctionCode>
-                                  </gmd:function>
-                              </gmd:CI_OnlineResource>
-                          </gmd:onLine>
-                      </snippet>
-                  </template>
-              </field>
-
-              <action type="add"
-                      name="sds-add-accesspoint"
-                      forceLabel="true"
-                      or="onLine"
-                      in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
-                  <template>
-                      <snippet>
-                          <gmd:onLine>
-                              <gmd:CI_OnlineResource>
-                                  <gmd:linkage>
-                                      <gmd:URL>http://accesspoint.url</gmd:URL>
-                                  </gmd:linkage>
-                                  <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/accessPoint">accessPoint</gmx:Anchor>
-                                  </gmd:description>
-                                  <gmd:function>
-                                      <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"></gmd:CI_OnLineFunctionCode>
-                                  </gmd:function>
-                              </gmd:CI_OnlineResource>
-                          </gmd:onLine>
-                      </snippet>
-                  </template>
-              </action>
-
-              <!-- 4.4.2 Resource locator -->
-              <!-- 4.4.2 Function -->
-              <!-- *** endPoint *** -->
-
-              <field name="sds-endpoint"
-                     templateModeOnly="true"
-                     xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'endPoint']"
-                     notDisplayedIfMissing="true"
-                     del=".">
-                  <template>
-                      <values>
-                          <key label="linkage" xpath="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
-                      </values>
-                      <snippet>
-                          <gmd:onLine>
-                              <gmd:CI_OnlineResource>
-                                  <gmd:linkage>
-                                      <gmd:URL>{{linkage}}</gmd:URL>
-                                  </gmd:linkage>
-                                  <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/endPoint">endPoint</gmx:Anchor>
-                                  </gmd:description>
-                                  <gmd:function>
-                                      <gmd:CI_OnLineFunctionCode
-                                          codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
-                                          codeListValue="information">
-                                      </gmd:CI_OnLineFunctionCode>
-                                  </gmd:function>
-                              </gmd:CI_OnlineResource>
-                          </gmd:onLine>
-                      </snippet>
-                  </template>
-              </field>
-
-              <action type="add"
-                      name="sds-add-endpoint"
-                      forceLabel="true"
-                      or="onLine"
-                      in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
-                  <template>
-                      <snippet>
-                          <gmd:onLine>
-                              <gmd:CI_OnlineResource>
-                                  <gmd:linkage>
-                                      <gmd:URL>http://endpoint.url</gmd:URL>
-                                  </gmd:linkage>
-                                  <gmd:description>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/endPoint">endPoint</gmx:Anchor>
-                                  </gmd:description>
-                                  <gmd:function>
-                                      <gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"></gmd:CI_OnLineFunctionCode>
-                                  </gmd:function>
-                              </gmd:CI_OnlineResource>
-                          </gmd:onLine>
-                      </snippet>
-                  </template>
-              </action>
+          <action type="add"
+                  name="inspire_add_pass"
+                  forceLabel="true"
+                  or="pass"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult">
+            <template>
+              <snippet>
+                <gmd:pass>
+                  <gco:Boolean>true</gco:Boolean>
+                </gmd:pass>
+              </snippet>
+            </template>
+          </action>
 
 
-              <!-- 4.4.3 TG8: edit Technical specification -->
+          <!-- 4.4.2 Resource locator -->
+          <!-- 4.4.2 Function -->
+          <!-- *** accessPoint *** -->
 
-              <field
-                    templateModeOnly="true"
-                    notDisplayedIfMissing="true"
-                    forceLabel="true"
-                    name="sds-tech-spec"
-                    del="../.."
-                    xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_FormatConsistency/gmd:result">
-                  <template>
-                      <values>
-                          <key label="conformity_linkage" xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href"/>
-                          <key label="conformity_desc"    xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/text()"
-                               tooltip="gmd:pass">
-                              <helper name="gmd:title" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_FormatConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
-                          </key>
-                          <key label="conformity_date" use="gn-date-picker"
-                               xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date" />
-                          <key label="explanation" use="text"
-                               xpath="gmd:DQ_ConformanceResult/gmd:explanation/gco:CharacterString" />
-                      </values>
-                      <snippet>
-                          <gmd:result>
-                              <gmd:DQ_ConformanceResult>
-                                  <gmd:specification>
-                                      <gmd:CI_Citation>
-                                          <gmd:title>
-                                              <gmx:Anchor xlink:href="{{conformity_linkage}}">{{conformity_desc}}</gmx:Anchor>
-                                          </gmd:title>
-                                          <gmd:date>
-                                              <gmd:CI_Date>
-                                                  <gmd:date>
-                                                      <gco:Date>{{conformity_date}}</gco:Date>
-                                                  </gmd:date>
-                                                  <gmd:dateType>
-                                                      <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
-                                                  </gmd:dateType>
-                                              </gmd:CI_Date>
-                                          </gmd:date>
-                                      </gmd:CI_Citation>
-                                  </gmd:specification>
-                                  <gmd:explanation>
-                                      <gco:CharacterString>{{explanation}}</gco:CharacterString>
-                                  </gmd:explanation>
-                                  <gmd:pass>
-                                      <gco:Boolean>true</gco:Boolean>
-                                  </gmd:pass>
-                              </gmd:DQ_ConformanceResult>
-                          </gmd:result>
-                      </snippet>              
-                  </template>
-              </field>
+          <field name="sds-accesspoint"
+                 templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'accessPoint']"
 
-              <!-- 4.4.3 TG8: add Technical specification entry -->
+                 del=".">
+            <template>
+              <values>
+                <key label="linkage" xpath="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+              </values>
+              <snippet>
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>{{linkage}}</gmd:URL>
+                    </gmd:linkage>
+                    <gmd:description>
+                      <gmx:Anchor
+                        xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/accessPoint">
+                        accessPoint
+                      </gmx:Anchor>
+                    </gmd:description>
+                    <gmd:function>
+                      <gmd:CI_OnLineFunctionCode
+                        codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+                        codeListValue="information">
+                      </gmd:CI_OnLineFunctionCode>
+                    </gmd:function>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </snippet>
+            </template>
+          </field>
 
-              <action type="add"
-                      name="sds-add-tech-spec"
-                      forceLabel="true"
-                      or="report"
-                      in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
-                  
-                  <template>
-                      <snippet>
-                          <gmd:report>
-                              <gmd:DQ_FormatConsistency>
-                                  <gmd:result>
-                                      <gmd:DQ_ConformanceResult>
-                                          <gmd:specification>
-                                              <gmd:CI_Citation>
-                                                  <gmd:title>
-                                                      <gmx:Anchor xlink:href=" http://link,to/the.technical.specification">Description of technical specification</gmx:Anchor>
-                                                  </gmd:title>
-                                                  <gmd:date>
-                                                      <gmd:CI_Date>
-                                                          <gmd:date>
-                                                              <gco:Date>2014-12-11</gco:Date>
-                                                          </gmd:date>
-                                                          <gmd:dateType>
-                                                              <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
-                                                          </gmd:dateType>
-                                                      </gmd:CI_Date>
-                                                  </gmd:date>
-                                              </gmd:CI_Citation>
-                                          </gmd:specification>
-                                          <gmd:explanation>
-                                              <gco:CharacterString>Conformant to the cited specifications.</gco:CharacterString>
-                                          </gmd:explanation>
-                                          <gmd:pass>
-                                              <gco:Boolean>true</gco:Boolean>
-                                          </gmd:pass>
-                                      </gmd:DQ_ConformanceResult>
-                                  </gmd:result>
-                              </gmd:DQ_FormatConsistency>
-                          </gmd:report>
-                      </snippet>
-                  </template>
-              </action>
+          <action type="add"
+                  name="sds-add-accesspoint"
+                  forceLabel="true"
+                  or="onLine"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+            <template>
+              <snippet>
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>http://accesspoint.url</gmd:URL>
+                    </gmd:linkage>
+                    <gmd:description>
+                      <gmx:Anchor
+                        xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/accessPoint">
+                        accessPoint
+                      </gmx:Anchor>
+                    </gmd:description>
+                    <gmd:function>
+                      <gmd:CI_OnLineFunctionCode
+                        codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+                        codeListValue="information"></gmd:CI_OnLineFunctionCode>
+                    </gmd:function>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </snippet>
+            </template>
+          </action>
 
+          <!-- 4.4.2 Resource locator -->
+          <!-- 4.4.2 Function -->
+          <!-- *** endPoint *** -->
+
+          <field name="sds-endpoint"
+                 templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine[gmd:CI_OnlineResource/gmd:description/gmx:Anchor/text() = 'endPoint']"
+                 notDisplayedIfMissing="true"
+                 del=".">
+            <template>
+              <values>
+                <key label="linkage" xpath="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+              </values>
+              <snippet>
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>{{linkage}}</gmd:URL>
+                    </gmd:linkage>
+                    <gmd:description>
+                      <gmx:Anchor
+                        xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/endPoint">
+                        endPoint
+                      </gmx:Anchor>
+                    </gmd:description>
+                    <gmd:function>
+                      <gmd:CI_OnLineFunctionCode
+                        codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+                        codeListValue="information">
+                      </gmd:CI_OnLineFunctionCode>
+                    </gmd:function>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add"
+                  name="sds-add-endpoint"
+                  forceLabel="true"
+                  or="onLine"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution//gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+            <template>
+              <snippet>
+                <gmd:onLine>
+                  <gmd:CI_OnlineResource>
+                    <gmd:linkage>
+                      <gmd:URL>http://endpoint.url</gmd:URL>
+                    </gmd:linkage>
+                    <gmd:description>
+                      <gmx:Anchor
+                        xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ResourceLocatorDescription/endPoint">
+                        endPoint
+                      </gmx:Anchor>
+                    </gmd:description>
+                    <gmd:function>
+                      <gmd:CI_OnLineFunctionCode
+                        codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode"
+                        codeListValue="information"></gmd:CI_OnLineFunctionCode>
+                    </gmd:function>
+                  </gmd:CI_OnlineResource>
+                </gmd:onLine>
+              </snippet>
+            </template>
+          </action>
+
+
+          <!-- 4.4.3 TG8: edit Technical specification -->
+
+          <field
+            templateModeOnly="true"
+            notDisplayedIfMissing="true"
+            forceLabel="true"
+            name="sds-tech-spec"
+            del="../.."
+            xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_FormatConsistency/gmd:result">
+            <template>
+              <values>
+                <key label="conformity_linkage"
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/@xlink:href"/>
+                <key label="conformity_desc"
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor/text()"
+                     tooltip="gmd:pass">
+                  <helper name="gmd:title"
+                          context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_FormatConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
+                </key>
+                <key label="conformity_date" use="gn-date-picker"
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+                <key label="explanation" use="text"
+                     xpath="gmd:DQ_ConformanceResult/gmd:explanation/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:result>
+                  <gmd:DQ_ConformanceResult>
+                    <gmd:specification>
+                      <gmd:CI_Citation>
+                        <gmd:title>
+                          <gmx:Anchor xlink:href="{{conformity_linkage}}">{{conformity_desc}}
+                          </gmx:Anchor>
+                        </gmd:title>
+                        <gmd:date>
+                          <gmd:CI_Date>
+                            <gmd:date>
+                              <gco:Date>{{conformity_date}}</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                              <gmd:CI_DateTypeCode
+                                codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                                codeListValue="publication"/>
+                            </gmd:dateType>
+                          </gmd:CI_Date>
+                        </gmd:date>
+                      </gmd:CI_Citation>
+                    </gmd:specification>
+                    <gmd:explanation>
+                      <gco:CharacterString>{{explanation}}</gco:CharacterString>
+                    </gmd:explanation>
+                    <gmd:pass>
+                      <gco:Boolean>true</gco:Boolean>
+                    </gmd:pass>
+                  </gmd:DQ_ConformanceResult>
+                </gmd:result>
+              </snippet>
+            </template>
+          </field>
+
+          <!-- 4.4.3 TG8: add Technical specification entry -->
+
+          <action type="add"
+                  name="sds-add-tech-spec"
+                  forceLabel="true"
+                  or="report"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']">
+
+            <template>
+              <snippet>
+                <gmd:report>
+                  <gmd:DQ_FormatConsistency>
+                    <gmd:result>
+                      <gmd:DQ_ConformanceResult>
+                        <gmd:specification>
+                          <gmd:CI_Citation>
+                            <gmd:title>
+                              <gmx:Anchor xlink:href=" http://link,to/the.technical.specification">
+                                Description of technical specification
+                              </gmx:Anchor>
+                            </gmd:title>
+                            <gmd:date>
+                              <gmd:CI_Date>
+                                <gmd:date>
+                                  <gco:Date>2014-12-11</gco:Date>
+                                </gmd:date>
+                                <gmd:dateType>
+                                  <gmd:CI_DateTypeCode
+                                    codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode"
+                                    codeListValue="publication"/>
+                                </gmd:dateType>
+                              </gmd:CI_Date>
+                            </gmd:date>
+                          </gmd:CI_Citation>
+                        </gmd:specification>
+                        <gmd:explanation>
+                          <gco:CharacterString>Conformant to the cited specifications.
+                          </gco:CharacterString>
+                        </gmd:explanation>
+                        <gmd:pass>
+                          <gco:Boolean>true</gco:Boolean>
+                        </gmd:pass>
+                      </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                  </gmd:DQ_FormatConsistency>
+                </gmd:report>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
+
+        <!-- CONFORMITY CLASS 2 -->
+        <section name="inspire_sds_cc2">
+
+          <section name="sds-section-crs">
+            <field
+              xpath="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
+              del="."/>
+            <!-- The useXmlSnippet="true" attribute is a workaround to keep backward compatibility since often
+            the data-gn-crs-selector directive is used specifying a snippet as below although the developer wanted
+            to use the hardcoded snipped in EditorXMLService.js. We need a way to specify if we really want
+            to use the snippet below. The attribute is used in the template render-element-template-field located in form-builder.xsl-->
+            <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
+                    useXmlSnippet="true"
+                    or="referenceSystemInfo" in="/gmd:MD_Metadata">
+              <template>
+                <snippet>
+                  <gmd:referenceSystemInfo>
+                    <gmd:MD_ReferenceSystem>
+                      <gmd:referenceSystemIdentifier>
+                        <gmd:RS_Identifier>
+                          <gmd:code>
+                            <gmx:Anchor xlink:href='http://www.opengis.net/def/crs/EPSG/0/{{code}}'
+                                        xlink:title='{{description}}'>{{code}}
+                            </gmx:Anchor>
+                          </gmd:code>
+                        </gmd:RS_Identifier>
+                      </gmd:referenceSystemIdentifier>
+                    </gmd:MD_ReferenceSystem>
+                  </gmd:referenceSystemInfo>
+                </snippet>
+              </template>
+            </action>
           </section>
 
-          <!-- CONFORMITY CLASS 2 -->
-          <section name="inspire_sds_cc2">
-          
-              <section name="sds-section-crs">
-                  <field xpath="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor"
-                         del="." />
-                  <!-- The useXmlSnippet="true" attribute is a workaround to keep backward compatibility since often
-                  the data-gn-crs-selector directive is used specifying a snippet as below although the developer wanted
-                  to use the hardcoded snipped in EditorXMLService.js. We need a way to specify if we really want
-                  to use the snippet below. The attribute is used in the template render-element-template-field located in form-builder.xsl-->
-                  <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector" useXmlSnippet="true"
-                          or="referenceSystemInfo" in="/gmd:MD_Metadata">
-                      <template>
-                          <snippet>
-                              <gmd:referenceSystemInfo>
-                                  <gmd:MD_ReferenceSystem>
-                                      <gmd:referenceSystemIdentifier>
-                                          <gmd:RS_Identifier>
-                                              <gmd:code>
-                                                  <gmx:Anchor xlink:href='http://www.opengis.net/def/crs/EPSG/0/{{code}}'
-                                                              xlink:title='{{description}}'>{{code}}</gmx:Anchor>
-                                              </gmd:code>
-                                          </gmd:RS_Identifier>
-                                      </gmd:referenceSystemIdentifier>
-                                  </gmd:MD_ReferenceSystem>
-                              </gmd:referenceSystemInfo>
-                          </snippet>
-                      </template>
-                  </action>
-              </section>
+          <!-- 4.5.2 Ensure gmd:DQ_ConceptualConsistency mandatory elements for quality of service exists -->
 
-              <!-- 4.5.2 Ensure gmd:DQ_ConceptualConsistency mandatory elements for quality of service exists -->
+          <section name="sds-section-qos">
 
-              <section name="sds-section-qos">
-
-                  <action type="process"
-                          process="sds-add-qualityofservice"
-                          if="(count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])>0 and
+            <action type="process"
+                    process="sds-add-qualityofservice"
+                    if="(count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service'])>0 and
                               (count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='availability'])=0 or
                                count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='performance'])=0 or
-                               count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='capacity'])=0 ))" />
+                               count(gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality[gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue='service']/gmd:report/gmd:DQ_ConceptualConsistency/gmd:nameOfMeasure/gmx:Anchor[text()='capacity'])=0 ))"/>
 
-                  <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency"/>
-
-              </section>
-
-              <!-- 4.5.3 TG13 Conditions applying to access and use -->
-
-              <section name="accessConstraints">
-
-                  <!-- fixed values, user should only be able to remove the whole gmd:resourceConstraints element, and not edit it -->
-                  <field
-                      xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints/gmx:Anchor]" />
-
-                  <!-- editable value, user should be able to edit the characterstring element, or to remove the whole gmd:resourceConstraints element -->
-                  <field
-                        xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints[gco:CharacterString]]"
-                        templateModeOnly="true"
-                        notDisplayedIfMissing="true"
-                        forceLabel="true"
-                        name="sds-limitation"
-                        del=".">
-
-                      <template>
-                        <values>
-                            <key label="string" xpath="gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>
-                        </values>
-                          <snippet>
-                              <gmd:resourceConstraints>
-                                  <gmd:MD_LegalConstraints>
-                                      <gmd:accessConstraints>
-                                          <gmd:MD_RestrictionCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                              codeListValue="otherRestrictions"/>
-                                      </gmd:accessConstraints>
-                                      <gmd:otherConstraints>
-                                          <gco:CharacterString>{{string}}</gco:CharacterString>
-                                      </gmd:otherConstraints>
-                                  </gmd:MD_LegalConstraints>
-                              </gmd:resourceConstraints>
-                          </snippet>
-                      </template>
-                  </field>
-
-                  <!-- accessConstraints: ADD "no constraints" if element not defined -->
-                  <action type="add"
-                          name="sds-addNoConstraints"
-                          forceLabel="true"
-                          or="resourceConstraints" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                          check="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints])"
-                          if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
-
-                  <template>
-                      <snippet>
-                          <gmd:resourceConstraints>
-                              <gmd:MD_LegalConstraints>
-                                  <gmd:accessConstraints>
-                                      <gmd:MD_RestrictionCode
-                                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                          codeListValue="otherRestrictions"/>
-                                  </gmd:accessConstraints>
-                                  <gmd:otherConstraints>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">No Conditions Apply</gmx:Anchor>
-                                  </gmd:otherConstraints>
-                              </gmd:MD_LegalConstraints>
-                          </gmd:resourceConstraints>
-                      </snippet>
-                  </template>
-                  </action>
-
-                  <!-- accessConstraints: ADD "unknown constraints" if element not defined -->
-                  <action type="add"
-                          name="sds-addUnknownConstraints"
-                          forceLabel="true"
-                          or="resourceConstraints" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                          if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
-                      <template>
-                          <snippet>
-                              <gmd:resourceConstraints>
-                                  <gmd:MD_LegalConstraints>
-                                      <gmd:accessConstraints>
-                                          <gmd:MD_RestrictionCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                              codeListValue="otherRestrictions"/>
-                                      </gmd:accessConstraints>
-                                      <gmd:otherConstraints>
-                                          <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">Conditions Unknown</gmx:Anchor>
-                                      </gmd:otherConstraints>
-                                  </gmd:MD_LegalConstraints>
-                              </gmd:resourceConstraints>
-                          </snippet>
-                      </template>
-                  </action>
-
-
-                  <!-- accessConstraints: ADD custom constraints if element not defined -->
-
-                  <action type="add"
-                          forceLabel="true"
-                          name="sds-addConstraints"
-                          or="resourceConstraints" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                          if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
-                      <template>
-                          <snippet>
-                              <gmd:resourceConstraints>
-                                  <gmd:MD_LegalConstraints>
-                                      <gmd:accessConstraints>
-                                          <gmd:MD_RestrictionCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                              codeListValue="otherRestrictions"/>
-                                      </gmd:accessConstraints>
-                                      <gmd:otherConstraints gco:nilReason="missing">
-                                          <gco:CharacterString/>
-                                      </gmd:otherConstraints>
-                                  </gmd:MD_LegalConstraints>
-                              </gmd:resourceConstraints>
-                          </snippet>
-                      </template>
-                  </action>
-
-              </section> <!-- access constraints -->
-
-              <section name="useConstraints">
-
-                  <!-- fixed values, user should only be able to remove the whole gmd:resourceConstraints element, and not edit it -->
-                  <field
-                      xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints/gmx:Anchor]" />
-
-                  <!-- editable value, user should be able to edit the characterstring element, or to remove the whole gmd:resourceConstraints element -->
-                  <field
-                        xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints[gco:CharacterString]]"
-                        templateModeOnly="true"
-                        notDisplayedIfMissing="true"
-                        forceLabel="true"
-                        name="sds-limitation"
-                        del=".">
-
-                      <template>
-                        <values>
-                            <key label="string" xpath="gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>
-                        </values>
-                          <snippet>
-                              <gmd:resourceConstraints>
-                                  <gmd:MD_LegalConstraints>
-                                      <gmd:useConstraints>
-                                          <gmd:MD_RestrictionCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                              codeListValue="otherRestrictions"/>
-                                      </gmd:useConstraints>
-                                      <gmd:otherConstraints>
-                                          <gco:CharacterString>{{string}}</gco:CharacterString>
-                                      </gmd:otherConstraints>
-                                  </gmd:MD_LegalConstraints>
-                              </gmd:resourceConstraints>
-                          </snippet>
-                      </template>
-                  </field>
-
-                  <!-- useConstraints: ADD "no constraints" if element not defined -->
-                  <action type="add"
-                          name="sds-addNoConstraints"
-                          forceLabel="true"
-                          or="resourceConstraints" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                          check="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints])"
-                          if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
-
-                  <template>
-                      <snippet>
-                          <gmd:resourceConstraints>
-                              <gmd:MD_LegalConstraints>
-                                  <gmd:useConstraints>
-                                      <gmd:MD_RestrictionCode
-                                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                          codeListValue="otherRestrictions"/>
-                                  </gmd:useConstraints>
-                                  <gmd:otherConstraints>
-                                      <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">No Conditions Apply</gmx:Anchor>
-                                  </gmd:otherConstraints>
-                              </gmd:MD_LegalConstraints>
-                          </gmd:resourceConstraints>
-                      </snippet>
-                  </template>
-                  </action>
-
-                  <!-- useConstraints: ADD "unknown constraints" if element not defined -->
-                  <action type="add"
-                          name="sds-addUnknownConstraints"
-                          forceLabel="true"
-                          or="resourceConstraints" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                          if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
-                      <template>
-                          <snippet>
-                              <gmd:resourceConstraints>
-                                  <gmd:MD_LegalConstraints>
-                                      <gmd:useConstraints>
-                                          <gmd:MD_RestrictionCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                              codeListValue="otherRestrictions"/>
-                                      </gmd:useConstraints>
-
-                                      <gmd:otherConstraints>
-                                          <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">Conditions Unknown</gmx:Anchor>
-                                      </gmd:otherConstraints>
-                                  </gmd:MD_LegalConstraints>
-                              </gmd:resourceConstraints>
-                          </snippet>
-                      </template>
-                  </action>
-
-
-                  <!-- useConstraints: ADD custom constraints if element not defined -->
-
-                  <action type="add"
-                          forceLabel="true"
-                          name="sds-addConstraints"
-                          or="resourceConstraints" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                          if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
-                      <template>
-                          <snippet>
-                              <gmd:resourceConstraints>
-                                  <gmd:MD_LegalConstraints>
-                                      <gmd:useConstraints>
-                                          <gmd:MD_RestrictionCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
-                                              codeListValue="otherRestrictions"/>
-                                      </gmd:useConstraints>
-                                      <gmd:otherConstraints gco:nilReason="missing">
-                                          <gco:CharacterString/>
-                                      </gmd:otherConstraints>
-                                  </gmd:MD_LegalConstraints>
-                              </gmd:resourceConstraints>
-                          </snippet>
-                      </template>
-                  </action>
-
-              </section> <!-- use constraints -->
-
-              <section name="sds-section-custodian">
-
-                  <field name="pointOfContact" 
-                         templateModeOnly="true"
-                         xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
-                         del="." >
-
-                      <template>
-                          <values readonlyIf="count(@xlink:href) > 0">
-                              <key label="organisationName"
-                                   xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                              <key label="electronicMailAddress"
-                                   xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                                   use="email"/>
-                          </values>
-                          <snippet>
-                              <gmd:pointOfContact>
-                                  <gmd:CI_ResponsibleParty>
-                                      <gn:copy select="gmd:individualName"/>
-                                      <gmd:organisationName>
-                                          <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                                          <gn:copy select="gmd:PT_FreeText"/>
-                                      </gmd:organisationName>
-                                      <gn:copy select="gmd:positionName"/>
-                                      <gmd:contactInfo>
-                                          <gmd:CI_Contact>
-                                              <gn:copy select="gmd:phone"/>
-                                              <gmd:address>
-                                                  <gmd:CI_Address>
-                                                      <gn:copy select="gmd:deliveryPoint"/>
-                                                      <gn:copy select="gmd:city"/>
-                                                      <gn:copy select="gmd:administrativeArea"/>
-                                                      <gn:copy select="gmd:postalCode"/>
-                                                      <gn:copy select="gmd:country"/>
-                                                      <gmd:electronicMailAddress>
-                                                          <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                                                          <gn:copy select="gmd:PT_FreeText"/>
-                                                      </gmd:electronicMailAddress>
-                                                  </gmd:CI_Address>
-                                              </gmd:address>
-                                              <gn:copy select="gmd:onlineResource"/>
-                                              <gn:copy select="gmd:hoursOfService"/>
-                                              <gn:copy select="gmd:contactInstructions"/>
-                                          </gmd:CI_Contact>
-                                      </gmd:contactInfo>
-                                      <gmd:role>
-                                          <gmd:CI_RoleCode
-                                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                                              codeListValue="custodian"/>
-                                      </gmd:role>
-                                  </gmd:CI_ResponsibleParty>
-                              </gmd:pointOfContact>
-                          </snippet>
-                      </template>
-                  </field>
-
-
-                  <action type="add" name="pointOfContact"
-                          addDirective="data-gn-directory-entry-selector"
-                          or="pointOfContact"
-                          in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
-                      <directiveAttributes
-                          data-template-add-action="true"
-                          data-template-type="contact"
-                          data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
-                  </action>
-              </section>
+            <field
+              xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_ConceptualConsistency"/>
 
           </section>
 
-          <!-- CONFORMITY CLASS 3 -->
+          <!-- 4.5.3 TG13 Conditions applying to access and use -->
 
-          <section name="inspire_sds_cc3">
+          <section name="accessConstraints">
 
+            <!-- fixed values, user should only be able to remove the whole gmd:resourceConstraints element, and not edit it -->
             <field
-                xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations" />
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints/gmx:Anchor]"/>
+
+            <!-- editable value, user should be able to edit the characterstring element, or to remove the whole gmd:resourceConstraints element -->
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:accessConstraints]/gmd:otherConstraints[gco:CharacterString]]"
+              templateModeOnly="true"
+              notDisplayedIfMissing="true"
+              forceLabel="true"
+              name="sds-limitation"
+              del=".">
+
+              <template>
+                <values>
+                  <key label="string"
+                       xpath="gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>
+                </values>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:accessConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:accessConstraints>
+                      <gmd:otherConstraints>
+                        <gco:CharacterString>{{string}}</gco:CharacterString>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </field>
+
+            <!-- accessConstraints: ADD "no constraints" if element not defined -->
+            <action type="add"
+                    name="sds-addNoConstraints"
+                    forceLabel="true"
+                    or="resourceConstraints"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    check="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints])"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
+
+              <template>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:accessConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:accessConstraints>
+                      <gmd:otherConstraints>
+                        <gmx:Anchor
+                          xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">
+                          No Conditions Apply
+                        </gmx:Anchor>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </action>
+
+            <!-- accessConstraints: ADD "unknown constraints" if element not defined -->
+            <action type="add"
+                    name="sds-addUnknownConstraints"
+                    forceLabel="true"
+                    or="resourceConstraints"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
+              <template>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:accessConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:accessConstraints>
+                      <gmd:otherConstraints>
+                        <gmx:Anchor
+                          xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">
+                          Conditions Unknown
+                        </gmx:Anchor>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </action>
+
+
+            <!-- accessConstraints: ADD custom constraints if element not defined -->
 
             <action type="add"
                     forceLabel="true"
-                    name="sds-addOperation"
-                    or="containsOperations" in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
-                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
-                <template>
-                    <snippet>
-                        <srv:containsOperations>
-                            <srv:SV_OperationMetadata>
-                                <srv:operationName>
-                                    <gco:CharacterString></gco:CharacterString>
-                                </srv:operationName>
-                                <srv:DCP>
-                                    <srv:DCPList 
-                                        codeList="http://inspire.ec.europa.eu/metadata-codelist/DCPList"
-                                        codeListValue="webServices">Web services</srv:DCPList>
-                                </srv:DCP>
-                                <srv:connectPoint>
-                                    <gmd:CI_OnlineResource>
-                                        <gmd:linkage>
-                                            <gmd:URL>http://</gmd:URL>
-                                        </gmd:linkage>
-                                    </gmd:CI_OnlineResource>
-                                </srv:connectPoint>
-                            </srv:SV_OperationMetadata>
-                        </srv:containsOperations>
-                    </snippet>
-                </template>
+                    name="sds-addConstraints"
+                    or="resourceConstraints"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:accessConstraints]) = 0">
+              <template>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:accessConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:accessConstraints>
+                      <gmd:otherConstraints gco:nilReason="missing">
+                        <gco:CharacterString/>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
             </action>
 
+          </section> <!-- access constraints -->
+
+          <section name="useConstraints">
+
+            <!-- fixed values, user should only be able to remove the whole gmd:resourceConstraints element, and not edit it -->
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints/gmx:Anchor]"/>
+
+            <!-- editable value, user should be able to edit the characterstring element, or to remove the whole gmd:resourceConstraints element -->
+            <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints[gmd:MD_LegalConstraints[gmd:useConstraints]/gmd:otherConstraints[gco:CharacterString]]"
+              templateModeOnly="true"
+              notDisplayedIfMissing="true"
+              forceLabel="true"
+              name="sds-limitation"
+              del=".">
+
+              <template>
+                <values>
+                  <key label="string"
+                       xpath="gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString"/>
+                </values>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:useConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:useConstraints>
+                      <gmd:otherConstraints>
+                        <gco:CharacterString>{{string}}</gco:CharacterString>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </field>
+
+            <!-- useConstraints: ADD "no constraints" if element not defined -->
+            <action type="add"
+                    name="sds-addNoConstraints"
+                    forceLabel="true"
+                    or="resourceConstraints"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    check="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints])"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
+
+              <template>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:useConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:useConstraints>
+                      <gmd:otherConstraints>
+                        <gmx:Anchor
+                          xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply">
+                          No Conditions Apply
+                        </gmx:Anchor>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </action>
+
+            <!-- useConstraints: ADD "unknown constraints" if element not defined -->
+            <action type="add"
+                    name="sds-addUnknownConstraints"
+                    forceLabel="true"
+                    or="resourceConstraints"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
+              <template>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:useConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:useConstraints>
+
+                      <gmd:otherConstraints>
+                        <gmx:Anchor
+                          xlink:href="http://inspire.ec.europa.eu/registry/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">
+                          Conditions Unknown
+                        </gmx:Anchor>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </action>
+
+
+            <!-- useConstraints: ADD custom constraints if element not defined -->
+
+            <action type="add"
+                    forceLabel="true"
+                    name="sds-addConstraints"
+                    or="resourceConstraints"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                    if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints[gmd:useConstraints]) = 0">
+              <template>
+                <snippet>
+                  <gmd:resourceConstraints>
+                    <gmd:MD_LegalConstraints>
+                      <gmd:useConstraints>
+                        <gmd:MD_RestrictionCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_RestrictionCode"
+                          codeListValue="otherRestrictions"/>
+                      </gmd:useConstraints>
+                      <gmd:otherConstraints gco:nilReason="missing">
+                        <gco:CharacterString/>
+                      </gmd:otherConstraints>
+                    </gmd:MD_LegalConstraints>
+                  </gmd:resourceConstraints>
+                </snippet>
+              </template>
+            </action>
+
+          </section> <!-- use constraints -->
+
+          <section name="sds-section-custodian">
+
+            <field name="pointOfContact"
+                   templateModeOnly="true"
+                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
+                   del=".">
+
+              <template>
+                <values readonlyIf="count(@xlink:href) > 0">
+                  <key label="organisationName"
+                       xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                  <key label="electronicMailAddress"
+                       xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                       use="email"/>
+                </values>
+                <snippet>
+                  <gmd:pointOfContact>
+                    <gmd:CI_ResponsibleParty>
+                      <gn:copy select="gmd:individualName"/>
+                      <gmd:organisationName>
+                        <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                        <gn:copy select="gmd:PT_FreeText"/>
+                      </gmd:organisationName>
+                      <gn:copy select="gmd:positionName"/>
+                      <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                          <gn:copy select="gmd:phone"/>
+                          <gmd:address>
+                            <gmd:CI_Address>
+                              <gn:copy select="gmd:deliveryPoint"/>
+                              <gn:copy select="gmd:city"/>
+                              <gn:copy select="gmd:administrativeArea"/>
+                              <gn:copy select="gmd:postalCode"/>
+                              <gn:copy select="gmd:country"/>
+                              <gmd:electronicMailAddress>
+                                <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                                <gn:copy select="gmd:PT_FreeText"/>
+                              </gmd:electronicMailAddress>
+                            </gmd:CI_Address>
+                          </gmd:address>
+                          <gn:copy select="gmd:onlineResource"/>
+                          <gn:copy select="gmd:hoursOfService"/>
+                          <gn:copy select="gmd:contactInstructions"/>
+                        </gmd:CI_Contact>
+                      </gmd:contactInfo>
+                      <gmd:role>
+                        <gmd:CI_RoleCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                          codeListValue="custodian"/>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </gmd:pointOfContact>
+                </snippet>
+              </template>
+            </field>
+
+
+            <action type="add" name="pointOfContact"
+                    addDirective="data-gn-directory-entry-selector"
+                    or="pointOfContact"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
+              <directiveAttributes
+                data-template-add-action="true"
+                data-template-type="contact"
+                data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+            </action>
           </section>
+
+        </section>
+
+        <!-- CONFORMITY CLASS 3 -->
+
+        <section name="inspire_sds_cc3">
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations"/>
+
+          <action type="add"
+                  forceLabel="true"
+                  name="sds-addOperation"
+                  or="containsOperations"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+            <template>
+              <snippet>
+                <srv:containsOperations>
+                  <srv:SV_OperationMetadata>
+                    <srv:operationName>
+                      <gco:CharacterString></gco:CharacterString>
+                    </srv:operationName>
+                    <srv:DCP>
+                      <srv:DCPList
+                        codeList="http://inspire.ec.europa.eu/metadata-codelist/DCPList"
+                        codeListValue="webServices">Web services
+                      </srv:DCPList>
+                    </srv:DCP>
+                    <srv:connectPoint>
+                      <gmd:CI_OnlineResource>
+                        <gmd:linkage>
+                          <gmd:URL>http://</gmd:URL>
+                        </gmd:linkage>
+                      </gmd:CI_OnlineResource>
+                    </srv:connectPoint>
+                  </srv:SV_OperationMetadata>
+                </srv:containsOperations>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
       </tab>
 
       <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>
-        <for name="srv:containsOperations" />
-        <for name="srv:SV_OperationMetadata" />
-        <for name="srv:parameters" />
+        <for name="srv:containsOperations"/>
+        <for name="srv:SV_OperationMetadata"/>
+        <for name="srv:parameters"/>
       </flatModeExceptions>
 
     </view>
@@ -1848,7 +1910,7 @@
 
       <!-- Elements that should not use the "flat" mode -->
       <flatModeExceptions>
-        <for name="gmd:descriptiveKeywords" />
+        <for name="gmd:descriptiveKeywords"/>
         <for name="gmd:keyword"/>
         <for name="gmd:spatialResolution"/>
         <for name="gmd:pointOfContact"/>
@@ -1948,7 +2010,8 @@
              xpath="gmd:identificationInfo/*/
                       gmd:citation/gmd:CI_Citation/gmd:title"
              indexField="title">
-        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template>
+          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
 
       <!-- Insert a new keyword in the first gmd:descriptiveKeywords found.
@@ -1961,7 +2024,8 @@
                       gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword"
              indexField="keyword"
              insertMode="gn_create">
-        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template>
+          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
 
       <!-- Insert a new topic category
@@ -1974,7 +2038,8 @@
              codelist="gmd:MD_TopicCategoryCode"
              indexField="topicCat"
              insertMode="gn_create">
-        <template><![CDATA[<gmd:MD_TopicCategoryCode xmlns:gmd='http://www.isotc211.org/2005/gmd'>{{value}}</gmd:MD_TopicCategoryCode>]]></template>
+        <template>
+          <![CDATA[<gmd:MD_TopicCategoryCode xmlns:gmd='http://www.isotc211.org/2005/gmd'>{{value}}</gmd:MD_TopicCategoryCode>]]></template>
       </field>
 
       <!-- Insert a new extent
@@ -1994,7 +2059,8 @@
              use="data-gn-language-picker"
              insertMode="gn_replace"
              removable="true">
-        <template><![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+        <template>
+          <![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
 
       <!-- Insert, or replace if existing, the parent identifier.
@@ -2005,7 +2071,8 @@
              use="data-gn-metadata-picker"
              insertMode="gn_replace"
              removable="true">
-        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template>
+          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
 
       <field name="resourceStatus"
@@ -2015,7 +2082,8 @@
              codelist="gmd:MD_ProgressCode"
              insertMode="gn_replace"
              removable="true">
-        <template><![CDATA[<gmd:MD_ProgressCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+        <template>
+          <![CDATA[<gmd:MD_ProgressCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
     </section>
 
@@ -2031,7 +2099,8 @@
              codelist="gmd:MD_RestrictionCode"
              insertMode="gn_create"
              removable="true">
-        <template><![CDATA[<gmd:MD_RestrictionCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+        <template>
+          <![CDATA[<gmd:MD_RestrictionCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
 
       <!-- Insert a new other contraints
@@ -2044,7 +2113,8 @@
              use="textarea"
              insertMode="gn_create"
              removable="true">
-        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template>
+          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
     </section>
 
@@ -2059,7 +2129,8 @@
              use="textarea"
              insertMode="gn_replace"
              removable="true">
-        <template><![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
+        <template>
+          <![CDATA[<gco:CharacterString xmlns:gco='http://www.isotc211.org/2005/gco'>{{value}}</gco:CharacterString>]]></template>
       </field>
     </section>
 
@@ -2083,7 +2154,8 @@
              xpath="gmd:language"
              use="data-gn-language-picker"
              removable="true">
-        <template><![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
+        <template>
+          <![CDATA[<gmd:LanguageCode xmlns:gmd='http://www.isotc211.org/2005/gmd' codeListValue='{{value}}'/>]]></template>
       </field>
     </section>
   </batchEditing>

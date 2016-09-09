@@ -33,6 +33,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * @author Jesse
  */
 public interface UserGroupRepository extends GeonetRepository<UserGroup, UserGroupId>, JpaSpecificationExecutor<UserGroup>,
-        UserGroupRepositoryCustom {
+    UserGroupRepositoryCustom {
 
 }

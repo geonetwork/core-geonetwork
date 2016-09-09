@@ -62,17 +62,15 @@ import org.fao.geonet.utils.Log;
 import com.google.common.base.Splitter;
 
 /**
- * Class to create a Lucene query from a {@link LuceneQueryInput} representing a
- * search request.
- * 
- * <ul>
- *  <li>all search criteria could have more than one value (AND operator is used)</li>
- *  <li>Non tokenized field could use the {@link #OR_SEPARATOR} to create an OR query (eg. for keyword, use Global or biodiversity)</li>
- *  <li>all search criteria are take into account (except {@link UserQueryInput#RESERVED_FIELDS} and {@link UserQueryInput#SECURITY_FIELDS})</li>
- *  <li>extra search fields are considered as text (and are analyzed according to Lucene index configuration)</li>
- *  <li></li>
- * </ul>
- * 
+ * Class to create a Lucene query from a {@link LuceneQueryInput} representing a search request.
+ *
+ * <ul> <li>all search criteria could have more than one value (AND operator is used)</li> <li>Non
+ * tokenized field could use the {@link #OR_SEPARATOR} to create an OR query (eg. for keyword, use
+ * Global or biodiversity)</li> <li>all search criteria are take into account (except {@link
+ * UserQueryInput#RESERVED_FIELDS} and {@link UserQueryInput#SECURITY_FIELDS})</li> <li>extra search
+ * fields are considered as text (and are analyzed according to Lucene index configuration)</li>
+ * <li></li> </ul>
+ *
  * @author heikki doeleman
  * @author francois prunayre
  */
@@ -82,19 +80,17 @@ public class LuceneQueryBuilder {
     private static final String FIELD_OR_SEPARATOR = "_OR_";
     private static final String FACET_QUERY_AND_SEPARATOR = "&";
     private static final String STRING_TOKENIZER_DELIMITER = " \n\r\t";
+    // Lat long bounding box constants
+    private static final Double minBoundingLatitudeValue = -90.0;
+    private static final Double maxBoundingLatitudeValue = 90.0;
+    private static final Double minBoundingLongitudeValue = -180.0;
+    private static final Double maxBoundingLongitudeValue = 180.0;
     private final LuceneConfig luceneConfig;
     private Set<String> _tokenizedFieldSet;
     private PerFieldAnalyzerWrapper _analyzer;
     private Map<String, LuceneConfig.LuceneConfigNumericField> _numericFieldSet;
     private FacetsConfig _taxonomyConfiguration;
     private String _language;
-
-    // Lat long bounding box constants
-    private static final Double minBoundingLatitudeValue = -90.0;
-    private static final Double maxBoundingLatitudeValue = 90.0;
-    private static final Double minBoundingLongitudeValue = -180.0;
-    private static final Double maxBoundingLongitudeValue = 180.0;
-
     /**
      * Only one spatial search criteria could be added.
      */
@@ -112,13 +108,12 @@ public class LuceneQueryBuilder {
     /**
      * TODO javadoc.
      *
-     * @param _tokenizedFieldSet
      * @param analyzer Lucene analyzer
      * @param langCode language of search terms
      */
     public LuceneQueryBuilder(LuceneConfig luceneConfig, Set<String> _tokenizedFieldSet, PerFieldAnalyzerWrapper analyzer, String langCode) {
         BooleanQuery.setMaxClauseCount(Integer.MAX_VALUE);
-        
+
         this._tokenizedFieldSet = _tokenizedFieldSet;
         _numericFieldSet = luceneConfig.getNumericFields();
         _taxonomyConfiguration = luceneConfig.getTaxonomyConfiguration();
@@ -127,14 +122,107 @@ public class LuceneQueryBuilder {
         _language = langCode;
     }
 
+    static Query constructQueryFromAnalyzedString(LuceneConfig luceneConfig, String string, String luceneIndexField, String similarity, Query query,
+                                                  String analyzedString, Set<String> tokenizedFieldSet) {
+        if (StringUtils.isNotBlank(analyzedString)) {
+            // no wildcards
+            if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
+                if (tokenizedFieldSet.contains(luceneIndexField) && analyzedString.contains(" ")) {
+                    // if analyzer creates spaces (by converting ignored
+                    // characters like -) then make boolean query
+                    String[] terms = analyzedString.split(" ");
+                    BooleanQuery booleanQuery = new BooleanQuery();
+                    query = booleanQuery;
+                    for (String term : terms) {
+                        booleanQuery.add(createFuzzyOrTermQuery(luceneConfig, luceneIndexField, similarity, term), Occur.MUST);
+                    }
+                } else {
+                    query = createFuzzyOrTermQuery(luceneConfig, luceneIndexField, similarity, analyzedString);
+                }
+            }
+            // wildcards
+            else {
+                query = new WildcardQuery(new Term(luceneIndexField, analyzedString));
+            }
+        }
+        return query;
+    }
+
+    private static Query createFuzzyOrTermQuery(LuceneConfig luceneConfig, String luceneIndexField, String similarity, String analyzedString) {
+        Query query = null;
+        if (similarity != null && luceneConfig.applySimilarity(luceneIndexField)) {
+            Float minimumSimilarity = Float.parseFloat(similarity);
+
+            if (minimumSimilarity < 1) {
+                int maxEdits = Math.min((int) ((1D - minimumSimilarity) * 10), LevenshteinAutomata.MAXIMUM_SUPPORTED_DISTANCE);
+                query = new FuzzyQuery(new Term(luceneIndexField, analyzedString), maxEdits);
+            } else if (minimumSimilarity > 1) {
+                throw new IllegalArgumentException("similarity cannot be > 1.  The provided value was " + similarity);
+            }
+        }
+
+        if (query == null) {
+            query = new TermQuery(new Term(luceneIndexField, analyzedString));
+        }
+        return query;
+    }
+
+    public static NumericRangeQuery<? extends Number> buildNumericRangeQueryForType(String fieldName, String min, String max,
+                                                                                    boolean minInclusive, boolean maxInclusive, String type) {
+        NumericRangeQuery<? extends Number> rangeQuery;
+        if ("double".equals(type)) {
+            rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
+                (min == null ? Double.MIN_VALUE : Double.parseDouble(min)),
+                (max == null ? Double.MAX_VALUE : Double.parseDouble(max)),
+                true, true);
+
+        } else if ("float".equals(type)) {
+            rangeQuery = NumericRangeQuery.newFloatRange(fieldName,
+                (min == null ? Float.MIN_VALUE : Float.parseFloat(min)),
+                (max == null ? Float.MAX_VALUE : Float.parseFloat(max)), true,
+                true);
+        } else if ("long".equals(type)) {
+            rangeQuery = NumericRangeQuery.newLongRange(fieldName,
+                (min == null ? Long.MIN_VALUE : Long.parseLong(min)),
+                (max == null ? Long.MAX_VALUE : Long.parseLong(max)), true,
+                true);
+        } else {
+            rangeQuery = NumericRangeQuery.newIntRange(fieldName,
+                (min == null ? Integer.MIN_VALUE : Integer.parseInt(min)),
+                (max == null ? Integer.MAX_VALUE : Integer.parseInt(max)),
+                true, true);
+        }
+        return rangeQuery;
+    }
+
+    /**
+     * TODO javadoc.
+     */
+    static Query addLocaleTerm(Query query, String langCode, SettingInfo.SearchRequestLanguage requestedLanguageOnly) {
+        if (langCode == null || requestedLanguageOnly == null) {
+            return query;
+        }
+
+        BooleanQuery booleanQuery;
+        if (query instanceof BooleanQuery) {
+            booleanQuery = (BooleanQuery) query;
+        } else {
+            booleanQuery = new BooleanQuery();
+            booleanQuery.add(query, BooleanClause.Occur.MUST);
+        }
+
+        requestedLanguageOnly.addQuery(booleanQuery, langCode);
+        return booleanQuery;
+    }
+
     /**
      * Build a Lucene query for the {@link LuceneQueryInput}.
-     * 
+     *
      * @param luceneQueryInput the requested search parameters
      * @return Lucene query
      */
     public Query build(LuceneQueryInput luceneQueryInput) {
-        if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+        if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "LuceneQueryBuilder: luceneQueryInput is: \n" + luceneQueryInput.toString());
         Query result = buildBaseQuery(luceneQueryInput);
 
@@ -148,13 +236,15 @@ public class LuceneQueryBuilder {
     /**
      * Build a Lucene query for the {@link LuceneQueryInput}.
      *
-     * A AND clause is used for each search criteria and a OR clause if the content of a criteria is "this or that".
+     * A AND clause is used for each search criteria and a OR clause if the content of a criteria is
+     * "this or that".
      *
-     * A Boolean OR between parameters is used if the parameter has the form A_OR_B with content "this", this will
-     * produce a query for documents having "this" in field A, B or both.
+     * A Boolean OR between parameters is used if the parameter has the form A_OR_B with content
+     * "this", this will produce a query for documents having "this" in field A, B or both.
      *
-     * Some search criteria does not support multi-occurences like spatial, temporal criteria or range fields.
-     * 
+     * Some search criteria does not support multi-occurences like spatial, temporal criteria or
+     * range fields.
+     *
      * @param luceneQueryInput user and system input
      * @return Lucene query
      */
@@ -164,7 +254,7 @@ public class LuceneQueryBuilder {
         Set<String> processedRangeFields = new LinkedHashSet<String>();
 
         // top query to hold all sub-queries for each search parameter
-         BooleanQuery query = new BooleanQuery();
+        BooleanQuery query = new BooleanQuery();
 
         // Filter according to user session
         addPrivilegeQuery(luceneQueryInput, query);
@@ -183,30 +273,30 @@ public class LuceneQueryBuilder {
         //
         Map<String, Set<String>> searchCriteriaOR = new LinkedHashMap<String, Set<String>>();
 
-        for (Iterator<Entry<String, Set<String>>> i = searchCriteria.entrySet().iterator(); i.hasNext();) {
+        for (Iterator<Entry<String, Set<String>>> i = searchCriteria.entrySet().iterator(); i.hasNext(); ) {
             Entry<String, Set<String>> entry = i.next();
             String fieldName = entry.getKey();
             Set<String> fieldValues = entry.getValue();
             if (fieldName.contains(FIELD_OR_SEPARATOR)) {
                 i.remove();
                 if (fieldName.contains(LuceneIndexField.NORTH)
-                        || fieldName.contains(LuceneIndexField.SOUTH)
-                        || fieldName.contains(LuceneIndexField.EAST)
-                        || fieldName.contains(LuceneIndexField.WEST)
-                        || fieldName.contains(SearchParameter.RELATION)
+                    || fieldName.contains(LuceneIndexField.SOUTH)
+                    || fieldName.contains(LuceneIndexField.EAST)
+                    || fieldName.contains(LuceneIndexField.WEST)
+                    || fieldName.contains(SearchParameter.RELATION)
 
-                        || fieldName.contains("without")
-                        || fieldName.contains("phrase")
+                    || fieldName.contains("without")
+                    || fieldName.contains("phrase")
 
-                        || fieldName.contains(SearchParameter.EXTTO)
-                        || fieldName.contains(SearchParameter.EXTFROM)
+                    || fieldName.contains(SearchParameter.EXTTO)
+                    || fieldName.contains(SearchParameter.EXTFROM)
 
-                        || fieldName.contains(SearchParameter.FEATURED)
-                        || fieldName.contains(SearchParameter.TEMPLATE)
+                    || fieldName.contains(SearchParameter.FEATURED)
+                    || fieldName.contains(SearchParameter.TEMPLATE)
 
-                        || UserQueryInput.RANGE_QUERY_FIELDS.contains(fieldName)
+                    || UserQueryInput.RANGE_QUERY_FIELDS.contains(fieldName)
 
-                        ) {
+                    ) {
                     // not supported in field disjunction
                     continue;
                 }
@@ -216,33 +306,31 @@ public class LuceneQueryBuilder {
                 while (scanner.hasNext()) {
                     String field = scanner.next();
 
-                    if(field.equals("or")) {
+                    if (field.equals("or")) {
                         // handle as 'any', add ' or ' for space-separated values
 
                         field = "any";
                         Set<String> values = searchCriteriaOR.get(field);
-                        if(values == null) values = new LinkedHashSet<String>();
+                        if (values == null) values = new LinkedHashSet<String>();
                         values.addAll(fieldValues);
                         searchCriteriaOR.put(field, values);
-                    }
-                    else {
-                            Set<String> values = searchCriteriaOR.get(field);
-                            if(values == null) values = new LinkedHashSet<String>();
-                            values.addAll(fieldValues);
-                            searchCriteriaOR.put(field, values);
+                    } else {
+                        Set<String> values = searchCriteriaOR.get(field);
+                        if (values == null) values = new LinkedHashSet<String>();
+                        values.addAll(fieldValues);
+                        searchCriteriaOR.put(field, values);
                     }
                 }
             }
         }
         query = buildORQuery(searchCriteriaOR, query, similarity);
         query = buildANDQuery(searchCriteria, query, similarity, processedRangeFields);
-        if(StringUtils.isNotEmpty(_language)) {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+        if (StringUtils.isNotEmpty(_language)) {
+            if (Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
             return addLocaleTerm(query, _language, luceneQueryInput.isRequestedLanguageOnly());
-        }
-        else {
-            if(Log.isDebugEnabled(Geonet.LUCENE))
+        } else {
+            if (Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "no language set, not adding locale query");
             return query;
         }
@@ -251,20 +339,19 @@ public class LuceneQueryBuilder {
     /**
      * Add drilldown queries to a base query
      *
-     * There may be many drilldown queries specified in the search parameters
-     * Add each one to the base query
-     * 
-     * @param baseQuery base query for requested search criteria
+     * There may be many drilldown queries specified in the search parameters Add each one to the
+     * base query
+     *
+     * @param baseQuery    base query for requested search criteria
      * @param facetQueries drilldown queries requested
-     * 
      * @return Lucene query
      */
 
     private Query addFacetQueries(Query baseQuery,
-            Set<String> facetQueries) {
+                                  Set<String> facetQueries) {
         DrillDownQuery result = new DrillDownQuery(_taxonomyConfiguration, baseQuery);
 
-        for (String facetQuery: facetQueries) {
+        for (String facetQuery : facetQueries) {
             addFacetQuery(facetQuery, result);
         }
 
@@ -272,7 +359,7 @@ public class LuceneQueryBuilder {
     }
 
     private void addFacetQuery(String facetQuery, DrillDownQuery result) {
-        for (String drillDownParam: facetQuery.split(FACET_QUERY_AND_SEPARATOR)) {
+        for (String drillDownParam : facetQuery.split(FACET_QUERY_AND_SEPARATOR)) {
             DrillDownPath drillDownPath = new DrillDownPath(drillDownParam);
             result.add(drillDownPath.getDimension(), drillDownPath.getPath());
         }
@@ -280,11 +367,6 @@ public class LuceneQueryBuilder {
 
     /**
      * Builds a query where OR operator is used for each search criteria.
-     *
-     * @param searchCriteria
-     * @param query
-     * @param similarity
-     * @return
      */
     private BooleanQuery buildORQuery(Map<String, Set<String>> searchCriteria, BooleanQuery query, String similarity) {
 
@@ -292,14 +374,14 @@ public class LuceneQueryBuilder {
         temporalCriteriaAdded = false;
         templateCriteriaAdded = false;
 
-        if(searchCriteria.size() == 0) {
+        if (searchCriteria.size() == 0) {
             return query;
         }
 
         // Avoid search by field who control privileges
         Set<String> fields = new LinkedHashSet<String>();
-        for(String requestedField : searchCriteria.keySet()) {
-            if(!(UserQueryInput.SECURITY_FIELDS.contains(requestedField) || SearchParameter.EDITABLE.equals(requestedField))) {
+        for (String requestedField : searchCriteria.keySet()) {
+            if (!(UserQueryInput.SECURITY_FIELDS.contains(requestedField) || SearchParameter.EDITABLE.equals(requestedField))) {
                 fields.add(requestedField);
             }
         }
@@ -307,9 +389,9 @@ public class LuceneQueryBuilder {
         BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
         BooleanClause.Occur tokenOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
         BooleanQuery booleanQuery = new BooleanQuery();
-        for(String fieldName : fields) {
+        for (String fieldName : fields) {
 
-            Set<String> fieldValues = searchCriteria.get(fieldName) ;
+            Set<String> fieldValues = searchCriteria.get(fieldName);
             for (String fieldValue : fieldValues) {
                 if (fieldValue.contains(OR_SEPARATOR)) {
                     // TODO : change OR separator
@@ -362,12 +444,6 @@ public class LuceneQueryBuilder {
 
     /**
      * TODO Javadoc.
-     *
-     * @param fieldValue
-     * @param similarity
-     * @param singleTokenOccur
-     * @param moreTokensOccur
-     * @return
      */
     private BooleanClause tokenizeSearchParam(String fieldValue, String similarity, Occur singleTokenOccur, Occur moreTokensOccur) {
         // tokenize searchParam
@@ -379,8 +455,7 @@ public class LuceneQueryBuilder {
             if (subQuery != null) {
                 anyClause = new BooleanClause(subQuery, singleTokenOccur);
             }
-        }
-        else {
+        } else {
             BooleanQuery orBooleanQuery = new BooleanQuery();
             while (st.hasMoreTokens()) {
                 String token = st.nextToken();
@@ -397,12 +472,6 @@ public class LuceneQueryBuilder {
 
     /**
      * Builds a query where AND operator is used for each search criteria.
-     *
-     * @param searchCriteria
-     * @param query
-     * @param similarity
-     * @param processedRangeFields
-     * @return
      */
     private BooleanQuery buildANDQuery(Map<String, Set<String>> searchCriteria, BooleanQuery query, String similarity,
                                        Set<String> processedRangeFields) {
@@ -441,15 +510,13 @@ public class LuceneQueryBuilder {
         for (String fieldValue : fieldValues) {
             if (LuceneIndexField.ANY.equals(fieldName)) {
                 addAnyTextQuery(fieldValue, similarity, (criteriaIsASet ? bq : query));
-            }
-            else if (LuceneIndexField.UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
+            } else if (LuceneIndexField.UUID.equals(fieldName) || SearchParameter.UUID.equals(fieldName)) {
                 addUUIDQuery(fieldValue, similarity, criteriaIsASet, bq, query);
-            }
-            else if (LuceneIndexField.NORTH.equals(fieldName)
-                    || LuceneIndexField.SOUTH.equals(fieldName)
-                    || LuceneIndexField.EAST.equals(fieldName)
-                    || LuceneIndexField.WEST.equals(fieldName)
-                    || SearchParameter.RELATION.equals(fieldName)) {
+            } else if (LuceneIndexField.NORTH.equals(fieldName)
+                || LuceneIndexField.SOUTH.equals(fieldName)
+                || LuceneIndexField.EAST.equals(fieldName)
+                || LuceneIndexField.WEST.equals(fieldName)
+                || SearchParameter.RELATION.equals(fieldName)) {
                 addBBoxQuery(searchCriteria, query);
             }
             // template
@@ -480,23 +547,20 @@ public class LuceneQueryBuilder {
             }
             // range
             else if (UserQueryInput.RANGE_QUERY_FIELDS.contains(fieldName)) {
-                rangeCriteria(searchCriteria, fieldName, query,processedRangeFields);
+                rangeCriteria(searchCriteria, fieldName, query, processedRangeFields);
             }
             // featured
             else if (SearchParameter.FEATURED.equals(fieldName)) {
                 featuredCriteria(fieldValue, bq);
-            }
-            else {
-                if(criteriaIsASet) {
+            } else {
+                if (criteriaIsASet) {
                     // Add to the boolean query which will be added to the main query
                     addNotRequiredTextField(fieldValue, fieldName, similarity, bq);
-                }
-                else if (fieldValue.contains(OR_SEPARATOR)) {
+                } else if (fieldValue.contains(OR_SEPARATOR)) {
                     // TODO : change OR separator
                     // Add all separated values to the boolean query
                     addSeparatedTextField(fieldValue, OR_SEPARATOR, fieldName, bq);
-                }
-                else {
+                } else {
                     // Add the field to main query
                     addRequiredTextField(fieldValue, fieldName, similarity, query);
                 }
@@ -511,9 +575,6 @@ public class LuceneQueryBuilder {
 
     /**
      * Adds featured searchterm to query.
-     *
-     * @param fieldValue
-     * @param bq
      */
     private void featuredCriteria(String fieldValue, BooleanQuery bq) {
         if ("true".equals(fieldValue)) {
@@ -529,6 +590,7 @@ public class LuceneQueryBuilder {
             bq.add(viewClause);
         }
     }
+
     /**
      * Handles range query fields. Boolean query could not be made in the same range query field.
      */
@@ -541,17 +603,16 @@ public class LuceneQueryBuilder {
             if (rangeQueryField.equals(fieldName)) {
                 from = searchCriteria.get(rangeQueryField);
                 to = from;
-            }
-            else {
+            } else {
                 from = searchCriteria.get(UserQueryInput.getFrom(rangeQueryField));
                 to = searchCriteria.get(UserQueryInput.getTo(rangeQueryField));
             }
             // create range query
             addRangeQuery(query,
-                    (from != null ? (String) from.toArray()[0]
-                            : null),
-                    (to != null ? (String) to.toArray()[0] : null),
-                    rangeQueryField);
+                (from != null ? (String) from.toArray()[0]
+                    : null),
+                (to != null ? (String) to.toArray()[0] : null),
+                rangeQueryField);
 
             // Remove upper or lower range field
             processedRangeFields.add(rangeQueryField);
@@ -560,10 +621,6 @@ public class LuceneQueryBuilder {
 
     /**
      * Adds phrase searchterm to query.
-     *
-     * @param fieldValue
-     * @param query
-     * @param qOccur
      */
     private void phraseCriteria(String fieldValue, BooleanQuery query, BooleanClause.Occur qOccur) {
         PhraseQuery phraseQ = null;
@@ -586,12 +643,9 @@ public class LuceneQueryBuilder {
 
     /**
      * Adds template searchterm to query.
-     *
-     * @param fieldValue
-     * @param query
      */
     private void templateCriteria(String fieldValue, BooleanQuery query) {
-        if(! templateCriteriaAdded) {
+        if (!templateCriteriaAdded) {
             BooleanClause.Occur templateOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
             Query templateQ;
@@ -615,10 +669,6 @@ public class LuceneQueryBuilder {
 
     /**
      * Adds temporal searchterms to query.
-     *
-     * @param searchCriteria
-     * @param query
-     * @return
      */
     private boolean temporalCriteria(Map<String, Set<String>> searchCriteria, BooleanQuery query) {
         //
@@ -674,19 +724,16 @@ public class LuceneQueryBuilder {
     }
 
     /**
-     * Creates a query for a string. If the string contains a wildcard (* or ?),
-     * similarity is ignored.
-     * 
-     * @param string
-     *            string
-     * @param luceneIndexField
-     *            index field
-     * @param similarity
-     *            fuzziness
+     * Creates a query for a string. If the string contains a wildcard (* or ?), similarity is
+     * ignored.
+     *
+     * @param string           string
+     * @param luceneIndexField index field
+     * @param similarity       fuzziness
      * @return query
      */
     private Query textFieldToken(String string, String luceneIndexField,
-            String similarity) {
+                                 String similarity) {
         if (string == null) {
             throw new IllegalArgumentException("Cannot create Lucene query for null string");
         }
@@ -710,186 +757,137 @@ public class LuceneQueryBuilder {
         return query;
     }
 
-    static Query constructQueryFromAnalyzedString(LuceneConfig luceneConfig, String string, String luceneIndexField, String similarity, Query query,
-            String analyzedString, Set<String> tokenizedFieldSet) {
-        if (StringUtils.isNotBlank(analyzedString)) {
-            // no wildcards
-            if (string.indexOf('*') < 0 && string.indexOf('?') < 0) {
-                if (tokenizedFieldSet.contains(luceneIndexField) && analyzedString.contains(" ")) {
-                    // if analyzer creates spaces (by converting ignored
-                    // characters like -) then make boolean query
-                    String[] terms = analyzedString.split(" ");
-                    BooleanQuery booleanQuery = new BooleanQuery();
-                    query = booleanQuery;
-                    for (String term : terms) {
-                        booleanQuery.add(createFuzzyOrTermQuery(luceneConfig, luceneIndexField, similarity, term), Occur.MUST);
-                    }
-                } else {
-                    query = createFuzzyOrTermQuery(luceneConfig, luceneIndexField, similarity, analyzedString);
-                }
-            }
-            // wildcards
-            else {
-                query = new WildcardQuery(new Term(luceneIndexField, analyzedString));
-            }
-        }
-        return query;
-    }
-
-    private static Query createFuzzyOrTermQuery(LuceneConfig luceneConfig, String luceneIndexField, String similarity, String analyzedString) {
-        Query query = null;
-        if (similarity != null && luceneConfig.applySimilarity(luceneIndexField)) {
-            Float minimumSimilarity = Float.parseFloat(similarity);
-            
-            if (minimumSimilarity < 1) {
-                int maxEdits = Math.min((int) ((1D-minimumSimilarity) * 10),  LevenshteinAutomata.MAXIMUM_SUPPORTED_DISTANCE);
-                query  = new FuzzyQuery(new Term(luceneIndexField, analyzedString), maxEdits);
-            } else if (minimumSimilarity > 1){
-                throw new IllegalArgumentException("similarity cannot be > 1.  The provided value was "+similarity);
-            }
-        }
-        
-        if (query == null) {
-            query = new TermQuery(new Term(luceneIndexField, analyzedString));
-        }
-        return query;
-    }
-
     /**
-     * Add clause to a query for all tokens in the search param. The query must select
-     * only results where none of the tokens in the search param is present.
-     * 
+     * Add clause to a query for all tokens in the search param. The query must select only results
+     * where none of the tokens in the search param is present.
+     *
      * Apply this to tokenized field.
-     * 
-     * @param searchParam search param
+     *
+     * @param searchParam      search param
      * @param luceneIndexField index field
-     * @param query query being built
+     * @param query            query being built
      */
     private void addProhibitedTextField(String searchParam, String luceneIndexField, BooleanQuery query) {
         BooleanClause booleanClause = null;
         BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
         BooleanClause.Occur dontOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, true);
-		if (StringUtils.isNotBlank(searchParam)) {
-			BooleanQuery booleanQuery = new BooleanQuery();
-			MatchAllDocsQuery matchAllDocsQuery = new MatchAllDocsQuery();
-			BooleanClause matchAllDocsClause = new BooleanClause(matchAllDocsQuery, occur);
-			booleanQuery.add(matchAllDocsClause);
-			// tokenize searchParam
-			StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				// ignore fuzziness in without-queries
-				Query subQuery = textFieldToken(token, luceneIndexField, null);
-				if (subQuery != null) {
-					BooleanClause subClause = new BooleanClause(subQuery, dontOccur);
-					booleanQuery.add(subClause);
-				}
-			}
-			booleanClause = new BooleanClause(booleanQuery, occur);
-		}
+        if (StringUtils.isNotBlank(searchParam)) {
+            BooleanQuery booleanQuery = new BooleanQuery();
+            MatchAllDocsQuery matchAllDocsQuery = new MatchAllDocsQuery();
+            BooleanClause matchAllDocsClause = new BooleanClause(matchAllDocsQuery, occur);
+            booleanQuery.add(matchAllDocsClause);
+            // tokenize searchParam
+            StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                // ignore fuzziness in without-queries
+                Query subQuery = textFieldToken(token, luceneIndexField, null);
+                if (subQuery != null) {
+                    BooleanClause subClause = new BooleanClause(subQuery, dontOccur);
+                    booleanQuery.add(subClause);
+                }
+            }
+            booleanClause = new BooleanClause(booleanQuery, occur);
+        }
         if (booleanClause != null) {
             query.add(booleanClause);
         }
     }
 
     /**
-     * Add clause to a query for all tokens in the search param. 'Not required' does
-     * not mean that this is not a required search parameter; rather it means
-     * that if this parameter is present, the query must select results where at
-     * least one of the tokens in the search param is present.
-     * 
-     * @param searchParam search param
+     * Add clause to a query for all tokens in the search param. 'Not required' does not mean that
+     * this is not a required search parameter; rather it means that if this parameter is present,
+     * the query must select results where at least one of the tokens in the search param is
+     * present.
+     *
+     * @param searchParam      search param
      * @param luceneIndexField index field
-     * @param similarity fuzziness
-     * @param query query being built
+     * @param similarity       fuzziness
+     * @param query            query being built
      */
-	private void addNotRequiredTextField(String searchParam, String luceneIndexField, String similarity, BooleanQuery query) {
-		BooleanClause booleanClause = null;
-		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-		BooleanClause.Occur tokenOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
-		if (StringUtils.isNotBlank(searchParam)) {
-			if (!_tokenizedFieldSet.contains(luceneIndexField)) {
-				// TODO : use similarity when needed
-				TermQuery termQuery = new TermQuery(new Term(luceneIndexField, searchParam.trim()));
-				BooleanClause clause = new BooleanClause(termQuery, occur);
-				query.add(clause);
-			}
-            else {
-				// tokenize searchParam
-				StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
+    private void addNotRequiredTextField(String searchParam, String luceneIndexField, String similarity, BooleanQuery query) {
+        BooleanClause booleanClause = null;
+        BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+        BooleanClause.Occur tokenOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(false, false);
+        if (StringUtils.isNotBlank(searchParam)) {
+            if (!_tokenizedFieldSet.contains(luceneIndexField)) {
+                // TODO : use similarity when needed
+                TermQuery termQuery = new TermQuery(new Term(luceneIndexField, searchParam.trim()));
+                BooleanClause clause = new BooleanClause(termQuery, occur);
+                query.add(clause);
+            } else {
+                // tokenize searchParam
+                StringTokenizer st = new StringTokenizer(searchParam.trim(), STRING_TOKENIZER_DELIMITER);
                 BooleanQuery booleanQuery = new BooleanQuery();
-				while (st.hasMoreTokens()) {
-					String token = st.nextToken();
-					Query subQuery = textFieldToken(token, luceneIndexField, similarity);
-					if (subQuery != null) {
-						BooleanClause subClause = new BooleanClause(subQuery, tokenOccur);
-						booleanQuery.add(subClause);
-					}
-				}
-				booleanClause = new BooleanClause(booleanQuery, occur);
-			}
-		}
-		if (booleanClause != null) {
-			query.add(booleanClause);
-		}
-	}
+                while (st.hasMoreTokens()) {
+                    String token = st.nextToken();
+                    Query subQuery = textFieldToken(token, luceneIndexField, similarity);
+                    if (subQuery != null) {
+                        BooleanClause subClause = new BooleanClause(subQuery, tokenOccur);
+                        booleanQuery.add(subClause);
+                    }
+                }
+                booleanClause = new BooleanClause(booleanQuery, occur);
+            }
+        }
+        if (booleanClause != null) {
+            query.add(booleanClause);
+        }
+    }
 
     /**
-     * Add a clause to a query for all tokens in the search param. 'Required' does not
-     * mean that this is a required search parameter; rather it means that if
-     * this parameter is present, the query must select only results where each
-     * of the tokens in the search param is present.
-     * 
-     * @param searchParam search parameter
+     * Add a clause to a query for all tokens in the search param. 'Required' does not mean that
+     * this is a required search parameter; rather it means that if this parameter is present, the
+     * query must select only results where each of the tokens in the search param is present.
+     *
+     * @param searchParam      search parameter
      * @param luceneIndexField index field
-     * @param similarity fuzziness
-     * @param query query being built
+     * @param similarity       fuzziness
+     * @param query            query being built
      */
-	private void addRequiredTextField(String searchParam, String luceneIndexField, String similarity, BooleanQuery query) {
-		BooleanClause booleanClause = null;
-		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-		if (StringUtils.isNotBlank(searchParam)) {
-			if (!_tokenizedFieldSet.contains(luceneIndexField)) {
-				// TODO : use similarity when needed
-				BooleanClause clause = new BooleanClause(textFieldToken(searchParam, luceneIndexField, similarity), occur);
-				query.add(clause);
-			}
-            else {
-				// tokenize searchParam only if tokenized when indexing
-				StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
-				if (st.countTokens() == 1) {
-					String token = st.nextToken();
-					Query subQuery = textFieldToken(token, luceneIndexField, similarity);
-					if (subQuery != null) {
-						booleanClause = new BooleanClause(subQuery, occur);
-					}
-				}
-                else {
-					BooleanQuery booleanQuery = new BooleanQuery();
-					while (st.hasMoreTokens()) {
-						String token = st.nextToken();
-						Query subQuery = textFieldToken(token, luceneIndexField, similarity);
-						if (subQuery != null) {
-							BooleanClause subClause = new BooleanClause(subQuery, occur);
-							booleanQuery.add(subClause);
-						}
-					}
-					booleanClause = new BooleanClause(booleanQuery, occur);
-				}
-			}
-		}
-		if (booleanClause != null) {
-			query.add(booleanClause);
-		}
-	}
+    private void addRequiredTextField(String searchParam, String luceneIndexField, String similarity, BooleanQuery query) {
+        BooleanClause booleanClause = null;
+        BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+        if (StringUtils.isNotBlank(searchParam)) {
+            if (!_tokenizedFieldSet.contains(luceneIndexField)) {
+                // TODO : use similarity when needed
+                BooleanClause clause = new BooleanClause(textFieldToken(searchParam, luceneIndexField, similarity), occur);
+                query.add(clause);
+            } else {
+                // tokenize searchParam only if tokenized when indexing
+                StringTokenizer st = new StringTokenizer(searchParam, STRING_TOKENIZER_DELIMITER);
+                if (st.countTokens() == 1) {
+                    String token = st.nextToken();
+                    Query subQuery = textFieldToken(token, luceneIndexField, similarity);
+                    if (subQuery != null) {
+                        booleanClause = new BooleanClause(subQuery, occur);
+                    }
+                } else {
+                    BooleanQuery booleanQuery = new BooleanQuery();
+                    while (st.hasMoreTokens()) {
+                        String token = st.nextToken();
+                        Query subQuery = textFieldToken(token, luceneIndexField, similarity);
+                        if (subQuery != null) {
+                            BooleanClause subClause = new BooleanClause(subQuery, occur);
+                            booleanQuery.add(subClause);
+                        }
+                    }
+                    booleanClause = new BooleanClause(booleanQuery, occur);
+                }
+            }
+        }
+        if (booleanClause != null) {
+            query.add(booleanClause);
+        }
+    }
 
     /**
      * Add clause to a query for all tokens between the separator.
-     * 
-     * @param text text
+     *
+     * @param text      text
      * @param separator separator
      * @param fieldName Lucene field name
-     * @param query query being built
+     * @param query     query being built
      */
     private void addSeparatedTextField(String text, String separator, String fieldName, BooleanQuery query) {
 
@@ -908,26 +906,21 @@ public class LuceneQueryBuilder {
         }
     }
 
-
-	/**
-	 * Add any field clause to a query.
-	 * 
-	 * @param any
-	 * @param similarity
-	 * @param query
-	 */
-	private void addAnyTextQuery(String any, String similarity, BooleanQuery query) {
-		BooleanClause anyClause = null;
-		BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-		if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
+    /**
+     * Add any field clause to a query.
+     */
+    private void addAnyTextQuery(String any, String similarity, BooleanQuery query) {
+        BooleanClause anyClause = null;
+        BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+        if (StringUtils.isNotBlank(any) && !onlyWildcard(any)) {
             anyClause = tokenizeSearchParam(any, similarity, occur, occur);
-		}
-		if (anyClause != null) {
-			query.add(anyClause);
-		}
-	}
+        }
+        if (anyClause != null) {
+            query.add(anyClause);
+        }
+    }
 
-    private void addUUIDQuery(String fieldValue, String similarity, boolean criteriaIsASet, BooleanQuery bq, BooleanQuery query)  {
+    private void addUUIDQuery(String fieldValue, String similarity, boolean criteriaIsASet, BooleanQuery bq, BooleanQuery query) {
         // the uuid param is an 'or' separated list. Remove the 'or's and handle like an 'or' query if more
         // than one uuid parameter is set, then a 'and' query is made
         if (fieldValue.contains(OR_SEPARATOR)) {
@@ -937,12 +930,10 @@ public class LuceneQueryBuilder {
             BooleanClause booleanClause = new BooleanClause(uuidBooleanQuery, BooleanClause.Occur.MUST);
             if (criteriaIsASet) {
                 bq.add(booleanClause);
-            }
-            else {
+            } else {
                 query.add(booleanClause);
             }
-        }
-        else {
+        } else {
             addNotRequiredTextField(fieldValue, LuceneIndexField.UUID, similarity, (criteriaIsASet ? bq : query));
         }
     }
@@ -958,10 +949,10 @@ public class LuceneQueryBuilder {
 
             if (e != null && w != null && n != null && s != null) {
                 addBoundingBoxQuery(query, (String) r.toArray()[0],
-                        (String) e.toArray()[0],
-                        (String) w.toArray()[0],
-                        (String) n.toArray()[0],
-                        (String) s.toArray()[0]);
+                    (String) e.toArray()[0],
+                    (String) w.toArray()[0],
+                    (String) n.toArray()[0],
+                    (String) s.toArray()[0]);
             }
             spatialCriteriaAdded = true;
         }
@@ -969,9 +960,9 @@ public class LuceneQueryBuilder {
 
     /**
      * Add search privilege criteria to a query.
-     * 
+     *
      * @param luceneQueryInput user and system input
-     * @param query query being built
+     * @param query            query being built
      */
     private void addPrivilegeQuery(LuceneQueryInput luceneQueryInput, BooleanQuery query) {
         // Set user groups privileges
@@ -1036,14 +1027,14 @@ public class LuceneQueryBuilder {
     }
 
     /**
-     * Add a range query according to field type. If field type is numeric, then
-     * a numeric range query is used. If not a default range query is uses.
-     * 
+     * Add a range query according to field type. If field type is numeric, then a numeric range
+     * query is used. If not a default range query is uses.
+     *
      * Range query include lower and upper bounds by default.
-     * 
-     * @param query query being built
-     * @param from begin of range
-     * @param to end of range
+     *
+     * @param query            query being built
+     * @param from             begin of range
+     * @param to               end of range
      * @param luceneIndexField Lucene field
      */
     private void addRangeQuery(BooleanQuery query, String from, String to, String luceneIndexField) {
@@ -1053,30 +1044,30 @@ public class LuceneQueryBuilder {
         LuceneConfig.LuceneConfigNumericField type = _numericFieldSet.get(luceneIndexField);
         if (type == null) {
             addTextRangeQuery(query, from, to, luceneIndexField);
-        }
-        else {
+        } else {
             addNumericRangeQuery(query, from, to, true, true, luceneIndexField, true);
         }
     }
 
     /**
      * Add a numeric range query according to field numeric type.
-     * 
-     * @param query query being built
-     * @param min minimum in range
-     * @param max maximum in range
-     * @param minInclusive whether minimum is inclusive
-     * @param maxExclusive whether maximum is inclusive
+     *
+     * @param query            query being built
+     * @param min              minimum in range
+     * @param max              maximum in range
+     * @param minInclusive     whether minimum is inclusive
+     * @param maxExclusive     whether maximum is inclusive
      * @param luceneIndexField Lucene field
-     * @param required whether this is a required query clause
-     *            TODO
+     * @param required         whether this is a required query clause TODO
      */
     private void addNumericRangeQuery(BooleanQuery query, String min, String max, boolean minInclusive,
                                       boolean maxExclusive, String luceneIndexField, boolean required) {
         if (min != null && max != null) {
             String type = _numericFieldSet.get(luceneIndexField).getType();
+            int precisionStep = _numericFieldSet.get(luceneIndexField).getPrecisionStep();
 
-            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max, minInclusive, maxExclusive, type);
+            NumericRangeQuery<? extends Number> rangeQuery = buildNumericRangeQueryForType(luceneIndexField, min, max,
+                    minInclusive, maxExclusive, type, precisionStep);
 
             BooleanClause.Occur denoOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(required, false);
             BooleanClause rangeClause = new BooleanClause(rangeQuery, denoOccur);
@@ -1086,29 +1077,29 @@ public class LuceneQueryBuilder {
     }
 
     public static NumericRangeQuery<? extends Number> buildNumericRangeQueryForType(String fieldName, String min, String max,
-                                                                  boolean minInclusive, boolean maxInclusive, String type) {
+                                                                  boolean minInclusive, boolean maxInclusive, String type, int precisionStep) {
         NumericRangeQuery<? extends Number> rangeQuery;
         if ("double".equals(type)) {
-            rangeQuery = NumericRangeQuery.newDoubleRange(fieldName,
+            rangeQuery = NumericRangeQuery.newDoubleRange(fieldName, precisionStep,
                     (min == null ? Double.MIN_VALUE : Double.parseDouble(min)),
                     (max == null ? Double.MAX_VALUE : Double.parseDouble(max)),
                     true, true);
 
         }
         else if ("float".equals(type)) {
-            rangeQuery = NumericRangeQuery.newFloatRange(fieldName,
+            rangeQuery = NumericRangeQuery.newFloatRange(fieldName, precisionStep,
                     (min == null ? Float.MIN_VALUE : Float.parseFloat(min)),
                     (max == null ? Float.MAX_VALUE : Float.parseFloat(max)), true,
                     true);
         }
         else if ("long".equals(type)) {
-            rangeQuery = NumericRangeQuery.newLongRange(fieldName,
+            rangeQuery = NumericRangeQuery.newLongRange(fieldName, precisionStep,
                     (min == null ? Long.MIN_VALUE : Long.parseLong(min)),
                     (max == null ? Long.MAX_VALUE : Long.parseLong(max)), true,
                     true);
         }
         else {
-            rangeQuery = NumericRangeQuery.newIntRange(fieldName,
+            rangeQuery = NumericRangeQuery.newIntRange(fieldName, precisionStep,
                     (min == null ? Integer.MIN_VALUE : Integer.parseInt(min)),
                     (max == null ? Integer.MAX_VALUE : Integer.parseInt(max)),
                     true, true);
@@ -1118,10 +1109,10 @@ public class LuceneQueryBuilder {
 
     /**
      * Add a date range query for a text field type.
-     * 
-     * @param query query being built
-     * @param dateTo end of range
-     * @param dateFrom start of range
+     *
+     * @param query            query being built
+     * @param dateTo           end of range
+     * @param dateFrom         start of range
      * @param luceneIndexField Lucene field
      */
     private void addTextRangeQuery(BooleanQuery query, String dateFrom, String dateTo, String luceneIndexField) {
@@ -1143,25 +1134,6 @@ public class LuceneQueryBuilder {
 
     /**
      * TODO Javadoc.
-     *
-     * @param query
-     * @param westBL
-     * @param minWestBL
-     * @param maxWestBL
-     * @param westBLIndexField
-     * @param eastBL
-     * @param minEastBL
-     * @param maxEastBL
-     * @param eastBLIndexField
-     * @param southBL
-     * @param minSouthBL
-     * @param maxSouthBL
-     * @param southBLIndexField
-     * @param northBL
-     * @param minNorthBL
-     * @param maxNorthBL
-     * @param northBLIndexField
-     * @param inclusive
      */
     private void addLatLongQuery(BooleanQuery query, String westBL, String minWestBL, String maxWestBL, String westBLIndexField,
                                  String eastBL, String minEastBL, String maxEastBL, String eastBLIndexField,
@@ -1184,25 +1156,23 @@ public class LuceneQueryBuilder {
 
     /**
      * Handle geographical search using Lucene.
-     * 
+     *
      * East, North, South and West bounds are indexed as numeric in Lucene.
-     * 
-     * Lucene bounding box searches are probably faster than using spatial index
-     * using geometry criteria. It does not support complex geometries and all
-     * type of relation.
-     * 
+     *
+     * Lucene bounding box searches are probably faster than using spatial index using geometry
+     * criteria. It does not support complex geometries and all type of relation.
+     *
      * If metadata contains multiple bounding boxes invalid results may appear.
-     * 
-     * If relation is null or is not a known relation type (See
-     * {@link org.fao.geonet.constants.Geonet.SearchResult.Relation}), overlap
-     * is used.
-     * 
-     * @param query query being built
+     *
+     * If relation is null or is not a known relation type (See {@link
+     * org.fao.geonet.constants.Geonet.SearchResult.Relation}), overlap is used.
+     *
+     * @param query    query being built
      * @param relation spatial relation
-     * @param eastBL east
-     * @param westBL west
-     * @param northBL north
-     * @param southBL south
+     * @param eastBL   east
+     * @param westBL   west
+     * @param northBL  north
+     * @param southBL  south
      */
     private void addBoundingBoxQuery(BooleanQuery query, String relation, String eastBL, String westBL, String northBL, String southBL) {
 
@@ -1216,9 +1186,9 @@ public class LuceneQueryBuilder {
             // -(a + b + c + d) = -a * -b * -c * -d
             //
             addLatLongQuery(query, westBL, westBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
-                    eastBL, String.valueOf(minBoundingLongitudeValue), eastBL, LuceneIndexField.WEST,
-                    southBL, southBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH,
-                    northBL, String.valueOf(minBoundingLatitudeValue), northBL, LuceneIndexField.SOUTH, inclusive, true);
+                eastBL, String.valueOf(minBoundingLongitudeValue), eastBL, LuceneIndexField.WEST,
+                southBL, southBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH,
+                northBL, String.valueOf(minBoundingLatitudeValue), northBL, LuceneIndexField.SOUTH, inclusive, true);
         }
         //
         // equal: coordinates of the target rectangle within 1 degree from
@@ -1226,18 +1196,18 @@ public class LuceneQueryBuilder {
         //
         else if (relation.equals(Geonet.SearchResult.Relation.EQUAL)) {
             addLatLongQuery(query, westBL, westBL, westBL, LuceneIndexField.WEST,
-                    eastBL, eastBL, eastBL, LuceneIndexField.EAST,
-                    southBL, southBL, southBL, LuceneIndexField.SOUTH,
-                    northBL, northBL, northBL, LuceneIndexField.NORTH,  inclusive, true);
+                eastBL, eastBL, eastBL, LuceneIndexField.EAST,
+                southBL, southBL, southBL, LuceneIndexField.SOUTH,
+                northBL, northBL, northBL, LuceneIndexField.NORTH, inclusive, true);
         }
         //
         // encloses: metadata rectangle encloses target rectangle
         //
         else if (relation.equals(Geonet.SearchResult.Relation.ENCLOSES)) {
             addLatLongQuery(query, westBL, String.valueOf(minBoundingLongitudeValue), westBL, LuceneIndexField.WEST,
-                    eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
-                    southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.SOUTH,
-                    northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH, inclusive, true);
+                eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.EAST,
+                southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.SOUTH,
+                northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.NORTH, inclusive, true);
         }
         //
         // fullyEnclosedWithin: metadata rectangle fully enclosed within target
@@ -1245,9 +1215,9 @@ public class LuceneQueryBuilder {
         //
         else if (relation.equals(Geonet.SearchResult.Relation.ENCLOSEDWITHIN)) {
             addLatLongQuery(query, westBL, westBL, eastBL, LuceneIndexField.WEST,
-                    eastBL, westBL, eastBL, LuceneIndexField.EAST,
-                    southBL, southBL, northBL, LuceneIndexField.SOUTH,
-                    northBL, southBL, northBL, LuceneIndexField.NORTH, inclusive, true);
+                eastBL, westBL, eastBL, LuceneIndexField.EAST,
+                southBL, southBL, northBL, LuceneIndexField.SOUTH,
+                northBL, southBL, northBL, LuceneIndexField.NORTH, inclusive, true);
         }
         //
         // fullyOutsideOf: one or more of the 4 forbidden halfplanes contains
@@ -1256,53 +1226,23 @@ public class LuceneQueryBuilder {
         // not contain the metadata rectangle
         else if (relation.equals(Geonet.SearchResult.Relation.OUTSIDEOF)) {
             addLatLongQuery(query, westBL, String.valueOf(minBoundingLongitudeValue), westBL, LuceneIndexField.EAST,
-                    eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.WEST,
-                    southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.NORTH,
-                    northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.SOUTH, inclusive, false);
+                eastBL, eastBL, String.valueOf(maxBoundingLongitudeValue), LuceneIndexField.WEST,
+                southBL, String.valueOf(minBoundingLatitudeValue), southBL, LuceneIndexField.NORTH,
+                northBL, northBL, String.valueOf(maxBoundingLatitudeValue), LuceneIndexField.SOUTH, inclusive, false);
         }
     }
 
     /**
      * Whether a string equals the wildcard *.
-     * @param s
-     * @return
      */
     private boolean onlyWildcard(String s) {
         return "*".equals(StringUtils.trim(s));
     }
 
-    /**
-     * TODO javadoc.
-     *
-     *
-     * @param query
-     * @param langCode
-     * @param requestedLanguageOnly
-     * @return
-     */
-    static Query addLocaleTerm( Query query, String langCode, SettingInfo.SearchRequestLanguage requestedLanguageOnly ) {
-        if (langCode == null || requestedLanguageOnly == null) {
-            return query;
-        }
-
-        BooleanQuery booleanQuery;
-        if (query instanceof BooleanQuery) {
-            booleanQuery = (BooleanQuery) query;
-        }
-        else {
-            booleanQuery = new BooleanQuery();
-            booleanQuery.add(query, BooleanClause.Occur.MUST);
-        }
-
-        requestedLanguageOnly.addQuery(booleanQuery, langCode);
-        return booleanQuery;
-    }
-    
     private static class DrillDownPath {
+        private static final String DRILLDOWN_PATH_SEPARATOR = "/";
         private final String dimension;
         private final String[] path;
-
-        private static final String DRILLDOWN_PATH_SEPARATOR = "/";
 
         public DrillDownPath(String drillDownPath) {
             dimension = getDimension(drillDownPath);
@@ -1318,9 +1258,9 @@ public class LuceneQueryBuilder {
             String[] components = drillDownPath.split(DRILLDOWN_PATH_SEPARATOR);
             String[] result = new String[components.length - 1];
 
-            for (int i=1; i<components.length; i++) {
+            for (int i = 1; i < components.length; i++) {
                 try {
-                    result[i-1] = URLDecoder.decode(components[i], "UTF-8");
+                    result[i - 1] = URLDecoder.decode(components[i], "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
                 }

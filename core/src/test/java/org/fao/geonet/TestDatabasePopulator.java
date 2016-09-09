@@ -40,26 +40,25 @@ import java.sql.SQLException;
  */
 public class TestDatabasePopulator extends ResourceDatabasePopulator {
     /**
-     * Set the scripts which are urls to a file.  If the url contains ${webapp} then it will be replaced with the path to the
-     * webapp directory of geonetwork: web/src/main/webapp
-     * @param scripts
+     * Set the scripts which are urls to a file.  If the url contains ${webapp} then it will be
+     * replaced with the path to the webapp directory of geonetwork: web/src/main/webapp
      */
     public void setInterpolatedScripts(String[] scripts) throws IOException {
         final String base = "src/main/webapp/WEB-INF/config.xml";
         File webappFile;
-        if (new File("web/"+base).exists()) {
-            webappFile = new File("web/"+base);
-        } else if (new File("../web/"+base).exists()) {
-            webappFile = new File("../web/"+base);
+        if (new File("web/" + base).exists()) {
+            webappFile = new File("web/" + base);
+        } else if (new File("../web/" + base).exists()) {
+            webappFile = new File("../web/" + base);
         } else if (new File(base).exists()) {
             webappFile = new File(base);
         } else {
-            throw new AssertionError("Unable to locate the web/src/main/webapp webapp directory from the current directory: "+new File(".").getAbsolutePath());
+            throw new AssertionError("Unable to locate the web/src/main/webapp webapp directory from the current directory: " + new File(".").getAbsolutePath());
         }
 
         String webapp = webappFile.getParentFile().getParentFile().getCanonicalPath().replace(File.separatorChar, '/');
-        if (System.getProperty("os.name").toLowerCase().indexOf("win") ==  -1) {
-            webapp = "/"+webapp;
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") == -1) {
+            webapp = "/" + webapp;
         }
         for (String script : scripts) {
             String finalString = script.replace("${webapp}", webapp);
@@ -69,7 +68,7 @@ public class TestDatabasePopulator extends ResourceDatabasePopulator {
                 try {
                     addScript(new InputStreamResource(getClass().getClassLoader().getResourceAsStream(resourceString)));
                 } catch (Exception e) {
-                    throw new AssertionError("Failed to load data script as a from the classpath: "+resourceString);
+                    throw new AssertionError("Failed to load data script as a from the classpath: " + resourceString);
                 }
             } else {
                 // series of hack for different platforms...
@@ -86,7 +85,7 @@ public class TestDatabasePopulator extends ResourceDatabasePopulator {
                     if (new File(finalString).exists()) {
                         addScript(new InputStreamResource(new FileInputStream(finalString)));
                     } else {
-                        throw new AssertionError("Failed to load data script as a url: "+finalString);
+                        throw new AssertionError("Failed to load data script as a url: " + finalString);
                     }
                 }
             }

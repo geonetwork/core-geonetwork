@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -65,31 +66,28 @@ import javax.annotation.Nullable;
 
 /**
  * A container of I/O methods. <P>
- *
  */
 public final class IO {
-    static FileSystem defaultFs = FileSystems.getDefault();
-    static ThreadLocal<FileSystem> defaultFsThreadLocal = new InheritableThreadLocal<>();
-
     public static final DirectoryStream.Filter<Path> DIRECTORIES_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path entry) throws IOException {
             return Files.isDirectory(entry);
         }
     };
-
     public static final DirectoryStream.Filter<Path> FILES_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path entry) throws IOException {
             return Files.isRegularFile(entry);
         }
     };
+    static FileSystem defaultFs = FileSystems.getDefault();
+    static ThreadLocal<FileSystem> defaultFsThreadLocal = new InheritableThreadLocal<>();
 
     /**
-    * Default constructor.
-    * Builds a IO.
-    */
-   private IO() {}
+     * Default constructor. Builds a IO.
+     */
+    private IO() {
+    }
 
     public static void deleteFile(Path file, boolean throwException, String loggerModule) {
         deleteFile(file, throwException, Log.createLogger(loggerModule));
@@ -99,7 +97,7 @@ public final class IO {
         try {
             Files.delete(file);
         } catch (IOException e) {
-            if(throwException) {
+            if (throwException) {
                 throw new RuntimeException(e);
             } else {
                 context.error(e);
@@ -126,6 +124,7 @@ public final class IO {
             }
         }
     }
+
     public static void copyDirectoryOrFile(@Nonnull final Path from,
                                            @Nonnull final Path to,
                                            boolean copyInto) throws IOException {
@@ -134,10 +133,10 @@ public final class IO {
 
     /**
      * Copy a file or directories from the from path to the to path.
-     * @param from the source
-     * @param to the destination
+     *
+     * @param from   the source
+     * @param to     the destination
      * @param filter a filter to control which files to copy.  May be null
-     * @throws IOException
      */
     public static void copyDirectoryOrFile(@Nonnull final Path from,
                                            @Nonnull final Path to,
@@ -195,6 +194,7 @@ public final class IO {
             Files.move(from, actualTo);
         }
     }
+
     public static boolean isEmptyDir(Path dir) throws IOException {
         try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {
             final Iterator<Path> iterator = children.iterator();
@@ -205,6 +205,7 @@ public final class IO {
     public static void deleteFileOrDirectory(Path path) throws IOException {
         deleteFileOrDirectory(path, false);
     }
+
     public static void deleteFileOrDirectory(Path path, final boolean ignoreErrors) throws IOException {
         if (Files.isDirectory(path)) {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -243,12 +244,13 @@ public final class IO {
             }
         }
     }
-    public static void touch(Path file) throws IOException{
+
+    public static void touch(Path file) throws IOException {
         long timestamp = System.currentTimeMillis();
         touch(file, FileTime.from(timestamp, TimeUnit.MILLISECONDS));
     }
 
-    public static void touch(Path file, FileTime timestamp) throws IOException{
+    public static void touch(Path file, FileTime timestamp) throws IOException {
         if (!Files.exists(file)) {
             Path parent = file.getParent();
             if (parent != null && !Files.exists(parent)) {
@@ -274,8 +276,8 @@ public final class IO {
         } catch (FileSystemNotFoundException e) {
             if (uri.toString().startsWith("jar:")) {
                 throw new IllegalStateException("The zip file references in URI: " + uri + " has not been opened.  " +
-                                                "Before you can create this path you must first call ZipUtil.openZipFS with the url to " +
-                                                "the zip file");
+                    "Before you can create this path you must first call ZipUtil.openZipFS with the url to " +
+                    "the zip file");
             }
             throw new FileSystemNotFoundException("No filesystem found for the uri: " + uri);
         }
@@ -363,8 +365,9 @@ public final class IO {
     }
 
     /**
-     * Convert the URI to a URL.  If the file system is not a default one the URL scheme may not be registered so
-     * we need to make the URL in such a way that the scheme is registered in its url context.
+     * Convert the URI to a URL.  If the file system is not a default one the URL scheme may not be
+     * registered so we need to make the URL in such a way that the scheme is registered in its url
+     * context.
      */
     public static URL toURL(URI uri) throws MalformedURLException {
         try {
@@ -429,6 +432,7 @@ public final class IO {
             return FileVisitResult.CONTINUE;
         }
     }
+
     private static class CopyAcceptedFiles extends SimpleFileVisitor<Path> {
         private final Path from;
         private final Path actualTo;

@@ -22,29 +22,29 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
-  exclude-result-prefixes="#all">
-  
-  <!-- 
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:saxon="http://saxon.sf.net/"
+                version="2.0" extension-element-prefixes="saxon"
+                exclude-result-prefixes="#all">
+
+  <!--
     Render an element as XML tree in view or edit mode
   -->
   <xsl:template mode="render-xml" match="*">
     <xsl:choose>
       <xsl:when test="$isEditing">
-        <!-- TODO: could help editor to have basic
-        syntax highlighting. -->
-        <textarea name="data" class="gn-textarea-xml form-control" data-gn-autogrow="">
-          
-          <!-- Remove gn:* element -->
-          <xsl:variable name="strippedXml">
-            <xsl:apply-templates mode="gn-element-cleaner" select="."/>
-          </xsl:variable>
-          
-          <!-- Render XML in textarea -->
-          <xsl:value-of select="saxon:serialize($strippedXml, 'default-indent-mode')"></xsl:value-of>
+        <!-- Remove gn:* element -->
+        <xsl:variable name="strippedXml">
+          <xsl:apply-templates mode="gn-element-cleaner" select="."/>
+        </xsl:variable>
+
+        <!-- Render XML in textarea -->
+        <div id="xmleditor"
+             ui-ace="{{useWrapMode:true,showGutter:true,mode:'xml',onLoad:xmlEditorLoaded,onChange:xmlEditorChange}}">
+          <xsl:value-of
+            select="saxon:serialize($strippedXml, 'default-indent-mode')"/>
+        </div>
+        <textarea name="data" class="hidden">
         </textarea>
       </xsl:when>
       <xsl:otherwise>

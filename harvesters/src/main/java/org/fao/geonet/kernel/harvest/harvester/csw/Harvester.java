@@ -53,158 +53,182 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
-class Harvester implements IHarvester<HarvestResult>
-{
-    private final AtomicBoolean cancelMonitor;
+class Harvester implements IHarvester<HarvestResult> {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
+    // FIXME : Currently switch from POST to GET for testing mainly.
+    public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
+    private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
 
-	public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params)
-	{
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private final static String ATTRIB_SEARCHRESULT_RETURNED = "numberOfRecordsReturned";
+
+    //---------------------------------------------------------------------------
+    private final static String ATTRIB_SEARCHRESULT_NEXT = "nextRecord";
+
+    //---------------------------------------------------------------------------
+    private static int GETRECORDS_REQUEST_MAXRECORDS = 20;
+
+    //---------------------------------------------------------------------------
+    private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
+
+    //---------------------------------------------------------------------------
+    //FIXME version should be parametrized
+    private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
+    private final AtomicBoolean cancelMonitor;
+
+    //---------------------------------------------------------------------------
+    private Logger log;
+    private CswParams params;
+    private ServiceContext context;
+
+    //---------------------------------------------------------------------------
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
+
+    //---------------------------------------------------------------------------
+
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, CswParams params) {
         this.cancelMonitor = cancelMonitor;
-		this.log    = log;
-		this.context= context;
-		this.params = params;
-	}
+        this.log = log;
+        this.context = context;
+        this.params = params;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public HarvestResult harvest(Logger log) throws Exception {
+        this.log = log;
+        log.info("Retrieving capabilities file for : " + params.getName());
 
-	public HarvestResult harvest(Logger log) throws Exception
-	{	    
-	    this.log = log;
-		log.info("Retrieving capabilities file for : "+ params.getName());
-
-		CswServer server = retrieveCapabilities(log);
+        CswServer server = retrieveCapabilities(log);
         if (cancelMonitor.get()) {
             return new HarvestResult();
         }
 
         //--- perform all searches
-		
-		Set<RecordInfo> records = new HashSet<RecordInfo>();
-		
-		Search s = new Search();
-		
-		for (Element element : params.eltSearches) {
+
+        Set<RecordInfo> records = new HashSet<RecordInfo>();
+
+        Search s = new Search();
+
+        for (Element element : params.eltSearches) {
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
 
-            if (element.getChildText("value")!=null){
-				if (!element.getChildText("value").trim().equals("")){
-					s.addAttribute(element.getName(), element.getChildText("value").trim());
-				}
-			} else if (element.getText()!=null) {
-				s.addAttribute(element.getName(), element.getText().trim());
-			}
-		}
-			
+            if (element.getChildText("value") != null) {
+                if (!element.getChildText("value").trim().equals("")) {
+                    s.addAttribute(element.getName(), element.getChildText("value").trim());
+                }
+            } else if (element.getText() != null) {
+                s.addAttribute(element.getName(), element.getText().trim());
+            }
+        }
+
         try {
             records.addAll(search(server, s));
         } catch (Exception t) {
             log.error("Unknown error trying to harvest");
             log.error(t.getMessage());
             log.error(t);
-            errors.add(new HarvestError(t, log));
+            errors.add(new HarvestError(context, t, log));
         } catch (Throwable t) {
             log.fatal("Something unknown and terrible happened while harvesting");
             log.fatal(t.getMessage());
-            errors.add(new HarvestError(t, log));
+            errors.add(new HarvestError(context, t, log));
         }
 
-		log.info("Total records processed in all searches :"+ records.size());
+        log.info("Total records processed in all searches :" + records.size());
 
-		//--- align local node
+        //--- align local node
 
-		Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
+        Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
 
-		return aligner.align(records, errors);
-	}
+        return aligner.align(records, errors);
+    }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    /**
+     * Does CSW GetCapabilities request and check that operations needed for harvesting (ie.
+     * GetRecords and GetRecordById) are available in remote node.
+     */
+    private CswServer retrieveCapabilities(Logger log) throws Exception {
+        if (!Lib.net.isUrlValid(params.capabUrl))
+            throw new BadParameterEx("Capabilities URL", params.capabUrl);
 
-	/**
-	 * Does CSW GetCapabilities request
-	 * and check that operations needed for harvesting
-	 * (ie. GetRecords and GetRecordById)
-	 * are available in remote node.
-	 */
-	private CswServer retrieveCapabilities(Logger log) throws Exception {		
-		if (!Lib.net.isUrlValid(params.capabUrl))
-			throw new BadParameterEx("Capabilities URL", params.capabUrl);
-
-		XmlRequest req;
-		// Support both full GetCapbilities URL or CSW entry point
+        XmlRequest req;
+        // Support both full GetCapbilities URL or CSW entry point
         final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
         if (params.capabUrl.contains("GetCapabilities")) {
             req = requestFactory.createXmlRequest(new URL(params.capabUrl));
-		} else {
-			req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
-		}
+        } else {
+          req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
+        }
 
-		Lib.net.setupProxy(context, req);
+        Lib.net.setupProxy(context, req);
 
-		if (params.isUseAccount())
-			req.setCredentials(params.getUsername(), params.getPassword());
-		CswServer server = null;
-		try{
-    		Element capabil = req.execute();
-    
+        if (params.isUseAccount())
+            req.setCredentials(params.getUsername(), params.getPassword());
+        CswServer server = null;
+        try{
+            Element capabil = req.execute();
+
             if(log.isDebugEnabled())
                 log.debug("Capabilities:\n"+Xml.getString(capabil));
-            
-    		if (capabil.getName().equals("ExceptionReport"))
-    			CatalogException.unmarshal(capabil);
-    
-    		server = new CswServer(capabil);
-    
-    		if (!checkOperation(log, server, "GetRecords"))
-    			throw new OperationAbortedEx("GetRecords operation not found");
-    
-    		if (!checkOperation(log, server, "GetRecordById"))
-    			throw new OperationAbortedEx("GetRecordById operation not found");
 
-		} catch(BadXmlResponseEx e) {
-            errors.add(new HarvestError(e, log, params.capabUrl));
+            if (capabil.getName().equals("ExceptionReport"))
+                CatalogException.unmarshal(capabil);
+
+            server = new CswServer(capabil);
+
+            if (!checkOperation(log, server, "GetRecords"))
+                throw new OperationAbortedEx("GetRecords operation not found");
+
+            if (!checkOperation(log, server, "GetRecordById"))
+                throw new OperationAbortedEx("GetRecordById operation not found");
+
+        } catch(BadXmlResponseEx e) {
+            errors.add(new HarvestError(context, e, log, params.capabUrl));
             throw e;
-		} 
-        
-		return server;
-	}
+        }
 
-	//---------------------------------------------------------------------------
+        return server;
+    }
 
-	private boolean checkOperation(Logger log, CswServer server, String name)
-	{
-		CswOperation oper = server.getOperation(name);
+    //---------------------------------------------------------------------------
 
-		if (oper == null)
-		{
-			log.warning("Operation not present in capabilities : "+ name);
-			return false;
-		}
+    private boolean checkOperation(Logger log, CswServer server, String name) {
+        CswOperation oper = server.getOperation(name);
 
-		if (oper.getGetUrl() == null && oper.getPostUrl() == null)
-		{
-			log.warning("Operation has no GET and POST bindings : "+ name);
-			return false;
-		}
+        if (oper == null) {
+            log.warning("Operation not present in capabilities : " + name);
+            return false;
+        }
 
-		return true;
-	}
+        if (oper.getGetUrl() == null && oper.getPostUrl() == null) {
+            log.warning("Operation has no GET and POST bindings : " + name);
+            return false;
+        }
 
-	//---------------------------------------------------------------------------
+        return true;
+    }
 
-	/**
-	 * Does CSW GetRecordsRequest.
-	 */
+    /**
+     * Does CSW GetRecordsRequest.
+     */
     private Set<RecordInfo> search(CswServer server, Search s) throws Exception {
         int start = 1;
 
@@ -221,6 +245,8 @@ class Harvester implements IHarvester<HarvestResult>
 
         // Use the preferred HTTP method and check one exist.
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
+        // Force csw:Record outputSchema
+        request.setOutputSchema(Csw.NAMESPACE_CSW.getURI());
 
         if (params.isUseAccount()) {
             log.debug("Logging into server (" + params.getUsername() + ")");
@@ -236,9 +262,11 @@ class Harvester implements IHarvester<HarvestResult>
                 log.debug(ex.getMessage());
                 log.debug(String.format("Due to errors, changing CSW harvester method to HTTP %s method.", PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET"));
             }
-            errors.add(new HarvestError(ex, log));
+            errors.add(new HarvestError(context, ex, log));
 
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
+            // Force csw:Record outputSchema
+            request.setOutputSchema(Csw.NAMESPACE_CSW.getURI());
         }
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
@@ -277,7 +305,7 @@ class Harvester implements IHarvester<HarvestResult>
                     }
 
                 } catch (Exception ex) {
-                    errors.add(new HarvestError(ex, log));
+                    errors.add(new HarvestError(context, ex, log));
                     log.error("Unable to process record from csw (" + this.params.getName() + ")");
                     log.error("   Record failed: " + foundCnt);
                     log.debug("   Record: " + ((Element) record).getName());
@@ -310,12 +338,12 @@ class Harvester implements IHarvester<HarvestResult>
                 log.warning("Declared number of returned records (" + returnedCount + ") does not match actual record count (" + foundCnt + ")");
             }
 
-            if(nextRecord == null) {
+            if (nextRecord == null) {
                 log.warning("Declared nextRecord is null");
             }
 
             //== Find out if the harvesting loop has completed
-            
+
             // Check for standard CSW: A value of 0 means all records have been returned.
             if (nextRecord != null && nextRecord == 0) {
                 break;
@@ -354,15 +382,6 @@ class Harvester implements IHarvester<HarvestResult>
 
     /**
      * TODO Javadoc.
-     *
-     * @param request
-     * @param oper
-     * @param server
-     * @param s
-     * @param url
-     * @param constraintLanguage
-     * @param constraint
-     * @param method
      */
     private void setUpRequest(GetRecordsRequest request, CswOperation oper, CswServer server, Search s, URL url,
                               ConstraintLanguage constraintLanguage, String constraint, AbstractHttpRequest.Method method) {
@@ -393,22 +412,15 @@ class Harvester implements IHarvester<HarvestResult>
                 request.addTypeName(TypeName.getTypeName(typeName));
             }
         }
-		request.setOutputFormat(oper.getPreferredOutputFormat());
+        request.setOutputFormat(oper.getPreferredOutputFormat());
     }
 
     /**
      * Configs the harvester request.
-     *
-     * @param request
-     * @param oper
-     * @param server
-     * @param s
-     * @param preferredMethod
-     * @throws Exception
      */
     private void configRequest(final GetRecordsRequest request, final CswOperation oper, final CswServer server,
                                final Search s, final String preferredMethod)
-            throws Exception {
+        throws Exception {
         if (oper.getGetUrl() == null && oper.getPostUrl() == null) {
             throw new OperationAbortedEx("No GET or POST DCP available in this service.");
         }
@@ -416,29 +428,27 @@ class Harvester implements IHarvester<HarvestResult>
         // Use the preferred HTTP method and check one exist.
         if (oper.getGetUrl() != null && preferredMethod.equals("GET") && oper.getConstraintLanguage().contains("cql_text")) {
             setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
-                    AbstractHttpRequest.Method.GET);
+                AbstractHttpRequest.Method.GET);
         } else if (oper.getPostUrl() != null && preferredMethod.equals("POST") && oper.getConstraintLanguage().contains("filter")) {
             setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s),
-                    AbstractHttpRequest.Method.POST);
+                AbstractHttpRequest.Method.POST);
         } else {
             if (oper.getGetUrl() != null && oper.getConstraintLanguage().contains("cql_text")) {
                 setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
-                        AbstractHttpRequest.Method.GET);
+                    AbstractHttpRequest.Method.GET);
             } else if (oper.getPostUrl() != null && oper.getConstraintLanguage().contains("filter")) {
                 setUpRequest(request, oper, server, s, oper.getPostUrl(), ConstraintLanguage.FILTER, getFilterConstraint(s),
-                        AbstractHttpRequest.Method.POST);
+                    AbstractHttpRequest.Method.POST);
             } else {
                 // TODO : add GET+FE and POST+CQL support
                 log.warning("No GET (using CQL) or POST (using FE) DCP available in this service... Trying GET CQL anyway ...");
                 setUpRequest(request, oper, server, s, oper.getGetUrl(), ConstraintLanguage.CQL, getCqlConstraint(s),
-                        AbstractHttpRequest.Method.GET);
+                    AbstractHttpRequest.Method.GET);
             }
         }
     }
 
-	//---------------------------------------------------------------------------
-
-	private String getFilterConstraint(final Search s) {
+    private String getFilterConstraint(final Search s) {
         //--- collect queriables
 
         ArrayList<Element> queriables = new ArrayList<Element>();
@@ -446,15 +456,15 @@ class Harvester implements IHarvester<HarvestResult>
         if (!s.attributesMap.isEmpty()) {
             for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
                 if (entry.getValue() != null) {
-					// If the queriable has the namespace, use it
-					String queryableName = entry.getKey();
-					if (queryableName.contains("__")) {
-						queryableName = queryableName.replace("__", ":");
-					} else if (!queryableName.contains(":")) {
-						queryableName = "csw:" + queryableName;
-					}
-					buildFilterQueryable(queriables, queryableName, entry.getValue());
-				}
+                    // If the queriable has the namespace, use it
+                    String queryableName = entry.getKey();
+                    if (queryableName.contains("__")) {
+                        queryableName = queryableName.replace("__", ":");
+                    } else if (!queryableName.contains(":")) {
+                        queryableName = "csw:" + queryableName;
+                    }
+                    buildFilterQueryable(queriables, queryableName, entry.getValue());
+                }
             }
         } else {
             log.debug("no search criterion specified, harvesting all ... ");
@@ -463,82 +473,78 @@ class Harvester implements IHarvester<HarvestResult>
 
         //--- build filter expression
 
-		if (queriables.isEmpty()) {
+        if (queriables.isEmpty()) {
             return null;
         }
 
-		Element filter = new Element("Filter", Csw.NAMESPACE_OGC);
+        Element filter = new Element("Filter", Csw.NAMESPACE_OGC);
 
-		if (queriables.size() == 1)
-			filter.addContent(queriables.get(0));
-		else
-		{
-			Element and = new Element("And", Csw.NAMESPACE_OGC);
+        if (queriables.size() == 1)
+            filter.addContent(queriables.get(0));
+        else {
+            Element and = new Element("And", Csw.NAMESPACE_OGC);
 
-			for(Element prop : queriables)
-				and.addContent(prop);
+            for (Element prop : queriables)
+                and.addContent(prop);
 
-			filter.addContent(and);
-		}
+            filter.addContent(and);
+        }
 
-		return Xml.getString(filter);
-	}
+        return Xml.getString(filter);
+    }
 
-	//---------------------------------------------------------------------------
-	private void buildFilterQueryable(List<Element> queryables, String name, String value) {
-		if (value.contains("%")) { 
-			buildFilterQueryable(queryables, name, value, "PropertyIsLike");
-		} else {
-			buildFilterQueryable(queryables, name, value, "PropertyIsEqualTo");
-		}
-	}
-	private void buildFilterQueryable(List<Element> queryables, String name, String value, String operator)
-	{
-		if (value.length() == 0)
-			return;
+    //---------------------------------------------------------------------------
+    private void buildFilterQueryable(List<Element> queryables, String name, String value) {
+        if (value.contains("%")) {
+            buildFilterQueryable(queryables, name, value, "PropertyIsLike");
+        } else {
+            buildFilterQueryable(queryables, name, value, "PropertyIsEqualTo");
+        }
+    }
 
-		// add Like operator
-		Element prop;
-		
-		if (operator.equals("PropertyIsLike")) {
-			prop = new Element(operator, Csw.NAMESPACE_OGC);
-			prop.setAttribute("wildcard", "%");
-			prop.setAttribute("singleChar", "_");
-			prop.setAttribute("escapeChar", "\\");
-		} else {
-			prop = new Element(operator, Csw.NAMESPACE_OGC);
-		}
-		
-		Element propName = new Element("PropertyName", Csw.NAMESPACE_OGC);
-		Element literal  = new Element("Literal", Csw.NAMESPACE_OGC);
-		
-		propName.setText(name);
-		literal .setText(value);
+    private void buildFilterQueryable(List<Element> queryables, String name, String value, String operator) {
+        if (value.length() == 0)
+            return;
 
-		prop.addContent(propName);
-		prop.addContent(literal);
+        // add Like operator
+        Element prop;
 
-		queryables.add(prop);
-	}
+        if (operator.equals("PropertyIsLike")) {
+            prop = new Element(operator, Csw.NAMESPACE_OGC);
+            prop.setAttribute("wildcard", "%");
+            prop.setAttribute("singleChar", "_");
+            prop.setAttribute("escapeChar", "\\");
+        } else {
+            prop = new Element(operator, Csw.NAMESPACE_OGC);
+        }
 
-	//---------------------------------------------------------------------------
+        Element propName = new Element("PropertyName", Csw.NAMESPACE_OGC);
+        Element literal = new Element("Literal", Csw.NAMESPACE_OGC);
 
-	private String getCqlConstraint(Search s)
-	{
-		//--- collect queriables
+        propName.setText(name);
+        literal.setText(value);
 
-		ArrayList<String> queryables = new ArrayList<String>();
-		
-		if (!s.attributesMap.isEmpty()){
-			for(Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
-			    if (entry.getValue()!=null){
-			    	buildCqlQueryable(queryables, "csw:"+entry.getKey(), entry.getValue());
-		    	}
-			}
-		} else {
-			log.debug("no search criterion specified, harvesting all ... ");
-		}
-		
+        prop.addContent(propName);
+        prop.addContent(literal);
+
+        queryables.add(prop);
+    }
+
+    private String getCqlConstraint(Search s) {
+        //--- collect queriables
+
+        ArrayList<String> queryables = new ArrayList<String>();
+
+        if (!s.attributesMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : s.attributesMap.entrySet()) {
+                if (entry.getValue() != null) {
+                    buildCqlQueryable(queryables, "csw:" + entry.getKey(), entry.getValue());
+                }
+            }
+        } else {
+            log.debug("no search criterion specified, harvesting all ... ");
+        }
+
 		/*
 		buildCqlQueryable(queryables, "csw:AnyText", s.freeText);
 		buildCqlQueryable(queryables, "dc:title", s.title);
@@ -547,169 +553,130 @@ class Harvester implements IHarvester<HarvestResult>
 		buildCqlQueryable(queryables, "dct:denominator", s.minscale, ">=");
 		buildCqlQueryable(queryables, "dct:denominator", s.maxscale, "<=");
 		*/
-		
-		//--- build CQL query
 
-		StringBuffer sb = new StringBuffer();
+        //--- build CQL query
 
-		for (int i=0; i<queryables.size(); i++)
-		{
-			sb.append(queryables.get(i));
+        StringBuffer sb = new StringBuffer();
 
-			if (i < queryables.size() -1)
-				sb.append(" AND ");
-		}
+        for (int i = 0; i < queryables.size(); i++) {
+            sb.append(queryables.get(i));
 
-		return (queryables.size() == 0) ? null : sb.toString();
-	}
+            if (i < queryables.size() - 1)
+                sb.append(" AND ");
+        }
 
-	//---------------------------------------------------------------------------
+        return (queryables.size() == 0) ? null : sb.toString();
+    }
 
-	/**
-	 * Build CQL from user entry. If parameter value
-	 * contains '%', then the like operator is used.
-	 */
-	private void buildCqlQueryable(List<String> queryables, String name, String value)
-	{
-		if (value.length() != 0) {
-			if (value.contains("%")) {
+    /**
+     * Build CQL from user entry. If parameter value contains '%', then the like operator is used.
+     */
+    private void buildCqlQueryable(List<String> queryables, String name, String value) {
+        if (value.length() != 0) {
+            if (value.contains("%")) {
                 buildCqlQueryable(queryables, name, value, "like");
             } else {
                 buildCqlQueryable(queryables, name, value, "=");
             }
-		}
-	}
-	private void buildCqlQueryable(List<String> queryables, String name, String value, String operator)
-	{
-		if (value.length() != 0) {
-            queryables.add(name + " " + operator + " '" + value + "'");
         }
-	}
-	//---------------------------------------------------------------------------
-
-	private Element doSearch(CatalogRequest request, int start, int max) throws Exception
-	{
-		try
-		{
-			log.info("Searching on : "+ params.getName() +" ("+ start +".."+ (start + max) +")");
-            Element response = request.execute();
-            if(log.isDebugEnabled()) {
-                log.debug("Sent request "+request.getSentData());
-                log.debug("Search results:\n"+Xml.getString(response));
-            }
-
-			return response;
-		}
-		catch(Exception e)
-		{
-            errors.add(new HarvestError(e, log));
-			log.warning("Raised exception when searching : "+ e);
-			log.warning("Url: " + request.getHost());
-			log.warning("Method: " + request.getMethod());
-			log.warning("Sent request " + request.getSentData());
-			throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
-		}
-	}
-
-	//---------------------------------------------------------------------------
-
-    private int getSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx	{
-            String value = results.getAttributeValue(attribName);
-
-            if (value == null) {
-                throw new OperationAbortedEx("Missing '" + attribName + "' attribute in 'SearchResults'");
-            }
-
-            if (!Lib.type.isInteger(value)) {
-                throw new OperationAbortedEx("Bad value for '" + attribName + "'", value);
-            }
-
-            return Integer.parseInt(value);
-	}
-
-        private Integer getOptionalSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx	{
-            String value = results.getAttributeValue(attribName);
-
-            if (value == null) {
-                return null;
-            }
-
-            if (!Lib.type.isInteger(value)) {
-                throw new OperationAbortedEx("Bad value for '" + attribName + "'", value);
-            }
-
-            return Integer.valueOf(value);
-	}
-
-	//---------------------------------------------------------------------------
-
-	private RecordInfo getRecordInfo(Element record)
-	{
-		String name = record.getName();
-        if(log.isDebugEnabled())
-            log.debug("getRecordInfo (name): " + name);
-
-		// get schema
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getBean(DataManager.class);
-
-		// get uuid and date modified
-		try {
-			String schema = dm.autodetectSchema(record);
-            if(log.isDebugEnabled())
-                log.debug("getRecordInfo (schema): " + schema);
-
-			String identif  = dm.extractUUID(schema, record); 
-			if (identif.length() == 0) {
-      	log.warning("Record doesn't have a uuid : "+ name);
-				return null; // skip this one
-			}
-			
-			String modified = dm.extractDateModified(schema, record); 
-			if (modified.length() == 0) modified = null;
-            if(log.isDebugEnabled())
-                log.debug("getRecordInfo: adding "+identif+" with modification date "+modified);
-      return new RecordInfo(identif, modified);
-		} catch (Exception e) {
-      log.warning("Skipped record not in supported format : "+ name);
-			e.printStackTrace();
     }
 
-		// we get here if we didn't recognize the schema and/or couldn't get the 
-		// UUID or date modified
-		return null;
+    private void buildCqlQueryable(List<String> queryables, String name, String value, String operator) {
+        if (value.length() != 0) {
+            queryables.add(name + " " + operator + " '" + value + "'");
+        }
+    }
 
-	}
+    private Element doSearch(CatalogRequest request, int start, int max) throws Exception {
+        try {
+            log.info("Searching on : " + params.getName() + " (" + start + ".." + (start + max) + ")");
+            Element response = request.execute();
+            if (log.isDebugEnabled()) {
+                log.debug("Sent request " + request.getSentData());
+                log.debug("Search results:\n" + Xml.getString(response));
+            }
 
+            return response;
+        }
+        catch(Exception e)
+        {
+          errors.add(new HarvestError(context, e, log));
+          log.warning("Raised exception when searching : "+ e);
+          log.warning("Url: " + request.getHost());
+          log.warning("Method: " + request.getMethod());
+          log.warning("Sent request " + request.getSentData());
+          throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
+        }
+    }
+
+    private int getSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx {
+        String value = results.getAttributeValue(attribName);
+
+        if (value == null) {
+            throw new OperationAbortedEx("Missing '" + attribName + "' attribute in 'SearchResults'");
+        }
+
+        if (!Lib.type.isInteger(value)) {
+            throw new OperationAbortedEx("Bad value for '" + attribName + "'", value);
+        }
+
+        return Integer.parseInt(value);
+    }
+
+    private Integer getOptionalSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx {
+        String value = results.getAttributeValue(attribName);
+
+        if (value == null) {
+            return null;
+        }
+
+        if (!Lib.type.isInteger(value)) {
+            throw new OperationAbortedEx("Bad value for '" + attribName + "'", value);
+        }
+
+        return Integer.valueOf(value);
+    }
+
+    private RecordInfo getRecordInfo(Element record) {
+        String name = record.getName();
+        if (log.isDebugEnabled())
+            log.debug("getRecordInfo (name): " + name);
+
+        // get schema
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+
+        // get uuid and date modified
+        try {
+            String schema = dm.autodetectSchema(record);
+            if (log.isDebugEnabled())
+                log.debug("getRecordInfo (schema): " + schema);
+
+            String identif = dm.extractUUID(schema, record);
+            if (identif.length() == 0) {
+                log.warning("Record doesn't have a uuid : " + name);
+                return null; // skip this one
+            }
+
+            String modified = dm.extractDateModified(schema, record);
+            if (modified.length() == 0) modified = null;
+            if (log.isDebugEnabled())
+                log.debug("getRecordInfo: adding " + identif + " with modification date " + modified);
+            return new RecordInfo(identif, modified);
+        } catch (Exception e) {
+            log.warning("Skipped record not in supported format : " + name);
+            e.printStackTrace();
+        }
+
+        // we get here if we didn't recognize the schema and/or couldn't get the
+        // UUID or date modified
+        return null;
+
+    }
 
     public List<HarvestError> getErrors() {
         return errors;
     }
-    
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-	// FIXME : Currently switch from POST to GET for testing mainly.
-	public static final String PREFERRED_HTTP_METHOD = AbstractHttpRequest.Method.GET.toString();
-    private static int GETRECORDS_REQUEST_MAXRECORDS = 20;
-    private static String CONSTRAINT_LANGUAGE_VERSION = "1.1.0";
-
-    private final static String ATTRIB_SEARCHRESULT_MATCHED = "numberOfRecordsMatched";
-    private final static String ATTRIB_SEARCHRESULT_RETURNED = "numberOfRecordsReturned";
-    private final static String ATTRIB_SEARCHRESULT_NEXT = "nextRecord";
-
-	//FIXME version should be parametrized
-	private static String GETCAPABILITIES_PARAMETERS = "SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2";
-	private Logger         log;
-	private CswParams      params;
-	private ServiceContext context;
-	
-	/**
-	 * Contains a list of accumulated errors during the executing of this harvest.
-	 */
-	private List<HarvestError> errors = new LinkedList<HarvestError>();
 }
 
 //=============================================================================

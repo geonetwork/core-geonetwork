@@ -24,38 +24,41 @@
 
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
 
-<!-- OASIS CATALOG FOR GEONETWORK TO REMAP VARIOUS XML IDs -->
+  <!-- OASIS CATALOG FOR GEONETWORK TO REMAP VARIOUS XML IDs -->
 
-	<!-- This used to be done in Java code, but with the use of these 
-			 maps you can customise this to suit yourself. -->
+  <!-- This used to be done in Java code, but with the use of these
+             maps you can customise this to suit yourself. -->
 
-	<!-- Each schema has an oasis-catalog file for remapping individual
-	     xsd schemaLocation hints -->
+  <!-- Each schema has an oasis-catalog file for remapping individual
+         xsd schemaLocation hints -->
 
-	<!-- remap system id schema-ident.xsd to local copy in GeoNetwork 
-	     relative to this catalog file -->
+  <!-- remap system id schema-ident.xsd to local copy in GeoNetwork
+         relative to this catalog file -->
 
-	<system systemId="http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd" 
-	        uri="../xml/validation/schemaPlugins/schema-ident.xsd"/>
+  <system systemId="http://geonetwork-opensource.org/schemas/schema-ident/schema-ident.xsd"
+          uri="../xml/validation/schemaPlugins/schema-ident.xsd"/>
 
-	<system systemId="http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd" 
-	        uri="../xml/validation/oai/OAI-PMH.xsd"/>
+  <system systemId="http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd"
+          uri="../xml/validation/oai/OAI-PMH.xsd"/>
 
-	<system systemId="http://www.openarchives.org/OAI/2.0/oai_dc.xsd" 
-	        uri="../xml/validation/oai/dc/oai_dc.xsd"/>
+  <system systemId="http://www.openarchives.org/OAI/2.0/oai_dc.xsd"
+          uri="../xml/validation/oai/dc/oai_dc.xsd"/>
 
-	<system systemId="xml.xsd" 
-	        uri="../xml/validation/oai/dc/xml.xsd"/>
+  <system systemId="xml.xsd"
+          uri="../xml/validation/oai/dc/xml.xsd"/>
 
-	<system systemId="XMLSchema.dtd" 
-	        uri="../xml/validation/oai/dc/XMLSchema.dtd"/>
+  <system systemId="XMLSchema.dtd"
+          uri="../xml/validation/oai/dc/XMLSchema.dtd"/>
 
-	<!-- remap utils-fn.xsl included in schematrons to the correct place
-	     relative to this catalog file -->
+  <!-- remap utils-fn.xsl included in schematrons to the correct place
+         relative to this catalog file -->
 
 
-	<uri    name="../../../xsl/utils-fn.xsl"
-					uri="../xsl/utils-fn.xsl"/>
+  <uri name="../../../xsl/utils-fn.xsl"
+       uri="../xsl/utils-fn.xsl"/>
+
+  <uri name="common/render-html.xsl"
+       uri="../xslt/common/render-html.xsl"/>
 
   <uri name="common/functions-core.xsl"
        uri="../xslt/common/functions-core.xsl"/>

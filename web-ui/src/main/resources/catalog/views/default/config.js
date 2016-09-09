@@ -36,7 +36,10 @@
         'gnViewerSettings',
         'gnOwsContextService',
         'gnMap',
-        function(searchSettings, viewerSettings, gnOwsContextService, gnMap) {
+        'gnNcWms',
+        'gnConfig',
+        function(searchSettings, viewerSettings, gnOwsContextService,
+                 gnMap, gnNcWms, gnConfig) {
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
             viewerSettings.mapConfig.viewerMap ||
@@ -55,7 +58,17 @@
             viewerSettings.mapConfig.listOfServices || {};
 
           // WMS settings
-          viewerSettings.singleTileWMS = true;
+          // If 3D mode is activated, single tile WMS mode is
+          // not supported by ol3cesium, so force tiling.
+          if (gnConfig['map.is3DModeAllowed']) {
+            viewerSettings.singleTileWMS = false;
+            // Configure Cesium to use a proxy. This is required when
+            // WMS does not have CORS headers. BTW, proxy will slow
+            // down rendering.
+            viewerSettings.cesiumProxy = true;
+          } else {
+            viewerSettings.singleTileWMS = true;
+          }
 
           var bboxStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
@@ -105,8 +118,10 @@
 
           var searchMap = new ol.Map({
             controls:[],
-            layers: viewerMap.getLayers(),
-            view: new ol.View(mapsConfig)
+            layers: [new ol.layer.Tile({
+              source: new ol.source.OSM()
+            })],
+            view: new ol.View(angular.extend({}, mapsConfig))
           });
 
 
@@ -171,22 +186,13 @@
           // }
           searchSettings.formatter = {
             // defaultUrl: 'md.format.xml?xsl=full_view&id='
-            defaultUrl: 'md.format.xml?xsl=xsl-view&uuid=',
-            defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
+            // defaultUrl: 'md.format.xml?xsl=xsl-view&uuid=',
+            // defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
             list: [{
-            //  label: 'inspire',
-            //  url: 'md.format.xml?xsl=xsl-view' + '&view=inspire&id='
-            //}, {
-            //  label: 'full',
-            //  url: 'md.format.xml?xsl=xsl-view&view=advanced&id='
-            //}, {
               label: 'full',
-              url: 'md.format.xml?xsl=full_view&uuid='
-              /*
-              // You can use a function to choose formatter
               url : function(md) {
-                return 'md.format.xml?xsl=full_view&uuid=' + md.getUuid();
-              }*/
+                return '../api/records/' + md.getUuid() + '/formatters/xsl-view?root=div&view=advanced';
+              }
             }]
           };
 
@@ -208,5 +214,13 @@
             viewerMap: viewerMap,
             searchMap: searchMap
           });
+
+          viewerMap.getLayers().on('add', function(e) {
+            var layer = e.element;
+            if (layer.get('advanced')) {
+              gnNcWms.feedOlLayer(layer);
+            }
+          });
+
         }]);
 })();

@@ -63,8 +63,7 @@
       function loadMetadataUrnTemplates() {
         $scope.mdIdentifierTemplateSelected = {};
 
-        $http.get('metadataIdentifierTemplates' +
-            '?_content_type=json&userDefinedOnly=true')
+        $http.get('../api/identifiers?userDefinedOnly=true')
             .success(function(data) {
               $scope.mdIdentifierTemplates = data;
             });
@@ -73,14 +72,14 @@
 
       $scope.addMetadataIdentifierTemplate = function() {
         $scope.mdIdentifierTemplateSelected = {
-          'id': '',
+          'id': '-99',
           'name': '',
           'template': ''
         };
       };
 
       $scope.deleteMetadataIdentifierTemplate = function(id) {
-        $http.delete($scope.url + 'metadataIdentifierTemplates?id=' + id)
+        $http.delete('../api/identifiers/' + id)
             .success(function(data) {
               $('.ng-dirty').removeClass('ng-dirty');
               loadMetadataUrnTemplates();
@@ -101,14 +100,11 @@
 
       $scope.saveMetadataIdentifierTemplate = function() {
 
-        var params = {
-          id: $scope.mdIdentifierTemplateSelected.id,
-          name: $scope.mdIdentifierTemplateSelected.name,
-          template: $scope.mdIdentifierTemplateSelected.template
-        };
-
-        $http.post($scope.url + 'metadataIdentifierTemplates',
-            null, {params: params})
+        $http.put('../api/identifiers' + (
+            $scope.mdIdentifierTemplateSelected.id !== '-99' ?
+            '/' + $scope.mdIdentifierTemplateSelected.id : ''
+            ),
+            $scope.mdIdentifierTemplateSelected)
             .success(function(data) {
               $('.ng-dirty').removeClass('ng-dirty');
               loadMetadataUrnTemplates();

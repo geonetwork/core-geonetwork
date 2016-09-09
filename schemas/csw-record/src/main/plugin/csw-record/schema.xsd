@@ -22,6 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.opengis.net/cat/csw/2.0.2">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" attributeFormDefault="unqualified"
+           targetNamespace="http://www.opengis.net/cat/csw/2.0.2">
   <xs:include schemaLocation="schema/csw/2.0.2/record.xsd"/>
 </xs:schema>

@@ -39,9 +39,7 @@ import javax.persistence.criteria.Root;
 /**
  * Implementation for MetadataRatingByIpRepositoryCustom interface.
  * <p/>
- * User: jeichar
- * Date: 9/5/13
- * Time: 4:15 PM
+ * User: jeichar Date: 9/5/13 Time: 4:15 PM
  */
 public class MetadataRatingByIpRepositoryImpl implements MetadataRatingByIpRepositoryCustom {
 

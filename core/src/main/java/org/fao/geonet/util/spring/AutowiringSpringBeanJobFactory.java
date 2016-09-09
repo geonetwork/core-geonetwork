@@ -31,29 +31,28 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 /**
  * Custom JobFactory to add application context to JobDataMap.
- * 
  */
 public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory
-		implements ApplicationContextAware {
+    implements ApplicationContextAware {
 
-	private transient AutowireCapableBeanFactory beanFactory;
+    private transient AutowireCapableBeanFactory beanFactory;
 
-	private ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-	public void setApplicationContext(final ApplicationContext context) {
-		applicationContext = context;
-		beanFactory = applicationContext.getAutowireCapableBeanFactory();
-	}
+    public void setApplicationContext(final ApplicationContext context) {
+        applicationContext = context;
+        beanFactory = applicationContext.getAutowireCapableBeanFactory();
+    }
 
-	@Override
-	protected Object createJobInstance(final TriggerFiredBundle bundle)
-			throws Exception {
-	    if (beanFactory == null) {
-	        throw new IllegalStateException("beanFactory must be initialized before callin createJobInstance");
-	    }
-		bundle.getJobDetail().getJobDataMap().put("applicationContext", applicationContext);
-		final Object job = super.createJobInstance(bundle);
-		beanFactory.autowireBean(job);
-		return job;
-	}
+    @Override
+    protected Object createJobInstance(final TriggerFiredBundle bundle)
+        throws Exception {
+        if (beanFactory == null) {
+            throw new IllegalStateException("beanFactory must be initialized before callin createJobInstance");
+        }
+        bundle.getJobDetail().getJobDataMap().put("applicationContext", applicationContext);
+        final Object job = super.createJobInstance(bundle);
+        beanFactory.autowireBean(job);
+        return job;
+    }
 }

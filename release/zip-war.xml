@@ -13,21 +13,21 @@
         <include>geonetwork.war</include>
       </includes>
     </fileSet>
-    <fileSet>     
+    <fileSet>
       <directory>geoserver/target</directory>
       <outputDirectory/>
       <includes>
         <include>geoserver.war</include>
       </includes>
     </fileSet>
-   <!-- licenses -->
-   <fileSet>
-     <directory>release</directory>
-     <outputDirectory/>
-     <includes>
-       <include>license.html</include>
-     </includes>
-   </fileSet>
+    <!-- licenses -->
+    <fileSet>
+      <directory>release</directory>
+      <outputDirectory/>
+      <includes>
+        <include>license.html</include>
+      </includes>
+    </fileSet>
   </fileSets>
   <moduleSets>
     <moduleSet>
@@ -35,5 +35,5 @@
         <include>web</include>
       </includes>
     </moduleSet>
- </moduleSets>
+  </moduleSets>
 </assembly>

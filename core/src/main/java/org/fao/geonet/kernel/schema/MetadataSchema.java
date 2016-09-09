@@ -29,6 +29,11 @@ package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -46,9 +51,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -57,90 +59,95 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+
 //==============================================================================
 
-public class MetadataSchema
-{
-	private static final String XSL_FILE_EXTENSION = ".xsl";
-    private static final String SCH_FILE_EXTENSION = ".sch";
+@JsonPropertyOrder({
+    "name", "titles", "descriptions", "standardUrl", "targetNamespace", "namespaces",
+    "readwriteUUID", "schematronRules"
+})
+public class MetadataSchema {
     public static final String SCHEMATRON_DIR = "schematron";
-    private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
-	private Map<String,List<List<String>>> hmRestric  = new HashMap<String,List<List<String>>>();
-	private Map<String, MetadataType> hmTypes    = new HashMap<String, MetadataType>();
-	private Map<String, List<String>> hmSubs		 = new HashMap<String, List<String>>();
-	private Map<String, String> hmSubsLink = new HashMap<String, String>();
-	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
-	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
+    private static final String XSL_FILE_EXTENSION = ".xsl";
+    private static final String SCH_FILE_EXTENSION = ".sch";
+    private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
+    private Map<String, List<String>> hmElements = new HashMap<String, List<String>>();
+    private Map<String, List<List<String>>> hmRestric = new HashMap<String, List<List<String>>>();
+    private Map<String, MetadataType> hmTypes = new HashMap<String, MetadataType>();
+    private Map<String, List<String>> hmSubs = new HashMap<String, List<String>>();
+    private Map<String, String> hmSubsLink = new HashMap<String, String>();
+    private Map<String, Namespace> hmNameSpaces = new HashMap<String, Namespace>();
+    private Map<String, Namespace> hmPrefixes = new HashMap<String, Namespace>();
     private Map<String, Pair<String, Element>> hmOperationFilters =
-            new HashMap<String, Pair<String, Element>>();
-	private String	schemaName;
-	private Path schemaDir;
-	private String	primeNS;
-	private String[] schematronRules;
-	private boolean canEdit = false;
-	private boolean readwriteUUID = false;
-
-	private static final String SCHEMATRON_RULE_FILE_PREFIX = "schematron-rules";
-
-	private List<Element> rootAppInfoElements;
+        new HashMap<String, Pair<String, Element>>();
+    private String schemaName;
+    private Path schemaDir;
+    private String standardUrl;
+    private Map<String, String> titles = new HashMap<>();
+    private Map<String, String> descriptions = new HashMap<>();
+    private String primeNS;
+    private String[] schematronRules;
+    private boolean canEdit = false;
+    private boolean readwriteUUID = false;
+    private List<Element> rootAppInfoElements;
 
     private SchematronRepository schemaRepo;
     private SchematronCriteriaGroupRepository criteriaGroupRepository;
-	private SchemaPlugin schemaPlugin;
+    private SchemaPlugin schemaPlugin;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
     MetadataSchema(SchematronRepository schemaRepo, SchematronCriteriaGroupRepository criteriaGroupRepository) {
         schemaName = "UNKNOWN";
         this.schemaRepo = schemaRepo;
         this.criteriaGroupRepository = criteriaGroupRepository;
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public boolean canEdit()
-	{
-		return canEdit;
-	}
+    public boolean canEdit() {
+        return canEdit;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setCanEdit(boolean canEdit)
-	{
-		this.canEdit = canEdit;
-	}
+    public void setCanEdit(boolean canEdit) {
+        this.canEdit = canEdit;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setName(String inName)
-	{
-		schemaName = inName;
-		this.schemaPlugin = SchemaManager.getSchemaPlugin(schemaName);
-	}
+    public String getName() {
+        return schemaName;
+    }
 
-	//---------------------------------------------------------------------------
-	
-	public String getName()
-	{
-		return schemaName;
-	}
+    //---------------------------------------------------------------------------
 
+    public void setName(String inName) {
+        schemaName = inName;
+        this.schemaPlugin = SchemaManager.getSchemaPlugin(schemaName);
+    }
+
+    @JsonIgnore
     public Editor getConfigEditor() {
         Path metadataSchemaConfig =
-                getSchemaDir().resolve("layout").resolve("config-editor.xml");
+            getSchemaDir().resolve("layout").resolve("config-editor.xml");
         if (metadataSchemaConfig.toFile().exists()) {
             try {
                 JAXBContext jaxbContext = JAXBContext.newInstance(Editor.class);
@@ -154,77 +161,70 @@ public class MetadataSchema
         return null;
     }
 
-	/**
-	 * Get schema directory
-	 * 
-	 * @return
-	 */
-	public Path getSchemaDir() {
-		return schemaDir;
-	}
+    /**
+     * Get schema directory
+     */
+    @JsonIgnore
+    public Path getSchemaDir() {
+        return schemaDir;
+    }
 
-	/**
-	 * Set schema directory
-	 * 
-	 * @param schemaDir
-	 */
-	public void setSchemaDir(Path schemaDir) {
-		this.schemaDir = schemaDir;
-	}
-	
-	//---------------------------------------------------------------------------
+    /**
+     * Set schema directory
+     */
+    public void setSchemaDir(Path schemaDir) {
+        this.schemaDir = schemaDir;
+    }
 
-	public void setPrimeNS(String theNS)
-	{
-		primeNS = theNS;
-	}
+    //---------------------------------------------------------------------------
+    @JsonProperty(value = "targetNamespace")
+    public String getPrimeNS() {
+        return primeNS;
+    }
 
-	//---------------------------------------------------------------------------
-	
-	public String getPrimeNS()
-	{
-		return primeNS;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	
-	public MetadataType getTypeInfo(String type)
-	{
-		Logger.log();
-		if (hmTypes.get(type) == null) return new MetadataType();
-		else return hmTypes.get(type);
-	}
+    public void setPrimeNS(String theNS) {
+        primeNS = theNS;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getElementType(String elem,String parent) throws Exception
-	{
-		// two cases here - if we have just one element (or a substitute) with 
-		// this name then return its type
+    public MetadataType getTypeInfo(String type) {
+        Logger.log();
+        if (hmTypes.get(type) == null) return new MetadataType();
+        else return hmTypes.get(type);
+    }
 
-	  Logger.log();
-		List<String> childType = hmElements.get(elem);
-		if (childType == null) {
-			// Check and see whether we can substitute another element from the
-			// substitution link 
-			String oldelem = elem;
-			elem = hmSubsLink.get(elem);
-	  	Logger.log();
-			childType = hmElements.get(elem);
-			if (childType == null) { 
-			    Log.warning(Geonet.SCHEMA_MANAGER, "ERROR: Mismatch between schema and xml: No type for 'element' : "
-			                    + oldelem + " with parent " + parent + ". Returning xs:string");
-			    return "xs:string";
-			}
-		}
-		if (childType.size() == 1) return childType.get(0);
+    //---------------------------------------------------------------------------
 
-		Logger.log();
-		// OTHERWISE get the type by examining the parent:
-		// for each parent with that name parent
-		// 1. retrieve its mdt 
-		List<String> exType = hmElements.get(parent);
-		if (exType == null) return "xs:string";
+    public String getElementType(String elem, String parent) throws Exception {
+        // two cases here - if we have just one element (or a substitute) with
+        // this name then return its type
+
+        Logger.log();
+        List<String> childType = hmElements.get(elem);
+        if (childType == null) {
+            // Check and see whether we can substitute another element from the
+            // substitution link
+            String oldelem = elem;
+            elem = hmSubsLink.get(elem);
+            Logger.log();
+            childType = hmElements.get(elem);
+            if (childType == null) {
+                Log.warning(Geonet.SCHEMA_MANAGER, "ERROR: Mismatch between schema and xml: No type for 'element' : "
+                    + oldelem + " with parent " + parent + ". Returning xs:string");
+                return "xs:string";
+            }
+        }
+        if (childType.size() == 1) return childType.get(0);
+
+        Logger.log();
+        // OTHERWISE get the type by examining the parent:
+        // for each parent with that name parent
+        // 1. retrieve its mdt
+        List<String> exType = hmElements.get(parent);
+        if (exType == null) return "xs:string";
         for (String type : exType) {
             // 2. search that mdt for the element names elem
             MetadataType mdt = getTypeInfo(type);
@@ -237,123 +237,120 @@ public class MetadataSchema
             }
         }
 
-		Logger.log();
-		return null;
-	}
-
-	//---------------------------------------------------------------------------
-	/** A simple type is a type that has no children and no attributes (but can
-	  * have restrictions on its value)
-	  */
-
-	public boolean isSimpleElement(String elem,String parent) throws Exception
-	{
-		String type = getElementType(elem,parent);
-        return type != null && !hmTypes.containsKey(type);
-	}
-
-	//---------------------------------------------------------------------------
+        Logger.log();
+        return null;
+    }
 
     //---------------------------------------------------------------------------
 
-	public List<String> getElementValues(String elem,String parent) throws Exception
-	{
+    /**
+     * A simple type is a type that has no children and no attributes (but can have restrictions on
+     * its value)
+     */
 
-		String type = getElementType(elem,parent);
-		String restricName = elem;
-		if (type != null) restricName = restricName+"+"+type;
+    public boolean isSimpleElement(String elem, String parent) throws Exception {
+        String type = getElementType(elem, parent);
+        return type != null && !hmTypes.containsKey(type);
+    }
 
-		// two cases here - if we have just one element with this name 
-		// then return its values
-		List<List<String>> childValues = hmRestric.get(restricName);
-		if (childValues == null) return null;
-		if (childValues.size() == 1) return childValues.get(0);
+    //---------------------------------------------------------------------------
 
-		// OTHERWISE we don't know what to do so return the first one anyway! This
-		// should not happen....
-		Logger.log();
-		return childValues.get(0);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Package protected API methods
-	//---
-	//---------------------------------------------------------------------------
+    public List<String> getElementValues(String elem, String parent) throws Exception {
 
-	void addElement(String name, String type, List<String> alValues, List<String> alSubs, String subLink)
-	{
-		// first just add the subs - because these are for global elements we 
-		// never have a clash because global elements are all in the same scope
-		// and are thus unique
-		if (alSubs != null && alSubs.size() > 0) hmSubs.put(name,alSubs);
-		if (subLink != null && subLink.length() > 0) hmSubsLink.put(name,subLink);
+        String type = getElementType(elem, parent);
+        String restricName = elem;
+        if (type != null) restricName = restricName + "+" + type;
 
-		List<String> exType = hmElements.get(name);
+        // two cases here - if we have just one element with this name
+        // then return its values
+        List<List<String>> childValues = hmRestric.get(restricName);
+        if (childValues == null) return null;
+        if (childValues.size() == 1) return childValues.get(0);
 
-		// it's already there but the type has been added already
-		if (exType != null && exType.contains(type)) return; 
+        // OTHERWISE we don't know what to do so return the first one anyway! This
+        // should not happen....
+        Logger.log();
+        return childValues.get(0);
+    }
 
-		// it's already there but doesn't have this type 
-		if (exType != null && !(exType.contains(type))) { 
-			Logger.log();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Package protected API methods
+    //---
+    //---------------------------------------------------------------------------
+
+    void addElement(String name, String type, List<String> alValues, List<String> alSubs, String subLink) {
+        // first just add the subs - because these are for global elements we
+        // never have a clash because global elements are all in the same scope
+        // and are thus unique
+        if (alSubs != null && alSubs.size() > 0) hmSubs.put(name, alSubs);
+        if (subLink != null && subLink.length() > 0) hmSubsLink.put(name, subLink);
+
+        List<String> exType = hmElements.get(name);
+
+        // it's already there but the type has been added already
+        if (exType != null && exType.contains(type)) return;
+
+        // it's already there but doesn't have this type
+        if (exType != null && !(exType.contains(type))) {
+            Logger.log();
 
 
-		// it's not there so add a new list
-		} else {
-			hmElements.put(name, exType = new ArrayList<String>());
-		}
-		exType.add(type);
+            // it's not there so add a new list
+        } else {
+            hmElements.put(name, exType = new ArrayList<String>());
+        }
+        exType.add(type);
 
-		String restricName = name;
-		if (type != null) restricName = name+"+"+type;
+        String restricName = name;
+        if (type != null) restricName = name + "+" + type;
 
-		// it's already there
-		List<List<String>> exValues = hmRestric.get(restricName);
-		if (exValues != null) {
-			Logger.log();
+        // it's already there
+        List<List<String>> exValues = hmRestric.get(restricName);
+        if (exValues != null) {
+            Logger.log();
 
-		// it's not there so add a new list of lists
-		} else {
-			hmRestric .put(restricName, exValues = new ArrayList<List<String>>());
-		}
-		exValues.add(alValues);
-	}
+            // it's not there so add a new list of lists
+        } else {
+            hmRestric.put(restricName, exValues = new ArrayList<List<String>>());
+        }
+        exValues.add(alValues);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void addType(String name, MetadataType mdt)
-	{
-		mdt.setName(name);
-		hmTypes.put(name, mdt);
-	}
+    public void addType(String name, MetadataType mdt) {
+        mdt.setName(name);
+        hmTypes.put(name, mdt);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void addNS(String targetNSPrefix, String targetNSUri)
-	{
+    public void addNS(String targetNSPrefix, String targetNSUri) {
 
-		Namespace ns = Namespace.getNamespace(targetNSPrefix, targetNSUri);
-		hmNameSpaces.put(targetNSPrefix, ns);
-		hmPrefixes.put(targetNSUri, ns);
-	}
+        Namespace ns = Namespace.getNamespace(targetNSPrefix, targetNSUri);
+        hmNameSpaces.put(targetNSPrefix, ns);
+        hmPrefixes.put(targetNSUri, ns);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    @JsonIgnore
+    public String getNS(String targetNSPrefix) {
+        Namespace ns = hmNameSpaces.get(targetNSPrefix);
+        if (ns != null) {
+            return ns.getURI();
+        } else {
+            return null;
+        }
+    }
 
-	public String getNS(String targetNSPrefix)
-	{
-		Namespace ns = hmNameSpaces.get(targetNSPrefix);
-		if (ns != null) {
-			return ns.getURI();
-		} else {
-			return null;
-		}
-	}
 
     /**
      * Return the list of namespaces for the schema.
-     * @return
      */
+    @JsonIgnore
     public List<Namespace> getNamespaces() {
         List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
         for (Namespace ns : hmNameSpaces.values()) {
@@ -362,41 +359,40 @@ public class MetadataSchema
         return list;
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getPrefix(String theNSUri)
-	{
-		Namespace ns = hmPrefixes.get(theNSUri);
-		if (ns != null) {
-			return ns.getPrefix();
-		} else {
-			return null;
-		}
-	}
+    public String getPrefix(String theNSUri) {
+        Namespace ns = hmPrefixes.get(theNSUri);
+        if (ns != null) {
+            return ns.getPrefix();
+        } else {
+            return null;
+        }
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    @JsonIgnore
+    public List<Namespace> getSchemaNS() {
+        return new ArrayList<Namespace>(hmPrefixes.values());
+    }
 
-	public List<Namespace> getSchemaNS()
-	{
-		return new ArrayList<Namespace>(hmPrefixes.values());
-	}
-
+    @JsonProperty(value = "namespaces")
     public Map<String, String> getSchemaNSWithPrefix() {
         Map<String, String> mapNs = new HashMap<String, String>();
         List<Namespace> schemaNsList = getSchemaNS();
 
-        for(Namespace ns : schemaNsList) {
+        for (Namespace ns : schemaNsList) {
             mapNs.put(ns.getPrefix(), ns.getURI());
         }
         return mapNs;
     }
 
-	public void buildchematronRules(Path basePath) {
+    public void buildchematronRules(Path basePath) {
         Path schematronResourceDir = basePath.resolve("WEB-INF").resolve("classes").resolve(SCHEMATRON_DIR);
         Path schemaSchematronDir = schemaDir.resolve(SCHEMATRON_DIR);
         Path schematronCompilationFile = schematronResourceDir.resolve("iso_svrl_for_xslt2.xsl");
-        
-        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+
+        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
             Log.debug(Geonet.SCHEMA_MANAGER, "     Schematron compilation for schema " + schemaName);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - compiling with " + schematronCompilationFile);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - rules location is " + schemaSchematronDir);
@@ -405,7 +401,7 @@ public class MetadataSchema
         if (Files.exists(schemaSchematronDir)) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaSchematronDir, "*.sch")) {
                 for (Path rule : paths) {
-                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+                    if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
                         Log.debug(Geonet.SCHEMA_MANAGER, "                - rule " + rule);
                     }
 
@@ -418,24 +414,23 @@ public class MetadataSchema
                         Xml.transform(schematronRule, schematronCompilationFile, schematronXsl);
                     } catch (FileNotFoundException e) {
                         Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath
-                                                         + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage());
                     } catch (Exception e) {
                         Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath
-                                                         + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage());
                     }
 
                 }
             } catch (IOException e) {
                 Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schemaSchematronDir
-                                                 + ". Error is " + e.getMessage());
+                    + ". Error is " + e.getMessage());
             }
         }
     }
 
     /**
-     * Compile and register all schematron rules available for current schema.
-     * Schematron rules files are in schema schematron directory
-     * and start with "schematron-rules" prefix.
+     * Compile and register all schematron rules available for current schema. Schematron rules
+     * files are in schema schematron directory and start with "schematron-rules" prefix.
      */
     public void loadSchematronRules(Path basePath) {
         // Compile schema schematron rules
@@ -489,97 +484,118 @@ public class MetadataSchema
                 throw new RuntimeException(e);
             }
 
-			setSchematronPriorities();
+            setSchematronPriorities();
         }
 
         setSchematronRules(saSchemas.toArray(new String[saSchemas.size()]));
     }
 
-	private void setSchematronPriorities() {
-		List<Schematron> schematronList = schemaRepo.findAllBySchemaName(schemaName);
+    private void setSchematronPriorities() {
+        List<Schematron> schematronList = schemaRepo.findAllBySchemaName(schemaName);
 
-		Collections.sort(schematronList, Schematron.DISPLAY_PRIORITY_COMPARATOR);
+        Collections.sort(schematronList, Schematron.DISPLAY_PRIORITY_COMPARATOR);
 
-		List<Schematron> updated = Lists.newArrayList();
-		for(int i = 0; i < schematronList.size(); i++) {
-			Schematron schematron = schematronList.get(i);
-			if (schematron.getDisplayPriority() != i) {
-				schematron.setDisplayPriority(i);
-				updated.add(schematron);
-			}
-		}
-		this.schemaRepo.save(updated);
-	}
+        List<Schematron> updated = Lists.newArrayList();
+        for (int i = 0; i < schematronList.size(); i++) {
+            Schematron schematron = schematronList.get(i);
+            if (schematron.getDisplayPriority() != i) {
+                schematron.setDisplayPriority(i);
+                updated.add(schematron);
+            }
+        }
+        this.schemaRepo.save(updated);
+    }
 
-	public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
+    public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
         this.hmOperationFilters = operationFilters;
     }
 
     /**
      * Get the XPath filter for the reserved operation.
      *
-     * @param operation
      * @return The XPath to select element to filter or null
      */
     public Pair<String, Element> getOperationFilter(ReservedOperation operation) {
         return hmOperationFilters.get(operation.name());
     }
 
-	public SchemaPlugin getSchemaPlugin() {
-		return schemaPlugin;
-	}
+    @JsonIgnore
+    public SchemaPlugin getSchemaPlugin() {
+        return schemaPlugin;
+    }
 
-	/**
-	 * Schematron rules filename is like "schematron-rules-iso.xsl
-	 * 
-	 */
-	private static class SchematronReportRulesFilter implements DirectoryStream.Filter<Path> {
-		public boolean accept(Path entry) {
+    /**
+     * Return the list of schematron rules to applied for this schema
+     */
+    public String[] getSchematronRules() {
+        if (schematronRules != null) {
+            return this.schematronRules.clone();
+        } else {
+            return new String[]{};
+        }
+    }
+
+    private void setSchematronRules(String[] schematronRules) {
+        if (schematronRules != null) {
+            this.schematronRules = schematronRules.clone();
+        }
+    }
+
+    public void setRootAppInfoElements(List<Element> rootAppInfoElements) {
+        this.rootAppInfoElements = rootAppInfoElements;
+    }
+
+    // -- this info for profile detection methods
+    @JsonIgnore
+    public List<Element> getSchemaAppInfoElements() {
+        return rootAppInfoElements;
+    }
+
+    /**
+     * true if schema requires to synch the uuid column schema info with the uuid in the metadata
+     * record (updated on editing or in UFO).
+     */
+    public boolean isReadwriteUUID() {
+        return readwriteUUID;
+    }
+
+    public void setReadwriteUUID(boolean readwriteUUID) {
+        this.readwriteUUID = readwriteUUID;
+    }
+
+    public String getStandardUrl() {
+        return standardUrl;
+    }
+
+    public void setStandardUrl(String standardUrl) {
+        this.standardUrl = standardUrl;
+    }
+
+    public Map<String, String> getTitles() {
+        return titles;
+    }
+
+    public void setTitles(Map<String, String> titles) {
+        this.titles = titles;
+    }
+
+    public Map<String, String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(Map<String, String> descriptions) {
+        this.descriptions = descriptions;
+    }
+
+    /**
+     * Schematron rules filename is like "schematron-rules-iso.xsl
+     */
+    private static class SchematronReportRulesFilter implements DirectoryStream.Filter<Path> {
+        public boolean accept(Path entry) {
             String filename = entry.getFileName().toString();
             return filename.startsWith(SCHEMATRON_RULE_FILE_PREFIX) && filename.endsWith(XSL_FILE_EXTENSION);
         }
-	}
-	/**
-	 * Return the list of schematron rules to applied for this schema
-	 * @return
-	 */
-	public String[] getSchematronRules() {
-		if(schematronRules != null) {
-			return this.schematronRules.clone() ;
-		} else {
-			return new String[]{};
-		}
-	}
-
-	private void setSchematronRules(String[] schematronRules) {
-	    if(schematronRules != null) {
-	        this.schematronRules = schematronRules.clone();
-	    }
-	}
-
-	// -- this info for profile detection methods
-
-	public void setRootAppInfoElements(List<Element> rootAppInfoElements) {
-		this.rootAppInfoElements = rootAppInfoElements;
-	}
-	
-	public List<Element> getSchemaAppInfoElements() {
-		return rootAppInfoElements;
-	}
-	
-	/**
-	 * true if schema requires to synch the uuid column schema info
-	 * with the uuid in the metadata record (updated on editing or in UFO).
-	 * 
-	 * @return
-	 */
-	public boolean isReadwriteUUID() {
-		return readwriteUUID;
-	}
-
-	public void setReadwriteUUID(boolean readwriteUUID) {
-		this.readwriteUUID = readwriteUUID;
-	}
+    }
 }
 
 //==============================================================================

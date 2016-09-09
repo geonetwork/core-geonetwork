@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.schema;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
@@ -38,11 +39,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
+
 import java.io.IOException;
 import java.util.List;
 
 /**
- *  Load, edit, delete {@link org.fao.geonet.domain.SchematronCriteria} entities.
+ * Load, edit, delete {@link org.fao.geonet.domain.SchematronCriteria} entities.
  *
  * Created by Jesse on 2/7/14.
  */
@@ -64,7 +66,7 @@ public class SchematronCriteriaService extends AbstractSchematronService {
         final SchematronCriteriaGroupRepository criteriaGroupRepository = context.getBean(SchematronCriteriaGroupRepository.class);
 
         final SchematronCriteriaType type = SchematronCriteriaType
-                .valueOf(Util.getParam(params, PARAM_TYPE));
+            .valueOf(Util.getParam(params, PARAM_TYPE));
         final String value = Util.getParam(params, PARAM_VALUE, "");
         final String uitype = Util.getParam(params, PARAM_UI_TYPE);
         final String uivalue = Util.getParam(params, PARAM_UI_VALUE, "");
@@ -104,7 +106,7 @@ public class SchematronCriteriaService extends AbstractSchematronService {
         String id = Util.getParam(params, Params.ID, null);
 
         if (id != null && schematronId != null && groupName != null) {
-            throw new IllegalArgumentException("Either one of " + Params.ID + " cannot be present if either "+ PARAM_GROUP_NAME + " or " + PARAM_SCHEMATRON_ID + " are also present.");
+            throw new IllegalArgumentException("Either one of " + Params.ID + " cannot be present if either " + PARAM_GROUP_NAME + " or " + PARAM_SCHEMATRON_ID + " are also present.");
         }
 
         final SchematronCriteriaRepository criteriaRepository = context.getBean(SchematronCriteriaRepository.class);

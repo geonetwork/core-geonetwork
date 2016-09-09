@@ -51,25 +51,20 @@
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
-        function(gnMap, gnOwsCapabilities, gnSearchSettings, 
+        '$filter',
+        function(gnMap, gnOwsCapabilities, gnSearchSettings,
             ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
-                 gnWfsService) {
+            gnWfsService, $filter) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
           };
 
           var addWMSToMap = function(link, md) {
-
-            if (link.name &&
-                (angular.isArray(link.name) && link.name.length > 0)) {
-              angular.forEach(link.name, function(name) {
-                gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                                  link.url, name, false, md);
-              });
-            } else if (link.name && !angular.isArray(link.name)) {
+            var layerName = $filter('gnLocalized')(link.title);
+            if (layerName) {
               gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                 link.url, link.name, false, md);
+                 link.url, layerName, false, md);
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMS');
             }
@@ -79,26 +74,18 @@
 
 
           var addWFSToMap = function(link, md) {
-
-
-            if (link.name &&
-                (angular.isArray(link.name) && link.name.length > 0)) {
-              angular.forEach(link.name, function(name) {
-                gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
-                       link.url, name, false, md);
-              });
-            } else if (link.name && !angular.isArray(link.name)) {
+            var ftName = $filter('gnLocalized')(link.title);
+            if (ftName) {
               gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
-                 link.url, link.name, false, md);
+                 link.url, ftName, false, md);
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WFS');
             }
-
             gnSearchLocation.setMap();
           };
 
 
-          var addWMTSToMap = function(link, md) {
+          function addWMTSToMap(link, md) {
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
@@ -126,22 +113,21 @@
             }
           };
 
-          var addKMLToMap = function(record, md) {
+          function addKMLToMap(record, md) {
             gnMap.addKmlToMap(record.name, record.url,
                gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
-          var addMapToMap = function(record, md) {
+          function addMapToMap(record, md) {
             gnOwsContextService.loadContextFromUrl(record.url,
                 gnSearchSettings.viewerMap);
 
             gnSearchLocation.setMap();
           };
 
-          var openMd = function(record, md) {
-            return window.location.hash = '#/metadata/' +
-                (record.uuid || record['geonet:info'].uuid);
+          var openMd = function(r, md) {
+            return window.location.hash = '#/metadata/' + r.id;
           };
 
           var openLink = function(record, link) {
@@ -166,7 +152,7 @@
             },
             'WFS' : {
               iconClass: 'fa-globe',
-              label: 'webserviceLink',
+              label: 'addToMap',
               action: addWFSToMap
             },
             'WCS' : {
@@ -241,8 +227,17 @@
                 this.map['DEFAULT'].iconClass;
           };
 
-          this.getLabel = function(type) {
-            return this.map[type || 'DEFAULT'].label;
+          this.getLabel = function(mainType, type) {
+            // Old key before the move to API
+            var oldKey = {
+              hasfeaturecats: 'hasfeaturecat',
+              onlines: 'onlinesrc',
+              siblings: 'sibling',
+              fcats: 'fcat',
+              hassources: 'hassource'
+            };
+            return this.map[mainType || 'DEFAULT'].label +
+                   (oldKey[type] ? oldKey[type] : type);
           };
           this.getAction = function(type) {
             return this.map[type || 'DEFAULT'].action;
@@ -253,7 +248,7 @@
             f(parameters, md);
           };
 
-          this.getType = function(resource) {
+          this.getType = function(resource, type) {
             var protocolOrType = resource.protocol + resource.serviceType;
             // Cas for links
             if (angular.isString(protocolOrType) &&
@@ -282,24 +277,24 @@
             }
 
             // Metadata records
-            if (resource['@type'] &&
-                (resource['@type'] === 'parent' ||
-                 resource['@type'] === 'children')) {
+            if (type &&
+                (type === 'parent' ||
+                 type === 'children')) {
               return 'MDFAMILY';
-            } else if (resource['@type'] &&
-               (resource['@type'] === 'sibling')) {
+            } else if (type &&
+               (type === 'siblings')) {
               return 'MDSIBLING';
-            } else if (resource['@type'] &&
-               (resource['@type'] === 'sources' ||
-                resource['@type'] === 'hassource')) {
+            } else if (type &&
+               (type === 'sources' ||
+                type === 'hassources')) {
               return 'MDSOURCE';
-            } else if (resource['@type'] &&
-               (resource['@type'] === 'associated' ||
-               resource['@type'] === 'services' ||
-               resource['@type'] === 'hasfeaturecat' ||
-               resource['@type'] === 'datasets')) {
+            } else if (type &&
+               (type === 'associated' ||
+               type === 'services' ||
+               type === 'hasfeaturecats' ||
+               type === 'datasets')) {
               return 'MD';
-            } else if (resource['@type'] && resource['@type'] === 'fcats') {
+            } else if (type && type === 'fcats') {
               return 'MDFCATS';
             }
 

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -67,131 +68,21 @@ import java.util.Set;
 
 //=============================================================================
 
-public class Info implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Info implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception
-	{
-		importXslPath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
-		oaiSchema  = appPath.resolve("xml/validation/oai/OAI-PMH.xsd");
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
-
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element result = new Element("root");
-
-		String schema = org.fao.geonet.Util.getParam(params, "schema", "");
-		String serviceType = Util.getParam(params, "serviceType", "");
-
-		@SuppressWarnings("unchecked")
-        List<Element> paramChildren = params.getChildren();
-		for (Element el : paramChildren) {
-			String name = el.getName();
-			String type = el.getText();
-
-			if (name.equals("type")) {
-
-				if (type.equals("icons"))
-					result.addContent(getIcons(context));
-
-				else if (type.equals("harvesterTypes"))
-				    result.addContent(getHarvesterTypes(context));
-
-				else if (type.equals("oaiPmhServer"))
-					result.addContent(getOaiPmhServer(el, context));
-
-				else if (type.equals("wfsFragmentStylesheets"))
-					result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.WFS_STYLESHEETS, schema));
-
-				else if (type.equals("threddsFragmentStylesheets"))
-					result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.TDS_STYLESHEETS, schema));
-
-				else if (type.equals("threddsFragmentSchemas"))
-					result.addContent(getSchemas(el, context, Geonet.Path.TDS_STYLESHEETS));
-
-				else if (type.equals("ogcwxsOutputSchemas"))
-					result.addContent(getSchemas(el, context, getGetCapXSLPath(serviceType)));
-
-				else if (type.equals("wfsFragmentSchemas"))
-					result.addContent(getSchemas(el, context, Geonet.Path.WFS_STYLESHEETS));
-
-				else if (type.equals("threddsDIFSchemas"))
-					result.addContent(getSchemas(el, context, Geonet.Path.DIF_STYLESHEETS));
-
-				else if (type.equals("importStylesheets"))
-					result.addContent(getStylesheets(importXslPath));
-
-				else if (type.equals("validation"))
-					result.addContent(getValidationOptions());
-
-				else
-					throw new BadParameterEx("type", type);
-			} else if (name.equals("schema")||(name.equals("serviceType"))) { // do nothing
-//			} else {
-//					throw new BadParameterEx(name, type);
-			}
-		}
-
-		return result;
-	}
-
-    private Element getValidationOptions() {
-        Element validationOptions = new Element("validationOptions");
-        for (HarvestValidationEnum validationEnum : HarvestValidationEnum.values()) {
-            validationOptions.addContent(new Element("validation").setText(validationEnum.name()));
-        }
-        return validationOptions;
-    }
+    private static final String iconExt[] = {".gif", ".png", ".jpg", ".jpeg"};
 
     //--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
-
-	private Element getHarvesterTypes(ServiceContext context) {
-	    Element types = new Element("types");
-	    for (String type : AbstractHarvester.getHarvesterTypes(context)) {
-            types.addContent(new Element("type").setText(type));
-        }
-        return types;
-    }
-
-    private Element getIcons(ServiceContext context)
-	{
-		Set<Path> icons = Resources.listFiles(context, "harvesting", iconFilter);
-		List<Path> list = new ArrayList<>(icons);
-		Collections.sort(list);
-		Element result = new Element("icons");
-
-		for (Path icon : list) {
-		    if(icon != null) {
-		        Path fileName = icon.getFileName();
-                if(fileName != null) {
-    			result.addContent(new Element("icon").
-    			        setText(fileName.toString()));
-    		    }
-		    }
-		}
-
-		return result;
-	}
-
-	//--------------------------------------------------------------------------
-
-	private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>()
-	{
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+    private DirectoryStream.Filter<Path> iconFilter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path icon) throws IOException {
             if (icon == null || !Files.isRegularFile(icon))
@@ -207,206 +98,293 @@ public class Info implements Service
             return false;
         }
     };
+    private Path oaiSchema;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
+    private Path importXslPath;
+
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+        importXslPath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
+        oaiSchema = appPath.resolve("xml/validation/oai/OAI-PMH.xsd");
+    }
+
+    //--------------------------------------------------------------------------
+
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element result = new Element("root");
+
+        String schema = org.fao.geonet.Util.getParam(params, "schema", "");
+        String serviceType = Util.getParam(params, "serviceType", "");
+
+        @SuppressWarnings("unchecked")
+        List<Element> paramChildren = params.getChildren();
+        for (Element el : paramChildren) {
+            String name = el.getName();
+            String type = el.getText();
+
+            if (name.equals("type")) {
+
+                if (type.equals("icons"))
+                    result.addContent(getIcons(context));
+
+                else if (type.equals("harvesterTypes"))
+                    result.addContent(getHarvesterTypes(context));
+
+                else if (type.equals("oaiPmhServer"))
+                    result.addContent(getOaiPmhServer(el, context));
+
+                else if (type.equals("wfsFragmentStylesheets"))
+                    result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.WFS_STYLESHEETS, schema));
+
+                else if (type.equals("threddsFragmentStylesheets"))
+                    result.addContent(getSchemaFragmentStylesheets(el, context, Geonet.Path.TDS_STYLESHEETS, schema));
+
+                else if (type.equals("threddsFragmentSchemas"))
+                    result.addContent(getSchemas(el, context, Geonet.Path.TDS_STYLESHEETS));
+
+                else if (type.equals("ogcwxsOutputSchemas"))
+                    result.addContent(getSchemas(el, context, getGetCapXSLPath(serviceType)));
+
+                else if (type.equals("wfsFragmentSchemas"))
+                    result.addContent(getSchemas(el, context, Geonet.Path.WFS_STYLESHEETS));
+
+                else if (type.equals("threddsDIFSchemas"))
+                    result.addContent(getSchemas(el, context, Geonet.Path.DIF_STYLESHEETS));
+
+                else if (type.equals("importStylesheets"))
+                    result.addContent(getStylesheets(importXslPath));
+
+                else if (type.equals("validation"))
+                    result.addContent(getValidationOptions());
+
+                else
+                    throw new BadParameterEx("type", type);
+            } else if (name.equals("schema") || (name.equals("serviceType"))) { // do nothing
+//			} else {
+//					throw new BadParameterEx(name, type);
+            }
+        }
+
+        return result;
+    }
 
 
-	//--------------------------------------------------------------------------
-	//--- Get Metadata fragment stylesheets from each schema
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //--- Get Metadata fragment stylesheets from each schema
+    //--------------------------------------------------------------------------
 
-	private Element getSchemaFragmentStylesheets(Element el, ServiceContext context, String xslFragmentDir, String schemaFilter) throws Exception {
+    private Element getValidationOptions() {
+        Element validationOptions = new Element("validationOptions");
+        for (HarvestValidationEnum validationEnum : HarvestValidationEnum.values()) {
+            validationOptions.addContent(new Element("validation").setText(validationEnum.name()));
+        }
+        return validationOptions;
+    }
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+    //--------------------------------------------------------------------------
+    //--- Get List of Schemas that contain the xslPath
+    //--------------------------------------------------------------------------
 
-		Element elRoot = new Element("stylesheets");
+    private Element getHarvesterTypes(ServiceContext context) {
+        Element types = new Element("types");
+        for (String type : AbstractHarvester.getHarvesterTypes(context)) {
+            types.addContent(new Element("type").setText(type));
+        }
+        return types;
+    }
 
-		for (String schema : schemaMan.getSchemas()) {
-			if (!schemaFilter.equals("") && !schema.equals(schemaFilter)) continue;
-			Path xslPath = schemaMan.getSchemaDir(schema).resolve(xslFragmentDir);
-			if (!Files.exists(xslPath)) continue;
+    //--------------------------------------------------------------------------
 
-			@SuppressWarnings("unchecked")
+    private Element getIcons(ServiceContext context) {
+        Set<Path> icons = Resources.listFiles(context, "harvesting", iconFilter);
+        List<Path> list = new ArrayList<>(icons);
+        Collections.sort(list);
+        Element result = new Element("icons");
+
+        for (Path icon : list) {
+            if (icon != null) {
+                Path fileName = icon.getFileName();
+                if (fileName != null) {
+                    result.addContent(new Element("icon").
+                        setText(fileName.toString()));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------
+    //--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type
+    //--------------------------------------------------------------------------
+
+    private Element getSchemaFragmentStylesheets(Element el, ServiceContext context, String xslFragmentDir, String schemaFilter) throws Exception {
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+
+        Element elRoot = new Element("stylesheets");
+
+        for (String schema : schemaMan.getSchemas()) {
+            if (!schemaFilter.equals("") && !schema.equals(schemaFilter)) continue;
+            Path xslPath = schemaMan.getSchemaDir(schema).resolve(xslFragmentDir);
+            if (!Files.exists(xslPath)) continue;
+
+            @SuppressWarnings("unchecked")
             List<Element> elSheets = getStylesheets(xslPath).getChildren();
-			for (Element elSheet : elSheets) {
-				elSheet = (Element)elSheet.clone();
-				elSheet.addContent(new Element(Geonet.Elem.SCHEMA).setText(schema));
-				elRoot.addContent(elSheet);
-			}
-		}
+            for (Element elSheet : elSheets) {
+                elSheet = (Element) elSheet.clone();
+                elSheet.addContent(new Element(Geonet.Elem.SCHEMA).setText(schema));
+                elRoot.addContent(elSheet);
+            }
+        }
 
-		return elRoot;
-	}
+        return elRoot;
+    }
 
-	//--------------------------------------------------------------------------
-	//--- Get List of Schemas that contain the xslPath
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //--- OaiPmhServer
+    //--------------------------------------------------------------------------
 
-	private Element getSchemas(Element el, ServiceContext context, String xslPathStr) throws Exception {
+    private Element getSchemas(Element el, ServiceContext context, String xslPathStr) throws Exception {
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		Element elRoot = new Element("schemas");
+        Element elRoot = new Element("schemas");
 
-		for (String schema : schemaMan.getSchemas()) {
-			File xslPath = new File(schemaMan.getSchemaDir(schema)+xslPathStr);
-			if (xslPath.exists()) {
-				Element res = new Element(Jeeves.Elem.RECORD);
+        for (String schema : schemaMan.getSchemas()) {
+            File xslPath = new File(schemaMan.getSchemaDir(schema) + xslPathStr);
+            if (xslPath.exists()) {
+                Element res = new Element(Jeeves.Elem.RECORD);
 
-				res.addContent(new Element(Geonet.Elem.ID)  .setText(schema));
-				res.addContent(new Element(Geonet.Elem.NAME).setText(schema));
+                res.addContent(new Element(Geonet.Elem.ID).setText(schema));
+                res.addContent(new Element(Geonet.Elem.NAME).setText(schema));
 
-				elRoot.addContent(res);
-			}
-		}
+                elRoot.addContent(res);
+            }
+        }
 
-		return elRoot;
-	}
+        return elRoot;
+    }
 
-	//--------------------------------------------------------------------------
-
-	private Element getStylesheets(Path xslPath) throws Exception {
+    //--------------------------------------------------------------------------
+    @Deprecated
+    private Element getStylesheets(Path xslPath) throws Exception {
         try (DirectoryStream<Path> sheets = Files.newDirectoryStream(xslPath)) {
             Element elRoot = new Element("stylesheets");
             for (Path sheet : sheets) {
 
-                    String id = sheet.toString();
-                    if (id != null && id.endsWith(".xsl")) {
-                        String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
+                String id = sheet.toString();
+                if (id != null && id.endsWith(".xsl")) {
+                    String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
 
-                        Element res = new Element(Jeeves.Elem.RECORD);
+                    Element res = new Element(Jeeves.Elem.RECORD);
 
-                        res.addContent(new Element(Geonet.Elem.ID)  .setText(id));
-                        res.addContent(new Element(Geonet.Elem.NAME).setText(name));
+                    res.addContent(new Element(Geonet.Elem.ID).setText(id));
+                    res.addContent(new Element(Geonet.Elem.NAME).setText(name));
 
-                        elRoot.addContent(res);
-                    }
+                    elRoot.addContent(res);
+                }
             }
             return elRoot;
         }
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//--- OGC GetCapabilities to iso19119 stylesheet path for OGC service type
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private String getGetCapXSLPath(String serviceType) {
-		return Geonet.Path.OGC_STYLESHEETS
-				+ "/OGC"
-				+ serviceType.substring(0,3)
-				+ "GetCapabilities-to-ISO19119_ISO19139.xsl";
-	}
+    private String getGetCapXSLPath(String serviceType) {
+        return Geonet.Path.OGC_STYLESHEETS
+            + "/OGC"
+            + serviceType.substring(0, 3)
+            + "GetCapabilities-to-ISO19119_ISO19139.xsl";
+    }
 
-	//--------------------------------------------------------------------------
-	//--- OaiPmhServer
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
 
-	private Element getOaiPmhServer(Element el, ServiceContext context) throws BadInputEx
-	{
-		String url = el.getAttributeValue("url");
+    private Element getOaiPmhServer(Element el, ServiceContext context) throws BadInputEx {
+        String url = el.getAttributeValue("url");
 
-		if (url == null)
-			throw new MissingParameterEx("attribute:url", el);
+        if (url == null)
+            throw new MissingParameterEx("attribute:url", el);
 
-		if (!Lib.net.isUrlValid(url))
-			throw new BadParameterEx("attribute:url", el);
+        if (!Lib.net.isUrlValid(url))
+            throw new BadParameterEx("attribute:url", el);
 
-		Element res = new Element("oaiPmhServer");
+        Element res = new Element("oaiPmhServer");
 
-		try
-		{
-			res.addContent(getMdFormats(url, context));
-			res.addContent(getSets(url, context));
-		}
-		catch(JDOMException e)
-		{
-			res.setContent(JeevesException.toElement(new BadXmlResponseEx(e.getMessage())));
-		}
-		catch(SAXException e)
-		{
-			res.setContent(JeevesException.toElement(new BadXmlResponseEx(e.getMessage())));
-		}
-		catch(OaiPmhException e)
-		{
-			res.setContent(org.fao.geonet.kernel.oaipmh.Lib.toJeevesException(e));
-		}
-		catch(Exception e)
-		{
-			res.setContent(JeevesException.toElement(e));
-		}
+        try {
+            res.addContent(getMdFormats(url, context));
+            res.addContent(getSets(url, context));
+        } catch (JDOMException e) {
+            res.setContent(JeevesException.toElement(new BadXmlResponseEx(e.getMessage())));
+        } catch (SAXException e) {
+            res.setContent(JeevesException.toElement(new BadXmlResponseEx(e.getMessage())));
+        } catch (OaiPmhException e) {
+            res.setContent(org.fao.geonet.kernel.oaipmh.Lib.toJeevesException(e));
+        } catch (Exception e) {
+            res.setContent(JeevesException.toElement(e));
+        }
 
-		return res;
-	}
+        return res;
+    }
 
-	//--------------------------------------------------------------------------
-
-	private Element getMdFormats(String url, ServiceContext context) throws Exception
-	{
-		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(context.getBean(GeonetHttpRequestFactory.class));
-		req.setSchemaPath(oaiSchema);
+    private Element getMdFormats(String url, ServiceContext context) throws Exception {
+        ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(context.getBean(GeonetHttpRequestFactory.class));
+        req.setSchemaPath(oaiSchema);
 
         XmlRequest t = req.getTransport();
-		t.setUrl(new URL(url));
-		Lib.net.setupProxy(context, t);
-		ListMetadataFormatsResponse res = req.execute();
+        t.setUrl(new URL(url));
+        Lib.net.setupProxy(context, t);
+        ListMetadataFormatsResponse res = req.execute();
 
-		//--- build response
+        //--- build response
 
-		Element root = new Element("formats");
+        Element root = new Element("formats");
 
-		for (MetadataFormat mf : res.getFormats())
-			root.addContent(new Element("format").setText(mf.prefix));
+        for (MetadataFormat mf : res.getFormats())
+            root.addContent(new Element("format").setText(mf.prefix));
 
-		return root;
-	}
+        return root;
+    }
 
-	//--------------------------------------------------------------------------
+    private Element getSets(String url, ServiceContext context) throws Exception {
+        Element root = new Element("sets");
 
-	private Element getSets(String url, ServiceContext context) throws Exception
-	{
-		Element root = new Element("sets");
-
-		try
-		{
-			ListSetsRequest req = new ListSetsRequest(context.getBean(GeonetHttpRequestFactory.class));
-			req.setSchemaPath(oaiSchema);
+        try {
+            ListSetsRequest req = new ListSetsRequest(context.getBean(GeonetHttpRequestFactory.class));
+            req.setSchemaPath(oaiSchema);
             XmlRequest t = req.getTransport();
-			t.setUrl(new URL(url));
-			Lib.net.setupProxy(context, t);
-			ListSetsResponse res = req.execute();
+            t.setUrl(new URL(url));
+            Lib.net.setupProxy(context, t);
+            ListSetsResponse res = req.execute();
 
-			//--- build response
+            //--- build response
 
-			while (res.hasNext())
-			{
-				SetInfo si = res.next();
+            while (res.hasNext()) {
+                SetInfo si = res.next();
 
-				Element el = new Element("set");
+                Element el = new Element("set");
 
-				el.addContent(new Element("name") .setText(si.getSpec()));
-				el.addContent(new Element("label").setText(si.getName()));
+                el.addContent(new Element("name").setText(si.getSpec()));
+                el.addContent(new Element("label").setText(si.getName()));
 
-				root.addContent(el);
-			}
-		}
-		catch(NoSetHierarchyException e)
-		{
-			//--- if the server does not support sets, simply returns an empty set
-		}
+                root.addContent(el);
+            }
+        } catch (NoSetHierarchyException e) {
+            //--- if the server does not support sets, simply returns an empty set
+        }
 
-		return root;
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private Path oaiSchema;
-	private Path importXslPath;
-
-	private static final String iconExt[] = { ".gif", ".png", ".jpg", ".jpeg" };
+        return root;
+    }
 }
 
 //=============================================================================

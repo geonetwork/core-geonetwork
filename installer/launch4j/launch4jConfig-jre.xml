@@ -22,7 +22,7 @@
   -->
 
 <!-- The properties 'jar', 'outfile', 'fileVersion', 'txtFileVersion',
-     'productVersion' and 'txtProductVersion' are overruled by the 
+     'productVersion' and 'txtProductVersion' are overruled by the
      installer build.xml file -->
 
 <launch4jConfig>
@@ -31,8 +31,8 @@
   <jar>../geonetwork-2.4.0/geonetwork-install.jar</jar>
   <outfile>../geonetwork-2.4.0/geonetwork-install.exe</outfile>
   <errTitle>GeoNetwork opensource Installation Error</errTitle>
-<!--  <downloadUrl>http://java.sun.com/javase/downloads/index_jdk5.jsp</downloadUrl>
-  <supportURL>http://java.sun.com/j2se/1.5.0/jre/install-windows.html</supportURL> -->
+  <!--  <downloadUrl>http://java.sun.com/javase/downloads/index_jdk5.jsp</downloadUrl>
+    <supportURL>http://java.sun.com/j2se/1.5.0/jre/install-windows.html</supportURL> -->
   <jarArgs></jarArgs>
   <chdir></chdir>
   <customProcName>false</customProcName>
@@ -43,7 +43,7 @@
     <!-- The minimal version required by the IzPack installer is 1.4
          The JRE for GeoNetwork is included in the installer -->
     <minVersion>1.4.0</minVersion>
-<!--    <maxVersion>1.5.0_12</maxVersion> -->
+    <!--    <maxVersion>1.5.0_12</maxVersion> -->
     <initialHeapSize>256</initialHeapSize>
     <maxHeapSize>512</maxHeapSize>
     <args></args>

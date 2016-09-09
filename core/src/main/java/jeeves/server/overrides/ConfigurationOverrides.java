@@ -75,22 +75,20 @@ import javax.servlet.ServletContext;
  * <p/>
  * <p/>
  * The idea is to allow configurations to have seconds overridden for a specific server deployment.
- * A common scenario is to have test and production instances with different configurations.  In both configurations
- * 90% of the configuration is the same but certain parts need to be updated.
+ * A common scenario is to have test and production instances with different configurations.  In
+ * both configurations 90% of the configuration is the same but certain parts need to be updated.
  * <p/>
- * This class allows an override file to be specified as a system property or a servlet init parameter:
- * <em>jeeves.configuration.overrides.file</em>.
+ * This class allows an override file to be specified as a system property or a servlet init
+ * parameter: <em>jeeves.configuration.overrides.file</em>.
  * <p/>
- * The order of resolution is:
- * <ol>
- * <li>System property with key:  <em>{servlet.getServletContext().getServletContextName()}.jeeves.configuration.overrides.file</em></li>
+ * The order of resolution is: <ol> <li>System property with key:  <em>{servlet.getServletContext().getServletContextName()}.jeeves.configuration.overrides.file</em></li>
  * <li>Servlet init parameter with key:  <em>jeeves.configuration.overrides.file</em></li>
- * <li>System property with key:  <em>jeeves.configuration.overrides.file</em></li>
- * <li>Servlet <em>context</em> init parameters with key:  <em>jeeves.configuration.overrides.file</em></li>
+ * <li>System property with key:  <em>jeeves.configuration.overrides.file</em></li> <li>Servlet
+ * <em>context</em> init parameters with key:  <em>jeeves.configuration.overrides.file</em></li>
  * </ol>
- * 
- * The configuration in the override file will override settings in the "standard" loaded configuration
- * files.
+ *
+ * The configuration in the override file will override settings in the "standard" loaded
+ * configuration files.
  * <p/>
  * The overrides file can be a file (relative to the servlet base) or a URL
  * <p/>
@@ -100,85 +98,80 @@ import javax.servlet.ServletContext;
  * The override configuration structure is an XML file as follows:
  * <pre><[[CDATA[
  * <overrides>
-    <!-- import values.  The imported values are put at top of sections -->
-    <import file="./imported-config-overrides.xml" />
-     <!-- properties allow some properties to be defined that will be substituted -->
-     <!-- into text or attributes where ${property} is the substitution pattern -->
-     <!-- The properties can reference other properties -->
-     <properties>
-         <enabled>true</enabled>
-         <dir>xml</dir>
-         <aparam>overridden</aparam>
-     </properties>
-     <!-- A regular expression for matching the file affected. -->
-     <file name=".*WEB-INF/config\.xml">
-         <!-- This example will update the file attribute of the xml element with the name attribute 'countries' -->
-         <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file" value="${dir}/europeanCountries.xml"/>
-         <!-- if there is no value then the attribute is removed -->
-         <replaceAtt xpath="default/gui" attName="removeAtt"/>
-         <!-- If the attribute does not exist it is added -->
-         <replaceAtt xpath="default/gui" attName="newAtt" value="newValue"/>
-
-         <!-- This example will replace all the xml in resources with the contained xml -->
-         TODO
-
-         <!-- This example simple replaces the text of an element -->
-         <replaceText xpath="default/language">${lang}</replaceText>
-         <!-- This examples shows how only the text is replaced not the nodes -->
-         <replaceText xpath="default/gui">ExtraText</replaceText>
-         <!-- append xml as a child to a section (If xpath == "" then that indicates the root of the document),
-              this case adds nodes to the root document -->
-         <addXML xpath=""><newNode/></addXML>
-         <!-- append xml as a child to a section, this case adds nodes to the root document -->
-         <addXML xpath="default/gui"><newNode2/></addXML>
-         <!-- remove a single node -->
-         <removeXML xpath="default/gui/xml[@name = countries2]"/>
-     </file>
-     <file name=".*WEB-INF/config2\.xml">
-         <replaceText xpath="default/language">de</replaceText>
-     </file>
-     <!-- a normal file tag is for updating XML configuration files -->
-     <!-- textFile tags are for updating normal text files like sql files -->
-     <textFile name="test-sql.sql">
-     	<!-- each line in the text file is matched against the linePattern attribute and the new value is used for substitution -->
-     	<update linePattern="(.*) Relations">$1 NewRelations</update>
-     	<update linePattern="(.*)relatedId(.*)">$1${aparam}$2</update>
-     </textFile>
-     <!-- configure the spring aspects of geonetwork -->
-     <spring>
-         <!-- import a complete spring xml file -->
-         <import file="./config-spring-overrides.xml"/>
-         <!-- declare a file as a spring properties override file: See http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/beans/factory/config/PropertyOverrideConfigurer.html -->
-         <propertyOverrides file="./config-property-overrides.properties" />
-         <!-- set a property on one bean to reference another bean -->
-         <set bean="beanName" property="propertyName" ref="otherBeanName"/>
-         <!-- add a references to a bean to a property on another bean.  This assumes the property is a collection -->
-         <add bean="beanName" property="propertyName" ref="otherBeanName"/>
-      </spring>
- </overrides>
+ * <!-- import values.  The imported values are put at top of sections -->
+ * <import file="./imported-config-overrides.xml" />
+ * <!-- properties allow some properties to be defined that will be substituted -->
+ * <!-- into text or attributes where ${property} is the substitution pattern -->
+ * <!-- The properties can reference other properties -->
+ * <properties>
+ * <enabled>true</enabled>
+ * <dir>xml</dir>
+ * <aparam>overridden</aparam>
+ * </properties>
+ * <!-- A regular expression for matching the file affected. -->
+ * <file name=".*WEB-INF/config\.xml">
+ * <!-- This example will update the file attribute of the xml element with the name attribute
+ * 'countries' -->
+ * <replaceAtt xpath="default/gui/xml[@name = 'countries']" attName="file"
+ * value="${dir}/europeanCountries.xml"/>
+ * <!-- if there is no value then the attribute is removed -->
+ * <replaceAtt xpath="default/gui" attName="removeAtt"/>
+ * <!-- If the attribute does not exist it is added -->
+ * <replaceAtt xpath="default/gui" attName="newAtt" value="newValue"/>
+ *
+ * <!-- This example will replace all the xml in resources with the contained xml -->
+ * TODO
+ *
+ * <!-- This example simple replaces the text of an element -->
+ * <replaceText xpath="default/language">${lang}</replaceText>
+ * <!-- This examples shows how only the text is replaced not the nodes -->
+ * <replaceText xpath="default/gui">ExtraText</replaceText>
+ * <!-- append xml as a child to a section (If xpath == "" then that indicates the root of the
+ * document),
+ * this case adds nodes to the root document -->
+ * <addXML xpath=""><newNode/></addXML>
+ * <!-- append xml as a child to a section, this case adds nodes to the root document -->
+ * <addXML xpath="default/gui"><newNode2/></addXML>
+ * <!-- remove a single node -->
+ * <removeXML xpath="default/gui/xml[@name = countries2]"/>
+ * </file>
+ * <file name=".*WEB-INF/config2\.xml">
+ * <replaceText xpath="default/language">de</replaceText>
+ * </file>
+ * <!-- a normal file tag is for updating XML configuration files -->
+ * <!-- textFile tags are for updating normal text files like sql files -->
+ * <textFile name="test-sql.sql">
+ * <!-- each line in the text file is matched against the linePattern attribute and the new value is
+ * used for substitution -->
+ * <update linePattern="(.*) Relations">$1 NewRelations</update>
+ * <update linePattern="(.*)relatedId(.*)">$1${aparam}$2</update>
+ * </textFile>
+ * <!-- configure the spring aspects of geonetwork -->
+ * <spring>
+ * <!-- import a complete spring xml file -->
+ * <import file="./config-spring-overrides.xml"/>
+ * <!-- declare a file as a spring properties override file: See http://static.springsource.org/spring/docs/3.0.x/api/org/springframework/beans/factory/config/PropertyOverrideConfigurer.html
+ * -->
+ * <propertyOverrides file="./config-property-overrides.properties" />
+ * <!-- set a property on one bean to reference another bean -->
+ * <set bean="beanName" property="propertyName" ref="otherBeanName"/>
+ * <!-- add a references to a bean to a property on another bean.  This assumes the property is a
+ * collection -->
+ * <add bean="beanName" property="propertyName" ref="otherBeanName"/>
+ * </spring>
+ * </overrides>
  * ]]></pre>
- * 
- * 	 A original proposal about the overrides are at:
- *   <a href="http://trac.osgeo.org/geonetwork/wiki/ConfigOverride">http://trac.osgeo.org/geonetwork/wiki/ConfigOverride</a>
- *   The API has changed slightly since it was written but the principals remain the same 
-
+ *
+ * A original proposal about the overrides are at: <a href="http://trac.osgeo.org/geonetwork/wiki/ConfigOverride">http://trac.osgeo.org/geonetwork/wiki/ConfigOverride</a>
+ * The API has changed slightly since it was written but the principals remain the same
  */
 public class ConfigurationOverrides {
 
 
-    private static final String CONFIG_OVERRIDES_FILENAME = "config-overrides.xml";
-    private SpringPropertyOverrides springPropertyOverrides;
-
-    enum Updates {
-        REPLACEATT,
-        REPLACEXML,
-        ADDXML,
-        REMOVEXML,
-        REPLACETEXT;
-    }
-
-    static final String LOGFILE_XPATH = "logging/logFile";
     public static final String OVERRIDES_KEY = "jeeves.configuration.overrides.file";
+    public static final ConfigurationOverrides DEFAULT = new ConfigurationOverrides(null);
+    static final String LOGFILE_XPATH = "logging/logFile";
+    private static final String CONFIG_OVERRIDES_FILENAME = "config-overrides.xml";
     private static final String ATTNAME_ATTR_NAME = "attName";
     private static final String VALUE_ATTR_NAME = "value";
     private static final String XPATH_ATTR_NAME = "xpath";
@@ -199,22 +192,25 @@ public class ConfigurationOverrides {
         }
     };
     private static final List<Namespace> WEB_XML_NS = new ArrayList<Namespace>();
+
     static {
         WEB_XML_NS.add(Namespace.getNamespace("http://java.sun.com/xml/ns/j2ee"));
     }
-    
-    public static final ConfigurationOverrides DEFAULT = new ConfigurationOverrides(null);
-    private String _overrides;
 
+    private SpringPropertyOverrides springPropertyOverrides;
+    private String _overrides;
     public ConfigurationOverrides(final String overrides) {
         this._overrides = overrides;
     }
 
     /**
-     * Update the logging configuration so that it uses the configuration defined in the overrides rather than the defaults
-     * 
-     * @param context the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
-     * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
+     * Update the logging configuration so that it uses the configuration defined in the overrides
+     * rather than the defaults
+     *
+     * @param context the servlet context that is loaded (maybe null.  If null appPath is used to
+     *                resolve configuration files like: /WEB-INF/configuration-overrides.xml
+     * @param appPath The path to the webapplication root.  If servlet is null (and therefore
+     *                getResource cannot be used, this path is used to file files)
      */
     public void updateLoggingAsAccordingToOverrides(ServletContext context, Path appPath) throws JDOMException, IOException {
         String resource = lookupOverrideParameter(context, appPath);
@@ -254,19 +250,18 @@ public class ConfigurationOverrides {
     }
 
     /**
-     * 
-     *
-     * @param configFile the path to the configuration file that has been loaded (and is the configRoot).  This is used to identify overrides
-     * @param context
-     *@param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
-     * @param configElement the root element of the configuration (obtained by loading configFile)    @throws JDOMException
-     * @throws IOException
+     * @param configFile    the path to the configuration file that has been loaded (and is the
+     *                      configRoot).  This is used to identify overrides
+     * @param appPath       The path to the webapplication root.  If servlet is null (and therefore
+     *                      getResource cannot be used, this path is used to file files)
+     * @param configElement the root element of the configuration (obtained by loading configFile)
+     *                      @throws JDOMException
      */
     public void updateWithOverrides(String configFile, ServletContext context, Path appPath, Element configElement) throws JDOMException, IOException {
-        String resource = lookupOverrideParameter(context,appPath);
+        String resource = lookupOverrideParameter(context, appPath);
 
         ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
-        updateConfig(loader,resource,configFile, configElement);
+        updateConfig(loader, resource, configFile, configElement);
     }
 
     private void updateConfig(ResourceLoader loader, String overridesResource, String configFilePath, Element configRoot) throws JDOMException, IOException {
@@ -281,7 +276,7 @@ public class ConfigurationOverrides {
             String expectedfileName = file.getAttributeValue(FILE_NAME_ATT_NAME);
 
             if (Pattern.matches(expectedfileName, configFilePath.replace(File.separator, "/"))) {
-            	Log.info(Log.JEEVES, "Overrides being applied to configuration file: " + expectedfileName);
+                Log.info(Log.JEEVES, "Overrides being applied to configuration file: " + expectedfileName);
 
                 @SuppressWarnings("unchecked")
                 List<Element> elements = file.getChildren();
@@ -429,14 +424,14 @@ public class ConfigurationOverrides {
     private List<Content> xpathLookup(Element configRoot, String xpath) throws JDOMException {
         // Register all namespaces which may be required to solve xpath
         ArrayList<Namespace> namespaces = new ArrayList<Namespace>();
-        for (Iterator<?> iterator = configRoot.getAdditionalNamespaces().iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = configRoot.getAdditionalNamespaces().iterator(); iterator.hasNext(); ) {
             Namespace ns = (Namespace) iterator.next();
             namespaces.add(ns);
         }
-        
+
         List<?> objects = Xml.selectNodes(configRoot, xpath, namespaces);
         List<Content> elements = new ArrayList<Content>();
-        
+
         for (Object object : objects) {
             if (object instanceof Content) {
                 elements.add((Element) object);
@@ -519,7 +514,7 @@ public class ConfigurationOverrides {
         return newXml;
     }
 
-    private<E> List<E> toList(Iterator<E> iter) {
+    private <E> List<E> toList(Iterator<E> iter) {
         ArrayList<E> elems = new ArrayList<E>();
         while (iter.hasNext()) {
             elems.add(iter.next());
@@ -581,7 +576,7 @@ public class ConfigurationOverrides {
             return _overrides;
         }
         String resource;
-        if(context == null) {
+        if (context == null) {
             resource = lookupOverrideParamFromAppPath(appPath);
         } else {
             resource = lookupOverrideParamFromServlet(context);
@@ -593,19 +588,19 @@ public class ConfigurationOverrides {
         final Path webInf = appPath.resolve("WEB-INF");
         Path webxmlFile = webInf.resolve("web.xml");
         String resource = null;
-        if(Files.exists(webxmlFile)) {
+        if (Files.exists(webxmlFile)) {
             Element webXML = Xml.loadFile(webxmlFile);
             Namespace namespace = webXML.getNamespace();
             String webappName = webXML.getChildTextTrim("display-name", namespace);
 
-            if(webappName == null || webappName.isEmpty()) {
+            if (webappName == null || webappName.isEmpty()) {
                 webappName = "geonetwork";
             }
-            resource = System.getProperty(webappName+"."+OVERRIDES_KEY);
-            
+            resource = System.getProperty(webappName + "." + OVERRIDES_KEY);
+
         }
         if (resource == null || resource.trim().isEmpty()) {
-        	resource = lookupOverrideParamFromConfigFile(webInf.resolve(CONFIG_OVERRIDES_FILENAME).toUri().toURL());
+            resource = lookupOverrideParamFromConfigFile(webInf.resolve(CONFIG_OVERRIDES_FILENAME).toUri().toURL());
         }
         if (resource == null || resource.trim().isEmpty()) {
             resource = System.getProperty(OVERRIDES_KEY);
@@ -614,27 +609,27 @@ public class ConfigurationOverrides {
     }
 
     @SuppressWarnings("unchecked")
-	private String lookupOverrideParamFromConfigFile(URL url) throws IOException, JDOMException {
-    	try {
-			Element config = Xml.loadFile(url);
-			StringBuilder builder = new StringBuilder();
-			for(Element elem : (List<Element>)config.getChildren("override")) {
-				if(builder.length() > 0) {
-					builder.append(',');
-				}
-				builder.append(elem.getTextTrim());
-			}
-			return builder.toString();
-    	} catch (FileNotFoundException e) {
-    		return null;
-    	} catch (NullPointerException e) { //If the url is null
-		return null;
-	}
-	}
+    private String lookupOverrideParamFromConfigFile(URL url) throws IOException, JDOMException {
+        try {
+            Element config = Xml.loadFile(url);
+            StringBuilder builder = new StringBuilder();
+            for (Element elem : (List<Element>) config.getChildren("override")) {
+                if (builder.length() > 0) {
+                    builder.append(',');
+                }
+                builder.append(elem.getTextTrim());
+            }
+            return builder.toString();
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (NullPointerException e) { //If the url is null
+            return null;
+        }
+    }
 
-	private String lookupOverrideParamFromServlet(ServletContext context) throws IOException, JDOMException {
+    private String lookupOverrideParamFromServlet(ServletContext context) throws IOException, JDOMException {
         String resource;
-        resource = System.getProperty(context.getServletContextName()+"."+OVERRIDES_KEY);
+        resource = System.getProperty(context.getServletContextName() + "." + OVERRIDES_KEY);
         if (resource == null || resource.trim().isEmpty()) {
             resource = System.getProperty(OVERRIDES_KEY);
         }
@@ -645,6 +640,201 @@ public class ConfigurationOverrides {
             resource = context.getInitParameter(OVERRIDES_KEY);
         }
         return resource;
+    }
+
+    /**
+     * Load an XML file and applies the overrides to the file
+     *
+     * @param servletRelativePath file to load.  It is assumed to be with the servlet and is assumed
+     *                            to start with /.
+     * @param context             the ServletContext to use for locating the file
+     */
+    public Element loadXmlFileAndUpdate(String servletRelativePath, ServletContext context) {
+        Path appPath = IO.toPath(context.getContextPath());
+        Element elem = null;
+        try {
+            final Path realPath = IO.toPath(context.getRealPath(servletRelativePath));
+            elem = Xml.loadFile(realPath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            updateWithOverrides(servletRelativePath, context, appPath, elem);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.error(Log.JEEVES, "Unable to read overrides for config.xml: " + e);
+        }
+        return elem;
+    }
+
+    /**
+     * Loads a text file, compares each line to the textFile elements in the overrides file and if a
+     * match is found replaces that line with the line in the overrides
+     *
+     * Examples of use are to be able to update server.props using overrides and the sql
+     * data,create, etc... files with overrides so that the files can contain the defaults and the
+     * specifics for a particular platform can be configured using overrides
+     *
+     * @param configFilePath The path to the files to be loaded and overriden.  IE
+     *                       /WEB-INF/server.prop
+     * @param context        the servlet context that is loaded (maybe null.  If null appPath is
+     *                       used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
+     * @param appPath        The path to the webapplication root.  If servlet is null (and therefore
+     *                       getResource cannot be used, this path is used to file files)
+     * @param reader         a buffered reader opened to the file to be loaded.
+     * @return the array of lines in the file.
+     */
+    public List<String> loadTextFileAndUpdate(String configFilePath, ServletContext context, Path appPath, BufferedReader reader) throws IOException {
+        ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
+
+        try {
+            String resource = lookupOverrideParameter(context, appPath);
+            return loadFileAndUpdate(loader, resource, configFilePath, reader);
+        } catch (JDOMException e) {
+            return loadFileAndUpdate(loader, null, configFilePath, reader);
+        }
+
+    }
+
+    private List<String> loadFileAndUpdate(ResourceLoader loader, String overridesResource, String configFilePath,
+                                           BufferedReader reader) throws IOException {
+        Element overrides = loader.loadXmlResource(overridesResource);
+        HashMap<Pattern, String> matches = new HashMap<Pattern, String>();
+
+        Properties properties = new Properties();
+        if (overrides != null) {
+            properties = loadProperties(overrides);
+            @SuppressWarnings("unchecked")
+            List<Element> files = overrides.getChildren(TEXT_FILE_NODE_NAME);
+
+            for (Element file : files) {
+                String expectedfileName = file
+                    .getAttributeValue(FILE_NAME_ATT_NAME);
+
+                if (Pattern.matches(expectedfileName, configFilePath)) {
+                    @SuppressWarnings("unchecked")
+                    List<Element> updates = file.getChildren("update");
+                    for (Element element : updates) {
+                        matches.put(Pattern.compile(element
+                            .getAttributeValue("linePattern")), element
+                            .getTextTrim());
+                    }
+                }
+            }
+        }
+
+        ArrayList<String> al = new ArrayList<String>();
+
+        String line = reader.readLine();
+        try {
+            while (line != null) {
+                for (Map.Entry<Pattern, String> entry : matches.entrySet()) {
+                    Matcher matcher = entry.getKey().matcher(line);
+                    if (matcher.matches()) {
+                        String value = updatePropertiesInText(properties,
+                            entry.getValue());
+                        line = matcher.replaceFirst(value);
+                        break;
+                    }
+                }
+                al.add(line);
+                line = reader.readLine();
+            }
+            return al;
+        } finally {
+            reader.close();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void importSpringConfigurations(XmlBeanDefinitionReader reader, ConfigurableBeanFactory beanFactory, ServletContext servletContext, Path appPath) throws JDOMException, IOException {
+        String overridesResource = lookupOverrideParameter(servletContext, appPath);
+
+        ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
+
+        Element overrides = loader.loadXmlResource(overridesResource);
+        if (overrides == null) {
+            return;
+        }
+
+        Properties properties = loadProperties(overrides);
+
+        for (Element e : (List<Element>) overrides.getChildren("spring")) {
+            for (Element element : (List<Element>) e.getChildren("import")) {
+
+                String importFile = element.getAttributeValue("file");
+                importFile = updatePropertiesInText(properties, importFile);
+
+                Log.info(Log.JEEVES, "ConfigurationOverrides: importing spring file into application context: " + importFile);
+                Path file = loader.resolveFile(importFile);
+                if (file != null) {
+                    Resource inputSource = new InputStreamResource(IO.newInputStream(file));
+                    reader.loadBeanDefinitions(inputSource);
+                } else {
+                    InputStream inputStream = loader.loadInputStream(importFile);
+                    try {
+                        Resource inputSource = new InputStreamResource(inputStream);
+                        reader.loadBeanDefinitions(inputSource);
+                    } finally {
+                        IOUtils.closeQuietly(inputStream);
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    public void postProcessSpringBeanFactory(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
+                                             Path appPath) throws JDOMException, IOException {
+
+        final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
+        if (springPropertyOverrides == null) return;
+        springPropertyOverrides.postProcessBeanFactory(beanFactory);
+    }
+
+    public void onSpringApplicationContextFinishedRefresh(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
+                                                          Path appPath) throws JDOMException, IOException {
+
+        final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
+        if (springPropertyOverrides == null) return;
+        springPropertyOverrides.onFinishedRefresh(beanFactory);
+    }
+
+    @SuppressWarnings("unchecked")
+    private synchronized SpringPropertyOverrides getSpringPropertyOverrides(ServletContext servletContext, Path appPath) throws JDOMException, IOException {
+        if (this.springPropertyOverrides == null) {
+            String overridesResource = lookupOverrideParameter(servletContext, appPath);
+
+            ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
+
+            Element overrides = loader.loadXmlResource(overridesResource);
+            if (overrides == null) {
+                return null;
+            }
+
+            Properties properties = loadProperties(overrides);
+            List<Element> updateEls = new ArrayList<Element>();
+            List<Element> spring = new ArrayList<Element>(overrides.getChildren("spring"));
+            for (Element el : spring) {
+                for (Element element : (List<Element>) el.getChildren()) {
+                    if (!element.getName().equals("import")) {
+                        updateEls.add(element);
+                    }
+
+                }
+            }
+            this.springPropertyOverrides = new SpringPropertyOverrides(updateEls, properties);
+        }
+        return springPropertyOverrides;
+    }
+
+    enum Updates {
+        REPLACEATT,
+        REPLACEXML,
+        ADDXML,
+        REMOVEXML,
+        REPLACETEXT;
     }
 
     public static abstract class ResourceLoader {
@@ -661,17 +851,20 @@ public class ConfigurationOverrides {
                 resource = resource.replace((CharSequence) repl, subst);
             }
             Path file = resolveFile(resource);
-            if(file == null) {
+            if (file == null) {
                 return fallbackInputStream(resource);
             } else {
                 return IO.newInputStream(file);
             }
         }
+
         protected abstract Path resolveFile(String resource) throws IOException;
+
         protected abstract InputStream fallbackInputStream(String resource) throws IOException;
+
         protected String resolveImportFileName(String importResource, String baseResource) {
             String resolved = resolveRelative(importResource, baseResource, File.separator);
-            if(resolved.equals(importResource)) {
+            if (resolved.equals(importResource)) {
                 return resolveRelative(importResource, baseResource, "/");
             } else {
                 return resolved;
@@ -681,14 +874,14 @@ public class ConfigurationOverrides {
         protected String resolveRelative(String importResource, String baseResource, String sep) {
             String baseDir = baseResource;
             int lastSep = baseDir.lastIndexOf(sep);
-            if(lastSep > -1) {
-                baseDir = baseDir.substring(0,lastSep);
+            if (lastSep > -1) {
+                baseDir = baseDir.substring(0, lastSep);
             }
             String back = ".." + sep;
-            if(importResource.startsWith(back)) {
-                return baseDir+sep+".."+sep+importResource;
-            } else if(importResource.startsWith(back.substring(1))){
-                return baseDir+sep+importResource;
+            if (importResource.startsWith(back)) {
+                return baseDir + sep + ".." + sep + importResource;
+            } else if (importResource.startsWith(back.substring(1))) {
+                return baseDir + sep + importResource;
             } else {
                 return importResource;
             }
@@ -708,7 +901,7 @@ public class ConfigurationOverrides {
                     return data.toString();
                 } finally {
                     IOUtils.closeQuietly(in);
-                    if(reader != null) {
+                    if (reader != null) {
                         IOUtils.closeQuietly(reader);
                     }
                 }
@@ -718,11 +911,11 @@ public class ConfigurationOverrides {
         }
 
         public final Element loadXmlResource(String resource) throws IOException {
-        	Element loadedResource = null;
-        	if(resource == null) {
-        	    return null;
-        	}
-        	String[] resources = resource.split(",");
+            Element loadedResource = null;
+            if (resource == null) {
+                return null;
+            }
+            String[] resources = resource.split(",");
             for (String string : resources) {
                 if (!string.trim().isEmpty()) {
                     InputStream in = loadInputStream(string);
@@ -743,7 +936,7 @@ public class ConfigurationOverrides {
                             in.close();
                         }
                     } else {
-                        if(Log.isDebugEnabled(Log.JEEVES))
+                        if (Log.isDebugEnabled(Log.JEEVES))
                             Log.debug(Log.JEEVES, "Unable to load Configuration Override resource: " + string);
                     }
                 }
@@ -761,11 +954,12 @@ public class ConfigurationOverrides {
 
                 Element importedXml = loadXmlResource(resolveImportFileName(file, baseResource));
                 mergeElements(baseElement, importedXml);
-                
+
             }
             return baseElement;
         }
-		private void mergeElements(Element baseElement, Element importedXml) throws JDOMException {
+
+        private void mergeElements(Element baseElement, Element importedXml) throws JDOMException {
             @SuppressWarnings("unchecked")
             List<Element> children = new ArrayList<Element>(importedXml.getChildren());
             for (Element toMerge : children) {
@@ -784,15 +978,15 @@ public class ConfigurationOverrides {
             }
         }
 
-        private void merge(Element baseElement, Element toMerge, String xpath, boolean overrideImports ) throws JDOMException {
+        private void merge(Element baseElement, Element toMerge, String xpath, boolean overrideImports) throws JDOMException {
             Element mergeTarget = Xml.selectElement(baseElement, xpath);
-            if(mergeTarget != null) {
+            if (mergeTarget != null) {
                 @SuppressWarnings("unchecked")
                 Collection<Content> contentToAdd = detach(toMerge.getContent());
-                if(overrideImports) {
+                if (overrideImports) {
                     contentToAdd = filterOutExistingElements(mergeTarget, contentToAdd);
                 }
-                mergeTarget.addContent(0,contentToAdd);
+                mergeTarget.addContent(0, contentToAdd);
             } else {
                 baseElement.addContent(toMerge);
             }
@@ -800,11 +994,10 @@ public class ConfigurationOverrides {
 
         private Collection<Content> filterOutExistingElements(Element mergeTarget, Collection<Content> contentToAdd) {
             ArrayList<Content> toAdd = new ArrayList<Content>();
-            for (Content c : contentToAdd)
-            {
-                if(c instanceof Element) {
+            for (Content c : contentToAdd) {
+                if (c instanceof Element) {
                     Element e = (Element) c.detach();
-                    if(mergeTarget.getChild(e.getName()) == null) {
+                    if (mergeTarget.getChild(e.getName()) == null) {
                         toAdd.add(e);
                     }
                 } else {
@@ -838,19 +1031,19 @@ public class ConfigurationOverrides {
             Path file = null;
             Path testPath = IO.toPath(resource);
 
-            if(Files.exists(testPath)) {
+            if (Files.exists(testPath)) {
                 file = testPath;
             }
-            if(file == null && context!=null) {
+            if (file == null && context != null) {
                 String path = context.getRealPath(resource);
-                if(path != null) {
+                if (path != null) {
                     testPath = IO.toPath(path);
-                    if(Files.exists(testPath)) {
+                    if (Files.exists(testPath)) {
                         file = testPath;
                     }
                 }
             }
-            if(file == null && appPath != null) {
+            if (file == null && appPath != null) {
                 String resourceNoFirstSlash = resource;
                 if (resourceNoFirstSlash.startsWith("/") || resourceNoFirstSlash.startsWith("\\")) {
                     resourceNoFirstSlash = resourceNoFirstSlash.substring(1);
@@ -861,7 +1054,7 @@ public class ConfigurationOverrides {
                 }
             }
 
-            if(file == null) {
+            if (file == null) {
                 URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
                 if (url != null) {
                     Path testFile = IO.toPath(url.getFile());
@@ -889,18 +1082,18 @@ public class ConfigurationOverrides {
                 } catch (MalformedURLException e) {
                     URL url;
                     try {
-                        if(context != null) {
+                        if (context != null) {
                             // try to get resource from the servlet context if servlet is non-null
                             url = context.getResource(resource);
                         } else {
-                            // fall back to appPath is servlet is null 
+                            // fall back to appPath is servlet is null
                             Path appBasedFile = appPath.resolve(resource);
-                            if(Files.exists(appBasedFile)) {
+                            if (Files.exists(appBasedFile)) {
                                 url = appBasedFile.toUri().toURL();
                             } else {
                                 url = null;
                             }
-                       }
+                        }
                     } catch (MalformedURLException e2) {
                         url = null;
                     }
@@ -909,12 +1102,12 @@ public class ConfigurationOverrides {
                         if (Files.exists(file)) {
                             in = IO.newInputStream(file);
                         } else {
-                        	file = IO.toPath(resource.replace('/', '\\'));
-                        	if(Files.exists(file)) {
-                        		in = IO.newInputStream(file);
-                        	} else {
-                        		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource.  Perhaps a leading / was forgotten?");
-                        	}
+                            file = IO.toPath(resource.replace('/', '\\'));
+                            if (Files.exists(file)) {
+                                in = IO.newInputStream(file);
+                            } else {
+                                throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource.  Perhaps a leading / was forgotten?");
+                            }
                         }
                     } else {
                         in = url.openStream();
@@ -924,192 +1117,6 @@ public class ConfigurationOverrides {
             }
             return null;
         }
-    }
-
-    /**
-     * Load an XML file and applies the overrides to the file
-     * 
-     *
-     * @param servletRelativePath file to load.  It is assumed to be with the servlet and is assumed to start with /.
-     * @param context the ServletContext to use for locating the file
-     * @return
-     */
-    public Element loadXmlFileAndUpdate(String servletRelativePath, ServletContext context) {
-        Path appPath = IO.toPath(context.getContextPath());
-        Element elem = null;
-        try {
-            final Path realPath = IO.toPath(context.getRealPath(servletRelativePath));
-            elem = Xml.loadFile(realPath);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            updateWithOverrides(servletRelativePath, context, appPath, elem);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.error(Log.JEEVES, "Unable to read overrides for config.xml: "+e);
-        }
-        return elem;
-    }
-
-
-    /**
-     * Loads a text file, compares each line to the textFile elements in the overrides file and if a match is found replaces that line with the line in the overrides
-     * 
-     * Examples of use are to be able to update server.props using overrides and the sql data,create, etc... files with overrides so that the files can contain the defaults
-     * and the specifics for a particular platform can be configured using overrides
-     * 
-     * @param configFilePath The path to the files to be loaded and overriden.  IE /WEB-INF/server.prop
-     * @param context the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
-     * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
-     * @param reader a buffered reader opened to the file to be loaded.
-     * 
-     * @return the array of lines in the file.
-     * @throws JDOMException 
-     */
-	public List<String> loadTextFileAndUpdate(String configFilePath, ServletContext context, Path appPath, BufferedReader reader) throws IOException {
-	    ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
-	    
-        try {
-            String resource = lookupOverrideParameter(context, appPath);
-            return loadFileAndUpdate(loader, resource, configFilePath, reader);
-        } catch (JDOMException e) {
-            return loadFileAndUpdate(loader, null, configFilePath, reader);
-        }
-
-	}
-
-    private List<String> loadFileAndUpdate(ResourceLoader loader, String overridesResource, String configFilePath,
-            BufferedReader reader) throws IOException {
-        Element overrides = loader.loadXmlResource(overridesResource);
-		HashMap<Pattern, String> matches = new HashMap<Pattern, String>();
-
-		Properties properties = new Properties();
-		if (overrides != null) {
-			properties = loadProperties(overrides);
-			@SuppressWarnings("unchecked")
-            List<Element> files = overrides.getChildren(TEXT_FILE_NODE_NAME);
-
-			for (Element file : files) {
-				String expectedfileName = file
-						.getAttributeValue(FILE_NAME_ATT_NAME);
-
-				if (Pattern.matches(expectedfileName, configFilePath)) {
-					@SuppressWarnings("unchecked")
-                    List<Element> updates = file.getChildren("update");
-					for (Element element : updates) {
-						matches.put(Pattern.compile(element
-								.getAttributeValue("linePattern")), element
-								.getTextTrim());
-					}
-				}
-			}
-		}
-
-		ArrayList<String> al = new ArrayList<String>();
-
-		String line = reader.readLine();
-		try {
-			while (line != null) {
-				for (Map.Entry<Pattern, String> entry : matches.entrySet()) {
-					Matcher matcher = entry.getKey().matcher(line);
-					if (matcher.matches()) {
-						String value = updatePropertiesInText(properties,
-								entry.getValue());
-						line = matcher.replaceFirst(value);
-						break;
-					}
-				}
-				al.add(line);
-				line = reader.readLine();
-			}
-			return al;
-		} finally {
-			reader.close();
-		}
-	}
-
-    @SuppressWarnings("unchecked")
-    public void importSpringConfigurations(XmlBeanDefinitionReader reader, ConfigurableBeanFactory beanFactory, ServletContext servletContext, Path appPath) throws JDOMException, IOException {
-        String overridesResource = lookupOverrideParameter(servletContext, appPath);
-
-        ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
-        
-        Element overrides = loader.loadXmlResource(overridesResource);
-        if (overrides == null) {
-            return;
-        }
-
-        Properties properties = loadProperties(overrides);
-
-        for(Element e: (List<Element>) overrides.getChildren("spring")) {
-            for (Element element : (List<Element>) e.getChildren("import")) {
-
-                String importFile = element.getAttributeValue("file");
-                importFile = updatePropertiesInText(properties, importFile);
-                
-                Log.info(Log.JEEVES, "ConfigurationOverrides: importing spring file into application context: "+importFile);
-                Path file = loader.resolveFile(importFile);
-                if(file != null) {
-                    Resource inputSource = new InputStreamResource(IO.newInputStream(file));
-                    reader.loadBeanDefinitions(inputSource);
-                } else {
-                    InputStream inputStream = loader.loadInputStream(importFile);
-                    try {
-                        Resource inputSource = new InputStreamResource(inputStream);
-                        reader.loadBeanDefinitions(inputSource);
-                    } finally {
-                        IOUtils.closeQuietly(inputStream);
-                    }
-                }
-            }
-        }
-
-        
-    }
-
-    public void postProcessSpringBeanFactory(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
-                                             Path appPath) throws JDOMException, IOException {
-
-        final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
-        if (springPropertyOverrides == null) return;
-        springPropertyOverrides.postProcessBeanFactory(beanFactory);
-    }
-
-    public void onSpringApplicationContextFinishedRefresh(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
-                                             Path appPath) throws JDOMException, IOException {
-
-        final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
-        if (springPropertyOverrides == null) return;
-        springPropertyOverrides.onFinishedRefresh(beanFactory);
-    }
-
-    @SuppressWarnings("unchecked")
-    private synchronized SpringPropertyOverrides getSpringPropertyOverrides(ServletContext servletContext, Path appPath) throws JDOMException, IOException {
-        if (this.springPropertyOverrides == null) {
-            String overridesResource = lookupOverrideParameter(servletContext, appPath);
-
-            ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
-
-            Element overrides = loader.loadXmlResource(overridesResource);
-            if (overrides == null) {
-                return null;
-            }
-
-            Properties properties = loadProperties(overrides);
-            List<Element> updateEls = new ArrayList<Element>();
-            List<Element> spring = new ArrayList<Element>(overrides.getChildren("spring"));
-            for (Element el : spring) {
-                for (Element element : (List<Element>) el.getChildren()) {
-                    if (!element.getName().equals("import")) {
-                        updateEls.add(element);
-                    }
-
-                }
-            }
-            this.springPropertyOverrides = new SpringPropertyOverrides(updateEls, properties);
-        }
-        return springPropertyOverrides;
     }
 
 }

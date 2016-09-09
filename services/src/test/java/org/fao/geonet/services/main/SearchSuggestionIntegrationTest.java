@@ -44,6 +44,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -56,8 +57,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test the SearchSuggestion Service
- * Created by Jesse on 2/4/14.
+ * Test the SearchSuggestion Service Created by Jesse on 2/4/14.
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:suggestions-context.xml")
 public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationTest {
@@ -67,9 +67,9 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     @BeforeClass
     public static void initService() throws Exception {
         searchSuggestionService.init(IO.toPath("."), new ServiceConfig(Lists.newArrayList(
-                createServiceConfigParam(CONFIG_PARAM_DEFAULT_SEARCH_FIELD, "any"),
-                createServiceConfigParam(CONFIG_PARAM_MAX_NUMBER_OF_TERMS, "10000000"),
-                createServiceConfigParam(CONFIG_PARAM_THRESHOLD, "1000")
+            createServiceConfigParam(CONFIG_PARAM_DEFAULT_SEARCH_FIELD, "any"),
+            createServiceConfigParam(CONFIG_PARAM_MAX_NUMBER_OF_TERMS, "10000000"),
+            createServiceConfigParam(CONFIG_PARAM_THRESHOLD, "1000")
         )));
 
     }
@@ -90,12 +90,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     @Test
     public void testExec_INDEX_TERM_VALUES_sortBy_Frequency() throws Exception {
         final Element params = createParams(
-                read(PARAM_FIELD, "any"),
-                read(PARAM_Q, "Aus"),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, INDEX_TERM_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
+            read(PARAM_FIELD, "any"),
+            read(PARAM_Q, "Aus"),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, INDEX_TERM_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
         );
 
         List<Element> items = performQuery(params);
@@ -124,12 +124,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     @Test
     public void testExec_INDEX_TERM_VALUES_sortBy_STARTSWITHFIRST() throws Exception {
         final Element params = createParams(
-                read(PARAM_FIELD, "any"),
-                read(PARAM_Q, "Aus"),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, INDEX_TERM_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
+            read(PARAM_FIELD, "any"),
+            read(PARAM_Q, "Aus"),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, INDEX_TERM_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
         );
 
         final String searchTerm = "vic";
@@ -151,12 +151,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     @Test
     public void testExec_INDEX_TERM_VALUES_sortBy_ALPHA() throws Exception {
         final Element params = createParams(
-                read(PARAM_FIELD, "any"),
-                read(PARAM_Q, "Aus"),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, INDEX_TERM_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.ALPHA)
+            read(PARAM_FIELD, "any"),
+            read(PARAM_Q, "Aus"),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, INDEX_TERM_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.ALPHA)
         );
 
         final String searchTerm = "vic";
@@ -178,12 +178,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_sortBy_FREQUENCY() throws Exception {
         final String searchTerm = "*a*";
         final Element params = createParams(
-                read(PARAM_FIELD, "title"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
+            read(PARAM_FIELD, "title"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
         );
 
         List<Element> items = performQuery(params);
@@ -195,12 +195,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_sortBy_ALPHA() throws Exception {
         final String searchTerm = "*a*";
         final Element params = createParams(
-                read(PARAM_FIELD, "title"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.ALPHA)
+            read(PARAM_FIELD, "title"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.ALPHA)
         );
 
         List<Element> items = performQuery(params);
@@ -212,12 +212,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_sortBy_STARTSWITHFIRST() throws Exception {
         final String searchTerm = "*wa*";
         final Element params = createParams(
-                read(PARAM_FIELD, "keyword"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
+            read(PARAM_FIELD, "keyword"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
         );
 
         List<Element> items = performQuery(params);
@@ -236,12 +236,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_Any() throws Exception {
         final String searchTerm = "*00*";
         final Element params = createParams(
-                read(PARAM_FIELD, "any"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
+            read(PARAM_FIELD, "any"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
         );
 
         List<Element> items = performQuery(params);
@@ -254,20 +254,20 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_No_duplicates() throws Exception {
         final String searchTerm = "*";
         final Element params = createParams(
-                read(PARAM_FIELD, "any"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
+            read(PARAM_FIELD, "any"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.STARTSWITHFIRST)
         );
 
         List<Element> items = performQuery(params);
 
-        Set<String> encountered  = new HashSet<String>();
+        Set<String> encountered = new HashSet<String>();
         for (Element el : items) {
             String value = el.getAttributeValue(ATT_TERM);
-            assertFalse (value + " is a duplicate", encountered.contains(value));
+            assertFalse(value + " is a duplicate", encountered.contains(value));
             encountered.add(value);
         }
     }
@@ -276,12 +276,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_sortBy_FREQUENCY_NoFilter() throws Exception {
         final String searchTerm = "*";
         final Element params = createParams(
-                read(PARAM_FIELD, "keyword"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 1),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
+            read(PARAM_FIELD, "keyword"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 1),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
         );
 
         List<Element> items = performQuery(params);
@@ -296,12 +296,12 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
     public void testExec_RECORDS_FIELD_VALUES_THRESHHOLD() throws Exception {
         final String searchTerm = "*";
         final Element params = createParams(
-                read(PARAM_FIELD, "keyword"),
-                read(PARAM_Q, searchTerm),
-                read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
-                read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
-                read(PARAM_THRESHOLD, 2),
-                read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
+            read(PARAM_FIELD, "keyword"),
+            read(PARAM_Q, searchTerm),
+            read(PARAM_MAX_NUMBER_OF_TERMS, 100000),
+            read(PARAM_ORIGIN, RECORDS_FIELD_VALUES),
+            read(PARAM_THRESHOLD, 2),
+            read(PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY)
         );
 
         List<Element> items = performQuery(params);

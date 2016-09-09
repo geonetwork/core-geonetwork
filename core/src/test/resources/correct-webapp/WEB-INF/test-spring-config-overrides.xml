@@ -23,23 +23,25 @@
   -->
 
 <overrides>
-	<properties>
-		<db>newString</db>
-		<sharedPath>./spring</sharedPath>
-	</properties>
-	<spring>
-		<import file="${sharedPath}/imported-config.xml"/>
-		<add bean="testBeanFull" property="collectionProp" value="addedProperty"/>
-		<add bean="testBeanFull" property="collectionRef" ref="testBean2"/>
-		<set bean="testBeanFull" property="simpleRef" ref="testBean2"/>
-		<set bean="testBeanFull" property="basicProp" value="updatedBasicProp"/>
-		<set bean="testBeanFull" property="basicProp2" value="updatedBasicProp2"/>
-		<set bean="testBean" property="simpleRef" ref="testBean2"/>
-		<set bean="testBean" property="basicProp2" ref="astring"/>
-		<add bean="testBean" property="collectionProp" value="${db}" />
-		<add bean="testBean" property="collectionRef" ref="testBean3" />
-		<addInterceptUrl bean="filterSecurityInterceptor" pattern="/monitor/.*" access="hasRole('Administrator')"/>
-		<removeInterceptUrl bean="filterSecurityInterceptor" pattern="/toremove/.*"/>
-		<setInterceptUrl bean="filterSecurityInterceptor" pattern="/toset/.*" access="hasRole('RegisteredUser')"/>
-	</spring>
+  <properties>
+    <db>newString</db>
+    <sharedPath>./spring</sharedPath>
+  </properties>
+  <spring>
+    <import file="${sharedPath}/imported-config.xml"/>
+    <add bean="testBeanFull" property="collectionProp" value="addedProperty"/>
+    <add bean="testBeanFull" property="collectionRef" ref="testBean2"/>
+    <set bean="testBeanFull" property="simpleRef" ref="testBean2"/>
+    <set bean="testBeanFull" property="basicProp" value="updatedBasicProp"/>
+    <set bean="testBeanFull" property="basicProp2" value="updatedBasicProp2"/>
+    <set bean="testBean" property="simpleRef" ref="testBean2"/>
+    <set bean="testBean" property="basicProp2" ref="astring"/>
+    <add bean="testBean" property="collectionProp" value="${db}"/>
+    <add bean="testBean" property="collectionRef" ref="testBean3"/>
+    <addInterceptUrl bean="filterSecurityInterceptor" pattern="/monitor/.*"
+                     access="hasRole('Administrator')"/>
+    <removeInterceptUrl bean="filterSecurityInterceptor" pattern="/toremove/.*"/>
+    <setInterceptUrl bean="filterSecurityInterceptor" pattern="/toset/.*"
+                     access="hasRole('RegisteredUser')"/>
+  </spring>
 </overrides>

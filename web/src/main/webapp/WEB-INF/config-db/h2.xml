@@ -22,23 +22,25 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans default-lazy-init="true"
-	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	">
-    <import resource="defaultJdbcDataSource.xml" />
+  <import resource="defaultJdbcDataSource.xml"/>
 
-    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
-        <constructor-arg value="H2"/>
-    </bean>
+  <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+    <constructor-arg value="H2"/>
+  </bean>
 
-    <bean id="jdbcDriverClassName" class="java.lang.String">
-        <constructor-arg value="org.h2.Driver"/>
-    </bean>
+  <bean id="jdbcDriverClassName" class="java.lang.String">
+    <constructor-arg value="org.h2.Driver"/>
+  </bean>
 
-    <bean id="jdbcURL" class="java.lang.String">
-        <constructor-arg value="jdbc:h2:${jdbc.database};LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE"/>
-    </bean>
+  <bean id="jdbcURL" class="java.lang.String">
+    <constructor-arg
+      value="jdbc:h2:${jdbc.database};LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE"/>
+  </bean>
 
 </beans>

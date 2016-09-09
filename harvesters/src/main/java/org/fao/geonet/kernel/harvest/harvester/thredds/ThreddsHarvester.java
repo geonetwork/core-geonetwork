@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -40,135 +41,129 @@ import java.util.UUID;
 
 //=============================================================================
 
-public class ThreddsHarvester extends AbstractHarvester<HarvestResult>
-{
+public class ThreddsHarvester extends AbstractHarvester<HarvestResult> {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	protected void doInit(Element node, ServiceContext context) throws BadInputEx
-	{
-		params = new ThreddsParams(dataMan);
+    private ThreddsParams params;
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Add
+    //---
+    //---------------------------------------------------------------------------
+
+    protected void doInit(Element node, ServiceContext context) throws BadInputEx {
+        params = new ThreddsParams(dataMan);
         super.setParams(params);
 
         params.create(node);
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Add
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update
+    //---
+    //---------------------------------------------------------------------------
 
-	protected String doAdd(Element node) throws BadInputEx, SQLException
-	{
-		params = new ThreddsParams(dataMan);
+    protected String doAdd(Element node) throws BadInputEx, SQLException {
+        params = new ThreddsParams(dataMan);
         super.setParams(params);
 
         //--- retrieve/initialize information
-		params.create(node);
+        params.create(node);
 
-		//--- force the creation of a new uuid
-		params.setUuid(UUID.randomUUID().toString());
+        //--- force the creation of a new uuid
+        params.setUuid(UUID.randomUUID().toString());
 
-		String id = settingMan.add("harvesting", "node", getType());
+        String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(params, "id:"+id);
+        storeNode(params, "id:" + id);
         Source source = new Source(params.getUuid(), params.getName(), params.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.getUuid());
-        
-		return id;
-	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update
-	//---
-	//---------------------------------------------------------------------------
+        return id;
+    }
 
-	protected void doUpdate(String id, Element node)
-									throws BadInputEx, SQLException
-	{
-		ThreddsParams copy = params.copy();
+    //---------------------------------------------------------------------------
 
-		//--- update variables
-		copy.update(node);
+    protected void doUpdate(String id, Element node)
+        throws BadInputEx, SQLException {
+        ThreddsParams copy = params.copy();
 
-		String path = "harvesting/id:"+ id;
+        //--- update variables
+        copy.update(node);
 
-		settingMan.removeChildren(path);
+        String path = "harvesting/id:" + id;
 
-		//--- update database
-		storeNode(copy, path);
+        settingMan.removeChildren(path);
 
-		//--- we update a copy first because if there is an exception Params
-		//--- could be half updated and so it could be in an inconsistent state
+        //--- update database
+        storeNode(copy, path);
+
+        //--- we update a copy first because if there is an exception Params
+        //--- could be half updated and so it could be in an inconsistent state
 
         Source source = new Source(copy.getUuid(), copy.getName(), copy.getTranslations(), true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.getUuid());
-		
-		params = copy;
+
+        params = copy;
         super.setParams(params);
 
     }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Harvest
+    //---
+    //---------------------------------------------------------------------------
 
-	protected void storeNodeExtra(AbstractParams p, String path,
-											String siteId, String optionsId) throws SQLException
-	{
-		ThreddsParams params = (ThreddsParams) p;
+    protected void storeNodeExtra(AbstractParams p, String path,
+                                  String siteId, String optionsId) throws SQLException {
+        ThreddsParams params = (ThreddsParams) p;
         super.setParams(params);
 
-        settingMan.add("id:"+siteId, "url",  params.url);
-		settingMan.add("id:"+siteId, "icon", params.icon);
-		settingMan.add("id:"+optionsId, "lang",  params.lang);
-		settingMan.add("id:"+optionsId, "topic",  params.topic);
-		settingMan.add("id:"+optionsId, "createThumbnails",  params.createThumbnails);
-		settingMan.add("id:"+optionsId, "createServiceMd", params.createServiceMd);
-		settingMan.add("id:"+optionsId, "createCollectionDatasetMd",  params.createCollectionDatasetMd);
-		settingMan.add("id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd);
-		settingMan.add("id:"+optionsId, "ignoreHarvestOnCollections",  params.ignoreHarvestOnCollections);
-		settingMan.add("id:"+optionsId, "collectionGeneration",  params.collectionMetadataGeneration);
-		settingMan.add("id:"+optionsId, "collectionFragmentStylesheet",  params.collectionFragmentStylesheet);
-		settingMan.add("id:"+optionsId, "collectionMetadataTemplate",  params.collectionMetadataTemplate);
-		settingMan.add("id:"+optionsId, "createCollectionSubtemplates",  params.createCollectionSubtemplates);
-		settingMan.add("id:"+optionsId, "outputSchemaOnCollectionsDIF",  params.outputSchemaOnCollectionsDIF);
-		settingMan.add("id:"+optionsId, "outputSchemaOnCollectionsFragments",  params.outputSchemaOnCollectionsFragments);
-		settingMan.add("id:"+optionsId, "ignoreHarvestOnAtomics",  params.ignoreHarvestOnAtomics);
-		settingMan.add("id:"+optionsId, "atomicGeneration",  params.atomicMetadataGeneration);
-		settingMan.add("id:"+optionsId, "modifiedOnly",  params.modifiedOnly);
-		settingMan.add("id:"+optionsId, "atomicFragmentStylesheet",  params.atomicFragmentStylesheet);
-		settingMan.add("id:"+optionsId, "atomicMetadataTemplate",  params.atomicMetadataTemplate);
-		settingMan.add("id:"+optionsId, "createAtomicSubtemplates",  params.createAtomicSubtemplates);
-		settingMan.add("id:"+optionsId, "outputSchemaOnAtomicsDIF",  params.outputSchemaOnAtomicsDIF);
-		settingMan.add("id:"+optionsId, "outputSchemaOnAtomicsFragments",  params.outputSchemaOnAtomicsFragments);
-		settingMan.add("id:"+optionsId, "createAtomicDatasetMd",  params.createAtomicDatasetMd);
-		settingMan.add("id:"+optionsId, "datasetCategory",  params.datasetCategory);
-	}
+        settingMan.add("id:" + siteId, "url", params.url);
+        settingMan.add("id:" + siteId, "icon", params.icon);
+        settingMan.add("id:" + optionsId, "lang", params.lang);
+        settingMan.add("id:" + optionsId, "topic", params.topic);
+        settingMan.add("id:" + optionsId, "createThumbnails", params.createThumbnails);
+        settingMan.add("id:" + optionsId, "createServiceMd", params.createServiceMd);
+        settingMan.add("id:" + optionsId, "createCollectionDatasetMd", params.createCollectionDatasetMd);
+        settingMan.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
+        settingMan.add("id:" + optionsId, "ignoreHarvestOnCollections", params.ignoreHarvestOnCollections);
+        settingMan.add("id:" + optionsId, "collectionGeneration", params.collectionMetadataGeneration);
+        settingMan.add("id:" + optionsId, "collectionFragmentStylesheet", params.collectionFragmentStylesheet);
+        settingMan.add("id:" + optionsId, "collectionMetadataTemplate", params.collectionMetadataTemplate);
+        settingMan.add("id:" + optionsId, "createCollectionSubtemplates", params.createCollectionSubtemplates);
+        settingMan.add("id:" + optionsId, "outputSchemaOnCollectionsDIF", params.outputSchemaOnCollectionsDIF);
+        settingMan.add("id:" + optionsId, "outputSchemaOnCollectionsFragments", params.outputSchemaOnCollectionsFragments);
+        settingMan.add("id:" + optionsId, "ignoreHarvestOnAtomics", params.ignoreHarvestOnAtomics);
+        settingMan.add("id:" + optionsId, "atomicGeneration", params.atomicMetadataGeneration);
+        settingMan.add("id:" + optionsId, "modifiedOnly", params.modifiedOnly);
+        settingMan.add("id:" + optionsId, "atomicFragmentStylesheet", params.atomicFragmentStylesheet);
+        settingMan.add("id:" + optionsId, "atomicMetadataTemplate", params.atomicMetadataTemplate);
+        settingMan.add("id:" + optionsId, "createAtomicSubtemplates", params.createAtomicSubtemplates);
+        settingMan.add("id:" + optionsId, "outputSchemaOnAtomicsDIF", params.outputSchemaOnAtomicsDIF);
+        settingMan.add("id:" + optionsId, "outputSchemaOnAtomicsFragments", params.outputSchemaOnAtomicsFragments);
+        settingMan.add("id:" + optionsId, "createAtomicDatasetMd", params.createAtomicDatasetMd);
+        settingMan.add("id:" + optionsId, "datasetCategory", params.datasetCategory);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Harvest
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public void doHarvest(Logger log) throws Exception
-	{
-		Harvester h = new Harvester(cancelMonitor, log, context, params);
-		result = h.harvest(log);
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	private ThreddsParams params;
+    public void doHarvest(Logger log) throws Exception {
+        Harvester h = new Harvester(cancelMonitor, log, context, params);
+        result = h.harvest(log);
+    }
 }

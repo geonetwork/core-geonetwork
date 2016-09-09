@@ -25,12 +25,16 @@
   goog.provide('gn_mdview');
 
 
+
+
+  goog.require('gn_md_feedback');
   goog.require('gn_mdview_directive');
   goog.require('gn_mdview_service');
 
   var module = angular.module('gn_mdview', [
     'gn_mdview_service',
-    'gn_mdview_directive'
+    'gn_mdview_directive',
+    'gn_md_feedback'
   ]);
 
   module.controller('GnMdViewController', [
@@ -73,7 +77,11 @@
         $scope.currentFormatter = f;
         if (f) {
           gnMdFormatter.getFormatterUrl(f.url, $scope).then(function(url) {
-            $http.get(url).then(
+            $http.get(url, {
+              headers: {
+                Accept: 'text/html'
+              }
+            }).then(
                 function(response) {
                   var snippet = response.data.replace(
                       '<?xml version="1.0" encoding="UTF-8"?>', '');
@@ -104,8 +112,5 @@
       $scope.$watch('gnMdViewObj.from', function(v) {
         $scope.fromView = v ? v.substring(1) : v;
       });
-
-
     }]);
-
 })();

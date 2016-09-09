@@ -29,111 +29,107 @@ import org.fao.oaipmh.exceptions.BadResumptionTokenException;
 
 //=============================================================================
 
-public class SearchResult
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-	
-	public String        prefix;
-	private List<Integer> ids;
-	
-	private String token;
-	
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class SearchResult {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public SearchResult(String prefix)
-	{
-		this.prefix = prefix;
-	}
+    public String prefix;
+    private List<Integer> ids;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    private String token;
 
-	public int parseToken(String token) throws BadResumptionTokenException
-	{
-		if (!Lib.isInteger(token))
-			throw new BadResumptionTokenException("Invalid token : "+ token);
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
+
+    public SearchResult(String prefix) {
+        this.prefix = prefix;
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+
+    public int parseToken(String token) throws BadResumptionTokenException {
+        if (!Lib.isInteger(token))
+            throw new BadResumptionTokenException("Invalid token : " + token);
 
         if (ids == null) {
             throw new IllegalStateException("res.ids should not be null");
         }
-		int pos = Integer.parseInt(token);
+        int pos = Integer.parseInt(token);
 
-		if (pos >= ids.size())
-			throw new BadResumptionTokenException("Token beyond limit : "+ token);
+        if (pos >= ids.size())
+            throw new BadResumptionTokenException("Token beyond limit : " + token);
 
-		this.token = token;
+        this.token = token;
 
-		return pos;
-	}
+        return pos;
+    }
 
-	/**
-	 * @return the prefix
-	 */
-	public String getPrefix() {
-		return prefix;
-	}
+    /**
+     * @return the prefix
+     */
+    public String getPrefix() {
+        return prefix;
+    }
 
-	/**
-	 * @param prefix the prefix to set
-	 */
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
+    /**
+     * @param prefix the prefix to set
+     */
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 
-	/**
-	 * @return the ids
-	 */
-	public List<Integer> getIds() {
-		return ids;
-	}
+    /**
+     * @return the ids
+     */
+    public List<Integer> getIds() {
+        return ids;
+    }
 
-	/**
-	 * @param ids the ids to set
-	 */
-	public void setIds(List<Integer> ids) {
-		this.ids = ids;
-	}
+    /**
+     * @param ids the ids to set
+     */
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
+    }
 
-	/**
-	 * @param ids the ids to add
-	 */
-	public void addIds(List<Integer> ids) {
-		if (this.ids == null) this.ids = ids;
-		else this.ids.addAll(ids);
-	}
+    /**
+     * @param ids the ids to add
+     */
+    public void addIds(List<Integer> ids) {
+        if (this.ids == null) this.ids = ids;
+        else this.ids.addAll(ids);
+    }
 
-	/**
-	 * @return the token
-	 */
-	public String getToken() {
-		return token;
-	}
+    /**
+     * @return the token
+     */
+    public String getToken() {
+        return token;
+    }
 
-	/**
-	 * @param token the token to set
-	 */
-	public void setToken(String token) {
-		this.token = token;
-	}
-	
-	
+    /**
+     * @param token the token to set
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-	//---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
 
 /*
-	public void setupToken(ListResponse res, int pos)
+    public void setupToken(ListResponse res, int pos)
 	{
 		if (pos < ids.size())
 			res.setResumptionToken(new ResumptionToken(Integer.toString(pos)));

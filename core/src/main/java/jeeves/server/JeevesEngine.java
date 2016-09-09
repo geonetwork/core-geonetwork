@@ -79,20 +79,20 @@ import jeeves.server.sources.http.JeevesServlet;
 
 //=============================================================================
 
-/** This is the main class. It handles http connections and inits the system
-  */
+/**
+ * This is the main class. It handles http connections and inits the system
+ */
 public class JeevesEngine {
-    private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
     private static final int DEFAULT_MAX_UPLOAD_SIZE_MD = 50;
     private static final int BYTES_PER_KB = 1024;
 
     private String _defaultSrv;
-	private String _startupErrorSrv;
-	private String _defaultLang;
+    private String _startupErrorSrv;
+    private String _defaultLang;
     private boolean _debugFlag;
 
-	/* true if the 'general' part has been loaded */
-	private boolean _generalLoaded;
+    /* true if the 'general' part has been loaded */
+    private boolean _generalLoaded;
 
 
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
@@ -104,15 +104,31 @@ public class JeevesEngine {
 
 
     //---------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //---------------------------------------------------------------------------
 
-	/** Inits the engine, loading all needed data.
-	  */
-    public void init(final Path appPath, final Path configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
-	{
+    public static void handleStartupError(Throwable e) {
+        Log.fatal(Log.ENGINE, "Raised exception during init");
+        Log.fatal(Log.ENGINE, "   Exception : " + e);
+        Log.fatal(Log.ENGINE, "   Message   : " + e.getMessage());
+        Log.fatal(Log.ENGINE, "   Stack     : " + Util.getStackTrace(e));
+
+        if (Boolean.TRUE.toString().equalsIgnoreCase(System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR))) {
+            e.printStackTrace();
+            System.err.println("\n\n\tERROR STARTING UP GEONETWORK.  System property " + Jeeves.SHUTDOWN_ON_STARTUP_ERROR + " == " + System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR));
+            System.err.println("\n\n\t>> HARD SHUTDOWN INITIATED <<");
+            System.exit(1);
+        }
+
+        throw new RuntimeException("Exception raised", e);
+    }
+
+    /**
+     * Inits the engine, loading all needed data.
+     */
+    public void init(final Path appPath, final Path configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         ServiceManager _serviceMan = appContext.getBean(ServiceManager.class);
         MonitorManager _monitorManager = appContext.getBean(MonitorManager.class);
@@ -197,121 +213,103 @@ public class JeevesEngine {
 
     }
 
-    public static void handleStartupError(Throwable e) {
-        Log.fatal  (Log.ENGINE, "Raised exception during init");
-        Log.fatal  (Log.ENGINE, "   Exception : " + e);
-        Log.fatal  (Log.ENGINE, "   Message   : " + e.getMessage());
-        Log.fatal  (Log.ENGINE, "   Stack     : " + Util.getStackTrace(e));
-
-        if (Boolean.TRUE.toString().equalsIgnoreCase(System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR))) {
-            e.printStackTrace();
-            System.err.println("\n\n\tERROR STARTING UP GEONETWORK.  System property "+Jeeves.SHUTDOWN_ON_STARTUP_ERROR+" == "+System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR));
-            System.err.println("\n\n\t>> HARD SHUTDOWN INITIATED <<");
-            System.exit(1);
-        }
-
-        throw new RuntimeException("Exception raised", e);
-    }
-
     /**
-     * Looks up the implementation of XSLT factory defined in META-INF/services/javax.xml.transform.TransformerFactory and instantiates
-     * that implementation. This way, a conflicting setting in System Properties is overridden for this application only.
-     *
-     * @throws IOException
-     * @throws TransformerConfigurationException
+     * Looks up the implementation of XSLT factory defined in META-INF/services/javax.xml.transform.TransformerFactory
+     * and instantiates that implementation. This way, a conflicting setting in System Properties is
+     * overridden for this application only.
      */
     private void setupXSLTTransformerFactory(JeevesServlet servlet) throws IOException, TransformerConfigurationException {
 
-    	InputStream in = null;
-    	BufferedReader br = null;
-    	// In debug mode, Jeeves may load a different file
-    	// Load javax.xml.transform.TransformerFactory from application path instead
-    	if(servlet != null) {
-    		in = servlet.getServletContext().getResourceAsStream(TRANSFORMER_PATH);
-    	}
-    	if(in == null) {
-    		File f = new File(_appPath + TRANSFORMER_PATH);
-    		in = new FileInputStream(f);
-    	}
+        InputStream in = null;
+        BufferedReader br = null;
+        // In debug mode, Jeeves may load a different file
+        // Load javax.xml.transform.TransformerFactory from application path instead
+        if (servlet != null) {
+            in = servlet.getServletContext().getResourceAsStream(TransformerFactoryFactory.TRANSFORMER_PATH);
+        }
+        if (in == null) {
+            File f = new File(_appPath + TransformerFactoryFactory.TRANSFORMER_PATH);
+            in = new FileInputStream(f);
+        }
         try {
 
-            if(in != null) {
+            if (in != null) {
                 br = new BufferedReader(new InputStreamReader(in, Constants.ENCODING));
                 String line;
-                while ((line = br.readLine()) != null)   {
-                    if(line.length() == 0) {
+                while ((line = br.readLine()) != null) {
+                    if (line.length() == 0) {
                         warning("Malformed definition of XSLT transformer (in: META-INF/services/javax.xml.transform.TransformerFactory).");
                     }
                     TransformerFactoryFactory.init(line);
                     break;
                 }
             }
-        } catch(IOException x) {
-        	String msg = "Definition of XSLT transformer not found (tried: " + new File(_appPath + TRANSFORMER_PATH).getCanonicalPath() + ")";
-        	if (servlet != null) {
-        		msg += " and servlet.getServletContext().getResourceAsStream("+TRANSFORMER_PATH+")";
-        	}
-        	warning(msg);
+        } catch (IOException x) {
+            String msg = "Definition of XSLT transformer not found (tried: " + new File(_appPath +
+                TransformerFactoryFactory.TRANSFORMER_PATH).getCanonicalPath() + ")";
+            if (servlet != null) {
+                msg += " and servlet.getServletContext().getResourceAsStream(" + TransformerFactoryFactory.TRANSFORMER_PATH + ")";
+            }
+            warning(msg);
             error(x.getMessage());
             x.printStackTrace();
         } finally {
             IOUtils.closeQuietly(in);
-            if(br != null) {
+            if (br != null) {
                 IOUtils.closeQuietly(br);
             }
         }
     }
 
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-    private void loadConfigFile(ServletContext servletContext, Path path, String fileName, ServiceManager serviceMan) throws Exception
-	{
+    @SuppressWarnings("unchecked")
+    private void loadConfigFile(ServletContext servletContext, Path path, String fileName, ServiceManager serviceMan) throws Exception {
         if (fileName.charAt(0) == '/' || fileName.charAt(0) == '\\') {
             fileName = fileName.substring(1);
         }
         Path file = path.resolve(fileName);
 
-		info("Loading : " + file);
+        info("Loading : " + file);
 
-		Element configRoot = Xml.loadFile(file);
+        Element configRoot = Xml.loadFile(file);
 
         ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, _appPath, configRoot);
 
-		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
-		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);
+        Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
+        Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);
 
-		if (!_generalLoaded) {
-			if (elGeneral == null) {
+        if (!_generalLoaded) {
+            if (elGeneral == null) {
                 throw new NullPointerException("Missing 'general' element in config file :" + file);
             }
 
-			if (elDefault == null) {
+            if (elDefault == null) {
                 throw new NullPointerException("Missing 'default' element in config file :" + file);
             }
 
-			_generalLoaded = true;
+            _generalLoaded = true;
 
-			initGeneral(elGeneral, serviceMan);
-			initDefault(elDefault, serviceMan);
-		} else {
-			if (elGeneral != null) {
+            initGeneral(elGeneral, serviceMan);
+            initDefault(elDefault, serviceMan);
+        } else {
+            if (elGeneral != null) {
                 throw new IllegalArgumentException("Illegal 'general' element in secondary include");
             }
 
-			if (elDefault != null) {
+            if (elDefault != null) {
                 throw new IllegalArgumentException("Illegal 'default' element in secondary include");
             }
-		}
+        }
 
-		//--- init app-handlers
+        //--- init app-handlers
 
-		_appHandList.addAll(configRoot.getChildren(ConfigFile.Child.APP_HANDLER));
+        _appHandList.addAll(configRoot.getChildren(ConfigFile.Child.APP_HANDLER));
 
-		//--- init services
+        //--- init services
 
-		List<Element> srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
+        List<Element> srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
 
         for (Element aSrvList : srvList) {
             initServices(aSrvList);
@@ -325,33 +323,32 @@ public class JeevesEngine {
             context.getBean(MonitorManager.class).initMonitors(aMonitorList);
         }
 
-		//--- recurse on includes
+        //--- recurse on includes
 
-		List<Element> includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
+        List<Element> includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
 
         for (Element include : includes) {
             loadConfigFile(servletContext, path, include.getText(), serviceMan);
         }
 
-	}
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- 'general' element
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- 'general' element
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
+    /**
      * Setup parameters from config tag. (config.xml)
-	 */
+     */
 
-	private void initGeneral (final Element general, final ServiceManager serviceMan) throws BadInputEx
-	{
-		info("Initializing general configuration...");
+    private void initGeneral(final Element general, final ServiceManager serviceMan) throws BadInputEx {
+        info("Initializing general configuration...");
 
-		try {
-		    _maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
-		} catch (Exception e) {
+        try {
+            _maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
+        } catch (Exception e) {
             _maxUploadSize = DEFAULT_MAX_UPLOAD_SIZE_MD;
             error("Maximum upload size not properly configured in config.xml. Using default size of 50MB");
             error("   Exception : " + e);
@@ -359,109 +356,106 @@ public class JeevesEngine {
             error("   Stack     : " + Util.getStackTrace(e));
         }
 
-		_debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
+        _debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
 
-		serviceMan.setMaxUploadSize(_maxUploadSize);
-	}
+        serviceMan.setMaxUploadSize(_maxUploadSize);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- 'general' element
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- 'general' element
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
+    /**
      * Setup parameters from config tag. (config.xml)
-	  */
+     */
 
-	@SuppressWarnings("unchecked")
-	private void initDefault(Element defaults, ServiceManager serviceMan) throws Exception
-	{
-		info("Initializing defaults...");
+    @SuppressWarnings("unchecked")
+    private void initDefault(Element defaults, ServiceManager serviceMan) throws Exception {
+        info("Initializing defaults...");
 
-		_defaultSrv = Util.getParam(defaults, ConfigFile.Default.Child.SERVICE);
+        _defaultSrv = Util.getParam(defaults, ConfigFile.Default.Child.SERVICE);
 
-		// -- Don't break behaviour before gn 2.7 - if the startupErrorService
-		// -- doesn't exist then ignore this parameter
-		_startupErrorSrv = Util.getParam(defaults, ConfigFile.Default.Child.STARTUPERRORSERVICE, "");
-		_defaultLang = Util.getParam(defaults, ConfigFile.Default.Child.LANGUAGE);
+        // -- Don't break behaviour before gn 2.7 - if the startupErrorService
+        // -- doesn't exist then ignore this parameter
+        _startupErrorSrv = Util.getParam(defaults, ConfigFile.Default.Child.STARTUPERRORSERVICE, "");
+        _defaultLang = Util.getParam(defaults, ConfigFile.Default.Child.LANGUAGE);
         String defaultContType = Util.getParam(defaults, ConfigFile.Default.Child.CONTENT_TYPE);
 
         boolean defaultLocal = "true".equals(defaults.getChildText(ConfigFile.Default.Child.LOCALIZED));
 
-		info("   Default local is :" + defaultLocal);
+        info("   Default local is :" + defaultLocal);
 
-		serviceMan.setDefaultLang(_defaultLang);
-		serviceMan.setDefaultLocal(defaultLocal);
-		serviceMan.setDefaultContType(defaultContType);
+        serviceMan.setDefaultLang(_defaultLang);
+        serviceMan.setDefaultLocal(defaultLocal);
+        serviceMan.setDefaultContType(defaultContType);
 
-		List<Element> errorPages = defaults.getChildren(ConfigFile.Default.Child.ERROR);
+        List<Element> errorPages = defaults.getChildren(ConfigFile.Default.Child.ERROR);
 
         for (Element errorPage : errorPages) {
             serviceMan.addErrorPage(errorPage);
         }
 
-		Element gui = defaults.getChild(ConfigFile.Default.Child.GUI);
+        Element gui = defaults.getChild(ConfigFile.Default.Child.GUI);
 
-		if (gui != null)
-		{
-			List<Element> guiElems = gui.getChildren();
+        if (gui != null) {
+            List<Element> guiElems = gui.getChildren();
 
             for (Element guiElem : guiElems) {
                 serviceMan.addDefaultGui(guiElem);
             }
-		}
-	}
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- 'appHandler' element
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- 'appHandler' element
+    //---
+    //---------------------------------------------------------------------------
 
-	private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception
-	{
-		if (handler == null) {
-			info("Handler not found");
+    private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception {
+        if (handler == null) {
+            info("Handler not found");
         } else {
-			String className = handler.getAttributeValue(ConfigFile.AppHandler.Attr.CLASS);
+            String className = handler.getAttributeValue(ConfigFile.AppHandler.Attr.CLASS);
 
-			if (className == null) {
-				throw new IllegalArgumentException("Missing '"        +ConfigFile.AppHandler.Attr.CLASS
-                                                   + "' attribute in '" +ConfigFile.Child.APP_HANDLER
-                                                   + "' element");
+            if (className == null) {
+                throw new IllegalArgumentException("Missing '" + ConfigFile.AppHandler.Attr.CLASS
+                    + "' attribute in '" + ConfigFile.Child.APP_HANDLER
+                    + "' element");
             }
 
             ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
             ServiceManager serviceMan = appContext.getBean(ServiceManager.class);
             MonitorManager monitorManager = appContext.getBean(MonitorManager.class);
 
-			info("Found handler : " +className);
+            info("Found handler : " + className);
 
-			Class<?> c = Class.forName(className);
+            Class<?> c = Class.forName(className);
 
-			ApplicationHandler h = (ApplicationHandler) c.newInstance();
+            ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-			ServiceContext srvContext = serviceMan.createServiceContext("AppHandler", appContext);
-			srvContext.setLanguage(_defaultLang);
-			srvContext.setLogger(_appHandLogger);
-			srvContext.setServlet(servlet);
-			srvContext.setAsThreadLocal();
+            ServiceContext srvContext = serviceMan.createServiceContext("AppHandler", appContext);
+            srvContext.setLanguage(_defaultLang);
+            srvContext.setLogger(_appHandLogger);
+            srvContext.setServlet(servlet);
+            srvContext.setAsThreadLocal();
 
-			try {
-				info ("--- Starting handler --------------------------------------");
+            try {
+                info("--- Starting handler --------------------------------------");
 
-				Object context = h.start(handler, srvContext);
+                Object context = h.start(handler, srvContext);
 
-				_appHandlers.add(h);
-				serviceMan.registerContext(h.getContextName(), context);
+                _appHandlers.add(h);
+                serviceMan.registerContext(h.getContextName(), context);
                 monitorManager.initMonitorsForApp(srvContext);
 
-				info("--- Handler started ---------------------------------------");
-			} catch (Exception e) {
+                info("--- Handler started ---------------------------------------");
+            } catch (Exception e) {
                 Map<String, String> errors = new HashMap<String, String>();
                 String eS = "Raised exception while starting the application. " +
-                        "Fix the error and restart.";
+                    "Fix the error and restart.";
                 error(eS);
                 errors.put("Error", eS);
                 error("   Handler   : " + className);
@@ -479,156 +473,160 @@ public class JeevesEngine {
                     serviceMan.setStartupErrors(errors);
                 }
             }
-		}
-	}
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- 'services' element
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- 'services' element
+    //---
+    //---------------------------------------------------------------------------
 
-	/** Setup services found in the services tag (config.xml)
-	  */
+    /**
+     * Setup services found in the services tag (config.xml)
+     */
 
-	@SuppressWarnings("unchecked")
-	public void initServices(Element services) throws Exception
-	{
-		info("Initializing services...");
+    @SuppressWarnings("unchecked")
+    public void initServices(Element services) throws Exception {
+        info("Initializing services...");
 
-		//--- get services root package
-		String pack = services.getAttributeValue(ConfigFile.Services.Attr.PACKAGE);
+        //--- get services root package
+        String pack = services.getAttributeValue(ConfigFile.Services.Attr.PACKAGE);
 
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
 
         // --- scan services elements
-		for (Element service : (List<Element>) services
-				.getChildren(ConfigFile.Services.Child.SERVICE)) {
-			String name = service
-					.getAttributeValue(ConfigFile.Service.Attr.NAME);
+        for (Element service : (List<Element>) services
+            .getChildren(ConfigFile.Services.Child.SERVICE)) {
+            String name = service
+                .getAttributeValue(ConfigFile.Service.Attr.NAME);
 
-			info("   Adding service : " + name);
+            info("   Adding service : " + name);
 
-			try {
-				serviceManager.addService(pack, service, this._appPath);
-			} catch (Exception e) {
-				warning("Raised exception while registering service. Skipped.");
-				warning("   Service   : " + name);
-				warning("   Package   : " + pack);
-				warning("   Exception : " + e);
-				warning("   Message   : " + e.getMessage());
-				warning("   Stack     : " + Util.getStackTrace(e));
-			}
-		}
-	}
+            try {
+                serviceManager.addService(pack, service, this._appPath);
+            } catch (Exception e) {
+                warning("Raised exception while registering service. Skipped.");
+                warning("   Service   : " + name);
+                warning("   Package   : " + pack);
+                warning("   Exception : " + e);
+                warning("   Message   : " + e.getMessage());
+                warning("   Stack     : " + Util.getStackTrace(e));
+            }
+        }
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Destroy
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Destroy
+    //---
+    //---------------------------------------------------------------------------
     @PreDestroy
-	public void destroy() {
-		try {
-			info("=== Stopping system ========================================");
+    public void destroy() {
+        try {
+            info("=== Stopping system ========================================");
 
-			info("Shutting down monitor manager...");
-			ApplicationContext app = ApplicationContextHolder.get();
-			if (app != null) {
-				MonitorManager m = app.getBean(MonitorManager.class);
-				if (m != null) {
-					m.shutdown();
-				} else {
-					error("Unable to get MonitorManager bean (already destroyed ?)");
-				}
-			} else {
-				error("Unable to get a hook on the ApplicationContext.");
-			}
-			info("Stopping handlers...");
-			stopHandlers();
+            // The monitor manager will be stopped by the ApplicationContextHolder when it is closed
 
-			info("=== System stopped ========================================");
-		}
-		catch (Exception e)
-		{
-			error("Raised exception during destroy");
-			error("  Exception : " +e);
-			error("  Message   : " +e.getMessage());
-			error("  Stack     : " +Util.getStackTrace(e));
-		}
-	}
+            info("Stopping handlers...");
+            stopHandlers();
 
-	//---------------------------------------------------------------------------
-	/**
+            info("=== System stopped ========================================");
+        } catch (Exception e) {
+            error("Raised exception during destroy");
+            error("  Exception : " + e);
+            error("  Message   : " + e.getMessage());
+            error("  Stack     : " + Util.getStackTrace(e));
+        }
+    }
+
+    //---------------------------------------------------------------------------
+
+    /**
      * Stop handlers.
-	  */
+     */
 
-	private void stopHandlers() throws Exception {
-		for (ApplicationHandler h : _appHandlers) {
-			h.stop();
-		}
-	}
+    private void stopHandlers() throws Exception {
+        for (ApplicationHandler h : _appHandlers) {
+            h.stop();
+        }
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Path getUploadDir() {
-        return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class).getUploadDir(); }
+    public Path getUploadDir() {
+        return ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class).getUploadDir();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-  public int getMaxUploadSize() { return _maxUploadSize; }
+    public int getMaxUploadSize() {
+        return _maxUploadSize;
+    }
 
-  //---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void dispatch(ServiceRequest srvReq, UserSession session)
-	{
+    public void dispatch(ServiceRequest srvReq, UserSession session) {
         ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
 
         if (srvReq.getService() == null || srvReq.getService().length() == 0)
-			srvReq.setService(_defaultSrv);
+            srvReq.setService(_defaultSrv);
 
-		if (srvReq.getLanguage() == null || srvReq.getLanguage().length() == 0)
-			srvReq.setLanguage(_defaultLang);
+        if (srvReq.getLanguage() == null || srvReq.getLanguage().length() == 0)
+            srvReq.setLanguage(_defaultLang);
 
-		srvReq.setDebug(srvReq.hasDebug() && _debugFlag);
+        srvReq.setDebug(srvReq.hasDebug() && _debugFlag);
 
-		//--- if we have a startup error (ie. exception during startup) then
-		//--- override with the startupErrorSrv service (if defined)
-		if (serviceManager.isStartupError() && !_startupErrorSrv.equals("")
-				&& !srvReq.getService().contains(_startupErrorSrv))
-			srvReq.setService(_startupErrorSrv);
+        //--- if we have a startup error (ie. exception during startup) then
+        //--- override with the startupErrorSrv service (if defined)
+        if (serviceManager.isStartupError() && !_startupErrorSrv.equals("")
+            && !srvReq.getService().contains(_startupErrorSrv))
+            srvReq.setService(_startupErrorSrv);
 
-		//--- normal dispatch pipeline
+        //--- normal dispatch pipeline
 
-		serviceManager.dispatch(srvReq, session);
-	}
+        serviceManager.dispatch(srvReq, session);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private void info   (String message) { Log.info   (Log.ENGINE, message); }
-	private void warning(String message) { Log.warning(Log.ENGINE, message); }
-	private void error  (String message) { Log.error  (Log.ENGINE, message); }
-	private void fatal  (String message) { Log.fatal  (Log.ENGINE, message); }
+    private void info(String message) {
+        Log.info(Log.ENGINE, message);
+    }
 
-	public ServiceManager getServiceManager() {
-		return ApplicationContextHolder.get().getBean(ServiceManager.class);
-	}
+    private void warning(String message) {
+        Log.warning(Log.ENGINE, message);
+    }
 
-	public ProfileManager getProfileManager() { return getServiceManager().getProfileManager(); }
+    private void error(String message) {
+        Log.error(Log.ENGINE, message);
+    }
+
+    private void fatal(String message) {
+        Log.fatal(Log.ENGINE, message);
+    }
+
+    public ServiceManager getServiceManager() {
+        return ApplicationContextHolder.get().getBean(ServiceManager.class);
+    }
+
+    public ProfileManager getProfileManager() {
+        return getServiceManager().getProfileManager();
+    }
 
     /**
-     * Create or reload Jeeves services from a configuration stored in the Services table
-     * of the DBMS resource.
+     * Create or reload Jeeves services from a configuration stored in the Services table of the
+     * DBMS resource.
      *
      * @param serviceIdentifierToLoad -1 for all or the service identifier
      */
@@ -658,7 +656,7 @@ public class JeevesEngine {
                     for (ServiceParam serviceParam : paramList) {
                         if (serviceParam.getValue() != null && !serviceParam.getValue().trim().isEmpty()) {
                             filter.append(" ");
-                            if (serviceParam.getOccur() == null ) {
+                            if (serviceParam.getOccur() == null) {
                                 filter.append("+");
                             } else {
                                 filter.append(serviceParam.getOccur());
@@ -667,25 +665,25 @@ public class JeevesEngine {
                         }
                     }
                     cls.addContent(new Element("param").
-                            setAttribute("name", "filter").
-                            setAttribute("value", filter.toString().trim()));
+                        setAttribute("name", "filter").
+                        setAttribute("value", filter.toString().trim()));
 
                     srv.setAttribute("name", service.getName())
-                            .addContent(
-                                    cls.setAttribute("name",
-                                            service.getClassName()));
+                        .addContent(
+                            cls.setAttribute("name",
+                                service.getClassName()));
                     eltServices.addContent(srv);
                 }
             }
 
             _dbServices.add(eltServices);
 
-            for (int i=0; i< _dbServices.size(); i++){
+            for (int i = 0; i < _dbServices.size(); i++) {
                 initServices(_dbServices.get(i));
             }
         } catch (Exception e) {
             warning("Jeeves DBMS service configuration lookup failed (database may not be available yet). Message is: "
-                    + e.getMessage());
+                + e.getMessage());
         }
 
     }

@@ -24,6 +24,9 @@
 package org.fao.geonet.api.directory;
 
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.api.registries.CollectResults;
+import org.fao.geonet.api.registries.DirectoryUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
@@ -62,16 +65,16 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         // with 1 in 2 locations.
         final URL resource = DirectoryApiTest.class.getResource("record.xml");
         int id = importMetadataXML(context, "uuid", resource.openStream(),
-                MetadataType.METADATA,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.METADATA,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
 
         final Metadata record = _metadataRepo.findOne(id);
         CollectResults collectResults =
-                DirectoryUtils.collectEntries(record, xpath, null);
+            DirectoryUtils.collectEntries(record, xpath, null);
 
         assertEquals("3 contacts extracted",
-                3, collectResults.getEntries().size());
+            3, collectResults.getEntries().size());
     }
 
     @Test
@@ -85,16 +88,16 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         // with 1 in 2 locations.
         final URL resource = DirectoryApiTest.class.getResource("record.xml");
         int id = importMetadataXML(context, "uuid", resource.openStream(),
-                MetadataType.METADATA,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.METADATA,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
         final Metadata record = _metadataRepo.findOne(id);
         final String uuidXpath = ".//gmd:electronicMailAddress/gco:CharacterString/text()";
         CollectResults collectResults =
-                DirectoryUtils.collectEntries(record, xpath, uuidXpath);
+            DirectoryUtils.collectEntries(record, xpath, uuidXpath);
 
         assertEquals("2 unique contacts extracted",
-                2, collectResults.getEntries().size());
+            2, collectResults.getEntries().size());
     }
 
     @Test
@@ -103,22 +106,22 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         loginAsAdmin(context);
 
         final String xpath = ".//gmd:graphicOverview[" +
-                "ends-with(*/gmd:fileName/gco:CharacterString, '.gif')]";
+            "ends-with(*/gmd:fileName/gco:CharacterString, '.gif')]";
 
         // Test record contains 3 contacts matching XPath
         // with 1 in 2 locations.
         final URL resource = DirectoryApiTest.class.getResource("record.xml");
         int id = importMetadataXML(context, "uuid", resource.openStream(),
-                MetadataType.METADATA,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.METADATA,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
 
         final Metadata record = _metadataRepo.findOne(id);
         CollectResults collectResults =
-                DirectoryUtils.collectEntries(record, xpath, null);
+            DirectoryUtils.collectEntries(record, xpath, null);
 
         assertEquals("1 graphic overview extracted",
-                1, collectResults.getEntries().size());
+            1, collectResults.getEntries().size());
     }
 
 
@@ -135,14 +138,14 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         // with 1 in 2 locations.
         final URL resource = DirectoryApiTest.class.getResource("record.xml");
         int id = importMetadataXML(context, "uuid", resource.openStream(),
-                MetadataType.METADATA,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.METADATA,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
         final URL contact1 = DirectoryApiTest.class.getResource("contact1.xml");
         int contact1id = importMetadataXML(context, "uuid", contact1.openStream(),
-                MetadataType.SUB_TEMPLATE,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.SUB_TEMPLATE,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
 
         final Metadata record = _metadataRepo.findOne(id);
         final Metadata contact1record = _metadataRepo.findOne(contact1id);
@@ -152,47 +155,47 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
 
         Element subtemplate = contact1record.getXmlData(false);
         final String subtemplateEmail = Xml.selectString(
-                subtemplate, uuidXpath);
+            subtemplate, uuidXpath);
         final String subtemplateRole = Xml.selectString(
-                subtemplate, contactRoleFieldXpath);
+            subtemplate, contactRoleFieldXpath);
         final String subtemplateCity = Xml.selectString(
-                subtemplate, contactCityFieldXpath);
+            subtemplate, contactCityFieldXpath);
 
         final String recordCityXpathField = ".//gmd:CI_ResponsibleParty[.//gmd:electronicMailAddress/gco:CharacterString/text() = '" +
-                subtemplateEmail + "']/" + contactCityFieldXpath;
+            subtemplateEmail + "']/" + contactCityFieldXpath;
         final String recordRoleXpathField = ".//gmd:CI_ResponsibleParty[.//gmd:electronicMailAddress/gco:CharacterString/text() = '" +
-                subtemplateEmail + "']/" + contactRoleFieldXpath;
+            subtemplateEmail + "']/" + contactRoleFieldXpath;
 
         String recordCity = Xml.selectString(record.getXmlData(false), recordCityXpathField);
         assertEquals("Contact city in record is Rome",
-                recordCity, "Rome"
+            recordCity, "Rome"
         );
 
 
         CollectResults collectResults =
-                DirectoryUtils.synchronizeEntries(record,
-                        xpath, uuidXpath, propertiesToCopy,
-                        false, null);
+            DirectoryUtils.synchronizeEntries(record,
+                xpath, uuidXpath, propertiesToCopy,
+                false, null);
 
         Element updateRecord = collectResults.getUpdatedRecord();
         recordCity = Xml.selectString(
-                updateRecord,
-                recordCityXpathField);
+            updateRecord,
+            recordCityXpathField);
         assertEquals("Contact city in subtemplate is Milano",
-                "Milano", subtemplateCity
+            "Milano", subtemplateCity
         );
         assertEquals("Contact city in record is same as in subtemplate",
-                "Milano", recordCity
+            "Milano", recordCity
         );
 
         String recordRole = Xml.selectString(
-                updateRecord,
-                recordRoleXpathField);
+            updateRecord,
+            recordRoleXpathField);
         assertEquals("Contact role in template is shouldBePreserved",
-                "pointOfContact", subtemplateRole
+            "pointOfContact", subtemplateRole
         );
         assertEquals("Contact role in record is shouldBePreserved",
-                "shouldBePreserved", recordRole
+            "shouldBePreserved", recordRole
         );
     }
 
@@ -210,14 +213,14 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         // with 1 in 2 locations.
         final URL resource = DirectoryApiTest.class.getResource("record.xml");
         int id = importMetadataXML(context, "uuid", resource.openStream(),
-                MetadataType.METADATA,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.METADATA,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
         final URL contact1 = DirectoryApiTest.class.getResource("contact1.xml");
         int contact1id = importMetadataXML(context, "uuid", contact1.openStream(),
-                MetadataType.SUB_TEMPLATE,
-                ReservedGroup.all.getId(),
-                Params.GENERATE_UUID);
+            MetadataType.SUB_TEMPLATE,
+            ReservedGroup.all.getId(),
+            Params.GENERATE_UUID);
         String contact1uuid = _metadataRepo.findOne(contact1id).getUuid();
 
         final Metadata record = _metadataRepo.findOne(id);
@@ -225,9 +228,9 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
 
 
         CollectResults collectResults =
-                DirectoryUtils.synchronizeEntries(record,
-                        xpath, uuidXpath, propertiesToCopy,
-                        true, null);
+            DirectoryUtils.synchronizeEntries(record,
+                xpath, uuidXpath, propertiesToCopy,
+                true, null);
 
         Element updateRecord = collectResults.getUpdatedRecord();
 
@@ -235,23 +238,23 @@ public class DirectoryApiTest extends AbstractServiceIntegrationTest {
         ns.add(Geonet.Namespaces.XLINK);
         ns.add(Geonet.Namespaces.GMD);
         List contacts = Xml.selectNodes(
-                updateRecord, ".//*[name() = 'gmd:pointOfContact' or name() = 'gmd:contact'][@xlink:href]", ns);
+            updateRecord, ".//*[name() = 'gmd:pointOfContact' or name() = 'gmd:contact'][@xlink:href]", ns);
         assertEquals("2 contacts replaced by a matching subtemplate",
-                2, contacts.size()
+            2, contacts.size()
         );
         for (Object c : contacts) {
             if (c instanceof Element) {
                 Element e = (Element) c;
                 Attribute xlink = e.getAttribute("href", Geonet.Namespaces.XLINK);
                 assertNotNull("Contact has XLink",
-                        xlink
+                    xlink
                 );
                 // First contact role is shouldBePreserved
                 String role = e.getName().equals("contact") ?
-                        "shouldBePreserved" : "pointOfContact";
+                    "shouldBePreserved" : "pointOfContact";
                 assertEquals("XLink is correct",
-                             "local://eng/subtemplate?uuid=" + contact1uuid +
-                                "&amp;process=./gmd:role/*/@codeListValue~" + role, xlink.getValue()
+                    "local://eng/subtemplate?uuid=" + contact1uuid +
+                        "&amp;process=./gmd:role/*/@codeListValue~" + role, xlink.getValue()
                 );
             }
         }

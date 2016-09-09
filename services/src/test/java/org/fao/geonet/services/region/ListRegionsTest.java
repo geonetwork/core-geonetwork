@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.region;
 
+import org.fao.geonet.api.regions.ListRegionsResponse;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Ignore;
 
 public class ListRegionsTest extends AbstractServiceIntegrationTest {

@@ -30,18 +30,12 @@ import org.jdom.Element;
  */
 public interface ISOPlugin {
     /**
-     * Return the name (with namespace prefix)
-     * for the basic default type.
-     *
-     * @return
+     * Return the name (with namespace prefix) for the basic default type.
      */
     String getBasicTypeCharacterStringName();
 
     /**
-     * Return an element to be use as default
-     * when creating new elements.
-     *
-     * @return
+     * Return an element to be use as default when creating new elements.
      */
     Element createBasicTypeCharacterString();
 }

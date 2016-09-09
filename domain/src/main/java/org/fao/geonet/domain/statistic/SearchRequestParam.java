@@ -37,7 +37,7 @@ import javax.persistence.*;
 @Access(AccessType.PROPERTY)
 @Table(name = "Params")
 @EntityListeners(SearchRequestParamEntityListenerManager.class)
-@SequenceGenerator(name=SearchRequestParam.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = SearchRequestParam.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class SearchRequestParam {
     static final String ID_SEQ_NAME = "search_request_params_id_seq";
     private int _id;
@@ -51,22 +51,22 @@ public class SearchRequestParam {
     private SearchRequest _request;
 
     /**
-     * Get the id of the request parameters this entity represents. This is a generated value and as such new instances should not have
-     * this
-     * set as it will simply be ignored and could result in reduced performance.
+     * Get the id of the request parameters this entity represents. This is a generated value and as
+     * such new instances should not have this set as it will simply be ignored and could result in
+     * reduced performance.
      *
      * @return the id of the request parameters this entity represents.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the request parameters this entity represents. This is a generated value and as such new instances should not have
-     * this
-     * set as it will simply be ignored and could result in reduced performance.
+     * Set the id of the request parameters this entity represents. This is a generated value and as
+     * such new instances should not have this set as it will simply be ignored and could result in
+     * reduced performance.
      *
      * @param id the id of the request parameters this entity represents.
      */
@@ -220,8 +220,9 @@ public class SearchRequestParam {
     }
 
     /**
-     * For backwards compatibility we need the inclusive column to be either 'n' or 'y'. This is a workaround to allow this until future
-     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     * For backwards compatibility we need the inclusive column to be either 'n' or 'y'. This is a
+     * workaround to allow this until future versions of JPA that allow different ways of
+     * controlling how types are mapped to the database.
      */
     @Column(name = "inclusive", length = 1, nullable = true)
     protected char getInclusive_JPAWorkaround() {

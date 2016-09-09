@@ -26,6 +26,7 @@ package org.fao.geonet.domain;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -41,12 +42,13 @@ import javax.persistence.Table;
 
 /**
  * One of the entities responsible for dynamic service configuration.
+ *
  * @author Jesse
  */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "ServiceParameters")
-@SequenceGenerator(name=ServiceParam.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = ServiceParam.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class ServiceParam extends GeonetEntity {
     static final String ID_SEQ_NAME = "serviceparameters_id_seq";
     private static final List<Character> LEGALVALUES = Lists.newArrayList('+', '-', ' ', null);
@@ -59,10 +61,12 @@ public class ServiceParam extends GeonetEntity {
     public ServiceParam() {
         // for JPA
     }
+
     public ServiceParam(String name, String value) {
         this.name = name;
         this.value = value;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
@@ -128,14 +132,11 @@ public class ServiceParam extends GeonetEntity {
     }
 
     /**
-     * Get the "occur" property which determines how this clause affects the filtering.
-     * The allowed options are '+', '-', and ' '.  Where
-     * <ul>
-     *     <li>'+' means that the clause is required for a result to be included</li>
-     *     <li>' ' means that the clause is should true, this has the effect of increasing relevancy of a particular
-     *     result in the overall result set</li>
-     *     <li>'-' means that the clause is must be false for a result to be included</li>
-     * </ul>
+     * Get the "occur" property which determines how this clause affects the filtering. The allowed
+     * options are '+', '-', and ' '.  Where <ul> <li>'+' means that the clause is required for a
+     * result to be included</li> <li>' ' means that the clause is should true, this has the effect
+     * of increasing relevancy of a particular result in the overall result set</li> <li>'-' means
+     * that the clause is must be false for a result to be included</li> </ul>
      */
     public Character getOccur() {
         if (this.occur == null) {
@@ -146,6 +147,7 @@ public class ServiceParam extends GeonetEntity {
 
     /**
      * Set occur property.
+     *
      * @param occur the new value.  Legal values: '+', ' ', '-'
      */
     public void setOccur(Character occur) {

@@ -40,10 +40,6 @@ public class MetadataFileUploadRepositoryImpl implements MetadataFileUploadRepos
 
     /**
      * Returns a {@link org.fao.geonet.domain.MetadataFileUpload} by file name that is not deleted.
-     *
-     * @param metadataId
-     * @param fileName
-     * @return
      */
     @Override
     public MetadataFileUpload findByMetadataIdAndFileNameNotDeleted(int metadataId, String fileName) {
@@ -56,8 +52,8 @@ public class MetadataFileUploadRepositoryImpl implements MetadataFileUploadRepos
         final Expression<String> deletedPath = root.get(MetadataFileUpload_.deletedDate);
 
         cbQuery.where(cb.and(
-                        cb.and(cb.equal(metadataIdPath, metadataId), cb.equal(fileNamePath, fileName))),
-                        cb.isNull(deletedPath)
+            cb.and(cb.equal(metadataIdPath, metadataId), cb.equal(fileNamePath, fileName))),
+            cb.isNull(deletedPath)
         );
 
         return _entityManager.createQuery(cbQuery).getSingleResult();

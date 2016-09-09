@@ -43,73 +43,69 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.*;
 
 //=============================================================================
 
-public class ListRecords extends AbstractTokenLister
-{
+public class ListRecords extends AbstractTokenLister {
 
 
-	public ListRecords(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
-	    super(cache, sm, scm);
-	}
+    public ListRecords(ResumptionTokenCache cache, SettingManager sm, SchemaManager scm) {
+        super(cache, sm, scm);
+    }
 
-	public String getVerb() { return ListRecordsRequest.VERB; }
+    public String getVerb() {
+        return ListRecordsRequest.VERB;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
 
 
+    public ListRecordsResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception {
 
+        int num = 0;
+        ListRecordsResponse res = new ListRecordsResponse();
 
-	public ListRecordsResponse processRequest(TokenListRequest req, int pos, SearchResult result, ServiceContext context) throws Exception  {
-	 
-		int num = 0;
-		ListRecordsResponse res = new ListRecordsResponse();
+        //--- loop to retrieve metadata
 
-		//--- loop to retrieve metadata
+        while (num < getMaxRecords() && pos < result.getIds().size()) {
+            int id = result.getIds().get(pos);
 
-		while (num < getMaxRecords() && pos < result.getIds().size())
-		{
-			int id = result.getIds().get(pos);
+            Record r = buildRecord(context, id, result.prefix);
 
-			Record r = buildRecord(context, id, result.prefix);
+            if (r != null) {
+                res.addRecord(r);
+                num++;
+            }
 
-			if (r != null)
-			{
-				res.addRecord(r);
-				num++;
-			}
+            pos++;
+        }
 
-			pos++;
-		}
+        return res;
 
-		return res;
+    }
 
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception {
 
-	private Record buildRecord(ServiceContext context, int id, String prefix) throws Exception
-	{
-
-		// have to catch exceptions and return null because this function can
-		// be called several times for a list of MD records
-		// and we do not want to stop because of one error
-		try {
-			return GetRecord.buildRecordStat(context, hasMetadataId(id) , prefix);
-		} catch (IdDoesNotExistException e) {
-			return null;
-		} catch (CannotDisseminateFormatException e2) {
-			return null;
-		} catch (Exception e3) {
-			throw e3;
-		}
-	}
+        // have to catch exceptions and return null because this function can
+        // be called several times for a list of MD records
+        // and we do not want to stop because of one error
+        try {
+            return GetRecord.buildRecordStat(context, hasMetadataId(id), prefix);
+        } catch (IdDoesNotExistException e) {
+            return null;
+        } catch (CannotDisseminateFormatException e2) {
+            return null;
+        } catch (Exception e3) {
+            throw e3;
+        }
+    }
 }
 
 //=============================================================================

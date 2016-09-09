@@ -25,11 +25,14 @@ package org.fao.geonet.guiservices.metadata;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -43,6 +46,7 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.nio.file.Path;
 import java.util.List;
 
@@ -51,19 +55,17 @@ import static org.springframework.data.jpa.domain.Specifications.*;
 /**
  * Retrieves the metadata owned by a user. Depending on user profile:
  *
- *   - Administrator: returns all metadata
- *   - Reviewer, UserAdmin: returns all metadata owned by the user's groups
- *   - Editor: return metadata owned by the user
- *   - Other profiles: throw exception OperationNotAllowedEx
+ * - Administrator: returns all metadata - Reviewer, UserAdmin: returns all metadata owned by the
+ * user's groups - Editor: return metadata owned by the user - Other profiles: throw exception
+ * OperationNotAllowedEx
  *
  * Service parameters:
  *
- *   - sortBySelect: allowed values (date, popularity, rating) (optional parameter)
- *
+ * - sortBySelect: allowed values (date, popularity, rating) (optional parameter)
  */
 public class GetByOwner implements Service {
 
-    private static final String SORT_BY       = "sortBy";
+    private static final String SORT_BY = "sortBy";
 
     private Element _response;
 
@@ -95,9 +97,9 @@ public class GetByOwner implements Service {
 
         Specifications<Metadata> spec;
         // if the user is an admin, return all metadata
-        if(userProfile == Profile.Administrator) {
+        if (userProfile == Profile.Administrator) {
             spec = where(MetadataSpecs.isHarvested(false));
-        } else if(userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
+        } else if (userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
             final List<UserGroup> groups = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(ownerId));
             List<Integer> groupIds = Lists.transform(groups, new Function<UserGroup, Integer>() {
                 @Nullable
@@ -108,7 +110,7 @@ public class GetByOwner implements Service {
             });
             spec = where(MetadataSpecs.isHarvested(false)).and(MetadataSpecs.isOwnedByOneOfFollowingGroups(groupIds));
             // if the user is a reviewer, return all metadata of the user's groups
-        } else if(userProfile == Profile.Editor) {
+        } else if (userProfile == Profile.Editor) {
             spec = where(MetadataSpecs.isOwnedByUser(ownerId)).and(MetadataSpecs.isHarvested(false));
             // if the user is an editor, return metadata owned by this user
         } else {
@@ -119,21 +121,21 @@ public class GetByOwner implements Service {
         String sortBy = sortByParameter(params);
 
         Sort order = null;
-        if(sortBy.equals("date")) {
+        if (sortBy.equals("date")) {
             order = new Sort(Sort.Direction.DESC, Metadata_.dataInfo + "." + MetadataDataInfo_.changeDate);
-        } else if(sortBy.equals("popularity")) {
+        } else if (sortBy.equals("popularity")) {
             order = new Sort(Sort.Direction.DESC, Metadata_.dataInfo + "." + MetadataDataInfo_.popularity);
-        } else if(sortBy.equals("rating")) {
+        } else if (sortBy.equals("rating")) {
             order = new Sort(Sort.Direction.DESC, Metadata_.dataInfo + "." + MetadataDataInfo_.rating);
         } else {
-            throw new IllegalArgumentException("Unknown sortBy parameter: "+sortBy);
+            throw new IllegalArgumentException("Unknown sortBy parameter: " + sortBy);
         }
 
         List<Metadata> metadataList = context.getBean(MetadataRepository.class).findAll(spec, order);
         _response = new Element("response");
 
         for (Metadata rec : metadataList) {
-            String  id = "" + rec.getId();
+            String id = "" + rec.getId();
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
             _response.addContent(md);
@@ -147,14 +149,13 @@ public class GetByOwner implements Service {
     }
 
     private String sortByParameter(Element params) {
-		Element sortByEl = params.getChild(SORT_BY);
-		String sortBy = null;
-		if (sortByEl == null) {
-			sortBy = "date";
-		}
-        else {
-			sortBy = sortByEl.getText();
-		}
+        Element sortByEl = params.getChild(SORT_BY);
+        String sortBy = null;
+        if (sortByEl == null) {
+            sortBy = "date";
+        } else {
+            sortBy = sortByEl.getText();
+        }
         return sortBy;
     }
 

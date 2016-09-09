@@ -26,29 +26,26 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class OperationNotAllowedEx extends NotAllowedEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class OperationNotAllowedEx extends NotAllowedEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public OperationNotAllowedEx()
-	{
-		super("Operation not allowed", null);
+    public OperationNotAllowedEx() {
+        super("Operation not allowed", null);
 
-		id   = "operation-not-allowed";
-		code = 403;
-	}
+        id = "operation-not-allowed";
+        code = 403;
+    }
 
-	public OperationNotAllowedEx(String message)
-	{
-		super("Operation not allowed", message);
+    public OperationNotAllowedEx(String message) {
+        super("Operation not allowed", message);
 
-		id   = "operation-not-allowed";
-		code = 403;
-	}
+        id = "operation-not-allowed";
+        code = 403;
+    }
 }
 
 //=============================================================================

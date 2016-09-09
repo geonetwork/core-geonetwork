@@ -32,15 +32,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Implementation of the custom repository methods.
  * <p/>
- * User: Jesse
- * Date: 9/20/13
- * Time: 10:36 AM
+ * User: Jesse Date: 9/20/13 Time: 10:36 AM
  */
 public class CswCapabilitiesInfoFieldRepositoryImpl implements CswCapabilitiesInfoFieldRepositoryCustom {
     @PersistenceContext

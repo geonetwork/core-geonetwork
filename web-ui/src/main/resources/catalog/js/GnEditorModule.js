@@ -48,7 +48,8 @@
     'gn_ows',
     'gn_geopublisher',
     'gn_batch_service',
-    'gn_mdactions_directive'
+    'gn_mdactions_directive',
+    'ui.ace'
   ]);
 
   module.constant('gnViewerSettings', {});
@@ -57,6 +58,8 @@
     function($LOCALES) {
       $LOCALES.push('search');
       $LOCALES.push('editor');
-      $LOCALES.push('/../api/0.1/tools/i18n/db?type=StatusValue');
+      $LOCALES.push('/../api/0.1/tools/i18n/db?' +
+          'type=StatusValue&type=Operation&type=Group');
+
     }]);
 })();

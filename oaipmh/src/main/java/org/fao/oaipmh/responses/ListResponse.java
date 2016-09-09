@@ -36,111 +36,109 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public abstract class ListResponse extends AbstractResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-	
-	private ListRequest listReq;
-	private ResumptionToken token;
-	private Iterator<Element> iterator;
+public abstract class ListResponse extends AbstractResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    private ListRequest listReq;
+    private ResumptionToken token;
+    private Iterator<Element> iterator;
 
-	public ListResponse() {}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public ListResponse() {
+    }
 
-	public ListResponse(ListRequest lr, Element response)
-	{
-		super(response);
+    //---------------------------------------------------------------------------
 
-		listReq = lr;
-		build(response);
-	}
+    public ListResponse(ListRequest lr, Element response) {
+        super(response);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+        listReq = lr;
+        build(response);
+    }
 
-	public boolean hasNext()
-	{
-		if (iterator.hasNext())
-			return true;
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-		if (token != null && !token.isTokenEmpty())
-			return true;
+    public boolean hasNext() {
+        if (iterator.hasNext())
+            return true;
 
-		return false;
-	}
+        if (token != null && !token.isTokenEmpty())
+            return true;
 
-	//---------------------------------------------------------------------------
+        return false;
+    }
 
-	public Object next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception
-	{
-		if (iterator.hasNext())
-			return createObject(iterator.next());
+    //---------------------------------------------------------------------------
 
-		if (token == null || token.isTokenEmpty())
-			throw new RuntimeException("Iterator exausted");
+    public Object next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception {
+        if (iterator.hasNext())
+            return createObject(iterator.next());
 
-		build(listReq.resume(token));
+        if (token == null || token.isTokenEmpty())
+            throw new RuntimeException("Iterator exausted");
 
-		//--- just to avoid problems...
-		if (!iterator.hasNext()) {
-		    throw new NoSuchElementException();
-		}
+        build(listReq.resume(token));
 
-		return createObject(iterator.next());
-	}
-	
-	public abstract int getSize();
+        //--- just to avoid problems...
+        if (!iterator.hasNext()) {
+            throw new NoSuchElementException();
+        }
 
-	//---------------------------------------------------------------------------
+        return createObject(iterator.next());
+    }
 
-	public ResumptionToken getResumptionToken() { return token; }
+    public abstract int getSize();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setResumptionToken(ResumptionToken token)
-	{
-		this.token = token;
-	}
-	
+    public ResumptionToken getResumptionToken() {
+        return token;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected abstract Object createObject(Element object);
-	protected abstract String getListElementName();
+    public void setResumptionToken(ResumptionToken token) {
+        this.token = token;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	private void build(Element response)
-	{
-		Element operElem = response.getChild(listReq.getVerb(), OaiPmh.Namespaces.OAI_PMH);
-		Element resToken = operElem.getChild("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-		token    = (resToken == null) ? null : new ResumptionToken(resToken);
-		iterator = operElem.getChildren(getListElementName(), OaiPmh.Namespaces.OAI_PMH).iterator();
-	}
+    protected abstract Object createObject(Element object);
+
+    protected abstract String getListElementName();
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
+    private void build(Element response) {
+        Element operElem = response.getChild(listReq.getVerb(), OaiPmh.Namespaces.OAI_PMH);
+        Element resToken = operElem.getChild("resumptionToken", OaiPmh.Namespaces.OAI_PMH);
+
+        token = (resToken == null) ? null : new ResumptionToken(resToken);
+        iterator = operElem.getChildren(getListElementName(), OaiPmh.Namespaces.OAI_PMH).iterator();
+    }
 
 }
 

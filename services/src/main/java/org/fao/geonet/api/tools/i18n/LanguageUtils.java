@@ -40,7 +40,7 @@ public class LanguageUtils {
                          final String defaultLanguage) {
         iso3code = Collections.unmodifiableSet(localesToLoad);
         this.defaultLanguage = defaultLanguage;
-        for(String l : iso3code) {
+        for (String l : iso3code) {
             locales.add(Locale.forLanguageTag(l));
         }
     }
@@ -58,12 +58,24 @@ public class LanguageUtils {
     public Locale parseAcceptLanguage(final Enumeration<Locale> listOfLocales) {
         while (listOfLocales.hasMoreElements()) {
             Locale l = listOfLocales.nextElement();
-            if (iso3code.contains(l.getISO3Language())) {
+            if (iso3code.contains(locale2gnCode(l.getISO3Language()))) {
                 return l;
             }
         }
         return Locale.forLanguageTag(defaultLanguage);
     }
+
+    public String getIso3langCode(Enumeration<Locale> locales) {
+        Locale l = parseAcceptLanguage(locales);
+        return locale2gnCode(l.getISO3Language());
+    }
+    private String locale2gnCode (String code) {
+        if (code.equals("fra")) {
+            return "fre";
+        } else {
+            return code;
+        }
+	}
 
     public Locale parseAcceptLanguage(final Locale locale) {
         Vector<Locale> locales = new Vector<>();

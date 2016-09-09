@@ -24,11 +24,13 @@
 package org.fao.geonet.services.metadata.schema;
 
 import com.google.common.collect.Lists;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaType;
@@ -138,7 +140,7 @@ public class SchematronCriteriaTypeService implements Service {
             for (Element type : types) {
                 final String name = type.getChildText(EL_NAME).toUpperCase();
                 String label = criteriaTypeTranslations.getChildText(name.toLowerCase());
-                if (label == null ) {
+                if (label == null) {
                     label = name;
                 }
                 type.addContent(new Element(EL_LABEL).setText(label));
@@ -151,7 +153,7 @@ public class SchematronCriteriaTypeService implements Service {
         Element criteriaTypeTranslations;
         try {
             criteriaTypeTranslations = cacheManager.get(context.getApplicationContext(), true, schemaDir.resolve("loc"), translationFile, context.getLanguage(),
-                    Geonet.DEFAULT_LANGUAGE, true);
+                Geonet.DEFAULT_LANGUAGE, true);
         } catch (NoSuchFileException e) {
             // there is a case where the schematron plugin doesn't have any translations for the criteria (maybe there aren't any criteria).
             criteriaTypeTranslations = new Element("strings");
@@ -160,17 +162,17 @@ public class SchematronCriteriaTypeService implements Service {
     }
 
     private Element genericXPathCriteriaType() {
-       return new Element(EL_TYPE).addContent(Arrays.asList(
-               new Element(EL_VALUE).setText("@@value@@"),
-               new Element(EL_TYPE).setText(SchematronCriteriaType.XPATH.name()),
-               new Element(EL_NAME).setText(SchematronCriteriaType.XPATH.name()))
-       );
+        return new Element(EL_TYPE).addContent(Arrays.asList(
+            new Element(EL_VALUE).setText("@@value@@"),
+            new Element(EL_TYPE).setText(SchematronCriteriaType.XPATH.name()),
+            new Element(EL_NAME).setText(SchematronCriteriaType.XPATH.name()))
+        );
     }
 
     private Element alwaysAcceptCriteriaType() {
         return new Element(EL_TYPE).addContent(Arrays.asList(
-                new Element(EL_TYPE).setText(SchematronCriteriaType.ALWAYS_ACCEPT.name()),
-                new Element(EL_NAME).setText(SchematronCriteriaType.ALWAYS_ACCEPT.name()))
+            new Element(EL_TYPE).setText(SchematronCriteriaType.ALWAYS_ACCEPT.name()),
+            new Element(EL_NAME).setText(SchematronCriteriaType.ALWAYS_ACCEPT.name()))
         );
     }
 }

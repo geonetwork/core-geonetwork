@@ -39,51 +39,97 @@ import org.jdom.Element;
 
 /**
  * Search parameters that can be provided by a search client.
- * 
+ *
  * @author heikki doeleman
  * @author francois prunayre
  */
 public class UserQueryInput {
 
     /**
-     * List of fields which MUST not be control by user. Those fields are always
-     * removed from the request.
+     * List of fields which MUST not be control by user. Those fields are always removed from the
+     * request.
      */
     public static final List<String> SECURITY_FIELDS = Arrays.asList(
-            SearchParameter.OWNER, 
-            SearchParameter.ISADMIN, 
-            SearchParameter.ISREVIEWER, 
-            SearchParameter.ISUSERADMIN);
+        SearchParameter.OWNER,
+        SearchParameter.ISADMIN,
+        SearchParameter.ISREVIEWER,
+        SearchParameter.ISUSERADMIN);
 
     /**
-     * Don't take into account those field in search (those field are not 
-     * indexed but are search options).
-     * 
-     * TODO : move to lucene-config.xml because those fields depends on the
-     * client
+     * Don't take into account those field in search (those field are not indexed but are search
+     * options).
+     *
+     * TODO : move to lucene-config.xml because those fields depends on the client
      */
     public static final List<String> RESERVED_FIELDS = Arrays.asList(
-            SearchParameter.GROUP, 
-            Geonet.SearchResult.FAST, 
-            Geonet.SearchResult.SORT_BY,
-            Geonet.SearchResult.SORT_ORDER,
-            Geonet.SearchResult.REMOTE, 
-            Geonet.SearchResult.EXTENDED, 
-            Geonet.SearchResult.INTERMAP, 
-            Geonet.SearchResult.HITS_PER_PAGE, 
-            Geonet.SearchResult.GEOMETRY,
-            Geonet.SearchResult.TIMEOUT, 
-            Geonet.SearchResult.OUTPUT, 
-            Geonet.SearchResult.SUMMARY_ONLY, 
-            Geonet.SearchResult.BUILD_SUMMARY,
-            Geonet.SearchResult.REQUESTED_LANGUAGE,
-            "region_simple", "attrset", "mode", 
-            "region", "from", "to", "hitsperpage", "georss"
-            );
-
-    private String similarity;
-    private String editable;
+        SearchParameter.GROUP,
+        Geonet.SearchResult.FAST,
+        Geonet.SearchResult.SORT_BY,
+        Geonet.SearchResult.SORT_ORDER,
+        Geonet.SearchResult.EXTENDED,
+        Geonet.SearchResult.INTERMAP,
+        Geonet.SearchResult.HITS_PER_PAGE,
+        Geonet.SearchResult.GEOMETRY,
+        Geonet.SearchResult.OUTPUT,
+        Geonet.SearchResult.SUMMARY_ONLY,
+        Geonet.SearchResult.BUILD_SUMMARY,
+        Geonet.SearchResult.REQUESTED_LANGUAGE,
+        "region_simple", "attrset", "mode",
+        "region", "from", "to", "hitsperpage", "georss"
+    );
+    /**
+     * List of fields to exclude from language detection. TODO: should be lucene-config.xml
+     */
+    public static final List<String> NO_TEXT_FIELDS = Arrays.asList(
+        SearchParameter.UUID,
+        SearchParameter.PARENTUUID,
+        SearchParameter.OPERATESON,
+        SearchParameter._SCHEMA,
+        SearchParameter.ROOT,
+        SearchParameter.ISTEMPLATE,
+        SearchParameter.RESULTTYPE,
+        SearchParameter.RELATION,
+        SearchParameter.SITEID,
+        SearchParameter.TYPE,
+        SearchParameter.HASFEATURECAT
+    );
+    // TODO Improve and move to config-lucene.xml in order to be able
+    // to add range field from configuration
+    public static final List<String> RANGE_QUERY_FIELDS = Arrays.asList(
+        SearchParameter.DATEFROM,
+        SearchParameter.DATETO,
+        SearchParameter.REVISIONDATEFROM,
+        SearchParameter.REVISIONDATETO,
+        SearchParameter.PUBLICATIONDATEFROM,
+        SearchParameter.PUBLICATIONDATETO,
+        SearchParameter.DENOMINATORFROM,
+        SearchParameter.DENOMINATORTO,
+        SearchParameter.DENOMINATOR,
+        SearchParameter.CREATIONDATEFROM,
+        SearchParameter.CREATIONDATETO);
+    /**
+     * TODO : use enum instead ?
+     */
+    private static final List<String> RANGE_FIELDS = Arrays.asList(
+        LuceneIndexField.CHANGE_DATE,
+        LuceneIndexField.REVISION_DATE,
+        LuceneIndexField.PUBLICATION_DATE,
+        LuceneIndexField.CREATE_DATE,
+        LuceneIndexField.DENOMINATOR);
+    private static final List<String> RANGE_FIELDS_FROM = Arrays.asList(
+        SearchParameter.DATEFROM,
+        SearchParameter.REVISIONDATEFROM,
+        SearchParameter.PUBLICATIONDATEFROM,
+        SearchParameter.CREATIONDATEFROM,
+        SearchParameter.DENOMINATORFROM);
+    private static final List<String> RANGE_FIELDS_TO = Arrays.asList(
+        SearchParameter.DATETO,
+        SearchParameter.REVISIONDATETO,
+        SearchParameter.PUBLICATIONDATETO,
+        SearchParameter.CREATIONDATETO,
+        SearchParameter.DENOMINATORTO);
     private static Map<String, String> searchParamToLuceneField = new LinkedHashMap<String, String>();
+
     static {
         // Populate map for search parameter to Lucene mapping
         searchParamToLuceneField.put(SearchParameter.SITEID, LuceneIndexField.SOURCE);
@@ -91,81 +137,25 @@ public class UserQueryInput {
         searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
         searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
         searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
-        searchParamToLuceneField.put(SearchParameter.OP_VIEW,     LuceneIndexField._OP0);
+        searchParamToLuceneField.put(SearchParameter.OP_VIEW, LuceneIndexField._OP0);
         searchParamToLuceneField.put(SearchParameter.OP_DOWNLOAD, LuceneIndexField._OP1);
-        searchParamToLuceneField.put(SearchParameter.OP_EDITING,  LuceneIndexField._OP2);
-        searchParamToLuceneField.put(SearchParameter.OP_NOTIFY,   LuceneIndexField._OP3);
-        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC,  LuceneIndexField._OP5);
+        searchParamToLuceneField.put(SearchParameter.OP_EDITING, LuceneIndexField._OP2);
+        searchParamToLuceneField.put(SearchParameter.OP_NOTIFY, LuceneIndexField._OP3);
+        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC, LuceneIndexField._OP5);
         searchParamToLuceneField.put(SearchParameter.OP_FEATURED, LuceneIndexField._OP6);
     }
+
+    private String similarity;
+    private String editable;
     private Map<String, Set<String>> searchCriteria = new LinkedHashMap<String, Set<String>>();
     private Map<String, Set<String>> searchPrivilegeCriteria = new LinkedHashMap<String, Set<String>>();
     private Map<String, String> searchOption = new LinkedHashMap<String, String>();
     private Set<String> facetQueries = new LinkedHashSet<String>();
 
     /**
-     * Return all search criteria.
-     *
-     * @return
-     */
-    public Map<String, Set<String>> getSearchCriteria() {
-        return searchCriteria;
-    }
-
-    public Set<String> getFacetQueries() {
-        return facetQueries;
-    }
-
-    /**
-     * List of fields to exclude from language detection.
-     * TODO: should be lucene-config.xml
-     */
-    public static final List<String> NO_TEXT_FIELDS = Arrays.asList(
-            SearchParameter.UUID,
-            SearchParameter.PARENTUUID,
-            SearchParameter.OPERATESON,
-            SearchParameter._SCHEMA,
-            SearchParameter.ROOT,
-            SearchParameter.ISTEMPLATE,
-            SearchParameter.RESULTTYPE,
-            SearchParameter.RELATION,
-            SearchParameter.SITEID,
-            SearchParameter.TYPE,
-            SearchParameter.HASFEATURECAT
-            );
-
-    /**
-     * Return all search criteria except those which
-     * does not contains textual information like
-     * identifiers or codelists (eg. UUID, PARENTUUID).
-     *
-     *
-     * Those fields may be used for language detection.
-     *
-     * @return
-     */
-    public Map<String, Set<String>> getTextCriteria() {
-        Map<String, Set<String>> textCriteria = new LinkedHashMap<String, Set<String>>();
-        for (String criteria : searchCriteria.keySet()) {
-            if (!NO_TEXT_FIELDS.contains(criteria)) {
-                textCriteria.put(criteria, searchCriteria.get(criteria));
-            }
-        }
-        return textCriteria;
-    }
-    public Map<String, Set<String>> getSearchPrivilegeCriteria() {
-        return searchPrivilegeCriteria;
-    }
-
-    public Map<String, String> getSearchOption() {
-        return searchOption;
-    }
-
-    /**
      * Creates this from a JDOM element.
-     * 
-     * @param jdom
-     *            input
+     *
+     * @param jdom input
      */
     public UserQueryInput(Element jdom) {
 
@@ -183,11 +173,11 @@ public class UserQueryInput {
                     // ignore this.  it is for presentation
                 } else {
                     if (StringUtils.isNotBlank(nodeValue)) {
-                    	// Handles operation parameters. These parameters are safe, because
-                    	// the fields have been sanitized before (in LuceneSearcher.java:713)
-                    	if (nodeName.startsWith("_operation")) {
-                    		addValues(searchCriteria, searchParamToLuceneField.get(nodeName), nodeValue);
-                    	} else if (SECURITY_FIELDS.contains(nodeName) || nodeName.contains("_op")) {
+                        // Handles operation parameters. These parameters are safe, because
+                        // the fields have been sanitized before (in LuceneSearcher.java:713)
+                        if (nodeName.startsWith("_operation")) {
+                            addValues(searchCriteria, searchParamToLuceneField.get(nodeName), nodeValue);
+                        } else if (SECURITY_FIELDS.contains(nodeName) || nodeName.contains("_op")) {
                             addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
@@ -198,11 +188,11 @@ public class UserQueryInput {
                             // Rename search parameter to lucene index field
                             // when needed
                             addValues(
-                                    searchCriteria,
-                                    (searchParamToLuceneField
-                                            .containsKey(nodeName) ? searchParamToLuceneField
-                                            .get(nodeName) : nodeName),
-                                    nodeValue);
+                                searchCriteria,
+                                (searchParamToLuceneField
+                                    .containsKey(nodeName) ? searchParamToLuceneField
+                                    .get(nodeName) : nodeName),
+                                nodeValue);
 
                         }
                     }
@@ -212,79 +202,7 @@ public class UserQueryInput {
     }
 
     /**
-     * Is node a facet drilldown request
-     *
-     * @param nodeName
-     */
-    private boolean isFacetQuery(String nodeName) {
-        return nodeName.equals(SearchParameter.FACET_QUERY);
-    }
-
-    /**
-     * TODO javadoc.
-     *
-     * @param hash
-     * @param nodeName
-     * @param nodeValue
-     */
-    private void addValues(Map<String, Set<String>> hash, String nodeName, String nodeValue) {
-        Set<String> currentValues = searchCriteria.get(nodeName);
-
-        try {
-            if (currentValues == null) {
-                Set<String> values = new LinkedHashSet<String>();
-                values.add(URLDecoder.decode(nodeValue, "UTF-8"));
-                hash.put(nodeName, values);
-            } else {
-                currentValues.add(URLDecoder.decode(nodeValue, "UTF-8"));
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // TODO Improve and move to config-lucene.xml in order to be able
-    // to add range field from configuration
-    public static final List<String> RANGE_QUERY_FIELDS = Arrays.asList(
-            SearchParameter.DATEFROM,
-            SearchParameter.DATETO,
-            SearchParameter.REVISIONDATEFROM, 
-            SearchParameter.REVISIONDATETO,
-            SearchParameter.PUBLICATIONDATEFROM,
-            SearchParameter.PUBLICATIONDATETO,
-            SearchParameter.DENOMINATORFROM,
-            SearchParameter.DENOMINATORTO,
-            SearchParameter.DENOMINATOR,
-            SearchParameter.CREATIONDATEFROM, 
-            SearchParameter.CREATIONDATETO);
-
-    /**
-     * TODO : use enum instead ? 
-     */
-    private static final List<String> RANGE_FIELDS = Arrays.asList(
-            LuceneIndexField.CHANGE_DATE, 
-            LuceneIndexField.REVISION_DATE,
-            LuceneIndexField.PUBLICATION_DATE, 
-            LuceneIndexField.CREATE_DATE,
-            LuceneIndexField.DENOMINATOR);
-    private static final List<String> RANGE_FIELDS_FROM = Arrays.asList(
-            SearchParameter.DATEFROM, 
-            SearchParameter.REVISIONDATEFROM,
-            SearchParameter.PUBLICATIONDATEFROM,
-            SearchParameter.CREATIONDATEFROM, 
-            SearchParameter.DENOMINATORFROM);
-    private static final List<String> RANGE_FIELDS_TO = Arrays.asList(
-            SearchParameter.DATETO, 
-            SearchParameter.REVISIONDATETO,
-            SearchParameter.PUBLICATIONDATETO, 
-            SearchParameter.CREATIONDATETO,
-            SearchParameter.DENOMINATORTO);
-
-    /**
      * Return Lucene field name according to search parameter name.
-     * 
-     * @param searchFieldName
-     * @return
      */
     public static String getRangeField(String searchFieldName) {
         // Do a range query for the search field itself (eg. denominator)
@@ -309,7 +227,68 @@ public class UserQueryInput {
     }
 
     /**
-     * 
+     * Return all search criteria.
+     */
+    public Map<String, Set<String>> getSearchCriteria() {
+        return searchCriteria;
+    }
+
+    public Set<String> getFacetQueries() {
+        return facetQueries;
+    }
+
+    /**
+     * Return all search criteria except those which does not contains textual information like
+     * identifiers or codelists (eg. UUID, PARENTUUID).
+     *
+     *
+     * Those fields may be used for language detection.
+     */
+    public Map<String, Set<String>> getTextCriteria() {
+        Map<String, Set<String>> textCriteria = new LinkedHashMap<String, Set<String>>();
+        for (String criteria : searchCriteria.keySet()) {
+            if (!NO_TEXT_FIELDS.contains(criteria)) {
+                textCriteria.put(criteria, searchCriteria.get(criteria));
+            }
+        }
+        return textCriteria;
+    }
+
+    public Map<String, Set<String>> getSearchPrivilegeCriteria() {
+        return searchPrivilegeCriteria;
+    }
+
+    public Map<String, String> getSearchOption() {
+        return searchOption;
+    }
+
+    /**
+     * Is node a facet drilldown request
+     */
+    private boolean isFacetQuery(String nodeName) {
+        return nodeName.equals(SearchParameter.FACET_QUERY);
+    }
+
+    /**
+     * TODO javadoc.
+     */
+    private void addValues(Map<String, Set<String>> hash, String nodeName, String nodeValue) {
+        Set<String> currentValues = searchCriteria.get(nodeName);
+
+        try {
+            if (currentValues == null) {
+                Set<String> values = new LinkedHashSet<String>();
+                values.add(URLDecoder.decode(nodeValue, "UTF-8"));
+                hash.put(nodeName, values);
+            } else {
+                currentValues.add(URLDecoder.decode(nodeValue, "UTF-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * @return a string representation of the object.
      */
     @Override
@@ -320,25 +299,24 @@ public class UserQueryInput {
         return text.toString();
     }
 
-    public void setSimilarity(String similarity) {
-        this.similarity = similarity;
-    }
-
     public String getSimilarity() {
         return similarity;
     }
 
-    public void setEditable(String editable) {
-        if(editable.equals("true")) {
-            this.editable = editable;
-        }
-        else {
-            this.editable = "false";
-        }
+    public void setSimilarity(String similarity) {
+        this.similarity = similarity;
     }
 
     public String getEditable() {
         return editable;
+    }
+
+    public void setEditable(String editable) {
+        if (editable.equals("true")) {
+            this.editable = editable;
+        } else {
+            this.editable = "false";
+        }
     }
 
     private void addSearchCriteria(StringBuilder text) {
@@ -350,7 +328,7 @@ public class UserQueryInput {
     }
 
     private void addFacetQueries(StringBuilder text) {
-        for (String facetQuery: facetQueries) {
+        for (String facetQuery : facetQueries) {
             text.append("facetQuery:").append(facetQuery).append(" ");
         }
     }

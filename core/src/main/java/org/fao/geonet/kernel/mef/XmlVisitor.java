@@ -30,36 +30,35 @@ import org.jdom.Element;
 import java.nio.file.Path;
 
 /**
- * Import an XML file and create a temporary information file before passing the
- * information to the MEF visitor.
- * 
+ * Import an XML file and create a temporary information file before passing the information to the
+ * MEF visitor.
  */
 public class XmlVisitor implements IVisitor {
 
-	public void visit(Path xmlFile, IMEFVisitor v) throws Exception {
-		handleXml(xmlFile, v);
-	}
+    public void visit(Path xmlFile, IMEFVisitor v) throws Exception {
+        handleXml(xmlFile, v);
+    }
 
-	/**
-	 * Load an XML file and pass it to a MEF visitor.
-	 */
-	public Element handleXml(Path xmlFile, IMEFVisitor v) throws Exception {
+    /**
+     * Load an XML file and pass it to a MEF visitor.
+     */
+    public Element handleXml(Path xmlFile, IMEFVisitor v) throws Exception {
 
-		Element md;
-		md = Xml.loadFile(xmlFile);
-		if (md == null)
-			throw new BadFormatEx("Missing xml metadata file .");
+        Element md;
+        md = Xml.loadFile(xmlFile);
+        if (md == null)
+            throw new BadFormatEx("Missing xml metadata file .");
 
-		v.handleMetadata(md, 0);
+        v.handleMetadata(md, 0);
 
-		// Generate dummy info file.
-		Element info;
-		info = new Element("info");
-		v.handleInfo(info, 0);
-		return info;
-	}
+        // Generate dummy info file.
+        Element info;
+        info = new Element("info");
+        v.handleInfo(info, 0);
+        return info;
+    }
 
-	public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
-			throws Exception {
-	}
+    public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
+        throws Exception {
+    }
 }

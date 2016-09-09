@@ -23,14 +23,22 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.fao.geonet.entitylistener.MetadataCategoryEntityListenerManager;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
+
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * A Metadata category. This is separate from any category listed in the metadata xml itself and is geonetwork specific.
+ * A Metadata category. This is separate from any category listed in the metadata xml itself and is
+ * geonetwork specific.
  *
  * @author Jesse
  */
@@ -39,7 +47,7 @@ import java.util.Map;
 @Cacheable
 @Table(name = "Categories")
 @EntityListeners(MetadataCategoryEntityListenerManager.class)
-@SequenceGenerator(name=MetadataCategory.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = MetadataCategory.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class MetadataCategory extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "metadata_category_id_seq";
     private int _id;
@@ -51,15 +59,15 @@ public class MetadataCategory extends Localized implements Serializable {
      * @return the id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the category. This is typically set by the JPA entity manager and should only be set by the developer when they
-     * want to
-     * merge new data with an existing entity or want to perform query by example. But even then it is not generally recommended.
+     * Set the id of the category. This is typically set by the JPA entity manager and should only
+     * be set by the developer when they want to merge new data with an existing entity or want to
+     * perform query by example. But even then it is not generally recommended.
      *
      * @param id the id.
      */
@@ -93,6 +101,25 @@ public class MetadataCategory extends Localized implements Serializable {
     @Column(name = "label", nullable = false)
     public Map<String, String> getLabelTranslations() {
         return super.getLabelTranslations();
+    }
+
+
+    private Set<Metadata> _records = new HashSet<Metadata>();
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
+        fetch = FetchType.EAGER)
+    @JoinTable(name = Metadata.METADATA_CATEG_JOIN_TABLE_NAME,
+        inverseJoinColumns = @JoinColumn(name = "metadataId"),
+        joinColumns = @JoinColumn(name =
+            Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
+    @Nonnull
+    @JsonIgnore
+    public Set<Metadata> getRecords() {
+        return _records;
+    }
+
+    protected void setRecords(@Nonnull Set<Metadata> records) {
+        this._records = records;
     }
 
     // CHECKSTYLE:OFF

@@ -22,9 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -33,33 +33,33 @@
        ">
 
 
-    <bean id="configPath" class="java.lang.String">
-        <constructor-arg index="0" value="/WEB-INF/" />
-    </bean>
+  <bean id="configPath" class="java.lang.String">
+    <constructor-arg index="0" value="/WEB-INF/"/>
+  </bean>
 
-    <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
-         are needed here.
-     -->
-    <util:set id="languages">
-        <value>ara</value>
-        <value>cat</value>
-        <value>chi</value>
-        <value>dut</value>
-        <value>eng</value>
-        <value>fin</value>
-        <value>fre</value>
-        <value>ger</value>
-        <value>ita</value>
-        <value>nor</value>
-        <value>pol</value>
-        <value>por</value>
-        <value>rus</value>
-        <value>spa</value>
-        <value>tur</value>
-    </util:set>
+  <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
+       are needed here.
+   -->
+  <util:set id="languages">
+    <value>ara</value>
+    <value>cat</value>
+    <value>chi</value>
+    <value>dut</value>
+    <value>eng</value>
+    <value>fin</value>
+    <value>fre</value>
+    <value>ger</value>
+    <value>ita</value>
+    <value>nor</value>
+    <value>pol</value>
+    <value>por</value>
+    <value>rus</value>
+    <value>spa</value>
+    <value>tur</value>
+  </util:set>
 
-    <bean id="formatterCache"
-      class="org.fao.geonet.services.metadata.format.cache.NoCachingStore">
-    </bean>
+  <bean id="formatterCache"
+        class="org.fao.geonet.api.records.formatters.cache.NoCachingStore">
+  </bean>
 
 </beans>

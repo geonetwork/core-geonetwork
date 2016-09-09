@@ -33,72 +33,79 @@ import java.nio.file.Path;
 /**
  * Register XML or binary file to process.
  */
-public interface IVisitor
-{
-	/**
-	 * Register XML or binary file to process.
-	 */
-	public void visit(Path mefFile, IMEFVisitor v) throws Exception;
+public interface IVisitor {
+    /**
+     * Register XML or binary file to process.
+     */
+    public void visit(Path mefFile, IMEFVisitor v) throws Exception;
 
-	/**
-	 * Register XML files.
-	 */
-	public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception ;
+    /**
+     * Register XML files.
+     */
+    public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception;
 
-	/**
-	 * Register binary file.
-	 * 
-	 * @param mefFile		a {@link File} to process
-	 * @param v				the visitor
-	 * @param info			the information file
-	 * @param index			the index to store the results
-	 * @throws Exception
-	 */
-	public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index) throws Exception ;
+    /**
+     * Register binary file.
+     *
+     * @param mefFile a {@link File} to process
+     * @param v       the visitor
+     * @param info    the information file
+     * @param index   the index to store the results
+     */
+    public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index) throws Exception;
 
 }
 
 // =============================================================================
 
-class InputStreamBridge extends InputStream
-{
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Constructor
-	// ---
-	// --------------------------------------------------------------------------
+class InputStreamBridge extends InputStream {
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Constructor
+    // ---
+    // --------------------------------------------------------------------------
 
-	public InputStreamBridge(InputStream is)
-	{
-		this.is = is;
-	}
+    private InputStream is;
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Bridging methods
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Bridging methods
+    // ---
+    // --------------------------------------------------------------------------
 
-	public int read() throws IOException { return is.read(); }
+    public InputStreamBridge(InputStream is) {
+        this.is = is;
+    }
 
-	public int available() throws IOException { return is.available(); }
+    public int read() throws IOException {
+        return is.read();
+    }
 
-	// --- this *must* be empty to work with zip files
-	public void close() throws IOException {}
+    public int available() throws IOException {
+        return is.available();
+    }
 
-	public synchronized void mark(int readlimit) { is.mark(readlimit); }
+    // --- this *must* be empty to work with zip files
+    public void close() throws IOException {
+    }
 
-	public synchronized void reset() throws IOException { is.reset(); }
+    public synchronized void mark(int readlimit) {
+        is.mark(readlimit);
+    }
 
-	public boolean markSupported() {	return is.markSupported(); }
+    public synchronized void reset() throws IOException {
+        is.reset();
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Variables
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Variables
+    // ---
+    // --------------------------------------------------------------------------
 
-	private InputStream is; 
+    public boolean markSupported() {
+        return is.markSupported();
+    }
 }
 // =============================================================================
 

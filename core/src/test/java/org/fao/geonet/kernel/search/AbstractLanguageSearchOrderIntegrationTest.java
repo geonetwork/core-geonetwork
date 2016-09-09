@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
@@ -33,6 +34,7 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.Updater;
 import org.jdom.JDOMException;
@@ -48,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import static org.fao.geonet.kernel.setting.SettingInfo.SearchRequestLanguage.ONLY_DOC_LOCALE;
@@ -66,39 +69,37 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class AbstractLanguageSearchOrderIntegrationTest extends AbstractCoreIntegrationTest {
     public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
-    @Autowired
-    private SettingRepository _settingRepository;
-
-    @Autowired
-    private SearchManager _searchManager;
-
     protected MetaSearcher _luceneSearcher;
     protected ServiceContext _serviceContext;
     protected String _abstractSearchTerm;
+    @Autowired
+    private SettingRepository _settingRepository;
+    @Autowired
+    private SearchManager _searchManager;
 
     @BeforeClass
     public static synchronized void bareMetadataXml() throws IOException, JDOMException {
         if (METADATA_TO_IMPORT.isEmpty()) {
             final URL url = AbstractLanguageSearchOrderIntegrationTest.class.getResource("templated-name-lang.iso19139.xml");
             final String xmlString = IOUtils.toString(url,
-                    "UTF-8");
+                "UTF-8");
 
             METADATA_TO_IMPORT.add(loadMetadata("eng",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">zz</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "</gmd:PT_FreeText>", xmlString));
             METADATA_TO_IMPORT.add(loadMetadata("ita",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">yy</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("ita",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">xx</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("eng",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">A ENG EN and FR is " +
                     "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">A ENG EN and FR is " +
@@ -106,7 +107,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("eng",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">E2 ENG EN and FR is " +
                     "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">Z2 ENG EN and FR is " +
@@ -114,13 +115,13 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("eng",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">G eng is " +
                     "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("eng",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">e eng en and fr is " +
                     "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">e eng en and fr is " +
@@ -128,13 +129,13 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("fre",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">é fra is " +
                     "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("fre",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">A FRA EN and FR is " +
                     "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">A FRA EN and FR is " +
@@ -142,7 +143,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
                     + "</gmd:PT_FreeText>", xmlString));
 
             METADATA_TO_IMPORT.add(loadMetadata("fre",
-                    "<gmd:PT_FreeText>\n"
+                "<gmd:PT_FreeText>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">Z3 FRA EN and FR is " +
                     "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
                     + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">E3 FRA EN and FR is " +
@@ -164,7 +165,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         for (String element : METADATA_TO_IMPORT) {
             byte[] bytes = element.replace("{uuid}", "" + _abstractSearchTerm).getBytes("UTF-8");
             importMetadataXML(_serviceContext, "uuid:" + System.currentTimeMillis(), new ByteArrayInputStream(bytes),
-                    MetadataType.METADATA, ReservedGroup.intranet.getId(), Params.GENERATE_UUID);
+                MetadataType.METADATA, ReservedGroup.intranet.getId(), Params.GENERATE_UUID);
         }
 
         this._luceneSearcher = _searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
@@ -185,16 +186,16 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(PREFER_LOCALE, false, false);
         String[] titles = doSearch("fre");
         assertArrayEquals(new String[]{
-                "A ENG EN and FR is FR",
-                "A FRA EN and FR is FR",
-                "E2 ENG EN and FR is FR",
-                "e eng en and fr is fr",
-                "é fra is fr",
-                "G eng is fr",
-                "xx",
-                "yy",
-                "Z3 FRA EN and FR is FR",
-                "zz"}, titles);
+            "A ENG EN and FR is FR",
+            "A FRA EN and FR is FR",
+            "E2 ENG EN and FR is FR",
+            "e eng en and fr is fr",
+            "é fra is fr",
+            "G eng is fr",
+            "xx",
+            "yy",
+            "Z3 FRA EN and FR is FR",
+            "zz"}, titles);
     }
 
     @Test
@@ -203,7 +204,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(PREFER_LOCALE, false, false);
         String[] titles = doSearch("eng");
         assertArrayEquals(new String[]{"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
+            "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
     @Test
@@ -220,7 +221,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(ONLY_DOC_LOCALE, false, false);
         String[] titles = doSearch("eng");
         assertArrayEquals(new String[]{"A ENG EN and FR is EN", "e eng en and fr is en", "G eng is fr", "Z2 ENG EN and FR is EN",
-                "zz"}, titles);
+            "zz"}, titles);
     }
 
     @Test
@@ -237,7 +238,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(ONLY_LOCALE, false, false);
         String[] titles = doSearch("eng");
         assertArrayEquals(new String[]{"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
+            "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
     @Test
@@ -254,7 +255,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(ONLY_LOCALE, false, true);
         String[] titles = doSearch("fre");
         assertArrayEquals(new String[]{"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
+            "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
     @Test
@@ -263,7 +264,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(ONLY_UI_LOCALE, false, true);
         String[] titles = doSearch("eng");
         assertArrayEquals(new String[]{"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
+            "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
     @Test
@@ -280,7 +281,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(PREFER_UI_LOCALE, false, true);
         String[] titles = doSearch("eng");
         assertArrayEquals(new String[]{"A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
+            "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
     @Test
@@ -289,7 +290,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(PREFER_UI_LOCALE, false, true);
         String[] titles = doSearch("fre");
         assertArrayEquals(new String[]{"A ENG EN and FR is FR", "A FRA EN and FR is FR", "E2 ENG EN and FR is FR",
-                "e eng en and fr is fr", "é fra is fr", "G eng is fr", "xx", "yy", "Z3 FRA EN and FR is FR", "zz"}, titles);
+            "e eng en and fr is fr", "é fra is fr", "G eng is fr", "xx", "yy", "Z3 FRA EN and FR is FR", "zz"}, titles);
     }
 
     @Test
@@ -298,7 +299,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(PREFER_LOCALE, true, false);
         String[] titles = doSearch("fre");
         assertContainsOnly(titles, "A ENG EN and FR is FR", "A FRA EN and FR is FR", "e eng en and fr is fr", "é fra is fr",
-                "E2 ENG EN and FR is FR", "G eng is fr", "xx", "yy", "Z3 FRA EN and FR is FR", "zz");
+            "E2 ENG EN and FR is FR", "G eng is fr", "xx", "yy", "Z3 FRA EN and FR is FR", "zz");
         assertContainsInOrderOnly(titles, 0, 3, "A FRA EN and FR is FR", "é fra is fr", "Z3 FRA EN and FR is FR");
         assertContainsInOrder(titles, 3, titles.length, "A ENG EN and FR is FR", "e eng en and fr is fr", "G eng is fr", "zz");
         assertContainsInOrder(titles, 3, titles.length, "xx", "yy");
@@ -310,9 +311,9 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         setSearchSettings(PREFER_LOCALE, true, false);
         String[] titles = doSearch("eng");
         assertContainsOnly(titles, "A ENG EN and FR is EN", "A FRA EN and FR is EN", "E3 FRA EN and FR is EN",
-                "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz");
+            "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz");
         assertContainsInOrderOnly(titles, 0, 5, "A ENG EN and FR is EN", "e eng en and fr is en", "G eng is fr",
-                "Z2 ENG EN and FR is EN", "zz");
+            "Z2 ENG EN and FR is EN", "zz");
         assertContainsInOrder(titles, 5, titles.length, "A FRA EN and FR is EN", "E3 FRA EN and FR is EN", "é fra is fr");
         assertContainsInOrder(titles, 5, titles.length, "xx", "yy");
     }
@@ -344,25 +345,25 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
 
         if (!extras.isEmpty() || !missing.isEmpty()) {
             throw new AssertionError("Following strings should not be in results: " + extras + "\nFollowing strings should have been in" +
-                                     " results: " + missing);
+                " results: " + missing);
         }
     }
 
     private void setSearchSettings(final SettingInfo.SearchRequestLanguage searchSetting, final Boolean sorted,
                                    final Boolean autoDetectSearchLanguage) {
-        _settingRepository.update(SettingManager.SYSTEM_REQUESTED_LANGUAGE_ONLY, new Updater<Setting>() {
+        _settingRepository.update(Settings.SYSTEM_REQUESTED_LANGUAGE_ONLY, new Updater<Setting>() {
             @Override
             public void apply(@Nonnull Setting entity) {
                 entity.setValue(searchSetting.databaseValue);
             }
         });
-        _settingRepository.update(SettingManager.SYSTEM_REQUESTED_LANGUAGE_SORTED, new Updater<Setting>() {
+        _settingRepository.update(Settings.SYSTEM_REQUESTED_LANGUAGE_SORTED, new Updater<Setting>() {
             @Override
             public void apply(@Nonnull Setting entity) {
                 entity.setValue(sorted.toString());
             }
         });
-        _settingRepository.update(SettingManager.SYSTEM_AUTODETECT_ENABLE, new Updater<Setting>() {
+        _settingRepository.update(Settings.SYSTEM_AUTODETECT_ENABLE, new Updater<Setting>() {
             @Override
             public void apply(@Nonnull Setting entity) {
                 entity.setValue(autoDetectSearchLanguage.toString());

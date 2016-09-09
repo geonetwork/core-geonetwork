@@ -25,9 +25,12 @@ package org.fao.geonet.services.region;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+
+import org.fao.geonet.api.regions.ListRegionsResponse;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
@@ -42,19 +45,23 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import java.nio.file.Path;
 import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static org.fao.geonet.api.regions.RegionsApi.createRequest;
 
 //=============================================================================
 
 /**
  * Returns a specific region and coordinates given its id
  */
+@Deprecated
 @Controller
 public class List {
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-    }
+    @Autowired
+    private ServiceManager serviceManager;
 
     // --------------------------------------------------------------------------
     // ---
@@ -62,15 +69,15 @@ public class List {
     // ---
     // --------------------------------------------------------------------------
 
-    @Autowired
-    private ServiceManager serviceManager;
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
     /**
-     *
      * Example XML Response:
      * <pre><code>
      * &lt;response count="3">
-     *    &lt;region hasGeom="false" categoryId="http://geonetwork-opensource.org/regions#country" id="http://geonetwork-opensource.org/regions#19">
+     *    &lt;region hasGeom="false" categoryId="http://geonetwork-opensource.org/regions#country"
+     * id="http://geonetwork-opensource.org/regions#19">
      *       &lt;north>-9.6792&lt;/north>
      *       &lt;east>-57.52112&lt;/east>
      *       &lt;south>-22.90111&lt;/south>
@@ -128,21 +135,21 @@ public class List {
      *    "@count":3
      * }
      * </code></pre>
-     * @throws Exception
      *
      * @param categoryId only return labels contained in the given category - optional
-     * @param label searches the labels for regions that contain the text in this parameters - optional
+     * @param label      searches the labels for regions that contain the text in this parameters -
+     *                   optional
      * @param maxRecords limit the number of results returned - optional
      */
 
     @RequestMapping(value = "/{lang}/regions.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public ListRegionsResponse exec(@PathVariable String lang,
-                        @RequestParam(required = false) String label,
-                        @RequestParam(required = false) String categoryId,
-                        @RequestParam(defaultValue = "-1") int maxRecords,
-                        NativeWebRequest webRequest) throws Exception {
+                                    @RequestParam(required = false) String label,
+                                    @RequestParam(required = false) String categoryId,
+                                    @RequestParam(defaultValue = "-1") int maxRecords,
+                                    NativeWebRequest webRequest) throws Exception {
 
         final HttpServletRequest nativeRequest = webRequest.getNativeRequest(HttpServletRequest.class);
         ServiceContext context = serviceManager.createServiceContext("regions.list", lang, nativeRequest);
@@ -179,20 +186,6 @@ public class List {
         nativeResponse.setHeader("Cache-Control", "no-cache");
 
         return new ListRegionsResponse(regions);
-    }
-
-    private Request createRequest(@RequestParam(required = false) String label, @RequestParam(required = false) String categoryId, @RequestParam(defaultValue = "-1") int maxRecords, ServiceContext context, RegionsDAO dao) throws Exception {
-        Request request = dao.createSearchRequest(context);
-        if (label != null) {
-            request.label(label);
-        }
-        if (categoryId != null) {
-            request.categoryId(categoryId);
-        }
-        if (maxRecords > 0) {
-            request.maxRecords(maxRecords);
-        }
-        return request;
     }
 
 }

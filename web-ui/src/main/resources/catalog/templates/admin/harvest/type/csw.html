@@ -1,113 +1,117 @@
 <form data-ng-keypress="updatingHarvester()">
 
 
-    <div class="row">
-        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
+  <div class="row">
+    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
 
-        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+  </div>
+
+
+  <fieldset>
+    <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+      harvesterSelected['@type']) | translate}}
+    </legend>
+    <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+      <label class="control-label" data-translate="">serviceUrl</label>
+      <input type="text" class="form-control"
+             data-ng-model="harvesterSelected.site.capabilitiesUrl"/>
+      <p class="help-block" data-translate="">csw-capabilitiesUrlHelp</p>
+    </div>
+
+    <fieldset class="form-horizontal cswCriteriaInfo">
+      <legend data-translate="">harvesterFilter</legend>
+
+
+      <div class="alert alert-warning"
+           data-ng-show="errorRetrievingCswCapabilities === true"
+           data-translate=""
+           data-translate-values="{url: '{{cswCapabilitiesUrl}}'}">
+        errorRetrievingCswCapabilities
+      </div>
+
+      <div class="alert alert-warning"
+           data-ng-show="cswCriteriaInfo !== null">
+        {{cswCriteriaInfo}}
+      </div>
+
+      <div class="alert alert-warning"
+           data-ng-show="errorRetrievingCswCapabilities === false && cswCriteria.length === 0 && cswCapabilitiesUrl"
+           data-translate=""
+           data-translate-values="{url: '{{cswCapabilitiesUrl}}'}">
+        noCswCriteriaFoundInCapabilities
+      </div>
+
+      <div class="alert alert-info"
+           data-ng-show="cswCriteria.length > 0"
+           data-translate="">
+        CswCriteriaFoundInCapabilities
+      </div>
+      <div class="form-group" data-ng-repeat="c in cswCriteria track by $index">
+        <label class="control-label col-lg-4">{{c.replace('__', ':') | translate}}</label>
+        <div class="col-lg-8">
+          <input type="text" class="form-control gn-csw-criteria" id="csw-{{c}}"
+                 data-ng-model="harvesterSelected.searches[0][c].value"/>
+        </div>
+      </div>
+    </fieldset>
+
+  </fieldset>
+
+
+  <fieldset>
+    <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
+
+
+    <div data-gn-harvester-account="harvesterSelected"/>
+
+    <div>
+      <label class="control-label">
+        <input type="checkbox"
+               data-ng-model="harvesterSelected.site.rejectDuplicateResource"/>
+        <span data-translate="">csw-rejectDuplicateResource</span>
+      </label>
+      <p class="help-block" data-translate="">csw-rejectDuplicateResourceHelp</p>
     </div>
 
 
-    <fieldset>
-        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
-            harvesterSelected['@type']) | translate}}</legend>
-        <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
-            <label class="control-label" data-translate="">serviceUrl</label>
-            <input type="text" class="form-control"
-                data-ng-model="harvesterSelected.site.capabilitiesUrl"/>
-            <p class="help-block" data-translate="">csw-capabilitiesUrlHelp</p>
-        </div>
-
-        <fieldset class="form-horizontal cswCriteriaInfo">
-            <legend data-translate="">harvesterFilter</legend>
+    <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+         data-label="csw-category"/>
 
 
-            <div class="alert alert-warning"
-                 data-ng-show="errorRetrievingCswCapabilities === true"
-                 data-translate=""
-                 data-translate-values="{url: '{{cswCapabilitiesUrl}}'}">
-                errorRetrievingCswCapabilities
-            </div>
+    <div>
+      <label class="control-label">
+        <span data-translate="">harvesterValidate</span>
+      </label>
+      <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
+      <p class="help-block" data-translate="">harvesterValidateHelp</p>
+    </div>
+    <div>
+      <label class="control-label" data-translate="">applyXSLToRecord</label>
+      <div data-gn-import-xsl="harvesterSelected.site.xslfilter"/>
 
-            <div class="alert alert-warning"
-                 data-ng-show="cswCriteriaInfo !== null">
-                {{cswCriteriaInfo}} </div>
+      <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+    </div>
+    <div>
+      <label class="control-label" data-translate="">csw-outputSchema</label>
+      <input type="text" class="form-control gn-csw-criteria" id="csw-outputSchemaInput"
+             data-ng-model="harvesterSelected.site.outputSchema"/>
 
-            <div class="alert alert-warning"
-                 data-ng-show="errorRetrievingCswCapabilities === false && cswCriteria.length === 0 && cswCapabilitiesUrl"
-                 data-translate=""
-                 data-translate-values="{url: '{{cswCapabilitiesUrl}}'}">
-              noCswCriteriaFoundInCapabilities
-            </div>
+      <label class="control-label" data-translate="">csw-outputSchemaOptions</label>
+      <select data-ng-model="harvesterSelected.site.outputSchema"
+              class="form-control gn-csw-criteria"
+              id="csw-outputSchemaOptionsSelect">
+        <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore
+        </option>
+        <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
+      </select>
 
-            <div class="alert alert-info"
-                 data-ng-show="cswCriteria.length > 0"
-                 data-translate="">
-              CswCriteriaFoundInCapabilities
-            </div>
-            <div class="form-group" data-ng-repeat="c in cswCriteria track by $index">
-                <label class="control-label col-lg-4">{{c.replace('__', ':') | translate}}</label>
-                <div class="col-lg-8">
-                    <input type="text" class="form-control gn-csw-criteria" id="csw-{{c}}"
-                        data-ng-model="harvesterSelected.searches[0][c].value"/>
-                </div>
-            </div>
-        </fieldset>
-
-    </fieldset>
+      <p class="help-block" data-translate="">csw-outputSchemaHelp</p>
+    </div>
+  </fieldset>
 
 
-    <fieldset>
-        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
-            {{harvesterSelected['@type'] | translate}}</legend>
-
-
-        <div data-gn-harvester-account="harvesterSelected"/>
-
-        <div>
-            <label class="control-label">
-                <input type="checkbox"
-                    data-ng-model="harvesterSelected.site.rejectDuplicateResource"/>
-                <span data-translate="">csw-rejectDuplicateResource</span>
-            </label>
-            <p class="help-block" data-translate="">csw-rejectDuplicateResourceHelp</p>
-        </div>
-
-
-        <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
-            data-label="csw-category"/>
-
-
-        <div>
-            <label class="control-label">
-                <span data-translate="">harvesterValidate</span>
-            </label>
-            <div data-gn-harvester-validation="harvesterSelected.content.validate"/>
-            <p class="help-block" data-translate="">harvesterValidateHelp</p>
-        </div>
-        <div>
-            <label class="control-label" data-translate="">applyXSLToRecord</label>
-            <div data-gn-import-xsl="harvesterSelected.content.importxslt"/>
-
-            <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
-        </div>
-        <div>
-            <label class="control-label" data-translate="">csw-outputSchema</label>
-            <input type="text" class="form-control gn-csw-criteria" id="csw-outputSchemaInput"
-                   data-ng-model="harvesterSelected.site.outputSchema"/>
-
-            <label class="control-label" data-translate="">csw-outputSchemaOptions</label>
-            <select data-ng-model="harvesterSelected.site.outputSchema" class="form-control gn-csw-criteria"
-                    id="csw-outputSchemaOptionsSelect">
-                <option value="http://www.opengis.net/cat/csw/2.0.2" data-translate="">csw-dublinCore</option>
-                <option value="http://www.isotc211.org/2005/gmd" data-translate="">csw-iso19139</option>
-            </select>
-
-            <p class="help-block" data-translate="">csw-outputSchemaHelp</p>
-        </div>
-    </fieldset>
-
-
-
-    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

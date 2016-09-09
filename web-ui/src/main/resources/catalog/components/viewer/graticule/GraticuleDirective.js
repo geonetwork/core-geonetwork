@@ -200,7 +200,7 @@
             transform(intersectionPoint, lonLat);
             textStyle = getTextStyle(lonLat[0], 0, 10, 'EW');
             vectorContext.setTextStyle(textStyle);
-            vectorContext.drawPointGeometry(point, null);
+            vectorContext.drawPointGeometry(point);
             vectorContext.setTextStyle(null);
 
           }

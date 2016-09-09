@@ -31,9 +31,7 @@ import javax.annotation.Nullable;
 /**
  * Custom methods for finding and saving MetadataCategory entities.
  * <p/>
- * User: Jesse
- * Date: 9/10/13
- * Time: 7:23 AM
+ * User: Jesse Date: 9/10/13 Time: 7:23 AM
  */
 public interface MetadataCategoryRepositoryCustom {
     /**

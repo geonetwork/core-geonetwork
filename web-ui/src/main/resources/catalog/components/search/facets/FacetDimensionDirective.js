@@ -47,6 +47,8 @@
           scope.collapseAll = function() {
             $timeout(function() {
               element.parent().find('div.gn-facet > h4').click();
+              element.parent().find('div.gn-facet > a > i')
+                .toggleClass('fa-angle-double-up fa-angle-double-down');
             });
           };
 
@@ -134,16 +136,17 @@
                       encodeURIComponent(category['@value']);
                   return category.path;
                 };
-                
+
                 /**
-                 * Adds a new attribute called 'label' instead of '@label' for orderBy
+                 * Adds a new attribute called 'label' instead
+                 * of '@label' for orderBy
                  * @param {Object} category
                  * @return {boolean|*}
                  */
-                  scope.buildLabel = function(category) {
-                    category.label = category['@label'];
-                    return category.label;
-                  };
+                scope.buildLabel = function(category) {
+                  category.label = category['@label'];
+                  return category.label;
+                };
 
 
                 /**

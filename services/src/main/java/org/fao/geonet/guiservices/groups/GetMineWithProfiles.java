@@ -47,23 +47,23 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Service used to return all groups and profiles for current user.
  */
 public class GetMineWithProfiles implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	public Element exec(Element params, ServiceContext context)
-			throws Exception {
-		UserSession session = context.getUserSession();
+    public Element exec(Element params, ServiceContext context)
+        throws Exception {
+        UserSession session = context.getUserSession();
 
-		if (!session.isAuthenticated())
-			return new Element(Geonet.Elem.GROUPS);
+        if (!session.isAuthenticated())
+            return new Element(Geonet.Elem.GROUPS);
 
-		// --- retrieve user groups
-		if (Profile.Administrator == session.getProfile()) {
+        // --- retrieve user groups
+        if (Profile.Administrator == session.getProfile()) {
             return context.getBean(GroupRepository.class).findAllAsXml(not(isReserved()));
-		} else {
+        } else {
             final int userIdAsInt = session.getUserIdAsInt();
             final Specifications<UserGroup> spec = where(UserGroupSpecs.hasUserId(userIdAsInt)).and(UserGroupSpecs.isReservedGroup(false));
             return context.getBean(UserGroupRepository.class).findAllAsXml(spec);
-		}
-	}
+        }
+    }
 }

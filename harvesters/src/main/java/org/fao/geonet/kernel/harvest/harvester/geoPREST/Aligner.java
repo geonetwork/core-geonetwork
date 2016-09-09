@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -55,140 +56,168 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
 
-public class Aligner extends BaseAligner
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class Aligner extends BaseAligner {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
+    private Logger log;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Alignment method
+    //---
+    //--------------------------------------------------------------------------
+    private ServiceContext context;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods : addMetadata
+    //---
+    //--------------------------------------------------------------------------
+    private XmlRequest request;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods : updateMetadata
+    //---
+    //--------------------------------------------------------------------------
+    private GeoPRESTParams params;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //--------------------------------------------------------------------------
+    private DataManager dataMan;
+
+    //--------------------------------------------------------------------------
+    private CategoryMapper localCateg;
+
+    //--------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //--------------------------------------------------------------------------
+    private GroupMapper localGroups;
+    private UUIDMapper localUuids;
+    private HarvestResult result;
+    public Aligner(AtomicBoolean cancelMonitor, Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
         super(cancelMonitor);
-		this.log        = log;
-		this.context    = sc;
-		this.params     = params;
+        this.log = log;
+        this.context = sc;
+        this.params = params;
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		dataMan = gc.getBean(DataManager.class);
-		result  = new HarvestResult();
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        dataMan = gc.getBean(DataManager.class);
+        result = new HarvestResult();
 
-		//--- setup REST operation rest/document?id={uuid}
+        //--- setup REST operation rest/document?id={uuid}
 
-		request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/document"));
+        request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl + "/rest/document"));
 
-	}
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Alignment method
-	//---
-	//--------------------------------------------------------------------------
+    public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {
+        log.info("Start of alignment for : " + params.getName());
 
+        //-----------------------------------------------------------------------
+        //--- retrieve all local categories and groups
+        //--- retrieve harvested uuids for given harvesting node
 
-	public HarvestResult align(Set<RecordInfo> records, List<HarvestError> errors) throws Exception {		log.info("Start of alignment for : "+ params.getName());
-
-		//-----------------------------------------------------------------------
-		//--- retrieve all local categories and groups
-		//--- retrieve harvested uuids for given harvesting node
-
-		localCateg = new CategoryMapper(context);
-		localGroups= new GroupMapper(context);
-		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        localCateg = new CategoryMapper(context);
+        localGroups = new GroupMapper(context);
+        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
 
         dataMan.flush();
 
         //-----------------------------------------------------------------------
-		//--- remove old metadata
+        //--- remove old metadata
 
-		for (String uuid : localUuids.getUUIDs()) {
+        for (String uuid : localUuids.getUUIDs()) {
             if (cancelMonitor.get()) {
                 return result;
             }
 
             if (!exists(records, uuid)) {
-				String id = localUuids.getID(uuid);
+                String id = localUuids.getID(uuid);
 
-				if(log.isDebugEnabled())
-					log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadata(context, id);
+                if (log.isDebugEnabled())
+                    log.debug("  - Removing old metadata with local id:" + id);
+                dataMan.deleteMetadata(context, id);
 
                 dataMan.flush();
 
                 result.locallyRemoved++;
-			}
-		}
+            }
+        }
 
-		//-----------------------------------------------------------------------
-		//--- insert/update new metadata
+        //-----------------------------------------------------------------------
+        //--- insert/update new metadata
 
-		for (RecordInfo ri : records) {
+        for (RecordInfo ri : records) {
             if (cancelMonitor.get()) {
                 return result;
             }
 
             try {
-    			String id = dataMan.getMetadataId(ri.uuid);
-    
-    			if (id == null)	addMetadata(ri);
-    			else				updateMetadata(ri, id);
+                String id = dataMan.getMetadataId(ri.uuid);
+
+                if (id == null) addMetadata(ri);
+                else updateMetadata(ri, id);
                 result.totalMetadata++;
-                
-		    }catch (Throwable t) {
-                errors.add(new HarvestError(t, log));
+
+            }catch (Throwable t) {
+                errors.add(new HarvestError(context, t, log));
                 log.error("Unable to process record from csw (" + this.params.getName() + ")");
-                log.error("   Record failed: " + ri.uuid); 
-		    }
-		}
+                log.error("   Record failed: " + ri.uuid);
+            }
+        }
 
         dataMan.forceIndexChanges();
-        
-		log.info("End of alignment for : "+ params.getName());
 
-		return result;
-	}
+        log.info("End of alignment for : " + params.getName());
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods : addMetadata
-	//---
-	//--------------------------------------------------------------------------
+        return result;
+    }
 
-	private void addMetadata(RecordInfo ri) throws Exception {
-		Element md = retrieveMetadata(ri.uuid);
+    private void addMetadata(RecordInfo ri) throws Exception {
+        Element md = retrieveMetadata(ri.uuid);
 
-		if (md == null) return;
+        if (md == null) return;
 
-		String schema = dataMan.autodetectSchema(md, null);
+        String schema = dataMan.autodetectSchema(md, null);
 
-		if (schema == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid);
-			}
-			result.unknownSchema++;
-			return;
-		}
+        if (schema == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("  - Metadata skipped due to unknown schema. uuid:" + ri.uuid);
+            }
+            result.unknownSchema++;
+            return;
+        }
 
-		if (log.isDebugEnabled())
-			log.debug("  - Adding metadata with remote uuid:"+ ri.uuid + " schema:" + schema);
+        if (log.isDebugEnabled())
+            log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
 
-		//
-		// insert metadata
-		//
-		int userid = 1;
+        //
+        // insert metadata
+        //
+        int userid = 1;
         Metadata metadata = new Metadata().setUuid(ri.uuid);
         metadata.getDataInfo().
-                setSchemaId(schema).
-                setRoot(md.getQualifiedName()).
-                setType(MetadataType.METADATA).
-                setChangeDate(new ISODate(ri.changeDate)).
-                setCreateDate(new ISODate(ri.changeDate));
+            setSchemaId(schema).
+            setRoot(md.getQualifiedName()).
+            setType(MetadataType.METADATA).
+            setChangeDate(new ISODate(ri.changeDate)).
+            setCreateDate(new ISODate(ri.changeDate));
         metadata.getSourceInfo().
-                setSourceId(params.getUuid()).
-                setOwner(userid);
+            setSourceId(params.getUuid()).
+            setOwner(userid);
         metadata.getHarvestInfo().
-                setHarvested(true).
-                setUuid(params.getUuid());
+            setHarvested(true).
+            setUuid(params.getUuid());
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
@@ -199,47 +228,40 @@ public class Aligner extends BaseAligner
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.indexMetadata(id, Math.random() < 0.01);
-		result.addedMetadata++;
-	}
+        result.addedMetadata++;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods : updateMetadata
-	//---
-	//--------------------------------------------------------------------------
+    private void updateMetadata(RecordInfo ri, String id) throws Exception {
+        String date = localUuids.getChangeDate(ri.uuid);
 
-	private void updateMetadata(RecordInfo ri, String id) throws Exception
-	{
-		String date = localUuids.getChangeDate(ri.uuid);
+        if (date == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
+            }
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("  - Comparing date " + date + " with harvested date " + ri.changeDate + " Comparison: " + ri.isMoreRecentThan(date));
+            }
+            if (!ri.isMoreRecentThan(date)) {
+                if (log.isDebugEnabled()) {
+                    log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
+                }
+                result.unchangedMetadata++;
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("  - Updating local metadata for uuid:" + ri.uuid);
+                }
+                Element md = retrieveMetadata(ri.uuid);
 
-		if (date == null) {
-			if (log.isDebugEnabled()) {
-				log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
-			}
-		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("  - Comparing date "+date+" with harvested date "+ri.changeDate+" Comparison: "+ri.isMoreRecentThan(date));
-			}
-			if (!ri.isMoreRecentThan(date)) {
- 				if (log.isDebugEnabled()) {
-					log.debug("  - Metadata XML not changed for uuid:"+ ri.uuid);
-				}
-				result.unchangedMetadata++;
-			} else {
-				if (log.isDebugEnabled()) {
-					log.debug("  - Updating local metadata for uuid:"+ ri.uuid);
-				}
-				Element md = retrieveMetadata(ri.uuid);
+                if (md == null) return;
 
-				if (md == null) return;
-				
-				//
-				// update metadata
-				//
-				boolean validate = false;
-				boolean ufo = false;
-				boolean index = false;
-				String language = context.getLanguage();
+                //
+                // update metadata
+                //
+                boolean validate = false;
+                boolean ufo = false;
+                boolean index = false;
+                String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
@@ -251,65 +273,49 @@ public class Aligner extends BaseAligner
                 dataMan.flush();
 
                 dataMan.indexMetadata(id, Math.random() < 0.01);
-				result.updatedMetadata++;
-			}
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+                result.updatedMetadata++;
+            }
+        }
+    }
 
     /**
-     *  Returns true if the uuid is present in the remote node.
-     * 
-     * @param records
-     * @param uuid
-     * @return
+     * Returns true if the uuid is present in the remote node.
      */
-	private boolean exists(Set<RecordInfo> records, String uuid)
-	{
-		for(RecordInfo ri : records) {
-			if (uuid.equals(ri.uuid)) return true;
-		}
+    private boolean exists(Set<RecordInfo> records, String uuid) {
+        for (RecordInfo ri : records) {
+            if (uuid.equals(ri.uuid)) return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	//--------------------------------------------------------------------------
+    /**
+     * Does REST document request. If validation is requested and the metadata does not validate,
+     * null is returned. If transformation is requested then metadata is transformed.
+     *
+     * @param uuid uuid of metadata to request
+     * @return metadata the metadata
+     */
+    private Element retrieveMetadata(String uuid) {
+        request.clearParams();
+        //request.addParam("id","{"+uuid+"}");
+        request.addParam("id", uuid);
 
-	/**
-	 * Does REST document request. If validation is requested and the metadata
-   * does not validate, null is returned. If transformation is requested then
-	 * metadata is transformed.
-   *
-   * @param uuid uuid of metadata to request
-   * @return metadata the metadata
-	 */
-	private Element retrieveMetadata(String uuid)
-	{
-		request.clearParams();
-		//request.addParam("id","{"+uuid+"}");
-		request.addParam("id",uuid);
-
-		try
-		{
-			if (log.isDebugEnabled()) {
+        try {
+            if (log.isDebugEnabled()) {
                 log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
             }
-			Element response = null;
-			try {
-				response = request.execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("Getting record from GeoPortal REST raised exception: "+e.getMessage());
-				log.error("Sent request "+request.getSentData());
-				throw new Exception(e);
-			}
+            Element response = null;
+            try {
+                response = request.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Getting record from GeoPortal REST raised exception: " + e.getMessage());
+                log.error("Sent request " + request.getSentData());
+                throw new Exception(e);
+            }
 
-			if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Record got:\n" + Xml.getString(response));
             }
 
@@ -321,46 +327,28 @@ public class Aligner extends BaseAligner
                 return null;
             }
 
-			// transform it here if requested
-			if (!params.getImportXslt().equals("none")) {
-				Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).
-                        resolve(params.getImportXslt());
-				try {
-					response = Xml.transform(response, thisXslt);
-				} catch (Exception e) {
-					log.info("Cannot transform XML " +Xml.getString(response)+", ignoring. Error was: "+e.getMessage());
-					result.badFormat++;
-					return null;
-				}
-			}
-			return response;
-		}
-		catch(Exception e)
-		{
-			log.warning("Raised exception while getting record : "+ e);
-			e.printStackTrace();
-			result.unretrievable++;
+            // transform it here if requested
+            if (!params.getImportXslt().equals("none")) {
+                Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).
+                    resolve(params.getImportXslt());
+                try {
+                    response = Xml.transform(response, thisXslt);
+                } catch (Exception e) {
+                    log.info("Cannot transform XML " + Xml.getString(response) + ", ignoring. Error was: " + e.getMessage());
+                    result.badFormat++;
+                    return null;
+                }
+            }
+            return response;
+        } catch (Exception e) {
+            log.warning("Raised exception while getting record : " + e);
+            e.printStackTrace();
+            result.unretrievable++;
 
-			//--- we don't raise any exception here. Just try to go on
-			return null;
-		}
-	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private Logger         log;
-	private ServiceContext context;
-	private XmlRequest		 request;
-	private GeoPRESTParams params;
-	private DataManager    dataMan;
-	private CategoryMapper localCateg;
-	private GroupMapper    localGroups;
-	private UUIDMapper     localUuids;
-	private HarvestResult result;
+            //--- we don't raise any exception here. Just try to go on
+            return null;
+        }
+    }
 }
 
 //=============================================================================

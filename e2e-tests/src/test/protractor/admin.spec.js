@@ -28,7 +28,7 @@ var GeoNetworkAdminConsolePage = function() {
       element(by.css('a[href="admin.console#/organization/users/admin"]'));
   this.catalogInfoLink = element(by.css('a[href="home"]'));
   this.logoutButton =
-      element(by.css('a[href="../../j_spring_security_logout"]'));
+      element(by.css('a[href="../../signout"]'));
 
   this.get = function() {
     browser.get(this.service);

@@ -35,34 +35,34 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class ListSetsRequest extends ListRequest
-{
-	public static final String VERB = "ListSets";
+public class ListSetsRequest extends ListRequest {
+    public static final String VERB = "ListSets";
 
     public ListSetsRequest(GeonetHttpRequestFactory transport) {
         super(transport);
     }
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListSetsResponse execute() throws IOException, OaiPmhException, JDOMException,
-														  SAXException, Exception
-	{
-		Map<String, String> params = new HashMap<String, String>();
+    public ListSetsResponse execute() throws IOException, OaiPmhException, JDOMException,
+        SAXException, Exception {
+        Map<String, String> params = new HashMap<String, String>();
 
-		if (resumpToken != null)
-			params.put("resumptionToken", resumpToken);
+        if (resumpToken != null)
+            params.put("resumptionToken", resumpToken);
 
-		return new ListSetsResponse(this, sendRequest(params));
-	}
+        return new ListSetsResponse(this, sendRequest(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public String getVerb() { return VERB; }
+    public String getVerb() {
+        return VERB;
+    }
 }
 
 //=============================================================================

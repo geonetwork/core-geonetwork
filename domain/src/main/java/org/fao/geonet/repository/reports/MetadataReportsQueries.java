@@ -31,6 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
+
 import java.util.*;
 
 /**
@@ -53,12 +54,8 @@ public class MetadataReportsQueries {
 
 
     /**
-     * Retrieves the metadata updated during a period of time. Optionally filters metadata in groups.
-     *
-     * @param dateFrom
-     * @param dateTo
-     * @param groups
-     * @return
+     * Retrieves the metadata updated during a period of time. Optionally filters metadata in
+     * groups.
      */
     public List<Metadata> getUpdatedMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
@@ -82,12 +79,12 @@ public class MetadataReportsQueries {
             Predicate inGroups = groupOwnerPath.in(groups);
 
             cbQuery.select(metadataRoot)
-                    .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
+                .where(cb.and(cb.and(ownerPredicate, datePredicate), inGroups));
 
         } else {
 
             cbQuery.select(metadataRoot)
-                    .where(cb.and(cb.and(ownerPredicate, datePredicate)));
+                .where(cb.and(cb.and(ownerPredicate, datePredicate)));
         }
 
 
@@ -99,11 +96,6 @@ public class MetadataReportsQueries {
     /**
      * Retrieves created metadata in the period specified, that is not available in ALL group.
      * Optionally filters metadata in groups.
-     *
-     * @param dateFrom
-     * @param dateTo
-     * @param groups
-     * @return
      */
     public List<Metadata> getInternalMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups,
                                               @Nonnull Specification<OperationAllowed> operationAllowedSpecification) {
@@ -137,12 +129,12 @@ public class MetadataReportsQueries {
             Predicate inGroups = groupOwnerPath.in(groups);
 
             cbQuery.select(metadataRoot)
-                    .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate), inGroups)));
+                .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate), inGroups)));
 
         } else {
 
             cbQuery.select(metadataRoot)
-                    .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate))));
+                .where(cb.and(cb.not(metadataRoot.get(Metadata_.id).in(subquery)), cb.and(cb.and(ownerPredicate, datePredicate))));
         }
 
         cbQuery.orderBy(cb.asc(createDate));

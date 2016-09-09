@@ -22,14 +22,12 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dc="http://purl.org/dc/elements/1.1/"
-                xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:tr="java:org.fao.geonet.services.metadata.format.SchemaLocalizations"
+                xmlns:tr="java:org.fao.geonet.api.records.formatters.SchemaLocalizations"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
-                xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <!-- Load the editor configuration to be able
@@ -49,11 +47,13 @@
                 select="/root/simpledc"/>
 
 
-
-
   <!-- Specific schema rendering -->
   <xsl:template mode="getMetadataTitle" match="simpledc">
     <xsl:value-of select="dc:title"/>
+  </xsl:template>
+
+  <xsl:template mode="getMetadataHierarchyLevel" match="simpledc">
+    <xsl:value-of select="'dataset'"/>
   </xsl:template>
 
   <xsl:template mode="getMetadataAbstract" match="simpledc">
@@ -119,11 +119,6 @@
   </xsl:template>
 
 
-
-
-
-
-
   <!-- ########################## -->
   <!-- Render values for text ... -->
   <xsl:template mode="render-value" match="*">
@@ -132,7 +127,9 @@
 
   <!-- ... URL -->
   <xsl:template mode="render-value" match="*[starts-with(., 'http')]">
-    <a href="{.}"><xsl:value-of select="."/></a>
+    <a href="{.}">
+      <xsl:value-of select="."/>
+    </a>
   </xsl:template>
 
   <!-- ... Dates -->
@@ -140,7 +137,8 @@
     <xsl:value-of select="format-date(., $dateFormats/date/for[@lang = $language]/text())"/>
   </xsl:template>
 
-  <xsl:template mode="render-value" match="*[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
+  <xsl:template mode="render-value"
+                match="*[matches(., '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}')]">
     <xsl:value-of select="format-dateTime(., $dateFormats/dateTime/for[@lang = $language]/text())"/>
   </xsl:template>
 

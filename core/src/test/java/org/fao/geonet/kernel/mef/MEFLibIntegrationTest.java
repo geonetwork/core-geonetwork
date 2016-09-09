@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Params;
@@ -49,9 +50,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Test MEF.
  *
- * User: Jesse
- * Date: 10/15/13
- * Time: 8:53 PM
+ * User: Jesse Date: 10/15/13 Time: 8:53 PM
  */
 public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
@@ -119,6 +118,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         public ImportMetadata invoke() throws Exception {
             return invoke(1);
         }
+
         public ImportMetadata invoke(int iterations) throws Exception {
             assertTrue("iterations must be greater than 0 but was: " + iterations, iterations > 0);
             testClass.loginAsAdmin(context);
@@ -144,7 +144,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
                 Element params = new Element("request");
                 if (iterations > 1 && !uuidAction.equalsIgnoreCase(Params.GENERATE_UUID)) {
                     throw new AssertionError("If iterations (the number or times each mef file is imported) is greater than 1"
-                                             + " then uuidAction must be " + Params.GENERATE_UUID);
+                        + " then uuidAction must be " + Params.GENERATE_UUID);
                 }
                 params.addContent(new Element(Params.UUID_ACTION).setText(uuidAction));
 

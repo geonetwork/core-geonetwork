@@ -59,6 +59,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Update the information of a group.
  */
+@Deprecated
 public class Update extends NotInReadOnlyModeService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
@@ -77,30 +78,30 @@ public class Update extends NotInReadOnlyModeService {
         final String copyLogo = Util.getParam(params, "copyLogo", null);
         final String email = params.getChildText(Params.EMAIL);
         final String category = Util.getParam(params, Params.CATEGORY, "-1");
-        
+
         final java.util.List<Integer> allowedCategories = Util.getParamsAsInt(params, "allowedCategories");
         final Boolean enableAllowedCategories = Util.getParam(params, "enableAllowedCategories", false);
-        
+
         String website = params.getChildText("website");
         if (website != null && website.length() > 0 && !website.startsWith("http://")) {
             website = "http://" + website;
         }
-        
+
         //Check that we have privileges over this group
         UserSession session = context.getUserSession();
-        if(!session.getProfile().equals(Profile.Administrator)) {
+        if (!session.getProfile().equals(Profile.Administrator)) {
             java.util.List<UserGroup> usergroups = context.getBean(UserGroupRepository.class).findAll(
-                    GroupSpecs.isEditorOrMore(session.getUserIdAsInt()));
+                GroupSpecs.isEditorOrMore(session.getUserIdAsInt()));
             boolean canEditGroup = false;
             if (id != null && !"".equals(id)) {
                 Integer i = Integer.valueOf(id);
-                for(UserGroup ug : usergroups) {
-                    if(ug.getGroup().getId() == i) {
+                for (UserGroup ug : usergroups) {
+                    if (ug.getGroup().getId() == i) {
                         canEditGroup = ug.getProfile().equals(Profile.UserAdmin);
                     }
                 }
             }
-            if(!canEditGroup) {
+            if (!canEditGroup) {
                 throw new SecurityException("You cannot edit this group");
             }
         }
@@ -108,40 +109,40 @@ public class Update extends NotInReadOnlyModeService {
         // Original devs: Heikki Doeleman and Thijs Brentjens
         String logoFile = params.getChildText("logofile");
         final String logoUUID = copyLogo == null ? copyLogoFromRequest(context, logoFile) :
-                copyLogoFromHarvesters(context, copyLogo);
+            copyLogoFromHarvesters(context, copyLogo);
 
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
-        
 
-        final MetadataCategoryRepository catRepository = 
-                context.getBean(MetadataCategoryRepository.class);
-        
+
+        final MetadataCategoryRepository catRepository =
+            context.getBean(MetadataCategoryRepository.class);
+
         MetadataCategory tmpcat = null;
-        
-        try{
+
+        try {
             tmpcat = catRepository.findOne(Integer.valueOf(category));
-        }catch(Throwable t) {
+        } catch (Throwable t) {
             //Not a valid category id
         }
-        
+
         final MetadataCategory cat = tmpcat;
-        
+
         final Element elRes = new Element(Jeeves.Elem.RESPONSE);
 
         if (id == null || "".equals(id)) {
 
             Group group = new Group()
-                    .setName(name)
-                    .setDescription(description)
-                    .setEmail(email)
-                    .setLogo(logoUUID)
-                    .setWebsite(website)
-                    .setDefaultCategory(cat)
-                    .setEnableAllowedCategories(enableAllowedCategories);
-            
+                .setName(name)
+                .setDescription(description)
+                .setEmail(email)
+                .setLogo(logoUUID)
+                .setWebsite(website)
+                .setDefaultCategory(cat)
+                .setEnableAllowedCategories(enableAllowedCategories);
+
             setUpAllowedCategories(allowedCategories, enableAllowedCategories,
-                    catRepository, group);
-            
+                catRepository, group);
+
 
             final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
             java.util.List<Language> allLanguages = langRepository.findAll();
@@ -158,15 +159,15 @@ public class Update extends NotInReadOnlyModeService {
                 @Override
                 public void apply(final Group entity) {
                     entity.setEmail(email)
-                            .setName(name)
-                            .setDescription(description)
-                            .setWebsite(finalWebsite)
-                            .setDefaultCategory(cat)
-                            .setEnableAllowedCategories(enableAllowedCategories);
-                    
+                        .setName(name)
+                        .setDescription(description)
+                        .setWebsite(finalWebsite)
+                        .setDefaultCategory(cat)
+                        .setEnableAllowedCategories(enableAllowedCategories);
+
                     setUpAllowedCategories(allowedCategories, enableAllowedCategories,
-                            catRepository, entity);
-                    
+                        catRepository, entity);
+
                     if (!deleteLogo && logoUUID != null) {
                         entity.setLogo(logoUUID);
                     }
@@ -183,20 +184,20 @@ public class Update extends NotInReadOnlyModeService {
     }
 
     private void setUpAllowedCategories(
-            final java.util.List<Integer> allowedCategories,
-            final Boolean enableAllowedCategories,
-            final MetadataCategoryRepository catRepository, Group group) {
-        
-        if(enableAllowedCategories) {
+        final java.util.List<Integer> allowedCategories,
+        final Boolean enableAllowedCategories,
+        final MetadataCategoryRepository catRepository, Group group) {
+
+        if (enableAllowedCategories) {
             if (group.getAllowedCategories() != null) {
                 group.getAllowedCategories().clear();
             }
-            
-            for(Integer i : allowedCategories) {
-                try{
+
+            for (Integer i : allowedCategories) {
+                try {
                     MetadataCategory c = catRepository.findOne(i);
                     group.getAllowedCategories().add(c);
-                }catch(Throwable t) {
+                } catch (Throwable t) {
                     //Not a valid category
                 }
             }
@@ -231,7 +232,7 @@ public class Update extends NotInReadOnlyModeService {
         String extension = FilenameUtils.getExtension(harvestLogo.getFileName().toString());
         logoUUID = UUID.randomUUID().toString();
 
-        Path newLogo = Resources.locateLogosDir(context).resolve(logoUUID + "." +  extension);
+        Path newLogo = Resources.locateLogosDir(context).resolve(logoUUID + "." + extension);
 
         try (InputStream in = IO.newInputStream(harvestLogo)) {
             ImageIO.read(in); // check it parses
@@ -243,8 +244,9 @@ public class Update extends NotInReadOnlyModeService {
     private String stripPath(String file) {
         if (file.indexOf('\\') > 0) {
             String[] pathTokens = file.split("\\\\");
-            file = pathTokens[pathTokens.length-1];
+            file = pathTokens[pathTokens.length - 1];
         }
 
         return file;
-    }}
+    }
+}

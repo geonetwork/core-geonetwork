@@ -27,30 +27,27 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class NoMetadataFormatsException extends OaiPmhException
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class NoMetadataFormatsException extends OaiPmhException {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -459132471591744812L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -459132471591744812L;
 
-	public NoMetadataFormatsException(String message)
-	{
-		this(message, null);
-	}
+    public NoMetadataFormatsException(String message) {
+        this(message, null);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public NoMetadataFormatsException(String message, Element response)
-	{
-		super(NO_METADATA_FORMATS, message, response);
-	}
+    public NoMetadataFormatsException(String message, Element response) {
+        super(NO_METADATA_FORMATS, message, response);
+    }
 }
 
 //=============================================================================

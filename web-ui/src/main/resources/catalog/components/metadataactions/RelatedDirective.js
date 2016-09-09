@@ -34,14 +34,52 @@
    * Shows a list of related records given an uuid with the actions defined in
    * config.js
    */
+  module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
+    function get(uuid, types) {
+      var canceller = $q.defer();
+      var request = $http({
+        method: 'get',
+        url: '../api/records/' + uuid + '/related?' +
+            (types ?
+            'type=' + types.split('|').join('&type=') :
+            ''),
+        timeout: canceller.promise,
+        cache: true
+      });
+
+      var promise = request.then(
+          function(response) {
+            return (response.data);
+          },
+          function() {
+            return ($q.reject('Something went wrong'));
+          }
+          );
+
+      promise.abort = function() {
+        canceller.resolve();
+      };
+
+      promise.finally(
+          function() {
+            promise.abort = angular.noop;
+            canceller = request = promise = null;
+          }
+      );
+      return (promise);
+    }
+    return {
+      get: get
+    };
+  }]);
   module
       .directive(
           'gnRelated',
           [
-        '$http',
+        'gnRelatedService',
         'gnGlobalSettings',
         'gnRelatedResources',
-        function($http, gnGlobalSettings, gnRelatedResources) {
+        function(gnRelatedService, gnGlobalSettings, gnRelatedResources) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -53,31 +91,24 @@
               template: '@',
               types: '@',
               title: '@',
-              list: '@'
+              list: '@',
+              user: '='
             },
             link: function(scope, element, attrs, controller) {
+              var promise;
               scope.updateRelations = function() {
-                if (scope.md) {
-                  scope.uuid = scope.md.getUuid();
-                }
                 scope.relations = [];
                 if (scope.uuid) {
-                  $http.get(
-                     'md.relations?_content_type=json&uuid=' +
-                     scope.uuid + (scope.types ? '&type=' +
-                     scope.types : ''), {cache: true})
-                     .success(function(data, status, headers, config) {
-                       if (data && data != 'null' && data.relation) {
-                         if (!angular.isArray(data.relation)) {
-                           scope.relations = [
-                             data.relation
-                           ];
-                         } else {
-                           for (var i = 0; i < data.relation.length; i++) {
-                             scope.relations.push(data.relation[i]);
-                           }
+                  scope.relationFound = false;
+                  (promise = gnRelatedService.get(
+                     scope.uuid, scope.types)
+                  ).then(function(data) {
+                       scope.relations = data;
+                       angular.forEach(data, function(value) {
+                         if (value) {
+                           scope.relationFound = true;
                          }
-                       }
+                       });
                      });
                 }
               };
@@ -85,37 +116,43 @@
               scope.getTitle = function(link) {
                 return link.title['#text'] || link.title;
               };
-
               scope.hasAction = function(mainType) {
-                // Do not display add to map action when map
-                // viewer is disabled.
-                if (mainType === 'WMS' &&
+                var fn = gnRelatedResources.map[mainType].action;
+                // If function name ends with ToMap do not display the action
+                if (fn.name.match(/.*ToMap$/) &&
                    gnGlobalSettings.isMapViewerEnabled === false) {
                   return false;
                 }
-                return angular.isFunction(
-                   gnRelatedResources.map[mainType].action);
+                return angular.isFunction(fn);
               };
               scope.config = gnRelatedResources;
 
-              scope.$watchCollection('md', function() {
-                scope.updateRelations();
-              });
-
-              /**
-               * Return an array of all relations of the given types
-               * @return {Array}
-               */
-              scope.getByTypes = function() {
-                var res = [];
-                var types = Array.prototype.splice.call(arguments, 0);
-                angular.forEach(scope.relations, function(rel) {
-                  if (types.indexOf(rel['@type']) >= 0) {
-                    res.push(rel);
+              scope.$watchCollection('md', function(n, o) {
+                if (n && n !== o || angular.isUndefined(scope.uuid)) {
+                  if (promise && angular.isFunction(promise.abort)) {
+                    promise.abort();
                   }
-                });
-                return res;
-              };
+                  if (scope.md != null) {
+                    scope.uuid = scope.md.getUuid();
+                  }
+                  scope.updateRelations();
+                }
+              });
+              //
+              // /**
+              //  * Return an array of all relations of the given types
+              //  * @return {Array}
+              //  */
+              // scope.getByTypes = function() {
+              //   var res = [];
+              //   var types = Array.prototype.splice.call(arguments, 0);
+              //   angular.forEach(scope.relations, function(rel) {
+              //     if (types.indexOf(rel['@type']) >= 0) {
+              //       res.push(rel);
+              //     }
+              //   });
+              //   return res;
+              // };
             }
           };
         }]);

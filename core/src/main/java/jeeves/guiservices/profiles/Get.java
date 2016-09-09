@@ -26,6 +26,7 @@ package jeeves.guiservices.profiles;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
@@ -33,25 +34,25 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** A simple service that returns all user profiles in the system
-  */
+/**
+ * A simple service that returns all user profiles in the system
+ */
 
-public class Get implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class Get implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Profile profile = context.getUserSession().getProfile();
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Profile profile = context.getUserSession().getProfile();
 
-		return (Element) context.getProfileManager().getProfilesElement(profile);
-	}
+        return (Element) context.getProfileManager().getProfilesElement(profile);
+    }
 }
 
 //=============================================================================

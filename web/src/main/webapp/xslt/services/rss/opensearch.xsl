@@ -22,7 +22,7 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
 
   <xsl:import href="../../common/base-variables.xsl"/>
 
@@ -33,7 +33,7 @@
       </ShortName>
       <LongName>
         <xsl:value-of
-                select="concat($env/system/site/name, ' (', $env/system/site/organization, ')')"/>
+          select="concat($env/system/site/name, ' (', $env/system/site/organization, ')')"/>
       </LongName>
       <Description>
         <xsl:value-of select="/root/gui/strings/opensearch"/>
@@ -50,21 +50,22 @@
       </Url>
       <Url type="application/rdf+xml">
         <xsl:attribute name="template">
-          <xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/rdf.search?')"/>
+          <xsl:value-of
+            select="concat($fullURLForService,'/rdf.search?')"/>
           <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
         </xsl:attribute>
       </Url>
       <Url type="text/html">
         <xsl:attribute name="template">
           <xsl:value-of
-                  select="concat($fullURLForService ,'/catalog.search#/search?')"/>
+            select="concat($fullURLForService ,'/catalog.search#/search?')"/>
           <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
         </xsl:attribute>
       </Url>
       <Url type="application/x-suggestions+json">
         <xsl:attribute name="template">
           <xsl:value-of
-                  select="concat($fullURLForService ,'/suggest?field=anylight&amp;sortBy=STARTSWITHFIRST&amp;')"/>
+            select="concat($fullURLForService ,'/suggest?field=anylight&amp;sortBy=STARTSWITHFIRST&amp;')"/>
           <xsl:text>q={searchTerms}</xsl:text>
         </xsl:attribute>
       </Url>

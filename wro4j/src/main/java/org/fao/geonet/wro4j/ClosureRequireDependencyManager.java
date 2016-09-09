@@ -14,17 +14,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.Nonnull;
 
 /**
- * Reads Javascript files to determine the dependency graph between javascript files and allow searching the dependency graph for all
- * descendants of any node in the graph.
+ * Reads Javascript files to determine the dependency graph between javascript files and allow
+ * searching the dependency graph for all descendants of any node in the graph.
  * <p/>
  * Will detect cycles in graph.
  * <p/>
- * User: Jesse
- * Date: 11/21/13
- * Time: 10:45 AM
+ * User: Jesse Date: 11/21/13 Time: 10:45 AM
  */
 public class ClosureRequireDependencyManager {
 
@@ -34,9 +33,9 @@ public class ClosureRequireDependencyManager {
     /**
      * Add a javascript file to process.
      *
-     * @param path           the path to the file that will be listed in the WRO4J model to identify the javascript.
+     * @param path           the path to the file that will be listed in the WRO4J model to identify
+     *                       the javascript.
      * @param javascriptFile the file containing the javascript
-     * @param notMinimized
      * @return a node object representing the javascript file.
      */
     @Nonnull
@@ -48,7 +47,8 @@ public class ClosureRequireDependencyManager {
     /**
      * Add a javascript file to process.
      *
-     * @param path       the path to the file that will be listed in the WRO4J model to identify the javascript.
+     * @param path       the path to the file that will be listed in the WRO4J model to identify the
+     *                   javascript.
      * @param javascript the javascript
      * @return a node object representing the javascript file.
      */
@@ -64,7 +64,7 @@ public class ClosureRequireDependencyManager {
         Node node = new Node(path, javascript, isMinimized);
         if (_modules.containsKey(node.id)) {
             throw new IllegalArgumentException("Both '" + node.path + "' and '" + _modules.get(node.id) + "' have the same provide id: " +
-                                               "" + node.id);
+                "" + node.id);
         }
         this._modules.put(node.id, node);
         return node;
@@ -73,10 +73,9 @@ public class ClosureRequireDependencyManager {
     /**
      * Get the list of all (transitive included) dependencies of a particular module.
      *
-     * @param moduleId    the root module.
-     * @param includeSelf
-     * @return the ordered list of dependency paths.  The order is defined as:
-     * {deps of dependencyA}, dependencyA, {deps of dependencyB}, dependencyB, ...
+     * @param moduleId the root module.
+     * @return the ordered list of dependency paths.  The order is defined as: {deps of
+     * dependencyA}, dependencyA, {deps of dependencyB}, dependencyB, ...
      */
     public Collection<Node> getTransitiveDependenciesFor(String moduleId, boolean includeSelf) {
         Node module = getNode(moduleId);
@@ -129,7 +128,7 @@ public class ClosureRequireDependencyManager {
         final Node moduleNode = _modules.get(moduleId);
         if (moduleNode == null) {
             throw new IllegalArgumentException("Found a dependency: " + moduleId + " that does not exist.  It is a transitive " +
-                                               "dependency of " + sourceModule + ".  Dependency path " + previousNodes);
+                "dependency of " + sourceModule + ".  Dependency path " + previousNodes);
         }
         for (String node : moduleNode.dependencyIds) {
             detectCyle(node, sourceModule, previousNodes);

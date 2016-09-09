@@ -69,7 +69,6 @@ var gnHarvestercsw = {
       + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
-      + $scope.buildTranslations(h)
       + '    <rejectDuplicateResource>' + h.site.rejectDuplicateResource + '</rejectDuplicateResource>'
       + '    <capabilitiesUrl>' + h.site.capabilitiesUrl.replace(/&/g, '&amp;') + '</capabilitiesUrl>'
       + '    <icon>' + h.site.icon + '</icon>'

@@ -30,12 +30,12 @@
       <documentation>
         <![CDATA[
         Search service returning results in RSS formats.
-        
+
         Parameters:
         * Any search criteria supported by Lucene search service.
         * mdlinkonly: to return only the link pointing to the metadata record. If not defined
-        metadata link and links from the distribution section are returned. The alternate and 
-        type attribute can be used to make distinction between different types of link 
+        metadata link and links from the distribution section are returned. The alternate and
+        type attribute can be used to make distinction between different types of link
         (eg. WMS, ZIP, HTML).
         * georss: The type of geometry to return (simple return georss:box, simplepoint return
         georss:point, otherwise georss:where).
@@ -46,7 +46,7 @@
         <param name="maxHitsInSummary" value="1000"/>
       </class>
       <output sheet="../xslt/services/rss/rss-search.xsl"
-        contentType="application/rss+xml; charset=UTF-8">
+              contentType="application/rss+xml; charset=UTF-8">
         <call name="rssItems" class=".services.main.Result"/>
         <call name="siteURL" class=".guiservices.util.GetSiteURL"/>
         <xml name="i18n" file="xml/i18n.xml"/>

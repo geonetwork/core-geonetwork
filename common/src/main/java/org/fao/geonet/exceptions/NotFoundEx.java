@@ -26,21 +26,19 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public abstract class NotFoundEx extends JeevesClientEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public abstract class NotFoundEx extends JeevesClientEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public NotFoundEx(String message, Object object)
-	{
-		super(message, object);
+    public NotFoundEx(String message, Object object) {
+        super(message, object);
 
-		id = "not-found";
-		code = 404;
-	}
+        id = "not-found";
+        code = 404;
+    }
 }
 
 //=============================================================================

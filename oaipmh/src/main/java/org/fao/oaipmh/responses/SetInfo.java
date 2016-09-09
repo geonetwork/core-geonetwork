@@ -26,92 +26,95 @@ package org.fao.oaipmh.responses;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class SetInfo
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class SetInfo {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public SetInfo() {}
+    private String spec;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private String name;
 
-	public SetInfo(String spec, String name)
-	{
-		this.spec = spec;
-		this.name = name;
-	}
+    //---------------------------------------------------------------------------
+    private List<Element> descriptions = new ArrayList<Element>();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public SetInfo(Element set)
-	{
-		build(set);
-	}
+    public SetInfo() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public SetInfo(String spec, String name) {
+        this.spec = spec;
+        this.name = name;
+    }
 
-	public String getSpec() { return spec; }
-	public String getName() { return name; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public SetInfo(Element set) {
+        build(set);
+    }
 
-	public Iterator<Element> getDescriptions() { return descriptions.iterator(); }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public String getSpec() {
+        return spec;
+    }
 
-	public Element toXml()
-	{
-		Element set = new Element("set", OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		Lib.add(set, "setSpec", spec);
-		Lib.add(set, "setName", name);
+    public String getName() {
+        return name;
+    }
 
-		for (Element descr : descriptions)
-			set.addContent((Element) descr.clone());
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		return set;
-	}
+    public Iterator<Element> getDescriptions() {
+        return descriptions.iterator();
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public Element toXml() {
+        Element set = new Element("set", OaiPmh.Namespaces.OAI_PMH);
 
-	private void build(Element set)
-	{
-		spec = set.getChildText("setSpec", OaiPmh.Namespaces.OAI_PMH);
-		name = set.getChildText("setName", OaiPmh.Namespaces.OAI_PMH);
+        Lib.add(set, "setSpec", spec);
+        Lib.add(set, "setName", name);
 
-		//--- add description information
+        for (Element descr : descriptions)
+            set.addContent((Element) descr.clone());
 
-		for (Object o : set.getChildren("setDescription", OaiPmh.Namespaces.OAI_PMH))
-			descriptions.add((Element) o);
-	}
+        return set;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    private void build(Element set) {
+        spec = set.getChildText("setSpec", OaiPmh.Namespaces.OAI_PMH);
+        name = set.getChildText("setName", OaiPmh.Namespaces.OAI_PMH);
 
-	private String spec;
-	private String name;
+        //--- add description information
 
-	private List<Element> descriptions = new ArrayList<Element>();
+        for (Object o : set.getChildren("setDescription", OaiPmh.Namespaces.OAI_PMH))
+            descriptions.add((Element) o);
+    }
 }
 
 //=============================================================================

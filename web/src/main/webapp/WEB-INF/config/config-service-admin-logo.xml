@@ -29,14 +29,14 @@
       <class name=".services.logo.Delete"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="admin.logo.update">
       <documentation><![CDATA[Set the logo for the catalog.
         Using favicon=1 parameter, set the favicon.]]></documentation>
       <class name=".services.logo.Set"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
-    
+
     <service name="admin.logo.list">
       <documentation><![CDATA[List all logo available in the
         catalog using type=icons parameter.]]></documentation>

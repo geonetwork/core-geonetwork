@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
@@ -62,7 +63,7 @@ public class Upload implements Service {
     // ----------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
 
         String id = Utils.getIdentifierFromParameters(params, context);
         String ref = Util.getParam(params, Params.REF);
@@ -79,7 +80,7 @@ public class Upload implements Service {
 
         final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
-        String mdUuid =  metadata.getUuid();
+        String mdUuid = metadata.getUuid();
 
         // Jeeves will place the uploaded file name in the f_{ref} element
         // we do it this way because Jeeves will sanitize the name to remove
@@ -95,15 +96,15 @@ public class Upload implements Service {
         uploadHook.onUpload(context, params, Integer.parseInt(id), fname, Double.parseDouble(fsize));
 
         context.info("UPLOADED:" + fname + "," + id + "," + mdUuid + ","
-                + context.getIpAddress() + "," + username);
+            + context.getIpAddress() + "," + username);
 
         // update the metadata
         Element elem = new Element("_" + ref);
         params.addContent(elem);
         elem.setText(fname);
         return new Element("response").addContent(
-                new Element("fname").setText(fname)).addContent(
-                new Element("fsize").setText(fsize));
+            new Element("fname").setText(fname)).addContent(
+            new Element("fsize").setText(fsize));
     }
 }
 

@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -42,11 +43,8 @@ import java.nio.file.Path;
 
 
 /**
- * Activate a thesaurus. Parameters:
- * <ul>
- * <li>fname: thesaurus identifier</li>
- * <li>activated: "y" or "n"</li>
- * </ul>
+ * Activate a thesaurus. Parameters: <ul> <li>fname: thesaurus identifier</li> <li>activated: "y" or
+ * "n"</li> </ul>
  */
 public class Activate implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
@@ -77,8 +75,8 @@ public class Activate implements Service {
         }
 
         return new Element(Jeeves.Elem.RESPONSE)
-                .addContent(params.getChild(Params.REF).detach())
-                .addContent(params.getChild("activated").detach());
+            .addContent(params.getChild(Params.REF).detach())
+            .addContent(params.getChild("activated").detach());
     }
 }
 

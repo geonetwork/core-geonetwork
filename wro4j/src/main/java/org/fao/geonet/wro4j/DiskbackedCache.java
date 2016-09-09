@@ -22,8 +22,8 @@ import ro.isdc.wro.cache.CacheValue;
 import ro.isdc.wro.cache.impl.LruMemoryCacheStrategy;
 
 /**
- * Wro4j caching strategy that in addition to using an in-memory cache, also writes to disk so that the cache is maintained even after
- * server restarts.
+ * Wro4j caching strategy that in addition to using an in-memory cache, also writes to disk so that
+ * the cache is maintained even after server restarts.
  *
  * @author Jesse on 3/7/2015.
  */
@@ -38,10 +38,10 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
     private static final String HASH = "hash";
     private static final String RAW_DATA = "rawdata";
     public static final String SQL_PUT_CACHE_VALUE = "MERGE INTO " + TABLE + " (" + GROUPNAME + ", " + TYPE + ", " + HASH + ", " +
-                                                     RAW_DATA + ") VALUES"
-                                                     + " (?,?,?,?)";
+        RAW_DATA + ") VALUES"
+        + " (?,?,?,?)";
     public static final String SQL_GET_QUERY = "SELECT " + HASH + "," + RAW_DATA + " FROM " + TABLE + " WHERE " +
-                                               GROUPNAME + "=? and " + TYPE + " = ?";
+        GROUPNAME + "=? and " + TYPE + " = ?";
     private final String dbPathString;
     private CacheStrategy<CacheKey, CacheValue> defaultCache;
     private Connection dbConnection;
@@ -77,10 +77,10 @@ public class DiskbackedCache implements CacheStrategy<CacheKey, CacheValue>, Clo
             throw new Error(e);
         }
         String[] initSql = {
-                "CREATE TABLE IF NOT EXISTS " + TABLE + "(" + GROUPNAME + "  VARCHAR(128) NOT NULL, " + TYPE + " VARCHAR(3) NOT NULL, " +
+            "CREATE TABLE IF NOT EXISTS " + TABLE + "(" + GROUPNAME + "  VARCHAR(128) NOT NULL, " + TYPE + " VARCHAR(3) NOT NULL, " +
                 HASH + " VARCHAR(256) NOT NULL, " + RAW_DATA + " CLOB NOT NULL, PRIMARY KEY (" + GROUPNAME + ", " + TYPE + "))"
         };
-        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";";
+        String init = ";INIT=" + Joiner.on("\\;").join(initSql) + ";DB_CLOSE_ON_EXIT=FALSE;";
 
         try {
             this.dbConnection = DriverManager.getConnection("jdbc:h2:" + path + init, "wro4jcache", "");

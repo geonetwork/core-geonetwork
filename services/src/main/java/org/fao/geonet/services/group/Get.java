@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.repository.GroupRepository;
@@ -36,23 +37,25 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Returns a specific group given its id
-  */
-
+/**
+ * Returns a specific group given its id
+ */
+@Deprecated
 public class Get implements Service {
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-		String id = params.getChildText(Params.ID);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
 
-		if (id == null) {
-			return new Element(Jeeves.Elem.RESPONSE);
+        if (id == null) {
+            return new Element(Jeeves.Elem.RESPONSE);
         }
         final Group group = context.getBean(GroupRepository.class).findOne(Integer.valueOf(id));
 
@@ -62,13 +65,13 @@ public class Get implements Service {
 
 
         Element result = new Element(Jeeves.Elem.RESPONSE).addContent(group.asXml());
-        
-        if(group.getDefaultCategory() != null) {
+
+        if (group.getDefaultCategory() != null) {
             result.getChild("record").getChild("defaultcategory").addContent(group.getDefaultCategory().asXml());
         }
-        
+
         return result;
-	}
+    }
 }
 
 //=============================================================================

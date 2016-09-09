@@ -23,16 +23,18 @@
   -->
 
 <beans
-	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-    " >
-    <bean id="timerThreadPool" class="java.util.concurrent.ScheduledThreadPoolExecutor">
-        <constructor-arg value="2" />
-        <constructor-arg>
-            <bean class="org.fao.geonet.utils.TimerThreadFactory" />
-        </constructor-arg>
-    </bean>
+    ">
+  <bean id="timerThreadPool" class="org.fao.geonet.domain.SpringScheduledThreadPoolExecutor">
+    <constructor-arg value="2"/>
+    <constructor-arg>
+      <bean class="org.fao.geonet.utils.TimerThreadFactory"/>
+    </constructor-arg>
+    <property name="executeExistingDelayedTasksAfterShutdownPolicy" value="false"/>
+    <property name="continueExistingPeriodicTasksAfterShutdownPolicy" value="false"/>
+  </bean>
 
 </beans>

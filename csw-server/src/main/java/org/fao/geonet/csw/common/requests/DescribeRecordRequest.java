@@ -24,6 +24,7 @@
 package org.fao.geonet.csw.common.requests;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.TypeName;
 import org.jdom.Element;
@@ -33,109 +34,105 @@ import java.util.List;
 
 //=============================================================================
 
-/** Params:
-  *  - outputFormat   (0..1) default is 'application/xml'
-  *  - schemaLanguage (0..1) default is 'XMLSCHEMA'
-  *  - typeName       (0..n)
-  */
+/**
+ * Params: - outputFormat   (0..1) default is 'application/xml' - schemaLanguage (0..1) default is
+ * 'XMLSCHEMA' - typeName       (0..n)
+ */
 
-public class DescribeRecordRequest extends CatalogRequest
-{
-	private String outputFormat;
-	private String schemaLang;
+public class DescribeRecordRequest extends CatalogRequest {
+    private String outputFormat;
+    private String schemaLang;
 
-	private List<TypeName> alTypeNames = new ArrayList<TypeName>();
+    private List<TypeName> alTypeNames = new ArrayList<TypeName>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public DescribeRecordRequest(ServiceContext context) { super(context); }
+    public DescribeRecordRequest(ServiceContext context) {
+        super(context);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public void addTypeName(TypeName name)
-	{
-		alTypeNames.add(name);
-	}
+    public void addTypeName(TypeName name) {
+        alTypeNames.add(name);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setOutputFormat(String format)
-	{
-		outputFormat = format;
-	}
+    public void setOutputFormat(String format) {
+        outputFormat = format;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void setSchemaLanguage(String language)
-	{
-		schemaLang = language;
-	}
+    public void setSchemaLanguage(String language) {
+        schemaLang = language;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-	protected String getRequestName() { return "DescribeRecord"; }
+    protected String getRequestName() {
+        return "DescribeRecord";
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected void setupGetParams()
-	{
-		addParam("request", getRequestName());
-		addParam("service", Csw.SERVICE);
-		addParam("version", getServerVersion());
+    protected void setupGetParams() {
+        addParam("request", getRequestName());
+        addParam("service", Csw.SERVICE);
+        addParam("version", getServerVersion());
 
-		if (outputFormat != null)
-			addParam("outputFormat", outputFormat);
+        if (outputFormat != null)
+            addParam("outputFormat", outputFormat);
 
-		if (schemaLang != null)
-			addParam("schemaLanguage", schemaLang);
+        if (schemaLang != null)
+            addParam("schemaLanguage", schemaLang);
 
-		fill("typeName", alTypeNames, Csw.NAMESPACE_CSW.getPrefix() + ":");
+        fill("typeName", alTypeNames, Csw.NAMESPACE_CSW.getPrefix() + ":");
 
-		addParam("namespace", Csw.NAMESPACE_CSW.getPrefix() +":"+ Csw.NAMESPACE_CSW.getURI());
-	}
+        addParam("namespace", Csw.NAMESPACE_CSW.getPrefix() + ":" + Csw.NAMESPACE_CSW.getURI());
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected Element getPostParams()
-	{
-		Element params  = new Element(getRequestName(), Csw.NAMESPACE_CSW);
+    protected Element getPostParams() {
+        Element params = new Element(getRequestName(), Csw.NAMESPACE_CSW);
 
-		//--- 'service' and 'version' are common mandatory attributes
-		params.setAttribute("service", Csw.SERVICE);
-		params.setAttribute("version", getServerVersion());
+        //--- 'service' and 'version' are common mandatory attributes
+        params.setAttribute("service", Csw.SERVICE);
+        params.setAttribute("version", getServerVersion());
 
-		if (outputFormat != null)
-			params.setAttribute("outputFormat", outputFormat);
+        if (outputFormat != null)
+            params.setAttribute("outputFormat", outputFormat);
 
-		if (schemaLang != null)
-			params.setAttribute("schemaLanguage", schemaLang);
+        if (schemaLang != null)
+            params.setAttribute("schemaLanguage", schemaLang);
 
-		//------------------------------------------------------------------------
-		//--- add 'TypeName' elements
+        //------------------------------------------------------------------------
+        //--- add 'TypeName' elements
 
-		for(TypeName typeName : alTypeNames)
-		{
-			Element el = new Element("TypeName", Csw.NAMESPACE_CSW);
-			el.setText(typeName.toString());
-			el.setAttribute("targetNamespace", Csw.NAMESPACE_CSW.getURI());
+        for (TypeName typeName : alTypeNames) {
+            Element el = new Element("TypeName", Csw.NAMESPACE_CSW);
+            el.setText(typeName.toString());
+            el.setAttribute("targetNamespace", Csw.NAMESPACE_CSW.getURI());
 
-			params.addContent(el);
-		}
+            params.addContent(el);
+        }
 
-		return params;
-	}
+        return params;
+    }
 }
 
 //=============================================================================

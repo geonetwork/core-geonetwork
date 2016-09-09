@@ -23,10 +23,6 @@
 
 package org.fao.geonet.api.tools.migration;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.api.API;
@@ -35,66 +31,66 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 
+import javax.sql.DataSource;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import jeeves.server.context.ServiceContext;
+
 @RequestMapping(value = {
-        "/api/tools/migration",
-        "/api/" + API.VERSION_0_1 +
-                "/tools/migration"
+    "/api/tools/migration",
+    "/api/" + API.VERSION_0_1 +
+        "/tools/migration"
 })
 @Api(value = "tools",
-     tags= "tools",
-     position = 100)
+    tags = "tools")
 @Controller("migration")
 public class MigrationApi {
 
 
     @ApiOperation(value = "Call a migration step",
-                  nickname = "callStep")
+        nickname = "callStep")
     @RequestMapping(value = "/steps/{stepName}",
-                    produces = MediaType.TEXT_PLAIN_VALUE,
-                    method = RequestMethod.PUT)
+        produces = MediaType.TEXT_PLAIN_VALUE,
+        method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.CREATED)
+    @PreAuthorize("hasRole('Administrator')")
     public ResponseEntity<String> callStep(
-            @ApiParam(value = "Class name to execute corresponding to a migration step. See DatabaseMigrationTask.",
-                      example = "org.fao.geonet.api.records.attachments.MetadataResourceDatabaseMigration",
-                      required = true)
-            @PathVariable
+        @ApiParam(value = "Class name to execute corresponding to a migration step. See DatabaseMigrationTask.",
+            example = "org.fao.geonet.api.records.attachments.MetadataResourceDatabaseMigration",
+            required = true)
+        @PathVariable
             String stepName) throws Exception {
-        Profile profile = ServiceContext.get().getUserSession().getProfile();
-        if (profile != Profile.Administrator) {
-            throw new SecurityException(String.format(
-                    "Only administrator can run migration steps. Your profile is '%s'.",
-                    profile == null ? "Anonymous" : profile
-            ));
-        }
 
         ApplicationContext appContext = ApplicationContextHolder.get();
         final DataSource dataSource = appContext.getBean(DataSource.class);
         try (Connection connection = dataSource.getConnection()) {
-             DatabaseMigrationTask task =
-                     (DatabaseMigrationTask) Class.forName(stepName).newInstance();
+            DatabaseMigrationTask task =
+                (DatabaseMigrationTask) Class.forName(stepName).newInstance();
             task.update(connection);
             return new ResponseEntity<>("", HttpStatus.CREATED);
         } catch (ClassNotFoundException e) {
             return new ResponseEntity<>(String.format(
-                    "Class '%s' not found. Choose a valid migration step.",
-                    e.getMessage()
+                "Class '%s' not found. Choose a valid migration step.",
+                e.getMessage()
             ), HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
             String error = ex.getMessage();
             if (ex.getCause() != null)
                 error = error + ". " + ex.getCause().getMessage();
             return new ResponseEntity<>(String.format(
-                    "Error occurred during migration step '%s'. %s.",
-                    stepName, error
+                "Error occurred during migration step '%s'. %s.",
+                stepName, error
             ), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -49,10 +49,8 @@ import static org.junit.Assert.assertTrue;
  * Created by Jesse on 1/31/14.
  */
 public class StrictInspireTest extends AbstractInspireTest {
-    protected Path schematronXsl;
-    protected Element inspire_schematron;
-
     private static final Map<String, String> CONFORMITY_STRING = new HashMap<String, String>();
+
     static {
         CONFORMITY_STRING.put("ger", "verordnung (eg) nr. 1089/2010 der kommission vom 23. november 2010 zur durchführung der richtlinie 2007/2/eg des europäischen parlaments und des rates hinsichtlich der interoperabilität von geodatensätzen und -diensten");
         CONFORMITY_STRING.put("eng", "commission regulation (eu) no 1089/2010 of 23 november 2010 implementing directive 2007/2/ec of the european parliament and of the council as regards interoperability of spatial data sets and services");
@@ -63,10 +61,13 @@ public class StrictInspireTest extends AbstractInspireTest {
         CONFORMITY_STRING.put("dut", "verordening (eu) n r. 1089/2010 van de commissie van 23 november 2010 ter uitvoering van richtlijn 2007/2/eg van het europees parlement en de raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens");
     }
 
+    protected Path schematronXsl;
+    protected Element inspire_schematron;
+
     @Before
     public void before() {
         super.before();
-        Pair<Element,Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire-strict.disabled.sch"));
+        Pair<Element, Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire-strict.disabled.sch"));
         inspire_schematron = compiledResult.one();
         schematronXsl = compiledResult.two();
     }
@@ -94,28 +95,28 @@ public class StrictInspireTest extends AbstractInspireTest {
             final String expectedTitle = CONFORMITY_STRING.get(lang.getValue());
 
             final Element title = Xml.selectElement(testMetadata,
-                    "gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:specification/*/gmd:title", Arrays.asList(GMD, GCO));
+                "gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:specification/*/gmd:title", Arrays.asList(GMD, GCO));
             title.setContent(new Element("CharacterString", GCO).setText(invalidText));
             testMetadata.getChild("language", GMD).getChild("CharacterString", GCO).setText(lang.getValue());
 
             checkFailure(testMetadata, lang, invalidText, expectedTitle);
 
             title.setContent(new Element("PT_FreeText", GMD).addContent(
-                    new Element("textGroup", GMD).addContent(
-                            new Element("LocalisedCharacterString", GMD).
-                                    setAttribute("locale", "#" + lang.getKey().toUpperCase()).
-                                    setText(invalidText)
-                    )
+                new Element("textGroup", GMD).addContent(
+                    new Element("LocalisedCharacterString", GMD).
+                        setAttribute("locale", "#" + lang.getKey().toUpperCase()).
+                        setText(invalidText)
+                )
             ));
 
             checkFailure(testMetadata, lang, invalidText, expectedTitle);
 
             title.setContent(new Element("PT_FreeText", GMD).addContent(
-                    new Element("textGroup", GMD).addContent(
-                            new Element("LocalisedCharacterString", GMD).
-                                    setAttribute("locale", "#XY").
-                                    setText(expectedTitle)
-                    )
+                new Element("textGroup", GMD).addContent(
+                    new Element("LocalisedCharacterString", GMD).
+                        setAttribute("locale", "#XY").
+                        setText(expectedTitle)
+                )
             ));
 
             Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
@@ -126,11 +127,11 @@ public class StrictInspireTest extends AbstractInspireTest {
             assertEquals(0, countFailures(results));
 
             title.setContent(new Element("PT_FreeText", GMD).addContent(
-                    new Element("textGroup", GMD).addContent(
-                            new Element("LocalisedCharacterString", GMD).
-                                    setAttribute("locale", "#"+lang.getKey().toUpperCase()).
-                                    setText(expectedTitle)
-                    )
+                new Element("textGroup", GMD).addContent(
+                    new Element("LocalisedCharacterString", GMD).
+                        setAttribute("locale", "#" + lang.getKey().toUpperCase()).
+                        setText(expectedTitle)
+                )
             ));
             results = Xml.transform(testMetadata, getSchematronXsl(), params);
             assertEquals(0, countFailures(results));
@@ -138,22 +139,22 @@ public class StrictInspireTest extends AbstractInspireTest {
     }
 
     private void checkFailure(Element testMetadata, Map.Entry<String, String> lang, String invalidText, String expectedTitle) throws
-            Exception {
+        Exception {
         Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
 
         assertEquals(Xml.getString(results), 1, countFailures(results));
 
         Element failure = (Element) results.getDescendants(FAILURE_FILTER).next();
 
-        assertTrue(failure.getAttributeValue("test"), failure.getAttributeValue("test").contains("$has"+lang.getKey()+"Title"));
+        assertTrue(failure.getAttributeValue("test"), failure.getAttributeValue("test").contains("$has" + lang.getKey() + "Title"));
 
         final List<?> failureMessageTextElements = Xml.selectNodes(failure, "*//text()");
         final Text expectedTextFromFailure = (Text) failureMessageTextElements.get(0);
 
-        assertTrue(expectedTextFromFailure.getText().contains("'"+expectedTitle+"'"));
+        assertTrue(expectedTextFromFailure.getText().contains("'" + expectedTitle + "'"));
 
         final Text actualTextFromFailure = (Text) failureMessageTextElements.get(0);
-        assertTrue(actualTextFromFailure.getText().contains("'"+invalidText+"'"));
+        assertTrue(actualTextFromFailure.getText().contains("'" + invalidText + "'"));
     }
 
 

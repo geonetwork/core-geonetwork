@@ -23,67 +23,109 @@
 
 package org.fao.geonet.services.feedback;
 
+import java.nio.file.Path;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.MailUtil;
+import org.jdom.Element;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.MailSender;
-import org.jdom.Element;
-
-import java.nio.file.Path;
 
 //=============================================================================
 
-/** Stores the feedback from a user into the database and sends an e-mail
-  */
+/**
+ * Stores the feedback from a user into the database and sends an e-mail
+ */
 
-public class Insert implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Insert implements Service {
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element exec(Element params, final ServiceContext context) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
+    public Element exec(Element params, final ServiceContext context)
+            throws Exception {
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
-		String name     = Util.getParam(params, Params.NAME);
-		String org      = Util.getParam(params, Params.ORG);
-		String email    = Util.getParam(params, Params.EMAIL);
-		String comments = Util.getParam(params, Params.COMMENTS);
-		String subject  = Util.getParam(params, Params.SUBJECT, "New feedback");  // TODO : i18n
+        String name = Util.getParam(params, Params.NAME);
+        String org = Util.getParam(params, Params.ORG);
+        String email = Util.getParam(params, Params.EMAIL);
+        String gender = Util.getParam(params, "gender", "-");
+        String phone = Util.getParam(params, "phone", null);
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String to   = sm.getValue("system/feedback/email");
+        String comments = Util.getParam(params, Params.COMMENTS, "");
+        String subject = Util.getParam(params, Params.SUBJECT, "New feedback");
 
-		MailSender sender = new MailSender(context);
-		sender.send(host, 
-		        sm.getValueAsInt("system/feedback/mailServer/port"), 
-		        sm.getValue("system/feedback/mailServer/username"), 
-		        sm.getValue("system/feedback/mailServer/password"), 
-		        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
-				sm.getValueAsBool("system/feedback/mailServer/tls"),
-		        email, name +" ("+org+")", to, null, subject, comments);
+        String function = Util.getParam(params, "function", "-");
+        String type = Util.getParam(params, Params.TYPE, "-");
+        String category = Util.getParam(params, Params.CATEGORY, "-");
 
-		return new Element("response").addContent(params.cloneContent());
-	}
+        String uuid = Util.getParam(params, Params.UUID, null);
+        String title = Util.getParam(params, "title", "-");
+        String metadataEmail = Util.getParam(params, "metadataEmail", null);
+        String metadataOrganization = Util.getParam(params,
+                "metadataOrganization", "-");
+
+        String to = sm.getValue("system/feedback/email");
+
+        List<String> toAddress = new LinkedList<String>();
+        toAddress.add(to);
+        if (metadataEmail != null) {
+            //Check metadata email belongs to metadata
+            //security!!
+            Metadata md = gc.getBean(MetadataRepository.class).findOneByUuid(uuid);
+            if(md.getData().indexOf(metadataEmail) > 0) {
+                toAddress.add(metadataEmail);
+            }
+        }
+
+        StringBuilder message = new StringBuilder();
+        message.append(name).append(" (").append(org).append(")");
+        message.append("<").append(email).append("> ");
+        if (phone != null) {
+            message.append(phone);
+        }
+        message.append("\n");
+
+        message.append(function).append("\n");
+        message.append(type).append("\n");
+        message.append(category).append("\n");
+
+        if (uuid != null) {
+            message.append(title).append(" [").append(uuid).append("] - ")
+                    .append(metadataOrganization).append(" \n");
+
+        }
+
+        message.append(comments);
+
+        MailUtil.sendMail(toAddress, subject, message.toString(), sm);
+
+        return new Element("response").addContent(params.cloneContent());
+    }
 }
 
-//=============================================================================
-
-
+// =============================================================================

@@ -22,265 +22,266 @@
   -->
 
 <FindBugsFilter>
-	<!-- Provider matchers that define which classes should *NOT* be analyzed by find bugs.
-		See http://findbugs.sourceforge.net/manual/filter.html
-		for the docs on include and exclude filter files
-	-->
+  <!-- Provider matchers that define which classes should *NOT* be analyzed by find bugs.
+        See http://findbugs.sourceforge.net/manual/filter.html
+        for the docs on include and exclude filter files
+    -->
 
-	<Match>
-		<Class name="~.*\..*Test" />
-	</Match>
+  <Match>
+    <Class name="~.*\..*Test"/>
+  </Match>
 
-    <!-- 			Domain Exceptions 					-->
-	<Match>
-		<Class name="~org\.fao\.geonet\.domain\.\S+_$" />
-	</Match>
-    <!-- 			Oaipmh Exceptions 					-->
-	<Match>
-		<Class name="org.fao.oaipmh.util.ISODate" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-	</Match>
+  <!-- 			Domain Exceptions 					-->
+  <Match>
+    <Class name="~org\.fao\.geonet\.domain\.\S+_$"/>
+  </Match>
+  <!-- 			Oaipmh Exceptions 					-->
+  <Match>
+    <Class name="org.fao.oaipmh.util.ISODate"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+  </Match>
 
-	<!--              Jeeves  Exceptions                 -->
-    <Match>
-        <Class name="jeeves.server.JeevesEngine" />
-        <Method name="setDBServicesElement" />
-        <Bug pattern="REC_CATCH_EXCEPTION" />
-    </Match>
-    <Match>
-        <Class name="jeeves.server.JeevesEngine" />
-        <Method name="init" />
-        <Bug pattern="DM_EXIT" />
-    </Match>
-    <Match>
-      <Class name="jeeves.server.dispatchers.ServiceManager" />
-      <Method name="dispatch" />
-      <Bug pattern="BC_UNCONFIRMED_CAST" />
-    </Match>
+  <!--              Jeeves  Exceptions                 -->
+  <Match>
+    <Class name="jeeves.server.JeevesEngine"/>
+    <Method name="setDBServicesElement"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+  </Match>
+  <Match>
+    <Class name="jeeves.server.JeevesEngine"/>
+    <Method name="init"/>
+    <Bug pattern="DM_EXIT"/>
+  </Match>
+  <Match>
+    <Class name="jeeves.server.dispatchers.ServiceManager"/>
+    <Method name="dispatch"/>
+    <Bug pattern="BC_UNCONFIRMED_CAST"/>
+  </Match>
 
-    <!--              Geonetwork main exceptions                 -->
-    <Match>
-      <Class name="org.fao.geonet.kernel.rdf.Query$QueryResults" />
-      <Bug pattern="SE_BAD_FIELD_INNER_CLASS" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.search.Z3950Searcher" />
-      <Bug pattern="REC_CATCH_EXCEPTION" />
-      <Method name="presentDocuments" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.Thesaurus" />
-      <Bug pattern="REC_CATCH_EXCEPTION" />
-      <Method name="retrieveThesaurusTitle" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
-      <Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE" />
-      <Method name="extractGeometriesFrom" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.DataManager" />
-      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
-      <Method name="autodetectSchema" params="org.jdom.Element"/>
-    </Match>
-    <Match>
-      <Or>
-        <Class name="org.fao.geonet.kernel.schema.ComplexTypeEntry" />
-        <Class name="org.fao.geonet.kernel.schema.AttributeEntry" />
-      </Or>
-      <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester" />
-      <Bug pattern="REC_CATCH_EXCEPTION" />
-      <Method name="harvest" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
-      <Bug pattern="IS2_INCONSISTENT_SYNC"/>
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
-      <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
-      <Method name="getFragmentHarvesterParams"/>
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.kernel.harvest.harvester.thredds.Harvester" />
-      <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
-      <Method name="processServices"/>
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.services.util.z3950.DefaultContextSetCQLString" />
-      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-      <Method name="processCQLTermNode"/>
-    </Match>
-    <Match>
-      <Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory" />
-      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.services.metadata.BatchVersion" />
-      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+  <!--              Geonetwork main exceptions                 -->
+  <Match>
+    <Class name="org.fao.geonet.kernel.rdf.Query$QueryResults"/>
+    <Bug pattern="SE_BAD_FIELD_INNER_CLASS"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.search.Z3950Searcher"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+    <Method name="presentDocuments"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.Thesaurus"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+    <Method name="retrieveThesaurusTitle"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter"/>
+    <Bug pattern="LG_LOST_LOGGER_DUE_TO_WEAK_REFERENCE"/>
+    <Method name="extractGeometriesFrom"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.DataManager"/>
+    <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    <Method name="autodetectSchema" params="org.jdom.Element"/>
+  </Match>
+  <Match>
+    <Or>
+      <Class name="org.fao.geonet.kernel.schema.ComplexTypeEntry"/>
+      <Class name="org.fao.geonet.kernel.schema.AttributeEntry"/>
+    </Or>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.harvest.harvester.geonet.Harvester"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+    <Method name="harvest"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
+    <Bug pattern="IS2_INCONSISTENT_SYNC"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester"/>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD "/>
+    <Method name="getFragmentHarvesterParams"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.harvest.harvester.thredds.Harvester"/>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD "/>
+    <Method name="processServices"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.util.z3950.DefaultContextSetCQLString"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="processCQLTermNode"/>
+  </Match>
+  <Match>
+    <Class name="de.fzi.dbs.xml.transform.CachingTransformerFactory"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.metadata.BatchVersion"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="exec"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.metadata.Version"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="serviceSpecificExec"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.records.formatters.cache.StoreInfoAndData"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+  <Match>
+    <Or>
+      <Class name="org.fao.geonet.monitor.health.NoIndexErrorsHealthCheck$1"/>
+      <Class name="org.fao.geonet.kernel.harvest.harvester.z3950.Harvester"/>
+      <Class name="org.fao.geonet.kernel.search.SearchManager"/>
+      <Class name="org.fao.geonet.kernel.oaipmh.Lib"/>
+      <Class name="org.fao.geonet.services.main.Info"/>
+      <Class name="org.fao.geonet.guiservices.metadata.GetRelated"/>
+      <Class name="org.fao.geonet.guiservices.templates.Get"/>
+      <Class name="org.fao.geonet.services.mef.Export"/>
+      <Class name="org.fao.geonet.services.metadata.SearchUnused"/>
+      <Class name="org.fao.geonet.services.metadata.SearchUnused"/>
+      <Class name="org.fao.geonet.utils.Xml"/>
+      <Class name="org.fao.geonet.services.thumbnail.Set"/>
+    </Or>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.DatabaseMigration"/>
+    <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+    <Method name="newLookup"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.security.ldap.AbstractLDAPUserDetailsContextMapper"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="mapUserFromContext"/>
+  </Match>
+  <Match>
+    <Class
+      name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithProfileSearch"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="setProfilesAndPrivileges"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="setProfilesAndPrivileges"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.util.XslUtil"/>
+    <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    <Method name="twoCharLangCode"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    <Method name="setProfilesAndPrivileges"/>
+  </Match>
+  <Match>
+    <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.users.transfer.OwnershipUtils$1"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.wro4j.TemplatesUriLocator"/>
+    <Bug pattern="OS_OPEN_STREAM"/>
+  </Match>
+
+  <Match>
+    <Class name="org.fao.geonet.utils.NioPathAwareCatalogResolver"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+  </Match>
+  <Match>
+    <Class name="v280.MoveHarvesterSettingsToHigherNumber$HarvesterSetting"/>
+    <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.AllQueryResultsTable"/>
+    <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <Class name="org.fao.geonet.wro4j.DiskbackedCache"/>
+      <Class name="org.fao.geonet.api.records.formatters.cache.FilesystemStore"/>
+    </Or>
+    <Bug pattern="DMI_EMPTY_DB_PASSWORD"/>
+  </Match>
+
+
+  <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->
+  <Match>
+    <Or>
+      <Class name="org.fao.geonet.kernel.search.LuceneSearcher"/>
+      <Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter"/>
+      <Class name="org.fao.geonet.kernel.search.SearchManager"/>
+    </Or>
+    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
+  </Match>
+
+  <!-- TODO: Excluded these findbug checks in the services module for now, Travis needs to be running first.  -->
+  <Match>
+    <Class name="org.fao.geonet.guiservices.csw.virtual.Update"/>
+    <Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
+    <Or>
       <Method name="exec"/>
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.services.metadata.Version" />
-      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-      <Method name="serviceSpecificExec"/>
-    </Match>
-    <Match>
-      <Class name="org.fao.geonet.services.metadata.format.cache.StoreInfoAndData" />
-      <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>
-    <Match>
-      <Or>
-        <Class name="org.fao.geonet.monitor.health.NoIndexErrorsHealthCheck$1" />
-        <Class name="org.fao.geonet.kernel.harvest.harvester.z3950.Harvester" />
-        <Class name="org.fao.geonet.kernel.search.SearchManager" />
-        <Class name="org.fao.geonet.kernel.oaipmh.Lib" />
-        <Class name="org.fao.geonet.services.main.Info" />
-        <Class name="org.fao.geonet.guiservices.metadata.GetRelated" />
-        <Class name="org.fao.geonet.guiservices.templates.Get" />
-        <Class name="org.fao.geonet.services.mef.Export" />
-        <Class name="org.fao.geonet.services.metadata.SearchUnused" />
-        <Class name="org.fao.geonet.services.metadata.SearchUnused" />
-        <Class name="org.fao.geonet.utils.Xml" />
-        <Class name="org.fao.geonet.services.thumbnail.Set" />
-      </Or>
-      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.DatabaseMigration" />
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
-        <Method name="newLookup"/>
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.kernel.security.ldap.AbstractLDAPUserDetailsContextMapper" />
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-        <Method name="mapUserFromContext"/>
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithProfileSearch" />
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-        <Method name="setProfilesAndPrivileges"/>
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper" />
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-        <Method name="setProfilesAndPrivileges"/>
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.util.XslUtil" />
-        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
-        <Method name="twoCharLangCode"/>
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern" />
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
-        <Method name="setProfilesAndPrivileges"/>
-    </Match>
-    <Match>
-        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1" />
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.wro4j.TemplatesUriLocator" />
-        <Bug pattern="OS_OPEN_STREAM" />
-    </Match>
-
-	<Match>
-        <Class name="org.fao.geonet.utils.NioPathAwareCatalogResolver" />
-        <Bug pattern="REC_CATCH_EXCEPTION" />
-    </Match>
-    <Match>
-        <Class name="v280.MoveHarvesterSettingsToHigherNumber$HarvesterSetting" />
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
-    </Match>
-    <Match>
-        <Class name="org.fao.geonet.kernel.AllQueryResultsTable" />
-        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
-    </Match>
-
-    <Match>
-        <Or>
-          <Class name="org.fao.geonet.wro4j.DiskbackedCache" />
-          <Class name="org.fao.geonet.services.metadata.format.cache.FilesystemStore" />
-        </Or>
-        <Bug pattern="DMI_EMPTY_DB_PASSWORD" />
-    </Match>
-
-
-<!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	
-	<Match>
-		<Or>
-			<Class name="org.fao.geonet.kernel.search.LuceneSearcher" />
-			<Class name="org.fao.geonet.kernel.search.spatial.SpatialIndexWriter" />
-			<Class name="org.fao.geonet.kernel.search.SearchManager" />
-		</Or>
-		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
-	</Match>
-	
-	<!-- TODO: Excluded these findbug checks in the services module for now, Travis needs to be running first.  -->
-	<Match>
-		<Class name="org.fao.geonet.guiservices.csw.virtual.Update"/>
-		<Bug pattern="BX_UNBOXING_IMMEDIATELY_REBOXED"/>
-		<Or>
-		  <Method name="exec"/>
-		  <Method name="valueOf"/>
-		</Or>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.log.List"/>
-		<Bug pattern="SS_SHOULD_BE_STATIC"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.log.ListLogFilesResponse$LogFileResponse"/>
-		<Bug pattern="URF_UNREAD_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.logo.Set"/>
-		<Bug pattern="REC_CATCH_EXCEPTION"/>
-		<Method name="exec"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.metadata.format.ImageReplacedElementFactory"/>
-		<Bug pattern="DC_DOUBLECHECK"/>
-		<Method name="getSupportedExts"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.metadata.format.groovy.util.AssociatedLink"/>
-		<Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
-		<Method name="equals"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.metadata.format.groovy.util.LinkType"/>
-		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.region.GetMap"/>
-		<Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-		<Or>
-			<Method name="computeGeomInDomainOfValidity"/>
-			<Method name="next"/>
-		</Or>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.region.ListRegionsResponse"/>
-		<Bug pattern="URF_UNREAD_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.region.ListRegionsResponse$CategoryResponse"/>
-		<Bug pattern="URF_UNREAD_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.region.ListRegionsResponse$RegionResponse"/>
-		<Bug pattern="URF_UNREAD_FIELD"/>
-	</Match>
-	<Match>
-		<Class name="org.fao.geonet.services.thesaurus.GetKeywords"/>
-		<Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
-		<Method name="parseBuilder"/>
-	</Match>
+      <Method name="valueOf"/>
+    </Or>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.log.List"/>
+    <Bug pattern="SS_SHOULD_BE_STATIC"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.site.model.ListLogFilesResponse$LogFileResponse"/>
+    <Bug pattern="URF_UNREAD_FIELD"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.logo.Set"/>
+    <Bug pattern="REC_CATCH_EXCEPTION"/>
+    <Method name="exec"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.records.formatters.ImageReplacedElementFactory"/>
+    <Bug pattern="DC_DOUBLECHECK"/>
+    <Method name="getSupportedExts"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.records.formatters.groovy.util.AssociatedLink"/>
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+    <Method name="equals"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.records.formatters.groovy.util.LinkType"/>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.region.GetMap"/>
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    <Or>
+      <Method name="computeGeomInDomainOfValidity"/>
+      <Method name="next"/>
+    </Or>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse"/>
+    <Bug pattern="URF_UNREAD_FIELD"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse$CategoryResponse"/>
+    <Bug pattern="URF_UNREAD_FIELD"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.api.regions.ListRegionsResponse$RegionResponse"/>
+    <Bug pattern="URF_UNREAD_FIELD"/>
+  </Match>
+  <Match>
+    <Class name="org.fao.geonet.services.thesaurus.GetKeywords"/>
+    <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
+    <Method name="parseBuilder"/>
+  </Match>
 </FindBugsFilter>

@@ -35,8 +35,8 @@ import org.junit.Test;
 public class TermLabelTest extends AbstractTermTest {
 
     private TermLabel termLabelClassifier;
-    
-    @Before 
+
+    @Before
     public void setup() throws Exception {
         ThesaurusManager manager = mockThesaurusManagerWith("BroaderTerm.rdf");
         termLabelClassifier = new TermLabel(manager, "scheme", "eng");

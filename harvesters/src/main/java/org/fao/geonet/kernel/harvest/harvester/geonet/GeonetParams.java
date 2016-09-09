@@ -36,94 +36,129 @@ import java.util.ArrayList;
 
 //=============================================================================
 
-public class GeonetParams extends AbstractParams
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class GeonetParams extends AbstractParams {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public GeonetParams(DataManager dm)
-	{
-		super(dm);
-	}
+    public String host;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Create : called when a new entry must be added. Reads values from the
-	//---          provided entry, providing default values
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Create : called when a new entry must be added. Reads values from the
+    //---          provided entry, providing default values
+    //---
+    //---------------------------------------------------------------------------
+    public boolean createRemoteCategory;
 
-	public void create(Element node) throws BadInputEx
-	{
-		super.create(node);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Update : called when an entry has changed and variables must be updated
+    //---
+    //---------------------------------------------------------------------------
+    public boolean mefFormatFull;
 
-		Element site     = node.getChild("site");
-		Element policy   = node.getChild("groupsCopyPolicy");
-		Element searches = node.getChild("searches");
+    //---------------------------------------------------------------------------
+    //---
+    //--- Other API methods
+    //---
+    //---------------------------------------------------------------------------
+    /**
+     * The filter is a process (see schema/process folder) which depends on the schema. It could be
+     * composed of parameter which will be sent to XSL transformation using the following syntax :
+     * <pre>
+     * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
+     * </pre>
+     */
+    public String xslfilter;
+    private String node;
+    private Boolean useChangeDateForUpdate;
 
-		host    = Util.getParam(site, "host",    "");
+    //---------------------------------------------------------------------------
+    private ArrayList<Search> alSearches = new ArrayList<Search>();
 
-        this.setNode(Util.getParam(site, "node",    "srv"));
+    //---------------------------------------------------------------------------
+    private ArrayList<Group> alCopyPolicy = new ArrayList<Group>();
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    public GeonetParams(DataManager dm) {
+        super(dm);
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void create(Element node) throws BadInputEx {
+        super.create(node);
+
+        Element site = node.getChild("site");
+        Element policy = node.getChild("groupsCopyPolicy");
+        Element searches = node.getChild("searches");
+
+        host = Util.getParam(site, "host", "");
+
+        this.setNode(Util.getParam(site, "node", "srv"));
         this.setUseChangeDateForUpdate(Util.getParam(site, "useChangeDateForUpdate", false));
 
-		createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
-		mefFormatFull = Util.getParam(site, "mefFormatFull", false);
-		xslfilter = Util.getParam(site, "xslfilter", "");
+        createRemoteCategory = Util.getParam(site, "createRemoteCategory", false);
+        mefFormatFull = Util.getParam(site, "mefFormatFull", false);
+        xslfilter = Util.getParam(site, "xslfilter", "");
 
-		//checkPort(port);
-		addSearches(searches);
-		addCopyPolicy(policy);
-	}
+        //checkPort(port);
+        addSearches(searches);
+        addCopyPolicy(policy);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Update : called when an entry has changed and variables must be updated
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	public void update(Element node) throws BadInputEx
-	{
-		super.update(node);
+    public void update(Element node) throws BadInputEx {
+        super.update(node);
 
-		Element site     = node.getChild("site");
-		Element searches = node.getChild("searches");
-		Element policy   = node.getChild("groupsCopyPolicy");
+        Element site = node.getChild("site");
+        Element searches = node.getChild("searches");
+        Element policy = node.getChild("groupsCopyPolicy");
 
-		host    = Util.getParam(site, "host",    host);
-		this.setNode(Util.getParam(site, "node",    this.getNode())); 
-		this.setUseChangeDateForUpdate(Util.getParam(site, "useChangeDateForUpdate", false));
+        host = Util.getParam(site, "host", host);
+        this.setNode(Util.getParam(site, "node", this.getNode()));
+        this.setUseChangeDateForUpdate(Util.getParam(site, "useChangeDateForUpdate", false));
         createRemoteCategory = Util.getParam(site, "createRemoteCategory", createRemoteCategory);
         mefFormatFull = Util.getParam(site, "mefFormatFull", mefFormatFull);
         xslfilter = Util.getParam(site, "xslfilter", "");
 
-		//checkPort(port);
+        //checkPort(port);
 
-		//--- if some search queries are given, we drop the previous ones and
-		//--- set these new ones
+        //--- if some search queries are given, we drop the previous ones and
+        //--- set these new ones
 
-		if (searches != null)
-			addSearches(searches);
+        if (searches != null)
+            addSearches(searches);
 
-		if (policy != null)
-			addCopyPolicy(policy);
-	}
+        if (policy != null)
+            addCopyPolicy(policy);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Other API methods
-	//---
-	//---------------------------------------------------------------------------
+    public Iterable<Search> getSearches() {
+        return alSearches;
+    }
 
-	public Iterable<Search> getSearches()        { return alSearches;   }
-	public Iterable<Group>  getGroupCopyPolicy() { return alCopyPolicy; }
+    public Iterable<Group> getGroupCopyPolicy() {
+        return alCopyPolicy;
+    }
 
     public String getServletPath() {
         if (StringUtils.isNotEmpty(host)) {
             try {
-                return  new URL(host).getPath();
+                return new URL(host).getPath();
             } catch (MalformedURLException ex) {
                 ex.printStackTrace();
             }
@@ -132,121 +167,81 @@ public class GeonetParams extends AbstractParams
         return "";
     }
 
-	//---------------------------------------------------------------------------
+    public boolean isSearchEmpty() {
+        return alSearches.isEmpty();
+    }
 
-	public boolean isSearchEmpty() { return alSearches.isEmpty(); }
+    public GeonetParams copy() {
+        GeonetParams copy = new GeonetParams(dm);
+        copyTo(copy);
 
-	//---------------------------------------------------------------------------
+        copy.host = host;
+        copy.node = node;
+        copy.useChangeDateForUpdate = useChangeDateForUpdate;
+        copy.createRemoteCategory = createRemoteCategory;
+        copy.mefFormatFull = mefFormatFull;
+        copy.xslfilter = xslfilter;
 
-	public GeonetParams copy()
-	{
-		GeonetParams copy = new GeonetParams(dm);
-		copyTo(copy);
+        for (Search s : alSearches)
+            copy.alSearches.add(s.copy());
 
-		copy.host    = host;
-		copy.node    = node;
-		copy.useChangeDateForUpdate = useChangeDateForUpdate;
-		copy.createRemoteCategory = createRemoteCategory;
-		copy.mefFormatFull = mefFormatFull;
-		copy.xslfilter = xslfilter;
-		
-		for (Search s : alSearches)
-			copy.alSearches.add(s.copy());
+        for (Group g : alCopyPolicy)
+            copy.alCopyPolicy.add(g.copy());
 
-		for (Group g : alCopyPolicy)
-			copy.alCopyPolicy.add(g.copy());
+        return copy;
+    }
 
-		return copy;
-	}
+    private void addSearches(Element searches) throws BadInputEx {
+        alSearches.clear();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+        if (searches == null)
+            return;
 
-	private void addSearches(Element searches) throws BadInputEx
-	{
-		alSearches.clear();
+        for (Object o : searches.getChildren("search")) {
+            Element search = (Element) o;
 
-		if (searches == null)
-			return;
+            alSearches.add(new Search(search));
+        }
+    }
 
-		for (Object o : searches.getChildren("search"))
-		{
-			Element search = (Element) o;
+    private void addCopyPolicy(Element policy) throws BadInputEx {
+        alCopyPolicy.clear();
 
-			alSearches.add(new Search(search));
-		}
-	}
+        if (policy == null)
+            return;
 
-	//---------------------------------------------------------------------------
+        for (Object o : policy.getChildren("group")) {
+            Element group = (Element) o;
 
-	private void addCopyPolicy(Element policy) throws BadInputEx
-	{
-		alCopyPolicy.clear();
+            alCopyPolicy.add(new Group(group));
+        }
+    }
 
-		if (policy == null)
-			return;
+    public String getNode() {
+        if (this.node == null) {
+            //default node
+            this.setNode("srv");
+        }
+        return node;
+    }
 
-		for (Object o : policy.getChildren("group"))
-		{
-			Element group = (Element) o;
+    public void setNode(String node) {
+        this.node = node;
+    }
 
-			alCopyPolicy.add(new Group(group));
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
-
-	public String getNode() {
-		if(this.node == null) {
-			//default node
-			this.setNode("srv");
-		}
-		return node;
-	}
-
-	public void setNode(String node) {
-		this.node = node;
-	}
-
-	public boolean useChangeDateForUpdate() {
-	    if(this.useChangeDateForUpdate == null) {
-	        this.setUseChangeDateForUpdate(false);
-	    }
+    public boolean useChangeDateForUpdate() {
+        if (this.useChangeDateForUpdate == null) {
+            this.setUseChangeDateForUpdate(false);
+        }
         return useChangeDateForUpdate;
     }
 
     public void setUseChangeDateForUpdate(Boolean useChangeDateForUpdate) {
-        if(useChangeDateForUpdate == null) {
+        if (useChangeDateForUpdate == null) {
             useChangeDateForUpdate = false;
         }
         this.useChangeDateForUpdate = useChangeDateForUpdate;
     }
-
-    public String  host;
-	private String node;
-	public boolean createRemoteCategory;
-	public boolean mefFormatFull;
-	private Boolean useChangeDateForUpdate;
-	
-	/**
-	 * The filter is a process (see schema/process folder) which depends on the schema.
-	 * It could be composed of parameter which will be sent to XSL transformation using
-	 * the following syntax :
-	 * <pre>
-	 * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
-	 * </pre>
-	 */
-	public String  xslfilter;
-	
-	private ArrayList<Search> alSearches   = new ArrayList<Search>();
-	private ArrayList<Group>  alCopyPolicy = new ArrayList<Group>();
 }
 
 //=============================================================================

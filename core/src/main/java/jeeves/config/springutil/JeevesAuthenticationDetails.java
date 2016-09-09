@@ -31,9 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * An authentications details object that adds extra information for multinode security.
  *
- * User: Jesse
- * Date: 12/4/13
- * Time: 8:14 AM
+ * User: Jesse Date: 12/4/13 Time: 8:14 AM
  */
 public class JeevesAuthenticationDetails extends WebAuthenticationDetails {
     private final NodeInfo _nodeInfo;
@@ -55,7 +53,8 @@ public class JeevesAuthenticationDetails extends WebAuthenticationDetails {
 
         JeevesAuthenticationDetails that = (JeevesAuthenticationDetails) o;
 
-        if (_nodeInfo != null ? !_nodeInfo.equals(that._nodeInfo) : that._nodeInfo != null) return false;
+        if (_nodeInfo != null ? !_nodeInfo.equals(that._nodeInfo) : that._nodeInfo != null)
+            return false;
 
         return true;
     }

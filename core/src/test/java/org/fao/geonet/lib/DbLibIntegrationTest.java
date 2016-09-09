@@ -24,6 +24,7 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.junit.Test;

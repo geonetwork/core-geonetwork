@@ -26,15 +26,17 @@ package jeeves.server.resources;
 
 //=============================================================================
 
-/** Describe a listener that is invoked before and after a resource is closed 
-  * and when a resource is aborted.
-  */
+/**
+ * Describe a listener that is invoked before and after a resource is closed and when a resource is
+ * aborted.
+ */
 
-public interface ResourceListener
-{
-	public void beforeClose(Object resource);
-	public void close(Object resource);
-	public void abort(Object resource);
+public interface ResourceListener {
+    public void beforeClose(Object resource);
+
+    public void close(Object resource);
+
+    public void abort(Object resource);
 }
 
 //=============================================================================

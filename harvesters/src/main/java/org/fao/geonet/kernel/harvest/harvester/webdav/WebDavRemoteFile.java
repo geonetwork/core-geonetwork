@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.webdav;
 
 import com.github.sardine.DavResource;
 import com.github.sardine.Sardine;
+
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;

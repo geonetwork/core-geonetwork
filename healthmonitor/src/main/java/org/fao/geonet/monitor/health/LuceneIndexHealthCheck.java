@@ -24,8 +24,10 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
+
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
@@ -39,9 +41,7 @@ import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 /**
  * Checks to ensure that the database is accessible and readable
  * <p/>
- * User: jeichar
- * Date: 3/26/12
- * Time: 9:01 AM
+ * User: jeichar Date: 3/26/12 Time: 9:01 AM
  */
 public class LuceneIndexHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
@@ -53,7 +53,7 @@ public class LuceneIndexHealthCheck implements HealthCheckFactory {
                 SearchManager searchMan = gc.getBean(SearchManager.class);
 
 
-                IndexAndTaxonomy indexAndTaxonomy= searchMan.getNewIndexReader(null);
+                IndexAndTaxonomy indexAndTaxonomy = searchMan.getNewIndexReader(null);
                 GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
                 try {
                     Query query = new MatchAllDocsQuery();

@@ -48,15 +48,15 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
  */
 public class MEF2Visitor implements IVisitor {
 
-	public void visit(Path mefFile, IMEFVisitor v) throws Exception {
-		handleXml(mefFile, v);
-	}
+    public void visit(Path mefFile, IMEFVisitor v) throws Exception {
+        handleXml(mefFile, v);
+    }
 
-	/**
-	 * Read the input MEF file and for each metadata found, check structure for
-	 * metadata.xml, info.xml and optional feature catalogue files.
-	 */
-	public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception {
+    /**
+     * Read the input MEF file and for each metadata found, check structure for metadata.xml,
+     * info.xml and optional feature catalogue files.
+     */
+    public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception {
 
         Logger log = Log.createLogger(Geonet.MEF);
 
@@ -80,7 +80,7 @@ public class MEF2Visitor implements IVisitor {
 
                             if (IO.isEmptyDir(metadataDir)) {
                                 throw new BadFormatEx(
-                                        "Missing XML document in metadata folder " + metadataDir + "in MEF file "
+                                    "Missing XML document in metadata folder " + metadataDir + "in MEF file "
                                         + mefFile + ".");
                             }
 
@@ -117,73 +117,72 @@ public class MEF2Visitor implements IVisitor {
         return info;
     }
 
-	/**
-	 * Check binary files to import.
-	 */
-	public void handleBin(Path file, IMEFVisitor v, Element info, int index)
-			throws Exception {
+    /**
+     * Check binary files to import.
+     */
+    public void handleBin(Path file, IMEFVisitor v, Element info, int index)
+        throws Exception {
 
-		List<Element> pubFiles = null;
-		List<Element> prvFiles = null;
+        List<Element> pubFiles = null;
+        List<Element> prvFiles = null;
 
-		if (info.getChildren().size() != 0) {
-		    @SuppressWarnings("unchecked")
+        if (info.getChildren().size() != 0) {
+            @SuppressWarnings("unchecked")
             List<Element> tmpPub = info.getChild("public").getChildren();
-			pubFiles = tmpPub;
-			@SuppressWarnings("unchecked")
+            pubFiles = tmpPub;
+            @SuppressWarnings("unchecked")
             List<Element> tmpPrv = info.getChild("private").getChildren();
-			prvFiles = tmpPrv;
-		}
+            prvFiles = tmpPrv;
+        }
 
-		Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
+        Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
         Path privateFile = file.resolve(MEFConstants.DIR_PRIVATE);
 
-		// Handle public binaries files
-		if (Files.exists(publicFile) && pubFiles != null && pubFiles.size() != 0) {
+        // Handle public binaries files
+        if (Files.exists(publicFile) && pubFiles != null && pubFiles.size() != 0) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(publicFile)) {
                 for (Path path : paths) {
                     String fileName = path.getFileName().toString();
                     try (InputStream in = IO.newInputStream(path)) {
                         v.handlePublicFile(fileName,
-                                MEFLib.getChangeDate(pubFiles, fileName),
-                                in, index);
+                            MEFLib.getChangeDate(pubFiles, fileName),
+                            in, index);
                     }
                 }
             }
-		}
+        }
 
-		// Handle private binaries files
-		if (Files.exists(privateFile) && prvFiles != null && prvFiles.size() != 0) {
+        // Handle private binaries files
+        if (Files.exists(privateFile) && prvFiles != null && prvFiles.size() != 0) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(privateFile)) {
                 for (Path path : paths) {
                     String fileName = path.getFileName().toString();
                     try (InputStream in = IO.newInputStream(path)) {
                         v.handlePrivateFile(fileName,
-                                MEFLib.getChangeDate(prvFiles, fileName),
-                                in, index);
+                            MEFLib.getChangeDate(prvFiles, fileName),
+                            in, index);
                     }
                 }
             }
-		}
-	}
+        }
+    }
 
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 
-	/**
-	 * getFeatureCalalogFile method return feature catalog xml file if exists
-	 *
-	 * @param file
-	 * @return File
-	 */
-	private Path getFeatureCalalogFile(Path file) throws IOException {
+    /**
+     * getFeatureCalalogFile method return feature catalog xml file if exists
+     *
+     * @return File
+     */
+    private Path getFeatureCalalogFile(Path file) throws IOException {
         Path tmp = null;
         Path fcRepo = file.resolve(MEFConstants.SCHEMA);
 
-		if (Files.exists(fcRepo)) {
+        if (Files.exists(fcRepo)) {
             Path fc = fcRepo.resolve(MEFConstants.FILE_METADATA);
-			if (Files.exists(fc))
-				tmp = fc;
-			else {
+            if (Files.exists(fc))
+                tmp = fc;
+            else {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(fcRepo)) {
                     final Iterator<Path> iterator = paths.iterator();
                     // Retrieve first files into applschema directory, without any
@@ -192,17 +191,17 @@ public class MEF2Visitor implements IVisitor {
                         tmp = iterator.next();
                     }
                 }
-			}
-		}
-		return tmp;
-	}
+            }
+        }
+        return tmp;
+    }
 
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
 
-	public Path getMetadataDirectory(Path dir) throws IOException {
+    public Path getMetadataDirectory(Path dir) throws IOException {
         Path metadata = dir.resolve("metadata");
 
-		if (!Files.isDirectory(metadata)) {
+        if (!Files.isDirectory(metadata)) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir)) {
                 for (Path path : paths) {
                     if (Files.isDirectory(path)) {
@@ -210,7 +209,7 @@ public class MEF2Visitor implements IVisitor {
                     }
                 }
             }
-		}
-		return metadata;
-	}
+        }
+        return metadata;
+    }
 }

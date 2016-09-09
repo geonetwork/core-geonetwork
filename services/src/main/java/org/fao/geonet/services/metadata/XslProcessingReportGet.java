@@ -23,18 +23,16 @@
 
 package org.fao.geonet.services.metadata;
 
-import javax.servlet.http.HttpSession;
-
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.constants.Geonet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+
+import jeeves.server.ServiceConfig;
 
 @Controller("md.processing.batch.report")
 /**
@@ -57,13 +55,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
  Sample response:
  ```
- <response 
- process="sextant-theme-add" 
- startdate="2013-08-23T18:33:09" 
- reportdate="2013-08-23T18:34:09" 
- running="true" 
- totalRecords="477" 
- processedRecords="43" 
+ <response
+ process="sextant-theme-add"
+ startdate="2013-08-23T18:33:09"
+ reportdate="2013-08-23T18:34:09"
+ running="true"
+ totalRecords="477"
+ processedRecords="43"
  nullRecords="0">
  <done>28</done>
  <notProcessFound>0</notProcessFound>
@@ -73,7 +71,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  <metadata id="1186">
  <message>Failed to compile stylesheet. 1 error detected.</message>
  <stack>
- javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.java:91) at jeeves.utils.Xml.transform(Xml.java:538) at jeeves.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at 
+ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.java:91) at jeeves.utils.Xml.transform(Xml.java:538) at jeeves.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at
  ...
  ```
  ]]>
@@ -86,15 +84,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author delawen
  *
  */
+@Deprecated
 public class XslProcessingReportGet {
-	public void init(String appPath, ServiceConfig config) throws Exception {
-	}
+    public void init(String appPath, ServiceConfig config) throws Exception {
+    }
 
-	@RequestMapping(value = "/{lang}/md.processing.batch.report", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
-	XslProcessingReport exec(HttpSession session) throws Exception {
-		return (XslProcessingReport) session
-				.getAttribute(Geonet.Session.BATCH_PROCESSING_REPORT);
-	}
+    @RequestMapping(value = "/{lang}/md.processing.batch.report", produces = {
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
+    IProcessingReport exec(HttpSession session) throws Exception {
+        return (IProcessingReport) session
+            .getAttribute(Geonet.Session.BATCH_PROCESSING_REPORT);
+    }
 }

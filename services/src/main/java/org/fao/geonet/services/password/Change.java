@@ -24,15 +24,19 @@
 package org.fao.geonet.services.password;
 
 import jeeves.constants.Jeeves;
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -55,94 +59,97 @@ import java.util.Calendar;
 @Deprecated
 public class Change extends NotInReadOnlyModeService {
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Init
-	// ---
-	// --------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	    this.stylePath = appPath.resolve(Geonet.Path.XSLT_FOLDER).resolve("services").resolve("account");
-	}
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
-	public Element serviceSpecificExec(Element params, ServiceContext context)
-			throws Exception {
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
+    private static final String CHANGE_KEY = "changeKey";
+    private static final String PWD_CHANGED_XSLT = "password-changed-email.xsl";
+    private static String FS = File.separator;
+    private Path stylePath;
 
-		String username = Util.getParam(params, Params.USERNAME);
-		String password = Util.getParam(params, Params.PASSWORD);
-		String changeKey = Util.getParam(params, CHANGE_KEY);
-		String template = Util.getParam(params, Params.TEMPLATE, PWD_CHANGED_XSLT);
-		
-		// check valid user 
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.stylePath = appPath.resolve(Geonet.Path.XSLT_FOLDER).resolve("services").resolve("account");
+    }
+
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+        throws Exception {
+
+        String username = Util.getParam(params, Params.USERNAME);
+        String password = Util.getParam(params, Params.PASSWORD);
+        String changeKey = Util.getParam(params, CHANGE_KEY);
+        String template = Util.getParam(params, Params.TEMPLATE, PWD_CHANGED_XSLT);
+
+        // check valid user
         final UserRepository userRepository = context.getBean(UserRepository.class);
         User elUser = userRepository.findOneByUsername(username);
-		if (elUser == null) {
-			throw new UserNotFoundEx(username);
+        if (elUser == null) {
+            throw new UserNotFoundEx(username);
         }
 
-		// only let registered users change their password this way  
-		if ( elUser.getProfile() != Profile.RegisteredUser) {
-			throw new OperationNotAllowedEx("Only users with profile RegisteredUser can change their password using this option");
+
+        // only let registered users change their password this way
+        if (elUser.getProfile() != Profile.RegisteredUser) {
+            throw new OperationNotAllowedEx("Only users with profile RegisteredUser can change their password using this option");
         }
-		
-		// construct expected change key - only valid today 
-		String scrambledPassword = elUser.getPassword();
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		String todaysDate = sdf.format(cal.getTime());
-		boolean passwordMatches = PasswordUtil.encoder(context.getServlet().getServletContext()).matches(scrambledPassword+todaysDate, changeKey);
 
-		//check change key
-		if (!passwordMatches)
-			throw new BadParameterEx("Change key invalid or expired", changeKey);
-		
-		// get mail details
-		SettingManager sm = context.getBean(SettingManager.class);
+        // construct expected change key - only valid today
+        String scrambledPassword = elUser.getPassword();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        String todaysDate = sdf.format(cal.getTime());
+        boolean passwordMatches = PasswordUtil.encoder(context.getServlet().getServletContext()).matches(scrambledPassword + todaysDate, changeKey);
 
-		String adminEmail = sm.getValue("system/feedback/email");
-		String thisSite = sm.getSiteName();
+        //check change key
+        if (!passwordMatches)
+            throw new BadParameterEx("Change key invalid or expired", changeKey);
 
-		// get site URL
-		SettingInfo si = context.getBean(SettingInfo.class);
-		String siteURL = si.getSiteUrl() + context.getBaseUrl();
+        // get mail details
+        SettingManager sm = context.getBean(SettingManager.class);
+
+        String adminEmail = sm.getValue("system/feedback/email");
+        String thisSite = sm.getSiteName();
+
+        // get site URL
+        SettingInfo si = context.getBean(SettingInfo.class);
+        String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
         elUser.getSecurity().setPassword(PasswordUtil.encode(context, password));
         userRepository.save(elUser);
 
-		// generate email details using customisable stylesheet
-		//TODO: allow internationalised emails
-		Element root = new Element("root");
-		root.addContent(elUser.asXml());
-		root.addContent(new Element("site").setText(thisSite));
-		root.addContent(new Element("siteURL").setText(siteURL));
-		root.addContent(new Element("adminEmail").setText(adminEmail));
-		root.addContent(new Element("password").setText(password));
-		
-		Path emailXslt = stylePath.resolve(template);
-		Element elEmail = Xml.transform(root, emailXslt);
 
-		String subject = elEmail.getChildText("subject");
-		String to      = elEmail.getChildText("to");
-		String content = elEmail.getChildText("content");
-		
-		// send password changed email
+        // generate email details using customisable stylesheet
+        //TODO: allow internationalised emails
+        Element root = new Element("root");
+        root.addContent(elUser.asXml());
+        root.addContent(new Element("site").setText(thisSite));
+        root.addContent(new Element("siteURL").setText(siteURL));
+        root.addContent(new Element("adminEmail").setText(adminEmail));
+        root.addContent(new Element("password").setText(password));
+
+        Path emailXslt = stylePath.resolve(template);
+        Element elEmail = Xml.transform(root, emailXslt);
+
+        String subject = elEmail.getChildText("subject");
+        String to = elEmail.getChildText("to");
+        String content = elEmail.getChildText("content");
+
+        // send password changed email
         if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");
-		}
+        }
 
-		return new Element(Jeeves.Elem.RESPONSE);
-	}
-
-	private static String FS = File.separator;
-	private Path stylePath;
-	private static final String CHANGE_KEY = "changeKey";
-	private static final String PWD_CHANGED_XSLT = "password-changed-email.xsl";
-	public static final String DATE_FORMAT = "yyyy-MM-dd";
+        return new Element(Jeeves.Elem.RESPONSE);
+    }
 
 }

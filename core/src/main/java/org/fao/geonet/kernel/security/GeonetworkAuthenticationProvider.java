@@ -23,6 +23,7 @@
 package org.fao.geonet.kernel.security;
 
 import jeeves.config.springutil.JeevesAuthenticationDetails;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.UserRepository;
@@ -39,8 +40,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
-	implements UserDetailsService {
+public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider
+    implements UserDetailsService {
+
+    private boolean checkUserNameOrEmail = false;
 
     public boolean isCheckUserNameOrEmail() {
         return checkUserNameOrEmail;
@@ -50,69 +53,67 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
         this.checkUserNameOrEmail = checkUserNameOrEmail;
     }
 
-    private boolean checkUserNameOrEmail = false;
-
-	@Override
-	protected void additionalAuthenticationChecks(UserDetails userDetails,
-			UsernamePasswordAuthenticationToken authentication)
-			throws AuthenticationException {
-		PasswordEncoder encoder = ApplicationContextHolder.get().getBean(PasswordEncoder.class);
+    @Override
+    protected void additionalAuthenticationChecks(UserDetails userDetails,
+                                                  UsernamePasswordAuthenticationToken authentication)
+        throws AuthenticationException {
+        PasswordEncoder encoder = ApplicationContextHolder.get().getBean(PasswordEncoder.class);
 
 
-		User gnDetails = (User) userDetails;
-				
-		if (authentication.getCredentials() == null) {
-			Log.warning(Log.JEEVES, "Authentication failed: no credentials provided");
-			throw new BadCredentialsException("Authentication failed: no credentials provided");
-		}
+        User gnDetails = (User) userDetails;
 
-		if (authentication.getCredentials().toString().isEmpty() ||
-			!encoder.matches(authentication.getCredentials().toString(), gnDetails.getPassword())) {
-			Log.warning(Log.JEEVES, "Authentication failed: wrong password provided");
-			throw new BadCredentialsException("Authentication failed: wrong password provided");
-		}
-	}
+        if (authentication.getCredentials() == null) {
+            Log.warning(Log.JEEVES, "Authentication failed: no credentials provided");
+            throw new BadCredentialsException("Authentication failed: no credentials provided");
+        }
 
-	@Override
-	protected UserDetails retrieveUser(String username,
-			UsernamePasswordAuthenticationToken authentication)
-			throws AuthenticationException {
-	    try {
-			final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-			PasswordEncoder encoder = applicationContext.getBean(PasswordEncoder.class);
-			UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+        if (authentication.getCredentials().toString().isEmpty() ||
+            !encoder.matches(authentication.getCredentials().toString(), gnDetails.getPassword())) {
+            Log.warning(Log.JEEVES, "Authentication failed: wrong password provided");
+            throw new BadCredentialsException("Authentication failed: wrong password provided");
+        }
+    }
 
-			// Only check user with local db user (ie. authtype is '')
-	        User user = userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
+    @Override
+    protected UserDetails retrieveUser(String username,
+                                       UsernamePasswordAuthenticationToken authentication)
+        throws AuthenticationException {
+        try {
+            final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+            PasswordEncoder encoder = applicationContext.getBean(PasswordEncoder.class);
+            UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+
+            // Only check user with local db user (ie. authtype is '')
+            User user = userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
             if (user == null && checkUserNameOrEmail) {
                 user = userRepository.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(username);
             }
-			if (user != null) {
-				if (authentication != null && authentication.getCredentials() != null) {
-					if(PasswordUtil.hasOldHash(user)) {
-						String oldPassword = user.getPassword();
-						String newPassword = authentication.getCredentials().toString();
+            if (user != null) {
+                if (authentication != null && authentication.getCredentials() != null) {
+                    if (PasswordUtil.hasOldHash(user)) {
+                        String oldPassword = user.getPassword();
+                        String newPassword = authentication.getCredentials().toString();
                         user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, userRepository);
-					}
-				}
+                    }
+                }
 
                 if (authentication != null && authentication.getDetails() instanceof JeevesAuthenticationDetails) {
                     user.getSecurity().setNodeId(((JeevesAuthenticationDetails) authentication.getDetails()).getNodeId());
                 }
 
-				return user;
-			}
-		} catch (Exception e) {
-			Log.error(Log.JEEVES, "Unexpected error while loading user", e);
-			throw new AuthenticationServiceException("Unexpected error while loading user",e);
-		}
-		throw new UsernameNotFoundException(username+" is not a valid username");
-	}
+                return user;
+            }
+        } catch (Exception e) {
+            Log.error(Log.JEEVES, "Unexpected error while loading user", e);
+            throw new AuthenticationServiceException("Unexpected error while loading user", e);
+        }
+        throw new UsernameNotFoundException(username + " is not a valid username");
+    }
 
-	@Override
-	public UserDetails loadUserByUsername(String username)
-			throws UsernameNotFoundException {
-		return retrieveUser(username, null);
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username)
+        throws UsernameNotFoundException {
+        return retrieveUser(username, null);
+    }
 
 }

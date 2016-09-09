@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
+  <!-- Convert a hierarchy level into corresponding
+  schema.org class. If no match, return http://schema.org/Thing
+   -->
+  <xsl:function name="gn-fn-render:get-schema-org-class" as="xs:string">
+    <xsl:param name="type" as="xs:string"/>
+
+    <xsl:variable name="map">
+      <entry key="dataset" value="http://schema.org/Dataset"/>
+      <entry key="series" value="http://schema.org/DataCatalog"/>
+      <entry key="service" value="http://schema.org/DataCatalog"/>
+      <entry key="application" value="http://schema.org/SoftwareApplication"/>
+      <entry key="collectionHardware" value="http://schema.org/Thing"/>
+      <entry key="nonGeographicDataset" value="http://schema.org/Dataset"/>
+      <entry key="dimensionGroup" value="http://schema.org/Dataset"/>
+      <entry key="featureType" value="http://schema.org/Dataset"/>
+      <entry key="model" value="http://schema.org/APIReference"/>
+      <entry key="tile" value="http://schema.org/Dataset"/>
+      <entry key="fieldSession" value="http://schema.org/Thing"/>
+      <entry key="collectionSession" value="http://schema.org/Thing"/>
+    </xsl:variable>
+
+    <xsl:variable name="match"
+                  select="$map/entry[@key = $type]/@value"/>
+    <xsl:value-of select="if ($match != '')
+                          then $match
+                          else 'http://schema.org/Thing'"/>
+  </xsl:function>
 
   <xsl:function name="gn-fn-render:get-schema-strings" as="xs:string">
     <xsl:param name="strings" as="node()"/>
@@ -35,8 +62,13 @@
                   $east, ' ', $south, '))')"/>
     <xsl:variable name="numberFormat" select="'0.00'"/>
 
-    <div class="thumbnail extent">
-      <span>
+    <div class="thumbnail extent"
+         itemprop="spatial"
+         itemscope="itemscope"
+         itemtype="http://schema.org/Place">
+      <span itemprop="geo"
+            itemscope="itemscope"
+            itemtype="http://schema.org/geoShape">
         <div class="input-group coord coord-north">
           <input type="text" class="form-control"
                  value="{format-number($north, $numberFormat)}" readonly=""/>
@@ -57,6 +89,9 @@
                  value="{format-number($west, $numberFormat)}" readonly=""/>
           <span class="input-group-addon">W</span>
         </div>
+        <meta itemprop="box"
+              content="{$south},{$east} {$north},{$west}"/>
+
       </span>
       <xsl:copy-of select="gn-fn-render:geometry($boxGeometry)"/>
     </div>

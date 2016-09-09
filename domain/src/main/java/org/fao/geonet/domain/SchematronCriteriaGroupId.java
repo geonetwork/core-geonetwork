@@ -25,11 +25,12 @@ package org.fao.geonet.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
 import java.io.Serializable;
 
 /**
- * Id object of a {@link org.fao.geonet.domain.SchematronCriteriaGroup} entity.
- * Created by Jesse on 2/10/14.
+ * Id object of a {@link org.fao.geonet.domain.SchematronCriteriaGroup} entity. Created by Jesse on
+ * 2/10/14.
  */
 @Embeddable
 public class SchematronCriteriaGroupId implements Serializable {
@@ -108,8 +109,8 @@ public class SchematronCriteriaGroupId implements Serializable {
     @Override
     public String toString() {
         return "SchematronCriteriaGroupId{" +
-               "name='" + name + '\'' +
-               ", schematronId=" + schematronId +
-               '}';
+            "name='" + name + '\'' +
+            ", schematronId=" + schematronId +
+            '}';
     }
 }

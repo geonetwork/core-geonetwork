@@ -3,19 +3,17 @@
  *
  * This file is part of GeoNetwork
  *
- * GeoNetwork is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * GeoNetwork is free software: you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * GeoNetwork is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GeoNetwork is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with GeoNetwork.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * You should have received a copy of the GNU General Public License along with GeoNetwork.  If not,
+ * see <http://www.gnu.org/licenses/>.
+ *
  * @author María Arias de Reyna
  */
 package org.fao.geonet.services.main;
@@ -25,11 +23,13 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.metadata.View;
 import org.jdom.Element;
 
 import java.nio.file.Path;
+
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -54,10 +54,10 @@ public class Home implements Service {
      * UI Servlet controller
      */
     public Element exec(Element params, ServiceContext context)
-            throws Exception {
+        throws Exception {
 
         String location = context.getBaseUrl() + "/srv/"
-                + context.getLanguage() + "/search";
+            + context.getLanguage() + "/search";
 
         StringBuilder parameters = new StringBuilder();
         parameters.append("?");
@@ -77,7 +77,7 @@ public class Home implements Service {
                 addNewUUID(tmp, uuid);
             } else {
                 parameters.append(((Element) e).getName() + "=" + uuid
-                        + "&");
+                    + "&");
             }
         }
         result.addContent(tmp);
@@ -88,7 +88,7 @@ public class Home implements Service {
             forwardTo(context, location, parameters.toString(), tabs);
         } else { // Maybe we come from a forward, let's restore uuids:
             result = (Element) session
-                    .getProperty(Geonet.Session.METADATA_UUIDS);
+                .getProperty(Geonet.Session.METADATA_UUIDS);
 
             if (result != null) {
                 session.removeProperty(Geonet.Session.METADATA_UUIDS);
@@ -102,7 +102,7 @@ public class Home implements Service {
 
                 View view = new View();
                 view.init(_appPath, _config);
-                
+
                 result = view.exec(result, context);
 
                 for (Object e : tmp.getChildren()) {
@@ -112,7 +112,7 @@ public class Home implements Service {
             } else {
                 result = params;
             }
-            
+
             setUser(result, session);
         }
 
@@ -121,22 +121,22 @@ public class Home implements Service {
 
     /**
      * Forward the result to url
-     * 
+     *
      * @param context
      * @param location
      * @param parameters
      * @param tabs
      */
     private void forwardTo(ServiceContext context, String location,
-            String parameters, String tabs) {
+                           String parameters, String tabs) {
         context.setStatusCode(HttpServletResponse.SC_MOVED_TEMPORARILY);
         context.getResponseHeaders().put("Location",
-                location + parameters + tabs);
+            location + parameters + tabs);
     }
 
     /**
      * If the user is authenticated, set up the user data on the result Element
-     * 
+     *
      * @param result
      * @param session
      */
@@ -144,7 +144,7 @@ public class Home implements Service {
         Element user = new Element("user");
         user.setText("user");
         result.addContent(user);
-        
+
         if (session.isAuthenticated()) {
             Element authenticated = new Element("authenticated");
             authenticated.setText("true");
@@ -170,7 +170,7 @@ public class Home implements Service {
 
     /**
      * Add new UUID to result Element
-     * 
+     *
      * @param result
      * @param uuid
      */

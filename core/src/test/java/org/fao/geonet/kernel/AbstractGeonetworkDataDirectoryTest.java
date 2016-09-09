@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.jdom.Element;
 import org.junit.Test;
@@ -36,12 +37,11 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Abstract class for GeonetworkDataDirectory tests where the data directory layout is a default layout but the
- * location of the root data directory is configurable by implementing {@link #getDataDir()}.
+ * Abstract class for GeonetworkDataDirectory tests where the data directory layout is a default
+ * layout but the location of the root data directory is configurable by implementing {@link
+ * #getDataDir()}.
  *
- * User: Jesse
- * Date: 11/14/13
- * Time: 9:07 AM
+ * User: Jesse Date: 11/14/13 Time: 9:07 AM
  */
 public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIntegrationTest {
     @Autowired

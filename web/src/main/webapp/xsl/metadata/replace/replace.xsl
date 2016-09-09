@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:include href="../../modal.xsl"/>
 
@@ -10,57 +10,70 @@
     <script>
 
       var sectionMetadataFields = {"FIELDS":[
-      <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'metadata']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+      <xsl:for-each
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'metadata']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
 
       var sectionIdentificationFields = {"FIELDS":[
-      <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'identification']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+      <xsl:for-each
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'identification']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
 
 
       var sectionDataIdentificationFields = {"FIELDS":[
-      <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'dataIdentification']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+      <xsl:for-each
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'dataIdentification']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
 
 
       var sectionServiceIdentificationFields = {"FIELDS":[
-      <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'serviceIdentification']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+      <xsl:for-each
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'serviceIdentification']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
 
       var sectionMaintenanceInformationFields =
       {"FIELDS":[
-      <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'maintenanceInformation']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+      <xsl:for-each
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'maintenanceInformation']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
 
       var sectionContentInformationFields =
       {"FIELDS":[
-      <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'contentInformation']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+      <xsl:for-each
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'contentInformation']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
 
       var sectionDistributionInformationFields =
       {"FIELDS":[
       <xsl:for-each
-          select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'distributionInformation']/field">
-        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of select="."/>","KEY":"<xsl:value-of
-          select="@key"/>"}
+        select="/root/gui/massive-replace/massiveReplaceForm/section[@id = 'distributionInformation']/field">
+        <xsl:if test="position() != 1">,</xsl:if>{"NAME":"<xsl:value-of
+        select="."/>","KEY":"<xsl:value-of
+        select="@key"/>"}
       </xsl:for-each>
       ]};
     </script>
@@ -101,7 +114,8 @@
               </label>
               <br/>
 
-              <select name="mdsection" id="mdsection" onchange="massiveMetadataReplace_updateFields(this.value)">
+              <select name="mdsection" id="mdsection"
+                      onchange="massiveMetadataReplace_updateFields(this.value)">
                 <xsl:for-each select="/root/gui/massive-replace/massiveReplaceForm/section">
                   <option value="{@id}">
                     <xsl:value-of select="@label"/>
@@ -139,7 +153,9 @@
               <input type="text" name="replaceValue" id="replaceValue" value="" size="70"/>
               <br/>
               <br/>
-              <button type="button" class="content" onclick="massiveMetadataReplace_addRow();">Add replacement</button>
+              <button type="button" class="content" onclick="massiveMetadataReplace_addRow();">Add
+                replacement
+              </button>
               <br/>
               <br/>
             </div>
@@ -152,10 +168,12 @@
             <input type="hidden" name="test" id="test" value="false"/>
 
             <h2>
-              <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/replacements-defined"/>
+              <xsl:value-of
+                select="/root/gui/massive-replace/massiveReplaceForm/replacements-defined"/>
             </h2>
             <p id="noReplacements">
-              <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/no-replacements-defined"/>
+              <xsl:value-of
+                select="/root/gui/massive-replace/massiveReplaceForm/no-replacements-defined"/>
             </p>
 
             <table id="massivereplace-updates" style="display: none">
@@ -178,7 +196,8 @@
                     <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/searchText"/>
                   </th>
                   <th>
-                    <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/replaceText"/>
+                    <xsl:value-of
+                      select="/root/gui/massive-replace/massiveReplaceForm/replaceText"/>
                   </th>
                   <th>
                     &#160;
@@ -195,7 +214,6 @@
             </label>
           </div>
         </form>
-
 
 
         <script>

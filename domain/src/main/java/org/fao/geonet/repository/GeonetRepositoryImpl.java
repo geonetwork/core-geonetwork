@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
@@ -54,15 +55,13 @@ import javax.persistence.criteria.Root;
  * @param <T>  The entity type
  * @param <ID> The entity id type
  *             <p/>
- *             User: jeichar
- *             Date: 9/5/13
- *             Time: 11:26 AM
+ *             User: jeichar Date: 9/5/13 Time: 11:26 AM
  */
 public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializable> extends SimpleJpaRepository<T,
-        ID> implements GeonetRepository<T, ID> {
+    ID> implements GeonetRepository<T, ID> {
 
-    protected EntityManager _entityManager;
     private final Class<T> _entityClass;
+    protected EntityManager _entityManager;
 
 
     protected GeonetRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
@@ -71,6 +70,36 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
         this._entityClass = domainClass;
     }
 
+    protected static <T extends GeonetEntity> Element findAllAsXml(EntityManager entityManager, Class<T> entityClass,
+                                                                   Specification<T> specification, Pageable pageable) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> query = cb.createQuery(entityClass);
+        Root<T> root = query.from(entityClass);
+
+        if (specification != null) {
+            final Predicate predicate = specification.toPredicate(root, query, cb);
+            query.where(predicate);
+        }
+
+        if (pageable != null) {
+            if (pageable.getSort() != null) {
+                List<Order> orders = SortUtils.sortToJpaOrders(cb, pageable.getSort(), root);
+                query.orderBy(orders);
+            }
+        }
+
+        Element rootEl = new Element(entityClass.getSimpleName().toLowerCase());
+
+        final TypedQuery<T> typedQuery = entityManager.createQuery(query);
+        if (pageable != null) {
+            typedQuery.setFirstResult(pageable.getOffset());
+            typedQuery.setMaxResults(pageable.getPageSize());
+        }
+        for (T t : typedQuery.getResultList()) {
+            rootEl.addContent(t.asXml());
+        }
+        return rootEl;
+    }
 
     public T update(ID id, Updater<T> updater) {
         final T entity = _entityManager.find(this._entityClass, id);
@@ -150,36 +179,5 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     public Element findAllAsXml(final Specification<T> specification, final Sort sort) {
         PageRequest request = new PageRequest(0, Integer.MAX_VALUE, sort);
         return findAllAsXml(_entityManager, _entityClass, specification, request);
-    }
-
-    protected static <T extends GeonetEntity> Element findAllAsXml(EntityManager entityManager, Class<T> entityClass,
-                                                                   Specification<T> specification, Pageable pageable) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> query = cb.createQuery(entityClass);
-        Root<T> root = query.from(entityClass);
-
-        if (specification != null) {
-            final Predicate predicate = specification.toPredicate(root, query, cb);
-            query.where(predicate);
-        }
-
-        if (pageable != null) {
-            if (pageable.getSort() != null) {
-                List<Order> orders = SortUtils.sortToJpaOrders(cb, pageable.getSort(), root);
-                query.orderBy(orders);
-            }
-        }
-
-        Element rootEl = new Element(entityClass.getSimpleName().toLowerCase());
-
-        final TypedQuery<T> typedQuery = entityManager.createQuery(query);
-        if (pageable != null) {
-            typedQuery.setFirstResult(pageable.getOffset());
-            typedQuery.setMaxResults(pageable.getPageSize());
-        }
-        for (T t : typedQuery.getResultList()) {
-            rootEl.addContent(t.asXml());
-        }
-        return rootEl;
     }
 }

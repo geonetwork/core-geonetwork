@@ -11,12 +11,10 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * The strategy used in WRO4J (Web Resource Optimizer for Java) that is responsible
- * for locating the javascript files and configuring them into groups/views.
+ * The strategy used in WRO4J (Web Resource Optimizer for Java) that is responsible for locating the
+ * javascript files and configuring them into groups/views.
  * <p/>
- * User: Jesse
- * Date: 11/20/13
- * Time: 8:53 AM
+ * User: Jesse Date: 11/20/13 Time: 8:53 AM
  */
 public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupport {
     @Override

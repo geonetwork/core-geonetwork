@@ -26,14 +26,13 @@ package org.fao.geonet.repository;
 import org.springframework.data.repository.query.Param;
 
 import javax.annotation.Nonnull;
+
 import java.util.Collection;
 
 /**
  * Custom methods for interacting with HarvestHistory repository.
  * <p/>
- * User: Jesse
- * Date: 9/21/13
- * Time: 11:21 AM
+ * User: Jesse Date: 9/21/13 Time: 11:21 AM
  */
 public interface HarvestHistoryRepositoryCustom {
 

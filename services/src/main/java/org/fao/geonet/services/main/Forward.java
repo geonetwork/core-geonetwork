@@ -25,9 +25,11 @@ package org.fao.geonet.services.main;
 
 import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.exceptions.UserNotFoundEx;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
@@ -41,89 +43,86 @@ import java.util.List;
 
 //=============================================================================
 
-public class Forward implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Forward implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig config) throws Exception {}
+    public void init(Path appPath, ServiceConfig config) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		Element site = Util.getChild(params, "site");
-		Element par  = Util.getChild(params, "params");
-		Element acc  = site.getChild("account");
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        Element site = Util.getChild(params, "site");
+        Element par = Util.getChild(params, "params");
+        Element acc = site.getChild("account");
 
-		String url  = Util.getParam(site, "url");
-		String type = Util.getParam(site, "type", "generic");
+        String url = Util.getParam(site, "url");
+        String type = Util.getParam(site, "type", "generic");
 
-		String username = (acc == null) ? null : Util.getParam(acc, "username");
-		String password = (acc == null) ? null : Util.getParam(acc, "password");
+        String username = (acc == null) ? null : Util.getParam(acc, "username");
+        String password = (acc == null) ? null : Util.getParam(acc, "password");
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = par.getChildren();
 
-		if (list.size() == 0)
-			throw new MissingParameterEx("<request>", par);
+        if (list.size() == 0)
+            throw new MissingParameterEx("<request>", par);
 
-		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
 
-		//--- do we need to authenticate?
+        //--- do we need to authenticate?
 
-		if (username != null)
-			authenticate(req, username, password, type);
+        if (username != null)
+            authenticate(req, username, password, type);
 
-		Lib.net.setupProxy(context, req);
+        Lib.net.setupProxy(context, req);
 
-		if (list.size() == 1) {
-			params = list.get(0);
-			req.setRequest(params); 
-		} else {
-			for (int i = 0; i < list.size();i++) {
-				Element elem = list.get(i);
-				req.addParam(elem.getName(), elem.getText());
-			}
-		}
+        if (list.size() == 1) {
+            params = list.get(0);
+            req.setRequest(params);
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                Element elem = list.get(i);
+                req.addParam(elem.getName(), elem.getText());
+            }
+        }
 
-		Element result = req.execute();
-		return result;
-	}
+        Element result = req.execute();
+        return result;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	private void authenticate(XmlRequest req, String username, String password,
-									  String type) throws Exception
-	{
-		if (!type.equals("geonetwork"))
-			//--- set basic/digest credentials for non geonetwork sites
-			req.setCredentials(username, password);
+    private void authenticate(XmlRequest req, String username, String password,
+                              String type) throws Exception {
+        if (!type.equals("geonetwork"))
+            //--- set basic/digest credentials for non geonetwork sites
+            req.setCredentials(username, password);
 
-		else
-		{
-			String addr = req.getAddress();
-			int    pos  = addr.lastIndexOf('/');
+        else {
+            String addr = req.getAddress();
+            int pos = addr.lastIndexOf('/');
 
-			req.setAddress(addr.substring(0, pos +1) + Geonet.Service.XML_LOGIN);
-			req.addParam("username", username);
-			req.addParam("password", password);
+            req.setAddress(addr.substring(0, pos + 1) + Geonet.Service.XML_LOGIN);
+            req.addParam("username", username);
+            req.addParam("password", password);
 
-			Element response = req.execute();
+            Element response = req.execute();
 
-			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(username);
+            if (!response.getName().equals("ok"))
+                throw new UserNotFoundEx(username);
 
-			req.setAddress(addr);
-		}
-	}
+            req.setAddress(addr);
+        }
+    }
 }
 
 //=============================================================================

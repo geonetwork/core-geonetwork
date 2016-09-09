@@ -42,6 +42,28 @@ public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     MetadataNotifierRepository _notifierRepo;
 
+    public static MetadataNotification newMetadataNotification(AtomicInteger inc, MetadataNotifierRepository notifierRepo) {
+
+        MetadataNotifier notifier = MetadataNotifierRepositoryTest.newMetadataNotifier(inc);
+        notifier = notifierRepo.save(notifier);
+
+        int val = inc.incrementAndGet();
+        MetadataNotification metadataNotification = new MetadataNotification();
+
+        MetadataNotificationId mdNotId = new MetadataNotificationId();
+        mdNotId.setMetadataId(val);
+        mdNotId.setNotifierId(notifier.getId());
+
+        metadataNotification.setId(mdNotId);
+        metadataNotification.setAction(val % 2 == 0 ? MetadataNotificationAction.UPDATE : MetadataNotificationAction.DELETE);
+
+        metadataNotification.setErrorMessage("errorMessage" + val);
+        metadataNotification.setMetadataUuid("uuid" + val);
+        metadataNotification.setNotified(val % 2 == 0);
+
+        return metadataNotification;
+    }
+
     @Test
     public void testFindOne() {
         MetadataNotification notification1 = newMetadataNotification();
@@ -62,13 +84,13 @@ public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
         notification1 = _repo.save(notification1);
 
         assertEquals(1, _repo.findAllNotNotifiedForNotifier(notification1.getId().getNotifierId(),
-                MetadataNotificationAction.UPDATE).size());
+            MetadataNotificationAction.UPDATE).size());
 
         notification1.setAction(MetadataNotificationAction.DELETE);
         notification1 = _repo.save(notification1);
 
         assertEquals(0, _repo.findAllNotNotifiedForNotifier(notification1.getId().getNotifierId(),
-                MetadataNotificationAction.UPDATE).size());
+            MetadataNotificationAction.UPDATE).size());
     }
 
     @Test
@@ -99,26 +121,5 @@ public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
 
     private MetadataNotification newMetadataNotification() {
         return newMetadataNotification(_inc, _notifierRepo);
-    }
-    public static MetadataNotification newMetadataNotification(AtomicInteger inc, MetadataNotifierRepository notifierRepo) {
-
-        MetadataNotifier notifier = MetadataNotifierRepositoryTest.newMetadataNotifier(inc);
-        notifier = notifierRepo.save(notifier);
-
-        int val = inc.incrementAndGet();
-        MetadataNotification metadataNotification = new MetadataNotification();
-
-        MetadataNotificationId mdNotId = new MetadataNotificationId();
-        mdNotId.setMetadataId(val);
-        mdNotId.setNotifierId(notifier.getId());
-
-        metadataNotification.setId(mdNotId);
-        metadataNotification.setAction(val % 2 == 0 ? MetadataNotificationAction.UPDATE : MetadataNotificationAction.DELETE);
-
-        metadataNotification.setErrorMessage("errorMessage" + val);
-        metadataNotification.setMetadataUuid("uuid" + val);
-        metadataNotification.setNotified(val % 2 == 0);
-
-        return metadataNotification;
     }
 }

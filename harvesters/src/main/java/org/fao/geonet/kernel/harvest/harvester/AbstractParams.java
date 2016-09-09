@@ -24,7 +24,9 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
+
 import com.vividsolutions.jts.util.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -50,41 +52,31 @@ import java.util.UUID;
 import static org.quartz.JobBuilder.newJob;
 
 /**
- * Params to configure a harvester. It contains things like
- * url, username, password,...
+ * Params to configure a harvester. It contains things like url, username, password,...
  */
 public abstract class AbstractParams {
-    private static final long MAX_EVERY = Integer.MAX_VALUE;
     public static final String TRANSLATIONS = "translations";
+    private static final long MAX_EVERY = Integer.MAX_VALUE;
 
     //---------------------------------------------------------------------------
     //---
     //--- Variables
     //---
     //---------------------------------------------------------------------------
-
+    protected DataManager dm;
     private String name;
     private Map<String, String> translations = Maps.newHashMap();
     private String uuid;
-
     private boolean useAccount;
     private String username;
     private String password;
-
     private String every;
     private boolean oneRunOnly;
-
     private HarvestValidationEnum validate;
     private String importXslt;
-
     private Element node;
-
     private String ownerId;
-
     private String ownerIdGroup;
-
-    protected DataManager dm;
-
     private List<Privileges> alPrivileges = new ArrayList<>();
     private List<String> alCategories = new ArrayList<>();
 
@@ -103,6 +95,11 @@ public abstract class AbstractParams {
     //--- API methods
     //---
     //---------------------------------------------------------------------------
+
+    private static HarvestValidationEnum readValidateFromParams(Element content) {
+        String validationString = Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.toString());
+        return HarvestValidationEnum.lookup(validationString);
+    }
 
     /**
      * @param node
@@ -176,11 +173,6 @@ public abstract class AbstractParams {
         addCategories(node.getChild("categories"));
 
         this.setNodeElement(node);
-    }
-
-    private static HarvestValidationEnum readValidateFromParams(Element content) {
-        String validationString = Util.getParam(content, "validate", HarvestValidationEnum.NOVALIDATION.toString());
-        return HarvestValidationEnum.lookup(validationString);
     }
 
     /**
@@ -307,7 +299,7 @@ public abstract class AbstractParams {
      */
     public JobDetail getJob() {
         return newJob(HarvesterJob.class).withIdentity(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME).usingJobData(HarvesterJob
-                .ID_FIELD, getUuid()).build();
+            .ID_FIELD, getUuid()).build();
     }
 
     /**
@@ -334,22 +326,13 @@ public abstract class AbstractParams {
     //---------------------------------------------------------------------------
 
     /**
-     * Fills a list with Privileges that reflect the input 'privileges' element.
-     * The 'privileges' element has this format:
+     * Fills a list with Privileges that reflect the input 'privileges' element. The 'privileges'
+     * element has this format:
      * <p/>
-     * <privileges>
-     * <group id="...">
-     * <operation name="...">
-     * ...
-     * </group>
-     * ...
-     * </privileges>
+     * <privileges> <group id="..."> <operation name="..."> ... </group> ... </privileges>
      * <p/>
-     * Operation names are: view, download, edit, etc... User defined operations are
-     * taken into account.
-     *
-     * @param privil
-     * @throws BadInputEx
+     * Operation names are: view, download, edit, etc... User defined operations are taken into
+     * account.
      */
     private void addPrivileges(Element privil) throws BadInputEx {
         alPrivileges.clear();
@@ -409,16 +392,10 @@ public abstract class AbstractParams {
     }
 
     /**
-     * Fills a list with category identifiers that reflect the input 'categories' element.
-     * The 'categories' element has this format:
+     * Fills a list with category identifiers that reflect the input 'categories' element. The
+     * 'categories' element has this format:
      * <p/>
-     * <categories>
-     * <category id="..."/>
-     * ...
-     * </categories>
-     *
-     * @param categ
-     * @throws BadInputEx
+     * <categories> <category id="..."/> ... </categories>
      */
     private void addCategories(Element categ) throws BadInputEx {
         alCategories.clear();

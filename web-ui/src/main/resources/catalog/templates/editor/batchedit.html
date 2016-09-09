@@ -7,8 +7,8 @@
 
     <ul class="nav nav-tabs">
       <li role="presentation"
-              data-ng-class="{'active' : selectedStep === 1}"
-              data-ng-click="setStep(1)">
+          data-ng-class="{'active' : selectedStep === 1}"
+          data-ng-click="setStep(1)">
         <a href="" data-translate="">chooseASet</a></li>
       <li role="presentation"
           data-ng-class="{'active': selectedStep === 2, 'disabled': searchResults.selectedCount < 1}"
@@ -18,7 +18,8 @@
           data-ng-class="{'active' : selectedStep === 3, 'disabled': searchResults.selectedCount < 1}"
           data-ng-click="searchResults.selectedCount > 0 && setStep(3)">
         <a href="" data-translate="">confirmAndSave</a></li>
-      <li class="gn-batch-editor-info">{{searchResults.selectedCount}} <span data-translate="">recordsInSelection</span></li>
+      <li class="gn-batch-editor-info">{{searchResults.selectedCount}} <span data-translate="">recordsInSelection</span>
+      </li>
     </ul>
     <br/>
 
@@ -151,7 +152,7 @@
           <div class="col-md-12">
             <form class="form-horizontal" id="gn-batch-changes">
               <fieldset data-ng-repeat="(key, standard) in fieldConfig"
-                data-ng-if="standard.section && hasRecordsInStandard(key)">
+                        data-ng-if="standard.section && hasRecordsInStandard(key)">
                 <legend data-gn-slide-toggle="">{{key | translate}}</legend>
 
                 <fieldset data-ng-repeat="section in standard.section">
@@ -160,7 +161,8 @@
                        data-ng-repeat="field in section.field"
                        data-ng-init="field.value = ''">
                     <label class="col-sm-2 control-label"
-                           data-ng-class="{'text-danger': field.isDeleted}">{{field.name | translate}}</label>
+                           data-ng-class="{'text-danger': field.isDeleted}">{{field.name |
+                      translate}}</label>
                     <div class="col-sm-8">
                       <div class="input-group" style="width:100%">
                         <input type="text"
@@ -169,10 +171,10 @@
                                data-ng-disabled="field.isDeleted"
                                class="form-control"/>
                         <textarea
-                               data-ng-if="field.use === 'textarea'"
-                               data-ng-blur="putChange(field, $event)"
-                               data-ng-disabled="field.isDeleted"
-                               class="form-control"/>
+                          data-ng-if="field.use === 'textarea'"
+                          data-ng-blur="putChange(field, $event)"
+                          data-ng-disabled="field.isDeleted"
+                          class="form-control"/>
                         <input type="text"
                                class="form-control"
                                data-ng-if="field.use === 'data-gn-language-picker'"
@@ -180,15 +182,15 @@
                                data-gn-language-picker=""
                                data-ng-blur="putChange(field, $event)"/>
                         <div class="form-control"
-                               data-ng-if="field.use === 'data-gn-codelist-picker'"
-                               data-ng-disabled="field.isDeleted"
-                               data-schema-info-combo="codelist"
-                               data-schema="{{key}}"
-                               data-allow-blank="true"
-                               data-gn-schema-info="{{field.codelist}}"
-                               data-selected-info="field.value"
-                               data-ng-blur="putChange(field, $event)"
-                               lang="lang"/>
+                             data-ng-if="field.use === 'data-gn-codelist-picker'"
+                             data-ng-disabled="field.isDeleted"
+                             data-schema-info-combo="codelist"
+                             data-schema="{{key}}"
+                             data-allow-blank="true"
+                             data-gn-schema-info="{{field.codelist}}"
+                             data-selected-info="field.value"
+                             data-ng-blur="putChange(field, $event)"
+                             lang="lang"/>
                         <div data-ng-if="field.use === 'data-gn-draw-bbox'">
                           <div class=""
                                data-gn-draw-bbox=""
@@ -255,7 +257,8 @@
 
               <fieldset>
                 <legend data-gn-slide-toggle="true"
-                        data-translate>advancedBatchEditMode</legend>
+                        data-translate>advancedBatchEditMode
+                </legend>
 
                 <form class="form-horizontal"
                       name="xpathConfigForm"
@@ -264,59 +267,62 @@
                   <div class="well">
                     <p class="help-block">
                       <span data-translate="">addXpath-help</span>
-                      <ul>
-                        <li>
-                          <span data-translate="">addXpathTitle</span>&nbsp;
-                          <i class="fa fa-check-circle text-success"
-                             data-ng-show="currentXpath.field != ''"/>
-                        </li><li>
-                          <span data-translate="">addXpathInsertMode</span>&nbsp;
-                          <i class="fa fa-check-circle text-success"
-                             data-ng-show="currentXpath.insertMode != ''"/>
-                        </li><li>
-                          <span data-translate="">addXpathXpath</span>&nbsp;
-                          <i class="fa fa-check-circle text-success"
-                             data-ng-show="currentXpath.xpath != ''"/>
-                        </li><li>
-                          <span data-translate="">addXpathValue</span>&nbsp;
-                          <i class="fa fa-check-circle text-success"
-                             data-ng-show="currentXpath.value != ''"/>
-                        </li>
-                      </ul>
-                      <div class="form-group">
-                        <input name="field"
-                               type="text"
-                               class="form-control"
-                               data-ng-model="currentXpath.field"
-                               placeholder="{{'addXpathTitle' | translate}}"/>
-                        <br/>
-                        <select name="insertMode"
-                                data-ng-options="(option | translate) for option in insertModes"
-                                data-ng-model="currentXpath.insertMode"
-                                data-ng-required=""></select>
-                        <br/>
-                        <input name="xpath"
-                               type="text"
-                               class="form-control"
-                               data-ng-model="currentXpath.xpath"
-                               data-ng-class="xpathConfigForm.xpath.$error.required ? 'has-error' : ''"
-                               data-ng-required=""
-                               placeholder="{{'xpath' | translate}}"/>
-                        <br/>
+                    <ul>
+                      <li>
+                        <span data-translate="">addXpathTitle</span>&nbsp;
+                        <i class="fa fa-check-circle text-success"
+                           data-ng-show="currentXpath.field != ''"/>
+                      </li>
+                      <li>
+                        <span data-translate="">addXpathInsertMode</span>&nbsp;
+                        <i class="fa fa-check-circle text-success"
+                           data-ng-show="currentXpath.insertMode != ''"/>
+                      </li>
+                      <li>
+                        <span data-translate="">addXpathXpath</span>&nbsp;
+                        <i class="fa fa-check-circle text-success"
+                           data-ng-show="currentXpath.xpath != ''"/>
+                      </li>
+                      <li>
+                        <span data-translate="">addXpathValue</span>&nbsp;
+                        <i class="fa fa-check-circle text-success"
+                           data-ng-show="currentXpath.value != ''"/>
+                      </li>
+                    </ul>
+                    <div class="form-group">
+                      <input name="field"
+                             type="text"
+                             class="form-control"
+                             data-ng-model="currentXpath.field"
+                             placeholder="{{'addXpathTitle' | translate}}"/>
+                      <br/>
+                      <select name="insertMode"
+                              data-ng-options="(option | translate) for option in insertModes"
+                              data-ng-model="currentXpath.insertMode"
+                              data-ng-required=""></select>
+                      <br/>
+                      <input name="xpath"
+                             type="text"
+                             class="form-control"
+                             data-ng-model="currentXpath.xpath"
+                             data-ng-class="xpathConfigForm.xpath.$error.required ? 'has-error' : ''"
+                             data-ng-required=""
+                             placeholder="{{'xpath' | translate}}"/>
+                      <br/>
                         <textarea
-                               name="xpath"
-                               class="form-control"
-                               data-ng-model="currentXpath.value"
-                               data-ng-disabled="currentXpath.insertMode.indexOf('gn_delete') !== -1"
-                               placeholder="{{'xpathValue' | translate}}"></textarea>
-                        <br/>
-                        <button class="btn btn-default"
-                                data-ng-disabled="currentXpath.xpath == ''"
-                                data-ng-click="addOrUpdateXpathChange()"
-                                type="submit">
-                          <i class="fa fa-plus"></i>
-                        </button>
-                      </div>
+                          name="xpath"
+                          class="form-control"
+                          data-ng-model="currentXpath.value"
+                          data-ng-disabled="currentXpath.insertMode.indexOf('gn_delete') !== -1"
+                          placeholder="{{'xpathValue' | translate}}"></textarea>
+                      <br/>
+                      <button class="btn btn-default"
+                              data-ng-disabled="currentXpath.xpath == ''"
+                              data-ng-click="addOrUpdateXpathChange()"
+                              type="submit">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
                     </p>
                   </div>
                 </form>
@@ -327,7 +333,6 @@
                     <h6>{{c.field}} ({{c.insertMode | translate}})</h6>
                     <pre>{{c.xpath}}</pre>
                     <pre>{{c.value}}</pre>
-
 
 
                     <button class="btn btn-default"

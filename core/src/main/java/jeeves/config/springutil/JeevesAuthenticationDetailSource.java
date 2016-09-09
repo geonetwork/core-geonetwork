@@ -31,9 +31,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * A details source that adds the referer to the Authentication details
- * User: Jesse
- * Date: 12/4/13
+ * A details source that adds the referer to the Authentication details User: Jesse Date: 12/4/13
  * Time: 8:12 AM
  */
 public class JeevesAuthenticationDetailSource extends WebAuthenticationDetailsSource {

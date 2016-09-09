@@ -23,137 +23,159 @@
 
 package org.fao.geonet.services.resources;
 
-import org.fao.geonet.ZipUtil;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.util.MailSender;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+
 //=============================================================================
 
-/** Sends the resource to the client in a zip archive with metadata and license
-  */
+/**
+ * Sends the resource to the client in a zip archive with metadata and license
+ */
 
-public class DownloadArchive implements Service
-{
-	private static String FS = File.separator;
-	private Path stylePath;
+public class DownloadArchive implements Service {
+    private static String FS = File.separator;
+    private Path stylePath;
 
-	//----------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //----------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
-	}
+    private static String now() {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(cal.getTime());
+    }
 
-	//----------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //----------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm   = gc.getBean(DataManager.class);
-		UserSession session = context.getUserSession();
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
+    }
 
-		String id = Utils.getIdentifierFromParameters(params, context);
-		String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
+    //----------------------------------------------------------------------------
+    //---
+    //--- Private Methods
+    //---
+    //----------------------------------------------------------------------------
 
-		//--- resource required is public (thumbnails)
-		if (access.equals(Params.Access.PUBLIC)) { 
-			Path dir = Lib.resource.getDir(context, access, id);
-			String fname = Util.getParam(params, Params.FNAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+        UserSession session = context.getUserSession();
 
-			if (fname.contains("..")) {
-				throw new BadParameterEx("Invalid character found in resource name.", fname);
-			}
-			
-			Path file = dir.resolve(fname);
-			return BinaryFile.encode(200, file, false).getElement();
-		}
+        String id = Utils.getIdentifierFromParameters(params, context);
+        String access = Util.getParam(params, Params.ACCESS, Params.Access.PUBLIC);
 
-		//--- from here on resource required is private datafile(s)
+        //--- resource required is public (thumbnails)
+        if (access.equals(Params.Access.PUBLIC)) {
+            Path dir = Lib.resource.getDir(context, access, id);
+            String fname = Util.getParam(params, Params.FNAME);
 
-		//--- check if disclaimer for this metadata has been displayed
-		Element elData = (Element) session.getProperty(Geonet.Session.FILE_DISCLAIMER);
-		if (elData == null) {
-			return new Element("response");
-		} else {
-			String idAllowed = elData.getChildText(Geonet.Elem.ID);
-			if (idAllowed == null || !idAllowed.equals(id)) {
-				return new Element("response");
-			}
-		}
+            if (fname.contains("..")) {
+                throw new BadParameterEx("Invalid character found in resource name.", fname);
+            }
 
-		//--- check whether notify is required
-		boolean doNotify = false;
-		Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-		doNotify = true;
+            Path file = dir.resolve(fname);
+            return BinaryFile.encode(200, file, false).getElement();
+        }
 
-		//--- set username for emails and logs
-		String username = session.getUsername();
-		if (username == null) username = "internet";
-		String userId  = session.getUserId();
+        //--- from here on resource required is private datafile(s)
 
-		//--- get feedback/reason for download info passed in & record in 'entered'
+        //--- check if disclaimer for this metadata has been displayed
+        Element elData = (Element) session.getProperty(Geonet.Session.FILE_DISCLAIMER);
+        if (elData == null) {
+            return new Element("response");
+        } else {
+            String idAllowed = elData.getChildText(Geonet.Elem.ID);
+            if (idAllowed == null || !idAllowed.equals(id)) {
+                return new Element("response");
+            }
+        }
+
+        //--- check whether notify is required
+        boolean doNotify = false;
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+        doNotify = true;
+
+        //--- set username for emails and logs
+        String username = session.getUsername();
+        if (username == null) username = "internet";
+        String userId = session.getUserId();
+
+        //--- get feedback/reason for download info passed in & record in 'entered'
 //		String name     = Util.getParam(params, Params.NAME);
 //		String org      = Util.getParam(params, Params.ORG);
 //		String email    = Util.getParam(params, Params.EMAIL);
 //		String comments = Util.getParam(params, Params.COMMENTS);
-		Element entered = new Element("entered").addContent(params.cloneContent());
-	
-		//--- get logged in user details & record in 'userdetails'
-		Element userDetails = new Element("userdetails");
-		if (!username.equals("internet")) {
-            final User user = context.getBean(UserRepository.class).findOne(userId);
-			if (user != null) {
-				userDetails.addContent(user.asXml());
-			}
-		}
-	
-		//--- get metadata info
-		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        Element entered = new Element("entered").addContent(params.cloneContent());
 
-		// set up zip output stream
-		Path zFile = Files.createTempFile(username+"_"+info.getUuid(),".zip");
+        //--- get logged in user details & record in 'userdetails'
+        Element userDetails = new Element("userdetails");
+        if (!username.equals("internet")) {
+            final User user = context.getBean(UserRepository.class).findOne(userId);
+            if (user != null) {
+                userDetails.addContent(user.asXml());
+            }
+        }
+
+        //--- get metadata info
+        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+
+        // set up zip output stream
+        Path zFile = Files.createTempFile(username + "_" + info.getUuid(), ".zip");
         try (FileSystem zipFs = ZipUtil.openZipFs(zFile)) {
             //--- now add the files chosen from the interface and record in 'downloaded'
             Element downloaded = new Element("downloaded");
@@ -169,7 +191,8 @@ public class DownloadArchive implements Service
                 }
 
                 Path file = dir.resolve(fname);
-                if (!Files.exists(file)) throw new ResourceNotFoundEx(file.toAbsolutePath().normalize().toString());
+                if (!Files.exists(file))
+                    throw new ResourceNotFoundEx(file.toAbsolutePath().normalize().toString());
 
                 Element fileInfo = new Element("file");
 
@@ -182,7 +205,7 @@ public class DownloadArchive implements Service
                     fileInfo.setAttribute("datemodified", "unknown");
                     fileInfo.setAttribute("name", remoteURL);
                     notifyAndLog(doNotify, id, info.getUuid(), access, username, remoteURL + " (local config: " + file.toAbsolutePath()
-                            .normalize() + ")", context);
+                        .normalize() + ")", context);
                     fname = details.getElement().getAttributeValue("remotefile");
                 } else {
                     if (context.isDebugEnabled())
@@ -209,7 +232,7 @@ public class DownloadArchive implements Service
 
             //--- manage the download hook
             IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean
-                    ("resourceDownloadHandler");
+                ("resourceDownloadHandler");
             Element response = downloadHook.onDownloadMultiple(context, params, Integer.parseInt(id), files);
 
             // Return null to do the default processing. TODO: Check to move the code to the default hook.
@@ -255,110 +278,98 @@ public class DownloadArchive implements Service
         }
     }
 
-	//----------------------------------------------------------------------------
-	//---
-	//--- Private Methods
-	//---
-	//----------------------------------------------------------------------------
-	
-	private void includeLicenseFiles(ServiceContext context,
-								FileSystem zipFs, Element root) throws Exception,
-								MalformedURLException, FileNotFoundException, IOException {
-		Element license = Xml.selectElement(root, "metadata/*/licenseLink");
-		if (license != null) {
-			String licenseURL = license.getText();
-            if(context.isDebugEnabled())
+    //----------------------------------------------------------------------------
+
+    private void includeLicenseFiles(ServiceContext context,
+                                     FileSystem zipFs, Element root) throws Exception,
+        MalformedURLException, FileNotFoundException, IOException {
+        Element license = Xml.selectElement(root, "metadata/*/licenseLink");
+        if (license != null) {
+            String licenseURL = license.getText();
+            if (context.isDebugEnabled())
                 context.debug("license URL = " + licenseURL);
 
-			Path licenseFilesDir = getLicenseFilesPath(licenseURL, context);
-            if(context.isDebugEnabled())
+            Path licenseFilesDir = getLicenseFilesPath(licenseURL, context);
+            if (context.isDebugEnabled())
                 context.debug(" licenseFilesPath = " + licenseFilesDir);
 
-			if (licenseFilesDir != null && Files.exists(licenseFilesDir)) {
+            if (licenseFilesDir != null && Files.exists(licenseFilesDir)) {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(licenseFilesDir)) {
                     for (Path licenseFile : paths) {
-                        if(context.isDebugEnabled()) {
+                        if (context.isDebugEnabled()) {
                             context.debug("adding " + licenseFile + " to zip file");
                         }
                         Files.copy(licenseFile, zipFs.getPath(licenseFile.getFileName().toString()));
                     }
                 }
-			}
-		}
-	}
+            }
+        }
+    }
 
-	//----------------------------------------------------------------------------
-	
-	private Path getLicenseFilesPath(String licenseURL, ServiceContext context) throws MalformedURLException {
-		// TODO: Ideally this method should probably read an xml file to map
-		// license url's to the sub-directory containing mirrored files
-		// but for the moment we'll just use the url path to identify this
+    //----------------------------------------------------------------------------
 
-		//--- Get license files subdirectory for license
-		URL url = new URL(licenseURL);
-		String licenseFilesPath = url.getHost() + url.getPath();
-        if(context.isDebugEnabled())
+    private Path getLicenseFilesPath(String licenseURL, ServiceContext context) throws MalformedURLException {
+        // TODO: Ideally this method should probably read an xml file to map
+        // license url's to the sub-directory containing mirrored files
+        // but for the moment we'll just use the url path to identify this
+
+        //--- Get license files subdirectory for license
+        URL url = new URL(licenseURL);
+        String licenseFilesPath = url.getHost() + url.getPath();
+        if (context.isDebugEnabled())
             context.debug("licenseFilesPath= " + licenseFilesPath);
 
-		//--- Get local mirror directory for license files
+        //--- Get local mirror directory for license files
         Path path = context.getAppPath();
 
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		ServiceConfig configHandler = gc.getBean(ServiceConfig.class);
-		String licenseDirAsString = configHandler.getValue(Geonet.Config.LICENSE_DIR);
-		if (licenseDirAsString == null) return null;
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ServiceConfig configHandler = gc.getBean(ServiceConfig.class);
+        String licenseDirAsString = configHandler.getValue(Geonet.Config.LICENSE_DIR);
+        if (licenseDirAsString == null) return null;
 
-		Path licenseDir = IO.toPath(licenseDirAsString);
-		if (!licenseDir.isAbsolute()) licenseDir = path.resolve(licenseDir);
+        Path licenseDir = IO.toPath(licenseDirAsString);
+        if (!licenseDir.isAbsolute()) licenseDir = path.resolve(licenseDir);
 
-        if(context.isDebugEnabled()) {
+        if (context.isDebugEnabled()) {
             context.debug("licenseDir = " + licenseDir);
         }
 
-		//--- return license files directory
-		return licenseDir.resolve(licenseFilesPath);
-	}
+        //--- return license files directory
+        return licenseDir.resolve(licenseFilesPath);
+    }
 
     //----------------------------------------------------------------------------
-	
-	private static String now() {
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return sdf.format(cal.getTime());
-	}
 
-	//----------------------------------------------------------------------------
-	
-	private void notifyAndLog(boolean doNotify, String id, String uuid, String access, String username, String theFile, ServiceContext context) throws Exception { 
+    private void notifyAndLog(boolean doNotify, String id, String uuid, String access, String username, String theFile, ServiceContext context) throws Exception {
 
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
-		DataManager    dm = gc.getBean(DataManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
+        DataManager dm = gc.getBean(DataManager.class);
 
-		//--- increase metadata popularity
-		if (access.equals(Params.Access.PRIVATE)) {
+        //--- increase metadata popularity
+        if (access.equals(Params.Access.PRIVATE)) {
             dm.increasePopularity(context, id);
         }
 
-		//--- send email notification
-		if (doNotify) {
-			
-			String site = sm.getSiteId();
-			String host = sm.getValue("system/feedback/mailServer/host");
-			String port = sm.getValue("system/feedback/mailServer/port");
-			String from = sm.getValue("system/feedback/email");
+        //--- send email notification
+        if (doNotify) {
 
-			String fromDescr = "GeoNetwork administrator";
+            String site = sm.getSiteId();
+            String host = sm.getValue("system/feedback/mailServer/host");
+            String port = sm.getValue("system/feedback/mailServer/port");
+            String from = sm.getValue("system/feedback/email");
 
-			String dateTime = now();
+            String fromDescr = "GeoNetwork administrator";
+
+            String dateTime = now();
             context.info("DOWNLOADED:" + theFile + "," + id + "," + uuid + "," + context.getIpAddress() + "," + username);
 
-			if (host.trim().length() == 0 || from.trim().length() == 0) {
-                if(context.isDebugEnabled()) {
+            if (host.trim().length() == 0 || from.trim().length() == 0) {
+                if (context.isDebugEnabled()) {
                     context.debug("Skipping email notification");
                 }
-			} else {
-                if(context.isDebugEnabled()) {
+            } else {
+                if (context.isDebugEnabled()) {
                     context.debug("Sending email notification for file : " + theFile);
                 }
 
@@ -369,35 +380,36 @@ public class DownloadArchive implements Service
 
                 for (OperationAllowed opAllowed : opsAllowed) {
                     Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
-                    String  name  = group.getName();
-					String  email = group.getEmail();
+                    String name = group.getName();
+                    String email = group.getEmail();
 
-					if (email.trim().length() != 0) {
-						String subject = "File " + theFile + " has been downloaded at "+dateTime;
-						String message = "GeoNetwork (site: "+site+") notifies you, as supervisor of group "+ name
-							+ " that data file "+ theFile 
-							+ " attached to metadata record with id number "+ id
-							+ " (uuid: "+uuid+")"
-							+ " has been downloaded from address " + context.getIpAddress() 
-							+ " by user " + username
-							+ ".";
+                    if (email.trim().length() != 0) {
+                        String subject = "File " + theFile + " has been downloaded at " + dateTime;
+                        String message = "GeoNetwork (site: " + site + ") notifies you, as supervisor of group " + name
+                            + " that data file " + theFile
+                            + " attached to metadata record with id number " + id
+                            + " (uuid: " + uuid + ")"
+                            + " has been downloaded from address " + context.getIpAddress()
+                            + " by user " + username
+                            + ".";
 
-						try {
-							MailSender sender = new MailSender(context);
-							sender.send(host, Integer.parseInt(port), 
-							        sm.getValue("system/feedback/mailServer/username"), 
-							        sm.getValue("system/feedback/mailServer/password"), 
-							        sm.getValueAsBool("system/feedback/mailServer/ssl"), 
-								sm.getValueAsBool("system/feedback/mailServer/tls"),
-							        from, fromDescr, email, null, subject, message);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-	}
+                        try {
+                            MailSender sender = new MailSender(context);
+                            sender.send(host, Integer.parseInt(port),
+                                sm.getValue("system/feedback/mailServer/username"),
+                                sm.getValue("system/feedback/mailServer/password"),
+                                sm.getValueAsBool("system/feedback/mailServer/ssl"),
+                                sm.getValueAsBool("system/feedback/mailServer/tls"),
+                                sm.getValueAsBool("system/feedback/mailServer/ingoreSslCertificateErrors", false),
+                                from, fromDescr, email, null, subject, message);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }
 

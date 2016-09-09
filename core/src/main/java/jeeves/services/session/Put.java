@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -37,56 +38,54 @@ import java.util.List;
 
 //=============================================================================
 
-/** Stores input fields in the session
-  */
+/**
+ * Stores input fields in the session
+ */
 
-public class Put implements Service
-{
-	String  groupName;
-	HashSet<String> inFields;
-	
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class Put implements Service {
+    String groupName;
+    HashSet<String> inFields;
 
-	public void init(Path appPath, ServiceConfig params) throws Exception
-	{
-		groupName = params.getMandatoryValue(Jeeves.Config.GROUP);
-		List<Element> l = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
-		if (l != null) {
-			inFields = new HashSet<String>();
-			for (Element field : l) {
-				inFields.add(field.getName());
-			}
-		}
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        groupName = params.getMandatoryValue(Jeeves.Config.GROUP);
+        List<Element> l = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);
+        if (l != null) {
+            inFields = new HashSet<String>();
+            for (Element field : l) {
+                inFields.add(field.getName());
+            }
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
-		
-		Hashtable<String, Element> group = (Hashtable<String, Element>) session.getProperty(groupName);
-		if (group == null) { 
-			group = new Hashtable<String, Element>();
-		}
-		for (Element child : (List<Element>) params.getChildren()) {
-			if (inFields == null || inFields.contains(child.getName())) {
-				group.put(child.getName(), child);
-			}
-		}
-		session.setProperty(groupName, group);
-		
-		return params;
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        UserSession session = context.getUserSession();
+
+        Hashtable<String, Element> group = (Hashtable<String, Element>) session.getProperty(groupName);
+        if (group == null) {
+            group = new Hashtable<String, Element>();
+        }
+        for (Element child : (List<Element>) params.getChildren()) {
+            if (inFields == null || inFields.contains(child.getName())) {
+                group.put(child.getName(), child);
+            }
+        }
+        session.setProperty(groupName, group);
+
+        return params;
+    }
 }
 
 //=============================================================================

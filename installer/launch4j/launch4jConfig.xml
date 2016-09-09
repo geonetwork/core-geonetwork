@@ -22,7 +22,7 @@
   -->
 
 <!-- The properties 'jar', 'outfile', 'fileVersion', 'txtFileVersion',
-     'productVersion' and 'txtProductVersion' are overruled by the 
+     'productVersion' and 'txtProductVersion' are overruled by the
      installer build.xml file -->
 
 <launch4jConfig>
@@ -37,9 +37,9 @@
   <stayAlive>false</stayAlive>
   <icon>../installer.ico</icon>
   <jre>
-<!--    <path>jre1.5.0_12</path> -->
+    <!--    <path>jre1.5.0_12</path> -->
     <minVersion>1.5.0</minVersion>
-<!--    <maxVersion>1.5.0_15</maxVersion> -->
+    <!--    <maxVersion>1.5.0_15</maxVersion> -->
     <initialHeapSize>256</initialHeapSize>
     <maxHeapSize>512</maxHeapSize>
     <args></args>

@@ -24,7 +24,9 @@
 package org.fao.geonet.util;
 
 import com.google.common.collect.Maps;
+
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -45,43 +47,15 @@ import java.util.Map;
 
 public class LangUtils {
 
-    private static final class TranslationKey {
-        private String type;
-        private String key;
-
-        private TranslationKey(String type, String key) {
-            this.type = type;
-            this.key = key;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            TranslationKey that = (TranslationKey) o;
-
-            if (!key.equals(that.key)) return false;
-            if (!type.equals(that.type)) return false;
-
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = type.hashCode();
-            result = 31 * result + key.hashCode();
-            return result;
-        }
-    }
     private static final Map<TranslationKey, Map<String, String>> translationsCache = Maps.newConcurrentMap();
 
     /**
-     * Find all the translations for a given key in the <type>.xml file.  normally you will want 
+     * Find all the translations for a given key in the <type>.xml file.  normally you will want
      * 'type' to == 'string'.  In fact the 2 parameter method can be used for this.
-     * 
+     *
      * @param type the type of translations file, typically strings
-     * @param key the key to look up.  may contain / but cannot start with one.  for example: categories/water
+     * @param key  the key to look up.  may contain / but cannot start with one.  for example:
+     *             categories/water
      */
     public static Map<String, String> translate(ApplicationContext context, String type, String key) throws JDOMException, IOException {
         TranslationKey translationKey = new TranslationKey(type, key);
@@ -124,16 +98,45 @@ public class LangUtils {
             translations = translations1;
             translationsCache.put(translationKey, translations);
         }
-        
+
         return translations;
     }
-
 
     /**
      * same as translate(context, "string", key)
      */
     public static Map<String, String> translate(ApplicationContext context, String key) throws JDOMException, IOException {
         return translate(context, "strings", key);
+    }
+
+    private static final class TranslationKey {
+        private String type;
+        private String key;
+
+        private TranslationKey(String type, String key) {
+            this.type = type;
+            this.key = key;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            TranslationKey that = (TranslationKey) o;
+
+            if (!key.equals(that.key)) return false;
+            if (!type.equals(that.type)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = type.hashCode();
+            result = 31 * result + key.hashCode();
+            return result;
+        }
     }
 
 }

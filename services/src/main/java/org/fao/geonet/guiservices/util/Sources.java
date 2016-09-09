@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -36,37 +37,36 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-public class Sources implements Service
-{
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+public class Sources implements Service {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm =gc.getBean(SettingManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
-		//--- create local node
+        //--- create local node
 
-		String name   = sm.getSiteName();
-		String siteId = sm.getSiteId();
+        String name = sm.getSiteName();
+        String siteId = sm.getSiteId();
 
-		Element local = new Element("record");
+        Element local = new Element("record");
 
-		local.addContent(new Element("name")  .setText(name));
-		local.addContent(new Element("siteid").setText(siteId));
+        local.addContent(new Element("name").setText(name));
+        local.addContent(new Element("siteid").setText(siteId));
 
-		//--- retrieve known nodes
+        //--- retrieve known nodes
         final Element asXml = context.getBean(SourceRepository.class).findAllAsXml();
         asXml.addContent(local);
 
-		return asXml;
-	}
+        return asXml;
+    }
 }
 
 //=============================================================================

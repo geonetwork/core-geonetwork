@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.AddressEntityListenerManager;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 /**
@@ -37,7 +38,7 @@ import java.io.Serializable;
 @Entity
 @Access(AccessType.PROPERTY)
 @EntityListeners(AddressEntityListenerManager.class)
-@SequenceGenerator(name=Address.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = Address.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Address extends GeonetEntity implements Serializable {
     static final String ID_SEQ_NAME = "address_id_seq";
 
@@ -50,18 +51,18 @@ public class Address extends GeonetEntity implements Serializable {
     private String _country;
 
     /**
-     * Id of the address. This is automatically generated so when creating a new object leave this blank and allow the database or JPA set
-     * the value for you on save.
+     * Id of the address. This is automatically generated so when creating a new object leave this
+     * blank and allow the database or JPA set the value for you on save.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the id of the address. This is automatically generated so when creating a new object leave this blank and allow the database or
-     * JPA set the value for you on save.
+     * Set the id of the address. This is automatically generated so when creating a new object
+     * leave this blank and allow the database or JPA set the value for you on save.
      *
      * @param id the id
      * @return this address object
@@ -72,7 +73,8 @@ public class Address extends GeonetEntity implements Serializable {
     }
 
     /**
-     * Get the address line of the address. This is typically the street name and number but varies depending on the type of address.
+     * Get the address line of the address. This is typically the street name and number but varies
+     * depending on the type of address.
      */
     public String getAddress() {
         return _address;
@@ -172,7 +174,8 @@ public class Address extends GeonetEntity implements Serializable {
      * Merge data from other address into this one.
      *
      * @param otherAddress  other address
-     * @param mergeNullData if true then also set null values from other address. If false then only merge non-null data
+     * @param mergeNullData if true then also set null values from other address. If false then only
+     *                      merge non-null data
      */
     public void mergeAddress(final Address otherAddress, final boolean mergeNullData) {
         if (mergeNullData || StringUtils.isNotBlank(otherAddress.getAddress())) {
@@ -202,9 +205,11 @@ public class Address extends GeonetEntity implements Serializable {
         Address address = (Address) o;
 
         if (_id != address._id) return false;
-        if (_address != null ? !_address.equals(address._address) : address._address != null) return false;
+        if (_address != null ? !_address.equals(address._address) : address._address != null)
+            return false;
         if (_city != null ? !_city.equals(address._city) : address._city != null) return false;
-        if (_country != null ? !_country.equals(address._country) : address._country != null) return false;
+        if (_country != null ? !_country.equals(address._country) : address._country != null)
+            return false;
         if (_state != null ? !_state.equals(address._state) : address._state != null) return false;
         if (_zip != null ? !_zip.equals(address._zip) : address._zip != null) return false;
 

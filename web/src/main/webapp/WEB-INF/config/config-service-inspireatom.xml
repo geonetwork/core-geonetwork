@@ -23,35 +23,36 @@
   -->
 
 <geonet>
-    <services package="org.fao.geonet">
+  <services package="org.fao.geonet">
 
-        <service name="atomharvester">
-            <documentation><![CDATA[
+    <service name="atomharvester">
+      <documentation><![CDATA[
         Service to harvest inspire atom feeds.
         ]]></documentation>
-            <class name="org.fao.geonet.services.inspireatom.AtomHarvester" />
-        </service>
+      <class name="org.fao.geonet.services.inspireatom.AtomHarvester"/>
+    </service>
 
-        <!-- OpenDescription document -->
-        <service name="atom.description">
-            <class name="org.fao.geonet.services.inspireatom.AtomServiceDescription" />
+    <!-- OpenDescription document -->
+    <service name="atom.description">
+      <class name="org.fao.geonet.services.inspireatom.AtomServiceDescription"/>
 
-            <output sheet="../xslt/services/inspire-atom/opensearch.xsl" contentType="text/xml; charset=UTF-8"/>
-        </service>
+      <output sheet="../xslt/services/inspire-atom/opensearch.xsl"
+              contentType="text/xml; charset=UTF-8"/>
+    </service>
 
-        <!-- Describe -->
-        <service name="atom.describe">
-            <class name="org.fao.geonet.services.inspireatom.AtomDescribe" />
-        </service>
+    <!-- Describe -->
+    <service name="atom.describe">
+      <class name="org.fao.geonet.services.inspireatom.AtomDescribe"/>
+    </service>
 
-        <!-- GetData -->
-        <service name="atom.download">
-            <class name="org.fao.geonet.services.inspireatom.AtomGetData" />
-        </service>
+    <!-- GetData -->
+    <service name="atom.download">
+      <class name="org.fao.geonet.services.inspireatom.AtomGetData"/>
+    </service>
 
-        <!-- Search -->
-        <service name="atom.search">
-            <class name="org.fao.geonet.services.inspireatom.AtomSearch" />
-        </service>
-    </services>
+    <!-- Search -->
+    <service name="atom.search">
+      <class name="org.fao.geonet.services.inspireatom.AtomSearch"/>
+    </service>
+  </services>
 </geonet>

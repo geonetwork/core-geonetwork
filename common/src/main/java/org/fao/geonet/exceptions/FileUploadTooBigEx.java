@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class FileUploadTooBigEx extends BadInputEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class FileUploadTooBigEx extends BadInputEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public FileUploadTooBigEx()
-	{
-		super("File upload too big", null);
+    public FileUploadTooBigEx() {
+        super("File upload too big", null);
 
-		id = "file-upload-too-big";
-	}
+        id = "file-upload-too-big";
+    }
 }
 
 //=============================================================================

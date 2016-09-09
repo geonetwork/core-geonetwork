@@ -26,74 +26,69 @@ package jeeves.server.sources.http;
 import jeeves.server.sources.ServiceRequest;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 //=============================================================================
 
-/** Represents a request from tomcat (ie http)
-  */
+/**
+ * Represents a request from tomcat (ie http)
+ */
 
-public class HttpServiceRequest extends ServiceRequest
-{
-	private HttpServletResponse httpRes;
+public class HttpServiceRequest extends ServiceRequest {
+    private HttpServletResponse httpRes;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public HttpServiceRequest(HttpServletResponse res)
-	{
-		httpRes = res;
-	}
+    public HttpServiceRequest(HttpServletResponse res) {
+        httpRes = res;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void beginStream(String contentType, boolean cache)
-	{
-		beginStream(contentType, -1, null, cache);
-	}
+    public void beginStream(String contentType, boolean cache) {
+        beginStream(contentType, -1, null, cache);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void beginStream(String contentType, int contentLength,
-									String contentDisposition, boolean cache)
-	{
-		httpRes.setStatus(statusCode);
+    public void beginStream(String contentType, int contentLength,
+                            String contentDisposition, boolean cache) {
+        httpRes.setStatus(statusCode);
 
-		if (contentType != null)
-			httpRes.setContentType(contentType);
+        if (contentType != null)
+            httpRes.setContentType(contentType);
 
-		if (contentLength != -1)
-			httpRes.setContentLength(contentLength);
+        if (contentLength != -1)
+            httpRes.setContentLength(contentLength);
 
-		if (contentDisposition != null)
-			httpRes.addHeader("Content-disposition", contentDisposition);
-		else
-		{
-			//--- this else is needed by IExplorer6
-			//--- maybe we can use the <meta> tag instead of these lines
+        if (contentDisposition != null)
+            httpRes.addHeader("Content-disposition", contentDisposition);
+        else {
+            //--- this else is needed by IExplorer6
+            //--- maybe we can use the <meta> tag instead of these lines
 
-			if (!cache)
-			{
-				httpRes.addHeader("Pragma",        "no-cache");
-				httpRes.addHeader("Cache-Control", "no-cache");
-				httpRes.addHeader("Expires",       "-1");
-			}
-		}
-	}
+            if (!cache) {
+                httpRes.addHeader("Pragma", "no-cache");
+                httpRes.addHeader("Cache-Control", "no-cache");
+                httpRes.addHeader("Expires", "-1");
+            }
+        }
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void endStream() throws IOException
-	{
-		httpRes.flushBuffer();
-	}
+    public void endStream() throws IOException {
+        httpRes.flushBuffer();
+    }
 
-	public HttpServletResponse getHttpServletResponse() {
-		return httpRes;
-	}
+    public HttpServletResponse getHttpServletResponse() {
+        return httpRes;
+    }
 }
 
 //=============================================================================

@@ -23,32 +23,29 @@
 
 package org.fao.geonet.services.schema;
 
-import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.api.standards.StandardsUtils;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlFile;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
-
-import java.util.Set;
 
 //=============================================================================
 
 /**
  * Service retrieving information for an element or a codelist from schema localized files (ie.
  * labels.xml and codelist.xml).
- * 
- * 
- * <p>
- * Example to retrieve codelist information:
- * 
+ *
+ *
+ * <p> Example to retrieve codelist information:
+ *
  * <pre>
  * {@code
  * <request>
@@ -56,27 +53,26 @@ import java.util.Set;
  * </request>
  * }
  * </pre>
- * 
+ *
  * </p>
- * 
- * 
- * <p>
- * Example to retrieve element information:
- * 
+ *
+ *
+ * <p> Example to retrieve element information:
+ *
  * <pre>
  * {@code
  * <request>
- *   <element schema="iso19139" name="gmd:identificationInfo" 
- *     context="gmd:MD_Metadata" 
- *     fullContext="gmd:MD_Metadata/gmd:identificationInfo" 
+ *   <element schema="iso19139" name="gmd:identificationInfo"
+ *     context="gmd:MD_Metadata"
+ *     fullContext="gmd:MD_Metadata/gmd:identificationInfo"
  *     isoType="" />
  * </request>
  * }
  * </pre>
- * 
+ *
  * </p>
- * 
  */
+@Deprecated
 public class Info implements Service {
     // --------------------------------------------------------------------------
     // ---
@@ -84,14 +80,36 @@ public class Info implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-        ;
-    }
+    private static final String UNKNOWN_SCHEMA = "unknown-schema";
 
     // --------------------------------------------------------------------------
     // ---
     // --- Service
     // ---
+    // --------------------------------------------------------------------------
+    private static final String UNKNOWN_NAMESPACE = "unknown-namespace";
+
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Private methods
+    // ---
+    // --------------------------------------------------------------------------
+    private static final String NOT_FOUND = "not-found";
+
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------
+
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        ;
+    }
+
     // --------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
@@ -118,176 +136,48 @@ public class Info implements Service {
 
     // --------------------------------------------------------------------------
     // ---
-    // --- Private methods
+    // --- Variables
     // ---
     // --------------------------------------------------------------------------
 
     private Element handleElement(SchemaManager scm, Element elem, ServiceContext context)
-            throws Exception {
+        throws Exception {
         return handleObject(scm, elem, "labels.xml", context);
     }
 
-    // --------------------------------------------------------------------------
-
     private Element handleCodelist(SchemaManager scm, Element elem, ServiceContext context)
-            throws Exception {
+        throws Exception {
         return handleObject(scm, elem, "codelists.xml", context);
     }
 
-    // --------------------------------------------------------------------------
-
     private Element handleObject(SchemaManager scm, Element elem, String fileName,
-            ServiceContext servContext) throws Exception {
+                                 ServiceContext servContext) throws Exception {
         String schema = Util.getAttrib(elem, "schema");
         String name = Util.getAttrib(elem, "name");
         String parent = Util.getAttrib(elem, "context", "");
         String isoType = Util.getAttrib(elem, "isoType", "");
         String xpath = Util.getAttrib(elem, "fullContext", "");
 
-        name = findNamespace(name, scm, schema);
-        parent = findNamespace(parent, scm, schema);
-        isoType = findNamespace(isoType, scm, schema);
+        name = StandardsUtils.findNamespace(name, scm, schema);
+        parent = StandardsUtils.findNamespace(parent, scm, schema);
+        isoType = StandardsUtils.findNamespace(isoType, scm, schema);
 
         if (name == null) {
-            return buildError(elem, UNKNOWN_NAMESPACE);
+            return StandardsUtils.buildError(elem, UNKNOWN_NAMESPACE);
         }
 
         if (!scm.existsSchema(schema)) {
-            return buildError(elem, UNKNOWN_SCHEMA);
+            return StandardsUtils.buildError(elem, UNKNOWN_SCHEMA);
         }
 
-        Element result = getHelp(scm, fileName, schema, name, parent, xpath, isoType, servContext);
+        Element result = StandardsUtils.getHelp(scm, fileName, schema, name, parent, xpath, isoType, servContext);
         // if not found then return an error
         if (result == null) {
-          return buildError(elem, NOT_FOUND);
+            return StandardsUtils.buildError(elem, NOT_FOUND);
         } else {
-          return result;
+            return result;
         }
     }
-
-    // --------------------------------------------------------------------------
-
-    public static Element getHelp(SchemaManager scm, String fileName, String schema,
-                                  String name, String parent, String xpath, String isoType, ServiceContext context)
-            throws Exception {
-
-        XmlFile xf = scm.getSchemaInfo(schema).get(fileName);
-
-        if (xf == null) {
-            throw new OperationAbortedEx("File not found for : " + schema + "/" + fileName);
-        }
-
-        Element entries = xf.exec(new Element("junk"), context);
-
-        Element result = checkEntries(scm, schema, entries, xpath, name, isoType, true);
-        if (result == null) {
-            result = checkEntries(scm, schema, entries, parent, name, isoType, true);
-        }
-        if (result == null) {
-        	result = checkEntries(scm, schema, entries, xpath, name, isoType, false);
-        }
-        if (result == null) {
-        	result = checkEntries(scm, schema, entries, parent, name, isoType, false);
-        }
-
-        if (result == null) {
-            // get schemas that this schema depends on and check whether the 
-						// help/label exists in those - stop at the first one found 
-            Set<String> dependentSchemas = scm.getDependencies(schema);
-            for (String baseSchema : dependentSchemas) {
-              result = getHelp(scm, fileName, baseSchema, name, parent, xpath, isoType, context);
-              if (result != null) break;
-            }
-        }
-        
-        return result;
-    }
-
-    // --------------------------------------------------------------------------
-
-    private static Element checkEntries(SchemaManager scm, String schema, Element entries, String context,
-            String name, String isoType, boolean requireContextMatch) throws OperationAbortedEx {
-
-        for (Object o : entries.getChildren()) {
-            Element currElem = (Element) o;
-            String currName = currElem.getAttributeValue("name");
-            String aliasName = currElem.getAttributeValue("alias");
-            String currContext = currElem.getAttributeValue("context");
-
-            currName = findNamespace(currName, scm, schema);
-
-            if (currName == null) {
-                Log.warning(Geonet.SCHEMA_MANAGER, "Namespace prefix for element " +
-                        currElem.getAttributeValue("name") +
-                        " not found in " + schema + " schema namespaces." +
-                        "Check the element namespace or remove it " +
-                        "from the labels.xml file.");
-                continue;
-            }
-
-            if(!currName.equals(name)) {
-              if (aliasName == null || !aliasName.equals(name)) {
-            		 continue;
-              }
-            }
-            
-        	if (currContext != null && (context != null || isoType != null)) {
-        		// XPath context are supposed to use same namespace prefix
-        		if (!currContext.contains("/")) {
-        			currContext = findNamespace(currContext, scm, schema);
-        		}
-        		
-        		if ((context != null && context.equals(currContext)) || (isoType != null && isoType.equals(currContext))) {
-        			return (Element) currElem.clone();
-        		}
-        	} else if (!requireContextMatch){
-        		return (Element) currElem.clone();
-        	}
-        }
-
-        return null; // no match found
-
-    }
-
-    // --------------------------------------------------------------------------
-
-    public static String findNamespace(String name, SchemaManager scm, String schema) {
-        int pos = name.indexOf(':');
-
-        if (pos == -1) {
-            return name;
-        }
-        String prefix = name.substring(0, pos);
-
-        String nsURI = scm.getNamespaceURI(schema, prefix);
-
-        if (nsURI == null) {
-            return null;
-        }
-        
-        return nsURI + name.substring(pos);
-    }
-
-    // --------------------------------------------------------------------------
-
-    private static Element buildError(Element elem, String error) {
-        elem = (Element) elem.clone();
-        elem.setAttribute("error", error);
-
-        return elem;
-    }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Variables
-    // ---
-    // --------------------------------------------------------------------------
-
-    private static final String UNKNOWN_SCHEMA = "unknown-schema";
-
-    private static final String UNKNOWN_NAMESPACE = "unknown-namespace";
-
-    private static final String NOT_FOUND = "not-found";
 }
 
 // =============================================================================

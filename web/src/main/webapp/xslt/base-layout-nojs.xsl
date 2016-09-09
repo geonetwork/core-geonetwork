@@ -24,59 +24,26 @@
 
 <!--
   The main entry point for all user interface generated
-  from XSLT. 
+  from XSLT.
 -->
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
-    encoding="UTF-8"/>
+              encoding="UTF-8"/>
 
   <xsl:include href="common/base-variables.xsl"/>
-  <xsl:include href="skin/default/skin.xsl"/>
-  <xsl:include href="base-layout-cssjs-loader.xsl"/>
+  <xsl:include href="common/render-html.xsl"/>
 
   <xsl:template match="/">
-    <html>
-      <head>
-        <title><!-- todo: md title / md desc / md keywords -->
-          <xsl:value-of select="concat($env/system/site/name, ' - ', $env/system/site/organization)"
-          />
-        </title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-        <meta name="apple-mobile-web-app-capable" content="yes"/>
-
-        <meta name="description" content=""/>
-        <meta name="keywords" content=""/>
-
-
-        <link rel="icon" sizes="16x16 32x32 48x48" type="image/png" href="../../images/logos/favicon.png"/>
-        <link href="rss.search?sortBy=changeDate" rel="alternate" type="application/rss+xml"
-          title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
-        <link href="portal.opensearch" rel="search" type="application/opensearchdescription+xml"
-          title="{concat($env/system/site/name, ' - ', $env/system/site/organization)}"/>
-
-        <xsl:call-template name="css-load"/>
-      </head>
-
-
-      <!-- The GnCatController takes care of 
-      loading site information, check user login state
-      and a facet search to get main site information.
-      -->
-      <body>
-        <div class="gn-full">
-              <xsl:call-template name="header"/>
-              <xsl:apply-templates mode="content" select="."/>
-              <xsl:call-template name="footer"/>
-        </div>               
-      </body>
-    </html>
+    <xsl:call-template name="render-html">
+      <xsl:with-param name="title"
+                      select="concat($env/system/site/name, ' - ', $env/system/site/organization)"/>
+      <xsl:with-param name="content">
+        <xsl:apply-templates mode="content" select="."/>
+      </xsl:with-param>
+    </xsl:call-template>
   </xsl:template>
-
-
-
 
 </xsl:stylesheet>

@@ -34,16 +34,7 @@ import javax.persistence.PersistenceContext;
 public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTest {
 
     @Autowired
-    MetadataRepository _mdRepo;
-    @Autowired
-    GroupRepository _groupRepo;
-    @Autowired
-    OperationRepository _opRepo;
-    @Autowired
     protected OperationAllowedRepository _opAllowRepo;
-    @PersistenceContext
-    EntityManager _entityManager;
-
     protected Metadata _md1;
     protected Operation _viewOp;
     protected Group _allGroup;
@@ -54,6 +45,14 @@ public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTe
     protected OperationAllowed _opAllowed2;
     protected OperationAllowed _opAllowed3;
     protected OperationAllowed _opAllowed4;
+    @Autowired
+    MetadataRepository _mdRepo;
+    @Autowired
+    GroupRepository _groupRepo;
+    @Autowired
+    OperationRepository _opRepo;
+    @PersistenceContext
+    EntityManager _entityManager;
 
     @Before
     public void createEntities() {

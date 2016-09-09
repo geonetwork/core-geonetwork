@@ -21,32 +21,30 @@
 package org.fao.geonet;
 
 import jeeves.server.context.ServiceContext;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 
 /**
+ * This class is a gateway between the Spring Application Context and the other contexts of
+ * Geonetwork It is used to store references to the different contexts used in geonetwork. A
+ * reference to it will be distributed via the Spring ApplicationContext
  *
- * This class is a gateway between the Spring Application
- * Context and the other contexts of Geonetwork
- * It is used to store references to the
- * different contexts used in geonetwork.
- * A reference to it will be distributed via
- * the Spring ApplicationContext
  * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  */
 
 public class ContextContainer implements ApplicationContextAware {
-       
-       //private GeonetContext geoctx;
-       private ServiceContext srvctx;
-       private ApplicationContext ctx;
-       
-       public ContextContainer() {
-       
-               
-       }
+
+    //private GeonetContext geoctx;
+    private ServiceContext srvctx;
+    private ApplicationContext ctx;
+
+    public ContextContainer() {
+
+
+    }
 
        /*
        public GeonetContext getGeoctx() {
@@ -54,32 +52,30 @@ public class ContextContainer implements ApplicationContextAware {
        }
 
        public void setGeoctx(GeonetContext geoctx) {
-               
+
                this.geoctx = geoctx;
        }
        */
 
-       public ServiceContext getSrvctx() {
-               return srvctx;
-       }
+    public ServiceContext getSrvctx() {
+        return srvctx;
+    }
 
-       public void setSrvctx(ServiceContext srvctx) {
-               this.srvctx = srvctx;
-       }
+    public void setSrvctx(ServiceContext srvctx) {
+        this.srvctx = srvctx;
+    }
 
-       
-       public void setApplicationContext(ApplicationContext arg0)
-                       throws BeansException {
-       
-                       ctx=arg0;
-       }
-       
-       
-       public ApplicationContext getApplicationContext() {
-               if (ctx==null) throw new RuntimeException("applicationcontext not yet initialized");
-               return ctx;
-       }
-       
+    public ApplicationContext getApplicationContext() {
+        if (ctx == null) throw new RuntimeException("applicationcontext not yet initialized");
+        return ctx;
+    }
+
+    public void setApplicationContext(ApplicationContext arg0)
+        throws BeansException {
+
+        ctx = arg0;
+    }
+
 
 }
 

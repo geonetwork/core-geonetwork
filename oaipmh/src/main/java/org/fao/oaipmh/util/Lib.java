@@ -31,83 +31,77 @@ import org.jdom.Element;
 
 //=============================================================================
 
-public class Lib
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+public class Lib {
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public static Element createOaiRoot()
-	{
-		Element root = new Element(OaiPmh.ROOT_NAME, OaiPmh.Namespaces.OAI_PMH);
-		root.setAttribute("schemaLocation", OaiPmh.SCHEMA_LOCATION, OaiPmh.Namespaces.XSI);
+    public static Element createOaiRoot() {
+        Element root = new Element(OaiPmh.ROOT_NAME, OaiPmh.Namespaces.OAI_PMH);
+        root.setAttribute("schemaLocation", OaiPmh.SCHEMA_LOCATION, OaiPmh.Namespaces.XSI);
 
-		Element date = new Element("responseDate", OaiPmh.Namespaces.OAI_PMH)
-									.setText(new ISODate().getDateAndTime() +"Z");
+        Element date = new Element("responseDate", OaiPmh.Namespaces.OAI_PMH)
+            .setText(new ISODate().getDateAndTime() + "Z");
 
-		root.addContent(date);
+        root.addContent(date);
 
-		return root;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static Element createOaiRoot(String url, Map<String, String> params, Element response)
-	{
-		Element root = Lib.createOaiRoot();
-		Element req  = new Element("request", OaiPmh.Namespaces.OAI_PMH)
-								.setText(url);
-
-		//--- if there is no verb, there are no params
-
-		if (params != null) {
-	        for (Map.Entry<String, String> param: params.entrySet()) {
-	            req.setAttribute(param.getKey(), param.getValue());
-			}
-		}
-		root.addContent(req);
-		root.addContent(response);
-
-		return root;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void add(Element parent, String name, String value)
-	{
-		parent.addContent(new Element(name, OaiPmh.Namespaces.OAI_PMH).setText(value));
-	}
-
-	//---------------------------------------------------------------------------
-	/** Checks if the response has a valid OAI-PMH root node */
-
-	public static boolean isRootValid(Element response)
-	{
-		if (!response.getName().equals(OaiPmh.ROOT_NAME))
-			return false;
-
-		if (!response.getNamespace().equals(OaiPmh.Namespaces.OAI_PMH))
-			return false;
-
-		return true;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static boolean isInteger(String value)
-  {
-    try
-    {
-      Integer.parseInt(value);
-      return true;
+        return root;
     }
-    catch(Exception e)
-    {
-      return false;
+
+    //---------------------------------------------------------------------------
+
+    public static Element createOaiRoot(String url, Map<String, String> params, Element response) {
+        Element root = Lib.createOaiRoot();
+        Element req = new Element("request", OaiPmh.Namespaces.OAI_PMH)
+            .setText(url);
+
+        //--- if there is no verb, there are no params
+
+        if (params != null) {
+            for (Map.Entry<String, String> param : params.entrySet()) {
+                req.setAttribute(param.getKey(), param.getValue());
+            }
+        }
+        root.addContent(req);
+        root.addContent(response);
+
+        return root;
     }
-  }
+
+    //---------------------------------------------------------------------------
+
+    public static void add(Element parent, String name, String value) {
+        parent.addContent(new Element(name, OaiPmh.Namespaces.OAI_PMH).setText(value));
+    }
+
+    //---------------------------------------------------------------------------
+
+    /**
+     * Checks if the response has a valid OAI-PMH root node
+     */
+
+    public static boolean isRootValid(Element response) {
+        if (!response.getName().equals(OaiPmh.ROOT_NAME))
+            return false;
+
+        if (!response.getNamespace().equals(OaiPmh.Namespaces.OAI_PMH))
+            return false;
+
+        return true;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public static boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
 
 //=============================================================================

@@ -55,6 +55,21 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     GroupRepository _groupRepo;
 
+    public static UserGroup getUserGroup(AtomicInteger atomicInteger, UserRepository _userRepo, GroupRepository _groupRepo) {
+        int groupName = atomicInteger.incrementAndGet();
+        int userName = atomicInteger.incrementAndGet();
+
+        User user = new User().setUsername(userName + "");
+        user.getSecurity().setPassword("password" + userName);
+        user = _userRepo.save(user);
+
+        Group group = _groupRepo.save(new Group().setName(groupName + ""));
+        UserGroup userGroup = new UserGroup().setGroup(group).setUser(user).setId(new UserGroupId(user, group));
+        userGroup.setProfile(Profile.values()[userName % Profile.values().length]);
+
+        return userGroup;
+    }
+
     @Test
     public void testFindUserIds() {
         UserGroup ug1 = _repo.save(newUserGroup());
@@ -78,7 +93,7 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testPrimaryKey() throws Exception {
         Group group = _groupRepo.save(GroupRepositoryTest.newGroup(_inc));
-        User user =_userRepo.save(UserRepositoryTest.newUser(_inc));
+        User user = _userRepo.save(UserRepositoryTest.newUser(_inc));
 
         UserGroup userGroup = new UserGroup().setGroup(group).setUser(user).setProfile(Profile.Editor);
         userGroup = _repo.save(userGroup);
@@ -150,9 +165,9 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(3, _repo.count());
 
-        Specification<UserGroup> spec =Specifications
-                .where(UserGroupSpecs.hasUserId(ug1.getUser().getId()))
-                .and(UserGroupSpecs.hasProfile(Profile.Reviewer));
+        Specification<UserGroup> spec = Specifications
+            .where(UserGroupSpecs.hasUserId(ug1.getUser().getId()))
+            .and(UserGroupSpecs.hasProfile(Profile.Reviewer));
 
         List<UserGroup> found = _repo.findAll(spec);
 
@@ -186,24 +201,8 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
         assertNull(_repo.findOne(ug1.getId()));
     }
 
-
     private UserGroup newUserGroup() {
         return getUserGroup(_inc, _userRepo, _groupRepo);
-    }
-
-    public static UserGroup getUserGroup(AtomicInteger atomicInteger, UserRepository _userRepo, GroupRepository _groupRepo) {
-        int groupName = atomicInteger.incrementAndGet();
-        int userName = atomicInteger.incrementAndGet();
-
-        User user = new User().setUsername(userName + "");
-        user.getSecurity().setPassword("password" + userName);
-        user = _userRepo.save(user);
-
-        Group group = _groupRepo.save(new Group().setName(groupName + ""));
-        UserGroup userGroup = new UserGroup().setGroup(group).setUser(user).setId(new UserGroupId(user, group));
-        userGroup.setProfile(Profile.values()[userName % Profile.values().length]);
-
-        return userGroup;
     }
 
 }

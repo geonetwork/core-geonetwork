@@ -24,10 +24,12 @@
 package org.fao.geonet.services.metadata;
 
 import com.google.common.base.Optional;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
@@ -53,9 +55,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import static org.fao.geonet.api.records.MetadataSharingApi.retrievePrivileges;
 import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
@@ -67,16 +71,17 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 @ReadWriteController
 @Controller
+@Deprecated
 public class BatchNewOwner {
 
     @RequestMapping(value = "/{lang}/metadata.batch.newowner", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public NewOwnerResult exec(
-            @PathVariable String lang,
-            @RequestParam("userId") String targetUsr,
-            @RequestParam("groupId") String targetGrp,
-            HttpServletRequest request) throws Exception {
+        @PathVariable String lang,
+        @RequestParam("userId") String targetUsr,
+        @RequestParam("groupId") String targetGrp,
+        HttpServletRequest request) throws Exception {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -105,7 +110,7 @@ public class BatchNewOwner {
     }
 
     private NewOwnerResult setNewOwner(ServiceContext context, String targetUsr, String targetGrp,
-                                       Collection<String> selection, Set <Integer> modified) throws Exception {
+                                       Collection<String> selection, Set<Integer> modified) throws Exception {
 
         AccessManager accessManager = context.getBean(AccessManager.class);
         DataManager dataManager = context.getBean(DataManager.class);
@@ -138,7 +143,7 @@ public class BatchNewOwner {
                 Integer sourceUsr = info.getSourceInfo().getOwner();
                 Integer sourceGrp = info.getSourceInfo().getGroupOwner();
                 Vector<OperationAllowedId> sourcePriv =
-                        retrievePrivileges(context, id, sourceUsr,  sourceGrp);
+                    retrievePrivileges(context, id, sourceUsr, sourceGrp);
 
                 // -- Set new privileges for new owner from privileges of the old
                 // -- owner, if none then set defaults
@@ -149,11 +154,11 @@ public class BatchNewOwner {
                     for (OperationAllowedId priv : sourcePriv) {
                         if (sourceGrp != null) {
                             dataManager.unsetOperation(context, id,
-                                    "" + sourceGrp,
-                                    "" + priv.getOperationId());
+                                "" + sourceGrp,
+                                "" + priv.getOperationId());
                         }
                         dataManager.setOperation(context, id, targetGrp,
-                                "" + priv.getOperationId());
+                            "" + priv.getOperationId());
                     }
                 }
                 // -- set the new owner into the metadata record
@@ -167,27 +172,6 @@ public class BatchNewOwner {
     }
 
     //--------------------------------------------------------------------------
-
-    private Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, Integer userId, Integer groupId) throws Exception {
-
-        OperationAllowedRepository opAllowRepo = context.getBean(OperationAllowedRepository.class);
-
-        int iMetadataId = Integer.parseInt(id);
-        Specifications<OperationAllowed> spec =
-                where(hasMetadataId(iMetadataId));
-        if (groupId != null) {
-            spec = spec.and(hasGroupId(groupId));
-        }
-
-        List<OperationAllowed> operationsAllowed = opAllowRepo.findAllWithOwner(userId, Optional.of((Specification<OperationAllowed>) spec));
-
-        Vector<OperationAllowedId> result = new Vector<OperationAllowedId>();
-        for (OperationAllowed operationAllowed : operationsAllowed) {
-            result.add(operationAllowed.getId());
-        }
-
-        return result;
-    }
 
 
     @XmlRootElement(name = "response")

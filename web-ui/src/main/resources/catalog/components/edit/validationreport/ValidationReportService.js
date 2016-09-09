@@ -29,24 +29,13 @@
   ]);
 
   module.factory('gnValidation', [
-    'gnHttp',
-    'gnEditor',
+    '$http',
     'gnCurrentEdit',
-    '$q',
-    function(gnHttp, gnEditor, gnCurrentEdit, $q) {
+    function($http, gnCurrentEdit) {
       return {
-
         get: function() {
-          var defer = $q.defer();
-
-          gnHttp.callService('getValidation', {
-            id: gnCurrentEdit.id
-          }).success(function(data) {
-            // Empty response return null string.
-            var response = data !== 'null' ? data : null;
-            defer.resolve(response);
-          });
-          return defer.promise;
+          return $http.put(
+              '../api/records/' + gnCurrentEdit.uuid + '/validate');
         }
       };
     }]);

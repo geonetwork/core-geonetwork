@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -42,34 +43,33 @@ import java.nio.file.Path;
 
 
 /**
- * Adds an ISO19135 register record as a thesaurus (or updates it if has 
- * already been added).
+ * Adds an ISO19135 register record as a thesaurus (or updates it if has already been added).
  */
 public class AddRegister extends NotInReadOnlyModeService {
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context)
-			throws Exception {
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element serviceSpecificExec(Element params, ServiceContext context)
+        throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String uuid = Util.getParam(params, Params.UUID);
-		String type = Util.getParam(params, "type");
-		String activated = Util.getParam(params, "activated", "y");
+        String uuid = Util.getParam(params, Params.UUID);
+        String type = Util.getParam(params, "type");
+        String activated = Util.getParam(params, "activated", "y");
 
-		ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
-		
+        ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
 
-		String theKey = tm.createUpdateThesaurusFromRegister(uuid, type, context);
 
-		Thesaurus gst = tm.getThesaurusByName(theKey);
-		String fname = gst.getFname();
+        String theKey = tm.createUpdateThesaurusFromRegister(uuid, type, context);
+
+        Thesaurus gst = tm.getThesaurusByName(theKey);
+        String fname = gst.getFname();
 
         final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
 
@@ -79,13 +79,13 @@ public class AddRegister extends NotInReadOnlyModeService {
 
         activationRepository.save(activation);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		Element elRef = new Element("ref");		
-		elRef.addContent(theKey);
-		elResp.addContent(elRef);
-		Element elName = new Element("thesaName").setText(fname);
-		elResp.addContent(elName);
-		
-		return elResp;
-	}
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        Element elRef = new Element("ref");
+        elRef.addContent(theKey);
+        elResp.addContent(elRef);
+        Element elName = new Element("thesaName").setText(fname);
+        elResp.addContent(elName);
+
+        return elResp;
+    }
 }

@@ -33,19 +33,18 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Defines what elements to update, what fields in each element to update and the new values.
  *
- * User: Jesse
- * Date: 10/4/13
- * Time: 11:38 AM
+ * User: Jesse Date: 10/4/13 Time: 11:38 AM
  *
  * @param <T> They type of entity this query will update
- * @see org.fao.geonet.repository.GeonetRepository#createBatchUpdateQuery(org.fao.geonet.repository.statistic.PathSpec, Object,
- *      org.springframework.data.jpa.domain.Specification)
+ * @see org.fao.geonet.repository.GeonetRepository#createBatchUpdateQuery(org.fao.geonet.repository.statistic.PathSpec,
+ * Object, org.springframework.data.jpa.domain.Specification)
  */
 public class BatchUpdateQuery<T> {
     private final Class<T> _entityClass;
@@ -65,11 +64,11 @@ public class BatchUpdateQuery<T> {
     /**
      * Add a new attribute path and value to the update query.
      *
-     * @param pathSpec the path of the attribute to update with the new value.  More paths and values can be added to the {@link
-     *                 BatchUpdateQuery} object after it is created.
+     * @param pathSpec the path of the attribute to update with the new value.  More paths and
+     *                 values can be added to the {@link BatchUpdateQuery} object after it is
+     *                 created.
      * @param newValue the value to set on the attribute of all the affected entities
      * @param <V>      The type of the attribute
-     * @return
      */
     public <V> BatchUpdateQuery<T> add(@Nonnull final PathSpec<T, V> pathSpec, @Nullable final V newValue) {
         _paths.add(pathSpec);
@@ -111,7 +110,8 @@ public class BatchUpdateQuery<T> {
     /**
      * Set the specification used to select the entities to update.
      *
-     * @param specification a specification for controlling which entities will be affected by update.
+     * @param specification a specification for controlling which entities will be affected by
+     *                      update.
      * @return this query object
      */
     public BatchUpdateQuery<T> setSpecification(@Nonnull final Specification<T> specification) {

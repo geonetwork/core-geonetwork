@@ -27,6 +27,7 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -36,38 +37,40 @@ import java.nio.file.Path;
 
 //=============================================================================
 
-/** Force optimize Lucene index 
-  */
+/**
+ * Force optimize Lucene index
+ */
 
-public class IndexOptimize implements Service
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+public class IndexOptimize implements Service {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(Path appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+    public Element exec(Element params, ServiceContext context) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		SearchManager searchMan = gc.getBean(SearchManager.class);
-		
-		boolean info = searchMan.optimizeIndex();
+        SearchManager searchMan = gc.getBean(SearchManager.class);
 
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element("status").setText((info?"true":"false")));
-		
-		return elResp;
-	};
+        boolean info = searchMan.optimizeIndex();
+
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element("status").setText((info ? "true" : "false")));
+
+        return elResp;
+    }
+
+    ;
 }
 
 //=============================================================================

@@ -38,11 +38,12 @@ import java.io.Reader;
 import java.util.Set;
 
 /**
- * Default Lucene analyzer for GeoNetwork, based on a modified version of WhitespaceTokenizer and with added LowercaseFilter and
- * ASCIIFoldingFilter, and optionally StopFilter.
+ * Default Lucene analyzer for GeoNetwork, based on a modified version of WhitespaceTokenizer and
+ * with added LowercaseFilter and ASCIIFoldingFilter, and optionally StopFilter.
  * <p/>
- * Reason is that with StandardAnalyzer, which GeoNetwork was using before, it tokenizes such that the character * is
- * seen as delimiting. That caused queries with wildcards analyzed using StandardAnalyzer to fail.
+ * Reason is that with StandardAnalyzer, which GeoNetwork was using before, it tokenizes such that
+ * the character * is seen as delimiting. That caused queries with wildcards analyzed using
+ * StandardAnalyzer to fail.
  *
  * @author heikki doeleman
  */
@@ -82,8 +83,8 @@ public final class GeoNetworkAnalyzer extends Analyzer {
     /**
      * Creates a new {@link TokenStreamComponents} instance for this analyzer.
      *
-     * @param fieldName the name of the fields content passed to the
-     *                  {@link TokenStreamComponents} sink as a reader
+     * @param fieldName the name of the fields content passed to the {@link TokenStreamComponents}
+     *                  sink as a reader
      * @param reader    the reader passed to the {@link Tokenizer} constructor
      * @return the {@link TokenStreamComponents} for this analyzer.
      */
@@ -91,7 +92,7 @@ public final class GeoNetworkAnalyzer extends Analyzer {
     protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
         final Tokenizer source = new StandardTokenizer(Geonet.LUCENE_VERSION, reader);
         ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(new LowerCaseFilter(Geonet.LUCENE_VERSION,
-                new StandardFilter(Geonet.LUCENE_VERSION, source)));
+            new StandardFilter(Geonet.LUCENE_VERSION, source)));
 
         if (this.stopwords != null && !this.stopwords.isEmpty()) {
             return new TokenStreamComponents(source, new StopFilter(Geonet.LUCENE_VERSION, asciiFoldingFilter, this.stopwords)) {

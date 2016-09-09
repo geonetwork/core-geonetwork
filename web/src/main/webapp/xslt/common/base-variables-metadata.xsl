@@ -22,26 +22,24 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:gn="http://www.fao.org/geonetwork"
-  xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
-  xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:srv="http://www.isotc211.org/2005/srv"
-  >
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:saxon="http://saxon.sf.net/"
+                version="2.0" extension-element-prefixes="saxon"
+>
   <!-- Global XSL variables about the metadata record. This should be included for
   service dealing with one metadata record (eg. viewing, editing). -->
-  
+
   <xsl:include href="base-variables.xsl"/>
-  
+
   <!-- The metadata record in whatever profile -->
   <xsl:variable name="metadata" select="/root/*[name(.)!='gui' and name(.) != 'request']"/>
-  
-  
-  <!-- Get the last gn:info element in case something added it twice to the record 
+
+
+  <!-- Get the last gn:info element in case something added it twice to the record
   which may break the editor. In that case, XML view can help fixing the record. -->
   <xsl:variable name="metadataInfo" select="$metadata/gn:info[position() = last()]"/>
-  
+
   <!-- The metadata schema -->
   <xsl:variable name="schema" select="$metadataInfo/schema"/>
   <xsl:variable name="metadataUuid" select="$metadataInfo/uuid"/>
@@ -51,7 +49,7 @@
   <xsl:variable name="isService">
     <saxon:call-template name="{concat('get-', $schema, '-is-service')}"/>
   </xsl:variable>
-  
+
   <xsl:variable name="metadataLanguage">
     <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
   </xsl:variable>
@@ -62,13 +60,12 @@
     <saxon:call-template name="{concat('get-', $schema, '-other-languages-as-json')}"/>
   </xsl:variable>
   <xsl:variable name="metadataIsMultilingual" select="count($metadataOtherLanguages/*) > 0"/>
-  
+
   <!-- The list of thesaurus -->
   <xsl:variable name="listOfThesaurus" select="/root/gui/thesaurus/thesauri"/>
-  
-  
+
+
   <!-- The labels, codelists and profiles specific strings -->
-  <!-- TODO : label inheritance between profiles - maybe in Java ? -->
   <xsl:variable name="schemaInfo" select="/root/gui/schemas/*[name(.)=$schema]"/>
   <xsl:variable name="labels" select="$schemaInfo/labels"/>
   <xsl:variable name="codelists" select="$schemaInfo/codelists"/>
@@ -78,21 +75,24 @@
   <xsl:variable name="iso19139labels" select="$iso19139schema/labels"/>
   <xsl:variable name="iso19139codelists" select="$iso19139schema/codelists"/>
   <xsl:variable name="iso19139strings" select="$iso19139schema/strings"/>
-  
-  <xsl:variable name="isEditing" select="$service = 'md.edit' or $service = 'md.element.add'"/>
-  
+
+  <xsl:variable name="isEditing"
+                select="$service = 'md.edit'
+                or $service = 'embedded'
+                or $service = 'md.element.add'"/>
+
   <!-- Display attributes in editor -->
   <xsl:variable name="isDisplayingAttributes" select="/root/request/displayAttributes = 'true'"/>
   <xsl:variable name="isDisplayingTooltips" select="/root/request/displayTooltips = 'true'"/>
-  
+
   <xsl:variable name="withInlineEditing" select="false()"/>
-  
+
   <xsl:variable name="withXPath" select="false()"/>
-  
+
   <xsl:variable name="editorConfig">
     <saxon:call-template name="{concat('get-', $schema, '-configuration')}"/>
   </xsl:variable>
-  
+
   <xsl:variable name="iso19139EditorConfig">
     <!-- TODO only load for ISO profiles -->
     <xsl:call-template name="get-iso19139-configuration"/>
@@ -105,13 +105,14 @@
                         else if (/root/gui/currTab)
                         then /root/gui/currTab
                         else $editorConfig/editor/views/view/tab[@default]/@id"/>
-  
+
   <xsl:variable name="viewConfig" select="$editorConfig/editor/views/view[tab/@id = $tab]"/>
   <xsl:variable name="tabConfig" select="$editorConfig/editor/views/view/tab[@id = $tab]"/>
-  <xsl:variable name="thesaurusList" select="$editorConfig/editor/views/view[tab/@id = $tab]/thesaurusList"/>
-  
+  <xsl:variable name="thesaurusList"
+                select="$editorConfig/editor/views/view[tab/@id = $tab]/thesaurusList"/>
+
   <xsl:variable name="isFlatMode" select="if (/root/request/flat) then /root/request/flat = 'true'
     else $tabConfig/@mode = 'flat'"/>
-  
-  
+
+
 </xsl:stylesheet>

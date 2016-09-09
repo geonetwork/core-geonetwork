@@ -49,12 +49,12 @@
 
   <!-- View configuration -->
   <views>
-    <view name="default" upAndDownControlHidden="true" >
+    <view name="default" upAndDownControlHidden="true">
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
       </tab>
       <flatModeExceptions>
-        <for name="dc:subject" />
+        <for name="dc:subject"/>
       </flatModeExceptions>
     </view>
     <view name="advanced">

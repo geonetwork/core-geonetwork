@@ -83,6 +83,14 @@
         };
       })
 
+      /* filter to strip html tags, for strings
+      that come in via userinput to prevent xss */
+      .filter('htmlToPlaintext', function() {
+        return function(text) {
+          return text ? String(text).replace(/<[^>]+>+/gm, '') : '';
+        };
+      })
+
       /* filter to check if a value is an empty array, and if so,
          return param or empty string quite some of the gn json returns
          empty array if undefined or empty string was intended */

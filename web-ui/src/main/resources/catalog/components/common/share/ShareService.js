@@ -29,9 +29,16 @@
   module.value('gnShareConstants', {
     // Customize column to be displayed and the order
     // TODO: Move config to DB using order in operations table
-    columnOrder: ['0', '5', '1', '2', '3'],
-    internalOperations: ['2', '3'],
-    internalGroups: ['-1', '0', '1'],
+    columnOrder: ['view', 'dynamic', 'download', 'editing', 'notify'],
+    icons: {
+      'view': 'fa-share-alt',
+      'dynamic': 'fa-globe',
+      'download': 'fa-download',
+      'notify': 'fa-envelope',
+      'process': 'fa-cog',
+      'editing': 'fa-pencil'},
+    internalOperations: ['editing', 'notify'],
+    internalGroups: [-1, 0, 1],
     internalGroupsProfiles: ['Administrator', 'Reviewer'],
     // Use topGroups to place those groups with internet, intranet groups
     // on top of the privileges panel.
@@ -57,31 +64,26 @@
   module.factory('gnShareService', [
     '$q', '$http', 'gnShareConstants',
     function($q, $http, gnShareConstants) {
-      var isAdminOrReviewer = function(userProfile, groupOwner, privileges) {
+      var isAdminOrReviewer = function(userProfile, groupOwner,
+                                       privileges, batchMode) {
         if ($.inArray(userProfile,
                       gnShareConstants.internalGroupsProfiles) === -1) {
           return false;
-        } else if (userProfile === 'Administrator') {
+        } else if (userProfile === 'Administrator' ||
+            (userProfile === 'Reviewer' && batchMode)) {
           return true;
         } else {
           // Check if user is member of groupOwner
           // or check if user is Reviewer and can edit record
           var ownerGroupInfo = $.grep(privileges, function(g) {
-            var canEdit = false;
-            for (var i = 0; i < g.oper.length; i++) {
-              if (g.oper[i].id === '2' && g.oper[i].on) {
-                // Editing
-                canEdit = true;
-                break;
-              }
-            }
-            return g.id === groupOwner ||
-                   (canEdit && $.inArray('Reviewer', g.userProfile) !== -1);
+            return g.group === groupOwner ||
+                   (g.operations.editing &&
+                    $.inArray('Reviewer', g.userProfiles) !== -1);
           });
 
           var profiles = [];
           for (var j = 0; j < ownerGroupInfo.length; j++) {
-            var groupProfile = ownerGroupInfo[j].userProfile;
+            var groupProfile = ownerGroupInfo[j].userProfiles;
             if (groupProfile) {
               if ($.isArray(groupProfile)) {
                 profiles = profiles.concat(groupProfile);
@@ -132,76 +134,37 @@
          */
         loadPrivileges: function(metadataId, userProfile) {
           var defer = $q.defer();
-          var url = angular.isDefined(metadataId) ?
-              'md.privileges?_content_type=json&id=' + metadataId :
-              'md.privileges.batch?_content_type=json';
+          var url = '../api/records' +
+              (angular.isDefined(metadataId) ? '/' + metadataId : '') +
+              '/sharing';
 
           $http.get(url)
               .success(function(data) {
-                var groups = data !== 'null' ? data.group : null;
-                if (data == null) {
-                  return;
-                }
+                var groups = data.privileges;
 
                 // Promote custom topgroups
                 angular.forEach(groups, function(g) {
-                  if ($.inArray(g.id, gnShareConstants.topGroups) !== -1) {
+                  if ($.inArray(g.group, gnShareConstants.topGroups) !== -1) {
                     g.reserved = 'true';
                   }
-                  g.isCheckedAll = false;
-                  // Format privileges information
-                  // Could be an object with a on property:
-                  //   "oper":       [
-                  //   {
-                  //     "id": "0",
-                  //     "on": []
-                  //   },
-                  //
-                  //   or a table of string and one dimenstion array
-                  //   "oper":       [
-                  //   "0",
-                  //   ["1"],
-                  //   ....
-                  g.privileges = {};
-                  angular.forEach(g.oper, function(o) {
-                    var key, value = false, disabled = false;
-                    if (angular.isObject(o) && !angular.isArray(o)) {
-                      key = o.id;
-                      value = o.on !== undefined;
-                    } else {
-                      key = o[0] || o;
-                      value = false;
-                    }
-
-                    if ($.inArray(g.id,
-                        gnShareConstants.internalGroups) !== -1 &&
-                        $.inArray(userProfile,
-                        gnShareConstants.internalGroupsProfiles) === -1) {
-                      disabled = true;
-                    }
-
-                    g.privileges[key] = {value: value, disabled: disabled};
-                  });
                 });
 
                 var operations = [];
-                if (gnShareConstants.columnOrder) {
-                  angular.forEach(gnShareConstants.columnOrder,
-                      function(operationId) {
-                        var operationFound =
-                            $.grep(data.operations, function(o) {
-                          return o.id === operationId;
-                        });
-                        operations.push(operationFound[0]);
-                      });
+                if (angular.isArray(gnShareConstants.columnOrder)) {
+                  operations = gnShareConstants.columnOrder;
                 } else {
-                  operations = data !== 'null' ? data.operations : null;
+                  angular.forEach(data.privileges[0].operations,
+                      function(value, key) {
+                        ops.push(key);
+                      });
                 }
+
                 defer.resolve({
-                  groups: groups,
+                  privileges: groups,
                   operations: operations,
                   isAdminOrReviewer:
-                      isAdminOrReviewer(userProfile, data.groupOwner, groups)});
+                      isAdminOrReviewer(userProfile, data.groupOwner,
+                      groups, angular.isUndefined(metadataId))});
               });
           return defer.promise;
         },
@@ -220,34 +183,33 @@
          *
          * @return {HttpPromise} Future object.
          */
-        savePrivileges: function(metadataId, groups, user) {
+        savePrivileges: function(metadataId, privileges, user, replace) {
           var defer = $q.defer();
-          var params = {};
-          var url;
+          var url = '../api/records' + (
+              angular.isDefined(metadataId) ? '/' + metadataId : '') +
+              '/sharing';
 
-          if (angular.isDefined(metadataId)) {
-            url = 'md.privileges.update?_content_type=json';
-            params.id = metadataId;
-          }
-          else {
-            url = 'md.privileges.batch.update?_content_type=json';
-          }
-          angular.forEach(groups, function(g) {
+          var ops = [];
+          angular.forEach(privileges, function(g) {
+            // Do not submit internal groups info
+            // If user is not allowed.
             var allowed = (
-                $.inArray(g.id, gnShareConstants.internalGroups) !== -1 &&
+                $.inArray(g.group, gnShareConstants.internalGroups) !== -1 &&
                 user.isReviewerOrMore()) ||
-                ($.inArray(g.id, gnShareConstants.internalGroups) === -1);
+                ($.inArray(g.group, gnShareConstants.internalGroups) === -1);
 
             if (allowed) {
-              angular.forEach(g.privileges, function(p, key) {
-                if (p.value === true) {
-                  params['_' + g.id + '_' + key] = 'on';
-                }
+              ops.push({
+                group: g.group,
+                operations: g.operations
               });
             }
           });
-          //TODO: fix service that crash with _content_type parameter
-          $http.get(url, {params: params})
+
+          $http.put(url, {
+            clear: replace,
+            privileges: ops
+          })
               .success(function(data) {
                 defer.resolve(data);
               }).error(function(data) {

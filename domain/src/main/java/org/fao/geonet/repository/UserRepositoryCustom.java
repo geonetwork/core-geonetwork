@@ -32,6 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +43,8 @@ import java.util.List;
  */
 public interface UserRepositoryCustom {
     /**
-     * Find the use with the given userid (where userid is a string).  The string will be converted to an integer for making the query.
+     * Find the use with the given userid (where userid is a string).  The string will be converted
+     * to an integer for making the query.
      *
      * @param userId the userid.
      * @return the use with the given userid
@@ -55,8 +57,8 @@ public interface UserRepositoryCustom {
      *
      * @param metadataIds the metadataIds of the metadata to inspect.
      * @param profile     if non-null then filter the users by the given profile.
-     * @param sort        if non-null then Sort the results by the <em>User</em> property.  The sort object must contain user
-     *                    properties only.
+     * @param sort        if non-null then Sort the results by the <em>User</em> property.  The sort
+     *                    object must contain user properties only.
      * @return all the users that are part of the ownerGroup of a particular set of metadata.
      */
     @Nonnull
@@ -74,8 +76,10 @@ public interface UserRepositoryCustom {
     /**
      * Find all the users are part of one of the {@link UserGroup}s selected by the specificatio.
      *
-     * @param userGroupSpec a specification for selecting which {@link UserGroup}s the user has to be part of.
-     * @return all the users are part of one of the {@link UserGroup}s selected by the specification.
+     * @param userGroupSpec a specification for selecting which {@link UserGroup}s the user has to
+     *                      be part of.
+     * @return all the users are part of one of the {@link UserGroup}s selected by the
+     * specification.
      */
     @Nonnull
     List<User> findAllUsersInUserGroups(@Nonnull Specification<UserGroup> userGroupSpec);
@@ -90,21 +94,23 @@ public interface UserRepositoryCustom {
     User findOneByEmail(@Nonnull String email);
 
     /**
-     * Find the user identified by the email but also has a null authtype (if user exists but has a nonnull authtype null is returned)
+     * Find the user identified by the email but also has a null authtype (if user exists but has a
+     * nonnull authtype null is returned)
      *
      * @param email the email to use in the query.
-     * @return the user identified by the username but also has a null authtype (if user exists but has a nonnull authtype null is
-     *         returned)
+     * @return the user identified by the username but also has a null authtype (if user exists but
+     * has a nonnull authtype null is returned)
      */
     @Nullable
     public User findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(@Nonnull String email);
 
     /**
-     * Find the user identified by the username but also has a null authtype (if user exists but has a nonnull authtype null is returned)
+     * Find the user identified by the username but also has a null authtype (if user exists but has
+     * a nonnull authtype null is returned)
      *
      * @param username the username to use in the query.
-     * @return the user identified by the username but also has a null authtype (if user exists but has a nonnull authtype null is
-     *         returned)
+     * @return the user identified by the username but also has a null authtype (if user exists but
+     * has a nonnull authtype null is returned)
      */
     @Nullable
     public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(@Nonnull String username);

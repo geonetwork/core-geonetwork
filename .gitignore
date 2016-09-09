@@ -75,7 +75,10 @@ target/
 web/src/main/webapp/WEB-INF/data/data/upload/
 transifex/transifex-format/
 datadir_*
+solr/solr-config/solr-*
 web/src/main/webapp/WEB-INF/data/harvester_*
-web/src/main/webapp/doc
+camel-harvesters/wfsfeature-harvester/logs
+web/src/main/webapp/doc/en
+web/src/main/webapp/doc/fr
 web/src/main/webapp/WEB-INF/data/data/backup
 schemas/*/doc/*/*.rst

@@ -26,6 +26,7 @@ package org.fao.oaipmh.responses;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListRecordsRequest;
@@ -37,92 +38,95 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class ListRecordsResponse extends ListResponse
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class ListRecordsResponse extends ListResponse {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public ListRecordsResponse() {}
+    private List<Record> records = new ArrayList<Record>();
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ListRecordsResponse(ListRequest lr, Element response)
-	{
-		super(lr, response);
-	}
+    public ListRecordsResponse() {
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public Record next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception
-	{
-		return (Record) super.next();
-	}
+    public ListRecordsResponse(ListRequest lr, Element response) {
+        super(lr, response);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void clearRecords() { records.clear(); }
+    public Record next() throws IOException, OaiPmhException, JDOMException, SAXException, Exception {
+        return (Record) super.next();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public void addRecord(Record r)
-	{
-		records.add(r);
-	}
+    public void clearRecords() {
+        records.clear();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public int getRecordsCount() { return records.size(); }
+    public void addRecord(Record r) {
+        records.add(r);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public int getSize() { return getRecordsCount(); }
+    public int getRecordsCount() {
+        return records.size();
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public Element toXml()
-	{
-		Element root = new Element(ListRecordsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
+    public int getSize() {
+        return getRecordsCount();
+    }
 
-		for (Record r : records)
-			root.addContent(r.toXml());
+    //---------------------------------------------------------------------------
+    //---
+    //--- Protected methods
+    //---
+    //---------------------------------------------------------------------------
 
-		ResumptionToken token = getResumptionToken();
+    public Element toXml() {
+        Element root = new Element(ListRecordsRequest.VERB, OaiPmh.Namespaces.OAI_PMH);
 
-		if (token != null)
-			root.addContent(token.toXml());
+        for (Record r : records)
+            root.addContent(r.toXml());
 
-		return root;
-	}
+        ResumptionToken token = getResumptionToken();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Protected methods
-	//---
-	//---------------------------------------------------------------------------
+        if (token != null)
+            root.addContent(token.toXml());
 
-	protected Object createObject(Element object)
-	{
-		return new Record(object);
-	}
+        return root;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	protected String getListElementName() { return "record"; }
+    protected Object createObject(Element object) {
+        return new Record(object);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-	private List<Record> records = new ArrayList<Record>();
+    protected String getListElementName() {
+        return "record";
+    }
 }
 
 //=============================================================================

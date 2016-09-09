@@ -35,19 +35,18 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Put the AbstractHarvester in JobExecutionContext so that HarvesterJob can access them.
- * 
- * This is necessary since Harvester objects could contain state (even if it is bad). So the same Harvester object must be used.
- * 
+ *
+ * This is necessary since Harvester objects could contain state (even if it is bad). So the same
+ * Harvester object must be used.
+ *
  * @author jeichar
  */
 public class HarversterJobListener implements JobListener {
 
     private static final String HARVESTER_JOB_CONFIGURATION_LISTENER = "Harvester Job configuration listener";
-
-    private List<HarvestManager> listOfManager = new ArrayList<HarvestManager>();
-
     private static HarversterJobListener INSTANCE = new HarversterJobListener() {
     };
+    private List<HarvestManager> listOfManager = new ArrayList<HarvestManager>();
 
     public static HarversterJobListener getInstance(HarvestManager manager) {
         INSTANCE.listOfManager.add(manager);

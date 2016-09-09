@@ -31,14 +31,14 @@ import org.jdom.Element;
 
 /**
  * A search clause for selecting based on a provided keyowrd URI
- * 
+ *
  * @author jeichar
  */
 public class URISearchClause implements SearchClause {
 
     KeywordSearchType searchType;
-    private String uri;
     boolean ignoreCase;
+    private String uri;
 
     public URISearchClause(String uri) {
         this.uri = uri;
@@ -65,7 +65,7 @@ public class URISearchClause implements SearchClause {
         KeywordSearchParamsBuilder.addXmlParam(params, XmlParams.pUri, this.uri);
         if (this.searchType != null) {
             KeywordSearchParamsBuilder.addXmlParam(params,
-                    XmlParams.pTypeSearch, "" + searchType.ordinal());
+                XmlParams.pTypeSearch, "" + searchType.ordinal());
         }
     }
 

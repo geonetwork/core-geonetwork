@@ -27,59 +27,58 @@ import java.util.ArrayList;
 
 //=============================================================================
 
-public class Privileges
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class Privileges {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public Privileges(String groupId)
-	{
-		this.groupId = groupId;
-	}
+    private String groupId;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private ArrayList<Integer> alOperations = new ArrayList<Integer>();
 
-	public String getGroupId() { return groupId; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Privileges(String groupId) {
+        this.groupId = groupId;
+    }
 
-	public void add(int operation)
-	{
-		alOperations.add(operation);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public String getGroupId() {
+        return groupId;
+    }
 
-	public Iterable<Integer> getOperations() { return alOperations; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void add(int operation) {
+        alOperations.add(operation);
+    }
 
-	public Privileges copy()
-	{
-		Privileges copy = new Privileges(groupId);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		for (int oper : alOperations)
-			copy.alOperations.add(oper);
+    public Iterable<Integer> getOperations() {
+        return alOperations;
+    }
 
-		return copy;
-	}
+    public Privileges copy() {
+        Privileges copy = new Privileges(groupId);
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        for (int oper : alOperations)
+            copy.alOperations.add(oper);
 
-	private String groupId;
-
-	private ArrayList<Integer> alOperations = new ArrayList<Integer>();
+        return copy;
+    }
 }
 
 //=============================================================================

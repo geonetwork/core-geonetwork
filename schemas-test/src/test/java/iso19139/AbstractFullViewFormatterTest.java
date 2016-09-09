@@ -24,15 +24,17 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
-import org.fao.geonet.services.metadata.format.FormatType;
-import org.fao.geonet.services.metadata.format.FormatterParams;
-import org.fao.geonet.services.metadata.format.groovy.Environment;
-import org.fao.geonet.services.metadata.format.groovy.EnvironmentImpl;
-import org.fao.geonet.services.metadata.format.groovy.Functions;
+import org.fao.geonet.api.records.formatters.AbstractFormatterTest;
+import org.fao.geonet.api.records.formatters.FormatType;
+import org.fao.geonet.api.records.formatters.FormatterParams;
+import org.fao.geonet.api.records.formatters.groovy.Environment;
+import org.fao.geonet.api.records.formatters.groovy.EnvironmentImpl;
+import org.fao.geonet.api.records.formatters.groovy.Functions;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -48,7 +50,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import static org.fao.geonet.services.metadata.format.FormatterWidth._100;
+import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
 
 /**
  * @author Jesse on 10/17/2014.
@@ -126,14 +128,15 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
         private FormatType formatType;
         private Functions functions;
         private String view;
-        private String requestLanguage = "eng";;
+        private String requestLanguage = "eng";
+        ;
 
         public Format(FormatType formatType) throws Exception {
             this.formatType = formatType;
             GetRelated related = Mockito.mock(GetRelated.class);
             Element relatedXml = Xml.loadFile(AbstractFullViewFormatterTest.class.getResource("relations.xml"));
             Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
-                    Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
             _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
 
 
@@ -150,6 +153,7 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
         public Format invoke() throws Exception {
             view = null;
             MockHttpServletRequest request = new MockHttpServletRequest();
+            request.getSession();
             MockHttpServletResponse response = new MockHttpServletResponse();
 //            measureFormatterPerformance(request, formatterId);
 
@@ -160,7 +164,7 @@ public abstract class AbstractFullViewFormatterTest extends AbstractFormatterTes
 
 //            formatService.exec("eng", FormatType.html.name(), "" + id, null, formatterId, "true", false, request, response);
             formatService.exec(getRequestLanguage(), formatType.name(), "" + id, null, formatterId, "true", false, _100,
-                    new ServletWebRequest(request, response));
+                new ServletWebRequest(request, response));
             view = response.getContentAsString();
 //            Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 

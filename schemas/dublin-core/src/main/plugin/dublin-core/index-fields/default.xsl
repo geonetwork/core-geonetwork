@@ -22,11 +22,11 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet version="2.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:dc = "http://purl.org/dc/elements/1.1/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
-                xmlns:dct="http://purl.org/dc/terms/">
+                xmlns:dct="http://purl.org/dc/terms/"
+                version="2.0">
 
   <!-- This file defines what parts of the metadata are indexed by Lucene
     Searches can be conducted on indexes defined here.
@@ -37,7 +37,7 @@
     work accross different metadata resources -->
   <!-- ========================================================================================= -->
 
-  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" />
+  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
   <!-- ========================================================================================= -->
 
@@ -99,7 +99,8 @@
         <Field name="MD_ConstraintsUseLimitation" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
       <xsl:for-each select="/simpledc/dc:rights">
-        <Field name="MD_LegalConstraintsUseLimitation" string="{string(.)}" store="true" index="true"/>
+        <Field name="MD_LegalConstraintsUseLimitation" string="{string(.)}" store="true"
+               index="true"/>
       </xsl:for-each>
 
       <xsl:for-each select="/simpledc/dct:spatial">
@@ -129,9 +130,9 @@
         <xsl:variable name="thumbnailType"
                       select="if (position() = 1) then 'thumbnail' else 'overview'"/>
         <!-- First thumbnail is flagged as thumbnail and could be considered the main one -->
-        <Field  name="image"
-                string="{concat($thumbnailType, '|', ., '|')}"
-                store="true" index="false"/>
+        <Field name="image"
+               string="{concat($thumbnailType, '|', ., '|')}"
+               store="true" index="false"/>
       </xsl:for-each>
 
 
@@ -151,12 +152,13 @@
             <xsl:variable name="e" select="substring-after($coverage,'East ')"/>
             <xsl:variable name="east" select="substring-before($e, ',')"/>
             <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
-            <xsl:variable name="west" select="if (contains($w, '. ')) then substring-before($w, '. ') else $w"/>
+            <xsl:variable name="west"
+                          select="if (contains($w, '. ')) then substring-before($w, '. ') else $w"/>
             <xsl:variable name="p" select="substring-after($coverage,'(')"/>
             <xsl:variable name="place" select="substring-before($p,')')"/>
 
-            <Field name="westBL"  string="{$west}" store="false" index="true"/>
-            <Field name="eastBL"  string="{$east}" store="false" index="true"/>
+            <Field name="westBL" string="{$west}" store="false" index="true"/>
+            <Field name="eastBL" string="{$east}" store="false" index="true"/>
             <Field name="southBL" string="{$south}" store="false" index="true"/>
             <Field name="northBL" string="{$north}" store="false" index="true"/>
             <Field name="geoBox" string="{concat($west, '|',
@@ -174,11 +176,30 @@
       </xsl:for-each>
 
 
-
       <xsl:apply-templates select="/simpledc/dc:subject">
         <xsl:with-param name="name" select="'keyword'"/>
         <xsl:with-param name="store" select="'true'"/>
       </xsl:apply-templates>
+
+      <xsl:variable name="listOfKeywords">{
+        <xsl:variable name="keywordWithNoThesaurus"
+                      select="/simpledc/dc:subject[text() != '']"/>
+        <xsl:if test="count($keywordWithNoThesaurus) > 0">
+          'keywords': [
+          <xsl:for-each select="$keywordWithNoThesaurus">
+            <xsl:value-of select="concat('''', replace(., '''', '\\'''), '''')"/>
+            <xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
+        </xsl:if>
+        }
+      </xsl:variable>
+
+      <Field name="keywordGroup"
+             string="{normalize-space($listOfKeywords)}"
+             store="true"
+             index="false"/>
+
 
       <xsl:for-each select="/simpledc/dct:isPartOf">
         <Field name="parentUuid" string="{string(.)}" store="true" index="true"/>
@@ -246,7 +267,7 @@
 
   <!-- text element, by default indexed, not stored, tokenized -->
   <xsl:template match="*">
-    <xsl:param name="name"  select="name(.)"/>
+    <xsl:param name="name" select="name(.)"/>
     <xsl:param name="store" select="'false'"/>
     <xsl:param name="index" select="'true'"/>
 

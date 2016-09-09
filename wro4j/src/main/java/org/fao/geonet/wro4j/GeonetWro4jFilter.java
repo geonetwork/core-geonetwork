@@ -1,9 +1,11 @@
 package org.fao.geonet.wro4j;
 
 import org.fao.geonet.utils.Log;
+
 import ro.isdc.wro.http.WroFilter;
 
 import java.net.SocketException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;

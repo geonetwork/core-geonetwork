@@ -34,18 +34,18 @@ import java.nio.file.Path;
  * Register XML or binary file to process for a MEF file.
  */
 public interface IMEFVisitor {
-	public void handleMetadata(Element md, int index) throws Exception;
+    public void handleMetadata(Element md, int index) throws Exception;
 
-	public void handleMetadataFiles(DirectoryStream<Path> files, Element info,
-			int index) throws Exception;
+    public void handleMetadataFiles(DirectoryStream<Path> files, Element info,
+                                    int index) throws Exception;
 
-	public void handleInfo(Element info, int index) throws Exception;
+    public void handleInfo(Element info, int index) throws Exception;
 
-	public void handleFeatureCat(Element md, int index) throws Exception;
+    public void handleFeatureCat(Element md, int index) throws Exception;
 
-	public void handlePublicFile(String file, String changeDate,
-			InputStream is, int index) throws IOException;
+    public void handlePublicFile(String file, String changeDate,
+                                 InputStream is, int index) throws IOException;
 
-	public void handlePrivateFile(String file, String changeDate,
-			InputStream is, int index) throws IOException;
+    public void handlePrivateFile(String file, String changeDate,
+                                  InputStream is, int index) throws IOException;
 }

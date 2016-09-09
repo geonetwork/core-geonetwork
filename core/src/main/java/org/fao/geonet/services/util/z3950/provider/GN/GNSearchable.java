@@ -37,7 +37,8 @@ import java.util.Observer;
 //import org.fao.geonet.services.util.z3950.GNSearchTask;
 
 /**
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>' interface between JZkit and GN. not currently used
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>' interface between JZkit and GN. not currently
+ *         used
  */
 public class GNSearchable implements Searchable {
 
@@ -48,8 +49,8 @@ public class GNSearchable implements Searchable {
     private ApplicationContext ctx;
 
     public GNSearchable() {
-        if (Log.isDebugEnabled(Geonet.Z3950_SERVER))
-            Log.debug(Geonet.Z3950_SERVER, "creating GNSearchable");
+        if (Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU, "creating GNSearchable");
     }
 
     public void close() {
@@ -72,8 +73,8 @@ public class GNSearchable implements Searchable {
 
     public IRResultSet evaluate(IRQuery q, Object userInfo, Observer[] observers) {
 
-        if (Log.isDebugEnabled(Geonet.Z3950_SERVER))
-            Log.debug(Geonet.Z3950_SERVER, "evaluating...");
+        if (Log.isDebugEnabled(Geonet.SRU))
+            Log.debug(Geonet.SRU, "evaluating...");
 
         ContextContainer cnt = (ContextContainer) ctx.getBean("ContextGateway");
 
@@ -81,11 +82,11 @@ public class GNSearchable implements Searchable {
 
         try {
             result = new GNResultSet(new GNXMLQuery(q, ctx), userInfo, observers, cnt.getSrvctx()); // SRUResultSet(observers, base_url,
-                                                                                                    // getCQLString(q), code);
+            // getCQLString(q), code);
             result.evaluate(timeout);
             result.setStatus(IRResultSetStatus.COMPLETE);
         } catch (Exception e) {
-            if(result!=null)
+            if (result != null)
                 result.setStatus(IRResultSetStatus.FAILURE);
             e.printStackTrace();
         }
@@ -99,7 +100,7 @@ public class GNSearchable implements Searchable {
     }
 
     public void setRecordArchetypes(@SuppressWarnings("rawtypes")
-    Map recordSyntaxArchetypes) {
+                                        Map recordSyntaxArchetypes) {
         this.recordArchetypes = recordSyntaxArchetypes;
 
     }

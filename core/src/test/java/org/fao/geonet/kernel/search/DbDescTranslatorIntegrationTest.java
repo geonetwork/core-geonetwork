@@ -43,10 +43,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Test DbDescTranslator
- * User: Jesse
- * Date: 9/9/13
- * Time: 9:07 AM
+ * Test DbDescTranslator User: Jesse Date: 9/9/13 Time: 9:07 AM
  */
 public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
@@ -62,7 +59,7 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
         testTranslation(1, "int");
     }
 
-    private<T extends Serializable> void testTranslation(T key, String type) throws IOException, JDOMException, ClassNotFoundException {
+    private <T extends Serializable> void testTranslation(T key, String type) throws IOException, JDOMException, ClassNotFoundException {
         JpaRepository<Object, T> repo = mock(JpaRepository.class);
         ValueObject value = new ValueObject();
 
@@ -100,6 +97,7 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
 
             setLabelTranslations(map);
         }
+
         String getValue() {
             return value;
         }

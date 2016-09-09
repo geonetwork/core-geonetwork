@@ -11,12 +11,12 @@
          data-ng-class="{'gn-time-with-ind-position': withIndeterminatePosition}"
          data-ng-show="dateTypeSupported === true">
       <div class="input-group gn-indeterminate-position"
-          data-ng-show="withIndeterminatePosition"
-          data-schema-info-combo="codelist"
-          data-selected-info="indeterminatePosition"
-          data-gn-schema-info="indeterminatePosition"
-          data-allow-blank=""
-          lang="lang"></div>
+           data-ng-show="withIndeterminatePosition"
+           data-schema-info-combo="codelist"
+           data-selected-info="indeterminatePosition"
+           data-gn-schema-info="indeterminatePosition"
+           data-allow-blank=""
+           lang="lang"></div>
 
       <input type="number" class="form-control"
              data-ng-model="year"
@@ -39,11 +39,11 @@
         <ul class="dropdown-menu pull-right"
             role="menu" aria-labelledby="{{'chooseOtherTypeOfDate' | translate}}">
           <li role="presentation"><a role="menuitem" data-translate=""
-             data-ng-click="setMode('')">dateMode</a></li>
+                                     data-ng-click="setMode('')">dateMode</a></li>
           <li role="presentation"><a role="menuitem" data-translate=""
-             data-ng-click="setMode('month')">yearAndMonthMode</a></li>
+                                     data-ng-click="setMode('month')">yearAndMonthMode</a></li>
           <li role="presentation"><a role="menuitem" data-translate=""
-             data-ng-click="setMode('year')">yearMode</a></li>
+                                     data-ng-click="setMode('year')">yearMode</a></li>
         </ul>
       </div>
     </div>

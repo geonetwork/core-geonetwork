@@ -42,7 +42,7 @@ public class SingleThesaurusFinder implements ThesaurusFinder {
 
     @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
-        if(existsThesaurus(thesaurusName)) {
+        if (existsThesaurus(thesaurusName)) {
             return thesaurus;
         }
         return null;

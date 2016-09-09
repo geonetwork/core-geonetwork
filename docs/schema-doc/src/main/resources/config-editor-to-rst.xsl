@@ -22,14 +22,13 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
-    xmlns:gndoc="http://geonetwork-opensource.org/doc"
-    exclude-result-prefixes="xs"
-    version="2.0">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gns="http://geonetwork-opensource.org/schemas/schema-ident"
+                xmlns:gndoc="http://geonetwork-opensource.org/doc"
+                exclude-result-prefixes="xs"
+                version="2.0">
 
   <xsl:import href="rst-writer.xsl"/>
-
 
 
   <xsl:param name="verbose"
@@ -85,7 +84,6 @@
                 select="$sc/gns:standardUrl[@xml:lang = $iso2lang or not(@xml:lang)]"/>
 
 
-
   <xsl:template match="/">
     <!-- Reference based on schema identifier -->
     <xsl:value-of select="gndoc:ref($schemaId, false())"/>
@@ -116,7 +114,9 @@
     <xsl:value-of select="gndoc:writeln(concat($t/nbOfViews, count($ec//views/view), $t/views))"/>
     <xsl:value-of select="gndoc:nl(2)"/>
     <xsl:for-each select="$ec//views/view">
-      <xsl:text>* </xsl:text><xsl:value-of select="if (@disabled = 'true') then concat(' (', $t/disabled, ') ') else ''"/><xsl:value-of select="gndoc:refTo(concat($schemaId, '-view-', normalize-space(@name)), false())"/>
+      <xsl:text>* </xsl:text><xsl:value-of
+      select="if (@disabled = 'true') then concat(' (', $t/disabled, ') ') else ''"/><xsl:value-of
+      select="gndoc:refTo(concat($schemaId, '-view-', normalize-space(@name)), false())"/>
       <xsl:value-of select="gndoc:nl()"/>
     </xsl:for-each>
 
@@ -141,7 +141,8 @@
       <xsl:value-of select="gndoc:writeln(concat($t/nbOfTabs, count(tab), $t/tabs))"/>
       <xsl:value-of select="gndoc:nl(2)"/>
       <xsl:for-each select="tab">
-        <xsl:text>* </xsl:text><xsl:value-of select="gndoc:refTo(concat($schemaId, '-tab-', normalize-space(@id)), false())"/>
+        <xsl:text>* </xsl:text><xsl:value-of
+        select="gndoc:refTo(concat($schemaId, '-tab-', normalize-space(@id)), false())"/>
         <xsl:value-of select="gndoc:nl()"/>
       </xsl:for-each>
 
@@ -155,11 +156,12 @@
         <xsl:variable name="name" select="@name"/>
         <xsl:choose>
           <xsl:when test="$l[@name = $name]/label = ''">
-            <xsl:message>  * Missing label for <xsl:value-of select="$name"/> </xsl:message>
+            <xsl:message>* Missing label for <xsl:value-of select="$name"/></xsl:message>
           </xsl:when>
           <xsl:otherwise>
             <!-- TODO handle context/xpath and remove select first -->
-            <xsl:value-of select="gndoc:writeln(concat('* ', $l[@name = $name][1]/label, ' (', $name, ')'))"/>
+            <xsl:value-of
+              select="gndoc:writeln(concat('* ', $l[@name = $name][1]/label, ' (', $name, ')'))"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:for-each>
@@ -183,7 +185,8 @@
         </xsl:if>
         <xsl:value-of select="gndoc:nl()"/>
 
-        <xsl:value-of select="gndoc:figure($docFolder, concat('img/', $schemaId, '-tab-', $tabName, '.png'))"/>
+        <xsl:value-of
+          select="gndoc:figure($docFolder, concat('img/', $schemaId, '-tab-', $tabName, '.png'))"/>
 
 
         <xsl:value-of select="gndoc:writeln(
@@ -198,8 +201,6 @@
       </xsl:for-each>
     </xsl:for-each>
   </xsl:template>
-
-
 
 
   <xsl:template match="field" mode="write-doc">
@@ -224,7 +225,8 @@
           </xsl:for-each>
           <xsl:value-of select="gndoc:nl(2)"/>
 
-          <xsl:value-of select="$t/cf"/><xsl:value-of select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($name)), true())"/>
+          <xsl:value-of select="$t/cf"/><xsl:value-of
+          select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($name)), true())"/>
         </xsl:when>
         <xsl:when test="$name != ''">
           <xsl:value-of select="gndoc:writeln($s[name() = $name], '^')"/>
@@ -288,11 +290,10 @@
 
       <xsl:value-of select="gndoc:writelnfield($t/xpath, @xpath)"/>
       <xsl:value-of select="gndoc:nl(2)"/>
-      <xsl:value-of select="$t/cf"/><xsl:value-of select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
+      <xsl:value-of select="$t/cf"/><xsl:value-of
+      select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
     </xsl:if>
   </xsl:template>
-
-
 
 
   <xsl:template match="text" mode="write-doc">
@@ -301,7 +302,8 @@
     <xsl:value-of select="gndoc:writelnfield($t/instruction)"/>
     <xsl:value-of select="gndoc:writelnhtml($s[name() = $ref])"/>
 
-    <xsl:value-of select="gndoc:figure($docFolder, concat('img/', $schemaId, '-tab-', ancestor::tab/@id, '-text-', $ref, '.png'))"/>
+    <xsl:value-of
+      select="gndoc:figure($docFolder, concat('img/', $schemaId, '-tab-', ancestor::tab/@id, '-text-', $ref, '.png'))"/>
 
     <xsl:if test="exists(@if)">
       <xsl:value-of select="gndoc:writelnfield($t/displayIf, @if)"/>
@@ -322,7 +324,8 @@
       <xsl:value-of select="gndoc:nl(2)"/>
     </xsl:if>
 
-    <xsl:value-of select="gndoc:figure($docFolder, concat('img/', $schemaId, '-tab-', ancestor::tab/@id, '-action-', $key, '.png'))"/>
+    <xsl:value-of
+      select="gndoc:figure($docFolder, concat('img/', $schemaId, '-tab-', ancestor::tab/@id, '-action-', $key, '.png'))"/>
 
     <xsl:if test="exists(@if)">
       <xsl:value-of select="gndoc:writelnfield($t/displayIf, @if)"/>
@@ -332,8 +335,6 @@
       <xsl:value-of select="gndoc:writeCode(template/snippet/*)"/>
     </xsl:if>
   </xsl:template>
-
-
 
 
   <xsl:template match="section" mode="write-doc">
@@ -355,13 +356,14 @@
         </xsl:for-each>
         <xsl:value-of select="gndoc:nl(2)"/>
 
-        <xsl:value-of select="$t/cf"/><xsl:value-of select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($sectionName)), true())"/>
+        <xsl:value-of select="$t/cf"/><xsl:value-of
+        select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($sectionName)), true())"/>
       </xsl:when>
       <xsl:when test="$sectionName != ''">
         <!-- Section name is a custom name. Use strings.xml. -->
         <xsl:choose>
           <xsl:when test="normalize-space($s[name() = $sectionName][1]) = ''">
-            <xsl:message>  * Missing section name for <xsl:value-of select="$sectionName"/> </xsl:message>
+            <xsl:message>* Missing section name for <xsl:value-of select="$sectionName"/></xsl:message>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="gndoc:writeln(
@@ -400,7 +402,8 @@
       </xsl:for-each>
       <xsl:value-of select="gndoc:nl(2)"/>
 
-      <xsl:value-of select="$t/cf"/><xsl:value-of select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
+      <xsl:value-of select="$t/cf"/><xsl:value-of
+      select="gndoc:refTo(concat($schemaId, '-elem-', normalize-space($nodeName)), true())"/>
       <xsl:value-of select="gndoc:nl(2)"/>
     </xsl:if>
 
@@ -434,8 +437,6 @@
   </xsl:template>
 
 
-
-
   <xsl:template name="write-glossary">
     <xsl:value-of select="gndoc:writeln($t/glossary, '*')"/>
     <xsl:value-of select="gndoc:nl()"/>
@@ -449,7 +450,8 @@
 
       <xsl:choose>
         <xsl:when test="exists(@context)">
-          <xsl:value-of select="gndoc:ref(concat($schemaId, '-elem-', $name, '-', @context), true())"/>
+          <xsl:value-of
+            select="gndoc:ref(concat($schemaId, '-elem-', $name, '-', @context), true())"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="gndoc:ref(concat($schemaId, '-elem-', $name), true())"/>
@@ -497,8 +499,6 @@
   </xsl:template>
 
 
-
-
   <xsl:template name="write-codelist">
     <xsl:value-of select="gndoc:writeln($t/codelists, '*')"/>
     <xsl:value-of select="gndoc:nl()"/>
@@ -513,18 +513,18 @@
   </xsl:template>
 
 
-
-
-
-
   <xsl:template match="helper" mode="doc">
     <xsl:value-of select="gndoc:writeln($t/helper)"/>
 
     <xsl:variable name="rows">
       <xsl:for-each select="option">
         <row>
-          <code><xsl:value-of select="@value"/></code>
-          <label><xsl:value-of select="."/></label>
+          <code>
+            <xsl:value-of select="@value"/>
+          </code>
+          <label>
+            <xsl:value-of select="."/>
+          </label>
         </row>
       </xsl:for-each>
     </xsl:variable>

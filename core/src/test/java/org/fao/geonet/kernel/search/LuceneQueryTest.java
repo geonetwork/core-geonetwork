@@ -242,7 +242,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+((+any:xxx +any:zzz) title:xxx title:zzz inspiretheme:xxx zzz) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
     /**
@@ -287,7 +287,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(any:xxx any:zzz title:xxx title:zzz inspiretheme:xxx "
-        		+ "inspiretheme:zzz) +_isTemplate:n", query.toString());
+            + "inspiretheme:zzz) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -354,7 +354,6 @@ public class LuceneQueryTest {
 
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
-     * @throws InterruptedException 
      */
     @Test
     public void testSingleORSingleValueWithALL() throws InterruptedException {
@@ -659,7 +658,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_uuid:63C2378A-17A7-B863-BFF4-CC3EF507D10D " +
-                                                "_uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
+            "_uuid:ad2aa2c7-f099-47cb-8a38-4effe2a2d250) +_isTemplate:n", query.toString());
     }
 
     /**
@@ -679,7 +678,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_uuid:63C2378A-17A7-B863-BFF4-CC3EF507D10D _uuid:BAR_DEN) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
 
@@ -1010,7 +1009,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(+topicCat:biota* +topicCat:boundaries +topicCat:environment*) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
     /**
@@ -1066,7 +1065,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(topicCat:biota* topicCat:boundaries topicCat:environment) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
     /**
@@ -1240,25 +1239,25 @@ public class LuceneQueryTest {
         // verify query
         assertEquals("unexpected Lucene query", "+title:humph +_isTemplate:n", query.toString());
     }
-    
-     /**	
-     * 'altTitle' parameter.	
-     */	
+
+    /**
+     * 'altTitle' parameter.
+     */
     @Test
-    public void testAltTitle() {	
-        // create request object	
-        JDOMFactory factory = new DefaultJDOMFactory();	
-        Element request = factory.element("request");	
-        Element altTitle = factory.element("altTitle");	
-        altTitle.addContent("humph");	
-        request.addContent(altTitle);	
-        // build lucene query input	
-        LuceneQueryInput lQI = new LuceneQueryInput(request);	
-        // build lucene query	
+    public void testAltTitle() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element altTitle = factory.element("altTitle");
+        altTitle.addContent("humph");
+        request.addContent(altTitle);
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
-        // verify query	
-        assertEquals("unexpected Lucene query", "+altTitle:humph +_isTemplate:n", 
-                query.toString());	
+        // verify query
+        assertEquals("unexpected Lucene query", "+altTitle:humph +_isTemplate:n",
+            query.toString());
     }
 
     /**
@@ -1378,7 +1377,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(+inspiretheme:\"Cadastral parcels\" +inspiretheme:Hydrography*) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
     /**
@@ -1442,9 +1441,10 @@ public class LuceneQueryTest {
     }
 
     /**
-     * 'themekey' parameter in a single element separating multiple themekeys by ' [keywordseparator] '.
-     * This is how the search page JS delivers themekey; that's unwanted behaviour, it's better
-     * to have it deliver multiple themekey elements as in the testcase above.
+     * 'themekey' parameter in a single element separating multiple themekeys by '
+     * [keywordseparator] '. This is how the search page JS delivers themekey; that's unwanted
+     * behaviour, it's better to have it deliver multiple themekey elements as in the testcase
+     * above.
      */
     @Test
     public void testMultipleThemeKeyOrSeparated() {
@@ -1461,7 +1461,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(keyword:\"hoeperdepoep\" keyword:\"zat op de stoep\") +_isTemplate:n",
-                query.toString());
+            query.toString());
 
     }
 
@@ -1591,8 +1591,8 @@ public class LuceneQueryTest {
         query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI3);
 
         expected = "+(tempExtentBegin:[2010-04-08T17:46:00 TO 2010-04-27T17:43:00] tempExtentEnd:[2010-04-08T17:46:00 TO " +
-                   "2010-04-27T17:43:00] (+tempExtentEnd:[2010-04-27T17:43:00 TO *] +tempExtentBegin:[* TO 2010-04-08T17:46:00])) " +
-                   "+_isTemplate:n";
+            "2010-04-27T17:43:00] (+tempExtentEnd:[2010-04-27T17:43:00 TO *] +tempExtentBegin:[* TO 2010-04-08T17:46:00])) " +
+            "+_isTemplate:n";
         assertEquals("unexpected Lucene query", expected, query.toString());
 
         // create request object
@@ -1749,7 +1749,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
     /**
@@ -1775,7 +1775,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
-                query.toString());
+            query.toString());
     }
 
     /**
@@ -1801,7 +1801,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _owner:yeah!) " +
-                                                "+_isTemplate:n", query.toString());
+            "+_isTemplate:n", query.toString());
     }
 
     /**
@@ -1827,12 +1827,11 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _dummy:0) " +
-                                                "+_isTemplate:n", query.toString());
+            "+_isTemplate:n", query.toString());
     }
 
     /**
-     * 'bounding box' parameter equals.
-     * TODO verify with Jose why he put the float values here.
+     * 'bounding box' parameter equals. TODO verify with Jose why he put the float values here.
      */
     @Test
     public void testBBEquals() {
@@ -1860,7 +1859,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+eastBL:[55.0 TO 55.0] +westBL:[43.0 TO 43.0] +southBL:[9.0 TO 9.0] +northBL:[12.0 TO " +
-                                                "12.0] +_isTemplate:n", query.toString());
+            "12.0] +_isTemplate:n", query.toString());
     }
 
     /**
@@ -1892,7 +1891,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+westBL:[-180.0 TO 55.0] +eastBL:[43.0 TO 180.0] +northBL:[9.0 TO 90.0] +southBL:[-90" +
-                                                ".0 TO 12.0] +_isTemplate:n", query.toString());
+            ".0 TO 12.0] +_isTemplate:n", query.toString());
     }
 
     /**
@@ -1924,7 +1923,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+eastBL:[55.0 TO 180.0] +westBL:[-180.0 TO 43.0] +southBL:[-90.0 TO 9.0] +northBL:[12" +
-                                                ".0 TO 90.0] +_isTemplate:n", query.toString());
+            ".0 TO 90.0] +_isTemplate:n", query.toString());
     }
 
     /**
@@ -1956,7 +1955,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+eastBL:[43.0 TO 55.0] +westBL:[43.0 TO 55.0] +southBL:[9.0 TO 12.0] +northBL:[9.0 TO " +
-                                                "12.0] +_isTemplate:n", query.toString());
+            "12.0] +_isTemplate:n", query.toString());
     }
 
     /**
@@ -1988,7 +1987,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "westBL:[55.0 TO 180.0] eastBL:[-180.0 TO 43.0] northBL:[-90.0 TO 0.0] southBL:[30.0 TO" +
-                                                " 90.0] +_isTemplate:n", query.toString());
+            " 90.0] +_isTemplate:n", query.toString());
     }
 
     /**
@@ -2020,25 +2019,14 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] " +
-                                                "+southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
+            "+southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
     }
 
     /**
-     * <request>
-     * <eastBL>180</eastBL>
-     * <title>hoi</title>
-     * <sortBy>popularity</sortBy>
-     * <southBL>-90</southBL>
-     * <northBL>90</northBL>
-     * <any />
-     * <similarity>1</similarity>
-     * <relation>overlaps</relation>
-     * <westBL>-180</westBL>
-     * <hitsPerPage>10</hitsPerPage>
-     * <attrset>geo</attrset>
-     * <group>1</group>
-     * <group>0</group>
-     * </request>
+     * <request> <eastBL>180</eastBL> <title>hoi</title> <sortBy>popularity</sortBy>
+     * <southBL>-90</southBL> <northBL>90</northBL> <any /> <similarity>1</similarity>
+     * <relation>overlaps</relation> <westBL>-180</westBL> <hitsPerPage>10</hitsPerPage>
+     * <attrset>geo</attrset> <group>1</group> <group>0</group> </request>
      */
     @Test
     public void testRandomTest1() {
@@ -2099,8 +2087,8 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+(_op0:0 _op2:0 _op0:1 _op2:1) +title:hoi +westBL:[-180.0 TO 180.0] "
-        		+ "+eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +_isTemplate:n",
-                query.toString());
+                + "+eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +_isTemplate:n",
+            query.toString());
     }
 
     /**
@@ -2191,12 +2179,6 @@ public class LuceneQueryTest {
         Element extended = factory.element("extended");
         extended.addContent("off");
         request.addContent(extended);
-        Element remote = factory.element("remote");
-        remote.addContent("off");
-        request.addContent(remote);
-        Element timeout = factory.element("timeout");
-        timeout.addContent("20");
-        request.addContent(timeout);
         Element hitsPerPage = factory.element("hitsPerPage");
         hitsPerPage.addContent("10");
         request.addContent(hitsPerPage);
@@ -2216,7 +2198,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
         assertEquals("unexpected Lucene query", "+westBL:[-180.0 TO 180.0] +eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] "
-        		+ "+southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
+            + "+southBL:[-90.0 TO 90.0] +_isTemplate:n", query.toString());
     }
 
 
@@ -2294,19 +2276,19 @@ public class LuceneQueryTest {
 
     /**
      * Tests passing operations (download and/or dynamic for instance) parameters criterias.
-     *
      */
     @Test
     public void testDownloadDynamicParameter() {
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
         Element download = factory.element("_operation5").addContent("1 or 2 or 3");
-        Element dynamic  = factory.element("_operation1").addContent("1 or 2 or 3");
+        Element dynamic = factory.element("_operation1").addContent("1 or 2 or 3");
         request.addContent(download).addContent(dynamic);
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3) +(_op1:1 _op1:2 _op1:3)"));
     }
+
     /**
      * Same test as above, but only download.
      */
@@ -2320,6 +2302,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         assertTrue(query.toString().contains("+(_op1:1 _op1:2 _op1:3)"));
     }
+
     /**
      * Only dynamic operation parameter.
      */
@@ -2333,6 +2316,7 @@ public class LuceneQueryTest {
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3)"));
     }
+
     /**
      * Only editing operation parameter.
      */
@@ -2345,8 +2329,8 @@ public class LuceneQueryTest {
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         assertTrue(query.toString().contains("+(_op2:1 _op2:2 _op2:3)"));
-    }    
-    
+    }
+
     /**
      * No operation parameter.
      */
@@ -2428,7 +2412,7 @@ public class LuceneQueryTest {
         Element facetQuery = factory.element(SearchParameter.FACET_QUERY);
 
         StringBuilder queryString = new StringBuilder();
-        
+
         for (String drilldown : drilldowns) {
             queryString.append(drilldown);
             queryString.append("&");
@@ -2449,7 +2433,7 @@ public class LuceneQueryTest {
             facetQuery.addContent(drilldown);
             request.addContent(facetQuery);
         }
-        
+
         return request;
     }
 }

@@ -29,6 +29,7 @@ import com.yammer.metrics.core.*;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,7 +56,8 @@ public abstract class WebappMetricsFilter implements Filter {
     /**
      * Creates a new instance of the filter.
      *
-     * @param registryAttribute the attribute used to look up the metrics registry in the servlet context
+     * @param registryAttribute      the attribute used to look up the metrics registry in the
+     *                               servlet context
      * @param meterNamesByStatusCode A map, keyed by status code, of meter names that we are
      *                               interested in.
      * @param otherMetricName        The name used for the catch-all meter.
@@ -72,23 +74,23 @@ public abstract class WebappMetricsFilter implements Filter {
         final MetricsRegistry metricsRegistry = getMetricsFactory(filterConfig);
 
         this.metersByStatusCode = new ConcurrentHashMap<Integer, Meter>(meterNamesByStatusCode
-                .size());
+            .size());
         for (Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
             metersByStatusCode.put(entry.getKey(),
-                    metricsRegistry.newMeter(WebappMetricsFilter.class,
-                            entry.getValue(),
-                            "responses",
-                            TimeUnit.SECONDS));
+                metricsRegistry.newMeter(WebappMetricsFilter.class,
+                    entry.getValue(),
+                    "responses",
+                    TimeUnit.SECONDS));
         }
         this.otherMeter = metricsRegistry.newMeter(WebappMetricsFilter.class,
-                otherMetricName,
-                "responses",
-                TimeUnit.SECONDS);
+            otherMetricName,
+            "responses",
+            TimeUnit.SECONDS);
         this.activeRequests = metricsRegistry.newCounter(WebappMetricsFilter.class, "activeRequests");
         this.requestTimer = metricsRegistry.newTimer(WebappMetricsFilter.class,
-                "requests",
-                TimeUnit.MILLISECONDS,
-                TimeUnit.SECONDS);
+            "requests",
+            TimeUnit.MILLISECONDS,
+            TimeUnit.SECONDS);
 
     }
 
@@ -105,14 +107,14 @@ public abstract class WebappMetricsFilter implements Filter {
     }
 
     public void destroy() {
-        
+        Metrics.defaultRegistry().shutdown();
     }
 
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         final StatusExposingServletResponse wrappedResponse =
-                new StatusExposingServletResponse((HttpServletResponse) response);
+            new StatusExposingServletResponse((HttpServletResponse) response);
         activeRequests.inc();
         final TimerContext context = requestTimer.time();
         try {
@@ -152,14 +154,14 @@ public abstract class WebappMetricsFilter implements Filter {
             super.sendError(sc, msg);
         }
 
+        public int getStatus() {
+            return httpStatus;
+        }
+
         @Override
         public void setStatus(int sc) {
             httpStatus = sc;
             super.setStatus(sc);
-        }
-
-        public int getStatus() {
-            return httpStatus;
         }
     }
 }

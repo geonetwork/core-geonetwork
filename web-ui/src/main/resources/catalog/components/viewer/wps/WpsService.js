@@ -74,10 +74,6 @@
 
       this.WMS_MIMETYPE = 'application/x-ogc-wms';
 
-      this.proxyUrl = function(url) {
-        return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
-      };
-
       /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnWpsService
@@ -100,8 +96,7 @@
 
         //send request and decode result
         if (gnUrlUtils.isValid(url)) {
-          var proxyUrl = this.proxyUrl(url);
-          return $http.get(proxyUrl, {
+          return $http.get(url, {
             cache: true
           }).then(
               function(response) {
@@ -136,7 +131,7 @@
             function(data) {
               var description = data.processDescription[0];
 
-              var url = me.proxyUrl(uri);
+              var url = uri;
               var request = {
                 name: {
                   localPart: 'Execute',
@@ -236,8 +231,7 @@
       this.getStatus = function(url) {
         var defer = $q.defer();
 
-        var proxyUrl = this.proxyUrl(url);
-        $http.get(proxyUrl, {
+        $http.get(url, {
           cache: true
         }).then(
             function(data) {

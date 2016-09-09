@@ -22,7 +22,9 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
@@ -47,7 +49,7 @@
     <admin.password>admin</admin.password>
     <base.url>/geonetwork/srv/eng</base.url>
     <base.loc.url>/geonetwork/srv/eng</base.loc.url>
-    
+
     <!-- jetty properties -->
     <geonetworkWar>${basedir}/target/geonetworkWar</geonetworkWar>
   </properties>
@@ -91,7 +93,7 @@
           <tempWebappDirectory>${basedir}/target/site-web</tempWebappDirectory>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
   <reporting>
@@ -102,7 +104,9 @@
         <version>1.1.0</version>
         <configuration>
           <title>Performance Report</title>
-          <description>The following reports are the result from running the jmeter testplan ${basedir}/src/main/resources/jmeter_test_plan.jmx</description>
+          <description>The following reports are the result from running the jmeter testplan
+            ${basedir}/src/main/resources/jmeter_test_plan.jmx
+          </description>
           <outputDirectory>target/site-web</outputDirectory>
           <showaverage>true</showaverage>
           <showpercentile>true</showpercentile>
@@ -158,7 +162,7 @@
           </plugin>
           <!-- start jetty before integration tests and shut it down after -->
           <plugin>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>

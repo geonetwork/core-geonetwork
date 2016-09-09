@@ -23,7 +23,8 @@
 package org.fao.geonet.exceptions;
 
 /**
- * For when something is not allowed, but it's not that the Operation or Service invocation is not allowed.
+ * For when something is not allowed, but it's not that the Operation or Service invocation is not
+ * allowed.
  *
  * @author heikki doeleman
  */
@@ -32,7 +33,7 @@ public class UnAuthorizedException extends NotAllowedEx {
 
     public UnAuthorizedException(String message, Object object) {
         super(message, object);
-		id   = "unauthorized";
-		code = 403;
+        id = "unauthorized";
+        code = 403;
     }
 }

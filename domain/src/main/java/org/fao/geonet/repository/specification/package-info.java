@@ -22,8 +22,8 @@
  */
 
 /**
- * Contains Utility objects for creating {@link org.springframework.data.jpa.domain.Specification} objects
- * for querying repositories.
+ * Contains Utility objects for creating {@link org.springframework.data.jpa.domain.Specification}
+ * objects for querying repositories.
  *
  * @author Jesse
  */

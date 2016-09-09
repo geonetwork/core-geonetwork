@@ -42,9 +42,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests for the MetadataRelationSpecs
  * <p/>
- * User: Jesse
- * Date: 9/30/13
- * Time: 7:58 PM
+ * User: Jesse Date: 9/30/13 Time: 7:58 PM
  */
 public class MetadataRelationSpecsTest extends AbstractSpringDataTest {
     @Autowired

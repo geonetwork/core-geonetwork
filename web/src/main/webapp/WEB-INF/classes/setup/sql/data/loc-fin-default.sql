@@ -16,7 +16,6 @@ INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'fin','Valokuvat');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'fin','Äänitteet / Videot');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'fin','Hakemistot');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'fin','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'fin','Z3950 Servers');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'fin','Registers');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'fin','Fyysisiä näytteitä');
 

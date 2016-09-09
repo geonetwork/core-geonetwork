@@ -1,6 +1,7 @@
 package org.fao.geonet.wro4j;
 
 import org.apache.commons.io.IOUtils;
+
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.model.resource.locator.UriLocator;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+
 import javax.servlet.ServletContext;
 
 /**
@@ -21,29 +23,27 @@ import javax.servlet.ServletContext;
  */
 public class TemplatesUriLocator implements UriLocator {
 
-	public static final String URI_PREFIX = "template://";
-	public static final String URI_PREFIX_HEADER = "template://header";
-	public static final String URI_PREFIX_FOOTER = "template://footer";
-	public static final String URI_LOCATOR_ID = "templateURILocator";
+    public static final String URI_PREFIX = "template://";
+    public static final String URI_PREFIX_HEADER = "template://header";
+    public static final String URI_PREFIX_FOOTER = "template://footer";
+    public static final String URI_LOCATOR_ID = "templateURILocator";
 
-	@Override
+    @Override
     public InputStream locate(String uri) throws IOException {
-	    StringBuilder javascript;
-    	if(uri.startsWith(URI_PREFIX_HEADER)) {
-    		javascript = getHeader();
-    	}
-    	else if(uri.startsWith(URI_PREFIX_FOOTER)) {
-    		javascript = getFooter();
-    	} else {
-    		javascript = new StringBuilder();
-    		final String realPath;
-        	final String path = uri.substring(URI_PREFIX.length());
-        	final ServletContext servletContext = Context.get().getServletContext();
-            if(servletContext != null) {
-            	realPath = servletContext.getRealPath(path);
-            }
-            else {
-            	realPath = path;
+        StringBuilder javascript;
+        if (uri.startsWith(URI_PREFIX_HEADER)) {
+            javascript = getHeader();
+        } else if (uri.startsWith(URI_PREFIX_FOOTER)) {
+            javascript = getFooter();
+        } else {
+            javascript = new StringBuilder();
+            final String realPath;
+            final String path = uri.substring(URI_PREFIX.length());
+            final ServletContext servletContext = Context.get().getServletContext();
+            if (servletContext != null) {
+                realPath = servletContext.getRealPath(path);
+            } else {
+                realPath = path;
             }
 
             // Check to avoid NullPointerException
@@ -53,10 +53,10 @@ public class TemplatesUriLocator implements UriLocator {
 
             File folder = new File(realPath);
             File[] files = folder.listFiles();
-            if(files != null) {
-                for(int i=0;i<files.length;++i) {
+            if (files != null) {
+                for (int i = 0; i < files.length; ++i) {
 
-                    if(files[i].isDirectory()) {
+                    if (files[i].isDirectory()) {
                         break;
                     }
                     BufferedReader br = null;
@@ -78,34 +78,34 @@ public class TemplatesUriLocator implements UriLocator {
                         sTemplate = sTemplate.replace("'", "\\'");
 
                         javascript.append(
-                                String.format("$templateCache.put('%s', '%s');",
-                                        "../.." + path.replace('\\','/') + '/' + files[i].getName(),
-                                        sTemplate));
+                            String.format("$templateCache.put('%s', '%s');",
+                                "../.." + path.replace('\\', '/') + '/' + files[i].getName(),
+                                sTemplate));
                     } finally {
                         IOUtils.closeQuietly(reader);
                     }
                 }
 
             }
-    	}
+        }
         return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
     }
 
-	private StringBuilder getHeader() {
-		StringBuilder javascript = new StringBuilder();
-		javascript.append("(function() {")
-				.append("angular.module('gn').run(['$templateCache', function($templateCache) {");
-		return javascript;
-	}
+    private StringBuilder getHeader() {
+        StringBuilder javascript = new StringBuilder();
+        javascript.append("(function() {")
+            .append("angular.module('gn').run(['$templateCache', function($templateCache) {");
+        return javascript;
+    }
 
-	private StringBuilder getFooter() {
-		StringBuilder javascript = new StringBuilder();
-		javascript.append("}]);").append("})();");
-		return javascript;
-	}
+    private StringBuilder getFooter() {
+        StringBuilder javascript = new StringBuilder();
+        javascript.append("}]);").append("})();");
+        return javascript;
+    }
 
-	@Override
-	public boolean accept(String uri) {
-		return uri.startsWith(URI_PREFIX);
-	}
+    @Override
+    public boolean accept(String uri) {
+        return uri.startsWith(URI_PREFIX);
+    }
 }

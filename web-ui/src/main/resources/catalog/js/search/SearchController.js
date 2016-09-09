@@ -92,13 +92,13 @@
         mode: 'prefetch',
         promise: (function() {
           var defer = $q.defer();
-          $http.get(suggestService.getInfoUrl('categories')).
+          $http.get('../api/tags', {cache: true}).
               success(function(data) {
                 var res = [];
-                for (var i = 0; i < data.metadatacategory.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                   res.push({
-                    id: data.metadatacategory[i].name,
-                    name: data.metadatacategory[i].label.eng
+                    id: data[i].name,
+                    name: data[i].label.eng
                   });
                 }
                 defer.resolve(res);
@@ -111,13 +111,12 @@
         mode: 'prefetch',
         promise: (function() {
           var defer = $q.defer();
-          $http.get(suggestService.getInfoUrl('sources')).
-              success(function(data) {
+          $http.get('../api/sources', {cache: true}).
+              success(function(a) {
                 var res = [];
-                var a = data['sources'];
                 for (var i = 0; i < a.length; i++) {
                   res.push({
-                    id: a[i]['@id'],
+                    id: a[i].id,
                     name: a[i].name
                   });
                 }

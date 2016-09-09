@@ -51,6 +51,7 @@
            'crsselector.html',
            link: function(scope, element, attrs) {
              scope.snippet = null;
+             scope.crsResults = [];
              scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
 
@@ -71,7 +72,7 @@
 
              scope.search = function() {
                if (scope.filter) {
-                 $http.get('crs.search@json?type=&maxResults=50&name=' +
+                 $http.get('../api/registries/crs?type=&rows=50&q=' +
                  scope.filter).success(
                  function(data) {
                    scope.crsResults = data;

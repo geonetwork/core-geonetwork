@@ -25,6 +25,7 @@ package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -55,7 +56,7 @@ public class MetadataCategorySpecsTest extends AbstractSpringDataTest {
         final MetadataCategory category3 = categoryRepository.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
 
         final Specification<MetadataCategory> specification = MetadataCategorySpecs.hasCategoryNameIn(Arrays.asList
-                (category.getName(), category3.getName()));
+            (category.getName(), category3.getName()));
 
         final List<String> all = Lists.transform(categoryRepository.findAll(specification), new Function<MetadataCategory, String>() {
             @Nullable

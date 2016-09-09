@@ -2,13 +2,13 @@
   <div class="clearfix">
     <div data-ng-show="searchResults.count > 0">
       <ng-pluralize count="searchResults.count"
-        when="{'0 ': ('noRecordFound' | translate),
+                    when="{'0 ': ('noRecordFound' | translate),
               'one': '1 ' +  ('record' | translate),
               'other': '{} ' +  ('records' | translate)}"/>
     </div>
     <div data-ng-show="options.selection.mode.indexOf('local') === -1">
       <div class="btn-group pull-right"
-        data-ng-show="searchResults.count > 0">
+           data-ng-show="searchResults.count > 0">
         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
           {{selection.length}} <span data-translate="">selected</span><span class="caret"/>
         </button>

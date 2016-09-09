@@ -25,9 +25,11 @@ package jeeves.config.springutil;
 
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.sources.ServiceRequestFactory;
 import jeeves.server.sources.http.JeevesServlet;
+
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
@@ -45,6 +47,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicationContextFromServletContext;
@@ -52,9 +55,7 @@ import static jeeves.config.springutil.JeevesDelegatingFilterProxy.getApplicatio
 /**
  * This filter is designed to ensure that users logged in one node is not logged in in the others.
  * <p/>
- * User: Jesse
- * Date: 11/26/13
- * Time: 7:24 AM
+ * User: Jesse Date: 11/26/13 Time: 7:24 AM
  */
 public class MultiNodeAuthenticationFilter extends GenericFilterBean {
     private String _location;
@@ -95,10 +96,10 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
                     if (oldNodeId != null && !oldNodeId.equals(nodeId)) {
                         final Escaper escaper = UrlEscapers.urlFormParameterEscaper();
                         final String location = getServletContext().getContextPath() + _location.replace("@@lang@@", escaper.escape(lang))
-                                .replace("@@nodeId@@", escaper.escape(nodeId))
-                                .replace("@@redirectedFrom@@", escaper.escape(redirectedFrom))
-                                .replace("@@oldNodeId@@", escaper.escape(oldNodeId))
-                                .replace("@@oldUserName@@", escaper.escape(user.getName()));
+                            .replace("@@nodeId@@", escaper.escape(nodeId))
+                            .replace("@@redirectedFrom@@", escaper.escape(redirectedFrom))
+                            .replace("@@oldNodeId@@", escaper.escape(oldNodeId))
+                            .replace("@@oldUserName@@", escaper.escape(user.getName()));
 
                         String requestURI = httpServletRequest.getRequestURI();
                         // drop the ! at the end so we can view the xml of the warning page
@@ -107,9 +108,9 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
                         }
                         final boolean isNodeWarningPage = requestURI.equals(location.split("\\?")[0]);
                         if (!isNodeWarningPage) {
-                                HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-                                httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(location));
-                                return;
+                            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+                            httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(location));
+                            return;
                         }
                     }
                 } else {
@@ -149,7 +150,7 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
 
     private void throwAuthError() {
         throw new WrongNodeAuthenticationException(
-                "The current user was logged into a different node.  " +
+            "The current user was logged into a different node.  " +
                 "To login to this node the user must logout and login to the new node.  " +
                 "It is also possible to return to the old node.");
     }

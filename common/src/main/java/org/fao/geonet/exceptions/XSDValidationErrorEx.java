@@ -26,22 +26,22 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class XSDValidationErrorEx extends JeevesClientEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class XSDValidationErrorEx extends JeevesClientEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public XSDValidationErrorEx(String name) { this(name, null); }
+    public XSDValidationErrorEx(String name) {
+        this(name, null);
+    }
 
-	public XSDValidationErrorEx(String name, Object value)
-	{
-		super(name, value);
+    public XSDValidationErrorEx(String name, Object value) {
+        super(name, value);
 
-		id = "xsd-validation-error";
-	}
+        id = "xsd-validation-error";
+    }
 }
 
 //=============================================================================

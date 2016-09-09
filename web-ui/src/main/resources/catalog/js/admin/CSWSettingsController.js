@@ -94,7 +94,7 @@
       }
 
       function loadUsers() {
-        $http.get('admin.user.list?_content_type=json&').
+        $http.get('../api/users').
             success(function(data) {
               $scope.users = data;
               loadSettings();

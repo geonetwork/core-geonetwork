@@ -33,81 +33,55 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
 /**
- * This class is responsible of reading and writing xml on the database. It works on tables like (id, data,
- * lastChangeDate).
+ * This class is responsible of reading and writing xml on the database. It works on tables like
+ * (id, data, lastChangeDate).
  */
 public class XmlSerializerDb extends XmlSerializer {
 
     /**
-     *  Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read
-     *  is converted into xml, XLinks are resolved when config'd on.
-     *
-     *
-     * @param id
-     * @return
-     * @throws Exception
+     * Retrieves the xml element which id matches the given one. The element is read from 'table'
+     * and the string read is converted into xml, XLinks are resolved when config'd on.
      */
-	public Element select(ServiceContext context, String id) throws Exception {
-		Element rec = internalSelect(id, false);
-		if (resolveXLinks()) Processor.detachXLink(rec, context);
-		return rec;
-	}
+    public Element select(ServiceContext context, String id) throws Exception {
+        Element rec = internalSelect(id, false);
+        if (resolveXLinks()) Processor.detachXLink(rec, context);
+        return rec;
+    }
 
     /**
-     * Retrieves the xml element which id matches the given one. The element is read from 'table' and the string read is
-     * converted into xml, XLinks are NOT resolved even if they are config'd on - this is used when you want to do XLink
-     * processing yourself.
-     *
-     *
-     * @param id
-     * @return
-     * @throws Exception
+     * Retrieves the xml element which id matches the given one. The element is read from 'table'
+     * and the string read is converted into xml, XLinks are NOT resolved even if they are config'd
+     * on - this is used when you want to do XLink processing yourself.
      */
-	public Element selectNoXLinkResolver(String id, boolean isIndexingTask) throws Exception {
-		return internalSelect(id, isIndexingTask);
-	}
+    public Element selectNoXLinkResolver(String id, boolean isIndexingTask) throws Exception {
+        return internalSelect(id, isIndexingTask);
+    }
 
     /**
      * TODO javadoc.
      *
-     *
      * @param newMetadata the metadata to insert
-     * @param dataXml the data to set on the metadata before saving
-     * @param context a service context
+     * @param dataXml     the data to set on the metadata before saving
+     * @param context     a service context
      * @return the saved metadata
-     * @throws SQLException
      */
-    public Metadata insert(final Metadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
-		return insertDb(newMetadata, dataXml, context);
+    public Metadata insert(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+        return insertDb(newMetadata, dataXml, context);
 
-	}
+    }
 
     /**
-     *  Updates an xml element into the database. The new data replaces the old one.
-     *
-     *
-     * @param id
-     * @param xml
-     * @param changeDate
-     * @param updateDateStamp
-     * @param context
-     * @throws SQLException
+     * Updates an xml element into the database. The new data replaces the old one.
      */
-	public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
-		updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
-	}
+    public void update(String id, Element xml, String changeDate, boolean updateDateStamp, String uuid, ServiceContext context) throws SQLException {
+        updateDb(id, xml, changeDate, xml.getQualifiedName(), updateDateStamp, uuid);
+    }
 
     /**
      * Deletes an xml element given its id.
-     *
-     *
-     *
-     * @param id
-		 * @param context
-     * @throws Exception
      */
-	public void delete(String id, ServiceContext context) throws Exception {
-		deleteDb(id);
-	}
+    public void delete(String id, ServiceContext context) throws Exception {
+        deleteDb(id);
+    }
 
 }

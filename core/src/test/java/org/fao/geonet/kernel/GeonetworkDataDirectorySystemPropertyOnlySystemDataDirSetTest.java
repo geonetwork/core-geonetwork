@@ -29,12 +29,11 @@ import org.junit.Before;
 import java.nio.file.Path;
 
 /**
- * Test the logic of calculating the Geonetwork data directories when the node id is the default and the system data directory
- * is set to something other than the default via the general property ({@link GeonetworkDataDirectory#GEONETWORK_DIR_KEY}.
+ * Test the logic of calculating the Geonetwork data directories when the node id is the default and
+ * the system data directory is set to something other than the default via the general property
+ * ({@link GeonetworkDataDirectory#GEONETWORK_DIR_KEY}.
  * <p/>
- * User: Jesse
- * Date: 11/14/13
- * Time: 8:36 AM
+ * User: Jesse Date: 11/14/13 Time: 8:36 AM
  */
 public class GeonetworkDataDirectorySystemPropertyOnlySystemDataDirSetTest extends AbstractGeonetworkDataDirectoryTest {
 

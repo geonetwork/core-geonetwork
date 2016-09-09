@@ -51,9 +51,10 @@
     '$http',
     '$rootScope',
     '$translate',
+    '$filter',
     'Metadata',
     function(gnBatchProcessing, gnHttp, gnEditor, gnCurrentEdit,
-             $q, $http, $rootScope, $translate, Metadata) {
+             $q, $http, $rootScope, $translate, $filter, Metadata) {
 
       var reload = false;
       var openCb = {};
@@ -63,8 +64,9 @@
        * TODO: Should be the same as in related resource directive
        */
       var protocolIcons = [
-        ['dq', 'fa-certificate'],
-        ['portrayal', 'fa-paint-brush'],
+        ['dq-report', 'fa-certificate'],
+        ['legend', 'fa-paint-brush'],
+        ['fcats', 'fa-table'],
         ['FILE:', 'fa-database'],
         ['OGC:OWS', 'fa-map'],
         ['OGC:WMC', 'fa-map'],
@@ -126,39 +128,6 @@
         return params;
       };
 
-      /**
-       * Parse XML result of md.relations.get service.
-       * Return an array of relations objects
-       */
-      var parseRelations = function(data) {
-
-        var relations = {};
-        if (data === null) {
-          data = {relation: []};
-        } else if (!angular.isArray(data.relation)) {
-          data.relation = [data.relation];
-        }
-        angular.forEach(data.relation, function(rel) {
-          if (angular.isDefined(rel)) {
-            var type = rel['@type'];
-            if (!relations[type]) {
-              relations[type] = [];
-            }
-            rel.type = type;
-            delete rel['@type'];
-
-            if (rel['@subType']) {
-              rel.subType = rel['@subType'];
-              delete rel['@subType'];
-            }
-            if (angular.isString(rel.title) ||
-                type == 'thumbnail') {
-              relations[type].push(rel);
-            }
-          }
-        });
-        return relations;
-      };
 
       var refreshForm = function(scope, data) {
         gnEditor.refreshEditorForm(data);
@@ -245,17 +214,14 @@
 
           var defer = $q.defer();
 
-          gnHttp.callService('getRelations', {
-            fast: false,
-            id: gnCurrentEdit.id
-          }, {
-            method: 'get',
+          $http.get('../api/records/' + gnCurrentEdit.uuid + '/related', {
             headers: {
-              'Content-type': 'application/xml'
+              'Accept': 'application/json'
             }
-          }).success(function(data) {
-            defer.resolve(parseRelations(data));
-          });
+          })
+            .success(function(data) {
+                defer.resolve(data);
+              });
           return defer.promise;
         },
 
@@ -362,10 +328,10 @@
          * @return {string} icon class
          */
         getIconByProtocol: function(p) {
-          if (p['@subtype']) {
+          if (p.type) {
             for (i = 0; i < protocolIcons.length; ++i) {
-              if (p['@subtype'].indexOf(protocolIcons[i][0]) >= 0 ||
-                  p['@subtype'].indexOf(protocolIcons[i][0]) >= 0) {
+              if (p.type.indexOf(protocolIcons[i][0]) >= 0 ||
+                  p.type.indexOf(protocolIcons[i][0]) >= 0) {
                 return protocolIcons[i][1];
               }
             }
@@ -395,7 +361,7 @@
         linkToService: function(params, popupid) {
           var qParams = setParams('dataset-add', params);
           var scope = this;
-          return gnBatchProcessing.runProcessMdXml({
+          return gnBatchProcessing.runProcessMd({
             scopedName: qParams.name,
             uuidref: qParams.uuidDS,
             uuid: qParams.uuidSrv,
@@ -437,7 +403,7 @@
           var qParams = setParams('onlinesrc-add', params);
           var scope = this;
 
-          return gnBatchProcessing.runProcessMdXml({
+          return gnBatchProcessing.runProcessMd({
             name: qParams.name,
             desc: qParams.desc,
             url: qParams.url,
@@ -528,7 +494,7 @@
               setParams('onlinesrc-remove', {
                 id: gnCurrentEdit.id,
                 url: onlinesrc.url,
-                name: onlinesrc.name
+                name: $filter('gnLocalized')(onlinesrc.title)
               }));
         },
 
@@ -544,11 +510,11 @@
          */
         removeService: function(onlinesrc) {
           var params = {
-            uuid: onlinesrc['geonet:info'].uuid,
+            uuid: onlinesrc.id,
             uuidref: gnCurrentEdit.uuid
           }, service = this;
 
-          gnBatchProcessing.runProcessMdXml(
+          gnBatchProcessing.runProcessMd(
               setParams('services-remove', params)).
               then(function(data) {
                 $rootScope.$broadcast('StatusUpdated', {
@@ -579,7 +545,7 @@
         removeDataset: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc['geonet:info'].uuid
+            uuidref: onlinesrc.id
           };
           runProcess(this,
               setParams('datasets-remove', params));
@@ -598,7 +564,7 @@
          */
         removeMdLink: function(mode, onlinesrc) {
           var params = {};
-          params[mode + 'Uuid'] = onlinesrc['geonet:info'].uuid;
+          params[mode + 'Uuid'] = onlinesrc.id;
           runProcess(this,
               setParams(mode + '-remove', params));
         },
@@ -618,7 +584,7 @@
           var params = {
             uuid: gnCurrentEdit.uuid,
             uuidref: onlinesrc['@subtype'] ? onlinesrc.url :
-                onlinesrc['geonet:info'].uuid
+                onlinesrc.id
           };
           runProcess(this,
               setParams('fcats-remove', params));
@@ -638,7 +604,7 @@
         removeSibling: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc.uuid
+            uuidref: onlinesrc.id
           };
           runProcess(this,
               setParams('sibling-remove', params));
@@ -691,7 +657,7 @@
           for (var p in protocols) {
             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
               // TODO : define default description
-              var key = p + 'Url';
+              var key = p + 'url';
               xml +=
                   this.buildOnLineResource(node[key], protocols[p].label,
                   layerName, title + ' (' + protocols[p].label + ')') +

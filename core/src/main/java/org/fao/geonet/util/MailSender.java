@@ -23,151 +23,118 @@
 
 package org.fao.geonet.util;
 
-import org.fao.geonet.Logger;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.fao.geonet.Logger;
+import org.fao.geonet.Util;
 
 import javax.mail.internet.InternetAddress;
-
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * see {@link MailUtil}
- *  *
  */
-@Deprecated 
-public class MailSender extends Thread
-{
-	Logger      _logger;
-	SimpleEmail _mail;
+@Deprecated
+public class MailSender extends Thread {
+    Logger _logger;
+    SimpleEmail _mail;
 
-	public MailSender(ServiceContext context)
-	{
-		_logger = context.getLogger();
-	}
+    public MailSender(ServiceContext context) {
+        _logger = context.getLogger();
+    }
 
     /**
-     *
-     * @param server
-     * @param port
      * @param username TODO
      * @param password TODO
-     * @param useSSL TODO
-     * @param from
-     * @param fromDescr
-     * @param to
-     * @param subject
-     * @param message
-     * @throws EmailException
+     * @param useSSL   TODO
      */
     private void setUp(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
+                       boolean ignoreSslCertificateErrors,
                        String from, String fromDescr, String to, String subject, String message) throws EmailException {
         _mail.setHostName(server);
         _mail.setSmtpPort(port);
         _mail.setFrom(from, fromDescr);
-        if(!"".equals(username)) {
+        if (!"".equals(username)) {
             _mail.setAuthentication(username, password);
         }
-        if(useTLS) {
+        if (useTLS) {
             _mail.setStartTLSEnabled(true);
             _mail.setStartTLSRequired(true);
         }
-        if(useSSL) {
+        if (useSSL) {
             _mail.setSSLOnConnect(useSSL);
             _mail.setSslSmtpPort(port + "");
         }
         _mail.addTo(to);
         _mail.setSubject(subject);
-		if ((message == null) || (message.length() == 0)){
+        if ((message == null) || (message.length() == 0)) {
             throw new EmailException("Invalid message supplied");
         }
-        _mail.setContent(message,"text/plain; charset=UTF-8");
+        _mail.setContent(message, "text/plain; charset=UTF-8");
+        if (ignoreSslCertificateErrors) {
+            _mail.getMailSession().getProperties().setProperty("mail.smtp.ssl.trust", "*");
+        }
     }
 
     /**
-     * Better use through MailUtil, as it takes the settings directly from the
-     * BBDD.
-     * 
-     * @param server
-     * @param port
+     * Better use through MailUtil, as it takes the settings directly from the BBDD.
+     *
      * @param username TODO
      * @param password TODO
-     * @param useSSL TODO
-     * @param from
-     * @param fromDescr
-     * @param to
-     * @param toDescr
-     * @param subject
-     * @param message
+     * @param useSSL   TODO
      */
-	public void send(String server, int port, String username, String password, boolean useSSL,boolean useTLS,
-	        String from, String fromDescr, String to, String toDescr, String subject, String message) {
-		_mail = new SimpleEmail();
-		try {
-            setUp(server, port, username, password, useSSL, useTLS, from, fromDescr, to, subject, message);
+    public void send(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
+                     boolean ignoreSslCertificateErrors, String from, String fromDescr, String to, String toDescr, String
+                         subject, String message) {
+        _mail = new SimpleEmail();
+        try {
+            setUp(server, port, username, password, useSSL, useTLS, ignoreSslCertificateErrors, from, fromDescr, to,
+                subject, message);
             start();
-		}
-		catch(EmailException e) {
-			logEx(e);
-		}
-	}
+        } catch (EmailException e) {
+            logEx(e);
+        }
+    }
 
     /**
-     * Better use through MailUtil, as it takes the settings directly from the
-     * BBDD.
-     * 
-     * @param server
-     * @param port
-     * @param from
-     * @param fromDescr
-     * @param to
-     * @param toDescr
-     * @param replyTo
-     * @param replyToDesc
-     * @param subject
-     * @param message
+     * Better use through MailUtil, as it takes the settings directly from the BBDD.
      */
-	public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
-	        String from, String fromDescr, String to, String toDescr, 
-	        String replyTo, String replyToDesc, String subject, String message) {
-		_mail = new SimpleEmail();
-		try {
-            setUp(server, port, username, password, useSSL, useTLS, from, fromDescr, to, subject, message);
+    public void sendWithReplyTo(String server, int port, String username, String password, boolean useSSL, boolean useTLS,
+                                boolean ignoreSslCertificateErrors, String from, String fromDescr, String to,
+                                String toDescr, String replyTo, String replyToDesc, String subject, String message) {
+        _mail = new SimpleEmail();
+        try {
+            setUp(server, port, username, password, useSSL, useTLS, ignoreSslCertificateErrors, from, fromDescr, to,
+                subject, message);
             List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
-			addressColl.add(new InternetAddress(replyTo, replyToDesc));
-			_mail.setReplyTo(addressColl);
+            addressColl.add(new InternetAddress(replyTo, replyToDesc));
+            _mail.setReplyTo(addressColl);
 
-			start();
-		}
-		catch(Exception e) {
-			logEx(e);
-		}
-	}
+            start();
+        } catch (Exception e) {
+            logEx(e);
+        }
+    }
 
-	public void run()
-	{
-		try
-		{
-			_mail.send();
+    public void run() {
+        try {
+            _mail.send();
 
-			_logger.info("Mail sent");
-		}
-		catch(EmailException e)
-		{
-			logEx(e);
-		}
-	}
+            _logger.info("Mail sent");
+        } catch (EmailException e) {
+            logEx(e);
+        }
+    }
 
-	private void logEx(Exception e)
-	{
-		if(_logger != null) {
-		_logger.error("Unable to mail feedback");
-		_logger.error("  Exception : " + e);
-		_logger.error("  Message   : " + e.getMessage());
-		_logger.error("  Stack     : " + Util.getStackTrace(e));
-		}
-	}
+    private void logEx(Exception e) {
+        if (_logger != null) {
+            _logger.error("Unable to mail feedback");
+            _logger.error("  Exception : " + e);
+            _logger.error("  Message   : " + e.getMessage());
+            _logger.error("  Stack     : " + Util.getStackTrace(e));
+        }
+    }
 };
 

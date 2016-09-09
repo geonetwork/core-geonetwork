@@ -203,7 +203,7 @@ div.gn-scroll-spy {
   border-top-left-radius: @panel-border-radius;
   border-top: 1px solid @panel-default-border;
   border-left: 1px solid @panel-default-border;
-  
+
   button {
     .pull-right();
   }
@@ -244,6 +244,12 @@ div.gn-scroll-spy {
   }
   li.disabled {
     cursor: not-allowed !important;
+  }
+
+  li.disabled {
+    a {
+      pointer-events: none;
+    }
   }
 }
 
@@ -312,6 +318,15 @@ img.thumb-small {
     z-index: 99;
     top: 0px;
     right: 0px;
+  }
+  a.onlinesrc-edit {
+    position: absolute;
+    z-index: 99;
+    top: 0px;
+    right: 20px;
+  }
+  a {
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
   }
 }
 .gn-layers-grid-container {
@@ -615,4 +630,82 @@ button, .btn, .btn:active, a {
 ::-webkit-scrollbar-thumb {
   background-color: gray;
   border-radius: 4px;
+}
+
+.gn-bbox-input {
+  input {
+    width: 6em;
+    display: inline-block;
+  }
+  [class^='col-'] {
+    text-align: center;
+  }
+  [ngeo-btn-group] {
+    padding:0;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+}
+
+.popover {
+  height: auto;
+  border-radius: 2px;
+  font-size: 12px;
+  &.popover-dropdown .popover-content {
+    display: table-cell;
+    vertical-align: middle;
+    height: 19em;
+    ul {
+      margin: 0;
+      font-size: 1em;
+    }
+    li {
+      font-size: 12px;
+      padding: 8px 10px;
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+      &:first-child { border-top: none; }
+      &:last-child { border-bottom: none; }
+      input[type="range"] {
+        display: block;
+        width: 100px;
+        margin-left: 10px
+      }
+    }
+  }
+  &.popover-dropdown-2 .popover-content {
+    height: 8em;
+  }
+  &.popover-dropdown-3 .popover-content {
+    height: 10.5em;
+  }
+  &.popover-dropdown-4 .popover-content {
+    height: 13em;
+  }
+  &.popover-dropdown-5 .popover-content {
+    height: 15.5em;
+  }
+  .popover-content > .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    padding: 0 0 1em;
+  }
+  .btn-group .dropdown-menu {
+    margin-top: 0;
+  }
+}
+
+input.ng-invalid {
+  border-color: #a94442;
+}
+
+/* Highlight updated checkboxes in sharing form */
+.gn-sharing-batch {
+  input.ng-dirty:after {
+    content: "*";
+    padding-left: 12px;
+  }
 }

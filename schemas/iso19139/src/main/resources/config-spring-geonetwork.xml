@@ -23,10 +23,20 @@
   -->
 
 <beans
-    xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean id="iso19139SchemaPlugin"
-        class="org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin"/>
+        class="org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin">
+    <property name="savedQueries">
+      <list>
+        <bean class="org.fao.geonet.kernel.schema.SavedQuery">
+          <property name="id" value="wfs-indexing-config"/>
+          <property name="xpath"
+                    value="*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, {{protocol}}) and gmd:name/gco:CharacterString = '{{name}}' and gmd:linkage/gmd:URL = '{{url}}']/gmd:applicationProfile/gco:CharacterString/text()"/>
+        </bean>
+      </list>
+    </property>
+  </bean>
 </beans>

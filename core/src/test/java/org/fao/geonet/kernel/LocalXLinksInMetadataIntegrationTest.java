@@ -24,16 +24,19 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.xlink.Processor;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -49,6 +52,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
 /**
  * Test local:// xlinks.
  *
@@ -68,35 +72,35 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
     public void testResolveLocalXLink() throws Exception {
         String namespaces = "xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\"";
         final String responseTemplate = "<gmd:MD_Keywords " + namespaces + ">\n"
-                                + "    <gmd:keyword>\n"
-                                + "        <gco:CharacterString>%s</gco:CharacterString>\n"
-                                + "    </gmd:keyword>\n"
-                                + "</gmd:MD_Keywords>\n";
+            + "    <gmd:keyword>\n"
+            + "        <gco:CharacterString>%s</gco:CharacterString>\n"
+            + "    </gmd:keyword>\n"
+            + "</gmd:MD_Keywords>\n";
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-              + "<gmd:MD_Metadata "+namespaces
-              + "    gco:isoType=\"gmd:MD_Metadata\">\n"
-              + "    <gmd:fileIdentifier xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
-              + "        <gco:CharacterString>23b53e29-c0a2-4897-b107-141bb15f929a</gco:CharacterString>\n"
-              + "    </gmd:fileIdentifier>\n"
-              + "    <gmd:identificationInfo xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
-              + "        <gmd:MD_DataIdentification gco:isoType=\"gmd:MD_DataIdentification\">\n"
-              + "        <gmd:descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://thesaurus" +
-              ".keyword?thesaurus=external.place.regions&amp;id=http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%235&amp;lang=eng\">\n"
-              + "        </gmd:descriptiveKeywords>\n"
-              + "        </gmd:MD_DataIdentification>\n"
-              + "    </gmd:identificationInfo>\n"
-              + "</gmd:MD_Metadata>";
+            + "<gmd:MD_Metadata " + namespaces
+            + "    gco:isoType=\"gmd:MD_Metadata\">\n"
+            + "    <gmd:fileIdentifier xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+            + "        <gco:CharacterString>23b53e29-c0a2-4897-b107-141bb15f929a</gco:CharacterString>\n"
+            + "    </gmd:fileIdentifier>\n"
+            + "    <gmd:identificationInfo xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+            + "        <gmd:MD_DataIdentification gco:isoType=\"gmd:MD_DataIdentification\">\n"
+            + "        <gmd:descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://thesaurus" +
+            ".keyword?thesaurus=external.place.regions&amp;id=http%3A%2F%2Fgeonetwork-opensource.org%2Fregions%235&amp;lang=eng\">\n"
+            + "        </gmd:descriptiveKeywords>\n"
+            + "        </gmd:MD_DataIdentification>\n"
+            + "    </gmd:identificationInfo>\n"
+            + "</gmd:MD_Metadata>";
 
         final List content = Lists.newArrayList(Xml.loadString(xml, false).getContent());
         for (Object o : content) {
-            ((Content)o).detach();
+            ((Content) o).detach();
         }
         final Element metadata = getSampleMetadataXml().setContent(content);
 
         ServiceContext context = createServiceContext();
         context.setAsThreadLocal();
         loginAsAdmin(context);
-        _settingManager.setValue(SettingManager.SYSTEM_XLINKRESOLVER_ENABLE, true);
+        _settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
 
         String schema = _dataManager.autodetectSchema(metadata);
         String uuid = UUID.randomUUID().toString();
@@ -106,8 +110,8 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         String metadataType = MetadataType.METADATA.codeString;
         String changeDate;
         String createDate = changeDate = new ISODate().getDateAndTime();
-        String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source,  metadataType, null,
-                null, createDate, changeDate, false, false);
+        String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
+            null, createDate, changeDate, false, false);
 
         final String keyword1 = "World";
         _serviceManager.setResponse(String.format(responseTemplate, keyword1));

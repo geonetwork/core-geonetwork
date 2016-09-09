@@ -36,48 +36,44 @@ import java.util.List;
 
 //==============================================================================
 
-class AttributeEntry
-{
-	public String  name;
-	public String  type;
-	public String  unqualifiedName;
-	public String  namespacePrefix;
-	public String  defValue;
-	public String  reference;
-    public String	 form = "unqualified";
-	public boolean required = false;
+class AttributeEntry {
+    public String name;
+    public String type;
+    public String unqualifiedName;
+    public String namespacePrefix;
+    public String defValue;
+    public String reference;
+    public String form = "unqualified";
+    public boolean required = false;
 
-	public ArrayList<String> alValues = new ArrayList<String>();
-	public ArrayList<String> alTypes = new ArrayList<String>();
-	
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    public ArrayList<String> alValues = new ArrayList<String>();
+    public ArrayList<String> alTypes = new ArrayList<String>();
 
-	public AttributeEntry(Element el, Path file, String targetNS, String targetNSPrefix)
-	{
-		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public AttributeEntry(Element el, Path file, String targetNS, String targetNSPrefix) {
+        this(new ElementInfo(el, file, targetNS, targetNSPrefix));
+    }
 
-	public AttributeEntry(ElementInfo ei)
-	{
-		handleAttribs(ei);
-		handleChildren(ei);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public AttributeEntry(ElementInfo ei) {
+        handleAttribs(ei);
+        handleChildren(ei);
+    }
 
-	private void handleAttribs(ElementInfo ei)
-	{
-		List<?> attribs = ei.element.getAttributes();
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
+
+    private void handleAttribs(ElementInfo ei) {
+        List<?> attribs = ei.element.getAttributes();
 
         for (Object attrib : attribs) {
             Attribute at = (Attribute) attrib;
@@ -92,41 +88,29 @@ class AttributeEntry
                 }
 
                 //System.out.println("-- name is "+name);
-            }
-            else if (attrName.equals("default") || attrName.equals("fixed")) {
+            } else if (attrName.equals("default") || attrName.equals("fixed")) {
                 defValue = at.getValue();
-            }
-
-            else if (attrName.equals("ref")) {
+            } else if (attrName.equals("ref")) {
                 reference = at.getValue();
 
                 //System.out.println("-- ref is "+reference);
-            }
-
-            else if (attrName.equals("use")) {
+            } else if (attrName.equals("use")) {
                 required = "required".equals(at.getValue());
                 //System.out.println("-- Required is "+required);
-            }
-
-            else if (attrName.equals("type")) {
-            	type = ei.element.getAttributeValue(attrName);
-            }
-
-            else if (attrName.equals("form")) {
+            } else if (attrName.equals("type")) {
+                type = ei.element.getAttributeValue(attrName);
+            } else if (attrName.equals("form")) {
                 form = at.getValue();
-            }
-
-            else {
+            } else {
                 Logger.log();
             }
         }
-	}
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void handleChildren(ElementInfo ei)
-	{
-		List<?> children = ei.element.getChildren();
+    private void handleChildren(ElementInfo ei) {
+        List<?> children = ei.element.getChildren();
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
             String elName = elChild.getName();
@@ -135,35 +119,31 @@ class AttributeEntry
                 for (int j = 0; j < ste.alEnum.size(); j++) {
                     alValues.add(ste.alEnum.get(j));
                 }
-                
+
                 for (int j = 0; j < ste.alTypes.size(); j++) {
-                	alTypes.add(ste.alTypes.get(j));
+                    alTypes.add(ste.alTypes.get(j));
                 }
-            }
+            } else if (elName.equals("annotation")) {
 
-            else if (elName.equals("annotation")) {
-
-            }
-
-            else {
-            	Logger.log();
+            } else {
+                Logger.log();
             }
         }
-	}
-	
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("AttributeEntry name:" + name + ", type:" + type + " [");
-		for (int j = 0; j < alValues.size(); j++) {
-		    sb.append(alValues.get(j) + ",");
-		}
-		sb.append("], types:[");
-		for (int j = 0; j < alTypes.size(); j++) {
-		    sb.append(alTypes.get(j) + ",");
-		}
-		sb.append("]");
-		return sb.toString();
-	}
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("AttributeEntry name:" + name + ", type:" + type + " [");
+        for (int j = 0; j < alValues.size(); j++) {
+            sb.append(alValues.get(j) + ",");
+        }
+        sb.append("], types:[");
+        for (int j = 0; j < alTypes.size(); j++) {
+            sb.append(alTypes.get(j) + ",");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }
 
 //==============================================================================

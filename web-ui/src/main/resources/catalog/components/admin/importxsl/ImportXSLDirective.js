@@ -30,8 +30,8 @@
    * Provide a list of available XSLT transformation
    *
    */
-  module.directive('gnImportXsl', ['$http', '$translate',
-    function($http, $translate) {
+  module.directive('gnImportXsl', ['$http',
+    function($http) {
 
       return {
         restrict: 'A',
@@ -43,15 +43,10 @@
         templateUrl: '../../catalog/components/admin/importxsl/partials/' +
             'importxsl.html',
         link: function(scope, element, attrs) {
-          $http.get('admin.harvester.info?' +
-              'type=importStylesheets&_content_type=json')
+          $http.get('../api/site/info/transforms')
               .success(function(data) {
-                scope.stylesheets = data[0];
-                scope.stylesheets.unshift({
-                  id: '',
-                  name: ''
-                });
-                scope.element = '';
+                scope.stylesheets = data;
+                scope.stylesheets.unshift('');
               });
         }
       };

@@ -25,47 +25,45 @@ import java.util.Map;
 
 /**
  * Data transport object for explain operation
- * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  *
+ * @author 'Timo Proescholdt <tproescholdt@wmo.int>'
  */
 public class GNExplainInfoDTO {
-       
-       String id ;
-       String title;
-       Map<String,String> map = new HashMap<String, String>();
-       
-       public GNExplainInfoDTO() {
-       
-       }
-       
-       public GNExplainInfoDTO(String id) {
-    	   this.id=id;
-       }
-       
-       public GNExplainInfoDTO(String id, String title) {
-               this.id=id;
-               this.title=title;
-       }
-       
-       public String getId() {
-               return id;
-       }
-       
-       public String getTitle() {
-               return title;
-       }
-       
-       /**
-        * @return
-        * map containing indices (and their namespaces) that map to
-        * this index
-        */
-       public Map<String, String> getMappings() {
-               return map;
-       }
 
-       public void addMapping(String index,String namespace) {
-               map.put(index, namespace);
-       }
-       
+    String id;
+    String title;
+    Map<String, String> map = new HashMap<String, String>();
+
+    public GNExplainInfoDTO() {
+
+    }
+
+    public GNExplainInfoDTO(String id) {
+        this.id = id;
+    }
+
+    public GNExplainInfoDTO(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @return map containing indices (and their namespaces) that map to this index
+     */
+    public Map<String, String> getMappings() {
+        return map;
+    }
+
+    public void addMapping(String index, String namespace) {
+        map.put(index, namespace);
+    }
+
 }

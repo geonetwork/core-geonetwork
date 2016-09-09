@@ -35,13 +35,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Delete a virual CSW service configurations
  */
 @Controller("admin.config.virtualcsw.remove")
+@Deprecated
 public class Delete {
 
     @RequestMapping(value = "/{lang}/admin.config.virtualcsw.remove", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
+        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public
+    @ResponseBody
     OkResponse exec(@RequestParam String id)
-            throws Exception {
+        throws Exception {
         ServiceRepository serviceRepository = ApplicationContextHolder.get().getBean(ServiceRepository.class);
         int iId = Integer.parseInt(id);
         serviceRepository.delete(iId);

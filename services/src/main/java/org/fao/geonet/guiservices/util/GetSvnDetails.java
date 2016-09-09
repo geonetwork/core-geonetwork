@@ -26,6 +26,7 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.GeonetContext;
@@ -55,7 +56,7 @@ public class GetSvnDetails implements Service {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         boolean svnManagerFound = false;
         Element root = new Element("a");
-        
+
         try {
             SvnManager svnMan = gc.getBean(SvnManager.class);
             if (svnMan != null) {
@@ -65,9 +66,9 @@ public class GetSvnDetails implements Service {
             // No SVN manager found - SVN is not activated
             Log.debug(Geonet.SVN_MANAGER, "NoSuchBeanDefinitionException: No SVN manager found - SVN is not activated");
         }
-        
+
         root.addContent(new Element(Geonet.Elem.ENABLED).setText(Boolean.toString(svnManagerFound)));
-        
+
         return root;
     }
 }

@@ -105,6 +105,7 @@
       $scope.location = gnSearchLocation;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
+        $('button.gn-minimap-toggle > i').toggleClass('fa-angle-double-left fa-angle-double-right');
       };
       hotkeys.bindTo($scope)
         .add({
@@ -170,11 +171,23 @@
         gnMdView.removeLocationUuid();
       };
       $scope.nextRecord = function() {
-        // TODO: When last record of page reached, go to next page...
-        $scope.openRecord(mdView.current.index + 1);
+        var nextRecordId = mdView.current.index + 1;
+        if (nextRecordId === mdView.records.length) {
+          // When last record of page reached, go to next page...
+          // Not the most elegant way to do it, but it will
+          // be easier using Solr search components
+          $scope.$broadcast('nextPage');
+        } else {
+          $scope.openRecord(nextRecordId);
+        }
       };
       $scope.previousRecord = function() {
-        $scope.openRecord(mdView.current.index - 1);
+        var prevRecordId = mdView.current.index - 1;
+        if (prevRecordId === -1) {
+          $scope.$broadcast('previousPage');
+        } else {
+          $scope.openRecord(prevRecordId);
+        }
       };
 
       $scope.infoTabs = {
@@ -190,7 +203,7 @@
         }};
 
       // Set the default browse mode for the home page
-      $scope.$watch('searchInfo', function () {
+      $scope.$watch('searchInfo', function (n, o) {
         if (angular.isDefined($scope.searchInfo.facet)) {
           if ($scope.searchInfo.facet['inspireThemes'].length > 0) {
             $scope.browse = 'inspire';
@@ -202,6 +215,14 @@
         }
       });
 
+      $scope.$on('layerAddedFromContext', function(e,l) {
+        var md = l.get('md');
+        if(md) {
+          var linkGroup = md.getLinkGroup(l);
+          gnMap.feedLayerWithRelated(l,linkGroup);
+        }
+      });
+
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
 
@@ -209,7 +230,12 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md);
+          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).
+          then(function(layer) {
+            if(layer) {
+              gnMap.feedLayerWithRelated(layer, link.group);
+            }
+          });
       },
         addAllMdLayersToMap: function (layers, md) {
           angular.forEach(layers, function (layer) {

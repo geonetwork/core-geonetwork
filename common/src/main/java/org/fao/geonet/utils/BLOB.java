@@ -36,97 +36,86 @@ import java.nio.charset.Charset;
 
 //=============================================================================
 
-/** class to encode/decode blobs to base64 strings
-  */
+/**
+ * class to encode/decode blobs to base64 strings
+ */
 
-public final class BLOB
-{
-	private static final int BUF_SIZE = 8192;
+public final class BLOB {
+    private static final int BUF_SIZE = 8192;
 
-	/**
-    * Default constructor.
-    * Builds a BLOB.
-    */
-   private BLOB() {}
+    /**
+     * Default constructor. Builds a BLOB.
+     */
+    private BLOB() {
+    }
 
-	public static Element encode(int responseCode, byte blob[], String contentType, String filename)
-	{
-		Element response = new Element("response");
-		response.setAttribute("responseCode",   responseCode + "");
-		response.setAttribute("contentType",    contentType);
-		response.setAttribute("contentLength",  blob.length+"");
-		if (filename != null)
-			response.setAttribute("contentDisposition",  "attachment;filename=" + filename);
-		//String data = new BASE64Encoder().encode(blob);
-		String data = new String(new Base64().encode(blob), Charset.forName(Constants.ENCODING));
-		response.setText(data);
-		return response;
-	}
+    public static Element encode(int responseCode, byte blob[], String contentType, String filename) {
+        Element response = new Element("response");
+        response.setAttribute("responseCode", responseCode + "");
+        response.setAttribute("contentType", contentType);
+        response.setAttribute("contentLength", blob.length + "");
+        if (filename != null)
+            response.setAttribute("contentDisposition", "attachment;filename=" + filename);
+        //String data = new BASE64Encoder().encode(blob);
+        String data = new String(new Base64().encode(blob), Charset.forName(Constants.ENCODING));
+        response.setText(data);
+        return response;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static String getContentType(Element response)
-	{
-		return response.getAttributeValue("contentType");
-	}
+    public static String getContentType(Element response) {
+        return response.getAttributeValue("contentType");
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static String getContentLength(Element response)
-	{
-		return response.getAttributeValue("contentLength");
-	}
+    public static String getContentLength(Element response) {
+        return response.getAttributeValue("contentLength");
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static String getContentDisposition(Element response)
-	{
-		return response.getAttributeValue("contentDisposition");
-	}
+    public static String getContentDisposition(Element response) {
+        return response.getAttributeValue("contentDisposition");
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static int getResponseCode(Element response)
-	{
-		return Integer.parseInt(response.getAttributeValue("responseCode"));
-	}
+    public static int getResponseCode(Element response) {
+        return Integer.parseInt(response.getAttributeValue("responseCode"));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public static void write(Element response, OutputStream output) throws IOException
-	{
-		String data = response.getText();
-		
-		//byte blob[] = new BASE64Decoder().decodeBuffer(data);
-		byte blob[] = new Base64().decode(data.getBytes(Charset.forName(Constants.ENCODING)));
-		ByteArrayInputStream input = new ByteArrayInputStream(blob);
-		copy(input, output);
-	}
+    public static void write(Element response, OutputStream output) throws IOException {
+        String data = response.getText();
 
-	//-----------------------------------------------------------------------------
-	// copies an input stream to an output stream
+        //byte blob[] = new BASE64Decoder().decodeBuffer(data);
+        byte blob[] = new Base64().decode(data.getBytes(Charset.forName(Constants.ENCODING)));
+        ByteArrayInputStream input = new ByteArrayInputStream(blob);
+        copy(input, output);
+    }
 
-	private static void copy(InputStream in, OutputStream output) throws IOException
-	{
-		BufferedInputStream input = new BufferedInputStream(in);
-		try
-		{
-			byte buffer[] = new byte[BUF_SIZE];
-			int nRead;
-			do
-			{
-				nRead = input.read(buffer, 0, BUF_SIZE);
-				output.write(buffer, 0, nRead);
+    //-----------------------------------------------------------------------------
+    // copies an input stream to an output stream
 
-			} while (nRead == BUF_SIZE);
-			input.close();
-		}
-		catch (IOException e)
-		{
-			input.close();
-			throw e;
-		}
-	}
+    private static void copy(InputStream in, OutputStream output) throws IOException {
+        BufferedInputStream input = new BufferedInputStream(in);
+        try {
+            byte buffer[] = new byte[BUF_SIZE];
+            int nRead;
+            do {
+                nRead = input.read(buffer, 0, BUF_SIZE);
+                output.write(buffer, 0, nRead);
+
+            } while (nRead == BUF_SIZE);
+            input.close();
+        } catch (IOException e) {
+            input.close();
+            throw e;
+        }
+    }
 }
 
 //=============================================================================

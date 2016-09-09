@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.ServiceConfig;
+
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
@@ -51,12 +52,12 @@ public class LuceneSearcher_FastEqualsFast_OrderIntegrationTest extends Abstract
     protected String[] doSearch(String lang) throws Exception {
         _serviceContext.setLanguage(lang);
         Element request = new Element("request")
-                .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
-                .addContent(new Element("from").setText("1"))
-                .addContent(new Element("to").setText("50"))
-                .addContent(new Element("abstract").setText(""+ _abstractSearchTerm))
-                .addContent(new Element("sortOrder").setText("reverse"))
-                .addContent(new Element("sortBy").setText("_title"));
+            .addContent(new Element(Geonet.SearchResult.FAST).setText("true"))
+            .addContent(new Element("from").setText("1"))
+            .addContent(new Element("to").setText("50"))
+            .addContent(new Element("abstract").setText("" + _abstractSearchTerm))
+            .addContent(new Element("sortOrder").setText("reverse"))
+            .addContent(new Element("sortBy").setText("_title"));
         final ServiceConfig config = new ServiceConfig();
         _luceneSearcher.search(_serviceContext, request, config);
         final Element result = _luceneSearcher.present(_serviceContext, request, config);

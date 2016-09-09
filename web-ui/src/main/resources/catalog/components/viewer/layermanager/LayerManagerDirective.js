@@ -63,7 +63,7 @@
           map: '=gnLayermanagerMap'
         },
         controllerAs: 'gnLayermanagerCtrl',
-        controller: ['$scope', function($scope) {
+        controller: ['$scope', '$compile', function($scope, $compile) {
 
           /**
          * Change layer index in the map.
@@ -94,6 +94,18 @@
             });
             layer.showInfo = !layer.showInfo;
           };
+
+          this.setWPS = function(wpsLink, layer, parent) {
+
+            var scope = $scope.$new();
+            wpsLink.layer = layer;
+            scope.wpsLink = wpsLink;
+            var el = angular.element(
+                '<gn-wps-process-form map="map" ' +
+                'data-wps-link="wpsLink"></gn-wps-process-form>');
+            $compile(el)(scope);
+            parent.append(el);
+          };
         }],
         link: function(scope, element, attrs) {
 
@@ -104,14 +116,6 @@
           scope.removeFailed = function(layer) {
             gnWmsQueue.removeFromError(layer);
           };
-
-          function resetPopup() {
-            // Hack to remove popup on layer remove eg.
-            $('[gn-popover-dropdown] .btn').each(function(i, button) {
-              $(button).popover('hide');
-            });
-          };
-          scope.map.getLayers().on('change:length', resetPopup);
         }
       };
     }]);
@@ -141,14 +145,22 @@
         scope: true,
         link: function(scope, element, attrs, ctrl) {
           scope.layer = scope.$eval(attrs['gnLayermanagerItem']);
+          var layer = scope.layer;
+
           scope.showInfo = ctrl.showInfo;
           scope.moveLayer = ctrl.moveLayer;
 
           scope.showMetadata = function() {
             gnMdView.openMdFromLayer(scope.layer);
           };
-
+          function resetPopup() {
+            // Hack to remove popup on layer remove eg.
+            $('[gn-popover-dropdown] .btn').each(function(i, button) {
+              $(button).popover('hide');
+            });
+          };
           scope.removeLayer = function(layer, map) {
+            resetPopup();
             map.removeLayer(layer);
           };
           scope.zoomToExtent = function(layer, map) {
@@ -157,6 +169,29 @@
             } else if (layer.get('extent')) {
               map.getView().fit(layer.get('extent'), map.getSize());
             }
+          };
+
+          if (layer.get('md')) {
+            var d = layer.get('downloads');
+            var downloadable =
+                layer.get('md')['geonet:info'].download == 'true';
+            if (angular.isArray(d) && downloadable) {
+              scope.download = d[0];
+            }
+
+            var wfs = layer.get('wfs');
+            if (angular.isArray(wfs) && downloadable) {
+              scope.wfs = wfs[0];
+            }
+
+            var p = layer.get('processes');
+            if (angular.isArray(p)) {
+              scope.process = p;
+            }
+          }
+
+          scope.showWPS = function(process) {
+            ctrl.setWPS(process, layer, element);
           };
         }
       };

@@ -24,8 +24,51 @@
 (function() {
   goog.provide('gn_viewer');
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
+  goog.require('gn_featurestable');
   goog.require('gn_graticule');
   goog.require('gn_layermanager');
   goog.require('gn_localisation');
@@ -37,11 +80,14 @@
   goog.require('gn_popup');
   goog.require('gn_print');
   goog.require('gn_searchlayerformap_directive');
+  goog.require('gn_solr');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wfs');
+  goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
+  goog.require('gn_wps');
 
   /**
    * @ngdoc overview
@@ -69,7 +115,11 @@
     'gn_module',
     'gn_graticule',
     'gn_searchlayerformap_directive',
-    'gn_terrainswitcher_directive'
+    'gn_terrainswitcher_directive',
+    'gn_wfsfilter',
+    'gn_solr',
+    'gn_wps',
+    'gn_featurestable'
   ]);
 
   module.controller('gnViewerController', [

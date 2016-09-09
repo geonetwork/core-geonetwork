@@ -26,111 +26,113 @@ package org.fao.oaipmh.responses;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.fao.oaipmh.OaiPmh;
 import org.jdom.Element;
 
 //=============================================================================
 
-public class Record
-{
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+public class Record {
+    //---------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //---------------------------------------------------------------------------
 
-	public Record() {}
+    private Header header;
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    private Element metadata;
 
-	public Record(Element record)
-	{
-		build(record);
-	}
+    //---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
+    private List<Element> abouts = new ArrayList<Element>();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    public Record() {
+    }
 
-	public Header  getHeader()   { return header;   }
-	public Element getMetadata() { return metadata; }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Record(Element record) {
+        build(record);
+    }
 
-	public Iterator<Element> getAbouts() { return abouts.iterator(); }
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Header getHeader() {
+        return header;
+    }
 
-	public void setHeader(Header header)
-	{
-		this.header = header;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public void setHeader(Header header) {
+        this.header = header;
+    }
 
-	public void setMetadata(Element metadata)
-	{
-		this.metadata = metadata;
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
+    public Element getMetadata() {
+        return metadata;
+    }
 
-	public Element toXml()
-	{
-		Element rec = new Element("record",   OaiPmh.Namespaces.OAI_PMH);
-		Element md  = new Element("metadata", OaiPmh.Namespaces.OAI_PMH);
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		rec.addContent(header.toXml());
-		rec.addContent(md);
-		md.addContent((Element) metadata.clone());
+    public void setMetadata(Element metadata) {
+        this.metadata = metadata;
+    }
 
-		for (Element about : abouts)
-			rec.addContent((Element) about.clone());
+    //---------------------------------------------------------------------------
+    //---
+    //--- Variables
+    //---
+    //---------------------------------------------------------------------------
 
-		return rec;
-	}
+    public Iterator<Element> getAbouts() {
+        return abouts.iterator();
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public Element toXml() {
+        Element rec = new Element("record", OaiPmh.Namespaces.OAI_PMH);
+        Element md = new Element("metadata", OaiPmh.Namespaces.OAI_PMH);
 
-	@SuppressWarnings("unchecked")
-	private void build(Element record)
-	{
-		Element header = record.getChild("header",   OaiPmh.Namespaces.OAI_PMH);
-		Element mdata  = record.getChild("metadata", OaiPmh.Namespaces.OAI_PMH);
+        rec.addContent(header.toXml());
+        rec.addContent(md);
+        md.addContent((Element) metadata.clone());
 
-		//--- store header
+        for (Element about : abouts)
+            rec.addContent((Element) about.clone());
 
-		this.header = new Header(header);
+        return rec;
+    }
 
-		//--- store metadata
+    @SuppressWarnings("unchecked")
+    private void build(Element record) {
+        Element header = record.getChild("header", OaiPmh.Namespaces.OAI_PMH);
+        Element mdata = record.getChild("metadata", OaiPmh.Namespaces.OAI_PMH);
 
-		List<Element> list = mdata.getChildren();
+        //--- store header
 
-		if (list.size() != 0)
-			metadata = list.get(0);
+        this.header = new Header(header);
 
-		//--- add about information
+        //--- store metadata
 
-		for (Element e : (List<Element>) record.getChildren("about", OaiPmh.Namespaces.OAI_PMH))
-			abouts.add(e);
-	}
+        List<Element> list = mdata.getChildren();
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+        if (list.size() != 0)
+            metadata = list.get(0);
 
-	private Header  header;
-	private Element metadata;
+        //--- add about information
 
-	private List<Element> abouts = new ArrayList<Element>();
+        for (Element e : (List<Element>) record.getChildren("about", OaiPmh.Namespaces.OAI_PMH))
+            abouts.add(e);
+    }
 }
 
 //=============================================================================

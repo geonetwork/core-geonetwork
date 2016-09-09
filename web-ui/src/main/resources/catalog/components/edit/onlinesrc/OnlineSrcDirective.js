@@ -36,7 +36,6 @@
    * Provide directives for online resources
    * <ul>
    * <li>gnOnlinesrcList</li>
-   * <li>gnAddThumbnail</li>
    * <li>gnAddOnlinesrc</li>
    * <li>gnLinkServiceToDataset</li>
    * <li>gnLinkToMetadata</li>
@@ -48,7 +47,7 @@
     'ga_print_directive'
   ])
 
-      /**
+  /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
    *
@@ -76,8 +75,8 @@
    * </ul>
    *
    */
-      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
-        function(gnOnlinesrc, gnCurrentEdit) {
+      .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit', '$filter',
+        function(gnOnlinesrc, gnCurrentEdit, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -86,6 +85,8 @@
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
               scope.gnCurrentEdit = gnCurrentEdit;
+              scope.allowEdits = true;
+              scope.lang = scope.$parent.lang;
 
               /**
                * Calls service 'relations.get' to load
@@ -128,6 +129,9 @@
                       loadRelations();
                     }
                   });
+              scope.sortLinks = function(g) {
+                return $filter('gnLocalized')(g);
+              };
             }
           };
         }])
@@ -169,9 +173,10 @@
         '$translate',
         '$timeout',
         '$http',
+        '$filter',
         function(gnOnlinesrc, gnOwsCapabilities, gnWfsService,
             gnEditor, gnCurrentEdit, gnMap, gnGlobalSettings, Metadata,
-            $rootScope, $translate, $timeout, $http) {
+            $rootScope, $translate, $timeout, $http, $filter) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
@@ -242,9 +247,11 @@
                       process: 'onlinesrc-add',
                       fields: {
                         'url': {},
-                        'protocol': {},
+                        'protocol': {value: 'WWW:LINK-1.0-http--link'},
                         'name': {},
-                        'desc': {}
+                        'desc': {},
+                        'function': {},
+                        'applicationProfile': {}
                       }
                     }, {
                       label: 'addThumbnail',
@@ -257,7 +264,7 @@
                       process: 'thumbnail-add',
                       fields: {
                         'url': {param: 'thumbnail_url'},
-                        'desc': {param: 'thumbnail_desc'}
+                        'name': {param: 'thumbnail_desc'}
                       }
                     }]
                   },
@@ -275,7 +282,7 @@
                       process: 'thumbnail-add',
                       fields: {
                         'url': {},
-                        'desc': {}
+                        'name': {param: 'desc'}
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -784,7 +791,7 @@
                 scope.generateThumbnail = function() {
                   return $http.put('../api/0.1/records/' +
                       scope.gnCurrentEdit.uuid +
-                      '/attachments/actions/save-thumbnail', null, {
+                      '/attachments/print-thumbnail', null, {
                         params: {
                           jsonConfig: angular.fromJson(scope.jsonSpec)
                         }
@@ -815,7 +822,41 @@
                   scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
                 };
 
-                gnOnlinesrc.register('onlinesrc', function() {
+                // Check which config to load based on the link
+                // to edit properties. A match is returned based
+                // on link type and config process prefix. If none found
+                // return the first config.
+                function getTypeConfig(link) {
+                  for (var i = 0; i < scope.config.types.length; i++) {
+                    var c = scope.config.types[i];
+                    if (scope.schema === 'iso19115-3') {
+                      var p = c.fields &&
+                              c.fields.protocol &&
+                              c.fields.protocol.value || '',
+                          f = c.fields &&
+                          c.fields.function &&
+                          c.fields.function.value || '',
+                          ap = c.fields &&
+                          c.fields.applicationProfile &&
+                          c.fields.applicationProfile.value || '';
+                      if (c.process.indexOf(link.type) === 0 &&
+                          p === (link.protocol || '') &&
+                          f === (link.function || '') &&
+                          ap === (link.applicationProfile || '')
+                      ) {
+                        return c;
+                      }
+                    } else {
+                      if (c.process.indexOf(link.type) === 0) {
+                        return c;
+                      }
+                    }
+                  }
+                  return scope.config.types[0];
+                };
+                gnOnlinesrc.register('onlinesrc', function(linkToEdit) {
+                  scope.isEditing = angular.isDefined(linkToEdit);
+
                   scope.metadataId = gnCurrentEdit.id;
                   scope.schema = gnCurrentEdit.schema;
                   scope.config = schemaConfig[scope.schema];
@@ -823,10 +864,8 @@
                       scope.schema.indexOf('iso19139') === 0) {
                     scope.config = schemaConfig['iso19139'];
                   }
-                  scope.params.linkType = scope.config.types[0];
 
-                  if (angular.isUndefined(scope.isMdMultilingual) &&
-                      gnCurrentEdit.mdOtherLanguages) {
+                  if (gnCurrentEdit.mdOtherLanguages) {
 
                     scope.mdOtherLanguages = gnCurrentEdit.mdOtherLanguages;
                     scope.mdLangs = JSON.parse(scope.mdOtherLanguages);
@@ -853,8 +892,76 @@
 
                   initThumbnailMaker();
                   resetForm();
+
                   $(scope.popupid).modal('show');
-                });
+
+                  if (scope.isEditing) {
+                    // If the title object contains more than one value,
+                    // Then the record resource is multilingual (and
+                    // probably the record also).
+                    // scope.isMdMultilingual =
+                    //   Object.keys(linkToEdit.title).length > 1 ||
+                    //   Object.keys(linkToEdit.description).length > 1;
+
+
+                    // Create a key which will be sent to XSL processing
+                    // for finding which element to edit.
+                    var keysuffix = $filter('gnLocalized')(linkToEdit.title);
+                    if (scope.isMdMultilingual) {
+                      // Key in multilingual mode is
+                      // the title in the main language
+                      keysuffix =
+                          linkToEdit.title[Object.keys(scope.mdLangs)[0]];
+                      if (angular.isUndefined(keysuffix)) {
+                        console.warn(
+                            'Failed to compute key for updating the resource.');
+                      }
+                    }
+                    scope.editingKey = [linkToEdit.url,
+                                        linkToEdit.protocol,
+                                        keysuffix].join('');
+
+                    scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
+
+                    var name = $filter('gnLocalized')(linkToEdit.title),
+                        desc = $filter('gnLocalized')(linkToEdit.description);
+
+                    // For multilingual record, build
+                    // name and desc based on loc IDs
+                    // and no iso3letter code.
+                    // If OGC, only take into account, the first element
+                    if (scope.isMdMultilingual && scope.OGCProtocol == null) {
+                      name = {};
+                      desc = {};
+                      $.each(scope.mdLangs, function(key, v) {
+                        name[v] =
+                            (linkToEdit.title && linkToEdit.title[key]) || '';
+                      });
+                      $.each(scope.mdLangs, function(key, v) {
+                        desc[v] =
+                            (linkToEdit.description &&
+                             linkToEdit.description[key]) || '';
+                      });
+                    }
+
+                    scope.params = {
+                      linkType: getTypeConfig(linkToEdit),
+                      url: linkToEdit.url,
+                      protocol: linkToEdit.protocol,
+                      name: name,
+                      desc: desc,
+                      applicationProfile: linkToEdit.applicationProfile,
+                      function: linkToEdit.function,
+                      selectedLayers: []
+                      };
+                      } else{
+                      scope.editingKey= null;
+                      scope.params.linkType= scope.config.types[0];
+                      scope.params.protocol= null;
+                      setParameterValue(scope.params.name, '');
+                      setParameterValue(scope.params.desc, '');
+                    }
+                  });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
                 scope.mode = 'url';
@@ -883,8 +990,8 @@
                 };
                 var resetProtocol = function() {
                   scope.layers = [];
-                  scope.OGCProtocol = null;
-                  if (scope.params) {
+                  scope.OGCProtocol = false;
+                  if (scope.params && !scope.isEditing) {
                     scope.params.name = scope.isMdMultilingual ? {} : '';
                     scope.params.desc = scope.isMdMultilingual ? {} : '';
                     scope.params.selectedLayers = [];
@@ -935,6 +1042,10 @@
                         }
                       });
 
+                  if (scope.isEditing) {
+                    processParams.updateKey = scope.editingKey;
+                  }
+
                   // Add list of layers for WMS
                   if (scope.params.selectedLayers) {
                     processParams.selectedLayers = scope.params.selectedLayers;
@@ -976,7 +1087,7 @@
                                 scope.layers.push(l);
                               }
                             });
-                          }).catch(function(error) {
+                          }).catch (function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     } else if (scope.OGCProtocol == 'WFS') {
@@ -996,7 +1107,7 @@
                                    });
                                  }
                                });
-                          }).catch(function(error) {
+                          }).catch (function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     }
@@ -1018,6 +1129,18 @@
                   }
                 };
 
+                function checkIsOgc(protocol) {
+                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
+                    return 'WMS';
+                  }
+                  else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
+                    return 'WFS';
+                  }
+                  else {
+                    return null;
+                  }
+                };
+
                 /**
                  * On protocol combo Change.
                  * Update OGCProtocol values to display or hide
@@ -1026,12 +1149,8 @@
                 scope.$watch('params.protocol', function(n, o) {
                   if (!angular.isUndefined(scope.params.protocol) && o != n) {
                     resetProtocol();
-                    if (scope.params.protocol.indexOf('OGC:WMS') >= 0) {
-                      scope.OGCProtocol = 'WMS';
-                    } else if (scope.params.protocol.indexOf('OGC:WFS') >= 0) {
-                      scope.OGCProtocol = 'WFS';
-                    }
-                    if (scope.OGCProtocol != null) {
+                    scope.OGCProtocol = checkIsOgc(scope.params.protocol);
+                    if (scope.OGCProtocol != null && !scope.isEditing) {
                       // Reset parameter in case of multilingual metadata
                       // Those parameters are object.
                       scope.params.name = '';
@@ -1052,8 +1171,17 @@
                         scope.params.url.match(/.*.(png|jpg|gif)$/i);
                   }
                 });
+
+                /**
+                 * Concat layer names and title in params names
+                 * and desc fields.
+                 * XSL processing tokenize thoses fields and add
+                 * them to the record.
+                 */
                 scope.$watchCollection('params.selectedLayers', function(n, o) {
-                  if (o != n) {
+                  if (o != n &&
+                      scope.params.selectedLayers &&
+                      scope.params.selectedLayers.length > 0) {
                     var names = [],
                         descs = [];
 
@@ -1068,23 +1196,32 @@
                     });
                   }
                 });
+
+                /**
+                   * Init link based on linkType configuration.
+                   * Reset metadata store search, set defaults.
+                   */
                 scope.$watch('params.linkType', function(newValue, oldValue) {
                   if (newValue !== oldValue) {
-                    resetForm();
+                    if (!scope.isEditing) {
+                      resetForm();
+                    }
 
-                    if (newValue.sources.metadataStore) {
+                    if (newValue.sources && newValue.sources.metadataStore) {
                       scope.$broadcast('resetSearch',
                           newValue.sources.metadataStore.params);
                     }
 
-                    if (angular.isDefined(newValue.fields)) {
+                    if (!scope.isEditing &&
+                        angular.isDefined(newValue.fields)) {
                       angular.forEach(newValue.fields, function(val, key) {
                         if (angular.isDefined(val.value)) {
                           scope.params[key] = val.value;
                         }
                       });
                     }
-                    if (angular.isDefined(newValue.copyLabel)) {
+                    if (!scope.isEditing &&
+                        angular.isDefined(newValue.copyLabel)) {
                       scope.params[newValue.copyLabel] =
                           $translate(newValue.label);
                     }
@@ -1179,6 +1316,7 @@
                   scope.mode = iAttrs['gnLinkServiceToDataset'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.alertMsg = null;
+                  scope.layerSelectionMode = 'multiple';
 
                   gnOnlinesrc.register(scope.mode, function() {
                     $(scope.popupid).modal('show');
@@ -1273,7 +1411,8 @@
                           scope.alertMsg =
                               $translate('linkToServiceWithoutURLError');
                         }
-                      } else {
+                      }
+                      else {
                         scope.srcParams.uuidDS = md.getUuid();
                       }
                     }
@@ -1333,6 +1472,7 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
+                    any: '',
                     params: {}
                   };
                   scope.modelOptions =
@@ -1342,6 +1482,13 @@
                   scope.mode = iAttrs['gnLinkToMetadata'];
                   scope.popupid = '#linkto' + scope.mode + '-popup';
                   scope.btn = {};
+
+
+                  // Append * for like search
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                        '*' + scope.searchObj.any + '*';
+                  };
 
                   /**
                    * Register a method on popup open to reset
@@ -1412,8 +1559,33 @@
               return {
                 pre: function preLink(scope) {
                   scope.searchObj = {
-                    params: {}
+                    any: '',
+                    defaultParams: {
+                      any: '',
+                      from: 1,
+                      to: 50,
+                      sortBy: 'title',
+                      sortOrder: 'reverse'
+                      // resultType: 'hits'
+                    }
                   };
+                  scope.searchObj.params = angular.extend({},
+                      scope.searchObj.defaultParams);
+
+                  // Define configuration to restrict search
+                  // to a subset of records when an initiative type
+                  // and/or association type is selected.
+                  // eg. crossReference-study restrict to DC records
+                  // using _schema=dublin-core
+                  scope.searchParamsPerType = {
+                    //'crossReference-study': {
+                    //  _schema: 'dublin-core'
+                    //},
+                    //'crossReference-*': {
+                    //  _isHarvested: 'n'
+                    //}
+                  };
+
                   scope.modelOptions =
                       angular.copy(gnGlobalSettings.modelOptions);
                 },
@@ -1431,8 +1603,42 @@
                     scope.selection = [];
                   });
 
+                  // Append * for like search
+                  scope.updateParams = function() {
+                    scope.searchObj.params.any =
+                        '*' + scope.searchObj.any + '*';
+                  };
+
+                  // Based on initiative type and association type
+                  // define custom search parameter and refresh search
+                  var setSearchParamsPerType = function() {
+                    var p = scope.searchParamsPerType[
+                        scope.config.associationType + '-' +
+                        scope.config.initiativeType
+                        ];
+                    var pall = scope.searchParamsPerType[
+                        scope.config.associationType + '-*'
+                        ];
+                    scope.searchObj.params = angular.extend({},
+                        scope.searchObj.defaultParams,
+                        angular.isDefined(p) ? p : (
+                        angular.isDefined(pall) ? pall : {}));
+                    scope.$broadcast('resetSearch', scope.searchObj.params);
+                  };
+
+                  scope.config = {
+                    associationType: null,
+                    initiativeType: null
+                  };
+
+                  scope.$watchCollection('config', function(n, o) {
+                    if (n && n !== o) {
+                      setSearchParamsPerType();
+                    }
+                  });
+
                   /**
-                   * Search a metada record into the selection.
+                   * Search a metadata record into the selection.
                    * Return the index or -1 if not present.
                    */
                   var findObj = function(md) {
@@ -1493,8 +1699,8 @@
                           obj.initiativeType);
                     }
                     var params = {
-                      initiativeType: scope.initiativeType,
-                      associationType: scope.associationType,
+                      initiativeType: scope.config.initiativeType,
+                      associationType: scope.config.associationType,
                       uuids: uuids.join(',')
                     };
                     return gnOnlinesrc.linkToSibling(params, scope.popupid);

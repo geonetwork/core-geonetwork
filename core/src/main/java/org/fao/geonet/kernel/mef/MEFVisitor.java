@@ -46,19 +46,19 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
  * MEF version 1 visitor to process and load MEF files.
  */
 public class MEFVisitor implements IVisitor {
-	public void visit(Path mefFile, IMEFVisitor v) throws Exception {
-		Element info = handleXml(mefFile, v);
-		handleBin(mefFile, v, info, 0);
-	}
+    public void visit(Path mefFile, IMEFVisitor v) throws Exception {
+        Element info = handleXml(mefFile, v);
+        handleBin(mefFile, v, info, 0);
+    }
 
-	// --------------------------------------------------------------------------
-	/**
-	 * Read the input MEF file and check structure for metadata.xml and info.xml
-	 * files.
-	 */
-	public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception {
-            Element md = null;
-            Element info = null;
+    // --------------------------------------------------------------------------
+
+    /**
+     * Read the input MEF file and check structure for metadata.xml and info.xml files.
+     */
+    public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception {
+        Element md = null;
+        Element info = null;
 
         try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
             Path fileMdFile = zipFs.getPath(FILE_METADATA);
@@ -72,44 +72,43 @@ public class MEFVisitor implements IVisitor {
             }
         }
 
-		if (md == null)
-			throw new BadFormatEx("Missing metadata file : " + FILE_METADATA);
+        if (md == null)
+            throw new BadFormatEx("Missing metadata file : " + FILE_METADATA);
 
-		if (info == null)
-			throw new BadFormatEx("Missing info file : " + FILE_INFO);
+        if (info == null)
+            throw new BadFormatEx("Missing info file : " + FILE_INFO);
 
-		v.handleMetadata(md, 0);
-		v.handleInfo(info, 0);
+        v.handleMetadata(md, 0);
+        v.handleInfo(info, 0);
 
-		return info;
-	}
+        return info;
+    }
 
-	/**
-	 * Check binary files structure. Binary files are stored in the public or
-	 * private folders. All binary files MUST be registered in the information
-	 * document (ie. info.xml).
-	 */
-	public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
-			throws Exception {
+    /**
+     * Check binary files structure. Binary files are stored in the public or private folders. All
+     * binary files MUST be registered in the information document (ie. info.xml).
+     */
+    public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
+        throws Exception {
 
-		// yes they must be registered but make sure we don't crash if the
-		// public/private elements don't exist
-		List<Element> pubFiles;
-		if (info.getChild("public") != null) {
-			@SuppressWarnings("unchecked")
+        // yes they must be registered but make sure we don't crash if the
+        // public/private elements don't exist
+        List<Element> pubFiles;
+        if (info.getChild("public") != null) {
+            @SuppressWarnings("unchecked")
             List<Element> tmp = info.getChild("public").getChildren();
-			pubFiles = tmp;
-		} else {
-			pubFiles = new ArrayList<>();
-		}
-		List<Element> prvFiles;
-		if (info.getChild("private") != null) {
-			@SuppressWarnings("unchecked")
+            pubFiles = tmp;
+        } else {
+            pubFiles = new ArrayList<>();
+        }
+        List<Element> prvFiles;
+        if (info.getChild("private") != null) {
+            @SuppressWarnings("unchecked")
             List<Element> tmp = info.getChild("private").getChildren();
-			prvFiles = tmp;
-		} else {
-			prvFiles = new ArrayList<>();
-		}
+            prvFiles = tmp;
+        } else {
+            prvFiles = new ArrayList<>();
+        }
 
 
         try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
@@ -136,7 +135,7 @@ public class MEFVisitor implements IVisitor {
                 }
             }
         }
-	}
+    }
 
 }
 

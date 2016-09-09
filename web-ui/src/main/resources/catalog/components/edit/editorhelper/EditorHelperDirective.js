@@ -68,6 +68,8 @@
             if (field && value !== undefined) {
               field.value = field.type === 'number' ? parseFloat(value) : value;
               $(field).change();
+              // gn-check add class on keyup event.
+              $(field).keyup();
             }
           };
 

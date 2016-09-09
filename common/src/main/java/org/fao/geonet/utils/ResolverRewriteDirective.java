@@ -40,8 +40,9 @@ public interface ResolverRewriteDirective {
     String rewrite(String href);
 
     /**
-     * Each directive must have a key that identifies the directive so that it is possible to find and replace the directive
-     * if (for example) the resource moves.  An example of this is in testing.  Each test might need the value to be different.
+     * Each directive must have a key that identifies the directive so that it is possible to find
+     * and replace the directive if (for example) the resource moves.  An example of this is in
+     * testing.  Each test might need the value to be different.
      */
     Object getKey();
 }

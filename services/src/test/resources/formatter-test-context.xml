@@ -22,16 +22,20 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:util="http://www.springframework.org/schema/util"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        ">
 
-    <bean id="httpRequestFactory" class="org.fao.geonet.MockRequestFactoryGeonet"/>
+  <bean id="httpRequestFactory" class="org.fao.geonet.MockRequestFactoryGeonet"/>
 
-    <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
-        <value>FormatIntegrationTest.com</value>
-    </util:set>
+  <bean id="defaultLanguage" class="java.lang.String">
+    <constructor-arg index="0" value="eng"/>
+  </bean>
+
+  <util:set id="formatterRemoteFormatAllowedHosts" value-type="java.lang.String">
+    <value>FormatIntegrationTest.com</value>
+  </util:set>
 </beans>

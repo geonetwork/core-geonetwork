@@ -79,7 +79,7 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
                 int newSequenceValue = Math.max(numberOfMetadata, Math.max(numberOfParams, numberOfRequests)) + 1;
                 Log.debug(Geonet.DB, "  Set sequence to value: " + newSequenceValue);
                 final String updateSequenceSQL = "ALTER SEQUENCE HIBERNATE_SEQUENCE " +
-                        "RESTART WITH " + newSequenceValue;
+                    "RESTART WITH " + newSequenceValue;
                 statement.execute(updateSequenceSQL);
 
                 // TODO: Probably a scenario for Oracle db
@@ -94,7 +94,7 @@ public class SetSequenceValueToMaxOfMetadataAndStats implements DatabaseMigratio
             }
         } catch (Exception e) {
             Log.debug(Geonet.DB, "  Exception while updating sequence. " +
-                    "Error is: " + e.getMessage());
+                "Error is: " + e.getMessage());
             e.printStackTrace();
         }
     }

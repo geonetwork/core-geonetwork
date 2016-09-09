@@ -58,5 +58,5 @@ public class PathDecorator extends Selector {
     public String getPath() {
         return wrapped.getPath();
     }
-    
+
 }

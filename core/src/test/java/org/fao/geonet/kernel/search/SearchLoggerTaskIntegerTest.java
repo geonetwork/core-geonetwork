@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.search;
 import static org.junit.Assert.assertEquals;
 
 import jeeves.server.context.ServiceContext;
+
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
@@ -58,6 +59,6 @@ public class SearchLoggerTaskIntegerTest extends AbstractCoreIntegrationTest {
                 task.run();
             }
         });
-        assertEquals(numSearches+1, _searchRequestRepository.count());
+        assertEquals(numSearches + 1, _searchRequestRepository.count());
     }
 }

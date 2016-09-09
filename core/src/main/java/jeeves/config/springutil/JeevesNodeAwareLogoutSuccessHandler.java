@@ -31,6 +31,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationTar
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.io.IOException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

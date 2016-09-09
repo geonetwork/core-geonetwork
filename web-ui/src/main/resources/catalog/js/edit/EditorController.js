@@ -260,7 +260,7 @@
                 // appending a random int in order to avoid
                 // caching by route.
                 $scope.editorFormUrl = gnEditor
-                    .buildEditUrlPrefix('md.edit') +
+                    .buildEditUrlPrefix('editor') +
                     '&starteditingsession=yes&' +
                     '_random=' + Math.floor(Math.random() * 10000);
 
@@ -297,6 +297,19 @@
             });
           }
         });
+      };
+
+      /**
+       * Update textarea containing XML when the ACE editor change.
+       * See form-builder-xml.xsl.
+       */
+      $scope.xmlEditorChange = function(e) {
+        // TODO: Here we could check if XML is valid based on ACE info
+        // and disable save action ?
+        $('textarea[name=data]').val(e[1].getSession().getValue());
+      };
+      $scope.xmlEditorLoaded = function(e) {
+        // TODO: Adjust height of editor based on screen size ?
       };
 
       $scope.startVersioning = function() {
@@ -456,7 +469,7 @@
       };
 
       $scope.close = function() {
-        var promise = gnEditor.save(false)
+        var promise = gnEditor.save(false, null, true)
             .then(function(form) {
               closeEditor();
             }, function(error) {

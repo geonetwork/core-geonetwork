@@ -47,7 +47,7 @@ public class OrSpatialFilter extends SpatialFilter {
     private Collection<SpatialFilter> filters;
 
     public OrSpatialFilter(Query query, int numHits, Envelope bounds,
-            Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Collection<SpatialFilter> filters) throws IOException {
+                           Pair<FeatureSource<SimpleFeatureType, SimpleFeature>, SpatialIndex> sourceAccessor, Collection<SpatialFilter> filters) throws IOException {
         super(query, numHits, bounds, sourceAccessor);
         this.filters = filters;
     }
@@ -55,14 +55,14 @@ public class OrSpatialFilter extends SpatialFilter {
     @Override
     protected Filter createFilter(FeatureSource<SimpleFeatureType, SimpleFeature> source) {
         List<Filter> ops = new ArrayList<Filter>(filters.size());
-        
+
         for (SpatialFilter sfilter : filters) {
             ops.add(sfilter.createFilter(source));
         }
         return _filterFactory.or(ops);
 
     }
-    
+
     @Override
     public Filter createGeomFilter(FilterFactory2 filterFactory, PropertyName geomPropertyName, Literal geomExpression) {
         throw new UnsupportedOperationException();

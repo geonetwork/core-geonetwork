@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:gfc="http://www.isotc211.org/2005/gfc"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet xmlns:gfc="http://www.isotc211.org/2005/gfc" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0">
   <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
   <xsl:template match="/root">

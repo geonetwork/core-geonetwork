@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <xs:element name="labels">
+    <xs:annotation>
+      <xs:documentation>A list of labels describing standard descriptors
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="element">
+          <xs:annotation>
+            <xs:documentation>A descriptor with label, definition, help text and
+              suggestions
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="element">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="label" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>The descriptor label to display next
+              to the field
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="description" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>The definition to be displayed in the help
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="help" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>More help (CDATA could be used to store HTML)
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="condition" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>CHECKME: Not really used ?</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="example" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Examples to be added to the help section
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="helper" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>List of suggestion to be displayed in edit mode to
+              help populating the field. It's ussually common values for a
+              field.
+              More than one helper could be define if needed to match different
+              scope of metadata (eg. metadata on dataset and metadata on
+              service).
+              In that case, a displayIf attribute is added to define when to
+              display that helper list.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:all>
+      <xs:attribute name="context" type="xs:NMTOKEN">
+        <xs:annotation>
+          <xs:documentation>Parent element name or full XPath</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id" type="xs:decimal">
+        <xs:annotation>
+          <xs:documentation>An optional reference to the standard descriptor
+            identifier.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="name" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="condition" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="help" type="xs:string"/>
+  <xs:element name="label" type="xs:string"/>
+  <xs:element name="example" type="xs:string"/>
+
+  <xs:element name="helper">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="option">
+          <xs:annotation>
+            <xs:documentation>Suggestion is an HTML option</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="rel" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Name of the element to be populated by the title
+            attribute of the option. That parameter allows to update 2 fields in
+            the editor at a time.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="relAtt" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Name of an attribute (eg. uom) to be populated by
+            the title attribute of the option. That parameter allows to update 2
+            fields in the editor at a time.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="sort" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Set this attribute to true to sort by alpha order.
+            By default, the helpers are displayed in the order define in labels
+            file.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="editorMode">
+        <xs:annotation>
+          <xs:documentation>By default, the list of suggestion is displayed in a
+            combo next to the
+            element. The layout may be customized by setting the editorMode.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="radio">
+              <xs:annotation>
+                <xs:documentation>Simple radio displayed next to each other.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="radio_withdesc">
+              <xs:annotation>
+                <xs:documentation>Radio button with label and the description
+                  define in the title attribute.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="radio_linebreak">
+              <xs:annotation>
+                <xs:documentation>Radio button with line break between each of
+                  them (maybe better to use CSS to define this).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:enumeration>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="displayIf" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[
+          Conditional helpers which may define an xpath expression to evaluate if the xpath match.
+
+        The scope of the expression is defined by a variable named "$p1" whitch is the current node.
+
+        For example, to match a metadata on dataset:
+        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or
+        $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']"
+
+        and a metadata on service:
+        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification"
+
+          ]]>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="option">
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" type="xs:NMTOKEN"/>
+      <xs:attribute name="title"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="inspireInfo" type="xs:string"/>
+
+  <xs:element name="codelists">
+    <xs:annotation>
+      <xs:documentation>* Hide in edit mode : If some codelist needs to be
+        hidden
+        in edit mode, the hideInEditMode attribute could be added
+        to any entries.
+
+        eg.
+        &lt;entry hideInEditMode="true">
+
+        This will restrict the number of available entries for end
+        user editors and keep all records ISO compatible when using
+        codelist (eg. harvested records could use codelist hidden
+        in local node and needs to be displayed in view mode).
+
+        By default, this attribute is not used.
+
+        * editorMode attribute allows to configure the editor form field.
+
+        * - not set -: simple combo box
+        * radio : radio button in one line
+        * radio_linebreak : radio button with line break
+        * radio_withdesc : radion button with line break and codelist entry
+        description
+        * select : select box with size set to the number of items if lower than
+        7 entries.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="codelist">
+          <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+              <xs:element name="entry">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="code"/>
+                    <xs:element type="xs:string" name="label"/>
+                    <xs:element type="xs:string" name="description"/>
+                  </xs:sequence>
+                  <xs:attribute type="xs:boolean" name="hideInEditMode" use="optional"/>
+                  <xs:attribute type="xs:boolean" name="default" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="optional"/>
+            <xs:attribute type="xs:string" name="alias" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

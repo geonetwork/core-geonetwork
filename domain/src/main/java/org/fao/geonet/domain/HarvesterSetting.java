@@ -24,11 +24,13 @@
 package org.fao.geonet.domain;
 
 import com.google.common.collect.Sets;
+
 import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -38,9 +40,8 @@ import static javax.persistence.CascadeType.*;
 /**
  * An entity representing a harvester configuration setting.
  * <p/>
- * Harvester settings are represented by a tree. One should use the {@link org.fao.geonet.repository.HarvesterSettingRepository} to
- * traverse
- * the hierarchy.
+ * Harvester settings are represented by a tree. One should use the {@link
+ * org.fao.geonet.repository.HarvesterSettingRepository} to traverse the hierarchy.
  *
  * @author Jesse
  */
@@ -48,7 +49,7 @@ import static javax.persistence.CascadeType.*;
 @Table(name = "HarvesterSettings")
 @Access(AccessType.PROPERTY)
 @EntityListeners(HarvesterSettingEntityListenerManager.class)
-@SequenceGenerator(name=HarvesterSetting.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = HarvesterSetting.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class HarvesterSetting extends GeonetEntity {
     static final String ID_SEQ_NAME = "harvester_setting_id_seq";
     private static final HashSet<String> EXCLUDE_FROM_XML = Sets.newHashSet("valueAsBool", "valueAsInt");
@@ -59,21 +60,21 @@ public class HarvesterSetting extends GeonetEntity {
     private String _value;
 
     /**
-     * Get the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
-     * could result in reduced performance.
+     * Get the setting id. This is a generated value and as such new instances should not have this
+     * set as it will simply be ignored and could result in reduced performance.
      *
      * @return the setting id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(name = "id", nullable = false)
     public int getId() {
         return _id;
     }
 
     /**
-     * Set the setting id. This is a generated value and as such new instances should not have this set as it will simply be ignored and
-     * could result in reduced performance.
+     * Set the setting id. This is a generated value and as such new instances should not have this
+     * set as it will simply be ignored and could result in reduced performance.
      *
      * @param id the setting id
      * @return this setting object
@@ -134,16 +135,25 @@ public class HarvesterSetting extends GeonetEntity {
 
     /**
      * Get the setting value. This is a nullable property.
-     *
-     * @return
      */
     @Lob
     @Column(name = "value", nullable = true)
-    @Type(type="org.hibernate.type.StringClobType") // this is a work around for postgres so postgres can correctly load clobs
+    @Type(type = "org.hibernate.type.StringClobType")
+    // this is a work around for postgres so postgres can correctly load clobs
     public
     @Nullable
     String getValue() {
         return _value;
+    }
+
+    /**
+     * Set the value of setting with a boolean.
+     *
+     * @param value the new value
+     * @return this setting object
+     */
+    public HarvesterSetting setValue(boolean value) {
+        return setValue(String.valueOf(value));
     }
 
     public HarvesterSetting setValue(@Nullable String value) {
@@ -152,9 +162,8 @@ public class HarvesterSetting extends GeonetEntity {
     }
 
     /**
-     * Get the value as an integer. This may throw {@link NullPointerException} if the value is null or {@link NumberFormatException}
-     * if the
-     * value is not a valid number.
+     * Get the value as an integer. This may throw {@link NullPointerException} if the value is null
+     * or {@link NumberFormatException} if the value is not a valid number.
      *
      * @return the value as an integer
      */
@@ -188,16 +197,6 @@ public class HarvesterSetting extends GeonetEntity {
             throw new NullPointerException("Setting value of " + getName() + " is null");
         }
         return Boolean.parseBoolean(_value);
-    }
-
-    /**
-     * Set the value of setting with a boolean.
-     *
-     * @param value the new value
-     * @return this setting object
-     */
-    public HarvesterSetting setValue(boolean value) {
-        return setValue(String.valueOf(value));
     }
 
     @Override

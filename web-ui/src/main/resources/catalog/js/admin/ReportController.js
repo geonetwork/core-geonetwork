@@ -141,8 +141,8 @@
           });
 
       function loadGroups() {
-        $http.get('admin.group.list@json').success(function(data) {
-          $scope.groups = data !== 'null' ? data : null;
+        $http.get('../api/groups').success(function(data) {
+          $scope.groups = data;
         }).error(function(data) {
           // TODO
         });

@@ -26,20 +26,18 @@ package org.fao.geonet.exceptions;
 //=============================================================================
 
 @SuppressWarnings("serial")
-public class BadServerCertificateEx extends BadResponseEx
-{
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+public class BadServerCertificateEx extends BadResponseEx {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BadServerCertificateEx(String message)
-	{
-		super("Bad server certificate: "+message, null);
+    public BadServerCertificateEx(String message) {
+        super("Bad server certificate: " + message, null);
 
-		id = "bad-server-certificate";
-	}
+        id = "bad-server-certificate";
+    }
 }
 
 //=============================================================================
