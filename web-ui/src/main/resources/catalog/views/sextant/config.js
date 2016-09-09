@@ -25,8 +25,9 @@
       /** *************************************
        * Define mapviewer background layers
        */
-      viewerSettings.bgLayers = [
-        gnMap.createLayerForType('mapquest'),
+      viewerSettings.bgLayers = (typeof sxtGnUrl != 'undefined') ?  [
+        new ol.layer.Tile()
+      ] : [
         gnMap.createLayerForType('osm'),
         gnMap.createLayerForType('bing_aerial')
       ];
