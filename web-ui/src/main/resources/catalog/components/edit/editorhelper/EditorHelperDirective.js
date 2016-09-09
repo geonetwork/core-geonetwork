@@ -47,7 +47,7 @@
         link: function(scope, element, attrs) {
           scope.suggestions = [];
           if (scope.field != '') {
-            $http.get('suggest?origin=INDEX_TERM_VALUES&field=' +
+            $http.get('suggest?sortBy=ALPHA&maxNumberOfTerms=1000&origin=INDEX_TERM_VALUES&field=' +
               scope.field, {cache: true}).then(
               function(r) {
                 scope.suggestions = r.data[1];
@@ -60,6 +60,10 @@
 
           var populateField = function(field, value) {
             if (field && value !== undefined) {
+              // Checkpoint - Remove first token corresponding to challenge
+              if (value.indexOf('|') !== -1) {
+                value = value.split('|').slice(1).join('|');
+              }
               field.value = field.type === 'number' ? parseFloat(value) : value;
               $(field).change();
               $(field).keyup();

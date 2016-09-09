@@ -72,7 +72,7 @@
 
              scope.search = function() {
                if (scope.filter) {
-                 $http.get('../api/registries/crs?type=&rows=50&q=' +
+                 $http.get('../api/registries/crs?type=&rows=150&q=' +
                  scope.filter).success(
                  function(data) {
                    scope.crsResults = data;

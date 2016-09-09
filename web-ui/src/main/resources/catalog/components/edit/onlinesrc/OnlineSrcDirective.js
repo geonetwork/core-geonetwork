@@ -1755,8 +1755,16 @@
                         scope.stateObj.selectRecords.length > 0 &&
                         n != o) {
                         scope.selection = [];
-                        angular.forEach(scope.stateObj.selectRecords, function (o) {
-                          scope.addToSelection(new Metadata(o),
+                        // var selectRecords = [];
+                        angular.forEach(scope.stateObj.selectRecords, function (m) {
+                          // if (scope.config.initiativeType === 'specification') {
+                          //   angular.forEach(o, function (oldm) {
+                          //     if (m.getUuid() === oldm.getUuid()) {
+                          //
+                          //     }
+                          //   });
+                          // }
+                          scope.addToSelection(new Metadata(m),
                             scope.config.associationType,
                             scope.config.initiativeType);
                         });

@@ -420,6 +420,38 @@ form.gn-tab-medsea-metadata {
   }
 }
 
+form.gn-tab-checkpoint-dps-characteristics,
+form.gn-tab-checkpoint-dps-dq,
+form.gn-tab-checkpoint-tdp-characteristics,
+form.gn-tab-checkpoint-tdp-qm {
+
+  .gn-required > label:after {
+    display: none;
+  }
+
+  /* Do not display thesaurus transformation selector */
+  *[data-gn-keyword-selector='tagsinput'] * .dropdown-toggle {
+    display: none;
+  }
+
+  legend {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .control-label {
+    text-align: left !important;
+  }
+  /* Date */
+  .gn-date label::after,
+  legend.EX_GeographicBoundingBox::after {
+    display: inline;
+    content: "*" !important;
+    color: #6a6a6a;
+    font-size: 14px;
+  }
+}
+
 /* Add mandatory flag to keyword selector */
 form.gn-tab-characteristics {
   fieldset:nth-of-type(1) > legend.descriptiveKeywords::after,
