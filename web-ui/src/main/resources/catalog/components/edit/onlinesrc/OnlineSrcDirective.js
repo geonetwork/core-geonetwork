@@ -1749,6 +1749,21 @@
                   };
                   scope.stateObj = {};
 
+                  scope.selectRecord = function (md) {
+                    if (scope.config.initiativeType !== 'specification') {
+                      if (scope.stateObj.selectRecords.indexOf(md) < 0) {
+                        scope.stateObj.selectRecords.push(md);
+                      }
+                      else {
+                        scope.stateObj.selectRecords.splice(
+                          scope.stateObj.selectRecords.indexOf(md), 1);
+                      }
+                    }
+                    else {
+                      scope.stateObj.selectRecords.pop();
+                      scope.stateObj.selectRecords.push(md);
+                    }
+                  };
                   scope.$watchCollection('stateObj.selectRecords',
                     function(n, o) {
                       if (!angular.isUndefined(scope.stateObj.selectRecords) &&
