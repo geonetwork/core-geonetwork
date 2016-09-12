@@ -25,14 +25,13 @@ package org.fao.geonet.api.groups;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
-
+import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +42,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for GroupsApi.
@@ -79,10 +72,10 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc.perform(get("/api/groups")
             .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 
     @Test
@@ -113,7 +106,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name",  is("sample")))
+            .andExpect(jsonPath("$.name", is("sample")))
             .andExpect(content().contentType("application/json"));
     }
 
@@ -196,6 +189,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
             .create();
         String json = gson.toJson(groupToUpdate);
 
@@ -225,6 +219,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
             .create();
         String json = gson.toJson(groupToUpdate);
 
@@ -255,6 +250,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
             .create();
         String json = gson.toJson(groupToAdd);
 
@@ -289,6 +285,7 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
             .create();
         String json = gson.toJson(groupToAdd);
 

@@ -28,28 +28,18 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.Updater;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
 
 @RequestMapping(value = {
     "/api/tags",
@@ -151,7 +141,7 @@ public class TagsApi {
             appContext.getBean(MetadataCategoryRepository.class);
         org.fao.geonet.domain.MetadataCategory category = categoryRepository.findOne(tagIdentifier);
         if (category == null) {
-            throw new ResourceNotFoundException(String.format("Category not found"));
+            throw new ResourceNotFoundException("Category not found");
         }
         return category;
     }

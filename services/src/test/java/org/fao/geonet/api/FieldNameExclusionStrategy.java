@@ -20,20 +20,31 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.api;
 
-package org.fao.geonet.services;
+import com.google.common.collect.Lists;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 
-import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
+import java.util.List;
 
 /**
- * Adds extra bean required for services tests.
- *
- * User: Jesse Date: 10/17/13 Time: 9:53 AM
+ * Created by juanl on 06/09/2016.
  */
-@WebAppConfiguration()
-@ContextConfiguration(inheritLocations = true,
-    locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
-public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
+public class FieldNameExclusionStrategy implements ExclusionStrategy {
+    private List<String> excludedFields;
+
+    public FieldNameExclusionStrategy(String... fieldNames) {
+        excludedFields = Lists.asList("", fieldNames);
+    }
+
+    @Override
+    public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+        return excludedFields.indexOf(fieldAttributes.getName()) != -1;
+    }
+
+    @Override
+    public boolean shouldSkipClass(Class<?> aClass) {
+        return false;
+    }
 }
