@@ -25,6 +25,7 @@ package org.fao.geonet.api.sources;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import junit.framework.Assert;
+import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.repository.SourceRepository;
@@ -43,9 +44,7 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for SourcesApi.
@@ -90,6 +89,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
             .create();
         String json = gson.toJson(source);
 
@@ -117,6 +117,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
             .create();
         String json = gson.toJson(sourceToUpdate);
 

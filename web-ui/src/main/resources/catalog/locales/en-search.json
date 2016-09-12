@@ -361,7 +361,7 @@
   "fbCatHarvesting": "Harvesting",
   "fbCatValidator": "Validator",
   "fbCatOthers": "Others",
-  "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map"
+  "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map",
   "mdvalid": "Metadata is valid",
   "mdinvalid": "Metadata is invalid",
   "mdinvalidcantpublish": "Invalid metadata can't be publish",

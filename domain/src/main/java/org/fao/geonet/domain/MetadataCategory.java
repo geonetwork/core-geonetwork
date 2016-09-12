@@ -24,13 +24,10 @@
 package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.fao.geonet.entitylistener.MetadataCategoryEntityListenerManager;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;

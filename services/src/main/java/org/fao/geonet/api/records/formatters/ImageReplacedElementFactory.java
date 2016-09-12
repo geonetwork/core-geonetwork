@@ -29,6 +29,7 @@ import com.google.common.io.Files;
 import com.itextpdf.text.Image;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.xhtmlrenderer.extend.FSImage;
@@ -87,6 +88,9 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
         if ("img".equals(nodeName) && src.contains("region.getmap.png")) {
             StringBuilder builder = new StringBuilder(baseURL);
             try {
+                if (StringUtils.startsWith(src, "http")) {
+                    builder = new StringBuilder();
+                }
                 String[] parts = src.split("\\?|&");
                 builder.append(parts[0]);
                 builder.append('?');
@@ -125,6 +129,8 @@ public class ImageReplacedElementFactory implements ReplacedElementFactory {
                                       int cssWidth, int cssHeight, String url, float scaleFactor) {
         InputStream input = null;
         try {
+            Log.error(Geonet.GEONETWORK, "URL -> " + url.toString());
+
             input = new URL(url).openStream();
             byte[] bytes = IOUtils.toByteArray(input);
             Image image = Image.getInstance(bytes);

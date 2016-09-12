@@ -94,6 +94,15 @@
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>
       <bean class="org.fao.geonet.api.DOMElementMessageConverter"/>
+      <bean class = "org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+          <list>
+            <value>text/plain</value>
+            <value>text/html</value>
+            <value>application/json</value>
+          </list>
+        </property>
+      </bean>
 
       <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper">
