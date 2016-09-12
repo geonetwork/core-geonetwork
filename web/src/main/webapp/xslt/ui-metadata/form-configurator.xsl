@@ -44,7 +44,7 @@
 
     <xsl:choose>
       <xsl:when test="$sectionName">
-        <fieldset data-gn-field-highlight="">
+        <fieldset data-gn-field-highlight="" class="gn-{@name}">
           <!-- Get translation for labels.
           If labels contains ':', search into labels.xml. -->
           <legend data-gn-slide-toggle="">
