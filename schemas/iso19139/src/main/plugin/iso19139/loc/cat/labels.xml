@@ -2480,7 +2480,7 @@ El valor de la unitat o bé se selecciona d'entre les unitats per intervals de t
 		<description>Superconjunt</description>
 	</element>
 	<element name="gmd:CI_RoleCode">
-		<label>Codi de ro</label>
+		<label>Tipus de rol</label>
 		<description/>
 	</element>
 	<element name="gts:TM_PeriodDuration">
