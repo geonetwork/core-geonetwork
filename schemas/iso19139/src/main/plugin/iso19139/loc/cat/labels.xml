@@ -1081,8 +1081,8 @@ TIFF, XWD</help>
 		<description>Tipus d'identificador únic per al recurs. Per exemple: Codi Universal de Producte (UPC), o National Stock Number (NSN)</description>
 	</element>
 	<element name="gmd:identifier" id="573.0" context="gmd:CI_Citation">
-		<label>Identificador del contacte</label>
-		<description>Identificador de la citació</description>
+		<label>Identificador del conjunt de dades/servei</label>
+		<description>Identificador del conjunt de dades/servei</description>
 	</element>
 	<element name="gmd:identifier" id="575.0" context="gmd:MD_Authority">
 		<label>Identificador</label>
