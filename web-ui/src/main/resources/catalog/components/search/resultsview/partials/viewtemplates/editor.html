@@ -35,7 +35,7 @@
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
          title="{{'privileges' | translate}}">
         <i class="fa text-muted" data-ng-style="{'color': (md.draft == 'Y'? 'orange' : '')}"
-           data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></i>
+           data-ng-class="(md.isPublished() || md.draft == 'Y') ? 'fa-unlock' : 'fa-lock'"></i>
       </a>
     </td>
     <td>

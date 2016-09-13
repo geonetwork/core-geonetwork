@@ -48,13 +48,13 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.IMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -153,8 +153,10 @@ public class MetadataEditingApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         if (starteditingsession) {
-            DataManager dm = applicationContext.getBean(DataManager.class);
-            dm.startEditingSession(context, String.valueOf(metadata.getId()));
+            IMetadataManager dm = applicationContext.getBean(IMetadataManager.class);
+            Integer id = Integer.valueOf(
+                            dm.startEditingSession(context, String.valueOf(metadata.getId())));
+            metadata = dm.getMetadataObject(id);
         }
 
         Element elMd = new AjaxEditUtils(context)

@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.metadata.DefaultMetadataManager;
+import org.fao.geonet.kernel.metadata.IMetadataIndexer;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -77,6 +78,9 @@ public class DraftMetadataManager extends DefaultMetadataManager {
 
     @Autowired
     private MetadataDraftRepository mdDraftRepository;
+    
+    @Autowired
+    private IMetadataIndexer mdIndexer;
 
     /**
      * @param context
@@ -85,6 +89,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     public void init(ServiceContext context) {
         super.init(context);
         this.mdDraftRepository = context.getBean(MetadataDraftRepository.class);
+        this.mdIndexer = context.getBean(IMetadataIndexer.class);
     }
 
     /**
@@ -135,10 +140,17 @@ public class DraftMetadataManager extends DefaultMetadataManager {
         } else {
             // We are removing a draft
             IMetadata findOne = mdDraftRepository.findOne(metadataId);
+            String uuid = findOne.getUuid();
             if (findOne != null) {
                 deleteMetadataFromDB(context, metadataId);
             }
             context.getBean(SearchManager.class).delete("_id", metadataId + "");
+            
+            //Make sure the original metadata knows it has been removed
+            Metadata originalMd = mdRepository.findOneByUuid(uuid);
+            if(originalMd != null) {
+                mdIndexer.indexMetadata(Integer.toString(originalMd.getId()), true);
+            }
         }
     }
 
@@ -228,10 +240,6 @@ public class DraftMetadataManager extends DefaultMetadataManager {
                 id = createDraft(context, id, groupOwner, source, owner,
                         parentUuid, md.getDataInfo().getType().codeString,
                         fullRightsForGroup, md.getUuid());
-                this.updateMetadata(context, Integer.toString(md.getId()),
-                        md.getXmlData(false), false, true, true,
-                        context.getLanguage(),
-                        md.getDataInfo().getChangeDate().toString(), false);
             } else if (isPublished
                     && mdDraftRepository.findOneByUuid(md.getUuid()) != null) {
                 // We already have a draft created
@@ -294,6 +302,8 @@ public class DraftMetadataManager extends DefaultMetadataManager {
 
         int finalId = insertMetadata(context, newMetadata, xml, false, true,
                 true, UpdateDatestamp.YES, fullRightsForGroup, true).getId();
+        
+        mdIndexer.indexMetadata(templateId, true);
 
         return String.valueOf(finalId);
     }

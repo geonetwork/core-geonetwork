@@ -163,19 +163,15 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
     @Override
     public void indexMetadata(String metadataId, boolean forceRefreshReaders)
             throws Exception {
-        // Just in case, do the same for the related drafts
         Metadata metaData = mdRepository.findOne(metadataId);
         if (metaData != null) {
+            //It is a normal metadata record
             MetadataDraft mdD = mdDraftRepository
                     .findOneByUuid(metaData.getUuid());
-            if (mdD != null) {
-                indexMetadata(Integer.toString(mdD.getId()),
-                        forceRefreshReaders);
-                superIndexMetadata(metadataId, forceRefreshReaders, true);
-            } else {
-                superIndexMetadata(metadataId, forceRefreshReaders, false);
-            }
+            
+            superIndexMetadata(metadataId, forceRefreshReaders, (mdD != null));
         } else {
+            //It is a draft
             indexLock.lock();
             try {
                 if (waitForIndexing.contains(metadataId)) {

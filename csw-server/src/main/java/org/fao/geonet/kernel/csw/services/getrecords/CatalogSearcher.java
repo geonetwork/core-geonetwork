@@ -577,8 +577,6 @@ public class CatalogSearcher implements MetadataRecordSelector {
         // record globals for reuse
         _query = query;
         _sort = sort;
-        
-        System.out.println(query);
 
         ServiceConfig config = new ServiceConfig();
         String geomWkt = null;
