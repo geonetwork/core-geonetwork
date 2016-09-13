@@ -390,7 +390,7 @@
 		<description>URL</description>
 	</element>
 	<element name="gmd:abstract" id="25.0">
-		<label>Extracte</label>
+		<label>Resum</label>
 		<description>Breu resum narratiu del contingut del recurs o recursos</description>
 		<condition>mandatory</condition>
 	</element>
