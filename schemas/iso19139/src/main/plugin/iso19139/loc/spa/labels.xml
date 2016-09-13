@@ -1993,7 +1993,7 @@ sesgados</option>
 		<condition>conditional</condition>
 	</element>
 	<element name="gmd:voice" id="408.0">
-		<label>Voz</label>
+		<label>Teléfono</label>
 		<description>Número de teléfono mediante el cual se puede contactar con la organización o individuo responsable</description>
 	</element>
 	<element name="gmd:volumes" id="295.0">

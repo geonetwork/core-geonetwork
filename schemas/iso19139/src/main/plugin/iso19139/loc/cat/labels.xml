@@ -1993,7 +1993,7 @@ esbiaixades</option>
 		<condition>conditional</condition>
 	</element>
 	<element name="gmd:voice" id="408.0">
-		<label>Veu</label>
+		<label>Telèfon</label>
 		<description>Número de telèfon mitjançant el qual es pot contactar amb l'organització o individu responsable</description>
 	</element>
 	<element name="gmd:volumes" id="295.0">
