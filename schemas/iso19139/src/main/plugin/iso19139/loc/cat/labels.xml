@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><labels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../labels.xsd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gmx="http://www.isotc211.org/2005/gmx">
-
+	<element name="gmd:CI_OnLineFunctionCode">
+		<label>Funció del recurs en línia</label>
+		<description></description>
+	</element>
 	<element name="gmd:MD_ScopeCode">
 		<label>Codi de l'abast</label>
 		<description>Classe d'informació que s'aplica a l'entitat referenciada</description>
