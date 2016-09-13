@@ -1163,7 +1163,7 @@ TIFF, XWD</help>
 		<_condition>Condicional / informe no proporcionat?</_condition>
 	</element>
 	<element name="gmd:linkage" id="397.0">
-		<label>Enllaçament</label>
+		<label>Enllaç</label>
 		<description>Ubicació (direcció) per a l'accés en línia utilitzant una URL o esquema d'adreçament similar tal com http://www.statkart.no/isotc211</description>
 		<condition>mandatory</condition>
 	</element>
