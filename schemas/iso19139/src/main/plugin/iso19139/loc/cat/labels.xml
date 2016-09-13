@@ -323,8 +323,8 @@
 		<description>Informació sobre els suports en què el recurs pot ser distribuït</description>
 	</element>
 	<element name="gmd:MD_Metadata" id="1.0">
-		<label>Metadada</label>
-		<abbrLabel>Metadata</abbrLabel>
+		<label>Metadades</label>
+		<abbrLabel>Metadades</abbrLabel>
 		<description>Entitat arrel que defineix les metadades d'un recurs o recursos</description>
 	</element>
 	<element name="gmd:MD_MetadataExtensionInformation" id="303.0">
@@ -437,7 +437,7 @@
 	</element>
 	<element name="gmd:applicationSchemaInfo" id="21.0">
 		<label>Informació de l'esquema de l'aplicació</label>
-		<abbrLabel>App. Schema</abbrLabel>
+		<abbrLabel>Esquema Apl.</abbrLabel>
 		<description>Proporciona informació sobre l'esquema conceptual d'un conjunt de dades</description>
 	</element>
 	<element name="gmd:associationType" id="66.4">
@@ -618,7 +618,7 @@
 	<element name="gmd:contentInfo" id="16.0">
 		<description>Proporciona informació sobre el catàleg de features i descriu les característiques de les dades de cobertura i d'imatge</description>
 		<label>Informació del contingut</label>
-		<abbrLabel>Content Info.</abbrLabel>
+		<abbrLabel>Info. Continguts</abbrLabel>
 	</element>
 	<element name="gmd:contentType" id="241.0">
 		<label>Tipus de contingut</label>
@@ -653,7 +653,7 @@
 	</element>
 	<element name="gmd:dataQualityInfo" id="18.0">
 		<label>Informació de la qualitat de les dades</label>
-		<abbrLabel>Data Quality</abbrLabel>
+		<abbrLabel>Qualitat Dades</abbrLabel>
 		<description>Proporciona avaluació global de la qualitat d'un recurs</description>
 	</element>
 	<element name="gmd:dataSetURI" id="11.1">
@@ -843,7 +843,7 @@
 	<element name="gmd:distributionInfo" id="17.0">
 		<description>Proporciona informació sobre el distribuïdor i les opcions per obtenir el recurs</description>
 		<label>Informació de la distribució</label>
-		<abbrLabel>Distribution</abbrLabel>
+		<abbrLabel>Distribució</abbrLabel>
 	</element>
 	<element name="gmd:distributionOrderProcess" id="281.0">
 		<label>Distribució / procés de comanda</label>
@@ -1072,7 +1072,7 @@ TIFF, XWD</help>
 	</element>
 	<element name="gmd:identificationInfo" id="15.0">
 		<label>Informació d'identificació</label>
-		<abbrLabel>Identification</abbrLabel>
+		<abbrLabel>Identificació</abbrLabel>
 		<description>Informació bàsica sobre el recurs al que s'apliquen les metadades</description>
 		<condition>mandatory</condition>
 	</element>
@@ -1203,22 +1203,22 @@ TIFF, XWD</help>
 	</element>
 	<element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
 		<label>Limitacions de la metadada</label>
-		<abbrLabel>Constraints</abbrLabel>
+		<abbrLabel>Restriccions</abbrLabel>
 		<description>Proporciona restriccions en l'accés i ús de metadades</description>
 	</element>
 	<element name="gmd:metadataConstraints">
 		<label>Limitacions de la metadada</label>
-		<abbrLabel>Constraints</abbrLabel>
+		<abbrLabel>Restriccions</abbrLabel>
 		<description>Proporciona restriccions en l'accés i ús de les dades</description>
 	</element>
 	<element name="gmd:metadataExtensionInfo" id="14.0">
 		<description>Informació que descriu les extensions de les metadades</description>
 		<label>Informació de l'extensió de la metadada</label>
-		<abbrLabel>Extension Info.</abbrLabel>
+		<abbrLabel>Info. Extensió</abbrLabel>
 	</element>
 	<element name="gmd:metadataMaintenance" id="22.0">
 		<label>Manteniment de la metadada</label>
-		<abbrLabel>Maintenance</abbrLabel>
+		<abbrLabel>Manteniment</abbrLabel>
 		<description>Proporciona informació sobre la freqüència de les actualitzacions de metadades, i l'abast d'aquests canvis</description>
 	</element>
 	<element name="gmd:metadataStandardName" id="10.0">
@@ -1549,7 +1549,7 @@ esbiaixades</option>
 	</element>
 	<element name="gmd:portrayalCatalogueInfo" id="19.0">
 		<label>Informació del catàleg de representació</label>
-		<abbrLabel>Portrayal</abbrLabel>
+		<abbrLabel>Representació</abbrLabel>
 		<description>Proporciona informació sobre el catàleg de regles definides per a la representació d'un recurs</description>
 	</element>
 	<element name="gmd:positionName" id="377.0">
@@ -1654,7 +1654,7 @@ esbiaixades</option>
 	</element>
 	<element name="gmd:referenceSystemInfo" id="13.0">
 		<label>Informació del Sistema de Referència</label>
-		<abbrLabel>Ref. Sys.</abbrLabel>
+		<abbrLabel>Sist. Ref.</abbrLabel>
 		<description>Descripció dels sistemes de referència espacials i temporals utilitzats en el conjunt de dades</description>
 	</element>
 	<element name="gmd:report" id="80.0">
@@ -1781,7 +1781,7 @@ esbiaixades</option>
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12.0">
 		<label>Informació de la representació espacia</label>
-		<abbrLabel>Spatial Repr.</abbrLabel>
+		<abbrLabel>Repr. Espacial</abbrLabel>
 		<description>Representació digital de la informació espacial en el conjunt de dades</description>
 	</element>
 	<element name="gmd:spatialRepresentationType" id="37.0">

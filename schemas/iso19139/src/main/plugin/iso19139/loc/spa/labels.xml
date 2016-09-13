@@ -323,8 +323,8 @@
 		<description>Información acerca de los soportes en los que el recurso puede ser distribuido</description>
 	</element>
 	<element name="gmd:MD_Metadata" id="1.0">
-		<label>Metadato</label>
-		<abbrLabel>Metadata</abbrLabel>
+		<label>Metadatos</label>
+		<abbrLabel>Metadatos</abbrLabel>
 		<description>Entidad raíz que define los metadatos de un recurso o recursos</description>
 	</element>
 	<element name="gmd:MD_MetadataExtensionInformation" id="303.0">
@@ -437,7 +437,7 @@
 	</element>
 	<element name="gmd:applicationSchemaInfo" id="21.0">
 		<label>Información del esquema de la aplicación</label>
-		<abbrLabel>App. Schema</abbrLabel>
+		<abbrLabel>Esquema Apl.</abbrLabel>
 		<description>Proporciona información sobre el esquema conceptual de un conjunto de datos</description>
 	</element>
 	<element name="gmd:associationType" id="66.4">
@@ -618,7 +618,7 @@
 	<element name="gmd:contentInfo" id="16.0">
 		<description>Proporciona información sobre el catálogo de features y describe las características de los datos de cobertura y de imagen</description>
 		<label>Información del Contenido</label>
-		<abbrLabel>Content Info.</abbrLabel>
+		<abbrLabel>Info. Contenido</abbrLabel>
 	</element>
 	<element name="gmd:contentType" id="241.0">
 		<label>Tipo de contenido</label>
@@ -653,7 +653,7 @@
 	</element>
 	<element name="gmd:dataQualityInfo" id="18.0">
 		<label>Información de la calidad del dato</label>
-		<abbrLabel>Data Quality</abbrLabel>
+		<abbrLabel>Calidad Datos</abbrLabel>
 		<description>Proporciona evaluación global de la calidad de un recurso</description>
 	</element>
 	<element name="gmd:dataSetURI" id="11.1">
@@ -844,7 +844,7 @@
 	<element name="gmd:distributionInfo" id="17.0">
 		<description>Proporciona información sobre el distribuidor y las opciones para obtener el recurso</description>
 		<label>Información de la distribución</label>
-		<abbrLabel>Distribution</abbrLabel>
+		<abbrLabel>Distribución</abbrLabel>
 	</element>
 	<element name="gmd:distributionOrderProcess" id="281.0">
 		<label>Distribución / Proceso de Pedido</label>
@@ -1073,7 +1073,7 @@
 	</element>
 	<element name="gmd:identificationInfo" id="15.0">
 		<label>Información de Identificación</label>
-		<abbrLabel>Identification</abbrLabel>
+		<abbrLabel>Identificación</abbrLabel>
 		<description>Información básica sobre el recurso al que aplican los metadatos</description>
 		<condition>mandatory</condition>
 	</element>
@@ -1203,22 +1203,22 @@
 	</element>
 	<element name="gmd:metadataConstraints" id="20.0" context="gmd:MD_Metadata">
 		<label>Limitaciones del metadato</label>
-		<abbrLabel>Constraints</abbrLabel>
+		<abbrLabel>Restricciones</abbrLabel>
 		<description>Proporciona restricciones en el acceso y uso de metadatos</description>
 	</element>
 	<element name="gmd:metadataConstraints">
 		<label>Limitaciones del metadato</label>
-		<abbrLabel>Constraints</abbrLabel>
+		<abbrLabel>Restricciones</abbrLabel>
 		<description>Proporciona restricciones en el acceso y uso de los datos</description>
 	</element>
 	<element name="gmd:metadataExtensionInfo" id="14.0">
 		<description>Información que describe las extensiones de los metadatos</description>
 		<label>Informacion extendida del metadato</label>
-		<abbrLabel>Extension Info.</abbrLabel>
+		<abbrLabel>Info. Extensión</abbrLabel>
 	</element>
 	<element name="gmd:metadataMaintenance" id="22.0">
 		<label>Mantenimiento del metadato</label>
-		<abbrLabel>Maintenance</abbrLabel>
+		<abbrLabel>Mantenimiento</abbrLabel>
 		<description>Proporciona información sobre la frecuencia de las actualizaciones de metadatos, y el alcance de dichos cambios</description>
 	</element>
 	<element name="gmd:metadataStandardName" id="10.0">
@@ -1549,7 +1549,7 @@ sesgados</option>
 	</element>
 	<element name="gmd:portrayalCatalogueInfo" id="19.0">
 		<label>Información del catálogo de representación</label>
-		<abbrLabel>Portrayal</abbrLabel>
+		<abbrLabel>Representación</abbrLabel>
 		<description>Proporciona información sobre el catálogo de reglas definidas para la representación de un recurso</description>
 	</element>
 	<element name="gmd:positionName" id="377.0">
@@ -1654,7 +1654,7 @@ sesgados</option>
 	</element>
 	<element name="gmd:referenceSystemInfo" id="13.0">
 		<label>Información del Sistema de Referencia</label>
-		<abbrLabel>Ref. Sys.</abbrLabel>
+		<abbrLabel>Sist. Ref.</abbrLabel>
 		<description>Descripción de los sistemas de referencia espaciales y temporales utilizados en el conjunto de datos</description>
 	</element>
 	<element name="gmd:report" id="80.0">
@@ -1781,7 +1781,7 @@ sesgados</option>
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12.0">
 		<label>Información de la representación espacial</label>
-		<abbrLabel>Spatial Repr.</abbrLabel>
+		<abbrLabel>Repr. Espacial</abbrLabel>
 		<description>Representación digital de la información espacial en el conjunto de datos</description>
 	</element>
 	<element name="gmd:spatialRepresentationType" id="37.0">
