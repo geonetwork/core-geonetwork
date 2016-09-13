@@ -1780,7 +1780,7 @@ esbiaixades</option>
 		<condition>mandatory</condition>
 	</element>
 	<element name="gmd:spatialRepresentationInfo" id="12.0">
-		<label>Informació de la representació espacia</label>
+		<label>Informació de la representació espacial</label>
 		<abbrLabel>Repr. Espacial</abbrLabel>
 		<description>Representació digital de la informació espacial en el conjunt de dades</description>
 	</element>
