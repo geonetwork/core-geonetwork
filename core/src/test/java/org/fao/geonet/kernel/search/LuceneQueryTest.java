@@ -173,9 +173,35 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx title:xxx) +_isTemplate:n +any:yyy", query.toString());
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx title:xxx) +any:yyy +_isTemplate:n", query.toString());
     }
 
+    /**
+     * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
+     * https://github.com/geonetwork/core-geonetwork/issues/1679
+     */
+    @Test
+    public void testSingleORSingleValueAndANDIsTemplateparam() {
+        // create request object
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+
+        Element OR = factory.element("inspiretheme_OR_title");
+        OR.addContent("xxx");
+        request.addContent(OR);
+
+        Element isT = factory.element("_isTemplate");
+        isT.addContent("y or n");
+        request.addContent(isT);
+
+        // build lucene query input
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+
+        // build lucene query
+        Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
+        // verify query
+        assertEquals("unexpected Lucene query", "+(inspiretheme:xxx title:xxx) +(_isTemplate:y _isTemplate:n)", query.toString());
+    }
     /**
      * Tests parameters for disjunctions. They are of the form paramA_OR_paramB.
      */
