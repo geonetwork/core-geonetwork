@@ -5,6 +5,10 @@
   <!-- All URL parameters could be available as params -->
   <xsl:param name="view" select="'default'"/>
 
+  <!-- Formatter will render a full HTML page. If not set,
+  then it will render an HTML DIV only. -->
+  <xsl:param name="root" select="'html'"/>
+
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"
                 select="/root/info/record/datainfo/schemaid"/>

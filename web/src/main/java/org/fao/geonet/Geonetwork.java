@@ -353,10 +353,10 @@ public class Geonetwork implements ApplicationHandler {
         SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         if (sourceRepository.findOneByUuid(settingMan.getSiteId()) == null) {
             final Source source = sourceRepository.save(
-                new Source()
-                    .setLocal(true)
-                    .setName(settingMan.getSiteName())
-                    .setUuid(settingMan.getSiteId()));
+                new Source(settingMan.getSiteId(),
+                    settingMan.getSiteName(),
+                    null,
+                    true));
         }
 
         // Creates a default site logo, only if the logo image doesn't exists

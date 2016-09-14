@@ -27,6 +27,10 @@ import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -49,6 +53,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -58,7 +64,11 @@ import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +178,7 @@ public class MetadataEditingApi {
             currTab, session, allRequestParams,
             request, metadata.getId(), elMd, metadata.getDataInfo().getSchemaId(),
             showValidationErrors,
-            context, applicationContext, false);
+            context, applicationContext, false, false);
     }
 
 
@@ -305,10 +315,52 @@ public class MetadataEditingApi {
 //        elResp.addContent(new Element(Params.MINOREDIT).setText(String.valueOf(minor)));
 
         //--- if finished then remove the XML from the session
-        if (commit) {
+        if ((commit) && (!terminate)) {
             return null;
         }
         if (terminate) {
+            SettingManager sm = context.getBean(SettingManager.class);
+
+            boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
+
+            boolean reindex = false;
+
+            // Save validation if the forceValidationOnMdSave is enabled
+            if (forceValidationOnMdSave) {
+                dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+                    new Document(metadata.getXmlData(false)), context.getLanguage());
+                reindex = true;
+            }
+
+            boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
+
+            // Unpublish the metadata automatically if the setting automaticUnpublishInvalidMd is enabled and
+            // the metadata becomes invalid
+            if (automaticUnpublishInvalidMd) {
+                final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
+
+                boolean isPublic = (operationAllowedRepo.count(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
+                    .view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
+
+                if (isPublic) {
+                    final MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+
+                    boolean isInvalid =
+                        (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
+
+                    if (isInvalid) {
+                        operationAllowedRepo.deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
+                    }
+
+                    reindex = true;
+                }
+
+            }
+
+            if (reindex) {
+                dataMan.indexMetadata(id, true);
+            }
+
             ajaxEditUtils.removeMetadataEmbedded(session, id);
             dataMan.endEditingSession(id, session);
             return null;
@@ -326,7 +378,7 @@ public class MetadataEditingApi {
             tab, httpSession, forwardedParams,
             request, metadata.getId(), elMd, metadata.getDataInfo().getSchemaId(),
             withValidationErrors,
-            context, applicationContext, false);
+            context, applicationContext, false, false);
     }
 
 
@@ -451,7 +503,7 @@ public class MetadataEditingApi {
             allRequestParams.get("currTab"), httpSession, allRequestParams,
             request, metadata.getId(), md, metadata.getDataInfo().getSchemaId(),
             false,
-            context, applicationContext, true);
+            context, applicationContext, true, true);
     }
 
 
@@ -628,7 +680,7 @@ public class MetadataEditingApi {
         String schema,
         boolean showValidationErrors,
         ServiceContext context,
-        ApplicationContext applicationContext, boolean isEmbedded) throws Exception {
+        ApplicationContext applicationContext, boolean isEmbedded, boolean embedded) throws Exception {
 
 
         UserSession userSession = ApiUtils.getUserSession(session);
@@ -639,7 +691,7 @@ public class MetadataEditingApi {
             new Element("currTab").setText(tab));
         // This flag is used to generate top tool bar or not
         gui.addContent(
-            new Element("reqService").setText("md.edit"));
+            new Element("reqService").setText(embedded ? "embedded" : "md.edit"));
         String iso3langCode = languageUtils.getIso3langCode(request.getLocales());
         gui.addContent(
             new Element("language").setText(iso3langCode));

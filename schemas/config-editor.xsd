@@ -225,7 +225,7 @@ switch from one language to another.
     <xs:annotation>
       <xs:documentation>
         <![CDATA[
-All fields in ISO could be multilingual. Define element to exlcude. TODO: it may be
+All fields in ISO could be multilingual. Define element to exclude. TODO: it may be
 relevant to have parent defined to have more control over the list.
         ]]></xs:documentation>
     </xs:annotation>
@@ -602,6 +602,7 @@ A section is a group of fields.
         </xs:element>
         <xs:element ref="action"/>
         <xs:element ref="text"/>
+        <xs:element ref="xsl"/>
         <xs:element ref="section"/>
         <xs:element ref="fieldset"/>
       </xs:choice>
@@ -897,6 +898,7 @@ eg. The gmd:MD_Identifier may contain a gmd:authority node which needs to be pre
       </gmd:identifier>
     </snippet>
 
+Warning: Template based field does not support multilingual editing for ISO standards (ie. only the main language is edited - therefore, multilingual elements will be preserved).
 
         ]]></xs:documentation>
     </xs:annotation>
@@ -956,8 +958,20 @@ The fragment is defined in localization file strings.xml:
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="if" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <![CDATA[
+An XPath expression to evaluate. If true, the text is displayed.
+          ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
+
+
+
+
 
   <xs:element name="action">
     <xs:annotation>
@@ -1008,12 +1022,29 @@ with ``add-resource-id`` identifier:
 
 .. code-block:: xml
 
-          <action type="batch"
+          <action type="process"
                   process="add-resource-id"
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/
                                 gmd:citation/*/gmd:identifier[
                                   ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString,
                                             //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0"/>
+
+
+Example of a button based on custom directive with some directive attributes set by
+XPath:
+
+.. code-block:: xml
+
+          <action type="add"
+                  btnLabel="checkpoint-tdp-add-component"
+                  name="dataQualityInfo" or="dataQualityInfo"
+                  in="/mdb:MD_Metadata"
+                  addDirective="data-gn-record-fragment-selector">
+            <directiveAttributes data-source-records="xpath::string-join(
+              //mri:associatedResource/*[mri:initiativeType/*/@codeListValue = 'specification']
+                /mri:metadataReference/@uuidref, ',')"/>
+          </action>
+
 
         ]]></xs:documentation>
     </xs:annotation>
@@ -1033,8 +1064,8 @@ with ``add-resource-id`` identifier:
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
-            <xs:enumeration value="batch"/>
             <xs:enumeration value="add"/>
+            <xs:enumeration value="process"/>
             <xs:enumeration value="associatedResource"/>
           </xs:restriction>
         </xs:simpleType>
@@ -1507,6 +1538,55 @@ Translations are set on client side.
           </xs:complexType>
         </xs:element>
       </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+
+  <xs:element name="xsl">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+Trigger an XSL rendering mode. In some circumstances, you may want
+to customize a lot the editor. In such case, delegate to XSL template.
+
+
+For example, create a tab on the data quality section:
+
+.. code-block:: xml
+
+      <tab id="qualityMeasures">
+        <section>
+          <xsl xpath="/mdb:MD_Metadata/mdb:dataQualityInfo"
+               mode="iso19115-3-qm"
+               or="report"/>
+         </section>
+      </tab>
+
+
+Then declare a template (eg. in iso19115-3/layout/layout-custom-tpl.xsl) to customize
+the layout:
+
+.. code-block:: xml
+
+      <xsl:template name="iso19115-3-qm">
+        <h1><xsl:value-of select="$strings/qualityMeasures"/></h1>
+
+
+For example, create a table of contact:
+
+.. code-block:: xml
+
+      <xsl xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact"
+           mode="iso19139-table-contact"/>
+
+]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="xpath" use="required" type="xs:string"/>
+      <xs:attribute name="mode" use="required" type="xs:string"/>
+      <xs:attribute name="or" use="optional" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 </xs:schema>

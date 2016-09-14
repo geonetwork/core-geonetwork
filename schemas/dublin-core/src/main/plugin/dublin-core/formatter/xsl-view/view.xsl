@@ -52,6 +52,10 @@
     <xsl:value-of select="dc:title"/>
   </xsl:template>
 
+  <xsl:template mode="getMetadataHierarchyLevel" match="simpledc">
+    <xsl:value-of select="'dataset'"/>
+  </xsl:template>
+
   <xsl:template mode="getMetadataAbstract" match="simpledc">
     <xsl:value-of select="dc:description"/>
   </xsl:template>

@@ -38,9 +38,13 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.jdom.Document;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -87,6 +91,9 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 
         String id = Utils.getIdentifierFromParameters(params, context);
         boolean update = Util.getParam(params, Params.UPDATEONLY, "false").equals("true");
+		SettingManager sm = context.getBean(SettingManager.class);
+
+		boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
 
         //-----------------------------------------------------------------------
         //--- check access
@@ -136,23 +143,68 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
                     continue;
                 }
 
-                if (!update) {
-                    dm.setOperation(context, id, groupId, operId);
-                } else {
-                    boolean publish = "on".equals(el.getTextTrim());
-                    if (publish) {
-                        dm.setOperation(context, id, groupId, operId);
-                    } else {
-                        dm.unsetOperation(context, id, groupId, operId);
-                    }
-                }
-            }
-        }
+				if (!update) {
+					// For privileges to ALL group, check if it's allowed or not to publish invalid metadata
+					if (groupId.equals(ReservedGroup.all.getId() + "") && (!allowPublishInvalidMd)) {
+						if (!canPublishToAllGroup(context, dm, Integer.parseInt(id))) {
+							continue;
+						}
+					}
+
+					dm.setOperation(context, id, groupId, operId);
+				} else {
+					boolean publish = "on".equals(el.getTextTrim());
+					if (publish) {
+
+						// For privileges to ALL group, check if it's allowed or not to publish invalid metadata
+						if (groupId.equals(ReservedGroup.all.getId() + "") && (!allowPublishInvalidMd)) {
+							if (!canPublishToAllGroup(context, dm, Integer.parseInt(id))) {
+								continue;
+							}
+						}
+
+						dm.setOperation(context, id, groupId, operId);
+					} else {
+						dm.unsetOperation(context, id, groupId, operId);
+					}
+				}
+			}
+		}
 
         //--- index metadata
         dm.indexMetadata(id, true);
 
         //--- return id for showing
-        return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
-    }
+		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
+	}
+
+	/**
+	 * For privileges to ALL group, check if it's allowed or not to publish invalid metadata.
+	 *
+	 * @param context
+	 * @param dm
+	 * @param mdId
+	 * @return
+     * @throws Exception
+     */
+	private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, int mdId) throws Exception {
+		MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+		MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+
+		boolean hasValidation =
+				(metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
+
+		if (!hasValidation) {
+			Metadata metadata = metadataRepository.findOne(mdId);
+
+			dm.doValidate(metadata.getDataInfo().getSchemaId(), mdId + "",
+					new Document(metadata.getXmlData(false)), context.getLanguage());
+			dm.indexMetadata(mdId + "", true);
+		}
+
+		boolean isInvalid =
+				(metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(mdId)) > 0);
+
+		return !isInvalid;
+	}
 }

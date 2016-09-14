@@ -64,6 +64,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+
 import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -71,8 +72,12 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.jdom.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
@@ -299,6 +304,11 @@ public class MetadataSharingApi {
         Map<String, Integer> operationMap,
         List<GroupOperations> privileges) throws Exception {
         if (privileges != null) {
+            SettingManager sm = context.getBean(SettingManager.class);
+            DataManager dm = context.getBean(DataManager.class);
+
+            boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
+
             for (GroupOperations p : privileges) {
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
                     Integer opId = operationMap.get(o.getKey());
@@ -309,6 +319,13 @@ public class MetadataSharingApi {
                     }
 
                     if (o.getValue()) {
+                        // For privileges to ALL group, check if it's allowed or not to publish invalid metadata
+                        if ((p.getGroup() == ReservedGroup.all.getId()) && (!allowPublishInvalidMd)) {
+                            if (!canPublishToAllGroup(context, dm, metadata)) {
+                                continue;
+                            }
+                        }
+
                         dataMan.setOperation(
                             context, metadata.getId(), p.getGroup(), opId);
                     } else if (!sharing.isClear() && !o.getValue()) {
@@ -320,6 +337,32 @@ public class MetadataSharingApi {
         }
     }
 
+    /**
+     * For privileges to ALL group, check if it's allowed or not to publish invalid metadata.
+     *
+     * @param context
+     * @param dm
+     * @param metadata
+     * @return
+     * @throws Exception
+     */
+    private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, IMetadata metadata) throws Exception {
+        MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+
+        boolean hasValidation =
+            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
+
+        if (!hasValidation) {
+            dm.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+                new Document(metadata.getXmlData(false)), context.getLanguage());
+            dm.indexMetadata(metadata.getId() + "", true);
+        }
+
+        boolean isInvalid =
+            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(metadata.getId())) > 0);
+
+        return !isInvalid;
+    }
 
     @ApiOperation(
         value = "Get record sharing settings",

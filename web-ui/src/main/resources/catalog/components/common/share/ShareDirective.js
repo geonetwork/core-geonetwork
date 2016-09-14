@@ -62,6 +62,7 @@
           scope.onlyUserGroup = gnConfig['system.metadataprivs.usergrouponly'];
           scope.disableAllCol = gnShareConstants.disableAllCol;
           scope.displayProfile = gnShareConstants.displayProfile;
+          scope.icons = gnShareConstants.icons;
 
           angular.extend(scope, {
             batch: scope.batch === 'true',
@@ -79,7 +80,7 @@
           var loadPrivileges;
           var fillGrid = function(data) {
             scope.privileges = data.privileges;
-            // scope.operations = data.operations;
+            scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
 
@@ -181,7 +182,7 @@
               return g.userProfile;
             }
             else {
-              return g.privileges[scope.sorter.predicate].value;
+              return g.operations[scope.sorter.predicate];
             }
           };
 

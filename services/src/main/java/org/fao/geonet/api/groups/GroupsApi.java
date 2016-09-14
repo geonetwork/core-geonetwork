@@ -180,7 +180,7 @@ public class GroupsApi {
             group.getLabelTranslations().put(l.getId(),
                 label == null ? group.getName() : label);
         }
-            groupRepository.save(group);
+        groupRepository.save(group);
 
         return new ResponseEntity<>(group.getId(), HttpStatus.CREATED);
     }

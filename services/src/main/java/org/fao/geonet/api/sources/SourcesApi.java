@@ -122,7 +122,7 @@ public class SourcesApi {
             updateSource(sourceIdentifier, source, sourceRepository);
         } else {
             throw new ResourceNotFoundException(String.format(
-                "Source with uuid '%d' does not exist.",
+                "Source with uuid '%s' does not exist.",
                 sourceIdentifier
             ));
         }

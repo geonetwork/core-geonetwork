@@ -40,17 +40,24 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+
 import org.fao.geonet.kernel.metadata.IMetadataOperations;
 import org.fao.geonet.kernel.metadata.IMetadataUtils;
 import org.fao.geonet.repository.MetadataDraftRepository;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.jdom.Document;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -135,8 +142,12 @@ public class Publish {
         ConfigurableApplicationContext appContext = ApplicationContextHolder
                 .get();
         DataManager dataManager = appContext.getBean(DataManager.class);
-        OperationAllowedRepository operationAllowedRepository = appContext
-                .getBean(OperationAllowedRepository.class);
+        OperationAllowedRepository operationAllowedRepository = appContext.getBean(OperationAllowedRepository.class);
+        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        MetadataValidationRepository metadataValidationRepository = appContext.getBean(MetadataValidationRepository.class);
+        SettingManager sm = appContext.getBean(SettingManager.class);
+
+        boolean allowPublishInvalidMd = sm.getValueAsBool("metadata/workflow/allowPublishInvalidMd");
 
         final PublishReport report = new PublishReport();
 
@@ -175,8 +186,29 @@ public class Publish {
             List<OperationAllowed> operationAllowed = operationAllowedRepository
                     .findAll(allOpsSpec);
             if (publish) {
-                doPublish(serviceContext, report, groupIds, toIndex,
-                        operationIds, mdId, allOpsSpec, operationAllowed);
+
+                if (!allowPublishInvalidMd) {
+                    boolean hasValidation =
+                            (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
+
+                    if (!hasValidation) {
+                        Metadata metadata = metadataRepository.findOne(mdId);
+
+                        dataManager.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+                                new Document(metadata.getXmlData(false)), serviceContext.getLanguage());
+                        dataManager.indexMetadata(nextId, true);
+                    }
+
+                    boolean isInvalid =
+                            (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(mdId)) > 0);
+
+                    if (isInvalid) {
+                        report.incNoValid();
+                        continue;
+                    }
+                }
+
+                doPublish(serviceContext, report, groupIds, toIndex, operationIds, mdId, allOpsSpec, operationAllowed);
             } else {
                 doUnpublish(serviceContext, report, groupIds, toIndex,
                         operationIds, mdId, allOpsSpec, operationAllowed);
@@ -339,7 +371,7 @@ public class Publish {
     public static final class PublishReport implements Serializable {
 
         private static final long serialVersionUID = -4088318479396943965L;
-        private int published, unpublished, unmodified, disallowed;
+        private int published, unpublished, unmodified, disallowed, novalid;
 
         public void incPublished() {
             published++;
@@ -357,6 +389,9 @@ public class Publish {
             disallowed++;
         }
 
+        public void incNoValid() {
+            novalid++;
+        }
         public int getPublished() {
             return published;
         }
@@ -373,11 +408,19 @@ public class Publish {
             return disallowed;
         }
 
+        public int getNovalid() {
+            return novalid;
+        }
+
         @Override
         public String toString() {
-            return "PublishReport{" + "published=" + published
-                    + ", unpublished=" + unpublished + ", unmodified="
-                    + unmodified + ", disallowed=" + disallowed + '}';
+            return "PublishReport{" +
+                   "published=" + published +
+                   ", unpublished=" + unpublished +
+                   ", unmodified=" + unmodified +
+                   ", disallowed=" + disallowed +
+                   ", novalid=" + novalid +
+                   '}';
         }
     }
 }

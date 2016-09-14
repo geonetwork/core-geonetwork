@@ -1084,36 +1084,6 @@
           },
 
           /**
-           * Call a WMS getCapabilities and create ol3 layers for all items.
-           * Add them to the map if `createOnly` is false;
-           *
-           * @param {ol.Map} map to add the layer
-           * @param {string} url of the service
-           * @param {string} name of the layer
-           * @param {boolean} createOnly or add it to the map
-           */
-          addWmsAllLayersFromCap: function(map, url, createOnly) {
-            var $this = this;
-
-            return gnOwsCapabilities.getWMSCapabilities(url).
-                then(function(capObj) {
-
-                  var createdLayers = [];
-
-                  var layers = capObj.layers || capObj.Layer;
-                  for (var i = 0, len = layers.length; i < len; i++) {
-                    var capL = layers[i];
-                    var olL = $this.createOlWMSFromCap(map, capL);
-                    if (!createOnly) {
-                      map.addLayer(olL);
-                    }
-                    createdLayers.push(olL);
-                  }
-                  return createdLayers;
-                });
-          },
-
-          /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#addWmtsFromScratch
@@ -1536,7 +1506,19 @@
                 _content_type: 'json'
               }).then(function(data) {
                 if (data.metadata.length == 1) {
-                  layer.set('md', new Metadata(data.metadata[0]));
+                  var md = new Metadata(data.metadata[0]);
+                  layer.set('md', md);
+
+                  var mdLinks = md.getLinksByType('#OGC:WMTS',
+                      '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
+
+                  angular.forEach(mdLinks, function(link) {
+                    if (layer.get('url').indexOf(link.url) >= 0 &&
+                        link.name == layer.getSource().getParams().LAYERS) {
+                      this.feedLayerWithRelated(layer, link.group);
+                      return;
+                    }
+                  }, $this);
                 }
                 return layer;
               });
@@ -1591,7 +1573,7 @@
          * appear in the layer manager
          */
         selected: function(layer) {
-          return layer.displayInLayerManager;
+          return layer.displayInLayerManager && !layer.get('fromWps');
         },
         visible: function(layer) {
           return layer.displayInLayerManager && layer.visible;

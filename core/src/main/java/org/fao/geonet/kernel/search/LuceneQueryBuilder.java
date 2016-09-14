@@ -272,6 +272,10 @@ public class LuceneQueryBuilder {
         //
         Map<String, Set<String>> searchCriteriaOR = new LinkedHashMap<String, Set<String>>();
 
+        spatialCriteriaAdded = false;
+        temporalCriteriaAdded = false;
+        templateCriteriaAdded = false;
+
         for (Iterator<Entry<String, Set<String>>> i = searchCriteria.entrySet().iterator(); i.hasNext(); ) {
             Entry<String, Set<String>> entry = i.next();
             String fieldName = entry.getKey();
@@ -332,6 +336,15 @@ public class LuceneQueryBuilder {
         }
         query = buildORQuery(searchCriteriaOR, query, similarity);
         query = buildANDQuery(searchCriteria, query, similarity, processedRangeFields);
+
+        // Search only for metadata (no template or sub-templates) if not set by search criteria before
+        if (!templateCriteriaAdded) {
+            BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
+            query.add(q, occur);
+            templateCriteriaAdded = true;
+        }
+
         if (StringUtils.isNotEmpty(_language)) {
             if (Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "adding locale query for language " + _language);
@@ -376,10 +389,6 @@ public class LuceneQueryBuilder {
      * Builds a query where OR operator is used for each search criteria.
      */
     private BooleanQuery buildORQuery(Map<String, Set<String>> searchCriteria, BooleanQuery query, String similarity) {
-
-        spatialCriteriaAdded = false;
-        temporalCriteriaAdded = false;
-        templateCriteriaAdded = false;
 
         if (searchCriteria.size() == 0) {
             return query;
@@ -438,14 +447,6 @@ public class LuceneQueryBuilder {
         }
         BooleanClause booleanClause = new BooleanClause(booleanQuery, occur);
         query.add(booleanClause);
-
-        // Search only for metadata (no template or sub-templates) if not set by search criteria before
-        if (!templateCriteriaAdded) {
-            occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
-            query.add(q, occur);
-            templateCriteriaAdded = true;
-        }
         return query;
     }
 
@@ -487,14 +488,6 @@ public class LuceneQueryBuilder {
             String fieldName = searchCriterium.getKey();
             Set<String> fieldValues = searchCriterium.getValue();
             addANDCriteria(fieldName, fieldValues, similarity, query, searchCriteria, processedRangeFields);
-        }
-
-        // Search only for metadata (no template or sub-templates) if not set by search criteria before
-        if (!templateCriteriaAdded) {
-            BooleanClause.Occur occur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            Query q = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));
-            query.add(q, occur);
-            templateCriteriaAdded = true;
         }
         return query;
     }

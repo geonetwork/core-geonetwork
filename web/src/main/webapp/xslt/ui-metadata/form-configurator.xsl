@@ -44,7 +44,7 @@
 
     <xsl:choose>
       <xsl:when test="$sectionName">
-        <fieldset data-gn-field-highlight="">
+        <fieldset data-gn-field-highlight="" class="gn-{@name}">
           <!-- Get translation for labels.
           If labels contains ':', search into labels.xml. -->
           <legend data-gn-slide-toggle="">
@@ -114,6 +114,7 @@
           <xsl:call-template name="render-batch-process-button">
             <xsl:with-param name="process-name" select="@process"/>
             <xsl:with-param name="process-params" select="@params"/>
+            <xsl:with-param name="btnClass" select="@btnClass"/>
           </xsl:call-template>
         </xsl:when>
         <xsl:when test="@type = 'associatedResource'">
@@ -127,6 +128,35 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
+
+
+  <!-- Call an XSL template by name.  -->
+  <xsl:template mode="form-builder" match="xsl">
+    <xsl:param name="base" as="node()"/>
+
+    <xsl:variable name="nodes">
+      <saxon:call-template name="{concat('evaluate-', $schema)}">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="in" select="concat('/../', @xpath)"/>
+      </saxon:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="mode" select="@mode"/>
+    <xsl:variable name="config" select="."/>
+    <xsl:for-each select="$nodes/*">
+      <xsl:variable name="originalNode"
+                    select="gn-fn-metadata:getOriginalNode($base, .)"/>
+
+      <xsl:for-each select="$originalNode">
+        <saxon:call-template name="{$mode}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="config" select="$config"/>
+        </saxon:call-template>
+      </xsl:for-each>
+    </xsl:for-each>
+  </xsl:template>
+
+
 
   <!-- Element to ignore in that mode -->
   <xsl:template mode="form-builder" match="@name"/>
@@ -637,7 +667,6 @@
       <xsl:variable name="btnLabel" select="@btnLabel"/>
       <xsl:variable name="btnClass" select="@btnClass"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
-      <xsl:variable name="directive" select="."/>
 
       <xsl:choose>
         <xsl:when test="template">
@@ -666,6 +695,8 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
+          <xsl:variable name="directive" select="."/>
+
           <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
             <xsl:call-template name="render-element-to-add">
               <xsl:with-param name="label" select="$name"/>

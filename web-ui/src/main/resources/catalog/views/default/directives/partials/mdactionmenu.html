@@ -36,17 +36,30 @@
         <i class="fa fa-user"></i>&nbsp;
         <span data-translate="">transferOwnership</span>
       </a></li>
-    <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()">
+    <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+        data-ng-class="(md.isPublished() || (allowPublishInvalidMd() === true) ||
+          (!md.isPublished() && (allowPublishInvalidMd() === false) &&
+          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
+        title="{{(!md.isPublished() ? (md.isValid() ? 'mdvalid' : (!md.hasValidation() ? 'mdnovalidation':
+               (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}"
+    >
       <a data-ng-click="mdService.publish(md)">
         <i class="fa"
            data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
         <span data-ng-if="md.isPublished()" data-translate="">unpublish</span>
-        <span data-ng-if="!md.isPublished()" data-translate="">publish</span>
+        <span data-ng-if="!md.isPublished()" data-translate="">publish</span>&nbsp;
+
+        <i class="fa" data-ng-if="!md.isPublished() && md.hasValidation()"
+           data-ng-class="md.isValid() ? 'gn-recordtype-n text-success' : 'gn-recordtype-n text-danger'"></i>
+        <i class="fa gn-recordtype-n text-muted" data-ng-if="!md.isPublished() && !md.hasValidation()"></i>
       </a>
+
     </li>
     <!-- TODO: Some installation only allows status update
     based on current status. -->
-    <li><a data-ng-href=""
+    <li data-ng-class="((allowPublishInvalidMd() === true) || 
+          ((allowPublishInvalidMd() === false) &&
+          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"><a data-ng-href=""
            data-ng-if="user.canEditRecord(md) &&
                               md.isWorkflowEnabled()"
            data-ng-click="mdService.openUpdateStatusPanel(getScope())">

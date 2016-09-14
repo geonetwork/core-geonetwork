@@ -76,7 +76,10 @@
   <xsl:variable name="iso19139codelists" select="$iso19139schema/codelists"/>
   <xsl:variable name="iso19139strings" select="$iso19139schema/strings"/>
 
-  <xsl:variable name="isEditing" select="$service = 'md.edit' or $service = 'md.element.add'"/>
+  <xsl:variable name="isEditing"
+                select="$service = 'md.edit'
+                or $service = 'embedded'
+                or $service = 'md.element.add'"/>
 
   <!-- Display attributes in editor -->
   <xsl:variable name="isDisplayingAttributes" select="/root/request/displayAttributes = 'true'"/>

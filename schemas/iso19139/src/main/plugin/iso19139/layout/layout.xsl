@@ -38,6 +38,7 @@
   <xsl:include href="utility-tpl.xsl"/>
   <xsl:include href="layout-custom-fields.xsl"/>
   <xsl:include href="layout-custom-fields-date.xsl"/>
+  <xsl:include href="layout-custom-tpl.xsl"/>
 
   <!-- Ignore all gn element -->
   <xsl:template mode="mode-iso19139"
@@ -162,7 +163,7 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
-    <xsl:param name="refToDelete" select="gn:element" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
 
     <xsl:variable name="elementName" select="name()"/>
     <xsl:variable name="exclusionMatchesParent">
@@ -325,7 +326,7 @@
       <xsl:with-param name="name" select="$theElement/gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="$theElement/gn:element"/>
       <xsl:with-param name="parentEditInfo"
-                      select="$refToDelete"/>
+                      select="if ($refToDelete) then $refToDelete else gn:element"/>
       <!-- TODO: Handle conditional helper -->
       <xsl:with-param name="listOfValues" select="$helper"/>
       <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>

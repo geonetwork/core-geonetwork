@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,8 +46,11 @@ import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,8 +73,8 @@ import io.swagger.annotations.ApiResponses;
  */
 @Service
 @RequestMapping(value = {
-        "/api/records/{metadataUuid}",
-        "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
+    "/api/records/{metadataUuid}",
+    "/api/" + API.VERSION_0_1 + "/records/{metadataUuid}"
 })
 @Api(value = API_CLASS_RECORD_TAG,
     tags = API_CLASS_RECORD_TAG,
@@ -83,10 +87,10 @@ public class MetadataSavedQueryApi {
 
 
     @ApiOperation(value = "List saved queries for this metadata",
-                  nickname = "getMetadataSavedQueries")
+        nickname = "getMetadataSavedQueries")
     @RequestMapping(value = "/query",
-                    method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
@@ -94,12 +98,12 @@ public class MetadataSavedQueryApi {
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
     public List<SavedQuery> getSavedQueries(
-            @ApiParam(
-                value = ApiParams.API_PARAM_RECORD_UUID,
-                required = true)
-            @PathVariable final String metadataUuid,
-            HttpServletRequest request
-            ) throws Exception {
+        @ApiParam(
+            value = ApiParams.API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable final String metadataUuid,
+        HttpServletRequest request
+    ) throws Exception {
         IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         String schemaIdentifier = metadata.getDataInfo().getSchemaId();
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
@@ -125,25 +129,28 @@ public class MetadataSavedQueryApi {
     @RequestMapping(
         value = "/query/{savedQuery}",
         method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseBody
     @ResponseStatus(value = HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Query response."),
+        @ApiResponse(code = 200, message = "List of matching elements. " +
+            "If element are nodes, then they are returned as string."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
     })
-    public String applyQuery(
-            @ApiParam(value = "The metadata UUID",
-                      required = true,
-                      example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
-            @PathVariable final String metadataUuid,
-            @ApiParam(value = "The saved query to apply",
-                      required = true,
-                      example = "wfs-indexing-config")
-            @PathVariable final String savedQuery,
-            HttpServletRequest request,
-            @ApiParam(value = "The query parameters")
-            @RequestBody(required = false) final HashMap<String,String> parameters) throws Exception {
+    public Map<String, String> applyQuery(
+        @ApiParam(value = "The metadata UUID",
+            required = true,
+            example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
+        @PathVariable final String metadataUuid,
+        @ApiParam(value = "The saved query to apply",
+            required = true,
+            example = "wfs-indexing-config")
+        @PathVariable final String savedQuery,
+        HttpServletRequest request,
+        @ApiParam(value = "The query parameters")
+        @RequestBody(required = false) final HashMap<String, String> parameters) throws Exception {
 
         IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
@@ -151,22 +158,22 @@ public class MetadataSavedQueryApi {
         SchemaPlugin schemaPlugin = schemaManager.getSchema(schemaIdentifier).getSchemaPlugin();
         if (schemaPlugin == null) {
             throw new ResourceNotFoundException(String.format(
-                    "Saved query '%s' for schema '%s' not found.",
-                    savedQuery, schemaIdentifier));
+                "Saved query '%s' for schema '%s' not found.",
+                savedQuery, schemaIdentifier));
         }
 
         SavedQuery query = schemaPlugin.getSavedQuery(savedQuery);
         if (query == null) {
             throw new ResourceNotFoundException(String.format(
-                    "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
-                    savedQuery, schemaIdentifier, schemaPlugin.getSavedQueries()));
+                "Saved query '%s' for schema '%s' not found. Available queries are '%s'.",
+                savedQuery, schemaIdentifier, schemaPlugin.getSavedQueries()));
         }
 
 
         String xpath = query.getXpath();
         if (Log.isDebugEnabled(LOG_MODULE)) {
             Log.debug(LOG_MODULE, String.format(
-                    "Saved query XPath: %s", xpath));
+                "Saved query XPath: %s", xpath));
         }
         if (parameters != null) {
             Iterator<String> parametersIterator = parameters.keySet().iterator();
@@ -177,29 +184,69 @@ public class MetadataSavedQueryApi {
         }
         if (Log.isDebugEnabled(LOG_MODULE)) {
             Log.debug(LOG_MODULE, String.format(
-                    "Saved query XPath after URL parameters substitution %s", xpath));
+                "Saved query XPath after URL parameters substitution %s", xpath));
         }
 
 
-        // TODO: Could return any kind of object
-        // TODO: Could select multiple nodes
+        Map<String, String> response = new HashMap<>();
         try {
-            final Element matchingElement =
-                    (Element) Xml.selectSingle(metadata.getXmlData(false),
-                            xpath,
-                            new ArrayList<>(schemaPlugin.getNamespaces()));
-
+            ArrayList<Namespace> nss = new ArrayList<>(schemaPlugin.getNamespaces());
+            final List<?> matchingElement = Xml.selectNodes(metadata.getXmlData(false),
+                xpath,
+                nss);
+            int counter = 0;
+            String queryCleanValues = query.getCleanValues();
             if (matchingElement != null) {
-                return matchingElement.getText();
-            }
+                for (Object o : matchingElement) {
+                    String key = String.valueOf(counter), value = null;
+                    if (o instanceof Element) {
+                        Element e = (Element) o;
+                        if (query.getLabel() != null) {
+                            String label = Xml.selectString(e, query.getLabel(), nss);
+                            if (label != null) {
+                                key = label;
+                            }
+                        }
 
+
+                        if (queryCleanValues != null) {
+                            final List<?> valuesToClean = Xml.selectNodes(e,
+                                queryCleanValues,
+                                nss);
+                            if (valuesToClean != null) {
+                                for (Object v : valuesToClean) {
+                                    if (v instanceof Element) {
+                                        ((Element) v).setText("");
+                                    } else if (v instanceof Attribute) {
+                                        ((Attribute) v).setValue("");
+                                    } else if (v instanceof Text) {
+                                        ((Text) v).setText("");
+                                    }
+                                }
+                            }
+                        }
+
+                        value = Xml.getString(e);
+                    } else if (o instanceof Attribute) {
+                        value = ((Attribute) o).getValue();
+                    } else if (o instanceof Text) {
+                        value = ((Text) o).getText();
+                    }
+
+                    response.put(key, value);
+                    counter++;
+                }
+            }
+            if (response.size() > 0) {
+                return response;
+            }
             throw new NoResultsFoundException(String.format(
-                    "No results found in metadata '%s' for query '%s'.",
-                    metadataUuid, xpath));
+                "No results found in metadata '%s' for query '%s'.",
+                metadataUuid, xpath));
         } catch (JDOMException e) {
             throw new IllegalArgumentException(String.format(
-                    "Error in query: %s. Saved query parameters are '%s'.",
-                    e.getMessage(), query.getParameters()));
+                "Error in query: %s. Saved query parameters are '%s'.",
+                e.getMessage(), query.getParameters()));
         }
     }
 }

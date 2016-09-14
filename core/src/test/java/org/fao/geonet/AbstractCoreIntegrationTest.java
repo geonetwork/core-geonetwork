@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -204,6 +205,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
         context.setBaseUrl("geonetwork");
+        context.getBean(ServiceManager.class).registerContext(Geonet.CONTEXT_NAME, gc);
 
         assertDataDirInMemoryFS(context);
 
