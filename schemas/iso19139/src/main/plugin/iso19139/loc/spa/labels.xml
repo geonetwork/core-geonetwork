@@ -2635,4 +2635,94 @@ El intervalo de tiempo se especifica de la siguiente forma "PnYnMnDTnHnMnS" dond
     <element name="gmd:DS_InitiativeTypeCode">
         <label>Tipo de iniciativa</label>
     </element>
+        <element name="gmd:CI_DateTypeCode">
+        <label>Código de tipo de fecha</label>
+    </element>
+    <element name="gmd:CI_PresentationFormCode">
+        <label>Código de formulario de presentación</label>
+    </element>
+    <element name="gmd:Country">
+        <label>País</label>
+    </element>
+    <element name="gmd:DQ_EvaluationMethodTypeCode">
+        <label>Código de tipo de método de evaluación</label>
+        <description>tipo de método para evaluar una medida de calidad de datos identificados</description>
+    </element>
+    <element name="gmd:LocalisedCharacterString">
+        <label>Cadena de caracteres localizada</label>
+    </element>
+    <element name="gmd:MD_CellGeometryCode">
+        <label>Código de geometría de celda</label>
+    </element>
+    <element name="gmd:MD_ClassificationCode">
+        <label>Código de classificación</label>
+    </element>
+    <element name="gmd:MD_CoverageContentTypeCode">
+        <label>Código de tipo de contenido</label>
+        <description>tipo específico de informaciones representadas en la celda</description>
+    </element>
+    <element name="gmd:MD_DatatypeCode">
+        <label>Código de tipo de datos</label>
+  		<description>tipo de datos del elemento o entidad</description>
+    </element>
+    <element name="gmd:MD_DimensionNameTypeCode">
+        <label>Código de tipo de nombre de dimensión</label>
+    </element>
+    <element name="gmd:MD_DistributionUnits">
+        <label>Unidades de distribución</label>
+    </element>
+    <element name="gmd:MD_ImagingConditionCode">
+        <label>Código de la condición de la imagen</label>
+    </element>
+    <element name="gmd:MD_KeywordTypeCode">
+        <label>Código de tipo de palabra clave</label>
+    </element>
+    <element name="gmd:MD_MediumFormatCode">
+        <label>Método utilizado para escribir en el medio</label>
+    </element>
+    <element name="gmd:MD_MediumNameCode">
+        <label>Nombre del medio</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode">
+        <label>Restricción</label>
+    </element>
+    <element name="gml:BaseUnit">
+        <label>Unidad base</label>
+    </element>
+    <element name="gml:ConventionalUnit">
+        <label>Unidad convencional</label>
+    </element>
+    <element name="gml:DerivedUnit">
+        <label>Unidad derivada</label>
+    </element>
+    <element name="gml:UnitDefinition">
+        <label>Definición de Unidad</label>
+    </element>
+    <element name="gmx:MimeFileType">
+        <label>Tipo de fichero Mime</label>
+    </element>
+    <element name="gmx:ML_BaseUnit">
+        <label>Unidad base</label>
+    </element>
+    <element name="gmx:ML_ConventionalUnit">
+        <label>Unidad convencional</label>
+    </element>
+    <element name="gmx:ML_DerivedUnit">
+        <label>Unidad derivada</label>
+    </element>
+    <element name="gmx:ML_UnitDefinition">
+        <label>Definición de Unidad</label>
+    </element>
+    <element name="gmx:MX_ScopeCode">
+        <label>Código</label>
+    </element>
+    <element name="idec:rccCategory">
+        <label>Categoria RCC</label>
+    </element>
+    <element name="idec:rccPCCIdCode">
+        <label>Código RCC PCC Id</label>
+    </element>
+    <element name="idec:rccSubCategory">
+        <label>Subcategoria RCC</label>
+    </element>
 </labels>

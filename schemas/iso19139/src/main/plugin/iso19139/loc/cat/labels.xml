@@ -8,7 +8,7 @@
 		<description>Classe d'informació que s'aplica a l'entitat referenciada</description>
 	</element>
 	<element name="code" id="207.0" context="gmd:MD_Identifier">
-		<label>Codi</label>
+		<label>Identificador</label>
 		<description>Valor alfanumèric que identifica una instància al namespace</description>
 		<help>valor alfanumèric que identifica una instància de l'espai de noms</help>
 	</element>
@@ -47,7 +47,7 @@
 	</element>
 	<element name="gco:DateTime">
 		<label>Data i hora</label>
-		<description>Data i hora, o rang de data i hora, en què aquesta etapa del processat va tenir lloc (AAAA-MM-DDThh:mm:ss)</description> 
+		<description>Data i hora, o rang de data i hora, en què aquest pas de procés va tenir lloc (AAAA-MM-DDThh:mm:ss)</description> 
 	</element>
 	<element name="gco:Measure" id="100.0" context="gmd:DQ_Element">
 		<label>Nom de la mesura</label>
@@ -108,11 +108,11 @@
 		<description>Exactitud de les referències temporals d'un element (expressant l'error en la mesura del temps)</description>
 	</element>
 	<element name="gmd:DQ_CompletenessCommission" id="109.0">
-		<label>Comisió de la completitud</label>
+		<label>Comisió de la completesa</label>
 		<description>Excés de dades presents en el conjunt de dades, segons el descrit en l'àmbit d'aplicació</description>
 	</element>
 	<element name="gmd:DQ_CompletenessOmission" id="110.0">
-		<label>Omisió de la completitud</label>
+		<label>Omisió de la completesa</label>
 		<description>Dada no disponible en el conjunt de dades, segons el descrit en l'àmbit d'aplicació</description>
 	</element>
 	<element name="gmd:DQ_ConceptualConsistency" id="112.0">
@@ -217,7 +217,7 @@
 		<description>Informació sobre les accions i fonts de dades que van donar origen a les dades especificades en l'abast, o la manca de coneixement sobre aquelles</description>
 	</element>
 	<element name="gmd:LI_ProcessStep" id="86.0">
-		<label>Etapa del processat</label>
+		<label>Pas de procés</label>
 		<description>Informació sobre un esdeveniment en el procés de creació de les dades especificat per l'abast</description>
 		<help>informació sobre un esdeveniment o transformació durant l'històric d'un conjunt de dades, incloent-hi el procés de mantenir-lo</help>
 	</element>
@@ -555,7 +555,7 @@
 		<condition>mandatory</condition>
 	</element>
 	<element name="gmd:code" id="207.0" context="gmd:MD_Identifier">
-		<label>Codi</label>
+		<label>Identificador</label>
 		<description>Valor alfanumèric que identifica una instància al namespace</description>
 		<condition>mandatory</condition>
 	</element>
@@ -710,7 +710,7 @@
 		<description>Data i hora, o rang de dates i hores, en què aquesta etapa del processat va tenir lloc (AAAA-MM-DDThh:mm:ss)</description>
 	</element>
 	<element name="gmd:dateTime" id="89.0" context="LI_ProcessStep">
-		<description>Data i hora, o rang de data i hora, en què aquesta etapa del processat va tenir lloc (AAAA-MM-DDThh:mm:ss)</description>
+		<description>Data i hora, o rang de data i hora, en què aquest pas de procés va tenir lloc (AAAA-MM-DDThh:mm:ss)</description>
 		<label>Data/Hora</label>
 	</element>
 	<element name="gmd:dateTime" id="106.0" context="gmd:DQ_Element">
@@ -1120,7 +1120,7 @@ TIFF, XWD</help>
 		<description>Tipus d'iniciativa sota la qual es va produir el conjunt agregat de dades</description>
 	</element>
 	<element name="gmd:issueIdentification" id="405.0">
-		<label>Identificador de l'assumpte</label>
+		<label>Identificador de la sèrie</label>
 		<description>Informació identificant l'expedició de la sèrie</description>
 	</element>
 	<element name="gmd:keyword" id="53.0">
@@ -1566,7 +1566,7 @@ esbiaixades</option>
 		<description>Mode en el qual es representa el recurs</description>
 	</element>
 	<element name="gmd:processStep" id="84.0">
-		<label>Etapa del processat</label>
+		<label>Pas de procés</label>
 		<description>Informació sobre un esdeveniment en el procés de creació de les dades especificat per l'abast</description>
 		<condition>conditional</condition>
 	</element>
@@ -1576,7 +1576,7 @@ esbiaixades</option>
 	</element>
 	<element name="gmd:processor" id="90.0">
 		<label>Processador</label>
-		<description>Identificació i mitjans de comunicació amb persona(es) i organització(ns) associats a l'etapa del processat</description>
+		<description>Identificació i mitjans de comunicació amb persona(es) i organització(ns) associats al pas de procés</description>
 	</element>
 	<element name="gmd:protocol" id="398.0" alias="protocol">
 		<label>Protoco</label>
@@ -2631,9 +2631,99 @@ L'interval de temps s'especifica de la següent manera "PnYnMnDTnHnMnS", on:
         <label>Restricció d'ús</label>
     </element>
     <element name="gmd:DS_AssociationTypeCode">
-        <label>Tipus d'associaciṕ</label>
+        <label>Tipus d'associació</label>
     </element>
     <element name="gmd:DS_InitiativeTypeCode">
         <label>Tipus d'iniciativa</label>
+    </element>
+    <element name="gmd:CI_DateTypeCode">
+        <label>Codi de tipus de data</label>
+    </element>
+    <element name="gmd:CI_PresentationFormCode">
+        <label>Codi de formulari de presentació</label>
+    </element>
+    <element name="gmd:Country">
+        <label>País</label>
+    </element>
+    <element name="gmd:DQ_EvaluationMethodTypeCode">
+        <label>Codi de tipus de mètode d'avaluació</label>
+        <description>Tipus de mètode per a avaluar una mesura de qualitat de dades identificades</description>
+    </element>
+    <element name="gmd:LocalisedCharacterString">
+        <label>Cadena de caràcters localitzada</label>
+    </element>
+    <element name="gmd:MD_CellGeometryCode">
+        <label>Codi de geometria de cel·la</label>
+    </element>
+    <element name="gmd:MD_ClassificationCode">
+        <label>Codi de classificació</label>
+    </element>
+    <element name="gmd:MD_CoverageContentTypeCode">
+        <label>Codi de tipus de contingut</label>
+        <description>Tipus específic d'informacions representades a la cel·la</description>
+    </element>
+    <element name="gmd:MD_DatatypeCode">
+        <label>Codi de tipus de dades</label>
+  		<description>Tipus de dades de l'element o entitat</description>
+    </element>
+    <element name="gmd:MD_DimensionNameTypeCode">
+        <label>Codi de tipus de nom de dimensió</label>
+    </element>
+    <element name="gmd:MD_DistributionUnits">
+        <label>Unitats de distribucio</label>
+    </element>
+    <element name="gmd:MD_ImagingConditionCode">
+        <label>Codi de la condició de la imatge</label>
+    </element>
+    <element name="gmd:MD_KeywordTypeCode">
+        <label>Codi de tipus de paraula clau</label>
+    </element>
+    <element name="gmd:MD_MediumFormatCode">
+        <label>Mètode utilitzat per escriure als mitjans</label>
+    </element>
+    <element name="gmd:MD_MediumNameCode">
+        <label>Nom del mitjà</label>
+    </element>
+    <element name="gmd:MD_RestrictionCode">
+        <label>Restricció</label>
+    </element>
+    <element name="gml:BaseUnit">
+        <label>Unitat base</label>
+    </element>
+    <element name="gml:ConventionalUnit">
+        <label>Unitat convencional</label>
+    </element>
+    <element name="gml:DerivedUnit">
+        <label>Unitat derivada</label>
+    </element>
+    <element name="gml:UnitDefinition">
+        <label>Definició d'unitat</label>
+    </element>
+    <element name="gmx:MimeFileType">
+        <label>Tipus de fitxer Mime</label>
+    </element>
+    <element name="gmx:ML_BaseUnit">
+        <label>Unitat base</label>
+    </element>
+    <element name="gmx:ML_ConventionalUnit">
+        <label>Unitat convencional</label>
+    </element>
+    <element name="gmx:ML_DerivedUnit">
+        <label>Unitat derivada</label>
+    </element>
+    <element name="gmx:ML_UnitDefinition">
+        <label>Definició d'unitat</label>
+    </element>
+    <element name="gmx:MX_ScopeCode">
+        <label>Codi</label>
+    </element>
+    <element name="idec:rccCategory">
+        <label>Categoria RCC</label>
+    </element>
+    <element name="idec:rccPCCIdCode">
+        <label>Codi RCC PCC Id</label>
+    </element>
+    <element name="idec:rccSubCategory">
+        <label>Subcategoria RCC</label>
     </element>
 </labels>
