@@ -38,31 +38,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.IMetadata;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.metadata.IMetadataOperations;
 import org.fao.geonet.kernel.metadata.IMetadataUtils;
 import org.fao.geonet.repository.MetadataDraftRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -79,19 +65,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -245,6 +218,9 @@ public class Publish {
                         try{ 
                             unifiedSet.add(Integer.toString(mdDraftRepository.
                                     findOneByUuid(uuid).getId()));
+
+                            //Add both
+                            unifiedSet.add(dataManager.getMetadataId(uuid));
                         } catch (Throwable t) {
                             //skip
                         }
@@ -297,26 +273,6 @@ public class Publish {
                 operationAllowedRepository.save(operationAllowed);
                 report.incDisallowed();
             } else {
-                // If it has a draft associated
-                IMetadataManager manager = serviceContext
-                        .getBean(IMetadataManager.class);
-                IMetadata metadata = manager.getMetadataObject(mdId);
-                MetadataDraftRepository mdDraftRepository = serviceContext
-                        .getBean(MetadataDraftRepository.class);
-
-                MetadataDraft draft = mdDraftRepository
-                        .findOneByUuid(metadata.getUuid());
-                if (draft != null) {
-                    // Copy the draft content to the published metadata
-                    manager.updateMetadata(serviceContext,
-                            Integer.toString(mdId), draft.getXmlData(false),
-                            false, false, true, "", draft.getDataInfo()
-                                    .getChangeDate().getDateAndTime(),
-                            false);
-                    // Remove the draft
-                    manager.deleteMetadata(serviceContext,
-                            Integer.toString(draft.getId()));
-                }
                 report.incUnpublished();
                 toIndex.add(mdId);
             }
@@ -344,29 +300,7 @@ public class Publish {
                 operationAllowedRepository.save(operationAllowed);
                 report.incDisallowed();
             } else {
-                // If it is a draft
-                MetadataDraftRepository mdDraftRepository = serviceContext
-                        .getBean(MetadataDraftRepository.class);
-                if (mdDraftRepository.exists(mdId)) {
-                    IMetadataManager manager = serviceContext
-                            .getBean(IMetadataManager.class);
-                    
-                    MetadataDraft draft = mdDraftRepository.findOne(mdId);
-                    MetadataRepository mdRepository = serviceContext
-                            .getBean(MetadataRepository.class);
-                    Metadata md = mdRepository.findOneByUuid(draft.getUuid());
 
-                    // Remove the draft
-                    manager.deleteMetadata(serviceContext,
-                            Integer.toString(draft.getId()));
-                    
-                    // Copy the draft content to the published metadata
-                    manager.updateMetadata(serviceContext,
-                            Integer.toString(md.getId()), draft.getXmlData(false),
-                            false, false, true, "", draft.getDataInfo()
-                                    .getChangeDate().getDateAndTime(),
-                            false);
-                }
                 toIndex.add(mdId);
                 report.incPublished();
             }

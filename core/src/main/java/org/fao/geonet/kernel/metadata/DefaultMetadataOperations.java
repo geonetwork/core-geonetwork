@@ -16,6 +16,8 @@ import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.events.md.MetadataPublished;
+import org.fao.geonet.events.md.MetadataUnpublished;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -25,6 +27,8 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.google.common.base.Optional;
@@ -38,7 +42,7 @@ import jeeves.server.context.ServiceContext;
  * 
  * 
  */
-public class DefaultMetadataOperations implements IMetadataOperations {
+public class DefaultMetadataOperations implements IMetadataOperations, ApplicationEventPublisherAware {
 
     @Autowired
     private OperationAllowedRepository operationAllowedRepository;
@@ -50,6 +54,17 @@ public class DefaultMetadataOperations implements IMetadataOperations {
     public void init(ServiceContext context) {
         this.operationAllowedRepository = context
                 .getBean(OperationAllowedRepository.class);
+    }
+    
+    private ApplicationEventPublisher eventPublisher;
+    
+    /**
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
+     */
+    @Override
+    public void setApplicationEventPublisher(
+        ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
     }
 
     @Override
@@ -76,6 +91,16 @@ public class DefaultMetadataOperations implements IMetadataOperations {
         if (opAllowed.isPresent()) {
             operationAllowedRepository.save(opAllowed.get());
             context.getBean(SvnManager.class).setHistory(mdId + "", context);
+            
+            //If it is published/unpublished, throw event
+            if(opId == ReservedOperation.view.getId() 
+                    && grpId == ReservedGroup.all.getId()) {
+                IMetadataManager mdManager = context
+                        .getBean(IMetadataManager.class);
+                this.eventPublisher.publishEvent(new MetadataPublished(
+                        mdManager.getMetadataObject(Integer.valueOf(mdId))));
+            }
+            
             return true;
         }
 
@@ -173,6 +198,15 @@ public class DefaultMetadataOperations implements IMetadataOperations {
             if (svnManager != null) {
                 svnManager.setHistory(mdId + "", context);
             }
+        }
+        //If it is published/unpublished, throw event
+        if(operId == ReservedOperation.view.getId() 
+                && groupId == ReservedGroup.all.getId()) {
+
+            IMetadataManager mdManager = context
+                    .getBean(IMetadataManager.class);
+            this.eventPublisher.publishEvent(new MetadataUnpublished(
+                    mdManager.getMetadataObject(Integer.valueOf(mdId))));
         }
     }
 

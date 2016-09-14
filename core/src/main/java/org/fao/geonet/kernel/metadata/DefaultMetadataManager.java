@@ -161,7 +161,13 @@ public class DefaultMetadataManager implements IMetadataManager {
     private OperationAllowedRepository operationAllowedRepository;
 
     private EditLib editLib;
+    
+    @Autowired
+    private SearchManager searchManager;
 
+    @Autowired
+    private MetadataNotifierManager metadataNotifierManager;
+    
     /**
      * @param context
      */
@@ -188,6 +194,8 @@ public class DefaultMetadataManager implements IMetadataManager {
                 .getBean(OperationAllowedRepository.class);
         this.mdLockRepository = context.getBean(MetadataLockRepository.class);
         this.setSchemaManager(context.getBean(SchemaManager.class));
+        this.searchManager = context.getBean(SearchManager.class);
+        this.metadataNotifierManager = context.getBean(MetadataNotifierManager.class);
     }
 
     /**
@@ -1174,14 +1182,14 @@ public class DefaultMetadataManager implements IMetadataManager {
 
             // Notifies the metadata change to metatada notifier service
             if (isMetadata) {
-                context.getBean(MetadataNotifierManager.class)
+                metadataNotifierManager
                         .deleteMetadata(metadataId, uuid, context);
             }
         }
 
         // --- update search criteria
 
-        context.getBean(SearchManager.class).delete("_id", metadataId + "");
+        searchManager.delete("_id", metadataId + "");
         // _entityManager.flush();
         // _entityManager.clear();
     }
