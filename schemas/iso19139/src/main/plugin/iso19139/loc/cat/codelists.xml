@@ -1368,7 +1368,7 @@ que és resultat de la creativitat</description>
 		<entry>
 			<code>attributeType</code>
 			<label>Tipus d'atribut</label>
-			<description>La informació aplica a la característica d'una feature</description>
+			<description>La informació aplica a la característica d'un objecte geogràfic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1409,14 +1409,14 @@ que és resultat de la creativitat</description>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>feature</code>
-			<label>Feature</label>
-			<description>La informació s'aplica a una feature</description>
+			<label>Objecte Geogràfic</label>
+			<description>La informació s'aplica a un objecte geogràfic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>featureType</code>
-			<label>Tipus de feature</label>
-			<description>La informació s'aplica a un tipus de feature</description>
+			<label>Tipus d'objecte geogràfic</label>
+			<description>La informació s'aplica a un tipus d'objecte geogràfic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1491,7 +1491,7 @@ tal com un cas d'ús</description>
 		</entry>
     <entry hideInEditMode="true">
       <code>featureCatalog</code>
-      <label>Catàleg de Features</label>
+      <label>Catàleg d'Objectes Geogràfics</label>
       <description/>
     </entry>
 	</codelist>
@@ -1776,7 +1776,7 @@ de gas i energia, comunicació de dades, telecomunicacions, ràdio, xarxes de co
 		<entry>
 			<code>attributeType</code>
 			<label>Tipus d'atribut</label>
-			<description>La informació aplica a la característica d'una feature</description>
+			<description>La informació aplica a la característica d'un objecte geogràfic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
@@ -1817,14 +1817,14 @@ de gas i energia, comunicació de dades, telecomunicacions, ràdio, xarxes de co
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>feature</code>
-			<label>Feature</label>
-			<description>La informació s'aplica a una feature</description>
+			<label>Objecte Geogràfic</label>
+			<description>La informació s'aplica a un objecte geogràfic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>featureType</code>
 			<label>Tipus de feature</label>
-			<description>La informació s'aplica a un tipus de feature</description>
+			<description>La informació s'aplica a un tipus d'objecte geogràfic</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>

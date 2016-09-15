@@ -275,8 +275,8 @@
 		<label>Informació de l'element extès</label>
 	</element>
 	<element name="gmd:MD_FeatureCatalogueDescription" id="233.0">
-		<label>Descripció del catàleg de features</label>
-		<description>Informació que identifica el catàleg de features o l'esquema conceptual</description>
+		<label>Descripció del catàleg d'objectes geogràfics</label>
+		<description>Informació que identifica el catàleg d'objectes geogràfics o l'esquema conceptual</description>
 	</element>
 	<element name="gmd:MD_Format" id="284.0">
 		<label>Format</label>
@@ -578,7 +578,7 @@
 	</element>
 	<element name="gmd:complianceCode" id="234.0">
 		<label>Codi de conformitat</label>
-		<description>Indicació de si el catàleg de features citat compleix amb la norma ISO 19110</description>
+		<description>Indicació de si el catàleg d'objectes geogràfics citat compleix amb la norma ISO 19110</description>
 	</element>
 	<element name="gmd:compressionGenerationQuantity" id="250.0">
 		<label>Quantitat de generacions de compressió</label>
@@ -616,7 +616,7 @@
 		<description>Instruccions suplementàries sobre com o quan s'ha de posar en contacte amb la persona o organització</description>
 	</element>
 	<element name="gmd:contentInfo" id="16.0">
-		<description>Proporciona informació sobre el catàleg de features i descriu les característiques de les dades de cobertura i d'imatge</description>
+		<description>Proporciona informació sobre el catàleg d'objectes geogràfics i descriu les característiques de les dades de cobertura i d'imatge</description>
 		<label>Informació del contingut</label>
 		<abbrLabel>Info. Continguts</abbrLabel>
 	</element>
@@ -961,22 +961,22 @@ extent.geographicElement.EX_GeographicDescription</_condition>
 		<description>Número de telèfon d'una màquina de fax de la persona o organització responsable</description>
 	</element>
 	<element name="gmd:featureCatalogueCitation" id="238.0">
-		<label>Citació del catàleg de features</label>
-		<description>Referència bibliogràfica completa a un o més catàlegs de features externs</description>
+		<label>Citació del catàleg d'objectes geogràfics</label>
+		<description>Referència bibliogràfica completa a un o més catàlegs d'objectes geogràfics externs</description>
 		<condition>mandatory</condition>
 	</element>
 	<element name="gmd:featureInstances" id="152.0">
-		<label>Instàncies de features</label>
-		<description>Instàncies de features a les que s'aplica la informació</description>
+		<label>Instàncies d'objectes geogràfics</label>
+		<description>Instàncies d'objectes geogràfics a les que s'aplica la informació</description>
 		<condition/>
 	</element>
 	<element name="gmd:featureTypes" id="237.0">
-		<label>Tipus de features</label>
-		<description>Subconjunt dels tipus de features del catàleg de features citat que es donen en les dades</description>
+		<label>Tipus d'objectes geogràfics</label>
+		<description>Subconjunt dels tipus d'objectes geogràfics del catàleg d'objectes geogràfics citat que es donen en les dades</description>
 	</element>
 	<element name="gmd:features" id="151.0">
-		<label>Features</label>
-		<description>Features a les que s'aplica la informació</description>
+		<label>Objectes Geogràfics</label>
+		<description>Objectes geogràfics als que s'aplica la informació</description>
 		<condition/>
 	</element>
 	<element name="gmd:fees" id="299.0">
@@ -1107,7 +1107,7 @@ TIFF, XWD</help>
 	</element>
 	<element name="gmd:includedWithDataset" id="236.0">
 		<label>Inclòs al conjunt de dades</label>
-		<description>Indicació de si el catàleg de features s'inclou o no en el conjunt de dades</description>
+		<description>Indicació de si el catàleg d'objectes geogràfics s'inclou o no en el conjunt de dades</description>
 		<condition>mandatory</condition>
 	</element>
 	<element name="gmd:individualName" id="375.0">
@@ -1409,7 +1409,7 @@ esbiaixades</option>
 			<option value="">-- Thematic accuracy / Classification
 				correctness --
 			</option>
-			<option value="Number of incorrectly classified features" title="Number of incorrectly classified features" id="ISO19138:2006:measure:60">Nombre de features incorrectament classificades</option>
+			<option value="Number of incorrectly classified features" title="Number of incorrectly classified features" id="ISO19138:2006:measure:60">Nombre d'objectes geogràfics incorrectament classificats</option>
 			<option value="Misclassification rate" title="number of incorrectly classified features in relation to the number of features that are supposed to be there" id="ISO19138:2006:measure:61">Taxa d'errors de classificació</option>
 			<option value="Misclassification matrix" title="matrix that indicates the number of items of class (i) classified as class (j)." id="ISO19138:2006:measure:62">Matriu de classificació errònia</option>
 			<option value="Relative misclassification matrix" title="matrix that indicates the number of items of class (i) classified as class (i) divided by the number of items of class (i)" id="ISO19138:2006:measure:63">Matriu de classificació errònia relativa</option>
@@ -1583,7 +1583,7 @@ esbiaixades</option>
 		<description>Protocol de connexió que s'utilitzarà</description>
 		<helper sort="true">
 			<option value="ESRI:AIMS--http--configuration">Fitxer de configuració del servei de mapes ArcIMS (*.AXL)</option>
-			<option value="ESRI:AIMS--http-get-feature">Servei de Features d'ArcIMS</option>
+			<option value="ESRI:AIMS--http-get-feature">Servei d'Objectes Geogràfics d'ArcIMS</option>
 			<option value="ESRI:AIMS--http-get-image">Servei d'imatges d'ArcIMS</option>
 			<option value="GLG:KML-2.0-http-get-map">Servei KML de Google Earth (versió 2.0)</option>
 			<option value="OGC:CSW">OGC-CSW Servei de catàleg per a la Web</option>
@@ -1600,8 +1600,8 @@ esbiaixades</option>
 			<option value="OGC:WCS">OGC-WCS Servei Web de Cobertura</option>
 			<option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Servei Web de Cobertura (versió 1.1.0)</option>
 			<option value="OGC:WCTS">OGC-WCTS Servei web de Transformació de Coordenades</option>
-			<option value="OGC:WFS">OGC WFS-Servei Web de Features</option>
-			<option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Servei Web de Features (versió 1.0.0)</option>
+			<option value="OGC:WFS">OGC WFS-Servei Web d'Objectes Geogràfics</option>
+			<option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Servei Web d'Objectes Geogràfics (versió 1.0.0)</option>
 			<option value="OGC:WFS-G">OGC-WFS-G Servei de Nomenclàtor</option>
 			<option value="OGC:WMC">OGC-WMC Context de Mapa Web</option>
 			<option value="OGC:WMS">OGC-WMS Servei Web de Mapes</option>
@@ -2177,7 +2177,7 @@ El valor de la unitat o bé se selecciona d'entre les unitats per intervals de t
 		<description>Nom del tipus de servei procedent d'un registre de serveis. Per exemple, els valors dels atributs Namespace i el nom dels atributs GeneralName poden ser 'OGC' i 'catàleg'</description>
 		<helper>
 			<option value="OGC:WMS">Servei Web de Mapes OGC (OGC:WMS)</option>
-			<option value="OGC:WFS">Servei Web de Features OGC (OGC:WFS)</option>
+			<option value="OGC:WFS">Servei Web d'Objectes Geogràfics OGC (OGC:WFS)</option>
 			<option value="OGC:WCS">Servei Web de Cobertura OGC (OGC:WCS)</option>
 			<option value="W3C:HTML:DOWNLOAD">Descàrrega (W3C:HTML:DOWNLOAD)</option>
 			<option value="W3C:HTML:LINK">Informació (W3C:HTML:LINK)</option>
@@ -2325,11 +2325,11 @@ El valor de la unitat o bé se selecciona d'entre les unitats per intervals de t
 		<description>PT_LocaleContainer</description>
 	</element>
 	<element name="gmd:featureType">
-		<label>Tipus de feature</label>
-		<description>Subconjunt dels tipus de features del catàleg de features citat que es donen en les dades</description>
+		<label>Tipus d'objecte geogràfic</label>
+		<description>Subconjunt dels tipus d'objectes geogràfics del catàleg d'objectes geogràfics citat que es donen en les dades</description>
 	</element>
 	<element name="gmd:featureAttribute">
-		<label>Atribut de feature</label>
+		<label>Atribut d'objecte geogràfic</label>
 		<description/>
 	</element>
 	<element name="gmd:DS_Association">
@@ -2540,7 +2540,7 @@ L'interval de temps s'especifica de la següent manera "PnYnMnDTnHnMnS", on:
     <!-- ==================================================== -->
     <element name="gmx:name"> 
         <label>Nom</label> 
-        <description>Nom del catàleg de features</description> 
+        <description>Nom del catàleg d'objectes geogràfics</description> 
     </element> 
     <element name="gmx:scope"> 
         <label>Abast</label> 
