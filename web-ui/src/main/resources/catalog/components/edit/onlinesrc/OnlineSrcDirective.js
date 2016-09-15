@@ -94,9 +94,16 @@
                * metadata into the list
                */
               var loadRelations = function() {
+                scope.siblingTypes = [];
                 gnOnlinesrc.getAllResources()
                     .then(function(data) {
                       scope.relations = data;
+                      for (var i = 0; i < data.siblings.length; i ++) {
+                        var type = data.siblings[i].associationType;
+                        if ($.inArray(type, scope.siblingTypes) == -1) {
+                          scope.siblingTypes.push(type);
+                        }
+                      }
                     });
               };
               scope.isCategoryEnable = function(category) {

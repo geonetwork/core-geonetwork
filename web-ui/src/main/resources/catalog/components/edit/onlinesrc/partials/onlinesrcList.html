@@ -369,39 +369,43 @@
           <i class="fa fa-plus"></i>
         </a>
       </h4>
-      <ul class="list-group">
-        <li class="list-group-item"
-            data-ng-repeat="resource in relations.siblings | orderBy:'title'">
-          <div class="row">
-            <div class="col-md-11"
-                 title="{{resource.description | gnLocalized: lang}}">
-              <a target="_blank"
-                 data-ng-href="{{'../metadata/' + resource.id}}">
-                {{resource.title | gnLocalized: lang}}
-                <span>{{'(' + resource.associationType.toUpperCase() + ')'}}</span>
-              </a>
-            </div>
-            <div class="col-md-1">
-              <a href="" class="onlinesrc-remove"
-                 data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
-                 data-ng-click="onlinesrcService.removeSibling(resource)">
-                <i class="fa fa-times text-danger"></i>
-              </a>
+      <div data-ng-repeat="t in siblingTypes">
+        <h5>{{t}}</h5>
+        <ul class="list-group">
+          <li class="list-group-item"
+              data-ng-repeat="resource in relations.siblings | orderBy:'title'"
+              data-ng-show="resource.associationType === t">
+            <div class="row">
+              <div class="col-md-11"
+                   title="{{resource.description | gnLocalized: lang}}">
+                <a target="_blank"
+                   data-ng-href="{{'../metadata/' + resource.id}}">
+                  {{resource.title | gnLocalized: lang}}
+                  <span>{{'(' + resource.associationType.toUpperCase() + ')'}}</span>
+                </a>
+              </div>
+              <div class="col-md-1">
+                <a href="" class="onlinesrc-remove"
+                   data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+                   data-ng-click="onlinesrcService.removeSibling(resource)">
+                  <i class="fa fa-times text-danger"></i>
+                </a>
 
-              <!-- In checkpoint we assume that user can
-              edit any records related. The relation service does not
-              provide information about user privileges. An extra call
-              to search service would be required in order to check if user
-              can or cannot edit the related record. -->
-              <a data-ng-show="gnCurrentEdit.metadata.standardName == 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'"
-                 target="_blank"
-                 data-ng-href="{{'#/metadata/' + resource.id}}">
-                <i class="fa fa-pencil"></i>
-              </a>
+                <!-- In checkpoint we assume that user can
+                edit any records related. The relation service does not
+                provide information about user privileges. An extra call
+                to search service would be required in order to check if user
+                can or cannot edit the related record. -->
+                <a data-ng-show="gnCurrentEdit.metadata.standardName == 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product'"
+                   target="_blank"
+                   data-ng-href="{{'#/metadata/' + resource.id}}">
+                  <i class="fa fa-pencil"></i>
+                </a>
+              </div>
             </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
 
       <!-- ******* List of associated records (reverse direction of siblings) ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.associated">
