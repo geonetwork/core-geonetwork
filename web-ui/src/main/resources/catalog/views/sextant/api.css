@@ -21203,6 +21203,11 @@ yx-axis
   max-height: none;
   max-width: 100%;
 }
+.gn [gn-metadata-display] ~ [gn-metadata-display],
+.g [gn-metadata-display] ~ [gn-metadata-display] {
+  position: absolute;
+  top: 1.5em;
+}
 .gn [gn-metadata-display].sxt-scroll,
 .g [gn-metadata-display].sxt-scroll {
   right: 0;
@@ -21562,6 +21567,10 @@ yx-axis
 .portlet-borderless-container [gn-metadata-display].sxt-scroll {
   position: relative;
   margin-top: -4em;
+}
+.portlet-borderless-container [gn-metadata-display] ~ [gn-metadata-display] {
+  position: absolute;
+  top: 5.5em;
 }
 .gn [sxt-main-viewer] #importLayer .panel-carousel .mCSB_container {
   min-height: 100%;
