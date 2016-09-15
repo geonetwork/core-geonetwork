@@ -158,10 +158,17 @@
 
 }
 
-.portlet-borderless-container [gn-metadata-display].sxt-scroll {
-  position: relative;
-  margin-top: -4em;
+.portlet-borderless-container {
+  [gn-metadata-display].sxt-scroll {
+    position: relative;
+    margin-top: -4em;
+  }
+  [gn-metadata-display] ~ [gn-metadata-display] {
+    position: absolute;
+    top: 5.5em;
+  }
 }
+
 
 .gn [sxt-main-viewer] {
   #importLayer .panel-carousel {
