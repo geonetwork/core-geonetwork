@@ -785,8 +785,12 @@ public class MetadataInsertDeleteApi {
                     Path tempFile = Files.createTempFile("mef-import", ".zip");
                     try {
                         FileUtils.copyInputStreamToFile(f.getInputStream(), tempFile.toFile());
+
+                        MEFLib.Version version = MEFLib.getMEFVersion(tempFile);
+
                         List<String> ids = MEFLib.doImport(
-                            "mef2", uuidProcessing, transformWith,
+                            version == MEFLib.Version.V1 ? "mef" : "mef2",
+                            uuidProcessing, transformWith,
                             settingManager.getSiteId(),
                             metadataType, category, group, rejectIfInvalid,
                             assignToCatalog, context, tempFile);
