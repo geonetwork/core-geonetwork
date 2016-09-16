@@ -4,7 +4,10 @@
 	xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
 	xmlns:gmx="http://www.isotc211.org/2005/gmx">
-
+	<element name="gmd:CI_OnLineFunctionCode">
+		<label>Online function code</label>
+		<description></description>
+	</element>
 	<element name="gmd:MD_ScopeCode">
 		<label>Scope code</label>
 		<description>Class of information to which the referencing entity applies</description>
