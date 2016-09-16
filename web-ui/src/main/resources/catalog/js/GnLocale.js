@@ -62,6 +62,20 @@
         function buildUrl(prefix, lang, value, suffix) {
           if (value.indexOf('/') === 0) {
             return value.substring(1);
+          } else if (value.indexOf('|') > -1) {
+            /* Allows to configure locales for custom views,
+               providing the path and the locale type
+               separated by a |:
+
+             module.config(['$LOCALES', function($LOCALES) {
+              $LOCALES.push('../../catalog/views/sdi/locales/|search');
+             }]);
+
+             */
+            var localPrefix = value.split('|')[0];
+            var localValue = value.split('|')[1];
+            return localPrefix + gnLangs.getIso2Lang(lang)
+              + '-' + localValue + suffix;
           } else {
             return prefix + gnLangs.getIso2Lang(lang) + '-' + value + suffix;
           }
