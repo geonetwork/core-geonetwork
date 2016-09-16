@@ -1077,7 +1077,7 @@ public class SearchManager {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
-            params.put("thesauriDir", geonetworkDataDirectory.getThesauriDir().toAbsolutePath());
+            params.put("thesauriDir", geonetworkDataDirectory.getThesauriDir().toAbsolutePath().toString());
 
             Element defaultLang = Xml.transform(xml, defaultLangStyleSheet, params);
             if (Files.exists(otherLocalesStyleSheet)) {
