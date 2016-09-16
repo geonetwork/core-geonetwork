@@ -269,6 +269,9 @@
               {{report.message}}
             </p>
             <p>
+              <div data-ng-repeat="(key, value) in report.infos">
+                <span>{{value.message}}</span>
+              </div>
               <!--id and uuid from single import-->
               <div data-ng-repeat="(key, value) in report.metadataInfos">
                 <span>{{value[0].message}}</span>
