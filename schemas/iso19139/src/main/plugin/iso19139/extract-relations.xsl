@@ -80,57 +80,61 @@
                 match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]"
                 priority="99">
 
-    <thumbnails>
-      <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
-        <item>
-          <id>
-            <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
-          </id>
-          <url>
-            <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
-          </url>
-          <title>
-            <xsl:apply-templates mode="get-iso19139-localized-string"
-                                 select="gmd:fileDescription"/>
-          </title>
-          <type>thumbnail</type>
-        </item>
-      </xsl:for-each>
-    </thumbnails>
+    <xsl:if test="count(*/descendant::*[name(.) = 'gmd:graphicOverview']/*) > 0">
+      <thumbnails>
+        <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
+          <item>
+            <id>
+              <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
+            </id>
+            <url>
+              <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
+            </url>
+            <title>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:fileDescription"/>
+            </title>
+            <type>thumbnail</type>
+          </item>
+        </xsl:for-each>
+      </thumbnails>
+    </xsl:if>
 
-    <onlines>
-      <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
-        <item>
-          <xsl:variable name="langCode">
-            <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
-          </xsl:variable>
-          <xsl:variable name="url" select="gmd:linkage/gmd:URL"/>
-          <id>
-            <xsl:value-of select="$url"/>
-          </id>
-          <title>
-            <xsl:apply-templates mode="get-iso19139-localized-string"
-                                 select="gmd:name"/>
-          </title>
-          <url>
-            <xsl:value-of select="$url"/>
-          </url>
-          <function>
-            <xsl:value-of select="gmd:function/*/@codeListValue"/>
-          </function>
-          <applicationProfile>
-            <xsl:value-of select="gmd:applicationProfile/gco:CharacterString"/>
-          </applicationProfile>
-          <description>
-            <xsl:apply-templates mode="get-iso19139-localized-string"
-                                 select="gmd:description"/>
-          </description>
-          <protocol>
-            <xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/>
-          </protocol>
-          <type>onlinesrc</type>
-        </item>
-      </xsl:for-each>
-    </onlines>
+    <xsl:if test="count(*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']) > 0">
+      <onlines>
+        <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
+          <item>
+            <xsl:variable name="langCode">
+              <xsl:value-of select="concat('#', upper-case(util:twoCharLangCode($lang, 'EN')))"/>
+            </xsl:variable>
+            <xsl:variable name="url" select="gmd:linkage/gmd:URL"/>
+            <id>
+              <xsl:value-of select="$url"/>
+            </id>
+            <title>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:name"/>
+            </title>
+            <url>
+              <xsl:value-of select="$url"/>
+            </url>
+            <function>
+              <xsl:value-of select="gmd:function/*/@codeListValue"/>
+            </function>
+            <applicationProfile>
+              <xsl:value-of select="gmd:applicationProfile/gco:CharacterString"/>
+            </applicationProfile>
+            <description>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:description"/>
+            </description>
+            <protocol>
+              <xsl:value-of select="gn-fn-rel:translate(gmd:protocol, $langCode)"/>
+            </protocol>
+            <type>onlinesrc</type>
+          </item>
+        </xsl:for-each>
+      </onlines>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
