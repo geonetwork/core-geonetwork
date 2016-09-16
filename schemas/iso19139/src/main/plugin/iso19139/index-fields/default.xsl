@@ -456,6 +456,16 @@
                     <Field name="{$fieldPrefix}UseLimitation"
                            string="{string(.)}" store="true" index="true"/>
                 </xsl:for-each>
+
+                <xsl:for-each select="gmd:useLimitation/gmx:Anchor[not(string(@xlink:href))]">
+                    <Field name="{$fieldPrefix}UseLimitation"
+                           string="{string(.)}" store="true" index="true"/>
+                </xsl:for-each>
+
+                <xsl:for-each select="gmd:useLimitation/gmx:Anchor[string(@xlink:href)]">
+                    <Field name="{$fieldPrefix}UseLimitation"
+                           string="{concat('link|',string(@xlink:href), '|', string(.))}" store="true" index="true"/>
+                </xsl:for-each>
             </xsl:for-each>
 
             <!-- Index aggregation info and provides option to query by type of association
