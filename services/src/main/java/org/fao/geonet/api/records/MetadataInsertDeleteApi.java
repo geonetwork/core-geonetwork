@@ -801,11 +801,26 @@ public class MetadataInsertDeleteApi {
                     Path tempFile = Files.createTempFile("mef-import", ".zip");
                     try {
                         FileUtils.copyInputStreamToFile(f.getInputStream(), tempFile.toFile());
-                        List<String> id = MEFLib.doImport(
-                            "mef2", uuidProcessing, transformWith,
+
+                        MEFLib.Version version = MEFLib.getMEFVersion(tempFile);
+
+                        List<String> ids = MEFLib.doImport(
+                            version == MEFLib.Version.V1 ? "mef" : "mef2",
+                            uuidProcessing, transformWith,
                             settingManager.getSiteId(),
                             metadataType, category, group, rejectIfInvalid,
                             assignToCatalog, context, tempFile);
+                        ids.forEach(e -> {
+                            report.addMetadataInfos(Integer.parseInt(e), String.format(
+                                "Metadata imported with ID '%s'", e)
+                            );
+                            report.incrementProcessedRecords();
+                        });
+                    } catch (Exception e) {
+                        report.addError(e);
+                        report.addInfos(String.format(
+                            "Failed to import MEF file '%s'. Check error for details.",
+                            f.getOriginalFilename()));
                     } finally {
                         IO.deleteFile(tempFile, false, Geonet.MEF);
                     }
