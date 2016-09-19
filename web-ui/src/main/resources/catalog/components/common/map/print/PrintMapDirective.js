@@ -35,6 +35,9 @@
     var printConfigUrlPrefix = (gnGlobalSettings.gnUrl) ?
         gnGlobalSettings.gnUrl : '';
 
+    if (printConfigUrlPrefix.indexOf('//') === 0) {
+      printConfigUrlPrefix = location.protocol + printConfigUrlPrefix;
+    }
     var options = {
       printConfigUrl: printConfigUrlPrefix + '../../pdf/info.json?url=' +
           printConfigUrlPrefix + '..%2F..%2Fpdf',
