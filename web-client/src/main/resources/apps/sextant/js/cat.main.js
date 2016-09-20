@@ -47,11 +47,11 @@ cat.app = function() {
 //    var fieldWithFilterApplied = [];
 //    var appFilteredField = ['E_credit', 'E__groupPublished'];
 //    /**
-//     * The application may provide custom restriction for 
+//     * The application may provide custom restriction for
 //     * search field using hidden input like configwhat.
-//     * 
+//     *
 //     * For those field with restriction, if no selection is made
-//     * apply the list of filters defined by default to not allow 
+//     * apply the list of filters defined by default to not allow
 //     * search accross all catalog content
 //     */
 //    function applyAppSearchFilter() {
@@ -72,7 +72,7 @@ cat.app = function() {
 //        });
 //        fieldWithFilterApplied = [];
 //    }
-    
+
     function search() {
         searching = true;
         Ext.get('load-spinner').show();
@@ -111,7 +111,7 @@ cat.app = function() {
             })]
         });
     }
-    
+
     function createLoginForm() {
 
         // Refresh login form if needed
@@ -119,7 +119,7 @@ cat.app = function() {
         if (user) {
             catalogue.identifiedUser = user;
         }
-        
+
         var loginForm = new GeoNetwork.LoginForm({
             renderTo : 'login-form',
             catalogue : catalogue,
@@ -127,19 +127,19 @@ cat.app = function() {
             hidden:catalogue.casEnabled,
             hideLoginLabels : GeoNetwork.hideLoginLabels
         });
-        
+
         catalogue.on('afterLogin', function() {
             cookie.set('user', catalogue.identifiedUser);
         });
         catalogue.on('afterLogout', function() {
             cookie.set('user', undefined);
         });
-        
+
         loginForm.triggerClick();
     }
-    
+
     function showMD(uuid, record, url, maximized, width, height) {
-        
+
         var bd = Ext.getBody();
         //var style = urlParameters.style || 'sextant';
         var url = Ext.get(Ext.query('input[id*=configmdviewerurl]')[0]).getValue();
@@ -164,7 +164,7 @@ cat.app = function() {
             maximized: false,
             metadataUuid: uuid,
             record: record,
-            viewMode: style, 
+            viewMode: style,
             resultsView: this.resultsView,
             modal: true,
             draggable: false,
@@ -177,7 +177,7 @@ cat.app = function() {
             });
         win.show();
     }
-    
+
     function edit(metadataId, create, group, child, isTemplate, schema, record) {
         var record = record || catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
 
@@ -261,9 +261,9 @@ cat.app = function() {
             var url = 'catalog.edit#/';
             if (create) {
               url += 'create/from/' + metadataId +
-                '/in/' + group + '/tab/characteristics';
+                '/in/' + group;
             } else {
-              url += 'metadata/' + metadataId + '/tab/characteristics';
+              url += 'metadata/' + metadataId;
             }
             window.open(
               catalogue.services.rootUrl + url)
@@ -311,7 +311,7 @@ cat.app = function() {
             resultsPanel.show();
         }
     }
-    
+
     function resetResultPanels() {
         var infoPanel = Ext.getCmp('infoPanel'), resultsPanel = Ext
         .getCmp('resultsPanel');
@@ -344,7 +344,7 @@ cat.app = function() {
     function createResultsPanel(permalinkProvider) {
 
         var hits = parseInt(Ext.getCmp('E_hitsperpage').getValue(), 10);
-        
+
         var previousAction = new Ext.Action({
             id : 'previousBt',
             text : '&lt;',
@@ -367,7 +367,7 @@ cat.app = function() {
             },
             scope : this
         });
-        
+
         var firstAction = new Ext.Action({
             id: 'firstBt',
             text: '&lt;&lt;',
@@ -416,7 +416,7 @@ cat.app = function() {
         });
 
         catalogue.resultsView = metadataResultsView;
-        
+
         tBar = new GeoNetwork.MetadataResultsToolbar({
             catalogue : catalogue,
             searchFormCmp : Ext.getCmp('searchForm'),
@@ -431,16 +431,16 @@ cat.app = function() {
             sortByStore : new Ext.data.ArrayStore({
                 id: 0,
                 fields: ['id', 'name'],
-                data: [['popularity#', OpenLayers.i18n('popularity')], 
-                        ['title#reverse', OpenLayers.i18n('title')], 
+                data: [['popularity#', OpenLayers.i18n('popularity')],
+                        ['title#reverse', OpenLayers.i18n('title')],
                         ['changeDate#', OpenLayers.i18n('changeDate')]]
             }),
-            items : [ firstAction, ' ', previousAction, '|', 
+            items : [ firstAction, ' ', previousAction, '|',
                       nextAction, ' ', lastAction, '|', {
                     xtype : 'tbtext',
                     text : '',
                     id : 'info'
-                }, ' ',' ', ' ', ' ', ' ', 
+                }, ' ',' ', ' ', ' ', ' ',
                 pdfAction,  GeoNetwork.Util.buildPermalinkMenu(permalinkProvider.getLink, permalinkProvider),
                 new Ext.Toolbar.TextItem({
                     id: 'gn-sxt-restb-admin-btn',
@@ -451,7 +451,7 @@ cat.app = function() {
             createOtherActionMenu : function() {
                 this.actionMenu = new Ext.menu.Menu();
                 this.createAdminMenu(!this.catalogue.isAdmin());
-                
+
                 this.on('afterrender', function() {
                     var adminBtn = this.getComponent('gn-sxt-restb-admin-btn');
                     adminBtn.on('afterrender', function(e){
@@ -464,7 +464,7 @@ cat.app = function() {
                     tBar.changeMode(false);
                     this.updatePrivileges(catalogue, catalogue.identifiedUser);
                 }, this);
-                
+
                 return ' ';
             },
             changeMode: function(mode) {
@@ -478,14 +478,14 @@ cat.app = function() {
 
                 var nbVisible=0;
                 var editingActions = []; //new Md & insert MD actions
-                
+
                 if(this.createMetadataAction) editingActions.push(this.createMetadataAction);
                 if(this.mdImportAction) editingActions.push(this.mdImportAction);
-                
+
                 // Only administrator (SXT5_ALL_Administrator) will see 'Administration' button
                 var vis = user && user.role == 'Administrator';
                 this.adminAction.setVisible(vis);
-                
+
                 // Do not display editing action for registered users
                 Ext.each(editingActions, function(){
                     var vis = user && user.role !== 'RegisteredUser';
@@ -495,7 +495,7 @@ cat.app = function() {
                 this.actionOnSelectionMenu && this.actionOnSelectionMenu.setVisible(nbVisible > 0 && catalogue.identifiedUser != undefined);
             }
         });
-        
+
         resultPanel = new Ext.Panel({
             id : 'resultsPanel',
             border : false,
@@ -507,18 +507,18 @@ cat.app = function() {
             layout : 'fit',
             items : metadataResultsView
         });
-        
+
         return resultPanel;
     }
 
     function createSearchForm() {
-        
+
         var services = catalogue.services;
         cat.what.createCmp(catalogue);
-        
+
         searchModes = Ext.get(Ext.query('input[id*=configtypesearch]')[0]).getValue().split(',');
         activeSearchMode = searchModes.indexOf('simple') >= 0 ? 'simple' : searchModes[0];
-        
+
         var whereForm = cat.where.createCmp();
         var whatForm = cat.what.getPanel();
         var whenForm = cat.when.createCmp();
@@ -650,13 +650,13 @@ cat.app = function() {
                     Ext.each(cmpToRemove, function(cmp) {
                         this.remove(cmp);
                     }, this);
-                    
+
                     searchForm.find('id', 'E__groupPublished')[0].getStore().load();
                 }
             },
             items : formItems
         });
-        
+
         // Manage header click event to toggle advanced or simple search
         // criteria mode
         searchForm.on('afterrender',function(cpt) {
@@ -672,11 +672,11 @@ cat.app = function() {
                 }
                 cookie.set('cat.searchform.viewmode', activeSearchMode)
             }, cpt);
-            
-            
+
+
             cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').setVisibilityMode(Ext.Element.DISPLAY);
             cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').setVisibilityMode(Ext.Element.DISPLAY);
-        
+
             cpt.on('advancedmode',function(cpt) {
                 cpt.setVisible(true);
                 Ext.each(advandcedField,function(item) {
@@ -704,14 +704,14 @@ cat.app = function() {
                  cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').hide();
                  cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').show();
             });
-            
+
             // get active serach mode from cookies, or from the first element of the config list
             // then fire the event of the mode
             var initMode = searchModes[0] || 'simple';
             initMode = cookie.get('cat.searchform.viewmode') ? cookie.get('cat.searchform.viewmode') : initMode;
             this.fireEvent(initMode + 'mode', this);
             activeSearchMode = initMode;
-            
+
             // Set title
             document.getElementById('currentSearchMode').innerHTML = OpenLayers.i18n('search-header-' + initMode);
             if(cpt.ownerCt.header.child('#searchFormHeaderLink' + initMode)) {
@@ -721,7 +721,7 @@ cat.app = function() {
             if (searchModes.length == 1) {
                 Ext.getCmp('west').setTitle('');
             }
-            
+
         });
       app.userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
       app.userGroupStore.load();
@@ -742,7 +742,7 @@ cat.app = function() {
 
       return searchForm;
     }
-    
+
     function modalActionFn(title, urlOrPanel, cb){
         if (urlOrPanel) {
             var app = this, item, win, defaultCb = function(el, success, response, options) {
@@ -751,7 +751,7 @@ cat.app = function() {
                     win.close();
                 }
             };
-            
+
             if(typeof(urlOrPanel) == 'string') {
                 item = new Ext.Panel({
                     autoLoad: {
@@ -767,7 +767,7 @@ cat.app = function() {
             else {
                 item =urlOrPanel;
             }
-            
+
             win = new Ext.Window({
                 id: 'modalWindow',
                 layout: 'fit',
@@ -788,11 +788,11 @@ cat.app = function() {
             win.show(this);
         }
     }
-    
+
     /**
      * Fix the main panel height to the browser size (or portlet-content if embeded in liferay)
      * Called on startup and window.resize
-     * 
+     *
      **/
     function fitHeightToBody(o) {
         var portletContainer = Ext.Element.select('#column-1 .portlet-body');
@@ -807,11 +807,11 @@ cat.app = function() {
         }
         o.setHeight(height);
         searchForm.setHeight(height-20);
-        
+
         Ext.getBody().setHeight(Ext.getBody().getViewSize().height);
         o.doLayout();
     }
-    
+
     // Get location of an url
     var getLocation = function(href) {
         var l = document.createElement("a");
@@ -833,14 +833,14 @@ cat.app = function() {
             // TODO : should open the viewer ?
         },
         init : function() {
-            
+
             var cookiePath = '/';
-            
+
             var gnUrlElt = Ext.query('input[id*=configgeonetwork]');
             if(gnUrlElt && gnUrlElt.length==1) {
                 GeoNetwork.URL=Ext.get(gnUrlElt[0]).getValue();
-                
-                if(window.location.href.indexOf('https') == 0 && 
+
+                if(window.location.href.indexOf('https') == 0 &&
                         GeoNetwork.URL.indexOf('https') < 0) {
                     GeoNetwork.URL = GeoNetwork.URL.replace('http', 'https');
                 }
@@ -848,9 +848,9 @@ cat.app = function() {
                 cookiePath = loc.pathname;
             }
             geonetworkUrl = GeoNetwork.URL || window.location.href.match(/((http).*\/.*)\/apps\/sextant.*/, '')[1];
-            
+
             urlParameters = GeoNetwork.Util.getParameters(location.href);
-            
+
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(
                         urlParameters.extent[0], urlParameters.extent[1],
@@ -863,12 +863,12 @@ cat.app = function() {
                         + (1000 * 60 * 60 * 24 * 365)),
                 path: cookiePath
             });
-            
+
             // If we are reading a permalink, we overwrite all cookies values
             var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
             if(Object.keys(permalinkProvider.state).length > 0) {
                 cookie.state = permalinkProvider.state;
-                
+
                 if(cookie.state.s) {
                     if(cookie.state.s.scaleOn) delete cookie.state.s.scaleOn;
                     if(cookie.state.s.timeType) delete cookie.state.s.timeType;
@@ -911,7 +911,7 @@ cat.app = function() {
             };
 
             Ext.state.Manager.setProvider(cookie);
-            
+
             // Create connexion to the catalogue
             catalogue = new GeoNetwork.Catalogue({
                 statusBarId : 'info',
@@ -926,9 +926,9 @@ cat.app = function() {
                 metadataShowFn: showMD,
                 modalAction:modalActionFn
             });
-            
+
             catalogue.getInfo();
-            
+
             // Extra stuffs
             infoPanel = createInfoPanel();
             searchForm = createSearchForm();
@@ -936,9 +936,9 @@ cat.app = function() {
 
             edit();
             resultsPanel = createResultsPanel(cookie);
-            
+
             createLoginForm();
-            
+
             var breadcrumb = new Ext.Panel({
                 layout:'table',
                 cls: 'breadcrumb',
@@ -988,7 +988,7 @@ cat.app = function() {
                 maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
                 facetListConfig: facetConfig
             });
-            
+
             var viewport = new Ext.Panel({
                 renderTo: 'main-viewport',
                 layout : 'border',
@@ -1007,13 +1007,13 @@ cat.app = function() {
                         + OpenLayers.i18n('search-view-form') + ' '
                         + '</span>'
                         + '<span id="currentSearchMode"></span>'
-                        + (searchModes.indexOf('advanced') >= 0 ? 
-                                '<a id="searchFormHeaderLinkadvanced" href="#">' + 
-                                OpenLayers.i18n('search-header-advanced') + 
+                        + (searchModes.indexOf('advanced') >= 0 ?
+                                '<a id="searchFormHeaderLinkadvanced" href="#">' +
+                                OpenLayers.i18n('search-header-advanced') +
                                 '</a>' : '')
-                        + (searchModes.indexOf('simple') >= 0 ? 
-                                '<a id="searchFormHeaderLinksimple" href="#">' + 
-                                OpenLayers.i18n('search-header-simple') + 
+                        + (searchModes.indexOf('simple') >= 0 ?
+                                '<a id="searchFormHeaderLinksimple" href="#">' +
+                                OpenLayers.i18n('search-header-simple') +
                             '</a>' : ''),
                     frame : false,
                     minWidth : 300,
@@ -1050,7 +1050,7 @@ cat.app = function() {
                     bodyCssClass: 'west-panel-body',
                     headerCssClass : 'search-panel-header',
                     split : true,
-                    hidden: searchModes.indexOf('facet') >= 0 ? false : true, 
+                    hidden: searchModes.indexOf('facet') >= 0 ? false : true,
                     margins: '0 0 0 4',
                     title : OpenLayers.i18n("refineSearch"),
                     collapsible : true,
@@ -1076,15 +1076,15 @@ cat.app = function() {
                                 }
                             }
                             var searchPage = cookie.get('cat.search.page');
-                            
-                            
-                            if(urlParameters.s_search === undefined && 
+
+
+                            if(urlParameters.s_search === undefined &&
                                     searchPage && searchPage > 0) {
                                 catalogue.startRecord = searchPage;
                             }
-                            
+
                             fitHeightToBody(o);
-                            
+
                             var loadDiv = Ext.get('loading');
                             if(loadDiv) {
                                 loadDiv.remove();
@@ -1096,11 +1096,11 @@ cat.app = function() {
                     }
                 }
             });
-            
+
             window.onresize = function() {
                 fitHeightToBody(viewport);
             }
-            
+
             if (urlParameters.edit !== undefined && urlParameters.edit !== '') {
                 catalogue.metadataEdit(urlParameters.edit);
             }
@@ -1141,7 +1141,7 @@ cat.app = function() {
                     cat.what.updateUserGroups(searchAfterLoggin);
                 });
             });
-            
+
         },
 
         getCatalogue : function() {
@@ -1150,22 +1150,22 @@ cat.app = function() {
 
         loadResults : function(response) {
 //            clearAppSearchFilter();
-            
+
             initPanels();
             facetsPanel.refresh(response);
-            
+
             // FIXME : result panel need to update layout in case of slider
             // Ext.getCmp('resultsPanel').syncSize();
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
             Ext.getCmp('firstBt').setDisabled(catalogue.startRecord === 1);
-            
+
             var lastEnable = (catalogue.startRecord
             + parseInt(Ext.getCmp('E_hitsperpage').getValue(),
                     10) > catalogue.metadataStore.totalLength);
-            
+
             Ext.getCmp('nextBt').setDisabled(lastEnable);
             Ext.getCmp('lastBt').setDisabled(lastEnable);
-            
+
             if (Ext.getCmp('E_sortBy').getValue()) {
                 Ext.getCmp('sortByToolBar').setValue(
                         Ext.getCmp('E_sortBy').getValue() + "#"
@@ -1175,17 +1175,17 @@ cat.app = function() {
                 Ext.getCmp('sortByToolBar').setValue(
                         Ext.getCmp('E_sortBy').getValue());
             }
-            
-            
+
+
             Ext.getCmp('pdfPrintResults').setDisabled(catalogue.metadataStore.totalLength > GeoNetwork.Settings.results.maxResultsInPDF);
-            
+
             resultsPanel.syncSize();
             resultsPanel.setHeight(Ext.getCmp('center').getHeight());
 
             Ext.getCmp('west').syncSize();
             Ext.getCmp('center').syncSize();
             Ext.ux.Lightbox.register('a[rel^=lightbox]');
-            
+
             tBar.changeMode(true);
             Ext.get('load-spinner').hide();
         }
@@ -1193,21 +1193,21 @@ cat.app = function() {
 }
 
 Ext.onReady(function() {
-    
+
     var urlParameters = GeoNetwork.Util.getParameters(location.href);
     cat.language = cat.language || urlParameters.hl || GeoNetwork.Util.defaultLocale;
-    
+
     if(cat.language == 'fr') cat.language = 'fre';
     else if(cat.language == 'en') cat.language = 'eng';
     else if(cat.language == 'es') cat.language = 'spa';
     else if(cat.language == 'it') cat.language = 'ita';
-    
+
     cat.libPath = cat.imgPath?cat.imgPath+'js/lib':'../js';
     GeoNetwork.Util.setLang(cat.language, cat.libPath);
 
     Ext.QuickTips.init();
     cat.imgPath=cat.imgPath?cat.imgPath:'';
-    
+
     app = new cat.app();
     app.init();
     catalogue = app.getCatalogue();
@@ -1226,9 +1226,9 @@ Ext.onReady(function() {
             } else {
                 GeoNetwork.Settings.editor.editHarvested = enable.innerText;
             }
-        } 
+        }
     });
-    
+
     /* Focus on full text search field */
     Ext.getDom('E_any').focus(true);
     Ext.get('E_any').setHeight(28);
