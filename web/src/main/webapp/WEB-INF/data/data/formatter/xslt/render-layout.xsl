@@ -12,6 +12,7 @@
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
 
+
   <!-- Those templates should be overriden in the schema plugin - start -->
   <xsl:template mode="getMetadataTitle" match="undefined"/>
   <xsl:template mode="getMetadataAbstract" match="undefined"/>
@@ -82,6 +83,15 @@
 
         </footer>
       </article>
+
+      <xsl:if test="$css = 'sextant'">
+        <!-- Avoid self closing tag. -->
+        <script src="../../static/lib.js">;</script>
+        <script src="../../static/gn_search_sextant.js">;</script>
+        <script type="text/javascript">
+        var module = angular.module('gn_search');
+        </script>
+      </xsl:if>
     </div>
   </xsl:template>
 
