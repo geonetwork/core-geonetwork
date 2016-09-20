@@ -447,16 +447,25 @@ public class MetadataInsertDeleteApi {
             ServiceContext context = ApiUtils.createServiceContext(request);
             for (Path f : files) {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
-                    List<String> ids = MEFLib.doImport(
-                        "mef2", uuidProcessing, transformWith,
-                        settingManager.getSiteId(),
-                        metadataType, category, group, rejectIfInvalid,
-                        assignToCatalog, context, f);
-                    for (String id : ids) {
-                        report.addMetadataInfos(Integer.parseInt(id), String.format(
-                            "Metadata imported from MEF with id '%s'", id)
-                        );
-                        report.incrementProcessedRecords();
+                    try {
+                        MEFLib.Version version = MEFLib.getMEFVersion(f);
+                        List<String> ids = MEFLib.doImport(
+                            version == MEFLib.Version.V1 ? "mef" : "mef2",
+                            uuidProcessing, transformWith,
+                            settingManager.getSiteId(),
+                            metadataType, category, group, rejectIfInvalid,
+                            assignToCatalog, context, f);
+                        for (String id : ids) {
+                            report.addMetadataInfos(Integer.parseInt(id), String.format(
+                                "Metadata imported from MEF with id '%s'", id)
+                            );
+                            report.incrementProcessedRecords();
+                        }
+                    } catch (Exception e) {
+                        report.addError(e);
+                        report.addInfos(String.format(
+                            "Failed to import MEF file '%s'. Check error for details.",
+                            f.getFileName().toString()));
                     }
                 } else {
                     try {
