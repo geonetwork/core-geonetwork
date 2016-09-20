@@ -158,6 +158,12 @@ Insert is made in first transferOptions found.
       </xsl:for-each>
     </xsl:if>
 
+    <xsl:variable name="separator" select="'\|'"/>
+    <xsl:variable name="useOnlyPTFreeText">
+      <xsl:value-of
+        select="count(//*[gmd:PT_FreeText and not(gco:CharacterString)]) > 0"/>
+    </xsl:variable>
+
 
     <xsl:if test="$url">
       <!-- In case the protocol is an OGC protocol
@@ -186,6 +192,52 @@ Insert is made in first transferOptions found.
                   </gco:CharacterString>
                 </gmd:protocol>
 
+                <xsl:if test="$applicationProfile != ''">
+                  <gmd:applicationProfile>
+                    <xsl:choose>
+                      <xsl:when test="contains($applicationProfile, '#')">
+                        <xsl:for-each select="tokenize($applicationProfile, $separator)">
+                          <xsl:variable name="nameLang"
+                                        select="substring-before(., '#')"></xsl:variable>
+                          <xsl:variable name="nameValue"
+                                        select="substring-after(., '#')"></xsl:variable>
+                          <xsl:if
+                            test="$useOnlyPTFreeText = 'false' and $nameLang = $mainLang">
+                            <gco:CharacterString>
+                              <xsl:value-of select="$nameValue"/>
+                            </gco:CharacterString>
+                          </xsl:if>
+                        </xsl:for-each>
+
+                        <gmd:PT_FreeText>
+                          <xsl:for-each select="tokenize($applicationProfile, $separator)">
+                            <xsl:variable name="nameLang"
+                                          select="substring-before(., '#')"></xsl:variable>
+                            <xsl:variable name="nameValue"
+                                          select="substring-after(., '#')"></xsl:variable>
+
+                            <xsl:if
+                              test="$useOnlyPTFreeText = 'true' or $nameLang != $mainLang">
+                              <gmd:textGroup>
+                                <gmd:LocalisedCharacterString
+                                  locale="{concat('#', $nameLang)}">
+                                  <xsl:value-of select="$nameValue"/>
+                                </gmd:LocalisedCharacterString>
+                              </gmd:textGroup>
+                            </xsl:if>
+
+                          </xsl:for-each>
+                        </gmd:PT_FreeText>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <gco:CharacterString>
+                          <xsl:value-of select="$applicationProfile"/>
+                        </gco:CharacterString>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </gmd:applicationProfile>
+                </xsl:if>
+
                 <xsl:if test=". != ''">
                   <gmd:name>
                     <gco:CharacterString>
@@ -201,6 +253,15 @@ Insert is made in first transferOptions found.
                     </gco:CharacterString>
                   </gmd:description>
                 </xsl:if>
+
+
+                <xsl:if test="$function != ''">
+                  <gmd:function>
+                    <gmd:CI_OnLineFunctionCode
+                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode"
+                      codeListValue="{$function}"/>
+                  </gmd:function>
+                </xsl:if>
               </gmd:CI_OnlineResource>
             </gmd:onLine>
           </xsl:for-each>
@@ -208,12 +269,6 @@ Insert is made in first transferOptions found.
         <xsl:otherwise>
           <!-- ... the name is simply added in the newly
           created online element. -->
-
-          <xsl:variable name="separator" select="'\|'"/>
-          <xsl:variable name="useOnlyPTFreeText">
-            <xsl:value-of
-              select="count(//*[gmd:PT_FreeText and not(gco:CharacterString)]) > 0"/>
-          </xsl:variable>
 
           <gmd:onLine>
             <xsl:if test="$uuidref">
