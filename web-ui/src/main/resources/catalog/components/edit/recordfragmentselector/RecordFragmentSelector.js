@@ -64,7 +64,7 @@
                  };
 
                  scope.modelOptions = angular.copy(
-                   gnGlobalSettings.modelOptions);
+                 gnGlobalSettings.modelOptions);
                },
                post: function(scope, element, attrs) {
                  scope.snippet = null;
@@ -84,12 +84,12 @@
                    };
                  } else {
                    scope.searchQuery =
-                     (attrs['searchQuery'] &&
-                     angular.fromJson(
+                   (attrs['searchQuery'] &&
+                   angular.fromJson(
                        attrs['searchQuery']
                          .replace('{uuid}', gnCurrentEdit.uuid)
-                         .replace(/'/g, "\"")
-                     )) || {};
+                         .replace(/'/g, '\"')
+                   )) || {};
                  }
 
                  angular.extend(scope.searchObj.params, scope.searchQuery);
@@ -98,9 +98,9 @@
                  scope.snippetRef = gnEditor.
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
-                 scope.setSource = function (r) {
+                 scope.setSource = function(r) {
                    scope.sourceRecord =
-                     angular.isObject(r) ? r['geonet:info'].uuid : null;
+                   angular.isObject(r) ? r['geonet:info'].uuid : null;
                  };
                  scope.getFragments = function() {
                    scope.fragments = [];
@@ -116,7 +116,7 @@
                  // Append * for like search
                  scope.updateParams = function() {
                    scope.searchObj.params.any =
-                     '*' + scope.searchObj.any + '*';
+                   '*' + scope.searchObj.any + '*';
                  };
 
                  scope.$watch('sourceRecord', function(n, o) {

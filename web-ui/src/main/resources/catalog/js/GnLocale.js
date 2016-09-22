@@ -74,8 +74,8 @@
              */
             var localPrefix = value.split('|')[0];
             var localValue = value.split('|')[1];
-            return localPrefix + gnLangs.getIso2Lang(lang)
-              + '-' + localValue + suffix;
+            return localPrefix + gnLangs.getIso2Lang(lang) +
+                '-' + localValue + suffix;
           } else {
             return prefix + gnLangs.getIso2Lang(lang) + '-' + value + suffix;
           }
