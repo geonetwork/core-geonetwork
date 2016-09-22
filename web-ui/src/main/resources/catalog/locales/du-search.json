@@ -218,6 +218,7 @@
     "mdUnpublished": "Metadata Ingetrokken",
     "mdUnmodified": "Onaangetaste Metadata",
     "mdDisallowed": "Beperkt Toegankelijke Metadata",
+    "mdNovalid": "Metadata not valid",
     "metadataUnchanged": "Ongewijzigde Metadata",
     "accessRestricted": "U heeft geen rechten om deze metadata aan te passen",
     "copiedToClip": "Tekst gekopieerd naar klembord !",
@@ -359,5 +360,9 @@
     "fbCatHarvesting": "Harvesting",
     "fbCatValidator": "Validator",
     "fbCatOthers": "Others",
-    "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map"
+    "syncAllLayers": "Synchronize all layers (or only background layers) between map viewer and search overview map",
+    "mdvalid": "Metadata is valid",
+    "mdinvalid": "Metadata is invalid",
+    "mdinvalidcantpublish": "Invalid metadata can't be publish",
+    "mdnovalidation": "Metadata has no validation information"
 }
