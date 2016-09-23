@@ -262,7 +262,11 @@
           password2: $scope.resetPassword2
         };
 
-        $http.post('admin.user.resetpassword', null, {params: params})
+        $http.post('admin.user.resetpassword',
+            $.param(params),
+            {
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
@@ -347,8 +351,12 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get('admin.user.update?' + $(formId).serialize() +
-                '&enabled=' + $scope.userIsEnabled)
+        $http.post('admin.user.update',
+            $(formId).serialize() +
+            '&enabled=' + $scope.userIsEnabled,
+            {
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $scope.unselectUser();
               loadUsers();
