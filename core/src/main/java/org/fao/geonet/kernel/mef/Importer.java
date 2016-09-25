@@ -114,7 +114,7 @@ public class Importer {
                                         final String source,
                                         final MetadataType isTemplate,
                                         final String[] category,
-                                        final String groupId,
+                                        final String forceGroupId,
                                         final boolean validate,
                                         final boolean assign,
                                         final ServiceContext context,
@@ -324,6 +324,7 @@ public class Importer {
                         recordSource = context.getBean(SettingManager.class).getSiteId();
                     }
 
+                    groupId = forceGroupId;
                     privileges = new Element("group");
                     privileges.addContent(new Element("operation")
                         .setAttribute("name", "view"));
