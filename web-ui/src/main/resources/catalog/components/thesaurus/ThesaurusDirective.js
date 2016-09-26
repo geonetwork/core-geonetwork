@@ -169,9 +169,9 @@
   module.directive('gnKeywordSelector',
       ['$compile', '$timeout', '$translate',
        'gnThesaurusService', 'gnEditor',
-       'Keyword',
+       'Keyword', 'gnLangs',
        function($compile, $timeout, $translate,
-               gnThesaurusService, gnEditor, Keyword) {
+               gnThesaurusService, gnEditor, Keyword, gnLangs) {
 
          return {
            restrict: 'A',
@@ -279,8 +279,9 @@
                  var counter = 0;
                  angular.forEach(scope.initialKeywords, function(keyword) {
                    // One keyword only and exact match search
+                   // in current editor language.
                    gnThesaurusService.getKeywords(keyword,
-                   scope.thesaurusKey, scope.mainLang, 1, 'MATCH')
+                   scope.thesaurusKey, gnLangs.current, 1, 'MATCH')
                      .then(function(listOfKeywords) {
                      counter++;
 
@@ -357,7 +358,7 @@
                    gnThesaurusService.getKeywordAutocompleter({
                      thesaurusKey: scope.thesaurusKey,
                      dataToExclude: scope.selected,
-                     lang: scope.mainLang
+                     lang: gnLangs.current
                    });
 
                    // Init typeahead
@@ -428,7 +429,7 @@
 
              var search = function() {
                gnThesaurusService.getKeywords(scope.filter,
-               scope.thesaurusKey, scope.mainLang, scope.max)
+               scope.thesaurusKey, gnLangs.current, scope.max)
                 .then(function(listOfKeywords) {
                  // Remove from search already selected keywords
                  scope.results = $.grep(listOfKeywords, function(n) {

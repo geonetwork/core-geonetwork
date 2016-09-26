@@ -339,26 +339,6 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
-        //If it is a useradmin updating,
-        //maybe we don't know all the groups the user is part of
-        if (!myProfile.equals(Profile.Administrator)) {
-            List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specifications.where(
-                hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
-
-            List<UserGroup> usergroups =
-                userGroupRepository.findAll(Specifications.where(
-                    hasUserId(Integer.parseInt(userDto.getId()))));
-
-            //keep unknown groups as is
-            for (UserGroup ug : usergroups) {
-                if (!myUserAdminGroups.contains(ug.getGroup().getId())) {
-                    groups.add(new GroupElem(ug.getProfile().name(),
-                        ug.getGroup().getId()));
-                }
-            }
-        }
-
-
         user = new User();
         user.getSecurity().setPassword(
             PasswordUtil.encoder(ApplicationContextHolder.get()).encode(

@@ -218,6 +218,7 @@
     "mdUnpublished": "메타데이터 게시 취소됨",
     "mdUnmodified": "영향을 받지않은 메타데이터",
     "mdDisallowed": "제한된 메타데이터",
+    "mdNovalid": "유효하지 않은 메타데이터",
     "metadataUnchanged": "변경되지 않은 메타데이터",
     "accessRestricted": "이 메타데이터를 변경할 권한이 없습니다",
     "copiedToClip": "텍스트를 클립보드에 복사하였습니다!",
@@ -305,7 +306,7 @@
     "Locations": "위치",
     "clear": "지우기",
     "msgCanDropFileOnMap": "또한 지도에 파일을 끌어다 놓을 수 있습니다",
-    "UploadKMZfile": "Upload a KMZ file",
+    "UploadKMZfile": "KMZ 파일 업로드",
     "or": "또는",
     "KMLfileURL": "KML 파일 URL 설정",
     "refineSearch": "검색 수정",
@@ -330,7 +331,7 @@
     "wpsDescribeProcessFailed": "DescribeProcess 실패",
     "wpsExecute": "실행",
     "wpsExecuteFailed": "실행 실패",
-    "wpsErrorCodeReturned": "The server returned status code",
+    "wpsErrorCodeReturned": "서버가 상태 코드를 반환했습니다",
     "time": "시간",
     "features": "피처(들)",
     "downloadLayer": "데이터 다운로드",
@@ -359,5 +360,9 @@
     "fbCatHarvesting": "수집",
     "fbCatValidator": "유효성 검사기",
     "fbCatOthers": "기타",
-    "syncAllLayers": "지도 뷰어와 검색 미리보기 지도간의 모든 레이어 (또는 백그라운드 레이어만) 동기화"
+    "syncAllLayers": "지도 뷰어와 검색 미리보기 지도간의 모든 레이어 (또는 백그라운드 레이어만) 동기화",
+    "mdvalid": "메타데이터가 유효합니다",
+    "mdinvalid": "메타데이터가 유효하지 않습니다",
+    "mdinvalidcantpublish": "유효하지 않은 메타데이터는 게시할 수 없습니다",
+    "mdnovalidation": "메타데이터의 유효성검사 정보가 없습니다"
 }

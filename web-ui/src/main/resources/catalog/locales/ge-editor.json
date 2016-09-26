@@ -163,6 +163,7 @@
     "metadataContent": "Metadateninhalt",
     "metadataNotFound": "Achtung! Gesuchter Metadatensatz mit id {{id}} wurde nicht gefunden. <a href='#/create'>Möchten Sie einen neuen erstellen?</a>",
     "metadataType": "Art des Datensatzes",
+    "hasDqMeasures": "With quality measures",
     "generateThumbnail": "Erzeuge Miniaturbild",
     "generateThumbnail-help": "Miniaturbild wird erstellt und in der Dateiablage gespeichert. Verwenden Sie die Dateiablage, um das Miniaturbild dem Metadatensatz hinzuzufügen.",
     "createAThumbnail": "Erzeuge Miniaturbild aus dem Darstellungsdienst",

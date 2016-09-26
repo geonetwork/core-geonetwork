@@ -218,6 +218,7 @@
     "mdUnpublished": "Fiche dépubliée",
     "mdUnmodified": "Fiche non affectée",
     "mdDisallowed": "Fiche restreinte",
+    "mdNovalid": "Metadata not valid",
     "metadataUnchanged": "Fiche non modifiée",
     "accessRestricted": "Vous n'avez pas le droit de modifier cette fiche",
     "copiedToClip": "Texte copié dans le presse papier !",
@@ -359,5 +360,9 @@
     "fbCatHarvesting": "Moissonnage",
     "fbCatValidator": "Validation",
     "fbCatOthers": "Autre",
-    "syncAllLayers": "Synchroniser toutes les couches (ou seulement le fond de carte) entre le visualiseur et la minicarte d'aperçu."
+    "syncAllLayers": "Synchroniser toutes les couches (ou seulement le fond de carte) entre le visualiseur et la minicarte d'aperçu.",
+    "mdvalid": "Metadata is valid",
+    "mdinvalid": "Metadata is invalid",
+    "mdinvalidcantpublish": "Invalid metadata can't be publish",
+    "mdnovalidation": "Metadata has no validation information"
 }

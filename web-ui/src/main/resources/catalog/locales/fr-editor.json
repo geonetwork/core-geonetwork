@@ -163,6 +163,7 @@
     "metadataContent": "Contenu de la métadonnée",
     "metadataNotFound": "Attention ! La fiche avec l'identifiant {{id}} n'a pas été trouvée. <a href='#/create'>En créer une nouvelle ?</a>",
     "metadataType": "Type de fiche",
+    "hasDqMeasures": "With quality measures",
     "generateThumbnail": "Générer un aperçu",
     "generateThumbnail-help": "L'aperçu sera généré puis sauvé dans le dépôt de fichiers. Utiliser ensuite le fichier du dépôt pour l'ajouter dans la fiche.",
     "createAThumbnail": "Générer un aperçu en utilisant un service de visualisation",
