@@ -83,6 +83,8 @@
                  data-ng-model="g.isCheckedAll"/>
         </td>
         <td class="text-center">
+          <span data-ng-if="displayProfile && g.userProfiles.length === 0 && user.isAdministrator()"
+                data-translate="">Administrator</span>
           <span data-ng-if="displayProfile"
                 data-ng-repeat="p in g.userProfiles">
             {{user.isAdministrator() ? ('Administrator' | translate) : (p | translate)}}&nbsp;
