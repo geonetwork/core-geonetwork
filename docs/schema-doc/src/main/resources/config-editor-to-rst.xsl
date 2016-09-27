@@ -263,7 +263,10 @@
       <!-- Try to match on xpath even if config editor use * in xpath -->
 
       <xsl:variable name="nodeDescWithXpath"
-                    select="$l[@name = $nodeName and matches(@context, replace($xpath, '\*', '.*'))]"/>
+                    select="$l[@name = $nodeName and
+                              matches(@context,
+                                replace(replace(replace($xpath,
+                                  '\*', '.*'), '\[', '\\['), '\]', '\\]'))]"/>
 
       <xsl:variable name="nodeDesc">
         <xsl:choose>
