@@ -672,7 +672,6 @@ An experiment of loop - need more work.
     content: "US";
 }
 
-/* English */
 .iti-box.full.ac-en .label:before {
     content: "Atmospheric conditions";
 }
@@ -774,108 +773,4 @@ An experiment of loop - need more work.
 }
 .iti-box.full.us-en .label:before {
     content: "Utility and governmental services";
-}
-
-/* Dutch */
-.iti-box.full.ac-du .label:before {
-  content: "Atmosferische omstandigheden";
-}
-.iti-box.full.ad-du .label:before {
-  content: "Adressen";
-}
-.iti-box.full.af-du .label:before {
-  content: "Landbouwuitrusting en\A productiefaciliteiten";
-}
-.iti-box.full.am-du .label:before {
-  content: "Gebiedsbeheer, gebieden waar\A beperkingen gelden, gereguleerde\A gebieden en rapportage-eenheden";
-}
-.iti-box.full.au-du .label:before {
-  content: "Administratieve eenheden";
-}
-.iti-box.full.br-du .label:before {
-  content: "Biogeografische gebieden";
-}
-.iti-box.full.bu-du .label:before {
-  content: "Gebouwen";
-}
-.iti-box.full.cp-du .label:before {
-  content: "Kadastrale percelen";
-}
-.iti-box.full.ef-du .label:before {
-  content: "Milieubewakingsvoorzieningen";
-}
-.iti-box.full.el-du .label:before {
-  content: "Hoogte";
-}
-.iti-box.full.er-du .label:before {
-  content: "Energiebronnen";
-}
-.iti-box.full.ge-du .label:before {
-  content: "Geologie";
-}
-.iti-box.full.gg-du .label:before {
-  content: "GGeografisch rastersysteem";
-}
-.iti-box.full.gn-du .label:before {
-  content: "Geografische namen";
-}
-.iti-box.full.hb-du .label:before {
-  content: "Habitats en biotopen";
-}
-.iti-box.full.hh-du .label:before {
-  content: "Menselijke gezondheid en veiligheid";
-}
-.iti-box.full.hy-du .label:before {
-  content: "Hydrografie";
-}
-.iti-box.full.lc-du .label:before {
-  content: "Bodemgebruik";
-}
-.iti-box.full.lu-du .label:before {
-  content: "Landgebruik";
-}
-.iti-box.full.mf-du .label:before {
-  content: "Meteorologische\A geografische kenmerken";
-}
-.iti-box.full.mr-du .label:before {
-  content: "Minerale bronnen";
-}
-.iti-box.full.nz-du .label:before {
-  content: "Gebieden met natuurrisico's";
-}
-.iti-box.full.of-du .label:before {
-  content: "Oceanografische\A geografische kenmerken";
-}
-.iti-box.full.oi-du .label:before {
-  content: "Orthobeeldvorming";
-}
-.iti-box.full.pd-du .label:before {
-  content: "Spreiding van de bevolking —\A demografie";
-}
-.iti-box.full.pf-du .label:before {
-  content: "Faciliteiten voor\A productie en industrie";
-}
-.iti-box.full.ps-du .label:before {
-  content: "Beschermde gebieden";
-}
-.iti-box.full.rs-du .label:before {
-  content: "Systemen voor verwijzing\A door middel van coördinaten";
-}
-.iti-box.full.sd-du .label:before {
-  content: "Spreiding van soorten";
-}
-.iti-box.full.so-du .label:before {
-  content: "Bodem";
-}
-.iti-box.full.sr-du .label:before {
-  content: "Zeegebieden";
-}
-.iti-box.full.su-du .label:before {
-  content: "Statistische eenheden";
-}
-.iti-box.full.tn-du .label:before {
-  content: "Vervoersnetwerken";
-}
-.iti-box.full.us-du .label:before {
-  content: "Nutsdiensten en overheidsdiensten";
 }
