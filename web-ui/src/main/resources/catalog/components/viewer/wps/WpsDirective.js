@@ -127,6 +127,8 @@
           var defaults = scope.$eval(attrs['defaults']) ||
               scope.wpsLink.applicationProfile;
 
+          scope.wpsLink.layer.set('wpsfilter-el', element);
+
           if (defaults) {
             defaults = parseKvpParams(defaults);
           }

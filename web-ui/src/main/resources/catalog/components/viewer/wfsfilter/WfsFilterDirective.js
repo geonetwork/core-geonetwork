@@ -478,6 +478,10 @@
             else if (old && geom != '') {
               scope.filterFacets();
             }
+            else if (!old && geom === ',,,') {
+              geometry = undefined;
+              scope.filterFacets();
+            }
             // do nothing when reset from wfsFilter directive
           });
 

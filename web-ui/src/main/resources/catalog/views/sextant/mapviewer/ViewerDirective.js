@@ -168,6 +168,9 @@
                 if (e.element.get('wfsfilter-el')) {
                   e.element.get('wfsfilter-el').remove();
                 }
+                if (e.element.get('wpsfilter-el')) {
+                  e.element.get('wpsfilter-el').remove();
+                }
               });
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
