@@ -39,6 +39,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -274,6 +275,11 @@ public class DatabaseMigration implements BeanPostProcessor {
             _logger.info("         - Java migration class:" + className);
 
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
+
+            if (task instanceof ApplicationContextAware) {
+                ((ApplicationContextAware) task).setApplicationContext(_applicationContext);
+            }
+
             task.update(conn);
             return false;
         } catch (SQLException e) {

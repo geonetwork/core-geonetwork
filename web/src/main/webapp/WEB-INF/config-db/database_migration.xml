@@ -168,6 +168,7 @@
     </entry>
     <entry key="3.2.1">
       <list>
+        <value>java:v321.UpdateEncryptedSettings</value>
         <value>WEB-INF/classes/setup/sql/migrate/v321/migrate-</value>
       </list>
     </entry>
