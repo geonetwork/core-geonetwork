@@ -24,6 +24,7 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
+import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesEngine;
@@ -32,6 +33,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -73,6 +76,8 @@ import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
 import org.jdom.Element;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -161,6 +166,9 @@ public class Geonetwork implements ApplicationHandler {
         String subVersion = systemInfo.getSubVersion();
 
         logger.info("Initializing GeoNetwork " + version + "." + subVersion + " ...");
+
+        // Initialize password encoder
+        initPasswordEncoder();
 
         // Get main service config handler
         @SuppressWarnings("unchecked")
@@ -667,5 +675,32 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("NOTE: Using shapefile for spatial index, this can be slow for larger catalogs");
         return ids;
+    }
+
+    private void initPasswordEncoder() throws Exception {
+        StandardPBEStringEncryptor encryptor =
+                (StandardPBEStringEncryptor) this._applicationContext.getBean("strongEncryptor");
+
+        String securityPropsPath = ((JeevesApplicationContext) _applicationContext).getServletContext()
+                .getRealPath("WEB-INF/config-security/config-security.properties");
+
+        PropertiesConfiguration conf = new PropertiesConfiguration(securityPropsPath);
+        String encrypterPassword = (String) conf.getProperty("encrypter.password");
+
+        // Creates a random encrypter password if the password has the value 'default'
+        if (encrypterPassword.equals("default")) {
+            encrypterPassword = RandomStringUtils.randomAlphanumeric(10);
+
+            conf.setProperty("encrypter.password", encrypterPassword);
+            conf.save();
+
+            encryptor.setPassword(encrypterPassword);
+        }
+
+        // Register encryptor in HibernatePBEEncryptorRegistry class
+        HibernatePBEEncryptorRegistry registry =
+                HibernatePBEEncryptorRegistry.getInstance();
+        registry.registerPBEStringEncryptor("STRING_ENCRYPTOR", encryptor);
+
     }
 }

@@ -66,6 +66,7 @@
   <bean id="defaultLanguage" class="java.lang.String">
     <constructor-arg index="0" value="eng"/>
   </bean>
+
   <!-- Define the languages in the UI. Seems like these should come from database
     at some point but at the moment they are needed here. -->
   <util:set id="languages" value-type="java.lang.String">
@@ -176,4 +177,14 @@
     <constructor-arg name="langCode" value="eng"/>
   </bean>
   -->
+
+  <bean id="strongEncryptor"
+        class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+    <property name="algorithm">
+      <value>${encrypter.algorithm}</value>
+    </property>
+    <property name="password">
+      <value>${encrypter.password}</value>
+    </property>
+  </bean>
 </beans>

@@ -24,6 +24,10 @@
 package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.MapServerEntityListenerManager;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.jasypt.hibernate4.type.EncryptedStringType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +42,14 @@ import java.util.Map;
  *
  * @author Francois
  */
+@TypeDef(
+        name="encryptedString",
+        typeClass=EncryptedStringType.class,
+        parameters= {
+                // value will be used later to register encryptor
+                @Parameter(name="encryptorRegisteredName", value="STRING_ENCRYPTOR")
+        }
+)
 @Entity
 @Table(name = "Mapservers")
 @Cacheable
@@ -232,6 +244,7 @@ public class MapServer extends GeonetEntity {
      * @return the password.
      */
     @Column(length = 128)
+    @Type(type="encryptedString")
     public String getPassword() {
         return _password;
     }
