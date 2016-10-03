@@ -165,6 +165,7 @@
       <field name="cl_classification_text" tagName="classification_text"/>
       <field name="cl_maintenanceAndUpdateFrequency_text" tagName="maintenanceAndUpdateFrequency_text"/>
       <field name="cl_spatialRepresentationType_text" tagName="spatialRepresentationType_text"/>
+      <field name="cl_spatialRepresentationType" tagName="spatialRepresentationType"/>
       <field name="datasetLang" tagName="datasetLang"/>
       <field name="mdLanguage" tagName="mdLanguage"/>
       <field name="serviceType" tagName="serviceType"/>
