@@ -1,26 +1,3 @@
-/*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
- * United Nations (FAO-UN), United Nations World Food Programme (WFP)
- * and United Nations Environment Programme (UNEP)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
- *
- * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
- * Rome - Italy. email: geonetwork@osgeo.org
- */
-
 (function() {
   goog.provide('gn_printmap_service');
 
@@ -163,25 +140,18 @@
           var encFeatures = [];
           var stylesDict = {};
           var styleId = 0;
-
           angular.forEach(features, function(feature) {
             var encStyle = {
               id: styleId
             };
 
-            var styles, featureStyle = feature.get('_style');
-            if (angular.isFunction(featureStyle)) {
-              styles = featureStyle(feature);
-            }
-            else if (angular.isArray(featureStyle)) {
-              styles = featureStyle;
-            }
-            else if (featureStyle) {
-              styles = [featureStyle];
-            }
-            else {
-              styles = ol.style.defaultStyleFunction(feature);
-            }
+            var hasLayerStyleFunction = !!(feature.getStyleFunction &&
+                feature.getStyleFunction());
+
+            var styles = (hasLayerStyleFunction) ?
+                feature.getStyleFunction()(feature) :
+                ol.feature.defaultStyleFunction(feature);
+
 
             var geometry = feature.getGeometry();
 
@@ -243,7 +213,6 @@
             customParams: {
               'EXCEPTIONS': 'XML',
               'TRANSPARENT': 'true',
-              'CRS': 'EPSG:3857',
               'TIME': params.TIME
             },
             singleTile: config.singleTile || false
@@ -312,6 +281,14 @@
           var tileGrid = source.getTileGrid();
           var matrixSet = source.getMatrixSet();
           var matrixIds = new Array(tileGrid.getResolutions().length);
+          // if there is a layer URL use that
+          // this must be URLEncoded or MapFish barfs.
+          var url = layer.get('url');
+          if(!url){ //otherwise try the source URL
+             url = layer instanceof ol.source.WMTS ?
+              layer.getSource().getUrl() :
+              layer.getSource().getUrls()[0];
+          }
           for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
             var mSize = (ol.extent.getWidth(ol.proj.get('EPSG:3857').
                 getExtent()) /tileGrid.getTileSize()) /
@@ -327,12 +304,17 @@
 
           angular.extend(enc, {
             type: 'WMTS',
-            baseURL: layer.get('url'),
+            baseURL: url,
             layer: source.getLayer(),
             version: source.getVersion(),
-            requestEncoding: 'KVP',
+            //choose the right encoding, default to KVP
+            requestEncoding: source.getRequestEncoding() || 'KVP',
             format: source.getFormat(),
+            //while MapFish claims they are optional they aren't in the code
+            customParams: {},
             style: source.getStyle(),
+            //while MapFish claims they are optional they aren't in the code
+            dimensions: [],
             matrixSet: matrixSet,
             matrixIds: matrixIds
           });
@@ -479,6 +461,7 @@
 
       if (textStyle) {
         var fillColor = ol.color.asArray(textStyle.getFill().getColor());
+        var strokeColor = ol.color.asArray(textStyle.getStroke().getColor());
         var fontValues = textStyle.getFont().split(' ');
         literal.fontColor = toHexa(fillColor);
         // Fonts managed by print server: COURIER, HELVETICA, TIMES_ROMAN
@@ -487,11 +470,8 @@
         literal.fontWeight = 'normal'; //fontValues[0];
         literal.label = textStyle.getText();
         literal.labelAlign = textStyle.getTextAlign();
-        if (textStyle.getStroke()) {
-          literal.labelOutlineColor = toHexa(ol.color.asArray(
-              textStyle.getStroke().getColor()));
-          literal.labelOutlineWidth = textStyle.getStroke().getWidth();
-        }
+        literal.labelOutlineColor = toHexa(strokeColor);
+        literal.labelOutlineWidth = textStyle.getStroke().getWidth();
         literal.fillOpacity = 0.0;
         literal.pointRadius = 0;
       }
