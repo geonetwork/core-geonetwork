@@ -37,7 +37,7 @@
       'Metadata',
       'gnWfsService',
       'gnGlobalSettings',
-      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log, 
+      function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
           gnGlobalSettings) {
@@ -1272,12 +1272,6 @@
            */
           createLayerForType: function(type, opt) {
             switch (type) {
-              case 'mapquest':
-                return new ol.layer.Tile({
-                  style: 'Road',
-                  source: new ol.source.MapQuest({layer: 'osm'}),
-                  title: 'MapQuest'
-                });
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
