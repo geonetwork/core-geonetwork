@@ -302,7 +302,7 @@
     "suggestionListError": "Ajaj, při vyhledávání návrhů se něco nepovedlo!",
     "showHideErrors": "Zobrazit / skrýt chyby",
     "showHideSuccess": "Zobrazit / skrýt úspěšnost",
-    "chooseAFragment": "Select element to add",
+    "chooseAFragment": "select component to add",
     "chooseASourceRecord": "Choose a source record to add element from",
     "sourceRecord": "Source record",
     "deleteField": "Vymazat toto pole",

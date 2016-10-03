@@ -302,7 +302,7 @@
     "suggestionListError": "Ui! Quelcom ha fallat mentre carregàvem els suggeriments!",
     "showHideErrors": "Mostra/oculta els errors",
     "showHideSuccess": "Mostra/oculta els encerts",
-    "chooseAFragment": "Select element to add",
+    "chooseAFragment": "select component to add",
     "chooseASourceRecord": "Choose a source record to add element from",
     "sourceRecord": "Source record",
     "deleteField": "Esborra aquest camp",

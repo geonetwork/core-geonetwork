@@ -302,7 +302,7 @@
     "suggestionListError": "¡Oh! ¡Algo salió mal mientras cargábamos las sugerencias!",
     "showHideErrors": "Mostrar/ocultar errores",
     "showHideSuccess": "Mostrar/ocultar éxitos",
-    "chooseAFragment": "Select element to add",
+    "chooseAFragment": "select component to add",
     "chooseASourceRecord": "Choose a source record to add element from",
     "sourceRecord": "Source record",
     "deleteField": "Borrar este campo",
