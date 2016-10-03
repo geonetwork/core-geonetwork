@@ -42,13 +42,18 @@
         'editorhelper/partials/fieldsuggestions.html',
         scope: {
           ref: '@',
-          field: '@'
+          field: '@',
+          fq: '@'
         },
         link: function(scope, element, attrs) {
           scope.suggestions = [];
           if (scope.field != '') {
-            $http.get('suggest?sortBy=ALPHA&maxNumberOfTerms=1000&origin=INDEX_TERM_VALUES&field=' +
-              scope.field, {cache: true}).then(
+            var url = 'suggest?sortBy=ALPHA&maxNumberOfTerms=1000&' +
+              'origin=INDEX_TERM_VALUES&field=' + scope.field
+            if (scope.fq != '') {
+              url += '&q=' + scope.fq;
+            }
+            $http.get(url, {cache: true}).then(
               function(r) {
                 scope.suggestions = r.data[1];
               }
