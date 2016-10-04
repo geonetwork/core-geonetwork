@@ -298,16 +298,19 @@ public class RdfOutputManager {
         serverEl.addContent(new Element("protocol").setText(sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL)));
 
         Element siteEl = new Element("site");
-        siteEl.addContent(new Element("id").setText(sm.getValue(Settings.SYSTEM_SITE_SITE_ID_PATH)));
+        siteEl.addContent(new Element("siteId").setText(sm.getValue(Settings.SYSTEM_SITE_SITE_ID_PATH)));
         siteEl.addContent(new Element("name").setText(sm.getValue(Settings.SYSTEM_SITE_NAME_PATH)));
         siteEl.addContent(new Element("organization").setText(sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION)));
-        siteEl.addContent(new Element("resourcePrefix").setText(sm.getValue(Settings.SYSTEM_RESOURCE_PREFIX)));
+
+        Element metadataEl = new Element("metadata");
+        metadataEl.addContent(new Element("resourceIdentifierPrefix").setText(sm.getValue(Settings.SYSTEM_RESOURCE_PREFIX)));
 
         Element guiEl = new Element("gui");
         Element systemConfigEl = new Element("systemConfig");
         Element systemEl = new Element("system");
         systemEl.addContent(serverEl);
         systemEl.addContent(siteEl);
+        systemEl.addContent(metadataEl);
 
         systemConfigEl.addContent(systemEl);
 

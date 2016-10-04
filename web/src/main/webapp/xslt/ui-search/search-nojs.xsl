@@ -28,7 +28,10 @@
   -->
   <xsl:import href="../base-layout-nojs.xsl"/>
 
+
+
   <xsl:template mode="content" match="/">
+
     <div class="row" style="padding-bottom:20px">
       <div class="col-md-push-3 col-md-6">
         <form action="catalog.search.nojs" class="form-inline">
@@ -48,53 +51,84 @@
       </div>
     </div>
 
+    <!-- TODO: Display info about the filter.
+    eg. siteLogo if source filter is active, gravatar if contact filter is used. -->
 
-    <xsl:if test="/root/request/*">
+    <!-- Display field stats only -->
+    <xsl:variable name="fieldStats" select="/root/search/params/*[. = '']/name()"/>
+    <xsl:for-each select="/root/search/response/summary[1]/dimension[@name = $fieldStats and category]">
+      <h1><xsl:value-of select="@label"/></h1>
 
-      <div class="row" style="padding-bottom:20px">
-        <div class="col-xs-12">
-          From
-          <b>
-            <xsl:value-of select="/root/response/@from"/>
-          </b>
-          to
-          <b>
-            <xsl:value-of select="/root/response/@to"/>
-          </b>
-          out of
-          <b>
-            <xsl:value-of select="/root/response/summary/@count"/>
-          </b>
-          results.
+      <xsl:variable name="field" select="@name"/>
+      <ul>
+        <xsl:for-each select="category">
+          <li>
+            <a href="?{$field}={@value}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a>
+          </li>
+        </xsl:for-each>
+      </ul>
+    </xsl:for-each>
+
+    <!---->
+    <textarea cols="100" rows="30">
+      <xsl:copy-of select="."/>
+    </textarea>
+
+
+    <xsl:if test="count($fieldStats) = 0">
+      <div class="row">
+        <div class="col-md-3">
+          <xsl:for-each select="/root/search/response[1]/summary">
+            <xsl:for-each select="dimension[category]">
+              <h1><xsl:value-of select="@label"/></h1>
+
+              <xsl:variable name="field" select="@name"/>
+              <ul>
+                <xsl:for-each select="category">
+                  <li>
+                    <a href="?{$field}={@value}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a>
+                  </li>
+                </xsl:for-each>
+              </ul>
+            </xsl:for-each>
+          </xsl:for-each>
+        </div>
+        <div class="col-md-9">
+          <xsl:for-each select="/root/search/response[@from]">
+
+            <div class="row" style="padding-bottom:20px">
+              <div class="col-xs-12">
+                From
+                <b>
+                  <xsl:value-of select="@from"/>
+                </b>
+                to
+                <b>
+                  <xsl:value-of select="@to"/>
+                </b>
+                out of
+                <b>
+                  <xsl:value-of select="@count"/>
+                </b>
+                results.
+              </div>
+            </div>
+
+            <xsl:for-each select="metadata">
+              <div class="row" style="padding-bottom:20px;">
+                <div class="col-xs-10">
+                  <a href="api/records/{*[name()='geonet:info']/uuid}">
+                    <xsl:value-of select="title|defaultTitle"/>
+                  </a>
+                  <br/>
+                  <xsl:value-of select="abstract"/>
+                </div>
+              </div>
+            </xsl:for-each>
+          </xsl:for-each>
         </div>
       </div>
-
-      <xsl:for-each select="/root/response/metadata">
-        <div class="row" style="padding-bottom:20px;">
-          <div class="col-xs-10">
-            <a href="../../metadata/{*[name()='geonet:info']/uuid}">
-              <xsl:value-of select="title|defaultTitle"/>
-            </a>
-            <br/>
-            <xsl:value-of select="abstract"/>
-          </div>
-        </div>
-      </xsl:for-each>
     </xsl:if>
-
-
-    <div class="row" style="background-color:#999;color:white;padding:40px">
-      <h2>Browse by topic</h2>
-      <xsl:for-each select="root/response/summary/topicCats/topicCat">
-        <div class="col-xs-12 col-sm-6 col-lg-4" style="padding:15px">
-          <a style="color:white" href="catalog.search.nojs?fast=index&amp;any={@name}">
-            <xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)
-          </a>
-        </div>
-      </xsl:for-each>
-    </div>
-
-
   </xsl:template>
 
 </xsl:stylesheet>

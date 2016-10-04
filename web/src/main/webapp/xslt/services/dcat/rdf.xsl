@@ -47,17 +47,21 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-  <xsl:variable name="url" select="concat($env/system/server/protocol, '://',
-    $env/system/server/host,
-    if ($port='80') then '' else concat(':', $port),
-    /root/gui/url)"/>
-  <xsl:variable name="resourcePrefix" select="$env/system/site/resourcePrefix"/>
+
+  <xsl:variable name="url"
+                select="concat($env/system/server/protocol, '://',
+                          $env/system/server/host,
+                          if ($port='80') then '' else concat(':', $port),
+                          /root/gui/url)"/>
+
+  <xsl:variable name="resourcePrefix" select="$env/metadata/resourceIdentifierPrefix"/>
 
   <!-- TODO: should use Java language code mapper -->
   <xsl:variable name="iso2letterLanguageCode" select="substring(/root/gui/language, 1, 2)"/>
 
 
   <xsl:template match="/">
+    <xsl:message>##<xsl:copy-of select="$env/system/site"/></xsl:message>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
              xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
              xmlns:foaf="http://xmlns.com/foaf/0.1/"
@@ -83,7 +87,7 @@
       "Typically, a web-based data catalog is represented as a single instance of this class."
       ... also describe harvested catalogues if harvested records are in the current dump.
     -->
-    <dcat:Catalog rdf:about="{$resourcePrefix}/catalogs/{$env/system/site/id}">
+    <dcat:Catalog rdf:about="{$resourcePrefix}/catalogs/{$env/system/site/siteId}">
 
       <!-- A name given to the catalog. -->
       <dct:title xml:lang="{$iso2letterLanguageCode}">
@@ -104,19 +108,17 @@
       </foaf:homepage>
 
       <!-- FIXME : void:Dataset -->
-      <void:openSearchDescription><xsl:value-of select="$url"/>/srv/eng/portal.opensearch
-      </void:openSearchDescription>
-      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/rdf.search?any=
-      </void:uriLookupEndpoint>
+      <void:openSearchDescription><xsl:value-of select="$url"/>/srv/eng/portal.opensearch</void:openSearchDescription>
+      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/rdf.search?any=</void:uriLookupEndpoint>
 
 
       <!-- The entity responsible for making the catalog online. -->
-      <dct:publisher rdf:resource="{$resourcePrefix}/organization/0"/>
+      <dct:publisher rdf:resource="{$resourcePrefix}/organizations/{encode-for-uri($env/system/site/organization)}"/>
 
       <!-- The knowledge organization system (KOS) used to classify catalog's datasets.
       -->
       <xsl:for-each select="/root/gui/thesaurus/thesauri/thesaurus">
-        <dcat:themes rdf:resource="{$resourcePrefix}/thesaurus/{key}"/>
+        <dcat:themes rdf:resource="{$resourcePrefix}/registries/vocabularies/{key}"/>
       </xsl:for-each>
 
 
@@ -158,7 +160,7 @@
 
     <!-- Organization in charge of the catalogue defined in the administration
     > system configuration -->
-    <foaf:Organization rdf:about="{$resourcePrefix}/organization/0">
+    <foaf:Organization rdf:about="{$resourcePrefix}/organizations/{encode-for-uri($env/system/site/organization)}">
       <foaf:name>
         <xsl:value-of select="$env/system/site/organization"></xsl:value-of>
       </foaf:name>
@@ -168,7 +170,7 @@
       * Resource identifier is a local identifier for local thesaurus or public URI if external
     -->
     <xsl:for-each select="/root/gui/thesaurus/thesauri/thesaurus">
-      <skos:ConceptScheme rdf:about="{$resourcePrefix}/thesaurus/{key}">
+      <skos:ConceptScheme rdf:about="{$resourcePrefix}/registries/vocabularies/{key}">
         <dct:title>
           <xsl:value-of select="title"/>
         </dct:title>
@@ -198,8 +200,8 @@
   <xsl:template mode="references" match="gui|request|metadata"/>
 
   <xsl:template mode="record-reference" match="metadata" priority="2">
-    <dcat:dataset rdf:resource="{$resourcePrefix}/resource/{geonet:info/uuid}"/>
-    <dcat:record rdf:resource="{$resourcePrefix}/metadata/{geonet:info/uuid}"/>
+    <dcat:dataset rdf:resource="{$resourcePrefix}/datasets/{geonet:info/uuid}"/>
+    <dcat:record rdf:resource="{$resourcePrefix}/records/{geonet:info/uuid}"/>
   </xsl:template>
 
 

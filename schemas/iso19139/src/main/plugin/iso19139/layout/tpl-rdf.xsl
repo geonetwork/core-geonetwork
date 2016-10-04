@@ -131,9 +131,9 @@
       select="//gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString" group-by=".">
       <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
       <skos:Concept
-        rdf:about="{$resourcePrefix}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/{encode-for-uri(.)}">
+        rdf:about="{$resourcePrefix}/registries/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/concepts/{encode-for-uri(.)}">
         <skos:inScheme
-          rdf:resource="{$resourcePrefix}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}"/>
+          rdf:resource="{$resourcePrefix}/registries/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}"/>
         <skos:prefLabel>
           <xsl:value-of select="."/>
         </skos:prefLabel>
@@ -222,7 +222,7 @@
           select="//gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString=current-grouping-key()]"
           group-by="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
           <foaf:member
-            rdf:resource="{$resourcePrefix}/organizations/{encode-for-uri(iso19139:getContactId(.))}"/>
+            rdf:resource="{$resourcePrefix}/persons/{encode-for-uri(iso19139:getContactId(.))}"/>
         </xsl:for-each-group>
       </foaf:Organization>
     </xsl:for-each-group>
@@ -230,11 +230,11 @@
 
     <xsl:for-each-group select="//gmd:CI_ResponsibleParty"
                         group-by="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
-      <!-- Organization memeber
+      <!-- Organization member
 
         xpath: //gmd:CI_ResponsibleParty-->
 
-      <foaf:Agent rdf:about="{$resourcePrefix}/person/{encode-for-uri(iso19139:getContactId(.))}">
+      <foaf:Agent rdf:about="{$resourcePrefix}/persons/{encode-for-uri(iso19139:getContactId(.))}">
         <xsl:if test="gmd:individualName/gco:CharacterString">
           <foaf:name>
             <xsl:value-of select="gmd:individualName/gco:CharacterString"/>
@@ -328,14 +328,14 @@
       select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString">
       <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
       <dcat:theme
-        rdf:resource="{$resourcePrefix}/thesaurus/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/{.}"/>
+        rdf:resource="{$resourcePrefix}/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/concepts/{.}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->
     <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharaceterString -->
     <!-- xpath: gmd:identificationInfo/*/gmd:topicCategory/gmd:MD_TopicCategoryCode -->
     <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode[.!='']">
       <!-- FIXME Is there any public URI pointing to topicCategory enumeration ? -->
-      <dcat:theme rdf:resource="{$resourcePrefix}/thesaurus/iso/topicCategory/{.}"/>
+      <dcat:theme rdf:resource="{$resourcePrefix}/vocabularies/isoTopicCategory/concepts/{.}"/>
     </xsl:for-each>
 
     <!-- Thumbnail -->
@@ -459,7 +459,7 @@
     -->
     <xsl:for-each
       select="../../gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/@uuidref ">
-      <dcat:dataDictionary rdf:resource="{$resourcePrefix}/metadata/{.}"/>
+      <dcat:dataDictionary rdf:resource="{$resourcePrefix}/records/{.}"/>
     </xsl:for-each>
     <!-- xpath: gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/@uuidref -->
 
