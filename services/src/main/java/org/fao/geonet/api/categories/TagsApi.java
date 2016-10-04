@@ -28,7 +28,9 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -107,6 +109,15 @@ public class TagsApi {
                 "A tag with id '%d' already exist", category.getId()
             ));
         } else {
+            // Populate languages if not already set
+            LanguageRepository langRepository = appContext.getBean(LanguageRepository.class);
+            java.util.List<Language> allLanguages = langRepository.findAll();
+            Map<String, String> labelTranslations = category.getLabelTranslations();
+            for (Language l : allLanguages) {
+                String label = labelTranslations.get(l.getId());
+                category.getLabelTranslations().put(l.getId(),
+                    label == null ? category.getName() : label);
+            }
             categoryRepository.save(category);
             return new ResponseEntity(null, HttpStatus.NO_CONTENT);
 

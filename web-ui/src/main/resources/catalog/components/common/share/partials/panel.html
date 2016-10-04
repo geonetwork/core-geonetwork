@@ -35,7 +35,9 @@
                data-ng-class="sorter.reverse ? 'fa-long-arrow-down' : 'fa-long-arrow-up'"></i>
           </a>
         </th>
-        <th data-ng-if="!disableAllCol"/>
+        <th data-ng-if="!disableAllCol">
+          <span translate>setall</span>
+        </th>
         <th><a href="" ng-click="setSorter('p')" data-ng-if="displayProfile">
           <span translate>profile</span>&nbsp;
           <i data-ng-if="sorter.predicate == 'p'" class="fa"

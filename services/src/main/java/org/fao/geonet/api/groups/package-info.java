@@ -21,39 +21,8 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function() {
-  goog.provide('gn_md_feedback_controller');
-
-  var module = angular.module('gn_md_feedback_controller', []);
-
-  module.controller('gnMdFeedbackController', [
-    '$scope', '$http', 'gnConfig',
-    function($scope, $http, gnConfig) {
-      $scope.isFeedbackEnabled = gnConfig[gnConfig.key.isFeedbackEnabled];
-
-      $scope.mdFeedbackOpen = false;
-      $scope.toggle = function() {
-        $scope.mdFeedbackOpen = !$scope.mdFeedbackOpen;
-      };
-
-      $scope.send = function(formId) {
-        $http({
-          url: 'contact.send?_content_type=json',
-          method: 'POST',
-          data: $(formId).serialize(),
-          headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded'
-          }
-        }).then(function(response) {
-          // TODO: report no email sent
-          if (response.status === 200) {
-            $scope.success = true;
-          } else {
-            $scope.success = false;
-          }
-        });
-      };
-    }
-  ]);
-
-})();
+/**
+ * API classes related with the {@link org.fao.geonet.domain.Group}
+ * manipulation.
+ */
+package org.fao.geonet.api.groups;

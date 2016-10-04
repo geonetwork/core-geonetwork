@@ -121,7 +121,8 @@
                 '&isTemplate=' + encodeURIComponent(isTemplate))
             .success(function(data) {
 
-              if ((data == 'null') || (data == null)) { // Null response returned
+              if ((data == 'null') || (data == null)) {
+                // Null response returned
                 // TODO : Add no data message
                 return;
               }

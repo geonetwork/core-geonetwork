@@ -8,12 +8,12 @@
                 exclude-result-prefixes="#all">
 
   <xsl:template name="header">
-    <div class="navbar navbar-default gn-top-bar ng-scope" role="navigation">
+    <!--<div class="navbar navbar-default gn-top-bar ng-scope" role="navigation">
       <div class="container-fluid ng-scope">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                   data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <!-- FIXME: i18n -->
+            &lt;!&ndash; FIXME: i18n &ndash;&gt;
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -24,10 +24,10 @@
           <ul class="nav navbar-nav">
             <li class="active">
               <a href=".">
-                <!-- FIXME: Should point to catalog logo -->
+                &lt;!&ndash; FIXME: Should point to catalog logo &ndash;&gt;
                 <img class="gn-logo"
                      src="{/root/gui/url}/images/harvesting/GN3.png"/>&#160;
-                <!-- FIXME: Replace by node name -->
+                &lt;!&ndash; FIXME: Replace by node name &ndash;&gt;
                 <span class="visible-lg ng-binding">GeoNetwork</span>
               </a>
             </li>
@@ -40,7 +40,7 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div>-->
   </xsl:template>
 
   <xsl:template name="footer">

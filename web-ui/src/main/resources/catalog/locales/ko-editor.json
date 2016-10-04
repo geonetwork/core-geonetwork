@@ -163,6 +163,7 @@
     "metadataContent": "메타데이터 내용",
     "metadataNotFound": "경고! {{id}} 아이디의 요청된 메타데이터를 찾을 수 없습니다.  <a href='#/create'>새로 생성하시겠습니까 ?</a>",
     "metadataType": "레코드 유형",
+    "hasDqMeasures": "품질 측정",
     "generateThumbnail": "썸네일 생성",
     "generateThumbnail-help": "파일저장소에 썸네일을 생성하고 저장합니다. 메타데이터 레코드에 썸네일을 추가하기 위해 파일저장소를 사용하십시오.",
     "createAThumbnail": "뷰 서비스를 사용하여 썸네일 생성",

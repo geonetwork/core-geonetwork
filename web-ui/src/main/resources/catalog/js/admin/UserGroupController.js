@@ -268,7 +268,11 @@
         };
 
         $http.post('../api/users/' + $scope.userSelected.id +
-            '/actions/forget-password' , null, {params: params})
+            '/actions/forget-password',
+            $.param(params),
+            {
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
@@ -516,7 +520,7 @@
         $http.put('../api/groups' + (
             $scope.groupSelected.id != -99 ?
             '/' + $scope.groupSelected.id : ''
-          ), $scope.groupSelected)
+            ), $scope.groupSelected)
           .success(uploadImportMdDone)
           .error(uploadImportMdError);
       };
