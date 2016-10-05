@@ -27,7 +27,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-          <a href="{$fullURLForService}catalog.search#/home">
+          <a href="{/root/gui/nodeUrl}{$lang}/catalog.search#/home">
             <img class="gn-logo"
                  src="{/root/gui/url}/images/logos/{$env/system/site/siteId}.png"></img>
             <span class="hidden-xs">
