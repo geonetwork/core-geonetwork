@@ -99,8 +99,15 @@
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
                  scope.setSource = function(r) {
-                   scope.sourceRecord =
-                   angular.isObject(r) ? r['geonet:info'].uuid : null;
+                   if (angular.isObject(r)) {
+                     scope.sourceRecordTitle = r.title || r.defaultTitle || '';
+                     scope.sourceRecord = r['geonet:info'].uuid;
+                   } else {
+                     scope.sourceRecordTitle = null;
+                     scope.sourceRecord = null;
+                     scope.fragments = {};
+                   }
+
                  };
                  scope.getFragments = function() {
                    scope.fragments = [];
