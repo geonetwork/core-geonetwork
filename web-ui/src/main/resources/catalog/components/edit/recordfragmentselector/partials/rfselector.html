@@ -1,10 +1,11 @@
-<span>
+<div>
   <div data-ng-search-form="" class="input-group">
     <input type="text"
            class="form-control"
            placeholder="{{'search' | translate}}"
            data-ng-model="searchObj.any"
            data-ng-model-options="modelOptions"
+           data-ng-focus="updateParams();triggerSearch()"
            data-ng-change="updateParams();triggerSearch()"/>
 
      <div class="input-group-btn"
@@ -36,16 +37,15 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
-        <li href="" class="list-group-item"
-            data-ng-repeat="(key, value) in fragments">{{key}}<span
-          class="pull-right">
-            <a href="" data-ng-click="addFragment(value)"
-               class="fa fa-plus pull-right"/>
-          </span>
+        <li data-ng-repeat="(key, value) in fragments">
+          <a href="" data-ng-click="addFragment(value)">
+             {{key}}&nbsp;
+            <i class="fa fa-plus pull-right"/>
+          </a>
         </li>
       </ul>
     </div>
 
     <input name="{{snippetRef}}" type="hidden"/>
   </div>
-</span>
+</div>
