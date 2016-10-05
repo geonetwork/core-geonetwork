@@ -71,9 +71,9 @@
 
       <xsl:call-template name="catalogue"/>
 
-      <xsl:apply-templates mode="to-dcat" select="/root/*"/>
+      <xsl:apply-templates mode="to-dcat" select="/root/*|/root/search/response/*"/>
 
-      <xsl:apply-templates mode="references" select="/root/*"/>
+      <xsl:apply-templates mode="references" select="/root/*|/root/search/response/*"/>
     </rdf:RDF>
 
   </xsl:template>
@@ -103,12 +103,12 @@
 
       <!-- The homepage of the catalog -->
       <foaf:homepage>
-        <xsl:value-of select="$url"/>
+        <xsl:value-of select="/root/gui/nodeUrl"/>
       </foaf:homepage>
 
       <!-- FIXME : void:Dataset -->
-      <void:openSearchDescription><xsl:value-of select="$url"/>/srv/eng/portal.opensearch</void:openSearchDescription>
-      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/rdf.search?any=</void:uriLookupEndpoint>
+      <void:openSearchDescription><xsl:value-of select="/root/gui/nodeUrl"/>eng/portal.opensearch</void:openSearchDescription>
+      <void:uriLookupEndpoint><xsl:value-of select="/root/gui/nodeUrl"/>eng/rdf.search?any=</void:uriLookupEndpoint>
 
 
       <!-- The entity responsible for making the catalog online. -->
@@ -154,7 +154,8 @@
         <dcat:dataset rdf:resource="http://localhost:8080/geonetwork/dataset/1"/>
         <dcat:record rdf:resource="http://localhost:8080/geonetwork/metadata/1"/>
       -->
-      <xsl:apply-templates mode="record-reference" select="/root/*"/>
+      <xsl:apply-templates mode="record-reference" select="/root/*|/root/search/response/*"/>
+
     </dcat:Catalog>
 
     <!-- Organization in charge of the catalogue defined in the administration
@@ -192,11 +193,11 @@
 
 
   <!-- Avoid request and gui tag in template modes related to metadata conversion -->
-  <xsl:template mode="record-reference" match="gui|request|metadata"/>
+  <xsl:template mode="record-reference" match="gui|request|metadata|translations|search|summary"/>
 
-  <xsl:template mode="to-dcat" match="gui|request|metadata"/>
+  <xsl:template mode="to-dcat" match="gui|request|metadata|translations|search|summary"/>
 
-  <xsl:template mode="references" match="gui|request|metadata"/>
+  <xsl:template mode="references" match="gui|request|metadata|translations|search|summary"/>
 
   <xsl:template mode="record-reference" match="metadata" priority="2">
     <dcat:dataset rdf:resource="{$resourcePrefix}/datasets/{geonet:info/uuid}"/>

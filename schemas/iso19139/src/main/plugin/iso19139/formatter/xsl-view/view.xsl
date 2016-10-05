@@ -233,7 +233,7 @@
               <xsl:choose>
                 <xsl:when test="$email">
                   <a href="mailto:{normalize-space($email)}">
-                    <xsl:value-of select="$displayName"/>
+                    <xsl:value-of select="$displayName"/>&#160;
                   </a>
                 </xsl:when>
                 <xsl:otherwise>
@@ -293,7 +293,7 @@
                   </xsl:variable>
                   <i class="fa fa-phone">&#160;</i>
                   <a href="tel:{$phoneNumber}">
-                    <xsl:value-of select="$phoneNumber"/>
+                    <xsl:value-of select="$phoneNumber"/>&#160;
                   </a>
                 </div>
               </xsl:for-each>
@@ -303,7 +303,7 @@
                 </xsl:variable>
                 <i class="fa fa-fax">&#160;</i>
                 <a href="tel:{normalize-space($phoneNumber)}">
-                  <xsl:value-of select="normalize-space($phoneNumber)"/>
+                  <xsl:value-of select="normalize-space($phoneNumber)"/>&#160;
                 </a>
               </xsl:for-each>
 
@@ -339,8 +339,8 @@
       <dd>
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
-
-        <a class="btn btn-link" href="xml.metadata.get?id={$metadataId}">
+<xsl:message>##<xsl:value-of select="$nodeUrl"/></xsl:message>
+        <a class="btn btn-link" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
           <i class="fa fa-file-code-o fa-2x">&#160;</i>
           <span data-translate="">metadataInXML</span>
         </a>
@@ -366,7 +366,7 @@
         </xsl:variable>
         <a href="{*/gmd:linkage/gmd:URL}">
           <xsl:apply-templates mode="render-value"
-                               select="*/gmd:name"/>
+                               select="*/gmd:name"/>&#160;
         </a>
         <p>
           <xsl:value-of select="normalize-space($linkDescription)"/>
@@ -653,7 +653,7 @@
   <xsl:template mode="render-value"
                 match="gmd:URL">
     <a href="{.}">
-      <xsl:value-of select="."/>
+      <xsl:value-of select="."/>&#160;
     </a>
   </xsl:template>
 

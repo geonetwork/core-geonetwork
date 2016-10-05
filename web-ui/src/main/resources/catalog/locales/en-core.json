@@ -203,6 +203,8 @@
     "upload": "Upload",
     "uuid": "Identifier",
     "url": "URL",
+    "records": "record(s)",
+    "responsiblePartyEmail": "Contact",
     "call": "Call",
     "weblink": "Links",
     "downloads": "Download",

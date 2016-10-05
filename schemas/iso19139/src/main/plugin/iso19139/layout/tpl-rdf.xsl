@@ -73,7 +73,7 @@
     -->
     <dcat:CatalogRecord rdf:about="{$resourcePrefix}/records/{gmd:fileIdentifier/gco:CharacterString}">
       <!-- Link to a dcat:Dataset or a rdf:Description for services and feature catalogue. -->
-      <foaf:primaryTopic rdf:resource="{$resourcePrefix}/resource/{iso19139:getResourceCode(.)}"/>
+      <foaf:primaryTopic rdf:resource="{$resourcePrefix}/resources/{iso19139:getResourceCode(.)}"/>
 
       <!-- Metadata change date.
       "The date is encoded as a literal in "YYYY-MM-DD" form (ISO 8601 Date and Time Formats)." -->
@@ -112,7 +112,7 @@
     </dct:references>
 
     <dct:references>
-      <rdf:Description rdf:about="{$resourcePrefix}/records/{$uuid}/formatters/html">
+      <rdf:Description rdf:about="{$resourcePrefix}/records/{$uuid}">
         <dct:format>
           <dct:IMT>
             <rdf:value>text/html</rdf:value>

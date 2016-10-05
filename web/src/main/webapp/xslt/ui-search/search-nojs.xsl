@@ -42,112 +42,94 @@
 
 
     <div class="row" style="padding-bottom:20px">
-      <div class="col-md-3"
-           style="text-align: center;">&#160;
-        <xsl:variable name="parameters"
-                      select="/root/search/params/*[
-                                  name(.) != 'fast' and name(.) != 'resultType'
-                                ]"/>
+      <div class="col-md-3">&#160;
 
-        <!-- If only one parameter set, the page provides a summary
-        for this criteria. For contact, source catalog, an extra panel
-        is added with some details about this resource. -->
-        <xsl:if test="count($parameters) = 1">
-          <xsl:variable name="parameterName"
-                        select="$parameters[1]/name()"/>
-          <xsl:variable name="parameterLabel"
-                        select="gn-fn-core:translate($parameterName, $t)"/>
+          <xsl:variable name="parameters"
+                        select="/root/search/params/*[
+                                    name(.) != 'fast' and name(.) != 'resultType'
+                                  ]"/>
 
-          <xsl:variable name="parameterValue"
-                        select="$parameters[1]/text()"/>
-          <h4>
-            <xsl:value-of select="$parameterLabel"/>
-          </h4>
-          <!-- Illustration -->
-          <xsl:choose>
-            <xsl:when test="$parameterName = '_groupPublished'">
-              <img  class="gn-logo-lg"
-                    src="{/root/gui/url}/images/harvesting/{$parameterValue}.png"/>
-            </xsl:when>
-            <xsl:when test="$parameterName = '_source'">
-              <img  class="gn-logo-lg"
-                    src="{/root/gui/url}/images/logos/{$parameterValue}.png"/>
-            </xsl:when>
-            <xsl:when test="$parameterName = 'responsiblePartyEmail'">
-              <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
-              <h2>
-                <xsl:value-of select="$parameterValue"/>
-              </h2>
-            </xsl:when>
-            <xsl:when test="$parameterName = 'topicCat' or $parameterName = 'type'">
-              <span class="">
-                <i class="fa fa-3x gn-icon gn-icon-{$parameterValue}">&#160;</i>
-              </span>
-              <h2>
-                <xsl:value-of select="$parameterValue"/>
-              </h2>
-            </xsl:when>
-            <xsl:otherwise>
-              <h2>
-                <xsl:value-of select="$parameterValue"/>
-              </h2>
-            </xsl:otherwise>
-          </xsl:choose>
-          <h4>
-            <xsl:value-of select="concat($count, ' ', $t/records)"/>
-          </h4>
-        </xsl:if>
+          <!-- If only one parameter set, the page provides a summary
+          for this criteria. For contact, source catalog, an extra panel
+          is added with some details about this resource. -->
+          <xsl:if test="count($parameters) = 1">
+            <div class="gn-resource-info">
+              <xsl:variable name="parameterName"
+                            select="$parameters[1]/name()"/>
+              <xsl:variable name="parameterLabel"
+                            select="gn-fn-core:translate($parameterName, $t)"/>
+
+              <xsl:variable name="parameterValue"
+                            select="$parameters[1]/text()"/>
+              <h4>
+                <xsl:value-of select="$parameterLabel"/>
+              </h4>
+              <!-- Illustration -->
+              <xsl:choose>
+                <xsl:when test="$parameterName = '_groupPublished'">
+                  <img  class="gn-logo-lg"
+                        src="{/root/gui/url}/images/harvesting/{$parameterValue}.png"/>
+                </xsl:when>
+                <xsl:when test="$parameterName = '_source'">
+                  <img  class="gn-logo-lg"
+                        src="{/root/gui/url}/images/logos/{$parameterValue}.png"/>
+                </xsl:when>
+                <xsl:when test="$parameterName = 'responsiblePartyEmail'">
+                  <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
+                  <h2>
+                    <xsl:value-of select="$parameterValue"/>
+                  </h2>
+                </xsl:when>
+                <xsl:when test="$parameterName = 'topicCat' or $parameterName = 'type'">
+                  <span class="">
+                    <i class="fa fa-3x gn-icon gn-icon-{$parameterValue}">&#160;</i>
+                  </span>
+                  <h2>
+                    <xsl:value-of select="$parameterValue"/>
+                  </h2>
+                </xsl:when>
+                <xsl:otherwise>
+                  <h2>
+                    <xsl:value-of select="$parameterValue"/>
+                  </h2>
+                </xsl:otherwise>
+              </xsl:choose>
+              <h4>
+                <xsl:value-of select="concat($count, ' ', $t/records)"/>
+              </h4>
+            </div>
+          </xsl:if>
       </div>
       <div class="col-md-9">
-        <form action="{/root/gui/nodeUrl}search"
-              class="form-inline">
-          <div class="input-group gn-form-any">
-            <input type="text"
-                   name="any"
-                   id="fldAny"
-                   placeholder="{$t/anyPlaceHolder}"
-                   value="{/root/request/any}"
-                   class="form-control input-lg"
-                   autofocus=""/>
-            <div class="input-group-btn">
-              <button type="submit"
-                      class="btn btn-primary btn-lg">
-                &#160;&#160;
-                <i class="fa fa-search">&#160;</i>
-                &#160;&#160;
-              </button>
-              <a href="{/root/gui/nodeUrl}search"
-                 class="btn btn-link btn-lg">
-                <i class="fa fa-times">&#160;</i>
-              </a>
+        <div style="padding-top: 19px;">
+          <form action="{/root/gui/nodeUrl}search"
+                class="form-inline">
+            <div class="input-group gn-form-any">
+              <input type="text"
+                     name="any"
+                     id="fldAny"
+                     placeholder="{$t/anyPlaceHolder}"
+                     value="{/root/request/any}"
+                     class="form-control input-lg"
+                     autofocus=""/>
+              <div class="input-group-btn">
+                <button type="submit"
+                        class="btn btn-primary btn-lg">
+                  &#160;&#160;
+                  <i class="fa fa-search">&#160;</i>
+                  &#160;&#160;
+                </button>
+                <a href="{/root/gui/nodeUrl}search"
+                   class="btn btn-link btn-lg">
+                  <i class="fa fa-times">&#160;</i>
+                </a>
+              </div>
             </div>
-          </div>
-          <input type="hidden" name="fast" value="index"/>
-        </form>
+            <input type="hidden" name="fast" value="index"/>
+          </form>
+        </div>
       </div>
     </div>
-
-    <!-- Display field stats only
-    <xsl:variable name="fieldStats" select="/root/search/params/*[. = '']/name()"/>
-    <xsl:for-each select="/root/search/response/summary[1]/dimension[@name = $fieldStats and category]">
-      <h1><xsl:value-of select="gn-fn-core:translate(@label, $t)"/></h1>
-
-      <xsl:variable name="field" select="@name"/>
-      <ul>
-        <xsl:for-each select="category">
-          <li>
-            <a href="?{$field}={@value}">
-              <xsl:value-of select="gn-fn-core:translate(@label, $t)"/>
-              (<xsl:value-of select="@count"/>)</a>
-          </li>
-        </xsl:for-each>
-      </ul>
-    </xsl:for-each>-->
-
-    <!--
-    <textarea cols="100" rows="30">
-      <xsl:copy-of select="."/>
-    </textarea>-->
 
 
     <xsl:if test="$count > 0">
@@ -162,7 +144,13 @@
                 <xsl:for-each select="category">
                   <li>
                     <label>
-                      <a href="?{$field}={@value}">
+                      <xsl:variable name="luceneField"
+                                    select="if ($field = 'sourceCatalog')
+                                            then '_source'
+                                            else if ($field = 'maintenanceAndUpdateFrequency')
+                                            then 'cl_maintenanceAndUpdateFrequency'
+                                            else $field"/>
+                      <a href="{/root/gui/nodeUrl}search?{$luceneField}={@value}">
                         <span class="gn-facet-label">
                         <xsl:value-of select="gn-fn-core:translate(@label, $t)"/>
                         </span>
@@ -199,7 +187,9 @@
 
             <ul class="list-group gn-resultview gn-resultview-sumup">
               <xsl:for-each select="metadata">
-               <li class="list-group-item gn-grid ng-scope">
+               <li class="list-group-item gn-grid"
+                   itemscope="itemscope"
+                   itemtype="{gn-fn-core:get-schema-org-class(type)}">
                  <div class="row">
                    <xsl:if test="count(category) > 0">
                      <div class="gn-md-category">
@@ -217,8 +207,9 @@
                  </div>
 
                  <div class="row gn-md-title">
-                   <h3>
-                     <a href="api/records/{*[name()='geonet:info']/uuid}">
+                   <h3 itemprop="name">
+                     <a href="api/records/{*[name()='geonet:info']/uuid}"
+                        itemprop="url">
                        <i class="fa gn-icon-{type}" title="{type}">&#160;</i>
                        <xsl:value-of select="title|defaultTitle"/>
                      </a>
@@ -246,17 +237,6 @@
                 </li>
               </xsl:for-each>
             </ul>
-           <!-- <xsl:for-each select="metadata">
-              <div class="row" style="padding-bottom:20px;">
-                <div class="col-xs-10">
-                  <a href="api/records/{*[name()='geonet:info']/uuid}">
-                    <xsl:value-of select="title|defaultTitle"/>
-                  </a>
-                  <br/>
-                  <xsl:value-of select="abstract"/>
-                </div>
-              </div>
-            </xsl:for-each>-->
           </xsl:for-each>
         </div>
       </div>
