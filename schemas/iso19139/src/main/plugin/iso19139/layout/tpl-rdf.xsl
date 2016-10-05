@@ -328,14 +328,14 @@
       select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString">
       <!-- FIXME maybe only do that, if keyword URI is available (when xlink is used ?) -->
       <dcat:theme
-        rdf:resource="{$resourcePrefix}/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/concepts/{.}"/>
+        rdf:resource="{$resourcePrefix}/registries/vocabularies/{iso19139:getThesaurusCode(../../gmd:thesaurusName)}/concepts/{.}"/>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor -->
     <!-- xpath: gmd:identificationInfo/*/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharaceterString -->
     <!-- xpath: gmd:identificationInfo/*/gmd:topicCategory/gmd:MD_TopicCategoryCode -->
     <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode[.!='']">
       <!-- FIXME Is there any public URI pointing to topicCategory enumeration ? -->
-      <dcat:theme rdf:resource="{$resourcePrefix}/vocabularies/isoTopicCategory/concepts/{.}"/>
+      <dcat:theme rdf:resource="{$resourcePrefix}/registries/vocabularies/isoTopicCategory/concepts/{.}"/>
     </xsl:for-each>
 
     <!-- Thumbnail -->

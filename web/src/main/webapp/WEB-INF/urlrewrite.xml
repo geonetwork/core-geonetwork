@@ -63,14 +63,14 @@
     <to type="forward">$1/search?orgName=$2</to>
   </rule>
   <rule>
-    <note>Vocabulary information page.</note>
-    <from>^(.*)/resources/registries/vocabularies/(.*)$</from>
-    <to type="forward">$1/search?thesaurusName=$2</to>
-  </rule>
-  <rule>
     <note>Tag information page.</note>
     <from>^(.*)/resources/registries/vocabularies/.*/concepts/(.*)$</from>
     <to type="forward">$1/search?keyword=$2</to>
+  </rule>
+  <rule>
+    <note>Vocabulary information page.</note>
+    <from>^(.*)/resources/registries/vocabularies/(.*)$</from>
+    <to type="forward">$1/search?thesaurusName=$2</to>
   </rule>
   <rule>
     <note>Organization information page. List all records for an organization.

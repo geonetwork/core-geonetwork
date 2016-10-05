@@ -369,7 +369,7 @@ public class SettingManager {
     @Nonnull
     String getNodeURL() {
         NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
-        String locServ = getBaseURL() + "/" + nodeInfo.getId() + "/";
+        String locServ = getBaseURL() + nodeInfo.getId() + "/";
         return locServ;
     }
     /**

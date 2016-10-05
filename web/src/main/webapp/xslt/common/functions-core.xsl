@@ -27,6 +27,16 @@
                 version="2.0">
 
 
+  <xsl:function name="gn-fn-core:translate" as="xs:string">
+    <xsl:param name="key" as="xs:string"/>
+    <xsl:param name="t" as="node()"/>
+
+    <xsl:value-of select="if ($t/*[name() = $key]/text() != '')
+                          then $t/*[name() = $key]/text()
+                          else $key"/>
+  </xsl:function>
+
+
   <!-- Return mimetype according to protocol and linkage extension -->
   <xsl:function name="gn-fn-core:protocolMimeType" as="xs:string">
     <xsl:param name="linkage" as="xs:string"/>

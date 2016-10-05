@@ -44,6 +44,8 @@
   <xsl:variable name="service" select="/root/gui/reqService"/>
 
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
+  <!-- Used by SearchApi loading translation from JSON locale files. -->
+  <xsl:variable name="t" select="/root/translations"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 

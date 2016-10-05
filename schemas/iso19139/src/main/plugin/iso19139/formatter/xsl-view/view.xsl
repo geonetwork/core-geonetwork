@@ -220,7 +220,7 @@
 
     <div class="gn-contact">
       <h3>
-        <i class="fa fa-envelope"></i>
+        <i class="fa fa-envelope">&#160;</i>
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:role/*/@codeListValue"/>
       </h3>
@@ -291,7 +291,7 @@
                   <xsl:variable name="phoneNumber">
                     <xsl:apply-templates mode="render-value" select="."/>
                   </xsl:variable>
-                  <i class="fa fa-phone"></i>
+                  <i class="fa fa-phone">&#160;</i>
                   <a href="tel:{$phoneNumber}">
                     <xsl:value-of select="$phoneNumber"/>
                   </a>
@@ -301,7 +301,7 @@
                 <xsl:variable name="phoneNumber">
                   <xsl:apply-templates mode="render-value" select="."/>
                 </xsl:variable>
-                <i class="fa fa-fax"></i>
+                <i class="fa fa-fax">&#160;</i>
                 <a href="tel:{normalize-space($phoneNumber)}">
                   <xsl:value-of select="normalize-space($phoneNumber)"/>
                 </a>
@@ -341,7 +341,7 @@
         <xsl:apply-templates mode="render-value" select="@*"/>
 
         <a class="btn btn-link" href="xml.metadata.get?id={$metadataId}">
-          <i class="fa fa-file-code-o fa-2x"></i>
+          <i class="fa fa-file-code-o fa-2x">&#160;</i>
           <span data-translate="">metadataInXML</span>
         </a>
       </dd>
@@ -592,7 +592,7 @@
             <xsl:for-each select="parent::node()/*[name() = $nodeName]">
               <li>
                 <a href="#uuid={@uuidref}">
-                  <i class="fa fa-link"></i>
+                  <i class="fa fa-link">&#160;</i>
                   <xsl:value-of select="gn-fn-render:getMetadataTitle(@uuidref, $language)"/>
                 </a>
               </li>
@@ -745,7 +745,7 @@
   <xsl:template mode="render-value"
                 match="@gco:nilReason[. = 'withheld']"
                 priority="100">
-    <i class="fa fa-lock text-warning" title="{{{{'withheld' | translate}}}}"></i>
+    <i class="fa fa-lock text-warning" title="{{{{'withheld' | translate}}}}">&#160;</i>
   </xsl:template>
   <xsl:template mode="render-value"
                 match="@*"/>

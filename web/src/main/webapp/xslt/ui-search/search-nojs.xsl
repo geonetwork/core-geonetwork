@@ -22,71 +22,155 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                version="2.0"
+                exclude-result-prefixes="#all">
   <!--
   Basic search interface which does not require JS.
   -->
   <xsl:import href="../base-layout-nojs.xsl"/>
+  <xsl:import href="../common/functions-core.xsl"/>
 
 
 
   <xsl:template mode="content" match="/">
 
+    <xsl:variable name="count"
+                  select="/root/search/response[1]/summary[1]/@count"/>
+
+
     <div class="row" style="padding-bottom:20px">
-      <div class="col-md-push-3 col-md-6">
-        <form action="catalog.search.nojs" class="form-inline">
-          <div class="form-group">
+      <div class="col-md-3"
+           style="text-align: center;">&#160;
+        <xsl:variable name="parameters"
+                      select="/root/search/params/*[
+                                  name(.) != 'fast' and name(.) != 'resultType'
+                                ]"/>
+
+        <!-- If only one parameter set, the page provides a summary
+        for this criteria. For contact, source catalog, an extra panel
+        is added with some details about this resource. -->
+        <xsl:if test="count($parameters) = 1">
+          <xsl:variable name="parameterName"
+                        select="$parameters[1]/name()"/>
+          <xsl:variable name="parameterLabel"
+                        select="gn-fn-core:translate($parameterName, $t)"/>
+
+          <xsl:variable name="parameterValue"
+                        select="$parameters[1]/text()"/>
+          <h4>
+            <xsl:value-of select="$parameterLabel"/>
+          </h4>
+          <!-- Illustration -->
+          <xsl:choose>
+            <xsl:when test="$parameterName = '_groupPublished'">
+              <img  class="gn-logo-lg"
+                    src="{/root/gui/url}/images/harvesting/{$parameterValue}.png"/>
+            </xsl:when>
+            <xsl:when test="$parameterName = '_source'">
+              <img  class="gn-logo-lg"
+                    src="{/root/gui/url}/images/logos/{$parameterValue}.png"/>
+            </xsl:when>
+            <xsl:when test="$parameterName = 'responsiblePartyEmail'">
+              <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
+              <h2>
+                <xsl:value-of select="$parameterValue"/>
+              </h2>
+            </xsl:when>
+            <xsl:when test="$parameterName = 'topicCat' or $parameterName = 'type'">
+              <span class="">
+                <i class="fa fa-3x gn-icon gn-icon-{$parameterValue}">&#160;</i>
+              </span>
+              <h2>
+                <xsl:value-of select="$parameterValue"/>
+              </h2>
+            </xsl:when>
+            <xsl:otherwise>
+              <h2>
+                <xsl:value-of select="$parameterValue"/>
+              </h2>
+            </xsl:otherwise>
+          </xsl:choose>
+          <h4>
+            <xsl:value-of select="concat($count, ' ', $t/records)"/>
+          </h4>
+        </xsl:if>
+      </div>
+      <div class="col-md-9">
+        <form action="{/root/gui/nodeUrl}search"
+              class="form-inline">
+          <div class="input-group gn-form-any">
             <input type="text"
                    name="any"
                    id="fldAny"
+                   placeholder="{$t/anyPlaceHolder}"
                    value="{/root/request/any}"
-                   class="form-control input-large gn-search-text"
+                   class="form-control input-lg"
                    autofocus=""/>
-          </div>
-          <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Search"/>
+            <div class="input-group-btn">
+              <button type="submit"
+                      class="btn btn-primary btn-lg">
+                &#160;&#160;
+                <i class="fa fa-search">&#160;</i>
+                &#160;&#160;
+              </button>
+              <a href="{/root/gui/nodeUrl}search"
+                 class="btn btn-link btn-lg">
+                <i class="fa fa-times">&#160;</i>
+              </a>
+            </div>
           </div>
           <input type="hidden" name="fast" value="index"/>
         </form>
       </div>
     </div>
 
-    <!-- TODO: Display info about the filter.
-    eg. siteLogo if source filter is active, gravatar if contact filter is used. -->
-
-    <!-- Display field stats only -->
+    <!-- Display field stats only
     <xsl:variable name="fieldStats" select="/root/search/params/*[. = '']/name()"/>
     <xsl:for-each select="/root/search/response/summary[1]/dimension[@name = $fieldStats and category]">
-      <h1><xsl:value-of select="@label"/></h1>
+      <h1><xsl:value-of select="gn-fn-core:translate(@label, $t)"/></h1>
 
       <xsl:variable name="field" select="@name"/>
       <ul>
         <xsl:for-each select="category">
           <li>
-            <a href="?{$field}={@value}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a>
+            <a href="?{$field}={@value}">
+              <xsl:value-of select="gn-fn-core:translate(@label, $t)"/>
+              (<xsl:value-of select="@count"/>)</a>
           </li>
         </xsl:for-each>
       </ul>
-    </xsl:for-each>
+    </xsl:for-each>-->
 
-    <!---->
+    <!--
     <textarea cols="100" rows="30">
       <xsl:copy-of select="."/>
-    </textarea>
+    </textarea>-->
 
 
-    <xsl:if test="count($fieldStats) = 0">
+    <xsl:if test="$count > 0">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 gn-facet">
           <xsl:for-each select="/root/search/response[1]/summary">
             <xsl:for-each select="dimension[category]">
-              <h1><xsl:value-of select="@label"/></h1>
+              <h4><xsl:value-of select="gn-fn-core:translate(@label, $t)"/></h4>
 
               <xsl:variable name="field" select="@name"/>
               <ul>
                 <xsl:for-each select="category">
                   <li>
-                    <a href="?{$field}={@value}"><xsl:value-of select="@label"/> (<xsl:value-of select="@count"/>)</a>
+                    <label>
+                      <a href="?{$field}={@value}">
+                        <span class="gn-facet-label">
+                        <xsl:value-of select="gn-fn-core:translate(@label, $t)"/>
+                        </span>
+                        <span class="gn-facet-count">
+                        (<xsl:value-of select="@count"/>)
+                        </span>
+                      </a>
+                    </label>
                   </li>
                 </xsl:for-each>
               </ul>
@@ -98,23 +182,71 @@
 
             <div class="row" style="padding-bottom:20px">
               <div class="col-xs-12">
-                From
+                <xsl:value-of select="$t/from"/>
                 <b>
                   <xsl:value-of select="@from"/>
                 </b>
-                to
+                -
                 <b>
                   <xsl:value-of select="@to"/>
                 </b>
-                out of
+                <xsl:value-of select="$t/on"/>
                 <b>
-                  <xsl:value-of select="@count"/>
+                  <xsl:value-of select="$count"/>
                 </b>
-                results.
               </div>
             </div>
 
-            <xsl:for-each select="metadata">
+            <ul class="list-group gn-resultview gn-resultview-sumup">
+              <xsl:for-each select="metadata">
+               <li class="list-group-item gn-grid ng-scope">
+                 <div class="row">
+                   <xsl:if test="count(category) > 0">
+                     <div class="gn-md-category">
+                       <span><xsl:value-of select="$t/categories"/></span>
+                       <xsl:for-each select="category">
+                         <a title="{.}"
+                            href="{/root/gui/nodeUrl}search?_cat=maps">
+                           <i class="fa">
+                             <span class="fa gn-icon-{.}">&#160;</span>
+                           </i>
+                         </a>
+                       </xsl:for-each>
+                     </div>
+                   </xsl:if>
+                 </div>
+
+                 <div class="row gn-md-title">
+                   <h3>
+                     <a href="api/records/{*[name()='geonet:info']/uuid}">
+                       <i class="fa gn-icon-{type}" title="{type}">&#160;</i>
+                       <xsl:value-of select="title|defaultTitle"/>
+                     </a>
+                   </h3>
+                 </div>
+
+                 <div>
+                   <div class="gn-md-thumbnail">
+                     <xsl:for-each select="image[1]">
+                       <img class="gn-img-thumbnail"
+                            src="{tokenize(., '\|')[2]}"></img>
+                     </xsl:for-each>
+                   </div>
+                   <div style="float:left; display:block; width: calc(100% - 162px)">
+
+                     <div class="text-justify gn-md-abstract ellipsis">
+                       <div>
+                         <p>
+                           <xsl:value-of select="abstract"/>
+                         </p>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                </li>
+              </xsl:for-each>
+            </ul>
+           <!-- <xsl:for-each select="metadata">
               <div class="row" style="padding-bottom:20px;">
                 <div class="col-xs-10">
                   <a href="api/records/{*[name()='geonet:info']/uuid}">
@@ -124,7 +256,7 @@
                   <xsl:value-of select="abstract"/>
                 </div>
               </div>
-            </xsl:for-each>
+            </xsl:for-each>-->
           </xsl:for-each>
         </div>
       </div>
