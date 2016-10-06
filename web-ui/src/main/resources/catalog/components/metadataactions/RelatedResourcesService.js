@@ -60,8 +60,43 @@
             angular.extend(this.map, options);
           };
 
-          var addWMSToMap = function(link, md) {
-            var layerName = $filter('gnLocalized')(link.title);
+          var downloadWFS = function (link, md) {
+            var ft = "";
+            if (link.name) {
+              if (angular.isArray(link.name) && link.name.length > 0) {
+                ft = link.name[0];
+              } else if (link.name != '') {
+                ft = link.name;
+              } else if (link.title) {
+                ft = link.title[Object.keys(link.title)[0]];
+              } else {
+                alert('Metadata does not provide a featuretypename');
+                return false;
+              }
+              //todo: check version, featuretype, outputformat and projection
+              // in getcapabilities
+              window.open(link.url +
+              (link.url.indexOf("?") > -1) ? "" : "?" +
+              '&REQUEST=GetFeature&SERVICE=WFS&VERSION=1.1.0&typename=' + cl);
+            }
+            ;
+          };
+
+          var downloadAtom = function (link, md) {
+            if (link.name) {
+              if (angular.isArray(link.name) && link.name.length > 0) {
+                cl = link.name[0];
+              } else {
+                cl = link.name;
+              }
+            }
+            //todo: retrieve the atom file, parse it and retrieve the relevant downloads and provide as links
+            window.open(link.url);
+          };
+
+          var addWMSToMap = function (link, md) {
+            //if this operation is called from search-from-map, the link does not contain title, but contains name directly
+            var layerName = link.name ? link.name : $filter('gnLocalized')(link.title);
             if (layerName) {
               gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
                  link.url, layerName, false, md);
@@ -85,28 +120,49 @@
           };
 
 
-          function addWMTSToMap(link, md) {
-
+          var addWMTSToMap = function (link, md) {
+            uuid = md ? md['geonet:info'].uuid : "";
             if (link.name &&
-                (angular.isArray(link.name) && link.name.length > 0)) {
-              angular.forEach(link.name, function(name) {
+              (angular.isArray(link.name) && link.name.length > 0)) {
+              angular.forEach(link.name, function (name) {
                 gnOwsCapabilities.getWMTSCapabilities(link.url).then(
-                   function(capObj) {
-                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                     name, capObj, uuid);
-                     gnMap.addWmtsToMapFromCap(
-                     gnSearchSettings.viewerMap, layerInfo, capObj);
-                   });
+                  function (capObj) {
+                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                      name, capObj, uuid);
+                    if (layerInfo) {
+                      gnMap.addWmtsToMapFromCap(
+                        gnSearchSettings.viewerMap, layerInfo, capObj);
+                    }
+                  });
               });
               gnSearchLocation.setMap();
-            } else if (link.name && !angular.isArray(link.name)) {
+            } else if (link.name && !angular.isArray(link.name) && link.name != '') {
               gnOwsCapabilities.getWMTSCapabilities(link.url).then(
-                  function(capObj) {
-                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
-                   link.name, capObj, uuid);
+                function (capObj) {
+                  //console.log(link.name);
+                  var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                    link.name, capObj, uuid);
+                  if (layerInfo) {
                     gnMap.addWmtsToMapFromCap(
-                        gnSearchSettings.viewerMap, layerInfo, capObj);
-                  });
+                      gnSearchSettings.viewerMap, layerInfo, capObj);
+                  } else {
+                    alert("Unable to load layer " + link.name);
+                  }
+                });
+              gnSearchLocation.setMap();
+            } else if (link.title) {
+              layerName = $filter('gnLocalized')(link.title);
+              gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+                function (capObj) {
+                  var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
+                    layerName, capObj, uuid);
+                  if (layerInfo) {
+                    gnMap.addWmtsToMapFromCap(
+                      gnSearchSettings.viewerMap, layerInfo, capObj);
+                  } else {
+                    alert("Unable to load layer " + layerName);
+                  }
+                });
               gnSearchLocation.setMap();
             } else {
               gnMap.addOwsServiceToMap(link.url, 'WMTS');
@@ -130,12 +186,17 @@
             return window.location.hash = '#/metadata/' + r.id;
           };
 
-          var openLink = function(record, link) {
-            if (record.url.indexOf('http') == 0 ||
-                record.url.indexOf('ftp') == 0) {
+          var openLink = function (record, link) {
+            if (record.url && (record.url.indexOf('\\') == 0 ||
+              record.url.indexOf('http') == 0 ||
+              record.url.indexOf('ftp') == 0)) {
               return window.open(record.url, '_blank');
-            } else {
+            } else if (record.url && record.url.indexOf('www.') == 0) {
+              return window.open("http://" + record.url, '_blank');
+            } else if (record.title && record.title != '') {
               return window.location.assign(record.title);
+            } else {
+              alert("Unable to open link");
             }
           };
 
@@ -150,12 +211,20 @@
               label: 'addToMap',
               action: addWMTSToMap
             },
-            'WFS' : {
+            'WFS': {
               iconClass: 'fa-globe',
-              label: 'addToMap',
-              action: addWFSToMap
+              label: 'download'
             },
-            'WCS' : {
+            'ATOM': {
+              iconClass: 'fa-globe',
+              label: 'download'
+            },
+            'WCS': {
+              iconClass: 'fa-globe',
+              label: 'fileLink',
+              action: null
+            },
+            'SOS': {
               iconClass: 'fa-globe',
               label: 'fileLink',
               action: null
@@ -261,6 +330,10 @@
                 return 'WFS';
               } else if (protocolOrType.match(/wcs/i)) {
                 return 'WCS';
+              } else if (protocolOrType.match(/sos/i)) {
+                return 'SOS';
+              } else if (protocolOrType.match(/atom/i)) {
+                return 'ATOM';
               } else if (protocolOrType.match(/ows-c/i)) {
                 return 'MAP';
               } else if (protocolOrType.match(/db:/i)) {
@@ -271,7 +344,11 @@
                 return 'KML';
               } else if (protocolOrType.match(/download/i)) {
                 return 'LINKDOWNLOAD';
+              } else if (protocolOrType.match(/dataset/i)) {
+                return 'LINKDOWNLOAD';
               } else if (protocolOrType.match(/link/i)) {
+                return 'LINK';
+              } else if (protocolOrType.match(/website/i)) {
                 return 'LINK';
               }
             }

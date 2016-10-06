@@ -83,7 +83,16 @@
           result.Contents.operationsMetadata = result.OperationsMetadata;
           return result.Contents;
         };
-
+	var mergeParams = function(url, Params) {
+          //merge URL parameters with indeicated ones
+          var parts = url.split('?');
+          var urlParams = angular.isDefined(parts[1]) ?
+              gnUrlUtils.parseKeyValue(parts[1]) : {};
+          for (var p in Params) {
+            urlParams[p] = Params[p];
+          }
+          return gnUrlUtils.append(parts[0],gnUrlUtils.toKeyValue(urlParams));
+        };
         var mergeDefaultParams = function(url, defaultParams) {
           //merge URL parameters with default ones
           var parts = url.split('?');
@@ -105,7 +114,7 @@
         };
         return {
           mergeDefaultParams: mergeDefaultParams,
-
+	  mergeParams: mergeParams,
           getWMSCapabilities: function(url) {
             var defer = $q.defer();
             if (url) {
@@ -206,11 +215,23 @@
           getLayerInfoFromCap: function(name, capObj, uuid) {
             var needles = [];
             var layers = capObj.layers || capObj.Layer;
-
+			
+			//non namespaced lowercase name
+			nameNoNamespace = name.split(':')[name.split(':').length-1].toLowerCase();
+			
             for (var i = 0, len = layers.length; i < len; i++) {
+              //Add Info for Requests:
+              if(capObj.Request) {
+                layers[i].capRequest = capObj.Request;
+              }       
+              
               //check layername
-              if (name == layers[i].Name || name == layers[i].Identifier) {
-                layers[i].nameToUse = name;
+		capName = layers[i].Name || layers[i].Identifier || "";
+		//non namespaced lowercase capabilities name
+	 	capNameNoNamespace = capName.split(':')[capName.split(':').length-1].toLowerCase();
+		//either names match or non namespaced names
+              if (name == capName || nameNoNamespace == capNameNoNamespace) {
+                layers[i].nameToUse = capName;
                 return layers[i];
               }
 

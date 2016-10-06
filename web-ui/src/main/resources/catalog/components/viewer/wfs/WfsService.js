@@ -100,6 +100,7 @@
             $http.get(url, {
               cache: true
             }).then(function(response) {
+			  try {
               //First cleanup not supported INSPIRE extensions:
               var xml = $.parseXML(response.data);
               if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
@@ -128,6 +129,10 @@
               else {
                 defer.resolve(xfsCap);
               }
+			  } catch (e) {
+				  //alert('WFS version not supported.');
+				  defer.reject({msg: 'wfsGetCapabilitiesFailed', owsExceptionReport: e.message});
+			  }
 
             }, function(response) {
               defer.reject({msg: 'wfsGetCapabilitiesFailed',
@@ -212,7 +217,7 @@
           if (projection) {
             params.srsName = projection;
           }
-          url = gnOwsCapabilities.mergeDefaultParams(url, params);
+          url = gnOwsCapabilities.mergeParams(url, params);
           window.open(url);
         }
       };

@@ -25,9 +25,10 @@
 
   goog.provide('gn_related_directive');
   goog.require('gn_relatedresources_service');
+  goog.require('gn_wms');
 
   var module = angular.module('gn_related_directive', [
-    'gn_relatedresources_service'
+    'gn_relatedresources_service', 'gn_wms'
   ]);
 
   /**
@@ -119,7 +120,7 @@
               scope.hasAction = function(mainType) {
                 var fn = gnRelatedResources.map[mainType].action;
                 // If function name ends with ToMap do not display the action
-                if (fn.name.match(/.*ToMap$/) &&
+                if (fn&&fn.name&&fn.name.match(/.*ToMap$/) &&
                    gnGlobalSettings.isMapViewerEnabled === false) {
                   return false;
                 }
