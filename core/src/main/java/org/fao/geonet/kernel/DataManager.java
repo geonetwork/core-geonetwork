@@ -1582,7 +1582,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             }
         }
 
-        boolean fullRightsForGroup = false;
+        boolean fullRightsForGroup = true;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, notifyChange, index, ufo, UpdateDatestamp.NO,
             fullRightsForGroup, false).getId();
