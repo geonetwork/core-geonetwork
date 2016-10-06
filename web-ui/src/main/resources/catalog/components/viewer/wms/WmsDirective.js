@@ -79,7 +79,6 @@
           scope.checkWmsUrl = function() {
             return gnWmsService.getCapabilities(scope.url)
               .then(function(capabilities) {
-                  console.log(capabilities);
                 scope.capabilities = capabilities;
               });
           };
