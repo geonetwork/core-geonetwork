@@ -239,6 +239,18 @@
       };
 
       /**
+       * Update textarea containing XML when the ACE editor change.
+       * See form-builder-xml.xsl.
+       */
+      $scope.xmlEditorChange = function(e) {
+      // TODO: Here we could check if XML is valid based on ACE info
+      // and disable save action ?
+        $('textarea[name=data]').val(e[1].getSession().getValue());
+      };
+      $scope.xmlEditorLoaded = function(e) {
+        // TODO: Adjust height of editor based on screen size ?
+      };
+      /**
        * When the form is loaded, this function is called.
        * Use it to retrieve form variables or initialize
        * elements eg. tooltip ?
