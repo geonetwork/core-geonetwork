@@ -20,10 +20,6 @@
                           && r.description.length > 0">
           {{r.description | gnLocalized: lang | striptags | characters:150}}
         </h4>
-
-
-{{mainType}}
-
         <div ng-switch on="mainType">
           <div ng-switch-when="WMS">
             <span data-translate=""
@@ -52,6 +48,12 @@
             <span data-translate=""
                   data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
                   wmtsLinkDetails</span>
+                  <div
+                    data-gn-wmts-download="r.title"
+                    data-layer-name="{{r.title | gnLocalized: lang}}"
+                    data-url="{{r.url}}"
+                    data-md="md">
+                  </div>
           </div>
           <div ng-switch-when="SOS">
             <span data-translate=""
@@ -107,7 +109,7 @@
 
         <button type="button"
                 class="btn btn-default"
-                data-ng-show="hasAction(mainType) && mainType != 'WMS'"
+                data-ng-show="hasAction(mainType) && ['WMS','WMTS','WFS'].indexOf(mainType)==-1"
                 data-ng-click="config.doAction(mainType, r, md)">
           <span class="visible-md-*">
             {{(config.getLabel(mainType, type)) | translate}}

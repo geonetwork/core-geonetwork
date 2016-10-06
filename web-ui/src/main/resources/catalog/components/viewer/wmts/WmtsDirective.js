@@ -22,31 +22,31 @@
  */
 
 (function() {
-  goog.provide('gn_wms_directive');
+  goog.provide('gn_wmts_directive');
 
-  goog.require('gn_wms_service');
+  goog.require('gn_wmts_service');
 
-  var module = angular.module('gn_wms_directive', [
-    'gn_wms_service'
+  var module = angular.module('gn_wmts_directive', [
+    'gn_wmts_service'
   ]);
 
-  module.directive('gnWmsDownload', ['gnWmsService', 'gnGlobalSettings', 'gnSearchSettings', '$rootScope', '$translate',
+  module.directive('gnWmtsDownload', ['gnWmtsService', 'gnGlobalSettings', 'gnSearchSettings', '$rootScope', '$translate',
     'gnSearchLocation',
-    function(gnWmsService, gnGlobalSettings, gnSearchSettings, $rootScope, $translate, gnSearchLocation) {
+    function(gnWmtsService, gnGlobalSettings, gnSearchSettings, $rootScope, $translate, gnSearchLocation) {
       return {
         restrict: 'A',
         scope: {
-          layer: '=gnWmsDownload',
+          layer: '=gnWmtsDownload',
           map: '=',
           md: '='
         },
         templateUrl: '../../catalog/components/' +
-        'viewer/wms/partials/wmsDownload.html',
+        'viewer/wmts/partials/wmtsDownload.html',
         link: function(scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.capabilities = null;
           scope.layerSelected = null;
-          scope.isWmsAvailable = false;
+          scope.isWmtsAvailable = false;
           scope.isLayerInCapabilities = false;
           scope.capabilitiesChecked = false;
           var init = function() {
@@ -56,13 +56,11 @@
               scope.layerName = attrs['layerName'];
 
               scope.projections = [];
-              scope.checkWmsUrl().then(
+              scope.checkWmtsUrl().then(
                 function() {
-				  if (scope.capabilities.layers && scope.capabilities.layers.length != 0) {
-                    scope.isWmsAvailable = true;
-                    //here check wms/wmts
-                    
-                    scope.isLayerInCapabilities = gnWmsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
+				  if (scope.capabilities.Layer && scope.capabilities.Layer.length != 0) {
+                    scope.isWmtsAvailable = true;
+                    scope.isLayerInCapabilities = gnWmtsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
 				  }
                 }, function() {
                 }
@@ -76,10 +74,9 @@
             }
           };
 
-          scope.checkWmsUrl = function() {
-            return gnWmsService.getCapabilities(scope.url)
+          scope.checkWmtsUrl = function() {
+            return gnWmtsService.getCapabilities(scope.url)
               .then(function(capabilities) {
-                  console.log(capabilities);
                 scope.capabilities = capabilities;
               });
           };
@@ -88,7 +85,7 @@
             if (!layerSelected) {
               return;
             }
-            gnWmsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap);
+            gnWmtsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap,scope.capabilities);
             gnSearchLocation.setMap();
 
           };
@@ -97,8 +94,8 @@
             return ("Name" in layer) && layer.Name;
           };
 
-          scope.addWmsLayer = function() {
-            gnWmsService.addWMSToMap(scope.layerName, scope.url, scope.md, gnSearchSettings.viewerMap);
+          scope.addWmtsLayer = function() {
+            gnWmtsService.addWMTSToMap(scope.layerName, scope.url, scope.md, gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
 
           };
