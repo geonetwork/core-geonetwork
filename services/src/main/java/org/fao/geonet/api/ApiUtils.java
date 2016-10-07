@@ -28,6 +28,7 @@ import com.google.common.collect.Sets;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
@@ -37,6 +38,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XmlRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -57,6 +59,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -64,6 +67,7 @@ import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -122,7 +126,14 @@ public class ApiUtils {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        Metadata metadata = null;
+        try {
+            metadata = metadataRepository.findOneByUuid(uuidOrInternalId);
+        } catch (IncorrectResultSizeDataAccessException e){
+            Log.warning(Geonet.GEONETWORK, String.format(
+                "More than one record found with UUID '%s'. Error is '%s'.",
+                uuidOrInternalId, e.getMessage()));
+        }
         if (metadata == null) {
             metadata = metadataRepository.findOne(uuidOrInternalId);
             if (metadata == null) {

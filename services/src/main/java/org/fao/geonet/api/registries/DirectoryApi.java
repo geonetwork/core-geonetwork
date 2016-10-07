@@ -23,6 +23,12 @@
 
 package org.fao.geonet.api.registries;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -36,30 +42,20 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Authorization;
-import io.swagger.annotations.AuthorizationScope;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 
 @EnableWebMvc
 @Service
@@ -362,7 +358,14 @@ public class DirectoryApi {
         boolean validate = false, ufo = false, index = false;
         report.setTotalRecords(setOfUuidsToEdit.size());
         for (String recordUuid : setOfUuidsToEdit) {
-            Metadata record = metadataRepository.findOneByUuid(recordUuid);
+            Metadata record = null;
+            try {
+                record = metadataRepository.findOneByUuid(recordUuid);
+            } catch (IncorrectResultSizeDataAccessException e){
+                Log.warning(Geonet.GEONETWORK, String.format(
+                    "More than one record found with UUID '%s'. Error is '%s'.",
+                    recordUuid, e.getMessage()));
+            }
             if (record == null) {
                 report.incrementNullRecords();
             } else if (!accessMan.canEdit(context, String.valueOf(record.getId()))) {
