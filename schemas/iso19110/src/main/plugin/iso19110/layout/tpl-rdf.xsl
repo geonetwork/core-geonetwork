@@ -42,8 +42,8 @@
   -->
   <!-- FIME : $url comes from a global variable. -->
   <xsl:template match="gfc:FC_FeatureCatalogue|gfc:FC_FeatureType" mode="record-reference">
-    <dcat:dataset rdf:resource="{$url}/resource/{@uuid}"/>
-    <dcat:record rdf:resource="{$url}/metadata/{@uuid}"/>
+    <dcat:dataset rdf:resource="{$resourcePrefix}/datasets/{@uuid}"/>
+    <dcat:record rdf:resource="{$resourcePrefix}/records/{@uuid}"/>
   </xsl:template>
 
 
@@ -54,7 +54,7 @@
     <!-- Catalogue records
       "A record in a data catalog, describing a single dataset."
     -->
-    <rdf:Description rdf:about="{$url}/metadata/{@uuid}">
+    <rdf:Description rdf:about="{$resourcePrefix}/records/{@uuid}">
       <dc:title>
         <xsl:value-of select="gfc:name/gco:CharacterString"/>
       </dc:title>
@@ -71,7 +71,7 @@
 
       <!-- Source relation -->
       <xsl:for-each select="/root/gui/relation/*/response/metadata">
-        <dc:relation rdf:resource="{$url}/metadata/{geonet:info/uuid}"/>
+        <dc:relation rdf:resource="{$resourcePrefix}/records/{geonet:info/uuid}"/>
       </xsl:for-each>
 
     </rdf:Description>
