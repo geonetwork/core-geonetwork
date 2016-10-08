@@ -1418,12 +1418,6 @@
            */
           createLayerForType: function(type, opt, title) {
             switch (type) {
-              case 'mapquest':
-                return new ol.layer.Tile({
-                  style: 'Road',
-                  source: new ol.source.MapQuest({layer: 'osm'}),
-                  title: title ||  'MapQuest'
-                });
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),

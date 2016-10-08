@@ -282,24 +282,6 @@
           });
           return enc;
         },
-        'MapQuest': function(layer, config) {
-          var enc = self.encoders.
-              layers['Layer'].call(this, layer);
-          angular.extend(enc, {
-            type: 'OSM',
-            baseURL: 'http://otile1-s.mqcdn.com/tiles/1.0.0/osm',
-            extension: 'png',
-            // Hack to return an extent for the base
-            // layer in case of undefined
-            maxExtent: layer.getExtent() ||
-                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-            resolutions: layer.getSource().tileGrid.getResolutions(),
-            tileSize: [
-              layer.getSource().tileGrid.getTileSize(),
-              layer.getSource().tileGrid.getTileSize()]
-          });
-          return enc;
-        },
         'WMTS': function(layer, config) {
           // sextant specific
           var enc = self.encoders.layers['Layer'].
