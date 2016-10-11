@@ -704,7 +704,8 @@
               });
 
               var dragboxInteraction = new ol.interaction.DragBox({
-                className: 'gnbbox-dragbox'
+                className: 'gnbbox-dragbox',
+                style: style
               });
               scope.map.addInteraction(dragboxInteraction);
               layer.setMap(scope.map);

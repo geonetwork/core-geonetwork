@@ -43,7 +43,7 @@
               </label>
               <div ng-if="::input.literalData">
                 <div ng-if="::input.literalData.allowedValues">
-                  <select id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value">
+                  <select id="{{::input.identifier.value}}" class="form-control input-sm" ng-model="input.value" ng-required="input.minOccurs">
                     <option ng-repeat="value in input.literalData.allowedValues.valueOrRange" value="{{::value.value}}">{{::value.value}}</option>
                   </select>
                 </div>
