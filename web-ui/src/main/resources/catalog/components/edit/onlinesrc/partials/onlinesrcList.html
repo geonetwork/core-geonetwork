@@ -424,6 +424,18 @@
                 {{resource.title | gnLocalized: lang}}
               </a>
             </div>
+            <div class="col-md-1">
+              <!-- In checkpoint we assume that user can
+              edit any records related. The relation service does not
+              provide information about user privileges. An extra call
+              to search service would be required in order to check if user
+              can or cannot edit the related record. -->
+              <a data-ng-show="gnCurrentEdit.metadata.standardName == 'ISO 19115-3 - Emodnet Checkpoint - Upstream Data'"
+                 target="_blank"
+                 data-ng-href="{{'#/metadata/' + resource.id}}">
+                <i class="fa fa-pencil"></i>
+              </a>
+            </div>
           </div>
         </li>
       </ul>
