@@ -62,6 +62,46 @@
           }
         };
       });
+
+  module.directive('gnTitle',
+    ['$http', '$rootScope', '$translate', 'gnCurrentEdit',
+      function($http, $rootScope, $translate, gnCurrentEdit) {
+      return {
+        restrict: 'C',
+        link: function(scope, element, attrs) {
+          var titleEl = element.find('div > input[name]');
+          var titleCheck = function () {
+            // Search by title. Field will be analyzed, so we can't expect
+            // to have exact match. There is no capability to exclude current
+            // record so we will check if current record is the one currently
+            // edited.
+            $http.get('q?fast=index&_content_type=json&title="' +
+              titleEl.val() + '"', {cache: true})
+              .then(function (r) {
+                // Don't take pagination in account, we don't expect
+                // to have that many duplicates.
+                if (r.data.metadata) {
+                  var count = 0;
+                  for(var i = 0; i < r.data.metadata.length; i++) {
+                    if (r.data.metadata[i]['geonet:info'].id !== gnCurrentEdit.id) {
+                      count ++;
+                    }
+                  }
+                  element.toggleClass('has-error', count > 0)
+                  if (count > 0) {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title: count + $translate('similarRecordsExist'),
+                      timeout: 5,
+                      type: 'danger'});
+                  }
+                }
+              });
+          };
+          titleEl.change(titleCheck);
+          titleEl.blur(titleCheck);
+        }
+      };
+    }]);
   /**
    * Note: ng-model and angular checks could not be applied to
    * the editor form as it would require to init the model
