@@ -47,8 +47,10 @@
                 .toggleClass('hidden', !scope.covered);
               $('#gn-field-' + scope.titleId)
                 .val(scope.covered ? '' : 'Component not covered');
-              $('#gn-field-' + scope.abstractId)
-               .val(scope.covered ? '' : '-- Explain why --');
+              var abs = $('#gn-field-' + scope.abstractId);
+              if (abs.val() === '') {
+               abs.val(scope.covered ? '' : '-- Explain why --');
+              }
             }
             scope.$watch('covered', function(n, o) {
               if (n !== o) {
