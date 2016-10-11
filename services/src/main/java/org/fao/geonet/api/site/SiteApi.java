@@ -57,6 +57,7 @@ import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -390,9 +391,10 @@ public class SiteApi {
     })
     @ResponseBody
     public SiteInformation getInformation(
+        @ApiIgnore
+        HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
         return new SiteInformation(context, (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME));
     }
