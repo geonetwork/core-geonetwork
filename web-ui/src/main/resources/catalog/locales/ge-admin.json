@@ -332,6 +332,8 @@
     "exportLogAsZIP": "Als ZIP-Datei exportieren",
     "facetIndicatorHelp": "Statistiken zu Datensätzen werden definiert auf der Basis der Facetten-Konfiguration and bilden nur die häufigsten Werte ab.",
     "fees": "Gebühren",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "filesystem-checkFileLastModifiedForUpdate": "Aktualisierte Datensätze",
     "filesystem-checkFileLastModifiedForUpdateHelp": "Datensätze im Katalog nur dann aktualisieren, wenn Datei aktualisiert wurde.",
     "filesystem-directory": "Verzeichnis",

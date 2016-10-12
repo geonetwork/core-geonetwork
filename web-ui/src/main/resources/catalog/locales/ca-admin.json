@@ -332,6 +332,8 @@
     "exportLogAsZIP": "Exportar (ZIP)",
     "facetIndicatorHelp": "Les estadístiques de les entrades es defineixen en base a la configuració de facets i poden representar només els valors més freqüents.",
     "fees": "Quotes",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "filesystem-checkFileLastModifiedForUpdate": "Actualitzar entrada al catàleg només si el fitxer s'ha actualitzat",
     "filesystem-checkFileLastModifiedForUpdateHelp": "Actualitzar entrada al catàleg només si el fitxer s'ha actualitzat",
     "filesystem-directory": "Directori",
