@@ -95,8 +95,8 @@ public final class UserSpecs {
         return new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Path<Boolean> enabledAttributePath = root.get(User_.enabled);
-                Predicate enabledEqualPredicate = cb.equal(enabledAttributePath, enabled);
+                Path<Character> enabledAttributePath = root.get(User_.enabled_JpaWorkaround);
+                Predicate enabledEqualPredicate = cb.equal(enabledAttributePath, cb.literal(Constants.toYN_EnabledChar(enabled)));
                 return enabledEqualPredicate;
             }
         };
