@@ -77,8 +77,8 @@
             // to have exact match. There is no capability to exclude current
             // record so we will check if current record is the one currently
             // edited.
-            $http.get('q?fast=index&_content_type=json&title="' +
-              titleEl.val() + '"', {cache: true})
+            $http.get('q?fast=index&_content_type=json&_title=' +
+              titleEl.val(), {cache: true})
               .then(function (r) {
                 // Don't take pagination in account, we don't expect
                 // to have that many duplicates.

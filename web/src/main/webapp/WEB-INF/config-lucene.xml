@@ -236,6 +236,7 @@
 
   -->
   <fieldSpecificAnalyzer>
+    <Field name="_title" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="_uuid" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="standardName" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
