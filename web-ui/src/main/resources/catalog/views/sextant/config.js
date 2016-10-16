@@ -222,11 +222,13 @@
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
             var view =
-              md.standardName === 'ISO 19115-3 - Emodnet Checkpoint' ? 'medsea' :
-                (md.standardName ===
-                  'ISO 19115-3 - Emodnet Checkpoint - Targeted Product' ?
-                  'medsea-targeted-product' : 'default'
-                );
+              md.standardName ===
+                'ISO 19115-3 - Emodnet Checkpoint - Upstream Data' ? 'medsea' :
+                (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product' ?
+                  'checkpoint-tdp' :
+                  (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
+                  'checkpoint-dps' : 'default'
+                ));
             url = 'md.format.xml?xsl=xsl-view&view=' + view +
                     '&uuid=' + md.getUuid();
           } else {

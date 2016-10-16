@@ -73,6 +73,7 @@
         </header>
         <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
 
+
         <!--
         TODO: scrollspy or tabs on header ?
         <div class="gn-scroll-spy"
@@ -136,6 +137,32 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Quality tab for Checkpoint is a custom layout
+  made on client side based on an Angular directive. -->
+  <xsl:template mode="render-view"
+                priority="200"
+                match="tab[@id = 'checkpoint-tdp-qm' or
+                           @id = 'checkpoint-dps-dq' or
+                           @id = 'checkpoint-ud-qm']">
+
+    <xsl:variable name="content">
+      <xsl:apply-templates mode="render-field"
+                           select="$metadata//*:dataQualityInfo"/>
+    </xsl:variable>
+
+    <!-- Display a tab only if it contains something -->
+    <xsl:if test="$content/*">
+      <xsl:variable name="title"
+                    select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
+
+      <div id="gn-tab-{@id}">
+        <h3 class="view-header">
+          <xsl:value-of select="$title"/>
+        </h3>
+        <xsl:copy-of select="$content"/>
+      </div>
+    </xsl:if>
+  </xsl:template>
 
   <!-- Render sections. 2 types of sections could be
   defined:

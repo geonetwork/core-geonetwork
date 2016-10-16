@@ -128,7 +128,7 @@
                     if (v.indexOf(tokens[0] + '/' + tokens[1]) === 0 &&
                         v.indexOf(mId) !== -1) {
                       var t = v.split('|');
-                      qm.dps = t[5] + ' ' + t[6];
+                      qm.dps = t[5] != '' ? t[5] + ' ' + t[6] : '';
                       q1.resolve(qm);
                       break;
                     }
@@ -153,7 +153,7 @@
                       var v = values[i];
                       if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
                         var t = v.split('|');
-                        qm.tdp = t[5] + ' ' + t[6];
+                        qm.tdp = t[5] != '' ? t[5] + ' ' + t[6] : '';
                         q2.resolve(qm);
                         break;
                       }
@@ -204,7 +204,7 @@
                     var fu = getFu(cptId, value[2]);
                     getDpsOrTdpValues(cptId, value[2], {
                       qmName: value[3] + ' (' + value[2] + ')',
-                      qm: value[5] + ' ' + value[6],
+                      qm: value[5] != '' ? value[5] + ' ' + value[6] : '',
                       qeName: qe.name,
                       qe: qe.value,
                       fuName: fu.name,

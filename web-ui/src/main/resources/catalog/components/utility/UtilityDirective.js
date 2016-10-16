@@ -1162,7 +1162,11 @@
                     var v = values[i];
                     if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
                       var t = v.split('|');
-                      scope.value = t[5] + ' ' + t[6];
+                      if (t[5] != '') { // Concat value + unit
+                        scope.value = t[5] + ' ' + t[6];
+                      } else {
+                        scope.value = '';
+                      }
                       return;
                     }
                   }
