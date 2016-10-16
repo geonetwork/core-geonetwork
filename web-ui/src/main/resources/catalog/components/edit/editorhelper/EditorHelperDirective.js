@@ -39,7 +39,7 @@
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/edit/' +
-        'editorhelper/partials/fieldsuggestions.html',
+            'editorhelper/partials/fieldsuggestions.html',
         scope: {
           ref: '@',
           field: '@',
@@ -49,14 +49,14 @@
           scope.suggestions = [];
           if (scope.field != '') {
             var url = 'suggest?sortBy=ALPHA&maxNumberOfTerms=1000&' +
-              'origin=INDEX_TERM_VALUES&field=' + scope.field
+                'origin=INDEX_TERM_VALUES&field=' + scope.field;
             if (scope.fq != '') {
               url += '&q=' + scope.fq;
             }
             $http.get(url, {cache: true}).then(
-              function(r) {
-                scope.suggestions = r.data[1];
-              }
+                function(r) {
+                  scope.suggestions = r.data[1];
+                }
             );
           }
 

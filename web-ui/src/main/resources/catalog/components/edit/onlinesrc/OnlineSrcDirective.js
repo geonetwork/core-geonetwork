@@ -98,7 +98,7 @@
                 gnOnlinesrc.getAllResources()
                     .then(function(data) {
                       scope.relations = data;
-                      for (var i = 0; i < data.siblings.length; i ++) {
+                      for (var i = 0; i < data.siblings.length; i++) {
                         var type = data.siblings[i].associationType;
                         if ($.inArray(type, scope.siblingTypes) == -1) {
                           scope.siblingTypes.push(type);
@@ -1734,7 +1734,8 @@
                     if (idx >= 0) {
                       scope.selection.splice(idx, 1);
                     }
-                    for (var i = 0; i < scope.stateObj.selectRecords.length; i++) {
+                    for (var i = 0;
+                         i < scope.stateObj.selectRecords.length; i++) {
                       var o = scope.stateObj.selectRecords[i];
                       if (o.getUuid() === obj.md.getUuid()) {
                         scope.stateObj.selectRecords.splice([i], 1);
@@ -1756,14 +1757,14 @@
                   };
                   scope.stateObj = {};
 
-                  scope.selectRecord = function (md) {
+                  scope.selectRecord = function(md) {
                     if (scope.config.initiativeType !== 'specification') {
                       if (scope.stateObj.selectRecords.indexOf(md) < 0) {
                         scope.stateObj.selectRecords.push(md);
                       }
                       else {
                         scope.stateObj.selectRecords.splice(
-                          scope.stateObj.selectRecords.indexOf(md), 1);
+                            scope.stateObj.selectRecords.indexOf(md), 1);
                       }
                     }
                     else {
@@ -1772,26 +1773,29 @@
                     }
                   };
                   scope.$watchCollection('stateObj.selectRecords',
-                    function(n, o) {
-                      if (!angular.isUndefined(scope.stateObj.selectRecords) &&
-                        scope.stateObj.selectRecords.length > 0 &&
-                        n != o) {
-                        scope.selection = [];
-                        // var selectRecords = [];
-                        angular.forEach(scope.stateObj.selectRecords, function (m) {
-                          // if (scope.config.initiativeType === 'specification') {
-                          //   angular.forEach(o, function (oldm) {
-                          //     if (m.getUuid() === oldm.getUuid()) {
-                          //
-                          //     }
-                          //   });
-                          // }
-                          scope.addToSelection(new Metadata(m),
-                            scope.config.associationType,
-                            scope.config.initiativeType);
-                        });
-                      }
-                    });
+                      function(n, o) {
+                        if (!angular.isUndefined(
+                            scope.stateObj.selectRecords) &&
+                            scope.stateObj.selectRecords.length > 0 &&
+                            n != o) {
+                          scope.selection = [];
+                          // var selectRecords = [];
+                          angular.forEach(scope.stateObj.selectRecords,
+                              function(m) {
+                                // if (scope.config.initiativeType
+                                // === 'specification') {
+                                //   angular.forEach(o, function (oldm) {
+                                //     if (m.getUuid() === oldm.getUuid()) {
+                                //
+                                //     }
+                                //   });
+                                // }
+                                scope.addToSelection(new Metadata(m),
+                                    scope.config.associationType,
+                                    scope.config.initiativeType);
+                              });
+                        }
+                      });
 
                   /**
                    * Call the batch process to add the sibling

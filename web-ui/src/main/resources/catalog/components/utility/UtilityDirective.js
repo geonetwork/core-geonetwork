@@ -1155,10 +1155,10 @@
 
               $http.get('q?fast=index&_content_type=json&_uuid=' + dpsOrTdpId, {
                 cache: true
-              }).then(function (r) {
+              }).then(function(r) {
                 if (r.data.metadata && r.data.metadata.dqValues) {
                   var values = r.data.metadata.dqValues;
-                  for(var i = 0; i < values.length; i ++) {
+                  for (var i = 0; i < values.length; i++) {
                     var v = values[i];
                     if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
                       var t = v.split('|');

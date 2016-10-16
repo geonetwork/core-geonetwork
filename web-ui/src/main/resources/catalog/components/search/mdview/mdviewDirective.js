@@ -69,7 +69,8 @@
           scope.dismiss = function() {
             unRegister();
             // Do not close parent mdview
-            if ($('[gn-metadata-display] ~ [gn-metadata-display]').length == 0) {
+            if ($('[gn-metadata-display] ~ [gn-metadata-display]')
+                .length == 0) {
               gnMdView.removeLocationUuid();
             }
             element.remove();

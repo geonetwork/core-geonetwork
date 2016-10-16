@@ -49,7 +49,7 @@
                 .val(scope.covered ? '' : 'Component not covered');
               var abs = $('#gn-field-' + scope.abstractId);
               if (abs.val() === '') {
-               abs.val(scope.covered ? '' : '-- Explain why --');
+                abs.val(scope.covered ? '' : '-- Explain why --');
               }
             }
             scope.$watch('covered', function(n, o) {
@@ -66,48 +66,49 @@
       });
 
   module.directive('gnTitle',
-    ['$http', '$rootScope', '$translate',
-      'gnCurrentEdit', 'gnSearchManagerService',
-      function($http, $rootScope, $translate,
+      ['$http', '$rootScope', '$translate',
+       'gnCurrentEdit', 'gnSearchManagerService',
+       function($http, $rootScope, $translate,
                gnCurrentEdit, gnSearchManagerService) {
-      return {
-        restrict: 'C',
-        link: function(scope, element, attrs) {
-          var titleEl = element.find('div > input[name]');
-          var titleCheck = function () {
-            // Search by title. Field will be analyzed, so we can't expect
-            // to have exact match. There is no capability to exclude current
-            // record so we will check if current record is the one currently
-            // edited.
-            $http.get('q?fast=index&_content_type=json&_title=' +
-              titleEl.val(), {cache: true})
-              .then(function (r) {
-                var records = gnSearchManagerService.format(r.data);
+         return {
+           restrict: 'C',
+           link: function(scope, element, attrs) {
+             var titleEl = element.find('div > input[name]');
+             var titleCheck = function() {
+               // Search by title. Field will be analyzed, so we can't expect
+               // to have exact match. There is no capability to exclude current
+               // record so we will check if current record is the one currently
+               // edited.
+               $http.get('q?fast=index&_content_type=json&_title=' +
+               titleEl.val(), {cache: true})
+              .then(function(r) {
+                 var records = gnSearchManagerService.format(r.data);
 
-                // Don't take pagination in account, we don't expect
-                // to have that many duplicates.
-                if (records.metadata) {
-                  var count = 0;
-                  for(var i = 0; i < records.metadata.length; i++) {
-                    if (records.metadata[i]['geonet:info'].id !== gnCurrentEdit.id) {
-                      count ++;
-                    }
-                  }
-                  element.toggleClass('has-error', count > 0)
-                  if (count > 0) {
-                    $rootScope.$broadcast('StatusUpdated', {
-                      title: count + $translate('similarRecordsExist'),
-                      timeout: 5,
-                      type: 'danger'});
-                  }
-                }
-              });
-          };
-          titleEl.change(titleCheck);
-          titleEl.blur(titleCheck);
-        }
-      };
-    }]);
+                 // Don't take pagination in account, we don't expect
+                 // to have that many duplicates.
+                 if (records.metadata) {
+                   var count = 0;
+                   for (var i = 0; i < records.metadata.length; i++) {
+                     if (records.metadata[i]['geonet:info'].id !==
+                     gnCurrentEdit.id) {
+                       count++;
+                     }
+                   }
+                   element.toggleClass('has-error', count > 0);
+                   if (count > 0) {
+                     $rootScope.$broadcast('StatusUpdated', {
+                       title: count + $translate('similarRecordsExist'),
+                       timeout: 5,
+                       type: 'danger'});
+                   }
+                 }
+               });
+             };
+             titleEl.change(titleCheck);
+             titleEl.blur(titleCheck);
+           }
+         };
+       }]);
   /**
    * Note: ng-model and angular checks could not be applied to
    * the editor form as it would require to init the model

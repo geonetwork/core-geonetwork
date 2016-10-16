@@ -98,7 +98,8 @@
                 layersCollection.item(index + delta)
                     .get('group').split('/')[1] :
                 undefined;
-            var groupcombo = layersCollection.item(index + delta).get('groupcombo')
+            var groupcombo =
+                layersCollection.item(index + delta).get('groupcombo');
             var i = index + delta;
             while (
                 layersCollection.item(i) &&
@@ -110,7 +111,8 @@
               i += delta;
             }
             layersCollection.removeAt(index);
-            layersCollection.insertAt((group && groupcombo) ? i - delta : i, layer);
+            layersCollection.insertAt(
+                (group && groupcombo) ? i - delta : i, layer);
           };
         }
       };
