@@ -66,8 +66,10 @@
       });
 
   module.directive('gnTitle',
-    ['$http', '$rootScope', '$translate', 'gnCurrentEdit',
-      function($http, $rootScope, $translate, gnCurrentEdit) {
+    ['$http', '$rootScope', '$translate',
+      'gnCurrentEdit', 'gnSearchManagerService',
+      function($http, $rootScope, $translate,
+               gnCurrentEdit, gnSearchManagerService) {
       return {
         restrict: 'C',
         link: function(scope, element, attrs) {
@@ -80,12 +82,14 @@
             $http.get('q?fast=index&_content_type=json&_title=' +
               titleEl.val(), {cache: true})
               .then(function (r) {
+                var records = gnSearchManagerService.format(r.data);
+
                 // Don't take pagination in account, we don't expect
                 // to have that many duplicates.
-                if (r.data.metadata) {
+                if (records.metadata) {
                   var count = 0;
-                  for(var i = 0; i < r.data.metadata.length; i++) {
-                    if (r.data.metadata[i]['geonet:info'].id !== gnCurrentEdit.id) {
+                  for(var i = 0; i < records.metadata.length; i++) {
+                    if (records.metadata[i]['geonet:info'].id !== gnCurrentEdit.id) {
                       count ++;
                     }
                   }
