@@ -24,9 +24,10 @@
       <div class="input-group-btn"
            data-ng-show="fragments">
         <a class="btn btn-default"
-           data-ng-click="setSource()">
+           data-ng-click="setSource()"
+           title="{{sourceRecordTitle}}">
           <i class="fa fa-times"></i>&nbsp;
-          {{sourceRecordTitle}}
+          {{sourceRecordTitle | limitTo: 20 }}{{sourceRecordTitle.length > 20 ? '...' : ''}}
         </a>
       </div>
 
