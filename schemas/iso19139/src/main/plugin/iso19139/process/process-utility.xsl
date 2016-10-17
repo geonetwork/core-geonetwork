@@ -23,11 +23,12 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 xmlns:exslt="http://exslt.org/common" xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                version="2.0" exclude-result-prefixes="exslt">
+                version="2.0" exclude-result-prefixes="exslt java">
 
   <!-- Language of the GUI -->
   <xsl:param name="guiLang" select="'eng'"/>
@@ -74,8 +75,34 @@
     <xsl:param name="version" as="xs:string"/>
     <xsl:variable name="sep" select="if (contains($url, '?')) then '&amp;' else '?'"/>
 
-    <xsl:copy-of
-      select="document(concat($url, $sep, 'SERVICE=', $type, '&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities'))"/>
+    <xsl:variable name="proxyhost"><xsl:value-of select="java:getSettingValue('system/proxy/host')"/></xsl:variable>
+    <xsl:variable name="baseHost"><xsl:value-of select="java:getSettingValue('system/server/host')"/></xsl:variable>
+    <xsl:variable name="protocol"><xsl:value-of select="java:getSettingValue('system/server/protocol')"/></xsl:variable>
+    <xsl:variable name="basePort">
+      <xsl:choose>
+        <xsl:when test="$protocol = 'https'">
+          <xsl:value-of select="java:getSettingValue('system/server/securePort')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="java:getSettingValue('system/server/port')"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+        
+    <xsl:variable name="fullUrl"><xsl:value-of select="concat($url, $sep, 'SERVICE=', $type, '&amp;VERSION=', $version, '&amp;REQUEST=GetCapabilities')"/></xsl:variable>
+        
+    <xsl:choose>
+      <xsl:when test="$proxyhost != ''">
+        <xsl:copy-of
+          select="document(concat($protocol, '://', $baseHost, ':', 
+                            $basePort, $baseUrl, '/proxy?url=', encode-for-uri($fullUrl)))"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of
+          select="document($fullUrl)"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
   </xsl:function>
 
   <!-- Create a GetMap request for the layer which could be used to set a thumbnail.
