@@ -306,11 +306,13 @@ public class RdfOutputManager {
         metadataEl.addContent(new Element("resourceIdentifierPrefix").setText(sm.getValue(Settings.SYSTEM_RESOURCE_PREFIX)));
 
         Element guiEl = new Element("gui");
+
         Element systemConfigEl = new Element("systemConfig");
+        systemConfigEl.addContent(metadataEl);
+
         Element systemEl = new Element("system");
         systemEl.addContent(serverEl);
         systemEl.addContent(siteEl);
-        systemEl.addContent(metadataEl);
 
         systemConfigEl.addContent(systemEl);
 

@@ -339,7 +339,6 @@
       <dd>
         <xsl:apply-templates mode="render-value" select="*"/>
         <xsl:apply-templates mode="render-value" select="@*"/>
-<xsl:message>##<xsl:value-of select="$nodeUrl"/></xsl:message>
         <a class="btn btn-link" href="{$nodeUrl}api/records/{$metadataId}/formatters/xml">
           <i class="fa fa-file-code-o fa-2x">&#160;</i>
           <span data-translate="">metadataInXML</span>
