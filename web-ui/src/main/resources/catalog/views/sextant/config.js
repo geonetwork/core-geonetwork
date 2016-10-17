@@ -229,7 +229,7 @@
                   (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
                   'checkpoint-dps' : 'default'
                 ));
-            url = 'md.format.xml?xsl=xsl-view&view=' + view +
+            url = 'md.format.xml?root=div&xsl=xsl-view&view=' + view +
                     '&uuid=' + md.getUuid();
           } else {
             url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
