@@ -312,10 +312,10 @@
             };
 
             processResponse = function(response) {
-              if (response.TYPE_NAME = 'OWS_1_1_0.ExceptionReport') {
+              if (response.TYPE_NAME === 'OWS_1_1_0.ExceptionReport') {
                 scope.executeState = 'finished';
               }
-              if (response.TYPE_NAME = 'WPS_1_0_0.ExecuteResponse') {
+              if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
                 if (response.status != undefined) {
                   if (response.status.processAccepted != undefined ||
                       response.status.processPaused != undefined ||
@@ -331,7 +331,10 @@
 
                     if (response.status.processSucceeded) {
                       gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map, scope.wpsLink.layer);
+                        response, scope.map, scope.wpsLink.layer, {
+                          exclude: /^OUTPUT_/
+                        }
+                      );
                     }
                   }
                 }
