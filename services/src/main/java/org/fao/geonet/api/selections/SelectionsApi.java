@@ -46,6 +46,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import jeeves.server.UserSession;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 
@@ -80,6 +81,7 @@ public class SelectionsApi {
             example = "metadata")
         @PathVariable
             String bucket,
+        @ApiIgnore
         HttpSession httpSession
     )
         throws Exception {
@@ -112,7 +114,9 @@ public class SelectionsApi {
             required = false)
         @RequestParam(required = false)
             String[] uuid,
+        @ApiIgnore
         HttpSession httpSession,
+        @ApiIgnore
         HttpServletRequest request
     )
         throws Exception {
@@ -151,7 +155,9 @@ public class SelectionsApi {
             required = false)
         @RequestParam(required = false)
             String[] uuid,
+        @ApiIgnore
         HttpSession httpSession,
+        @ApiIgnore
         HttpServletRequest request
     )
         throws Exception {

@@ -620,6 +620,8 @@
                            access="hasRole('Editor')"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/api/.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/search.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/resources!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.rate!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/md.view!?(\?.*)?"
                            access="hasRole('Editor')"/>
@@ -891,7 +893,7 @@
                            access="hasRole('Editor')"/>
 
         <!-- Retrieve public metadata as RDF  -->
-        <sec:intercept-url pattern="/srv/[a-z]{2,3}/rdf.metadata.public.get!?.*"
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/rdf.metadata.public.get!?.*"
                            access="permitAll"/>
 
         <sec:intercept-url pattern="/error" access="permitAll"/>

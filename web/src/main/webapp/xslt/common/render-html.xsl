@@ -50,7 +50,7 @@
 
 
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
-              href="../../images/logos/favicon.png"/>
+              href="{/root/gui/url}/images/logos/favicon.png"/>
         <link href="rss.search?sortBy=changeDate"
               rel="alternate"
               type="application/rss+xml"

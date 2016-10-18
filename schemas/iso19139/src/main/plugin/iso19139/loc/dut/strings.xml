@@ -23,14 +23,14 @@
   -->
 
 <strings>
-  <understandResource>Information about the dataset</understandResource>
-  <relatedResources>Related services and linked data</relatedResources>
-  <techInfo>Technical information</techInfo>
-  <contactInfo>Contact information</contactInfo>
+  <understandResource>Informatie over de dataset</understandResource>
+  <relatedResources>Gerelateerde services en gekoppelde data</relatedResources>
+  <techInfo>Technische informatie</techInfo>
+  <contactInfo>Contact informatie</contactInfo>
   <mdContactInfo>Metadata contact</mdContactInfo>
-  <refDate>Reference date</refDate>
-  <temporalRef>Temporal information</temporalRef>
-  <constraintInfo>Access constraint information</constraintInfo>
+  <refDate>Referentie datum</refDate>
+  <temporalRef>Temporele informatie</temporalRef>
+  <constraintInfo>Toegang restrictie informatie</constraintInfo>
 
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
@@ -38,6 +38,21 @@
   <default>Standaard</default>
   <simple>Eenvoudig</simple>
   <inspire>INSPIRE</inspire>
+  <inspire_sds>SDS</inspire_sds>
+
   <resource>Bron</resource>
   <xml>XML</xml>
+  <metadata>Metadata</metadata>
+  <identificationInfo>Identificatie</identificationInfo>
+  <distributionInfo>Distributie</distributionInfo>
+  <dataQualityInfo>Kwaliteit</dataQualityInfo>
+  <spatialRepresentationInfo>Ruimtelijke rep.</spatialRepresentationInfo>
+  <referenceSystemInfo>Ref. systeem</referenceSystemInfo>
+  <contentInfo>Inhoud</contentInfo>
+  <portrayalCatalogueInfo>Weergave</portrayalCatalogueInfo>
+  <metadataConstraints>Md. restricties</metadataConstraints>
+  <metadataMaintenance>Md. ouderhoud</metadataMaintenance>
+  <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  <noThesaurusName>Trefwoorden</noThesaurusName>
+  <bboxesSection>Geografische dekking</bboxesSection>
 </strings>

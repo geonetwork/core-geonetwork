@@ -49,7 +49,7 @@
       $scope.sourcesFilter = {};
       $scope.categoriesFilter = {};
       $scope.newFilter = {
-        name: null,
+        name: '_groupPublished',
         value: null,
         occur: '+'
       };

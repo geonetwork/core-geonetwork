@@ -99,8 +99,15 @@
                  buildXMLFieldName(scope.elementRef, scope.elementName);
 
                  scope.setSource = function(r) {
-                   scope.sourceRecord =
-                   angular.isObject(r) ? r['geonet:info'].uuid : null;
+                   if (angular.isObject(r)) {
+                     scope.sourceRecordTitle = r.title || r.defaultTitle || '';
+                     scope.sourceRecord = r['geonet:info'].uuid;
+                   } else {
+                     scope.sourceRecordTitle = null;
+                     scope.sourceRecord = null;
+                     scope.fragments = {};
+                   }
+
                  };
                  scope.getFragments = function() {
                    scope.fragments = [];
@@ -134,11 +141,13 @@
                  scope.addFragment = function(f) {
                    var field = $.find('input[name=' + scope.snippetRef +
                    ']')[0];
+
                    $(field).val(f);
                    scope.fragments = [];
                    gnEditor.save(gnCurrentEdit.id, true);
                    return false;
                  };
+
                }
              };
            }

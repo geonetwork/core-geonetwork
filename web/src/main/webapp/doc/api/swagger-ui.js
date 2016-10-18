@@ -128,9 +128,12 @@ window.Docs = {
 	shebang: function() {
 
 		// If shebang has an operation nickname in it..
-		// e.g. /docs/#!/words/get_search
-		var fragments = $.param.fragment().split('/');
-		fragments.shift(); // get rid of the bang
+		// e.g. /docs/#!/words/get_search?param1=value
+		var tokens = $.param.fragment().split('?');
+		var fragments = tokens[0].split('/');
+    fragments.shift(); // get rid of the bang
+
+    var params = tokens.length === 2 ? tokens[1].split('&') : [];
 
 		switch (fragments.length) {
 			case 1:
@@ -156,6 +159,15 @@ window.Docs = {
 
             Docs.expandOperation($('#'+li_content_dom_id));
             $('#'+li_dom_id).slideto({highlight: false});
+
+            // Init inputs by URL parameters
+            for (var i = 0; i < params.length; i ++) {
+              var keyValue = params[i].split('='),
+                e = $('#'+li_dom_id).find('[name='+keyValue[0]+']');
+              if (e) {
+                e.val(keyValue[1]);
+              }
+            }
             break;
 		}
 	},

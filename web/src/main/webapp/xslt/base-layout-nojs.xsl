@@ -27,11 +27,14 @@
   from XSLT.
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 version="2.0"
                 exclude-result-prefixes="#all">
 
   <xsl:output omit-xml-declaration="yes" method="html" doctype-system="html" indent="yes"
               encoding="UTF-8"/>
+
 
   <xsl:include href="common/base-variables.xsl"/>
   <xsl:include href="common/render-html.xsl"/>

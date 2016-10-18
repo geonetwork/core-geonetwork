@@ -620,6 +620,10 @@ public final class XslUtil {
         return DefaultEncoder.getInstance().encodeForJavaScript(str);
     }
 
+    public static String md5Hex(String str) {
+        return org.apache.commons.codec.digest.DigestUtils.md5Hex(str);
+    }
+
     public static String encodeForURL(String str) {
         try {
             return DefaultEncoder.getInstance().encodeForURL(str);

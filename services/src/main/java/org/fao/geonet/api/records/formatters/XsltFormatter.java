@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.formatters;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.Schema;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -64,12 +65,15 @@ public class XsltFormatter implements FormatterImpl {
 
         Element root = new Element("root");
 
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
         root.addContent(new Element("lang").setText(fparams.context.getLanguage()));
         root.addContent(new Element("url").setText(fparams.url));
         // FIXME: This is a hack to mimic what Jeeves service are doing.
         // Some XSLT are used by both formatters and Jeeves and Spring MVC services
         Element gui = new Element("gui");
         gui.addContent(new Element("url").setText(fparams.url + "../.."));
+        gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
         gui.addContent(new Element("reqService").setText("md.format.html"));
         root.addContent(gui);
 
