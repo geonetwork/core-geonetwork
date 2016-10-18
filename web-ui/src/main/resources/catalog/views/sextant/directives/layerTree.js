@@ -377,6 +377,9 @@
 
           scope.showWPS = function(process) {
             controller.setWPS(process, scope.member);
+            $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
+              $(button).popover('hide');
+            });
           };
 
           scope.showWFSFilter = function() {
