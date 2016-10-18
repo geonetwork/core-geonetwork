@@ -125,6 +125,16 @@ public class ApiUtils {
         ApplicationContext appContext = ApplicationContextHolder.get();
         IMetadataManager metadataRepository = appContext.getBean(IMetadataManager.class);
         IMetadata metadata = metadataRepository.getMetadataObject(uuidOrInternalId);
+        if(metadata == null) {
+            try{
+                Integer i = Integer.valueOf(uuidOrInternalId);
+                metadata = metadataRepository.getMetadataObject(i);
+            } catch(NumberFormatException e) {
+                //Silently fails, we will catch it on the next if
+                metadata = null;
+            }
+        }
+        
         if (metadata == null) {
             try {
                 metadata = metadataRepository.getMetadataObject(uuidOrInternalId);
