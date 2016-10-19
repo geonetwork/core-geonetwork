@@ -35,13 +35,13 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu" sxt-custom-scroll>
-      <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)" title="{{layer.desc || layer.name}}">
+      <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md, $event)" title="{{layer.desc || layer.name}}">
         <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
         <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml' || layer.contentType=='OGC:WMTS'"></span>
         {{layer.desc || layer.name}} </a></li>
       <li class="divider"></li>
       <li>
-        <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md)">
+        <a href="" data-ng-click="resultviewFns.addAllMdLayersToMap(layers, md, $event)">
           <i class="fa fa-plus"></i>&nbsp;
                   <span data-translate=""
                         data-translate-values="{number: '{{layers.length}}'}">
@@ -51,7 +51,7 @@
     </ul>
   </div>
   <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].dynamic == 'false'"
-          ng-if="isMap && layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)" title="{{'view' | translate}}">
+          ng-if="isMap && layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md, $event)" title="{{'view' | translate}}">
     <span class="fa fa-globe"></span>
   </button>
 

@@ -183,7 +183,6 @@
           </div>
 
           <div ng-if="executeResponse.status.processSucceeded">
-            <h4><span translate>wpsProcessSucceeded</span></h4>
 
             <div ng-if="executeResponse.processOutputs.output">
               <div class="row" ng-repeat="output in executeResponse.processOutputs.output">
@@ -223,7 +222,7 @@
                   </div>
                 </div> <!-- ng-if="::output.data.complexData" -->
 
-                <div ng-if="::output.reference">
+                <div ng-if="output.reference && output.reference.mimeType!='application/x-ogc-wms'">
                   <h4 class="col-sm-6">{{::output.title.value}}</h4>
                   <div class="col-sm-6">
                     <a class="btn btn-default" target="_blank" href="{{::output.reference.href}}">Download</a>
