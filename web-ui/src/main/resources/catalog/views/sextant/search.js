@@ -243,8 +243,8 @@
         }
       });
 
-      $scope.addLayerPopover = function(to) {
-        var pop = $('#sxt-tabswitcher');
+      $scope.addLayerPopover = function(to, opt_el) {
+        var pop = opt_el || $('#sxt-tabswitcher');
         if(!pop) {
           return;
         }
@@ -255,14 +255,14 @@
         };
 
         pop.popover(opts);
-        pop.popover('show');
+        $timeout(function() { pop.popover('show'); });
         $timeout(function() {
           pop.popover('destroy');
         }, 5000);
       };
 
       $scope.resultviewFns = {
-        addMdLayerToMap: function(link, md) {
+        addMdLayerToMap: function(link, md, $event) {
 
           if(gnSearchSettings.viewerUrl) {
             var url = gnSearchSettings.viewerUrl;
@@ -294,16 +294,20 @@
                     angular.element($('[gn-metadata-display]')).scope().dismiss();
                     $location.path('/map');
                   }
-                  $scope.addLayerPopover('map');
+                  var el;
+                  if ($event) {
+                    el = $($event.currentTarget).parents('.gn-grid-item');
+                  }
+                  $scope.addLayerPopover('map', el);
                   $scope.mainTabs.map.titleInfo += 1;
                 }
               });
 
 
         },
-        addAllMdLayersToMap: function (layers, md) {
+        addAllMdLayersToMap: function (layers, md, $event) {
           angular.forEach(layers, function (layer) {
-            $scope.resultviewFns.addMdLayerToMap(layer, md);
+            $scope.resultviewFns.addMdLayerToMap(layer, md, $event);
           });
         },
 
