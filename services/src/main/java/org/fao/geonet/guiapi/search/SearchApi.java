@@ -98,7 +98,7 @@ public class SearchApi {
         allRequestParams.put("fast", isRdf ? "false" : "index");
 
 
-        response.setHeader("Content-type", accept);
+        response.setHeader("Content-type", (isRdf || isXml || isJson ? accept : "text/html")+ ";charset=utf-8");
 
         Element results = query(allRequestParams, request);
         if (isXml) {
