@@ -45,7 +45,6 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -156,7 +155,6 @@ public class MetadataInsertDeleteApi {
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
-        SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
             MetadataUtils.backupRecord(metadata, context);
@@ -167,8 +165,6 @@ public class MetadataInsertDeleteApi {
                 String.valueOf(metadata.getId())));
 
         dataManager.deleteMetadata(context, metadataUuid);
-
-        searchManager.forceIndexChanges();
     }
 
     @ApiOperation(
@@ -208,7 +204,6 @@ public class MetadataInsertDeleteApi {
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dataManager = appContext.getBean(DataManager.class);
         AccessManager accessMan = appContext.getBean(AccessManager.class);
-        SearchManager searchManager = appContext.getBean(SearchManager.class);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
 
@@ -235,9 +230,6 @@ public class MetadataInsertDeleteApi {
                 report.addMetadataId(metadata.getId());
             }
         }
-
-        searchManager.forceIndexChanges();
-
         return report;
     }
 
