@@ -208,7 +208,7 @@
 
                  <div class="row gn-md-title">
                    <h3 itemprop="name">
-                     <a href="api/records/{*[name()='geonet:info']/uuid}"
+                     <a href="{/root/gui/nodeUrl}api/records/{*[name()='geonet:info']/uuid}"
                         itemprop="url">
                        <i class="fa gn-icon-{type}" title="{type}">&#160;</i>
                        <xsl:value-of select="title|defaultTitle"/>
