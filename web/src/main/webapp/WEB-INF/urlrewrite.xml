@@ -54,7 +54,7 @@
     <note>In the catalog, a dataset is equivalent to one record.
     So redirect to metadata formatter.</note>
     <from>^(.*)/resources/datasets/(.*)$</from>
-    <to type="forward">$1/api/records/$2</to>
+    <to type="forward">$1/search?_uuid_OR_identifier=$2</to>
   </rule>
   <rule>
     <note>Catalog information page. List all records for the catalog.
