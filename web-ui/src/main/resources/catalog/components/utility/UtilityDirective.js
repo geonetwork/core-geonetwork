@@ -180,27 +180,29 @@
             if (scope.regionType) {
               gnRegionService.loadRegion(scope.regionType, scope.lang).then(
                   function(data) {
-                    $(element).typeahead('destroy');
-                    var source = new Bloodhound({
-                      datumTokenizer:
-                          Bloodhound.tokenizers.obj.whitespace('name'),
-                      queryTokenizer: Bloodhound.tokenizers.whitespace,
-                      local: data,
-                      limit: 30
-                    });
-                    source.initialize();
-                    $(element).typeahead({
-                      minLength: 0,
-                      highlight: true
-                    }, {
-                      name: 'countries',
-                      displayKey: 'name',
-                      source: source.ttAdapter()
-                    }).on('typeahead:selected', function(event, datum) {
-                      if (angular.isFunction(scope.onRegionSelect)) {
-                        scope.onRegionSelect(datum);
-                      }
-                    });
+                    if (data) {
+                      $(element).typeahead('destroy');
+                      var source = new Bloodhound({
+                        datumTokenizer:
+                            Bloodhound.tokenizers.obj.whitespace('name'),
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: data,
+                        limit: 30
+                      });
+                      source.initialize();
+                      $(element).typeahead({
+                        minLength: 0,
+                        highlight: true
+                      }, {
+                        name: 'countries',
+                        displayKey: 'name',
+                        source: source.ttAdapter()
+                      }).on('typeahead:selected', function(event, datum) {
+                        if (angular.isFunction(scope.onRegionSelect)) {
+                          scope.onRegionSelect(datum);
+                        }
+                      });
+                    }
                   });
             }
           });

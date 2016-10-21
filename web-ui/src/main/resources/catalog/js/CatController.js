@@ -205,8 +205,8 @@
               error(function(data, status, headers, config) {
                 $rootScope.$broadcast('StatusUpdated',
                    {
-                     title: $translate('somethingWrong'),
-                     msg: $translate('msgNoCatalogInfo'),
+                     title: $translate.instant('somethingWrong'),
+                     msg: $translate.instant('msgNoCatalogInfo'),
                      type: 'danger'});
               });
         });

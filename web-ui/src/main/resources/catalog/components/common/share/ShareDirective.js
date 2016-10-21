@@ -59,6 +59,13 @@
           batch: '@gnShareBatch'
         },
         link: function(scope) {
+          var translations = null;
+          $translate(['privilegesUpdated',
+            'privilegesUpdatedError']).then(function (t) {
+            translations = t;
+          });
+
+
           scope.onlyUserGroup = gnConfig['system.metadataprivs.usergrouponly'];
           scope.disableAllCol = gnShareConstants.disableAllCol;
           scope.displayProfile = gnShareConstants.displayProfile;
@@ -147,13 +154,13 @@
                 function(data) {
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {
-                    msg: $translate('privilegesUpdated'),
+                    msg: translations.privilegesUpdated,
                     timeout: 0,
                     type: 'success'});
                 }, function(data) {
                   scope.$emit('PrivilegesUpdated', false);
                   scope.$emit('StatusUpdated', {
-                    title: $translate('privilegesUpdatedError'),
+                    title: translations.privilegesUpdatedError,
                     error: data,
                     timeout: 0,
                     type: 'danger'});
@@ -176,7 +183,7 @@
 
           scope.sortGroups = function(g) {
             if (scope.sorter.predicate == 'g') {
-              return $translate(g.group);
+              return $translate.instant(g.group);
             }
             else if (scope.sorter.predicate == 'p') {
               return g.userProfile;

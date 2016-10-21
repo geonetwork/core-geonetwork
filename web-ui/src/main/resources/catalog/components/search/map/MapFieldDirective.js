@@ -149,9 +149,9 @@
               }
               scope.getButtonTitle = function() {
                 if (scope.interaction.active) {
-                  return $translate('clickToRemoveSpatialFilter');
+                  return $translate.instant('clickToRemoveSpatialFilter');
                 } else {
-                  return $translate('drawAnExtentToFilter');
+                  return $translate.instant('drawAnExtentToFilter');
                 }
               };
               scope.interaction.on('boxend', function() {

@@ -84,7 +84,7 @@
         gnMetadataActions.deleteMd(md).
             then(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('metadataRemoved',
+                title: $translate.instant('metadataRemoved',
                     {title: md.title || md.defaultTitle}),
                 timeout: 2
               });

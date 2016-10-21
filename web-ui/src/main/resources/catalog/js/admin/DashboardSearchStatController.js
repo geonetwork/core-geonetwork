@@ -226,7 +226,7 @@
                       // the current set of displayed values
                       return '<h3>' + key + '</h3>' +
                              '<p>' + parseInt(y).toFixed() + ' ' +
-                             $translate('searches') + ' (' +
+                             $translate.instant('searches') + ' (' +
                              (y / total * 100).toFixed() + '%)</p>';
                     })
                          .showLabels(true);

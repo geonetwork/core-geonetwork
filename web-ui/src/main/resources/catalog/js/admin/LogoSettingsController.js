@@ -59,7 +59,7 @@
       loadLogoError = function(e, data) {
         if (data.jqXHR.status !== 201) {
           $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('logoUploadError'),
+            title: $translate.instant('logoUploadError'),
             error: data.jqXHR.responseJSON,
             timeout: 0,
             type: 'danger'});
@@ -87,14 +87,14 @@
             '&asFavicon=' + asFavicon)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('logoUpdated'),
+                msg: $translate.instant('logoUpdated'),
                 timeout: 2,
                 type: 'success'});
               $rootScope.$broadcast('loadCatalogInfo');
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('logoUpdateError'),
+                title: $translate.instant('logoUpdateError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -109,14 +109,14 @@
         $http.delete('../api/logos/' + logoName)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('logoRemoved'),
+                msg: $translate.instant('logoRemoved'),
                 timeout: 2,
                 type: 'success'});
               loadLogo();
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('logoRemoveError'),
+                title: $translate.instant('logoRemoveError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});

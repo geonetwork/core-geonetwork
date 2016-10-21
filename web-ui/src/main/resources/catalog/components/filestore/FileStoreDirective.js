@@ -71,7 +71,7 @@
                   scope.loadMetadataResources();
                 }, function(data) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('resourceUploadError'),
+                    title: $translate.instant('resourceUploadError'),
                     error: {
                       message: (data.errorThrown || data.statusText) +
                           (angular.isFunction(data.response) ?
@@ -96,7 +96,7 @@
 
               var uploadResourceFailed = function(e, data) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('resourceUploadError'),
+                  title: $translate.instant('resourceUploadError'),
                   error: {
                     message: data.errorThrown +
                         angular.isDefined(

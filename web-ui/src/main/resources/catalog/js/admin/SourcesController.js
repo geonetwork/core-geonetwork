@@ -49,13 +49,13 @@
                   $scope.sourcesSelected)
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('settingsUpdated'),
+                msg: $translate.instant('settingsUpdated'),
                 timeout: 2,
                 type: 'success'});
             })
             .error(function(data) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('settingsUpdateError'),
+                    title: $translate.instant('settingsUpdateError'),
                     error: data,
                     timeout: 0,
                     type: 'danger'});
