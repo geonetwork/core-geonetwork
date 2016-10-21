@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataDraftRepository;
+import org.fao.geonet.repository.MetadataLockRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataDraftSpecs;
@@ -81,6 +82,9 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     
     @Autowired
     private IMetadataIndexer mdIndexer;
+
+    @Autowired
+    private MetadataLockRepository mdLockRepo;
 
     /**
      * @param context
@@ -186,7 +190,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
      * @throws Exception
      */
     @Override
-    public String startEditingSession(ServiceContext context, String id)
+    public String startEditingSession(ServiceContext context, String id, Boolean lock)
             throws Exception {
         Metadata md = mdRepository.findOne(Integer.valueOf(id));
 
@@ -240,6 +244,8 @@ public class DraftMetadataManager extends DefaultMetadataManager {
                 id = createDraft(context, id, groupOwner, source, owner,
                         parentUuid, md.getDataInfo().getType().codeString,
                         fullRightsForGroup, md.getUuid());
+                //We don't want to lock because we are going to redirect
+                lock = false;
             } else if (isPublished
                     && mdDraftRepository.findOneByUuid(md.getUuid()) != null) {
                 // We already have a draft created
@@ -248,7 +254,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
             }
         }
 
-        return super.startEditingSession(context, id);
+        return super.startEditingSession(context, id, lock);
     }
 
     private String createDraft(ServiceContext context, String templateId,

@@ -258,7 +258,7 @@ public class DataManager {
     @Deprecated
     public String startEditingSession(ServiceContext context, String id)
             throws Exception {
-        return metadataManager.startEditingSession(context, id);
+        return metadataManager.startEditingSession(context, id, true);
     }
 
     @Deprecated

@@ -225,7 +225,8 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @param id
      * @throws Exception
      */
-    public String startEditingSession(ServiceContext context, String id)
+    @Override
+    public String startEditingSession(ServiceContext context, String id, Boolean lock)
             throws Exception {
         if (Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
             Log.debug(Geonet.EDITOR_SESSION,
@@ -234,11 +235,13 @@ public class DefaultMetadataManager implements IMetadataManager {
         
         UserSession userSession = context.getUserSession();
         
-        synchronized (this) {
-            if(mdLockRepository.isLocked(id, userSession.getPrincipal())) {
-                throw new MetadataLockedException(id);            
+        if(lock) {
+            synchronized (this) {
+                if(mdLockRepository.isLocked(id, userSession.getPrincipal())) {
+                    throw new MetadataLockedException(id);            
+                }
+                mdLockRepository.lock(id, userSession.getPrincipal());            
             }
-            mdLockRepository.lock(id, userSession.getPrincipal());            
         }
 
         boolean keepXlinkAttributes = true;

@@ -165,7 +165,7 @@ public class MetadataEditingApi {
         if (starteditingsession) {
             IMetadataManager dm = applicationContext.getBean(IMetadataManager.class);
             Integer id = Integer.valueOf(
-                            dm.startEditingSession(context, String.valueOf(metadata.getId())));
+                            dm.startEditingSession(context, String.valueOf(metadata.getId()), true));
             metadata = dm.getMetadataObject(id);
         }
 

@@ -63,9 +63,10 @@ public interface IMetadataManager {
      * 
      * @param context
      * @param id
+     * @param lock Should I lock the edit of this metadata
      * @throws Exception
      */
-    public String startEditingSession(ServiceContext context, String id)
+    public String startEditingSession(ServiceContext context, String id, Boolean lock)
             throws Exception;
 
     /**

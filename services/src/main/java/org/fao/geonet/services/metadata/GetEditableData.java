@@ -82,7 +82,7 @@ public class GetEditableData implements Service {
         if (starteditingsession) {
           GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
           IMetadataManager   dm = gc.getBean(IMetadataManager.class);
-          id = dm.startEditingSession(context, id);
+          id = dm.startEditingSession(context, id, true);
         }
 
         Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
