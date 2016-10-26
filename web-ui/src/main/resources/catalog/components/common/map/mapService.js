@@ -1287,8 +1287,7 @@
                 return new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: 'Ak-dzM4wZjSqTlzveKz5u0d4I' +
-                        'Q4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+                  key: 'AlYStuHjo5oENzCHRK6sHv88lMcs_HEHS3bEyLKoyMt1cQlaKYFS5sWC9rK51ckk',
                     imagerySet: 'Aerial'
                   }),
                   title: 'Bing Aerial'
