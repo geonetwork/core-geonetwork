@@ -17154,16 +17154,50 @@ yx-axis
 .g [sxt-main-viewer] .sxt-wps-panel .panel-body {
   font-size: 12px;
 }
+.gn [sxt-main-viewer] .sxt-wps-panel .gn-outputs,
+.g [sxt-main-viewer] .sxt-wps-panel .gn-outputs {
+  position: relative;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .gn-single-output,
+.g [sxt-main-viewer] .sxt-wps-panel .gn-single-output {
+  position: absolute;
+  right: 0;
+  top: -4em;
+}
 .gn [sxt-main-viewer] .sxt-wps-panel label,
 .g [sxt-main-viewer] .sxt-wps-panel label {
   font-weight: normal;
   text-transform: uppercase;
 }
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu label,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu label {
+  text-transform: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu input[type=radio],
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu input[type=radio] {
+  margin: 0;
+  vertical-align: middle;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul {
+  padding: .5em 1em;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu .form-group,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu .form-group,
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul {
+  margin-bottom: 0;
+}
 .gn [sxt-main-viewer] .sxt-wps-panel button[type="submit"],
 .g [sxt-main-viewer] .sxt-wps-panel button[type="submit"] {
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0 1em;
   width: auto;
+  border-radius: 2px 0 0 2px;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel button ~ button,
+.g [sxt-main-viewer] .sxt-wps-panel button ~ button {
+  margin-left: -2px;
+  border-radius: 0 2px 2px 0;
 }
 .gn [sxt-main-viewer] .sxt-wps-panel .form-group.optional,
 .g [sxt-main-viewer] .sxt-wps-panel .form-group.optional {
