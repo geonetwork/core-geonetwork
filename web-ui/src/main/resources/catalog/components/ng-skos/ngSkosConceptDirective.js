@@ -119,11 +119,11 @@
                                    c.ancestor.prefLabel[
                                      Object.keys(c.ancestor.prefLabel)[0]];
                c.help = {
-                 broader: label + ' ' + $translate('conceptBroader') +
+                 broader: label + ' ' + $translate.instant('conceptBroader') +
                  ' ' + labelAncestor,
-                 narrower: label + ' ' + $translate('conceptNarrower') +
+                 narrower: label + ' ' + $translate.instant('conceptNarrower') +
                  ' ' + labelAncestor,
-                 related: label + ' ' + $translate('conceptRelated') +
+                 related: label + ' ' + $translate.instant('conceptRelated') +
                  ' ' + labelAncestor
                };
              };

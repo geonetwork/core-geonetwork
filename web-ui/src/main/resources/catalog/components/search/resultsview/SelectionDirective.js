@@ -125,17 +125,17 @@
           hotkeys.bindTo(scope)
               .add({
                 combo: 'a',
-                description: $translate('hotkeySelectAll'),
+                description: $translate.instant('hotkeySelectAll'),
                 callback: scope.selectAll
               }).add({
                 combo: 'p',
-                description: $translate('hotkeySelectAllInPage'),
+                description: $translate.instant('hotkeySelectAllInPage'),
                 callback: function() {
                   scope.selectAllInPage(true);
                 }
               }).add({
                 combo: 'n',
-                description: $translate('hotkeyUnSelectAll'),
+                description: $translate.instant('hotkeyUnSelectAll'),
                 callback: scope.unSelectAll
               });
 

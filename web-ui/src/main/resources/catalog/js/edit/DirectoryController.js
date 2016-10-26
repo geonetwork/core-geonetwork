@@ -207,13 +207,13 @@
             .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataSuccess'),
+                title: $translate.instant('saveMetadataSuccess'),
                 timeout: 2
               });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataError'),
+                title: $translate.instant('saveMetadataError'),
                 error: error,
                 timeout: 0,
                 type: 'danger'});
@@ -229,7 +229,7 @@
               searchEntries();
             }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataError'),
+                title: $translate.instant('saveMetadataError'),
                 error: error,
                 timeout: 0,
                 type: 'danger'});
@@ -307,7 +307,7 @@
             function(r) {
               if (r.status === 400) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('saveMetadataError'),
+                  title: $translate.instant('saveMetadataError'),
                   error: r.data,
                   timeout: 0,
                   type: 'danger'});

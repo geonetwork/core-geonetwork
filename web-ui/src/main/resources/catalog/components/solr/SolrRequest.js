@@ -189,7 +189,7 @@
         this.initBaseRequest_(options);
       }
       catch (e) {
-        var msg = this.$translate('docTypeNotIndexed', {
+        var msg = this.$translate.instant('docTypeNotIndexed', {
           id: docTypeId
         });
         defer.reject({statusText: msg});
@@ -197,7 +197,7 @@
       defer.resolve(indexInfos);
     }), function(r) {
       if (r.status === 404) {
-        defer.reject({statusText: this.$translate('indexNotRunning')});
+        defer.reject({statusText: this.$translate.instant('indexNotRunning')});
       } else {
         defer.reject(r);
       }

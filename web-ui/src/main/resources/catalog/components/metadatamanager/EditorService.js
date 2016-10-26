@@ -125,7 +125,7 @@
            }
          };
          var setStatus = function(status) {
-           gnCurrentEdit.savedStatus = $translate(status.msg);
+           gnCurrentEdit.savedStatus = $translate.instant(status.msg);
            gnCurrentEdit.savedTime = moment();
            gnCurrentEdit.saving = status.saving;
          };

@@ -352,7 +352,7 @@
                   .then(function(listOfKeywords) {
 
                    var field = $(id).tagsinput('input');
-                   field.attr('placeholder', $translate('searchKeyword'));
+                   field.attr('placeholder', $translate.instant('searchKeyword'));
 
                    var keywordsAutocompleter =
                    gnThesaurusService.getKeywordAutocompleter({
@@ -526,7 +526,7 @@
             // Get list of available thesaurus (if not defined
             // by scope)
             element.typeahead('destroy');
-            element.attr('placeholder', $translate('searchOrTypeKeyword'));
+            element.attr('placeholder', $translate.instant('searchOrTypeKeyword'));
 
             // Thesaurus selector is not added if the key is defined
             // by configuration
