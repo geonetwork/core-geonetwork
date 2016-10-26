@@ -38,11 +38,18 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +77,10 @@ import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 @RequestMapping(value = {
     "/api/records",
@@ -289,10 +300,52 @@ public class MetadataEditingApi {
 //        elResp.addContent(new Element(Params.MINOREDIT).setText(String.valueOf(minor)));
 
         //--- if finished then remove the XML from the session
-        if (commit) {
+        if ((commit) && (!terminate)) {
             return null;
         }
         if (terminate) {
+            SettingManager sm = context.getBean(SettingManager.class);
+
+            boolean forceValidationOnMdSave = sm.getValueAsBool("metadata/workflow/forceValidationOnMdSave");
+
+            boolean reindex = false;
+
+            // Save validation if the forceValidationOnMdSave is enabled
+            if (forceValidationOnMdSave) {
+                dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
+                    new Document(metadata.getXmlData(false)), context.getLanguage());
+                reindex = true;
+            }
+
+            boolean automaticUnpublishInvalidMd = sm.getValueAsBool("metadata/workflow/automaticUnpublishInvalidMd");
+
+            // Unpublish the metadata automatically if the setting automaticUnpublishInvalidMd is enabled and
+            // the metadata becomes invalid
+            if (automaticUnpublishInvalidMd) {
+                final OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
+
+                boolean isPublic = (operationAllowedRepo.count(where(hasMetadataId(id)).and(hasOperation(ReservedOperation
+                    .view)).and(hasGroupId(ReservedGroup.all.getId()))) > 0);
+
+                if (isPublic) {
+                    final MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
+
+                    boolean isInvalid =
+                        (metadataValidationRepository.count(MetadataValidationSpecs.isInvalidAndRequiredForMetadata(Integer.parseInt(id))) > 0);
+
+                    if (isInvalid) {
+                        operationAllowedRepo.deleteAll(where(hasMetadataId(id)).and(hasGroupId(ReservedGroup.all.getId())));
+                    }
+
+                    reindex = true;
+                }
+
+            }
+
+            if (reindex) {
+                dataMan.indexMetadata(id, true);
+            }
+
             ajaxEditUtils.removeMetadataEmbedded(session, id);
             dataMan.endEditingSession(id, session);
             return null;

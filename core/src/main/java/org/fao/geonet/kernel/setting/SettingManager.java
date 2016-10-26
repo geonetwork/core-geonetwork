@@ -369,13 +369,20 @@ public class SettingManager {
     @Nonnull
     String getNodeURL() {
         NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
-
+        String locServ = getBaseURL() + nodeInfo.getId() + "/";
+        return locServ;
+    }
+    /**
+     * Return complete node URL eg. http://localhost:8080/geonetwork/
+     */
+    public
+    @Nonnull
+    String getBaseURL() {
         String baseURL = pathFinder.getBaseUrl();
         String protocol = getValue(Settings.SYSTEM_SERVER_PROTOCOL);
         String host = getValue(Settings.SYSTEM_SERVER_HOST);
         String port = getValue(Settings.SYSTEM_SERVER_PORT);
-        String locServ = baseURL + "/" + nodeInfo.getId() + "/";
 
-        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
+        return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + baseURL + "/";
     }
 }

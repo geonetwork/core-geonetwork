@@ -200,7 +200,7 @@
         Terminate an editing session.
         ]]></documentation>
       <class name=".services.metadata.Update">
-        <!--<param name="finished" value="yes" />-->
+        <param name="finished" value="yes" />
       </class>
       <error sheet="../xslt/common/error.xsl"/>
     </service>

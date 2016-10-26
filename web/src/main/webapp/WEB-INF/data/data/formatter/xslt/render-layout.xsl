@@ -2,12 +2,14 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
                 xmlns:gn="http://www.fao.org/geonetwork"
+                xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="2.0">
 
   <xsl:import href="common/render-html.xsl"/>
+  <xsl:import href="common/functions-core.xsl"/>
   <xsl:import href="render-variables.xsl"/>
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
@@ -45,7 +47,7 @@
   </xsl:template>
 
   <xsl:template name="render-record">
-    <div class="container gn-metadata-view">
+    <div class="container-fluid gn-metadata-view">
 
       <xsl:if test="$css = 'sextant'">
         <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
@@ -60,7 +62,7 @@
 
       <article id="gn-metadata-view-{$metadataId}"
                itemscope="itemscope"
-               itemtype="{gn-fn-render:get-schema-org-class($type)}">
+               itemtype="{gn-fn-core:get-schema-org-class($type)}">
         <header>
           <h1>
             <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>

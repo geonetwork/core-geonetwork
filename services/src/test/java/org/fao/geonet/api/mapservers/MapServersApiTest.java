@@ -24,6 +24,7 @@ package org.fao.geonet.api.mapservers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.MapServer;
 import org.fao.geonet.repository.MapServerRepository;
@@ -40,12 +41,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for MapServersApi.
@@ -91,7 +88,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(jsonPath("$.name",  is(mapServer.getName())));
+            .andExpect(jsonPath("$.name", is(mapServer.getName())));
     }
 
     @Test
@@ -119,6 +116,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_pushstyleinworkspace"))
             .create();
         String json = gson.toJson(mapServerToAdd);
 
@@ -143,6 +141,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_pushstyleinworkspace"))
             .create();
         String json = gson.toJson(mapServerToUpdate);
 
@@ -170,6 +169,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_pushstyleinworkspace"))
             .create();
         String json = gson.toJson(mapServerToUpdate);
 
@@ -221,6 +221,7 @@ public class MapServersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(404))
             .andExpect(content().contentType("application/json"));
     }
+
     /**
      * Create sample data for the tests.
      */

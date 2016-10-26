@@ -130,13 +130,6 @@
     </description>
   </element>
   <!-- ==================================================== -->
-  <element name="gmd:referenceSystemInfo" id="13.0" context="gmd:MD_Metadata">
-    <label>Laajennetut metatiedot</label>
-    <description>Tietoa profiilissa käytettävistä standardia laajentavista
-      metatietoelementeistä.
-    </description>
-  </element>
-  <!-- ==================================================== -->
   <element name="gmd:identificationInfo" id="15.0" context="gmd:MD_Metadata">
     <label>Resurssin tunnistamistiedot</label>
     <description>Tietoa resurssista (tietoaineisto tai palvelu), johon

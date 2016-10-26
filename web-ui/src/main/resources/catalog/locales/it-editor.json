@@ -163,6 +163,7 @@
     "metadataContent": "Metadata content",
     "metadataNotFound": "Warning! Requested metadata with id {{id}} not found. <a href='#/create'>Create a new one ?</a>",
     "metadataType": "Type of record",
+    "hasDqMeasures": "With quality measures",
     "generateThumbnail": "Generate thumbnail",
     "generateThumbnail-help": "Thumbnail will be created and saved in the filestore. Use the filestore to add the thumbnail in the metadata record.",
     "createAThumbnail": "Generate thumbnail using the view service",

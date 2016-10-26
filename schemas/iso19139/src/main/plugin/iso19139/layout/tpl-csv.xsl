@@ -100,7 +100,6 @@
         </xsl:for-each>
       </xsl:for-each>
 
-      <!-- One column per contact role -->
       <xsl:for-each select="gmd:identificationInfo/*/gmd:pointOfContact">
         <xsl:variable name="key" select="*/gmd:role/*/@codeListValue"/>
 
