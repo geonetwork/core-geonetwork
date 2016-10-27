@@ -637,9 +637,14 @@
 
         <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
             <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
-                <xsl:variable name="crs" select="concat(string(gmd:codeSpace/gco:CharacterString),'::',string(gmd:code/gco:CharacterString))"/>
+                <xsl:variable name="crs">
+                    <xsl:for-each select="gmd:codeSpace/gco:CharacterString/text() | gmd:code/gco:CharacterString/text()">
+                        <xsl:value-of select="."/>
+                        <xsl:if test="not(position() = last())">::</xsl:if>
+                    </xsl:for-each>
+                </xsl:variable>
 
-                <xsl:if test="$crs != '::'">
+                <xsl:if test="$crs != ''">
                     <Field name="crs" string="{$crs}" store="true" index="true"/>
                 </xsl:if>
             </xsl:for-each>
