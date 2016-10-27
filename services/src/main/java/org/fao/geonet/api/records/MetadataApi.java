@@ -103,7 +103,7 @@ public class MetadataApi implements ApplicationContextAware {
         notes = "Depending on the accept header the appropriate formatter is used. " +
             "When requesting a ZIP, a MEF version 2 file is returned. " +
             "When requesting HTML, the default formatter is used.",
-        nickname = "get")
+        nickname = "getRecord")
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.GET,
         consumes = {
@@ -170,9 +170,9 @@ public class MetadataApi implements ApplicationContextAware {
     }
 
 
-    @ApiOperation(value = "Get a metadata record",
+    @ApiOperation(value = "Get a metadata record as XML or JSON",
         notes = "",
-        nickname = "getRecordAsXml")
+        nickname = "getRecordAsXmlOrJSON")
     @RequestMapping(value =
         {
             "/{metadataUuid}/formatters/xml",
@@ -391,7 +391,7 @@ public class MetadataApi implements ApplicationContextAware {
 
     @ApiOperation(
         value = "Get record related resources",
-        nickname = "get",
+        nickname = "getAssociated",
         notes = "Retrieve related services, datasets, onlines, thumbnails, sources, ... " +
             "to this records.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/associating-resources/index.html'>More info</a>")

@@ -163,7 +163,7 @@ public class SldApi {
 
 
     @ApiOperation(value = "Generate a SLD with a new filter",
-        nickname = "getMetadataSavedQueries",
+        nickname = "buildSLD",
         notes = "Get the currend SLD for the requested layers, add new filters in, save the SLD and return the new SLD URL.")
     @RequestMapping(value = "/sld",
         method = RequestMethod.POST,
@@ -219,7 +219,7 @@ public class SldApi {
     }
 
     @ApiOperation(value = "Download a SLD",
-        nickname = "getMetadataSavedQueries",
+        nickname = "downloadSLD",
         notes = "")
     @RequestMapping(value = "/sld/{id:\\d+}.{extension}",
         method = RequestMethod.GET,
