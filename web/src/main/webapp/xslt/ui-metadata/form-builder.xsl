@@ -213,7 +213,7 @@
                     which should be in the sibbling axis. -->
                     <xsl:with-param name="relatedElement"
                                     select="concat('_',
-                        following-sibling::*[name() = $listOfValues/@rel]/*/gn:element/@ref)"/>
+                        following-sibling::*[name() = $listOfValues/@rel]/*[1]/gn:element/@ref)"/>
                     <!-- Related attribute name is based on element name
                     _<element_ref>_<attribute_name>. -->
                     <xsl:with-param name="relatedElementRef"
