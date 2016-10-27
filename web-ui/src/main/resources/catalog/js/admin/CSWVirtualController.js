@@ -155,20 +155,20 @@
             .then(function(r) {
               if (r.status === 400) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('virtualCswUpdateError'),
+                  title: $translate.instant('virtualCswUpdateError'),
                   error: r.data,
                   timeout: 0,
                   type: 'danger'});
               } else {
                 loadCSWVirtual();
                 $rootScope.$broadcast('StatusUpdated', {
-                  msg: $translate('virtualCswUpdated'),
+                  msg: $translate.instant('virtualCswUpdated'),
                   timeout: 2,
                   type: 'success'});
               }
             }, function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('virtualCswUpdateError'),
+                title: $translate.instant('virtualCswUpdateError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -183,7 +183,7 @@
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('virtualCswDeleteError'),
+                title: $translate.instant('virtualCswDeleteError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});

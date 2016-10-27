@@ -66,7 +66,7 @@
                }).error(function(error) {
                  scope.loading = false;
                  $rootScope.$broadcast('StatusUpdated', {
-                   title: $translate('suggestionListError'),
+                   title: $translate.instant('suggestionListError'),
                    error: error,
                    timeout: 0,
                    type: 'danger'});

@@ -150,7 +150,7 @@
           refreshForm(scope, $(data.data));
         }, function(error) {
           $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('runProcessError'),
+            title: $translate.instant('runProcessError'),
             error: error,
             timeout: 0,
             type: 'danger'});
@@ -172,7 +172,7 @@
                 refreshForm(scope);
               }).error(function(error) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('runServiceError'),
+                  title: $translate.instant('runServiceError'),
                   error: error,
                   timeout: 0,
                   type: 'danger'});
@@ -380,7 +380,7 @@
             });
           }, function(error) {
             $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('linkToServiceError'),
+              title: $translate.instant('linkToServiceError'),
               msg: error.statusText,
               timeout: 0,
               type: 'danger'});
@@ -518,13 +518,13 @@
               setParams('services-remove', params)).
               then(function(data) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('serviceDetachedToCurrentRecord'),
+                  title: $translate.instant('serviceDetachedToCurrentRecord'),
                   timeout: 3
                 });
                 service.reload = true;
               }, function(error) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('removeServiceError'),
+                  title: $translate.instant('removeServiceError'),
                   error: error,
                   timeout: 0,
                   type: 'danger'});
