@@ -74,6 +74,13 @@
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
 
+      // This is to force IE11 NOT to cache json requests
+      if (!$http.defaults.headers.get) {
+          $http.defaults.headers.get = {};
+      }
+      $http.defaults.headers.get['Cache-Control'] = 'no-cache';
+      $http.defaults.headers.get['Pragma'] = 'no-cache';
+
       $http.get('info?type=categories&_content_type=json').
           success(function(data) {
             $scope.categories = data.metadatacategory;
