@@ -57,7 +57,7 @@ public class WFSHarvesterApi {
     private JMSMessager jmsMessager;
 
     @ApiOperation(value = "Index a WFS feature type",
-            nickname = "getAllMetadataResources")
+            nickname = "indexWfsFeatureType")
     @RequestMapping(value = "start",
                     consumes = MediaType.APPLICATION_JSON_VALUE,
                     produces = MediaType.APPLICATION_JSON_VALUE,

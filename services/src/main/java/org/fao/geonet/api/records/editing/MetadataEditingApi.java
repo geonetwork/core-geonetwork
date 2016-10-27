@@ -497,7 +497,7 @@ public class MetadataEditingApi {
 
     @ApiOperation(value = "Reorder element",
         notes = "",
-        nickname = "addElement")
+        nickname = "reorderElement")
     @RequestMapping(value = "/{metadataUuid}/editor/elements/{direction}",
         method = RequestMethod.PUT,
         consumes = {

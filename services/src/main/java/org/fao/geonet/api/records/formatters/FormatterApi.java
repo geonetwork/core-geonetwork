@@ -210,7 +210,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             // TODO: PDF
         })
     @ApiOperation(
-        value = "Get a metadata record",
+        value = "Get a formatted metadata record",
         nickname = "getRecordFormattedBy"
     )
     @ResponseBody

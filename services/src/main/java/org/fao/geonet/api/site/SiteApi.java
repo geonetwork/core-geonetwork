@@ -314,7 +314,7 @@ public class SiteApi {
     @ApiOperation(
         value = "Save settings",
         notes = "",
-        nickname = "getSettingsDetails")
+        nickname = "saveSettingsDetails")
     @RequestMapping(
         path = "/settings",
         produces = MediaType.APPLICATION_JSON_VALUE,

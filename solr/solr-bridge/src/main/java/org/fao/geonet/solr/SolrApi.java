@@ -85,7 +85,7 @@ public class SolrApi {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete documents",
-            nickname = "delete")
+            nickname = "deleteFromIndex")
     public void delete(@RequestParam(required = true)
                        String query,
                        HttpServletRequest request) throws Exception {

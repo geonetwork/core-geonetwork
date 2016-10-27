@@ -144,27 +144,25 @@ public class MetadataProcessApi {
     }
 
     @ApiOperation(
-        value = "Preview (GET) or apply (POST) a process",
+        value = "Preview process result",
         notes = API_OP_NOTE_PROCESS,
-        nickname = "processRecord")
+        nickname = "processRecordPreview")
     @RequestMapping(
         value = "/{metadataUuid}/processes/{process}",
         method = {
-            RequestMethod.GET,
-            RequestMethod.POST,
+            RequestMethod.GET
         },
         produces = MediaType.APPLICATION_XML_VALUE
     )
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A preview of the processed record (if method is not POST)."),
-        @ApiResponse(code = 204, message = "Record processed and saved."),
+        @ApiResponse(code = 200, message = "A preview of the processed record."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
-    ResponseEntity<Element> processRecord(
+    ResponseEntity<Element> processRecordPreview(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
             required = true)
@@ -179,6 +177,7 @@ public class MetadataProcessApi {
     )
         throws Exception {
         Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        boolean save = request.getMethod().equals("POST");
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -186,8 +185,62 @@ public class MetadataProcessApi {
         SettingManager sm = applicationContext.getBean(SettingManager.class);
         XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
 
-        Element processedMetadata = null;
-        boolean save = request.getMethod().equals("POST");
+        Element processedMetadata =  process(process, request, metadata, save, context, sm, report);
+
+        return new ResponseEntity<>(processedMetadata, HttpStatus.OK);
+    }
+
+
+    @ApiOperation(
+        value = "Apply a process",
+        notes = API_OP_NOTE_PROCESS,
+        nickname = "processRecord")
+    @RequestMapping(
+        value = "/{metadataUuid}/processes/{process}",
+        method = {
+            RequestMethod.POST,
+        },
+        produces = MediaType.APPLICATION_XML_VALUE
+    )
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Record processed and saved."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    public
+    @ResponseBody
+    ResponseEntity processRecord(
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+            String metadataUuid,
+        @ApiParam(
+            value = ApiParams.API_PARAM_PROCESS_ID
+        )
+        @PathVariable
+            String process,
+        HttpServletRequest request
+    )
+        throws Exception {
+        Metadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        boolean save = true;
+
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        XsltMetadataProcessingReport report = new XsltMetadataProcessingReport(process);
+
+        process(process, request, metadata, save, context, sm, report);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    private Element process(String process, HttpServletRequest request,
+                         Metadata metadata, boolean save, ServiceContext context,
+                         SettingManager sm, XsltMetadataProcessingReport report) throws Exception {
+        Element processedMetadata;
         try {
             final String siteURL = sm.getSiteURL(context);
             processedMetadata = XslProcessUtils.process(
@@ -203,8 +256,6 @@ public class MetadataProcessApi {
         } catch (Exception e) {
             throw e;
         }
-        return new ResponseEntity<>(
-            save ? null : processedMetadata,
-            save ? HttpStatus.NO_CONTENT : HttpStatus.OK);
+        return processedMetadata;
     }
 }

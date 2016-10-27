@@ -127,7 +127,7 @@ public class MetadataInsertDeleteApi {
             "By default, a backup is made in ZIP format. After that, " +
             "the record attachments are removed, the document removed " +
             "from the index and then from the database.",
-        nickname = "delete")
+        nickname = "deleteRecord")
     @RequestMapping(value = "/{metadataUuid}",
         method = RequestMethod.DELETE
     )
