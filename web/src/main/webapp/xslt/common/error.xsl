@@ -47,7 +47,7 @@
         {<xsl:apply-templates mode="error" select="*"/>}
       </xsl:when>
       <xsl:otherwise>
-        "<xsl:value-of select="."/>"
+        "<xsl:value-of select="replace(translate(., '&quot;', ''), '&lt;script', '')"/>"
       </xsl:otherwise>
     </xsl:choose>
     <!-- Last element of interest for error is request. Next one is the record. -->

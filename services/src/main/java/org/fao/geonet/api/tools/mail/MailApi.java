@@ -115,7 +115,7 @@ public class MailApi {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
         } catch (Exception ex) {
-            Log.error("geonetwork.api", "Error sending test email", ex);
+            Log.error(API.LOG_MODULE_NAME, "Error sending test email", ex);
             String error = ex.getMessage();
             if (ex.getCause() != null) error = error + ". " + ex.getCause().getMessage();
             return new ResponseEntity<>(String.format(

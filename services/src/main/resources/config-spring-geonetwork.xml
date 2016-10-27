@@ -112,4 +112,9 @@
 
   <bean id="processingReportRegistry"
         class="org.fao.geonet.api.processing.report.registry.ProcessingReportRegistry"/>
+
+  <bean id="apiMessages" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basename" value="org.fao.geonet.api.Messages" />
+    <property name="useCodeAsDefaultMessage" value="true" />
+  </bean>
 </beans>

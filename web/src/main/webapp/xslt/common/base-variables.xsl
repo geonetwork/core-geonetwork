@@ -44,6 +44,8 @@
   <xsl:variable name="service" select="/root/gui/reqService"/>
 
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
+  <!-- Used by SearchApi loading translation from JSON locale files. -->
+  <xsl:variable name="t" select="/root/translations"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
   <xsl:variable name="requestParameters" select="/root/request"/>
 
@@ -78,6 +80,7 @@
     else if ($service = 'catalog.viewer') then 'gn_viewer'
     else if ($service = 'catalog.search'
       or $service = 'catalog.search.nojs'
+      or $service = 'search'
       or $service = 'md.format.html') then 'gn_search'
     else if ($service = 'md.viewer') then 'gn_formatter_viewer'
     else 'gn'"/>

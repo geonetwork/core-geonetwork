@@ -57,10 +57,14 @@
   <xsl:param name="thesauriDir"/>
   <xsl:param name="inspire">false</xsl:param>
 
-  <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
-  <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
-  <xsl:variable name="sextant-thesaurus" select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
-  <xsl:variable name="sextant-theme" select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
+  <xsl:variable name="inspire-thesaurus"
+                select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
+  <xsl:variable name="inspire-theme"
+                select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
+  <xsl:variable name="sextant-thesaurus"
+                select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
+  <xsl:variable name="sextant-theme"
+                select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
 
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE

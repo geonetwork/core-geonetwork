@@ -33,6 +33,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * User: Jesse Date: 10/17/13 Time: 9:53 AM
  */
 @WebAppConfiguration()
-@ContextConfiguration(inheritLocations = true, locations = "classpath:services-repository-test-context.xml")
+@ContextConfiguration(inheritLocations = true,
+    locations = {"classpath:services-repository-test-context.xml", "classpath:services-web-test-context.xml"})
 public abstract class AbstractServiceIntegrationTest extends AbstractCoreIntegrationTest {
 }

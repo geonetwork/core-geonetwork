@@ -163,6 +163,7 @@
     "metadataContent": "Metadata inhoud",
     "metadataNotFound": "Waarschuwing! De gevraagde metadata met id {{id}} niet gevonden . <a href='#/create'> Maak een nieuwe? < / a>",
     "metadataType": "Type record",
+    "hasDqMeasures": "With quality measures",
     "generateThumbnail": "Maak een thumbnail aan",
     "generateThumbnail-help": "Een thumbnail zal worden aangemaakt en opgeslagen op een file share. Gebruik de file share om de thumbnail aan het metadata record toe te voegen",
     "createAThumbnail": "Maak een thumbnail aan op basis van de View Service",

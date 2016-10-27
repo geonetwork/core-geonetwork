@@ -55,11 +55,9 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -68,6 +66,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 /**
  * API utilities mainly to deal with parameters.
@@ -135,7 +134,13 @@ public class ApiUtils {
                 uuidOrInternalId, e.getMessage()));
         }
         if (metadata == null) {
-            metadata = metadataRepository.findOne(uuidOrInternalId);
+            try {
+                metadata = metadataRepository.findOne(uuidOrInternalId);
+            } catch (InvalidDataAccessApiUsageException e) {
+                throw new ResourceNotFoundException(String.format(
+                    "Record with UUID '%s' not found in this catalog",
+                    uuidOrInternalId));
+            }
             if (metadata == null) {
                 throw new ResourceNotFoundException(String.format(
                     "Record with UUID '%s' not found in this catalog",
@@ -229,7 +234,6 @@ public class ApiUtils {
      * Check if the current user can view this record.
      */
     public static Metadata canViewRecord(String metadataUuid, HttpServletRequest request) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
         Metadata metadata = getRecord(metadataUuid);
         try {
             Lib.resource.checkPrivilege(createServiceContext(request), String.valueOf(metadata.getId()), ReservedOperation.view);

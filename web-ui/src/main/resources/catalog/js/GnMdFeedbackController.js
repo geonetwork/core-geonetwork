@@ -27,8 +27,10 @@
   var module = angular.module('gn_md_feedback_controller', []);
 
   module.controller('gnMdFeedbackController', [
-    '$scope', '$http',
-    function($scope, $http) {
+    '$scope', '$http', 'gnConfig',
+    function($scope, $http, gnConfig) {
+      $scope.isFeedbackEnabled = gnConfig[gnConfig.key.isFeedbackEnabled];
+
       $scope.mdFeedbackOpen = false;
       $scope.toggle = function() {
         $scope.mdFeedbackOpen = !$scope.mdFeedbackOpen;

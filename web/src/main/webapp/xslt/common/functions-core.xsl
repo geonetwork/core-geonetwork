@@ -27,6 +27,44 @@
                 version="2.0">
 
 
+  <!-- Convert a hierarchy level into corresponding
+  schema.org class. If no match, return http://schema.org/Thing
+   -->
+  <xsl:function name="gn-fn-core:get-schema-org-class" as="xs:string">
+    <xsl:param name="type" as="xs:string"/>
+
+    <xsl:variable name="map">
+      <entry key="dataset" value="http://schema.org/Dataset"/>
+      <entry key="series" value="http://schema.org/DataCatalog"/>
+      <entry key="service" value="http://schema.org/DataCatalog"/>
+      <entry key="application" value="http://schema.org/SoftwareApplication"/>
+      <entry key="collectionHardware" value="http://schema.org/Thing"/>
+      <entry key="nonGeographicDataset" value="http://schema.org/Dataset"/>
+      <entry key="dimensionGroup" value="http://schema.org/Dataset"/>
+      <entry key="featureType" value="http://schema.org/Dataset"/>
+      <entry key="model" value="http://schema.org/APIReference"/>
+      <entry key="tile" value="http://schema.org/Dataset"/>
+      <entry key="fieldSession" value="http://schema.org/Thing"/>
+      <entry key="collectionSession" value="http://schema.org/Thing"/>
+    </xsl:variable>
+
+    <xsl:variable name="match"
+                  select="$map/entry[@key = $type]/@value"/>
+    <xsl:value-of select="if ($match != '')
+                          then $match
+                          else 'http://schema.org/Thing'"/>
+  </xsl:function>
+
+  <xsl:function name="gn-fn-core:translate" as="xs:string">
+    <xsl:param name="key" as="xs:string"/>
+    <xsl:param name="t" as="node()"/>
+
+    <xsl:value-of select="if ($t/*[name() = $key]/text() != '')
+                          then $t/*[name() = $key]/text()
+                          else $key"/>
+  </xsl:function>
+
+
   <!-- Return mimetype according to protocol and linkage extension -->
   <xsl:function name="gn-fn-core:protocolMimeType" as="xs:string">
     <xsl:param name="linkage" as="xs:string"/>

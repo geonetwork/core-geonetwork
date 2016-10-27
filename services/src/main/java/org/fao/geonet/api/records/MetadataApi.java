@@ -23,12 +23,18 @@
 
 package org.fao.geonet.api.records;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.api.records.model.related.RelatedResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -53,24 +59,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
-
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
-import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
-import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
+import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 
@@ -121,11 +116,10 @@ public class MetadataApi implements ApplicationContextAware {
         })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the record."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW)
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW),
+        @ApiResponse(code = 404, message = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
-    public
-    @ResponseBody
-    void getRecord(
+    public String getRecord(
         @ApiParam(value = API_PARAM_RECORD_UUID,
             required = true)
         @PathVariable
@@ -144,28 +138,31 @@ public class MetadataApi implements ApplicationContextAware {
         HttpServletRequest request
     )
         throws Exception {
-        ApiUtils.canViewRecord(metadataUuid, request);
-
+        try {
+            ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
         String defaultFormatter = "xsl-view";
-        if (accept.contains(MediaType.TEXT_HTML_VALUE) ||
-            accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE) ||
-            accept.contains("application/pdf")) {
-            response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-        } else if (
-            accept.contains(MediaType.APPLICATION_XML_VALUE) ||
-            accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            response.sendRedirect(metadataUuid + "/formatters/xml");
-        } else if (
-            accept.contains("application/zip") ||
-                accept.contains(MEF_V1_ACCEPT_TYPE) ||
-                accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            response.setHeader(HttpHeaders.ACCEPT, MEF_V2_ACCEPT_TYPE);
-            response.sendRedirect(metadataUuid + "/formatters/zip");
+        if (accept.contains(MediaType.TEXT_HTML_VALUE)
+            || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
+            || accept.contains("application/pdf")) {
+            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+        } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
+                || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
+            return "forward:" + (metadataUuid + "/formatters/xml");
+        } else if (accept.contains("application/zip")
+                || accept.contains(MEF_V1_ACCEPT_TYPE)
+                || accept.contains(MEF_V2_ACCEPT_TYPE)) {
+            return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
+            // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
-            response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
+            //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
 
@@ -215,8 +212,17 @@ public class MetadataApi implements ApplicationContextAware {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         DataManager dataManager = appContext.getBean(DataManager.class);
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-
+        Metadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (ResourceNotFoundException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw e;
+        }
+        catch (Exception e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
         ServiceContext context = ApiUtils.createServiceContext(request);
         try {
             Lib.resource.checkPrivilege(context,
@@ -225,10 +231,9 @@ public class MetadataApi implements ApplicationContextAware {
         } catch (Exception e) {
             // TODO: i18n
             // TODO: Report exception in JSON format
-            throw new SecurityException(String.format(
-                "Metadata with UUID '%s' is not shared with you.",
-                metadataUuid
-            ));
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+
         }
 
         if (increasePopularity) {
@@ -261,6 +266,7 @@ public class MetadataApi implements ApplicationContextAware {
             isJson ? "json" : "xml"
         ));
         return isJson ? Xml.getJSON(xml) : xml;
+        //return xml;
     }
 
     @ApiOperation(
@@ -275,7 +281,9 @@ public class MetadataApi implements ApplicationContextAware {
             MediaType.ALL_VALUE
         },
         produces = {
-            "application/zip"
+            "application/zip",
+            MEF_V1_ACCEPT_TYPE,
+            MEF_V2_ACCEPT_TYPE
         })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the record."),
@@ -291,10 +299,10 @@ public class MetadataApi implements ApplicationContextAware {
             String metadataUuid,
         @ApiParam(
             value = "MEF file format.",
-            required = true)
+            required = false)
         @RequestParam(
             required = false,
-            defaultValue = "full")
+            defaultValue = "FULL")
             MEFLib.Format format,
         @ApiParam(
             value = "With related records (parent and service).",
@@ -328,7 +336,14 @@ public class MetadataApi implements ApplicationContextAware {
         throws Exception {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
-        Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+
+        Metadata metadata;
+        try {
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -385,6 +400,7 @@ public class MetadataApi implements ApplicationContextAware {
             metadata.getUuid()
         ));
         response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
+        response.setContentType(acceptHeader);
         FileUtils.copyFile(file.toFile(), response.getOutputStream());
     }
 
@@ -428,7 +444,14 @@ public class MetadataApi implements ApplicationContextAware {
             int rows,
         HttpServletRequest request) throws Exception {
 
-        Metadata md = ApiUtils.canViewRecord(metadataUuid, request);
+
+        Metadata md;
+        try{
+            md = ApiUtils.canViewRecord(metadataUuid, request);
+        } catch (SecurityException e) {
+            Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
+            throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+        }
 
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
 
