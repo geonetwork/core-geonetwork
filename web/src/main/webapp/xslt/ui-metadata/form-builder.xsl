@@ -552,6 +552,13 @@
                     </span>
                   </xsl:when>
                   <!-- A directive -->
+                  <xsl:when test="@use = 'data-gn-language-picker'">
+                    <input class="form-control"
+                           value="{value}"
+                           data-gn-field-tooltip="{$schema}|{@tooltip}"
+                           data-gn-language-picker=""
+                           id="{$id}_{@label}"/>
+                  </xsl:when>
                   <xsl:when test="starts-with(@use, 'gn-')">
                     <input class="form-control"
                            type="hidden"
