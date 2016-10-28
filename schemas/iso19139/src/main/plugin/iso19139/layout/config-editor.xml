@@ -570,8 +570,50 @@
       <tab id="sextant-metadata" mode="flat">
         <section name="sextantmetadataInfoTitle">
           <field xpath="/gmd:MD_Metadata/gmd:language"/>
-          <field xpath="/gmd:MD_Metadata/gmd:locale/*/gmd:languageCode"
-                 or="locale" in="/gmd:MD_Metadata" del="../.."/>
+
+          <field name="locale"
+                 xpath="/gmd:MD_Metadata/gmd:locale"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 del=".">
+            <template>
+              <values>
+                <key label="locale"
+                     use="data-gn-language-picker"
+                     xpath="gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+              </values>
+              <snippet>
+                <gmd:locale>
+                  <gmd:PT_Locale>
+                    <gmd:languageCode>
+                      <gmd:LanguageCode codeList="" codeListValue="{{locale}}"/>
+                    </gmd:languageCode>
+                    <gn:copy select="gmd:characterEncoding"/>
+                  </gmd:PT_Locale>
+                </gmd:locale>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="locale" or="locale"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:locale>
+                  <gmd:PT_Locale>
+                    <gmd:languageCode>
+                      <gmd:LanguageCode codeList="" codeListValue=""/>
+                    </gmd:languageCode>
+                    <gmd:characterEncoding>
+                      <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+                                               codeListValue="utf8"/>
+                    </gmd:characterEncoding>
+                  </gmd:PT_Locale>
+                </gmd:locale>
+              </snippet>
+            </template>
+          </action>
+
           <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:contact"/>
