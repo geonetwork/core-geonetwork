@@ -49,6 +49,8 @@ import org.fao.geonet.entitylistener.GroupEntityListenerManager;
 public class Group extends Localized {
     static final String ID_SEQ_NAME = "group_id_seq";
 
+    static final char DEFAULT_CATEGORIES_RESTRICTION = Constants.YN_FALSE; // By default, allow all categories
+
     private int _id;
     private String _name;
     private String _description;
@@ -58,7 +60,7 @@ public class Group extends Localized {
     private String website;
     private MetadataCategory defaultCategory;
     private List<MetadataCategory> allowedCategories;
-    private Boolean enableAllowedCategories;
+    private Character enableCategoriesRestriction = DEFAULT_CATEGORIES_RESTRICTION;
 
     /**
      * Get the id of the group.
@@ -334,28 +336,48 @@ public class Group extends Localized {
     }
 
     /**
+     * For backwards compatibility we need the reserved column to be either 'n' or 'y'.
+     * This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     */
+    @Column(name = "enableCategoriesRestriction", nullable = true, length = 1)
+    protected Character getEnabled_JpaWorkaround() {
+        return enableCategoriesRestriction != null ?
+                enableCategoriesRestriction :
+                DEFAULT_CATEGORIES_RESTRICTION;
+    }
+
+    /**
+     * Set the column value.
+     *
+     * @param enabled Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
+     * @return
+     */
+    protected Character setEnabled_JpaWorkaround(final Character enabled) {
+        return enableCategoriesRestriction = enabled;
+    }
+
+    /**
      * Should we use the allowedCategories list on this group?
-     * 
+     *
      * @return if false, we allow all categories
      */
-    @Column
-    public Boolean getEnableAllowedCategories() {
-        if (enableAllowedCategories == null) {
-            // By default, allow all categories
-            this.enableAllowedCategories = false;
-        }
-        return enableAllowedCategories;
+    @Transient
+    public Boolean getEnableAllowedCategories(){
+        return Constants.toBoolean_fromYNChar(getEnabled_JpaWorkaround());
     }
 
     /**
      * Should we use the enableAllowedCategories list on this group? If false, we allow
      * all categories.
-     * 
+     *
      * @param enableAllowedCategories
      * @return this group entity object
      */
-    public Group setEnableAllowedCategories(Boolean enableAllowedCategories) {
-        this.enableAllowedCategories = enableAllowedCategories;
+    public Group setEnableAllowedCategories(Boolean enabled) {
+        setEnabled_JpaWorkaround( enabled != null?
+                Constants.toYN_EnabledChar(enabled):
+                null);
         return this;
     }
 }

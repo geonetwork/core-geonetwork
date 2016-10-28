@@ -42,15 +42,15 @@ public class CheckUsername {
             user.setUsername(user.getUsername().replaceAll("<", ""));
         }
 
-        if (user.getSurname().contains("<")) {
+        if (user.getSurname() != null && user.getSurname().contains("<")) {
             user.setSurname(user.getSurname().replaceAll("<", ""));
         }
 
-        if (user.getName().contains("<")) {
+        if (user.getName() != null && user.getName().contains("<")) {
             user.setName(user.getName().replaceAll("<", ""));
         }
 
-        if (user.getOrganisation().contains("<")) {
+        if (user.getOrganisation() != null && user.getOrganisation().contains("<")) {
             user.setOrganisation(user.getOrganisation().replaceAll("<", ""));
         }
     }

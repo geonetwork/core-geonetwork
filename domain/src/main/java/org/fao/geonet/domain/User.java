@@ -32,14 +32,14 @@ public class User extends GeonetEntity implements UserDetails {
     private String _username;
     private String _surname;
     private String _name;
-    private Set<String> _email = new HashSet<String>();
-    private Set<Address> _addresses = new LinkedHashSet<Address>();
+    private Set<String> _email = new HashSet<>();
+    private Set<Address> _addresses = new LinkedHashSet<>();
     private String _organisation;
     private String _kind;
     private Profile _profile = Profile.RegisteredUser;
     private UserSecurity _security = new UserSecurity();
     private String _lastLoginDate;
-    private Boolean _isEnabled;
+    private char _isEnabled = Constants.YN_TRUE;
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -368,17 +368,40 @@ public class User extends GeonetEntity implements UserDetails {
         return true;
     }
 
-    @Column
-    public boolean isEnabled() {
-        if (_isEnabled == null) {
-            this._isEnabled = true;
-        }
+    /**
+     * For backwards compatibility we need the reserved column to be either 'n' or 'y'.
+     * This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     */
+    @Column(name = "isenabled", nullable = false, length = 1)
+    protected char getEnabled_JpaWorkaround() {
         return _isEnabled;
     }
 
-    public User setEnabled(Boolean enabled) {
-        this._isEnabled = enabled;
-        return this;
+    /**
+     * Set the column value.
+     *
+     * @param enabled Constants.YN_ENABLED for true or Constants.YN_DISABLED for false.
+     * @return
+     */
+    protected char setEnabled_JpaWorkaround(final char enabled) {
+        return _isEnabled = enabled;
+    }
+
+    /**
+     * @return true if the user is enabled .
+     */
+    @Override
+    @Transient
+    public boolean isEnabled() {
+        return Constants.toBoolean_fromYNChar(getEnabled_JpaWorkaround());
+    }
+
+    /**
+     * Set true if this is a reserved StatusValue.
+     */
+    public void setEnabled(final boolean enabled) {
+        setEnabled_JpaWorkaround(Constants.toYN_EnabledChar(enabled));
     }
 
     /**
