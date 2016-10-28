@@ -459,11 +459,11 @@ public class DefaultMetadataManager implements IMetadataManager {
                 .setDoctype(docType).setRoot(metadataXml.getQualifiedName())
                 .setType(MetadataType.lookup(metadataType));
         newMetadata.getSourceInfo().setOwner(owner).setSourceId(source);
-        if (groupOwner != null) {
+        if (StringUtils.isNotBlank(groupOwner)) {
             newMetadata.getSourceInfo()
                     .setGroupOwner(Integer.valueOf(groupOwner));
         }
-        if (category != null) {
+        if (StringUtils.isNotBlank(category)) {
             MetadataCategory metadataCategory = mdCatRepository
                     .findOneByName(category);
             if (metadataCategory == null) {
@@ -471,7 +471,7 @@ public class DefaultMetadataManager implements IMetadataManager {
                         "No category found with name: " + category);
             }
             newMetadata.getCategories().add(metadataCategory);
-        } else if (groupOwner != null) {
+        } else if (StringUtils.isNotBlank(groupOwner)) {
             // If the group has a default category, use it
             Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
             if (group.getDefaultCategory() != null) {
