@@ -110,13 +110,13 @@
       hotkeys.bindTo($scope)
         .add({
             combo: 'h',
-            description: $translate('hotkeyHome'),
+            description: $translate.instant('hotkeyHome'),
             callback: function(event) {
               $location.path('/home');
             }
           }).add({
             combo: 't',
-            description: $translate('hotkeyFocusToSearch'),
+            description: $translate.instant('hotkeyFocusToSearch'),
             callback: function(event) {
               event.preventDefault();
               var anyField = $('#gn-any-field');
@@ -128,21 +128,21 @@
             }
           }).add({
             combo: 'enter',
-            description: $translate('hotkeySearchTheCatalog'),
+            description: $translate.instant('hotkeySearchTheCatalog'),
             allowIn: 'INPUT',
             callback: function() {
               $location.search('tab=search');
             }
             //}).add({
             //  combo: 'r',
-            //  description: $translate('hotkeyResetSearch'),
+            //  description: $translate.instant('hotkeyResetSearch'),
             //  allowIn: 'INPUT',
             //  callback: function () {
             //    $scope.resetSearch();
             //  }
           }).add({
             combo: 'm',
-            description: $translate('hotkeyMap'),
+            description: $translate.instant('hotkeyMap'),
             callback: function(event) {
               $location.path('/map');
             }

@@ -207,13 +207,13 @@
             .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataSuccess'),
+                title: $translate.instant('saveMetadataSuccess'),
                 timeout: 2
               });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataError'),
+                title: $translate.instant('saveMetadataError'),
                 error: error,
                 timeout: 0,
                 type: 'danger'});
@@ -229,7 +229,7 @@
               searchEntries();
             }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataError'),
+                title: $translate.instant('saveMetadataError'),
                 error: error,
                 timeout: 0,
                 type: 'danger'});
@@ -238,6 +238,18 @@
         return false;
       };
 
+      /**
+       * Update textarea containing XML when the ACE editor change.
+       * See form-builder-xml.xsl.
+       */
+      $scope.xmlEditorChange = function(e) {
+      // TODO: Here we could check if XML is valid based on ACE info
+      // and disable save action ?
+        $('textarea[name=data]').val(e[1].getSession().getValue());
+      };
+      $scope.xmlEditorLoaded = function(e) {
+        // TODO: Adjust height of editor based on screen size ?
+      };
       /**
        * When the form is loaded, this function is called.
        * Use it to retrieve form variables or initialize
@@ -295,7 +307,7 @@
             function(r) {
               if (r.status === 400) {
                 $rootScope.$broadcast('StatusUpdated', {
-                  title: $translate('saveMetadataError'),
+                  title: $translate.instant('saveMetadataError'),
                   error: r.data,
                   timeout: 0,
                   type: 'danger'});

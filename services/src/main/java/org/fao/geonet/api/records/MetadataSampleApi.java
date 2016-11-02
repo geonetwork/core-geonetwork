@@ -167,7 +167,7 @@ public class MetadataSampleApi {
         notes = "Add template records for one or more schemas. " +
             "Templates are defined for each standard in the template folder " +
             "as XML files. Template may also contains subtemplates.",
-        nickname = "addSamples")
+        nickname = "addTemplates")
     @RequestMapping(value = "/templates",
         method = RequestMethod.PUT
     )

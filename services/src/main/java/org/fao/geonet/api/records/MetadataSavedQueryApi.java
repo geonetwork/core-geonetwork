@@ -103,7 +103,7 @@ public class MetadataSavedQueryApi {
     // TODO: Api is query xpath
     @ApiOperation(
         value = "Apply a saved query for this metadata",
-        nickname = "getMetadataSavedQueries",
+        nickname = "applyQuery",
         notes = "All parameters will be substituted to the XPath query. " +
             "eg. {{protocol}} in the XPath expression will be replaced by " +
             "the protocol parameter provided in the request body.")

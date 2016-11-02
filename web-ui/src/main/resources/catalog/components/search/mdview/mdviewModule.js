@@ -58,7 +58,7 @@
       $scope.deleteRecord = function(md) {
         return gnMetadataActions.deleteMd(md).then(function(data) {
           gnAlertService.addAlert({
-            msg: $translate('metadataRemoved',
+            msg: $translate.instant('metadataRemoved',
                 {title: md.title || md.defaultTitle}),
             type: 'success'
           });

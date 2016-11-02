@@ -188,11 +188,11 @@
 
 
       if ($routeParams.childOf) {
-        $scope.title = $translate('createChildOf');
+        $scope.title = $translate.instant('createChildOf');
       } else if ($routeParams.from) {
-        $scope.title = $translate('createCopyOf');
+        $scope.title = $translate.instant('createCopyOf');
       } else {
-        $scope.title = $translate('createA');
+        $scope.title = $translate.instant('createA');
       }
 
       $scope.createNewMetadata = function(isPublic) {
@@ -229,7 +229,7 @@
             metadataUuid
         ).error(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
-            title: $translate('createMetadataError'),
+            title: $translate.instant('createMetadataError'),
             error: data.error,
             timeout: 0,
             type: 'danger'});

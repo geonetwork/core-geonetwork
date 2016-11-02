@@ -422,13 +422,13 @@
               $scope.unselectUser();
               loadUsers();
               $rootScope.$broadcast('StatusUpdated', {
-                msg: $translate('userUpdated'),
+                msg: $translate.instant('userUpdated'),
                 timeout: 2,
                 type: 'success'});
             },
             function(r) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('userUpdateError'),
+                title: $translate.instant('userUpdateError'),
                 error: r.data,
                 timeout: 0,
                 type: 'danger'});
@@ -447,7 +447,7 @@
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('userDeleteError'),
+                title: $translate.instant('userDeleteError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -488,14 +488,14 @@
         $scope.unselectGroup();
         loadGroups();
         $rootScope.$broadcast('StatusUpdated', {
-          msg: $translate('groupUpdated'),
+          msg: $translate.instant('groupUpdated'),
           timeout: 2,
           type: 'success'});
 
       };
       var uploadImportMdError = function(data) {
         $rootScope.$broadcast('StatusUpdated', {
-          title: $translate('groupUpdateError'),
+          title: $translate.instant('groupUpdateError'),
           error: data,
           timeout: 0,
           type: 'danger'});
@@ -534,7 +534,7 @@
             })
             .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('groupDeleteError'),
+                title: $translate.instant('groupDeleteError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});

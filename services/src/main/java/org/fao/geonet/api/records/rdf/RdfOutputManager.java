@@ -21,12 +21,13 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.services.rdf;
+package org.fao.geonet.api.records.rdf;
 
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -37,6 +38,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.context.ApplicationContext;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -67,8 +69,9 @@ public class RdfOutputManager {
      * @return Name of the temporal file
      */
     public File createRdfFile(ServiceContext context, RdfSearcher searcher) throws Exception {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        DataManager dm = applicationContext.getBean(DataManager.class);
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         try {
             List results = searcher.search(context);
@@ -295,11 +298,18 @@ public class RdfOutputManager {
         serverEl.addContent(new Element("protocol").setText(sm.getValue(Settings.SYSTEM_SERVER_PROTOCOL)));
 
         Element siteEl = new Element("site");
+        siteEl.addContent(new Element("siteId").setText(sm.getValue(Settings.SYSTEM_SITE_SITE_ID_PATH)));
         siteEl.addContent(new Element("name").setText(sm.getValue(Settings.SYSTEM_SITE_NAME_PATH)));
         siteEl.addContent(new Element("organization").setText(sm.getValue(Settings.SYSTEM_SITE_ORGANIZATION)));
 
+        Element metadataEl = new Element("metadata");
+        metadataEl.addContent(new Element("resourceIdentifierPrefix").setText(sm.getValue(Settings.SYSTEM_RESOURCE_PREFIX)));
+
         Element guiEl = new Element("gui");
+
         Element systemConfigEl = new Element("systemConfig");
+        systemConfigEl.addContent(metadataEl);
+
         Element systemEl = new Element("system");
         systemEl.addContent(serverEl);
         systemEl.addContent(siteEl);

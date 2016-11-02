@@ -65,7 +65,7 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
 public class SelectionsApi {
 
     @ApiOperation(value = "Get current selection",
-        nickname = "get")
+        nickname = "getSelection")
     @RequestMapping(
         method = RequestMethod.GET,
         value = "/{bucket}",
@@ -95,7 +95,7 @@ public class SelectionsApi {
 
 
     @ApiOperation(value = "Select one or more items",
-        nickname = "add")
+        nickname = "addToSelection")
     @RequestMapping(
         method = RequestMethod.PUT,
         value = "/{bucket}",
@@ -135,7 +135,7 @@ public class SelectionsApi {
 
 
     @ApiOperation(value = "Clear selection or remove items",
-        nickname = "clear")
+        nickname = "clearSelection")
     @RequestMapping(
         method = RequestMethod.DELETE,
         value = "/{bucket}",
