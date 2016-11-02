@@ -282,7 +282,8 @@
       INSPIRE Atom Describe (service)
     </note>
     <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
-    <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>
+    <to type="forward">/srv/$1/atom.local?fileIdentifier=$2</to>
+<!--    <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>-->
   </rule>
 
   <rule>
@@ -290,7 +291,8 @@
       INSPIRE Atom DescribeBy
     </note>
     <from>^/opensearch/(.*)/describe?(.*)$</from>
-    <to type="forward">/srv/$1/atom.describe</to>
+    <to type="forward">/srv/$1/atom.local</to>
+<!--    <to type="forward">/srv/$1/atom.describe</to>-->
   </rule>
 
 

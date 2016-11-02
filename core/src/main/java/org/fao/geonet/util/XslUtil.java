@@ -23,11 +23,22 @@
 
 package org.fao.geonet.util;
 
-import jeeves.component.ProfileManager;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -55,16 +66,11 @@ import org.owasp.esapi.reference.DefaultEncoder;
 import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Node;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import jeeves.component.ProfileManager;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All params are objects because
@@ -628,4 +634,61 @@ public final class XslUtil {
             return str;
         }
     }
+
+	/**
+	 * @param dateFormat	Date format part supported by the SimpleDateFormat java class
+	 * @return	Formatted current date
+	 */
+    public static String getCurrentDate(String dateFormat) {
+		return new SimpleDateFormat(dateFormat).format(new Date());
+	}
+    
+	/**
+	 * @param dateFormat	Date format part supported by the SimpleDateFormat java class
+	 * @param timeFormat	Time format part supported by the SimpleDateFormat java class
+	 * @return	ISO 8601 date/time string like 1994-11-05T13:15:30Z
+	 */
+	public static String getCurrentDateTime(String dateFormat, String timeFormat) {
+		return new SimpleDateFormat(dateFormat + "'T'" + timeFormat).format(new Date());
+	}
+	
+	/**
+	 * @param sNumber	Number to format
+	 * @param decimals	Number of decimals
+	 * @return	Formatted string with number of decimals or 0.0 in case of parse error
+	 */
+	public static String formatNumber(String sNumber, String decimals) {
+		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+		nf.setGroupingUsed(false);
+		nf.setMinimumFractionDigits(Integer.parseInt(decimals));
+		nf.setMaximumFractionDigits(Integer.parseInt(decimals));
+		double dNumber = 0.0;
+		try {
+			dNumber = Double.parseDouble(sNumber);
+		} catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to format number: " + e.getMessage());
+		}
+		return nf.format(dNumber);
+	}
+	
+	/**
+	 * @param sNumber1	First number
+	 * @param sNumber2	Second number
+	 * @return Closest long value of the product of the 2 numbers
+	 */
+	public static String multiply(String sNumber1, String sNumber2) {
+		double dNumber1 = 0.0;
+		double dNumber2 = 0.0;
+		try {
+			dNumber1 = Double.parseDouble(sNumber1);
+		} catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to format number: " + e.getMessage());
+		}
+		try {
+			dNumber2 = Double.parseDouble(sNumber2);
+		} catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Failed to format number: " + e.getMessage());
+		}
+		return Long.toString(Math.round(dNumber1 * dNumber2));
+	}
 }

@@ -22,34 +22,36 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.InspireAtomFeed;
+import org.fao.geonet.domain.InspireAtomFeedEntry;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.inspireatom.InspireAtomService;
+import org.fao.geonet.inspireatom.util.InspireAtomUtil;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.InspireAtomFeedRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.inspireatom.InspireAtomService;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.InspireAtomFeedRepository;
-import org.fao.geonet.utils.Log;
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.inspireatom.harvester.InspireAtomHarvester;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.InspireAtomFeedEntry;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.lib.Lib;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * INSPIRE OpenSearchDescription atom service.
@@ -57,6 +59,9 @@ import java.util.Map;
  * @author Jose García
  */
 public class AtomServiceDescription implements Service {
+
+	private Path stylePath;
+
     /**
      * Service uuid param name
      **/
@@ -64,7 +69,7 @@ public class AtomServiceDescription implements Service {
 
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
-
+        this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
     }
 
     //--------------------------------------------------------------------------
@@ -90,7 +95,7 @@ public class AtomServiceDescription implements Service {
             return new Element("response");
         }
 
-        InspireAtomService service = context.getBean(InspireAtomService.class);
+//        InspireAtomService service = context.getBean(InspireAtomService.class);
 
         String id = dm.getMetadataId(fileIdentifier);
         if (id == null) throw new MetadataNotFoundEx("Metadata not found.");
@@ -108,11 +113,11 @@ public class AtomServiceDescription implements Service {
 
         // Get dataset identifiers referenced by service metadata.
         List<String> datasetIdentifiers = null;
-
+/*
         InspireAtomFeed inspireAtomFeed = service.findByMetadataId(Integer.parseInt(id));
 
         // Check the metadata has an atom document (checks in the lucene index).
-        String atomUrl = inspireAtomFeed.getAtomUrl();
+        String atomUrl = inspireAtomFeed!=null ? inspireAtomFeed.getAtomUrl() : "";
 
         // If no atom document indexed, check if still metadata has feed url --> no processed by atom harvester yet
         if (StringUtils.isEmpty(atomUrl)) {
@@ -134,6 +139,7 @@ public class AtomServiceDescription implements Service {
 
         // Get information from the the service atom feed.
         String feedAuthorName = inspireAtomFeed.getAuthorName();
+        String feedAuthorEmail= inspireAtomFeed.getAuthorEmail();
         String feedTitle = inspireAtomFeed.getTitle();
         String feedSubtitle = inspireAtomFeed.getSubtitle();
         String feedLang = inspireAtomFeed.getLang();
@@ -155,7 +161,110 @@ public class AtomServiceDescription implements Service {
             .addContent(new Element("authorName").setText(feedAuthorName))
             .addContent(new Element("url").setText(feedUrl))
             .addContent(datasetsEl);
-    }
+  */
+        String keywords = LuceneSearcher.getMetadataFromIndex(context.getLanguage(), fileIdentifier, "keyword");
+    	Element serviceElement = InspireAtomUtil.getServiceFeed(fileIdentifier, context, null);
+        java.nio.file.Path styleSheet = stylePath.resolve(InspireAtomUtil.INSPIRE_ATOM_FEED);
+
+        Map<String, Object> paramsM = new HashMap<String, Object>();
+        Element serviceAtomFeed = Xml.transform(new Element("root").addContent(serviceElement), styleSheet, paramsM);
+        Namespace ns = serviceAtomFeed.getNamespace();
+        Element response = new Element("response");
+        response.addContent(new Element("fileId").setText(fileIdentifier));
+        response.addContent(new Element("title").setText(serviceAtomFeed.getChildText("title",ns)));
+        response.addContent(new Element("subtitle").setText(serviceAtomFeed.getChildText("subtitle",ns)));
+        response.addContent(new Element("lang").setText(context.getLanguage()));
+        if (!StringUtils.isEmpty(keywords)) {
+        	response.addContent(new Element("keywords").setText(keywords));
+        }
+        response.addContent(new Element("authorName").setText(serviceAtomFeed.getChild("author",ns).getChildText("name",ns)));
+        response.addContent(new Element("authorEmail").setText(serviceAtomFeed.getChild("author",ns).getChildText("email",ns)));
+        response.addContent(new Element("url").setText(serviceAtomFeed.getChildText("id",ns)));
+        Element datasetsEl = new Element("datasets");
+        response.addContent(datasetsEl);
+        InspireAtomService service = context.getBean(InspireAtomService.class);
+        Namespace inspiredlsns = serviceAtomFeed.getNamespace("inspire_dls");
+        Iterator<Element> datasets = (serviceAtomFeed.getChildren("entry", ns)).iterator();
+        while(datasets.hasNext()) {
+			Element dataset = datasets.next();
+			String datasetIdCode = dataset.getChildText("spatial_dataset_identifier_code", inspiredlsns);
+			String datasetIdNs = dataset.getChildText("spatial_dataset_identifier_namespace", inspiredlsns);
+			
+            // Get metadata uuid
+            String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
+            if (StringUtils.isEmpty(datasetUuid)) {
+            	datasetUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context, datasetIdCode, "identifier", null);
+            }
+            if (StringUtils.isEmpty(datasetUuid)) {
+            	throw new MetadataNotFoundEx("datasetIdCode=" + datasetIdCode);
+            }
+
+            // Retrieve metadata to check existence and permissions.
+            String datasetMetadataId = dm.getMetadataId(datasetUuid);
+
+            Element datasetAtomFeed = null;
+            try {
+            	datasetAtomFeed = Xml.transform(new Element("root").addContent(InspireAtomUtil.getDatasetFeed(dm, context, datasetMetadataId, datasetUuid, datasetIdCode, datasetIdNs, null, null)), styleSheet);
+            } catch(Exception e) {
+				System.out.println("No dataset metadata found with uuid:"
+						+ fileIdentifier);
+				continue;
+            }
+			Element datasetEl = buildDatasetInfo(datasetIdCode,datasetIdNs);
+            datasetEl.addContent(new Element("atom_url").setText(datasetAtomFeed.getChildText("id",ns)));
+			datasetsEl.addContent(datasetEl);
+            Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
+            Iterator<Element> entries = (datasetAtomFeed.getChildren("entry", ns)).iterator();
+            while(entries.hasNext()) {
+            	Element entry = entries.next();
+            	Element category = entry.getChild("category",ns);
+            	if (category!=null) {
+	            	String term = category.getAttributeValue("term");
+	                Integer count = downloadsCountByCrs.get(term);
+	                if (count == null) {
+	                	count = new Integer(0);
+	                }
+	                downloadsCountByCrs.put(term, count + 1);
+            	}
+            }
+            entries = (datasetAtomFeed.getChildren("entry", ns)).iterator();
+            while(entries.hasNext()) {
+            	Element entry = entries.next();
+            	Element category = entry.getChild("category",ns);
+            	if (category!=null) {
+	            	String term = category.getAttributeValue("term");
+	                Integer count = downloadsCountByCrs.get(term);
+	                if (count != null) {
+	                    Element downloadEl = new Element("file");
+	                    String title = entry.getChildText("title",ns);
+	                    int iPos = title.indexOf(" in  -");
+	                    if (iPos>-1) {
+	                    	title = title.substring(0,iPos);
+	                    }
+	                    downloadEl.addContent(new Element("title").setText(title));
+	                    downloadEl.addContent(new Element("lang").setText(context.getLanguage()));
+	                    downloadEl.addContent(new Element("url").setText(entry.getChildText("id",ns)));
+	                    if (count > 1) {
+	                        downloadEl.addContent(new Element("type").setText("application/atom+xml"));
+	                    } else {
+	                    	Element link = entry.getChild("link", ns);
+	                    	if (link!=null) {
+	                    		downloadEl.addContent(new Element("type").setText(link.getAttributeValue("type")));
+	                    	}
+	                    }
+	                    downloadEl.addContent(new Element("crs").setText(term));
+	                    downloadEl.addContent(new Element("crsCount").setText("" + count));
+	                    datasetEl.addContent(downloadEl);
+
+	                    // Remove from map to not process further downloads with same CRS,
+	                    // only 1 entry with type= is added in result
+	                    downloadsCountByCrs.remove(term);
+	                }
+            	}
+            }
+        }
+        return response;
+  }
 
 
     /**
@@ -234,6 +343,7 @@ public class AtomServiceDescription implements Service {
                     }
 
                     downloadEl.addContent(new Element("crs").setText(entry.getCrs()));
+                    downloadEl.addContent(new Element("crsCount").setText("" + count));
                     datasetEl.addContent(downloadEl);
 
                     // Remove from map to not process further downloads with same CRS,

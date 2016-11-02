@@ -71,7 +71,10 @@ public class AtomGetData implements Service {
      **/
     private final static String DATASET_CRS_PARAM = "crs";
 
-    public void init(Path appPath, ServiceConfig params) throws Exception {
+	/** Query param name **/
+	private static final String DATASET_Q_PARAM = "q";
+
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 
     }
 
@@ -100,7 +103,14 @@ public class AtomGetData implements Service {
         String datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
         String datasetCrs = Util.getParam(params, DATASET_CRS_PARAM);
 
-        // Get the metadata uuid for the dataset
+		String searchTerms = null;
+		try {
+			searchTerms = Util.getParam(params,
+					DATASET_Q_PARAM);
+		} catch (Exception e) {
+		}
+
+		// Get the metadata uuid for the dataset
         String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
         if (StringUtils.isEmpty(datasetUuid)) throw new MetadataNotFoundEx(datasetUuid);
 
@@ -138,7 +148,8 @@ public class AtomGetData implements Service {
             // Otherwise, return a feed with the downloads for the specified CRS
         } else {
             // Retrieve the dataset feed
-            Element feed = service.retrieveFeed(context, inspireAtomFeed);
+        	Element feed = service.retrieveDatasetFeed(context, Integer.parseInt(id), datasetUuid, datasetIdCode, datasetIdNs, datasetCrs, searchTerms);
+//            Element feed = service.retrieveFeed(context, inspireAtomFeed);
 
             // Filter the dataset feed by CRS code.
             InspireAtomUtil.filterDatasetFeedByCrs(feed, datasetCrs);

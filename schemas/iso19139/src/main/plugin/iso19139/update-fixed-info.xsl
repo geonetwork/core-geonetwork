@@ -541,4 +541,21 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="gmd:linkage">
+    <xsl:copy>
+	  <xsl:variable name="url" select="normalize-space(gmd:URL)"/>
+	  <xsl:if test="normalize-space($url)=''">
+		<xsl:attribute name="gco:nilReason">missing</xsl:attribute>
+	  </xsl:if>
+	  <xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+	  <xsl:variable name="fileIdentifier" select="/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString"/>
+	  <xsl:if test="contains($url, $fileIdentifier)">
+		<gmd:URL><xsl:value-of select="concat(substring-before($url, $fileIdentifier),/root/env/uuid,substring-after($url, $fileIdentifier))"/></gmd:URL>
+	  </xsl:if>
+	  <xsl:if test="not(contains($url, $fileIdentifier))">
+		<xsl:apply-templates select="*"/>
+	  </xsl:if>
+	</xsl:copy>
+  </xsl:template>
+
 </xsl:stylesheet>

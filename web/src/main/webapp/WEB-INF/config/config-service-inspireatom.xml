@@ -35,9 +35,17 @@
     <!-- OpenDescription document -->
     <service name="atom.description">
       <class name="org.fao.geonet.services.inspireatom.AtomServiceDescription"/>
-
+<!--
       <output sheet="../xslt/services/inspire-atom/opensearch.xsl"
               contentType="text/xml; charset=UTF-8"/>
+-->
+      <output sheet="../xslt/services/inspire-atom/opensearch-local.xsl" contentType="application/opensearchdescription+xml; charset=UTF-8"/>
+    </service>
+
+    <!-- Describe local -->
+    <service name="atom.local">
+        <class name="org.fao.geonet.services.inspireatom.AtomLocalDescribe" />
+        <output sheet="inspire-atom-feed.xsl" contentType="application/atom+xml; charset=UTF-8"/>
     </service>
 
     <!-- Describe -->
