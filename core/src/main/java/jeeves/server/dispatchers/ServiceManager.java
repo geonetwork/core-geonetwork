@@ -638,7 +638,7 @@ public class ServiceManager {
                         req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
                         req.endStream();
                     } else {
-                        if (context.getService().equals("atom.describe")) {
+                        if (context.getService().equals("atom.describe") || context.getService().equals("atom.local")) {
                         	req.beginStream("application/atom+xml; charset=UTF-8", cache);
                         } else {
                         	req.beginStream("application/xml; charset=UTF-8", cache);                        	
