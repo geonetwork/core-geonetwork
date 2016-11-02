@@ -5,10 +5,11 @@ gnpassword="$2"
 gnnodeid="$3"
 gnwebappname="geosource"
 gninstalldir="/applications/geosource"
-gndburl="$4"
-gndbdriver="$5"
+gnhost="$4"
+gndburl="$5"
+gndbdriver="$6"
 gndbdriver_default="postgres"
-gnpoolsize="$6"
+gnpoolsize="$7"
 gnpoolsize_default=2
 gnminIdle=0
 gnmaxIdle=$gnpoolsize
@@ -24,33 +25,42 @@ then
   gnpoolsize=$gnpoolsize_default
 fi
 
-# When running from the source code
-#GNLIB=../../../../../target/geonetwork/WEB-INF/lib/
-#WEB_FILE=../../../webResources/WEB-INF/web.xml
-#WEB_FILE_OUT=../../../webapp/WEB-INF/web.xml
-# When running from the app
-GNLIB=../lib/
-WEB_FILE=../web.xml
-WEB_FILE_OUT=../web-temp.xml
+if [ -d ../../../webResources/WEB-INF ]
+then
+  # When running from the source code
+  echo -e "Running from the source code"
+  GNLIB=../../../../../target/geonetwork/WEB-INF/lib/
+  WEB_FILE=../../../webResources/WEB-INF/web.xml
+  WEB_FILE_OUT=../../../webapp/WEB-INF/web.xml
+  CSS_FILE=../../../../../target/geonetwork/catalog/style/${gnnodeid}_custom_style.css
+else
+  # When running from the app
+  echo -e "Running from the app"
+  GNLIB=../lib/
+  WEB_FILE=../web.xml
+  WEB_FILE_OUT=../web-temp.xml
+  CSS_FILE=../catalog/style/${gnnodeid}_custom_style.css
+fi
 
 function showUsage 
 {
-  echo -e "\nThis script is used to create a new node configuration" 
+
+  echo -e "\nThis script is used to create a new node configuration"
   echo -e "\n  Default pool size: $gnpoolsize_default" 
   echo -e "  Default db driver: $gndbdriver_default"
   echo -e "  Default webapp path: $GEONETWORK_HOME"
   echo
-  echo -e "Usage: ./`basename $0 $1` username password nodeid dburl"
-  echo -e "       ./`basename $0 $1` username password nodeid dburl dbdriver"
-  echo -e "       ./`basename $0 $1` username password nodeid dburl dbdriver dbpoolsize"
-  echo -e "       ./`basename $0 $1` username password nodeid dburl dbdriver dbpoolsize webapppath"
+  echo -e "Usage: ./`basename $0 $1` username password nodeid nodehost dburl"
+  echo -e "       ./`basename $0 $1` username password nodeid nodehost dburl dbdriver"
+  echo -e "       ./`basename $0 $1` username password nodeid nodehost dburl dbdriver dbpoolsize"
+  echo -e "       ./`basename $0 $1` username password nodeid nodehost dburl dbdriver dbpoolsize webapppath"
   echo
   echo -e "Example:"
-  echo -e "\t./`basename $0 $1` admin admin 42 jdbc:postgresql://localhost:5432/catdb"
-  echo -e "\t./`basename $0 $1` admin admin 42 jdbc:postgresql://localhost:5432/catdb postgres "
-  echo -e "\t./`basename $0 $1` admin admin 42 jdbc:postgresql://localhost:5432/catdb postgres 5"
-  echo -e "\t./`basename $0 $1` admin gnos 42 jdbc:h2:/tmp/geonetwork42 h2 2"
-  echo -e "\t./`basename $0 $1` admin admin 42 jdbc:postgresql://localhost:5432/catdb postgres 2"
+  echo -e "\t./`basename $0 $1` admin admin 42 www.node42.com jdbc:postgresql://localhost:5432/catdb"
+  echo -e "\t./`basename $0 $1` admin admin 42 www.node42.com jdbc:postgresql://localhost:5432/catdb postgres "
+  echo -e "\t./`basename $0 $1` admin admin 42 www.node42.com jdbc:postgresql://localhost:5432/catdb postgres 5"
+  echo -e "\t./`basename $0 $1` admin gnos 42 www.node42.com jdbc:h2:/tmp/geonetwork42 h2 2"
+  echo -e "\t./`basename $0 $1` admin admin 42 www.node42.com jdbc:postgresql://localhost:5432/catdb postgres 2"
   echo
 }
 
@@ -61,12 +71,13 @@ then
 fi
 
 
-if [ $# -lt 4 ]
+if [ $# -lt 5 ]
 then
   showUsage
   exit
 fi
 echo "Creating node  : $gnnodeid"
+echo "      host     : $gnhost"
 echo "      DB driver: $gndbdriver"
 echo "      DB URL   : $gndburl"
 echo "      DB user  : $gnusername"
@@ -82,6 +93,7 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -PARAM dbDriver $gndbdriver \
         -PARAM dbUrl $gndburl \
         -PARAM poolSize $gnpoolsize \
+        -PARAM host $gnhost \
         -IN $WEB_FILE -XSL register-node.xsl \
         -OUT $WEB_FILE_OUT
 mv $WEB_FILE $WEB_FILE.bak
@@ -98,7 +110,22 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -IN ../config-node/srv.xml -XSL generate-spring-config.xsl \
         -OUT ../config-node/$gnnodeid.xml
 
-sed -i s/j2e://g $WEB_FILE
+# Replace j2e: by empty string in web.xml
+if [ "$(uname)" == "Darwin" ]
+then
+  sed -i  .bak s/j2e://g $WEB_FILE
+else
+  sed -i s/j2e://g $WEB_FILE
+fi
+
+# Create CSS file if doesn't exists
+if [ ! -f $CSS_FILE ];
+then
+   echo "File $CSS_FILE doesn't exists, creating it ..."
+   touch ${CSS_FILE}
+fi
+
+echo "Node created."
 
 
 
