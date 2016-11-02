@@ -105,7 +105,7 @@
                    if ($.inArray(field.idxName, scope.excludeCols) === -1) {
                      columns.push({
                        field: field.idxName,
-                       title: $translate(field.label)
+                       title: $translate.instant(field.label)
                      });
                    }
                  });

@@ -135,7 +135,7 @@
               $scope.statistics.md[by] = data;
               nv.addGraph(function() {
                 var chart = nv.models.pieChart()
-                .x(function(d) { return $translate(d.label) })
+                .x(function(d) { return $translate.instant(d.label) })
                 .y(function(d) { return d.total})
                 .values(function(d) { return d})
                 .tooltips(true)
