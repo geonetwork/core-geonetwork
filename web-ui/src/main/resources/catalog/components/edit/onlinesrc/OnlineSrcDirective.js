@@ -1230,7 +1230,7 @@
                     if (!scope.isEditing &&
                         angular.isDefined(newValue.copyLabel)) {
                       scope.params[newValue.copyLabel] =
-                          $translate(newValue.label);
+                          $translate.instant(newValue.label);
                     }
 
                     if (newValue.sources && newValue.sources.thumbnailMaker) {

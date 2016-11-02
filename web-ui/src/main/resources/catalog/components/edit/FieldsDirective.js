@@ -97,7 +97,7 @@
                    element.toggleClass('has-error', count > 0);
                    if (count > 0) {
                      $rootScope.$broadcast('StatusUpdated', {
-                       title: count + $translate('similarRecordsExist'),
+                       title: count + $translate.instant('similarRecordsExist'),
                        timeout: 5,
                        type: 'danger'});
                    }

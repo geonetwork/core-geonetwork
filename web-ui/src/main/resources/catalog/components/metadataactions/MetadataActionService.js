@@ -301,7 +301,7 @@
         var service = flag === 'on' ? 'publish' : 'unpublish';
 
         var publishNotification = function(data) {
-          var message = '<h4>' + $translate(service + 'Completed') +
+          var message = '<h4>' + $translate.instant(service + 'Completed') +
               '</h4><dl class="dl-horizontal"><dt>' +
               $translate.instant('mdPublished') + '</dt><dd>' +
               data.data.published + '</dd><dt>' +

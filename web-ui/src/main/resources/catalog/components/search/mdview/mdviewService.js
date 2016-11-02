@@ -212,8 +212,9 @@
     '$q',
     'gnMetadataManager',
     'sxtService',
+    'gnMdViewObj',
     function($rootScope, $http, $compile, $sce, gnAlertService,
-             gnSearchSettings, $q, gnMetadataManager, sxtService) {
+             gnSearchSettings, $q, gnMetadataManager, sxtService, gnMdViewObj) {
 
 
       this.getFormatterUrl = function(fUrl, scope, uuid) {
@@ -229,19 +230,23 @@
         }
 
         return promiseMd.then(function(md) {
-          if (angular.isString(fUrl)) {
-            url = fUrl.replace('{{uuid}}', md.getUuid());
-          }
-          else if (angular.isFunction(fUrl)) {
-            url = fUrl(md);
-          }
+          if (md['geonet:info']) {
+            if (angular.isString(fUrl)) {
+              url = fUrl.replace('{{uuid}}', md.getUuid());
+            }
+            else if (angular.isFunction(fUrl)) {
+              url = fUrl(md);
+            }
 
-          // Attach the md to the grid element scope
-          if (!scope.md) {
-            scope.$parent.md = md;
-            sxtService.feedMd(scope.$parent);
+            // Attach the md to the grid element scope
+            if (!scope.md) {
+              scope.$parent.md = md;
+              sxtService.feedMd(scope.$parent);
+            }
+            return url;
+          } else {
+            return null;
           }
-          return url;
         });
       };
 
@@ -257,6 +262,20 @@
 
         this.getFormatterUrl(gnSearchSettings.formatter.defaultUrl,
             newscope, uuid).then(function(url) {
+          if (url == null) {
+            var newscope = scope ? scope.$new() :
+                angular.element($('#sxt-controller')).scope().$new();
+
+            var notFoundEl = '<div class="alert alert-warning"' +
+                'data-translate=""' +
+                'data-translate-values="{uuid: ' +
+                '\'{{recordIdentifierRequested | htmlToPlaintext}}\'}">' +
+                '  recordNotFound' +
+                '</div>';
+            $(selector).append(notFoundEl);
+            $compile(notFoundEl)(newscope);
+            return;
+          }
           $http.get(url, {
             headers: {
               Accept: 'text/html'
