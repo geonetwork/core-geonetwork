@@ -769,7 +769,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String useAccId = settingMan.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 
         settingMan.add(ID_PREFIX + useAccId, "username", params.getUsername());
-        settingMan.add(ID_PREFIX + useAccId, "password", params.getPassword());
+        settingMan.add(ID_PREFIX + useAccId, "password", params.getPassword(), true);
 
         //--- setup options node ---------------------------------------
 
