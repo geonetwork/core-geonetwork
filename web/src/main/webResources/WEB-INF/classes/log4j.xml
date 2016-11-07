@@ -103,7 +103,10 @@
     <logger name="geonetwork.httpproxy">
         <level value="WARN" />
     </logger>
-
+    <logger name="geonetwork.harvest.wfs.features">
+      <level value="DEBUG"/>
+      <appender-ref ref="fileAppender" />
+    </logger>
 
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
@@ -202,10 +205,6 @@
       <appender-ref ref="fileAppender" />
     </logger>
 
-    <logger name="harvest.wfs.features" additivity="true">
-      <level value="DEBUG"/>
-      <appender-ref ref="fileAppender" />
-    </logger>
 
     <!-- Turn off logging except when explicitly declared below -->
     <root>
