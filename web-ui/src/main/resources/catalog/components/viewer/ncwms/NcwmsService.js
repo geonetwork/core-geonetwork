@@ -127,18 +127,18 @@
       };
 
       this.parseStyles = function(info) {
-        var t = [];
+        var t = {};
         if (angular.isArray(info.supportedStyles)) {
           angular.forEach(info.supportedStyles, function(s) {
             if (s == 'boxfill') {
               if (angular.isArray(info.palettes)) {
                 angular.forEach(info.palettes, function(p) {
-                  t.push(s + '/' + p);
+                  t[p] = s + '/' + p;
                 });
               }
             }
             else if (s == 'contour') {
-              t.push(s + '/');
+              t[s] = s + '/' + p;
             }
           });
         }
