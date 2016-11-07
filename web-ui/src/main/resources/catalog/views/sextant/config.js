@@ -53,9 +53,6 @@
         viewerSettings.singleTileWMS = true;
       }
 
-      viewerSettings.bingKey = 'AplOhn33DW5iCpDv0bY-CzSriFoi6GE2r' +
-          '5cY94SqSi47koQ1s4XlylK8DUB7NZFZ';
-
       /** *************************************
        * Define OWS services url for Import WMS
        */
