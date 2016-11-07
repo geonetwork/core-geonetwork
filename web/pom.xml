@@ -134,13 +134,10 @@
       <groupId>org.geotools</groupId>
       <artifactId>gt-api</artifactId>
     </dependency>
-    <!--
-    Replace gt-xml by custom JAR due to issue to parse empty date.
-    See https://github.com/geotools/geotools/pull/1201
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-xml</artifactId>
-    </dependency>-->
+    </dependency>
     <dependency>
       <groupId>org.geotools.xsd</groupId>
       <artifactId>gt-xsd-gml3</artifactId>
@@ -737,10 +734,7 @@
             catalog/lib/style/bootstrap/test-infra/**,
             catalog/lib/style/font-awesome/css/**,
             catalog/lib/style/font-awesome/src/**,
-            catalog/lib/style/font-awesome/scss/**,
-            <!-- Exclude JAR from GT that we overrides -->
-            WEB-INF/lib/gt-xml-15.0.jar,
-            WEB-INF/lib/gt-wfs-15.0.jar
+            catalog/lib/style/font-awesome/scss/**
           </packagingExcludes>
           <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
