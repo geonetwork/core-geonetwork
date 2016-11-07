@@ -36,11 +36,23 @@
     <property name="startsFromXMLConfigurationFile" value="false"/>
   </bean>
 
-  <bean id="solrWFSFeatureIndexer"
+  <!--<bean id="solrWFSFeatureIndexer"
         class="org.fao.geonet.harvester.wfsfeatures.worker.SolrWFSFeatureIndexer">
     <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
     <property name="featureCommitInterval" value="500"/>
     <property name="solrCommitWithinMs" value="10000"/>
+  </bean>-->
+  <bean id="WFSFeatureIndexer"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer">
+    <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
+    <property name="featureCommitInterval" value="500"/>
+    <property name="solrCommitWithinMs" value="10000"/>
+  </bean>
+
+  <bean id="esClient"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.EsClient">
+    <property name="serverUrl" value="${es.url}"/>
+    <property name="collection" value="${es.index.features}"/>
   </bean>
 
 

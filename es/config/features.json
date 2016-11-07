@@ -1,0 +1,101 @@
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "analyzer": {
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_default_": {
+      "dynamic_templates": [
+        {
+          "featureAttribute": {
+            "match": "ft_*",
+            "mapping": {
+              "type": "text"
+            }
+          }
+        },
+        {
+          "integerType": {
+            "match": "*_ti",
+            "mapping": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "doubleType": {
+            "match": "*_d",
+            "mapping": {
+              "type": "double"
+            }
+          }
+        },
+        {
+          "booleanType": {
+            "match": "*_b",
+            "mapping": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "dateType": {
+            "match": "*_d",
+            "mapping": {
+              "type": "date",
+              "format": "yyyy-MM-dd||yyyy-MM||yyyy"
+            }
+          }
+        },
+        {
+          "dateTimeType": {
+            "match": "*_dt",
+            "mapping": {
+              "type": "date",
+              "format": "yyyy-MM-ddTHH:mm:ss"
+            }
+          }
+        },
+        {
+          "stringType": {
+            "match": "*_s",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        }
+      ]
+    },
+    "records": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "docType": {
+          "type": "keyword"
+        },
+        "featureTypeId": {
+          "type": "keyword"
+        },
+        "resourceType": {
+          "type": "keyword"
+        },
+        "resourceTitle": {
+          "type": "keyword"
+        },
+        "parent": {
+          "type": "keyword"
+        },
+        "geom": {
+          "type": "geo_shape",
+          "tree": "quadtree",
+          "precision": "1m"
+        }
+      }
+    }
+  }
+}
