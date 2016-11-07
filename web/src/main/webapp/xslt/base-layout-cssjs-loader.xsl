@@ -210,7 +210,7 @@
         </xsl:if>
         gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
         gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        gnViewerSettings.bingKey = <xsl:value-of select="$bingKey"/>;
+        gnViewerSettings.bingKey = '<xsl:value-of select="$bingKey"/>';
         }]);
       </script>
     </xsl:if>
