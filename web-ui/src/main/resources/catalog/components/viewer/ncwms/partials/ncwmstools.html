@@ -48,12 +48,11 @@
     </div>
 
     <!--Styles combo-->
-    <div class="form-group">
+    <div class="form-group" data-ng-if="hasStyles()">
       <label class="col-sm-4" for="ncwmsstyles">Styles</label>
       <div class="col-sm-8">
-        <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES"
-                data-ng-change="updateLayerParams()">
-          <option data-ng-repeat="style in styles" value="{{style}}">{{style}}</option>
+        <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="ctrl.palette" data-ng-change="updateStyle()">
+          <option data-ng-repeat="(pal, style) in palettes" value="{{pal}}">{{pal}}</option>
         </select>
       </div>
     </div>

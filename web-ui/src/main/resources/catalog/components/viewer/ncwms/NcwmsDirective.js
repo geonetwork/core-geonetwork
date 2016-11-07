@@ -49,12 +49,15 @@
           map: '='
         },
         templateUrl: '../../catalog/components/viewer/ncwms/' +
-            'partials/ncwmstools.html',
+        'partials/ncwmstools.html',
         link: function(scope, element, attrs) {
 
           var drawInteraction, featureOverlay;
           var map = scope.map;
 
+          scope.ctrl = {};
+
+          //element.find('[ui-slider]').slider();
           /**
            * Just manage active button in ui.
            * Values of activeTool can be 'time', 'profile', 'transect'
@@ -108,45 +111,45 @@
             });
 
             drawInteraction.on('drawend',
-                function(evt) {
+              function(evt) {
 
-                  var url;
-                  if (activeTool == 'time') {
-                    url = scope.layer.getSource().getGetFeatureInfoUrl(
-                        evt.feature.getGeometry().getCoordinates(),
-                        map.getView().getResolution(),
-                        map.getView().getProjection(), {
-                          TIME: gnNcWms.formatTimeSeries(
-                              scope.timeSeries.tsfromD,
-                              scope.timeSeries.tstoD),
-                          //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
-                          //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
-                          INFO_FORMAT: 'image/png'
-                        });
-                  } else {
-                    url = gnNcWms.getNcwmsServiceUrl(
-                        scope.layer,
-                        scope.map.getView().getProjection(),
-                        evt.feature.getGeometry().getCoordinates(),
-                        activeTool);
-                  }
+                var url;
+                if (activeTool == 'time') {
+                  url = scope.layer.getSource().getGetFeatureInfoUrl(
+                    evt.feature.getGeometry().getCoordinates(),
+                    map.getView().getResolution(),
+                    map.getView().getProjection(), {
+                      TIME: gnNcWms.formatTimeSeries(
+                        scope.timeSeries.tsfromD,
+                        scope.timeSeries.tstoD),
+                      //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
+                      //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
+                      INFO_FORMAT: 'image/png'
+                    });
+                } else {
+                  url = gnNcWms.getNcwmsServiceUrl(
+                    scope.layer,
+                    scope.map.getView().getProjection(),
+                    evt.feature.getGeometry().getCoordinates(),
+                    activeTool);
+                }
 
-                  gnPopup.create({
-                    title: activeTool,
-                    url: url,
-                    content: '<div class="gn-popup-iframe ' +
-                        activeTool + '">' +
-                        '<img style="width:100%;height:100%;" ' +
-                        'src="{{options.url}}" />' +
-                        '</div>'
-                  });
-                  scope.$apply(function() {
-                    scope.activeTool = undefined;
-                  });
-                  setTimeout(function() {
-                    resetInteraction();
-                  }, 300);
-                }, this);
+                gnPopup.create({
+                  title: activeTool,
+                  url: url,
+                  content: '<div class="gn-popup-iframe ' +
+                  activeTool + '">' +
+                  '<img style="width:100%;height:100%;" ' +
+                  'src="{{options.url}}" />' +
+                  '</div>'
+                });
+                scope.$apply(function() {
+                  scope.activeTool = undefined;
+                });
+                setTimeout(function() {
+                  resetInteraction();
+                }, 300);
+              }, this);
 
             map.addInteraction(drawInteraction);
 
@@ -169,13 +172,13 @@
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
 
-            layer.set('cextent', ol.proj.transform([
-              parseFloat(ncInfo.bbox[0]),
-              parseFloat(ncInfo.bbox[1]),
-              parseFloat(ncInfo.bbox[2]),
-              parseFloat(ncInfo.bbox[3])],
-            'EPSG:4326',
-            map.getView().getProjection().getCode())
+            layer.set('cextent', ol.proj.transformExtent([
+                parseFloat(ncInfo.bbox[0]),
+                parseFloat(ncInfo.bbox[1]),
+                parseFloat(ncInfo.bbox[2]),
+                parseFloat(ncInfo.bbox[3])],
+              'EPSG:4326',
+              map.getView().getProjection().getCode())
             );
 
             scope.params = layer.getSource().getParams() || {};
@@ -187,8 +190,8 @@
             scope.colorscalerange = [scope.colorRange.min,
               scope.colorRange.max];
             scope.timeSeries = {};
-            scope.elevations = ncInfo.zaxis.values;
-            scope.styles = gnNcWms.parseStyles(ncInfo);
+            scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
+            scope.palettes = gnNcWms.parseStyles(ncInfo);
 
             if (angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
@@ -203,14 +206,14 @@
           scope.setAutoColorranges = function(evt) {
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
-                ol.proj.transformExtent(
-                    map.getView().calculateExtent(map.getSize()),
-                    map.getView().getProjection(), 'EPSG:4326').join(',')).
-                success(function(data) {
-                  scope.colorscalerange = [data.min, data.max];
-                  scope.onColorscaleChange(scope.colorscalerange);
-                  $(evt.target).removeClass('fa-spinner');
-                });
+              ol.proj.transformExtent(
+                map.getView().calculateExtent(map.getSize()),
+                map.getView().getProjection(), 'EPSG:4326').join(',')).
+            success(function(data) {
+              scope.colorscalerange = [data.min, data.max];
+              scope.onColorscaleChange(scope.colorscalerange);
+              $(evt.target).removeClass('fa-spinner');
+            });
           };
 
           /**
@@ -227,9 +230,38 @@
             }
           };
 
+          scope.ncTime = {};
+          scope.$watch('ncTime.value', function(time) {
+            if (time) {
+              scope.params.TIME =
+                moment(time, 'DD-MM-YYYY').format(
+                  'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+              scope.updateLayerParams();
+            }
+          });
+
+          scope.hasStyles = function() {
+            return Object.keys(scope.palettes).length > 1;
+          };
+
+          scope.updateStyle = function() {
+            scope.params.STYLES = scope.palettes[scope.ctrl.palette];
+            scope.updateLayerParams();
+          };
+
           scope.updateLayerParams = function() {
             scope.layer.getSource().updateParams(scope.params);
+
+            scope.layer.set('legend',
+                gnNcWms.updateLengendUrl(scope.layer.get('legend'),
+                    angular.extend({
+                      PALETTE: scope.ctrl.palette
+                    }, scope.params)));
           };
+
+          element.bind('$destroy', function(e) {
+            element.find('[ui-slider]').slider();
+          });
 
           initNcwmsParams();
         }
