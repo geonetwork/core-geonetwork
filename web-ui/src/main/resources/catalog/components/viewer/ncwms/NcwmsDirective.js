@@ -54,6 +54,9 @@
 
           var drawInteraction, featureOverlay;
           var map = scope.map;
+
+          scope.ctrl = {};
+
           //element.find('[ui-slider]').slider();
           /**
            * Just manage active button in ui.
@@ -188,7 +191,7 @@
               scope.colorRange.max];
             scope.timeSeries = {};
             scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
-            scope.styles = gnNcWms.parseStyles(ncInfo);
+            scope.palettes = gnNcWms.parseStyles(ncInfo);
 
             if (angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
@@ -237,12 +240,23 @@
             }
           });
 
+          scope.hasStyles = function() {
+            return Object.keys(scope.palettes).length > 1;
+          };
+
+          scope.updateStyle = function() {
+            scope.params.STYLES = scope.palettes[scope.ctrl.palette];
+            scope.updateLayerParams();
+          };
+
           scope.updateLayerParams = function() {
             scope.layer.getSource().updateParams(scope.params);
 
             scope.layer.set('legend',
                 gnNcWms.updateLengendUrl(scope.layer.get('legend'),
-                    scope.params));
+                    angular.extend({
+                      PALETTE: scope.ctrl.palette
+                    }, scope.params)));
           };
 
           element.bind('$destroy', function(e) {

@@ -343,8 +343,8 @@
           value: 'ECW',
           label: 'ECW'
         },{
-          value: 'Jpeg2000',
-          label: 'Jpeg2000'
+          value: 'JPEG2000',
+          label: 'JPEG2000'
         }]
       };
 
