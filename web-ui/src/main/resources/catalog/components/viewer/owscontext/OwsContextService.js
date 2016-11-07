@@ -138,34 +138,35 @@
         var self = this;
         var promises = [];
         var overlays = [];
-        for (i = 0; i < layers.length; i++) {
-          var type, layer = layers[i];
-          if (layer.name) {
-            if (layer.group == 'Background layers') {
+        if(angular.isArray(layers)) {
+          for (i = 0; i < layers.length; i++) {
+            var type, layer = layers[i];
+            if (layer.name) {
+              if (layer.group == 'Background layers') {
 
-              // {type=bing_aerial} (mapquest, osm ...)
-              var re = this.getREForPar('type');
-              if (layer.name.match(re) &&
+                // {type=bing_aerial} (mapquest, osm ...)
+                var re = this.getREForPar('type');
+                if (layer.name.match(re) &&
                   (type = re.exec(layer.name)[1]) != 'wmts') {
-                re = this.getREForPar('name');
-                var opt;
-                if (layer.name.match(re)) {
-                  var lyr = re.exec(layer.name)[1];
-                  opt = {name: lyr};
+                  re = this.getREForPar('name');
+                  var opt;
+                  if (layer.name.match(re)) {
+                    var lyr = re.exec(layer.name)[1];
+                    opt = {name: lyr};
+                  }
+                  var olLayer = gnMap.createLayerForType(type, opt, layer.title);
+                  if (olLayer) {
+                    bgLayers.push({layer: olLayer, idx: i});
+                    olLayer.displayInLayerManager = false;
+                    olLayer.background = true;
+                    olLayer.set('group', 'Background layers');
+                    olLayer.setVisible(!layer.hidden);
+                  }
                 }
-                var olLayer = gnMap.createLayerForType(type, opt, layer.title);
-                if (olLayer) {
-                  bgLayers.push({layer: olLayer, idx: i});
-                  olLayer.displayInLayerManager = false;
-                  olLayer.background = true;
-                  olLayer.set('group', 'Background layers');
-                  olLayer.setVisible(!layer.hidden);
-                }
-              }
 
-              // {type=wmts,name=Ocean_Basemap} or WMS
-              else {
-                promises.push(this.createLayer(layer, map, i).then(
+                // {type=wmts,name=Ocean_Basemap} or WMS
+                else {
+                  promises.push(this.createLayer(layer, map, i).then(
                     function(olLayer) {
                       if (olLayer) {
                         bgLayers.push({
@@ -176,19 +177,20 @@
                         olLayer.background = true;
                       }
                     }));
-              }
-            } else if (layer.server) {
-              var server = layer.server[0];
-              if (server.service == 'urn:ogc:serviceType:WMS') {
-                var p = self.createLayer(layer, map, undefined, i);
-                promises.push(p);
-                p.then(function(layer) {
-                  overlays[layer.get('tree_index')] = layer;
-                });
+                }
+              } else if (layer.server) {
+                var server = layer.server[0];
+                if (server.service == 'urn:ogc:serviceType:WMS') {
+                  var p = self.createLayer(layer, map, undefined, i);
+                  promises.push(p);
+                  p.then(function(layer) {
+                    overlays[layer.get('tree_index')] = layer;
+                  });
+                }
               }
             }
+            firstLoad = false;
           }
-          firstLoad = false;
         }
 
         // if there's at least one valid bg layer in the context use them for
