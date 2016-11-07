@@ -651,6 +651,12 @@
   module.directive('gnBootstrapDatepicker', [
     function() {
 
+      // to MM-dd-yyyy
+      var formatDate = function(day, month, year) {
+        return ('0' + day).slice(-2) + '-' +
+          ('0' + month).slice(-2) + '-' + year;
+      };
+
       var getMaxInProp = function(obj) {
         var year = {
           min: 3000,
@@ -666,27 +672,35 @@
         };
 
         for (var k in obj) {
+          k = parseInt(k);
           if (k < year.min) year.min = k;
           if (k > year.max) year.max = k;
         }
         for (k in obj[year.min]) {
+          k = parseInt(k);
           if (k < month.min) month.min = k;
         }
         for (k in obj[year.max]) {
+          k = parseInt(k);
           if (k > month.max) month.max = k;
         }
         for (k in obj[year.min][month.min]) {
-          if (obj[year.min][month.min][k] < day.min) day.min =
-                obj[year.min][month.min][k];
+          k = parseInt(k);
+          if (obj[year.min][month.min][k] < day.min) {
+            day.min = obj[year.min][month.min][k];
+          }
         }
         for (k in obj[year.max][month.max]) {
-          if (obj[year.min][month.min][k] > day.max) day.max =
-                obj[year.min][month.min][k];
+          k = parseInt(k);
+
+          if (obj[year.min][month.min][k] > day.max) {
+            day.max = obj[year.min][month.min][k];
+          }
         }
 
         return {
-          min: month.min + 1 + '/' + day.min + '/' + year.min,
-          max: month.max + 1 + '/' + day.max + '/' + year.max
+          min: formatDate(day.min, month.min + 1, year.min),
+          max: formatDate(day.max, month.max + 1, year.max)
         };
       };
 
@@ -716,7 +730,7 @@
           }
 
           $(element).datepicker(angular.isDefined(scope.dates) ? {
-            container: '.g',
+            //container: '.g',
             beforeShowDay: function(dt, a, b) {
               return available(dt);
             },
