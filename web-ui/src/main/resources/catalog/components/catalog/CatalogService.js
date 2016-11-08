@@ -564,7 +564,7 @@
         return this.link;
       },
       getLinkGroup: function(layer) {
-        var links = this.getLinksByType('OGC');
+        var links = this.getLinksByType('OGC:WMS');
         for (var i = 0; i < links.length; ++i) {
           var link = links[i];
           if (link.name == layer.getSource().getParams().LAYERS) {

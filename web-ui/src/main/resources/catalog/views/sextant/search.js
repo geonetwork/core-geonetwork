@@ -90,6 +90,7 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
+    'sxtService',
     'gnViewerSettings',
     'gnMap',
     'gnThesaurusService',
@@ -105,7 +106,7 @@
     'gnUrlUtils',
     'gnGlobalSettings',
     function($rootScope, $scope, $location, $window, suggestService,
-             $http, gnSearchSettings,
+             $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
              $translate, $q, gnUrlUtils, gnGlobalSettings) {
@@ -240,6 +241,13 @@
         if(md) {
           var linkGroup = md.getLinkGroup(l);
           gnMap.feedLayerWithRelated(l,linkGroup);
+          var downloads = l.get('downloads');
+          if( downloads && downloads.length > 1) {
+            var d = sxtService.getTopPriorityDownload(downloads);
+            if(d) {
+              l.set('downloads', [d]);
+            }
+          }
         }
       });
 
@@ -287,6 +295,9 @@
                   }
                   layer.set('group', group);
                   gnMap.feedLayerWithRelated(layer, link.group);
+                  if(link.extra && link.extra.downloads) {
+                    layer.set('downloads', link.extra.downloads);
+                  }
                   if(waitingLayers) waitingLayers.push(layer);
                   if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
 
@@ -564,6 +575,13 @@
 
   module.service('sxtService', [ function() {
 
+    var orderedDownloadTypes = ['#FILE', '#DB', '#COPYFILE',
+      '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
+      '#WWW:FTP', '#OGC:WFS', '#OGC:WCS'];
+
+    var layerTypes =  ['#OGC:WMTS', '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map',
+      '#OGC:OWS-C'];
+
     this.feedMd = function(scope) {
       var md = scope.md;
 
@@ -604,45 +622,55 @@
       scope.downloads = [];
       scope.layers = [];
 
-      var orderedDownloadTypes = ['#FILE', '#DB', '#COPYFILE',
-        '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
-        '#WWW:FTP', '#OGC:WFS', '#OGC:WCS'];
-
       angular.forEach(md.linksTree, function(transferOptions, i) {
 
         // get all layers and downloads for this transferOptions
-        var layers = md.getLinksByType(i+1, '#OGC:WMTS',
-            '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map', '#OGC:OWS-C');
-        var downloads = md.getLinksByType(i+1, '#FILE', '#DB', '#COPYFILE',
-            '#WWW:DOWNLOAD-1.0-link--download', '#WWW:OPENDAP', '#MYO:MOTU-SUB',
-            '#WWW:FTP', '#OGC:WFS', '#OGC:WCS');
+        var layers = md.getLinksByType.apply(md,
+          [i+1].concat(layerTypes));
+
+        var downloads = md.getLinksByType.apply(md,
+          [i+1].concat(orderedDownloadTypes));
 
         if(downloads.length > 0) {
           // If only one layer, we get only one download (we bind them later)
           // We take the first one cause based on types priority
           // https://github.com/camptocamp/sextant-geonetwork/wiki/Catalogue#les-protocoles
           if(layers.length == 1) {
-            loopType:
-            for (var i = 0; i < orderedDownloadTypes.length; i ++) {
-              var t = orderedDownloadTypes[i];
-              loopLink:
-              for (var j = 0; j < downloads.length; j ++) {
-                var l = downloads[j];
-                if (l.protocol == t.substr(1, t.length - 1)) {
-                  scope.downloads.push(l);
-                  break loopType;
-                }
-              }
+
+            var d = this.getTopPriorityDownload(downloads);
+            if(d) {
+              scope.downloads.push(d);
+              layers[0].extra = {
+                downloads: [d]
+              };
             }
-            // scope.downloads.push(downloads[0]);
           }
           else {
             scope.downloads = scope.downloads.concat(downloads);
           }
         }
         scope.layers = scope.layers.concat(layers);
-      });
-    }
+      }.bind(this));
+    };
+
+
+    this.getTopPriorityDownload = function(downloads) {
+      var download;
+      loopType:
+        for (var i = 0; i < orderedDownloadTypes.length; i ++) {
+          var t = orderedDownloadTypes[i];
+          loopLink:
+            for (var j = 0; j < downloads.length; j ++) {
+              var l = downloads[j];
+              if (l.protocol == t.substr(1, t.length - 1)) {
+                download = l;
+                break loopType;
+              }
+            }
+        }
+      return download;
+    };
+
   }]);
 
 
