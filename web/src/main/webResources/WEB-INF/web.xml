@@ -161,6 +161,15 @@
       <param-value>${cors.urls}</param-value>
     </init-param>
   </filter>
+  <!-- Add CORS Header -->
+  <filter>
+    <filter-name>cors</filter-name>
+    <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
+    <init-param>
+      <param-name>allowedHosts</param-name>
+      <param-value>${cors.allowedHosts}</param-value>
+    </init-param>
+  </filter>
   <filter>
     <!--
         WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)

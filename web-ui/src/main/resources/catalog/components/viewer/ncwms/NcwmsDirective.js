@@ -253,10 +253,10 @@
             scope.layer.getSource().updateParams(scope.params);
 
             scope.layer.set('legend',
-              gnNcWms.updateLengendUrl(scope.layer.get('legend'),
-                  angular.extend({
-                    PALETTE: scope.ctrl.palette
-                  }, scope.params)));
+                gnNcWms.updateLengendUrl(scope.layer.get('legend'),
+                    angular.extend({
+                      PALETTE: scope.ctrl.palette
+                    }, scope.params)));
           };
 
           element.bind('$destroy', function(e) {
