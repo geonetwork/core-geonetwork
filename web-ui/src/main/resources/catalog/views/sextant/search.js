@@ -256,7 +256,7 @@
         if(!pop) {
           return;
         }
-        var content = $translate('addLayerPopover' + to);
+        var content = $translate.instant('addLayerPopover' + to);
         var opts = {
           content:content,
           placement:'bottom'
