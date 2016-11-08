@@ -152,19 +152,6 @@
   <filter>
     <filter-name>cors</filter-name>
     <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
-    <!-- Specified what overrides to use if the
-      (servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
-      system parameter is not specified.
-    -->
-    <init-param>
-      <param-name>hostExceptions</param-name>
-      <param-value>${cors.urls}</param-value>
-    </init-param>
-  </filter>
-  <!-- Add CORS Header -->
-  <filter>
-    <filter-name>cors</filter-name>
-    <filter-class>org.fao.geonet.web.CORSResponseFilter</filter-class>
     <init-param>
       <param-name>allowedHosts</param-name>
       <param-value>${cors.allowedHosts}</param-value>
