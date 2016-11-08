@@ -1292,7 +1292,7 @@
      allows to change at run time the list of hosts. It
      may be a bit slower as it requires to check for every
      request the list of hosts (but JPA cache db queries). -->
-    <cors.allowedHosts>*</cors.allowedHosts>
+    <cors.allowedHosts>db</cors.allowedHosts>
 
     <spring.version>4.2.4.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
