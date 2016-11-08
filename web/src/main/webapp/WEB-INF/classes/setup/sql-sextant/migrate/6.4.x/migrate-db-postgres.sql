@@ -9,8 +9,6 @@ UPDATE Settings SET datatype = 3 WHERE name = 'map/config';
 UPDATE Settings SET datatype = 3 WHERE name = 'map/proj4js';
 UPDATE Settings SET datatype = 3 WHERE name = 'metadata/editor/schemaConfig';
 
-UPDATE Settings SET value = 'AplOhn33DW5iCpDv0bY-CzSriFoi6GE2r5cY94SqSi47koQ1s4XlylK8DUB7NZFZ' WHERE name = 'map/bingKey';
-
 UPDATE OperationsDes SET label = 'Traitement' WHERE iddes = 7 AND langid = 'fre';
 
 UPDATE metadata SET data = replace(data,
