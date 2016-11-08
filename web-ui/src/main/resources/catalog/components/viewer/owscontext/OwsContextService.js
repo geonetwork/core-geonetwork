@@ -123,6 +123,8 @@
         extent = ol.proj.transformExtent(extent,
             projection, map.getView().getProjection());
 
+        extent = gnMap.secureExtent(extent, map.getView().getProjection());
+
         // store the extent into view settings so that it can be used later in
         // case the map is not visible yet
         gnViewerSettings.initialExtent = extent;
