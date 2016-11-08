@@ -14,10 +14,10 @@
   module.value('kmlimportTemplateURL', '../../catalog/views/sextant/templates/kmlimport.html');
 
   module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnGlobalSettings', 'gnMap', 'gnConfig',
+    'gnGlobalSettings', 'gnMap', 'gnConfig', 'gnConfigService',
 
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap, gnConfig) {
+             gnGlobalSettings, gnMap, gnConfig, gnConfigService) {
 
       gnGlobalSettings.isMapViewerEnabled =
           gnGlobalSettings.isMapViewerEnabled || true;
@@ -39,6 +39,10 @@
 
       viewerSettings.defaultContext = '../../catalog/views/sextant/data/' +
           'defaultContext.xml';
+
+      gnConfigService.loadPromise.then(function(config) {
+        viewerSettings.bingKey = config['map.bingKey'];
+      });
 
       // WMS settings
       // If 3D mode is activated, single tile WMS mode is

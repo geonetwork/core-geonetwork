@@ -403,9 +403,11 @@
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
-    '$http',
+    '$http', '$q',
     'gnConfig',
-    function($http, gnConfig) {
+    function($http, $q, gnConfig) {
+      var defer = $q.defer();
+      var loadPromise = defer.promise;
       return {
 
         /**
@@ -420,7 +422,7 @@
          * @return {HttpPromise} Future object
          */
         load: function() {
-          return $http.get('../api/site/settings', {cache: true})
+           return $http.get('../api/site/settings', {cache: true})
             .then(function(response) {
                 angular.extend(gnConfig, response.data);
                 // Replace / by . in settings name
@@ -434,8 +436,12 @@
                 if (window.location.search.indexOf('with3d') !== -1) {
                   gnConfig['map.is3DModeAllowed'] = true;
                 }
-              });
+              defer.resolve(gnConfig);
+              }, function () {
+                defer.reject();
+            });
         },
+        loadPromise: loadPromise,
 
         /**
          * @ngdoc method
@@ -564,7 +570,7 @@
         return this.link;
       },
       getLinkGroup: function(layer) {
-        var links = this.getLinksByType('OGC');
+        var links = this.getLinksByType('OGC:WMS');
         for (var i = 0; i < links.length; ++i) {
           var link = links[i];
           if (link.name == layer.getSource().getParams().LAYERS) {
