@@ -1,13 +1,13 @@
 package org.geonetwork.map.wms;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Xml;
-import org.geotools.data.ows.Specification;
-import org.geotools.data.wms.WMS1_1_1;
-import org.geotools.data.wms.WebMapServer;
-import org.geotools.data.wms.request.GetStylesRequest;
-import org.geotools.data.wms.response.GetStylesResponse;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.v1_1.OGCConfiguration;
 import org.geotools.ows.ServiceException;
@@ -27,13 +27,13 @@ import javax.mail.internet.ParseException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 public class SLDUtil {
+
+    public static final String LOGGER = Geonet.GEONETWORK + ".util.sld";
 
     /**
      * Issue a GetStyle query on specified server for specified layers, parse XML result and return
@@ -46,32 +46,34 @@ public class SLDUtil {
      * @throws ServiceException if the server responds with an error
      * @throws ParseException if unable to parse content type header from server
      */
-    public static HashMap<String, String> parseSLD(URL url, String layers) throws IOException, ServiceException, ParseException {
-        GetStylesResponse wmsResponse = null;
-        GetStylesRequest wmsRequest = null;
-
+    public static HashMap<String, String> parseSLD(URI url, String layers) throws URISyntaxException, IOException, ParseException {
         HashMap<String, String> hash = new HashMap<String, String>();
-        WebMapServer server = new WebMapServer(url) {
-            // GetStyle is only implemented in WMS 1.1.1
-            protected void setupSpecifications() {
-                specs = new Specification[1];
-                specs[0] = new WMS1_1_1();
-            }
-        };
 
-        wmsRequest = server.createGetStylesRequest();
-        wmsRequest.setLayers(layers);
-        wmsResponse = server.issueRequest(wmsRequest);
+        String requestUrl = SLDUtil.getGetStyleRequest(url, layers);
+
+        HttpGet httpGet = new HttpGet(requestUrl);
+        HttpClient client = new DefaultHttpClient();
+        final HttpResponse httpResponse = client.execute(httpGet);
 
         // Set encoding of response from HTTP content-type header
-        ContentType contentType = new ContentType(wmsResponse.getContentType());
+        ContentType contentType = new ContentType(httpResponse.getEntity().getContentType().getValue());
         String charset = contentType.getParameter("charset");
         hash.put("charset", charset);
-        hash.put("content", IOUtils.toString(wmsResponse.getInputStream(),charset));
+        hash.put("content", IOUtils.toString(httpResponse.getEntity().getContent(), charset).trim());
 
         return hash;
     }
 
+
+    public static String getGetStyleRequest(URI uri, String layers) throws URISyntaxException {
+        URIBuilder builder = new URIBuilder(uri);
+        builder.addParameter("service", "WMS");
+        builder.addParameter("request", "GetStyles");
+        builder.addParameter("version", "1.1.1");
+        builder.addParameter("layers", layers);
+
+        return builder.build().toString();
+    }
 
     /**
      * Insert a new filter in all rules of the sld document. For each rule,
