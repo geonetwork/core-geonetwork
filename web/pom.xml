@@ -69,7 +69,6 @@
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
     </dependency>
-    <!-- rewrite url servletfilter -->
     <dependency>
       <groupId>org.tuckey</groupId>
       <artifactId>urlrewritefilter</artifactId>

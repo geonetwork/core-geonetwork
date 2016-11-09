@@ -41,7 +41,10 @@
 
 -->
 <urlrewrite use-query-string="true" use-context="false">
-
+  <rule>
+    <from>^/index/(.*)$</from>
+    <to type="proxy" qsappend="true">${es.url}/$1?</to>
+  </rule>
 
   <!-- Rule to redirect URL to resources from RDF output -->
   <rule>
