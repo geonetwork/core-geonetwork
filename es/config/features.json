@@ -14,7 +14,7 @@
           "featureAttribute": {
             "match": "ft_*",
             "mapping": {
-              "type": "text"
+              "type": "keyword"
             }
           }
         },
@@ -56,7 +56,7 @@
             "match": "*_dt",
             "mapping": {
               "type": "date",
-              "format": "yyyy-MM-ddTHH:mm:ss"
+              "format": "yyyy-MM-dd'T'HH:mm:ss'Z'|yyyy-MM-dd'T'HH:mm:ss"
             }
           }
         },
@@ -68,9 +68,7 @@
             }
           }
         }
-      ]
-    },
-    "records": {
+      ],
       "properties": {
         "id": {
           "type": "keyword"
@@ -93,7 +91,7 @@
         "geom": {
           "type": "geo_shape",
           "tree": "quadtree",
-          "precision": "1m"
+          "precision": "10km"
         }
       }
     }
