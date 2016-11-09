@@ -4,6 +4,7 @@ import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
+import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -47,6 +48,7 @@ public class EsClient implements InitializingBean {
             factory.setHttpClientConfig(new HttpClientConfig
                 .Builder(this.serverUrl)
                 .multiThreaded(true)
+                .readTimeout(-1)
                 .build());
              client = factory.getObject();
 //            Depends on java.lang.NoSuchFieldError: LUCENE_5_2_1
@@ -98,7 +100,7 @@ public class EsClient implements InitializingBean {
         this.collection = collection;
     }
 
-    public boolean bulkRequest(String index, Map<String, String> docs, int commitInterval) {
+    public boolean bulkRequest(String index, Map<String, String> docs, int commitInterval) throws IOException {
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
             .defaultIndex(index)
@@ -112,9 +114,15 @@ public class EsClient implements InitializingBean {
             );
         }
         try {
-            client.execute(bulk.build());
+            BulkResult result = client.execute(bulk.build());
+            if (!result.isSucceeded()) {
+                System.out.println(result.getErrorMessage());
+                System.out.println(result.getJsonString());
+                return false;
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            throw e;
         }
 //        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
 //        BulkResponse response = null;
@@ -185,8 +193,9 @@ public class EsClient implements InitializingBean {
         SearchResult result = client.execute(search);
 //        List<SearchResult.Hit<Object, Void>> hits = result.getHits(Object.class);
 //        for (SearchResult.Hit hit : hits) {
-//            hit.
+////            hit.
 //        }
+
 //        Bulk bulk = new Bulk.Builder()
 //            .defaultIndex("twitter")
 //            .defaultType("tweet")
@@ -227,5 +236,9 @@ public class EsClient implements InitializingBean {
 //            }
 //        }
         return String.format("No match found for query ''.", query);
+    }
+
+    protected void finalize() {
+        client.shutdownClient();
     }
 }

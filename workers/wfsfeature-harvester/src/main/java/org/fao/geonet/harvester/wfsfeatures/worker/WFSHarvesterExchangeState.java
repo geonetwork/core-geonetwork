@@ -115,10 +115,6 @@ public class WFSHarvesterExchangeState {
         WFSDataStoreFactory factory = new WFSDataStoreFactory();
         Map m = new HashMap();
 
-        // See http://docs.geotools.org/latest/userguide/library/referencing/order.html
-        // TODO: Discuss
-        System.setProperty("org.geotools.referencing.forceXY", "true");
-
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(
                     parameters.getUrl(), parameters.getVersion());

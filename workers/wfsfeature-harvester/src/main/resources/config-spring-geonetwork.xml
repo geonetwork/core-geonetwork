@@ -45,7 +45,7 @@
   <bean id="WFSFeatureIndexer"
         class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer">
     <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
-    <property name="featureCommitInterval" value="500"/>
+    <property name="featureCommitInterval" value="100"/>
     <property name="solrCommitWithinMs" value="10000"/>
   </bean>
 

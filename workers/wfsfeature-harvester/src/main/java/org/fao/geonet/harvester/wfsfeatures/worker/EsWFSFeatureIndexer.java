@@ -30,6 +30,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.vividsolutions.jts.geom.Geometry;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Index;
 import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.log4j.Logger;
@@ -37,18 +39,22 @@ import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
+import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.ReferencingFactoryFinder;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
+import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,6 +63,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -162,7 +169,7 @@ public class EsWFSFeatureIndexer {
     }
 
 
-    private int featureCommitInterval = 200;
+    private int featureCommitInterval = 100;
 
     public int getFeatureCommitInterval() {
         return featureCommitInterval;
@@ -217,26 +224,19 @@ public class EsWFSFeatureIndexer {
     }
 
     private void saveHarvesterReport(WFSHarvesterExchangeState state) {
-//        solr = new HttpSolrClient(solrCollectionUrl);
-//        SolrInputDocument harvestingTaskDocument = new SolrInputDocument();
-//        Iterator<String> fields = state.getHarvesterReport().keySet().iterator();
-//        while (fields.hasNext()) {
-//            String field = fields.next();
-//            harvestingTaskDocument.addField(
-//                    field,
-//                    state.getHarvesterReport().get(field));
-//        }
-//        try {
-//            UpdateResponse response = solr.add(harvestingTaskDocument);
-//            logger.info(String.format(
-//                    "Report saved in %sms.",
-//                    response.getElapsedTime()));
-//            solr.commit();
-//        } catch (SolrServerException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Map<String, Object> report = state.getHarvesterReport();
+        Index index = new Index.Builder(report)
+            .index(client.getCollection())
+            .type(client.getCollection())
+            .id(report.get("id").toString()).build();
+        try {
+            DocumentResult response = client.getClient().execute(index);
+            logger.info(String.format(
+                    "Report saved. '%s'.",
+                    response.getErrorMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -289,8 +289,12 @@ public class EsWFSFeatureIndexer {
             state.getHarvesterReport().put("parent", state.getParameters().getMetadataUuid());
         }
 
-        CoordinateReferenceSystem wgs84 = CRS.decode("EPSG:4326");
-
+        CoordinateReferenceSystem wgs84 = CRS
+            .getAuthorityFactory(true)
+            .createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
+//        Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
+//        CRSAuthorityFactory factory = ReferencingFactoryFinder.getCRSAuthorityFactory("EPSG", hints);
+//        CoordinateReferenceSystem wgs84 = factory.createCoordinateReferenceSystem("EPSG:4326");
         try {
             FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(typeName);
             Extent crsExtent = wgs84.getDomainOfValidity();
@@ -314,9 +318,9 @@ public class EsWFSFeatureIndexer {
 //            WARNING: java.io.IOException: org.xml.sax.SAXException: cannot merge two target namespaces. http://www.openplans.org/topp http://www.openplans.org/spearfish
             // Retrieve features in WGS 84
             Query query = new Query();
-            query.setCoordinateSystem(wgs84);
-
-            FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection = source.getFeatures(query);
+            query.setCoordinateSystemReproject(wgs84);
+            FeatureCollection<SimpleFeatureType, SimpleFeature> featuresCollection =
+                source.getFeatures(query);
 
             final FeatureIterator<SimpleFeature> features = featuresCollection.features();
             int numInBatch = 0, nbOfFeatures = 0;
@@ -485,8 +489,10 @@ public class EsWFSFeatureIndexer {
             ));
             state.getHarvesterReport().put("status_s", "success");
             state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
+            final DateTime dateTime = new DateTime(DateTimeZone.UTC);
             state.getHarvesterReport().put("endDate_dt",
-                    ISODateTimeFormat.dateTime().print(new DateTime()));
+                    ISODateTimeFormat.yearMonthDay().print(dateTime) + 'T' +
+                        ISODateTimeFormat.timeNoMillis().print(dateTime));
         } catch (Exception e) {
             state.getHarvesterReport().put("status_s", "error");
             state.getHarvesterReport().put("error_ss", e.getMessage());
