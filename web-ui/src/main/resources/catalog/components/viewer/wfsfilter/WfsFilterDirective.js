@@ -252,7 +252,7 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.data ? 'solrAccessError' : error.statusText;
+              scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
             });
           };
@@ -337,7 +337,7 @@
               },
               gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
-                    scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
+                    // scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
                   });
             }
           }

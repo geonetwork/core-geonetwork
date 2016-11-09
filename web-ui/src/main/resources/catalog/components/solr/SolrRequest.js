@@ -124,8 +124,7 @@
   };
 
   geonetwork.GnSolrRequest.prototype.buildSolrUrl = function(params) {
-    return this.urlUtils.append(this.config.url + '/query',
-        this.urlUtils.toKeyValue(params));
+    return this.config.url + '/_search';
   };
 
 
@@ -148,16 +147,19 @@
    */
   geonetwork.GnSolrRequest.prototype.getDocTypeInfo = function(options) {
     var docTypeId = this.config.idDoc(options);
-    var url = this.buildSolrUrl({
-      rows: 1,
-      q: this.config.docTypeIdField + ':"' + docTypeId + '"',
-      wt: 'json'
-    });
+    var url = this.buildSolrUrl();
     var defer = this.$q.defer();
-    this.$http.get(url).then(angular.bind(this, function(response) {
+    this.$http.post(url, {
+      size: 1,
+      "query": {
+        "query_string": {
+          "query": this.config.docTypeIdField + ':"' + docTypeId + '"'
+        }
+      }
+    }).then(angular.bind(this, function(response) {
       var indexInfos = [];
       try {
-        var indexInfo = response.data.response.docs[0];
+        var indexInfo = response.data.hits.hits[0]._source;
         var docF = indexInfo.docColumns_s.split('|');
         var customF = indexInfo.ftColumns_s.split('|');
 
@@ -266,19 +268,28 @@
   geonetwork.GnSolrRequest.prototype.search_ =
       function(qParams, solrParams, quiet) {
 
-    var url = this.getRequestUrl_(
-        qParams,
-        angular.extend({}, this.page, solrParams)
-        );
+    var url = this.buildSolrUrl();
 
-    return this.$http.get(url).then(angular.bind(this,
-        function(solrResponse) {
+    var params = {
+      from: this.page.start,
+      size: this.page.rows,
+      aggs : {}
+    };
+    for (var i = 0; i < solrParams['facet.field'].length; i ++) {
+      var field = solrParams['facet.field'][i];
+      params.aggs[field] = {
+        terms: {field: field}
+      }
+    };
+
+    return this.$http.post(url, params).then(angular.bind(this,
+        function(r) {
 
           var resp = {
-            solrData: solrResponse.data,
-            records: solrResponse.data.response.docs,
-            facets: this.createFacetData_(solrResponse.data),
-            count: solrResponse.data.response.numFound
+            solrData: r.data,
+            records: r.data.hits.hits,
+            facets: this.createFacetData_(r.data),
+            count: r.data.hits.total
           };
           if (!quiet) {
             this.sendEvent('search', angular.extend({}, resp, {
@@ -406,49 +417,49 @@
    */
   geonetwork.GnSolrRequest.prototype.createFacetData_ = function(solrData) {
     var fields = [];
-    for (var kind in solrData.facet_counts) {
-      var facetType = this.getFacetType_(kind);
+    for (var fieldId in solrData.aggregations) {
+      // var facetType = this.getFacetType_(kind);
       // TODO: format facet types eg heatmaps
-      if (facetType === '') {
-        continue;
-      }
-      for (var fieldProp in solrData.facet_counts[kind]) {
-        var field = solrData.facet_counts[kind][fieldProp];
-        var fNameObj = this.getIdxNameObj_(fieldProp);
+      // if (facetType === '') {
+      //   continue;
+      // }
+      // for (var fieldProp in solrData.aggregations[field]) {
+        var field = solrData.aggregations[fieldId];
+        var fNameObj = this.getIdxNameObj_(fieldId);
         var facetField = {
-          name: fieldProp,
-          label: fNameObj && fNameObj.label ? fNameObj.label : fieldProp,
+          name: fieldId,
+          label: fNameObj && fNameObj.label ? fNameObj.label : fieldId,
           values: [],
-          type: facetType
+          type: 'terms'
         };
 
-        if (kind == 'facet_ranges') {
-          var counts = field.counts;
-          for (var i = 0; i < counts.length; i += 2) {
-            if (counts[i + 1] > 0) {
-              var label = '';
-              if (i >= counts.length - 2) {
-                label = '> ' + Number(counts[i]).toFixed(2);
-              }
-              else {
-                label = Number(counts[i]).toFixed(2) + FACET_RANGE_DELIMITER +
-                    Number(counts[i + 2]).toFixed(2);
-              }
-              facetField.values.push({
-                value: label,
-                count: Number(counts[i + 1]).toFixed(2)
-              });
-            }
-          }
-          fields.push(facetField);
-        }
-        else if (kind == 'facet_fields' && field.length > 0) {
-          for (var i = 0; i < field.length; i += 2) {
+        // if (kind == 'facet_ranges') {
+        //   var counts = field.counts;
+        //   for (var i = 0; i < counts.length; i += 2) {
+        //     if (counts[i + 1] > 0) {
+        //       var label = '';
+        //       if (i >= counts.length - 2) {
+        //         label = '> ' + Number(counts[i]).toFixed(2);
+        //       }
+        //       else {
+        //         label = Number(counts[i]).toFixed(2) + FACET_RANGE_DELIMITER +
+        //             Number(counts[i + 2]).toFixed(2);
+        //       }
+        //       facetField.values.push({
+        //         value: label,
+        //         count: Number(counts[i + 1]).toFixed(2)
+        //       });
+        //     }
+        //   }
+        //   fields.push(facetField);
+        // }
+        // else if (kind == 'facet_fields' && field.length > 0) {
+          for (var i = 0; i < field.buckets.length; i ++) {
             facetField.values.push({
-              value: field[i],
-              count: field[i + 1]
+              value: field.buckets[i].key,
+              count: field.buckets[i].doc_count
             });
-          }
+          // }
           fields.push(facetField);
         }
 
@@ -460,7 +471,7 @@
           fields.push(facetField);
         }
         */
-      }
+      // }
     }
     return fields;
   };

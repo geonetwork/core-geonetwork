@@ -56,7 +56,7 @@
     this.register = function(type, name) {
 
       if (!(type && name)) {
-        console.error('You can\'t register a SOLR object without identifiers');
+        console.error('You can\'t register an index object without identifiers');
         return;
       }
 

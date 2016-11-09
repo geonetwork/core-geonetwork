@@ -39,7 +39,7 @@
     function(gnSolrRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
              $http, $q, $translate) {
 
-      var solrProxyUrl = gnHttp.getService('solrproxy');
+      var solrProxyUrl = gnHttp.getService('indexproxy');
 
       var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
 
@@ -78,6 +78,7 @@
        */
       var createFacetConfigFromSolr = function(solrData, docFields) {
         var fields = [];
+        var aggs = {};
         for (var kind in solrData.facet_counts) {
           var facetType = getFacetType(kind);
           for (var fieldProp in solrData.facet_counts[kind]) {
@@ -346,7 +347,7 @@
         return $http.put('../api/0.1/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,
-          version: version || '1.0.0',
+          version: version || '1.1.0',
           tokenize: idxConfig,
           metadataUuid: uuid
         }
