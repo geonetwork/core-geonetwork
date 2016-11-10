@@ -10,7 +10,7 @@
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1">
         <strong>
-          <i class="fa fa-2x"
+          <i class="fa"
              data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
         </strong>
       </div>
@@ -78,7 +78,7 @@
       </div>
       <div class="col-xs-4">
         <button type="button"
-                class="btn btn-default btn-lg btn-block"
+                class="btn btn-default btn-sm btn-block"
                 data-ng-show="hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
 

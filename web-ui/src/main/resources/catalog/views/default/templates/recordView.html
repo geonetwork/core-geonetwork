@@ -1,4 +1,4 @@
-<div data-ng-controller="GnMdViewController">
+<div data-ng-controller="GnMdViewController" class="container">
   <div class="alert alert-warning"
        data-ng-hide="mdView.current.record"
        data-translate=""
@@ -90,7 +90,7 @@
 
         </h1>
 
-        <div class="pull-right">
+        <div class="text-center text-muted">
           <i class="fa fa-calendar"></i>&nbsp;
           <span data-translate="">updatedOn</span>
           <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
@@ -126,37 +126,33 @@
                           mdView.current.record.inspirethemewithac.length > 0">
             <th data-translate="">inspireThemes</th>
             <td>
-              <div data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+              <button data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
                    data-ng-click="search({'inspirethemewithac': cat})"
-                   class="iti-box full {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
-                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}} ...">
-                <div class="icon"><span class="iti-{{cat.split('|')[0]}}"></span></div>
-                <p class="label"></p>
-              </div>
+                   class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+                <span class="iti-{{cat.split('|')[0]}}"></span>
+              </button>
             </td>
           </tr>
           <tr data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
             <td>
-              <div data-ng-repeat="cat in mdView.current.record.category"
+              <button data-ng-repeat="cat in mdView.current.record.category"
                    data-ng-click="search({'_cat': cat})"
-                   class="iti-box full gn-iti"
-                   title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}} ...">
-                <div class="icon">
-                  <span class="fa gn-icon-{{cat}}"></span></div>
-                <p class="label">{{('cat-' + cat) | translate}}</p>
-              </div>
+                   class="btn btn-sm btn-default"
+                   title="{{'clickToFilterOn' | translate}} {{('cat-' + cat) | translate}}">
+                <span class="fa gn-icon-{{cat}} resource-color"></span>&nbsp;
+                {{('cat-' + cat) | translate}}
+              </button>
 
-              <div data-ng-repeat="cat in mdView.current.record.topicCat track by $index"
+              <button data-ng-repeat="cat in mdView.current.record.topicCat track by $index"
                    data-ng-click="search({'topicCat': cat})"
-                   class="iti-box full gn-iti"
-                   title="{{'clickToFilterOn' | translate}} {{cat | translate}} ...">
-                <div class="icon">
-                  <span class="fa gn-icon-{{cat}}"></span>
-                </div>
-                <p class="label">{{cat | translate}}</p>
-              </div>
+                   class="btn btn-sm btn-default"
+                   title="{{'clickToFilterOn' | translate}} {{cat | translate}}">
+                <span class="fa gn-icon-{{cat}} topic-color"></span>&nbsp;
+                {{cat | translate}}
+              </button>
             </td>
           </tr>
           <tr data-ng-repeat="(thesaurus, keywords) in mdView.current.record.keywordGroup">
@@ -370,7 +366,7 @@
 
         <a class="btn btn-link"
            data-ng-href="../api/records/{{mdView.current.record.getUuid()}}/formatters/xml">
-          <i class="fa fa-file-code-o fa-2x"/>
+          <i class="fa fa-file-code-o"/>
           <span data-translate="">metadataInXML</span>
         </a>
 
@@ -565,22 +561,22 @@
           <a
             data-ng-href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
             target="_blank"
-            class="btn btn-lg btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
+            class="btn btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
           <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
              target="_blank"
-             class="btn btn-lg btn-default"><i class="fa fa-fw fa-twitter"></i></a>
+             class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
           <a
             data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
             target="_blank"
-            class="btn btn-lg btn-default"><i class="fa fa-fw fa-facebook"></i></a>
+            class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
           <a
             data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{socialMediaLink | encodeURIComponent}}"
             target="_blank"
-            class="btn btn-lg btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
+            class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
           <a
             data-ng-href="mailto:?subject={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
             target="_blank"
-            class="btn btn-lg btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
+            class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
         </section>
         </br>
 
