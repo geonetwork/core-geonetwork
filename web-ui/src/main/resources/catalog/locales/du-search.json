@@ -121,7 +121,6 @@
     "exportMEF": "Exporteer (ZIP)",
     "welcomeTitle": "{{orgName}} Data Portaal",
     "welcomeText": "Hier vindt u data, services, kaarten en meer.",
-    "getstarted": "Beginnen",
     "searchOver": "Zoek in <strong>{{records}}</strong> datasets, services en kaarten, ...",
     "browseBy": "Bladeren per",
     "browseTopics": "Blader onderwerpen",

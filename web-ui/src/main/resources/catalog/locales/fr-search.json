@@ -121,7 +121,6 @@
     "exportMEF": "Export (ZIP)",
     "welcomeTitle": "Accéder aux informations de {{orgName}}",
     "welcomeText": "Vous trouverez ici des données, des services et des cartes et plus encore ...",
-    "getstarted": "Pour commencer",
     "searchOver": "Rechercher parmi <strong>{{records}}</strong> jeux de données, services et cartes, ...",
     "browseBy": "Parcourir par",
     "browseTopics": "Parcourir les thèmes",

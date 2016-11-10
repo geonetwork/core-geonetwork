@@ -121,7 +121,6 @@
     "exportMEF": "Exportovat (ZIP)",
     "welcomeTitle": "{{orgName}} Datový portál",
     "welcomeText": "Zde naleznete data, služby, mapy a řadu dalších informací.",
-    "getstarted": "Začít",
     "searchOver": "Prohledávat <strong>{{records}}</strong> datové sady, služby a mapy, ...",
     "browseBy": "Prohledávat dle",
     "browseTopics": "Prohledat témata",

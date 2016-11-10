@@ -121,7 +121,6 @@
     "exportMEF": "Exportar (ZIP)",
     "welcomeTitle": "Portal de Dades de {{orgName}}",
     "welcomeText": "Aquí pots trobar dades, serveis, mapes i més.",
-    "getstarted": "Començar",
     "searchOver": "Cerca sobre <strong>{{records}}</strong> conjunts de dades, serveis i mapes,...",
     "browseBy": "Navegació per",
     "browseTopics": "Explorar temes",
