@@ -90,14 +90,6 @@
 
         </h1>
 
-        <div class="text-center text-muted">
-          <i class="fa fa-calendar"></i>&nbsp;
-          <span data-translate="">updatedOn</span>
-          <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
-                data-from-now=""></span>
-        </div>
-        <div style="clear:both"></div>
-
         <div class="well" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record) -->
@@ -550,6 +542,18 @@
           </h4>
           <img ng-src="../../images/logos/{{mdView.current.record.source}}.png"
                class="gn-source-logo"/>
+        </section>
+        </br>
+
+        <section>
+          <h4>
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span data-translate="">updatedOn</span>
+          </h4>
+          <p>
+            <span data-gn-humanize-time="{{mdView.current.record['geonet:info'].changeDate}}"
+                  data-from-now=""></span>
+          </p>
         </section>
         </br>
 
