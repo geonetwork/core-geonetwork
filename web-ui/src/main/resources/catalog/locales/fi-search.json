@@ -119,7 +119,6 @@
     "exportCSV": "Vie (CSV)",
     "exportPDF": "Vie (PDF)",
     "exportMEF": "Vie (ZIP)",
-    "welcomeTitle": "{{orgName}} paikkatietohakemisto",
     "welcomeText": "Luettelosta löydät tietoaineistoja, palveluita ja karttoja.",
     "searchOver": "Hae <strong>{{records}}</strong> aineiston, palvelun ja kartan joukosta.",
     "browseBy": "Selailuryhmä: ",

@@ -119,7 +119,6 @@
   "exportCSV": "Export (CSV)",
   "exportPDF": "Export (PDF)",
   "exportMEF": "Export (ZIP)",
-  "welcomeTitle": "{{orgName}} Data Portal",
   "welcomeText": "Here you will find data, services and maps and more.",
   "searchOver": "Search over <strong>{{records}}</strong> data sets, services and maps, ...",
   "browseBy": "Browse by",

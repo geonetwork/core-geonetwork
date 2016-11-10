@@ -119,7 +119,6 @@
     "exportCSV": "Exportar (CSV)",
     "exportPDF": "Exportar (PDF)",
     "exportMEF": "Exportar (ZIP)",
-    "welcomeTitle": "Portal de Datos de {{orgName}}",
     "welcomeText": "Aquí puedes encontrar datos, servicios, mapas y  más",
     "searchOver": "Buscar sobre <strong>{{records}}</strong> conjuntos de datos, servicios y  mapas,...",
     "browseBy": "Buscar por",
