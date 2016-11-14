@@ -172,7 +172,6 @@
                 if (!groups) {
                   scope.layerTree.nodes.push(l);
                   scope.layerTree.nodes.sort(sortNodeFn);
-                  addWpsLayers(l, scope.layerTree.nodes);
                 }
                 else {
                   if (groups[0] != '/') {
@@ -183,6 +182,13 @@
                 }
                 if(l.visible && l.get('groupcombo')) {
                   scope.setActiveComboGroup(l);
+                }
+              }
+              for (var i = 0; i < fLayers.length; i++) {
+                var l = fLayers[i];
+                var groups = l.get('group');
+                if (!groups) {
+                  addWpsLayers(l, scope.layerTree.nodes);
                 }
               }
               debounce--;
