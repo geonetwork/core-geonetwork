@@ -167,6 +167,13 @@
                 });
           };
 
+          scope.pFilter = '';
+          scope.pFilterFn = function(v) {
+            if (scope.pFilter === '') return true;
+            var v = $translate.instant('group-' + v.group);
+            return v.indexOf(scope.pFilter) >= 0;
+          };
+
           scope.sorter = {
             predicate: 'g',
             reverse: false
