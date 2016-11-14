@@ -322,7 +322,7 @@
           });
         },
 
-        addMdLayerToPanier: function(link, md) {
+        addMdLayerToPanier: function(link, md, $event) {
           if(link.protocol.match(
                   "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
             if (link.protocol == 'MYO:MOTU-SUB') {
@@ -339,7 +339,11 @@
             angular.element($('[gn-metadata-display]')).scope().dismiss();
             $location.path('/panier');
           }
-          $scope.addLayerPopover('panier');
+          var el;
+          if ($event) {
+            el = $($event.currentTarget).parents('.gn-grid-item');
+          }
+          $scope.addLayerPopover('panier', el);
         },
 
         addAllMdLayersToPanier: function (layers, md) {

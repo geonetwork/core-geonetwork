@@ -8,7 +8,7 @@
     </button>
     <ul class="dropdown-menu" role="menu" sxt-custom-scroll>
       <li ng-repeat="link in downloads">
-        <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)" title="{{link.desc || (link.name + ' - ' + link.contentType)}}">
+        <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md, $event)" title="{{link.desc || (link.name + ' - ' + link.contentType)}}">
           <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
           {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
       <li class="divider"></li>
@@ -24,7 +24,7 @@
     </ul>
   </div>
   <button type="button" class="btn btn-default btn-sm pull-right" data-ng-disabled="md['geonet:info'].download == 'false'"
-          ng-if="isPanier && downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)" title="{{'download' | translate}}">
+          ng-if="isPanier && downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md, $event)" title="{{'download' | translate}}">
     <span class="fa fa-download"></span>
   </button>
 
