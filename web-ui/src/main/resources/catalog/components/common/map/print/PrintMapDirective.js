@@ -198,7 +198,7 @@
       // http://mapfish.org/doc/print/protocol.html#print-pdf
       var view = $scope.map.getView();
       var proj = view.getProjection();
-      var lang = $translate.uses();
+      var lang = $translate.use();
       var defaultPage = {
         comment: $scope.mapComment || '',
         title: $scope.mapTitle || ''
