@@ -13061,6 +13061,10 @@ yx-axis
 .g .gn-logo {
   max-height: 23px;
 }
+.gn .gn-logo-lg,
+.g .gn-logo-lg {
+  width: 160px !important;
+}
 .gn .gn-stack,
 .g .gn-stack,
 .gn .gn-code,
@@ -13123,6 +13127,10 @@ yx-axis
 .gn .dropdown-menu li.disabled,
 .g .dropdown-menu li.disabled {
   cursor: not-allowed !important;
+}
+.gn .dropdown-menu li.disabled a,
+.g .dropdown-menu li.disabled a {
+  pointer-events: none;
 }
 .gn .gn-popup,
 .g .gn-popup {
@@ -13645,6 +13653,11 @@ yx-axis
 .g .gn-sharing-batch input.ng-dirty:after {
   content: "*";
   padding-left: 12px;
+}
+.gn .gn-resource-info,
+.g .gn-resource-info {
+  text-align: center;
+  border: 3px solid #bbb;
 }
 .gn [gn-main-viewer],
 .g [gn-main-viewer],
@@ -15736,7 +15749,7 @@ yx-axis
 }
 .gn [gn-share] .gn-share-grid tbody,
 .g [gn-share] .gn-share-grid tbody {
-  max-height: 500px;
+  max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
 }
