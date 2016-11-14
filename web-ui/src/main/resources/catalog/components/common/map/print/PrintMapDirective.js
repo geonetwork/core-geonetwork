@@ -102,7 +102,9 @@
           if (angular.isFunction(deregister[i])) {
             deregister[i]();
           } else {
-            deregister[i].target.unByKey(deregister[i]);
+            // FIXME
+            var src = deregister[i].src || deregister[i].target;
+            src.unByKey(deregister[i]);
           }
         }
       }
