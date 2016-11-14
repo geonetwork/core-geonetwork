@@ -54,58 +54,68 @@ layouts:
       items:
         - !columns
           absoluteX: 10
-          absoluteY: 832
+          absoluteY: 828
           width: 575
           items:
             - !text
+              align: center
               font: Helvetica
               fontSize: 24
               text: '${title}'
+        - !map
+          condition: hasTitle
+          spacingAfter: 10
+          width: 545
+          height: 700
+          absoluteX:25
+          absoluteY:780
+        - !map
+          condition: hasNoTitle
+          spacingAfter: 10
+          width: 545
+          height: 746
+          absoluteX:25
+          absoluteY:816
         - !columns
-          absoluteX: 10
-          absoluteY: 782
-          width: 575
+          condition: hasAttribution
+          absoluteX: 150
+          absoluteY: 55
+          width: 100
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 16
+                text: 'Source(s): '
+        - !columns
+          condition: hasAttribution
+          absoluteX: 250
+          absoluteY: 51
+          width: 250
           items:
             - !text
                 font: Helvetica
                 fontSize: 11
-                text: '${comment}'
-        - !map
-          spacingAfter: 10
-          width: 575
-          height: 680
-          absoluteX:10
-          absoluteY:700
+                text: '${dataOwner}'
         - !columns
-          absoluteX: 15
-          absoluteY: 130
-          width: 160
+          absoluteX: 25
+          absoluteY: 45
+          width: 180
           items:
             - !scalebar
               align: left
-              maxSize: 160
+              maxSize: 180
               type: 'bar sub'
               intervals: 5
         - !columns
-          absoluteX: 565
-          absoluteY: 145
-          width: 30
+          absoluteX: 540
+          absoluteY: 55
+          width: 35
           items:
             - !image
-              maxWidth: 30
-              maxHeight: 30
+              maxWidth: 35
+              maxHeight: 35
               url: 'file://${configDir}/Arrow_North_CFCF.svg'
               rotation: '${rotation}'
-        - !columns
-          absoluteX: 10
-          absoluteY: 19
-          width: 575
-          items:
-            - !text
-              text: '- ${now yyyy/MM/dd HH:mm} -'
-              align: right
-              fontEncoding: Cp1252
-              fontSize: 8
     lastPage:
       items:
          - !columns
@@ -136,47 +146,67 @@ layouts:
       backgroundPdf: '${configDir}/template-landscape.pdf'
       items:
         - !map
+          condition: hasTitle
           spacingAfter: 10
-          width: 988
-          height: 542
-          absoluteX: 10
+          width: 958
+          height: 480
+          absoluteX: 25
           absoluteY: 552
+        - !map
+          condition: hasNoTitle
+          spacingAfter: 10
+          width: 958
+          height: 516
+          absoluteX: 25
+          absoluteY: 588
         - !columns
-          absoluteX: 10
-          absoluteY: 600
-          width: 575
+          absoluteX: 25
+          absoluteY: 593
+          width: 958
           items:
             - !text
               font: Helvetica
+              align: center
               fontSize: 24
               text: '${title}'
         - !columns
-          absoluteX: 400
-          absoluteY: 600
-          width: 575
+          condition: hasAttribution
+          absoluteX: 200
+          absoluteY: 55
+          width: 100
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 16
+                text: 'Source(s): '
+        - !columns
+          condition: hasAttribution
+          absoluteX: 300
+          absoluteY: 51
+          width: 600
           items:
             - !text
                 font: Helvetica
                 fontSize: 11
-                text: '${comment}'
+                text: '${dataOwner}'
         - !columns
-          absoluteX: 15
-          absoluteY: 30
-          width: 160
+          absoluteX: 25
+          absoluteY: 45
+          width: 180
           items:
             - !scalebar
               align: left
-              maxSize: 160
+              maxSize: 180
               type: 'bar sub'
               intervals: 5
         - !columns
-          absoluteX: 965
-          absoluteY: 45
-          width: 30
+          absoluteX: 960
+          absoluteY: 48
+          width: 35
           items:
             - !image
-              maxWidth: 30
-              maxHeight: 30
+              maxWidth: 35
+              maxHeight: 35
               url: 'file://${configDir}/Arrow_North_CFCF.svg'
               rotation: '${rotation}'
     lastPage:
@@ -201,16 +231,3 @@ layouts:
               classSpace: 5
               backgroundColor: white
               layerFontSize: 9
-  #===========================================================================
-  Thumbnail:
-    mainPage:
-      rotation: false
-      pageSize: 612 612
-      backgroundPdf: '${configDir}/template-thumbnail.pdf'
-      items:
-        - !map
-          spacingAfter: 0
-          width: 612
-          height: 612
-          absoluteX: 0
-          absoluteY: 612

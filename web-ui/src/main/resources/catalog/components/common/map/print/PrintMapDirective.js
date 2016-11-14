@@ -44,7 +44,7 @@
       graticule: false
     };
 
-    $scope.enableLegends = true;
+    $scope.enableLegends = false;
 
     /**
      * Return print configuration from Mapfishprint service
@@ -213,7 +213,7 @@
 
       angular.forEach(layers.getArray(), function(layer) {
         if (layer.getVisible()) {
-          var attribution = layer.attribution;
+          var attribution = layer.get('attribution');
           if (attribution !== undefined &&
               attributions.indexOf(attribution) == -1) {
             attributions.push(attribution);
@@ -248,6 +248,9 @@
         layers: encLayers,
         legends: encLegends,
         enableLegends: $scope.enableLegends,
+        hasTitle:$scope.mapTitle ? true : false,
+        hasNoTitle:$scope.mapTitle ? false : true,
+        hasAttribution: !!attributions.length,
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(
