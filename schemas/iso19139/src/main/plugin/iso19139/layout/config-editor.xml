@@ -134,6 +134,7 @@
     <name>gmd:attributes</name>
     <name>gmd:geographicBox</name>
     <name>gmd:EX_TemporalExtent</name>
+    <name>gmd:EX_VerticalExtent</name>
     <name>gmd:MD_Distributor</name>
     <name>srv:containsOperations</name>
     <name>srv:SV_Parameter</name>
@@ -213,6 +214,8 @@
       <name>gmd:condition</name>
       <name>gmd:maximumOccurence</name>
       <name>gmd:domainValue</name>
+      <name>gmd:minimumValue</name>
+      <name>gmd:maximumValue</name>
       <name>gmd:densityUnits</name>
       <name>gmd:descriptor</name>
       <name>gmd:denominator</name>
