@@ -102,6 +102,7 @@
         <div data-gn-related="mdView.current.record"
              data-user="user"
              data-types="onlines"
+             data-has-results="hasRelations.onlines"
              data-title="{{'downloadsAndResources' | translate}}">
         </div>
 
@@ -325,12 +326,13 @@
               <p data-ng-bind-html="mdView.current.record.lineage | newlines"/>
             </td>
           </tr>
-          <tr>
+          <tr data-ng-if="hasRelations.sources || hasRelations.hassources">
             <th></th>
             <td>
               <div data-gn-related="mdView.current.record"
                    data-user="user"
                    data-types="sources"
+                   data-has-results="hasRelations.sources"
                    data-title="{{'sourceDatasets' | translate}}">
               </div>
 
@@ -338,6 +340,7 @@
               <div data-gn-related="mdView.current.record"
                    data-user="user"
                    data-types="hassources"
+                   data-has-results="hasRelations.hassources"
                    data-title="{{'isSourceOfDatasets' | translate}}">
               </div>
             </td>
