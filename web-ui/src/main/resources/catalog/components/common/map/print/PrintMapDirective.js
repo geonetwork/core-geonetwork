@@ -62,7 +62,9 @@
           layouts: data.layouts,
           dpi: data.dpis[1],
           scales: data.scales,
-          scale: data.scales[5]
+          scale: data.scales[5],
+          formats: data.outputFormats,
+          format: data.outputFormats[0]
         };
       });
       return http;
@@ -242,9 +244,13 @@
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
         dpi: $scope.config.dpi.value,
+        outputFormat: $scope.config.format.name,
         layers: encLayers,
         legends: encLegends,
-        enableLegends: $scope.enableLegends,
+        enableLegends: $scope.enableLegends && encLegends,
+        hasTitle:$scope.mapTitle ? true : false,
+        hasNoTitle:$scope.mapTitle ? false : true,
+        hasAttribution: !!attributions.length,
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(
