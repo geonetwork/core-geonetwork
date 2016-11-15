@@ -1640,11 +1640,11 @@ esbiaixades</option>
 		<description>Indicació de si es disposa o no de la informació de calibració radiomètrica per a generar el producte estàndard de dades radiomètricament calibrades</description>
 	</element>
 	<element name="gmd:rationale" id="88.0">
-		<label>Raonament</label>
+		<label>Raó</label>
 		<description>Requisit o propòsit de l'etapa de processament</description>
 	</element>
 	<element name="gmd:rationale" id="318.0" context="gmd:MD_ExtendedElementInformation">
-		<label>Raonament</label>
+		<label>Raó</label>
 		<description>Raó per crear l'element extès</description>
 	</element>
 	<element name="gmd:referenceSystemIdentifier" id="187.0">
