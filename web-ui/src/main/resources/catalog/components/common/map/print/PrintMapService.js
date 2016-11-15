@@ -31,8 +31,8 @@
     var self = this;
 
     var options = {
-      heightMargin: 0,
-      widthMargin: 0
+      heightMargin: 100,
+      widthMargin: 100
     };
 
     var DPI = 72;
