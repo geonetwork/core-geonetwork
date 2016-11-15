@@ -801,7 +801,7 @@
 		<description>Descripció del paper</description>
 	</element>
 	<element name="gmd:descriptiveKeywords" id="33.0">
-		<label>Paraules clau descriptives</label>
+		<label>Conjunt de paraules clau</label>
 		<description>Proporciona paraules clau de categoria, el tipus i font de referència</description>
 	</element>
 	<element name="gmd:descriptor" id="258.0">
