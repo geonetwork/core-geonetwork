@@ -152,8 +152,11 @@
             <td>
               <ul>
                 <li data-ng-repeat="k in keywords track by $index"
-                    title="{{'clickToFilterOn' | translate}} {{k}} ..."
-                    data-ng-click="search({'keyword': k})">{{k}}</li>
+                    data-ng-if="k"
+                    class="tt-cursor"
+                    title="{{'clickToFilterOn' | translate}} {{k}}">
+                    <a href="" data-ng-click="search({'keyword': k})">{{k}}</a>
+                </li>
               </ul>
             </td>
           </tr>
@@ -364,11 +367,11 @@
 
         <table class="table table-striped">
           <tbody>
-          <tr>
+          <tr data-ng-if="::mdView.current.record.getAllContacts()">
             <th data-translate="">contact</th>
             <td>
               <div class="gn-contact"
-                   data-ng-repeat="c in mdView.current.record.getAllContacts().metadata track by $index">
+                   data-ng-repeat="c in ::mdView.current.record.getAllContacts().metadata track by $index">
                 <h3>
                   <i class="fa fa-envelope"></i>
                   {{c.role | translate}}
@@ -405,11 +408,11 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr data-ng-if="::mdView.current.record.mdLanguage">
             <th data-translate="">metadataLanguage</th>
             <td>
               <ul>
-                <li data-ng-repeat="l in mdView.current.record.mdLanguage">
+                <li data-ng-repeat="l in ::mdView.current.record.mdLanguage">
                   {{l | translate}}
                 </li>
               </ul>
