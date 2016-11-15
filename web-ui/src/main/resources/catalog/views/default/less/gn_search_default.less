@@ -1,6 +1,10 @@
+@import "gn_variables_default.less"; // must be first
 @import "../../../style/gn_search.less";
 @import "../../../style/gn_metadata.less";
-@import "gn_feedback_default.less";
+
+@import "gn_results_default.less";
+@import "gn_facet_default.less";
+@import "gn_view.less";
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
@@ -9,15 +13,7 @@
 }
 
 
-.navbar {
-  margin-bottom: 14px;
-  .navbar-brand {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 50px;
-    font-size: 16px;
-  }
-}
+
 
 .jumbotron {
   h1 {
@@ -65,16 +61,11 @@
 
 
 
-.gn-sort-by {
-  .btn-group > button {
-    .btn-link();
-  }
-}
 .gn-search-page {
   clear: both;
-  padding-bottom:40px;
+  // padding-bottom:40px;
   .gn-md-view {
-    padding: 0 20px;
+    // padding: 0 20px;
   }
   .badge {
       margin-right: 5px;
@@ -98,152 +89,7 @@
   max-width: 60px;
   max-height: 60px;
 }
-ul.gn-resultview {
-  @thumbnail-width: 170px;
-  margin-right: -15px;
 
-  .metadata {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    width: 100%;
-    height: 100%;
-    z-index: 2050;
-  }
-  li.list-group-item {
-    margin-right: 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    border: none;
-    &:hover {
-      background-color: rgba(10, 10, 10, 0.05);
-      cursor: default;
-    }
-    .row:first-of-type {
-      padding-left: 3px;
-    }
-
-    .gn-md-thumbnail {
-      .gn-img-thumbnail {
-        max-width: @thumbnail-width;
-        max-height: 140px;
-        min-height: 40px;
-        height: auto;
-      }
-    }
-    .media {
-      a {
-        margin-left: 0;
-        &.gn-md-edit-btn {
-          width: 12px;
-          margin-left: 10px;
-
-        }
-      }
-      h4 {
-        margin-top: 0;
-        font-weight: 700;
-        a {
-          color: rgb(51, 51, 51);
-        }
-      }
-    }
-  }
-
-  li.gn-grid {
-    @grid-bottom-margin: 2px;
-
-    float: left;
-    border: 1px solid @list-group-border;
-    //box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
-    min-width: 300px;
-    max-width: 500px;
-    width: calc(~"100% - 15px");
-    height: 20.5em;
-    padding: 14px;
-    .gn-md-details {
-      //margin-left: @thumbnail-width;
-      color: #6a6a6a;
-      max-height: 50px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    /* Properly align category icons */
-    .fa img {
-      vertical-align: text-bottom;
-    }
-    .gn-md-title {
-      margin-top: 2px;
-      min-height: 3.5em;
-      max-height: 3.5em;
-      overflow: hidden;
-      cursor: pointer;
-      h3 {
-
-        /* Leave space for selection checkbox */
-        //padding-left: 20px;
-        margin-top: 0px;
-        a {
-          //text-transform: uppercase;
-          font-weight: normal;
-          font-size: 80%;
-          color: #333333;
-          max-height: 82px;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          display: block;
-        }
-        a:hover {
-          color: #428bca;
-          text-decoration: none;
-        }
-      }
-    }
-    .gn-source-logo {
-      z-index: 10;
-      height: 20px;
-      float: right;
-    }
-    .gn-md-thumbnail {
-      //position: absolute;
-      //top: 82px;
-      //opacity: .8;
-      overflow: hidden;
-      cursor: pointer;
-      .gn-img-thumbnail {
-        max-width: @thumbnail-width;
-        max-height: 140px;
-        min-height: 40px;
-        //margin: @grid-bottom-margin;
-        height: auto;
-      }
-    }
-    .gn-md-abstract {
-      cursor: pointer;
-      color: @gray-light;
-    }
-    .gn-md-abstract.ellipsis:after {
-      background: none;
-    }
-    .gn-md-links {
-      //position: absolute;
-      //bottom: @grid-bottom-margin;
-      background: none;
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
-      padding: 5px;
-    }
-    input {
-      float: left;
-    }
-    .gn-md-category {
-      display: block;
-      float: left;
-      margin-left: 18px;
-    }
-  }
-}
 
 .gn-md-view {
   .gn-md-side {
@@ -293,12 +139,25 @@ ul.gn-resultview {
     margin-top:-1.25em;
   }
 }
+
+// advanced search
 [data-ng-search-form] {
   .gn-top-search {
-    border-bottom: 1px solid @panel-default-border;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    position: relative;
+    // margin: 0 -15px 10px -15px;
+    // padding: 0;
+
+    // ----- main search panel
+    .gn-search-panel-main {
+      border-bottom: 1px solid #e5e5e5;
+      background-color: #f4f4f4;
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+    // ----- advanced search panel
+    .gn-search-panel-advanced {
+
+    }
+
     [typeahead] {
       vertical-align: middle;
       display: inline-block;
@@ -313,7 +172,7 @@ ul.gn-resultview {
       margin-left: 64px;
     }
     .gn-form-any {
-      max-width: 45vw;
+      // max-width: 45vw;
       input[type="text"], button {
         height: 36px;
       }
@@ -354,46 +213,6 @@ ul.gn-resultview {
   }
 }
 
-[data-gn-map-field] > [ngeo-map] {
-  //height: 89.9vh;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  right: 0;
-  bottom: 0;
-  position: fixed !important;
-  z-index: 99;
-  width: 250px !important;
-  heigth: 250px !important;
-  margin: 5px;
-}
-.gn-row-main {}
-
-.gn-row-info {}
-
-.gn-row-filters {
-  padding-bottom: 5px;
-  margin-bottom: 5px;
-
-  .gn-flfilter {
-
-  }
-  .gn-flfilter-icon {
-    text-align: center;
-    li {
-      list-style: none;
-      float: left;
-      width: 100px;
-    }
-    i {
-      //    .@{fa-css-prefix}-4x;
-      font-size: 4em;
-      width: 70px;
-      img {
-        width: 70px;
-      }
-    }
-  }
-}
 
 .gn-results-switch {
   float: left;
@@ -406,11 +225,12 @@ ul.gn-resultview {
   padding: 5px 0px;
   margin: auto -10px;
   li {
-    width: 33.3%;
+    width: 100%;
     zoom: 1;
     list-style: none;
     float: left;
     padding: 10px;
+    cursor: pointer;
     > div {
       margin: 0px;
       padding: 15px;
@@ -440,50 +260,119 @@ ul.gn-resultview {
         }
       }
     }
-    div:nth-child(2) {
-      overflow: hidden;
-      max-height: 100%;
-      text-overflow: ellipsis;
-    }
+  }
+  li:hover:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: "\f06e"; // eye icon
+    //content: "\f08e"; // external link
+    position: absolute;
+    margin-left: -50px;
+    margin-top: 15px;
+    color: #B9BBBB;
+    font-size: 30px;
   }
   li.gn-more {
     position: relative;
     float:right;
   }
-}
 
-[gn-main-viewer] {
-  margin-top: -18px;
-  .panel-tools {
-    .panel-heading {
-      background-color: transparent;
+  // info lists
+  // 
+  // ----- general
+  .resultcard {
+    padding: 0 0 10px 0;
+    background-color: #fff;
+    .title {
+      min-height: 40%;
+      padding: 10px;
+      h4 {
+        font-size: 16px;
+        margin: 0;
+      }
+    }
+    .abstract {
+      overflow: auto;
+      padding: 0 10px 0 10px;
+      height: 60%;
+    }
+  }
+  li:hover {
+    .title {
+      color: #000;
     }
   }
 
-  .nav-tabs {
-    > li {
-      cursor: pointer;
-    }
+  // styling for the scrollbar
+  ::-webkit-scrollbar {
+    width: 2px;
   }
+  // ----- track
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    margin-right: 5px;
+  }
+  // ----- handle
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: #efefef; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0,0,0,0.4); 
+  }
+}
 
-  [gn-kml-import] {
-    input {
-      margin-top: 15px;
+// ----- small
+.gn-info-list-small {
+  .gn-info-list {
+    li {
+      padding: 5px 10px;
+      .resultcard {
+        .abstract {
+          max-height: 1.5em !important;
+          overflow: hidden;
+        }
+        .abstract:after {
+          content: "..."
+        }
+      }
     }
   }
 }
-/*
-    Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
-*/
-.gn-bottom-bar {
-  bottom:0;
-  height:50px;
-  position:absolute;
-  overflow:hidden;
-  width:100%;
-  margin-bottom:0px;
-  border-radius: 0px;
+// ----- large
+.gn-info-list-large {
+  .gn-info-list {
+    .resultcard {
+      .abstract {
+        max-height: auto !important;
+        height: 100%;
+      }
+    }
+  }
 }
+// ----- blocks
+.gn-info-list-blocks {
+  .gn-info-list {
+    li {
+      width: 33%;
+      .resultcard {
+        .abstract {
+          max-height: 125px !important;
+        }
+      }
+    }
+    li:hover:before {
+      content: "";
+    }
+  }
+}
+
 
 .cookie-warning {
   .alert;
@@ -499,99 +388,26 @@ html, body {
   height:100%;
 }
 
-.navbar-form {
-  border:none;
-}
-
-/* Facet / this is a hack to hide a facet
- not to be displayed because used to get complex
- field for rendering properly INSPIRE theme icons
- only. It may be more relevant to have this at the
- facetsConfigService ? */
-[data-facet=inspireThemesWithAc] {
-  display: none;
-}
-
-/* Extra small devices (phones, less than 768px) */
-/* No media query since this is the default in Bootstrap */
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: @screen-sm-min) {
-  ul.gn-resultview li.gn-grid {
-    width: calc(~"100% - 15px");
+// search form
+.gn-form-search {
+  .form-control {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    margin-right: 10px;
+    height: 45px;
+    &:focus {
+      outline: none;
+    }
   }
-}
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: @screen-md-min) {
-
-  ul.gn-resultview li.gn-grid {
-    width: calc(~"50% - 15px");
+  .gn-label {
+    font-size: 14px;
+    display: block;
   }
-}
+  .input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+    color: #333;
 
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: @screen-lg-min) {
-
-  ul.gn-resultview li.gn-grid {
-    //width: calc(~"33% - 15px");
   }
-}
-
-@import "gn_view.less";
-
-.gn-footer-text {
-  margin-top: 15px;
-}
-.gn-footer-text > span {
-  padding-right: 5px;
-  padding-left: 15px;
-  color: #777;
-}
-.socialmedia {
-  margin-top: 15px;
-  margin-right: 15px;
-}
-.socialmedia a{
-  margin-top: 15px;
-  display:inline !important;
-  padding-left: 4px !important;
-  padding-right: 4px !important;
-  color: #777;
-}
-
-.gn-toggle {
-  background-color: @brand-primary;
-  color: white !important;
-  -webkit-border-radius: 25px;
-  border-width: 0px;
-  &:hover {
-    background-color: darken(@link-color, 15%);
-    color: white !important;
+  .dropdown-menu {
+    min-width: 100%;
   }
-}
-.gn-minimap-toggle {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 999;
-}
-.gn-minimap-button {
-  padding: 7px;
-  right: 0px;
-  bottom: 52px;
-}
-.gn-minimap-text {
-  text-decoration: blink;
-  transform: translate(100%) rotate(270deg);
-  transform-origin: left bottom;
-  bottom: 87px;
-  color: @brand-primary;
-  right:0;
-  text-transform: uppercase;
-}
-.gn-facet-toggle {
-  padding: 2px;
-  margin-top: -4px;
-  left: -5px;
 }

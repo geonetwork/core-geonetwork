@@ -1,3 +1,235 @@
 /* Defined here any custom style for the view
    which has to be applied for all apps
    (ie. admin, search, login, editor). */
+   
+@import "gn_variables_default.less"; // must be first
+@import "gn_layout_default.less";
+@import "gn_bar_default.less";
+@import "gn_map_default.less";
+
+
+.gn-fullbackground {
+	background-image: @gnBackgroundImage; 
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-top: -15px;
+  padding-top: 15px;
+}
+
+// home page
+// 
+// ----- welcome text
+.gn-welcome {
+  .gn-logo {
+    max-height: 1008% !important;
+    margin: 25px 20px 0 0;
+  }
+}
+// ----- search
+.gn-row-search {
+  margin-bottom: 80px;
+}
+// ----- info (new & most popular)
+.gn-row-info {
+  background-color: #fff;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+// ----- topics
+.gn-row-topics {
+  background-color: #ddd;
+  padding-top: 30px;
+  padding-bottom: 40px;
+  h4 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    label {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.gn-row-footer {
+  background: #e5e5e5;
+  color: #999;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  h4 {
+    font-size: 16px;
+  }
+  ul {
+    padding: 0px 15px;
+  }
+  li {
+    padding: 3px;
+  }
+  a {
+    color: #999;
+  }
+}
+
+
+// badges
+// 
+// ----- image/icon
+.badge-result {
+  border-radius: 20px !important;
+  float: left;
+  height: 40px;
+  line-height: 43px;
+  text-align: center;
+  vertical-align: bottom;
+  width: auto;
+  font-size: 12px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  background: transparent;
+  a {
+    color: #fff;
+    border-radius: 20px; 
+    padding-right: 10px;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .badge {
+    margin-top: -5px;
+  }
+}
+// ----- colors
+.badge-result-topic a {
+  background: #428bca;
+}
+.badge-result-type a {
+  background: #5cb85c;
+}
+// ----- icon
+.badge-icon {
+  font-size: 7px;
+  color: #fff;
+  background: #333;
+  width: 40px;
+  height: 40px;
+  display: block;
+  padding: 0;
+  border-radius: 50%;
+  line-height: 48px;
+  min-width: 0;
+}
+// ----- text
+.badge-text {
+  height: 100%;
+  line-height: 100%;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 13px;
+  font-size: 13px;
+  white-space: nowrap;
+  color: #fff;
+}
+
+
+// dropdown
+// 
+// ----- grid
+.dropdown-grid {
+  margin-left: -151px;
+  width: 302px;
+  padding: 0;
+  li {
+    float: left;
+    text-align: center;
+    width: 150px;
+    a {
+      padding: 20px 0 20px 0;
+    }
+    i {
+      font-size: 24px;
+    }
+    span {
+      color: #999;
+      font-size: 12px;
+    }
+  }
+}
+
+// 3 columns
+.dropdown-grid-3 {
+  margin-left: -225px;
+  width: 452px;
+}
+
+// general styles
+//
+// padding
+.gn-padding-top {
+  padding-top: @gnSpacing !important;
+}
+.gn-padding-right {
+  padding-right: @gnSpacing !important;
+}
+.gn-padding-bottom {
+  padding-bottom: @gnSpacing !important;
+}
+.gn-padding-left {
+  padding-left: @gnSpacing !important;
+}
+// no padding
+.gn-nopadding {
+  padding: 0 !important;
+}
+.gn-nopadding-tablet {
+  @media (min-width: 800px) and (max-width: 1024px) {
+    padding: 0 !important;
+  }
+}
+.gn-nopadding-top {
+  padding-top: 0 !important;
+}
+.gn-nopadding-right {
+  padding-right: 0 !important;
+}
+.gn-nopadding-bottom {
+  padding-bottom: 0 !important;
+}
+.gn-nopadding-left {
+  padding-left: 0 !important;
+}
+
+// extra padding for columns
+@media (min-width: @screen-sm-max) {
+  .gn-padding-left-extra {
+    padding-left: 25px;
+  }
+}
+
+// margin
+.gn-margin-top {
+  margin-top: @gnSpacing;
+}
+.gn-margin-right {
+  margin-right: @gnSpacing;
+}
+.gn-margin-bottom {
+  margin-bottom: @gnSpacing;
+}
+.gn-margin-left {
+  margin-left: @gnSpacing;
+}
+// margin for small devices
+@media (max-width: 750px) {
+  .gn-xs-margin-bottom {
+    margin-bottom: @gnSpacing;
+  }
+}
+
+// widths
+.gn-width-80 {
+  width: 80%;
+}
+.gn-width-60 {
+  width: 60%;
+}/* Defined here any custom style for the view
+   which has to be applied for all apps
+   (ie. admin, search, login, editor). */

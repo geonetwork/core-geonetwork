@@ -1,0 +1,61 @@
+.gn-facet-list {
+  margin-top: 20px;
+	.gn-facet {
+		h4 {
+			font-weight: normal;
+      border-bottom: 0;
+      margin-bottom: 5px;
+      padding-left: 20px;
+      line-height: 1.4em;
+      font-weight: bold;
+      i {
+        margin-left: -20px;
+      }
+		}
+    .list-group {
+      margin-left: -5px;
+      border: 0;
+    }
+    .list-group-item {
+      input[type="checkbox"] {
+        display: none;
+      }
+      label {
+        margin-bottom: 0px;
+        font-weight: normal;
+        font-size: .9em;
+        cursor: pointer;
+        .gn-facet-label {
+          float: left;
+          padding-right: 5px;
+          max-width: 180px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          height: 18px;
+        }
+        .gn-facet-count {
+          float: left;
+        }
+      }
+    }
+    .gn-facet-collapseall {
+      display: none;
+    }
+    .gn-facet-moreorless {
+      padding: 5px 20px;
+      button {
+        width: auto;
+        font-size: .9em;
+      }
+    }
+	}
+}
+/* Facet / this is a hack to hide a facet
+ not to be displayed because used to get complex
+ field for rendering properly INSPIRE theme icons
+ only. It may be more relevant to have this at the
+ facetsConfigService ? */
+[data-facet=inspireThemesWithAc] {
+  display: none;
+}

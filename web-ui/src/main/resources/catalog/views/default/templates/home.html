@@ -1,19 +1,24 @@
-<div class="container-fluid">
+<div class="container-fluid gn-fullbackground">
   <div class="row gn-row-main">
-    <div class="col-sm-4 col-sm-push-8">
-      <div class="well well-md">
-        <h1 data-translate=""
-            data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
-
-        <p data-translate="">welcomeText</p>
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="gn-welcome clearfix">
+        <!-- <img class="gn-logo pull-left"
+             data-ng-src="../../images/logos/{{info.site.siteId}}.png?{{info.site.lastUpdate}}"/> -->
+        <div class="pull-left">
+          <h1 data-translate=""
+              data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
+          <p data-translate="">welcomeText</p>
+        </div>
       </div>
     </div>
-    <div class="col-sm-8 col-sm-pull-4">
+  </div>
+  <div class="row gn-row-search">
+    <div class="col-sm-8 col-sm-offset-2">
       <h1 data-translate="">getstarted</h1>
       <p data-translate=""
          data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
 
-      <div class="input-group gn-form-any">
+      <div class="input-group gn-form-any gn-form-search">
         <input type="text"
                class="form-control input-lg"
                autofocus=""
@@ -25,7 +30,7 @@
                data-typeahead-loading="anyLoading"
                data-typeahead-min-length="1"/>
         <span class="input-group-btn">
-          <a class="btn btn-primary btn-lg"
+          <a class="btn btn-default btn-lg"
              type="button"
              data-ng-href="#/search?any={{homeAnyField}}">
             <i class="fa fa-search"></i>
@@ -34,100 +39,35 @@
       </div>
     </div>
   </div>
-  <div class="row" data-ng-show="searchInfo.count == 0">
+  <div class="row gn-row-topics" data-ng-show="searchInfo.count == 0">
     <div data-ng-show="searchInfo.count == 0"
          class="col-md-offset-4 col-md-4 alert alert-warning">
       <span data-translate="">noDataInCatalog</span>
       <div data-gn-need-help="user-guide/quick-start/index.html"></div>
     </div>
   </div>
-  <div class="row" data-ng-show="searchInfo.count > 0">
-    <div class="col-sm-8" data-ng-show="browse !== ''">
-      <span data-translate="">browseBy</span>
-      <span
-        data-ng-show="searchInfo.facet['inspireThemes'].length > 0 && searchInfo.facet['topicCats'].length > 0">
-        <label data-ng-show="searchInfo.facet['inspireThemes'].length > 0">
-          <input type="radio" name="browse" value="inspire" data-ng-model="browse"/>
-          <span data-translate="">inspireThemes</span>
-        </label>
-        <label data-ng-show="searchInfo.facet['topicCats'].length > 0">
-          <input type="radio" name="browse" value="topics" data-ng-model="browse"/>
-          <span data-translate="">topics</span>
-        </label>
-      </span>
-      <label
-        data-ng-show="searchInfo.facet['inspireThemes'].length > 0 && searchInfo.facet['topicCats'].length == 0"><span
-        data-translate="">inspireThemes</span></label>
-      <label
-        data-ng-show="searchInfo.facet['topicCats'].length > 0 && searchInfo.facet['inspireThemes'].length == 0"><span
-        data-translate="">topics</span></label>
-      <div class="row">
-        <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
-              class="col-xs-6 col-sm-4 col-lg-3" data-ng-show="browse === 'topics'">
-            <div class="badge-icon">
-              <a data-ng-href="#/search?facet.q=topicCat%2F{{facet['@name']}}">
-                <span class="badge-result badge-result-topic">
-                  <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i>
-                </span>
-              </a>
-            </div>
-            <div class="badge-text">
-              <a title="{{facet['@label']}}"
-                 data-ng-href="#/search?facet.q=topicCat%2F{{facet['@name']}}">
-                <span class="gn-icon-label">{{facet['@label']}}</span><br>
-                <span class="badge">{{facet['@count']}}</span>
-              </a>
-            </div>
-        </span>
-        <span id="chips-card"
-              data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesURI'] track by $index"
-              class="col-xs-6 col-sm-6 col-lg-4" data-ng-show="browse === 'inspire'">
-            <div class="badge-icon col-xs-3">
-              <a title="{{facet['@label']}}"
-                 data-ng-href="#/search?facet.q=inspireThemeURI%2F{{facet['@name'] | encodeURIComponent | encodeURIComponent}}">
-                <span class="badge-result badge-result-inspire">
-                   <i
-                     class="fa fa-3x gn-icon iti-{{facet['@name'].slice(facet['@name'].lastIndexOf('/')+1)}}"></i>
-                </span>
-              </a>
-            </div>
-            <div class="badge-text col-xs-9">
-              <a title="{{facet['@label']}}"
-                 data-ng-href="#/search?facet.q=inspireThemeURI%2F{{facet['@name'] | encodeURIComponent | encodeURIComponent}}">
-                <span class="gn-icon-label">{{facet['@label']}}</span><br>
-                <span class="badge">{{facet['@count']}}</span>
-              </a>
-            </div>
-        </span>
+
+  <div class="row gn-row-info gn-info-list-small" data-ng-show="searchInfo.count > 0">
+    <div class="col-sm-8 col-sm-offset-2">
+
+      <!-- togle buttons -->
+      <div class="btn-group pull-right" data-toggle="buttons">
+        <button type="button" class="btn btn-default active"
+                data-ng-click="toggleListType('small')">
+          <i class="fa fa-align-justify" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-default"
+                data-ng-click="toggleListType('large')">
+          <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-default"
+                data-ng-click="toggleListType('blocks')">
+          <i class="fa fa-th-large" aria-hidden="true"></i>
+        </button>
       </div>
-    </div>
-    <div class="col-sm-4" data-ng-show="searchInfo.facet['types'].length > 0">
-      <span data-translate="">browseTypes</span>
-      <div class="row">
-          <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['types']"
-                data-ng-show="facet['@label']"
-                class="col-xs-6 col-sm-6 col-lg-6">
-            <div class="badge-icon">
-              <a data-ng-href="#/search?facet.q=type%2F{{facet['@name']}}">
-                <span class="badge-result badge-result-type">
-                  <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i>
-                </span>
-              </a>
-            </div>
-            <div class="badge-text">
-              <a title="{{facet['@label']}}"
-                 data-ng-href="#/search?facet.q=type%2F{{facet['@name']}}">
-                <span class="gn-icon-label">{{facet['@label']}}</span><br>
-                <span class="badge">{{facet['@count']}}</span>
-              </a>
-            </div>
-          </span>
-      </div>
-    </div>
-  </div>
-  <div class="row gn-row-info" data-ng-show="searchInfo.count > 0">
-    <div class="col-xs-12">
-      <tabset id="info-tabset">
+
+      <tabset id="info-tabset pull-left">
+        <!-- latest -->
         <tab heading="{{'lastRecords' | translate}}"
              active="infoTabs.lastRecords.active">
           <form class="form-horizontal"
@@ -140,6 +80,8 @@
             <div data-gn-info-list=""></div>
           </form>
         </tab>
+
+        <!-- popular -->
         <tab heading="{{'preferredRecords' | translate}}"
              active="infoTabs.preferredRecords.active">
           <form class="form-horizontal"
@@ -152,6 +94,94 @@
           </form>
         </tab>
       </tabset>
+
     </div>
   </div>
+
+  <div class="row gn-row-topics" data-ng-show="searchInfo.count > 0">
+    <div class="col-sm-8 col-sm-offset-2">
+      <div class="row">
+        <div class="col-sm-6 gn-nopadding-left" data-ng-show="browse !== ''">
+          <h4>
+            <span data-translate="">browseBy</span>
+            <span
+              data-ng-show="searchInfo.facet['inspireThemes'].length > 0 && searchInfo.facet['topicCats'].length > 0">
+              <label data-ng-show="searchInfo.facet['inspireThemes'].length > 0">
+                <input type="radio" name="browse" value="inspire" data-ng-model="browse"/>
+                <span data-translate="">inspireThemes</span>
+              </label>
+              <label data-ng-show="searchInfo.facet['topicCats'].length > 0">
+                <input type="radio" name="browse" value="topics" data-ng-model="browse"/>
+                <span data-translate="">topics</span>
+              </label>
+            </span>
+            
+            <label
+              data-ng-show="searchInfo.facet['inspireThemes'].length > 0 && searchInfo.facet['topicCats'].length == 0"><span
+              data-translate="">inspireThemes</span></label>
+            <label
+              data-ng-show="searchInfo.facet['topicCats'].length > 0 && searchInfo.facet['inspireThemes'].length == 0"><span
+              data-translate="">topics</span></label>
+          </h4>  
+          <div class="row">
+            <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
+                  data-ng-show="browse === 'topics'">
+                
+              <div class="badge-result badge-result-topic clearfix">
+                <a class="pull-left clearfix" data-ng-href="#/search?facet.q=topicCat%2F{{facet['@name']}}">
+                  <span class="badge-icon pull-left">
+                    <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i>
+                  </span>
+                  <span class="badge-text pull-left">
+                    <span class="gn-icon-label">{{facet['@label']}}</span>
+                  </span>
+                </a>  
+                <span class="badge pull-left">{{facet['@count']}}</span>
+              </div>
+            </span>
+            <span id="chips-card"
+                  data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesURI'] track by $index"
+                  data-ng-show="browse === 'inspire'">
+                <div class="badge-result badge-result-inspire clearfix">
+                  <a class="pull-left clearfix" title="{{facet['@label']}}"
+                     data-ng-href="#/search?facet.q=inspireThemeURI%2F{{facet['@name'] | encodeURIComponent | encodeURIComponent}}">
+                    <span class="badge-icon pull-left">
+                       <i
+                         class="fa fa-3x gn-icon iti-{{facet['@name'].slice(facet['@name'].lastIndexOf('/')+1)}}"></i>
+                    </span>
+                    <span class="badge-text pull-left">
+                      <span class="gn-icon-label">{{facet['@label']}}</span>
+                  </a>
+                  <span class="badge pull-left">{{facet['@count']}}</span>
+                </div>
+            </span>
+          </div>
+        </div>
+
+
+        <div class="col-sm-6 gn-nopadding-right" data-ng-show="searchInfo.facet['types'].length > 0">
+          <h4>
+            <span data-translate="">browseTypes</span>
+          </h4>
+          <div class="row">
+              <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['types']"
+                    data-ng-show="facet['@label']">
+                <div class="badge-result badge-result-type clearfix">
+                  <a class="pull-left clearfix" data-ng-href="#/search?facet.q=type%2F{{facet['@name']}}">
+                    <span class="badge-icon pull-left">
+                      <i class="fa fa-3x fa-table gn-icon gn-icon-{{facet['@name']}}"></i>
+                    </span>
+                    <span class="badge-text pull-left">
+                      <span class="gn-icon-label">{{facet['@label']}}</span>
+                    </span>
+                  </a>
+                  <span class="badge pull-left">{{facet['@count']}}</span>
+                </div>
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

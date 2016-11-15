@@ -1,0 +1,124 @@
+// top bar
+.gn-top-bar {
+  position: fixed;
+  background-color: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  width: 100%;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
+  .gn-link-logo {
+    padding: 14px 13px 14px 13px !important;
+  }
+  .gn-link-admin {
+    padding: 13px !important;
+  }
+  a {
+    color: #fff;
+  }
+}
+// sub bar
+.gn-sub-bar {
+  position: fixed;
+  width: 100%;
+  border-bottom: 1px solid #e5e5e5;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #f4f4f4;
+  top: 52px;
+  // box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
+}
+.gn-has-sub-bar {
+  padding-top: 70px;
+}
+
+.navbar-default {
+  .navbar-toggle {
+    border-color: #036;
+    .icon-bar {
+      background-color: #fff;
+    }
+    &:hover, &:focus {
+      background: transparent;
+      color: #fff;
+    }
+  }
+  .navbar-collapse {
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+
+// .navbar {
+//   margin-bottom: 0px;
+//   border: 0;
+//   .navbar-brand {
+//     padding-top: 0;
+//     padding-bottom: 0;
+//     line-height: 50px;
+//     font-size: 16px;
+//   }
+// }
+
+.navbar-form {
+  border:none;
+}
+
+.navbar-default.gn-top-bar {
+
+  .navbar-nav > li > a {
+    color: #333;
+    font-size: 14px;
+    border: 0;
+    @media (max-width: @screen-xs-max) {
+      border-top: 0;
+      border-left: 2px solid #036; 
+    }
+    &:hover {
+      border-color: #fff;
+    }
+  }
+  .navbar-nav > .open > a, .navbar-nav > .open > a:hover, .navbar-nav > .open > a:focus {
+    background-color: #fff;
+    color: #333;
+  }
+  .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #333;
+    background-color: transparent;
+    border-color: #fff;
+  }
+}
+
+/*
+    Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
+*/
+.gn-bottom-bar {
+  bottom:0;
+  height:50px;
+  // position:absolute;
+  overflow:hidden;
+  width:100%;
+  margin-bottom:0px;
+  border-radius: 0px;
+}
+.footer-text {
+  margin-top: 15px;
+}
+.footer-text > span {
+  padding-right: 5px;
+  padding-left: 15px;
+  color: #777;
+}
+.socialmedia {
+  margin-top: 15px;
+  margin-right: 15px;
+}
+.socialmedia a{
+  margin-top: 15px;
+  display:inline !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  color: #777;
+}
+

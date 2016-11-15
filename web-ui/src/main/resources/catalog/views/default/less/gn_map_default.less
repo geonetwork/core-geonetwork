@@ -1,0 +1,100 @@
+[data-gn-map-field] > [ngeo-map] {
+  //height: 89.9vh;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  right: 0;
+  bottom: 0;
+  position: fixed !important;
+  z-index: 99;
+  width: 250px !important;
+  heigth: 250px !important;
+  margin: 5px;
+}
+.gn-row-main {}
+
+.gn-row-info {}
+
+.gn-row-filters {
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+
+  .gn-flfilter {
+
+  }
+  .gn-flfilter-icon {
+    text-align: center;
+    li {
+      list-style: none;
+      float: left;
+      width: 100px;
+    }
+    i {
+      //    .@{fa-css-prefix}-4x;
+      font-size: 4em;
+      width: 70px;
+      img {
+        width: 70px;
+      }
+    }
+  }
+}
+
+.gn-minimap-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+.gn-results-switch {
+  float: left;
+}
+
+
+// full map viewer
+// 
+[gn-main-viewer] {
+  .panel-tools {
+    .panel-heading {
+      background-color: transparent;
+    }
+  }
+
+  .nav-tabs {
+    > li {
+      cursor: pointer;
+    }
+  }
+
+  [gn-kml-import] {
+    input {
+      margin-top: 15px;
+    }
+  }
+}
+
+[data-gn-map-field] > [ngeo-map] {
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 0px;
+  right: auto;
+  bottom: auto;
+  position: absolute !important;
+  z-index: 99;
+  width: 250px !important;
+  heigth: 250px !important;
+  margin: 20px;
+  .btn-group-vertical {
+    right: -1px;
+    top: -1px;
+  }
+  .gn-draw-btn {
+    left: -1px;
+    top: -1px;
+  }
+  .btn {
+    border-radius: 0;
+    border-color: #ccc;
+    background: #efefef;
+  }
+}
