@@ -260,7 +260,7 @@
                 $scope.map, printRectangle),
             // scale has to be one of the advertise by the print server
             scale: $scope.config.scale.value,
-            dataOwner: '© ' + attributions.join(),
+            dataOwner: attributions.join(),
             rotation: -((view.getRotation() * 180.0) / Math.PI)
           }, defaultPage)
         ]
