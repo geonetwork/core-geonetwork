@@ -30,7 +30,6 @@ scales:
 formats:
   - pdf
   - png
-  - jpeg
 
 #===========================================================================
 # the list of allowed hosts

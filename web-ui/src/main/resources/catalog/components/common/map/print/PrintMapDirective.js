@@ -41,10 +41,10 @@
     var options = {
       printConfigUrl: printConfigUrlPrefix + '../../pdf/info.json?url=' +
           printConfigUrlPrefix + '..%2F..%2Fpdf',
-      graticule: false
+      graticule: true
     };
 
-    $scope.enableLegends = false;
+    $scope.enableLegends = true;
 
     /**
      * Return print configuration from Mapfishprint service
