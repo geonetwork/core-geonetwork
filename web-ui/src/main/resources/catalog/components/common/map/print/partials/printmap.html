@@ -32,15 +32,6 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="control-label" data-translate="">print_format</label>
-    <div class="">
-      <select class="form-control"
-              data-ng-model="config.format"
-              data-ng-options="f.name for f in config.formats"></select>
-    </div>
-  </div>
-
   <div class="form-group hidden">
     <label class="control-label" data-translate="">print_legend</label>
     <div class="checkbox">
@@ -58,12 +49,22 @@
     </div>
   </div>
 
-  <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
-          data-ng-click="submit()">
-    <i class="fa fa-print" ng-if="!printing"></i>
-    <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
-    &nbsp;
-    <span ng-if="!printing">{{'Print'|translate}}</span>
-    <span ng-if="printing">{{'Printing'|translate}}</span>
-  </button>
+  <div class="btn-group print-btn sxt-btn-group" role="group">
+    <button class="btn btn-default btn-block" ng-class="{'disabled': printing}"
+            data-ng-click="submit()">
+      <i class="fa fa-print" ng-if="!printing"></i>
+      <i class="fa fa-spinner fa-spin" ng-if="printing"></i>
+      &nbsp;
+      <span ng-if="!printing">{{'Print'|translate}}</span>
+      <span ng-if="printing">{{'Printing'|translate}}</span>
+    </button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="" data-ng-click="config.format = 'pdf'">PDF</a></li>
+      <li><a href=""  data-ng-click="config.format = 'png'">Image</a></li>
+    </ul>
+  </div>
+
 </form>

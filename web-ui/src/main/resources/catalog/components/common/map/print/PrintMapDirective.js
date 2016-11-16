@@ -71,7 +71,7 @@
           scales: data.scales,
           scale: data.scales[5],
           formats: data.outputFormats,
-          format: data.outputFormats[0]
+          format: data.outputFormats[0].name
         };
       });
       return http;
@@ -247,7 +247,7 @@
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
         dpi: $scope.config.dpi.value,
-        outputFormat: $scope.config.format.name,
+        outputFormat: $scope.config.format,
         layers: encLayers,
         legends: encLegends,
         enableLegends: $scope.enableLegends && encLegends,
