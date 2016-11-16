@@ -184,19 +184,28 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+
 .btn-default {
-  background: @sxt-base-color;
-  color: white;
-  border: none;
+  &, &.dropdown-toggle, .open &.dropdown-toggle {
+    background: @sxt-base-color;
+    color: white;
+    border: none;
+  }
   border-radius: 2px;
-  box-shadow: @sxt-shadow;
   &.active, &:hover, &:focus {
     background: @sxt-base-color-light;
     color: white;
   }
-  &.disabled, &[disabled] {
+  &.disabled, &[disabled], &.disabled:focus, &[disabled]:focus {
     background: @sxt-base-color-light;
     color: white;
+  }
+}
+[sxt-main-viewer] .sxt-btn-group {
+  box-shadow: @sxt-shadow;
+  .btn-default {
+    box-shadow: none;
+    margin-bottom: 0;
   }
 }
 
@@ -585,10 +594,6 @@
   }
   [gn-map-field] {
     border: none;
-    .open .dropdown-toggle.btn-default {
-      background: @sxt-base-color;
-      color: white;
-    }
   }
 }
 

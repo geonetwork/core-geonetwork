@@ -122,13 +122,18 @@
 
   [gn-baselayerswitcher], [gn-terrain-switcher] {
     margin: 1em 0;
-    .dropdown-toggle {
+    .btn-default.dropdown-toggle {
+      color: #333;
+    }
+
+    .dropdown-toggle, .open .dropdown-toggle {
       margin: 0 -15px;
       background: transparent;
       border: 1px solid #ddd;
       box-shadow: none;
       border-width: 1px 0;
       padding: .5em;
+      padding-bottom: 2em;
       .baselayer-title {
         color: @sxt-base-color;
       }
@@ -141,7 +146,7 @@
   .panel-tools-container {
     height: ~"calc(100% - 2em)";
     display: none;
-    &.open {
+    &.sxt-tab-open {
       display: block;
     }
   }
@@ -167,7 +172,7 @@
     }
   }
 
-  [gn-mapprint] button, [gn-ows-context] button {
+  [gn-ows-context] button {
     width: 100%;
     &.disabled {
       color: #888;
@@ -176,6 +181,17 @@
   [gn-mapprint] {
     input[type=checkbox] {
       margin-top: 0;
+    }
+
+    .print-btn {
+      margin: 40px 50px 55px;
+      .dropdown-toggle {
+        width: 2em;
+        flex: initial;
+      }
+      .dropdown-menu {
+        width: 100%;
+      }
     }
   }
 
