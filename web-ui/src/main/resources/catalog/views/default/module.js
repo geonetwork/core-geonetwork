@@ -190,9 +190,11 @@
         }
       };
 
+      /**
+       * Toggle the list types on the homepage
+       * @param  {String} type Type of list selected
+       */
       $scope.toggleListType = function(type) {
-
-console.log(type);
 
         // remove active class form the toggle buttons
         $('.gn-row-info .btn-group button').removeClass('active');
