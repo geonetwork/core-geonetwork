@@ -71,13 +71,13 @@
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
-                    msg: $translate('metadataStatusUpdatedWithNoErrors'),
+                    msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                     timeout: 2,
                     type: 'success'});
                 }, function(data) {
                   scope.$emit('metadataStatusUpdated', false);
                   scope.$emit('StatusUpdated', {
-                    title: $translate('metadataStatusUpdatedErrors'),
+                    title: $translate.instant('metadataStatusUpdatedErrors'),
                     error: data,
                     timeout: 0,
                     type: 'danger'});
@@ -178,7 +178,7 @@
                   scope.currentCategories.push(c.name);
                 }, function(response) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('assignCategoryError',
+                    title: $translate.instant('assignCategoryError',
                         {category: c.name}),
                     error: response.error,
                     timeout: 0,
@@ -236,7 +236,7 @@
                   scope.groupOwner = g.id;
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    title: $translate('changeCategoryError'),
+                    title: $translate.instant('changeCategoryError'),
                     error: error,
                     timeout: 0,
                     type: 'danger'});
@@ -334,7 +334,7 @@
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
               .then(function(r) {
                   $rootScope.$broadcast('StatusUpdated', {
-                    msg: $translate('transfertPrivilegesFinished', {
+                    msg: $translate.instant('transfertPrivilegesFinished', {
                       metadata: r.data.numberOfRecordsProcessed
                     }),
                     timeout: 2,

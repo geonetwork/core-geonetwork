@@ -53,6 +53,8 @@ import org.opengis.metadata.extent.GeographicExtent;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -324,7 +326,11 @@ public class SolrWFSFeatureIndexer {
             saveHarvesterReport(state);
 
             String titleExpression = state.getParameters().getTitleExpression();
-            String defaultTitleAttribute = titleExpression == null ? guessFeatureTitleAttribute(featureAttributes) : null;
+            String defaultTitleAttribute = titleExpression == null ?
+                WFSFeatureUtils.guessFeatureTitleAttribute(featureAttributes) : null;
+
+            ZonedDateTime startIndexingTime = ZonedDateTime.now();
+            ZonedDateTime startCommitTime = null;
 
             while (features.hasNext()) {
                 SolrInputDocument document = new SolrInputDocument();
@@ -339,7 +345,7 @@ public class SolrWFSFeatureIndexer {
 
                     if (titleExpression != null) {
                         document.addField("resourceTitle",
-                                buildFeatureTitle(feature, featureAttributes, titleExpression));
+                                WFSFeatureUtils.buildFeatureTitle(feature, featureAttributes, titleExpression));
                     }
 
                     if (state.getParameters().getMetadataUuid() != null) {
@@ -397,6 +403,7 @@ public class SolrWFSFeatureIndexer {
                 docCollection.add(document);
                 numInBatch++;
                 if (numInBatch >= featureCommitInterval) {
+                    startCommitTime = ZonedDateTime.now();
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
                                 "  %d features to index.",
@@ -415,12 +422,15 @@ public class SolrWFSFeatureIndexer {
                     numInBatch = 0;
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                                "  %d features indexed.",
-                                nbOfFeatures));
+                                "  %d features indexed in %dms.",
+                                nbOfFeatures,
+                                Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
+                        ));
                     }
                 }
             }
             if (docCollection.size() > 0) {
+                startCommitTime = ZonedDateTime.now();
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
                             "  %d features to index.",
@@ -435,13 +445,17 @@ public class SolrWFSFeatureIndexer {
                             nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
                     ));
                 }
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format(
-                            "  %d features indexed.",
-                            nbOfFeatures));
-                }
+                logger.debug(String.format(
+                    "  %d features indexed in %dms.",
+                    nbOfFeatures,
+                    Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
+                ));
             }
-            logger.info(String.format("Total number of features indexed is %d.", nbOfFeatures));
+            logger.info(String.format(
+                "Total number of features indexed is %d in %dms.",
+                nbOfFeatures,
+                Duration.between(startIndexingTime, ZonedDateTime.now()).toMillis()
+            ));
             state.getHarvesterReport().put("status_s", "success");
             state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
             state.getHarvesterReport().put("endDate_dt",
@@ -454,82 +468,5 @@ public class SolrWFSFeatureIndexer {
         } finally {
             saveHarvesterReport(state);
         }
-    }
-
-    private static Pattern pt = Pattern.compile("\\{\\{([^}]*)\\}\\}");
-    /**
-     * Build a title for the feature. The title expression could be
-     * an attribute name or could contain expression were attributes
-     * will be substituted. eg. "{{TITLE_FR}} ({{ID}})"
-     *
-     * @param feature   A simple feature
-     * @param fields    List of columns
-     * @param titleExpression A title expression based on one or more attributes
-     * @return
-     */
-    public static String buildFeatureTitle(SimpleFeature feature,
-                                    Map<String, String> fields,
-                                    String titleExpression) {
-        if (StringUtils.isNotEmpty(titleExpression)) {
-            if (titleExpression.contains("{{")) {
-                Matcher m = pt.matcher(titleExpression);
-                while (m.find()) {
-                    String attributeName = m.group(1);
-                    String attributeValue = (String) feature.getAttribute(attributeName);
-                    titleExpression = titleExpression.replaceAll(
-                            "\\{\\{" + attributeName + "\\}\\}",
-                            attributeValue);
-
-                }
-                return titleExpression;
-            } else {
-                String attributeValue = (String) feature.getAttribute(titleExpression);
-                if (attributeValue != null) {
-                    return attributeValue;
-                } else {
-                    return null;
-                }
-            }
-        } else {
-            for (String attributeName : fields.keySet()) {
-                String attributeType = fields.get(attributeName);
-                String attributeValue = (String) feature.getAttribute(attributeName);
-                if (attributeValue != null && !attributeType.equals("geometry")) {
-                    return attributeValue;
-                }
-            }
-        }
-        return null;
-    }
-
-    private static Pattern titleColumnShouldMatchPattern =
-            Pattern.compile(
-                    ".*(TITLE|LABEL|NAME|TITRE|NOM|LIBELLE).*",
-                    Pattern.CASE_INSENSITIVE);
-
-    /**
-     * From the list of attributes try to find the best one
-     * for a title. If not found, return the first attribute
-     * which is not a geometry. If none, return null.
-     *
-     * @param fields List of attributes
-     * @return
-     */
-    public static String guessFeatureTitleAttribute(Map<String, String> fields) {
-        Set<String> keySet = fields.keySet();
-        String defaultTitle = null;
-        for (String attributeName : keySet) {
-            if (!"geometry".equals(fields.get(attributeName))) {
-                // Default title is the first column which is not a geom
-                if (defaultTitle == null) {
-                    defaultTitle = attributeName;
-                }
-                Matcher m = titleColumnShouldMatchPattern.matcher(attributeName);
-                if (m.find()) {
-                    return attributeName;
-                }
-            }
-        }
-        return defaultTitle;
     }
 }

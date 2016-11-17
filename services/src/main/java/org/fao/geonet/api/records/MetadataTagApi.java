@@ -87,7 +87,7 @@ public class MetadataTagApi {
         value = "Get record tags",
         notes = "Tags are used to classify information.<br/>" +
             "<a href='http://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/tag-information/tagging-with-categories.html'>More info</a>",
-        nickname = "getTags")
+        nickname = "getRecordTags")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         produces = {
@@ -122,7 +122,7 @@ public class MetadataTagApi {
     @ApiOperation(
         value = "Add tags to a record",
         notes = "",
-        nickname = "addTags")
+        nickname = "addTagsToRecord")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         method = RequestMethod.PUT)
@@ -185,7 +185,7 @@ public class MetadataTagApi {
     @ApiOperation(
         value = "Delete tags of a record",
         notes = "",
-        nickname = "deleteTags")
+        nickname = "deleteRecordTags")
     @RequestMapping(
         value = "/{metadataUuid}/tags",
         method = RequestMethod.DELETE)
@@ -234,7 +234,7 @@ public class MetadataTagApi {
     @ApiOperation(
         value = "Add tags to one or more records",
         notes = "",
-        nickname = "addRecordsTags")
+        nickname = "addTagsToRecords")
     @RequestMapping(
         value = "/tags",
         produces = {

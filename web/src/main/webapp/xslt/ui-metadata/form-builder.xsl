@@ -200,7 +200,7 @@
                     which should be in the sibbling axis. -->
                     <xsl:with-param name="relatedElement"
                                     select="concat('_',
-                        following-sibling::*[name() = $listOfValues/@rel]/*/gn:element/@ref)"/>
+                        following-sibling::*[name() = $listOfValues/@rel]/*[1]/gn:element/@ref)"/>
                     <!-- Related attribute name is based on element name
                     _<element_ref>_<attribute_name>. -->
                     <xsl:with-param name="relatedElementRef"
@@ -552,6 +552,13 @@
                     </span>
                   </xsl:when>
                   <!-- A directive -->
+                  <xsl:when test="@use = 'data-gn-language-picker'">
+                    <input class="form-control"
+                           value="{value}"
+                           data-gn-field-tooltip="{$schema}|{@tooltip}"
+                           data-gn-language-picker=""
+                           id="{$id}_{@label}"/>
+                  </xsl:when>
                   <xsl:when test="starts-with(@use, 'gn-')">
                     <input class="form-control"
                            type="hidden"

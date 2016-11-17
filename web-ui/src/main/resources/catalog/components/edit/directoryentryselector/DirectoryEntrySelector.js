@@ -247,7 +247,7 @@
 
                   scope.openSelector = function() {
                     openModal({
-                      title: $translate('chooseEntry'),
+                      title: $translate.instant('chooseEntry'),
                       content:
                      '<div gn-directory-entry-list-selector=""></div>',
                       class: 'gn-modal-lg'

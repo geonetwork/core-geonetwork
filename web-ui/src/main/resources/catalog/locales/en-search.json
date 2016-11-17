@@ -229,6 +229,7 @@
   "PrintTheMap": "Print current map",
   "print_layout":"Layout",
   "print_scale":"Scale",
+  "print_format":"Format",
   "ZoomToMapMaxExtent": "Zoom to initial map extent",
   "ZoomToYourLocation": "Zoom near your position",
   "Auto":"Auto",

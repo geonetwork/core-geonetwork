@@ -192,7 +192,7 @@
 
       this.openPrivilegesPanel = function(md, scope) {
         openModal({
-          title: $translate('privileges') + ' - ' +
+          title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
           content: '<div gn-share="' + md.getId() + '"></div>'
         }, scope, 'PrivilegesUpdated');
@@ -212,13 +212,13 @@
               gnMetadataManager.updateMdObj(md);
               scope.$emit('metadataStatusUpdated', true);
               scope.$emit('StatusUpdated', {
-                msg: $translate('metadataStatusUpdatedWithNoErrors'),
+                msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
                 timeout: 2,
                 type: 'success'});
             }, function(data) {
               scope.$emit('metadataStatusUpdated', false);
               scope.$emit('StatusUpdated', {
-                title: $translate('metadataStatusUpdatedErrors'),
+                title: $translate.instant('metadataStatusUpdatedErrors'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});
@@ -285,17 +285,17 @@
         var service = flag === 'on' ? 'publish' : 'unpublish';
 
         var publishNotification = function(data) {
-          var message = '<h4>' + $translate(service + 'Completed') +
+          var message = '<h4>' + $translate.instant(service + 'Completed') +
               '</h4><dl class="dl-horizontal"><dt>' +
-              $translate('mdPublished') + '</dt><dd>' +
+              $translate.instant('mdPublished') + '</dt><dd>' +
               data.data.published + '</dd><dt>' +
-              $translate('mdUnpublished') + '</dt><dd>' +
+              $translate.instant('mdUnpublished') + '</dt><dd>' +
               data.data.unpublished + '</dd><dt>' +
-              $translate('mdUnmodified') + '</dt><dd>' +
+              $translate.instant('mdUnmodified') + '</dt><dd>' +
               data.data.unmodified + '</dd><dt>' +
-              $translate('mdDisallowed') + '</dt><dd>' +
+              $translate.instant('mdDisallowed') + '</dt><dd>' +
               data.data.disallowed + '</dd><dt>' +
-              $translate('mdNovalid') + '<dd>' +
+              $translate.instant('mdNovalid') + '<dd>' +
               data.data.novalid + '</dd>' +
               '</dt></dl>';
 
@@ -304,9 +304,9 @@
             if ((flag === 'on' && data.data.published === 0) ||
                 (flag !== 'on' && data.data.unpublished === 0)) {
               if (data.data.unmodified > 0) {
-                message = $translate('metadataUnchanged');
+                message = $translate.instant('metadataUnchanged');
               } else if (data.data.disallowed > 0) {
-                message = $translate('accessRestricted');
+                message = $translate.instant('accessRestricted');
               }
               success = 'danger';
             }

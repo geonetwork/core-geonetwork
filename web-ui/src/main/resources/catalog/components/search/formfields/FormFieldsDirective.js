@@ -310,7 +310,7 @@
               hotkeys.bindTo(scope)
                   .add({
                     combo: 's',
-                    description: $translate('hotkeySortBy'),
+                    description: $translate.instant('hotkeySortBy'),
                     callback: function() {
                       for (var i = 0; i < scope.values.length; i++) {
                         if (scope.values[i].sortBy === scope.params.sortBy) {
