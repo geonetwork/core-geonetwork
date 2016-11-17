@@ -486,6 +486,8 @@
     "manageMetadataIdentifierTemplates": "Metadata Identifier templates",
     "manageUsers": "Manage users",
     "manageVirtualCSW": "Virtual CSW",
+    "map/bingKey": "Bing Map Key",
+    "map/bingKey-help": "Hostname related key for Bing Map tiles. You must get your own key here.",
     "map/isMapViewerEnabled": "Enable Map Viewer",
     "map/isMapViewerEnabled-help": "If unselected, the map tab will be disabled and will not be used.",
     "map/is3DModeAllowed-help": "If enabled, user can switch the map to 3D mode. The map viewer need to be enabled also. If you don't want to enable the 3D mode for all users, adding <a href='catalog.search?with3d'>?with3d</a> in the URL will also load 3D mode.",

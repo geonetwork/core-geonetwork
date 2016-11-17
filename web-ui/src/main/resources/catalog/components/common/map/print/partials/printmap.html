@@ -40,6 +40,25 @@
               data-ng-options="l.name for l in config.scales"></select>
     </div>
   </div>
+
+  <div class="form-group">
+    <label class="control-label" data-translate="">print_format</label>
+    <div class="">
+      <select class="form-control"
+              data-ng-model="config.format"
+              data-ng-options="f.name for f in config.formats"></select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label" data-translate="">print_legend</label>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="enableLegends"> {{'print_legend_field'|translate}}
+      </label>
+    </div>
+  </div>
+
   <div class="form-group">
     <label class="control-label"
            data-translate="">mapComment</label>
