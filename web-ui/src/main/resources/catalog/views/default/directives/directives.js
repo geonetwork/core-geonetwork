@@ -75,7 +75,7 @@
         restrict: 'A',
         replace: true,
         templateUrl: '../../catalog/views/default/directives/' +
-        'partials/qm.html',
+        'partials/measures.html',
         scope: {
           recordId: '=gnDataQualityMeasureRenderer'
         },
