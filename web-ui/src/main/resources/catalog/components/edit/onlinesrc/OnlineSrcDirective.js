@@ -98,10 +98,12 @@
                 gnOnlinesrc.getAllResources()
                     .then(function(data) {
                       scope.relations = data;
-                      for (var i = 0; i < data.siblings.length; i++) {
-                        var type = data.siblings[i].associationType;
-                        if ($.inArray(type, scope.siblingTypes) == -1) {
-                          scope.siblingTypes.push(type);
+                      if (data.siblings) {
+                        for (var i = 0; i < data.siblings.length; i++) {
+                          var type = data.siblings[i].associationType;
+                          if ($.inArray(type, scope.siblingTypes) == -1) {
+                            scope.siblingTypes.push(type);
+                          }
                         }
                       }
                     });
