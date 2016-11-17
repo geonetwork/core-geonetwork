@@ -15978,21 +15978,36 @@ yx-axis
 .g [sxt-main-viewer] [gn-terrain-switcher] {
   margin: 1em 0;
 }
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .btn-default.dropdown-toggle,
+.g [sxt-main-viewer] [gn-baselayerswitcher] .btn-default.dropdown-toggle,
+.gn [sxt-main-viewer] [gn-terrain-switcher] .btn-default.dropdown-toggle,
+.g [sxt-main-viewer] [gn-terrain-switcher] .btn-default.dropdown-toggle {
+  color: #333;
+}
 .gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle,
 .g [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle,
 .gn [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle,
-.g [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle {
+.g [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle,
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .open .dropdown-toggle,
+.g [sxt-main-viewer] [gn-baselayerswitcher] .open .dropdown-toggle,
+.gn [sxt-main-viewer] [gn-terrain-switcher] .open .dropdown-toggle,
+.g [sxt-main-viewer] [gn-terrain-switcher] .open .dropdown-toggle {
   margin: 0 -15px;
   background: transparent;
   border: 1px solid #ddd;
   box-shadow: none;
   border-width: 1px 0;
   padding: .5em;
+  padding-bottom: 2em;
 }
 .gn [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle .baselayer-title,
 .g [sxt-main-viewer] [gn-baselayerswitcher] .dropdown-toggle .baselayer-title,
 .gn [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle .baselayer-title,
-.g [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle .baselayer-title {
+.g [sxt-main-viewer] [gn-terrain-switcher] .dropdown-toggle .baselayer-title,
+.gn [sxt-main-viewer] [gn-baselayerswitcher] .open .dropdown-toggle .baselayer-title,
+.g [sxt-main-viewer] [gn-baselayerswitcher] .open .dropdown-toggle .baselayer-title,
+.gn [sxt-main-viewer] [gn-terrain-switcher] .open .dropdown-toggle .baselayer-title,
+.g [sxt-main-viewer] [gn-terrain-switcher] .open .dropdown-toggle .baselayer-title {
   color: #4ba2d9;
 }
 .gn [sxt-main-viewer] [gn-baselayerswitcher] .btn,
@@ -16006,8 +16021,8 @@ yx-axis
   height: calc(100% - 2em);
   display: none;
 }
-.gn [sxt-main-viewer] .panel-tools-container.open,
-.g [sxt-main-viewer] .panel-tools-container.open {
+.gn [sxt-main-viewer] .panel-tools-container.sxt-tab-open,
+.g [sxt-main-viewer] .panel-tools-container.sxt-tab-open {
   display: block;
 }
 .gn [sxt-main-viewer] .panel-tools,
@@ -16032,14 +16047,10 @@ yx-axis
 .g [sxt-main-viewer] .panel-tools.force-hide {
   display: none;
 }
-.gn [sxt-main-viewer] [gn-mapprint] button,
-.g [sxt-main-viewer] [gn-mapprint] button,
 .gn [sxt-main-viewer] [gn-ows-context] button,
 .g [sxt-main-viewer] [gn-ows-context] button {
   width: 100%;
 }
-.gn [sxt-main-viewer] [gn-mapprint] button.disabled,
-.g [sxt-main-viewer] [gn-mapprint] button.disabled,
 .gn [sxt-main-viewer] [gn-ows-context] button.disabled,
 .g [sxt-main-viewer] [gn-ows-context] button.disabled {
   color: #888;
@@ -16047,6 +16058,19 @@ yx-axis
 .gn [sxt-main-viewer] [gn-mapprint] input[type=checkbox],
 .g [sxt-main-viewer] [gn-mapprint] input[type=checkbox] {
   margin-top: 0;
+}
+.gn [sxt-main-viewer] [gn-mapprint] .print-btn,
+.g [sxt-main-viewer] [gn-mapprint] .print-btn {
+  margin: 40px 50px 55px;
+}
+.gn [sxt-main-viewer] [gn-mapprint] .print-btn .dropdown-toggle,
+.g [sxt-main-viewer] [gn-mapprint] .print-btn .dropdown-toggle {
+  width: 2em;
+  flex: initial;
+}
+.gn [sxt-main-viewer] [gn-mapprint] .print-btn .dropdown-menu,
+.g [sxt-main-viewer] [gn-mapprint] .print-btn .dropdown-menu {
+  width: 100%;
 }
 .gn [sxt-main-viewer] .sx-toolbar,
 .g [sxt-main-viewer] .sx-toolbar {
@@ -20059,11 +20083,17 @@ yx-axis
 }
 .gn .btn-default,
 .g .btn-default {
+  border-radius: 2px;
+}
+.gn .btn-default,
+.g .btn-default,
+.gn .btn-default.dropdown-toggle,
+.g .btn-default.dropdown-toggle,
+.gn .open .btn-default.dropdown-toggle,
+.g .open .btn-default.dropdown-toggle {
   background: #4ba2d9;
   color: white;
   border: none;
-  border-radius: 2px;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
 }
 .gn .btn-default.active,
 .g .btn-default.active,
@@ -20077,9 +20107,22 @@ yx-axis
 .gn .btn-default.disabled,
 .g .btn-default.disabled,
 .gn .btn-default[disabled],
-.g .btn-default[disabled] {
+.g .btn-default[disabled],
+.gn .btn-default.disabled:focus,
+.g .btn-default.disabled:focus,
+.gn .btn-default[disabled]:focus,
+.g .btn-default[disabled]:focus {
   background: #81bee4;
   color: white;
+}
+.gn [sxt-main-viewer] .sxt-btn-group,
+.g [sxt-main-viewer] .sxt-btn-group {
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+}
+.gn [sxt-main-viewer] .sxt-btn-group .btn-default,
+.g [sxt-main-viewer] .sxt-btn-group .btn-default {
+  box-shadow: none;
+  margin-bottom: 0;
 }
 .gn .dropdown-menu,
 .g .dropdown-menu {
@@ -20564,11 +20607,6 @@ yx-axis
 .gn [data-ng-search-form] [gn-map-field],
 .g [data-ng-search-form] [gn-map-field] {
   border: none;
-}
-.gn [data-ng-search-form] [gn-map-field] .open .dropdown-toggle.btn-default,
-.g [data-ng-search-form] [gn-map-field] .open .dropdown-toggle.btn-default {
-  background: #4ba2d9;
-  color: white;
 }
 .gn [gn-map-field],
 .g [gn-map-field] {
