@@ -35,6 +35,10 @@
     <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
   </xsl:template>
 
+  <xsl:template name="get-dublin-core-title">
+    <xsl:value-of select="$metadata//dc:title"/>
+  </xsl:template>
+
   <!-- No multilingual support in Dublin core -->
   <xsl:template name="get-dublin-core-other-languages-as-json"/>
 

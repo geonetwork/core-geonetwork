@@ -50,6 +50,10 @@
     <saxon:call-template name="{concat('get-', $schema, '-is-service')}"/>
   </xsl:variable>
 
+  <xsl:variable name="metadataTitle">
+    <saxon:call-template name="{concat('get-', $schema, '-title')}"/>
+  </xsl:variable>
+
   <xsl:variable name="metadataLanguage">
     <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
   </xsl:variable>
