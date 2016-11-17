@@ -8,13 +8,15 @@
 @import "gn_map_default.less";
 
 
-.gn-fullbackground {
+body, .gn-fullbackground1 {
 	background-image: @gnBackgroundImage; 
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
-  margin-top: -15px;
-  padding-top: 15px;
+}
+.gn-full {
+  min-height: 100%;
+  position: relative;
 }
 
 // home page
@@ -23,7 +25,7 @@
 .gn-welcome {
   .gn-logo {
     max-height: 1008% !important;
-    margin: 25px 20px 0 0;
+    margin-right: 5px;
   }
 }
 // ----- search
