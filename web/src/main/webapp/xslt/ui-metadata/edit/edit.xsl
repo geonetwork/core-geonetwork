@@ -79,6 +79,7 @@
       <input type="hidden" id="isService" name="type" value="{$isService}"/>
       <input type="hidden" id="uuid" value="{$metadataUuid}"/>
       <input type="hidden" name="id" value="{$metadataId}"/>
+      <input type="hidden" id="title" value="{$metadataTitle}"/>
       <input type="hidden" id="language" value="{$metadataLanguage}"/>
       <input type="hidden" id="otherLanguages" value="{$metadataOtherLanguagesAsJson}"/>
       <input type="hidden" id="version" name="version" value="{$metadata/gn:info/version}"/>
