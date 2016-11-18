@@ -239,6 +239,12 @@
 
   <xsl:template name="get-iso19110-online-source-config"/>
 
+  <xsl:template name="get-iso19110-title">
+    <xsl:value-of select="$metadata/gfc:FC_FeatureCatalogue/gmx:name/gco:CharacterString|
+                          $metadata/gfc:FC_FeatureCatalogue/gfc:name/gco:CharacterString|
+                          $metadata/gfc:FC_FeatureType/gfc:typeName/gco:LocalName"/>
+  </xsl:template>
+
   <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
 
 </xsl:stylesheet>
