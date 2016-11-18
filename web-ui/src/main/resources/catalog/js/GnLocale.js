@@ -135,7 +135,7 @@
       gnGlobalSettings.lang = gnLangs.getIso2Lang(gnGlobalSettings.iso3lang);
       $translateProvider.preferredLanguage(gnGlobalSettings.iso3lang);
       // $translateProvider.useSanitizeValueStrategy('escape');
-      $translateProvider.useSanitizeValueStrategy(null);
+      $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
       moment.lang(gnGlobalSettings.lang);
     }]);
