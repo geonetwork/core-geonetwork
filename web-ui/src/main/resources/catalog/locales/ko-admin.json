@@ -332,6 +332,8 @@
     "exportLogAsZIP": "내보내기 (ZIP)",
     "facetIndicatorHelp": "기록에 의한 통계는 구성측면과 자주 사용되는 값을 기반으로 정의됩니다.",
     "fees": "수수료",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "filesystem-checkFileLastModifiedForUpdate": "파일이 업데이트된 경우에만 카탈로그 레코드 갱신",
     "filesystem-checkFileLastModifiedForUpdateHelp": "파일이 업데이트된 경우에만 카탈로그 레코드 갱신",
     "filesystem-directory": "디렉토리",
