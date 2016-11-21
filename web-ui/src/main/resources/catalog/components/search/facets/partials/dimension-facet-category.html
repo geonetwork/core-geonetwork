@@ -5,15 +5,17 @@
       class="list-group-item">
     <span data-ng-click="toggleNode($event)"
           class="fa fa-fw gn-facet-toggle"
-          data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'invisible'"></span>
+          data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'hidden'"></span>
+
     <label title="{{c['@label'] || c['@value']}}"
            data-ng-class="{'gn-facet-active': isSelected}">
       <input type="checkbox"
              data-ng-checked="isInFilter(c)"
              data-ng-click="filter(c, $event)"/>&nbsp;
-      <span class="gn-facet-label">{{(c['@label'] || c['@value']) | characters:20}}</span>&nbsp;
+      <span class="gn-facet-label">{{(c['@label'] || c['@value']) | characters:30}}</span>&nbsp;
       <span class="gn-facet-count">({{c['@count']}})</span>
     </label>
+
     <div data-gn-facet-dimension-category="c.category"
          data-category-key="categoryKey"
          data-facet-config="facetConfig"
@@ -21,7 +23,7 @@
          data-params="params"
          data-ng-class="isSelected ? '' : 'hidden'"></div>
   </li>
-  <li class="gn-facet-moreorless"
+  <li class="list-group-item"
       data-ng-if="category.length - initialMaxItems > 0">
     <button data-ng-click="toggleAll()"
             class="btn btn-link">
