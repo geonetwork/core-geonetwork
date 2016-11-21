@@ -275,12 +275,22 @@
       size: this.page.rows,
       aggs : {}
     };
-    for (var i = 0; i < solrParams['facet.field'].length; i ++) {
-      var field = solrParams['facet.field'][i];
-      params.aggs[field] = {
-        terms: {field: field}
-      }
-    };
+    if (qParams) {
+      params.query =
+        {
+          "query_string": {
+          "query": this.buildQParam_(qParams)
+        }
+      };
+    }
+    if (solrParams['facet.field']) {
+      for (var i = 0; i < solrParams['facet.field'].length; i ++) {
+        var field = solrParams['facet.field'][i];
+        params.aggs[field] = {
+          terms: {field: field}
+        }
+      };
+    }
 
     return this.$http.post(url, params).then(angular.bind(this,
         function(r) {
@@ -302,15 +312,15 @@
 
   geonetwork.GnSolrRequest.prototype.next = function() {
     this.page = {
-      start: this.page.start + ROWS,  // TODO: Max on total
-      rows: ROWS
+      from: this.page.start + ROWS,  // TODO: Max on total
+      size: ROWS
     };
     this.search();
   };
   geonetwork.GnSolrRequest.prototype.previous = function() {
     this.page = {
-      start: Math.max(this.page.start - ROWS, 0),
-      rows: ROWS
+      from: Math.max(this.page.start - ROWS, 0),
+      size: ROWS
     };
     this.search();
   };
@@ -323,13 +333,11 @@
    * @private
    */
   geonetwork.GnSolrRequest.prototype.initBaseRequest_ = function(options) {
-    var params = {
-      //rows: 0,
-      wt: 'json'
-    };
+    var params = {};
     if (this.config.docIdField) {
+      // TODO ES : Add this to query string
       params.fq = this.config.docIdField +
-          ':"' + this.config.idDoc(options) + '"';
+          ':\"' + this.config.idDoc(options) + '\"';
     }
     var url = this.buildSolrUrl(params);
     this.baseUrl = url;
@@ -357,7 +365,8 @@
         facetParams['facet.field'].push(field.idxName);
       }
       else {
-        statParams['stats.field'].push(field.idxName);
+        // TODO ES: rework how stats are computed
+        // statParams['stats.field'].push(field.idxName);
       }
     });
 
@@ -424,54 +433,51 @@
       //   continue;
       // }
       // for (var fieldProp in solrData.aggregations[field]) {
-        var field = solrData.aggregations[fieldId];
-        var fNameObj = this.getIdxNameObj_(fieldId);
-        var facetField = {
-          name: fieldId,
-          label: fNameObj && fNameObj.label ? fNameObj.label : fieldId,
-          values: [],
-          type: 'terms'
-        };
+      var field = solrData.aggregations[fieldId];
+      var fNameObj = this.getIdxNameObj_(fieldId);
+      var facetField = {
+        name: fieldId,
+        label: fNameObj && fNameObj.label ? fNameObj.label : fieldId,
+        values: [],
+        type: 'terms'
+      };
 
-        // if (kind == 'facet_ranges') {
-        //   var counts = field.counts;
-        //   for (var i = 0; i < counts.length; i += 2) {
-        //     if (counts[i + 1] > 0) {
-        //       var label = '';
-        //       if (i >= counts.length - 2) {
-        //         label = '> ' + Number(counts[i]).toFixed(2);
-        //       }
-        //       else {
-        //         label = Number(counts[i]).toFixed(2) + FACET_RANGE_DELIMITER +
-        //             Number(counts[i + 2]).toFixed(2);
-        //       }
-        //       facetField.values.push({
-        //         value: label,
-        //         count: Number(counts[i + 1]).toFixed(2)
-        //       });
-        //     }
-        //   }
-        //   fields.push(facetField);
-        // }
-        // else if (kind == 'facet_fields' && field.length > 0) {
-          for (var i = 0; i < field.buckets.length; i ++) {
-            facetField.values.push({
-              value: field.buckets[i].key,
-              count: field.buckets[i].doc_count
-            });
-          // }
-          fields.push(facetField);
-        }
-
-        //TODO: manage intervals ?
-        /*
-        else if (kind == 'facet_intervals' &&
-            Object.keys(field).length > 0) {
-          facetField.values = field;
-          fields.push(facetField);
-        }
-        */
+      // if (kind == 'facet_ranges') {
+      //   var counts = field.counts;
+      //   for (var i = 0; i < counts.length; i += 2) {
+      //     if (counts[i + 1] > 0) {
+      //       var label = '';
+      //       if (i >= counts.length - 2) {
+      //         label = '> ' + Number(counts[i]).toFixed(2);
+      //       }
+      //       else {
+      //         label = Number(counts[i]).toFixed(2) + FACET_RANGE_DELIMITER +
+      //             Number(counts[i + 2]).toFixed(2);
+      //       }
+      //       facetField.values.push({
+      //         value: label,
+      //         count: Number(counts[i + 1]).toFixed(2)
+      //       });
+      //     }
+      //   }
+      //   fields.push(facetField);
       // }
+      // else if (kind == 'facet_fields' && field.length > 0) {
+      for (var i = 0; i < field.buckets.length; i ++) {
+        facetField.values.push({
+          value: field.buckets[i].key,
+          count: field.buckets[i].doc_count
+        });
+      }
+      fields.push(facetField);
+
+      //TODO: manage intervals ?
+      /*
+      else if (kind == 'facet_intervals' &&
+          Object.keys(field).length > 0) {
+        facetField.values = field;
+        fields.push(facetField);
+      }*/
     }
     return fields;
   };
@@ -604,15 +610,15 @@
    *
    * =>
    *
-   * 'q=+(CARPOOL_d:[28109.00 TO 429692.20}) +(STATE_NAME_s:"Alabama") + *Ala*'
+   * '+(CARPOOL_d:[28109.00 TO 429692.20}) +(STATE_NAME_s:"Alabama") + *Ala*'
    *
    * @param {object} qParams
-   * @return {string} the q params string
+   * @return {string} the query string
    * @private
    */
   geonetwork.GnSolrRequest.prototype.buildQParam_ = function(qParams) {
     var fieldsQ = [],
-        qParam = '&q=',
+        qParam = '',
         any = qParams.any,
         geometry = qParams.geometry;
 
@@ -643,11 +649,12 @@
       fieldsQ.push('*:*');
     }
 
-    var filter = encodeURIComponent(fieldsQ.join(' '));
+    var filter = fieldsQ.join(' ');
     qParam += filter;
 
     //TODO: not q param but fq now
     if (geometry) {
+      // TODO ES https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-shape-query.html#_inline_shape_definition
       qParam += '&fq={!field f=' + this.geomField.idxName +
           '}Intersects(ENVELOPE(' + geometry + '))';
     }
