@@ -1179,7 +1179,6 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
-    <module>solr</module>
     <module>es</module>
     <module>workers</module>
     <module>messaging</module>
@@ -1229,12 +1228,6 @@
     <geotools.version>15.0</geotools.version>
 
     <lucene.version>4.9.0</lucene.version>
-
-    <solr.version>6.0.1</solr.version>
-    <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>
-    <solr.port>8984</solr.port>
-    <solr.url>http://localhost:${solr.port}/solr</solr.url>
-    <solr.collection>catalog_srv</solr.collection>
 
     <es.version>5.0.0</es.version>
     <es.version.md5>17275e4d3a1fd95d591d504af1a0fd0c</es.version.md5>

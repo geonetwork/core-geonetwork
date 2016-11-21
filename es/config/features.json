@@ -56,7 +56,7 @@
             "match": "*_dt",
             "mapping": {
               "type": "date",
-              "format": "yyyy-MM-dd'T'HH:mm:ss'Z'|yyyy-MM-dd'T'HH:mm:ss"
+              "format": "yyyy-MM-dd'T'HH:mm:ss'Z'||yyyy-MM-dd'T'HH:mm:ss"
             }
           }
         },
