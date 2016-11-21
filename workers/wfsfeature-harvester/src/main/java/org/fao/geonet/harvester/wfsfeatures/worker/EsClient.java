@@ -2,9 +2,11 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
+import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -179,18 +181,28 @@ public class EsClient implements InitializingBean {
     public String deleteByQuery(String index, String query, int scrollSize) throws Exception {
 
         String searchQuery = "{\n" +
-            "    \"id\": \"myTemplateId\"," +
-            "    \"params\": {\n" +
+            "    \"query\": {\n" +
             "        \"query_string\" : \"" + query + "\"" +
             "    }\n" +
             "}";
 
-        Search search = new Search.TemplateBuilder(searchQuery)
+        DeleteByQuery deleteAll = new DeleteByQuery.Builder(searchQuery)
             .addIndex(index)
-            .addIndex(index)
+            .addType(index)
             .build();
-
-        SearchResult result = client.execute(search);
+        final JestResult result = client.execute(deleteAll);
+        if (result.isSucceeded()) {
+            return String.format("Record removed. %s.", result.getJsonString());
+        } else {
+            return String.format("Error during removal. Errors is '%s'.", result.getErrorMessage());
+        }
+//
+//        Search search = new Search.TemplateBuilder(searchQuery)
+//            .addIndex(index)
+//            .addIndex(index)
+//            .build();
+//
+//        SearchResult result = client.execute(search);
 //        List<SearchResult.Hit<Object, Void>> hits = result.getHits(Object.class);
 //        for (SearchResult.Hit hit : hits) {
 ////            hit.
@@ -235,7 +247,6 @@ public class EsClient implements InitializingBean {
 //                    "{\"msg\": \"%d records removed.\"}", brb.numberOfActions());
 //            }
 //        }
-        return String.format("No match found for query ''.", query);
     }
 
     protected void finalize() {

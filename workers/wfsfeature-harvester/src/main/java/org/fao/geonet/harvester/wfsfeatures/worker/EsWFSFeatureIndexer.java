@@ -39,13 +39,11 @@ import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
-import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.ReferencingFactoryFinder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -54,16 +52,13 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
-import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -198,9 +193,9 @@ public class EsWFSFeatureIndexer {
         try {
             ZonedDateTime startTime = ZonedDateTime.now();
             String msg = client.deleteByQuery(
-                solrCollectionUrl,
+                client.getCollection(),
                 String.format(
-                    "+featureTypeId:\"%s#%s\"", url, typeName),
+                    "+featureTypeId:\\\"%s#%s\\\"", url, typeName),
                 featureCommitInterval);
             logger.info(String.format(
                     "  Features deleted in %sms.",
@@ -208,9 +203,9 @@ public class EsWFSFeatureIndexer {
 
             startTime = ZonedDateTime.now();
             msg = client.deleteByQuery(
-                solrCollectionUrl,
+                client.getCollection(),
                 String.format(
-                    "+id:\"%s#%s\"", url, typeName),
+                    "+id:\\\"%s#%s\\\"", url, typeName),
                 featureCommitInterval);
             logger.info(String.format(
                     "  Report deleted in %sms.",
@@ -492,7 +487,7 @@ public class EsWFSFeatureIndexer {
             final DateTime dateTime = new DateTime(DateTimeZone.UTC);
             state.getHarvesterReport().put("endDate_dt",
                     ISODateTimeFormat.yearMonthDay().print(dateTime) + 'T' +
-                        ISODateTimeFormat.timeNoMillis().print(dateTime));
+                        ISODateTimeFormat.timeNoMillis().print(dateTime).replace("Z", ""));
         } catch (Exception e) {
             state.getHarvesterReport().put("status_s", "error");
             state.getHarvesterReport().put("error_ss", e.getMessage());

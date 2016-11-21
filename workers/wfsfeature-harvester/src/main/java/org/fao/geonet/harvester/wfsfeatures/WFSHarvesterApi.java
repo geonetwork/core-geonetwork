@@ -89,7 +89,6 @@ public class WFSHarvesterApi {
         return j;
     }
 
-
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({

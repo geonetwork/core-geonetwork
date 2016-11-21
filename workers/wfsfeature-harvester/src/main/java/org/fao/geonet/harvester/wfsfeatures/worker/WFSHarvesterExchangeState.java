@@ -23,8 +23,8 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.common.StringUtils;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
