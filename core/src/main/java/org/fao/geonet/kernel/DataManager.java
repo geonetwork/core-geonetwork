@@ -715,6 +715,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             // get privileges
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
 
+            boolean isPublishedToAll = false;
+
             for (OperationAllowed operationAllowed : operationsAllowed) {
                 OperationAllowedId operationAllowedId = operationAllowed.getId();
                 int groupId = operationAllowedId.getGroupId();
@@ -725,8 +727,19 @@ public class DataManager implements ApplicationEventPublisherAware {
                     Group g = groupRepository.findOne(groupId);
                     if (g != null) {
                         moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName(), true, true));
+
+                        if (g.getId() == ReservedGroup.all.getId()) {
+                            isPublishedToAll = true;
+                        }
                     }
                 }
+
+            }
+
+            if (isPublishedToAll) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "y", true, true));
+            } else {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, "n", true, true));
             }
 
             for (MetadataCategory category : fullMd.getMetadataCategories()) {
