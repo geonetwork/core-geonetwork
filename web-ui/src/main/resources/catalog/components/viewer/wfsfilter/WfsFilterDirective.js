@@ -318,6 +318,7 @@
               geometry: geometry
             }).
                 then(function(resp) {
+                  solrObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
@@ -470,9 +471,9 @@
                 return parseFloat(val);
               });
               geometry = [
-                extentFilter[0], extentFilter[2],
-                extentFilter[3], extentFilter[1]
-              ].join(',');
+                [extentFilter[0], extentFilter[3]],
+                [extentFilter[2], extentFilter[1]]
+              ];
               scope.filterFacets();
             }
             // when reset from gnBbox directive

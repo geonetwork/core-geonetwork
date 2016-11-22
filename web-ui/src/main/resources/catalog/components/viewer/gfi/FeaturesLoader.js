@@ -253,38 +253,67 @@
 
     // get an update solr request url with geometry filter based on a point
     var url = this.solrObject.baseUrl;
-    // TODO ES : Add filter and query
-    // this.coordinates ?
-    //     this.solrObject.getMergedUrl({}, {
-    //       pt: ol.proj.transform(this.coordinates,
-    //           map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
-    //       //5 pixels radius tolerance
-    //       d: map.getView().getResolution() / 400,
-    //       sfield: solr.geomField.idxName
-    //     }, this.solrObject.getState()) +
-    //     '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
-    //         this.solrObject.getMergedUrl({}, {}, this.solrObject.getState());
+    var state = this.solrObject.getState();
+    var searchQuery = this.solrObject.getSearhQuery(state);
 
-    // url = url.replace('rows=0', '');
-    // if (url.indexOf('&q=') === -1) {
-    //   url += '&q=*:*';
-    // }
     this.loading = true;
     defer.resolve({
       url: url,
       contentType: 'application/json',
       method: 'POST',
       queryParams: function(p) {
-        var params = {
+
+        // TODO: Should use solrObject.search_ ?
+        var params = angular.extend({},
+          {
+            query: {query_string: {query: searchQuery}}},
+          {
           size: p.limit,
           from: p.offset
-        };
+        });
         if (p.sort) {
           params.sort = [];
           var sort = {};
           sort[p.sort] = {"order" : p.order};
           params.sort.push(sort);
         }
+
+
+        if (state.geometry || this.coordinates) {
+          var geomFilter = {};
+          if (state.geometry) {
+            geomFilter = {"geo_shape": {
+                "geom": {
+                  "shape": {
+                    "type": "envelope",
+                      "coordinates": state.geometry
+                  },
+                  "relation": "intersects"
+                }
+              }
+            };
+          } else if (this.coordinates) {
+            var coords = ol.proj.transform(this.coordinates,
+                         map.getView().getProjection(), 'EPSG:4326');
+            geomFilter = {"geo_distance" : {
+                "distance": map.getView().getResolution() / 400 + "km",
+                "geom": {
+                  "lat": coords[1],
+                  "lon": coords[0]
+                }
+              }
+            };
+          }
+          params.query = {
+            "bool": {
+              "must": {
+                "query_string": params.query.query_string || "*:*"
+              },
+              "filter": geomFilter
+            }
+          };
+        }
+
         return JSON.stringify(params);
       },
       //data: scope.data.response.docs,

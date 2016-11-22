@@ -123,7 +123,7 @@
 
   };
 
-  geonetwork.GnSolrRequest.prototype.buildSolrUrl = function(params) {
+  geonetwork.GnSolrRequest.prototype.buildSolrUrl = function() {
     return this.config.url + '/_search';
   };
 
@@ -232,7 +232,8 @@
       any: qParams.any,
       qParams: qParams.params,
       solrParams: solrParams,
-      geometry: qParams.geometry
+      geometry: qParams.geometry,
+      filter: this.initialParams.filter
     });
     return this.search_(qParams, solrParams);
   };
@@ -283,6 +284,28 @@
         }
       };
     }
+
+    if (qParams.geometry) {
+      params.query = {
+        "bool": {
+          "must": {
+            "query_string": params.query.query_string || "*:*"
+          },
+          "filter": {
+            "geo_shape": {
+              "geom": {
+                "shape": {
+                  "type": "envelope",
+                  "coordinates": qParams.geometry
+                },
+                "relation": "intersects"
+              }
+            }
+          }
+        }
+      };
+    }
+
     if (solrParams['facet.field']) {
       for (var i = 0; i < solrParams['facet.field'].length; i ++) {
         var field = solrParams['facet.field'][i];
@@ -333,13 +356,12 @@
    * @private
    */
   geonetwork.GnSolrRequest.prototype.initBaseRequest_ = function(options) {
-    var params = {};
+    this.initialParams = angular.extend({}, this.initialParams, {filter: ''});
     if (this.config.docIdField) {
-      // TODO ES : Add this to query string
-      params.fq = this.config.docIdField +
+      this.initialParams.filter = '+' + this.config.docIdField +
           ':\"' + this.config.idDoc(options) + '\"';
     }
-    var url = this.buildSolrUrl(params);
+    var url = this.buildSolrUrl();
     this.baseUrl = url;
     this.initBaseParams();
   };
@@ -370,10 +392,11 @@
       }
     });
 
-    this.initialParams = {
+
+    this.initialParams = angular.extend({}, this.initialParams, {
       facets: facetParams,
       stats: statParams
-    };
+    });
   };
 
 
@@ -583,7 +606,10 @@
     return this.buildQParam_(qParams) +
                this.parseKeyValue_(solrParams);
   };
-
+  geonetwork.GnSolrRequest.prototype.getSearhQuery =
+    function(params) {
+      return this.buildQParam_(params, params.qParams);
+    };
   /**
    * Build the qParams string from
    *   params: search params,
@@ -638,6 +664,22 @@
       }
     });
 
+    angular.forEach(qParams.qParams, function(field, fieldName) {
+      var valuesQ = [];
+      for (var p in field.values) {
+        if (field.type == 'range') {
+          valuesQ.push(fieldName +
+            ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}');
+        }
+        else {
+          valuesQ.push(fieldName + ':"' + p + '"');
+        }
+      }
+      if (valuesQ.length) {
+        fieldsQ.push('+(' + valuesQ.join(' ') + ')');
+      }
+    });
+
     if (any) {
       any.split(' ').forEach(function(v) {
         fieldsQ.push('+*' + v + '*');
@@ -649,16 +691,12 @@
       fieldsQ.push('*:*');
     }
 
-    var filter = fieldsQ.join(' ');
-    qParam += filter;
-
-    //TODO: not q param but fq now
-    if (geometry) {
-      // TODO ES https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-shape-query.html#_inline_shape_definition
-      qParam += '&fq={!field f=' + this.geomField.idxName +
-          '}Intersects(ENVELOPE(' + geometry + '))';
+    if (this.initialParams.filter != '') {
+      fieldsQ.push(this.initialParams.filter);
     }
 
+    var filter = fieldsQ.join(' ');
+    qParam += filter;
     return qParam;
 
   };
