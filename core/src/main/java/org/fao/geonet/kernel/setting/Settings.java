@@ -37,6 +37,7 @@ public class Settings {
     public static final String SYSTEM_SERVER_PROTOCOL = "system/server/protocol";
     public static final String SYSTEM_PLATFORM_VERSION = "system/platform/version";
     public static final String SYSTEM_PLATFORM_SUBVERSION = "system/platform/subVersion";
+    public static final String SYSTEM_CORS_ALLOWEDHOSTS = "system/cors/allowedHosts";
     public static final String SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
     public static final String SYSTEM_PROXY_USE = "system/proxy/use";
     public static final String SYSTEM_PROXY_HOST = "system/proxy/host";

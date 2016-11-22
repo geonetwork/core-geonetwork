@@ -181,7 +181,7 @@
           overlay.setPosition(coordinate);
           $(overlay.getElement()).show();
         }, this, function(layer) {
-          return !layer.get('temporary');
+          return layer.get('getinfo');
         });
         if (!f) {
           hidetimer = $timeout(function() {
