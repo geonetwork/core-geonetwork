@@ -338,7 +338,8 @@
               },
               gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
-                    // scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
+                    // scope.heatmaps =
+                    // resp.solrData.facet_counts.facet_heatmaps;
                   });
             }
           }

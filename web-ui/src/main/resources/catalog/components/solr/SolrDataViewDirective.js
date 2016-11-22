@@ -126,7 +126,7 @@
                      },
                      responseHandler: function(res) {
                        var rows = [];
-                       for (var i = 0; i < res.hits.hits.length; i ++) {
+                       for (var i = 0; i < res.hits.hits.length; i++) {
                          rows.push(res.hits.hits[i]._source);
                        }
                        return {

@@ -95,7 +95,8 @@
               //  ' Grid: ' + computedGridLevel);
 
               // TODO ES
-              // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-geohashgrid-aggregation.html
+              // https://www.elastic.co/guide/en/elasticsearch/reference/current/
+              // search-aggregations-bucket-geohashgrid-aggregation.html
               return {
                 'facet.heatmap': name || 'geom',
                 'facet.heatmap.geom': '["' +

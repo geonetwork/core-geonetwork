@@ -265,16 +265,16 @@
 
         // TODO: Should use solrObject.search_ ?
         var params = angular.extend({},
-          {
-            query: {query_string: {query: searchQuery}}},
-          {
-          size: p.limit,
-          from: p.offset
-        });
+            {
+              query: {query_string: {query: searchQuery}}},
+            {
+              size: p.limit,
+              from: p.offset
+            });
         if (p.sort) {
           params.sort = [];
           var sort = {};
-          sort[p.sort] = {"order" : p.order};
+          sort[p.sort] = {'order' : p.order};
           params.sort.push(sort);
         }
 
@@ -282,34 +282,34 @@
         if (state.geometry || this.coordinates) {
           var geomFilter = {};
           if (state.geometry) {
-            geomFilter = {"geo_shape": {
-                "geom": {
-                  "shape": {
-                    "type": "envelope",
-                      "coordinates": state.geometry
-                  },
-                  "relation": "intersects"
-                }
+            geomFilter = {'geo_shape': {
+              'geom': {
+                'shape': {
+                  'type': 'envelope',
+                  'coordinates': state.geometry
+                },
+                'relation': 'intersects'
               }
+            }
             };
           } else if (this.coordinates) {
             var coords = ol.proj.transform(this.coordinates,
-                         map.getView().getProjection(), 'EPSG:4326');
-            geomFilter = {"geo_distance" : {
-                "distance": map.getView().getResolution() / 400 + "km",
-                "geom": {
-                  "lat": coords[1],
-                  "lon": coords[0]
-                }
+                map.getView().getProjection(), 'EPSG:4326');
+            geomFilter = {'geo_distance' : {
+              'distance': map.getView().getResolution() / 400 + 'km',
+              'geom': {
+                'lat': coords[1],
+                'lon': coords[0]
               }
+            }
             };
           }
           params.query = {
-            "bool": {
-              "must": {
-                "query_string": params.query.query_string || "*:*"
+            'bool': {
+              'must': {
+                'query_string': params.query.query_string || '*:*'
               },
-              "filter": geomFilter
+              'filter': geomFilter
             }
           };
         }
@@ -320,7 +320,7 @@
       responseHandler: function(res) {
         this.count = res.hits.total;
         var rows = [];
-        for (var i = 0; i < res.hits.hits.length; i ++) {
+        for (var i = 0; i < res.hits.hits.length; i++) {
           rows.push(res.hits.hits[i]._source);
         }
         return {
