@@ -257,8 +257,10 @@
             });
           };
           scope.dropFeatures = function() {
-            return gnSolrService.deleteDocs('+featureTypeId:"' +
-                scope.url + '#' + ftName + '"').then(function() {
+            return $http.delete(
+              '../api/workers/data/wfs/actions?serviceUrl=' +
+                encodeURIComponent(scope.url)
+              + '&typeName=' + encodeURIComponent(ftName)).then(function() {
               scope.initSolrRequest();
             });
           };

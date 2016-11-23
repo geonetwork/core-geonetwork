@@ -194,6 +194,7 @@
             function deleteDocs(filter) {
               return $http.delete(
                   '../api/search/update',
+                  // TODO: Migrate to ES
                   {
                     params: {'query': filter}
                   }

@@ -18,9 +18,10 @@
 
 
 
-  <div data-ng-show="isFeaturesIndexed">
+  <div>
     <!--search input-->
-    <div class="gn-layertree-filter">
+    <div data-ng-show="isFeaturesIndexed"
+         class="gn-layertree-filter">
       <span class="fa fa-times-circle clear"
             data-ng-click="clearInput()"
             title="{{'clear' | translate}}"></span>
@@ -40,7 +41,8 @@
     </div>
 
     <!--Facet fields-->
-    <div class="gn-facet"
+    <div data-ng-show="isFeaturesIndexed"
+         class="gn-facet"
          data-ng-repeat="field in fields track by $index" data-ng-show="field.values.length > 0">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
@@ -60,7 +62,8 @@
     </div>
 
     <!--Geometry Field-->
-    <div class="gn-facet" ng-if="solrObject.geomField">
+    <div class="gn-facet"
+         ng-if="isFeaturesIndexed && solrObject.geomField">
       <h5 gn-collapsible="solrObject.geomField.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': solrObject.geomField.expanded, 'gn-field-empty': !output[solrObject.geomField.name]}"></span>
@@ -84,7 +87,6 @@
       </a>
       <a class="btn btn-default btn-xs"
          title="{{'refresh' | translate}}"
-         data-ng-if="isFeaturesIndexed"
          data-ng-click="initSolrRequest()">
         <i class="fa fa-refresh"></i>
       </a>

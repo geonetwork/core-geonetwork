@@ -186,9 +186,13 @@ public class EsWFSFeatureIndexer {
         final String url = state.getParameters().getUrl();
         final String typeName = state.getParameters().getTypeName();
 
+        deleteFeatures(url, typeName, logger, client, featureCommitInterval);
+    }
+
+    public static void deleteFeatures(String url, String typeName, Logger logger, EsClient client, int featureCommitInterval) {
         logger.info(String.format(
                 "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
-                url, typeName, solrCollectionUrl));
+                url, typeName, client.getCollection()));
 
         try {
             ZonedDateTime startTime = ZonedDateTime.now();
@@ -214,7 +218,7 @@ public class EsWFSFeatureIndexer {
             e.printStackTrace();
             logger.error(String.format(
                     "Error connecting to ES at '%s'. Error is %s.",
-                    solrCollectionUrl, e.getMessage()));
+                    client.getCollection(), e.getMessage()));
         }
     }
 

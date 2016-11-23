@@ -6,15 +6,12 @@ import io.searchbox.client.JestResult;
 import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
-import io.searchbox.core.DeleteByQuery;
 import io.searchbox.core.Index;
-import io.searchbox.core.Search;
-import io.searchbox.core.SearchResult;
+import org.fao.geonet.harvester.wfsfeatures.DeleteByQuery;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -52,7 +49,7 @@ public class EsClient implements InitializingBean {
                 .multiThreaded(true)
                 .readTimeout(-1)
                 .build());
-             client = factory.getObject();
+            client = factory.getObject();
 //            Depends on java.lang.NoSuchFieldError: LUCENE_5_2_1
 //            client = new PreBuiltTransportClient(Settings.EMPTY)
 //                .addTransportAddress(new InetSocketTransportAddress(
@@ -180,11 +177,9 @@ public class EsClient implements InitializingBean {
 
     public String deleteByQuery(String index, String query, int scrollSize) throws Exception {
 
-        String searchQuery = "{\n" +
-            "    \"query\": {\n" +
-            "        \"query_string\" : \"" + query + "\"" +
-            "    }\n" +
-            "}";
+        String searchQuery = "{\"query\": {\"query_string\": {" +
+            "\"query\": \"" + query + "\"" +
+            "}}}";
 
         DeleteByQuery deleteAll = new DeleteByQuery.Builder(searchQuery)
             .addIndex(index)
