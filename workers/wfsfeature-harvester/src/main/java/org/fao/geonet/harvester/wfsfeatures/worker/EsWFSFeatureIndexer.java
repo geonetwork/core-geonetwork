@@ -39,11 +39,13 @@ import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
+import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.ReferencingFactoryFinder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -52,6 +54,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
+import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -288,12 +291,19 @@ public class EsWFSFeatureIndexer {
             state.getHarvesterReport().put("parent", state.getParameters().getMetadataUuid());
         }
 
-        CoordinateReferenceSystem wgs84 = CRS
-            .getAuthorityFactory(true)
-            .createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
-//        Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
-//        CRSAuthorityFactory factory = ReferencingFactoryFinder.getCRSAuthorityFactory("EPSG", hints);
-//        CoordinateReferenceSystem wgs84 = factory.createCoordinateReferenceSystem("EPSG:4326");
+        // In WFS1.0.0, coordinates is lat/lon whatever the longitudeFirst is.
+        CoordinateReferenceSystem wgs84;
+
+        if (state.getParameters().getVersion().equals("1.0.0")) {
+            wgs84 = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem("EPSG:4326");
+//            Hints hints = new Hints(Hints.FORCE_LONGITUDE_FIRST_AXIS_ORDER, Boolean.TRUE);
+//            CRSAuthorityFactory factory = ReferencingFactoryFinder.getCRSAuthorityFactory("EPSG", hints);
+//            wgs84 = factory.createCoordinateReferenceSystem("4326");
+        } else {
+            wgs84 = CRS.getAuthorityFactory(true)
+                .createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
+        }
+
         try {
             FeatureSource<SimpleFeatureType, SimpleFeature> source = wfs.getFeatureSource(typeName);
             Extent crsExtent = wgs84.getDomainOfValidity();
