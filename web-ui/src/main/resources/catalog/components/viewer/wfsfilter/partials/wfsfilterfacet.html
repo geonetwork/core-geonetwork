@@ -15,20 +15,8 @@
     <span>{{status | translate}}</span>
   </div>
 
-  <div class="btn-group"
-       data-ng-if="!isFeaturesIndexed &&
-       (user.canEditRecord(md) || md.isHarvested == 'y')">
-    <a class="btn btn-default btn-xs"
-       data-ng-click="indexWFSFeatures()">
-      <i class="fa fa-codiepie"></i>&nbsp;
-      <span data-translate="">indexWFSFeatures</span>
-    </a>
-    <a class="btn btn-default btn-xs"
-       title="{{'refresh' | translate}}"
-       data-ng-click="initSolrRequest()">
-      <i class="fa fa-refresh"></i>
-    </a>
-  </div>
+
+
 
   <div data-ng-show="isFeaturesIndexed">
     <!--search input-->
@@ -87,28 +75,19 @@
     </div>
 
 
-    <!--admin buttons-->
     <div class="btn-group dropup">
-      <button class="btn btn-default btn-xs"
-              data-gn-click-and-spin="filterWMS()">
-        <i class="fa fa-filter"></i>&nbsp;
-        <span data-translate="">filter</span>
-      </button>
-      <button class="btn btn-default btn-xs"
-              ng-click="showTable()">
-        <i class="fa fa-table"></i>&nbsp;
-        <span data-translate="">Table</span>
-      </button>
-      <button data-gn-click-and-spin="resetFacets()"
-              class="btn btn-default btn-xs gn-reset-facets">
-        <i class="fa fa-eraser"></i>&nbsp;
-        <span translate>reset</span>
-      </button>
-      <button class="btn btn-default btn-xs"
-              title="{{'refresh' | translate}}"
-              data-ng-click="initSolrRequest()">
-        <i class="fa fa-refresh"></i>&nbsp;
-      </button>
+      <a class="btn btn-default btn-xs"
+         data-ng-if="!isFeaturesIndexed && (user.canEditRecord(md) || md.isHarvested == 'y')"
+         data-ng-click="indexWFSFeatures('1.0.0')">
+        <i class="fa fa-codiepie"></i>&nbsp;
+        <span data-translate="">indexWFSFeatures</span>
+      </a>
+      <a class="btn btn-default btn-xs"
+         title="{{'refresh' | translate}}"
+         data-ng-if="isFeaturesIndexed"
+         data-ng-click="initSolrRequest()">
+        <i class="fa fa-refresh"></i>
+      </a>
       <button data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'"
               type="button" class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -136,15 +115,33 @@
           </a>
         </li>
       </ul>
+      <button class="btn btn-default btn-xs"
+              data-ng-if="isFeaturesIndexed"
+              data-gn-click-and-spin="filterWMS()">
+        <i class="fa fa-filter"></i>&nbsp;
+        <span data-translate="">filter</span>
+      </button>
+      <button class="btn btn-default btn-xs"
+              data-ng-if="isFeaturesIndexed"
+              ng-click="showTable()">
+        <i class="fa fa-table"></i>&nbsp;
+        <span data-translate="">Table</span>
+      </button>
+      <button data-gn-click-and-spin="resetFacets()"
+              data-ng-if="isFeaturesIndexed"
+              class="btn btn-default btn-xs gn-reset-facets">
+        <i class="fa fa-eraser"></i>&nbsp;
+        <span translate>reset</span>
+      </button>
+      <div data-ng-show="hmActive"
+           data-ng-if="isFeaturesIndexed">
+        <label data-ng-show="map"
+               data-ng-show="source.getFeatures().length > 0">
+          <input type="checkbox"
+                 data-ng-model="isHeatMapVisible"/>
+          <span data-translate="">displayHeatMap</span>
+        </label>
+      </div>
     </div>
-    <div data-ng-show="hmActive">
-      <label data-ng-show="map"
-             data-ng-show="source.getFeatures().length > 0">
-        <input type="checkbox"
-               data-ng-model="isHeatMapVisible"/>
-        <span data-translate="">displayHeatMap</span>
-      </label>
-    </div>
-
   </div>
 </form>
