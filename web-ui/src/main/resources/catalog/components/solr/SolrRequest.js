@@ -375,8 +375,14 @@
     var statParams = {};
 
     this.filteredDocTypeFieldsInfo.forEach(function(field) {
-      if (!field.isRange) {
-        facetParams[field.idxName] ={
+
+      // Comes from application profile
+      if(field.aggs) {
+        field.aggs[Object.keys(field.aggs)[0]].field = field.idxName;
+        facetParams[field.idxName] = field.aggs;
+      }
+      else if (!field.isRange) {
+        facetParams[field.idxName] = {
           terms: {
             field: field.idxName
           }
@@ -417,23 +423,6 @@
     }
   };
 
-  geonetwork.GnSolrRequest.prototype.getFacetType_ = function(solrPropName) {
-    var type = '';
-    if (solrPropName == 'facet_ranges') {
-      type = 'range';
-    }
-    else if (solrPropName == 'facet_intervals') {
-      type = 'interval';
-    }
-    else if (solrPropName == 'facet_fields') {
-      type = 'field';
-    }
-    else if (solrPropName == 'facet_dates') {
-      type = 'date';
-    }
-    return type;
-  };
-
   /**
    * Create a facet results description object decoded from solr response.
    * It get the value from the facet_counts property of the solr response and
@@ -465,12 +454,35 @@
           var buckets = field.buckets;
           field.buckets.forEach(function(b, i) {
             var label = '';
-            if(i < field.buckets.length -1) {
+            if(i == 0 && field.buckets.length > 1) {
+              label = '< ' + field.buckets[i+1].key.toFixed(2);
+            }
+            else if(i < field.buckets.length -1) {
               label = b.key.toFixed(2)  + FACET_RANGE_DELIMITER +
                 field.buckets[i+1].key.toFixed(2)
             }
             else {
-              label = ' > ' + b.key.toFixed(2)
+              label = '> ' + b.key.toFixed(2)
+            }
+            facetField.values.push({
+              value: label,
+              count: b.doc_count
+            });
+          });
+        }
+        // ranges
+        if(requestParam.aggs[fieldId].hasOwnProperty('range')) {
+          facetField.type = 'range';
+          field.buckets.forEach(function(b, i) {
+            var label;
+            if(b.from && b.to) {
+              label = b.from + FACET_RANGE_DELIMITER + b.to;
+            }
+            else if (b.to) {
+              label = '< ' + b.to;
+            }
+            else if (b.from) {
+              label = '> ' + b.from;
             }
             facetField.values.push({
               value: label,
@@ -654,13 +666,20 @@
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
       for (var p in field.values) {
-        if (field.type == 'histogram') {
-          valuesQ.push(fieldName +
-            ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}');
+        if (field.type == 'histogram' || field.type == 'range') {
+          var value;
+          if(p.indexOf(FACET_RANGE_DELIMITER) > 0) {
+            value = fieldName +
+              ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}';
+          }
+          else {
+            value = fieldName + ':' + p.replace(/ /g, '');
+          }
         }
         else {
-          valuesQ.push(fieldName + ':"' + p + '"');
+          value = fieldName + ':"' + p + '"';
         }
+        valuesQ.push(value);
       }
       if (valuesQ.length) {
         fieldsQ.push('+(' + valuesQ.join(' ') + ')');
@@ -670,7 +689,7 @@
     angular.forEach(qParams.qParams, function(field, fieldName) {
       var valuesQ = [];
       for (var p in field.values) {
-        if (field.type == 'histogram') {
+        if (field.type == 'histogram' || field.type == 'range') {
           valuesQ.push(fieldName +
             ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}');
         }
