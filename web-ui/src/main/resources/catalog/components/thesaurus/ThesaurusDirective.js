@@ -235,11 +235,15 @@
 
              //Get langs of metadata
              var langs = [];
-             for (var p in JSON.parse(scope.lang)) {
+             var langsWithId = [];
+             var listOfLangs = JSON.parse(scope.lang);
+             for (var p in listOfLangs) {
                langs.push(p);
+               langsWithId.push(p + '|' + listOfLangs[p]);
              }
              scope.mainLang = langs[0];
              scope.langs = langs.join(',');
+             scope.langsWithId = langsWithId.join(',');
 
              // Check initial keywords are available in the thesaurus
              scope.sortKeyword = function(a, b) {
@@ -467,7 +471,8 @@
              var getSnippet = function() {
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
-               getKeywordIds(), scope.currentTransformation, scope.langs,
+               getKeywordIds(), scope.currentTransformation,
+                  scope.langs, scope.langsWithId,
                    scope.textgroupOnly).then(
                function(data) {
                  scope.snippet = data;

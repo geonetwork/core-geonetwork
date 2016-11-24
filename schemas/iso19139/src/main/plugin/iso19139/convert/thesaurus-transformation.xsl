@@ -92,13 +92,12 @@
         which use the thesaurus identifier for initialization. -->
     <xsl:param name="withThesaurusAnchor" select="true()"/>
 
-
     <!-- The lang parameter contains a list of languages
     with the main one as the first element. If only one element
     is provided, then CharacterString or Anchor are created.
     If more than one language is provided, then PT_FreeText
     with or without CharacterString can be created. -->
-    <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
+    <xsl:variable name="listOfLanguage" select="tokenize(/root/request/langWithId, ',')"/>
     <xsl:variable name="textgroupOnly"
                   as="xs:boolean"
                   select="if (/root/request/textgroupOnly and normalize-space(/root/request/textgroupOnly) != '')
@@ -196,21 +195,24 @@
             <xsl:when test="count($listOfLanguage) > 1">
               <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
               <xsl:variable name="keyword" select="."/>
-
+              <xsl:variable name="mainLang" select="substring-before($listOfLanguage[1], '|')"/>
+              <xsl:variable name="langId" select="substring-after($listOfLanguage[1], '|')"/>
               <xsl:if test="not($textgroupOnly)">
                 <gco:CharacterString>
                   <xsl:value-of
-                    select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
+                    select="$keyword/values/value[@language = $mainLang]/text()"></xsl:value-of>
                 </gco:CharacterString>
               </xsl:if>
 
               <gmd:PT_FreeText>
                 <xsl:for-each select="$listOfLanguage">
-                  <xsl:variable name="lang" select="."/>
-                  <xsl:if test="$textgroupOnly or $lang != $listOfLanguage[1]">
+                  <xsl:variable name="lang" select="substring-before(., '|')"/>
+                  <xsl:variable name="langId" select="substring-after(., '|')"/>
+
+                  <xsl:if test="$textgroupOnly or $lang != $mainLang">
                     <gmd:textGroup>
                       <gmd:LocalisedCharacterString
-                        locale="#{upper-case(util:twoCharLangCode($lang))}">
+                        locale="{$langId}">
                         <xsl:value-of
                           select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
                       </gmd:LocalisedCharacterString>
