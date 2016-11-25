@@ -1,8 +1,18 @@
 {
   "settings": {
-    "index": {
-      "analysis": {
-        "analyzer": {
+    "analysis": {
+      "analyzer": {
+        "pathAnalyzer": {
+          "tokenizer": "pathTokenizer"
+        }
+      },
+      "tokenizer": {
+        "pathTokenizer": {
+          "type": "path_hierarchy",
+          "delimiter": "/",
+          "replacement": "/",
+          "skip": 0,
+          "reverse": false
         }
       }
     }
@@ -57,6 +67,16 @@
             "match": "ft_*_s",
             "mapping": {
               "type": "keyword"
+            }
+          }
+        },
+        {
+          "stringPathType": {
+            "match": "ft_*_s_tree",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "pathAnalyzer"
             }
           }
         }
