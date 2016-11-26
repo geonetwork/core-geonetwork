@@ -48,85 +48,6 @@
             gnUrlUtils.toKeyValue(params));
       };
 
-      var getFacetType = function(solrPropName) {
-        var type = '';
-        if (solrPropName == 'facet_ranges') {
-          type = 'range';
-        }
-        else if (solrPropName == 'facet_intervals') {
-          type = 'interval';
-        }
-        else if (solrPropName == 'facet_fields') {
-          type = 'field';
-        }
-        else if (solrPropName == 'facet_dates') {
-          type = 'date';
-        }
-        else if (solrPropName == 'facet_heatmaps') {
-          type = 'heatmap';
-        }
-        return type;
-      };
-
-      /**
-       * Parse the solr response to create the facet UI config object.
-       * Solr reponse contains all values for facets fields, and help to build
-       * the facet ui.
-       *
-       * @param {object} solrData response from solr request
-       * @return {Array} All definition for each field
-       */
-      var createFacetConfigFromSolr = function(solrData, docFields) {
-        var fields = [];
-        var aggs = {};
-        for (var kind in solrData.facet_counts) {
-          var facetType = getFacetType(kind);
-          for (var fieldProp in solrData.facet_counts[kind]) {
-            var field = solrData.facet_counts[kind][fieldProp];
-            var fNameObj = getIdxNameObj(fieldProp, docFields);
-            var facetField = {
-              name: fieldProp,
-              label: fNameObj.label || fNameObj.label,
-              values: [],
-              type: facetType
-            };
-
-            if (kind == 'facet_ranges') {
-              var counts = field.counts;
-              for (var i = 0; i < counts.length; i += 2) {
-                if (counts[i + 1] > 0) {
-                  var label = '';
-                  if (i >= counts.length - 2) {
-                    label = '> ' + counts[i];
-                  }
-                  else {
-                    label = counts[i] + ',' + counts[i + 2];
-                  }
-                  facetField.values[label] = counts[i + 1];
-                }
-              }
-              fields.push(facetField);
-            }
-            else if (kind == 'facet_fields' && field.length > 0) {
-              for (var i = 0; i < field.length; i += 2) {
-                facetField.values.push({
-                  value: field[i],
-                  count: field[i + 1]
-                });
-              }
-              fields.push(facetField);
-            }
-            else if (kind == 'facet_intervals' &&
-                Object.keys(field).length > 0) {
-              facetField.values = field;
-              fields.push(facetField);
-            }
-          }
-        }
-        return fields;
-
-      };
-
       /**
        * Retrieve the index field object from the array given from feature type
        * info. The object contains the feature type attribute name, the solr
@@ -216,19 +137,17 @@
       };
 
       /**
-       * Build solr request from config of the applicationProfile.
-       * This config determines what fields to have in facet, and gives
-       * interval and range properties.
+       * Merge the fields with definition from application Profile.
+       * Fields could be replaced or just updated, regarding to
+       * `extendOnly` property.
        *
-       * @param {Object} config the applicationProfile definition
-       * @param {string} ftName featuretype name
-       * @param {string} wfsUrl url of the wfs service
-       * @param {array} idxFields info about doc fields
+       * @param {Array} fields index fields definition
+       * @param {Object} appProfile Config object.
        */
-      this.solrMergeApplicationProfile = function(fields, newFields) {
+      this.solrMergeApplicationProfile = function(fields, appProfile) {
 
         var toRemoveIdx = [];
-
+        var newFields = appProfile.fields;
         fields.forEach(function(field, idx) {
           var keep;
           for (var i = 0; i < newFields.length; i++) {
@@ -237,6 +156,7 @@
               if (newFields[i].label) {
                 field.label = newFields[i].label[gnGlobalSettings.lang];
               }
+              field.aggs = newFields[i].aggs;
               break;
             }
           }
@@ -247,69 +167,13 @@
 
         var allFields = angular.copy(fields);
 
-        toRemoveIdx.forEach(function(i) {
-          fields.splice(i, 1);
-        });
-
-        return allFields;
-      };
-
-      /**
-       * Call solr request to get info about facet to build.
-       * Then build the facet ui config from the response.
-       *
-       * @param {string} url of the solr request
-       * @param {array} docFields info of indexed fields.
-       * @return {httpPromise} return facet ui config
-       */
-      this.getFacetsConfigFromSolr____ = function(url, docFields) {
-
-        return $http.get(url).then(function(solrResponse) {
-          return {
-            facetConfig: createFacetConfigFromSolr(solrResponse.data,
-                docFields),
-            heatmaps: solrResponse.data.facet_counts.facet_heatmaps,
-            count: solrResponse.data.response.numFound
-          };
-        });
-      };
-
-      /**
-       * Update solr url depending on the current facet ui selection state.
-       * Each time a facet is selected, we trigger a new search on the index
-       * to build the facet ui again with updated occurencies.
-       *
-       * Will build the solr Q query like:
-       *  +(LABEL_s:"Abyssal" LABEL_s:Infralittoral)
-       *  +featureTypeId:*IFR_AAMP_ZONES_BIO_ATL_P
-       *
-       * @param {string} url of the base solr url
-       * @param {object} facetState strcture representing ui selection
-       * @param {string} filter the any filter from input
-       * @return {string} the updated url
-       */
-      this.updateSolrUrl___ = function(url, facetState, filter) {
-        var fieldsQ = [];
-
-        angular.forEach(facetState, function(field, fieldName) {
-          var valuesQ = [];
-          for (var p in field.values) {
-            valuesQ.push(fieldName + ':"' + p + '"');
-          }
-          if (valuesQ.length) {
-            fieldsQ.push('+(' + valuesQ.join(' ') + ')');
-          }
-        });
-        if (filter) {
-          filter.split(' ').forEach(function(v) {
-            fieldsQ.push('+*' + v + '*');
+        if(!appProfile.extendOnly) {
+          toRemoveIdx.forEach(function(i) {
+            fields.splice(i, 1);
           });
         }
-        if (fieldsQ.length) {
-          url = url.replace('&q=', '&q=' +
-              encodeURIComponent(fieldsQ.join(' ') + ' +'));
-        }
-        return url;
+
+        return allFields;
       };
 
       /**

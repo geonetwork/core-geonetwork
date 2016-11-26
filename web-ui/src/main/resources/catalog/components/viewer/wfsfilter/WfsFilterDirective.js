@@ -213,7 +213,7 @@
 
               solrObject.indexFields =
                   wfsFilterService.solrMergeApplicationProfile(
-                  solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
+                  solrObject.filteredDocTypeFieldsInfo, appProfile);
               solrObject.initBaseParams();
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
