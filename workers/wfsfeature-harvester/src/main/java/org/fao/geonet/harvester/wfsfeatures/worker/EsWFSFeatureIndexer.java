@@ -39,13 +39,11 @@ import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
 import org.geotools.data.wfs.WFSDataStore;
-import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.ReferencingFactoryFinder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -54,7 +52,6 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.metadata.extent.Extent;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
-import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -63,6 +60,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -72,6 +70,7 @@ import java.util.StringTokenizer;
 
 public class EsWFSFeatureIndexer {
     public static final String MULTIVALUED_SUFFIX = "s";
+    public static final String TREE_FIELD_SUFFIX = "_tree";
     public static final String FEATURE_FIELD_PREFIX = "ft_";
 
     @Autowired
@@ -265,7 +264,8 @@ public class EsWFSFeatureIndexer {
         state.getHarvesterReport().put("id", url + "#" + typeName);
         state.getHarvesterReport().put("docType", "harvesterReport");
 
-        final Map<String, String> tokenizedFields = state.getParameters().getTokenize();
+        final Map<String, String> tokenizedFields = state.getParameters().getTokenizedFields();
+        final List<String> treeFields = state.getParameters().getTreeFields();
         final boolean hasTokenizedFields = tokenizedFields != null;
 
         for (String attributeName : featureAttributes.keySet()) {
@@ -277,11 +277,11 @@ public class EsWFSFeatureIndexer {
             if (attributeType.equals("geometry")) {
                 documentFields.put(attributeName, "geom");
             } else {
-                boolean isTokenized = separator != null;
+                boolean isTree = treeFields.contains(attributeName);
                 documentFields.put(attributeName, FEATURE_FIELD_PREFIX +
                                attributeName +
                                XSDTYPES_TO_FIELDSUFFIX.get(attributeType) +
-                               (isTokenized ? MULTIVALUED_SUFFIX : "")
+                               (isTree ? TREE_FIELD_SUFFIX : "")
                 );
             }
         }
