@@ -343,12 +343,13 @@
        * @param {string} featuretype name
        * @return {httpPromise} when indexing is done
        */
-      this.indexWFSFeatures = function(url, type, idxConfig, uuid, version) {
+      this.indexWFSFeatures = function(url, type, idxConfig, treeFields, uuid, version) {
         return $http.put('../api/0.1/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,
           version: version || '1.1.0',
-          tokenize: idxConfig,
+          tokenizedFields: idxConfig,
+          treeFields: treeFields,
           metadataUuid: uuid
         }
         ).then(function(data) {

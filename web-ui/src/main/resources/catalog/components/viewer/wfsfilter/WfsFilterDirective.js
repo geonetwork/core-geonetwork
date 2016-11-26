@@ -149,6 +149,7 @@
               isFeaturesIndexed: false,
               status: null,
               md: scope.layer.get('md'),
+              mdUrl: scope.layer.get('url'),
               url: scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs')
             });
 
@@ -159,7 +160,7 @@
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
                 ftName,
-                scope.url,
+                scope.wfsUrl ? scope.url : scope.mdUrl,
                 // A WFS URL is in the metadata or we're guessing WFS has
                 // same URL as WMS
                 scope.wfsUrl ? 'WFS' : 'WMS').then(
@@ -340,7 +341,7 @@
               },
               gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
-                    // scope.heatmaps =
+                    scope.heatmaps = resp.aggs;
                     // resp.solrData.facet_counts.facet_heatmaps;
                   });
             }
@@ -437,7 +438,8 @@
               wfsFilterService.indexWFSFeatures(
                   scope.url,
                   ftName,
-                  appProfile ? appProfile.tokenize : null,
+                  appProfile ? appProfile.tokenizedFields : null,
+                  appProfile ? appProfile.treeFields : null,
                   uuid,
                   version);
             });
