@@ -1189,6 +1189,16 @@
   </distributionManagement>
 
   <properties>
+
+    <!-- Default catalog language when accessing the home page
+    ie. http://localhost:8080/geonetwork. -->
+    <language.default>eng</language.default>
+    <!-- Define if redirection should ignore HTTP headers,
+    Cookie or URL parameters. Set it to true to always redirect
+    to the default language. -->
+    <language.forceDefault>false</language.forceDefault>
+
+
     <jetty.version>9.3.9.v20160517</jetty.version>
     <geotools.version>16.0</geotools.version>
 
