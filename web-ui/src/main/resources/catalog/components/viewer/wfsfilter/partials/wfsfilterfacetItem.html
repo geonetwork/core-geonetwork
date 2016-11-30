@@ -1,0 +1,20 @@
+<div data-ng-if="::!ctrl.isRoot"
+     data-ng-class="::{'gn-leaf': !ctrl.node.nodes}">
+  <span data-ng-if="::ctrl.node.nodes"
+        ng-click="toggleNode($event)"
+        class="fa"
+        data-ng-class="selectedOnInit ? 'fa-minus-square' : 'fa-plus-square'" >
+  </span>
+
+  <span class="fa"
+     data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></span>
+  <span>{{::ctrl.node.value}}&nbsp;({{::ctrl.node.count | number:0}})</span>
+</div>
+
+<div ng-if="::ctrl.node.nodes" class="list-group">
+  <div ng-repeat="node in ::ctrl.node.nodes"
+      gn-wfs-filter-facets-item="::node"
+      gn-wfs-filter-facets-item-notroot
+      class="list-group-item">
+  </div>
+</div>

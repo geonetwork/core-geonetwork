@@ -544,4 +544,33 @@
         }
       };
     }]);
+
+  module.directive('gnWfsFilterFacetsItem', [
+    'wfsFilterService',
+    function(wfsFilterService) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/viewer/wfsfilter/' +
+        'partials/wfsfilterfacetItem.html',
+        scope: {
+          node: '<gnWfsFilterFacetsItem'
+        },
+        bindToController: true,
+        controllerAs: 'ctrl',
+        controller: ['$attrs', function($attrs) {
+          this.isRoot = $attrs['gnWfsFilterFacetsItemNotroot'] === undefined;
+        }],
+        link: function (scope, el, attrs) {
+          scope.toggleNode = function(evt) {
+            el.find('.fa').first().toggleClass('fa-minus-square')
+              .toggleClass('fa-plus-square');
+            el.children('.list-group').toggle();
+            !evt || evt.preventDefault();
+            return false;
+          };
+
+        }
+      };
+    }]);
+
 })();

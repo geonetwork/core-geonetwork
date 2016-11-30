@@ -30,7 +30,7 @@
     search: 'search'
   };
 
-  var ROWS = 20;
+  var ROWS = 2000;
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
@@ -41,7 +41,7 @@
     this.$http = $injector.get('$http');
     this.$q = $injector.get('$q');
     this.$translate = $injector.get('$translate');
-    this.urlUtils = $injector.get('gnUrlUtils');
+    this.gnTreeFromSlash = $injector.get('gnTreeFromSlash');
 
     this.config = config;
 
@@ -165,6 +165,7 @@
             label: customF[i],
             idxName: docF[i],
             isRange: docF[i].endsWith('_d'),
+            isTree: docF[i].endsWith('_tree'),
             isMultiple: docF[i].endsWith('_ss')
           });
         }
@@ -366,7 +367,8 @@
   };
 
   /**
-   * Set the solr request base params for facets and stats.
+   * Set the ES request base params for facets and stats.
+   * All params form the `aggs` request object.
    * It's done on request init, but can be overwritten by application.
    */
   geonetwork.GnSolrRequest.prototype.initBaseParams = function() {
@@ -381,10 +383,16 @@
         field.aggs[Object.keys(field.aggs)[0]].field = field.idxName;
         facetParams[field.idxName || field.label] = field.aggs;
       }
+/*
+      else if (field.isTree) {
+
+      }
+*/
       else if (!field.isRange) {
         facetParams[field.idxName] = {
           terms: {
-            field: field.idxName
+            field: field.idxName,
+            size: ROWS
           }
         };
       }
@@ -424,11 +432,9 @@
   };
 
   /**
-   * Create a facet results description object decoded from solr response.
-   * It get the value from the facet_counts property of the solr response and
-   * process all kind of facets (facet_ranges & facet_fields).
-   *
+   * Create a facet results description object decoded from ES response.
    * The return object is used for the UI to display all facet list.
+   * The object is created from histogram, range, terms or trees
    *
    * @param {Object} solrData  solr response object
    * @return {Array} Facet config
@@ -502,6 +508,9 @@
             });
           }
         }
+        else if(fieldId.endsWith('_tree')) {
+          facetField.tree = this.gnTreeFromSlash.getTree(field.buckets);
+        }
         // terms
         else if(requestParam.aggs[fieldId].hasOwnProperty('terms')) {
           facetField.type = 'terms';
@@ -559,7 +568,8 @@
           else {
             histograms[fieldName] = {
               terms: {
-                field: fieldName
+                field: fieldName,
+                size: ROWS
               }
             }
           }
