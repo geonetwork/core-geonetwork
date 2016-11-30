@@ -922,16 +922,8 @@
           text: '@gnLynky'
         },
         link: function(scope, element, attrs) {
-          // IE doesn't support startsWith
-          if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function(searchString, position) {
-              position = position || 0;
-              return this.indexOf(searchString, position) === position;
-            };
-          }
-
-          if (scope.text.startsWith('link') &&
-              scope.text.split('|').length == 3) {
+          if ((scope.text.indexOf('link') == 0) &&
+              (scope.text.split('|').length == 3)) {
             scope.link = scope.text.split('|')[1];
             scope.value = scope.text.split('|')[2];
 
