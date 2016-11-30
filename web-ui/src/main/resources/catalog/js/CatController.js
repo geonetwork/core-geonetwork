@@ -105,7 +105,7 @@
       $scope.$on('$locationChangeSuccess', function(event) {
         $scope.socialMediaLink = $location.absUrl();
         $scope.showSocialMediaLink =
-            $scope.socialMediaLink.includes('/metadata/');
+            ($scope.socialMediaLink.indexOf('/metadata/') != -1);
       });
       // TODO : add language
       var tokens = location.href.split('/');
