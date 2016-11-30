@@ -379,7 +379,7 @@
       // Comes from application profile
       if(field.aggs) {
         field.aggs[Object.keys(field.aggs)[0]].field = field.idxName;
-        facetParams[field.idxName] = field.aggs;
+        facetParams[field.idxName || field.label] = field.aggs;
       }
       else if (!field.isRange) {
         facetParams[field.idxName] = {
@@ -489,6 +489,18 @@
               count: b.doc_count
             });
           });
+        }
+        // filters - response bucket is object instead of array
+        else if(requestParam.aggs[fieldId].hasOwnProperty('filters')) {
+          facetField.type = 'filters';
+          for (var p in field.buckets) {
+            facetField.values.push({
+              value: p,
+              query: requestParam.aggs[fieldId].filters.
+                filters[p].query_string.query,
+              count: field.buckets[p].doc_count
+            });
+          }
         }
         // terms
         else if(requestParam.aggs[fieldId].hasOwnProperty('terms')) {
@@ -663,6 +675,7 @@
       any = qParams.any,
       geometry = qParams.geometry;
 
+    // TODO move this in createFacetData_ ? query param
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
       for (var p in field.values) {
@@ -675,6 +688,9 @@
           else {
             value = fieldName + ':' + p.replace(/ /g, '');
           }
+        }
+        else if(field.type == 'filters') {
+          value = field.query;
         }
         else {
           value = fieldName + ':"' + p + '"';

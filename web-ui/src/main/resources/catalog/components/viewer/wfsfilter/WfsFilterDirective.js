@@ -274,7 +274,11 @@
            * @param {string} facetKey facet key for this field
            * @param {string} type facet type
            */
-          scope.onCheckboxClick = function(fieldName, facetKey, type) {
+          scope.onCheckboxClick = function(field, facet) {
+
+            var fieldName = field.name;
+            var facetKey = facet.value;
+
             var output = scope.output;
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
@@ -289,7 +293,8 @@
             }
             else {
               output[fieldName] = {
-                type: type,
+                type: field.type,
+                query: facet.query,
                 values: {}
               };
               output[fieldName].values[facetKey] = true;

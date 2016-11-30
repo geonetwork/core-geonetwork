@@ -146,13 +146,16 @@
        */
       this.solrMergeApplicationProfile = function(fields, appProfile) {
 
-        var toRemoveIdx = [];
+        var toRemoveIdx = [], mergedF = [];
         var newFields = appProfile.fields;
+
+        // Merge field objects and detect if we need to remove some
         fields.forEach(function(field, idx) {
           var keep;
           for (var i = 0; i < newFields.length; i++) {
             if (field.label == newFields[i].name) {
               keep = true;
+              mergedF.push(field.label);
               if (newFields[i].label) {
                 field.label = newFields[i].label[gnGlobalSettings.lang];
               }
@@ -165,6 +168,7 @@
           }
         });
 
+
         var allFields = angular.copy(fields);
 
         if(!appProfile.extendOnly) {
@@ -172,6 +176,15 @@
             fields.splice(i, 1);
           });
         }
+
+        // Add appProfile extra fields
+        newFields.forEach(function(f) {
+          if(mergedF.indexOf(f.name) < 0) {
+            f.label = f.name;
+            fields.push(f);
+          }
+        });
+
 
         return allFields;
       };
