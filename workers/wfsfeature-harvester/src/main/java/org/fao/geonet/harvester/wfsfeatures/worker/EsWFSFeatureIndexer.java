@@ -277,7 +277,7 @@ public class EsWFSFeatureIndexer {
             if (attributeType.equals("geometry")) {
                 documentFields.put(attributeName, "geom");
             } else {
-                boolean isTree = treeFields.contains(attributeName);
+                boolean isTree = treeFields != null ? treeFields.contains(attributeName) : false;
                 documentFields.put(attributeName, FEATURE_FIELD_PREFIX +
                                attributeName +
                                XSDTYPES_TO_FIELDSUFFIX.get(attributeType) +
