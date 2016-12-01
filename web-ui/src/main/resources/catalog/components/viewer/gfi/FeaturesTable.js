@@ -57,6 +57,23 @@
 
   GnFeaturesTableController.prototype.initTable = function(element, scope) {
 
+    // See http://stackoverflow.com/a/13382873/29655
+    function getScrollbarWidth() {
+      var outer = document.createElement("div");
+      outer.style.visibility = "hidden";
+      outer.style.width = "100px";
+      outer.style.msOverflowStyle = "scrollbar";
+      document.body.appendChild(outer);
+      var widthNoScroll = outer.offsetWidth;
+      outer.style.overflow = "scroll";
+      var inner = document.createElement("div");
+      inner.style.width = "100%";
+      outer.appendChild(inner);
+      var widthWithScroll = inner.offsetWidth;
+      outer.parentNode.removeChild(outer);
+      return widthNoScroll - widthWithScroll;
+    }
+
     this.loader.getBsTableConfig().then(function(bstConfig) {
       var once = true;
       element.bootstrapTable('destroy');
@@ -94,6 +111,10 @@
               if (!once) { return; }
               element.bootstrapTable('resetView');
               once = false;
+              var el = $('.fixed-table-header');
+              if (parseInt(el.css('margin-right'), 10) > 13) {
+                el.css('margin-right', getScrollbarWidth() + 'px');
+              }
             },
             onDblClickRow: function(row, elt) {
               if (!this.map) {
