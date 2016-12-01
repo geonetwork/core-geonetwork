@@ -112,7 +112,7 @@
       * /resources/registries/vocabularies/{{thesaurusIdentifier}}/concepts/{{keywordName}}
 
     </note>
-    <from>^(.*)/resources/(.*)$</from>
+    <from>^(?!.*ext)/resources/(.*)$</from>
     <to type="forward">$1/api/$2</to>
   </rule>
 
