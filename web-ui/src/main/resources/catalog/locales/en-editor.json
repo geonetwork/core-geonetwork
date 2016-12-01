@@ -331,5 +331,10 @@
     "associatedConcept":"Associated concepts",
     "xsd": "Schema validation",
     "linkToDPS": "Link to data product specfication",
-    "linkToUD": "Link to upstream data"
+    "linkToUD": "Link to upstream data",
+    "checkpointType": "Checkpoint resource",
+    "hasCheckpointCpt": "Has Checkpoint component",
+    "hasDqEmptyCptMeasures": "Has empty Checkpoint component",
+    "hasDqCptNotCovered": "Has Checkpoint component not covered",
+    "emodnet-checkpoint.challenges": "Checkpoint challenges"
 }

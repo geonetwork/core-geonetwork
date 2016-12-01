@@ -108,6 +108,10 @@
     <facet name="status" indexKey="cl_status" label="status"/>
     <facet name="sourceCatalog" indexKey="_source" label="sourceCatalog"/>
     <facet name="standard" indexKey="_schema" label="standards"/>
+    <facet name="checkpointType" indexKey="checkpointType" label="checkpointType"/>
+    <facet name="hasCheckpointCpt" indexKey="hasCheckpointCpt" label="hasCheckpointCpt"/>
+    <facet name="hasDqEmptyCptMeasures" indexKey="hasDqEmptyCptMeasures" label="hasDqEmptyCptMeasures"/>
+    <facet name="hasDqCptNotCovered" indexKey="hasDqCptNotCovered" label="hasDqCptNotCovered"/>
     <facet name="subTemplateType" indexKey="_root" label="subTemplateTypes"/>
     <facet name="p01"
            label="p01"
@@ -205,6 +209,10 @@
             translator="db:org.fao.geonet.repository.GroupRepository:findOneByName"/>
       <item facet="standard" max="15" sortBy="value"/>
       <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="checkpointType" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasCheckpointCpt" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasDqEmptyCptMeasures" max="3" sortBy="value" translator="apploc:"/>
+      <item facet="hasDqCptNotCovered" max="3" sortBy="value" translator="apploc:"/>
       <item facet="hasDqMeasures" max="3" sortBy="value" translator="apploc:"/>
       <item facet="isHarvested" max="2" sortBy="value" translator="apploc:"/>
       <item facet="metadataType" max="3" sortBy="value" translator="apploc:recordType-"/>
