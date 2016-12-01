@@ -48,6 +48,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.util.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -314,7 +315,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             setType(MetadataType.METADATA);
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(getOwnerId(params)).
+            setGroupOwner(getOwnerGroupId(params));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid()).
@@ -425,7 +427,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             }
 
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                date, false);
+                date, false, getOwnerId(params), getOwnerGroupId(params));
 
             //--- the administrator could change privileges and categories using the
             //--- web interface so we have to re-set both
@@ -442,7 +444,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             result.updatedMetadata++;
         }
     }
-
+    
     public List<HarvestError> getErrors() {
         return errors;
     }

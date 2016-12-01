@@ -409,7 +409,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             String id = dataMan.getMetadataId(uuid);
             metadata.setId(Integer.valueOf(id));
             dataMan.updateMetadata(context, id, md, false, false, false,
-                context.getLanguage(), dataMan.extractDateModified(schema, md), false);
+                context.getLanguage(), dataMan.extractDateModified(schema, md), false,
+                metadata.getSourceInfo().getOwner(),
+                metadata.getSourceInfo().getGroupOwner());
         }
 
         String id = String.valueOf(metadata.getId());
@@ -739,7 +741,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 String id = dataMan.getMetadataId(reg.uuid);
                 metadata.setId(Integer.valueOf(id));
                 dataMan.updateMetadata(context, id, xml, false, false, false,
-                    context.getLanguage(), dataMan.extractDateModified(schema, xml), false);
+                    context.getLanguage(), dataMan.extractDateModified(schema, xml), false,
+                    metadata.getSourceInfo().getOwner(),
+                    metadata.getSourceInfo().getGroupOwner());
             }
 
             reg.id = String.valueOf(metadata.getId());

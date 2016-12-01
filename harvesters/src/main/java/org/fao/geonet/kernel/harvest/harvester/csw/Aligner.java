@@ -54,6 +54,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -205,7 +206,7 @@ public class Aligner extends BaseAligner {
                 result.locallyRemoved++;
             }
         }
-
+        
         //-----------------------------------------------------------------------
         //--- insert/update new metadata
 
@@ -218,8 +219,8 @@ public class Aligner extends BaseAligner {
 
                 String id = dataMan.getMetadataId(ri.uuid);
 
-                if (id == null) addMetadata(ri);
-                else updateMetadata(ri, id);
+                if (id == null) addMetadata(ri, getOwnerId(params), getOwnerGroupId(params));
+                else updateMetadata(ri, id, getOwnerId(params), getOwnerGroupId(params));
                 result.totalMetadata++;
             }catch(Throwable t) {
                 errors.add(new HarvestError(context, t, log));
@@ -236,7 +237,7 @@ public class Aligner extends BaseAligner {
         return result;
     }
 
-    private void addMetadata(RecordInfo ri) throws Exception {
+    private void addMetadata(RecordInfo ri, Integer ownerId, Integer groupId) throws Exception {
         if (cancelMonitor.get()) {
             return;
         }
@@ -269,16 +270,6 @@ public class Aligner extends BaseAligner {
         //
         // insert metadata
         //
-        final int ownerId;
-        if (params.getOwnerId() == null) {
-            if (context.getUserSession() != null) {
-                ownerId = context.getUserSession().getUserIdAsInt();
-            } else {
-                ownerId = 1;
-            }
-        } else {
-            ownerId = Integer.parseInt(params.getOwnerId());
-        }
         Metadata metadata = new Metadata().setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -288,7 +279,8 @@ public class Aligner extends BaseAligner {
             setCreateDate(new ISODate(ri.changeDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(ownerId);
+            setOwner(ownerId).
+            setGroupOwner(groupId);
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
@@ -310,7 +302,7 @@ public class Aligner extends BaseAligner {
     //--- Private methods : updateMetadata
     //---
     //--------------------------------------------------------------------------
-    private void updateMetadata(RecordInfo ri, String id) throws Exception {
+    private void updateMetadata(RecordInfo ri, String id, Integer ownerId, Integer groupId) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
         if (date == null) {
@@ -345,7 +337,9 @@ public class Aligner extends BaseAligner {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true,
+                        ownerId,
+                        groupId);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));

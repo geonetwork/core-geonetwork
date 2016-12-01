@@ -23,12 +23,12 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import jeeves.server.context.ServiceContext;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
@@ -39,6 +39,7 @@ import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
@@ -48,16 +49,16 @@ import org.fao.geonet.repository.specification.MetadataCategorySpecs;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
-public class Aligner {
+public class Aligner extends BaseAligner{
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -114,6 +115,7 @@ public class Aligner {
 
     public Aligner(AtomicBoolean cancelMonitor, Logger log, XmlRequest req, GeonetParams params, DataManager dm,
                    ServiceContext sc, CategoryMapper cm) {
+        super(cancelMonitor);
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.req = req;
@@ -235,7 +237,8 @@ public class Aligner {
             setCreateDate(new ISODate(createDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(getOwnerId(params)).
+            setGroupOwner(getOwnerGroupId(params));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
@@ -331,7 +334,8 @@ public class Aligner {
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false);
+                dataMan.updateMetadata(context, id, md, validate, ufo, index, language, changeDate, false,
+                        getOwnerId(params), getOwnerGroupId(params));
 
                 result.updatedMetadata++;
             }
@@ -344,7 +348,6 @@ public class Aligner {
 
         //--- remove old categories
 
-        @SuppressWarnings("unchecked")
         Collection<MetadataCategory> locCateg = dataMan.getCategories(id);
 
         for (MetadataCategory el : locCateg) {
