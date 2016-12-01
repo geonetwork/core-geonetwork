@@ -15,9 +15,6 @@
     <span>{{status | translate}}</span>
   </div>
 
-
-
-
   <div>
     <!--search input-->
     <div data-ng-show="isFeaturesIndexed"
@@ -54,11 +51,13 @@
         <div class="list-group-item"
              data-ng-repeat="facet in field.values | filter:searchInput"
              data-ng-click="onCheckboxClick(field, facet)"
-             data-ng-class="{'selected': output[field.name].values[facet.value]}">
+             data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
           <i class="fa"
              data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
         </div>
-        <div gn-wfs-filter-facets-item="::field.tree">
+        <div data-ng-if="field.tree"
+             gn-wfs-filter-facets-tree="field"
+             gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
         </div>
 
       </div>

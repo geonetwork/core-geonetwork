@@ -58,7 +58,7 @@
           layer: '=',
           heatmapConfig: '@'
         },
-        link: function(scope, element, attrs) {
+        link: function(scope, element, attrs, ctrl) {
 
           var solrUrl, uuid, ftName, appProfile, appProfilePromise;
           scope.map = scope.$parent.map;
@@ -302,6 +302,17 @@
             scope.searchInput = '';
             scope.filterFacets();
           };
+          ctrl.onCheckboxClick = scope.onCheckboxClick;
+
+          scope.isFacetSelected = function(fName, value) {
+            try {
+              var iS = scope.output[fName].values[value];
+              return iS;
+            }
+            catch(e) {
+              return false;
+            }
+          };
 
           /**
            * Send a new filtered request to solr to update the facet ui
@@ -534,7 +545,6 @@
               solrObject: solrObject,
               layer: scope.layer
             });
-
           };
 
           element.on('$destroy', function() {
@@ -545,30 +555,93 @@
       };
     }]);
 
-  module.directive('gnWfsFilterFacetsItem', [
-    'wfsFilterService',
-    function(wfsFilterService) {
+  /**
+   * @ngdoc directive
+   * @name gn_wfsfilter.directive:gnWfsFilterFacetsTree
+   *
+   * @description
+   * The global markup for the facet tree. Each node of the tree is a
+   * sub directive `gnWfsFilterFacetsTreeItem`.
+   *
+   * This directive is used to be the controller of all the tree.
+   */
+  module.directive('gnWfsFilterFacetsTree', [
+    function() {
+      return {
+        restrict: 'A',
+        scope: {
+          field: '<gnWfsFilterFacetsTree',
+          isSelectedFn: '&gnWfsFilterFacetsTreeIsselected'
+        },
+        require: {
+          wfsFilterCrl: '^^gnWfsFilterFacets'
+        },
+        template: '<div gn-wfs-filter-facets-tree-item="treeCtrl.field.tree"></div>',
+        bindToController: true,
+        controllerAs: 'treeCtrl',
+        controller: function() {
+          this.$onInit = function() {
+            this.onCheckboxTreeClick = function(value) {
+
+              this.wfsFilterCrl.onCheckboxClick(this.field, {
+                value: value
+              });
+            };
+            this.isSelected = function(value) {
+              return this.isSelectedFn({
+                name: this.field.name,
+                value: value
+              });
+            }
+          };
+        }
+      };
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_wfsfilter.directive:gnWfsFilterFacetsTreeItem
+   *
+   * @description
+   * The tree node structure of the wfs filter facet tree.
+   */
+  module.directive('gnWfsFilterFacetsTreeItem', [
+    function() {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
-        'partials/wfsfilterfacetItem.html',
+        'partials/wfsfilterfacetTreeItem.html',
         scope: {
-          node: '<gnWfsFilterFacetsItem'
+          node: '<gnWfsFilterFacetsTreeItem'
+        },
+        require: {
+          treeCtrl: '^^gnWfsFilterFacetsTree'
         },
         bindToController: true,
         controllerAs: 'ctrl',
         controller: ['$attrs', function($attrs) {
-          this.isRoot = $attrs['gnWfsFilterFacetsItemNotroot'] === undefined;
+          this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot']
+            === undefined;
+
+          this.$onInit = function() {
+
+            this.onCheckboxTreeClick = function() {
+              this.treeCtrl.onCheckboxTreeClick(this.node.key);
+            };
+            this.isSelected = function() {
+              return this.treeCtrl.isSelected(this.node.key);
+            }
+          };
         }],
-        link: function (scope, el, attrs) {
+        link: function (scope, el, attrs, ctrls) {
           scope.toggleNode = function(evt) {
             el.find('.fa').first().toggleClass('fa-minus-square')
               .toggleClass('fa-plus-square');
             el.children('.list-group').toggle();
             !evt || evt.preventDefault();
+            evt.stopPropagation();
             return false;
           };
-
         }
       };
     }]);
