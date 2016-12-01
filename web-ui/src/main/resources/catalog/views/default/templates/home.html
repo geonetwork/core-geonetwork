@@ -1,8 +1,6 @@
 <div class="container-fluid">
   <div class="row gn-row-main">
     <div class="col-sm-8 col-sm-offset-2">
-      <div data-translate=""
-         data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</div>
 
       <div class="input-group gn-form-any">
         <input type="text"
@@ -23,6 +21,10 @@
           </a>
         </span>
       </div>
+
+      <div data-translate="" class="search-over"
+           data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</div>
+
     </div>
   </div>
   <div class="row" data-ng-show="searchInfo.count == 0">
