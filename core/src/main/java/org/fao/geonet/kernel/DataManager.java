@@ -1655,7 +1655,8 @@ public class DataManager implements ApplicationEventPublisherAware {
      * @param keepXlinkAttributes When XLinks are resolved in non edit mode, do not remove XLink
      *                            attributes.
      */
-    public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
+    public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing,
+                               boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = getXmlSerializer().resolveXLinks();
         Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false);
         if (metadataXml == null) return null;
@@ -1665,6 +1666,21 @@ public class DataManager implements ApplicationEventPublisherAware {
         if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
             if (doXLinks) Processor.processXLink(metadataXml, srvContext);
             String schema = getMetadataSchema(id);
+
+            // Inflate metadata
+            Path inflateStyleSheet = getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
+            if (Files.exists(inflateStyleSheet)) {
+                //--- setup environment
+                Element env = new Element("env");
+                env.addContent(new Element("lang").setText(srvContext.getLanguage()));
+
+                // add original metadata to result
+                Element result = new Element("root");
+                result.addContent(metadataXml);
+                result.addContent(env);
+
+                metadataXml = Xml.transform(result, inflateStyleSheet);
+            }
 
             if (withEditorValidationErrors) {
                 version = doValidate(srvContext.getUserSession(), schema, id, metadataXml, srvContext.getLanguage(), forEditing).two();
