@@ -295,5 +295,5 @@
     "directoryManager": "Manage directory",
     "typeOfRecord": "Type of record",
     "load": "Load",
-    "solrAccessError": "Error during Solr access."
+    "indexAccessError": "Error during Solr access."
 }

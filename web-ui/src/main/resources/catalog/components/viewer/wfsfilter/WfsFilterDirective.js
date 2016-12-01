@@ -252,7 +252,7 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.data ? 'solrAccessError' : error.statusText;
+              scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
             });
           };
@@ -318,6 +318,7 @@
               geometry: geometry
             }).
                 then(function(resp) {
+                  solrObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
@@ -337,7 +338,8 @@
               },
               gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
-                    scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
+                    // scope.heatmaps =
+                    // resp.solrData.facet_counts.facet_heatmaps;
                   });
             }
           }
@@ -470,9 +472,9 @@
                 return parseFloat(val);
               });
               geometry = [
-                extentFilter[0], extentFilter[2],
-                extentFilter[3], extentFilter[1]
-              ].join(',');
+                [extentFilter[0], extentFilter[3]],
+                [extentFilter[2], extentFilter[1]]
+              ];
               scope.filterFacets();
             }
             // when reset from gnBbox directive

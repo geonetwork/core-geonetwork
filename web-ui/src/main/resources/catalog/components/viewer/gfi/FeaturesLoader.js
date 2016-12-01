@@ -252,40 +252,80 @@
     });
 
     // get an update solr request url with geometry filter based on a point
-    var url = this.coordinates ?
-        this.solrObject.getMergedUrl({}, {
-          pt: ol.proj.transform(this.coordinates,
-              map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
-          //5 pixels radius tolerance
-          d: map.getView().getResolution() / 400,
-          sfield: solr.geomField.idxName
-        }, this.solrObject.getState()) +
-        '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
-            this.solrObject.getMergedUrl({}, {}, this.solrObject.getState());
+    var url = this.solrObject.baseUrl;
+    var state = this.solrObject.getState();
+    var searchQuery = this.solrObject.getSearhQuery(state);
 
-    url = url.replace('rows=0', '');
-    if (url.indexOf('&q=') === -1) {
-      url += '&q=*:*';
-    }
     this.loading = true;
     defer.resolve({
       url: url,
+      contentType: 'application/json',
+      method: 'POST',
       queryParams: function(p) {
-        var params = {
-          rows: p.limit,
-          start: p.offset
-        };
+
+        // TODO: Should use solrObject.search_ ?
+        var params = angular.extend({},
+            {
+              query: {query_string: {query: searchQuery}}},
+            {
+              size: p.limit,
+              from: p.offset
+            });
         if (p.sort) {
-          params.sort = p.sort + ' ' + p.order;
+          params.sort = [];
+          var sort = {};
+          sort[p.sort] = {'order' : p.order};
+          params.sort.push(sort);
         }
-        return params;
+
+
+        if (state.geometry || this.coordinates) {
+          var geomFilter = {};
+          if (state.geometry) {
+            geomFilter = {'geo_shape': {
+              'geom': {
+                'shape': {
+                  'type': 'envelope',
+                  'coordinates': state.geometry
+                },
+                'relation': 'intersects'
+              }
+            }
+            };
+          } else if (this.coordinates) {
+            var coords = ol.proj.transform(this.coordinates,
+                map.getView().getProjection(), 'EPSG:4326');
+            geomFilter = {'geo_distance' : {
+              'distance': map.getView().getResolution() / 400 + 'km',
+              'geom': {
+                'lat': coords[1],
+                'lon': coords[0]
+              }
+            }
+            };
+          }
+          params.query = {
+            'bool': {
+              'must': {
+                'query_string': params.query.query_string || '*:*'
+              },
+              'filter': geomFilter
+            }
+          };
+        }
+
+        return JSON.stringify(params);
       },
       //data: scope.data.response.docs,
       responseHandler: function(res) {
-        this.count = res.response.numFound;
+        this.count = res.hits.total;
+        var rows = [];
+        for (var i = 0; i < res.hits.hits.length; i++) {
+          rows.push(res.hits.hits[i]._source);
+        }
         return {
-          total: res.response.numFound,
-          rows: res.response.docs
+          total: res.hits.total,
+          rows: rows
         };
       }.bind(this),
       onSort: function() {
@@ -318,11 +358,11 @@
     if (angular.isArray(geom)) {
       geom = geom[0];
     }
-    geom = new ol.format.WKT().readFeature(geom, {
+    geom = new ol.format.GeoJSON().readGeometry(geom, {
       dataProjection: 'EPSG:4326',
       featureProjection: this.map.getView().getProjection()
     });
-    return geom;
+    return new ol.Feature({geometry: geom});
   };
 
 

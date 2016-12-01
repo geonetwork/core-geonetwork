@@ -29,7 +29,7 @@
   module.factory('gnSolrWfsFilterConfig', ['gnHttp', function(gnHttp) {
 
     return {
-      url: gnHttp.getService('solrproxy'),
+      url: gnHttp.getService('indexproxy'),
       docTypeIdField: 'id',
       docIdField: 'featureTypeId',
       idDoc: function(config) {
@@ -45,7 +45,7 @@
 
   module.factory('gnSolrDefaultConfig', ['gnHttp', function(gnHttp) {
     return {
-      url: gnHttp.getService('solrproxy'),
+      url: gnHttp.getService('indexproxy'),
       facets: true,
       stats: false
     };

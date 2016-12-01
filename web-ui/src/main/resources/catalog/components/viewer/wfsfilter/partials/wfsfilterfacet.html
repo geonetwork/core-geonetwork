@@ -53,7 +53,7 @@
 
     <!--Facet fields-->
     <div class="gn-facet"
-         data-ng-repeat="field in fields" data-ng-show="field.values.length > 0">
+         data-ng-repeat="field in fields track by $index" data-ng-show="field.values.length > 0">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name]}"></span>
