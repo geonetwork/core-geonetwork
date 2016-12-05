@@ -58,6 +58,7 @@
           layer: '=',
           heatmapConfig: '@'
         },
+        controller: function(){},
         link: function(scope, element, attrs, ctrl) {
 
           var solrUrl, uuid, ftName, appProfile, appProfilePromise;
