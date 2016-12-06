@@ -3,13 +3,14 @@
      data-runSearch="true">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
-  <div class="row"
+
+  <div class="row gn-row-sort"
        data-ng-show="searchResults.records.length > 0">
-    <div class="col-md-offset-3 col-md-3 relative">
+    <div class="col-md-offset-4 col-md-3 relative">
       <div data-gn-selection-widget=""
            data-results="searchResults"></div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
       <div class="pull-right"
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"
@@ -23,8 +24,8 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-3 gn-search-facet">
+  <div class="row gn-row-results">
+    <div class="col-md-2 col-md-offset-2 gn-search-facet">
 
       <!-- Hierachical facet mode -->
       <div data-ng-show="searchResults.records.length > 0"
@@ -33,20 +34,10 @@
            data-facet-type="facetsSummaryType"
            data-current-facets="currentFacets">
       </div>
-
-      <!-- Flat facet mode (deprecated)
-      <div data-ng-show="searchResults.records.length > 0"
-           data-gn-facet-list="searchResults.facet"
-           data-params="searchObj.params"
-           data-facet-config="facetsSummaryType"
-           data-current-facets="currentFacets">
-      </div>-->
     </div>
-    <div class="col-md-9">
-      <!-- Flat facet mode (deprecated)
-      <div class="gn-results-heading">
-        <div data-gn-facet-breadcrumb="currentFacets"></div>
-      </div>-->
+
+    <div class="col-md-6">
+
       <span class="loading fa fa-spinner fa-spin"
             data-ng-show="searching"></span>
 
@@ -67,7 +58,7 @@
 
   <div class="row"
        data-ng-show="searchResults.records.length > 0">
-    <div class="col-md-offset-3 col-md-9">
+    <div class="col-md-offset-4 col-md-8">
       <div class=""
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"
