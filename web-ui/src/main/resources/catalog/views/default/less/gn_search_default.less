@@ -10,6 +10,8 @@
 @import "gn_pagination_default.less";
 // styling a single result: metadata page
 @import "gn_result_default.less";
+// bootstrap/twitter typeahead
+@import "gn_typeahead_default.less";
 
 @import "gn_view.less";
 
@@ -19,26 +21,15 @@
   display: none;
 }
 
-
-
-
-.jumbotron {
-  h1 {
-    font-size: 36px;
-  }
-}
-
-
-
-
-
+// .jumbotron {
+//   h1 {
+//     font-size: 36px;
+//   }
+// }
 
 .gn-search-page {
   clear: both;
-  // padding-bottom:40px;
-  .gn-md-view {
-    // padding: 0 20px;
-  }
+
   .badge {
       margin-right: 5px;
     }
@@ -63,6 +54,8 @@
 }
 
 // search form
+// 
+// ----- form on both home and search page
 .gn-form-search {
   .form-control {
     border-bottom-left-radius: 0;
@@ -79,52 +72,57 @@
   }
   .input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
     color: #333;
-
   }
   .dropdown-menu {
     min-width: 100%;
   }
 }
+// ----- form on search
+.gn-form-any {
+  input.form-control {
+    border-right: 0;
+  }
+  .btn-link.active {
+    color: @gnBlue !important;
+    box-shadow: none;
+  }
+}
 
-// advanced search
+// search page
 [data-ng-search-form] {
+  form {
+    padding-bottom: 40px;
+    .form-group {
+      margin: 0;
+    }
+  }
+  // ----- main search panel
   .gn-top-search {
-    // margin: 0 -15px 10px -15px;
-    // padding: 0;
+    padding-top: 30px;
+  }
+  // ----- advanced search panel
+  .gn-search-panel-advanced {
+    .bootstrap-tagsinput input {
+        padding: 1px;
+    }
+    .tagsinput-trigger {
+      right: 25px;
+      top: auto;
+      margin-top: -20px;
+    }
+    // ----- tag input
+    .control-label {
+      padding: 6px 0;
+    }
+    .bootstrap-tagsinput {
+      margin-bottom: 0;
+      margin-top: 2px;
+    }
 
-    // ----- main search panel
-    .gn-search-panel-main {
-      border-bottom: 1px solid #e5e5e5;
-      background-color: #f4f4f4;
-      padding-top: 30px;
-      padding-bottom: 30px;
-    }
-    // ----- advanced search panel
-    .gn-search-panel-advanced {
-
-    }
-
-    [typeahead] {
-      vertical-align: middle;
-      display: inline-block;
-    }
-    [typeahead-popup] {
-      text-align: left;
-    }
-    .inner-spinner {
-      position: absolute;
-      top: 1.75em;
-      left: 50%;
-      margin-left: 64px;
-    }
-    .gn-form-any {
-      // max-width: 45vw;
-      input[type="text"], button {
-        height: 36px;
-      }
-      button.btn-lg, input[type="text"].input-lg {
-        height: 46px;
-      }
+    // ----- choose period
+    .btn-group .btn-link {
+      color: @gnBlue;
+      padding-left: 0;
     }
   }
   .loading {
@@ -158,136 +156,7 @@
     }
   }
 }
-
-
 .gn-results-switch {
   float: left;
 }
 
-/*
-  List of records
- */
-.gn-info-list {
-  padding: 5px 0px;
-  margin: auto -10px;
-  li {
-    width: 100%;
-    zoom: 1;
-    list-style: none;
-    float: left;
-    padding: 10px;
-    cursor: pointer;
-  }
-  li:hover:before {
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    content: "\f06e"; // eye icon
-    //content: "\f08e"; // external link icon
-    position: absolute;
-    margin-left: -50px;
-    margin-top: 15px;
-    color: #B9BBBB;
-    font-size: 30px;
-  }
-  li.gn-more {
-    position: relative;
-    float: right;
-  }
-
-  // info lists
-  // 
-  // ----- general
-  .resultcard {
-    padding: 0 0 10px 0;
-    background-color: #fff;
-    .title {
-      min-height: 40%;
-      padding: 10px;
-      h4 {
-        font-size: 16px;
-        margin: 0;
-      }
-    }
-    .abstract {
-      overflow: auto;
-      padding: 0 10px 0 10px;
-      height: 60%;
-    }
-  }
-  li:hover {
-    .title {
-      color: #000;
-    }
-  }
-
-  // styling for the scrollbar
-  ::-webkit-scrollbar {
-    width: 2px;
-  }
-  // ----- track
-  ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); 
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    margin-right: 5px;
-  }
-  // ----- handle
-  ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 0px;
-    border-radius: 0px;
-    background: #efefef; 
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-  }
-  ::-webkit-scrollbar-thumb:window-inactive {
-    background: rgba(0,0,0,0.4); 
-  }
-}
-
-// info lists
-// 
-// ----- small
-.gn-info-list-small {
-  .gn-info-list {
-    li {
-      padding: 5px 10px;
-      .resultcard {
-        .abstract {
-          max-height: 1.5em !important;
-          overflow: hidden;
-        }
-        .abstract:after {
-          content: "..."
-        }
-      }
-    }
-  }
-}
-// ----- large
-.gn-info-list-large {
-  .gn-info-list {
-    .resultcard {
-      .abstract {
-        max-height: auto !important;
-        height: 100%;
-      }
-    }
-  }
-}
-// ----- blocks
-.gn-info-list-blocks {
-  .gn-info-list {
-    li {
-      width: 33%;
-      .resultcard {
-        .abstract {
-          max-height: 125px !important;
-        }
-      }
-    }
-    li:hover:before {
-      content: "";
-    }
-  }
-}

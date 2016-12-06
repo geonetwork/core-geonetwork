@@ -52,6 +52,7 @@ body, .gn-fullbackground1 {
   }
 }
 
+
 .gn-row-footer {
   background: #e5e5e5;
   color: #999;
@@ -71,6 +72,131 @@ body, .gn-fullbackground1 {
   }
 }
 
+// list of records
+.gn-info-list {
+  padding: 5px 0px;
+  margin: auto -10px;
+  li {
+    width: 100%;
+    zoom: 1;
+    list-style: none;
+    float: left;
+    padding: 10px;
+    cursor: pointer;
+  }
+  li:hover:before {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    content: "\f06e"; // eye icon
+    //content: "\f08e"; // external link icon
+    position: absolute;
+    margin-left: -50px;
+    margin-top: 15px;
+    color: #B9BBBB;
+    font-size: 30px;
+  }
+  li.gn-more {
+    position: relative;
+    float: right;
+  }
+
+  // info lists
+  // 
+  // ----- general
+  .resultcard {
+    padding: 0 0 10px 0;
+    background-color: #fff;
+    .title {
+      min-height: 40%;
+      padding: 10px;
+      h4 {
+        font-size: 16px;
+        margin: 0;
+      }
+    }
+    .abstract {
+      overflow: auto;
+      padding: 0 10px 0 10px;
+      height: 60%;
+    }
+  }
+  li:hover {
+    .title {
+      color: #000;
+    }
+  }
+
+  // styling for the scrollbar
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
+  // ----- track
+  ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    margin-right: 5px;
+  }
+  // ----- handle
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: #efefef; 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(0,0,0,0.4); 
+  }
+}
+
+// info lists
+// 
+// ----- small
+.gn-info-list-small {
+  .gn-info-list {
+    li {
+      padding: 5px 10px;
+      .resultcard {
+        .abstract {
+          max-height: 1.5em !important;
+          overflow: hidden;
+        }
+        .abstract:after {
+          content: "..."
+        }
+      }
+    }
+  }
+}
+// ----- large
+.gn-info-list-large {
+  .gn-info-list {
+    .resultcard {
+      .abstract {
+        max-height: auto !important;
+        height: 100%;
+      }
+    }
+  }
+}
+// ----- blocks
+.gn-info-list-blocks {
+  .gn-info-list {
+    li {
+      width: 33%;
+      .resultcard {
+        .abstract {
+          max-height: 125px !important;
+        }
+      }
+    }
+    li:hover:before {
+      content: "";
+    }
+  }
+}
 
 // badges
 // 
