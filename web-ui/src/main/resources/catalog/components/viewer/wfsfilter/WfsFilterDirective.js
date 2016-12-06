@@ -25,6 +25,53 @@
   goog.provide('gn_wfsfilter_directive');
 
 
+  var TMP_PROFILE =
+  { "extendOnly": true,
+    "fields":[
+/*
+      {
+      "name":"WATER_KM",
+      "aggs": {
+
+        "histogram": {
+          "interval": 5000,
+          "extended_bounds" : {
+            "min" : 2000,
+            "max" : 100000
+          }
+        }
+        ,"range" : {
+          "ranges" : [
+            { "to" : 7500 },
+            { "from" : 7500, "to" : 50000 },
+            { "from" : 50000 }
+          ]
+        }
+      }
+    },
+      {
+      "name": "P_SEXE",
+      "aggs": {
+        "filters": {
+          "filters": {
+            "48 - 50": {"query_string": {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.52"}},
+            "49 - 53": {"query_string": {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.53"}}
+          }
+        }
+      }
+    },
+      {
+      "name": "CARPOOL"
+    }
+
+*/
+      ],
+    "treeFields": ["CD_REGION"],
+    "tokenizedFields": {
+      "CGENELIN": "-"
+    }
+  };
+
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
 
@@ -210,6 +257,7 @@
 
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
+            appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
 
               solrObject.indexFields =
