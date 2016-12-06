@@ -6,18 +6,19 @@
 
   <div class="row gn-row-sort"
        data-ng-show="searchResults.records.length > 0">
-    <div class="col-md-offset-4 col-md-3 relative">
+    
+    <div class="col-md-offset-4 col-md-2">
       <div data-gn-selection-widget=""
            data-results="searchResults"></div>
     </div>
-    <div class="col-md-3">
-      <div class="pull-right"
-           data-gn-pagination="paginationInfo"
+    <div class="col-md-2">
+      <div data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"
            data-enable-hot-keys=""
            data-enable-events=""></div>
-
-      <div class="pull-right"
+    </div>
+    <div class="col-md-2">
+      <div class="pull-right" 
            data-sortby-combo=""
            data-params="searchObj.params"
            data-gn-sortby-values="searchObj.sortbyValues"></div>
