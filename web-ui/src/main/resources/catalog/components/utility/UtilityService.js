@@ -24,7 +24,9 @@
 (function() {
   goog.provide('gn_utility_service');
 
-  var module = angular.module('gn_utility_service', []);
+  goog.require('gn_popup');
+
+  var module = angular.module('gn_utility_service', ['gn_popup']);
 
   module.factory('RecursionHelper', ['$compile', function($compile) {
     return {
@@ -69,7 +71,8 @@
     };
   }]);
 
-  var gnUtilityService = function(gnPopup, $translate) {
+  module.factory('gnUtilityService',
+    ['gnPopup', '$translate', function(gnPopup, $translate) {
     /**
        * Scroll page to element.
        */
@@ -332,10 +335,8 @@
       randomUuid: randomUuid,
       getPermalink: getPermalink
     };
-  };
+  }]);
 
-  module.factory('gnUtilityService',
-      ['gnPopup', '$translate', gnUtilityService]);
 
   module.filter('gnFromNow', function() {
     return function(dateString) {
