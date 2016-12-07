@@ -44,12 +44,25 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li class="dropdown-header" data-translate="">chooseAView</li>
-        <li data-ng-class="currentFormatter === undefined ? 'disabled' : ''">
-          <a href="" data-ng-click="format()" data-translate="">defaultView</a>
+        <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
+          <a href="" data-ng-click="format()">
+            <i class="fa fa-fw"></i>
+            <span data-translate="">defaultView</span>
+          </a>
         </li>
         <li data-ng-repeat="f in formatter.list"
             data-ng-class="f === currentFormatter ? 'disabled' : ''">
-          <a href="" data-ng-click="format(f)">{{f.label | translate}}</a>
+          <a href="" data-ng-click="format(f)">
+            <i class="fa fa-fw"></i>
+            {{f.label | translate}}
+          </a>
+        </li>
+        <li>
+          <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
+                 target="_blank">
+            <i class="fa fa-file-code-o"></i>&nbsp;
+            <span data-translate="">xmlView</span>
+          </a>
         </li>
       </ul>
     </div>
