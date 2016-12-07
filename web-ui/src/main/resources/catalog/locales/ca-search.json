@@ -119,7 +119,9 @@
     "exportCSV": "Exportar (CSV)",
     "exportPDF": "Exporta (PDF)",
     "exportMEF": "Exportar (ZIP)",
+    "welcomeTitle": "Portal de Dades de {{orgName}}",
     "welcomeText": "Aquí pots trobar dades, serveis, mapes i més.",
+    "getstarted": "Començar",
     "searchOver": "Cerca sobre <strong>{{records}}</strong> conjunts de dades, serveis i mapes,...",
     "browseBy": "Navegació per",
     "browseTopics": "Explorar temes",
@@ -362,5 +364,6 @@
     "mdvalid": "La metadada és vàlida",
     "mdinvalid": "La metadada no és vàlida",
     "mdinvalidcantpublish": "Les metadades invàlides no es poden publicar",
-    "mdnovalidation": "La metadada no té informació de validació"
+    "mdnovalidation": "La metadada no té informació de validació",
+    "setall": "Aplicar tots els privilegis"
 }
