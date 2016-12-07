@@ -192,7 +192,7 @@
                 }
               }
               debounce--;
-            }, 100);
+            }, 100, false);
           };
 
           scope.map.getLayers().on('change:length', buildTree);
@@ -229,7 +229,6 @@
             scope.layerFilter.q = '';
             scope.filterLayers();
           };
-
         }
       };
     }]);
@@ -244,7 +243,21 @@
           map: '=map'
         },
         template: "<ul class='sxt-layertree-node'><sxt-layertree-elt ng-repeat='member" +
-            " in collection' member='member' map='map'></sxt-layertree-elt></ul>"
+            " in ::collection' member='member' map='map'></sxt-layertree-elt></ul>"
+      };
+    }]);
+
+  module.directive('sxtLayertreeColRoot', [
+    function() {
+      return {
+        restrict: 'E',
+        replace: true,
+        scope: {
+          collection: '=',
+          map: '=map'
+        },
+        template: "<ul class='sxt-layertree-node'><sxt-layertree-elt ng-repeat='member" +
+        " in collection' member='member' map='map'></sxt-layertree-elt></ul>"
       };
     }]);
 
@@ -265,7 +278,7 @@
           var el = element;
           if (angular.isArray(scope.member.nodes)) {
             element.append("<sxt-layertree-col class='list-group' " +
-                "collection='member.nodes' map='map'></sxt-layertree-col>");
+                "collection='::member.nodes' map='map'></sxt-layertree-col>");
             $compile(element.contents())(scope);
           }
           scope.toggleNode = function(evt) {
