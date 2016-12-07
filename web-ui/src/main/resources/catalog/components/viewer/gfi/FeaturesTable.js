@@ -112,9 +112,11 @@
               element.bootstrapTable('resetView');
               once = false;
               var el = $('.fixed-table-header');
-              if (parseInt(el.css('margin-right'), 10) > 13) {
-                el.css('margin-right', getScrollbarWidth() + 'px');
-              }
+              setTimeout(function() {
+                if (parseInt(el.css('margin-right'), 10) > 13) {
+                  el.css('margin-right', getScrollbarWidth() + 'px');
+                }
+              }, 0);
             },
             onDblClickRow: function(row, elt) {
               if (!this.map) {
