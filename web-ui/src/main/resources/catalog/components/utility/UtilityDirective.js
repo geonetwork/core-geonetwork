@@ -1198,8 +1198,6 @@
     };
   }]);
 
-  });
-
   /**
    * @ngdoc directive
    * @name gn_utility.directive:gnLynky

@@ -332,6 +332,8 @@
     "exportLogAsZIP": "Exportar (ZIP)",
     "facetIndicatorHelp": "Las estadísticas de las entradas se definen basándose en la configuración de facets y pueden representar sólo los valores más frecuentes.",
     "fees": "Cuotas",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "filesystem-checkFileLastModifiedForUpdate": "Actualizar entrada en el catálogo sólo si el fichero se ha actualizado",
     "filesystem-checkFileLastModifiedForUpdateHelp": "Actualizar entrada en el catálogo sólo si el fichero se ha actualizado",
     "filesystem-directory": "Directorio",

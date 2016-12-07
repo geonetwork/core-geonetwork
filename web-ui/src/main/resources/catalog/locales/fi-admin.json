@@ -332,6 +332,8 @@
     "exportLogAsZIP": "Vie (ZIP)",
     "facetIndicatorHelp": "Tietuetilastot rakentuvat fasettien perusteella ja ne saattavat edustaa ainoastaan yleisimpiä arvoja.",
     "fees": "Maksut",
+    "filesystem-beforeScript": "Script to run before harvesting",
+    "filesystem-beforeScriptHelp": "Can be used to do a rsync or something similar. Runs nothing if empty.",
     "filesystem-checkFileLastModifiedForUpdate": "Päivitä luettelon tietue vain, jos tiedosto oli päivitetty.",
     "filesystem-checkFileLastModifiedForUpdateHelp": "Päivät luettelon tietua vain, jos tiedosto oli päivitetty.",
     "filesystem-directory": "Hakemisto",

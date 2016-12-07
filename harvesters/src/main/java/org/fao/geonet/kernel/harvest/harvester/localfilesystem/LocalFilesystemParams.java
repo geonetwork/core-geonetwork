@@ -41,6 +41,7 @@ public class LocalFilesystemParams extends AbstractParams {
     public boolean checkFileLastModifiedForUpdate;
     public boolean nodelete;
     public String recordType;
+    public String beforeScript;
 
     public LocalFilesystemParams(DataManager dm) {
         super(dm);
@@ -82,6 +83,7 @@ public class LocalFilesystemParams extends AbstractParams {
         String checkFileLastModifiedForUpdateString = Util.getParam(site, "checkFileLastModifiedForUpdate", "true");
         checkFileLastModifiedForUpdate = (checkFileLastModifiedForUpdateString.equals("on") || checkFileLastModifiedForUpdateString.equals("true"));
         recordType = Util.getParam(site, "recordType", "n");
+        beforeScript = Util.getParam(site, "beforeScript", "");
     }
 
     public LocalFilesystemParams copy() {
@@ -93,6 +95,7 @@ public class LocalFilesystemParams extends AbstractParams {
         copy.nodelete = nodelete;
         copy.checkFileLastModifiedForUpdate = checkFileLastModifiedForUpdate;
         copy.recordType = recordType;
+        copy.beforeScript = beforeScript;
         return copy;
     }
 }
