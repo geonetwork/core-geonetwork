@@ -96,6 +96,7 @@
                        class="form-control"
                        data-ng-model="userSelected.username"
                        data-ng-required="true"
+                       data-ng-disabled="!user.isUserAdminOrMore()"
                        autocomplete="off"/>
                 <p class="help-block" data-translate="">usernameHelp</p>
               </div>
@@ -237,7 +238,8 @@
 
                 <h3 data-translate="">RegisteredUser</h3>
                 <select multiple="multiple" id="groups_RegisteredUser" name="groups_RegisteredUser"
-                        class="form-control" data-ng-click="setUserProfile()">
+                        class="form-control" data-ng-click="setUserProfile()"
+                        data-ng-disabled="!user.isUserAdminOrMore()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
                           data-ng-selected="isUserGroup(g.id, 'RegisteredUser')"
@@ -246,7 +248,8 @@
                 </select>
                 <h3 data-translate="">Editor</h3>
                 <select multiple="multiple" id="groups_Editor" name="groups_Editor"
-                        class="form-control" data-ng-click="setUserProfile()">
+                        class="form-control" data-ng-click="setUserProfile()"
+                        data-ng-disabled="!user.isUserAdminOrMore()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
                           data-ng-selected="isUserGroup(g.id, 'Editor')">
@@ -255,7 +258,8 @@
                 </select>
                 <h3 data-translate="">Reviewer</h3>
                 <select multiple="multiple" id="groups_Reviewer" name="groups_Reviewer"
-                        class="form-control" data-ng-click="setUserProfile()">
+                        class="form-control" data-ng-click="setUserProfile()"
+                        data-ng-disabled="!user.isUserAdminOrMore()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
                           data-ng-selected="isUserGroup(g.id, 'Reviewer')">
@@ -269,7 +273,8 @@
 
                 <h3 data-translate="">UserAdmin</h3>
                 <select multiple="multiple" id="groups_UserAdmin" name="groups_UserAdmin"
-                        class="form-control" data-ng-click="setUserProfile()">
+                        class="form-control" data-ng-click="setUserProfile()"
+                        data-ng-disabled="!user.isUserAdminOrMore()">
                   <option data-ng-repeat="g in groups | orderBy:sortByLabel"
                           value="{{g.id}}"
                           data-ng-selected="isUserGroup(g.id, 'UserAdmin')">
