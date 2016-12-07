@@ -297,7 +297,7 @@
               template: '<div class="popover ' + className + '">' +
                 '<div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
             });
-          }, 1);
+          }, 1, false);
 
           button.on('shown.bs.popover', function() {
             var $tip = button.data('bs.popover').$tip;
@@ -310,23 +310,32 @@
           });
 
           // can’t use dismiss boostrap option: incompatible with opacity slider
-          $('body').on('mousedown click', function(e) {
-            if ( (button.data('bs.popover') && button.data('bs.popover').$tip)
-                && (button[0] != e.target)
-                && (!$.contains(button[0], e.target))
-                && ($(e.target).parents('.popover')[0] != button.data('bs.popover').$tip[0])) {
-              $timeout(function(){
-                button.popover('hide');
-              }, 30);
-            }
-          });
-
-          if (attrs['sxtPopoverDismiss']) {
-            $(attrs['sxtPopoverDismiss']).on('scroll', function(){
+        var onMousedown = function(e) {
+          if ( (button.data('bs.popover') && button.data('bs.popover').$tip)
+            && (button[0] != e.target)
+            && (!$.contains(button[0], e.target))
+            && ($(e.target).parents('.popover')[0] != button.data('bs.popover').$tip[0])) {
+            $timeout(function(){
               button.popover('hide');
-            });
+            }, 30, false);
+          }
+        };
+        var onScroll = function() {
+          button.popover('hide');
+        };
+        $('body').on('mousedown click', onMousedown);
+
+        if (attrs['sxtPopoverDismiss']) {
+          $(attrs['sxtPopoverDismiss']).off('scroll', onScroll);
+        }
+
+        element.off('$destroy', function() {
+          $('body').un('mousedown click', onMousedown);
+          if (attrs['sxtPopoverDismiss']) {
+            $(attrs['sxtPopoverDismiss']).un('scroll', onScroll);
           }
 
+        });
       }
     }
   }]);
