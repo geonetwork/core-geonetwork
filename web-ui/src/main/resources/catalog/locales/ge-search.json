@@ -119,7 +119,9 @@
     "exportCSV": "Export (CSV)",
     "exportPDF": "Export (PDF)",
     "exportMEF": "Export (ZIP)",
+    "welcomeTitle": "{{orgName}} Metadatenportal",
     "welcomeText": "Hier finden Sie Daten, Dienste und Karten und vieles mehr.",
+    "getstarted": "Suche",
     "searchOver": "In <strong>{{records}}</strong> Datensätzen, Diensten und Karten, ... suchen",
     "browseBy": "Filtern nach",
     "browseTopics": "Filtern nach Themen",
@@ -289,7 +291,7 @@
     "brown": "braun",
     "purple": "violett",
     "gray": "grau",
-    "Results": "Reultate",
+    "Results": "Resultate",
     "Legend": "Legende",
     "isValid": "Validationsstatus",
     "Attribution": "Zuschreibung",
@@ -362,5 +364,6 @@
     "mdvalid": "Metadata is valid",
     "mdinvalid": "Metadata is invalid",
     "mdinvalidcantpublish": "Invalid metadata can't be publish",
-    "mdnovalidation": "Metadata has no validation information"
+    "mdnovalidation": "Metadata has no validation information",
+    "setall": "Set all privileges"
 }

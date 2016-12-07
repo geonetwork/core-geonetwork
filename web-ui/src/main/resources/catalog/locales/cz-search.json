@@ -119,7 +119,9 @@
     "exportCSV": "Exportovat (CSV)",
     "exportPDF": "Exportovat (PDF)",
     "exportMEF": "Exportovat (ZIP)",
+    "welcomeTitle": "{{orgName}} Datový portál",
     "welcomeText": "Zde naleznete data, služby, mapy a řadu dalších informací.",
+    "getstarted": "Začít",
     "searchOver": "Prohledávat <strong>{{records}}</strong> datové sady, služby a mapy, ...",
     "browseBy": "Prohledávat dle",
     "browseTopics": "Prohledat témata",
@@ -362,5 +364,6 @@
     "mdvalid": "Metadata is valid",
     "mdinvalid": "Metadata is invalid",
     "mdinvalidcantpublish": "Invalid metadata can't be publish",
-    "mdnovalidation": "Metadata has no validation information"
+    "mdnovalidation": "Metadata has no validation information",
+    "setall": "Set all privileges"
 }

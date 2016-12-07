@@ -119,7 +119,9 @@
     "exportCSV": "Export (CSV)",
     "exportPDF": "Export (PDF)",
     "exportMEF": "Export (ZIP)",
+    "welcomeTitle": "Accéder aux informations de {{orgName}}",
     "welcomeText": "Vous trouverez ici des données, des services et des cartes et plus encore ...",
+    "getstarted": "Pour commencer",
     "searchOver": "Rechercher parmi <strong>{{records}}</strong> jeux de données, services et cartes, ...",
     "browseBy": "Parcourir par",
     "browseTopics": "Parcourir les thèmes",
@@ -216,7 +218,7 @@
     "mdUnpublished": "Fiche dépubliée",
     "mdUnmodified": "Fiche non affectée",
     "mdDisallowed": "Fiche restreinte",
-    "mdNovalid": "Metadata not valid",
+    "mdNovalid": "Métadonnée non valide",
     "metadataUnchanged": "Fiche non modifiée",
     "accessRestricted": "Vous n'avez pas le droit de modifier cette fiche",
     "copiedToClip": "Texte copié dans le presse papier !",
@@ -359,8 +361,9 @@
     "fbCatValidator": "Validation",
     "fbCatOthers": "Autre",
     "syncAllLayers": "Synchroniser toutes les couches (ou seulement le fond de carte) entre le visualiseur et la minicarte d'aperçu.",
-    "mdvalid": "Metadata is valid",
-    "mdinvalid": "Metadata is invalid",
-    "mdinvalidcantpublish": "Invalid metadata can't be publish",
-    "mdnovalidation": "Metadata has no validation information"
+    "mdvalid": "La métadonnée est valide",
+    "mdinvalid": "La métadonnée n'est pas valide",
+    "mdinvalidcantpublish": "Une métadonnée invalide ne peut être publiée",
+    "mdnovalidation": "La métadonnée ne dispose pas d'information de validation",
+    "setall": "Activer tous les privilèges"
 }
