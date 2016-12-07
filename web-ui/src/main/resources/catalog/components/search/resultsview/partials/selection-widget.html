@@ -1,5 +1,5 @@
 <div class="btn-group gn-select">
-  <div class="btn-group">
+  <div class="btn-group" title="{{'clickToSelect' | translate}}">
     <button type="button"
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown">
@@ -23,6 +23,7 @@
     </ul>
   </div>
   <div class="btn-group gn-selection-actions"
+       title="{{'actionsOnSelection' | translate}}"
        ng-if="searchResults.selectedCount > 0 && !withoutActionMenu">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
       <span class="hidden-xs" translate="">selected</span>

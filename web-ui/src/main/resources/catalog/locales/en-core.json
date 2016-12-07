@@ -136,6 +136,8 @@
     "denominatorDesc": "low scale first",
     "denominatorAsc": "high scale first",
     "selected": "selected",
+    "actionsOnSelection": "Choose an action to apply to current selection ...",
+    "clickToSelect": "Click to select/unselect ...",
     "notifications": "Notifications",
     "orgName": "Contact for the resource",
     "orgNames": "Contact for the resource",
