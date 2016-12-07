@@ -62,11 +62,11 @@
             LAYERS: 'TEMP'
           },
           url: 'http://tds0.ifremer.fr/thredds/wms/' +
-          'CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE'
+              'CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE'
         });
         var layer = new ol.layer.Tile({
           url: 'http://tds0.ifremer.fr/thredds/wms/' +
-          'CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE',
+              'CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE',
           type: 'WMS',
           source: source,
           label: 'Super NCWMS'
@@ -91,10 +91,10 @@
 
         $http.get(proxyUrl)
           .success(function(json) {
-            if (angular.isObject(json)) {
-              layer.ncInfo = json;
-            }
-          });
+              if (angular.isObject(json)) {
+                layer.ncInfo = json;
+              }
+            });
         return layer;
       };
 
@@ -122,8 +122,8 @@
       this.formatTimeSeries = function(from, to) {
         return moment(from, 'DD-MM-YYYY').format(
             'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]') +
-          '/' +
-          moment(to, 'DD-MM-YYYY').format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+            '/' +
+            moment(to, 'DD-MM-YYYY').format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
       };
 
       this.parseStyles = function(info) {
@@ -169,9 +169,9 @@
           }
         }
         else if (angular.isObject(ncInfo.Dimension) &&
-          ncInfo.Dimension.name == name) {
+            ncInfo.Dimension.name == name) {
           value = ncInfo.Dimension.values[0] ||
-            ncInfo.Dimension.values;
+              ncInfo.Dimension.values;
         }
         return value;
       };
@@ -285,7 +285,7 @@
         var parts = legendUrl.split('?');
 
         var p = parts.length > 1 ?
-          gnUrlUtils.parseKeyValue(parts[1]) : {};
+            gnUrlUtils.parseKeyValue(parts[1]) : {};
         angular.extend(p, params);
 
         var sP = gnUrlUtils.toKeyValue(p);

@@ -334,7 +334,8 @@
     };
   };
 
-  module.factory('gnUtilityService', ['gnPopup', '$translate', gnUtilityService]);
+  module.factory('gnUtilityService',
+      ['gnPopup', '$translate', gnUtilityService]);
 
   module.filter('gnFromNow', function() {
     return function(dateString) {

@@ -271,7 +271,7 @@
             '/actions/forget-password',
             $.param(params),
             {
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
             .success(function(data) {
               $scope.resetPassword1 = null;
