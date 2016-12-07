@@ -113,8 +113,9 @@
               once = false;
               var el = $('.fixed-table-header');
               setTimeout(function() {
-                if (parseInt(el.css('margin-right'), 10) > 13) {
-                  el.css('margin-right', getScrollbarWidth() + 'px');
+                var width = getScrollbarWidth()
+                if (parseInt(el.css('margin-right'), 10) > width) {
+                  el.css('margin-right', width + 'px');
                 }
               }, 0);
             },
