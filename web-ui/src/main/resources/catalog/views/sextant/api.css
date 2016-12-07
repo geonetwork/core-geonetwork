@@ -16783,7 +16783,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset,
 .g [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
-  height: 200%;
+  height: calc(200% - 4em);
 }
 .gn [sxt-main-viewer] #importLayer > .panel-body,
 .g [sxt-main-viewer] #importLayer > .panel-body {
