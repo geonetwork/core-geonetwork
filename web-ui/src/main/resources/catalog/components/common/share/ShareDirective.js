@@ -87,6 +87,20 @@
           var loadPrivileges;
           var fillGrid = function(data) {
             scope.privileges = data.privileges;
+            // Define profile label
+            if(scope.displayProfile) {
+              var admin = scope.user.isAdministrator();
+              scope.privileges.forEach(function(p) {
+                if(admin) {
+                  p.profiles = $translate.instant('Administrator');
+                }
+                else {
+                  p.profiles = '' + p.userProfiles.map(function(up) {
+                    return $translate.instant(up);
+                  }).join(' ');
+                }
+              });
+            }
             scope.operations = data.operations;
             scope.isAdminOrReviewer = data.isAdminOrReviewer;
           };
@@ -193,7 +207,7 @@
               return $translate.instant(g.group);
             }
             else if (scope.sorter.predicate == 'p') {
-              return g.userProfile;
+              return g.profiles;
             }
             else {
               return g.operations[scope.sorter.predicate];
