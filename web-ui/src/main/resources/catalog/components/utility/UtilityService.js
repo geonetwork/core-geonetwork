@@ -69,7 +69,7 @@
     };
   }]);
 
-  var gnUtilityService = function() {
+  var gnUtilityService = function(gnPopup, $translate) {
     /**
        * Scroll page to element.
        */
@@ -305,6 +305,20 @@
             return v.toString(16);
           });
     }
+
+
+    /**
+     * Get html formatter link for the given md
+     * @param {String} title
+     * @param {String} url
+     */
+    function getPermalink(title, url) {
+      gnPopup.createModal({
+        title: $translate.instant('permalinkTo', {title: title}),
+        content: '<div gn-permalink-input="' + url + '"></div>'
+      });
+    };
+
     return {
       scrollTo: scrollTo,
       isInView: isInView,
@@ -315,11 +329,12 @@
       toCsv: toCsv,
       CSVToArray: CSVToArray,
       getUrlParameter: getUrlParameter,
-      randomUuid: randomUuid
+      randomUuid: randomUuid,
+      getPermalink: getPermalink
     };
   };
 
-  module.factory('gnUtilityService', gnUtilityService);
+  module.factory('gnUtilityService', ['gnPopup', '$translate', gnUtilityService]);
 
   module.filter('gnFromNow', function() {
     return function(dateString) {
