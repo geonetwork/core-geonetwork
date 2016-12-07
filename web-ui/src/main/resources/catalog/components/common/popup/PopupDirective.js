@@ -82,7 +82,7 @@
 
           // Get the popup options
           scope.options = scope.optionsFunc();
-          scope.titlePrint = $translate('print_action');
+          scope.titlePrint = $translate.instant('print_action');
 
           if (!scope.options) {
             scope.options = {

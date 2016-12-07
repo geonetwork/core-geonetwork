@@ -25,6 +25,8 @@
                 select="/root/lang/text()"/>
   <xsl:variable name="baseUrl"
                 select="/root/url"/>
+  <xsl:variable name="nodeUrl"
+                select="/root/gui/nodeUrl"/>
 
   <!-- Date formating -->
   <xsl:variable name="dateFormats">

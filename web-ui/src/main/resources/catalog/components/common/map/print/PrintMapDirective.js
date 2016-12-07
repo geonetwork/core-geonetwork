@@ -62,7 +62,9 @@
           layouts: data.layouts,
           dpi: data.dpis[1],
           scales: data.scales,
-          scale: data.scales[5]
+          scale: data.scales[5],
+          formats: data.outputFormats,
+          format: data.outputFormats[0]
         };
       });
       return http;
@@ -102,7 +104,9 @@
           if (angular.isFunction(deregister[i])) {
             deregister[i]();
           } else {
-            deregister[i].target.unByKey(deregister[i]);
+            // FIXME
+            var src = deregister[i].src || deregister[i].target;
+            src.unByKey(deregister[i]);
           }
         }
       }
@@ -194,7 +198,7 @@
       // http://mapfish.org/doc/print/protocol.html#print-pdf
       var view = $scope.map.getView();
       var proj = view.getProjection();
-      var lang = $translate.uses();
+      var lang = $translate.use();
       var defaultPage = {
         comment: $scope.mapComment || '',
         title: $scope.mapTitle || ''
@@ -240,9 +244,13 @@
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
         dpi: $scope.config.dpi.value,
+        outputFormat: $scope.config.format.name,
         layers: encLayers,
         legends: encLegends,
-        enableLegends: $scope.enableLegends,
+        enableLegends: $scope.enableLegends && encLegends ? true : false,
+        hasTitle: $scope.mapTitle ? true : false,
+        hasNoTitle: $scope.mapTitle ? false : true,
+        hasAttribution: !!attributions.length,
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(

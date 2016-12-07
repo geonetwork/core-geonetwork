@@ -181,6 +181,10 @@ a {
   max-height: 23px;
 }
 
+.gn-logo-lg {
+  width: 160px !important;
+}
+
 /**
  * Properly break stack trace error.
  */
@@ -555,11 +559,11 @@ i.fa-times.delete:hover {
 
 .gn-search-page {
   .gn-status {
-    border: 3px solid darken(@brand-info, 5%);
+    border: 2px solid darken(@brand-info, 5%);
     position: absolute;
     top: 95px;
     left: 2px;
-    border-radius: 15px;
+    border-radius: 6px;
     padding: 2px;
     -ms-transform: rotate(-30deg);
     -webkit-transform: rotate(-30deg);
@@ -570,7 +574,7 @@ i.fa-times.delete:hover {
     background-color: rgba(255, 255, 255 , 0.7);
   }
   .gn-status-mdview {
-    font-size: 120%;
+    font-size: 110%;
     position: relative;
     float: right;
     top: -52px;
@@ -708,4 +712,13 @@ input.ng-invalid {
     content: "*";
     padding-left: 12px;
   }
+}
+
+.gn-resource-info {
+  text-align: center;
+  border: 3px solid #bbb;
+}
+
+[data-rating] {
+  color: #ffa500;
 }

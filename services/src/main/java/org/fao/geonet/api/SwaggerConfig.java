@@ -54,27 +54,15 @@ import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
-@EnableWebMvc
 @Configuration
-@Service
 @ComponentScan(basePackages = {
     "org.fao.geonet.api",
     "org.fao.geonet.monitor.service"
 })
 @EnableSwagger2 //Loads the spring beans required by the framework
 public class SwaggerConfig {
-    @Autowired
-    private TypeResolver typeResolver;
-
-    private Docket doc;
-
-    private Predicate<String> paths() {
-        return or(
-            regex("/api/" + API.VERSION_0_1 + ".*")
-        );
-    }
-
-    public void loadApi() {
+    @Bean
+    public Docket api() {
         this.doc = new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(new ApiInfo(
                 "GeoNetwork Api Documentation (beta)",
@@ -98,30 +86,18 @@ public class SwaggerConfig {
                     typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
                     typeResolver.resolve(WildcardType.class)))
             .useDefaultResponseMessages(false)
-//                .globalResponseMessage(RequestMethod.GET,
-//                        newArrayList(new ResponseMessageBuilder()
-//                                .code(500)
-//                                .message("500 message")
-//                                .responseModel(new ModelRef("Error"))
-//                                .build()))
-            .securitySchemes(newArrayList(new BasicAuth("basicAuth")))
-//                .securityContexts(newArrayList(securityContext()))
-//                .enableUrlTemplating(true)
-//                .globalOperationParameters(
-//                        newArrayList(new ParameterBuilder()
-//                                .name("_content_type")
-//                                .description("Description of someGlobalParameter")
-//                                .modelRef(new ModelRef("string"))
-//                                .parameterType("query")
-//                                .required(true)
-//                                .build()))
-        ;
+            .securitySchemes(newArrayList(new BasicAuth("basicAuth")));
+        return this.doc;
     }
 
-    @Bean
-    public Docket geonetworkApi() {
-        // TODO: Add not id in pathMapping
-        loadApi();
-        return this.doc;
+    @Autowired
+    private TypeResolver typeResolver;
+
+    private Docket doc;
+
+    private Predicate<String> paths() {
+        return or(
+            regex("/api/" + API.VERSION_0_1 + "/.*")
+        );
     }
 }

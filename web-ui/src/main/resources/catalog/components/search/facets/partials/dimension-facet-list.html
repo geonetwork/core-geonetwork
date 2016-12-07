@@ -1,23 +1,33 @@
 <div class="gn-facet-list">
+
+  <!--Collapse all button for first panel-->
+  <a class=""
+     href
+     data-ng-click="collapseAll()"
+     title="{{'collapseAllFacet' | translate}}">
+    <i class="fa fa-lg fa-caret-square-o-right"></i>
+  </a>
+  <a class=""
+     href
+     data-ng-click="expandAll()"
+     title="{{'expandAllFacet' | translate}}">
+    <i class="fa fa-lg fa-caret-square-o-down"></i>
+  </a>
+
   <div data-ng-repeat="f in dimension"
+       data-ng-init="fLabel = f['@label'];fLvlCollapse[fLabel] = false"
        class="gn-facet gn-facet-{{f['@label']}}"
        data-ng-show="f.category">
-    <a class="gn-facet-collapseall gn-toggle gn-facet-button"
-       data-ng-if="$index === 0"
-       data-ng-click="collapseAll()"
-       title="{{'collapseAllFacet' | translate}}">
-      <i class="fa fa-fw fa-angle-double-up"></i>
-    </a>
 
-    <h4 data-gn-collapsible="collapsed">
-      <i class="fa fa-fw" data-ng-class="collapsed ? 'fa-angle-left' : ''"></i>
-      {{f['@label'] | translate}}
+    <h4 data-gn-collapsible="fLvlCollapse[fLabel]">
+      <i class="fa fa-fw" data-ng-class="fLvlCollapse[fLabel] ? 'fa-arrow-circle-right' : 'fa-arrow-circle-down'"></i>
+      {{fLabel | translate}}
     </h4>
     <div data-gn-facet-dimension-category="f.category"
-         data-category-key="f['@label']"
+         data-category-key="fLabel"
          data-params="params"
          data-facet-config="facetConfig"
-         data-ng-class="{'collapse': collapsed}">
+         data-ng-class="{'collapse': fLvlCollapse[fLabel]}">
     </div>
   </div>
 </div>

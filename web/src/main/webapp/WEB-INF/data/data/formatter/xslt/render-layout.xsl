@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn-fn-render="http://geonetwork-opensource.org/xsl/functions/render"
+                xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:saxon="http://saxon.sf.net/"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all"
                 version="2.0">
 
   <xsl:import href="common/render-html.xsl"/>
+  <xsl:import href="common/functions-core.xsl"/>
   <xsl:import href="render-variables.xsl"/>
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
@@ -43,14 +45,14 @@
   </xsl:template>
 
   <xsl:template name="render-record">
-    <div class="container gn-metadata-view">
+    <div class="container-fluid gn-metadata-view">
 
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
       </xsl:variable>
       <article id="gn-metadata-view-{$metadataId}"
                itemscope="itemscope"
-               itemtype="{gn-fn-render:get-schema-org-class($type)}">
+               itemtype="{gn-fn-core:get-schema-org-class($type)}">
         <header>
           <h1>
             <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
@@ -72,6 +74,8 @@
 
         </footer>
       </article>
+      <br/>
+      <br/>
     </div>
   </xsl:template>
 

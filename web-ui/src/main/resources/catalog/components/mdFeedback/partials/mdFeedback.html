@@ -2,8 +2,9 @@
      data-ng-show="isFeedbackEnabled"
      data-ng-controller="gnMdFeedbackController">
   <a href data-ng-click="toggle()"
-     class="btn btn-primary pull-right gn-md-feedback-btn"> <i
-    class="fa fa-fw fa-comments-o"></i>
+     title="{{'fbFeedback' | translate}}"
+     class="btn btn-primary pull-right gn-md-feedback-btn">
+    <i class="fa fa-fw fa-comments-o"></i>
   </a>
   <div class="modal fade">
     <div class="modal-dialog">
@@ -15,119 +16,126 @@
                     aria-hidden="true">&times;</button>
           </h3>
         </div>
-        <form class="form-horizontal" role="form" id="gn-contact-md-form">
+        <form class="form-horizontal"
+              role="form"
+              name="gnFeedbackForm"
+              data-ng-submit="send(gnFeedbackForm, '#gn-contact-md-form')"
+              id="gn-contact-md-form">
           <div class="modal-body">
-            <div class="ngr-margin-bottom">
-              <h4 data-translate="">fbContact</h4>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbName</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="name"
-                         value="{{user.name}}" required="required"/>
+            <div data-ng-if="!success">
+              <div class="">
+                <h4 data-translate="">fbContact</h4>
+                <div class="form-group gn-required">
+                  <label class="col-sm-3 control-label gn-required"
+                         data-translate="">fbName</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="name"
+                           value="{{user.name}}" required="required"/>
+                  </div>
+                </div>
+                <!-- <div class="form-group">
+                   <label class="col-sm-3 control-label"></label>
+                   <div class="col-sm-9">
+                     <label class="radio-inline">
+                       <input type="radio" name="gender" value="{{user.gender}}"/> M
+                     </label>
+                     <label class="radio-inline">
+                       <input type="radio" name="gender" value="{{user.gender}}"/> V
+                     </label>
+                   </div>
+                 </div>-->
+                <div class="form-group">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbFunction</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="function"
+                           value="{{user.function}}"/>
+                  </div>
+                </div>
+                <div class="form-group gn-required">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbOrganization</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" name="org"
+                           required="required"/>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbPhone</label>
+                  <div class="col-sm-9">
+                    <input type="tel" class="form-control" name="phone"
+                           data-gn-autogrow=""></input>
+                  </div>
+                </div>
+                <div class="form-group gn-required">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbEmail</label>
+                  <div class="col-sm-9">
+                    <input type="email" class="form-control" name="email"
+                           value="{{user.email|empty}}" required="required"/>
+                  </div>
                 </div>
               </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label"></label>
-                <div class="col-sm-9">
-                  <label class="radio-inline"> <input type="radio"
-                                                      name="gender" value="{{user.gender}}"> M
-                  </label> <label class="radio-inline"> <input type="radio"
-                                                               name="gender" value="{{user.gender}}"> V
-                </label>
+              <div class="ngr-margin-top">
+                <h4 data-translate="">fbFeedback</h4>
+                <div class="form-group gn-required">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbFunction</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" name="type" required="required">
+                      <option value="question" data-translate="">fbQuestion</option>
+                      <option value="error" data-translate="">fbError</option>
+                      <option value="comment" data-translate="">fbComments</option>
+                      <option value="contact" data-translate="">fbContact</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbFunction</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="function"
-                         value="{{user.function}}" required="required"/>
+                <div class="form-group gn-required">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbCategory</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" name="category"
+                            required="required">
+                      <option value="Metadata Contents" data-translate="">fbCatMetadataContents</option>
+                      <option value="Data Contents" data-translate="">fbCatDataContents</option>
+                      <option value="Service Contents" data-translate="">fbCatServiceContents</option>
+                      <option value="Support" data-translate="">fbCatSupport</option>
+                      <option value="Map Viewer" data-translate="">fbCatMapViewer</option>
+                      <option value="Search" data-translate="">fbCatSearch</option>
+                      <option value="Organizations" data-translate="">fbCatOrganizations</option>
+                      <option value="Content Management" data-translate="">fbCatContentManagement</option>
+                      <option value="Metadata Import" data-translate="">fbCatMetadataImport</option>
+                      <option value="Metadata Editing" data-translate="">fbCatMetadataEditing</option>
+                      <option value="Harvesting" data-translate="">fbCatHarvesting</option>
+                      <option value="Validator" data-translate="">fbCatValidator</option>
+                      <option value="Others" data-translate="">fbCatOthers</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbOrganization</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="org"
-                         required="required"/>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbPhone</label>
-                <div class="col-sm-9">
-                  <input type="tel" class="form-control" name="phone"
-                         data-gn-autogrow=""></input>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbEmail</label>
-                <div class="col-sm-9">
-                  <input type="email" class="form-control" name="email"
-                         value="{{user.email|empty}}" required="required"/>
-                </div>
-              </div>
-            </div>
-            <div class="ngr-margin-top">
-              <h4 data-translate="">fbFeedback</h4>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbFunction</label>
-                <div class="col-sm-9">
-                  <select class="form-control" name="type" required="required">
-                    <option value="question" data-translate="">fbQuestion</option>
-                    <option value="error" data-translate="">fbError</option>
-                    <option value="comment" data-translate="">fbComments</option>
-                    <option value="contact" data-translate="">fbContact</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbCategory</label>
-                <div class="col-sm-9">
-                  <select class="form-control" name="category"
-                          required="required">
-                    <option value="Metadata Contents" data-translate="">fbCatMetadataContents</option>
-                    <option value="Data Contents" data-translate="">fbCatDataContents</option>
-                    <option value="Service Contents" data-translate="">fbCatServiceContents</option>
-                    <option value="Support" data-translate="">fbCatSupport</option>
-                    <option value="Map Viewer" data-translate="">fbCatMapViewer</option>
-                    <option value="Search" data-translate="">fbCatSearch</option>
-                    <option value="Organizations" data-translate="">fbCatOrganizations</option>
-                    <option value="Content Management" data-translate="">fbCatContentManagement</option>
-                    <option value="Metadata Import" data-translate="">fbCatMetadataImport</option>
-                    <option value="Metadata Editing" data-translate="">fbCatMetadataEditing</option>
-                    <option value="Harvesting" data-translate="">fbCatHarvesting</option>
-                    <option value="Validator" data-translate="">fbCatValidator</option>
-                    <option value="Others" data-translate="">fbCatOthers</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-sm-3 control-label ngr-md-label"
-                       data-translate="">fbComments</label>
-                <div class="col-sm-9">
-									<textarea class="form-control" name="comments"
+                <div class="form-group gn-required">
+                  <label class="col-sm-3 control-label"
+                         data-translate="">fbComments</label>
+                  <div class="col-sm-9">
+                  <textarea class="form-control" name="comments"
                             data-gn-autogrow="" required="required"></textarea>
+                  </div>
                 </div>
               </div>
-            </div>
 
+              <input type="hidden" name="uuid" value="{{md.getUuid()}}"/>
+              <input type="hidden" name="title" value="{{md.defaultTitle}}"/>
+              <input type="hidden" name="metadataEmail"
+                     value="{{md.allContacts.metadata[0].email || md.allContacts.resource[0].email }}"/>
+              <input type="hidden" name="metadataOrganization"
+                     value="{{md.allContacts.metadata[0].org || md.allContacts.resource[0].org}}"/>
+
+            </div>
             <p class="alert alert-info" data-ng-if="success" data-translate="">feebackSent</p>
 
           </div>
           <div class="modal-footer">
-            <input type="hidden" name="uuid" value="{{md.getUuid()}}"/> <input
-            type="hidden" name="title" value="{{md.defaultTitle}}"/> <input
-            type="hidden" name="metadataEmail"
-            value="{{md.allContacts.metadata[0].email || md.allContacts.resource[0].email }}"/>
-            <input type="hidden" name="metadataOrganization"
-                   value="{{md.allContacts.metadata[0].org || md.allContacts.resource[0].org}}"/>
-            <button class="btn btn-primary pull-right"
-                    data-ng-click="send('#gn-contact-md-form')">
+            <button class="btn btn-primary pull-right" type="submit">
               <i class="fa fa-envelope"></i>&nbsp;<span data-translate="">send</span>
             </button>
           </div>

@@ -111,19 +111,19 @@
             hotkeys.bindTo(scope)
                 .add({
                   combo: 'ctrl+left',
-                  description: $translate('hotkeyFirstPage'),
+                  description: $translate.instant('hotkeyFirstPage'),
                   callback: scope.first
                 }).add({
                   combo: 'left',
-                  description: $translate('hotkeyPreviousPage'),
+                  description: $translate.instant('hotkeyPreviousPage'),
                   callback: scope.previous
                 }).add({
                   combo: 'right',
-                  description: $translate('hotkeyNextPage'),
+                  description: $translate.instant('hotkeyNextPage'),
                   callback: scope.next
                 }).add({
                   combo: 'ctrl+right',
-                  description: $translate('hotkeyLastPage'),
+                  description: $translate.instant('hotkeyLastPage'),
                   callback: scope.last
                 });
           }

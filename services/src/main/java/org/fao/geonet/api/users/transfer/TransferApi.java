@@ -104,7 +104,7 @@ public class TransferApi {
     @ApiOperation(
         value = "Retrieve all user groups",
         notes = "",
-        nickname = "retrieveUserGroups")
+        nickname = "retrieveAllUserGroups")
     @RequestMapping(
         value = "/groups",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -147,7 +147,7 @@ public class TransferApi {
     @ApiOperation(
         value = "Transfer privileges",
         notes = "",
-        nickname = "retrieveUserGroups")
+        nickname = "saveOwners")
     @RequestMapping(
         value = "/owners",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -155,7 +155,7 @@ public class TransferApi {
     )
     @PreAuthorize("hasRole('UserAdmin')")
     @ResponseBody
-    public ResponseEntity retrieveAllUserGroups(
+    public ResponseEntity saveOwners(
         @RequestBody
             TransferRequest transfer,
         @ApiIgnore

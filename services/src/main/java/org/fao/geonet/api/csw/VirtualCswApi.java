@@ -192,6 +192,10 @@ public class VirtualCswApi {
 
         Service existing = serviceRepository.findOne(identifier);
         if (existing != null) {
+            // Attach params to service in case not set by client.
+            service.getParameters().forEach(p -> {
+                p.setService(service);
+            });
             serviceRepository.save(service);
         } else {
             throw new ResourceNotFoundException(String.format(

@@ -70,9 +70,9 @@
           map: '='
         },
         link: function(scope, element, attrs) {
-          scope.mapFileName = $translate('mapFileName');
+          scope.mapFileName = $translate.instant('mapFileName');
           scope.save = function($event) {
-            scope.mapFileName = $translate('mapFileName') +
+            scope.mapFileName = $translate.instant('mapFileName') +
                 '-z' + scope.map.getView().getZoom() +
                 '-c' + scope.map.getView().getCenter().join('-');
 
@@ -102,7 +102,7 @@
             var xml = gnOwsContextService.writeContext(scope.map);
             scope.mapProps.map_string =
                 new XMLSerializer().serializeToString(xml);
-            scope.mapProps.map_filename = $translate('mapFileName') +
+            scope.mapProps.map_filename = $translate.instant('mapFileName') +
                 '-z' + scope.map.getView().getZoom() +
                 '-c' + scope.map.getView().getCenter().join('-') + '.ows';
             return $http.post('map.import?_content_type=json',
@@ -141,13 +141,15 @@
           });
 
           // load context from url or from storage
+          var key = 'owsContext_' +
+              window.location.host + window.location.pathname;
           var storage = gnViewerSettings.storage ?
               window[gnViewerSettings.storage] : window.localStorage;
           if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
                 scope.map);
-          } else if (storage.getItem('owsContext')) {
-            var c = storage.getItem('owsContext');
+          } else if (storage.getItem(key)) {
+            var c = storage.getItem(key);
             gnOwsContextService.loadContext(c, scope.map);
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(

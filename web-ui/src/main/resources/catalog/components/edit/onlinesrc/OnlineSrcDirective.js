@@ -1348,7 +1348,7 @@
                         scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                       } else {
                         scope.alertMsg =
-                            $translate('linkToServiceWithoutURLError');
+                            $translate.instant('linkToServiceWithoutURLError');
                       }
                     }
                   });
@@ -1408,8 +1408,8 @@
                           scope.srcParams.url = links[0].url;
                         } else {
                           scope.srcParams.url = '';
-                          scope.alertMsg =
-                              $translate('linkToServiceWithoutURLError');
+                          scope.alertMsg = $translate.instant(
+                              'linkToServiceWithoutURLError');
                         }
                       }
                       else {
@@ -1502,7 +1502,7 @@
                         _schema: 'iso19110'
                       };
                       scope.btn = {
-                        label: $translate('linkToFeatureCatalog')
+                        label: $translate.instant('linkToFeatureCatalog')
                       };
                     }
                     else if (scope.mode == 'parent') {
@@ -1510,7 +1510,7 @@
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        label: $translate('linkToParent')
+                        label: $translate.instant('linkToParent')
                       };
                     }
                     else if (scope.mode == 'source') {
@@ -1518,7 +1518,7 @@
                         hitsPerPage: 10
                       };
                       scope.btn = {
-                        label: $translate('linkToSource')
+                        label: $translate.instant('linkToSource')
                       };
                     }
                     scope.$broadcast('resetSearch', searchParams);

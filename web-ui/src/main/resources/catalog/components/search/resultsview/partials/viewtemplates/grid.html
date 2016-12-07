@@ -54,7 +54,7 @@
     <div class="row gn-md-title"
          data-ng-click="openRecord($index, md, searchResults.records)">
       <h3>
-        <a href=""
+        <a data-ng-href="#/metadata/{{md.getUuid()}}"
            title="{{md.title || md.defaultTitle}}">
 
           <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>

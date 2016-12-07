@@ -2,14 +2,14 @@
   <div class="input-group-btn">
     <button type="button"
             class="btn btn-default dropdown-toggle"
-            data-ng-if="gnRegionService.regionsList.length > 1"
+            data-ng-if="regionTypes.length > 1"
             data-toggle="dropdown">
-      {{regionType.label | translate}} <span class="caret"></span>
+      {{(regionType.label || regionType.name) | translate}} <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li data-ng-repeat="regionObj in gnRegionService.regionsList">
+      <li data-ng-repeat="regionObj in regionTypes">
         <a href="" data-ng-click="setRegion(regionObj)">
-          {{regionObj.label}}
+          {{regionObj.label || regionObj.name}}
         </a>
       </li>
     </ul>
@@ -18,4 +18,6 @@
   <input type="text" name="regionpicker" class="form-control"
          data-gn-region-picker-input=""
          placeholder="{{'chooseRegion' | translate}}"/>
+  <span class="fa fa-spinner fa-spin" data-ng-show="regionLoading"></span>
+  <span class="fa fa-times-circle" data-ng-click="resetRegion()"></span>
 </div>

@@ -80,8 +80,8 @@
             session.remainingTime < session.alertWhen) {
           if (session.remainingTime < 0) {
             $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('sessionIsProbablyCancelled'),
-              msg: $translate('sessionAlertDisconnectedMsg', {
+              title: $translate.instant('sessionIsProbablyCancelled'),
+              msg: $translate.instant('sessionAlertDisconnectedMsg', {
                 startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
                 length: session.length
               }),
@@ -89,8 +89,8 @@
               type: 'danger'});
           } else {
             $rootScope.$broadcast('StatusUpdated', {
-              title: $translate('sessionIsAboutToBeCancelled'),
-              msg: $translate('sessionAlertMsg', {
+              title: $translate.instant('sessionIsAboutToBeCancelled'),
+              msg: $translate.instant('sessionAlertMsg', {
                 startedAt: session.start.format('YYYY-MM-DD HH:mm:ss'),
                 willBeCancelledIn: session.remainingTime,
                 length: session.length

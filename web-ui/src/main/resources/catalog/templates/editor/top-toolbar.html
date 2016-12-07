@@ -4,7 +4,11 @@
 
   <p class="navbar-text gn-tooltip"
      data-ng-mouseover="getSaveStatus()" title="{{savedStatus}}">
-    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
+    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span><br/>
+    <strong title="{{gnCurrentEdit.mdTitle}}">
+      {{gnCurrentEdit.mdTitle | limitTo: 50 }}
+      {{gnCurrentEdit.mdTitle.length > 50 ? '...' : ''}}
+    </strong>
   </p>
 
   <div class="pull-right">

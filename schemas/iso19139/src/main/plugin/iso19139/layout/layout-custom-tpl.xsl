@@ -41,22 +41,24 @@
   <!-- Define table layout -->
   <xsl:template name="iso19139-table-contact">
     <xsl:variable name="name" select="name()"/>
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
     <xsl:variable name="values">
       <header>
         <col>
-          <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'gmd:organisationName', $labels,'', '', '')/label"/>
+          <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'gmd:organisationName', $labels, '', $isoType, $xpath)/label"/>
         </col>
         <col>
-          <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'gmd:individualName', $labels,'', '', '')/label"/>
-        </col>
-        <col>
-          <xsl:value-of
-            select="gn-fn-metadata:getLabel($schema, 'gmd:electronicMailAddress', $labels,'', '', '')/label"/>
+          <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'gmd:individualName', $labels, '', $isoType, $xpath)/label"/>
         </col>
         <col>
           <xsl:value-of
-            select="gn-fn-metadata:getLabel($schema, 'gmd:role', $labels,'', '', '')/label"/>
+            select="gn-fn-metadata:getLabel($schema, 'gmd:electronicMailAddress', $labels, '', $isoType, $xpath)/label"/>
+        </col>
+        <col>
+          <xsl:value-of
+            select="gn-fn-metadata:getLabel($schema, 'gmd:role', $labels, '', $isoType, $xpath)/label"/>
         </col>
       </header>
       <xsl:for-each select="(.|following-sibling::*[name() = $name])/gmd:CI_ResponsibleParty">
@@ -79,9 +81,6 @@
         </row>
       </xsl:for-each>
     </xsl:variable>
-
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
