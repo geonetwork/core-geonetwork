@@ -14,7 +14,7 @@
   "fullView": "Full metadata",
   "simpleView": "Essential metadata",
   "panierSuccessMsg" : "Your data download request has been taken into account. The data set is being created.<br>A message warns you of its availability on the FTP site of IFREMER. ",
-  "panierErrorMsg" : "A problem occurred in your data download request. Please try again later.",  
+  "panierErrorMsg" : "A problem occurred in your data download request. Please try again later.",
   "basket": "Basket",
   "inbasket": "in basket",
   "addAllLayersToPanier": "Add all {{number}} layers to the basket",
@@ -53,6 +53,7 @@
   "inspireThemes_en": "Inspire Themes",
   "inspireThemes_fr": "Inspire Themes",
   "firstname": "First name",
-  "lastname": "Last name"
+  "lastname": "Last name",
+  "replaceByThoseOperations": "Update"
 
 }

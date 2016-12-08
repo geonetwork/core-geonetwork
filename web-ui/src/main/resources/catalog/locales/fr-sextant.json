@@ -52,5 +52,6 @@
   "inspireThemes_en": "Thèmes Inspire",
   "inspireThemes_fr": "Thèmes Inspire",
   "firstname": "Prénom",
-  "lastname": "Nom"
+  "lastname": "Nom",
+  "replaceByThoseOperations": "Mettre à jour"
 }
