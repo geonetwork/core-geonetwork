@@ -1399,8 +1399,7 @@
 
     <!-- The widget configuration -->
     <div class="thesaurusPickerCfg" id="thesaurusPicker_{$elementRef}"
-         config="{{mode: '{$widgetMode}', thesaurus:'{$thesaurusId
-      }', maxKeywords: {$maxKeywords}, searchOnLoad: '{$searchOnLoad}', keywords: ['{$listOfKeywords
+         config="{{mode: '{$widgetMode}', thesaurus:'{normalize-space($thesaurusId)}', maxKeywords: {$maxKeywords}, searchOnLoad: '{$searchOnLoad}', keywords: ['{$listOfKeywords
       }'], transformations: [{$listOfTransformations
       }], mdLang: ['{$metadata/gmd:language/gmd:LanguageCode/@codeListValue}'{if ($metadata//gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue) then concat(',&quot;', string-join($metadata//gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue, '&quot;,&quot;'), '&quot;') else ''
       }], transformation: '{$transformation
