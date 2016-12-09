@@ -62,8 +62,18 @@
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      <li><a href="" data-ng-click="config.format = 'pdf'">PDF</a></li>
-      <li><a href=""  data-ng-click="config.format = 'png'">Image</a></li>
+      <li>
+        <label>
+          <input type="radio" value="pdf" ng-model="config.format">
+          PDF
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="radio" value="png" ng-model="config.format">
+          Image
+        </label>
+      </li>
     </ul>
   </div>
 

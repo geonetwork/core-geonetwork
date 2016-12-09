@@ -105,7 +105,7 @@ layouts:
           absoluteY:816
         - !columns
           condition: hasAttribution
-          absoluteX: 150
+          absoluteX: 170
           absoluteY: 55
           width: 100
           items:
@@ -115,8 +115,8 @@ layouts:
                 text: 'Source(s): '
         - !columns
           condition: hasAttribution
-          absoluteX: 200
-          absoluteY: 51
+          absoluteX: 245
+          absoluteY: 52
           width: 250
           items:
             - !text
@@ -149,6 +149,22 @@ layouts:
           condition: enableLegends
           absoluteX: 51
           absoluteY: 808
+          width: 511
+          items:
+            - !text
+                condition: isFr
+                font: Helvetica
+                fontSize: 14
+                text: 'Légende: '
+            - !text
+                condition: '!isFr'
+                font: Helvetica
+                fontSize: 14
+                text: 'Legend: '
+         - !columns
+          condition: enableLegends
+          absoluteX: 51
+          absoluteY: 768
           width: 511
           items:
             - !legends
@@ -268,7 +284,23 @@ layouts:
          - !columns
           condition: enableLegends
           absoluteX: 21
-          absoluteY: 588
+          absoluteY: 570
+          width: 511
+          items:
+            - !text
+                condition: isFr
+                font: Helvetica
+                fontSize: 14
+                text: 'Légende: '
+            - !text
+                condition: '!isFr'
+                font: Helvetica
+                fontSize: 14
+                text: 'Legend: '
+         - !columns
+          condition: enableLegends
+          absoluteX: 21
+          absoluteY: 548
           width: 801
           items:
             - !legends

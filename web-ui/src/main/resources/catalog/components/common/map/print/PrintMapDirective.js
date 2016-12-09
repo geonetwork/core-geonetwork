@@ -254,6 +254,7 @@
         hasTitle:$scope.mapTitle ? true : false,
         hasNoTitle:$scope.mapTitle ? false : true,
         hasAttribution: !!attributions.length,
+        isFr: lang == 'fre',
         pages: [
           angular.extend({
             center: gnPrint.getPrintRectangleCenterCoord(

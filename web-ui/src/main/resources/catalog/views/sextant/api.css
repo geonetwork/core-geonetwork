@@ -16072,6 +16072,19 @@ yx-axis
 .g [sxt-main-viewer] [gn-mapprint] .print-btn .dropdown-menu {
   width: 100%;
 }
+.gn [sxt-main-viewer] [gn-mapprint] label,
+.g [sxt-main-viewer] [gn-mapprint] label {
+  font-weight: normal;
+}
+.gn [sxt-main-viewer] [gn-mapprint] .dropdown-menu label,
+.g [sxt-main-viewer] [gn-mapprint] .dropdown-menu label {
+  margin-left: 10px;
+}
+.gn [sxt-main-viewer] [gn-mapprint] .dropdown-menu label input[type="radio"],
+.g [sxt-main-viewer] [gn-mapprint] .dropdown-menu label input[type="radio"] {
+  margin: 0;
+  vertical-align: middle;
+}
 .gn [sxt-main-viewer] .sx-toolbar,
 .g [sxt-main-viewer] .sx-toolbar {
   position: absolute;
@@ -16783,7 +16796,7 @@ yx-axis
 }
 .gn [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset,
 .g [sxt-main-viewer] .sxt-maximize-layer-tools .sxt-layers-tabset {
-  height: 200%;
+  height: calc(200% - 4em);
 }
 .gn [sxt-main-viewer] #importLayer > .panel-body,
 .g [sxt-main-viewer] #importLayer > .panel-body {
@@ -21354,7 +21367,9 @@ yx-axis
   right: .3em;
 }
 .gn [gn-share] .gn-share-help,
-.g [gn-share] .gn-share-help {
+.g [gn-share] .gn-share-help,
+.gn [gn-share] [data-gn-need-help],
+.g [gn-share] [data-gn-need-help] {
   display: none;
 }
 .gn .sxt-panier .sxt-main-tabs .sxt-download-btn,
