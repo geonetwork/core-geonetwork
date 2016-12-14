@@ -113,24 +113,25 @@
                  // TODO: Should use the solObject to get table of results
                  // and do paging/sorting instead of re-running the query
                  solrObject.on('search', function(event) {
-                   var url = solrUrl.replace('rows=0', '');
-                   if (url.indexOf('&q=') === -1) {
-                     url += '&q=*:*';
-                   }
+                   var url = solrUrl; // .replace('from=0', '');
+
                    table.bootstrapTable('destroy');
                    table.bootstrapTable({
                      url: url,
                      queryParams: function(p) {
                        return {
-                         rows: p.limit,
-                         start: p.offset
+                         from: p.limit,
+                         size: p.offset
                        };
                      },
-                     //data: scope.data.response.docs,
                      responseHandler: function(res) {
+                       var rows = [];
+                       for (var i = 0; i < res.hits.hits.length; i++) {
+                         rows.push(res.hits.hits[i]._source);
+                       }
                        return {
-                         total: res.response.numFound,
-                         rows: res.response.docs
+                         total: res.hits.total,
+                         rows: rows
                        };
                      },
                      columns: columns,

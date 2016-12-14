@@ -13,7 +13,6 @@
   <name>Solr module</name>
   <packaging>pom</packaging>
   <modules>
-    <module>solr-config</module>
     <module>solr-bridge</module>
   </modules>
 

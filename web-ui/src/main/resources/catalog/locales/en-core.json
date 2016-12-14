@@ -94,7 +94,8 @@
     "forgetDetails": "Forgotten your details?",
     "forgetDetailsInfo": "Use password recovery to reset it.",
     "from": "From",
-    "collapseAllFacet": "Show/hide facets",
+    "collapseAllFacet": "Collapse all facets",
+    "expandAllFacet": "Expand all facets",
     "ger": "Deutsch",
     "groupOwners": "Groups",
     "hour": "Hour",
@@ -295,5 +296,6 @@
     "typeOfRecord": "Type of record",
     "load": "Load",
     "solrAccessError": "Error during Solr access.",
-    "gnbbox": "Geographical area"
+    "gnbbox": "Geographical area",
+    "indexAccessError": "Error during Solr access."
 }

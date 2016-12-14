@@ -1,0 +1,111 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "pathAnalyzer": {
+          "tokenizer": "pathTokenizer"
+        }
+      },
+      "tokenizer": {
+        "pathTokenizer": {
+          "type": "path_hierarchy",
+          "delimiter": "/",
+          "replacement": "/",
+          "skip": 0,
+          "reverse": false
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_default_": {
+      "dynamic_templates": [
+        {
+          "integerType": {
+            "match": "ft_*_ti",
+            "mapping": {
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "doubleType": {
+            "match": "ft_*_d",
+            "mapping": {
+              "type": "double"
+            }
+          }
+        },
+        {
+          "booleanType": {
+            "match": "ft_*_b",
+            "mapping": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "dateType": {
+            "match": "ft_*_d",
+            "mapping": {
+              "type": "date",
+              "format": "yyyy-MM-dd||yyyy-MM||yyyy"
+            }
+          }
+        },
+        {
+          "dateTimeType": {
+            "match": "ft_*_dt",
+            "mapping": {
+              "type": "date",
+              "format": "yyyy-MM-dd'T'HH:mm:ss'Z'||yyyy-MM-dd'T'HH:mm:ss"
+            }
+          }
+        },
+        {
+          "stringType": {
+            "match": "ft_*_s",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "stringPathType": {
+            "match": "ft_*_s_tree",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "pathAnalyzer"
+            }
+          }
+        }
+      ],
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "docType": {
+          "type": "keyword"
+        },
+        "featureTypeId": {
+          "type": "keyword"
+        },
+        "resourceType": {
+          "type": "keyword"
+        },
+        "resourceTitle": {
+          "type": "keyword"
+        },
+        "parent": {
+          "type": "keyword"
+        },
+        "geom": {
+          "type": "geo_shape",
+          "tree": "quadtree",
+          "precision": "10km"
+        }
+      }
+    }
+  }
+}

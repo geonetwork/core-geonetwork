@@ -58,7 +58,8 @@
           layer: '=',
           heatmapConfig: '@'
         },
-        link: function(scope, element, attrs) {
+        controller: function(){},
+        link: function(scope, element, attrs, ctrl) {
 
           var solrUrl, uuid, ftName, appProfile, appProfilePromise;
           scope.map = scope.$parent.map;
@@ -148,6 +149,7 @@
               isFeaturesIndexed: false,
               status: null,
               md: scope.layer.get('md'),
+              mdUrl: scope.layer.get('url'),
               url: scope.wfsUrl || scope.layer.get('url').replace(/wms/i, 'wfs')
             });
 
@@ -158,7 +160,7 @@
             appProfile = null;
             appProfilePromise = wfsFilterService.getApplicationProfile(uuid,
                 ftName,
-                scope.url,
+                scope.wfsUrl ? scope.url : scope.mdUrl,
                 // A WFS URL is in the metadata or we're guessing WFS has
                 // same URL as WMS
                 scope.wfsUrl ? 'WFS' : 'WMS').then(
@@ -211,7 +213,7 @@
 
               solrObject.indexFields =
                   wfsFilterService.solrMergeApplicationProfile(
-                  solrObject.filteredDocTypeFieldsInfo, appProfile.fields);
+                  solrObject.filteredDocTypeFieldsInfo, appProfile);
               solrObject.initBaseParams();
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
@@ -251,13 +253,15 @@
               }
               appProfilePromise.then(loadFields);
             }, function(error) {
-              scope.status = error.data ? 'solrAccessError' : error.statusText;
+              scope.status = error.data ? 'indexAccessError' : error.statusText;
               scope.statusTitle = error.statusText;
             });
           };
           scope.dropFeatures = function() {
-            return gnSolrService.deleteDocs('+featureTypeId:"' +
-                scope.url + '#' + ftName + '"').then(function() {
+            return $http.delete(
+              '../api/workers/data/wfs/actions?serviceUrl=' +
+                encodeURIComponent(scope.url)
+              + '&typeName=' + encodeURIComponent(ftName)).then(function() {
               scope.initSolrRequest();
             });
           };
@@ -270,7 +274,11 @@
            * @param {string} facetKey facet key for this field
            * @param {string} type facet type
            */
-          scope.onCheckboxClick = function(fieldName, facetKey, type) {
+          scope.onCheckboxClick = function(field, facet) {
+
+            var fieldName = field.name;
+            var facetKey = facet.value;
+
             var output = scope.output;
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
@@ -285,13 +293,25 @@
             }
             else {
               output[fieldName] = {
-                type: type,
+                type: field.type,
+                query: facet.query,
                 values: {}
               };
               output[fieldName].values[facetKey] = true;
             }
             scope.searchInput = '';
             scope.filterFacets();
+          };
+          ctrl.onCheckboxClick = scope.onCheckboxClick;
+
+          scope.isFacetSelected = function(fName, value) {
+            try {
+              var iS = scope.output[fName].values[value];
+              return iS;
+            }
+            catch(e) {
+              return false;
+            }
           };
 
           /**
@@ -317,6 +337,7 @@
               geometry: geometry
             }).
                 then(function(resp) {
+                  solrObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
@@ -336,7 +357,8 @@
               },
               gnSolrService.getHeatmapParams(scope.map)).
                   then(function(resp) {
-                    scope.heatmaps = resp.solrData.facet_counts.facet_heatmaps;
+                    scope.heatmaps = resp.aggs;
+                    // resp.solrData.facet_counts.facet_heatmaps;
                   });
             }
           }
@@ -432,7 +454,8 @@
               wfsFilterService.indexWFSFeatures(
                   scope.url,
                   ftName,
-                  appProfile ? appProfile.tokenize : null,
+                  appProfile ? appProfile.tokenizedFields : null,
+                  appProfile ? appProfile.treeFields : null,
                   uuid,
                   version);
             });
@@ -469,9 +492,9 @@
                 return parseFloat(val);
               });
               geometry = [
-                extentFilter[0], extentFilter[2],
-                extentFilter[3], extentFilter[1]
-              ].join(',');
+                [extentFilter[0], extentFilter[3]],
+                [extentFilter[2], extentFilter[1]]
+              ];
               scope.filterFacets();
             }
             // when reset from gnBbox directive
@@ -526,7 +549,6 @@
               solrObject: solrObject,
               layer: scope.layer
             });
-
           };
 
           element.on('$destroy', function() {
@@ -536,4 +558,96 @@
         }
       };
     }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_wfsfilter.directive:gnWfsFilterFacetsTree
+   *
+   * @description
+   * The global markup for the facet tree. Each node of the tree is a
+   * sub directive `gnWfsFilterFacetsTreeItem`.
+   *
+   * This directive is used to be the controller of all the tree.
+   */
+  module.directive('gnWfsFilterFacetsTree', [
+    function() {
+      return {
+        restrict: 'A',
+        scope: {
+          field: '<gnWfsFilterFacetsTree',
+          isSelectedFn: '&gnWfsFilterFacetsTreeIsselected'
+        },
+        require: {
+          wfsFilterCrl: '^^gnWfsFilterFacets'
+        },
+        template: '<div gn-wfs-filter-facets-tree-item="treeCtrl.field.tree"></div>',
+        bindToController: true,
+        controllerAs: 'treeCtrl',
+        controller: function() {
+          this.$onInit = function() {
+            this.onCheckboxTreeClick = function(value) {
+
+              this.wfsFilterCrl.onCheckboxClick(this.field, {
+                value: value
+              });
+            };
+            this.isSelected = function(value) {
+              return this.isSelectedFn({
+                name: this.field.name,
+                value: value
+              });
+            }
+          };
+        }
+      };
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_wfsfilter.directive:gnWfsFilterFacetsTreeItem
+   *
+   * @description
+   * The tree node structure of the wfs filter facet tree.
+   */
+  module.directive('gnWfsFilterFacetsTreeItem', [
+    function() {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/viewer/wfsfilter/' +
+        'partials/wfsfilterfacetTreeItem.html',
+        scope: {
+          node: '<gnWfsFilterFacetsTreeItem'
+        },
+        require: {
+          treeCtrl: '^^gnWfsFilterFacetsTree'
+        },
+        bindToController: true,
+        controllerAs: 'ctrl',
+        controller: ['$attrs', function($attrs) {
+          this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot']
+            === undefined;
+
+          this.$onInit = function() {
+
+            this.onCheckboxTreeClick = function() {
+              this.treeCtrl.onCheckboxTreeClick(this.node.key);
+            };
+            this.isSelected = function() {
+              return this.treeCtrl.isSelected(this.node.key);
+            }
+          };
+        }],
+        link: function (scope, el, attrs, ctrls) {
+          scope.toggleNode = function(evt) {
+            el.find('.fa').first().toggleClass('fa-minus-square')
+              .toggleClass('fa-plus-square');
+            el.children('.list-group').toggle();
+            !evt || evt.preventDefault();
+            evt.stopPropagation();
+            return false;
+          };
+        }
+      };
+    }]);
+
 })();

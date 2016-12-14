@@ -23,8 +23,8 @@
 
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.common.StringUtils;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.wfs.WFSDataStore;
 import org.geotools.data.wfs.WFSDataStoreFactory;
@@ -114,10 +114,6 @@ public class WFSHarvesterExchangeState {
     public void initDataStore() throws Exception {
         WFSDataStoreFactory factory = new WFSDataStoreFactory();
         Map m = new HashMap();
-
-        // See http://docs.geotools.org/latest/userguide/library/referencing/order.html
-        // TODO: Discuss
-        System.setProperty("org.geotools.referencing.forceXY", "true");
 
         try {
             String getCapUrl = OwsUtils.getGetCapabilitiesUrl(

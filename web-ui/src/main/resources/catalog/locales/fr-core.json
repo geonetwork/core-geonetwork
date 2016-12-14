@@ -291,5 +291,6 @@
     "typeOfRecord": "Type de fiche",
     "load": "Charger",
     "solrAccessError": "Erreur lors de l'accès à l'index.",
-    "gnbbox": "Zone géographique"
+    "gnbbox": "Zone géographique",
+    "indexAccessError": "Erreur lors de l'accès à l'index."
 }

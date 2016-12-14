@@ -24,15 +24,9 @@
 package org.fao.geonet.web;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.overrides.ConfigurationOverrides;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -51,7 +45,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -85,7 +78,8 @@ public class LocaleRedirects {
 
     private String _homeRedirectUrl = "catalog.search";
 
-    private String _defaultLanguage = Geonet.DEFAULT_LANGUAGE;
+    @Autowired
+    DefaultLanguage defaultLanguage;
 
     @RequestMapping(value = "/home")
     public ModelAndView home(final HttpServletRequest request,
@@ -166,6 +160,9 @@ public class LocaleRedirects {
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {
+        if (defaultLanguage.isForceDefault()) {
+            return defaultLanguage.getLanguage();
+        }
 
         if (langParam != null) {
             return langParam;
@@ -174,7 +171,7 @@ public class LocaleRedirects {
             return langCookie;
         }
         if (langHeader == null) {
-            return _defaultLanguage;
+            return defaultLanguage.getLanguage();
         }
 
         String userLang = langHeader.split("-|,", 2)[0].toLowerCase();
@@ -210,7 +207,7 @@ public class LocaleRedirects {
         } else if (userLang.matches("^tr")) {
             userLang = "tur";
         } else {
-            userLang = _defaultLanguage;
+            userLang = defaultLanguage.getLanguage();
         }
 
         return userLang;

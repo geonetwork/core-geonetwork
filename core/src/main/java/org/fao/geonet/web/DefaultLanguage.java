@@ -20,35 +20,46 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
+package org.fao.geonet.web;
 
-(function() {
-  goog.provide('gn_solr_request_config');
+import org.fao.geonet.constants.Geonet;
 
-  var module = angular.module('gn_solr_request_config', []);
+/**
+ * Default catalog language and characteristics.
+ */
+public class DefaultLanguage {
 
-  module.factory('gnSolrWfsFilterConfig', ['gnHttp', function(gnHttp) {
+    public DefaultLanguage() {
+        language = Geonet.DEFAULT_LANGUAGE;
+        forceDefault = false;
+    }
 
-    return {
-      url: gnHttp.getService('indexproxy'),
-      docTypeIdField: 'id',
-      docIdField: 'featureTypeId',
-      idDoc: function(config) {
-        return config.wfsUrl + '#' +
-            config.featureTypeName.replace(':', '\\:');
-      },
-      facets: true,
-      stats: true,
-      excludedFields: ['geom', 'the_geom', 'ms_geometry',
-        'msgeometry', 'id_s', '_version_', 'featuretypeid', 'doctype']
-    };
-  }]);
 
-  module.factory('gnSolrDefaultConfig', ['gnHttp', function(gnHttp) {
-    return {
-      url: gnHttp.getService('indexproxy'),
-      facets: true,
-      stats: false
-    };
-  }]);
+    private String language;
 
-})();
+    /**
+     * @return The default language.
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+
+    private boolean forceDefault;
+
+    /**
+     * @return true if the default language is forced even if
+     * there is custom HTTP headers or URL parameters.
+     */
+    public boolean isForceDefault() {
+        return forceDefault;
+    }
+
+    public void setForceDefault(boolean forceDefault) {
+        this.forceDefault = forceDefault;
+    }
+}
