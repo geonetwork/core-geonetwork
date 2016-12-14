@@ -39,6 +39,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -105,7 +106,9 @@ public class AddLimitations implements Service {
 
             String fname = elem.getText();
 
-            if (fname.contains("..")) {
+            try {
+                FilePathChecker.verify(fname);
+            } catch (Exception ex) {
                 continue;    // Avoid unsecured file name
             }
 
