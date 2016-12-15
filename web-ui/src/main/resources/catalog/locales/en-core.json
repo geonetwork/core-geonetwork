@@ -2,6 +2,7 @@
     "all": "all",
     "allInPage": "all in page",
     "none": "none",
+    "dqReportCheckpoint": "Data quality report (Checkpoint)",
     "BadParameterEx": "Wrong parameter",
     "Editor": "Editor",
     "Keywords": "Keywords",
