@@ -210,6 +210,26 @@
               label: 'download',
               action: openLink
             },
+            'LINKDOWNLOAD-ZIP' : {
+              iconClass: 'fa-file-zip-o',
+              label: 'download',
+              action: openLink
+            },
+            'LINKDOWNLOAD-PDF' : {
+              iconClass: 'fa-file-pdf-o',
+              label: 'download',
+              action: openLink
+            },
+            'LINKDOWNLOAD-XML' : {
+              iconClass: 'fa-file-code-o',
+              label: 'download',
+              action: openLink
+            },
+            'LINKDOWNLOAD-RDF' : {
+              iconClass: 'fa-share-alt',
+              label: 'download',
+              action: openLink
+            },
             'LINK' : {
               iconClass: 'fa-link',
               label: 'openPage',
@@ -270,8 +290,19 @@
               } else if (protocolOrType.match(/kml/i)) {
                 return 'KML';
               } else if (protocolOrType.match(/download/i)) {
-                return 'LINKDOWNLOAD';
-              } else if (protocolOrType.match(/link/i)) {
+                if (resource.url.match(/zip/i)) {
+                  return 'LINKDOWNLOAD-ZIP';
+                } else if (resource.url.match(/pdf/i)) {
+                  return 'LINKDOWNLOAD-PDF';
+                } else if (resource.url.match(/xml/i)) {
+                  return 'LINKDOWNLOAD-XML';
+                } else if (resource.url.match(/rdf/i)) {
+                  return 'LINKDOWNLOAD-RDF';
+                } else {
+                  return 'LINKDOWNLOAD';
+                }
+              // Anything that is not matched before, gets the link icon
+              } else {
                 return 'LINK';
               }
             }
