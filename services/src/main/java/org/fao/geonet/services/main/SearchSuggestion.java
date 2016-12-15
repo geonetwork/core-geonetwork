@@ -170,8 +170,11 @@ public class SearchSuggestion implements Service {
         // user are returned, because the search filter the results first.
         if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
             LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-
-            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, listOfSuggestions);
+            String searchWithWildCard = searchValue;
+            if(!searchWithWildCard.endsWith("*")) {
+                searchWithWildCard = searchWithWildCard + "*";
+            }
+            searcher.getSuggestionForFields(context, fieldName, searchWithWildCard, _config, maxNumberOfTerms, threshold, listOfSuggestions);
         }
         // No values found from the index records field value ...
         if (origin.equals(INDEX_TERM_VALUES)
@@ -203,12 +206,17 @@ public class SearchSuggestion implements Service {
             collectionOfSuggestions = listOfSuggestions;
         }
 
+        int count = 0;
         for (TermFrequency suggestion : collectionOfSuggestions) {
             Element md = new Element(ELEM_ITEM);
             // md.setAttribute("term", suggestion.replaceAll("\"",""));
             md.setAttribute(ATT_TERM, suggestion.getTerm());
             md.setAttribute(ATT_FREQ, suggestion.getFrequency() + "");
             suggestionsResponse.addContent(md);
+            count++;
+            if (count >= maxNumberOfTerms) {
+                break;
+            }
         }
 
         return suggestionsResponse;

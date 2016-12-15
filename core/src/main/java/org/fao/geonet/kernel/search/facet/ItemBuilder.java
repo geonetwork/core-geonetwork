@@ -124,6 +124,10 @@ public class ItemBuilder {
     }
 
     private FacetResult getTopChildren(String... path) {
+        if(config.getMax() == -1) {
+            config.setMax(Integer.MAX_VALUE);
+        }
+        
         try {
             if (config.getDimension().isLocalized() && !config.getDimension().getLocales().contains(langCode)) {
                 return new FacetResult(config.getDimension().getName(langCode), path, 0, new LabelAndValue[0], 0);
