@@ -72,8 +72,11 @@ public class InspireAtomFeed extends GeonetEntity implements Serializable {
         Namespace ns = Namespace.getNamespace("f", "http://www.w3.org/2005/Atom");
         Namespace nsXml = Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
-        inspireAtomFeed.setTitle(atomDoc.getChildText("title", ns));
-        inspireAtomFeed.setSubtitle(atomDoc.getChildText("subtitle", ns));
+        /* Max length of title and subtitle of atom feed is 255 */
+        String title = atomDoc.getChildText("title", ns);
+        inspireAtomFeed.setTitle(title!=null ? title.substring(0,Math.min(title.length()-1, 255)):"");
+        String subTitle = atomDoc.getChildText("subtitle", ns);
+        inspireAtomFeed.setSubtitle(subTitle!=null ? subTitle.substring(0,Math.min(subTitle.length()-1, 255)):"");
         inspireAtomFeed.setRights(atomDoc.getChildText("rights", ns));
         inspireAtomFeed.setLang(atomDoc.getAttributeValue("lang", ns));
         Element authorEl = atomDoc.getChild("author", ns);

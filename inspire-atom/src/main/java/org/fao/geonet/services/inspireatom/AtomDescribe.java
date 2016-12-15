@@ -54,17 +54,25 @@ public class AtomDescribe implements Service {
     /**
      * Dataset identifier param name
      **/
-    private final static String DATASET_IDENTIFIER_CODE_PARAM = "spatial_dataset_identifier_code";
+	public final static String DATASET_IDENTIFIER_CODE_PARAM = "spatial_dataset_identifier_code";
 
     /**
      * Dataset namespace param name
      **/
-    private final static String DATASET_IDENTIFIER_NS_PARAM = "spatial_dataset_identifier_namespace";
+    public final static String DATASET_IDENTIFIER_NS_PARAM = "spatial_dataset_identifier_namespace";
+
+    /**
+     * Dataset crs param name
+     **/
+    public final static String DATASET_CRS_PARAM = "crs";
+
+	/** Query param name **/
+    public static final String DATASET_Q_PARAM = "q";
 
     /**
      * Service identifier param name
      **/
-    private final static String SERVICE_IDENTIFIER = "fileIdentifier";
+    public final static String SERVICE_IDENTIFIER = "fileIdentifier";
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
 
@@ -107,13 +115,31 @@ public class AtomDescribe implements Service {
         // Get request parameters
         String datasetIdCode = Util.getParam(params, DATASET_IDENTIFIER_CODE_PARAM);
         String datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
+		String datasetCrs = null;
+		try {
+			datasetCrs = Util.getParam(params,
+					DATASET_CRS_PARAM);
+		} catch (Exception e) {
+		}
 
-        Log.debug(Geonet.ATOM, "Processing dataset feed  (" + DATASET_IDENTIFIER_CODE_PARAM + ": " +
+		String searchTerms = null;
+		try {
+			searchTerms = Util.getParam(params,
+					DATASET_Q_PARAM);
+		} catch (Exception e) {
+		}
+		
+		Log.debug(Geonet.ATOM, "Processing dataset feed  (" + DATASET_IDENTIFIER_CODE_PARAM + ": " +
             datasetIdCode + ", " + DATASET_IDENTIFIER_NS_PARAM + ": " + datasetIdNs + " )");
 
         // Get metadata uuid
         String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
-        if (StringUtils.isEmpty(datasetUuid)) throw new MetadataNotFoundEx(datasetUuid);
+        if (StringUtils.isEmpty(datasetUuid)) {
+        	datasetUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context, datasetIdCode, "identifier", null);
+        }
+        if (StringUtils.isEmpty(datasetUuid)) {
+        	throw new MetadataNotFoundEx(datasetUuid);
+        }
 
         // Retrieve metadata to check existence and permissions.
         String id = dm.getMetadataId(datasetUuid);
@@ -122,7 +148,8 @@ public class AtomDescribe implements Service {
         // Check if allowed to the metadata
         Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-        return service.retrieveFeed(context, Integer.parseInt(id));
+        return service.retrieveDatasetFeed(context, Integer.parseInt(id), datasetUuid, datasetIdCode, datasetIdNs, datasetCrs, searchTerms);
+//        return service.retrieveFeed(context, Integer.parseInt(id));
     }
 
     /**
@@ -151,6 +178,7 @@ public class AtomDescribe implements Service {
             throw new Exception("No service metadata found with uuid:" + fileIdentifier);
         }
 
-        return service.retrieveFeed(context, Integer.parseInt(id));
+        return service.retrieveServiceFeed(dm, context, Integer.parseInt(id), fileIdentifier);
+//        return service.retrieveFeed(context, Integer.parseInt(id));
     }
 }

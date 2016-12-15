@@ -644,6 +644,9 @@
         <Field name="format" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
+      <xsl:if test="count(gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[normalize-space(gmd:applicationProfile/gco:CharacterString)='INSPIRE-Download-Atom'])>0">
+        <Field name="has_atom" string="true" store="false" index="true"/>
+      </xsl:if>
       <!-- index online protocol -->
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
         <xsl:variable name="tPosition" select="position()"></xsl:variable>

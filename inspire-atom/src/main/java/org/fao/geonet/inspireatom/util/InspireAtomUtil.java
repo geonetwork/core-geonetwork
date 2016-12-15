@@ -22,30 +22,38 @@
 //==============================================================================
 package org.fao.geonet.inspireatom.util;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.AtomFeedNotFoundEx;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
-import org.apache.commons.lang.StringUtils;
-
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import java.net.URL;
-import java.util.*;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Utility class for INSPIRE Atom.
@@ -65,9 +73,51 @@ public class InspireAtomUtil {
     private static final String EXTRACT_MD_TYPE = "extract-type.xsl";
 
     /**
+     * Xslt process to get if a metadata is a atom service.
+     **/
+    private static final String EXTRACT_SERVICE_TYPE = "extract-service-type.xsl";
+
+    /**
      * Xslt process to get the atom feed link from the metadata.
      **/
     private static final String EXTRACT_ATOM_FEED = "extract-atom-feed.xsl";
+
+	/**
+	 * Xslt process to get the related dataset fileidentifiers in service
+	 * metadata.
+	 **/
+    private static final String EXTRACT_DATASET_FILEIDENTIFIERS = "extract-dataset-fileidentifiers.xsl";
+
+	/** Xslt process to get the related datasets in service metadata. **/
+    private static final String EXTRACT_DATASET_ENTRY_INFO = "extract-dataset-entry-info.xsl";
+
+	/** Xslt process to get the service atomfeed. **/
+	public static final String INSPIRE_ATOM_FEED = "inspire-atom-feed.xsl";
+
+	private static final String ATOM_SERVICE_TYPE_VERSION = "INSPIRE ATOM V3.1";
+
+	private static final String ATOM_SERVICE_TYPE = "download";
+
+	/**
+     * Issue an http request to retrieve the local Atom feed document.
+     *
+     * @param context Service context.
+     * @param url Atom document url.
+     * @return Atom document content.
+     * @throws Exception Exception.
+     */
+    public static String retrieveLocalAtomFeedDocument(final ServiceContext context,
+                                                        final String url) throws Exception {
+    	XmlRequest remoteRequest = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
+
+        final SettingManager sm = context.getBean(SettingManager.class);
+
+        Lib.net.setupProxy(sm, remoteRequest);
+
+        Element atomFeed = remoteRequest.execute();
+
+        return Xml.getString(atomFeed);
+    }
 
     /**
      * Issue an http request to retrieve the remote Atom feed document.
@@ -141,7 +191,7 @@ public class InspireAtomUtil {
     }
 
     public static boolean isServiceMetadata(DataManager dm, String schema, Element md) throws Exception {
-        java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve("extract-type.xsl");
+        java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve(EXTRACT_MD_TYPE);
 
         Map<String, Object> paramsM = new HashMap<String, Object>();
         String mdType = Xml.transform(md, styleSheet, paramsM).getText().trim();
@@ -149,7 +199,14 @@ public class InspireAtomUtil {
         return "service".equalsIgnoreCase(mdType);
     }
 
+	public static boolean isDatasetMetadata(DataManager dm, String schema, Element md) throws Exception {
+        java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve(EXTRACT_MD_TYPE);
 
+        Map<String, Object> paramsM = new HashMap<String, Object>();
+        String mdType = Xml.transform(md, styleSheet, paramsM).getText().trim();
+
+		return "dataset".equalsIgnoreCase(mdType);
+	}
     /**
      * @param schema      Metadata schema.
      * @param md          JDOM element with metadata content.
@@ -280,15 +337,23 @@ public class InspireAtomUtil {
 
 
     public static String retrieveDatasetUuidFromIdentifier(ServiceContext context,
-                                                           SearchManager searchMan,
-                                                           String datasetIdCode) {
+            String datasetIdCode, String mainSearchFieldName, String searchTerms) {
 
-        String uuid = "";
-
-        Element request = new Element(Jeeves.Elem.REQUEST);
-        request.addContent(new Element("identifier").setText(datasetIdCode));
-        request.addContent(new Element("has_atom").setText("y"));
-        request.addContent(new Element("fast").setText("true"));
+		String uuid = "";
+		SearchManager searchMan = ((GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME)).getBean(SearchManager.class);
+		Element request = new Element(Jeeves.Elem.REQUEST);
+		if (mainSearchFieldName.equals("identifier")) {
+			request.addContent(new Element("has_atom").setText("true"));			
+		} else {
+			request.addContent(new Element("serviceType").setText(ATOM_SERVICE_TYPE));
+		}
+		request.addContent(new Element("fast").setText("true"));
+		if (!StringUtils.isEmpty(datasetIdCode)) {
+			request.addContent(new Element(mainSearchFieldName).setText(datasetIdCode));
+		}
+		if (!StringUtils.isEmpty(searchTerms)) {
+			request.addContent(new Element("any").setText(searchTerms));
+		}
 
         // perform the search and return the results read from the index
 
@@ -304,5 +369,215 @@ public class InspireAtomUtil {
         }
 
         return uuid;
+    }
+
+    public static Element getServiceFeed(String metadataUuid,
+			ServiceContext context, List<String> selectedDatasetFileIdentifiers) throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = context.getBean(DataManager.class);
+        SettingManager sm = gc.getBean(SettingManager.class);
+        String atomProtocol = sm.getValue("system/inspire/atomProtocol");
+		Element serviceEl = new Element("service");
+        String metadataId = dm.getMetadataId(metadataUuid);
+		Element md = dm.getMetadata(metadataId);
+		// String schema = dm.getMetadataSchema(dbms, id);
+        String schema = dm.getMetadataSchema(metadataId);
+		if (!InspireAtomUtil.isServiceMetadata(dm, schema, md)) {
+			throw new Exception("No service metadata found with uuid:"
+					+ metadataUuid);
+		}
+
+		if (!InspireAtomUtil
+				.isAtomDownloadServiceMetadata(dm, schema, md, atomProtocol)) {
+			throw new Exception(
+					"No ATOM download service metadata found with uuid:"
+							+ metadataUuid);
+		}
+
+		// Get dataset identifiers referenced by service metadata.
+		List<String> datasetFileIdentifiers = null;
+
+		datasetFileIdentifiers = InspireAtomUtil
+				.extractRelatedDatasetFileIdentifiers(schema, md, dm);
+
+		String baseURL = context.getBaseUrl();
+		String webappName = baseURL.substring(1);
+		// String keywords = LuceneSearcher.getMetadataFromIndex(webappName,
+		// context.getLanguage(), fileIdentifier, "keyword");
+
+		// Process datasets information
+
+		Element datasetsEl = processDatasetsInfo(dm,
+				datasetFileIdentifiers, selectedDatasetFileIdentifiers, metadataUuid, context, webappName);
+
+		// Build response.
+		return serviceEl.addContent(md.addContent((Element)datasetsEl.clone()));
+	}
+
+	private static Element processDatasetsInfo(DataManager dm, 
+			final List<String> datasetFileIdentifiers, final List<String> selectedDatasetFileIdentifiers,
+			final String serviceIdentifier, final ServiceContext context,
+			String webappName) throws Exception {
+		Element datasetsEl = new Element("datasets");
+
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+
+		for (String fileIdentifier : datasetFileIdentifiers) {
+			try {
+				if (selectedDatasetFileIdentifiers!=null && !selectedDatasetFileIdentifiers.contains(fileIdentifier)) {
+					continue;
+				}
+				datasetsEl.addContent(/*
+									 * InspireAtomUtil.getDatasetFeed(
+									 * datasetIdentifier, context)
+									 */InspireAtomUtil.getDatasetEntryInfo(dm, 
+						fileIdentifier, context));
+			} catch (MetadataNotFoundEx e) {
+				System.out.println("Dataset with id " + fileIdentifier
+						+ " not exists (uuid: " + e.toString() + ")");
+			} catch (AtomFeedNotFoundEx e) {
+				System.out.println("Dataset with id "
+								+ fileIdentifier
+								+ " has no download url with application profile INSPIRE-Download-Atom ("
+								+ e.toString() + ")");
+			}
+		}
+		return datasetsEl;
+	}
+
+	public static Element getDatasetEntryInfo(DataManager dm, String datasetFileIdentifier,
+			ServiceContext context) throws Exception {
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		if (!StringUtils.isBlank(datasetFileIdentifier)) {
+			// Retrieve metadata to check existence and permissions.
+			String id = dm.getMetadataId(datasetFileIdentifier);
+			if (StringUtils.isEmpty(id))
+				throw new MetadataNotFoundEx(datasetFileIdentifier);
+
+			Element md = dm.getMetadata(id);
+			String schema = dm.getMetadataSchema(id);
+	        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+			// Get dataset identifiers referenced by service metadata.
+			Element entry = InspireAtomUtil.extractDatasetEntryInfo(schema, md, dm);
+			if (entry.getChildren().size() > 0) {
+				return entry;
+			} else {
+				throw new AtomFeedNotFoundEx(datasetFileIdentifier);
+			}
+		} else {
+			throw new MetadataNotFoundEx(datasetFileIdentifier);
+		}
+	}
+
+	public static Element extractDatasetEntryInfo(final String schema, final Element md,
+			final DataManager dm) throws Exception {
+        java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve(EXTRACT_DATASET_ENTRY_INFO);
+        Element datasetEl = Xml.transform(md, styleSheet);
+		md.detach();
+		return datasetEl;
+	}
+
+	public static boolean isAtomDownloadServiceMetadata(
+			DataManager dm, String schema ,
+			Element md, String atomProtocol) throws Exception {
+        java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve(EXTRACT_SERVICE_TYPE);
+		Element service = Xml.transform(md, styleSheet);
+		String serviceType = service.getChildText("serviceType").trim();
+		String serviceTypeVersion = service.getChildText("serviceTypeVersion").trim();
+		return atomProtocol.equalsIgnoreCase(serviceType)
+				&& ATOM_SERVICE_TYPE_VERSION.equalsIgnoreCase(serviceTypeVersion);
+	}
+
+	public static List<String> extractRelatedDatasetFileIdentifiers(
+			final String schema, final Element md,
+			final DataManager dm) throws Exception {
+        java.nio.file.Path styleSheet = dm.getSchemaDir(schema).resolve(EXTRACT_DATASET_FILEIDENTIFIERS);
+		@SuppressWarnings("unchecked")
+		List<Element> fileIdentifiersEl = Xml.transform(md, styleSheet)
+				.getChildren();
+		List<String> fileIdentifiers = new ArrayList<String>();
+
+		// --- needed to detach md from the document
+		md.detach();
+
+		for (Element fileIdentifierEl : fileIdentifiersEl) {
+			String fileIdentifier = fileIdentifierEl.getText();
+
+			if (!StringUtils.isEmpty(fileIdentifier))
+				fileIdentifiers.add(fileIdentifier);
+		}
+
+		return fileIdentifiers;
+	}
+	
+	public static Element getDatasetFeed(DataManager dm, ServiceContext context, String metadataId, String fileIdentifier, String datasetIdCode, String datasetIdNs, String crs, String searchTerms)
+			throws Exception {
+		if (!StringUtils.isBlank(fileIdentifier)) {
+			Element md = dm.getMetadata(metadataId);
+            String schema = dm.getMetadataSchema(metadataId);
+			if (!InspireAtomUtil.isDatasetMetadata(dm, schema, md)) {
+				throw new Exception("No dataset metadata found with uuid:"
+						+ fileIdentifier);
+			}
+			boolean bCodeSpaceValueIsEqual = false;
+			if (!StringUtils.isBlank(datasetIdNs)) {
+				List<Namespace> nss = new ArrayList<Namespace>();
+//				nss.addAll(md.getAdditionalNamespaces());
+//				nss.add(md.getNamespace());
+				nss.add(Namespace.getNamespace("gmd","http://www.isotc211.org/2005/gmd"));
+				nss.add(Namespace.getNamespace("gco","http://www.isotc211.org/2005/gco"));
+				Object o = Xml
+						.selectSingle(
+								md,
+								"gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:codeSpace/gco:CharacterString|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString",
+								nss);
+				if (o != null && o instanceof Element) {
+					String codeSpaceValue = ((Element) o).getText();
+					if (!StringUtils.isBlank(codeSpaceValue)
+							&& codeSpaceValue.equals(datasetIdNs)) {
+						bCodeSpaceValueIsEqual = true;
+					}
+				}
+			} else {
+				bCodeSpaceValueIsEqual = true;
+			}
+			if (bCodeSpaceValueIsEqual) {
+				Element datasetEl = new Element("dataset");
+				try {
+					Element datasetEntryInfo = InspireAtomUtil.getDatasetEntryInfo(dm, 
+							fileIdentifier, context);
+					if (!StringUtils.isBlank(crs)) {
+						datasetEl.addContent(new Element("crs").setText(crs));
+					}
+					String serviceIdentifier = null;
+					try {
+						serviceIdentifier = retrieveDatasetUuidFromIdentifier(context, datasetIdCode, "operatesOn", searchTerms);
+					} catch (Exception e) {
+					}
+					if (StringUtils.isNotBlank(serviceIdentifier)) {
+						datasetEl.addContent(new Element("serviceIdentifier").setText(serviceIdentifier));
+					}
+					return datasetEl.addContent(datasetEntryInfo);
+				} catch (AtomFeedNotFoundEx e) {
+					throw new AtomFeedNotFoundEx(fileIdentifier);
+				}
+			}
+			throw new MetadataNotFoundEx(fileIdentifier);
+		} else {
+			throw new MetadataNotFoundEx(fileIdentifier);
+		}
+	}
+
+	public static String getBaseServiceAtomUrl(ServiceContext context, String fileIdentifier) {
+        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        return context.getBean(SettingManager.class).getSiteURL(context).replaceAll("/" + nodeInfo.getId() + "/", "/opensearch/").replaceAll(":80/","/").replaceAll(":443/","/") + fileIdentifier + "/describe";
+    }
+
+    public static String getBaseDatasetAtomUrl(ServiceContext context) {
+        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+        return context.getBean(SettingManager.class).getSiteURL(context).replaceAll("/" + nodeInfo.getId() + "/", "/opensearch/").replaceAll(":80/","/").replaceAll(":443/","/") + "describe";
     }
 }

@@ -97,6 +97,8 @@ public class InspireAtomHarvester {
         try {
             logger.info("ATOM feed harvest started");
 
+            String atomFormat = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM);
+
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
             String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
@@ -116,7 +118,7 @@ public class InspireAtomHarvester {
             //    datasetsInformation stores the dataset information for identifier and namespace for the services feed.
             //    This information is not available in the datasets feeds
             Map<String, String> datasetsInformation =
-                processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeeds, result);
+                processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeeds, result, atomFormat, atomProtocol);
 
             // Process DATASET metadata feeds related to the service metadata
             logger.info("ATOM feed harvest : processing dataset metadata feeds");
@@ -149,7 +151,8 @@ public class InspireAtomHarvester {
         SettingManager sm = context.getBean(SettingManager.class);
 
         final MetadataRepository metadataRepository = gc.getBean(MetadataRepository.class);
-        Metadata iso19139Metadata = metadataRepository.findOne(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
+        Metadata iso19139Metadata = metadataRepository.findOne(Specifications.where(MetadataSpecs.hasMetadataId(Integer.parseInt(metadataId))));
+//        Metadata iso19139Metadata = metadataRepository.findOne(Specifications.where(MetadataSpecs.isType(MetadataType.METADATA)).and(MetadataSpecs.isIso19139Schema()));
 
 
         Element result = new Element("response");
@@ -157,12 +160,14 @@ public class InspireAtomHarvester {
         try {
             logger.info("ATOM feed harvest started for metadata: " + metadataId);
 
+            String atomFormat = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM);
             // Value used in metadata editor for online resources to identify an INSPIRE atom resource
             String atomProtocol = sm.getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
             // Removes all atom information from existing metadata. Harvester will reload with updated information
             logger.info("ATOM feed harvest: remove existing metadata feed");
             repository.deleteAll(InspireAtomFeedSpecs.hasMetadataId(Integer.parseInt(metadataId)));
+            repository.flush();
             dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
 
             // Process service metadata feeds
@@ -175,7 +180,7 @@ public class InspireAtomHarvester {
                 InspireAtomUtil.retrieveServiceMetadataWithAtomFeed(dataMan, iso19139Metadata, atomProtocol);
 
             Map<String, String> datasetsInformation =
-                processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeed, result);
+                processServiceMetadataFeeds(dataMan, serviceMetadataWithAtomFeed, result, atomFormat, atomProtocol);
 
             // Process dataset metadata feeds related to the service metadata
             logger.info("ATOM feed harvest for metadata: " + metadataId + ",  processing dataset metadata feeds");
@@ -198,7 +203,8 @@ public class InspireAtomHarvester {
      */
     private Map<String, String> processServiceMetadataFeeds(final DataManager dataMan,
                                                             final Map<String, String> serviceMetadataWithAtomFeeds,
-                                                            Element result)
+                                                            Element result,
+                                                            String atomFormat, String atomProtocol)
         throws Exception {
 
         Map<String, String> datasetsInformation = new HashMap<String, String>();
@@ -229,7 +235,8 @@ public class InspireAtomHarvester {
                 inspireAtomFeed.setAtomDatasetns("");
 
 
-                repository.save(inspireAtomFeed);
+//                repository.save(inspireAtomFeed);
+                repository.saveAndFlush(inspireAtomFeed);
 
                 // Index the metadata to store the atom feed information in the index
                 dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
@@ -316,7 +323,8 @@ public class InspireAtomHarvester {
                 inspireAtomFeed.setAtomUrl(atomUrl);
                 inspireAtomFeed.setAtom(atomFeedDocument);
 
-                repository.save(inspireAtomFeed);
+//                repository.save(inspireAtomFeed);
+                repository.saveAndFlush(inspireAtomFeed);
 
                 // Index the metadata to store the atom feed information in the index
                 dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
@@ -346,7 +354,7 @@ public class InspireAtomHarvester {
         // Retrieve the metadata referencing atom feed documents.
 
         // Value used in metadata editor for online resources to identify an INSPIRE atom resource
-        String atomProtocol = gc.getBean(SettingManager.class).getValue("system/inspire/atomProtocol");
+        String atomProtocol = gc.getBean(SettingManager.class).getValue(Settings.SYSTEM_INSPIRE_ATOM_PROTOCOL);
 
         final InspireAtomFeedRepository repository = gc.getBean(InspireAtomFeedRepository.class);
 
@@ -356,8 +364,7 @@ public class InspireAtomHarvester {
             String metadataUuid = "";
 
             try {
-                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context,
-                    gc.getBean(SearchManager.class), atomDatasetId);
+                metadataUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context, atomDatasetId, "identifier", null);
 
                 String atomDatasetNs = entry.getValue();
                 logger.debug("Dataset, id=" + atomDatasetId + ", namespace=" + atomDatasetNs);
@@ -381,6 +388,16 @@ public class InspireAtomHarvester {
                 String atomFeedDocument = InspireAtomUtil.retrieveRemoteAtomFeedDocument(gc, atomUrl);
                 logger.debug("Dataset feed: " + atomFeedDocument);
 
+// 				This could be used when suporting harvesting of local atom feeds, but for now it is not possible to select local in de settings userinterface
+/*
+                String atomUrl = InspireAtomUtil.getBaseDatasetAtomUrl(context) + "?" +
+	        			AtomDescribe.DATASET_IDENTIFIER_CODE_PARAM + "=" + atomDatasetId + "&" +
+	        			AtomDescribe.DATASET_IDENTIFIER_NS_PARAM + "=" + atomDatasetNs;
+                String atomFeedDocument = InspireAtomUtil.retrieveLocalAtomFeedDocument(context, context.getBean(SettingManager.class).getSiteURL(context) + "atom.local?" +
+            			AtomDescribe.DATASET_IDENTIFIER_CODE_PARAM + "=" + atomDatasetId + "&" +
+            			AtomDescribe.DATASET_IDENTIFIER_NS_PARAM + "=" + atomDatasetNs);
+*/                
+
                 Element atomDoc = Xml.loadString(atomFeedDocument, false);
                 InspireAtomFeed inspireAtomFeed = InspireAtomFeed.build(atomDoc);
                 inspireAtomFeed.setMetadataId(Integer.parseInt(metadataId));
@@ -389,7 +406,8 @@ public class InspireAtomHarvester {
                 inspireAtomFeed.setAtomUrl(atomUrl);
                 inspireAtomFeed.setAtom(atomFeedDocument);
 
-                repository.save(inspireAtomFeed);
+                repository.saveAndFlush(inspireAtomFeed);
+//                repository.save(inspireAtomFeed);
 
                 // Index the metadata to store the atom feed information in the index
                 dataMan.indexMetadata(Arrays.asList(new String[]{metadataId}));
