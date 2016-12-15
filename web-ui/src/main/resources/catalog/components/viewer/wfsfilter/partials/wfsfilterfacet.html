@@ -46,20 +46,21 @@
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name]}"></span>
         {{field.label}}
       </h5>
-      <div class="list-group"
-           data-ng-class="{'collapse': !field.expanded}">
-        <div class="list-group-item"
-             data-ng-repeat="facet in field.values | filter:searchInput"
-             data-ng-click="onCheckboxClick(field, facet)"
-             data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
-          <i class="fa"
-             data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
+      <div data-ng-class="{'collapse': !field.expanded}">
+        <div class="list-group">
+          <div class="list-group-item"
+               data-ng-repeat="facet in field.values | filter:searchInput"
+               data-ng-click="onCheckboxClick(field, facet)"
+               data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
+            <i class="fa"
+               data-ng-class="output[field.name].values[facet.value] ? 'fa-check-square' : 'fa-square-o'"></i>{{::facet.value}}&nbsp;({{::facet.count | number:0}})
+          </div>
+          <div data-ng-if="field.tree"
+               gn-wfs-filter-facets-tree="field"
+               gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
+          </div>
         </div>
-        <div data-ng-if="field.tree"
-             gn-wfs-filter-facets-tree="field"
-             gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
-        </div>
-
+        <a href="" data-ng-click="getMore(field)" data-ng-if="field.more">more</a>
       </div>
     </div>
 

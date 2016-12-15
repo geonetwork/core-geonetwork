@@ -30,7 +30,7 @@
     search: 'search'
   };
 
-  var ROWS = 2000;
+  var ROWS = 20;
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
@@ -47,7 +47,7 @@
 
     this.page = {
       start: 0,
-      rows: ROWS
+      rows: 10
     };
 
     /**
@@ -236,6 +236,23 @@
     return this.search_(qParams, solrParams);
   };
 
+  /**
+   * Run exact same search but ask only for one field, with more results.
+   * @param {object} field to get more elements from.
+   * @return {promise} The search promise.
+   */
+  geonetwork.GnSolrRequest.prototype.getFacetMoreResults = function (field) {
+    var aggs = {};
+    var agg = this.reqParams.aggs[field.name];
+    agg[field.type].size += ROWS;
+    aggs[field.name] = agg;
+    return this.search_({
+      any: this.requestParams.any,
+      params: this.requestParams.qParams,
+      geometry: this.requestParams.geometry
+    }, aggs, true);
+  };
+
   geonetwork.GnSolrRequest.prototype.searchQuiet =
     function(qParams, solrParams) {
       return this.search_(qParams, solrParams, true);
@@ -315,6 +332,8 @@
        angular.extend(params.aggs, aggs.stats);
        }
        */
+
+      this.reqParams = params;
 
       return this.$http.post(this.ES_URL, params).then(angular.bind(this,
         function(r) {
@@ -446,26 +465,30 @@
       var fields = [];
       for (var fieldId in response.aggregations) {
         if(fieldId.indexOf('_stats') > 0 ) break;
-        var field = response.aggregations[fieldId];
+        var respAgg = response.aggregations[fieldId];
+        var reqAgg = requestParam.aggs[fieldId];
+
         var fNameObj = this.getIdxNameObj_(fieldId);
+
         var facetField = {
           name: fieldId,
           label: fNameObj && fNameObj.label ? fNameObj.label : fieldId,
-          values: []
+          values: [],
+          more: respAgg.sum_other_doc_count
         };
 
         // histogram
-        if(requestParam.aggs[fieldId].hasOwnProperty('histogram')) {
+        if(reqAgg.hasOwnProperty('histogram')) {
           facetField.type = 'histogram';
-          var buckets = field.buckets;
-          field.buckets.forEach(function(b, i) {
+          var buckets = respAgg.buckets;
+          respAgg.buckets.forEach(function(b, i) {
             var label = '';
-            if(i == 0 && field.buckets.length > 1) {
-              label = '< ' + field.buckets[i+1].key.toFixed(2);
+            if(i == 0 && respAgg.buckets.length > 1) {
+              label = '< ' + respAgg.buckets[i+1].key.toFixed(2);
             }
-            else if(i < field.buckets.length -1) {
+            else if(i < respAgg.buckets.length -1) {
               label = b.key.toFixed(2)  + FACET_RANGE_DELIMITER +
-                field.buckets[i+1].key.toFixed(2)
+                respAgg.buckets[i+1].key.toFixed(2)
             }
             else {
               label = '> ' + b.key.toFixed(2)
@@ -477,9 +500,9 @@
           });
         }
         // ranges
-        if(requestParam.aggs[fieldId].hasOwnProperty('range')) {
+        if(reqAgg.hasOwnProperty('range')) {
           facetField.type = 'range';
-          field.buckets.forEach(function(b, i) {
+          respAgg.buckets.forEach(function(b, i) {
             var label;
             if(b.from && b.to) {
               label = b.from + FACET_RANGE_DELIMITER + b.to;
@@ -497,27 +520,34 @@
           });
         }
         // filters - response bucket is object instead of array
-        else if(requestParam.aggs[fieldId].hasOwnProperty('filters')) {
+        else if(reqAgg.hasOwnProperty('filters')) {
           facetField.type = 'filters';
-          for (var p in field.buckets) {
+          for (var p in respAgg.buckets) {
             facetField.values.push({
               value: p,
-              query: requestParam.aggs[fieldId].filters.
+              query: reqAgg.filters.
                 filters[p].query_string.query,
-              count: field.buckets[p].doc_count
+              count: respAgg.buckets[p].doc_count
             });
           }
         }
         else if(fieldId.endsWith('_tree')) {
-          facetField.tree = this.gnTreeFromSlash.getTree(field.buckets);
+          facetField.tree = this.gnTreeFromSlash.getTree(respAgg.buckets);
         }
+        else if(fieldId.endsWith('_dt')) {
+          facetField.dates = respAgg.buckets.map(function(b) {
+            return b.key;
+          });
+        }
+
         // terms
-        else if(requestParam.aggs[fieldId].hasOwnProperty('terms')) {
+        else if(reqAgg.hasOwnProperty('terms')) {
           facetField.type = 'terms';
-          for (var i = 0; i < field.buckets.length; i++) {
+          facetField.size = reqAgg.terms.size;
+          for (var i = 0; i < respAgg.buckets.length; i++) {
             facetField.values.push({
-              value: field.buckets[i].key,
-              count: field.buckets[i].doc_count
+              value: respAgg.buckets[i].key,
+              count: respAgg.buckets[i].doc_count
             });
           }
         }

@@ -365,6 +365,12 @@
           }
 
 
+          scope.getMore = function(field) {
+            solrObject.getFacetMoreResults(field).then(function(response) {
+              field.values = response.facets[0].values;
+            });
+          };
+
           /**
            * reset and init the facet structure.
            * call the solr service to get info on all facet fields and bind it
