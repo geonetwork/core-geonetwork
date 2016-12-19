@@ -25,6 +25,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gts="http://www.isotc211.org/2005/gts"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:gn="http://www.fao.org/geonetwork"
@@ -228,7 +229,12 @@
       <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
-        <div gn-draw-bbox="" data-hleft="{gmd:westBoundLongitude/gco:Decimal}"
+
+        <xsl:variable name="identifier"
+                      select="../following-sibling::gmd:geographicElement[1]/gmd:EX_GeographicDescription/
+                                  gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/(gmx:Anchor|gco:CharacterString)"/>
+        <div gn-draw-bbox=""
+             data-hleft="{gmd:westBoundLongitude/gco:Decimal}"
              data-hright="{gmd:eastBoundLongitude/gco:Decimal}"
              data-hbottom="{gmd:southBoundLatitude/gco:Decimal}"
              data-htop="{gmd:northBoundLatitude/gco:Decimal}"
@@ -236,9 +242,21 @@
              data-hright-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
              data-hbottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
              data-htop-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"
-             data-lang="lang"></div>
+             data-lang="lang">
+          <xsl:if test="$identifier and $isFlatMode">
+            <xsl:attribute name="data-identifier" select="$identifier"/>
+            <xsl:attribute name="data-identifier-ref" select="concat('_', $identifier/gn:element/@ref)"/>
+          </xsl:if>
+        </div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 
+  <!-- In flat mode do not display geographic identifier because it is
+  part of the map widget - see previous template. -->
+  <xsl:template mode="mode-iso19139"
+                match="gmd:geographicElement[
+                                $isFlatMode and
+                                preceding-sibling::gmd:geographicElement/gmd:EX_GeographicBoundingBox
+                              ]/gmd:EX_GeographicDescription"/>
 </xsl:stylesheet>

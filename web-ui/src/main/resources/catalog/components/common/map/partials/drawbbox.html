@@ -1,79 +1,108 @@
 <div class="gn-drawmap-panel">
-  <div class="panel panel-default">
-    <div class="panel-body">
+  <div class="row">
 
-      <!-- Header with projection selection, draw button and area list -->
-      <form class="form-horizontal" role="form">
-        <div data-gn-region-picker=""></div>
-      </form>
+    <!--Region picker-->
+    <div class="col-md-9">
+      <div data-gn-region-picker=""></div>
+    </div>
 
-      <!-- Hidden field that match xml metadata schema -->
-      <div class="hidden">
-        <input data-ng-model="extent.md[0]" name="{{hleftRef}}"/>
-        <input data-ng-model="extent.md[1]" name="{{hbottomRef}}"/>
-        <input data-ng-model="extent.md[2]" name="{{hrightRef}}"/>
-        <input data-ng-model="extent.md[3]" name="{{htopRef}}"/>
-        <input data-ng-model="dcExtent" name="{{dcRef}}"/>
-      </div>
-      <table class="text-center">
-        <tr align="center">
-          <td>
-            <select data-ng-model="projs.form"
-                    title="{{'chooseAProj' | translate}}">
-              <option data-ng-repeat="proj in projs.list"
-                      value="{{proj.code}}"
-                      data-ng-selected="proj.code == projs.form">{{proj.label}}
-              </option>
-            </select>
-          </td>
-          <td>
-            <div class="form-group">
-              <input
-                data-ng-model="extent.form[3]" type="number"
-                id="drawbbox-top" placeholder="{{'north' | translate}}"
-                data-ng-change="updateBbox(true)"/>
-            </div>
-          </td>
-          <td>
-            <button class="btn btn-warning"
-                    title="{{'clickToDrawABox' | translate}}"
-                    data-ng-click="drawMap()"
-                    data-ng-class="{active : drawing}">
-              <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
-            </button>
-          </td>
-        </tr>
-        <tr valign="middle" align="center">
-          <td class="col-left">
-            <div class="form-group">
-              <input data-ng-model="extent.form[0]" type="number"
-                     id="drawbbox-left" placeholder="{{'west' | translate}}"
-                     data-ng-change="updateBbox(true)"/>
-            </div>
-          </td>
-          <td class="col-middle">
-            <div id="{{mapId}}" class="map"></div>
-          </td>
-          <td class="col-right">
-            <div class="form-group">
-              <input
-                data-ng-model="extent.form[2]"
-                type="number" id="drawbbox-right"
-                placeholder="{{'east' | translate}}" data-ng-change="updateBbox(true)"/>
-            </div>
-          </td>
-        </tr>
-        <tr align="center">
-          <td colspan="3">
-            <div class="form-group">
-              <input
-                data-ng-model="extent.form[1]" type="number"
-                id="drawbbox-bottom" placeholder="{{'south' | translate}}"
-                data-ng-change="updateBbox(true)"/>
-            </div>
-          </td>
-        </tr>
-      </table>
+    <!--Draw Button-->
+    <div class="col-md-3">
+      <button class="btn btn-warning"
+              title="{{'clickToDrawABox' | translate}}"
+              data-ng-click="drawMap()"
+              data-ng-class="{active : drawing}">
+        <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Hidden field that match xml metadata schema -->
+  <div class="hidden">
+    <input data-ng-model="extent.md[0]" name="{{hleftRef}}"/>
+    <input data-ng-model="extent.md[1]" name="{{hbottomRef}}"/>
+    <input data-ng-model="extent.md[2]" name="{{hrightRef}}"/>
+    <input data-ng-model="extent.md[3]" name="{{htopRef}}"/>
+    <input data-ng-model="dcExtent" name="{{dcRef}}"/>
+  </div>
+
+  <!--Map and coordinates inputs-->
+  <table class="text-center">
+    <tr align="center" valign="middle">
+      <td align="left">
+
+        <!--Projection selector-->
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  title="{{'chooseAProj' | translate}}">
+            {{projs.formLabel}} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li data-ng-repeat="proj in projs.list">
+              <a href="" data-ng-click="projs.form = proj.code; formLabel = proj.label">
+                {{proj.label}}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </td>
+      <td>
+        <div class="form-group">
+          <input
+            data-ng-model="extent.form[3]" type="number"
+            id="drawbbox-top" placeholder="{{'north' | translate}}"
+            data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr valign="middle" align="center">
+      <td class="col-left">
+        <div class="form-group">
+          <input data-ng-model="extent.form[0]" type="number"
+                 id="drawbbox-left" placeholder="{{'west' | translate}}"
+                 data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+      <td class="col-middle">
+        <div id="{{mapId}}" class="map"></div>
+      </td>
+      <td class="col-right">
+        <div class="form-group">
+          <input
+            data-ng-model="extent.form[2]"
+            type="number" id="drawbbox-right"
+            placeholder="{{'east' | translate}}" data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+    </tr>
+    <tr align="center">
+      <td colspan="3">
+        <div class="form-group">
+          <input
+            data-ng-model="extent.form[1]" type="number"
+            id="drawbbox-bottom" placeholder="{{'south' | translate}}"
+            data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="form-group gn-field" data-ng-show="identifierRef !== undefined">
+    <label class="col-sm-3 control-label"
+           data-translate="">bboxIdentifier</label>
+    <div class="col-sm-8 gn-value">
+      <input class="form-control"
+             data-ng-model="identifier"
+             name="{{identifierRef}}"/>
+    </div>
+    <div class="col-sm-1 gn-control">
+      <a class="btn pull-right" data-ng-click="identifier = ''">
+        <i class="fa fa-times text-danger"></i>
+      </a>
     </div>
   </div>
 </div>
