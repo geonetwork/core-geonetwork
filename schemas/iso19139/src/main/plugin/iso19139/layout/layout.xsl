@@ -47,7 +47,10 @@
 
   <!-- Ignore group element. -->
   <xsl:template mode="mode-iso19139"
-                match="gml:*[starts-with(name(.), 'gml:TimePeriodTypeGROUP_ELEMENT')]"
+                match="gml:*[
+                    starts-with(name(.), 'gml:TimePeriodTypeGROUP_ELEMENT') or
+                    starts-with(name(.), 'gml:TimeInstantTypeGROUP_ELEMENT')
+                ]"
                 priority="1000"/>
 
 
