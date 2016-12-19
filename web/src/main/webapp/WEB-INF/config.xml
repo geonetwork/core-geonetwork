@@ -25,12 +25,12 @@
 <geonet>
   <!-- ====================================================================== -->
 
-  <general>
-    <!-- Size must be in megabyte (integer), 100MB by default -->
-    <maxUploadSize>100</maxUploadSize>
-    <uploadDir>./data/tmp</uploadDir>
-    <debug>true</debug>
-  </general>
+	<general>
+		<!-- Size must be in megabyte (integer), 100MB by default -->
+		<maxUploadSize>100</maxUploadSize>
+		<uploadDir>./data/tmp</uploadDir>
+		<debug>false</debug>
+	</general>
 
   <!-- ====================================================================== -->
 

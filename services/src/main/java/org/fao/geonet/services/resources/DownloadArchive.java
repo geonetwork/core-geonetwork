@@ -25,6 +25,7 @@ package org.fao.geonet.services.resources;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -124,13 +125,11 @@ public class DownloadArchive implements Service {
             Path dir = Lib.resource.getDir(context, access, id);
             String fname = Util.getParam(params, Params.FNAME);
 
-            if (fname.contains("..")) {
-                throw new BadParameterEx("Invalid character found in resource name.", fname);
-            }
+			FilePathChecker.verify(fname);
 
-            Path file = dir.resolve(fname);
-            return BinaryFile.encode(200, file, false).getElement();
-        }
+			Path file = dir.resolve(fname);
+			return BinaryFile.encode(200, file, false).getElement();
+		}
 
         //--- from here on resource required is private datafile(s)
 
@@ -186,7 +185,9 @@ public class DownloadArchive implements Service {
             for (Element elem : files) {
                 String fname = elem.getText();
 
-                if (fname.contains("..")) {
+                try {
+                    FilePathChecker.verify(fname);
+                } catch (Exception ex) {
                     continue;
                 }
 

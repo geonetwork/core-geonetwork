@@ -108,8 +108,9 @@
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
-          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1) or
+          ($editInfo and $editInfo/@min = 1 and $isFirst)">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
