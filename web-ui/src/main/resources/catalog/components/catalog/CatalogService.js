@@ -255,6 +255,7 @@
     solrproxy: '../api/0.1/search'
   });
 
+
   /**
    * @ngdoc service
    * @kind function

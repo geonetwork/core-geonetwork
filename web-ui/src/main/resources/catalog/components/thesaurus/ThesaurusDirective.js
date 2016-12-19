@@ -24,7 +24,7 @@
 (function() {
   goog.provide('gn_thesaurus_directive');
 
-  var module = angular.module('gn_thesaurus_directive', []);
+  var module = angular.module('gn_thesaurus_directive', ['pascalprecht.translate']);
 
   /**
    * @ngdoc directive
@@ -46,12 +46,12 @@
    *
    */
   module.directive('gnThesaurusSelector',
-      ['$timeout',
-       'gnThesaurusService', 'gnEditor',
-       'gnEditorXMLService', 'gnCurrentEdit',
-       function($timeout,
-               gnThesaurusService, gnEditor,
-               gnEditorXMLService, gnCurrentEdit) {
+    ['$timeout',
+      'gnThesaurusService', 'gnEditor',
+      'gnEditorXMLService', 'gnCurrentEdit',
+      function ($timeout,
+                gnThesaurusService, gnEditor,
+                gnEditorXMLService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -123,7 +123,7 @@
                } else {
                  gnCurrentEdit.working = true;
                  return gnThesaurusService
-                 .getXML(thesaurusIdentifier,  null,
+                 .getXML(thesaurusIdentifier, null,
                  attrs.transformation).then(
                          function(data) {
                    // Add the fragment to the form
@@ -134,17 +134,26 @@
                                    scope.elementName);
 
 
-                   $timeout(function() {
-                     // Save the metadata and refresh the form
-                     gnEditor.save(gnCurrentEdit.id, true);
-                   });
-                 });
-               }
-               return false;
-             };
-           }
-         };
-       }]);
+                      $timeout(function () {
+                        // Save the metadata and refresh the form
+                        gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                          // success. Nothing to do.
+                        }, function(rejectedValue) {
+                          $rootScope.$broadcast('StatusUpdated', {
+                            title: $translate.instant('runServiceError'),
+                            error: rejectedValue,
+                            timeout: 0,
+                            type: 'danger'
+                          });
+                        });
+                      });
+                    });
+              }
+              return false;
+            };
+          }
+        };
+      }]);
 
 
   /**
