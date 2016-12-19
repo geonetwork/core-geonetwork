@@ -44,14 +44,34 @@
 
 
   <xsl:template match="/">
-    <xsl:for-each
-      select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
-      <!-- Dispatch to profile mode -->
-      <xsl:variable name="profileTemplate" select="concat('dispatch-', $schema)"/>
-      <saxon:call-template name="{$profileTemplate}">
-        <xsl:with-param name="base" select="."/>
-      </saxon:call-template>
-    </xsl:for-each>
+
+    <xsl:variable name="snippet">
+      <!-- Process the added object using schema layout ... -->
+      <xsl:for-each
+        select="/root/*[name(.)!='gui' and name(.)!='request']//*[@gn:addedObj = 'true']">
+        <!-- Dispatch to profile mode -->
+        <xsl:variable name="profileTemplate" select="concat('dispatch-', $schema)"/>
+        <saxon:call-template name="{$profileTemplate}">
+          <xsl:with-param name="base" select="."/>
+        </saxon:call-template>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <!-- In case the form generated contains multiple children
+    element, group them in a container to avoid creation of invalid XML
+    which will trigger NPE. This may happen if the container element is skipped
+    eg. gmd:extent not defined as a fieldset element, then all its children will
+    be on the root. -->
+    <xsl:choose>
+      <xsl:when test="count($snippet/*) > 1">
+        <div>
+          <xsl:copy-of select="$snippet/*"/>
+        </div>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="$snippet/*"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>
