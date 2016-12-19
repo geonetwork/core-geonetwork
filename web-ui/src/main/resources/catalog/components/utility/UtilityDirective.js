@@ -114,12 +114,12 @@
           scope.gnRegionService = gnRegionService;
 
           var addGeonames = !attrs['disableGeonames'];
-
+          scope.regionTypes = [];
           /**
           * Load list on init to fill the dropdown
           */
           gnRegionService.loadList().then(function(data) {
-            scope.regionTypes = data;
+            scope.regionTypes = angular.copy(data);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: 'Geonames',
