@@ -155,9 +155,11 @@
                    scope.extent[from],
                    scope.projs[from], scope.projs[to]
                );
-               scope.extent[to] = extent.map(function(coord) {
-                 return Math.round(coord * 10000) / 10000;
-               });
+               if (extent && extent.map) {
+                 scope.extent[to] = extent.map(function(coord) {
+                   return Math.round(coord * 10000) / 10000;
+                 });
+               }
              };
 
              // Init extent from md for map and form
@@ -169,9 +171,11 @@
                var extent = gnMap.reprojExtent(
                    scope.extent.form, oldValue, newValue
                );
-               scope.extent.form = extent.map(function(coord) {
-                 return Math.round(coord * 10000) / 10000;
-               });
+               if (extent && extent.map) {
+                 scope.extent.form = extent.map(function (coord) {
+                   return Math.round(coord * 10000) / 10000;
+                 });
+               }
              });
 
              // TODO: move style in db config
