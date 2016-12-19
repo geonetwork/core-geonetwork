@@ -100,7 +100,7 @@
 
       // This is to force IE11 NOT to cache json requests
       if (!$http.defaults.headers.get) {
-          $http.defaults.headers.get = {};
+        $http.defaults.headers.get = {};
       }
       $http.defaults.headers.get['Cache-Control'] = 'no-cache';
       $http.defaults.headers.get['Pragma'] = 'no-cache';
@@ -316,14 +316,14 @@
       /**
        * Returns the list of groups inside "groups" with the selected profile
        */
-      $scope.$watch('userGroups', function(groups){
+      $scope.$watch('userGroups', function(groups) {
         var res = [];
-        angular.forEach(["Administrator",
-                         "UserAdmin", "Reviewer",
-                         "Editor", "RegisteredUser",
-                         "Guest"], function (profile) {
+        angular.forEach(['Administrator',
+                         'UserAdmin', 'Reviewer',
+                         'Editor', 'RegisteredUser',
+                         'Guest'], function(profile) {
           res[profile] = [];
-          if(groups != null) {
+          if (groups != null) {
             for (var i = 0; i < groups.length; i++) {
               if (groups[i].profile == profile) {
                 res[profile].push(groups[i]);
@@ -332,7 +332,8 @@
           }
         });
 
-        //We need to change the pointer, not only the value, so ng-options is aware
+        //We need to change the pointer,
+        // not only the value, so ng-options is aware
         $scope.groupsByProfile = res;
       });
 

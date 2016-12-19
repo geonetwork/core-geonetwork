@@ -173,9 +173,10 @@
                isTypeahead = false;
                if (scope.isDirty()) {
                  var input = findValueInput();
-                 // it we are not using an autocompleter replace the value with valueUi
+                 // it we are not using an autocompleter
+                 // replace the value with valueUi
                  input.each(function(index, ele) {
-                   isTypeahead = isTypeahead || $(ele).data("ttTypeahead");
+                   isTypeahead = isTypeahead || $(ele).data('ttTypeahead');
                  });
                  if (!isTypeahead) {
                    criteriaType = scope.criteriaTypes[scope.criteria.uitype];

@@ -174,7 +174,7 @@
                    scope.extent.form, oldValue, newValue
                );
                if (extent && extent.map) {
-                 scope.extent.form = extent.map(function (coord) {
+                 scope.extent.form = extent.map(function(coord) {
                    return Math.round(coord * 10000) / 10000;
                  });
                }
