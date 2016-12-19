@@ -324,5 +324,6 @@
     "parentConcept":"Parent concept",
     "moreSpecificConcept":"More specific concepts",
     "associatedConcept":"Associated concepts",
-    "xsd": "Schema validation"
+    "xsd": "Schema validation",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }
