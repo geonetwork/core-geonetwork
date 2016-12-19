@@ -371,6 +371,11 @@
             });
           };
 
+          scope.updateDate = function(field, date) {
+            console.log(field.model);
+            console.log(date);
+          };
+
           /**
            * reset and init the facet structure.
            * call the solr service to get info on all facet fields and bind it

@@ -59,8 +59,16 @@
                gn-wfs-filter-facets-tree="field"
                gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
           </div>
+          <div data-ng-if="field.dates"
+               class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+               gn-bootstrap-datepicker="field.model"
+               on-change-fn="updateDate(field)"
+               date-available="field.dates" date-type="epoch">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            <input class="form-control input-sm" type="text">
+          </div>
         </div>
-        <a href="" data-ng-click="getMore(field)" data-ng-if="field.more">more</a>
+        <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
       </div>
     </div>
 

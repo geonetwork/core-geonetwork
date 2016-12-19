@@ -31,6 +31,7 @@
   };
 
   var ROWS = 20;
+  var MAX_ROWS = 2000;
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
@@ -166,6 +167,7 @@
             idxName: docF[i],
             isRange: docF[i].endsWith('_d'),
             isTree: docF[i].endsWith('_tree'),
+            isDateTime: docF[i].endsWith('_dt'),
             isMultiple: docF[i].endsWith('_ss')
           });
         }
@@ -206,7 +208,7 @@
   };
 
   geonetwork.GnSolrRequest.prototype.searchWithFacets =
-    function(qParams, solrParams) {
+    function(qParams, aggs) {
 
       if (Object.keys(this.initialParams.stats).length > 0) {
 
@@ -214,16 +216,20 @@
           function(resp) {
             var statsP = this.createFacetSpecFromStats_(resp.solrData.aggregations);
             return this.search(qParams, angular.extend(
-              {}, this.initialParams.facets, statsP, solrParams)
+              {}, this.initialParams.facets, statsP, aggs)
             );
           }.bind(this));
       }
       else {
         return this.search(
           qParams,
-          angular.extend({}, this.initialParams.facets, solrParams));
+          angular.extend({}, this.initialParams.facets, aggs));
       }
     };
+
+  geonetwork.GnSolrRequest.prototype.search_es = function() {
+    var esParams = this.reqParams;
+  };
 
   geonetwork.GnSolrRequest.prototype.search = function(qParams, solrParams) {
     angular.extend(this.requestParams, {
@@ -411,7 +417,7 @@
         facetParams[field.idxName] = {
           terms: {
             field: field.idxName,
-            size: ROWS
+            size: field.isDateTime ? MAX_ROWS : ROWS
           }
         };
       }
