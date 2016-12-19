@@ -1632,6 +1632,16 @@ public class DataManager implements ApplicationEventPublisherAware {
     public Element getMetadataNoInfo(ServiceContext srvContext, String id) throws Exception {
         Element md = getMetadata(srvContext, id, false, false, false);
         md.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+        // Drop Geonet namespace declaration. It may be contained
+        // multiple times, so loop on all.
+        final List<Namespace> additionalNamespaces =
+            new ArrayList<>(md.getAdditionalNamespaces());
+        for (Namespace n : additionalNamespaces) {
+            if (Edit.NAMESPACE.getURI().equals(n.getURI())) {
+                md.removeNamespaceDeclaration(Edit.NAMESPACE);
+            }
+        }
         return md;
     }
 
