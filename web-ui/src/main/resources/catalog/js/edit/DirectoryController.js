@@ -28,7 +28,7 @@
   goog.require('gn_facets');
 
   var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets']);
+      ['gn_catalog_service', 'gn_facets', 'pascalprecht.translate']);
 
   /**
    * Controller to create new metadata record.
@@ -182,7 +182,16 @@
               .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
-              });
+              }).then(function () {
+                // success. Nothing to do.
+              }, function(rejectedValue) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('runServiceError'),
+                  error: rejectedValue,
+                  timeout: 0,
+                  type: 'danger'
+                });
+          });
         } else {
           gnEditor.add(gnCurrentEdit.id, ref, name,
               insertRef, position, attribute);
