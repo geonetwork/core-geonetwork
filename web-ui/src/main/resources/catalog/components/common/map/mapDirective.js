@@ -44,6 +44,8 @@
              hbottomRef: '@',
              hleftRef: '@',
              hrightRef: '@',
+             identifierRef: '@',
+             identifier: '@',
              dcRef: '@',
              extentXml: '=?',
              lang: '=',
@@ -323,6 +325,11 @@
                    parseFloat(bbox.east),
                    parseFloat(bbox.north)];
                  scope.location = region.name;
+
+                 if (attrs.identifierRef !== undefined) {
+                   scope.identifier = region.id;
+                 }
+
                  reprojExtent('md', 'map');
                  reprojExtent('md', 'form');
                  setDcOutput();
