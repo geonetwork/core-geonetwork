@@ -188,6 +188,8 @@ public class SchematronCriteria extends GeonetEntity {
 
     /**
      * Create a copy of the c
+     *
+     * @return
      */
     public SchematronCriteria copy() {
         SchematronCriteria copy = new SchematronCriteria();

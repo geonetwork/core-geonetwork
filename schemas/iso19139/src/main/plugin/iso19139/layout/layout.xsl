@@ -446,16 +446,19 @@
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
 
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)" />
+
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', '')/label"/>
+        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', $xpath)/label"/>
       <xsl:with-param name="value" select="text()"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="type" select="gn-fn-iso19139:getCodeListType(name())"/>
       <xsl:with-param name="name" select="gn:element/@ref"/>
       <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="listOfValues"
-                      select="gn-fn-metadata:getCodeListValues($schema, name(), $codelists, .)"/>
+        select="gn-fn-metadata:getCodeListValues($schema, name(), $codelists, .)"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
     </xsl:call-template>
   </xsl:template>
 

@@ -33,6 +33,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.FilePathChecker;
 import org.jdom.Element;
 
 import java.nio.file.Files;
@@ -58,11 +59,7 @@ public class Get extends NotInReadOnlyModeService {
         // delete the file
         Path file = Lib.resource.getDir(context, access, id).resolve(filename);
 
-        if (filename.contains("..")
-            || filename.startsWith("://", 1)
-            || filename.startsWith("/")) {
-            throw new SecurityException("Wrong filename");
-        }
+        FilePathChecker.verify(filename);
 
         Files.deleteIfExists(file);
 

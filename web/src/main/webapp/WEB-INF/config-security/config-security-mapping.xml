@@ -433,7 +433,7 @@
                            access="hasRole('RegisteredUser')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.update!?.*"
                            access="hasRole('RegisteredUser')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.resetpassword\?.*"
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.resetpassword"
                            access="hasRole('RegisteredUser')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.remove!?.*"
                            access="hasRole('UserAdmin')"/>

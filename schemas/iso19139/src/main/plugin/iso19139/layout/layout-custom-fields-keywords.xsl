@@ -96,8 +96,8 @@
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
-                      select="if ($thesaurusTitle)
-                then $thesaurusTitle
+        select="if ($thesaurusTitle !='')
+                then $thesaurusTitle 
                 else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>

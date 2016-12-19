@@ -137,8 +137,14 @@ public final class Xml {
     private static SAXBuilder getSAXBuilderWithPathXMLResolver(boolean validate, Path base) {
         SAXBuilder builder = new SAXBuilder(validate);
         builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        NioPathHolder.setBase(base);
-        builder.setEntityResolver(Xml.PATH_RESOLVER);
+
+        if (base != null) {
+            NioPathHolder.setBase(base);
+            builder.setEntityResolver(Xml.PATH_RESOLVER);
+        } else {
+            builder.setEntityResolver(new NoOpEntityResolver());
+        }
+
         return builder;
     }
 
