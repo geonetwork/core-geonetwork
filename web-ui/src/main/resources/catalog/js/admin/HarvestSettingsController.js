@@ -436,7 +436,8 @@
             $scope.oaipmhSets = data[0].sets;
             $scope.oaipmhPrefix = data[0].formats;
           } else {
-            $scope.oaipmhInfo = $translate.instant('oaipmh-FailedToGetSetsAndPrefix');
+            $scope.oaipmhInfo =
+                $translate.instant('oaipmh-FailedToGetSetsAndPrefix');
           }
         }).error(function(data) {
         });

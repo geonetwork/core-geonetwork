@@ -1007,10 +1007,11 @@
                   if (!angular.isArray(olL.get('errors'))) {
                     olL.set('errors', []);
                   }
-                  var errormsg = $translate.instant('layerNotfoundInCapability', {
-                    layer: name,
-                    url: url
-                  });
+                  var errormsg = $translate.instant(
+                      'layerNotfoundInCapability', {
+                        layer: name,
+                        url: url
+                      });
                   errors.push(errormsg);
                   console.warn(errormsg);
 
@@ -1557,6 +1558,16 @@
               var process = md && md.getLinksByType(linkGroup, 'OGC:WPS');
               layer.set('processes', process);
             }
+          },
+
+          /**
+           * Return a secured extent that is contained in projection max extent.
+           * @param {Array} extent
+           * @param {Array} proj
+           * @return {ol.Extent} intersected extent
+           */
+          secureExtent: function(extent, proj) {
+            return ol.extent.getIntersection(extent, proj.getExtent());
           }
         };
       }];

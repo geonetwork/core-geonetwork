@@ -1408,8 +1408,8 @@
                           scope.srcParams.url = links[0].url;
                         } else {
                           scope.srcParams.url = '';
-                          scope.alertMsg =
-                              $translate.instant('linkToServiceWithoutURLError');
+                          scope.alertMsg = $translate.instant(
+                              'linkToServiceWithoutURLError');
                         }
                       }
                       else {

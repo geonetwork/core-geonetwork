@@ -37,13 +37,13 @@ public class SolrWFSFeatureIndexerTest {
         SimpleFeature feature = buildFeature(fields, values);
 
         String expression = "name";
-        String title = SolrWFSFeatureIndexer.buildFeatureTitle(feature, fields, expression);
+        String title = WFSFeatureUtils.buildFeatureTitle(feature, fields, expression);
         assertEquals(
                 values.get("name"),
                 title);
 
         expression = "Feature title is '{{name}} [{{number}}]'.";
-        title = SolrWFSFeatureIndexer.buildFeatureTitle(feature, fields, expression);
+        title = WFSFeatureUtils.buildFeatureTitle(feature, fields, expression);
         assertEquals(
                 "Feature title is '" +
                         values.get("name") + " [" +
@@ -66,7 +66,7 @@ public class SolrWFSFeatureIndexerTest {
         if (colName != null) {
             fields.put(colName, "String");
         }
-        String col = SolrWFSFeatureIndexer.guessFeatureTitleAttribute(fields);
+        String col = WFSFeatureUtils.guessFeatureTitleAttribute(fields);
         if (isSuccess) {
             assertEquals(colName, col);
         } else {

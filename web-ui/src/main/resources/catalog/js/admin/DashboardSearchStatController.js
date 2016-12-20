@@ -217,7 +217,9 @@
               $scope.statistics.search.byServiceType = data;
               nv.addGraph(function() {
                 var chart = nv.models.pieChart()
-                         .x(function(d) { return $translate.instant(d.service) })
+                         .x(function(d) {
+                      return $translate.instant(d.service);
+                    })
                          .y(function(d) { return d.nbsearch})
                          .values(function(d) { return d})
                          .tooltips(true)

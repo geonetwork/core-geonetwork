@@ -113,10 +113,19 @@
         link: function(scope, element, attrs) {
           scope.gnRegionService = gnRegionService;
 
+          var addGeonames = !attrs['disableGeonames'];
+
           /**
           * Load list on init to fill the dropdown
           */
           gnRegionService.loadList().then(function(data) {
+            scope.regionTypes = data;
+            if (addGeonames) {
+              scope.regionTypes.unshift({
+                name: 'Geonames',
+                id: 'geonames'
+              });
+            }
             scope.regionType = data[0];
           });
 
@@ -161,8 +170,8 @@
    * to catch event from selection.
    */
   module.directive('gnRegionPickerInput', [
-    'gnRegionService',
-    function(gnRegionService) {
+    'gnRegionService', 'gnUrlUtils',
+    function(gnRegionService, gnUrlUtils) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -178,32 +187,95 @@
           }
           scope.$watch('regionType', function(val) {
             if (scope.regionType) {
-              gnRegionService.loadRegion(scope.regionType, scope.lang).then(
-                  function(data) {
-                    if (data) {
-                      $(element).typeahead('destroy');
-                      var source = new Bloodhound({
-                        datumTokenizer:
-                            Bloodhound.tokenizers.obj.whitespace('name'),
-                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        local: data,
-                        limit: 30
-                      });
-                      source.initialize();
-                      $(element).typeahead({
-                        minLength: 0,
-                        highlight: true
-                      }, {
-                        name: 'countries',
-                        displayKey: 'name',
-                        source: source.ttAdapter()
-                      }).on('typeahead:selected', function(event, datum) {
-                        if (angular.isFunction(scope.onRegionSelect)) {
-                          scope.onRegionSelect(datum);
-                        }
-                      });
+
+              if (scope.regionType.id == 'geonames') {
+                $(element).typeahead('destroy');
+                var url = 'http://api.geonames.org/searchJSON';
+                url = gnUrlUtils.append(url, gnUrlUtils.toKeyValue({
+                  lang: scope.lang,
+                  style: 'full',
+                  type: 'json',
+                  maxRows: 10,
+                  name_startsWith: 'QUERY',
+                  username: 'georchestra'
+                }));
+
+                var autocompleter = new Bloodhound({
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                  queryTokenizer: Bloodhound.tokenizers.whitespace,
+                  limit: 30,
+                  remote: {
+                    wildcard: 'QUERY',
+                    url: url,
+                    ajax: {
+                      beforeSend: function() {
+                        scope.regionLoading = true;
+                        scope.$apply();
+                      },
+                      complete: function() {
+                        scope.regionLoading = false;
+                        scope.$apply();
+                      }
+                    },
+                    filter: function(data) {
+                      return data.geonames;
                     }
-                  });
+                  }
+                });
+                autocompleter.initialize();
+                $(element).typeahead({
+                  minLength: 1,
+                  highlight: true
+                }, {
+                  name: 'places',
+                  displayKey: 'name',
+                  source: autocompleter.ttAdapter(),
+                  templates: {
+                    suggestion: function(loc) {
+                      var props = [];
+                      ['adminName1', 'countryName'].
+                          forEach(function(p) {
+                            if (loc[p]) { props.push(loc[p]); }
+                          });
+                      return loc.name + ((props.length == 0) ? '' :
+                          ' — <em>' + props.join(', ') + '</em>');
+                    }
+                  }
+
+                }).on('typeahead:selected', function(event, datum) {
+                  if (angular.isFunction(scope.onRegionSelect)) {
+                    scope.onRegionSelect(datum);
+                  }
+                });
+              }
+              else {
+                gnRegionService.loadRegion(scope.regionType, scope.lang).then(
+                    function(data) {
+                      if (data) {
+                        $(element).typeahead('destroy');
+                        var source = new Bloodhound({
+                          datumTokenizer:
+                              Bloodhound.tokenizers.obj.whitespace('name'),
+                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                          local: data,
+                          limit: 30
+                        });
+                        source.initialize();
+                        $(element).typeahead({
+                          minLength: 0,
+                          highlight: true
+                        }, {
+                          name: 'countries',
+                          displayKey: 'name',
+                          source: source.ttAdapter()
+                        }).on('typeahead:selected', function(event, datum) {
+                          if (angular.isFunction(scope.onRegionSelect)) {
+                            scope.onRegionSelect(datum);
+                          }
+                        });
+                      }
+                    });
+              }
             }
           });
         }
@@ -651,6 +723,12 @@
   module.directive('gnBootstrapDatepicker', [
     function() {
 
+      // to MM-dd-yyyy
+      var formatDate = function(day, month, year) {
+        return ('0' + day).slice(-2) + '-' +
+            ('0' + month).slice(-2) + '-' + year;
+      };
+
       var getMaxInProp = function(obj) {
         var year = {
           min: 3000,
@@ -666,27 +744,35 @@
         };
 
         for (var k in obj) {
+          k = parseInt(k);
           if (k < year.min) year.min = k;
           if (k > year.max) year.max = k;
         }
         for (k in obj[year.min]) {
+          k = parseInt(k);
           if (k < month.min) month.min = k;
         }
         for (k in obj[year.max]) {
+          k = parseInt(k);
           if (k > month.max) month.max = k;
         }
         for (k in obj[year.min][month.min]) {
-          if (obj[year.min][month.min][k] < day.min) day.min =
-                obj[year.min][month.min][k];
+          k = parseInt(k);
+          if (obj[year.min][month.min][k] < day.min) {
+            day.min = obj[year.min][month.min][k];
+          }
         }
         for (k in obj[year.max][month.max]) {
-          if (obj[year.min][month.min][k] > day.max) day.max =
-                obj[year.min][month.min][k];
+          k = parseInt(k);
+
+          if (obj[year.min][month.min][k] > day.max) {
+            day.max = obj[year.min][month.min][k];
+          }
         }
 
         return {
-          min: month.min + 1 + '/' + day.min + '/' + year.min,
-          max: month.max + 1 + '/' + day.max + '/' + year.max
+          min: formatDate(day.min, month.min + 1, year.min),
+          max: formatDate(day.max, month.max + 1, year.max)
         };
       };
 

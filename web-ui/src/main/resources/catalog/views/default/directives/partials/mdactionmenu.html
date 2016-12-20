@@ -1,116 +1,121 @@
-<div class="btn-group md-actions">
-  <button type="button"
-          class="btn btn-default dropdown-toggle"
-          data-toggle="dropdown"
-          aria-expanded="false">
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-    <!--<li><a data-ng-href=""
-           data-gn-metadata-open="md"
-           data-gn-metadata-open-selector=".gn-resultview">
-      <i class="fa fa-eye"/>&nbsp;
-      <span data-translate="">view</span>
-    </a></li>-->
-    <!--<li><a data-ng-href=""
-           data-ng-click="zoomToMdExtent(md,map)">
-      <i class="fa fa-globe"></i>&nbsp;
-      <span data-translate="">zoomto</span>
-    </a></li>
-    <li data-ng-if="user['@authenticated'] == 'true'">
-      <a data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
-         target="_blank">
-        <i class="fa fa-pencil"></i>&nbsp;
-        <span data-translate="">edit</span>
-      </a>
-    </li>-->
-    <li><a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
-           data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
-      <i class="fa fa-key"></i>&nbsp;
-      <span data-translate="">privileges</span>
-    </a></li>
-    <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
-      <a data-ng-href=""
-         data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
-        <i class="fa fa-user"></i>&nbsp;
-        <span data-translate="">transferOwnership</span>
+<div>
+  <div class="btn-group md-actions"
+       data-ng-if="user.isConnected()">
+    <button type="button"
+            title="{{'manageRecord' | translate}}"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <i class="fa fa-cog"/>&nbsp;
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a data-ng-href=""
+             data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
+             data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())">
+        <i class="fa fa-key"></i>&nbsp;
+        <span data-translate="">privileges</span>
       </a></li>
-    <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
-        data-ng-class="(md.isPublished() || (allowPublishInvalidMd() === true) ||
-          (!md.isPublished() && (allowPublishInvalidMd() === false) &&
-          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
-        title="{{(!md.isPublished() ? (md.isValid() ? 'mdvalid' : (!md.hasValidation() ? 'mdnovalidation':
-               (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}"
-    >
-      <a data-ng-click="mdService.publish(md)">
-        <i class="fa"
-           data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
-        <span data-ng-if="md.isPublished()" data-translate="">unpublish</span>
-        <span data-ng-if="!md.isPublished()" data-translate="">publish</span>&nbsp;
+      <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
+        <a data-ng-href=""
+           data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
+          <i class="fa fa-user"></i>&nbsp;
+          <span data-translate="">transferOwnership</span>
+        </a></li>
+      <li data-ng-if="user.canEditRecord(md) && user.isReviewerOrMore()"
+          data-ng-class="
+            (md.isPublished() || (allowPublishInvalidMd() === true) ||
+            (!md.isPublished() && (allowPublishInvalidMd() === false) &&
+            (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"
+          title="{{(!md.isPublished() ? (md.isValid() ? 'mdvalid' :
+                    (!md.hasValidation() ? 'mdnovalidation':
+                      (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}"
+      >
+        <a data-ng-click="mdService.publish(md)">
+          <i class="fa"
+             data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
+          <span data-ng-if="md.isPublished()"
+                data-translate="">unpublish</span>
+          <span data-ng-if="!md.isPublished()"
+                data-translate="">publish</span>&nbsp;
 
-        <i class="fa" data-ng-if="!md.isPublished() && md.hasValidation()"
-           data-ng-class="md.isValid() ? 'gn-recordtype-n text-success' : 'gn-recordtype-n text-danger'"></i>
-        <i class="fa gn-recordtype-n text-muted" data-ng-if="!md.isPublished() && !md.hasValidation()"></i>
-      </a>
+          <i class="fa"
+             data-ng-if="!md.isPublished() && md.hasValidation()"
+             data-ng-class="md.isValid() ? 'gn-recordtype-n text-success' : 'gn-recordtype-n text-danger'"></i>
+          <i class="fa gn-recordtype-n text-muted"
+             data-ng-if="!md.isPublished() && !md.hasValidation()"></i>
+        </a>
 
-    </li>
-    <!-- TODO: Some installation only allows status update
-    based on current status. -->
-    <li data-ng-class="((allowPublishInvalidMd() === true) || 
-          ((allowPublishInvalidMd() === false) &&
-          (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'"><a data-ng-href=""
+      </li>
+      <!-- TODO: Some installation only allows status update
+      based on current status. -->
+      <li data-ng-class="((allowPublishInvalidMd() === true) || 
+            ((allowPublishInvalidMd() === false) &&
+            (!md.hasValidation() || (md.hasValidation() && md.isValid())))) ? '' : 'disabled'">
+        <a data-ng-href=""
            data-ng-if="user.canEditRecord(md) &&
-                              md.isWorkflowEnabled()"
+                                md.isWorkflowEnabled()"
            data-ng-click="mdService.openUpdateStatusPanel(getScope())">
-      <i class="fa fa-bell"></i>&nbsp;
-      <span data-translate="">updateStatus</span>
-    </a></li>
-    <li><a data-ng-href=""
-           data-ng-if="user.canEditRecord(md) &&
-                                !md.isWorkflowEnabled()"
-           data-ng-click="mdService.startWorkflow(md, getCatScope())">
-      <i class="fa fa-bell"></i>&nbsp;
-      <span data-translate="">enableWorkflow</span>
-    </a></li>
-    <li class="divider" data-ng-if="user.isConnected()"></li>
-    <li><a data-ng-href=""
-           data-ng-if="user.isEditorOrMore()"
-           data-ng-click="mdService.duplicate(md)">
-      <i class="fa fa-copy"></i>&nbsp;
-      <span data-translate="">duplicate</span>
-    </a></li>
-    <li><a data-ng-href=""
-           data-ng-if="user.isEditorOrMore()"
-           data-ng-click="mdService.createChild(md)">
-      <i class="fa fa-sitemap"></i>&nbsp;
-      <span data-translate="">createChild</span>
-    </a></li>
-    <li class="divider" data-ng-if="user.isConnected()"></li>
-    <li><a data-ng-href=""
-           data-ng-click="mdService.getPermalink(md)">
-      <i class="fa fa-link"/>&nbsp;
-      <span data-translate="">permalink</span>
-    </a></li>
-    <li><a data-ng-href=""
-           data-ng-click="mdService.metadataMEF(md.getUuid())">
-      <i class="fa fa-file-zip-o"></i>&nbsp;
-      <span data-translate="">exportMEF</span>
-    </a></li>
-    <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/pdf"
-           target="_blank">
-      <i class="fa fa-file-pdf-o"></i>&nbsp;
-      <span data-translate="">exportPDF</span>
-    </a></li>
-    <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
-           target="_blank">
-      <i class="fa fa-file-code-o"></i>&nbsp;
-      <span data-translate="">exportXML</span>
-    </a></li>
-    <li><a data-ng-href=""
-           data-ng-click="mdService.metadataRDF(md.getUuid())">
-      <i class="fa fa-share-alt"></i>&nbsp;
-      <span data-translate="">exportRDF</span>
-    </a></li>
-  </ul>
+          <i class="fa fa-bell"></i>&nbsp;
+          <span data-translate="">updateStatus</span>
+        </a></li>
+      <li><a data-ng-href=""
+             data-ng-if="user.canEditRecord(md) &&
+                                  !md.isWorkflowEnabled()"
+             data-ng-click="mdService.startWorkflow(md, getCatScope())">
+        <i class="fa fa-bell"></i>&nbsp;
+        <span data-translate="">enableWorkflow</span>
+      </a></li>
+      <li class="divider" data-ng-if="user.isConnected()"></li>
+      <li><a data-ng-href=""
+             data-ng-if="user.isEditorOrMore()"
+             data-ng-click="mdService.duplicate(md)">
+        <i class="fa fa-copy"></i>&nbsp;
+        <span data-translate="">duplicate</span>
+      </a></li>
+      <li><a data-ng-href=""
+             data-ng-if="user.isEditorOrMore()"
+             data-ng-click="mdService.createChild(md)">
+        <i class="fa fa-sitemap"></i>&nbsp;
+        <span data-translate="">createChild</span>
+      </a></li>
+    </ul>
+  </div>
+  <div class="btn-group md-actions">
+    <button type="button"
+            title="{{'downloadRecord' | translate}}"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+            aria-expanded="false">
+      <i class="fa fa-download"/>&nbsp;
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a data-ng-href=""
+             data-ng-click="mdService.getPermalink(md)">
+        <i class="fa fa-link"/>&nbsp;
+        <span data-translate="">permalink</span>
+      </a></li>
+      <li><a data-ng-href=""
+             data-ng-click="mdService.metadataMEF(md.getUuid())">
+        <i class="fa fa-file-zip-o"></i>&nbsp;
+        <span data-translate="">exportMEF</span>
+      </a></li>
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/pdf"
+             target="_blank">
+        <i class="fa fa-file-pdf-o"></i>&nbsp;
+        <span data-translate="">exportPDF</span>
+      </a></li>
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
+             target="_blank">
+        <i class="fa fa-file-code-o"></i>&nbsp;
+        <span data-translate="">exportXML</span>
+      </a></li>
+      <li><a data-ng-href=""
+             data-ng-click="mdService.metadataRDF(md.getUuid())">
+        <i class="fa fa-share-alt"></i>&nbsp;
+        <span data-translate="">exportRDF</span>
+      </a></li>
+    </ul>
+  </div>
 </div>

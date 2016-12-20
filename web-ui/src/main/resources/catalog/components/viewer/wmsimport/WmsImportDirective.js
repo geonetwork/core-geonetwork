@@ -215,7 +215,8 @@
                 var vector = new ol.layer.Vector({
                   source: kmlSource,
                   getinfo: true,
-                  label: $translate.instant('kmlFile', {layer: url.split('/').pop()})
+                  label: $translate.instant('kmlFile',
+                      {layer: url.split('/').pop()})
                 });
                 $scope.addToMap(vector, map);
                 $scope.url = '';
@@ -234,7 +235,8 @@
                   map.getSize());
 
               gnAlertService.addAlert({
-                msg: $translate.instant('layerAdded', {layer: layer.get('label')}),
+                msg: $translate.instant('layerAdded',
+                    {layer: layer.get('label')}),
                 type: 'success'
               });
             };
@@ -245,14 +247,15 @@
           scope.validUrl = true;
 
           /** File drag & drop support */
-          var dragAndDropInteraction = new ol.interaction.DragAndDrop({
-            formatConstructors: [
-              ol.format.GPX,
-              ol.format.GeoJSON,
-              ol.format.KML,
-              ol.format.TopoJSON
-            ]
-          });
+          var dragAndDropInteraction =
+              new ol.interaction.DragAndDrop({
+                formatConstructors: [
+                  ol.format.GPX,
+                  ol.format.GeoJSON,
+                  ol.format.KML,
+                  ol.format.TopoJSON
+                ]
+              });
 
           var onError = function(msg) {
             gnAlertService.addAlert({
@@ -277,7 +280,8 @@
             var layer = new ol.layer.Vector({
               source: vectorSource,
               getinfo: true,
-              label: $translate.instant('localLayerFile', {layer: event.file.name})
+              label: $translate.instant('localLayerFile',
+                  {layer: event.file.name})
             });
             scope.addToMap(layer, scope.map);
             scope.$apply();
@@ -294,11 +298,13 @@
 
             return {
               getEntries: function(file, onend) {
-                zip.createReader(new zip.BlobReader(file), function(zipReader) {
-                  zipReader.getEntries(onend);
-                }, onerror);
+                zip.createReader(new zip.BlobReader(file),
+                    function(zipReader) {
+                      zipReader.getEntries(onend);
+                    }, onerror);
               },
-              getEntryFile: function(entry, creationMethod, onend, onprogress) {
+              getEntryFile: function(entry, creationMethod,
+                                     onend, onprogress) {
                 var writer, zipFileEntry;
 
                 function getData() {
@@ -327,20 +333,22 @@
               });
 
               var vector = new ol.layer.Vector({
-                label: $translate.instant('localLayerFile', {layer: entry.filename}),
+                label: $translate.instant('localLayerFile',
+                    {layer: entry.filename}),
                 getinfo: true,
                 source: source
               });
-              var listenerKey = vector.getSource().on('change', function(evt) {
-                if (vector.getSource().getState() == 'ready') {
-                  vector.getSource().unByKey(listenerKey);
-                  scope.addToMap(vector, scope.map);
-                  entry.loading = false;
-                }
-                else if (vector.getSource().getState() == 'error') {
-                }
-                scope.$apply();
-              });
+              var listenerKey = vector.getSource().on('change',
+                  function(evt) {
+                    if (vector.getSource().getState() == 'ready') {
+                      vector.getSource().unByKey(listenerKey);
+                      scope.addToMap(vector, scope.map);
+                      entry.loading = false;
+                    }
+                    else if (vector.getSource().getState() == 'error') {
+                    }
+                    scope.$apply();
+                  });
             }, function(current, total) {
               unzipProgress.value = current;
               unzipProgress.max = total;

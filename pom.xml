@@ -1188,8 +1188,18 @@
   </distributionManagement>
 
   <properties>
+
+    <!-- Default catalog language when accessing the home page
+    ie. http://localhost:8080/geonetwork. -->
+    <language.default>eng</language.default>
+    <!-- Define if redirection should ignore HTTP headers,
+    Cookie or URL parameters. Set it to true to always redirect
+    to the default language. -->
+    <language.forceDefault>false</language.forceDefault>
+
+
     <jetty.version>9.3.9.v20160517</jetty.version>
-    <geotools.version>15.0</geotools.version>
+    <geotools.version>16.0</geotools.version>
 
     <lucene.version>4.9.0</lucene.version>
 
@@ -1201,6 +1211,16 @@
 
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>
+
+    <!-- List of comma separated values of hosts for which
+    CORS headers are added (eg. www.geonetwork-opensource.org,osgeo.org).
+    Use '*' to enable CORS for everyone.
+    Use '' to disable CORS.
+    Use 'db' for using database settings. This mode
+     allows to change at run time the list of hosts. It
+     may be a bit slower as it requires to check for every
+     request the list of hosts (but JPA cache db queries). -->
+    <cors.allowedHosts>*</cors.allowedHosts>
 
     <spring.version>4.2.4.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>

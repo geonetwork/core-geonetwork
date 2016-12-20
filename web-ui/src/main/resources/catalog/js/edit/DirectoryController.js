@@ -243,8 +243,8 @@
        * See form-builder-xml.xsl.
        */
       $scope.xmlEditorChange = function(e) {
-      // TODO: Here we could check if XML is valid based on ACE info
-      // and disable save action ?
+        // TODO: Here we could check if XML is valid based on ACE info
+        // and disable save action ?
         $('textarea[name=data]').val(e[1].getSession().getValue());
       };
       $scope.xmlEditorLoaded = function(e) {

@@ -61,7 +61,7 @@
         link: function(scope) {
           var translations = null;
           $translate(['privilegesUpdated',
-            'privilegesUpdatedError']).then(function (t) {
+            'privilegesUpdatedError']).then(function(t) {
             translations = t;
           });
 
@@ -165,6 +165,13 @@
                     timeout: 0,
                     type: 'danger'});
                 });
+          };
+
+          scope.pFilter = '';
+          scope.pFilterFn = function(v) {
+            if (scope.pFilter === '') return true;
+            var v = $translate.instant('group-' + v.group);
+            return v.indexOf(scope.pFilter) >= 0;
           };
 
           scope.sorter = {

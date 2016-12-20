@@ -23,7 +23,10 @@
 
 package org.fao.geonet.api.users;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -35,10 +38,10 @@ import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.User_;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.UserGroupId_;
+import org.fao.geonet.domain.User_;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -61,7 +64,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,17 +76,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.UserSession;
-import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpSession;
-
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.springframework.data.jpa.domain.Specifications.where;
-import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 
 @RequestMapping(value = {
     "/api/users",
@@ -343,6 +341,7 @@ public class UsersApi {
         user.getSecurity().setPassword(
             PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
                 userDto.getPassword()));
+
         fillUserFromParams(user, userDto);
 
         userRepository.save(user);
@@ -718,9 +717,24 @@ public class UsersApi {
         user.setKind(userDto.getKind());
 
         if (!userDto.getAddresses().isEmpty()) {
-            user.getAddresses().clear();
-            for (Address address : userDto.getAddresses()) {
-                user.getAddresses().add(address);
+//            Trigger constraint exception.
+//            Updating only the first (as only one supported on client side)
+//            user.getAddresses().clear();
+//            for (Address address : userDto.getAddresses()) {
+//                address.setZip(null);
+//                user.getAddresses().add(address);
+//            }
+
+            Set<Address> userAddresses = user.getAddresses();
+            if (userAddresses.size() == 1) {
+                Address userAddress = (Address) userAddresses.toArray()[0];
+                for (Address address : userDto.getAddresses()) {
+                    userAddress.setAddress(address.getAddress());
+                    userAddress.setCity(address.getCity());
+                    userAddress.setCountry(address.getCountry());
+                    userAddress.setState(address.getState());
+                    userAddress.setZip(address.getZip());
+                }
             }
         }
 

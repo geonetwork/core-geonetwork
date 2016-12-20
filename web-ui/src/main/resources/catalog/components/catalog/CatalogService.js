@@ -388,9 +388,11 @@
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
-    '$http',
+    '$http', '$q',
     'gnConfig',
-    function($http, gnConfig) {
+    function($http, $q, gnConfig) {
+      var defer = $q.defer();
+      var loadPromise = defer.promise;
       return {
 
         /**
@@ -419,8 +421,12 @@
                 if (window.location.search.indexOf('with3d') !== -1) {
                   gnConfig['map.is3DModeAllowed'] = true;
                 }
+                defer.resolve(gnConfig);
+              }, function() {
+                defer.reject();
               });
         },
+        loadPromise: loadPromise,
 
         /**
          * @ngdoc method

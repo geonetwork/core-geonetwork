@@ -71,7 +71,8 @@
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
-                    msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
+                    msg: $translate.instant(
+                       'metadataStatusUpdatedWithNoErrors'),
                     timeout: 2,
                     type: 'success'});
                 }, function(data) {

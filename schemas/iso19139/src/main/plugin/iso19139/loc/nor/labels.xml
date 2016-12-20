@@ -2547,8 +2547,6 @@
     <label>Sluttdato</label>
     <description>Formattert som 2007-09-12T15:00:00 (ÅÅÅÅ-MM-DDTtt:mm:ss)</description>
   </element>
-  >>>>>>> cd2dec4... Change all protocolChoice value to helper value (each language) and remove all
-  protocolChoice reference in xsl files
 
   <element name="gml:relatedTime">
     <label>Related time</label>

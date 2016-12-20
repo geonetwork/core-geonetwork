@@ -312,7 +312,8 @@
           thesaurusIdentifier: $scope.thesaurusSelected.key}).
             then(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('indexingRecordsRelatedToTheThesaurus'),
+                title:
+                    $translate.instant('indexingRecordsRelatedToTheThesaurus'),
                 timeout: 2
               });
             });

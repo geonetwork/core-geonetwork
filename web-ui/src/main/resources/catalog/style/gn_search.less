@@ -23,59 +23,57 @@
 @panel-heading-height: 3.8em;
 
 
+.gn-facet-list {
+  .fa-lg {
+    font-size: 1.2em;
+  }
+  a:hover, a:focus {
+    text-decoration: none;
+  }
+}
 .gn-facet {
+  h4 {
+    font-size: 14px;
+    text-transform: uppercase;
+  }
   .list-group {
-    border-left: 1px dotted @gray-lighter;
+    border-left: 1px dotted rgba(0, 0, 0, 0.2);
     margin-left: .5em;
-    padding-left: .1em;
+    padding-left: 1em;
     margin-bottom: 0;
+    font-size: 13px;
   }
   .list-group-item {
     padding: 0.1em;
-    //max-height: 22px;
-    color: @gray;
+    color: #555555;
     border: none;
     label {
       margin-bottom: 0px;
-      //width: 90%; /* hack */
+      font-weight: 500;
       cursor: pointer;
+      &.gn-facet-active {
+        color: @gray-darker
+      }
     }
-    label.gn-facet-active {
-      color: @gray-darker
+    input {
+      vertical-align: bottom;
+      position: relative;
+      top: -3px;
+    }
+    button {
+      margin: 0px;
+      padding: 0px;
+      font-size: 13px;
     }
   }
   .gn-facet-count, .list-group-item > span.fa {
     color: @gray-light;
   }
-  .gn-facet-collapseall {
-    color: @gray-darker;
-    cursor: pointer;
-    position: absolute;
-    float: left;
-    top: 9px;
-    left: 0px;
-  }
   .gn-facet-toggle {
     cursor: pointer;
   }
-  .gn-facet-moreorless {
-    list-style: none;
-    padding-left: 0.5em;
-    button {
-      width: 100%;
-      margin: 0px;
-      padding: 0px;
-    }
-  }
   .list-group-item:hover {
     color: @brand-primary;
-  }
-  h4 {
-    font-size: 14px;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-bottom: 0px;
-    border-bottom: 2px @gray-lighter solid;
   }
 }
 .gn-facet-breadcrumb {
@@ -86,7 +84,29 @@
   }
 }
 
-
+/*HOME*/
+.search-over {
+  color: #aaa;
+  text-align: center;
+  margin-top: 5px;
+}
+.gn-form-any {
+  input.input-lg {
+    height:45px;
+    border-radius: 3px;
+  }
+  .input-group-btn a {
+    border-radius: 3px;
+  }
+  .dropdown-menu {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    li a {
+      .text-overflow();
+    }
+  }
+}
 .gn-icon-bg {
   height: 130px;
 
@@ -483,7 +503,7 @@ span.gn-facet-label:first-letter {
 
 .relatedMd {
   .relatedRecord {
-    float:left; 
+    float:left;
     padding:8px;
     cursor: pointer;
   }
@@ -544,7 +564,7 @@ button.active [role=tooltip] {
       display: block;
     }
     tbody {
-      max-height: 200px;
+      max-height: 400px;
       overflow-y: auto;
       overflow-x: hidden;
     }

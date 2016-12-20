@@ -40,6 +40,7 @@
     'gnMetadataManager',
     'gnAlertService',
     'gnSearchSettings',
+    'gnUtilityService',
     'gnPopup',
     'gnMdFormatter',
     '$translate',
@@ -47,7 +48,7 @@
     '$http',
     function($rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
-             gnPopup, gnMdFormatter,
+             gnUtilityService, gnPopup, gnMdFormatter,
              $translate, $q, $http) {
 
       var windowName = 'geonetwork';
@@ -372,13 +373,9 @@
        * @param {Object} md
        */
       this.getPermalink = function(md) {
-
         var url = $location.absUrl().split('#')[0] + '#/metadata/' +
             md.getUuid();
-        gnPopup.createModal({
-          title: 'permalink',
-          content: '<div gn-permalink-input="' + url + '"></div>'
-        });
+        gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
       };
     }]);
 })();

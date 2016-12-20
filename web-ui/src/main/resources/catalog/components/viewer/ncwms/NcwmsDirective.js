@@ -55,6 +55,9 @@
           var drawInteraction, featureOverlay;
           var map = scope.map;
 
+          scope.ctrl = {};
+
+          //element.find('[ui-slider]').slider();
           /**
            * Just manage active button in ui.
            * Values of activeTool can be 'time', 'profile', 'transect'
@@ -169,7 +172,7 @@
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
 
-            layer.set('cextent', ol.proj.transform([
+            layer.set('cextent', ol.proj.transformExtent([
               parseFloat(ncInfo.bbox[0]),
               parseFloat(ncInfo.bbox[1]),
               parseFloat(ncInfo.bbox[2]),
@@ -187,8 +190,8 @@
             scope.colorscalerange = [scope.colorRange.min,
               scope.colorRange.max];
             scope.timeSeries = {};
-            scope.elevations = ncInfo.zaxis.values;
-            scope.styles = gnNcWms.parseStyles(ncInfo);
+            scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
+            scope.palettes = gnNcWms.parseStyles(ncInfo);
 
             if (angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
@@ -204,8 +207,8 @@
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
                 ol.proj.transformExtent(
-                    map.getView().calculateExtent(map.getSize()),
-                    map.getView().getProjection(), 'EPSG:4326').join(',')).
+                map.getView().calculateExtent(map.getSize()),
+                map.getView().getProjection(), 'EPSG:4326').join(',')).
                 success(function(data) {
                   scope.colorscalerange = [data.min, data.max];
                   scope.onColorscaleChange(scope.colorscalerange);
@@ -227,9 +230,38 @@
             }
           };
 
+          scope.ncTime = {};
+          scope.$watch('ncTime.value', function(time) {
+            if (time) {
+              scope.params.TIME =
+                  moment(time, 'DD-MM-YYYY').format(
+                  'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+              scope.updateLayerParams();
+            }
+          });
+
+          scope.hasStyles = function() {
+            return Object.keys(scope.palettes).length > 1;
+          };
+
+          scope.updateStyle = function() {
+            scope.params.STYLES = scope.palettes[scope.ctrl.palette];
+            scope.updateLayerParams();
+          };
+
           scope.updateLayerParams = function() {
             scope.layer.getSource().updateParams(scope.params);
+
+            scope.layer.set('legend',
+                gnNcWms.updateLengendUrl(scope.layer.get('legend'),
+                    angular.extend({
+                      PALETTE: scope.ctrl.palette
+                    }, scope.params)));
           };
+
+          element.bind('$destroy', function(e) {
+            element.find('[ui-slider]').slider();
+          });
 
           initNcwmsParams();
         }

@@ -105,8 +105,10 @@
       $scope.$on('$locationChangeSuccess', function(event) {
         $scope.socialMediaLink = $location.absUrl();
         $scope.showSocialMediaLink =
-            $scope.socialMediaLink.includes('/metadata/');
+            ($scope.socialMediaLink.indexOf('/metadata/') != -1);
       });
+      $scope.getPermalink = gnUtilityService.getPermalink;
+
       // TODO : add language
       var tokens = location.href.split('/');
       $scope.service = tokens[6].split('?')[0];
