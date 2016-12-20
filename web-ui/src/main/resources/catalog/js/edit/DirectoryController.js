@@ -182,7 +182,7 @@
               .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
-              }).then(function () {
+              }).then(function() {
                 // success. Nothing to do.
               }, function(rejectedValue) {
                 $rootScope.$broadcast('StatusUpdated', {
@@ -191,7 +191,7 @@
                   timeout: 0,
                   type: 'danger'
                 });
-          });
+              });
         } else {
           gnEditor.add(gnCurrentEdit.id, ref, name,
               insertRef, position, attribute);

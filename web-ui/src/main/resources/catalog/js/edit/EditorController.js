@@ -395,7 +395,7 @@
               .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
-              }, function (rejectedValue) {
+              }, function(rejectedValue) {
                 $rootScope.$broadcast('StatusUpdated', {
                   title: $translate.instant('runServiceError'),
                   error: rejectedValue,

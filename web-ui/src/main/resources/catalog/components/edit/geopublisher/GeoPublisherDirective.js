@@ -151,7 +151,7 @@
                 }
 
                 $timeout(function() {
-                  gnEditor.save(true).then(function () {
+                  gnEditor.save(true).then(function() {
                     // success. Nothing to do.
                   }, function(rejectedValue) {
                     $rootScope.$broadcast('StatusUpdated', {

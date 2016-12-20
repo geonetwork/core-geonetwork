@@ -76,7 +76,7 @@
              scope.snippet = null;
              scope.snippetRef = null;
              var restrictionList = scope.include ? (
-              scope.include.indexOf(',') !== -1 ?
+             scope.include.indexOf(',') !== -1 ?
              scope.include.split(',') : [scope.include]) : [];
 
              var includeThesaurus = [];
@@ -92,35 +92,35 @@
 
 
              scope.allowFreeTextKeywords =
-              (attrs.allowFreeTextKeywords === undefined) ||
-              (attrs.allowFreeTextKeywords == 'true');
+             (attrs.allowFreeTextKeywords === undefined) ||
+             (attrs.allowFreeTextKeywords == 'true');
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
              gnThesaurusService.getAll().then(
-              function(listOfThesaurus) {
-                scope.thesaurus = [];
-                angular.forEach(listOfThesaurus, function(thesaurus) {
-                  if (excludeThesaurus.length > 0 &&
+             function(listOfThesaurus) {
+               scope.thesaurus = [];
+               angular.forEach(listOfThesaurus, function(thesaurus) {
+                 if (excludeThesaurus.length > 0 &&
                  $.inArray(thesaurus.getKey(), excludeThesaurus) !== -1) {
 
-                  } else if (includeThesaurus.length == 0 || (
+                 } else if (includeThesaurus.length == 0 || (
                  includeThesaurus.length > 0 &&
                  $.inArray(thesaurus.getKey(), includeThesaurus) !== -1)) {
-                    scope.thesaurus.push(thesaurus);
-                  }
-                });
-              });
+                   scope.thesaurus.push(thesaurus);
+                 }
+               });
+             });
 
              scope.add = function() {
                return gnEditor.add(gnCurrentEdit.id,
-                scope.elementRef, scope.elementName, scope.domId, 'before');
+               scope.elementRef, scope.elementName, scope.domId, 'before');
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
                if (scope.selectorOnly) {
                  scope.$parent.thesaurusKey = scope.thesaurusKey =
-                  thesaurusIdentifier;
+                 thesaurusIdentifier;
                } else {
                  gnCurrentEdit.working = true;
                  return gnThesaurusService
@@ -130,8 +130,8 @@
                    // Add the fragment to the form
                    scope.snippet = data;
                    scope.snippetRef = gnEditor.buildXMLFieldName(
-                        scope.elementRef,
-                        scope.elementName);
+                   scope.elementRef,
+                   scope.elementName);
 
 
                    $timeout(function() {
@@ -222,7 +222,7 @@
                  if (next !== ',') {
                    buffer += next;
                  } else if (i === scope.keywords.length - 1 ||
-                  scope.keywords.charAt(i + 1) === ',') {
+                 scope.keywords.charAt(i + 1) === ',') {
                    buffer += next;
                    i++;
                  } else {
@@ -235,7 +235,7 @@
                }
              }
              scope.transformationLists =
-              scope.transformations.indexOf(',') !== -1 ?
+             scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
              scope.maxTagsLabel = scope.maxTags || '∞';
 
@@ -250,11 +250,11 @@
              // Check initial keywords are available in the thesaurus
              scope.sortKeyword = function(a, b) {
                if (a.getLabel().toLowerCase() <
-                b.getLabel().toLowerCase()) {
+               b.getLabel().toLowerCase()) {
                  return -1;
                }
                if (a.getLabel().toLowerCase() >
-                b.getLabel().toLowerCase()) {
+               b.getLabel().toLowerCase()) {
                  return 1;
                }
                return 0;
@@ -274,9 +274,9 @@
 
                // If no keyword, set the default transformation
                if (
-                $.inArray(scope.currentTransformation,
+               $.inArray(scope.currentTransformation,
                scope.transformationLists) === -1 &&
-                scope.initialKeywords.length === 0) {
+               scope.initialKeywords.length === 0) {
 
                  scope.setTransformation(scope.transformationLists[0]);
                }
@@ -300,7 +300,7 @@
                      if (counter === scope.initialKeywords.length) {
                        scope.isInitialized = true;
                        scope.invalidKeywordMatch =
-                        scope.selected.length !== scope.initialKeywords.length;
+                       scope.selected.length !== scope.initialKeywords.length;
 
                        // Get the matching XML snippet for
                        // the initial set of keywords
@@ -358,31 +358,31 @@
 
                    // Load all keywords from thesaurus on startup
                    gnThesaurusService.getKeywords('',
-                    scope.thesaurusKey, scope.max)
+                   scope.thesaurusKey, scope.max)
                     .then(function(listOfKeywords) {
 
-                      var field = $(id).tagsinput('input');
-                      field.attr('placeholder',
+                     var field = $(id).tagsinput('input');
+                     field.attr('placeholder',
                      $translate.instant('searchKeyword'));
 
-                      var keywordsAutocompleter =
+                     var keywordsAutocompleter =
                      gnThesaurusService.getKeywordAutocompleter({
                        thesaurusKey: scope.thesaurusKey,
                        dataToExclude: scope.selected,
                        lang: gnLangs.current
                      });
 
-                      // Init typeahead
-                      field.typeahead({
-                        minLength: 0,
-                        highlight: true
-                        // template: '<p>{{label}}</p>'
-                        // TODO: could be nice to have definition
-                      }, {
-                        name: 'keyword',
-                        displayKey: 'label',
-                        source: keywordsAutocompleter.ttAdapter()
-                      }).bind('typeahead:selected',
+                     // Init typeahead
+                     field.typeahead({
+                       minLength: 0,
+                       highlight: true
+                       // template: '<p>{{label}}</p>'
+                       // TODO: could be nice to have definition
+                     }, {
+                       name: 'keyword',
+                       displayKey: 'label',
+                       source: keywordsAutocompleter.ttAdapter()
+                     }).bind('typeahead:selected',
                      $.proxy(function(obj, keyword) {
                        // Add to tags
                        this.tagsinput('add', keyword);
@@ -395,28 +395,28 @@
                        // Clear typeahead
                        this.tagsinput('input').typeahead('val', '');
                      }, $(id))
-                      );
+                     );
 
-                      $(id).on('itemRemoved', function() {
-                        angular.copy($(this)
+                     $(id).on('itemRemoved', function() {
+                       angular.copy($(this)
                        .tagsinput('items'), scope.selected);
-                        getSnippet();
-                      });
+                       getSnippet();
+                     });
 
-                      // When clicking the element trigger input
-                      // to show autocompletion list.
-                      // https://github.com/twitter/typeahead.js/issues/798
-                      field.on('typeahead:opened', function() {
-                        var initial = field.val(),
+                     // When clicking the element trigger input
+                     // to show autocompletion list.
+                     // https://github.com/twitter/typeahead.js/issues/798
+                     field.on('typeahead:opened', function() {
+                       var initial = field.val(),
                        ev = $.Event('keydown');
-                        ev.keyCode = ev.which = 40;
-                        field.trigger(ev);
-                        if (field.val() != initial) {
-                          field.val('');
-                        }
-                        return true;
-                      });
-                    });
+                       ev.keyCode = ev.which = 40;
+                       field.trigger(ev);
+                       if (field.val() != initial) {
+                         field.val('');
+                       }
+                       return true;
+                     });
+                   });
                  } catch (e) {
                    console.warn('No tagsinput for ' + id +
                    ', error: ' + e.message);
@@ -445,19 +445,19 @@
 
              var search = function() {
                gnThesaurusService.getKeywords(scope.filter,
-                scope.thesaurusKey, gnLangs.current, scope.max)
+               scope.thesaurusKey, gnLangs.current, scope.max)
                 .then(function(listOfKeywords) {
-                  // Remove from search already selected keywords
-                  scope.results = $.grep(listOfKeywords, function(n) {
-                    var alreadySelected = true;
-                    if (scope.selected.length !== 0) {
-                      alreadySelected = $.grep(scope.selected, function(s) {
+                 // Remove from search already selected keywords
+                 scope.results = $.grep(listOfKeywords, function(n) {
+                   var alreadySelected = true;
+                   if (scope.selected.length !== 0) {
+                     alreadySelected = $.grep(scope.selected, function(s) {
                        return s.getLabel() === n.getLabel();
                      }).length === 0;
-                    }
-                    return alreadySelected;
-                  });
-                });
+                   }
+                   return alreadySelected;
+                 });
+               });
              };
              scope.setTransformation = function(t) {
                $timeout(function() {
@@ -482,17 +482,17 @@
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
                scope.textgroupOnly).then(
-                function(data) {
-                  scope.snippet = data;
-                });
+               function(data) {
+                 scope.snippet = data;
+               });
              };
 
              if (scope.thesaurusKey) {
                init();
                gnThesaurusService.getTopConcept(scope.thesaurusKey).then(
-                function(c) {
-                  scope.concept = c;
-                });
+               function(c) {
+                 scope.concept = c;
+               });
              }
            }
          };

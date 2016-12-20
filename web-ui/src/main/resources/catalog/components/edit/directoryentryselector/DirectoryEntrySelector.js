@@ -191,12 +191,12 @@
                            function(r) {
                              defer.resolve(r);
                            }, function(rejectedValue) {
-                                $rootScope.$broadcast('StatusUpdated', {
-                                  title: $translate.instant('runServiceError'),
-                                  error: rejectedValue,
-                                  timeout: 0,
-                                  type: 'danger'
-                                });
+                             $rootScope.$broadcast('StatusUpdated', {
+                               title: $translate.instant('runServiceError'),
+                               error: rejectedValue,
+                               timeout: 0,
+                               type: 'danger'
+                             });
                            });
                           });
                         }
