@@ -1340,6 +1340,11 @@ contains an XLink.
           <xs:documentation>XPath to get the value from the XML snippet.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="required" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Indicate if the field is required.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="tooltip" type="xs:string" use="optional">
         <xs:annotation>
           <xs:documentation><![CDATA[
