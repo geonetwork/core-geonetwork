@@ -38,7 +38,7 @@
            },
            link: function(scope, element, attrs) {
              var textarea = $(element).parent()
-            .find('textarea[name=' + scope.id + ']');
+             .find('textarea[name=' + scope.id + ']');
              // Unregister this textarea to the form
              // It will be only submitted if user click the add button
              textarea.removeAttr('name');

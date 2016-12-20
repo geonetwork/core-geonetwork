@@ -458,7 +458,7 @@
                     olL.set('tree_index', index);
                   }
                   return olL;
-                }).catch (function() {});
+                }).catch(function() {});
           }
         }
         else { // we suppose it's WMS
@@ -485,7 +485,7 @@
                   return olL;
                 }
                 return olL;
-              }).catch (function() {});
+              }).catch(function() {});
         }
       };
 

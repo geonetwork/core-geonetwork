@@ -134,7 +134,7 @@
             if (!replace) {
               var updateCheckBoxes = [];
               $('#opsForm input.ng-dirty[type=checkbox][data-ng-model]')
-                .each(function(c, el) {
+                  .each(function(c, el) {
                     updateCheckBoxes.push($(el).attr('name'));
                   });
               angular.forEach(scope.privileges, function(value, group) {

@@ -168,7 +168,7 @@
                     appProfile = angular.fromJson(response.data['0']);
                     return appProfile;
                   }
-                }).catch (function() {});
+                }).catch(function() {});
 
             solrObject =
                 gnSolrRequestManager.register('WfsFilter',
@@ -193,7 +193,7 @@
           scope.checkWFSServerUrl = function() {
             return $http.get('../../proxy?url=' +
                 encodeURIComponent(scope.url))
-              .then(function() {
+                .then(function() {
                   scope.isWfsAvailable = true;
                 }, function() {
                   scope.isWfsAvailable = false;
@@ -412,7 +412,7 @@
                     SLD: sldURL
                   });
                 }
-              }).finally (function() {
+              }).finally(function() {
                 defer.resolve();
               });
             } else {

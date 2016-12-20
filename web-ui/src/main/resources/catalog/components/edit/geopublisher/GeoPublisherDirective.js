@@ -256,7 +256,7 @@
                   map.removeLayer(scope.layer);
                 }
                 gnGeoPublisher.unpublishNode(scope.gsNode.id, scope.name)
-                  .success(function(data) {
+                    .success(function(data) {
                       scope.statusCode = data;
                       scope.isPublished = false;
                     }).error(function(data) {

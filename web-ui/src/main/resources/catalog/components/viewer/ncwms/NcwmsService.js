@@ -90,7 +90,7 @@
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
 
         $http.get(proxyUrl)
-          .success(function(json) {
+            .success(function(json) {
               if (angular.isObject(json)) {
                 layer.ncInfo = json;
               }

@@ -1037,7 +1037,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally (finishCreation);
+                    $this.feedLayerMd(olL).finally(finishCreation);
                   }
                 }
 

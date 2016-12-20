@@ -26,7 +26,7 @@
   goog.provide('gn_formfields_directive');
 
   angular.module('gn_formfields_directive', [])
-  /**
+      /**
    * @ngdoc directive
    * @name gn_formfields.directive:gnTypeahead
    * @restrict A

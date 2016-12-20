@@ -220,7 +220,7 @@
               'Accept': 'application/json'
             }
           })
-            .success(function(data) {
+              .success(function(data) {
                 defer.resolve(data);
               });
           return defer.promise;

@@ -235,7 +235,7 @@
                       var urlParams = params.join('&');
                       $http.get(
                           '../api/registries/entries/' + uuid + '?' + urlParams)
-                        .success(function(xml) {
+                     .success(function(xml) {
                        if (usingXlink) {
                          snippets.push(gnEditorXMLService.
                                   buildXMLForXlink(scope.schema,

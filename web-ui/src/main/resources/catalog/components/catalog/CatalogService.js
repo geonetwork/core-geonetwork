@@ -409,7 +409,7 @@
          */
         load: function() {
           return $http.get('../api/site/settings', {cache: true})
-            .then(function(response) {
+              .then(function(response) {
                 angular.extend(gnConfig, response.data);
                 // Replace / by . in settings name
                 angular.forEach(gnConfig, function(value, key) {

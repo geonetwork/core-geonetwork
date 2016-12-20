@@ -556,8 +556,8 @@
             $scope.groupSelected.id != -99 ?
             '/' + $scope.groupSelected.id : ''
             ), $scope.groupSelected)
-          .success(uploadImportMdDone)
-          .error(uploadImportMdError);
+            .success(uploadImportMdDone)
+            .error(uploadImportMdError);
       };
 
       $scope.deleteGroup = function(formId) {
