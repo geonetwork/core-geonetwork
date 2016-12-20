@@ -117,6 +117,14 @@
         data-template-type="contact"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
+    <for name="gmd:report" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-filter='{"_root": "gmd:DQ_DomainConsistency"}'
+        data-template-type="report"/>
+    </for>
 
 
     <!-- Example configuration: Add onLine source from subtemplate
