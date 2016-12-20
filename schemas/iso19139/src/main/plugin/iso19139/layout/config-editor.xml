@@ -280,6 +280,77 @@
     </exclude>
   </multilingualFields>
 
+  <tableFields>
+    <table for="gmd:CI_ResponsibleParty">
+      <header>
+        <!-- TODO: Add label from strings.xml / label with context-->
+        <col label="gmd:organisationName"/>
+        <col label="gmd:individualName"/>
+        <col label="gmd:electronicMailAddress"/>
+        <col label="gmd:role"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:organisationName"/>
+        <col xpath="gmd:individualName"/>
+        <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
+        <col xpath="gmd:role"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gmd:CI_OnlineResource">
+      <header>
+        <col label="gmd:protocol"/>
+        <col label="gmd:linkage"/>
+        <col label="gmd:name"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:protocol"/>
+        <col xpath="gmd:linkage"/>
+        <col xpath="gmd:name"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="srv:SV_CoupledResource">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="gco:ScopedName"/>
+        <col label="srv:identifier"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="gco:ScopedName"/>
+        <col xpath="srv:identifier"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gmd:MD_Format">
+      <header>
+        <col label="gmd:name"/>
+        <col label="gmd:version"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:name"/>
+        <col xpath="gmd:version"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gmd:PT_Locale">
+      <header>
+        <col label="gmd:languageCode"/>
+        <col label="gmd:characterEncoding"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:languageCode"/>
+        <col xpath="gmd:characterEncoding"/>
+        <col del=".."/>
+      </row>
+    </table>
+  </tableFields>
 
   <!-- View configuration -->
   <views>
@@ -1926,6 +1997,7 @@
         <for name="gmd:spatialResolution"/>
         <for name="gmd:pointOfContact"/>
         <for name="gmd:distributor"/>
+        <for name="gmd:distributionFormat"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
         <for name="gmd:topicCategory"/>
