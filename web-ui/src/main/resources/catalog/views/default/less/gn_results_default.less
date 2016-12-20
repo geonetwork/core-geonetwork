@@ -1,10 +1,11 @@
 
 .gn-row-sort {
   background: #fff;
+  padding-top: 30px;
 }
 .gn-row-results {
   background: #fff;
-  padding-top: 30px;
+  padding-top: 20px;
 }
 
 // ----- sort options
@@ -18,10 +19,11 @@
 
 ul.gn-resultview {
   @thumbnail-width: 170px;
-  // margin-right: -15px;
-  margin-top: 20px;
+
+  margin-top: 10px;
   input[type="checkbox"] {
-    margin: 0 10px 0 0;
+    margin: 6px 10px 0 0;
+    float: left;
   }
   .metadata {
     position: absolute;
@@ -82,10 +84,10 @@ ul.gn-resultview {
       border-left: 0;
     }
   }
+
   .gn-md-links {
     background: #fff;
     border-top: 1px solid #eee;
-    // border-bottom: 1px solid #eee;
     padding: 2px 0 5px 0;
     line-height: auto;
     font-size: 90%;
@@ -105,16 +107,10 @@ ul.gn-resultview {
   li.gn-grid {
     @grid-bottom-margin: 2px;
 
-    float: left;
-    border: 1px solid @list-group-border;
-    //box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
-    min-width: 300px;
-    max-width: 500px;
-    width: calc(~"100% - 15px");
-    height: 20.5em;
-    padding: 14px;
+    .gn-md-col2 {
+      margin-left: 25px;
+    }
     .gn-md-details {
-      //margin-left: @thumbnail-width;
       color: #6a6a6a;
       max-height: 50px;
       overflow: hidden;
@@ -126,10 +122,10 @@ ul.gn-resultview {
     }
     .gn-md-title {
       margin-top: 2px;
-      min-height: 3.5em;
-      max-height: 3.5em;
       overflow: hidden;
       cursor: pointer;
+      float: left;
+      max-width: 95%;
       h3 {
         
         /* Leave space for selection checkbox */
@@ -157,68 +153,54 @@ ul.gn-resultview {
       float: right;
     }
     .gn-md-thumbnail {
-      //position: absolute;
-      //top: 82px;
-      //opacity: .8;
       overflow: hidden;
       cursor: pointer;
       .gn-img-thumbnail {
         max-width: @thumbnail-width;
         max-height: 140px;
         min-height: 40px;
-        //margin: @grid-bottom-margin;
         height: auto;
       }
     }
     .gn-md-abstract {
       cursor: pointer;
       color: @gray-light;
+      &:hover {
+        color: #333;
+      }
     }
     .gn-md-abstract.ellipsis:after {
       background: none;
     }
     .gn-md-links {
-      //position: absolute;
-      //bottom: @grid-bottom-margin;
-      background: none;
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
-      padding: 5px;
-    }
-    input {
-      float: left;
+      border: 0;
+      padding: 5px 0;
     }
     .gn-md-category {
-      display: block;
-      float: left;
-      margin-left: 18px;
+      padding: 10px 0;
+      a {
+        margin-right: 3px;
+        color: @gnBlue;
+        &:hover {
+          text-decoration: none;
+        }
+      }
     }
-  }
-}
-
-/* Extra small devices (phones, less than 768px) */
-/* No media query since this is the default in Bootstrap */
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: @screen-sm-min) {
-  ul.gn-resultview li.gn-grid {
-    width: calc(~"100% - 15px");
-  }
-}
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: @screen-md-min) {
-  
-  ul.gn-resultview li.gn-grid {
-    width: calc(~"50% - 15px");
-  }
-}
-
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: @screen-lg-min) {
-  
-  ul.gn-resultview li.gn-grid {
-    //width: calc(~"33% - 15px");
+    .gn-md-footer {
+      border-top: 1px solid #eee;
+    }
+    .badge {
+      display: inline-block;
+      min-width: 10px;
+      padding: 5px 10px;
+      font-weight: normal; 
+      color: #999;
+      border: 1px solid #999;
+      line-height: 1;
+      background-color: #fff;
+      margin-bottom: 5px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
   }
 }
