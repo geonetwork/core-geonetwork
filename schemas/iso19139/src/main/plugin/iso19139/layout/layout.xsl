@@ -361,7 +361,6 @@
 
 
   <xsl:template mode="mode-iso19139" match="gco:ScopedName|gco:LocalName">
-    <xsl:message>==<xsl:copy-of select="."/></xsl:message>
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
                       select="gn-fn-metadata:getLabel($schema, name(.), $labels)/label"/>
