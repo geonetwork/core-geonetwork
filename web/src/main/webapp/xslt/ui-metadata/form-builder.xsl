@@ -108,7 +108,7 @@
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1) or
           ($editInfo and $editInfo/@min = 1 and $isFirst)">
           <xsl:value-of select="true()"/>
@@ -321,7 +321,7 @@
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
 
-    <fieldset id="{concat('gn-el-', $editInfo/@ref)}"
+    <fieldset id="{concat('gn-el-', if ($editInfo) then $editInfo/@ref else generate-id())}"
               data-gn-field-highlight=""
               class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
@@ -347,11 +347,12 @@
           </xsl:call-template>
         </xsl:if>
 
-
-        <xsl:call-template name="render-form-field-control-move">
-          <xsl:with-param name="elementEditInfo" select="$editInfo"/>
-          <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
-        </xsl:call-template>
+        <xsl:if test="$editInfo">
+          <xsl:call-template name="render-form-field-control-move">
+            <xsl:with-param name="elementEditInfo" select="$editInfo"/>
+            <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
+          </xsl:call-template>
+        </xsl:if>
       </legend>
 
       <xsl:if test="count($attributesSnippet/*) > 0">
