@@ -34,14 +34,7 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Address;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.UserGroupId;
-import org.fao.geonet.domain.UserGroupId_;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
@@ -57,24 +50,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
@@ -171,11 +152,11 @@ public class UsersApi {
                 throw new UserNotFoundEx(Integer.toString(userIdentifier));
             }
 
-            if (!(myUserId.equals(userIdentifier)) && myProfile == Profile.UserAdmin) {
+            if (!(myUserId.equals(Integer.toString(userIdentifier))) && myProfile == Profile.UserAdmin) {
 
                 //--- retrieve session user groups and check to see whether this user is
                 //--- allowed to get this info
-                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.valueOf(myUserId))).or(hasUserId
+                List<Integer> adminlist = userGroupRepository.findGroupIds(where(hasUserId(Integer.parseInt(myUserId))).or(hasUserId
                     (userIdentifier)));
                 if (adminlist.isEmpty()) {
                     throw new IllegalArgumentException("You don't have rights to do this because the user you want to edit is not part of your group");
@@ -208,7 +189,7 @@ public class UsersApi {
         @ApiIgnore
             ServletRequest request,
         @ApiIgnore
-        HttpSession httpSession
+            HttpSession httpSession
     ) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
@@ -286,28 +267,12 @@ public class UsersApi {
             HttpSession httpSession
     ) throws Exception {
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
-
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
-        String myUserId = session.getUserId();
-
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
-
 
         if (profile == Profile.Administrator) {
-            // Check at least 1 administrator is enabled
-            if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
-                List<User> adminEnabledList = userRepository.findAll(
-                    Specifications.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
-                if (adminEnabledList.size() == 1) {
-                    User adminUser = adminEnabledList.get(0);
-                    if (adminUser.getId() == Integer.parseInt(userDto.getId())) {
-                        throw new IllegalArgumentException(
-                            "Trying to disable all administrator users is not allowed");
-                    }
-                }
-            }
+            checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
         }
 
         // TODO: CheckAccessRights
@@ -391,18 +356,7 @@ public class UsersApi {
         UserGroupRepository userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
 
         if (profile == Profile.Administrator) {
-            // Check at least 1 administrator is enabled
-            if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
-                List<User> adminEnabledList = userRepository.findAll(
-                    Specifications.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
-                if (adminEnabledList.size() == 1) {
-                    User adminUser = adminEnabledList.get(0);
-                    if (adminUser.getId() == Integer.parseInt(userDto.getId())) {
-                        throw new IllegalArgumentException(
-                            "Trying to disable all administrator users is not allowed");
-                    }
-                }
-            }
+            checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
         }
 
         // TODO: CheckAccessRights
@@ -416,7 +370,7 @@ public class UsersApi {
         // Check no duplicated username
         User userWithUsername = userRepository.findOneByUsername(userDto.getUsername());
 
-        if ((userWithUsername !=null) && (user.getId() != userWithUsername.getId())) {
+        if ((userWithUsername != null) && (user.getId() != userWithUsername.getId())) {
             throw new IllegalArgumentException(String.format(
                 "Another user with username '%s' already exists",
                 user.getUsername()));
@@ -511,9 +465,10 @@ public class UsersApi {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
-        user.getSecurity().setPassword(
-            PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
-                password));
+        String passwordHash = PasswordUtil.encoder(ApplicationContextHolder.get()).encode(
+            password);
+        user.getSecurity().setPassword(passwordHash);
+        user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
         userRepository.save(user);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -745,6 +700,28 @@ public class UsersApi {
             }
         }
     }
+
+    /**
+     * Check if removing userDto from the admins there are still at least one user administrator in the system. .
+     *
+     * @param userDto        the user to check.
+     * @param userRepository user repository to retrieve users from.
+     * @throws IllegalArgumentException thrown if userDto is the last administrator user in the system.
+     */
+    private void checkIfAtLeastOneAdminIsEnabled(UserDto userDto, UserRepository userRepository) {
+        // Check at least 1 administrator is enabled
+        if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
+            List<User> adminEnabledList = userRepository.findAll(
+                Specifications.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
+            if (adminEnabledList.size() == 1) {
+                User adminUser = adminEnabledList.get(0);
+                if (adminUser.getId() == Integer.parseInt(userDto.getId())) {
+                    throw new IllegalArgumentException(
+                        "Trying to disable all administrator users is not allowed");
+                }
+            }
+        }
+    }
 }
 
 
@@ -752,6 +729,7 @@ class GroupElem {
 
     private String profile;
     private Integer id;
+
     public GroupElem(String profile, Integer id) {
         this.id = id;
         this.profile = profile;
@@ -764,5 +742,4 @@ class GroupElem {
     public Integer getId() {
         return id;
     }
-
 }

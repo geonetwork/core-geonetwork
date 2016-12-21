@@ -44,7 +44,8 @@
       'chi' : 'zh',
       'pol' : 'pl',
       'wel' : 'cy',
-      'dut' : 'nl'
+      'dut' : 'nl',
+      'ice' : 'is'
     };
     var lang = specialCases[threeCharLang];
     if (angular.isDefined(lang)) {
