@@ -51,7 +51,9 @@
 
           // initial state
           gnSearchManagerService.selected().success(function(res) {
-            scope.searchResults.selectedCount = parseInt(res, 10);
+            if (angular.isArray(res)) {
+              scope.searchResults.selectedCount = res.length;
+            }
           });
 
           var updateCkb = function(records) {
