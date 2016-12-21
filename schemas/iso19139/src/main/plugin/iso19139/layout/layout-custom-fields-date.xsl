@@ -69,7 +69,7 @@
   </xsl:template>
 
   <!-- Date type is handled in next template -->
-  <xsl:template mode="mode-iso19139" match="gmd:dateType" priority="2000"/>
+  <xsl:template mode="mode-iso19139" match="gmd:dateType" priority="4000"/>
 
   <!-- Rendering date type as a dropdown to select type
   and the calendar next to it.
