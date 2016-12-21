@@ -359,6 +359,23 @@
   </xsl:template>
 
 
+
+  <xsl:template mode="mode-iso19139" match="gco:ScopedName|gco:LocalName">
+    <xsl:message>==<xsl:copy-of select="."/></xsl:message>
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+                      select="gn-fn-metadata:getLabel($schema, name(.), $labels)/label"/>
+      <xsl:with-param name="value" select="."/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="name" select="gn:element/@ref"/>
+      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
   <!--
     <xsl:template mode="mode-iso19139" priority="200"
       match="*[gco:Date|gco:DateTime]">
