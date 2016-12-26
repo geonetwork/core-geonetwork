@@ -59,14 +59,16 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-      $scope.searchObj = {params: {
-        _isTemplate: 's',
-        any: '*',
-        _root: '',
-        sortBy: 'title',
-        sortOrder: 'reverse',
-        resultType: 'subtemplates'
-      }};
+      $scope.searchObj = {
+        selectionBucket: 'd101',
+        params: {
+          _isTemplate: 's',
+          any: '*',
+          _root: '',
+          sortBy: 'title',
+          sortOrder: 'reverse',
+          resultType: 'subtemplates'
+        }};
       $scope.paginationInfo = {
         pages: -1,
         currentPage: 1,

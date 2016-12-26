@@ -296,7 +296,8 @@
         link: function(scope, element, attrs) {
           var ownerId = parseInt(attrs['gnTransferMdOwner']);
           var groupOwner = parseInt(attrs['gnTransferMdGroupOwner']);
-          var mdUuid = attrs['gnTransferOwnership'];
+          var bucket = attrs['gnTransferMdGroupOwner'];
+          var mdUuid = attrs['selectionBucket'];
           scope.selectedUserGroup = null;
 
           scope.selectUser = function(user) {

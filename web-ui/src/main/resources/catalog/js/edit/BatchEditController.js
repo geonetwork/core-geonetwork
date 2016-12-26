@@ -36,6 +36,7 @@
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        selectionBucket: 'be101',
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',

@@ -47,6 +47,7 @@
           scope.checkAll = true;
           scope.withoutActionMenu =
               angular.isDefined(attrs.withoutActionMenu) ? true : false;
+
           scope.mdService = gnMetadataActions;
 
           // initial state
@@ -79,11 +80,24 @@
           scope.select = function() {
             scope.checkAll = !scope.checkAll;
             if (scope.checkAll) {
-              scope.selectAll();
+              scope.selectAll(scope.searchResults.selectionBucket);
             } else {
-              scope.unSelectAll();
+              scope.unSelectAll(scope.searchResults.selectionBucket);
             }
           };
+
+          scope.viewSelectionOnly = function() {
+            return gnSearchManagerService.selected(
+                scope.searchResults.selectionBucket)
+                .then(function(res) {
+                  if (angular.isArray(res.data)) {
+                    scope.resetSearch({
+                      _uuid: res.data.join(' or ')
+                    });
+                  }
+                });
+          };
+
           scope.getIcon = function() {
             if (scope.searchResults.selectedCount === 0) {
               return 'fa-square-o';
@@ -102,27 +116,33 @@
               record['geonet:info'].selected = selected;
             });
 
-            gnSearchManagerService.select(uuids).success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res, 10);
-            });
+            gnSearchManagerService.select(uuids,
+                scope.searchResults.selectionBucket)
+                .success(function(res) {
+                  scope.searchResults.selectedCount = parseInt(res, 10);
+                });
           };
 
           scope.selectAll = function() {
-            gnSearchManagerService.selectAll().success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res, 10);
-              scope.searchResults.records.forEach(function(record) {
-                record['geonet:info'].selected = true;
-              });
-            });
+            gnSearchManagerService.selectAll(
+                scope.searchResults.selectionBucket)
+                .success(function(res) {
+                  scope.searchResults.selectedCount = parseInt(res, 10);
+                  scope.searchResults.records.forEach(function(record) {
+                    record['geonet:info'].selected = true;
+                  });
+                });
           };
 
           scope.unSelectAll = function() {
-            gnSearchManagerService.selectNone().success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res, 10);
-              scope.searchResults.records.forEach(function(record) {
-                record['geonet:info'].selected = false;
-              });
-            });
+            gnSearchManagerService.selectNone(
+                scope.searchResults.selectionBucket)
+                .success(function(res) {
+                  scope.searchResults.selectedCount = parseInt(res, 10);
+                  scope.searchResults.records.forEach(function(record) {
+                    record['geonet:info'].selected = false;
+                  });
+                });
           };
           hotkeys.bindTo(scope)
               .add({
@@ -158,7 +178,8 @@
 
           scope.change = function() {
             var method = element[0].checked ? 'select' : 'unselect';
-            gnSearchManagerService[method](scope.md.getUuid()).
+            gnSearchManagerService[method](
+                scope.md.getUuid(), scope.searchResults.selectionBucket).
                 success(function(res) {
                   scope.searchResults.selectedCount = parseInt(res, 10);
                 });
