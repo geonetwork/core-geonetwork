@@ -1465,11 +1465,16 @@
                   <xsl:otherwise>
                     <xsl:choose>
                       <xsl:when test="@type">
+                        <xsl:variable name="name"
+                                      select="if (@name != '')
+                                              then @name
+                                              else concat('_', */gn:element/@ref)"/>
+
                         <xsl:choose>
                           <xsl:when test="@type = 'textarea'">
                             <!-- TODO: Multilingual, codelist, date ... -->
                             <textarea class="form-control"
-                                      name="_{*/gn:element/@ref}">
+                                      name="{$name}">
                               <xsl:value-of select="*/text()"/>
                             </textarea>
                           </xsl:when>
@@ -1478,7 +1483,7 @@
                                    type="{if (@type = 'Real' or @type = 'Integer' or @type = 'Percentage')
                                   then 'number'
                                   else 'text'}"
-                                   name="_{*/gn:element/@ref}"
+                                   name="{$name}"
                                    value="{*/normalize-space()}"/>
                           </xsl:otherwise>
                         </xsl:choose>

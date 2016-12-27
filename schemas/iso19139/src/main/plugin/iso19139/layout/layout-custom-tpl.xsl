@@ -35,7 +35,6 @@
                         $isFlatMode]"
                 priority="2000"/>
 
-
   <!-- Define table layout -->
   <xsl:template name="iso19139-table">
     <xsl:variable name="name" select="name()"/>
@@ -119,7 +118,80 @@
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
+
+
+
+
+  <xsl:template mode="mode-iso19139"
+                match="srv:operatesOn[(1 or @gn:addedObj = 'true') and $isFlatMode]"
+                priority="4000">
+
+    <xsl:variable name="name"
+                  select="name()"/>
+    <xsl:variable name="xpath"
+                  select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType"
+                  select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="isEmbeddedMode"
+                  select="@gn:addedObj = 'true'"/>
+    <xsl:variable name="isFirstOfItsKind"
+                  select="preceding-sibling::*[1]/name() != $name"/>
+    <xsl:variable name="values">
+      <xsl:if test="not($isEmbeddedMode)">
+        <header>
+          <col>
+            <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'uuidref', $labels, '', $isoType, $xpath)/label"/>
+          </col>
+          <col>
+            <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'xlink:href', $labels, '', $isoType, $xpath)/label"/>
+          </col>
+        </header>
+      </xsl:if>
+      <xsl:for-each select="(.|following-sibling::*[name() = $name])">
+        <row>
+          <col type="text" name="{concat('_', gn:element/@ref, '_uuidref')}">
+            <value><xsl:value-of select="@uuidref"/></value>
+          </col>
+          <col type="text" name="{concat('_', gn:element/@ref, '_xlinkCOLONhref')}">
+            <value><xsl:value-of select="@xlink:href"/></value>
+          </col>
+          <col remove="true">
+            <xsl:copy-of select="gn:element"/>
+          </col>
+        </row>
+      </xsl:for-each>
+    </xsl:variable>
+
+    <!-- Return only the new row in embed mode. -->
+    <xsl:choose>
+      <xsl:when test="$isEmbeddedMode and not($isFirstOfItsKind)">
+        <xsl:call-template name="render-table">
+          <xsl:with-param name="values" select="$values"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="render-boxed-element">
+          <xsl:with-param name="label"
+                          select="gn-fn-metadata:getLabel($schema, $name, $labels, $name, $isoType, $xpath)/label"/>
+          <xsl:with-param name="cls" select="local-name()"/>
+          <xsl:with-param name="subTreeSnippet">
+
+            <xsl:call-template name="render-table">
+              <xsl:with-param name="values" select="$values"/>
+            </xsl:call-template>
+
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template mode="mode-iso19139"
+                match="srv:operatesOn[
+                        preceding-sibling::*[1]/name() = name() and
+                        not(@gn:addedObj) and
+                        $isFlatMode]"
+                priority="4000"/>
 
 </xsl:stylesheet>
