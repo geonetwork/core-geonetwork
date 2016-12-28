@@ -23,6 +23,7 @@
 package org.fao.geonet.api.selections;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.SelectionManager;
 import org.springframework.http.HttpStatus;
@@ -145,7 +146,7 @@ public class SelectionsApi {
     public
     @ResponseBody
     ResponseEntity<Integer> clear(
-        @ApiParam(value = "Bucket name",
+        @ApiParam(value = ApiParams.API_PARAM_BUCKET_NAME,
             required = true,
             example = "metadata")
         @PathVariable

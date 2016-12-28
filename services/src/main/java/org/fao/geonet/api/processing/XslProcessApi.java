@@ -122,6 +122,13 @@ public class XslProcessApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiParam(value = "Append documents before processing",
             required = false,
             example = "false")
@@ -146,7 +153,7 @@ public class XslProcessApi {
         response.setHeader(CONTENT_TYPE, isText ? MediaType.TEXT_PLAIN_VALUE : MediaType.APPLICATION_XML_VALUE);
 
         try {
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, session);
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             ApplicationContext context = ApplicationContextHolder.get();
             DataManager dataMan = context.getBean(DataManager.class);
             SchemaManager schemaMan = context.getBean(SchemaManager.class);
@@ -239,6 +246,13 @@ public class XslProcessApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiIgnore
             HttpSession httpSession,
         @ApiIgnore
@@ -249,7 +263,7 @@ public class XslProcessApi {
             new XsltMetadataProcessingReport(process);
 
         try {
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, session);
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
             ApplicationContext context = ApplicationContextHolder.get();
             DataManager dataMan = context.getBean(DataManager.class);
 

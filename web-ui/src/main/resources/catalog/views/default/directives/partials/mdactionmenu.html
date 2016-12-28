@@ -31,7 +31,7 @@
                     (!md.hasValidation() ? 'mdnovalidation':
                       (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}"
       >
-        <a data-ng-click="mdService.publish(md)">
+        <a data-ng-click="mdService.publish(md, undefined, undefined, getCatScope())">
           <i class="fa"
              data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
           <span data-ng-if="md.isPublished()"

@@ -69,4 +69,5 @@ public class ApiParams {
     public static final String API_RESPONSE_NOT_ALLOWED_CAN_VIEW = "Operation not allowed. User needs to be able to view the resource.";
     public static final String API_RESPONSE_NOT_ALLOWED_ONLY_AUTHENTICATED = "Operation not allowed. Only authenticated user can access it.";
     public static final String API_RESPONSE_RESOURCE_NOT_FOUND = "Resource not found.";
+    public static final String API_PARAM_BUCKET_NAME = "Selection bucket name";
 }
