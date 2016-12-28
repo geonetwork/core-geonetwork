@@ -40,7 +40,7 @@
   </xsl:function>
 
 
-  <!-- Return an element label taking care of the profil, 
+  <!-- Return an element label taking care of the profile, 
   the context (ie. parent element) or a complete xpath.
   -->
   <xsl:function name="gn-fn-metadata:getLabel" as="node()">
@@ -75,8 +75,12 @@
     </xsl:variable>
     
     <!-- Name with context in current schema -->
-    <xsl:variable name="schemaLabelWithContext"
-      select="$labels/element[@name=$escapedName and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
+    <xsl:variable name="schemaLabelWithContextCollection"
+                  select="$labels/element[@name=$escapedName and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
+    <xsl:variable name="schemaLabelWithContext" select="$schemaLabelWithContextCollection[1]"/>
+    <xsl:if test="count($schemaLabelWithContextCollection) > 1">
+      <xsl:message>WARNING: gn-fn-metadata:getLabel | multiple labels found for element '<xsl:value-of select="$escapedName"/>' with context=('<xsl:value-of select="$xpath"/>' or '<xsl:value-of select="$parent"/>' or '<xsl:value-of select="$parentIsoType"/>') in schema <xsl:value-of select="$schema"/></xsl:message>
+    </xsl:if>
     
     <!-- Name in current schema -->
     <xsl:variable name="schemaLabel" select="$labels/element[@name=$escapedName and not(@context)]"/>
@@ -100,7 +104,7 @@
                 <xsl:value-of select="$escapedName"/>
               </label>
             </element>
-            <xsl:message>gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of
+            <xsl:message>WARNING: gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of
               select="$schema"/> for <xsl:value-of select="$name"/>.</xsl:message>
           </xsl:otherwise>
         </xsl:choose>
