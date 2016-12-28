@@ -312,6 +312,20 @@
         <col del=".."/>
       </row>
     </table>
+    <table for="srv:SV_OperationMetadata">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="srv:DCP"/>
+        <col label="srv:connectPoint"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="srv:DCP"/>
+        <col xpath="srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"/>
+        <col del=".."/>
+      </row>
+    </table>
     <table for="srv:SV_CoupledResource">
       <header>
         <col label="srv:operationName"/>
