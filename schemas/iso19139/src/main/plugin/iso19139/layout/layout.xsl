@@ -90,10 +90,12 @@
   <xsl:template mode="mode-iso19139" match="gmd:*|gmx:*|gml:*|srv:*|gts:*">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
 
     <xsl:apply-templates mode="mode-iso19139" select="*|@*">
       <xsl:with-param name="schema" select="$schema"/>
       <xsl:with-param name="labels" select="$labels"/>
+      <xsl:with-param name="refToDelete" select="$refToDelete"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -114,6 +116,8 @@
       *[namespace-uri(.) != $gnUri and $isFlatMode = false() and gmd:* and not(gco:CharacterString) and not(gmd:URL)]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="refToDelete" required="no"/>
+
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -135,11 +139,10 @@
         <xsl:call-template name="get-errors"/>
       </xsl:if>
     </xsl:variable>
-
+    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
     <xsl:call-template name="render-boxed-element">
-      <xsl:with-param name="label"
-                      select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="label" select="$label/label"/>
+      <xsl:with-param name="editInfo" select="if ($refToDelete) then $refToDelete else gn:element"/>
       <xsl:with-param name="errors" select="$errors"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
