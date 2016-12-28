@@ -47,7 +47,7 @@
     Render an element with a label and a value
   -->
   <xsl:template name="render-element">
-    <xsl:param name="label" as="xs:string"/>
+    <xsl:param name="label" as="node()?"/>
     <xsl:param name="value"/>
     <xsl:param name="errors" required="no"/>
     <!-- cls may define custom CSS class in order to activate
@@ -128,7 +128,7 @@
           <div class="col-lg-10">
             <xsl:attribute name="data-{$directive}" select="$value"/>
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
-            <xsl:attribute name="data-label" select="$label"/>
+            <xsl:attribute name="data-label" select="$label/label"/>
           </div>
           <div class="col-lg-2 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -149,7 +149,7 @@
           <label
             for="gn-field-{$editInfo/@ref}"
             class="col-sm-2 control-label">
-            <xsl:value-of select="$label"/>
+            <xsl:value-of select="$label/label"/>
           </label>
 
           <div class="col-sm-9 gn-value">
@@ -273,8 +273,9 @@
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
 
       <xsl:call-template name="render-element-to-add">
-        <xsl:with-param name="label"
-                        select="gn-fn-metadata:getLabel($schema, name(.), $labels, name(..), '', '')/label"/>
+        <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="directive" select="$directive"/>
         <xsl:with-param name="childEditInfo" select="$parentEditInfo"/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -755,6 +756,11 @@
                        class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
                        title="{$label/description}">
                     </i>
+                    <xsl:if test="$btnLabel != ''">&#160;
+                      <span>
+                        <xsl:value-of select="$btnLabel"/>
+                      </span>
+                    </xsl:if>
                   </a>
                 </xsl:for-each>
               </xsl:when>

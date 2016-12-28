@@ -52,6 +52,16 @@
             </xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element name="btnLabel" type="xs:string" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Optional label to be addded to the add button.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="btnClass" type="xs:string" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Optional CSS class to be added to the add button.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element ref="description" minOccurs="0" maxOccurs="1">
           <xs:annotation>
             <xs:documentation>The definition to be displayed in the help

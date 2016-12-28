@@ -49,7 +49,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="$labelConfig/label"/>
+                      select="$labelConfig"/>
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
@@ -151,7 +151,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="$labelConfig/label"/>
+                      select="$labelConfig"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
@@ -191,7 +191,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="$labelConfig/label"/>
+                      select="$labelConfig"/>
       <xsl:with-param name="name" select="gn:element/@ref"/>
       <xsl:with-param name="value" select="text()"/>
       <xsl:with-param name="cls" select="local-name()"/>

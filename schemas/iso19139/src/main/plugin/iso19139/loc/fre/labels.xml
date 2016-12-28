@@ -1751,6 +1751,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>-->
   <element name="gmd:citedResponsibleParty" id="367.0">
     <label>Responsable</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Information sur le nom et la position d'une personne individuelle ou d'une
       organisation responsable pour la ressource
     </description>
@@ -1878,10 +1879,13 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:contact" id="8.0">
     <label>Contact</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description></description>
   </element>
   <element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
     <label>Point de contact des métadonnées</label>
+    <btnLabel>Ajouter un contact</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Organisme responsable pour les informations que contiennent les métadonnées.
     </description>
     <help>Fonction (propriétaire, prestataire, gestionnaire, etc.) de la personne ou du service
@@ -1923,6 +1927,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>
   <element name="gmd:contact" id="148.1" context="gmd:MD_MaintenanceInformation">
     <label>Contact pour la mise à jour</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Indications concernant la personne ou l'organisation qui est responsable de la mis
       à jour des métadonnées
     </description>
@@ -2080,6 +2085,7 @@ de métadonnées de données « BD Carthage métropole »
   </element>-->
   <element name="gmd:date" id="144.0" context="gmd:MD_MaintenanceInformation">
     <label>Date de la prochaine mise à jour</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de la prochaine mise à jour de la ressource</description>
     <help>Date de la prochaine mise à jour (jj.mm.aaaa).</help>
     <condition/>
@@ -2089,6 +2095,7 @@ de métadonnées de données « BD Carthage métropole »
   <element name="gmd:date" id="362.0"
            context="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date de référence</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création,
       publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe
@@ -2143,6 +2150,7 @@ date de mise en ligne du service, en tant que date de publication.
   <element name="gmd:date" id="362.0"
            context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date de référence</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création,
       publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe
@@ -2194,11 +2202,13 @@ date de mise en ligne du service, en tant que date de publication.
   </element>
   <element name="gmd:date" id="362.0">
     <label>Date</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description/>
     <condition/>
   </element>
   <element name="gmd:dateOfNextUpdate" id="144.0">
     <label>Date de la prochaine mise à jour</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de la prochaine mise à jour de la ressource</description>
     <help>Date de la prochaine mise à jour (jj.mm.aaaa).</help>
     <condition/>
@@ -2206,6 +2216,7 @@ date de mise en ligne du service, en tant que date de publication.
   </element>
   <element name="gmd:dateStamp" id="9.0">
     <label>Date des métadonnées</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date de création des métadonnées</description>
     <help>Date de création des métadonnées. Elle est automatiquement attribuée par l'application.
     </help>
@@ -2544,6 +2555,7 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
   </element>
   <element name="gmd:distributorContact" id="280.0">
     <label>Contact</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Services depuis lesquels la ressource peut être obtenue. Cette liste n''a pas
       besoin d'être exhaustive
     </description>
@@ -3223,6 +3235,7 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:keyword" id="53.0">
     <label>Mot Clé</label>
+    <btnClass>fa fa-tag</btnClass>
     <description>Mots, notions ou phrases courants utilisés pour décrire le sujet</description>
     <help>Mots clés du jeu de données par l'intermédiaire desquels il peut être caractérisé et
       défini. Ces termes sont également utilisés en tant qu''arguments de recherche. Ces
@@ -4120,6 +4133,8 @@ période de temps couverte par le service.
   </element>
   <element name="gmd:parentIdentifier" id="5.0">
     <label>Identifiant de la fiche de métadonnées parent</label>
+    <btnLabel>Associer à une fiche parent</btnLabel>
+    <btnClass>fa fa-sitemap</btnClass>
     <description>L'identifiant de la fiche de métadonnées parent permet d'effectuer un lien entre
       les fiches descriptives de
       ressources liées hiérarchiquement. Ce mécanisme est utilisé notamment dans le cas de relations
@@ -4194,6 +4209,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
   </element>
   <element name="gmd:pointOfContact" id="29.0">
     <label>Contact pour la ressource</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Identification, et mode de communication avec, des personnes ou des organisations
       associées aux ressources
     </description>
@@ -5872,6 +5888,7 @@ INSPIRE doit être fournie.
   </element>
   <element name="srv:serviceContact">
     <label>Contact</label>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Informations permettant contacter le fournisseur du service</description>
   </element>
   <element name="srv:name">
