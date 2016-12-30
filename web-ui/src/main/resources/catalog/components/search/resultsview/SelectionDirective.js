@@ -51,11 +51,12 @@
           scope.mdService = gnMetadataActions;
 
           // initial state
-          gnSearchManagerService.selected().success(function(res) {
-            if (angular.isArray(res)) {
-              scope.searchResults.selectedCount = res.length;
-            }
-          });
+          gnSearchManagerService.selected(scope.searchResults.selectionBucket)
+              .success(function(res) {
+                if (angular.isArray(res)) {
+                  scope.searchResults.selectedCount = res.length;
+                }
+              });
 
           var updateCkb = function(records) {
             var checked = true;
