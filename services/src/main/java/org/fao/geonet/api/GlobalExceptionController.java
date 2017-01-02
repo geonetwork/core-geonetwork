@@ -49,6 +49,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.TransformerConfigurationException;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
@@ -94,10 +95,20 @@ public class GlobalExceptionController {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-        HttpMessageNotReadableException.class
+        HttpMessageNotReadableException.class,
+        RuntimeException.class
     })
     public ApiError runtimeExceptionHandler(final Exception exception) {
         return new ApiError("runtime_exception", exception.getClass().getSimpleName(), exception.getMessage());
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({
+        WebApplicationException.class
+    })
+    public ApiError webappExceptionHandler(final Exception exception) {
+        return new ApiError("webapplication_exception", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ResponseBody
