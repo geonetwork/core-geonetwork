@@ -320,7 +320,9 @@
     <xsl:variable name="labelConfig">
       <xsl:choose>
         <xsl:when test="$overrideLabel != ''">
-          <label><xsl:value-of select="$overrideLabel"/></label>
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="$labelConfig"/>
@@ -447,7 +449,9 @@
     <xsl:variable name="labelConfig">
       <xsl:choose>
         <xsl:when test="$overrideLabel != ''">
-          <label><xsl:value-of select="$overrideLabel"/></label>
+          <element>
+            <label><xsl:value-of select="$overrideLabel"/></label>
+          </element>
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), '', $xpath)"/>
