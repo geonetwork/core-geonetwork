@@ -290,54 +290,7 @@
   geonetwork.GnSolrRequest.prototype.search_ =
     function(qParams, aggs, quiet) {
 
-      var params = {
-        from: this.page.start,
-        size: this.page.rows,
-        aggs: aggs
-      };
-      if (qParams) {
-        params.query =
-        {
-          'query_string': {
-            'query': this.buildQParam_(qParams)
-          }
-        };
-      }
-
-      if (qParams.geometry) {
-        params.query = {
-          'bool': {
-            'must': {
-              'query_string': params.query.query_string || '*:*'
-            },
-            'filter': {
-              'geo_shape': {
-                'geom': {
-                  'shape': {
-                    'type': 'envelope',
-                    'coordinates': qParams.geometry
-                  },
-                  'relation': 'intersects'
-                }
-              }
-            }
-          }
-        };
-      }
-
-      /*
-       if (aggs['facet.field']) {
-       for (var i = 0; i < aggs['facet.field'].length; i++) {
-       var field = aggs['facet.field'][i];
-       params.aggs[field] = {
-       terms: {field: field}
-       };
-       }
-       }
-       if (aggs.stats) {
-       angular.extend(params.aggs, aggs.stats);
-       }
-       */
+      var params = this.buildESParams(qParams, aggs);
 
       this.reqParams = params;
 
@@ -541,9 +494,12 @@
           facetField.tree = this.gnTreeFromSlash.getTree(respAgg.buckets);
         }
         else if(fieldId.endsWith('_dt')) {
-          facetField.dates = respAgg.buckets.map(function(b) {
-            return b.key;
-          });
+          if(!fNameObj.allDates) {
+            fNameObj.allDates = respAgg.buckets.map(function(b) {
+              return b.key;
+            });
+          }
+          facetField.dates = fNameObj.allDates;
         }
 
         // terms
@@ -683,6 +639,76 @@
     function(params) {
       return this.buildQParam_(params, params.qParams);
     };
+
+  /**
+   * qParams:
+   *   any
+   *   geometry
+   *   params
+   *     type
+   *     values
+   *
+   *
+   * @param qParams
+   * @param aggs
+   */
+  geonetwork.GnSolrRequest.prototype.buildESParams =
+    function(qParams, aggs) {
+
+      var params = {
+        from: this.page.start,
+        size: this.page.rows,
+        aggs: aggs
+      };
+
+      params.query = {
+        'bool': {
+          'must': [{
+            'query_string': {
+              query: this.buildQParam_(qParams) || '*:*'
+            }
+          }]
+        }
+      };
+
+      if (qParams.geometry) {
+        params.bool.filter = {
+          'geo_shape': {
+            'geom': {
+              'shape': {
+                'type': 'envelope',
+                  'coordinates': qParams.geometry
+              },
+              'relation': 'intersects'
+            }
+          }
+        };
+      }
+
+      angular.forEach(qParams.params, function(field, fieldName) {
+        if (field.type == 'date' ) {
+          var gte, lfe, range = {};
+          if (angular.isObject(field.value)) {
+            gte = field.value.from;
+            lfe = field.value.to;
+          }
+          else{
+            gte = lfe = field.value;
+          }
+          range[fieldName] = {
+            gte : gte,
+            lte : lfe,
+            format: 'dd-MM-YYYY'
+          };
+          params.query.bool.must.push({
+            range: range
+          });
+        }
+      });
+
+      return params;
+    };
+
   /**
    * Build the qParams string from
    *   params: search params,

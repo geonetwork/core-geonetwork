@@ -329,6 +329,7 @@
             var facetKey = facet.value;
 
             var output = scope.output;
+
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
                 delete output[fieldName].values[facetKey];
@@ -361,6 +362,26 @@
             catch(e) {
               return false;
             }
+          };
+
+          scope.onUpdateDate = function(field) {
+            var output = scope.output;
+            var fieldName = field.name;
+            var date = field.model;
+
+            if((angular.isObject(date) && date.from && date.to) ||
+              angular.isString(date)) {
+              output[fieldName] = {
+                type: 'date',
+                value: date
+              };
+            }
+            else {
+              delete output[fieldName];
+            }
+
+            scope.searchInput = '';
+            scope.filterFacets();
           };
 
           /**
@@ -399,6 +420,7 @@
           };
 
           function refreshHeatmap() {
+            return;
             if (scope.isFeaturesIndexed && scope.isHeatMapVisible) {
               heatmapsRequest.searchWithFacets({
                 params: scope.output,
@@ -417,11 +439,6 @@
             solrObject.getFacetMoreResults(field).then(function(response) {
               field.values = response.facets[0].values;
             });
-          };
-
-          scope.updateDate = function(field, date) {
-            console.log(field.model);
-            console.log(date);
           };
 
           /**

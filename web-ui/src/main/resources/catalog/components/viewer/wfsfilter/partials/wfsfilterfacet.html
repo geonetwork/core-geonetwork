@@ -38,9 +38,9 @@
     </div>
 
     <!--Facet fields-->
-    <div data-ng-show="isFeaturesIndexed"
+    <div data-ng-if="isFeaturesIndexed"
          class="gn-facet"
-         data-ng-repeat="field in fields track by $index" data-ng-show="field.values.length > 0">
+         data-ng-repeat="field in fields" data-ng-show="field.values.length > 0 || field.dates.length > 0">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name]}"></span>
@@ -59,13 +59,15 @@
                gn-wfs-filter-facets-tree="field"
                gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
           </div>
-          <div data-ng-if="field.dates"
-               class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+
+          <div class="input-daterange input-group input-group-sm" data-ng-if="field.dates"
                gn-bootstrap-datepicker="field.model"
-               on-change-fn="updateDate(field)"
-               date-available="field.dates" date-type="epoch">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            <input class="form-control input-sm" type="text">
+               data-date-format="dd-mm-yyyy"
+               on-change-fn="onUpdateDate(field)"
+               date-available="field.dates">
+            <input type="text" class="input-sm form-control" name="start" value="{{::output[field.name].value.from}}"/>
+            <span class="input-group-addon">to</span>
+            <input type="text" class="input-sm form-control" name="end" value="{{::output[field.name].value.to}}" />
           </div>
         </div>
         <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>

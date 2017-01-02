@@ -781,13 +781,16 @@
         scope: {
           date: '=gnBootstrapDatepicker',
           dates: '=dateAvailable',
-          dateType: '@?',
           onChangeFn: '&?'
         },
-        link: function(scope, element, attrs, ngModelCtrl) {
+        link: function(scope, element, attrs) {
 
           var available, limits;
           var rendered = false;
+          var isRange = ($(element).find('input').length == 2);
+          if(isRange && ! scope.date) {
+            scope.date = {};
+          }
 
           scope.$watch('dates', function(dates, old) {
               init();
@@ -842,26 +845,48 @@
               startDate: limits.min,
               endDate: limits.max,
               clearBtn: true
-            } : {}).on('changeDate clearDate', function(ev) {
+              } : {}).on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
-                scope.date = $(element).find('input')[0].value;
+                if(!isRange) {
+
+                  scope.date = $(element).find('input')[0].value;
+                }
+                else {
+                  scope.date.from = $(element).find('input')[0].value;
+                  scope.date.to = $(element).find('input')[1].value;
+
+                }
               });
             });
             rendered = true;
           };
 
           // model -> view
-          scope.$watch('date', function(v,o) {
-            if (angular.isDefined(v) && angular.isFunction(scope.onChangeFn)) {
-              scope.onChangeFn();
-            }
+          if(!isRange) {
+            scope.$watch('date', function(v,o) {
+              if (angular.isDefined(v) && angular.isFunction(scope.onChangeFn)) {
+                scope.onChangeFn();
+              }
+              if(v != o) {
+                $(element).find('input')[0].value = v || '';
 
-            if (angular.isUndefined(v)) {
-              v = '';
-            }
-            $(element).find('input')[0].value = v;
-          });
+              }
+            });
+          }
+          else {
+            scope.$watchCollection('date', function(v,o) {
+              if (angular.isDefined(v) && v.to && v.from && angular.isFunction(scope.onChangeFn)) {
+                scope.onChangeFn();
+              }
+
+              if(v != o) {
+                $(element).find('input')[0].value = v.from || '';
+                $(element).find('input')[1].value = v.to || '';
+
+              }
+            });
+          }
         }
       };
     }]);
