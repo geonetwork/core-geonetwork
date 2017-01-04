@@ -513,6 +513,7 @@
 
             <xsl:for-each select="srv:serviceType/gco:LocalName">
                 <Field  name="serviceType" string="{string(.)}" store="true" index="true"/>
+                <Field  name="type" string="service-{string(.)}" store="true" index="true"/>
             </xsl:for-each>
 
             <xsl:for-each select="srv:serviceTypeVersion/gco:CharacterString">
