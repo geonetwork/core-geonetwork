@@ -18,7 +18,7 @@
           var result = parser.read(data);
 
           var layers = [];
-          var url = result.Capability.Request.GetCapabilities.
+          var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
 
           // Push all leaves into a flat array of Layers.
