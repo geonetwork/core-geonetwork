@@ -8,12 +8,13 @@
           data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'hidden'"></span>
 
     <label title="{{c['@label'] || c['@value']}}"
+           class="clearfix" 
            data-ng-class="{'gn-facet-active': isSelected}">
       <input type="checkbox"
              data-ng-checked="isInFilter(c)"
-             data-ng-click="filter(c, $event)"/>&nbsp;
-      <span class="gn-facet-label">{{(c['@label'] || c['@value']) | characters:30}}</span>&nbsp;
-      <span class="gn-facet-count">({{c['@count']}})</span>
+             data-ng-click="filter(c, $event)"/>
+      <span class="gn-facet-label pull-left">{{c['@label']}}</span>
+      <span class="gn-facet-count pull-left">({{c['@count']}})</span>
     </label>
 
     <div data-gn-facet-dimension-category="c.category"

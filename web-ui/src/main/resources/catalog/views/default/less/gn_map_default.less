@@ -39,11 +39,21 @@
   }
 }
 
-.gn-minimap-toggle {
+button.gn-minimap-toggle {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #efefef;
+  color: #333;
+  bottom: 20px;
+  right: 20px;
   z-index: 999;
+  &:hover, &:focus, &:active {
+    border: 1px solid #ccc;
+    background-color: #efefef;
+    text-decoration: none;
+    color: #333;
+  }
 }
 
 .gn-results-switch {
@@ -77,12 +87,12 @@
   border: 1px solid #ccc;
   background: #fff;
   border-radius: 0px;
-  right: auto;
-  bottom: auto;
-  position: absolute !important;
+  right: 0;
+  bottom: 0;
+  position: fixed !important;
   z-index: 99;
   width: 250px !important;
-  heigth: 250px !important;
+  height: 250px !important;
   margin: 20px;
   .btn-group-vertical {
     right: -1px;

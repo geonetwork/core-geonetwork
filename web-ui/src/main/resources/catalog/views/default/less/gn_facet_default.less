@@ -1,5 +1,5 @@
 .gn-facet-list {
-  margin-top: 20px;
+  margin-top: 15px;
 	.gn-facet {
 		h4 {
 			font-weight: normal;
@@ -13,8 +13,7 @@
       }
 		}
     .list-group {
-      margin-left: -5px;
-      border: 0;
+      margin-bottom: 10px;
     }
     .list-group-item {
       input[type="checkbox"] {
@@ -23,9 +22,9 @@
       label {
         margin-bottom: 0px;
         font-weight: normal;
-        font-size: .9em;
         cursor: pointer;
         margin-left: 2px;
+        line-height: 1.5em;
         .gn-facet-label {
           float: left;
           padding-right: 5px;
@@ -34,10 +33,14 @@
           overflow: hidden;
           white-space: nowrap;
           height: 18px;
+          max-width: 150px;
         }
         .gn-facet-count {
           float: left;
         }
+      }
+      .btn-link {
+        text-decoration: underline;
       }
     }
     .gn-facet-collapseall {

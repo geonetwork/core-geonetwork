@@ -7,15 +7,17 @@
     id="gn-info-list-mw-{{md.getUuid()}}">
     <section class="resultcard clearfix">
 
-<!--       <div class="gn-md-thumbnail">
-        <img class="gn-img-thumbnail"
-             data-ng-src="{{md.getThumbnails().list[0].url}}"
-             data-ng-if="md.getThumbnails().list[0].url"/>
-      </div> -->
-      
       <div class="title">
         <h4>{{md.title || md.defaultTitle}}</h4>
       </div>
+
+      <div class="gn-md-thumbnail">
+        <div class="gn-img-thumbnail"
+             style="background-image: url({{md.getThumbnails().list[0].url}})"
+             data-ng-if="md.getThumbnails().list[0].url">
+        </div>
+      </div>
+
       <div class="abstract">
         {{md.abstract}}
       </div>

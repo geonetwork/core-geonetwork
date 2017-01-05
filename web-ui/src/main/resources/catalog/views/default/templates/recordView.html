@@ -1,4 +1,4 @@
-<div data-ng-controller="GnMdViewController" class="container">
+<div data-ng-controller="GnMdViewController" class="container-fluid">
   <div class="alert alert-warning"
        data-ng-hide="mdView.current.record"
        data-translate=""
@@ -8,102 +8,119 @@
 
   <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
-    <button class="btn btn-primary"
-            data-ng-click="closeRecord(mdView.current.record)">
-      <i class="fa fa-search"></i>
-      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
-    </button>
 
-    <button class="btn btn-link"
-            data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
-            data-ng-show="mdView.records.length > 1"
-            data-ng-click="previousRecord()">
-      <i class="fa fa-angle-left"></i>
-      <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
-      <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
-    </button>
+    <div class="gn-sub-bar clearfix">
 
-    <button class="btn btn-link"
-            data-ng-class="mdView.current.index === mdView.records.length - 1 &&
-                           searchObj.params.to > searchInfo.count &&
-                           searchInfo.count > searchObj.params.from ? 'disabled' : ''"
-            data-ng-show="mdView.records.length > 1"
-            data-ng-click="nextRecord()">
-      <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>
-      <span data-ng-hide="mdView.current.index === mdView.records.length - 1" data-translate="">next</span>
-      <i class="fa fa-angle-right"></i>
-    </button>
+      <div class="btn-toolbar pull-left">
+        <button class="btn btn-default pull-left"
+                data-ng-click="closeRecord(mdView.current.record)">
+          <i class="fa fa-search"></i>
+          <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
+        </button>
 
+        <div class="btn-group">
+          <button class="btn btn-default"
+                  data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
+                  data-ng-show="mdView.records.length > 1"
+                  data-ng-click="previousRecord()">
+            <i class="fa fa-angle-left"></i>
+            <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
+            <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
+          </button>
 
-    <div class="btn-group pull-right">
-      <button type="button" class="btn btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-expanded="false">
-        <i class="fa fa-eye"></i>&nbsp;
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li class="dropdown-header" data-translate="">chooseAView</li>
-        <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
-          <a href="" data-ng-click="format()">
-            <i class="fa fa-fw"></i>
-            <span data-translate="">defaultView</span>
+          <button class="btn btn-default"
+                  data-ng-class="mdView.current.index === mdView.records.length - 1 &&
+                                 searchObj.params.to > searchInfo.count &&
+                                 searchInfo.count > searchObj.params.from ? 'disabled' : ''"
+                  data-ng-show="mdView.records.length > 1"
+                  data-ng-click="nextRecord()">
+            <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>
+            <span data-ng-hide="mdView.current.index === mdView.records.length - 1" data-translate="">next</span>
+            <i class="fa fa-angle-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="btn-toolbar pull-right" role="toolbar">
+
+        <div class="gnMdfeedback pull-left"></div>
+        
+        <div class="gn-md-actions-btn btn-group"
+             data-gn-md-actions-menu="mdView.current.record"></div>
+
+        <div class="btn-group">
+          <a class="btn btn-default gn-md-edit-btn"
+             data-ng-show="user.canEditRecord(mdView.current.record)"
+             data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
+             title="{{'edit' | translate}}">
+            <i class="fa fa-pencil"></i>
           </a>
-        </li>
-        <li data-ng-repeat="f in formatter.list"
-            data-ng-class="f === currentFormatter ? 'disabled' : ''">
-          <a href="" data-ng-click="format(f)">
-            <i class="fa fa-fw"></i>
-            {{f.label | translate}}
+
+          <a class="btn btn-danger gn-md-delete-btn"
+             data-ng-show="user.canEditRecord(mdView.current.record)"
+             data-gn-click-and-spin="deleteRecord(mdView.current.record)"
+             data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
+             title="{{'delete' | translate}}">
+
+            <i class="fa fa-times"></i>
           </a>
-        </li>
-        <li>
-          <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
-                 target="_blank">
-            <i class="fa fa-file-code-o"></i>&nbsp;
-            <span data-translate="">xmlView</span>
-          </a>
-        </li>
-      </ul>
+        </div>
+
+        <div data-ng-show="usingFormatter"
+             id="gn-metadata-display"
+             class="gn-metadata-display btn-group">
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown"
+                  aria-expanded="false">
+            <i class="fa fa-eye"></i>&nbsp;
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li class="dropdown-header" data-translate="">chooseAView</li>
+            <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
+              <a href="" data-ng-click="format()">
+                <i class="fa fa-fw"></i>
+                <span data-translate="">defaultView</span>
+              </a>
+            </li>
+            <li data-ng-repeat="f in formatter.list"
+                data-ng-class="f === currentFormatter ? 'disabled' : ''">
+              <a href="" data-ng-click="format(f)">
+                <i class="fa fa-fw"></i>
+                {{f.label | translate}}
+              </a>
+            </li>
+            <li>
+              <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
+                     target="_blank">
+                <i class="fa fa-file-code-o"></i>&nbsp;
+                <span data-translate="">xmlView</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
+    <!-- /.subbar -->
 
-    <div class="gn-md-actions-btn pull-right"
-         data-gn-md-actions-menu="mdView.current.record"/>
-
-    <a class="btn btn-danger gn-md-delete-btn pull-right"
-       data-ng-show="user.canEditRecord(mdView.current.record)"
-       data-gn-click-and-spin="deleteRecord(mdView.current.record)"
-       data-gn-confirm-click="{{'deleteRecordConfirm' | translate:mdView.current.record}}"
-       title="{{'delete' | translate}}">
-
-      <i class="fa fa-times"></i>
-    </a>
-
-    <a class="btn btn-primary gn-md-edit-btn pull-right"
-       data-ng-show="user.canEditRecord(mdView.current.record)"
-       data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
-       title="{{'edit' | translate}}">
-      <i class="fa fa-pencil"></i>
-    </a>
-
-    <div class="gnMdfeedback"></div>
-
-    <div data-ng-show="usingFormatter"
-         id="gn-metadata-display"
-         class="gn-metadata-display">
-    </div>
-
-
-    <div data-ng-show="!usingFormatter" class="gn-metadata-display">
-
-      <div class="col-md-8 gn-record">
+    <div data-ng-show="!usingFormatter" class="gn-metadata-display gn-metadata-display-title clearfix">
+      
+      <div class="col-md-8 col-md-offset-2 gn-record-title">
         <h1>
           <i class="fa gn-icon-{{mdView.current.record.type[0]}}"/>
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
-
         </h1>
+      </div>
+    </div>
 
-        <div class="alert alert-info" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
+    <div data-ng-show="!usingFormatter" class="gn-metadata-display gn-metadata-display-detail clearfix">
+
+      <div class="col-md-6 col-md-offset-2 gn-record">
+      
+        <p data-ng-bind-html="mdView.current.record.abstract | newlines"/>
 
         <!-- Display the first metadata status (apply to ISO19139 record) -->
         <div data-ng-if="mdView.current.record.status_text.length > 0"
@@ -111,6 +128,41 @@
              class="gn-status gn-status-mdview gn-status-{{mdView.current.record.status[0]}}">
           {{mdView.current.record.status_text[0]}}
         </div>
+
+        <section>
+          <h2>
+            <!-- <i class="fa fa-fw fa-share-square-o"></i> -->
+            <span data-translate="">shareOn</span>
+          </h2>
+          <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
+             title="{{'shareOnTwitter' | translate}}"
+             target="_blank"
+             class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
+          <a
+            data-ng-href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
+            title="{{'shareOnGooglePlus' | translate}}"
+            target="_blank"
+            class="btn btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
+          <a
+            data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
+            title="{{'shareOnFacebook' | translate}}"
+            target="_blank"
+            class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
+          <a
+            data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
+            title="{{'shareOnLinkedIn' | translate}}"
+            target="_blank"
+            class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
+          <a
+            data-ng-href="mailto:?subject={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
+            title="{{'shareByEmail' | translate}}"
+            target="_blank"
+            class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
+          <a
+            data-ng-click="mdService.getPermalink(md)"
+            title="{{'permalink' | translate}}"
+            class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
+        </section>
 
         <div data-gn-related="mdView.current.record"
              data-user="user"
@@ -126,7 +178,7 @@
         </div>
 
         <h2 data-translate="">aboutThisResource</h2>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tbody>
           <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                           mdView.current.record.inspirethemewithac.length > 0">
@@ -290,7 +342,7 @@
         </div>
 
 
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tbody>
           <tr data-ng-if="::mdView.current.record.updateFrequency">
             <th data-translate="">updateFrequency</th>
@@ -381,7 +433,7 @@
           <span data-translate="">metadataInXML</span>
         </a>
 
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tbody>
           <tr data-ng-if="::mdView.current.record.getAllContacts()">
             <th data-translate="">contact</th>
@@ -442,7 +494,8 @@
         </table>
       </div>
 
-      <div class="col-md-4 gn-md-side">
+      <div class="col-md-2 gn-md-side">
+
         <section data-ng-if="mdView.current.record.overviews.length > 0">
           <h4>
             <i class="fa fa-fw fa-image"></i>
@@ -460,8 +513,6 @@
             </div>
           </div>
         </section>
-        </br>
-
 
         <section data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
@@ -480,7 +531,6 @@
           </p>
 
         </section>
-        </br>
 
         <section data-ng-if="mdView.current.record.creationDate ||
                              mdView.current.record.publicationDate ||
@@ -493,33 +543,32 @@
           </h4>
 
           <p>
-          <dl data-ng-show="mdView.current.record.creationDate">
-            <dt data-translate>creationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
-                data-format="YYYY-MM-DD"/>
-          </dl>
-          <dl data-ng-show="mdView.current.record.publicationDate">
-            <dt data-translate>publicationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
-                data-format="YYYY-MM-DD"/>
-          </dl>
-          <dl data-ng-show="mdView.current.record.revisionDate">
-            <dt data-translate>revisionDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
-                data-format="YYYY-MM-DD"/>
-          </dl>
-          <dl data-ng-show="mdView.current.record.tempExtentBegin ||
-                              mdView.current.record.tempExtentEnd">
-            <dt data-translate>tempExtentBegin</dt>
-            <dd>
-              <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
-              &nbsp;<i class="fa fa-forward"></i>&nbsp;
-              <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
-            </dd>
-          </dl>
+            <dl data-ng-show="mdView.current.record.creationDate">
+              <dt data-translate>creationDate</dt>
+              <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
+                  data-format="YYYY-MM-DD"/>
+            </dl>
+            <dl data-ng-show="mdView.current.record.publicationDate">
+              <dt data-translate>publicationDate</dt>
+              <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+                  data-format="YYYY-MM-DD"/>
+            </dl>
+            <dl data-ng-show="mdView.current.record.revisionDate">
+              <dt data-translate>revisionDate</dt>
+              <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
+                  data-format="YYYY-MM-DD"/>
+            </dl>
+            <dl data-ng-show="mdView.current.record.tempExtentBegin ||
+                                mdView.current.record.tempExtentEnd">
+              <dt data-translate>tempExtentBegin</dt>
+              <dd>
+                <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+                &nbsp;<i class="fa fa-forward"></i>&nbsp;
+                <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
+              </dd>
+            </dl>
           </p>
         </section>
-        </br>
 
         <!--<section data-ng-repeat="c in mdView.current.record.getAllContacts().resource track by $index">
           <h4>
@@ -562,7 +611,6 @@
           <img ng-src="../../images/logos/{{mdView.current.record.source}}.png"
                class="gn-source-logo"/>
         </section>
-        </br>
 
         <section>
           <h4>
@@ -574,43 +622,8 @@
                   data-from-now=""></span>
           </p>
         </section>
-        </br>
 
-        <section>
-          <h4>
-            <i class="fa fa-fw fa-share-square-o"></i>
-            <span data-translate="">shareOn</span>
-          </h4>
-          <a data-ng-href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
-             title="{{'shareOnTwitter' | translate}}"
-             target="_blank"
-             class="btn btn-default"><i class="fa fa-fw fa-twitter"></i></a>
-          <a
-            data-ng-href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
-            title="{{'shareOnGooglePlus' | translate}}"
-            target="_blank"
-            class="btn btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
-          <a
-            data-ng-href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
-            title="{{'shareOnFacebook' | translate}}"
-            target="_blank"
-            class="btn btn-default"><i class="fa fa-fw fa-facebook"></i></a>
-          <a
-            data-ng-href="http://www.linkedin.com/shareArticle?mini=true&amp;summary={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;url={{socialMediaLink | encodeURIComponent}}"
-            title="{{'shareOnLinkedIn' | translate}}"
-            target="_blank"
-            class="btn btn-default"><i class="fa fa-fw fa-linkedin"></i></a>
-          <a
-            data-ng-href="mailto:?subject={{mdView.current.record.title || mdView.current.record.defaultTitle}}&amp;body={{socialMediaLink | encodeURIComponent}}"
-            title="{{'shareByEmail' | translate}}"
-            target="_blank"
-            class="btn btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
-          <a
-            data-ng-click="mdService.getPermalink(md)"
-            title="{{'permalink' | translate}}"
-            class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
-        </section>
-        </br>
+
 
         <section>
           <h4>

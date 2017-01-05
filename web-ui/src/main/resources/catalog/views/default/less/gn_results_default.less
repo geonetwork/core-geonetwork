@@ -7,6 +7,9 @@
   background: #fff;
   padding-top: 20px;
 }
+.gn-row-pagination {
+  background: #fff;
+}
 
 // ----- sort options
 .gn-sort-by .btn-group > button, .gn-sort-by .btn-group > button:hover, 
@@ -21,6 +24,9 @@ ul.gn-resultview {
   @thumbnail-width: 170px;
 
   margin-top: 10px;
+  p {
+    font-size: 1em;
+  }
   input[type="checkbox"] {
     margin: 6px 10px 0 0;
     float: left;
@@ -127,16 +133,10 @@ ul.gn-resultview {
       float: left;
       max-width: 95%;
       h3 {
-        
-        /* Leave space for selection checkbox */
-        //padding-left: 20px;
+        font-size: 22px;
         margin-top: 0px;
         a {
-          //text-transform: uppercase;
-          font-weight: normal;
-          font-size: 80%;
           color: #333333;
-          max-height: 82px;
           text-overflow: ellipsis; 
           overflow: hidden;
           display: block;
@@ -164,7 +164,11 @@ ul.gn-resultview {
     }
     .gn-md-abstract {
       cursor: pointer;
-      color: @gray-light;
+      max-height: 160px;
+      overflow: auto;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      padding-right: 10px;
       &:hover {
         color: #333;
       }
