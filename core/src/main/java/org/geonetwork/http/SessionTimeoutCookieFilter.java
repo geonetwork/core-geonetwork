@@ -42,12 +42,16 @@ public class SessionTimeoutCookieFilter implements javax.servlet.Filter {
         if(session == null) {
             String userAgent = httpReq.getHeader("user-agent");
 
-            Pattern regex = Pattern.compile(ServiceManager.BOT_REGEXP, 
-                    Pattern.CASE_INSENSITIVE);
-            Matcher m = regex.matcher(userAgent);
-            if(!m.find()) {
-                //It is not a bot, let's create a session
-                //FIXME: really? Should we? Can't we wait? Anonymous users need it?
+            if (StringUtils.isNotBlank(userAgent)) {
+                Pattern regex = Pattern.compile(ServiceManager.BOT_REGEXP,
+                        Pattern.CASE_INSENSITIVE);
+                Matcher m = regex.matcher(userAgent);
+                if(!m.find()) {
+                    //It is not a bot, let's create a session
+                    //FIXME: really? Should we? Can't we wait? Anonymous users need it?
+                    session = httpReq.getSession(true);
+                }
+            } else {
                 session = httpReq.getSession(true);
             }
         }
