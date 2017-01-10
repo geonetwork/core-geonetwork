@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.fao.geonet.utils.Log;
+import org.hibernate.exception.ConstraintViolationException;
 import org.jdom.Element;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -365,6 +366,10 @@ public class DirectoryApi {
                 Log.warning(Geonet.GEONETWORK, String.format(
                     "More than one record found with UUID '%s'. Error is '%s'.",
                     recordUuid, e.getMessage()));
+            } catch (Exception ec){
+                Log.warning(Geonet.GEONETWORK, String.format(
+                    "Constraints violation for record found with UUID '%s'. Error is '%s'. This probably due to record having same UUID in XML which was not synched with database.",
+                    recordUuid, ec.getMessage()));
             }
             if (record == null) {
                 report.incrementNullRecords();
