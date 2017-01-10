@@ -101,6 +101,11 @@
                   data-ng-switch-when="map/proj4js" type="text"
                   class="form-control" id="{{s['name']}}" name="{{s.name}}"
                 ></textarea>
+                <div
+                  data-gn-ui-config="s.value"
+                  data-id="s['name']"
+                  data-ng-switch-when="ui/searchAppConfig"
+                ></div>
 
 
                 <select data-ng-switch-when="system/server/protocol"

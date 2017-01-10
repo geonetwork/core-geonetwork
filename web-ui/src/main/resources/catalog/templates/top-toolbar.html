@@ -16,21 +16,21 @@
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
       <li>
-        <a data-gn-active-tb-item="catalog.search#/home">
+        <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
-               data-ng-src="../../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"/>
+               data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"/>
           <span class="visible-lg">{{info['system/site/name']}}</span>
         </a>
       </li>
       <li>
-        <a data-gn-active-tb-item="catalog.search#/search"
+        <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
            title="{{'search' | translate}}">
           <i class="fa fa-search"></i>
           <span class="visible-lg" data-translate="">search</span>
         </a>
       </li>
       <li data-ng-if="isMapViewerEnabled">
-        <a data-gn-active-tb-item="catalog.search#/map"
+        <a data-gn-active-tb-item="{{gnCfg.mods.map.appUrl}}"
            title="{{'map' | translate}}">
           <i class="fa fa-globe"></i>
           <span class="visible-lg" data-translate="">makeYourMap</span>
@@ -39,7 +39,7 @@
         </a>
       </li>
       <li data-ng-show="authenticated && user.isEditorOrMore()">
-        <a data-gn-active-tb-item="catalog.edit"
+        <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}">
           <i class="fa fa-plus"></i>
           <span class="visible-lg" data-translate="">contribute</span>
@@ -50,17 +50,17 @@
            role="button" aria-expanded="false"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
           <li>
-            <a data-gn-active-tb-item="catalog.edit#/create">
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
               <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
             </a>
           </li>
           <li>
-            <a data-gn-active-tb-item="catalog.edit#/import">
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
               <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
             </a>
           </li>
           <li>
-            <a data-gn-active-tb-item="catalog.edit#/directory"
+            <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory"
                data-ng-if="user.isReviewerOrMore()">
               <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
             </a>
@@ -74,7 +74,7 @@
         </ul>
       </li>
       <li data-ng-show="user.isReviewerOrMore()">
-        <a data-gn-active-tb-item="admin.console"
+        <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}"
            title="{{'adminConsole' | translate}}">
           <i class="fa fa-th"></i>
           <span class="visible-lg" data-translate="">adminConsole</span>
@@ -85,7 +85,7 @@
            role="button" aria-expanded="false"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in adminMenu">
-            <a data-gn-active-tb-item="admin.console{{t.route}}">
+            <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
               <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
             </a>
           </li>
@@ -103,7 +103,7 @@
 
     <ul class="nav navbar-nav navbar-right">
       <li data-ng-show="authenticated">
-        <a href="admin.console#/organization/users?userOrGroup={{user.username}}"
+        <a href="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
            title="{{'userDetails' | translate}}"
            class="hidden-xs btn btn-link">
           <img class="img-circle"
@@ -119,14 +119,14 @@
         </a>
       </li>
       <li data-ng-show="authenticated">
-        <a href="../../signout"
+        <a href="{{gnCfg.mods.signout.appUrl}}"
            title="{{'signout' | translate}}">
           <i class="fa fa-sign-out"></i>&nbsp;
           {{'signout' | translate}}
         </a>
       </li>
       <li data-ng-show="!authenticated && service !== 'catalog.signin'">
-        <a href="{{pages.signin}}"
+        <a href="{{gnCfg.mods.signin.appUrl}}"
            title="{{'signIn'|translate}}"
            data-ng-keypress="$event">
           <i class="fa fa-sign-in"/>&nbsp;

@@ -292,15 +292,18 @@
         mapfieldOption: {
           relations: ['within']
         },
+        hitsperpageValues: gnSearchSettings.hitsperpageValues,
         defaultParams: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: gnSearchSettings.sortBy || 'relevance'
         },
         params: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
-        }
-      }, gnSearchSettings.sortbyDefault);
-
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: gnSearchSettings.sortBy || 'relevance'
+        },
+        sortbyValues: gnSearchSettings.sortbyValues
+      });
     }]);
 })();

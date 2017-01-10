@@ -40,7 +40,7 @@
     locale: {},
     isMapViewerEnabled: false,
     requireProxy: [],
-    is3DModeAllowed: false,
+    gnUrl: '',
     docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
     //docUrl: '../../doc/',
     modelOptions: {
@@ -67,7 +67,7 @@
       'ice': 'is'
     },
     getIso2Lang: function(iso3lang) {
-      return this.langs[iso3lang];
+      return this.langs[iso3lang] || 'en';
     },
     getIso3Lang: function(iso2lang) {
       for (p in this.langs) {
@@ -75,6 +75,7 @@
           return p;
         }
       }
+      return 'eng';
     }
   });
 
@@ -113,9 +114,15 @@
       // TODO : add language
       var tokens = location.href.split('/');
       $scope.service = tokens[6].split('?')[0];
-      $scope.lang = tokens[5];
+
+      // If gnLangs current already set by config, do not use URL
+      $scope.lang = 'eng';
+      // $scope.lang = tokens[5];
+      // $scope.lang = gnLangs.current || tokens[5];
       gnLangs.current = $scope.lang;
-      $scope.iso2lang = gnLangs.getIso2Lang(tokens[5]);
+      $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      // TODO: set node id in settings
       $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = gnLangs.langs;
@@ -126,16 +133,13 @@
         'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
         'fin': 'Suomeksi', 'fin': 'Suomeksi', 'ice': 'Íslenska'};
       $scope.url = '';
-      $scope.base = '../../catalog/';
+      $scope.gnUrl = gnGlobalSettings.gnUrl;
+      $scope.gnCfg = gnGlobalSettings.gnCfg;
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
-      $scope.logoPath = '../../images/harvesting/';
+      $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
 
-      $scope.pages = {
-        home: 'home',
-        signin: 'catalog.signin'
-      };
 
       $scope.layout = {
         hideTopToolBar: false
