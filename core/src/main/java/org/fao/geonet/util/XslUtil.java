@@ -457,7 +457,8 @@ public final class XslUtil {
             });
             //response = requestFactory.execute(head);
             if (response.getRawStatusCode() == HttpStatus.SC_BAD_REQUEST
-                || response.getRawStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED) {
+                || response.getRawStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED
+                || response.getRawStatusCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 // the website doesn't support HEAD requests. Need to do a GET...
                 response.close();
                 HttpGet get = new HttpGet(url);
