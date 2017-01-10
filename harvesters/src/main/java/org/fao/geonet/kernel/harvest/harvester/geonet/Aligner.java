@@ -529,7 +529,8 @@ public class Aligner extends BaseAligner {
             setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
             setSourceId(siteId).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(getOwnerId(params)).
+            setGroupOwner(getOwnerGroupId(params));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
@@ -792,7 +793,7 @@ public class Aligner extends BaseAligner {
             boolean updateDateStamp = true;
             String language = context.getLanguage();
             dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
-                updateDateStamp);
+                updateDateStamp, getOwnerId(params), getOwnerGroupId(params));
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
         }

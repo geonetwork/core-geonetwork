@@ -1825,6 +1825,68 @@ public class DataManager implements ApplicationEventPublisherAware {
         // Return an up to date metadata record
         return getMetadataRepository().findOne(metadataId);
     }
+    
+
+    /**
+     * Updates a metadata record. Deletes validation report currently in session (if any). If user
+     * asks for validation the validation report will be (re-)created then.
+     *
+     * @return metadata if the that was updated
+     */
+    public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+                                                final boolean validate, final boolean ufo, final boolean index, final String lang,
+                                                final String changeDate, final boolean updateDateStamp,
+                                                final Integer ownerId, final Integer groupOwnerId) throws Exception {
+        Element metadataXml = md;
+
+        // when invoked from harvesters, session is null?
+        UserSession session = context.getUserSession();
+        if (session != null) {
+            session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
+        }
+        String schema = getMetadataSchema(metadataId);
+        if (ufo) {
+            String parentUuid = null;
+            Integer intId = Integer.valueOf(metadataId);
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
+        }
+
+        //--- force namespace prefix for iso19139 metadata
+        setNamespacePrefixUsingSchemas(schema, metadataXml);
+
+        // Notifies the metadata change to metatada notifier service
+        final Metadata metadata = getMetadataRepository().findOne(metadataId);
+
+        String uuid = null;
+        if (getSchemaManager().getSchema(schema).isReadwriteUUID()
+            && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+            uuid = extractUUID(schema, metadataXml);
+        }
+        
+        metadata.getSourceInfo().setGroupOwner(groupOwnerId);
+        metadata.getSourceInfo().setOwner(ownerId);
+
+        //--- write metadata to dbms
+        getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
+        if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
+            // Notifies the metadata change to metatada notifier service
+            notifyMetadataChange(metadataXml, metadataId);
+        }
+
+        try {
+            //--- do the validation last - it throws exceptions
+            if (session != null && validate) {
+                doValidate(session, schema, metadataId, metadataXml, lang, false);
+            }
+        } finally {
+            if (index) {
+                //--- update search criteria
+                indexMetadata(metadataId, true);
+            }
+        }
+        // Return an up to date metadata record
+        return getMetadataRepository().findOne(metadataId);
+    }
 
     /**
      * Validates an xml document, using autodetectschema to determine how.

@@ -23,22 +23,23 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import jeeves.server.context.ServiceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 /**
  * This class helps {@link AbstractHarvester} instances to process all metadata collected on the
@@ -146,4 +147,40 @@ public abstract class BaseAligner {
             }
         }
     }
+    
+    /**
+     * Returns the id of the group that owns the harvester. Null if there is no group defined.
+     * @param params
+     * @return
+     */
+    protected Integer getOwnerGroupId(AbstractParams params) {
+        Integer groupId = null;
+        if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerIdGroup()) 
+                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerIdGroup())) {
+            groupId = Integer.parseInt(params.getOwnerIdGroup());
+        }
+        return groupId;
+    }
+
+    /**
+     * Returns the owner of the harvester 
+     * or the admin user (id=1) if there is no owner of the harvester. 
+     * This second option should never happen, 
+     * but it is a failback just in case some weird harvester is created.
+     * 
+     * @param params
+     * @return
+     */
+    protected Integer getOwnerId(AbstractParams params) {
+        Integer ownerId = null;
+        
+        if (org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerId()) 
+                || ! org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerId())) {
+            ownerId = 1;
+        } else {
+            ownerId = Integer.parseInt(params.getOwnerId());
+        }
+        return ownerId;
+    }
+
 }
