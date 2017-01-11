@@ -15,6 +15,7 @@
     <xsl:variable name="info" select="children/info/children"/>
     <xsl:variable name="owner" select="children/owner"/>
     <xsl:variable name="ownerGroup" select="children/ownerGroup"/>
+    <xsl:variable name="ownerUser" select="children/ownerUser"/>
 
     <node id="{@id}" type="{value}">
       <owner>
@@ -27,6 +28,11 @@
           <xsl:value-of select="$site/ownerGroup/value"/>
         </id>
       </ownerGroup>
+      <ownerUser>
+        <id>
+          <xsl:value-of select="$site/ownerUser/value"/>
+        </id>
+      </ownerUser>
 
       <site>
         <name>
