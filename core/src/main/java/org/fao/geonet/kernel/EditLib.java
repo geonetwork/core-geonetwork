@@ -445,7 +445,7 @@ public class EditLib {
                           @SuppressWarnings("unchecked")
                           List<Element> children = node.getChildren();
                           for (int i = 0; i < children.size(); i++) {
-                              el.addContent(children.get(i).detach());
+                              el.addContent((Element)children.get(i).clone());
                           }
                           List<Attribute> attributes = node.getAttributes();
                           for (Attribute a : attributes) {
