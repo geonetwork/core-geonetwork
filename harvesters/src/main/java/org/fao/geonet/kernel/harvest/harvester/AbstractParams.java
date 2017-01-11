@@ -80,7 +80,6 @@ public abstract class AbstractParams {
     
     private String ownerIdUser;
 
-    protected DataManager dm;
 
     private List<Privileges> alPrivileges = new ArrayList<>();
     private List<String> alCategories = new ArrayList<>();
