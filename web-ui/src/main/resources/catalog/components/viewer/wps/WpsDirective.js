@@ -275,10 +275,15 @@
 
             var inputs = scope.processDescription.dataInputs.input.reduce(
                 function(o, v, i) {
-                  if (v.identifier.value == 'limits' && v.value == '') {
-                    o['limits'] = 'NaN,NaN,NaN,NaN';
+                  if (v.identifier.value == 'limits' &&
+                    (v.value == '' || v.value == ',,,')) {
+                    if(v.minOccurs > 0) {
+                      o['limits'] = 'NaN,NaN,NaN,NaN';
+                    }
                   } else {
-                    o[v.identifier.value] = v.value;
+                    if(v.minOccurs > 0 || v.value) {
+                      o[v.identifier.value] = v.value;
+                    }
                   }
                   return o;
                 }, {});
