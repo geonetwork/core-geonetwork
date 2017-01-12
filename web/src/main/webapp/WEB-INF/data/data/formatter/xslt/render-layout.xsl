@@ -47,7 +47,7 @@
   </xsl:template>
 
   <xsl:template name="render-record">
-    <div class="container-fluid gn-metadata-view">
+    <div class="container-fluid gn-metadata-view gn-schema-{$schema}">
 
       <xsl:if test="$css = 'sextant'">
         <link rel="stylesheet" type="text/css" href="../../apps/js/ext/resources/css/ext-all.css"/>
