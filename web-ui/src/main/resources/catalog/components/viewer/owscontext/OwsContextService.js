@@ -140,7 +140,7 @@
         var self = this;
         var promises = [];
         var overlays = [];
-        if(angular.isArray(layers)) {
+        if (angular.isArray(layers)) {
           for (i = 0; i < layers.length; i++) {
             var type, layer = layers[i];
             if (layer.name) {
@@ -149,14 +149,15 @@
                 // {type=bing_aerial} (mapquest, osm ...)
                 var re = this.getREForPar('type');
                 if (layer.name.match(re) &&
-                  (type = re.exec(layer.name)[1]) != 'wmts') {
+                    (type = re.exec(layer.name)[1]) != 'wmts') {
                   re = this.getREForPar('name');
                   var opt;
                   if (layer.name.match(re)) {
                     var lyr = re.exec(layer.name)[1];
                     opt = {name: lyr};
                   }
-                  var olLayer = gnMap.createLayerForType(type, opt, layer.title);
+                  var olLayer =
+                      gnMap.createLayerForType(type, opt, layer.title);
                   if (olLayer) {
                     bgLayers.push({layer: olLayer, idx: i});
                     olLayer.displayInLayerManager = false;
@@ -169,16 +170,16 @@
                 // {type=wmts,name=Ocean_Basemap} or WMS
                 else {
                   promises.push(this.createLayer(layer, map, i).then(
-                    function(olLayer) {
-                      if (olLayer) {
-                        bgLayers.push({
-                          layer: olLayer,
-                          idx: olLayer.get('bgIdx')
-                        });
-                        olLayer.displayInLayerManager = false;
-                        olLayer.background = true;
-                      }
-                    }));
+                      function(olLayer) {
+                        if (olLayer) {
+                          bgLayers.push({
+                            layer: olLayer,
+                            idx: olLayer.get('bgIdx')
+                          });
+                          olLayer.displayInLayerManager = false;
+                          olLayer.background = true;
+                        }
+                      }));
                 }
               } else if (layer.server) {
                 var server = layer.server[0];
@@ -409,7 +410,7 @@
         var xml = this.writeContext(map);
         var xmlString = (new XMLSerializer()).serializeToString(xml);
         var key = 'owsContext_' +
-          window.location.host + window.location.pathname;
+            window.location.host + window.location.pathname;
         storage.setItem(key, xmlString);
       };
 

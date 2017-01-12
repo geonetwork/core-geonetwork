@@ -1,6 +1,6 @@
 <div class="gn-related-resources"
      data-ng-if="relationFound">
-  <h2>{{title}}</h2>
+  <h2>{{::title}}</h2>
 
   <div class=""
        data-ng-repeat="(type, items) in relations track by $index"
@@ -9,10 +9,20 @@
          data-ng-repeat="r in items track by $index"
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1">
-        <strong>
-          <i class="fa fa-2x"
-             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+        <!-- OWS have their name overlaid over the globe icon -->
+        <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMTS') || (mainType === 'WFS') || (mainType === 'WCS')">
+          <span class="fa-stack fa-1x">
+            <i class="fa fa-globe fa-stack-2x" style="opacity: 0.55;"></i>
+            <span class="fa fa-stack-1x">
+              <strong style="font-size:10px;">{{mainType}}</strong>
+            </span>
+          </span>
         </strong>
+        <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMTS') && (mainType !== 'WFS') && (mainType !== 'WCS')">
+          <i class="fa"
+               data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+        </strong>
+      </strong>
       </div>
       <div class="col-xs-7">
         <!-- WMS & WFS contains layer name in title -->
@@ -21,7 +31,7 @@
                       mainType !== 'LINKDOWNLOAD' &&
                       mainType !== 'LINK' &&
                       r.protocol !== 'OGC:WFS' ">
-          {{(r.title | gnLocalized: lang) || r.url}}
+          {{::(r.title | gnLocalized: lang) || r.url}}
         </h4>
         <!-- Display description if available -->
         <h4 data-ng-if="(mainType === 'WMS' ||
@@ -29,12 +39,12 @@
                        mainType.indexOf('LINK') === 0 ||
                        r.protocol === 'OGC:WFS') &&
                        r.description.length > 0">
-          {{r.description | gnLocalized: lang | striptags | characters:150}}
+          {{::r.description | gnLocalized: lang | striptags | characters:150}}
         </h4>
 
         <p class="text-muted"
            data-ng-if="mainType.indexOf('MD') == 0">
-          {{r.title | gnLocalized: lang | striptags | characters:150}}
+          {{::r.title | gnLocalized: lang | striptags | characters:150}}
         </p>
         <p class="text-muted"
            data-ng-if="mainType === 'WMS'">
@@ -69,21 +79,21 @@
           <input class="form-control"
                  type="text"
                  onClick="this.setSelectionRange(0, this.value.length)"
-                 value="{{r.url}}"/>
+                 value="{{::r.url}}"/>
         </p>
-        <p class="text-muted"
+        <p class="text-muted" title="{{::(r.title | gnLocalized: lang) || (r.description | gnLocalized: lang) || r.url}}"
            data-ng-if="mainType === 'LINKDOWNLOAD' || mainType === 'LINK'">
-          {{(r.title | gnLocalized: lang) || (r.description | gnLocalized: lang) || r.url}}
+          {{::((r.title | gnLocalized: lang) || (r.description | gnLocalized: lang) || r.url)}}
         </p>
       </div>
       <div class="col-xs-4">
         <button type="button"
-                class="btn btn-default btn-lg btn-block"
+                class="btn btn-default btn-sm btn-block"
                 data-ng-show="hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
 
         <span class="visible-lg-*">
-          {{(config.getLabel(mainType, type)) | translate}}
+          {{::(config.getLabel(mainType, type)) | translate}}
         </span>
         </button>
       </div>

@@ -61,7 +61,7 @@
         link: function(scope) {
           var translations = null;
           $translate(['privilegesUpdated',
-            'privilegesUpdatedError']).then(function (t) {
+            'privilegesUpdatedError']).then(function(t) {
             translations = t;
           });
 

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -255,7 +256,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
                     for (Object o : nodes.getChildren()) {
                         Element node = transform((Element) o);
                         Element nodeGroup = node.getChild("ownerGroup");
-                        if ((nodeGroup != null) && (groups.contains(Integer.valueOf(nodeGroup.getValue())))) {
+                        if ((nodeGroup != null)
+                                && (!StringUtils.isEmpty(nodeGroup.getValue()))
+                                && (StringUtils.isNumeric(nodeGroup.getValue()))
+                                && (groups.contains(Integer.valueOf(nodeGroup.getValue())))) {
                             addInfo(node);
                             result.addContent(node);
                         }

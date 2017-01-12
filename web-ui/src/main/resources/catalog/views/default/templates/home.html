@@ -1,17 +1,6 @@
 <div class="container-fluid">
   <div class="row gn-row-main">
-    <div class="col-sm-4 col-sm-push-8">
-      <div class="well well-md">
-        <h1 data-translate=""
-            data-translate-values="{orgName: '{{info.site.organization}}'}">welcomeTitle</h1>
-
-        <p data-translate="">welcomeText</p>
-      </div>
-    </div>
-    <div class="col-sm-8 col-sm-pull-4">
-      <h1 data-translate="">getstarted</h1>
-      <p data-translate=""
-         data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</p>
+    <div class="col-sm-8 col-sm-offset-2">
 
       <div class="input-group gn-form-any">
         <input type="text"
@@ -32,6 +21,10 @@
           </a>
         </span>
       </div>
+
+      <div data-translate="" class="search-over"
+           data-translate-values="{records: '{{searchInfo.count}}'}">searchOver</div>
+
     </div>
   </div>
   <div class="row" data-ng-show="searchInfo.count == 0">

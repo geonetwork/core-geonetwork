@@ -290,5 +290,5 @@
     "directoryManager": "Spravovat adresář",
     "typeOfRecord": "Typ záznamu",
     "load": "Načíst",
-    "solrAccessError": "Error during Solr access."
+    "indexAccessError": "Error during Solr access."
 }

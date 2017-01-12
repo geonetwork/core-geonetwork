@@ -232,9 +232,9 @@
         }).success(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             msg: $translate.instant('transfertPrivilegesFinished',
-                            {
-                              privileges: data.privileges,
-                              metadata: data.metadata}),
+                {
+                  privileges: data.privileges,
+                  metadata: data.metadata}),
             timeout: 2,
             type: 'success'});
           params.running = false;

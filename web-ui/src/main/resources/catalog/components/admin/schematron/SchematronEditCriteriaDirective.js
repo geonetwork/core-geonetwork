@@ -129,7 +129,8 @@
              scope.describeCriteria = function() {
                switch (angular.uppercase(scope.original.uitype)) {
                  case 'ALWAYS_ACCEPT':
-                   return $translate.instant('schematronDescriptionAlwaysAccept');
+                   return $translate.instant(
+                   'schematronDescriptionAlwaysAccept');
                  case 'NEW':
                    return $translate.instant('NEW');
                  case 'XPATH':

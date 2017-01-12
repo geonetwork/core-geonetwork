@@ -52,12 +52,12 @@
 
   <bean id="localeResolver"
         class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-    <property name="defaultLocale" value="eng"/>
+    <property name="defaultLocale" value="${language.default}"/>
   </bean>
 
   <bean id="localeChangeInterceptor"
         class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-    <property name="paramName" value="language"/>
+    <property name="paramName" value="${language.default}"/>
   </bean>
   <bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
     <property name="urlPosition" value="0"/>

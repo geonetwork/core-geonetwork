@@ -125,6 +125,7 @@ public final class Geonet {
         public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
         public static final String JZKITAPPLICATIONCONTEXT = "JZkitApplicationContext.xml";
+        public static final String INFLATE_METADATA = "inflate-metadata.xsl";
 
         /**
          * Stylesheet to convert a CQL parameter to a filter.

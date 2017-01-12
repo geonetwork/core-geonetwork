@@ -1007,10 +1007,11 @@
                   if (!angular.isArray(olL.get('errors'))) {
                     olL.set('errors', []);
                   }
-                  var errormsg = $translate.instant('layerNotfoundInCapability', {
-                    layer: name,
-                    url: url
-                  });
+                  var errormsg = $translate.instant(
+                      'layerNotfoundInCapability', {
+                        layer: name,
+                        url: url
+                      });
                   errors.push(errormsg);
                   console.warn(errormsg);
 

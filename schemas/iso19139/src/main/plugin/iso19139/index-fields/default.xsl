@@ -434,7 +434,7 @@
 
       <xsl:for-each select="gmd:pointOfContact">
         <xsl:apply-templates mode="index-contact"
-                             select="gmd:CI_ResponsibleParty">
+                             select="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
           <xsl:with-param name="type" select="'resource'"/>
           <xsl:with-param name="fieldPrefix" select="'responsibleParty'"/>
           <xsl:with-param name="position" select="position()"/>
@@ -532,6 +532,16 @@
         <xsl:for-each select="gmd:useLimitation/gco:CharacterString">
           <Field name="{$fieldPrefix}UseLimitation"
                  string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:useLimitation/gmx:Anchor[not(string(@xlink:href))]">
+          <Field name="{$fieldPrefix}UseLimitation"
+                 string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:useLimitation/gmx:Anchor[string(@xlink:href)]">
+          <Field name="{$fieldPrefix}UseLimitation"
+                 string="{concat('link|',string(@xlink:href), '|', string(.))}" store="true" index="true"/>
         </xsl:for-each>
       </xsl:for-each>
 
@@ -947,7 +957,7 @@
   </xsl:template>
 
 
-  <xsl:template mode="index-contact" match="gmd:CI_ResponsibleParty">
+  <xsl:template mode="index-contact" match="gmd:CI_ResponsibleParty|*[@gco:isoType = 'gmd:CI_ResponsibleParty']">
     <xsl:param name="type"/>
     <xsl:param name="fieldPrefix"/>
     <xsl:param name="position" select="'0'"/>

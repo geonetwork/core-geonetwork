@@ -32,7 +32,10 @@ import jeeves.server.sources.http.JeevesServlet;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.web.DefaultLanguage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -122,6 +125,9 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
         chain.doFilter(request, response);
     }
 
+    @Autowired
+    DefaultLanguage defaultLanguage;
+
     private String getRequestLanguage(ConfigurableApplicationContext appContext, HttpServletRequest request) {
         String language = request.getParameter("hl");
         if (language == null) {
@@ -140,10 +146,11 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
         }
 
         if (language == null) {
-            language = appContext.getBean("defaultLanguage", String.class);
+            language = defaultLanguage.getLanguage();
         }
+
         if (language == null) {
-            language = "eng";
+            language = Geonet.DEFAULT_LANGUAGE;
         }
         return language;
     }
