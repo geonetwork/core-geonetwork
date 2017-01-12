@@ -14882,6 +14882,10 @@ yx-axis
   margin-bottom: 0px;
   border-bottom: 2px #eeeeee solid;
 }
+.gn .gn-facet .filter-input,
+.g .gn-facet .filter-input {
+  margin-bottom: 10px;
+}
 .gn .gn-facet-breadcrumb,
 .g .gn-facet-breadcrumb {
   margin-top: 8px;

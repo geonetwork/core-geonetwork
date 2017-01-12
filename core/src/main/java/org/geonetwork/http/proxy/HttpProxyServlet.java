@@ -220,7 +220,7 @@ public class HttpProxyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpGet httpGet = null;
 
-        Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (1/5) Start of doGet() method");
+        Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (1/8) Start of doGet() method");
 
         try {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
@@ -234,7 +234,7 @@ public class HttpProxyServlet extends HttpServlet {
                 returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "This proxy does not allow you to access that location.");
                 return;
             }
-            Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (2/5) Host seems to be allowed");
+            Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (2/8) Host seems to be allowed");
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
@@ -244,18 +244,21 @@ public class HttpProxyServlet extends HttpServlet {
 
                 final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
 
-                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3/5) Start of http call");
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3/8) Start of http call");
 
                 // Added support for proxy
                 Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4/8) Start of http call");
 
                 HttpClient client = clientBuilder.build();
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (5/8) Start of http call");
 
                 httpGet = new HttpGet(uri);
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (6/8) Start of http call");
 
                 final HttpResponse httpResponse = client.execute(httpGet);
 
-                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4/5) End of http call : " + httpResponse.getStatusLine().getStatusCode());
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (7/8) End of http call : " + httpResponse.getStatusLine().getStatusCode());
 
                 if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     Header contentType = httpResponse.getLastHeader(HEADER_CONTENT_TYPE);
@@ -279,18 +282,18 @@ public class HttpProxyServlet extends HttpServlet {
 
                     String responseBody = IOUtils.toString(httpResponse.getEntity().getContent(), response.getCharacterEncoding()).trim();
                     if(responseBody == null || responseBody.equals("")) {
-                        Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4-4/5) Error : Response empty");
+                        Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4-4/8) Error : Response empty");
                     }
                     PrintWriter out = response.getWriter();
                     out.print(responseBody);
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (5/5) Response sent");
+                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (8/8) Response sent");
 
                     out.flush();
                     out.close();
 
 
                 } else {
-                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4-4/5) Error : Status code not 200");
+                    Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (4-4/8) Error : Status code not 200");
                     returnExceptionMessage(response,
                         httpResponse.getStatusLine().getStatusCode(),
                         "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
@@ -300,7 +303,7 @@ public class HttpProxyServlet extends HttpServlet {
                 httpGet.releaseConnection();
 
             } else {
-                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3-4/5) Error : protocol not supported");
+                Log.warning(Geonet.GEONETWORK + ".httpproxy", request.hashCode() + " (3-4/8) Error : protocol not supported");
                 returnExceptionMessage(response, HttpStatus.SC_FORBIDDEN, "only HTTP(S) protocol supported");
             }
         } catch (UnknownHostException e) {
