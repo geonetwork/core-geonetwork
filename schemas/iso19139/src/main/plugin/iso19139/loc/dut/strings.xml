@@ -40,6 +40,7 @@
   <inspire>INSPIRE</inspire>
   <inspire_sds>SDS</inspire_sds>
 
+  <keywordFrom>Trefwoord van </keywordFrom>
   <resource>Bron</resource>
   <xml>XML</xml>
   <metadata>Metadata</metadata>
