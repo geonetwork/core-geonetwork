@@ -239,6 +239,38 @@ Configure here the list of fields to display using a table. This only applies to
               <col del=".."/>
             </row>
           </table>
+
+
+
+Tables can also contains subforms.
+
+Configuration is defined in the table config with a section element pointing to the element to add as a new row. In the following example, service operation are displayed in a table:
+
+* with 3 columns: operation name, DCP and connect point.
+
+* if parameters are defined, one subrow will be created per parameters
+
+* and if srv:parameters is in flatModeException, and extra row will be added to allow to add new parameters for the operation
+
+.. code-block:: xml
+
+    <table for="srv:SV_OperationMetadata">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="srv:DCP"/>
+        <col label="srv:connectPoint"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="srv:DCP"/>
+        <col xpath="srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"/>
+        <col del=".."/>
+        <section xpath="srv:SV_OperationMetadata/srv:parameters"
+                 or="parameters" in="srv:SV_OperationMetadata"/>
+      </row>
+    </table>
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -301,6 +333,7 @@ Table column.
             <xs:attribute name="del" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" ref="section"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

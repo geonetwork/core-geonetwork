@@ -1454,6 +1454,9 @@
                 <xsl:if test="@title">
                   <xsl:attribute name="title" select="@title"/>
                 </xsl:if>
+                <xsl:if test="@withLabel">
+                  <xsl:attribute name="class" select="'gn-table-label'"/>
+                </xsl:if>
 
                 <!-- TODO: Add move up/down control? -->
                 <xsl:choose>
@@ -1461,6 +1464,10 @@
                     <xsl:call-template name="render-form-field-control-remove">
                       <xsl:with-param name="editInfo" select="gn:element"/>
                     </xsl:call-template>
+                  </xsl:when>
+                  <!-- Form is inserted directly in the row. -->
+                  <xsl:when test="@type = 'form'">
+                   <xsl:copy-of select="*"/>
                   </xsl:when>
                   <xsl:when test="@readonly">
                     <xsl:value-of select="."/>
@@ -1498,8 +1505,6 @@
                         <!-- Call schema render mode of the field without label and controls.-->
                         <saxon:call-template name="{concat('dispatch-', $schema)}">
                           <xsl:with-param name="base" select="."/>
-                          <xsl:with-param name="overrideLabel"
-                                          select="''"/>
                         </saxon:call-template>
                       </xsl:otherwise>
                     </xsl:choose>
