@@ -1204,6 +1204,10 @@
 
     <lucene.version>4.9.0</lucene.version>
 
+    <!-- Jetty plugin port configuration -->
+    <jetty.port>8080</jetty.port>
+    <jetty.stop.port>8090</jetty.stop.port>
+
     <solr.version>6.0.1</solr.version>
     <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>
     <solr.port>8984</solr.port>

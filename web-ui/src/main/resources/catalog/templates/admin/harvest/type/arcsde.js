@@ -7,6 +7,7 @@ var gnHarvesterarcsde = {
             "@type": "arcsde",
             "owner": [""],
             "ownerGroup": [""],
+            "ownerUser": [""],
             "site":   {
               "name": "",
               "uuid": "",
@@ -48,6 +49,7 @@ var gnHarvesterarcsde = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <server>' + h.site.server + '</server>'

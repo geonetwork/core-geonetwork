@@ -422,6 +422,32 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     public synchronized void update(Element node) throws BadInputEx, SQLException, SchedulerException {
         doUpdate(id, node);
 
+        //Make sure privileges and ownership are updated too
+        try{
+            if(!StringUtils.isEmpty(this.getParams().getOwnerIdUser()) &&
+                    StringUtils.isNumeric(this.getParams().getOwnerIdUser())) {
+                final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+                final Specifications<Metadata> ownedByHarvester = Specifications.where(MetadataSpecs.hasHarvesterUuid(getParams().getUuid()));
+        
+                Integer owner = Integer.valueOf(this.getParams().getOwnerIdUser());
+                
+                List<String> toIndex = new LinkedList<String>();
+                for (Integer id : metadataRepository.findAllIdsBy(ownedByHarvester)) {
+                    Metadata md = metadataRepository.findOne(id);
+                    if(!md.getSourceInfo().getOwner().equals(owner)) {
+                        md.getSourceInfo().setOwner(owner);
+                        metadataRepository.save(md);
+                        toIndex.add(id.toString());
+                    }
+                }
+                metadataRepository.flush();
+                
+                dataMan.indexMetadata(toIndex);
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
         if (status == Status.ACTIVE) {
             //--- stop executor
             doUnschedule();
@@ -765,6 +791,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
          * Group selected by user who created or updated this node.
          */
         settingMan.add(ID_PREFIX + siteId, "ownerGroup", params.getOwnerIdGroup());
+        /**
+         * Group selected by user who owns the records.
+         */
+        settingMan.add(ID_PREFIX + siteId, "ownerUser", params.getOwnerIdUser());
 
         String useAccId = settingMan.add(ID_PREFIX + siteId, "useAccount", params.isUseAccount());
 

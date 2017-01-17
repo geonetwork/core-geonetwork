@@ -325,8 +325,8 @@
           res[profile] = [];
           if (groups != null) {
             for (var i = 0; i < groups.length; i++) {
-              if (groups[i].profile == profile) {
-                res[profile].push(groups[i]);
+              if (groups[i].id.profile == profile) {
+                res[profile].push(groups[i].group);
               }
             }
           }
@@ -608,6 +608,27 @@
       loadGroups();
       loadUsers();
     }]);
+
+  module.filter('loggedUserIsUseradminOrMore', function () {
+    var searchGroup = function (g, userAdminGroups) {
+      var found = false;
+      for (var i = 0; i < userAdminGroups.length && !found; i++) {
+        found = userAdminGroups[i]["@id"] == g.id;
+      }
+      return found;
+    };
+
+    return function (groups, userAdminGroups, isAdmin) {
+      var filtered = [];
+      angular.forEach(groups, function (g) {
+        if (isAdmin || searchGroup(g, userAdminGroups)) {
+          filtered.push(g);
+        }
+      });
+
+      return filtered;
+    };
+  });
 
 })();
 
