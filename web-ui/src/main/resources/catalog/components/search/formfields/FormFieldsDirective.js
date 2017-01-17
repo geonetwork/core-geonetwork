@@ -222,35 +222,36 @@
       }])
 
 
-    
-    
-    .directive('usersCombo', ['$http', function ($http) {
-      return {
 
-        restrict: 'A',
-        templateUrl: '../../catalog/components/search/formfields/' +
-        'partials/usersCombo.html',
-        scope: {
-          ownerUser: '=',
-          users: '='
-        },
 
-        link: function (scope, element, attrs) {
-          var url = 'info?_content_type=json&type=users';
-          
-          $http.get(url, {cache: true}).success(function (data) {            
+      .directive('usersCombo', ['$http', function($http) {
+        return {
+
+          restrict: 'A',
+          templateUrl: '../../catalog/components/search/formfields/' +
+              'partials/usersCombo.html',
+          scope: {
+            ownerUser: '=',
+            users: '='
+          },
+
+          link: function(scope, element, attrs) {
+            var url = 'info?_content_type=json&type=users';
+
+            $http.get(url, {cache: true}).success(function(data) {
               scope.users = data !== 'null' ? data.users : null;
 
-            // Select by default the first group.
-            if ((angular.isUndefined(scope.ownerUser) || scope.ownerUser === '')
-              && data.users && data.users.length > 0) {
-              scope.ownerUser = data.users[0]['@id'];
-            }
-          });
-        }
+              // Select by default the first group.
+              if ((angular.isUndefined(scope.ownerUser) ||
+                  scope.ownerUser === '') &&
+                  data.users && data.users.length > 0) {
+                scope.ownerUser = data.users[0]['@id'];
+              }
+            });
+          }
 
-      };
-    }])
+        };
+      }])
 
       .directive('groupsCombo', ['$http', function($http) {
         return {

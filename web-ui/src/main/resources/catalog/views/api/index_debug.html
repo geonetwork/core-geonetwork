@@ -75,16 +75,31 @@
     config = tokens ? tokens[1] : undefined,
     defaultConfig = {
       "mods": {
+        "header": {
+          "enabled": true,
+          "languages": {
+            "eng": "en",
+            "dut": "du",
+            "fre": "fr",
+            "ger": "ge",
+            "kor": "ko",
+            "spa": "es",
+            "cze": "cz",
+            "cat": "ca",
+            "fin": "fi",
+            "ice": "is"
+          }
+        },
         "home": {
           "enabled": true,
-          "appUrl": "#/home",
+          "appUrl": "#/home"
         },
         "search": {
           "enabled": true,
           "appUrl": "#/search",
           "hitsperpageValues": [10, 50, 100],
           "paginationInfo": {
-            "hitsPerPage": 10
+            "hitsPerPage": 20
           },
           "facetsSummaryType": "details",
           "sortbyValues": [{
@@ -119,9 +134,7 @@
           "formatter": {
             "list": [{
               "label": "full",
-              "url" : function(md) {
-                return '../api/records/' + md.getUuid() + '/formatters/xsl-view?root=div&view=advanced';
-              }
+              "url" : "../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&view=advanced"
             }]
           },
           "linkTypes": {
@@ -157,12 +170,15 @@
           }]
         },
         "editor": {
+          "enabled": true,
           "appUrl": "../../srv/eng/catalog.edit"
         },
         "admin": {
-            "appUrl": "../../srv/eng/admin.console"
+          "enabled": true,
+          "appUrl": "../../srv/eng/admin.console"
         },
         "signin": {
+          "enabled": true,
           "appUrl": "../../srv/eng/catalog.signin"
         },
         "signout": {

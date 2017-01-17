@@ -15,21 +15,21 @@
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
-      <li>
+      <li data-ng-if="gnCfg.mods.home.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
                data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"/>
           <span class="visible-lg">{{info['system/site/name']}}</span>
         </a>
       </li>
-      <li>
+      <li data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
            title="{{'search' | translate}}">
           <i class="fa fa-search"></i>
           <span class="visible-lg" data-translate="">search</span>
         </a>
       </li>
-      <li data-ng-if="isMapViewerEnabled">
+      <li data-ng-if="gnCfg.mods.map.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.map.appUrl}}"
            title="{{'map' | translate}}">
           <i class="fa fa-globe"></i>
@@ -38,14 +38,16 @@
           <span data-gnv-layer-indicator=""/>
         </a>
       </li>
-      <li data-ng-show="authenticated && user.isEditorOrMore()">
+      <li data-ng-if="gnCfg.mods.editor.enabled"
+          data-ng-show="authenticated && user.isEditorOrMore()">
         <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}">
           <i class="fa fa-plus"></i>
           <span class="visible-lg" data-translate="">contribute</span>
         </a>
       </li>
-      <li class="dropdown" data-ng-show="authenticated && user.isEditorOrMore()">
+      <li data-ng-if="gnCfg.mods.editor.enabled"
+          class="dropdown" data-ng-show="authenticated && user.isEditorOrMore()">
         <a href="" class="dropdown-toggle" data-toggle="dropdown"
            role="button" aria-expanded="false"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
@@ -73,14 +75,16 @@
           </li>
         </ul>
       </li>
-      <li data-ng-show="user.isReviewerOrMore()">
+      <li data-ng-if="gnCfg.mods.admin.enabled"
+          data-ng-show="user.isReviewerOrMore()">
         <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}"
            title="{{'adminConsole' | translate}}">
           <i class="fa fa-th"></i>
           <span class="visible-lg" data-translate="">adminConsole</span>
         </a>
       </li>
-      <li class="dropdown" data-ng-show="user.isReviewerOrMore() && viewMenuAdmin">
+      <li data-ng-if="gnCfg.mods.admin.enabled"
+          class="dropdown" data-ng-show="user.isReviewerOrMore() && viewMenuAdmin">
         <a href="" class="dropdown-toggle" data-toggle="dropdown"
            role="button" aria-expanded="false"><span class="caret"></span></a>
         <ul class="dropdown-menu" role="menu">
@@ -101,7 +105,8 @@
            data-lang-labels="langLabels"/>
     </form>
 
-    <ul class="nav navbar-nav navbar-right">
+    <ul data-ng-if="gnCfg.mods.signin.enabled"
+        class="nav navbar-nav navbar-right">
       <li data-ng-show="authenticated">
         <a href="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
            title="{{'userDetails' | translate}}"

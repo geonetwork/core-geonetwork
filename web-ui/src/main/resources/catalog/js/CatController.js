@@ -40,6 +40,123 @@
     locale: {},
     isMapViewerEnabled: false,
     requireProxy: [],
+    gnCfg: {
+      'mods': {
+        'header': {
+          'enabled': true,
+          'languages': {
+            'eng': 'en',
+            'dut': 'du',
+            'fre': 'fr',
+            'ger': 'ge',
+            'kor': 'ko',
+            'spa': 'es',
+            'cze': 'cz',
+            'cat': 'ca',
+            'fin': 'fi',
+            'ice': 'is'
+          }
+        },
+        'home': {
+          'enabled': true,
+          'appUrl': '#/home'
+        },
+        'search': {
+          'enabled': true,
+          'appUrl': '#/search',
+          'hitsperpageValues': [10, 50, 100],
+          'paginationInfo': {
+            'hitsPerPage': 20
+          },
+          'facetsSummaryType': 'details',
+          'sortbyValues': [{
+            'sortBy': 'relevance',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'changeDate',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'title',
+            'sortOrder': 'reverse'
+          }, {
+            'sortBy': 'rating',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'popularity',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'denominatorDesc',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'denominatorAsc',
+            'sortOrder': 'reverse'
+          }],
+          'sortBy': 'relevance',
+          'resultViewTpls': [{
+            'tplUrl': '../../catalog/components/' +
+                'search/resultsview/partials/viewtemplates/grid.html',
+            'tooltip': 'Grid',
+            'icon': 'fa-th'
+          }],
+          'resultTemplate': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/grid.html',
+          'formatter': {
+            'list': [{
+              'label': 'full',
+              'url' : '../api/records/{{md.getUuid()}}/' +
+                  'formatters/xsl-view?root=div&view=advanced'
+            }]
+          },
+          'linkTypes': {
+            'links': ['LINK', 'kml'],
+            'downloads': ['DOWNLOAD'],
+            'layers': ['OGC'],
+            'maps': ['ows']
+          }
+        },
+        'map': {
+          'enabled': true,
+          'appUrl': '#/map',
+          'is3DModeAllowed': true,
+          'storage': 'sessionStorage',
+          'map': '../../map/config-viewer.xml',
+          'listOfServices': {
+            'wms': [{'name': 'BRGM',
+              'url': 'http://geoservices.brgm.fr/geologie'}],
+            'wmts': []},
+          'useOSM': true,
+          'context': '',
+          'layer': {
+            'url': 'http://www2.demis.nl/mapserver/wms.asp?',
+            'layers': 'Countries',
+            'version': '1.1.1'
+          },
+          'projection': 'EPSG:3857',
+          'projectionList': [{
+            'code': 'EPSG:4326',
+            'label': 'WGS84 (EPSG:4326)'
+          }, {
+            'code': 'EPSG:3857',
+            'label': 'Google mercator (EPSG:3857)'
+          }]
+        },
+        'editor': {
+          'enabled': true,
+          'appUrl': '../../srv/eng/catalog.edit'
+        },
+        'admin': {
+          'enabled': true,
+          'appUrl': '../../srv/eng/admin.console'
+        },
+        'signin': {
+          'enabled': true,
+          'appUrl': '../../srv/eng/catalog.signin'
+        },
+        'signout': {
+          'appUrl': '../../signout'
+        }
+      }
+    },
     gnUrl: '',
     docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
     //docUrl: '../../doc/',
@@ -54,18 +171,7 @@
   });
 
   module.constant('gnLangs', {
-    langs: {
-      'eng': 'en',
-      'dut': 'du',
-      'fre': 'fr',
-      'ger': 'ge',
-      'kor': 'ko',
-      'spa': 'es',
-      'cze': 'cz',
-      'cat': 'ca',
-      'fin': 'fi',
-      'ice': 'is'
-    },
+    langs: {},
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang] || 'en';
     },
@@ -124,8 +230,8 @@
 
       // TODO: set node id in settings
       $scope.nodeId = tokens[4];
-      // TODO : get list from server side
-      $scope.langs = gnLangs.langs;
+      $scope.langs = gnLangs.langs =
+          gnGlobalSettings.gnCfg.mods.header.languages;
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',

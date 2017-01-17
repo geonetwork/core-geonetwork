@@ -40,16 +40,26 @@
         link: function(scope, element, attrs) {
           scope.jsonConfig = angular.fromJson(scope.config);
 
+          scope.sortOrderChoices = ['', 'reverse'];
 
           // Add an item to an array
           // or duplicate last item multiplied by 10 (eg. hitsPerPage)
           scope.addItem = function(array, item) {
-            array.push(item);
+            if (angular.isArray(array)) {
+              array.push(item);
+            } else if (angular.isObject(array)) {
+              var key = Object.keys(item)[0];
+              array[key] = item[key];
+            }
           };
 
           // Remove item from array
           scope.removeItem = function(array, index) {
-            array.splice(index, 1);
+            if (angular.isArray(array)) {
+              array.splice(index, 1);
+            } else if (angular.isObject(array)) {
+              delete array[index];
+            }
           };
 
         }

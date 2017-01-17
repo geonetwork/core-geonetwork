@@ -609,18 +609,18 @@
       loadUsers();
     }]);
 
-  module.filter('loggedUserIsUseradminOrMore', function () {
-    var searchGroup = function (g, userAdminGroups) {
+  module.filter('loggedUserIsUseradminOrMore', function() {
+    var searchGroup = function(g, userAdminGroups) {
       var found = false;
       for (var i = 0; i < userAdminGroups.length && !found; i++) {
-        found = userAdminGroups[i]["@id"] == g.id;
+        found = userAdminGroups[i]['@id'] == g.id;
       }
       return found;
     };
 
-    return function (groups, userAdminGroups, isAdmin) {
+    return function(groups, userAdminGroups, isAdmin) {
       var filtered = [];
-      angular.forEach(groups, function (g) {
+      angular.forEach(groups, function(g) {
         if (isAdmin || searchGroup(g, userAdminGroups)) {
           filtered.push(g);
         }
