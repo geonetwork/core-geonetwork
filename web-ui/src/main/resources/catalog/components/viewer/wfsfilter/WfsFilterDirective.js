@@ -458,6 +458,8 @@
               angular.element(boxElt).scope().clear();
             }
 
+            scope.layer.set('esConfig', null);
+
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
                 then(function(resp) {
@@ -483,30 +485,33 @@
           scope.filterWMS = function() {
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
+            var layer = scope.layer;
+
             solrObject.pushState();
+            layer.set('esConfig', solrObject.getState());
             if (!extentFilter) {
-              scope.layer.setExtent();
+              layer.setExtent();
             }
             else {
-              scope.layer.setExtent(
+              layer.setExtent(
                   ol.proj.transformExtent(extentFilter, 'EPSG:4326',
                       scope.map.getView().getProjection()));
 
             }
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
+              wfsFilterService.getSldUrl(sldConfig, layer.get('url'),
                   ftName).success(function(sldURL) {
                 // Do not activate it
                 // Usually return 414 Request-URI Too Large
                 var useSldBody = false;
                 if (useSldBody) {
                   $http.get(sldURL).then(function(response) {
-                    scope.layer.getSource().updateParams({
+                    layer.getSource().updateParams({
                       SLD_BODY: response.data
                     });
                   });
                 } else {
-                  scope.layer.getSource().updateParams({
+                  layer.getSource().updateParams({
                     SLD: sldURL
                   });
                 }
@@ -514,7 +519,7 @@
                 defer.resolve();
               });
             } else {
-              scope.layer.getSource().updateParams({
+              layer.getSource().updateParams({
                 SLD: null
               });
               defer.resolve();

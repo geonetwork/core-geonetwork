@@ -672,7 +672,7 @@
       };
 
       if (qParams.geometry) {
-        params.bool.filter = {
+        params.query.bool.filter = {
           'geo_shape': {
             'geom': {
               'shape': {
