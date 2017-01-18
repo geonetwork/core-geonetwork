@@ -62,10 +62,13 @@
     /** State of the facets of the current search */
     $scope.currentFacets = [];
 
-    /** Object were are stored result search information */
+    /** Object where are stored result search information */
     $scope.searchResults = {
       records: [],
-      count: -1
+      count: -1,
+      selectionBucket:
+          $scope.searchObj.selectionBucket ||
+          (Math.random() + '').replace('.', '')
     };
 
     $scope.searching = 0;
@@ -156,6 +159,8 @@
             }
           }
         }
+        params.bucket = $scope.searchResults.selectionBucket || 'metadata';
+
         gnSearchManagerService.gnSearch(finalParams).then(
             function(data) {
               $scope.searching--;

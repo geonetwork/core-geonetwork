@@ -152,6 +152,8 @@
       // TODO: Previous record should be stored on the client side
       $scope.mdView = mdView;
       gnMdView.initMdView();
+
+
       $scope.goToSearch = function (any) {
         $location.path('/search').search({'any': any});
       };
@@ -278,10 +280,13 @@
         }
       });
 
+
+
       angular.extend($scope.searchObj, {
         advancedMode: false,
         from: 1,
         to: 30,
+        selectionBucket: 's101',
         viewerMap: viewerMap,
         searchMap: searchMap,
         mapfieldOption: {

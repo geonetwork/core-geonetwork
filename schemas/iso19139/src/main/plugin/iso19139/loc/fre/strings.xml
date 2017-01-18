@@ -53,6 +53,7 @@
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
 
+  <keywordFrom>Mots clés - </keywordFrom>
   <!-- XSD error translation -->
   <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
   <onElementOf> Un des éléments suivants </onElementOf>

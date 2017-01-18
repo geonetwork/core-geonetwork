@@ -64,9 +64,9 @@
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
           $http.get('../api/regions?categoryId=' +
-              'http://geonetwork-opensource.org/regions%23country', {}, {
-                cache: true
-              }).success(function(response) {
+            'http://geonetwork-opensource.org/regions%23country', {}, {
+            cache: true
+          }).success(function(response) {
             var data = response.region;
 
             // Compute default name and add a
@@ -109,17 +109,17 @@
         replace: true,
         scope: true,
         templateUrl: '../../catalog/components/utility/' +
-            'partials/regionpicker.html',
+        'partials/regionpicker.html',
         link: function(scope, element, attrs) {
           scope.gnRegionService = gnRegionService;
 
           var addGeonames = !attrs['disableGeonames'];
-
+          scope.regionTypes = [];
           /**
-          * Load list on init to fill the dropdown
-          */
+           * Load list on init to fill the dropdown
+           */
           gnRegionService.loadList().then(function(data) {
-            scope.regionTypes = data;
+            scope.regionTypes = angular.copy(data);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: 'Geonames',
@@ -145,14 +145,14 @@
           processReport: '=gnBatchReport'
         },
         templateUrl: '../../catalog/components/utility/' +
-            'partials/batchreport.html',
+        'partials/batchreport.html',
         link: function(scope, element, attrs) {
           scope.$watch('processReport', function(n, o) {
             if (n && n != o) {
               scope.processReportWarning = n.notFound != 0 ||
-                  n.notOwner != 0 ||
-                  n.notProcessFound != 0 ||
-                  n.metadataErrorReport.metadataErrorReport.length != 0;
+                n.notOwner != 0 ||
+                n.notProcessFound != 0 ||
+                n.metadataErrorReport.metadataErrorReport.length != 0;
             }
           });
         }
@@ -364,12 +364,12 @@
               if (date.isValid()) {
                 var fromNow = date.fromNow();
                 var formattedDate = scope.format ?
-                    date.format(scope.format) :
-                    date.toString();
+                  date.format(scope.format) :
+                  date.toString();
                 scope.value = scope.fromNow !== undefined ?
-                    fromNow : formattedDate;
+                  fromNow : formattedDate;
                 scope.title = scope.fromNow !== undefined ?
-                    formattedDate : fromNow;
+                  formattedDate : fromNow;
               }
             }
           });
@@ -390,62 +390,62 @@
    *
    */
   module.directive('gnMetadataPicker',
-      ['gnUrlUtils', 'gnSearchManagerService',
-       function(gnUrlUtils, gnSearchManagerService) {
-         return {
-           restrict: 'A',
-           link: function(scope, element, attrs) {
-             element.attr('placeholder', '...');
-             var displayField = attrs['displayField'] || 'defaultTitle';
-             var valueField = attrs['valueField'] || displayField;
-             var params = angular.fromJson(element.attr('params') || '{}');
+    ['gnUrlUtils', 'gnSearchManagerService',
+      function(gnUrlUtils, gnSearchManagerService) {
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            element.attr('placeholder', '...');
+            var displayField = attrs['displayField'] || 'defaultTitle';
+            var valueField = attrs['valueField'] || displayField;
+            var params = angular.fromJson(element.attr('params') || '{}');
 
-             var url = gnUrlUtils.append('q?_content_type=json',
-             gnUrlUtils.toKeyValue(angular.extend({
-               _isTemplate: 'n',
-               any: '*QUERY*',
-               sortBy: 'title',
-               fast: 'index'
-             }, params)
-             )
-             );
-             var parseResponse = function(data) {
-               var records = gnSearchManagerService.format(data);
-               return records.metadata;
-             };
-             var source = new Bloodhound({
-               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-               queryTokenizer: Bloodhound.tokenizers.whitespace,
-               limit: 200,
-               remote: {
-                 wildcard: 'QUERY',
-                 url: url,
-                 filter: parseResponse
-               }
-             });
-             source.initialize();
-             $(element).typeahead({
-               minLength: 0,
-               highlight: true
-             }, {
-               name: 'metadata',
-               displayKey: function(data) {
-                 if (valueField === 'uuid') {
-                   return data['geonet:info'].uuid;
-                 } else {
-                   return data[valueField];
-                 }
-               },
-               source: source.ttAdapter(),
-               templates: {
-                 suggestion: function(datum) {
-                   return '<p>' + datum[displayField] + '</p>';
-                 }
-               }
-             });
-           }
-         };
-       }]);
+            var url = gnUrlUtils.append('q?_content_type=json',
+              gnUrlUtils.toKeyValue(angular.extend({
+                  _isTemplate: 'n',
+                  any: '*QUERY*',
+                  sortBy: 'title',
+                  fast: 'index'
+                }, params)
+              )
+            );
+            var parseResponse = function(data) {
+              var records = gnSearchManagerService.format(data);
+              return records.metadata;
+            };
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              limit: 200,
+              remote: {
+                wildcard: 'QUERY',
+                url: url,
+                filter: parseResponse
+              }
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'metadata',
+              displayKey: function(data) {
+                if (valueField === 'uuid') {
+                  return data['geonet:info'].uuid;
+                } else {
+                  return data[valueField];
+                }
+              },
+              source: source.ttAdapter(),
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum[displayField] + '</p>';
+                }
+              }
+            });
+          }
+        };
+      }]);
 
   /**
    * @name gn_utility.directive:gnClickToggle
@@ -466,18 +466,18 @@
       return {
         restrict: 'A',
         template: '<button title="{{\'gnToggle\' | translate}}">' +
-            '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
-            '</button>',
+        '<i class="fa fa-fw fa-angle-double-up"/>&nbsp;' +
+        '</button>',
         link: function linkFn(scope, element, attr) {
           var selector = attr['gnSectionToggle'] ||
               'form > fieldset > legend[data-gn-slide-toggle]',
-              event = attr['event'] || 'click';
+            event = attr['event'] || 'click';
           element.on('click', function() {
             $(selector).each(function(idx, elem) {
               $(elem).trigger(event);
             });
             $(this).find('i').toggleClass(
-                'fa-angle-double-up fa-angle-double-down');
+              'fa-angle-double-up fa-angle-double-down');
           });
         }
       };
@@ -496,55 +496,55 @@
    *
    */
   module.directive('gnDirectoryEntryPicker',
-      ['gnUrlUtils', 'gnSearchManagerService',
-       function(gnUrlUtils, gnSearchManagerService) {
-         return {
-           restrict: 'A',
-           link: function(scope, element, attrs) {
-             element.attr('placeholder', '...');
+    ['gnUrlUtils', 'gnSearchManagerService',
+      function(gnUrlUtils, gnSearchManagerService) {
+        return {
+          restrict: 'A',
+          link: function(scope, element, attrs) {
+            element.attr('placeholder', '...');
 
-             var url = gnUrlUtils.append('q@json',
-             gnUrlUtils.toKeyValue({
-               _isTemplate: 's',
-               any: '*QUERY*',
-               _root: 'gmd:CI_ResponsibleParty',
-               sortBy: 'title',
-               sortOrder: 'reverse',
-               resultType: 'subtemplates',
-               fast: 'index'
-             })
-             );
-             var parseResponse = function(data) {
-               var records = gnSearchManagerService.format(data);
-               return records.metadata;
-             };
-             var source = new Bloodhound({
-               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-               queryTokenizer: Bloodhound.tokenizers.whitespace,
-               limit: 200,
-               remote: {
-                 wildcard: 'QUERY',
-                 url: url,
-                 filter: parseResponse
-               }
-             });
-             source.initialize();
-             $(element).typeahead({
-               minLength: 0,
-               highlight: true
-             }, {
-               name: 'directoryEntry',
-               displayKey: 'title',
-               source: source.ttAdapter(),
-               templates: {
-                 suggestion: function(datum) {
-                   return '<p>' + datum.title + '</p>';
-                 }
-               }
-             });
-           }
-         };
-       }]);
+            var url = gnUrlUtils.append('q@json',
+              gnUrlUtils.toKeyValue({
+                _isTemplate: 's',
+                any: '*QUERY*',
+                _root: 'gmd:CI_ResponsibleParty',
+                sortBy: 'title',
+                sortOrder: 'reverse',
+                resultType: 'subtemplates',
+                fast: 'index'
+              })
+            );
+            var parseResponse = function(data) {
+              var records = gnSearchManagerService.format(data);
+              return records.metadata;
+            };
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              limit: 200,
+              remote: {
+                wildcard: 'QUERY',
+                url: url,
+                filter: parseResponse
+              }
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'directoryEntry',
+              displayKey: 'title',
+              source: source.ttAdapter(),
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.title + '</p>';
+                }
+              }
+            });
+          }
+        };
+      }]);
 
   /**
    * @ngdoc directive
@@ -559,7 +559,7 @@
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
     var testObj = angular.element('<textarea ' +
-        ' style="height: 0px; position: absolute; visibility: hidden;"/>');
+      ' style="height: 0px; position: absolute; visibility: hidden;"/>');
     angular.element(window.document.body).append(testObj);
 
     return {
@@ -574,8 +574,8 @@
           // or its parent if hidden (eg. multilingual field
           // on load).
           var height,
-              width = element.is(':hidden') ?
-              element.parent().width() || defaultWidth :
+            width = element.is(':hidden') ?
+            element.parent().width() || defaultWidth :
               element[0].clientWidth;
           testObj.css('width', width + 'px').val(element.val());
           height = Math.min(testObj[0].scrollHeight, maxHeight);
@@ -658,7 +658,7 @@
               element.addClass('disabled');
               icon.addClass('hidden');
               spinner = element.
-                  prepend('<i class="fa fa-spinner fa-spin"></i>');
+              prepend('<i class="fa fa-spinner fa-spin"></i>');
             };
             var done = function() {
               running = false;
@@ -709,7 +709,7 @@
           if (o != n) {
             $timeout(function() {
               o ? $element.focus() :
-                  $element.blur();
+                $element.blur();
             });
           }
         });
@@ -780,48 +780,111 @@
         restrict: 'A',
         scope: {
           date: '=gnBootstrapDatepicker',
-          dates: '=dateAvailable'
+          dates: '=dateAvailable',
+          onChangeFn: '&?'
         },
-        link: function(scope, element, attrs, ngModelCtrl) {
+        link: function(scope, element, attrs) {
 
-          var available = function(date) {
-            if (scope.dates[date.getFullYear()] &&
-                scope.dates[date.getFullYear()][date.getMonth()] &&
-                $.inArray(date.getDate(),
-                    scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
-              return true;
-            } else {
-              return false;
-            }
-          };
-
-          var limits;
-          if (scope.dates) {
-            limits = getMaxInProp(scope.dates);
-
+          var available, limits;
+          var rendered = false;
+          var isRange = ($(element).find('input').length == 2);
+          if(isRange && ! scope.date) {
+            scope.date = {};
           }
 
-          $(element).datepicker(angular.isDefined(scope.dates) ? {
-            container: '.g',
-            beforeShowDay: function(dt, a, b) {
-              return available(dt);
-            },
-            startDate: limits.min,
-            endDate: limits.max
-          } : {}).on('changeDate', function(ev) {
-            // view -> model
-            scope.$apply(function() {
-              scope.date = $(element).find('input')[0].value;
-            });
+          scope.$watch('dates', function(dates, old) {
+              init();
           });
 
-          // model -> view
-          scope.$watch('date', function(v) {
-            if (angular.isUndefined(v)) {
-              v = '';
+          var init = function() {
+            if(scope.dates) {
+              // Time epoch
+              if(angular.isArray(scope.dates) &&
+                Number.isInteger(scope.dates[0])) {
+
+                limits = {
+                  min: new Date(Math.min.apply(null, scope.dates)),
+                  max: new Date(Math.max.apply(null, scope.dates))
+                };
+
+                scope.times = scope.dates.map(function(time) {
+                  return moment(time).format('YYYY-MM-DD');
+                });
+
+                available = function(date) {
+                  return scope.times.indexOf(
+                      moment(date).format('YYYY-MM-DD')) >= 0;
+                };
+              }
+
+              // ncwms dates object (year/month/day)
+              else if(angular.isObject(scope.dates)) {
+
+                limits = getMaxInProp(scope.dates);
+
+                available = function(date) {
+                  if (scope.dates[date.getFullYear()] &&
+                    scope.dates[date.getFullYear()][date.getMonth()] &&
+                    $.inArray(date.getDate(),
+                      scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                };
+              }
             }
-            $(element).find('input')[0].value = v;
-          });
+
+            if(rendered) {
+              $(element).datepicker('destroy');
+            }
+            $(element).datepicker(angular.isDefined(scope.dates) ? {
+              beforeShowDay: function(dt, a, b) {
+                return available(dt);
+              },
+              startDate: limits.min,
+              endDate: limits.max,
+              clearBtn: true
+              } : {}).on('changeDate clearDate', function(ev) {
+              // view -> model
+              scope.$apply(function() {
+                if(!isRange) {
+
+                  scope.date = $(element).find('input')[0].value;
+                }
+                else {
+                  scope.date.from = $(element).find('input')[0].value;
+                  scope.date.to = $(element).find('input')[1].value;
+
+                }
+              });
+            });
+            rendered = true;
+          };
+
+          // model -> view
+          if(!isRange) {
+            scope.$watch('date', function(v,o) {
+              if (angular.isDefined(v) && angular.isFunction(scope.onChangeFn)) {
+                scope.onChangeFn();
+              }
+              if(v != o) {
+                $(element).find('input')[0].value = v || '';
+
+              }
+            });
+          }
+          else {
+            scope.$watchCollection('date', function(v,o) {
+              if (angular.isDefined(v) && v.to && v.from && angular.isFunction(scope.onChangeFn)) {
+                scope.onChangeFn();
+              }
+              if(v != o) {
+                $(element).find('input')[0].value = v.from || '';
+                $(element).find('input')[1].value = v.to || '';
+              }
+            });
+          }
         }
       };
     }]);
@@ -849,7 +912,7 @@
         restrict: 'A',
         scope: {items: '&'},
         templateUrl: '../../catalog/components/utility/' +
-            'partials/paginationlist.html',
+        'partials/paginationlist.html',
         replace: false,
         compile: function compile(tElement, tAttrs) {
           var cacheId = tAttrs.cache ? tAttrs.cache + '.paginator' : '';
@@ -861,8 +924,8 @@
                 currentPage: 0
               };
               scope.paginator = cacheId ?
-                  gnPaginationListStateCache.get(cacheId) || defaultSettings :
-                  defaultSettings;
+              gnPaginationListStateCache.get(cacheId) || defaultSettings :
+                defaultSettings;
               if (cacheId) {
                 gnPaginationListStateCache.put(cacheId, scope.paginator);
               }
@@ -872,7 +935,7 @@
               scope.isLastPage = function() {
                 if (scope.items()) {
                   return scope.paginator.currentPage >=
-                      scope.items().length / scope.paginator.pageSize - 1;
+                    scope.items().length / scope.paginator.pageSize - 1;
                 } else {
                   return false;
                 }
@@ -893,17 +956,17 @@
               scope.numberOfPages = function() {
                 if (scope.items()) {
                   return Math.ceil(scope.items().length /
-                      scope.paginator.pageSize);
+                    scope.paginator.pageSize);
                 } else {
                   return 0;
                 }
               };
               scope.$watch('paginator.pageSize',
-                  function(newValue, oldValue) {
-                    if (newValue != oldValue) {
-                      scope.firstPage();
-                    }
-                  });
+                function(newValue, oldValue) {
+                  if (newValue != oldValue) {
+                    scope.firstPage();
+                  }
+                });
 
               // ---- Functions available in parent scope -----
 
@@ -915,7 +978,7 @@
               scope.$parent.pageItems = function() {
                 if (angular.isArray(scope.items())) {
                   var start = scope.paginator.currentPage *
-                      scope.paginator.pageSize;
+                    scope.paginator.pageSize;
                   var limit = scope.paginator.pageSize;
                   return scope.items().slice(start, start + limit);
                 } else {
@@ -950,16 +1013,16 @@
             // create some new html elements to hold the separate info
             var firstSpan = $compile('<span>' + firstPart + '</span>')(scope);
             var secondSpan = $compile('<span ng-if="collapsed">' +
-                secondPart + '</span>')(scope);
+              secondPart + '</span>')(scope);
             var moreIndicatorSpan = $compile(
-                '<span ng-if="!collapsed">... </span>')(scope);
+              '<span ng-if="!collapsed">... </span>')(scope);
             var lineBreak = $compile('<br ng-if="collapsed">')(scope);
             var toggleButton = $compile(
-                '<span class="collapse-text-toggle" ng-click="toggle()">' +
-                '  <span ng-show="collapsed" translate>less</span>' +
-                '  <span ng-show="!collapsed" translate>more</span>' +
-                '</span>'
-                )(scope);
+              '<span class="collapse-text-toggle" ng-click="toggle()">' +
+              '  <span ng-show="collapsed" translate>less</span>' +
+              '  <span ng-show="!collapsed" translate>more</span>' +
+              '</span>'
+            )(scope);
             // remove the current contents of the element
             // and add the new ones we created
             element.empty();
@@ -1010,23 +1073,23 @@
       restrict: 'A',
       link: function(scope, element, attrs) {
         var link = attrs.gnActiveTbItem, href,
-            isCurrentService = false;
+          isCurrentService = false;
 
         // Insert debug mode between service and route
         if (link.indexOf('#') !== -1) {
           var tokens = link.split('#');
           isCurrentService = window.location.pathname.
-              match('.*' + tokens[0] + '$') !== null;
+            match('.*' + tokens[0] + '$') !== null;
           href =
-              (isCurrentService ? '' :
+            (isCurrentService ? '' :
               tokens[0] + (scope.isDebug ? '?debug' : '')
-              ) + '#' +
-              tokens[1];
+            ) + '#' +
+            tokens[1];
         } else {
           isCurrentService = window.location.pathname.
-              match('.*' + link + '$') !== null;
+            match('.*' + link + '$') !== null;
           href =
-              isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
+            isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
 
         }
 
@@ -1039,7 +1102,7 @@
           // Ignore the service parameters and
           // check url contains path
           var isActive = $location.absUrl().replace(/\?.*#/, '#').
-              match('.*' + link + '.*') !== null;
+            match('.*' + link + '.*') !== null;
 
           if (isActive) {
             element.parent().addClass('active');
@@ -1168,26 +1231,26 @@
 
         $timeout(function() {
           var className = (attrs['fixedHeight'] != 'false') ?
-              'popover-dropdown popover-dropdown-' + content.find('li').length :
-              '';
+          'popover-dropdown popover-dropdown-' + content.find('li').length :
+            '';
           button.popover({
             animation: false,
             container: '[gn-main-viewer]',
             placement: attrs['placement'] || 'bottom',
             content: ' ',
             template:
-                '<div class="popover ' + className + '">' +
-                '  <div class="arrow"></div>' +
-                '  <h3 class="popover-title"></h3>' +
-                '  <div class="popover-content"></div>' +
-                '</div>'
+            '<div class="popover ' + className + '">' +
+            '  <div class="arrow"></div>' +
+            '  <h3 class="popover-title"></h3>' +
+            '  <div class="popover-content"></div>' +
+            '</div>'
           });
         }, 1);
 
         button.on('shown.bs.popover', function() {
           var $tip = button.data('bs.popover').$tip;
           content.css('display', 'inline').appendTo(
-              $tip.find('.popover-content')
+            $tip.find('.popover-content')
           );
         });
         button.on('hidden.bs.popover', function() {
@@ -1197,11 +1260,11 @@
         // can’t use dismiss boostrap option: incompatible with opacity slider
         $('body').on('mousedown click', function(e) {
           if ((button.data('bs.popover') && button.data('bs.popover').$tip) &&
-              (button[0] != e.target) &&
-              (!$.contains(button[0], e.target)) &&
-              (
-              $(e.target).parents('.popover')[0] !=
-              button.data('bs.popover').$tip[0])
+            (button[0] != e.target) &&
+            (!$.contains(button[0], e.target)) &&
+            (
+            $(e.target).parents('.popover')[0] !=
+            button.data('bs.popover').$tip[0])
           ) {
             $timeout(function() {
               button.popover('hide');
@@ -1265,6 +1328,41 @@
 
           init();
         }
+      };
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnLynky
+   *
+   * @description
+   * If the text provided contains the following format:
+   * link|URL|Text, it's converted to an hyperlink, otherwise
+   * the text is displayed without any formatting.
+   *
+   */
+  module.directive('gnLynky', ['$compile',
+    function($compile) {
+      return {
+        restrict: 'A',
+        scope: {
+          text: '@gnLynky'
+        },
+        link: function(scope, element, attrs) {
+          if ((scope.text.indexOf('link') == 0) &&
+              (scope.text.split('|').length == 3)) {
+            scope.link = scope.text.split('|')[1];
+            scope.value = scope.text.split('|')[2];
+
+            element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
+                'data-ng-bind-html="value"></a>')(scope));
+          } else {
+
+            element.replaceWith($compile('<span ' +
+                'data-ng-bind-html="text"></span>')(scope));
+          }
+        }
+
       };
     }
   ]);

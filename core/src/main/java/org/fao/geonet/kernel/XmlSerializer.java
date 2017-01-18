@@ -159,7 +159,7 @@ public abstract class XmlSerializer {
     protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
         MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
 
-        Metadata metadata = _metadataRepository.findOne(id);
+        Metadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
 
         if (metadata == null)
             return null;

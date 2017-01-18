@@ -49,6 +49,15 @@ public class Functions {
     def isoUrlText = { el ->
         el.'gmd:URL'.text()
     }
+
+    def isoAnchorUrlLink = { el ->
+        el.'gmx:Anchor'['@xlink:href'].text()
+    }
+
+    def isoAnchorUrlText = { el ->
+        el.'gmx:Anchor'.text()
+    }
+
     def isoText = { el ->
         def uiCode2 = '#'+env.lang2.toUpperCase()
         def uiCode3 = '#'+env.lang3.toUpperCase()

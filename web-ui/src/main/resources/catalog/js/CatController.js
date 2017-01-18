@@ -63,7 +63,8 @@
       'spa': 'es',
       'cze': 'cz',
       'cat': 'ca',
-      'fin': 'fi'
+      'fin': 'fi',
+      'ice': 'is'
     },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang];
@@ -105,8 +106,10 @@
       $scope.$on('$locationChangeSuccess', function(event) {
         $scope.socialMediaLink = $location.absUrl();
         $scope.showSocialMediaLink =
-            $scope.socialMediaLink.includes('/metadata/');
+            ($scope.socialMediaLink.indexOf('/metadata/') != -1);
       });
+      $scope.getPermalink = gnUtilityService.getPermalink;
+
       // TODO : add language
       var url = gnGlobalSettings.gnUrl || location.href;
       var tokens = url.split('/');
@@ -121,7 +124,8 @@
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech', 'fin': 'Suomeksi'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
+        'fin': 'Suomeksi', 'fin': 'Suomeksi', 'ice': 'Íslenska'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;

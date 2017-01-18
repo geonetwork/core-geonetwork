@@ -357,7 +357,7 @@
                   scope.executeState = 'failed';
                   scope.executeResponse = response;
                 }
-            ).finally (
+            ).finally(
                 function() {
                   scope.running = false;
                 });

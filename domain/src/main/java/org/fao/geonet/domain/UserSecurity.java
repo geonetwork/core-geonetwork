@@ -24,14 +24,12 @@
 package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Transient;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -68,8 +66,11 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * @param password the hashed password.
      * @return this UserSecurity object
      */
-    public UserSecurity setPassword(String password) {
-        setPassword(password.toCharArray());
+    public
+    @Nonnull
+    @JsonIgnore
+    UserSecurity setPassword(@Nonnull char[] password) {
+        this._password = password == null ? new char[0] : password.clone();
         return this;
     }
 
@@ -79,11 +80,8 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * @param password the hashed password.
      * @return this UserSecurity object
      */
-    public
-    @Nonnull
-    @JsonIgnore
-    UserSecurity setPassword(@Nonnull char[] password) {
-        this._password = password == null ? new char[0] : password.clone();
+    public UserSecurity setPassword(String password) {
+        setPassword(password.toCharArray());
         return this;
     }
 

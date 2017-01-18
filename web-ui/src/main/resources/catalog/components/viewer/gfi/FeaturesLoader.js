@@ -98,8 +98,8 @@
     uri += '&FEATURE_COUNT=2147483647';
 
     this.loading = true;
-    this.promise = this.$http.get(this.proxyfyUrl(uri))
-      .then(function(response) {
+    this.promise = this.$http.get(
+        this.proxyfyUrl(uri)).then(function(response) {
 
           this.loading = false;
           if (layer.ncInfo) {

@@ -77,6 +77,10 @@
   .list-group-item:hover {
     color: @brand-primary;
   }
+  .input-daterange {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 }
 .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -86,7 +90,29 @@
   }
 }
 
-
+/*HOME*/
+.search-over {
+  color: #aaa;
+  text-align: center;
+  margin-top: 5px;
+}
+.gn-form-any {
+  input.input-lg {
+    height:45px;
+    border-radius: 3px;
+  }
+  .input-group-btn a {
+    border-radius: 3px;
+  }
+  .dropdown-menu {
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    li a {
+      .text-overflow();
+    }
+  }
+}
 .gn-icon-bg {
   height: 130px;
 
@@ -390,6 +416,7 @@ span.gn-facet-label:first-letter {
 /* Add space between button when pulled right */
 .gn-md-edit-btn.pull-right,
 .gn-md-delete-btn.pull-right,
+.gn-md-actions-btn.pull-right.btn-group,
 .gn-md-actions-btn.pull-right {
   margin-right: 5px;
 }

@@ -28,15 +28,17 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.jdom.Element;
 
 import java.nio.file.Path;
 
-//=============================================================================
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_BUCKET;
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+
 
 /** main.result service. shows search results
  */
@@ -45,29 +47,19 @@ public class Result implements Service
 {
     private ServiceConfig _config;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
 
     public void init(Path appPath, ServiceConfig config) throws Exception
     {
         _config = config;
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
-    public Element exec(Element params, ServiceContext context) throws Exception
-    {
+    public Element exec(Element params, ServiceContext context) throws Exception {
         // build result data
         UserSession session = context.getUserSession();
+        String bucket = Util.getParam(params, SELECTION_BUCKET, SELECTION_METADATA);
+        params.removeChild(SELECTION_BUCKET);
 
-        MetaSearcher searcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT);
+        MetaSearcher searcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT + bucket);
 
         String fast = _config.getValue("fast","");
 
@@ -91,24 +83,7 @@ public class Result implements Service
         Element result = searcher.present(context, params, _config);
 
         // Update result elements to present
-        if (!fast.equals("indexpdf")) {
-            SelectionManager.updateMDResult(context.getUserSession(), result);
-        }
-
-        // Restore last search if set
-        String restoreLastSearch = params.getChildText(Geonet.SearchResult.RESTORELASTSEARCH);
-        if (restoreLastSearch != null && restoreLastSearch.equals("yes")) {
-            Object oldSearcher = session.getProperty(Geonet.Session.LAST_SEARCH_RESULT);
-            if (oldSearcher != null) {
-                context.info("Restoring last search");
-                if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher)searcher).close();
-                session.setProperty(Geonet.Session.SEARCH_RESULT, oldSearcher);
-            }
-        }
-
+        SelectionManager.updateMDResult(context.getUserSession(), result);
         return result;
     }
 }
-
-//=============================================================================
-

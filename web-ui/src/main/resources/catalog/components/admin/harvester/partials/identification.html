@@ -34,4 +34,12 @@
 
     <p class="help-block" data-translate="">harvesterGroupHelp</p>
   </div>
+ <div data-ng-show="users.length"
+         data-ng-class="harvester.site.ownerUser == '' ? 'has-error' : ''">
+        <label class="control-label" data-translate="">harvesterUser</label>
+        <div data-users-combo="" data-owner-user="harvester.ownerUser[0]"
+              data-users="users"></div>
+
+        <p class="help-block" data-translate="">harvesterUserHelp</p>
+    </div>
 </fieldset>

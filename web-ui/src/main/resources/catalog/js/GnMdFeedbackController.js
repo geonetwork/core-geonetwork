@@ -36,22 +36,24 @@
         $scope.mdFeedbackOpen = !$scope.mdFeedbackOpen;
       };
 
-      $scope.send = function(formId) {
-        $http({
-          url: 'contact.send?_content_type=json',
-          method: 'POST',
-          data: $(formId).serialize(),
-          headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded'
-          }
-        }).then(function(response) {
-          // TODO: report no email sent
-          if (response.status === 200) {
-            $scope.success = true;
-          } else {
-            $scope.success = false;
-          }
-        });
+      $scope.send = function(form, formId) {
+        if (form.$valid) {
+          $http({
+            url: 'contact.send?_content_type=json',
+            method: 'POST',
+            data: $(formId).serialize(),
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }).then(function(response) {
+            // TODO: report no email sent
+            if (response.status === 200) {
+              $scope.success = true;
+            } else {
+              $scope.success = false;
+            }
+          });
+        }
       };
     }
   ]);

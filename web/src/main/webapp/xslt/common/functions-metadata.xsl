@@ -100,8 +100,12 @@
     </xsl:variable>
 
     <!-- Name with context in current schema -->
-    <xsl:variable name="schemaLabelWithContext"
+    <xsl:variable name="schemaLabelWithContextCollection"
                   select="$labels/element[@name=$escapedName and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
+    <xsl:variable name="schemaLabelWithContext" select="$schemaLabelWithContextCollection[1]"/>
+    <xsl:if test="count($schemaLabelWithContextCollection) > 1">
+      <xsl:message>WARNING: gn-fn-metadata:getLabel | multiple labels found for element '<xsl:value-of select="$escapedName"/>' with context=('<xsl:value-of select="$xpath"/>' or '<xsl:value-of select="$parent"/>' or '<xsl:value-of select="$parentIsoType"/>') in schema <xsl:value-of select="$schema"/></xsl:message>
+    </xsl:if>
 
     <!-- Name in current schema -->
     <xsl:variable name="schemaLabel"
@@ -319,7 +323,9 @@
 
     <!-- Name with context in current schema -->
     <xsl:variable name="helper"
-                  select="$labels/element[@name=$name and (@context=$xpath or @context=$context)]/helper"/>
+                  select="if (string($xpath) or string($context))
+                          then $labels/element[@name=$name and (@context=$xpath or @context=$context)]/helper
+                          else $labels/element[@name=$name and not(string(@context))]/helper"/>
 
     <xsl:choose>
       <xsl:when test="$helper">

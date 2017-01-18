@@ -25,6 +25,53 @@
   goog.provide('gn_wfsfilter_directive');
 
 
+  var TMP_PROFILE =
+  { "extendOnly": true,
+    "fields":[
+/*
+      {
+      "name":"WATER_KM",
+      "aggs": {
+
+        "histogram": {
+          "interval": 5000,
+          "extended_bounds" : {
+            "min" : 2000,
+            "max" : 100000
+          }
+        }
+        ,"range" : {
+          "ranges" : [
+            { "to" : 7500 },
+            { "from" : 7500, "to" : 50000 },
+            { "from" : 50000 }
+          ]
+        }
+      }
+    },
+      {
+      "name": "P_SEXE",
+      "aggs": {
+        "filters": {
+          "filters": {
+            "48 - 50": {"query_string": {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.52"}},
+            "49 - 53": {"query_string": {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.53"}}
+          }
+        }
+      }
+    },
+      {
+      "name": "CARPOOL"
+    }
+
+*/
+      ],
+    "treeFields": ["CD_REGION"],
+    "tokenizedFields": {
+      "CGENELIN": "-"
+    }
+  };
+
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
 
@@ -169,7 +216,7 @@
                     appProfile = angular.fromJson(response.data['0']);
                     return appProfile;
                   }
-                }).catch (function() {});
+                }).catch(function() {});
 
             solrObject =
                 gnSolrRequestManager.register('WfsFilter',
@@ -194,7 +241,7 @@
           scope.checkWFSServerUrl = function() {
             return $http.get('../../proxy?url=' +
                 encodeURIComponent(scope.url))
-              .then(function() {
+                .then(function() {
                   scope.isWfsAvailable = true;
                 }, function() {
                   scope.isWfsAvailable = false;
@@ -209,6 +256,7 @@
 
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
+            appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
 
               solrObject.indexFields =
@@ -280,6 +328,7 @@
             var facetKey = facet.value;
 
             var output = scope.output;
+
             if (output[fieldName]) {
               if (output[fieldName].values[facetKey]) {
                 delete output[fieldName].values[facetKey];
@@ -312,6 +361,26 @@
             catch(e) {
               return false;
             }
+          };
+
+          scope.onUpdateDate = function(field) {
+            var output = scope.output;
+            var fieldName = field.name;
+            var date = field.model;
+
+            if((angular.isObject(date) && date.from && date.to) ||
+              angular.isString(date)) {
+              output[fieldName] = {
+                type: 'date',
+                value: date
+              };
+            }
+            else {
+              delete output[fieldName];
+            }
+
+            scope.searchInput = '';
+            scope.filterFacets();
           };
 
           /**
@@ -350,6 +419,7 @@
           };
 
           function refreshHeatmap() {
+            return;
             if (scope.isFeaturesIndexed && scope.isHeatMapVisible) {
               heatmapsRequest.searchWithFacets({
                 params: scope.output,
@@ -363,6 +433,12 @@
             }
           }
 
+
+          scope.getMore = function(field) {
+            solrObject.getFacetMoreResults(field).then(function(response) {
+              field.values = response.facets[0].values;
+            });
+          };
 
           /**
            * reset and init the facet structure.
@@ -380,6 +456,8 @@
             if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
+
+            scope.layer.set('esConfig', null);
 
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
@@ -406,38 +484,41 @@
           scope.filterWMS = function() {
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
+            var layer = scope.layer;
+
             solrObject.pushState();
+            layer.set('esConfig', solrObject.getState());
             if (!extentFilter) {
-              scope.layer.setExtent();
+              layer.setExtent();
             }
             else {
-              scope.layer.setExtent(
+              layer.setExtent(
                   ol.proj.transformExtent(extentFilter, 'EPSG:4326',
                       scope.map.getView().getProjection()));
 
             }
             if (sldConfig.filters.length > 0) {
-              wfsFilterService.getSldUrl(sldConfig, scope.layer.get('url'),
+              wfsFilterService.getSldUrl(sldConfig, layer.get('url'),
                   ftName).success(function(sldURL) {
                 // Do not activate it
                 // Usually return 414 Request-URI Too Large
                 var useSldBody = false;
                 if (useSldBody) {
                   $http.get(sldURL).then(function(response) {
-                    scope.layer.getSource().updateParams({
+                    layer.getSource().updateParams({
                       SLD_BODY: response.data
                     });
                   });
                 } else {
-                  scope.layer.getSource().updateParams({
+                  layer.getSource().updateParams({
                     SLD: sldURL
                   });
                 }
-              }).finally (function() {
+              }).finally(function() {
                 defer.resolve();
               });
             } else {
-              scope.layer.getSource().updateParams({
+              layer.getSource().updateParams({
                 SLD: null
               });
               defer.resolve();

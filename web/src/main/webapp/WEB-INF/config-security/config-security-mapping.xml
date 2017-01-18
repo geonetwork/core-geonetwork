@@ -241,90 +241,160 @@
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/oaipmh!?.*" access="permitAll"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.list!?.*" access="hasRole('Editor')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.get!?.*" access="hasRole('Editor')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.update!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.update.labels!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.remove!?.*" access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.list!?.*"
+                           access="hasRole('Editor')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.get!?.*"
+                           access="hasRole('Editor')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.update!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.update.labels!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.group.remove!?.*"
+                           access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user!?\?.*" access="hasRole('RegisteredUser')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.list!?.*" access="hasRole('RegisteredUser')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.update!?.*" access="hasRole('RegisteredUser')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.resetpassword\?.*" access="hasRole('RegisteredUser')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.remove!?.*" access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user!?\?.*"
+                           access="hasRole('RegisteredUser')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.list!?.*"
+                           access="hasRole('RegisteredUser')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.update!?.*"
+                           access="hasRole('RegisteredUser')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.resetpassword"
+                           access="hasRole('RegisteredUser')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.user.remove!?.*"
+                           access="hasRole('UserAdmin')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.usergroups.list!?.*" access="hasRole('RegisteredUser')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.usergroups.list!?.*"
+                           access="hasRole('RegisteredUser')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.category.update!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.category.remove!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.category.update.labels!?.*" access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.category.update!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.category.remove!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.category.update.labels!?.*"
+                           access="hasRole('UserAdmin')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.list!?.*" access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.update!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.remove!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.upload!?.*" access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.list!?.*"
+                           access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.update!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.remove!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logo.upload!?.*"
+                           access="hasRole('UserAdmin')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.list!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.save!?.*" access="hasRole('Administrator')"/>
-
-
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.notifications.list!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.notifications.save!?.*" access="hasRole('Administrator')"/>
-
-
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.save!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset.save!?.*" access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.list!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.save!?.*"
+                           access="hasRole('Administrator')"/>
 
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.list!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.get!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.update!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.remove!?.*" access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.notifications.list!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.notifications.save!?.*"
+                           access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.rebuild!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.optimize!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.rebuildxlinks!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.config.reload!?.*" access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.list!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.update!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.add!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.remove!?.*" access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.save!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url
+          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset!?.*"
+          access="hasRole('Administrator')"/>
+        <sec:intercept-url
+          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.csw.customelementset.save!?.*"
+          access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.load.samples!?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.load.templates!?.*" access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.templates.list!?.*" access="hasRole('Reviewer')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.templates.save.order!?.*" access="hasRole('Reviewer')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.list!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.get!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.update!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.config.virtualcsw.remove!?.*"
+                           access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.list!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.add!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.update!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.clone!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.remove!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.clear!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.stop!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.start!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.run!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.info!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.history!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.history.full!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.history.delete!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.log!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.notifier.save!?.*" access="hasRole('UserAdmin')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.notifier.get!?.*" access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.rebuild!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.optimize!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.rebuildxlinks!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.index.config.reload!?.*"
+                           access="hasRole('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-ip?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-service-type?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-date?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-fields?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-terms?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-export?.*" access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content?.*" access="hasRole('Editor')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content-metadata?.*" access="hasRole('Editor')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.list!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.update!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.add!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schema.remove!?.*"
+                           access="hasRole('Administrator')"/>
+
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.load.samples!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.load.templates!?.*"
+                           access="hasRole('Administrator')"/>
+
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.templates.list!?.*"
+                           access="hasRole('Reviewer')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.templates.save.order!?.*"
+                           access="hasRole('Reviewer')"/>
+
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.list!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.add!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.update!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.clone!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.remove!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.clear!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.stop!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.start!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.run!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.info!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.history!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.history.full!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.history.delete!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.log!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.notifier.save!?.*"
+                           access="hasRole('UserAdmin')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.harvester.notifier.get!?.*"
+                           access="hasRole('UserAdmin')"/>
+
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-ip?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url
+          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-service-type?.*"
+          access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-date?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-fields?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-terms?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-export?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content?.*"
+                           access="hasRole('Editor')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content-metadata?.*"
+                           access="hasRole('Editor')"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/keywords!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus!?.*" access="permitAll"/>

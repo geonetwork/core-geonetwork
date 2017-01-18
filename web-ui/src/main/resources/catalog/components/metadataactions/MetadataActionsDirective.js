@@ -71,7 +71,8 @@
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit('metadataStatusUpdated', true);
                   scope.$emit('StatusUpdated', {
-                    msg: $translate.instant('metadataStatusUpdatedWithNoErrors'),
+                    msg: $translate.instant(
+                       'metadataStatusUpdatedWithNoErrors'),
                     timeout: 2,
                     type: 'success'});
                 }, function(data) {
@@ -295,14 +296,15 @@
         link: function(scope, element, attrs) {
           var ownerId = parseInt(attrs['gnTransferMdOwner']);
           var groupOwner = parseInt(attrs['gnTransferMdGroupOwner']);
-          var mdUuid = attrs['gnTransferOwnership'];
+          var bucket = attrs['gnTransferMdGroupOwner'];
+          var mdUuid = attrs['selectionBucket'];
           scope.selectedUserGroup = null;
 
           scope.selectUser = function(user) {
             scope.selectedUser = user;
             scope.editorSelectedId = user.id;
             $http.get('../api/users/' + id + '/groups')
-              .success(function(data) {
+                .success(function(data) {
                   var uniqueGroup = {};
                   angular.forEach(data, function(g) {
                     if (!uniqueGroup[g.group.id]) {
@@ -317,7 +319,7 @@
             scope.selectedGroup = group;
           };
           $http.get('../api/users/groups')
-            .success(function(data) {
+              .success(function(data) {
                 var uniqueUserGroups = {};
                 angular.forEach(data, function(g) {
                   var key = g.groupId + '-' + g.userId;
@@ -332,7 +334,7 @@
             return $http.put('../api/records/' + mdUuid +
                 '/ownership?userIdentifier=' + scope.selectedUserGroup.userId +
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
-              .then(function(r) {
+                .then(function(r) {
                   $rootScope.$broadcast('StatusUpdated', {
                     msg: $translate.instant('transfertPrivilegesFinished', {
                       metadata: r.data.numberOfRecordsProcessed

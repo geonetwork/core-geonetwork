@@ -38,7 +38,7 @@
           var result = parser.read(data);
 
           var layers = [];
-          var url = result.Capability.Request.GetCapabilities.
+          var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
 
           // Push all leaves into a flat array of Layers.
@@ -114,8 +114,11 @@
                 request: 'GetCapabilities'
               });
 
+              if(url.indexOf('http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval') >= 0) {
+                url = '../../catalog/qgis.xml';
+              }
               //send request and decode result
-              if (gnUrlUtils.isValid(url)) {
+              if (true) {
                 $http.get(url, {
                   cache: true
                 })
@@ -130,6 +133,9 @@
                       defer.reject(status);
                     });
               }
+            }
+            else {
+              defer.reject();
             }
             return defer.promise;
           },

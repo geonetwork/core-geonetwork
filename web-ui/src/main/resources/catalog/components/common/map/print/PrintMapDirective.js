@@ -251,8 +251,8 @@
         layers: encLayers,
         legends: encLegends,
         enableLegends: $scope.enableLegends && encLegends ? true : false,
-        hasTitle:$scope.mapTitle ? true : false,
-        hasNoTitle:$scope.mapTitle ? false : true,
+        hasTitle: $scope.mapTitle ? true : false,
+        hasNoTitle: $scope.mapTitle ? false : true,
         hasAttribution: !!attributions.length,
         isFr: lang == 'fre',
         pages: [

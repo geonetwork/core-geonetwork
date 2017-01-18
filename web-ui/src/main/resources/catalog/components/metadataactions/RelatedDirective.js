@@ -94,7 +94,8 @@
               types: '@',
               title: '@',
               list: '@',
-              user: '='
+              user: '=',
+              hasResults: '=?'
             },
             link: function(scope, element, attrs, controller) {
               var promise;
@@ -109,6 +110,7 @@
                        angular.forEach(data, function(value) {
                          if (value) {
                            scope.relationFound = true;
+                           scope.hasResults = true;
                          }
                        });
                      });

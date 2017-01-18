@@ -36,9 +36,10 @@
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
                 exclude-result-prefixes="#all">
 
-  <xsl:include href="../convert/functions.xsl" />
-  <xsl:include href="../../../xsl/utils-fn.xsl" />
-  <xsl:include href="index-subtemplate-fields.xsl" />
+  <xsl:include href="../convert/functions.xsl"/>
+  <xsl:include href="../../../xsl/utils-fn.xsl"/>
+  <xsl:include href="index-subtemplate-fields.xsl"/>
+  <xsl:include href="inspire-util.xsl" />
 
   <!-- This file defines what parts of the metadata are indexed by Lucene
        Searches can be conducted on indexes defined here.
@@ -545,8 +546,18 @@
         </xsl:for-each>
 
         <xsl:for-each select="gmd:useLimitation/gco:CharacterString">
-          <Field name="{$fieldPrefix}UseLimitation"
-                 string="{string(.)}" store="true" index="true"/>
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:useLimitation/gmx:Anchor[not(string(@xlink:href))]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+
+        <xsl:for-each select="gmd:useLimitation/gmx:Anchor[string(@xlink:href)]">
+            <Field name="{$fieldPrefix}UseLimitation"
+                   string="{concat('link|',string(@xlink:href), '|', string(.))}" store="true" index="true"/>
         </xsl:for-each>
       </xsl:for-each>
 
@@ -593,7 +604,8 @@
       <!--  Fields use to search on Service -->
 
       <xsl:for-each select="srv:serviceType/gco:LocalName">
-        <Field  name="serviceType" string="{string(.)}" store="true" index="true"/>
+        <Field name="serviceType" string="{string(.)}" store="true" index="true"/>
+        <Field  name="type" string="service-{string(.)}" store="true" index="true"/>
       </xsl:for-each>
 
       <xsl:for-each select="srv:serviceTypeVersion/gco:CharacterString">
@@ -882,13 +894,18 @@
     <!-- === Reference system info === -->
 
     <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
-      <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
-        <xsl:variable name="crs" select="concat(string(gmd:codeSpace/gco:CharacterString),'::',string(gmd:code/gco:CharacterString))"/>
+        <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
+            <xsl:variable name="crs">
+                <xsl:for-each select="gmd:codeSpace/gco:CharacterString/text() | gmd:code/gco:CharacterString/text()">
+                    <xsl:value-of select="."/>
+                    <xsl:if test="not(position() = last())">::</xsl:if>
+                </xsl:for-each>
+            </xsl:variable>
 
-        <xsl:if test="$crs != '::'">
-          <Field name="crs" string="{$crs}" store="true" index="true"/>
-        </xsl:if>
-      </xsl:for-each>
+            <xsl:if test="$crs != ''">
+                <Field name="crs" string="{$crs}" store="true" index="true"/>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:for-each>
 
     <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">

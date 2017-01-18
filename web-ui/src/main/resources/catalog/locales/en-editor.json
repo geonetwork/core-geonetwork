@@ -336,5 +336,6 @@
     "hasCheckpointCpt": "Has Checkpoint component",
     "hasDqEmptyCptMeasures": "Has empty Checkpoint component",
     "hasDqCptNotCovered": "Has Checkpoint component not covered",
-    "emodnet-checkpoint.challenges": "Checkpoint challenges"
+    "emodnet-checkpoint.challenges": "Checkpoint challenges",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

@@ -30,6 +30,7 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
@@ -52,6 +53,8 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
                          String fileName, String access) throws ResourceHandlerException {
 
         try {
+            FilePathChecker.verify(fileName);
+
             // delete online resource
             Path dir = Lib.resource.getDir(context, access, metadataId);
             Path file = dir.resolve(fileName);
@@ -90,6 +93,8 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
         throws ResourceHandlerException {
 
         try {
+            FilePathChecker.verify(fileName);
+
             // delete online resource
             Path dir = Lib.resource.getDir(context, access, metadataId);
             Path file = dir.resolve(fileName);

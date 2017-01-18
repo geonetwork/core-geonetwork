@@ -24,7 +24,7 @@
 (function() {
   goog.provide('gn_crs_selector');
 
-  var module = angular.module('gn_crs_selector', []);
+  var module = angular.module('gn_crs_selector', ['pascalprecht.translate']);
 
   /**
    *
@@ -32,9 +32,9 @@
    */
   module.directive('gnCrsSelector',
       ['$rootScope', '$timeout', '$http',
-       'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit',
+       'gnEditor', 'gnEditorXMLService', 'gnCurrentEdit', '$translate',
        function($rootScope, $timeout, $http,
-               gnEditor, gnEditorXMLService, gnCurrentEdit) {
+               gnEditor, gnEditorXMLService, gnCurrentEdit, $translate) {
 
          return {
            restrict: 'A',
@@ -94,7 +94,16 @@
 
                $timeout(function() {
                  // Save the metadata and refresh the form
-                 gnEditor.save(gnCurrentEdit.id, true);
+                 gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                   // Success. Do nothing.
+                 }, function(rejectedValue) {
+                   $rootScope.$broadcast('StatusUpdated', {
+                     title: $translate.instant('runServiceError'),
+                     error: rejectedValue,
+                     timeout: 0,
+                     type: 'danger'
+                   });
+                 });
                });
 
                return false;

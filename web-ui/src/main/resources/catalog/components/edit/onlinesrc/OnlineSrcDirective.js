@@ -47,7 +47,7 @@
     'ga_print_directive'
   ])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
    *
@@ -1096,7 +1096,7 @@
                                 scope.layers.push(l);
                               }
                             });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     } else if (scope.OGCProtocol == 'WFS') {
@@ -1116,7 +1116,7 @@
                                    });
                                  }
                                });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     }
@@ -1417,8 +1417,8 @@
                           scope.srcParams.url = links[0].url;
                         } else {
                           scope.srcParams.url = '';
-                          scope.alertMsg =
-                              $translate.instant('linkToServiceWithoutURLError');
+                          scope.alertMsg = $translate.instant(
+                              'linkToServiceWithoutURLError');
                         }
                       }
                       else {

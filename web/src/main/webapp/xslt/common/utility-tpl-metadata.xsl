@@ -41,8 +41,9 @@
     node()[namespace-uri()!='http://www.fao.org/geonetwork' and
            not(contains(name(.),'_ELEMENT'))]"
     mode="gn-element-cleaner">
-    <xsl:copy>
-      <xsl:copy-of select="@*[namespace-uri()!='http://www.fao.org/geonetwork']"/>
+    <xsl:copy copy-namespaces="no">
+      <xsl:copy-of select="namespace::*[. != 'http://www.fao.org/geonetwork']"/>
+      <xsl:copy-of select="@*[namespace-uri() != 'http://www.fao.org/geonetwork']"/>
       <xsl:apply-templates select="node()" mode="gn-element-cleaner"/>
     </xsl:copy>
   </xsl:template>
