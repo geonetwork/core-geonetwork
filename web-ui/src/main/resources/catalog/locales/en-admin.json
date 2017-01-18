@@ -1045,6 +1045,7 @@
     "serviceTypeHelp": "Service type",
     "metadata/editor/schemaConfig": "Standard configuration",
     "selectExistingLogo": "Select from existing logos",
+    "testClientConfig": "Test client configuration",
     "ui-mod-header": "Top toolbar",
     "ui-languages": "List of languages",
     "ui-languages-help": "Define the list of language in the language selector",

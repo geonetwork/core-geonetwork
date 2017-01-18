@@ -189,7 +189,7 @@
 
   if (config) {
     try {
-      config = angular.toJson(config);
+      config = angular.fromJson(decodeURIComponent(config));
     } catch (e) {
       console.warn('Invalid configuration: ' + config + '. Using default.');
       console.warn(e);
@@ -198,8 +198,6 @@
   } else {
     config = defaultConfig;
   }
-  // TODO: Add a configuration validation process ?
-  console.log(config);
 
   var module = angular.module('gn_search');
   module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings', 'gnLangs',

@@ -38,6 +38,7 @@
         templateUrl: '../../catalog/components/admin/uiconfig/partials/' +
             'uiconfig.html',
         link: function(scope, element, attrs) {
+          var testAppUrl = '../../catalog/views/api/?config=';
           scope.jsonConfig = angular.fromJson(scope.config);
 
           scope.sortOrderChoices = ['', 'reverse'];
@@ -62,6 +63,12 @@
             }
           };
 
+          scope.testClientConfig = function() {
+            window.open(
+              testAppUrl +
+              encodeURIComponent(angular.toJson(scope.jsonConfig)),
+             'gnClientTestWindow');
+          }
         }
       };
     }]);
