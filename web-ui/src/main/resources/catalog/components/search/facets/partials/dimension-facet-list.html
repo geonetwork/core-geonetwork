@@ -15,9 +15,9 @@
   </a>
 
   <div data-ng-repeat="f in dimension"
-       data-ng-init="fLabel = f['@label'];fLvlCollapse[fLabel] = false"
+       data-ng-init="fLabel = getLabel(f);fLvlCollapse[fLabel] = false"
        class="gn-facet gn-facet-{{f['@label']}}"
-       data-ng-show="f.category">
+       data-ng-show="f.category && isDisplayed(f)">
 
     <h4 data-gn-collapsible="fLvlCollapse[fLabel]">
       <i class="fa fa-fw" data-ng-class="fLvlCollapse[fLabel] ? 'fa-arrow-circle-right' : 'fa-arrow-circle-down'"></i>

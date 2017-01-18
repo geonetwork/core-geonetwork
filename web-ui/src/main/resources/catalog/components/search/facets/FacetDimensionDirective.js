@@ -29,8 +29,8 @@
       ['gn_utility_service']);
 
   module.directive('gnFacetDimensionList', [
-    'gnFacetConfigService', '$timeout',
-    function(gnFacetConfigService, $timeout) {
+    'gnFacetConfigService', 'gnLangs',
+    function(gnFacetConfigService, gnLangs) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/search/facets/' +
@@ -38,6 +38,9 @@
         scope: {
           dimension: '=gnFacetDimensionList',
           facetType: '=',
+          // Define a subset of facet to display
+          // in this facetType set.
+          facetList: '=',
           params: '='
         },
         link: function(scope, element) {
@@ -55,6 +58,43 @@
               scope.fLvlCollapse[k] = false;
             });
           };
+
+          var hasOverridenConfig =
+            angular.isArray(scope.facetList) &&
+            scope.facetList.length > 0;
+          scope.getLabel = function (facet) {
+            if (hasOverridenConfig) {
+              for (var i = 0; i < scope.facetList.length; i++) {
+                var f = scope.facetList[i];
+                if (facet['@name'] === f.key) {
+                  var newLabel = f.labels && f.labels[gnLangs.getCurrent()];
+                  if (newLabel) {
+                    return facet['@label'] = newLabel;
+                  }
+                }
+              }
+            }
+            return facet['@label'];
+          };
+
+          scope.isDisplayed = function (facet) {
+            if (hasOverridenConfig) {
+              // Check if the facet should be displayed
+              for (var i = 0; i < scope.facetList.length; i++) {
+                var f = scope.facetList[i];
+                if (facet['@name'] === f.key) {
+                  var newLabel = f.labels && f.labels[gnLangs.getCurrent()];
+                  if (newLabel) {
+                    facet['@label'] = newLabel;
+                  }
+                  return true;
+                }
+              }
+            } else {
+              return true;
+            }
+            return false;
+          }
 
           // Facet is collapsed if not in current search criteria
           scope.isFacetsCollapse = function(facetKey) {

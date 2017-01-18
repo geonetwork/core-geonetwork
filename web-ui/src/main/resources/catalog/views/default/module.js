@@ -101,6 +101,7 @@
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
+      $scope.facetConfig = gnSearchSettings.facetConfig;
       $scope.location = gnSearchLocation;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();

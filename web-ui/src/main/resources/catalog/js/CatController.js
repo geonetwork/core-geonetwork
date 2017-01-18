@@ -78,6 +78,15 @@
             'hitsPerPage': 20
           },
           'facetsSummaryType': 'details',
+          'facetConfig': [
+            // {
+            // key: 'createDateYear',
+            // labels: {
+            //   eng: 'Published',
+            //   fre: 'Publication'
+            // }}
+          ],
+          filters: [],
           'sortbyValues': [{
             'sortBy': 'relevance',
             'sortOrder': ''
