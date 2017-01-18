@@ -65,10 +65,10 @@
 
           scope.testClientConfig = function() {
             window.open(
-              testAppUrl +
-              encodeURIComponent(angular.toJson(scope.jsonConfig)),
-             'gnClientTestWindow');
-          }
+                testAppUrl +
+                encodeURIComponent(angular.toJson(scope.jsonConfig)),
+                'gnClientTestWindow');
+          };
         }
       };
     }]);

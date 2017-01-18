@@ -74,6 +74,13 @@
   var tokens = /config=([^&]+)/.exec(window.location.search),
     config = tokens ? tokens[1] : undefined,
     defaultConfig = {
+      "langDetector": {
+        "fromHtmlTag": true,
+        "default": "en"
+      },
+      "nodeDetector": {
+        "default": "srv"
+      },
       "mods": {
         "header": {
           "enabled": true,
@@ -202,13 +209,11 @@
   var module = angular.module('gn_search');
   module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings', 'gnLangs',
     function (gnViewerSettings, gnSearchSettings, gnGlobalSettings, gnLangs) {
+      angular.extend(gnGlobalSettings.gnCfg, config);
       gnViewerSettings.mapConfig = config.mods.map;
       angular.extend(gnSearchSettings, config.mods.search);
-
       gnGlobalSettings.isMapViewerEnabled = config.mods.map.enabled;
       gnGlobalSettings.gnCfg = config;
-      // TODO: Define API language
-      gnLangs.current = 'eng';
       gnGlobalSettings.gnUrl = 'http://localhost:8080/geonetwork/srv/';
       gnViewerSettings.bingKey = 'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D';
     }]);

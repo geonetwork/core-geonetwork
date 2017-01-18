@@ -41,6 +41,15 @@
     isMapViewerEnabled: false,
     requireProxy: [],
     gnCfg: {
+      'langDetector': {
+        'fromHtmlTag': false,
+        'regexp': '^\/[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-]+\/([a-z]{3})\/',
+        'default': 'eng'
+      },
+      'nodeDetector': {
+        'regexp': '^\/[a-zA-Z0-9_\-]+\/([a-zA-Z0-9_\-]+)\/[a-z]{3}\/',
+        'default': 'srv'
+      },
       'mods': {
         'header': {
           'enabled': true,
@@ -172,6 +181,66 @@
 
   module.constant('gnLangs', {
     langs: {},
+    current: null,
+    detectLang: function(detector, gnGlobalSettings) {
+      // If already detected
+      if (gnGlobalSettings.iso3lang) {
+        return gnGlobalSettings.iso3lang;
+      }
+
+      var iso2lang, iso3lang;
+
+      // Init language list
+      this.langs =
+          gnGlobalSettings.gnCfg.mods.header.languages;
+
+      // Detect language from HTML lang tag, regex on URL
+      if (detector) {
+        if (detector.fromHtmlTag) {
+          iso2lang = $('html').attr('lang').substr(0, 2);
+        } else if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            var urlLang = res[1];
+            if (this.isValidIso2Lang(urlLang)) {
+              iso2lang = urlLang;
+            } else if (this.isValidIso3Lang(urlLang)) {
+              iso2lang = this.getIso2Lang(urlLang);
+            } else {
+              console.warn('URL lang \'' + urlLang +
+                  '\' is not a valid language code.');
+            }
+          }
+        } else if (detector.default) {
+          iso2lang = detector.default;
+        }
+        iso3lang = this.getIso3Lang(iso2lang || detector.default);
+      }
+      this.current = iso3lang || 'eng';
+
+      // Set locale to global settings. This is
+      // used by locale loader.
+      gnGlobalSettings.iso3lang = this.current;
+      gnGlobalSettings.lang = this.getIso2Lang(this.current);
+      gnGlobalSettings.locale = {
+        iso3lang: this.current
+      };
+      return this.current;
+    },
+    getCurrent: function() {
+      return this.current;
+    },
+    isValidIso3Lang: function(lang) {
+      return angular.isDefined(this.langs[lang]);
+    },
+    isValidIso2Lang: function(lang) {
+      for (p in this.langs) {
+        if (this.langs[p] == lang) {
+          return true;
+        }
+      }
+      return false;
+    },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang] || 'en';
     },
@@ -217,21 +286,25 @@
       });
       $scope.getPermalink = gnUtilityService.getPermalink;
 
-      // TODO : add language
       var tokens = location.href.split('/');
+      // TODO: this does not work in API mode
       $scope.service = tokens[6].split('?')[0];
 
       // If gnLangs current already set by config, do not use URL
-      $scope.lang = 'eng';
-      // $scope.lang = tokens[5];
-      // $scope.lang = gnLangs.current || tokens[5];
-      gnLangs.current = $scope.lang;
+      $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
+      $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
 
-      // TODO: set node id in settings
-      $scope.nodeId = tokens[4];
-      $scope.langs = gnLangs.langs =
-          gnGlobalSettings.gnCfg.mods.header.languages;
+      function detectNode(detector) {
+        if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            return res[1];
+          }
+        }
+        return detector.default || 'srv';
+      }
+      $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',

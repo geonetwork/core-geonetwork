@@ -37,9 +37,11 @@
         'gnOwsContextService',
         'gnMap',
         'gnNcWms',
-        'gnConfig',
+        'gnGlobalSettings',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnNcWms, gnConfig) {
+                 gnMap, gnNcWms, gnGlobalSettings) {
+          angular.extend(searchSettings, gnGlobalSettings.gnCfg.mods.search);
+
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
             viewerSettings.mapConfig.map ||
