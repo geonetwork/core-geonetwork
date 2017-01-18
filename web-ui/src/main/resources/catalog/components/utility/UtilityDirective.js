@@ -114,12 +114,12 @@
           scope.gnRegionService = gnRegionService;
 
           var addGeonames = !attrs['disableGeonames'];
-
+          scope.regionTypes = [];
           /**
            * Load list on init to fill the dropdown
            */
           gnRegionService.loadList().then(function(data) {
-            scope.regionTypes = data;
+            scope.regionTypes = angular.copy(data);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: 'Geonames',
@@ -234,11 +234,11 @@
                     suggestion: function(loc) {
                       var props = [];
                       ['adminName1', 'countryName'].
-                      forEach(function(p) {
-                        if (loc[p]) { props.push(loc[p]); }
-                      });
+                          forEach(function(p) {
+                            if (loc[p]) { props.push(loc[p]); }
+                          });
                       return loc.name + ((props.length == 0) ? '' :
-                        ' — <em>' + props.join(', ') + '</em>');
+                          ' — <em>' + props.join(', ') + '</em>');
                     }
                   }
 
@@ -250,31 +250,31 @@
               }
               else {
                 gnRegionService.loadRegion(scope.regionType, scope.lang).then(
-                  function(data) {
-                    if (data) {
-                      $(element).typeahead('destroy');
-                      var source = new Bloodhound({
-                        datumTokenizer:
-                          Bloodhound.tokenizers.obj.whitespace('name'),
-                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        local: data,
-                        limit: 30
-                      });
-                      source.initialize();
-                      $(element).typeahead({
-                        minLength: 0,
-                        highlight: true
-                      }, {
-                        name: 'countries',
-                        displayKey: 'name',
-                        source: source.ttAdapter()
-                      }).on('typeahead:selected', function(event, datum) {
-                        if (angular.isFunction(scope.onRegionSelect)) {
-                          scope.onRegionSelect(datum);
-                        }
-                      });
-                    }
-                  });
+                    function(data) {
+                      if (data) {
+                        $(element).typeahead('destroy');
+                        var source = new Bloodhound({
+                          datumTokenizer:
+                              Bloodhound.tokenizers.obj.whitespace('name'),
+                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                          local: data,
+                          limit: 30
+                        });
+                        source.initialize();
+                        $(element).typeahead({
+                          minLength: 0,
+                          highlight: true
+                        }, {
+                          name: 'countries',
+                          displayKey: 'name',
+                          source: source.ttAdapter()
+                        }).on('typeahead:selected', function(event, datum) {
+                          if (angular.isFunction(scope.onRegionSelect)) {
+                            scope.onRegionSelect(datum);
+                          }
+                        });
+                      }
+                    });
               }
             }
           });
@@ -726,7 +726,7 @@
       // to MM-dd-yyyy
       var formatDate = function(day, month, year) {
         return ('0' + day).slice(-2) + '-' +
-          ('0' + month).slice(-2) + '-' + year;
+            ('0' + month).slice(-2) + '-' + year;
       };
 
       var getMaxInProp = function(obj) {
@@ -1263,4 +1263,40 @@
       }
     };
   }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnLynky
+   *
+   * @description
+   * If the text provided contains the following format:
+   * link|URL|Text, it's converted to an hyperlink, otherwise
+   * the text is displayed without any formatting.
+   *
+   */
+  module.directive('gnLynky', ['$compile',
+    function($compile) {
+      return {
+        restrict: 'A',
+        scope: {
+          text: '@gnLynky'
+        },
+        link: function(scope, element, attrs) {
+          if ((scope.text.indexOf('link') == 0) &&
+              (scope.text.split('|').length == 3)) {
+            scope.link = scope.text.split('|')[1];
+            scope.value = scope.text.split('|')[2];
+
+            element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
+                'data-ng-bind-html="value"></a>')(scope));
+          } else {
+
+            element.replaceWith($compile('<span ' +
+                'data-ng-bind-html="text"></span>')(scope));
+          }
+        }
+
+      };
+    }
+  ]);
 })();

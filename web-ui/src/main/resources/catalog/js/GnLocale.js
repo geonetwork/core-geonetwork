@@ -44,7 +44,8 @@
       'chi' : 'zh',
       'pol' : 'pl',
       'wel' : 'cy',
-      'dut' : 'nl'
+      'dut' : 'nl',
+      'ice' : 'is'
     };
     var lang = specialCases[threeCharLang];
     if (angular.isDefined(lang)) {
@@ -55,7 +56,8 @@
   });
   module.constant('$LOCALES', ['core']);
 
-  module.factory('localeLoader', ['$http', '$q', 'gnLangs', '$translate', '$timeout',
+  module.factory('localeLoader', [
+    '$http', '$q', 'gnLangs', '$translate', '$timeout',
     function($http, $q, gnLangs, $translate, $timeout) {
       return function(options) {
 

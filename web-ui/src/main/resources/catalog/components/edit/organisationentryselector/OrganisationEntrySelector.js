@@ -32,7 +32,7 @@
 
   var module = angular.module('gn_organisation_entry_selector',
       ['gn_metadata_manager_service', 'gn_schema_manager_service',
-       'gn_editor_xml_service']);
+       'gn_editor_xml_service', 'pascalprecht.translate']);
 
   /**
    *
@@ -42,11 +42,11 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
-        'gnCurrentEdit', 'gnConfigService',
-        function($rootScope, $timeout, $q, $http, 
-            gnEditor, gnSchemaManagerService, 
-            gnEditorXMLService, gnHttp, gnConfig, 
-            gnCurrentEdit, gnConfigService) {
+        'gnCurrentEdit', 'gnConfigService', '$translate',
+        function($rootScope, $timeout, $q, $http,
+            gnEditor, gnSchemaManagerService,
+            gnEditorXMLService, gnHttp, gnConfig,
+            gnCurrentEdit, gnConfigService, $translate) {
 
          return {
            restrict: 'A',
@@ -109,7 +109,16 @@
                    scope.elementRef, scope.elementName,
                    scope.domId, 'before').then(function() {
                  if (scope.templateAddAction) {
-                   gnEditor.save(gnCurrentEdit.id, true);
+                   gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                     // success. Nothing to do.
+                   }, function(rejectedValue) {
+                     $rootScope.$broadcast('StatusUpdated', {
+                       title: $translate.instant('runServiceError'),
+                       error: rejectedValue,
+                       timeout: 0,
+                       type: 'danger'
+                     });
+                   });
                  }
                });
                return false;
@@ -134,7 +143,16 @@
 
                     $timeout(function() {
                       // Save the metadata and refresh the form
-                      gnEditor.save(gnCurrentEdit.id, true);
+                      gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                        // success. Nothing to do
+                      }, function(rejectedValue) {
+                        $rootScope.$broadcast('StatusUpdated', {
+                          title: $translate.instant('runServiceError'),
+                          error: rejectedValue,
+                          timeout: 0,
+                          type: 'danger'
+                        });
+                      });
                     });
                  }
                };

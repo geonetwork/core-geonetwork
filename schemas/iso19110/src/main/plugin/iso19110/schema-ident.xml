@@ -36,6 +36,7 @@
   <standardUrl xml:lang="fr">
     http://www.iso.org/iso/fr/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=39965
   </standardUrl>
+  <depends>iso19139</depends>
   <schemaLocation>http://www.isotc211.org/2005/gfc http://www.isotc211.org/2005/gfc/gfc.xsd
   </schemaLocation>
   <autodetect xmlns:gfc="http://www.isotc211.org/2005/gfc">

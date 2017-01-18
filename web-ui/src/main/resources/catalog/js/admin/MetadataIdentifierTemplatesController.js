@@ -48,7 +48,8 @@
       $scope.mdIdentifierTemplateSelected = {};
 
       $scope.selectTemplate = function(template) {
-        if ($('.ng-dirty').length > 0 && confirm($translate.instant('doSaveConfirm'))) {
+        if ($('.ng-dirty').length > 0 &&
+            confirm($translate.instant('doSaveConfirm'))) {
           $scope.saveMetadataIdentifierTemplate(false);
         }
         $scope.mdIdentifierTemplateSelected = template;
@@ -116,7 +117,8 @@
             .error(function(data) {
               $('.ng-dirty').removeClass('ng-dirty');
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('metadataIdentifier TemplateUpdateError'),
+                title: $translate.instant(
+                    'metadataIdentifier TemplateUpdateError'),
                 error: data,
                 timeout: 0,
                 type: 'danger'});

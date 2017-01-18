@@ -29,6 +29,7 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -203,8 +204,18 @@ public class SiteApi {
 
         List<String> settingList = new ArrayList<>();
         if (set == null && key == null) {
+            final SettingRepository settingRepository = appContext.getBean(SettingRepository.class);
             final List<org.fao.geonet.domain.Setting> publicSettings =
-                appContext.getBean(SettingRepository.class).findAllByInternal(false);
+                settingRepository.findAllByInternal(false);
+
+            // Add virtual settings based on internal settings.
+            // eg. if mail server is defined, allow email interactions ...
+            String mailServer = sm.getValue(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST);
+            publicSettings.add(new Setting()
+                .setName(Settings.SYSTEM_FEEDBACK_MAILSERVER_HOST + Settings.VIRTUAL_SETTINGS_SUFFIX_ISDEFINED)
+                .setDataType(SettingDataType.BOOLEAN)
+                .setValue(StringUtils.isNotEmpty(mailServer) + ""));
+
 
             SettingsListResponse response = new SettingsListResponse();
             response.setSettings(publicSettings);

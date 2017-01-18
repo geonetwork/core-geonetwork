@@ -670,6 +670,9 @@
         <configuration>
           <contextXml>${basedir}/jetty-context.xml</contextXml>
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
+          <httpConnector>
+            <port>${jetty.port}</port>
+          </httpConnector>
           <webApp>
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
@@ -688,7 +691,7 @@
             </systemProperty>
           </systemProperties>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>8090</stopPort>
+          <stopPort>${jetty.stop.port}</stopPort>
         </configuration>
       </plugin>
     </plugins>

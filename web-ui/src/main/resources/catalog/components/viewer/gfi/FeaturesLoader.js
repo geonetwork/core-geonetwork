@@ -101,33 +101,33 @@
     this.promise = this.$http.get(
         this.proxyfyUrl(uri)).then(function(response) {
 
-      this.loading = false;
-      if (layer.ncInfo) {
-        var doc = ol.xml.parse(response.data);
-        var props = {};
-        ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
-          var node = doc.getElementsByTagName(v);
-          if (node && node.length > 0) {
-            props[v] = ol.xml.getAllTextContent(node[0], true);
+          this.loading = false;
+          if (layer.ncInfo) {
+            var doc = ol.xml.parse(response.data);
+            var props = {};
+            ['longitude', 'latitude', 'time', 'value'].forEach(function(v) {
+              var node = doc.getElementsByTagName(v);
+              if (node && node.length > 0) {
+                props[v] = ol.xml.getAllTextContent(node[0], true);
+              }
+            });
+            this.features = (props.value && props.value != 'none') ?
+                [new ol.Feature(props)] : [];
+          } else {
+            var format = new ol.format.WMSGetFeatureInfo();
+            this.features = format.readFeatures(response.data, {
+              featureProjection: map.getView().getProjection()
+            });
           }
-        });
-        this.features = (props.value && props.value != 'none') ?
-            [new ol.Feature(props)] : [];
-      } else {
-        var format = new ol.format.WMSGetFeatureInfo();
-        this.features = format.readFeatures(response.data, {
-          featureProjection: map.getView().getProjection()
-        });
-      }
 
-      return this.features;
+          return this.features;
 
-    }.bind(this), function() {
+        }.bind(this), function() {
 
-      this.loading = false;
-      this.error = true;
+          this.loading = false;
+          this.error = true;
 
-    }.bind(this));
+        }.bind(this));
 
   };
 

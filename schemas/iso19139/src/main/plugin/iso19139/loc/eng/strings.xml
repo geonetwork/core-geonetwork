@@ -42,6 +42,7 @@
   <inspire>INSPIRE</inspire>
   <inspire_sds>SDS</inspire_sds>
 
+  <keywordFrom>Keywords - </keywordFrom>
   <resource>Resource</resource>
   <xml>XML</xml>
   <metadata>Metadata</metadata>

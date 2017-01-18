@@ -15,8 +15,11 @@
   <!-- SDS: Category. Render an anchor as select box populating it with a codelist -->
   <xsl:template mode="mode-iso19139" priority="2000"
                 match="gmd:dataQualityInfo/*/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[$tab='inspire_sds']">
+    <xsl:variable name="labelConfig">
+      <label><xsl:value-of select="$strings/sds-category"/></label>
+    </xsl:variable>
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="$strings/sds-category"/>
+      <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="@xlink:href"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -58,8 +61,11 @@
   <!-- SDS: CRS -->
   <xsl:template mode="mode-iso19139" priority="2002"
                 match="gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor[$tab='inspire_sds']">
+    <xsl:variable name="labelConfig">
+      <label></label>
+    </xsl:variable>
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="''"/>
+      <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="@xlink:title"/>
       <xsl:with-param name="name" select="gn:element/@ref"/>
       <xsl:with-param name="cls" select="local-name()"/>
@@ -77,8 +83,11 @@
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="subTreeSnippet">
         <xsl:if test="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href != ''">
+          <xsl:variable name="labelConfig">
+            <label><xsl:value-of select="$strings/qos_uom"/></label>
+          </xsl:variable>
           <xsl:call-template name="render-element">
-            <xsl:with-param name="label" select="$strings/qos_uom"/>
+            <xsl:with-param name="label" select="$labelConfig"/>
             <xsl:with-param name="value"
                             select="gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/@xlink:href"/>
             <xsl:with-param name="cls" select="local-name()"/>
@@ -86,8 +95,13 @@
             <xsl:with-param name="isDisabled" select="true()"/>
           </xsl:call-template>
         </xsl:if>
+
+        <xsl:variable name="labelConfig">
+          <label><xsl:value-of select="$strings/qos_value"/></label>
+        </xsl:variable>
+
         <xsl:call-template name="render-element">
-          <xsl:with-param name="label" select="$strings/qos_value"/>
+          <xsl:with-param name="label" select="$labelConfig"/>
           <xsl:with-param name="value"
                           select="gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/text()"/>
           <xsl:with-param name="name"
@@ -108,8 +122,11 @@
     <xsl:variable name="accessCode"
                   select="substring-after($anchor/@xlink:href, 'ConditionsApplyingToAccessAndUse/')"/>
 
+    <xsl:variable name="labelConfig">
+      <label><xsl:value-of select="$strings/sds-limitation"/></label>
+    </xsl:variable>
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="$strings/sds-limitation"/>
+      <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="$strings/sds/*[name()=$accessCode]"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -134,10 +151,12 @@
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
     <xsl:variable name="elementName" select="name()"/>
-
+    <xsl:variable name="labelConfig">
+      <label><xsl:value-of select="if ($overrideLabel != '') then $overrideLabel else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/></label>
+    </xsl:variable>
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="if ($overrideLabel != '') then $overrideLabel else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+                      select="$labelConfig"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>

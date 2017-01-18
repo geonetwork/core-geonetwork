@@ -255,6 +255,7 @@
     indexproxy: '../../index'
   });
 
+
   /**
    * @ngdoc service
    * @kind function
@@ -407,8 +408,8 @@
          * @return {HttpPromise} Future object
          */
         load: function() {
-           return $http.get('../api/site/settings', {cache: true})
-            .then(function(response) {
+          return $http.get('../api/site/settings', {cache: true})
+              .then(function(response) {
                 angular.extend(gnConfig, response.data);
                 // Replace / by . in settings name
                 angular.forEach(gnConfig, function(value, key) {
@@ -421,10 +422,10 @@
                 if (window.location.search.indexOf('with3d') !== -1) {
                   gnConfig['map.is3DModeAllowed'] = true;
                 }
-              defer.resolve(gnConfig);
-              }, function () {
+                defer.resolve(gnConfig);
+              }, function() {
                 defer.reject();
-            });
+              });
         },
         loadPromise: loadPromise,
 

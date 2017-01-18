@@ -129,7 +129,8 @@
              scope.describeCriteria = function() {
                switch (angular.uppercase(scope.original.uitype)) {
                  case 'ALWAYS_ACCEPT':
-                   return $translate.instant('schematronDescriptionAlwaysAccept');
+                   return $translate.instant(
+                   'schematronDescriptionAlwaysAccept');
                  case 'NEW':
                    return $translate.instant('NEW');
                  case 'XPATH':
@@ -168,7 +169,25 @@
                scope.confirmationDialog.showDialog();
              };
              scope.saveEdit = function() {
+               var criteriaType, rawValue, value, isTypeahead;
+               isTypeahead = false;
                if (scope.isDirty()) {
+                 var input = findValueInput();
+                 // it we are not using an autocompleter
+                 // replace the value with valueUi
+                 input.each(function(index, ele) {
+                   isTypeahead = isTypeahead || $(ele).data('ttTypeahead');
+                 });
+                 if (!isTypeahead) {
+                   criteriaType = scope.criteriaTypes[scope.criteria.uitype];
+                   rawValue = scope.criteria.uivalue;
+                   if (criteriaType.value) {
+                     // Check because ALWAYS_ACCEPT has not value.
+                     value = criteriaType.value.replace(/@@value@@/g, rawValue);
+                     scope.criteria.value = value;
+                   }
+                 }
+
                  if (scope.criteria.id) {
                    // it is an updated
                    gnSchematronAdminService.criteria.

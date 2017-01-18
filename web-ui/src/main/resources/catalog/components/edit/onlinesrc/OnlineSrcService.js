@@ -159,6 +159,7 @@
 
       /**
        * Run a service (not a batch) to add or remove
+       *
        * an onlinesrc.
        * Save the form, launch the service, then refresh
        * the form and reload the onlinesrc list.
@@ -219,7 +220,7 @@
               'Accept': 'application/json'
             }
           })
-            .success(function(data) {
+              .success(function(data) {
                 defer.resolve(data);
               });
           return defer.promise;

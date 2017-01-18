@@ -77,6 +77,15 @@
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 
+  <xsl:template mode="index" match="gmd:DQ_DomainConsistency[count(ancestor::node()) =  1]">
+    <Field name="_title"
+           string="{gmd:result/*/gmd:specification/*/gmd:title/gco:CharacterString}"
+           store="true" index="true"/>
+
+    <xsl:call-template name="subtemplate-common-fields"/>
+  </xsl:template>
+
+
   <xsl:template name="subtemplate-common-fields">
     <Field name="any" string="{normalize-space(string(.))}" store="false" index="true"/>
     <Field name="_root" string="{name(.)}" store="true" index="true"/>
