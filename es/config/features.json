@@ -66,7 +66,8 @@
           "stringType": {
             "match": "ft_*_s",
             "mapping": {
-              "type": "keyword"
+              "type": "keyword",
+              "fielddata": true
             }
           }
         },
