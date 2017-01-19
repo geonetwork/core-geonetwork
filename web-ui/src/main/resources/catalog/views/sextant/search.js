@@ -105,11 +105,12 @@
     '$q',
     'gnUrlUtils',
     'gnGlobalSettings',
+    'sxtPanierService',
     function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-             $translate, $q, gnUrlUtils, gnGlobalSettings) {
+             $translate, $q, gnUrlUtils, gnGlobalSettings, sxtPanierService) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -421,6 +422,15 @@
         gnViewerSettings.layerName = params.layername;
         gnViewerSettings.layerGroup = params.layergroup;
       }
+
+      $scope.$watch('mainTabs.panier.active', function(a) {
+        if(a === true) {
+          sxtPanierService.bindPanierWithLayers($scope.searchObj.panier,
+            viewerMap);
+        }
+        else if (a === false){
+        }
+      });
     }]);
 
   module.controller('gnsSextantSearch', [

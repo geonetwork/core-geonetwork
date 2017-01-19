@@ -47,6 +47,7 @@
             layers: []
           };
 
+          // because user loading is asynch
           var unregisterUserWatch = scope.$watch('user', function(user) {
             if(user && user.surname) {
               scope.prefillUser = !(user.generic == 'true');
@@ -257,6 +258,13 @@
               };
 
               var format = new ol.format.WKT();
+              scope.$watch('element.filter.extent', function(e) {
+                if(e) {
+                  scope.prop.extent = format.writeGeometry(
+                    ol.geom.Polygon.fromExtent(e));
+                }
+              })
+
               scope.$watch('prop.extent', function(n) {
                 if(n) {
                   try {
