@@ -25,7 +25,7 @@ body, .gn-fullbackground1 {
 }
 .gn-full {
   min-height: 100%;
-  position: relative;
+  position: absolute;
 }
 
 // home page
@@ -207,8 +207,27 @@ body, .gn-fullbackground1 {
       width: 33%;
       height: 250px;
       .resultcard {
+        .title {
+          h4 {
+            font-size: 16px;
+            margin: 0;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
         .abstract {
-          max-height: 125px !important;
+          display: none !important;
+        }
+        .gn-img-thumbnail {
+          width: 100%;
+          display: block;
+        }
+        &:hover {
+          .gn-img-thumbnail {
+            filter: none !important;
+          }
         }
       }
     }

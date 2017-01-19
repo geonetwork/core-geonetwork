@@ -1,14 +1,16 @@
 <div class="gn-editor-board"
      data-ng-controller="GnSearchController">
-  <div class="row" data-ng-controller="GnEditorBoardSearchController">
-    <div class="col-sm-9"
-         data-ng-search-form=""
+
+  <div data-ng-controller="GnEditorBoardSearchController">
+
+    <div data-ng-search-form=""
          data-runSearch="true">
 
-      <form class="form-horizontal"
-            role="form">
-        <div class="row gn-top-search">
-          <div class="col-md-12">
+      <div class="row gn-sub-bar clearfix">
+
+        <div class="gn-top-search col-md-6">
+          <form role="form">
+            
             <div class="input-group gn-form-any">
 
               <span class="input-group-addon">
@@ -32,36 +34,63 @@
               <div class="input-group-btn">
                 <button type="button"
                         data-ng-click="triggerSearch()"
-                        class="btn btn-primary">
-                  &nbsp;&nbsp;
+                        class="btn btn-default">
                   <i class="fa fa-search"></i>
-                  &nbsp;&nbsp;
                 </button>
-
                 <button type="button"
                         data-ng-click="onlyMyRecord = false;resetSearch(defaultSearchObj.params);"
                         title="{{'ClearTitle' | translate}}"
-                        class="btn btn-link">
+                        class="btn btn-link text-danger">
                   <i class="fa fa-times"></i>
                 </button>
               </div>
 
             </div>
+
+          </form>
+        </div>
+        <!-- /.gn-top-search -->
+        <div class="col-md-6 clearfix gn-nopadding-left">
+          <div class="pull-right">
+            <a href="#/create" class="btn btn-default">
+              <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
+            </a>
+            <a href="#/import" class="btn btn-default">
+              <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
+            </a>
+            <a href="#/directory" class="btn btn-default"
+               ng-if="user.isEditorOrMore()">
+              <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
+            </a>
+            <a href="#/batchedit" class="btn btn-default"
+               ng-if="user.isEditorOrMore()">
+              <i class="fa fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
+            </a>
           </div>
         </div>
-      </form>
-      <br/>
-      <div class="row"
+      </div>
+      <!-- /.gn-sub-bar -->
+
+      <div class="row">
+        <div class="col-md-offset-4 col-md-6 relative">
+          <p class="alert alert-info"
+             data-translate="">editorBoardInfo</p>
+        </div>
+      </div>
+
+      <div class="row gn-margin-bottom"
            data-ng-show="searchResults.records.length > 0">
-        <div class="col-md-offset-3 col-md-4 relative">
-          <div data-gn-selection-widget=""
+        <div class="col-md-offset-4 col-md-2 relative">
+          <div class="pull-left" 
+               data-gn-selection-widget=""
                data-results="searchResults"></div>
         </div>
-        <div class="col-md-5">
-          <div class="pull-right"
+        <div class="col-md-2">
+          <div class="center-block"
                data-gn-pagination="paginationInfo"
                data-hits-values="searchObj.hitsperpageValues"></div>
-
+        </div>
+        <div class="col-md-2">
           <div class="pull-right"
                data-sortby-combo=""
                data-params="searchObj.params"
@@ -70,7 +99,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3 gn-search-facet">
+        <div class="col-md-2 col-md-offset-2 gn-search-facet">
 
           <!-- Hierachical facet mode -->
           <div data-ng-show="searchResults.records.length > 0"
@@ -80,7 +109,7 @@
                data-current-facets="currentFacets">
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-6">
           <div class="gn-results-heading">
             <div data-gn-facet-breadcrumb="currentFacets"></div>
           </div>
@@ -100,29 +129,11 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-3">
-      <a href="#/create" class="btn btn-primary btn-lg btn-block">
-        <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
-      </a>
-      <a href="#/import" class="btn btn-default btn-lg btn-block">
-        <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
-      </a>
-      <a href="#/directory" class="btn btn-default btn-lg btn-block"
-         ng-if="user.isEditorOrMore()">
-        <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
-      </a>
-      <a href="#/batchedit" class="btn btn-default btn-lg btn-block"
-         ng-if="user.isEditorOrMore()">
-        <i class="fa fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
-      </a>
 
-
-      <br/>
-
-      <p class="alert alert-info"
-         data-translate="">editorBoardInfo</p>
-    </div>
   </div>
   <div data-ng-include="'../../catalog/templates/info.html'">
+  </div>
+
+  <div data-ng-include="'../../catalog/views/default/templates/footer.html'">
   </div>
 </div>

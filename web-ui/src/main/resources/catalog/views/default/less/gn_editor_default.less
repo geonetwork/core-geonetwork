@@ -1,3 +1,86 @@
 @import "gn_search_default.less";
 @import "../../../style/gn_editor";
 @import "gn_view.less";
+
+body {
+	// override the background image
+	background: #fff;
+}
+
+.nav-tabs:empty {
+  border-bottom: 0;
+}
+// text in the top bar
+.navbar-text {
+  margin-top: 6px;
+  margin-bottom: 8px;
+  color: #333 !important;
+}
+
+// text and button in `my metadata`
+.gn-editor-board {
+
+	.table.gn-results-editor {
+		h1 {
+	    font-size: 16px !important;
+	    margin: 0 0 5px 0;
+	    a {
+	    	color: #333;
+	    }
+		}
+	 	td {
+			.btn-group {
+				margin-bottom: 5px;
+			}
+			.gn-record-details {
+			  padding-left: 0px;
+			}
+			:nth-of-type(1) {
+			  font-size: 100%;
+			  padding-top: 6px;
+			}
+		}
+	}
+}
+
+// editor
+form.gn-editor {
+  .field-bg {
+    background: transparent;
+    color: 
+  }
+  .gn-required > label:after {
+    font-size: 1.8em;
+    margin: 0px 0 0 7px;
+  } 
+	fieldset {
+    padding: 0px;
+    border: 1px solid #ebebeb;
+    border-radius: 3px;
+    margin-top: 10px;
+    legend {
+    	border: 1px solid #ebebeb;
+      background: #f9f9f9; 
+    	margin-left: -1px;
+    	margin-right: -1px;
+      width: ~"calc(100% + 2px)";
+    	font-size: 18px;
+      padding: 10px 23px;
+    }
+    fieldset {
+    	margin: 10px;
+      padding-left: 0;
+    }
+  }
+  // override deafult bootstrap widths for the editor
+  .col-sm-2 {
+    width: 25%;
+  }
+  .col-sm-9 {
+    width: 66%;
+    .col-sm-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
