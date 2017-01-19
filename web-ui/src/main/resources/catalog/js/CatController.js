@@ -35,6 +35,8 @@
       ['gn_search_manager', 'gn_session_service', 'gn_admin_menu']);
 
 
+  module.constant('gnSearchSettings', {});
+  module.constant('gnViewerSettings', {});
   module.constant('gnGlobalSettings', {
     proxyUrl: '../../proxy?url=',
     locale: {},
@@ -136,6 +138,8 @@
           'enabled': true,
           'appUrl': '#/map',
           'is3DModeAllowed': true,
+          'isSaveMapInCatalogAllowed': true,
+          'bingKey': 'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
           'storage': 'sessionStorage',
           'map': '../../map/config-viewer.xml',
           'listOfServices': {
@@ -185,7 +189,19 @@
         blur: 0
       }
     },
-    current: null
+    current: null,
+    init: function (config, gnUrl, gnViewerSettings, gnSearchSettings) {
+      // Remap some old settings with new one
+      angular.extend(this.gnCfg, config || {});
+      this.gnUrl = gnUrl || '../';
+      gnViewerSettings.mapConfig = this.gnCfg.mods.map;
+      angular.extend(gnSearchSettings, this.gnCfg.mods.search);
+      this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
+      gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
+      gnViewerSettings.owsContext = this.gnCfg.mods.map.context;
+      gnViewerSettings.wmsUrl = this.gnCfg.mods.map.layer.url;
+      gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
+    }
   });
 
   module.constant('gnLangs', {
@@ -276,12 +292,14 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
-    'gnLangs', 'gnAdminMenu',
+    'gnLangs', 'gnAdminMenu', 'gnViewerSettings', 'gnSearchSettings',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
             gnGlobalSettings, $location, gnUtilityService, gnSessionService,
-            gnLangs, gnAdminMenu) {
+            gnLangs, gnAdminMenu, gnViewerSettings, gnSearchSettings) {
       $scope.version = '0.0.1';
+
+
       //Display or not the admin menu
       if ($location.absUrl().indexOf('/admin.console') != -1) {
         $scope.viewMenuAdmin = true;

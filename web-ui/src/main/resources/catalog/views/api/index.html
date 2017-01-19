@@ -22,24 +22,16 @@
       } catch (e) {
         console.warn('Invalid configuration: ' + config + '. Using default.');
         console.warn(e);
-        config = defaultConfig;
+        config = {};
       }
     } else {
-      config = defaultConfig;
+      config = {};
     }
 
     var module = angular.module('gn_search');
-    module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings', 'gnLangs',
-      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings, gnLangs) {
-        gnViewerSettings.mapConfig = config.mods.map;
-        angular.extend(gnSearchSettings, config.mods.search);
-
-        gnGlobalSettings.isMapViewerEnabled = config.mods.map.enabled;
-        gnGlobalSettings.gnCfg = config;
-        // TODO: Define API language
-        gnLangs.current = 'eng';
-        gnGlobalSettings.gnUrl = 'http://localhost:8080/geonetwork/srv/';
-        gnViewerSettings.bingKey = 'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D';
+    module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+      function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+        gnGlobalSettings.init(config, 'http://localhost:8080/geonetwork/srv/', gnViewerSettings, gnSearchSettings);
       }]);
   </script>
 </body>

@@ -40,7 +40,6 @@
         'gnGlobalSettings',
         function(searchSettings, viewerSettings, gnOwsContextService,
                  gnMap, gnNcWms, gnGlobalSettings) {
-          angular.extend(searchSettings, gnGlobalSettings.gnCfg.mods.search);
 
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
@@ -52,7 +51,6 @@
           viewerSettings.bgLayers = [
             gnMap.createLayerForType('osm')
           ];
-
           viewerSettings.servicesUrl =
             viewerSettings.mapConfig.listOfServices || {};
 

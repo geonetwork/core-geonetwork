@@ -178,72 +178,30 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <xsl:variable name="appConfig"
+                  select="util:getSettingValue('ui/config')"/>
 
-    <xsl:variable name="mapConfig"
-                  select="util:getSettingValue('map/config')"/>
-
-    <xsl:variable name="bingKey"
-                  select="util:getSettingValue('map/bingKey')"/>
-
-    <xsl:variable name="isMapViewerEnabled">
-      <xsl:choose>
-        <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')">
-          <xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/>
-        </xsl:when>
-        <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
-      </xsl:choose>
-
-    </xsl:variable>
-
-    <xsl:if test="$angularApp = 'gn_search'">
-      <script type="text/javascript">
-        var module = angular.module('gn_search');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-          gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
-        </xsl:if>
-        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        gnViewerSettings.bingKey = '<xsl:value-of select="$bingKey"/>';
-        }]);
-      </script>
-    </xsl:if>
-
+    <!-- XML highlighter JS dependency. -->
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js"></script>
-
-      <script type="text/javascript">
-        var module = angular.module('gn_editor');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-        </xsl:if>
-        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
     </xsl:if>
 
-    <xsl:if test="$angularApp = 'gn_admin'">
-      <script type="text/javascript">
-        var module = angular.module('gn_admin');
-        module.config(['gnGlobalSettings',
-        function(gnGlobalSettings) {
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
-    </xsl:if>
+    <script type="text/javascript">
+      var module = angular.module('<xsl:value-of select="$angularApp"/>');
+      <xsl:choose>
+        <xsl:when test="$angularApp = 'gn_login'">
+
+        </xsl:when>
+        <xsl:otherwise>
+          module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+          function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+          gnGlobalSettings.init(
+          <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
+          null, gnViewerSettings, gnSearchSettings);
+          }]);
+        </xsl:otherwise>
+      </xsl:choose>
+    </script>
   </xsl:template>
 </xsl:stylesheet>

@@ -105,6 +105,9 @@
           "enabled": true,
           "appUrl": "#/search",
           "hitsperpageValues": [10, 50, 100],
+          "filters": {
+              "type": "service"
+          },
           "paginationInfo": {
             "hitsPerPage": 20
           },
@@ -207,15 +210,9 @@
   }
 
   var module = angular.module('gn_search');
-  module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings', 'gnLangs',
-    function (gnViewerSettings, gnSearchSettings, gnGlobalSettings, gnLangs) {
-      angular.extend(gnGlobalSettings.gnCfg, config);
-      gnViewerSettings.mapConfig = config.mods.map;
-      angular.extend(gnSearchSettings, config.mods.search);
-      gnGlobalSettings.isMapViewerEnabled = config.mods.map.enabled;
-      gnGlobalSettings.gnCfg = config;
-      gnGlobalSettings.gnUrl = 'http://localhost:8080/geonetwork/srv/';
-      gnViewerSettings.bingKey = 'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D';
+  module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+    function (gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+      gnGlobalSettings.init(config, 'http://localhost:8080/geonetwork/srv/', gnViewerSettings, gnSearchSettings);
     }]);
 </script>
 </body>
