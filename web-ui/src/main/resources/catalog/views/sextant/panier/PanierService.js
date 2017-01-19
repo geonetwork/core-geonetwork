@@ -38,11 +38,12 @@
                 var esConfig = layer.get('esConfig');
                 if(esConfig) {
                   var g = esConfig.geometry;
+                  panierItem.filter = {
+                    params: esConfig.qParams
+                };
                   if(g) {
                     var extent = [g[0][0], g[1][1], g[1][0], g[0][1]];
-                    panierItem.filter = {
-                      extent: extent
-                    }
+                    panierItem.filter.extent = extent
                   }
                 }
               }

@@ -281,6 +281,10 @@
                   catch(e) {}
                 }
               });
+
+              scope.removeFilters = function() {
+                scope.element.filter = null;
+              };
             }
           };
         }

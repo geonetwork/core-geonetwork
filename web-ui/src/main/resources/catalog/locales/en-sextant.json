@@ -54,6 +54,8 @@
   "inspireThemes_fr": "Inspire Themes",
   "firstname": "First name",
   "lastname": "Last name",
+  "activeFilter": "Des filtres sont actifs sur cette couche",
+  "removeActiveFilter": "Retirer les filtres sur la couche",
   "replaceByThoseOperations": "Update"
 
 }

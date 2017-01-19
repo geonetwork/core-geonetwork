@@ -53,5 +53,7 @@
   "inspireThemes_fr": "Thèmes Inspire",
   "firstname": "Prénom",
   "lastname": "Nom",
+  "activeFilter": "Some filters are active on the layer",
+  "removeActiveFilter": "Remove active filters",
   "replaceByThoseOperations": "Mettre à jour"
 }
