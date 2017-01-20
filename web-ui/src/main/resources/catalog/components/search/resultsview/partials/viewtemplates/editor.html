@@ -1,7 +1,8 @@
 <table class="table gn-results-editor">
   <tr data-ng-repeat="md in searchResults.records">
     <td>
-      <input data-gn-selection-md type="checkbox"
+      <input class="gn-selectrecord"
+             data-gn-selection-md type="checkbox"
              data-ng-model="md['geonet:info'].selected"
              data-ng-change="change()"/>
     </td>

@@ -25,9 +25,12 @@
 	    	color: #333;
 	    }
 		}
+    .gn-selectrecord {
+      margin-top: 15px;
+    }
     .gn-recordtype {
       display: block;
-      margin-top: 5px;
+      margin-top: 2px;
     }
 	 	td {
 			.btn-group {
@@ -46,6 +49,12 @@
 
 // editor
 form.gn-editor {
+  // toggle button
+  form.gn-editor div[data-gn-toggle] {
+    right: 0;
+    top: 0;
+  }
+  // styling on row hover
   .field-bg {
     background: transparent;
     color: 
@@ -57,7 +66,7 @@ form.gn-editor {
 	fieldset {
     padding: 0px;
     border: 1px solid #ebebeb;
-    border-radius: 3px;
+    border-radius: 2px;
     margin-top: 10px;
     legend {
     	border: 1px solid #ebebeb;
@@ -68,9 +77,21 @@ form.gn-editor {
     	font-size: 18px;
       padding: 10px 23px;
     }
+    table {
+      .col-sm-2, .col-sm-9 {
+        padding-right: 0;
+        padding-left: 0;
+      }
+      .btn [data-gn-click-and-spin] {
+        margin-right: 3px;
+      }
+    }
     fieldset {
     	margin: 10px;
       padding-left: 0;
+      legend {
+        padding-right: 11px;
+      }
     }
   }
   // override deafult bootstrap widths for the editor
