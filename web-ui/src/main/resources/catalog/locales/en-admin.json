@@ -1048,6 +1048,8 @@
     "testClientConfig": "Test client configuration",
     "ui-mod-header": "Top toolbar",
     "ui-languages": "List of languages",
+    "ui-filters": "Filters",
+    "ui-filters-help": "Add extra filters to add to any search queries. It is recommended to avoid to set a filter on an existing form field.",
     "ui-languages-help": "Define the list of language in the language selector",
     "ui-mod-home": "Home page",
     "ui-appUrl": "Application URL",

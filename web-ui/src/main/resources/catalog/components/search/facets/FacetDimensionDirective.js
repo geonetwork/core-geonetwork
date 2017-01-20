@@ -60,9 +60,9 @@
           };
 
           var hasOverridenConfig =
-            angular.isArray(scope.facetList) &&
-            scope.facetList.length > 0;
-          scope.getLabel = function (facet) {
+              angular.isArray(scope.facetList) &&
+              scope.facetList.length > 0;
+          scope.getLabel = function(facet) {
             if (hasOverridenConfig) {
               for (var i = 0; i < scope.facetList.length; i++) {
                 var f = scope.facetList[i];
@@ -77,7 +77,7 @@
             return facet['@label'];
           };
 
-          scope.isDisplayed = function (facet) {
+          scope.isDisplayed = function(facet) {
             if (hasOverridenConfig) {
               // Check if the facet should be displayed
               for (var i = 0; i < scope.facetList.length; i++) {
@@ -94,7 +94,7 @@
               return true;
             }
             return false;
-          }
+          };
 
           // Facet is collapsed if not in current search criteria
           scope.isFacetsCollapse = function(facetKey) {

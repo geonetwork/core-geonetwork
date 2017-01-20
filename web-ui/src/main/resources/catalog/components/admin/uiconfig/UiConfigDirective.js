@@ -26,8 +26,8 @@
 
   var module = angular.module('gn_ui_config_directive', []);
 
-  module.directive('gnUiConfig', ['$http', '$rootScope',
-    function($http, $rootScope) {
+  module.directive('gnUiConfig', [
+    function() {
 
       return {
         restrict: 'A',
@@ -42,6 +42,24 @@
           scope.jsonConfig = angular.fromJson(scope.config);
 
           scope.sortOrderChoices = ['', 'reverse'];
+
+
+          // ng-model can't bind to object key, so
+          // when key value change, reorganize object.
+          scope.updateKey = function(obj, new_key, id) {
+            var keys = Object.keys(obj);
+            var values = Object.values(obj);
+            var old_key = keys[id];
+            if (keys.indexOf(new_key) == -1 && new_key.length > 0) {
+              for (var i = 0, key; key = keys[i]; i++) {
+                delete obj[key];
+              }
+              keys[id] = new_key;
+              for (var i = 0, key; key = keys[i]; i++) {
+                obj[key] = values[i];
+              }
+            }
+          };
 
           // Add an item to an array
           // or duplicate last item multiplied by 10 (eg. hitsPerPage)

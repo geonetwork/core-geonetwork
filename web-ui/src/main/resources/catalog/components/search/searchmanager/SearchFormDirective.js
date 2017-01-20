@@ -127,6 +127,24 @@
           $scope.searchObj.params,
           defaultParams);
 
+      // Add hidden filters which may
+      // restrict search
+      if ($scope.searchObj.filters) {
+        angular.forEach($scope.searchObj.filters,
+            function(value, key) {
+              var p = $scope.searchObj.params[key];
+              if (p) {
+                if (!angular.isArray(p)) {
+                  $scope.searchObj.params[key] = [p];
+                }
+                $scope.searchObj.params[key].push(value);
+
+              } else {
+                $scope.searchObj.params[key] = value;
+              }
+            });
+      }
+
       // Set default pagination if not set
       if ((!keepPagination &&
           !$scope.searchObj.permalink) ||

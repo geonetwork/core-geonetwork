@@ -46,6 +46,7 @@
     function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'popularity',
           from: 1,
@@ -56,10 +57,11 @@
 
 
   module.controller('gnsSearchLatestController', [
-    '$scope',
-    function($scope) {
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           from: 1,
@@ -293,6 +295,7 @@
           relations: ['within']
         },
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        filters: gnSearchSettings.filters,
         defaultParams: {
           'facet.q': '',
           resultType: gnSearchSettings.facetsSummaryType || 'details',

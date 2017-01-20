@@ -91,7 +91,7 @@
           };
 
           scope.isSaveMapInCatalogAllowed =
-            gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed || true;
+              gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed || true;
           scope.mapUuid = null;
           scope.mapProps = {
             map_title: '',

@@ -88,7 +88,7 @@
             //   fre: 'Publication'
             // }}
           ],
-          filters: [],
+          'filters': [],
           'sortbyValues': [{
             'sortBy': 'relevance',
             'sortOrder': ''
@@ -139,7 +139,8 @@
           'appUrl': '#/map',
           'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
-          'bingKey': 'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
+          'bingKey':
+              'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
           'storage': 'sessionStorage',
           'map': '../../map/config-viewer.xml',
           'listOfServices': {
@@ -190,7 +191,7 @@
       }
     },
     current: null,
-    init: function (config, gnUrl, gnViewerSettings, gnSearchSettings) {
+    init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
       // Remap some old settings with new one
       angular.extend(this.gnCfg, config || {});
       this.gnUrl = gnUrl || '../';
