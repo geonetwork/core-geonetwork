@@ -88,6 +88,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -1225,11 +1226,12 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @throws Exception
      */
     @Override
+    @Transactional
     public void deleteMetadataOper(ServiceContext context, String metadataId, boolean skipAllReservedGroup) throws Exception {
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
         if (skipAllReservedGroup) {
-            int[] exclude = new int[] {
+            Integer[] exclude = new Integer[] {
                 ReservedGroup.all.getId(),
                     ReservedGroup.intranet.getId(),
                     ReservedGroup.guest.getId()

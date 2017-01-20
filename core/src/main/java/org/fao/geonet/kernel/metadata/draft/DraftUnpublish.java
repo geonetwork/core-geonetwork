@@ -3,8 +3,6 @@
  */
 package org.fao.geonet.kernel.metadata.draft;
 
-import java.io.IOException;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -13,9 +11,9 @@ import org.fao.geonet.kernel.metadata.IMetadataIndexer;
 import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.utils.Log;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import jeeves.server.context.ServiceContext;
 
@@ -26,6 +24,7 @@ import jeeves.server.context.ServiceContext;
  * 
  * 
  */
+@Component
 public class DraftUnpublish
         implements ApplicationListener<MetadataUnpublished> {
 

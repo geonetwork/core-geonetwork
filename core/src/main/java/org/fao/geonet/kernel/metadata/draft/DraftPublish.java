@@ -15,6 +15,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import jeeves.server.context.ServiceContext;
 
@@ -25,6 +26,7 @@ import jeeves.server.context.ServiceContext;
  * 
  * 
  */
+@Component
 public class DraftPublish implements ApplicationListener<MetadataPublished> {
 
     @Autowired

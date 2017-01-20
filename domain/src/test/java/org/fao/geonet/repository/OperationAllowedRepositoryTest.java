@@ -108,7 +108,7 @@ public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTes
     public void deleteAllByMetadataIdExceptGroupId() {
         System.out.println("deleteAllByMdIdNotGroup");
         assertEquals(4, _opAllowRepo.count());
-        _opAllowRepo.deleteAllByMetadataIdExceptGroupId(_md1.getId(), new int[]{
+        _opAllowRepo.deleteAllByMetadataIdExceptGroupId(_md1.getId(), new Integer[]{
             _allGroup.getId()
         });
 

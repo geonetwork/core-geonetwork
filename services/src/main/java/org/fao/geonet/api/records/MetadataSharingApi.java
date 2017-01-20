@@ -64,16 +64,15 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-
 import org.fao.geonet.kernel.metadata.IMetadataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
@@ -86,6 +85,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -145,6 +146,7 @@ public class MetadataSharingApi {
     })
     @PreAuthorize("hasRole('Editor')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional(propagation=Propagation.REQUIRES_NEW)
     public void share(
         @ApiParam(
             value = API_PARAM_RECORD_UUID,
@@ -215,6 +217,7 @@ public class MetadataSharingApi {
     @ResponseStatus(HttpStatus.CREATED)
     public
     @ResponseBody
+    @Transactional
     MetadataProcessingReport share(
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
