@@ -26,8 +26,8 @@
 
   var module = angular.module('gn_ui_config_directive', []);
 
-  module.directive('gnUiConfig', [
-    function() {
+  module.directive('gnUiConfig', ['gnGlobalSettings',
+    function(gnGlobalSettings) {
 
       return {
         restrict: 'A',
@@ -79,6 +79,11 @@
             } else if (angular.isObject(array)) {
               delete array[index];
             }
+          };
+
+          scope.reset = function() {
+            angular.extend(scope.jsonConfig,
+                gnGlobalSettings.getDefaultConfig());
           };
 
           scope.testClientConfig = function() {

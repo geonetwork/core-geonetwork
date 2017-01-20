@@ -37,12 +37,8 @@
 
   module.constant('gnSearchSettings', {});
   module.constant('gnViewerSettings', {});
-  module.constant('gnGlobalSettings', {
-    proxyUrl: '../../proxy?url=',
-    locale: {},
-    isMapViewerEnabled: false,
-    requireProxy: [],
-    gnCfg: {
+  module.constant('gnGlobalSettings', function() {
+    var defaultConfig = {
       'langDetector': {
         'fromHtmlTag': false,
         'regexp': '^\/[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-]+\/([a-z]{3})\/',
@@ -80,6 +76,7 @@
             'hitsPerPage': 20
           },
           'facetsSummaryType': 'details',
+          'facetTabField': '',
           'facetConfig': [
             // {
             // key: 'createDateYear',
@@ -88,7 +85,7 @@
             //   fre: 'Publication'
             // }}
           ],
-          'filters': [],
+          'filters': {},
           'sortbyValues': [{
             'sortBy': 'relevance',
             'sortOrder': ''
@@ -144,9 +141,9 @@
           'storage': 'sessionStorage',
           'map': '../../map/config-viewer.xml',
           'listOfServices': {
-            'wms': [{'name': 'BRGM',
-              'url': 'http://geoservices.brgm.fr/geologie'}],
-            'wmts': []},
+            'wms': [],
+            'wmts': []
+          },
           'useOSM': true,
           'context': '',
           'layer': {
@@ -179,31 +176,42 @@
           'appUrl': '../../signout'
         }
       }
-    },
-    gnUrl: '',
-    docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
-    //docUrl: '../../doc/',
-    modelOptions: {
-      updateOn: 'default blur',
-      debounce: {
-        default: 300,
-        blur: 0
+    };
+
+    return {
+      proxyUrl: '../../proxy?url=',
+      locale: {},
+      isMapViewerEnabled: false,
+      requireProxy: [],
+      gnCfg: angular.copy(defaultConfig),
+      gnUrl: '',
+      docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+      //docUrl: '../../doc/',
+      modelOptions: {
+        updateOn: 'default blur',
+        debounce: {
+          default: 300,
+          blur: 0
+        }
+      },
+      current: null,
+      init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
+        // Remap some old settings with new one
+        angular.extend(this.gnCfg, config || {});
+        this.gnUrl = gnUrl || '../';
+        gnViewerSettings.mapConfig = this.gnCfg.mods.map;
+        angular.extend(gnSearchSettings, this.gnCfg.mods.search);
+        this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
+        gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
+        gnViewerSettings.owsContext = this.gnCfg.mods.map.context;
+        gnViewerSettings.wmsUrl = this.gnCfg.mods.map.layer.url;
+        gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
+      },
+      getDefaultConfig: function() {
+        return angular.copy(defaultConfig);
       }
-    },
-    current: null,
-    init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
-      // Remap some old settings with new one
-      angular.extend(this.gnCfg, config || {});
-      this.gnUrl = gnUrl || '../';
-      gnViewerSettings.mapConfig = this.gnCfg.mods.map;
-      angular.extend(gnSearchSettings, this.gnCfg.mods.search);
-      this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
-      gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
-      gnViewerSettings.owsContext = this.gnCfg.mods.map.context;
-      gnViewerSettings.wmsUrl = this.gnCfg.mods.map.layer.url;
-      gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
-    }
-  });
+    };
+  }());
 
   module.constant('gnLangs', {
     langs: {},

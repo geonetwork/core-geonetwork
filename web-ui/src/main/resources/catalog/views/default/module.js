@@ -104,6 +104,7 @@
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
       $scope.facetConfig = gnSearchSettings.facetConfig;
+      $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
@@ -252,8 +253,14 @@
       };
 
       // Manage route at start and on $location change
+      // depending on configuration
       if (!$location.path()) {
-        $location.path('/home');
+        var m = gnGlobalSettings.gnCfg.mods;
+        $location.path(
+          m.home.enabled ? '/home' :
+          m.search.enabled ? '/search' :
+          m.map.enabled ? '/map' : 'home'
+        );
       }
       $scope.activeTab = $location.path().
           match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
