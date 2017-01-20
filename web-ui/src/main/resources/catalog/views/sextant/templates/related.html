@@ -1,4 +1,4 @@
-<div class="btn-group" ng-if="relationFound">
+<div class="btn-group" ng-if="relationFound" sxt-popover-dropdown placement="bottom" container=".gn-grid-item" className="sxt-popover-grid">
   <button type="button"
           class="btn dropdown-toggle btn-sm btn-default"
           data-toggle="dropdown"
@@ -6,7 +6,7 @@
     <span class="fa fa-code-fork"></span>
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" role="menu">
+  <ul class="dropdown-menu" role="menu" sxt-custom-scroll>
     <li data-ng-repeat="r in ::relations.parent track by $index">
       <a href="#/metadata/{{r.id}}"
          title="{{r.title | gnLocalized: lang}}">
