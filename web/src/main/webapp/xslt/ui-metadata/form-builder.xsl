@@ -1497,7 +1497,20 @@
                                   then 'number'
                                   else 'text'}"
                                    name="{$name}"
-                                   value="{*/normalize-space()}"/>
+                                   value="{*/normalize-space()}">
+                              <xsl:if test="@min">
+                                <xsl:attribute name="min" select="@min"/>
+                              </xsl:if>
+                              <xsl:if test="@max">
+                                <xsl:attribute name="max" select="@max"/>
+                              </xsl:if>
+                              <xsl:if test="@step">
+                                <xsl:attribute name="step" select="@step"/>
+                              </xsl:if>
+                              <xsl:if test="@pattern">
+                                <xsl:attribute name="pattern" select="@pattern"/>
+                              </xsl:if>
+                            </input>
                           </xsl:otherwise>
                         </xsl:choose>
                       </xsl:when>
