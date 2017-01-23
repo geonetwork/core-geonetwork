@@ -66,11 +66,11 @@
         },
         'home': {
           'enabled': true,
-          'appUrl': '#/home'
+          'appUrl': '../../srv/{{lang}}/catalog.search#/home'
         },
         'search': {
           'enabled': true,
-          'appUrl': '#/search',
+          'appUrl': '../../srv/{{lang}}/catalog.search#/search',
           'hitsperpageValues': [10, 50, 100],
           'paginationInfo': {
             'hitsPerPage': 20
@@ -133,7 +133,7 @@
         },
         'map': {
           'enabled': true,
-          'appUrl': '#/map',
+          'appUrl': '../../srv/{{lang}}/catalog.search#/map',
           'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
           'bingKey':
@@ -162,15 +162,15 @@
         },
         'editor': {
           'enabled': true,
-          'appUrl': '../../srv/eng/catalog.edit'
+          'appUrl': '../../srv/{{lang}}/catalog.edit'
         },
         'admin': {
           'enabled': true,
-          'appUrl': '../../srv/eng/admin.console'
+          'appUrl': '../../srv/{{lang}}/admin.console'
         },
         'signin': {
           'enabled': true,
-          'appUrl': '../../srv/eng/catalog.signin'
+          'appUrl': '../../srv/{{lang}}/catalog.signin'
         },
         'signout': {
           'appUrl': '../../signout'
@@ -502,6 +502,10 @@
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
           var url = 'qi?_content_type=json&summaryOnly=true';
+          angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
+              function(v, k) {
+                url += '&' + k + '=' + v;
+              });
           return gnSearchManagerService.search(url).
               then(function(data) {
                 $scope.searchInfo = data;

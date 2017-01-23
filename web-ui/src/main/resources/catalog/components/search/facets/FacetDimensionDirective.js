@@ -44,7 +44,7 @@
           params: '=',
           tabField: '='
         },
-        link: function(scope, element) {
+        link: function(scope, element, attrs) {
           scope.facetQuery = scope.params['facet.q'];
           scope.facetConfig = null;
 
@@ -80,6 +80,7 @@
 
           scope.tabs = null;
           scope.activeTab = null;
+          scope.isTabMode = angular.isDefined(attrs['tabField']);
           scope.initialValues = null;
           if (scope.tabField) {
             // Init the facet to use for tabs the first time
