@@ -14,7 +14,7 @@
        data-ng-show="(('ui-mod-' + m + '-help') | translate) != ('ui-mod-' + m + '-help')">
       {{('ui-' + m + '-help') | translate}} </p>
 
-    <div class="col-sm-8"
+    <div class="col-sm-12"
          data-ng-repeat="(key, value) in mCfg"
          data-ng-switch="key">
       <div data-ng-switch-when="enabled"></div>
@@ -24,7 +24,7 @@
 
       <!-- arrays -->
       <div data-ng-switch-when="hitsperpageValues">
-        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <label class="col-sm-4 control-label">{{('ui-' + key) | translate}}</label>
         <table class="table table-striped">
           <tr data-ng-repeat="v in mCfg[key] track by $index">
             <td>
