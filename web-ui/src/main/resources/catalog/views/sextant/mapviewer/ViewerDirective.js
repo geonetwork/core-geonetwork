@@ -285,7 +285,9 @@
       link: function (scope, element, attrs) {
           var content = element.find('ul').css('display', 'none');
           var button = element.find('.dropdown-toggle');
-          var grid = element.parents(attrs['container']).first();
+          if (attrs['container']) {
+            var grid = element.parents(attrs['container']).first();
+          }
 
           $timeout(function() {
             var className = (attrs['fixedHeight'] != 'false')  ?
@@ -295,7 +297,7 @@
             }
             button.popover({
               animation: false,
-              container: grid[0] || '[sxt-main-viewer]',
+              container: (grid) ? grid[0] : '[sxt-main-viewer]',
               placement: attrs['placement'] || 'right',
               content: ' ',
               template: '<div class="bottom popover ' + className + '">' +
@@ -308,14 +310,16 @@
             content.css('display', 'inline').appendTo(
               $tip.find('.popover-content')
             );
-            $tip.find('.arrow').css({
-              left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
-            });
-            $tip.css({
-              right: '0',
-              left: '0'
-            });
-            $tip.find('[sxt-custom-scroll]').mCustomScrollbar('update');
+            if (grid) {
+              $tip.find('.arrow').css({
+                left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
+              });
+              $tip.css({
+                right: '0',
+                left: '0'
+              });
+              $tip.find('[sxt-custom-scroll]').mCustomScrollbar('update');
+            }
           });
           button.on('hidden.bs.popover', function() {
             content.css('display', 'none').appendTo(element);
