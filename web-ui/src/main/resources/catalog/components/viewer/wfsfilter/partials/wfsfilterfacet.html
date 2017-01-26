@@ -148,6 +148,12 @@
         <i class="fa fa-eraser"></i>&nbsp;
         <span translate>reset</span>
       </button>
+      <button data-gn-click-and-spin="toSqlOgr()"
+              data-ng-if="isFeaturesIndexed"
+              class="btn btn-default btn-xs gn-reset-facets">
+        <i class="fa fa-eraser"></i>&nbsp;
+        <span translate>SQL</span>
+      </button>
       <div data-ng-show="hmActive"
            data-ng-if="isFeaturesIndexed">
         <label data-ng-show="map"

@@ -633,6 +633,35 @@
             scope.$destroy();
             resetHeatMap();
           });
+
+
+          scope.toSqlOgr = function() {
+            solrObject.pushState();
+            var state = solrObject.getState();
+
+            if(!state.any) {
+              var where = [];
+              angular.forEach(state.qParams, function(fObj, fName) {
+                var clause = [];
+                angular.forEach(fObj.values, function(v, k) {
+                  clause.push(fName + '=' + k);
+                });
+                where.push('(' + clause.join(' OR ') + ')');
+              });
+              console.log(where.join(' AND '));
+            }
+            else {
+              solrObject.search_es({
+                size: scope.count || 10000,
+                aggs: {}
+              }).then(function(data) {
+                var where = data.hits.hits.map(function(res) {
+                  return res._id;
+                });
+                console.log(where.join(' OR '));
+              });
+            }
+          };
         }
       };
     }]);
