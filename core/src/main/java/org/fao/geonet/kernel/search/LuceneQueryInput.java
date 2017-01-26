@@ -75,7 +75,9 @@ public class LuceneQueryInput extends UserQueryInput {
         if(groupsEd != null) {
             Set<String> groups = new HashSet<String>();
             for(Element groupEd : groupsEd) {
-                groups.add(groupEd.getText());
+                for(Object group : groupEd.getChildren()) {
+                    groups.add(((Element)group).getText());
+                }
             }
             setEditableGroups(groups);
         }
