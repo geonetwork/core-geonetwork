@@ -358,7 +358,7 @@
 
                    // Load all keywords from thesaurus on startup
                    gnThesaurusService.getKeywords('',
-                   scope.thesaurusKey, scope.max)
+                   scope.thesaurusKey, gnLangs.current, scope.max)
                     .then(function(listOfKeywords) {
 
                      var field = $(id).tagsinput('input');

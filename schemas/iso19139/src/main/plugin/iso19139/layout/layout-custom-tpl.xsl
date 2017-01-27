@@ -172,7 +172,7 @@
     <xsl:variable name="isFirstOfItsKind"
                   select="preceding-sibling::*[1]/name() != $name"/>
     <xsl:variable name="values">
-      <xsl:if test="not($isEmbeddedMode)">
+      <xsl:if test="not($isEmbeddedMode) or ($isEmbeddedMode and $isFirstOfItsKind)">
         <header>
           <col>
             <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'uuidref', $labels, '', $isoType, $xpath)/label"/>
