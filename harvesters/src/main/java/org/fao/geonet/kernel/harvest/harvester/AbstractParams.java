@@ -146,6 +146,19 @@ public abstract class AbstractParams {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
         }
 
+        Element ownerIdUserE = site.getChild("ownerUser");
+        if (ownerIdUserE == null) {
+            ownerIdUserE = node.getChild("ownerUser");
+        }
+        if (ownerIdUserE != null) {
+            Element idE = ownerIdUserE.getChild("id");
+            if (idE != null) {
+                setOwnerIdUser(idE.getText());
+            } else if (!ownerIdUserE.getTextTrim().isEmpty()) {
+                setOwnerIdUser(ownerIdUserE.getTextTrim());
+            }
+        }
+
         Element ownerIdGroupE = site.getChild("ownerGroup");
         if (ownerIdGroupE == null) {
             ownerIdGroupE = node.getChild("ownerGroup");
