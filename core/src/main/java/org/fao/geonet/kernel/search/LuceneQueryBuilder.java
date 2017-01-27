@@ -975,7 +975,7 @@ public class LuceneQueryBuilder {
         
         luceneQueryInput.getSearchCriteria().remove("draft");
         
-        //Queries for drafts:
+        //Auxiliary queries for drafts:
         BooleanQuery canEditQuery = new BooleanQuery(); 
         BooleanQuery cannotEditQuery = new BooleanQuery();
         
@@ -997,44 +997,81 @@ public class LuceneQueryBuilder {
         cannotEditQuery.add(haveDraftClause);
         
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-        
 
-        if (!editable) {
+        boolean admin = luceneQueryInput.getAdmin();
+        
+        //We need this query to combine it with the view privilege (see comments forward)
+        BooleanQuery notPresentInEditableGroups = null;
+
+        if(!editableGroups.isEmpty()) {
+            notPresentInEditableGroups = new BooleanQuery();
+        }
+        for(String editableGroup : editableGroups) {
+            BooleanQuery editableQuery = new BooleanQuery();
+            
+            //group has edit privileges
+            TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, editableGroup.trim()));
+
+            editableQuery.add(editQuery, 
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            editableQuery.add(cannotEditQuery, 
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            
+            notPresentInEditableGroups.add(editableQuery,
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
+        }
+
+        if (!editable && !admin) {
             if (!CollectionUtils.isEmpty(groups)) {
                 for (String group : groups) {
                     if (StringUtils.isNotBlank(group)) {  
-                        //Should we only show metadata editable by the user?  
-                        BooleanQuery editableQuery = new BooleanQuery();   
-                        BooleanQuery groupQuery = new BooleanQuery();
-                        if (!editable) {
-                            // add to view
-                            TermQuery viewEditQuery = new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
-                            BooleanClause viewClause = new BooleanClause(viewEditQuery, 
-                                    LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
-                            groupsQueryEmpty = false;
-                            groupQuery.add(viewClause); 
-                        }
+                        //at least one groupQuery is added
+                        groupsQueryEmpty = false;
                         
-                        // add to edit
+                        //query to show md in group "group"
+                        BooleanQuery editableQuery = new BooleanQuery();
+                        
+                        //group has view privileges
+                        TermQuery viewEditQuery = 
+                                new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
+                        BooleanClause viewClause = new BooleanClause(viewEditQuery, 
+                                LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
+                        
+                        //group has edit privileges
                         TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, group.trim()));
                         BooleanClause editClause = new BooleanClause(editQuery, 
                                 LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
-                        groupsQueryEmpty = false;
+                        
+                        //merged previous view and edit group privileges query with an OR
+                        BooleanQuery groupQuery = new BooleanQuery();
+                        groupQuery.add(viewClause); 
                         groupQuery.add(editClause);
                         
+                        //add previous OR to general group query
                         editableQuery.add(groupQuery, 
                                 LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
 
+                        //Show draft or not depending if user have edit privileges over group
                         if(editableGroups.contains(group) && !noDraft) {
                             editableQuery.add(canEditQuery, 
                                     LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
                         } else {        
-                            editableQuery.add(cannotEditQuery, 
+                            //We have to make sure we don't have privileges to edit this md somewhere else
+                            //because if we can edit it, it will break the query 
+                            //showing both draft and non-draft version
+                            BooleanQuery nonEditableQuery = new BooleanQuery();
+                            nonEditableQuery.add(cannotEditQuery, 
+                                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+                            if(notPresentInEditableGroups != null) {
+                                nonEditableQuery.add(notPresentInEditableGroups, 
+                                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+                            }
+                                
+                            editableQuery.add(nonEditableQuery, 
                                     LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
                         }
                         
-
-                        // don't view drafts
+                        // add to general groups query with OR
                         groupsQuery.add(new BooleanClause(editableQuery, 
                                 LuceneUtils.convertRequiredAndProhibitedToOccur(false, false)));
                     }                     
@@ -1085,7 +1122,6 @@ public class LuceneQueryBuilder {
         // "dummy" -- to go in groups query, to retrieve everything for
         // Administrator users.
         //
-        boolean admin = luceneQueryInput.getAdmin();
         if (admin) {
             TermQuery adminQuery = new TermQuery(new Term(LuceneIndexField.DUMMY, "0"));
             BooleanClause adminClause = new BooleanClause(adminQuery, groupOccur);

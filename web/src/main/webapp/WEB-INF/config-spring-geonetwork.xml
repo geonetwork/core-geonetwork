@@ -185,7 +185,7 @@
   -->
   
   <!-- Draft workspace/workflow -->    
-<!--   <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataIndexer" 
+  <!--  <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataIndexer" 
         lazy-init="false"
        primary="true"/>
     <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataManager" 
@@ -200,6 +200,14 @@
     <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataCategory"  
        lazy-init="false"
        primary="true"
+       />
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftPublish"  
+       lazy-init="false"
+       primary="true"
+       />
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftUnpublish"  
+       lazy-init="false"
+       primary="true"
        /> -->
-  
+
 </beans>

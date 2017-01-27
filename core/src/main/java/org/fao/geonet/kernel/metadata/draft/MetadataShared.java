@@ -95,7 +95,9 @@ public class MetadataShared implements ApplicationListener<MetadataShare> {
                                     original.getId(),
                                     event.getOp().getId().getOperationId());
                     
-                    operationAllowedRepository.delete(operationAllowed);
+                    if(operationAllowed != null) {
+                        operationAllowedRepository.delete(operationAllowed);
+                    }
                     break;
                 default:
                     //There is a case for this?
