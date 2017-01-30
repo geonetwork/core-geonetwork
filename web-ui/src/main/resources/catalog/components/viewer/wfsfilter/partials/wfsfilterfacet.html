@@ -72,6 +72,8 @@
         </div>
         <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
       </div>
+      <div gn-facet-graph field="field" callback="onUpdateDate"
+         ng-if="field.label=='date_min'" class="list-group"></div>
     </div>
 
     <!--Geometry Field-->
