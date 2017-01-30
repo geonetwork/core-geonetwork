@@ -509,6 +509,12 @@
             });
           }
           facetField.dates = fNameObj.allDates;
+          facetField.datesCount = respAgg.buckets.map(function(b) {
+            return {
+              value: b.key,
+              count: b.doc_count
+            };
+          });
         }
 
         // terms

@@ -256,4 +256,41 @@
         }
       };
     }]);
+
+  module.directive('gnFacetGraph', [ '$timeout', function($timeout) {
+
+    return {
+      restrict: 'A',
+      replace: true,
+      templateUrl: '../../catalog/components/search/facets/' +
+          'partials/facet-graph.html',
+      scope: {
+        field: '=',
+        callback: '='
+      },
+      link: function(scope, element, attrs, controller) {
+        if (!scope.field) { return; }
+        var data = scope.field.datesCount.map(function(d) {
+          return {
+            event: d.value,
+            time: {
+              begin: d.value,
+              end: d.value
+            },
+            value: d.count
+          };
+        });
+        data = data.sort(function(a,b) {
+          return a.event > b.event;
+        });
+
+        $timeout(function() {
+          var tm = new TimeLine(element.find('.ui-timeline')[0]);
+          tm.initialize(data, scope.field, scope.callback);
+        }, 100, false);
+      }
+    };
+
+  }]);
+
 })();
