@@ -1,7 +1,7 @@
 <div class="gn-md-links">
 
   <!--Downloads to panier button-->
-  <div class="btn-group pull-right" ng-if="isPanier && downloads.length > 1">
+  <div class="btn-group pull-right" ng-if="isPanier && downloads.length > 1" sxt-popover-dropdown placement="bottom" container=".gn-grid-item" className="sxt-popover-grid">
     <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'download' | translate}}" data-ng-disabled="md['geonet:info'].download == 'false'">
       <span class="fa fa-download"></span>
       <span class="caret"></span>
@@ -29,7 +29,7 @@
   </button>
 
   <!--Layers to map button-->
-  <div class="btn-group pull-right" ng-if="isMap && layers.length > 1 ">
+  <div class="btn-group pull-right" ng-if="isMap && layers.length > 1 " sxt-popover-dropdown placement="bottom" container=".gn-grid-item" className="sxt-popover-grid">
     <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'view' | translate}}" data-ng-disabled="md['geonet:info'].dynamic == 'false'">
       <span class="fa fa-globe"></span>
       <span class="caret"></span>
@@ -55,7 +55,7 @@
     <span class="fa fa-globe"></span>
   </button>
 
-  <div class="btn-group pull-right" ng-if="links.length > 0">
+  <div class="btn-group pull-right" ng-if="links.length > 0" sxt-popover-dropdown placement="bottom" container=".gn-grid-item" className="sxt-popover-grid">
     <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" title="{{'links' | translate}}">
       <span class="fa fa-link"></span>
       <span class="caret"></span>

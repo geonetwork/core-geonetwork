@@ -271,22 +271,19 @@
 }
 .gn-grid,
 .sxt-main-tabs {
-  .popover-content {
-    padding: 6px 10px 5px;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: bold;
-  }
-  .popover {
+  .popover:not(.sxt-popover-grid) {
     margin-top: 4px;
     border-radius: 2px;
     .arrow {
       display: none;
     }
-  }
-  .popover-content {
-    color: red;
-    font-size: 11px;
+    .popover-content {
+      padding: 6px 10px 5px;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: red;
+      font-size: 11px;
+    }
   }
 }
 
@@ -926,7 +923,7 @@ ul.gn-resultview {
         max-width: 100%;
       }
     }
-    .popover {
+    .popover:not(.sxt-popover-grid) {
       top: 10em !important;
     }
   }
@@ -1321,6 +1318,35 @@ ul.gn-resultview {
 
 .popover {
   height: auto;
+}
+.popover.sxt-popover-grid {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  .popover-content {
+    height: auto;
+    padding: 0;
+    width: 100%;
+    display: inline-block;
+    ul.dropdown-menu {
+      padding-bottom: 0;
+      width: 100%;
+    }
+    li {
+      width: 100%;
+      &.divider {
+        margin: 0;
+        padding: 0;
+      }
+    }
+    li a {
+      padding-top: 1px;
+      padding-bottom: 1px;
+      line-height: normal;
+      .text-overflow();
+      width: 100%;
+    }
+  }
 }
 .g {
   height: auto;

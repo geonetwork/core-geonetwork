@@ -20,8 +20,8 @@
                 title="{{::md.icon.title | translate}}"></span>
 
           <h4 title="{{::md.title || md.defaultTitle}}">
-            <a  href="md.viewer#/sxt_view/{{::md.getUuid()}}" gn-metadata-open="::md">
-              {{::(md.title || md.defaultTitle) | characters : 70}}</a>
+            <a  href="md.viewer#/sxt_view/{{::md.getUuid()}}" gn-metadata-open="::md" sxt-truncate>
+              {{::(md.title || md.defaultTitle)}}</a>
           </h4>
 
         </div>
@@ -85,7 +85,7 @@
         </div>
 
         <sxt-links-btn></sxt-links-btn>
-        <div class="gn-md-relations" ng-if="::md.type == 'series'">
+        <div class="gn-md-relations pull-right" ng-if="::md.type == 'series'">
           <div gn-related="::md" types="parent|children"
                template="../../catalog/views/sextant/templates/related.html"></div>
          </div>
