@@ -788,6 +788,8 @@
           var available, limits;
           var rendered = false;
           var isRange = ($(element).find('input').length == 2);
+          var highlight = attrs['dateOnlyHighlight'] === 'true';
+
           if(isRange && ! scope.date) {
             scope.date = {};
           }
@@ -840,7 +842,9 @@
             }
             $(element).datepicker(angular.isDefined(scope.dates) ? {
               beforeShowDay: function(dt, a, b) {
-                return available(dt);
+                var isEnable = available(dt);
+                return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+                  isEnable;
               },
               startDate: limits.min,
               endDate: limits.max,
