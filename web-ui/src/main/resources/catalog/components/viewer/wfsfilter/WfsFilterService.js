@@ -48,6 +48,14 @@
             gnUrlUtils.toKeyValue(params));
       };
 
+      this.registerEsObject = function(url, ftName) {
+        return gnSolrRequestManager.register('WfsFilter', url + '#' + ftName);
+      };
+      this.getEsObject = function(url, ftName) {
+        return gnSolrRequestManager.get('WfsFilter', url + '#' + ftName);
+      };
+
+
       /**
        * Retrieve the index field object from the array given from feature type
        * info. The object contains the feature type attribute name, the solr
@@ -234,5 +242,34 @@
         }, function(response) {
         });
       };
+
+      this.toCQL = function(esObj) {
+
+        var state = esObj.getState();
+
+        if(!state.any) {
+          var where = [];
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var clause = [];
+            angular.forEach(fObj.values, function(v, k) {
+              clause.push(fName + '=' + k);
+            });
+            where.push('(' + clause.join(' OR ') + ')');
+          });
+          return(where.join(' AND '));
+        }
+        else {
+          esObj.search_es({
+            size: scope.count || 10000,
+            aggs: {}
+          }).then(function(data) {
+            var where = data.hits.hits.map(function(res) {
+              return res._id;
+            });
+            return(where.join(' OR '));
+          });
+        }
+      };
+
     }]);
 })();

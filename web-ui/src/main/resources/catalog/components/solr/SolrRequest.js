@@ -902,7 +902,7 @@
     var state_ = state || angular.copy(this.requestParams);
     this.states_.push(state_);
   };
-  geonetwork.GnSolrRequest.prototype.popState = function(state) {
+  geonetwork.GnSolrRequest.prototype.popState = function() {
     return this.states_.pop();
   };
   geonetwork.GnSolrRequest.prototype.getState = function(idx) {
