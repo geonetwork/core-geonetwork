@@ -788,14 +788,15 @@
           var available, limits;
           var rendered = false;
           var isRange = ($(element).find('input').length == 2);
+          var highlight = attrs['dateOnlyHighlight'] === 'true';
+
           if(isRange && ! scope.date) {
             scope.date = {};
           }
 
           scope.$watch('dates', function(dates, old) {
-              init();
-          });
 
+          });
           var init = function() {
             if(scope.dates) {
               // Time epoch
@@ -840,31 +841,36 @@
             }
             $(element).datepicker(angular.isDefined(scope.dates) ? {
               beforeShowDay: function(dt, a, b) {
-                return available(dt);
+                var isEnable = available(dt);
+                return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+                  isEnable;
               },
               startDate: limits.min,
               endDate: limits.max,
-              clearBtn: true
+              //autoClose: true,
+              clearBtn: true,
+              todayHighlight: false,
               } : {}).on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
                 if(!isRange) {
-
                   scope.date = $(element).find('input')[0].value;
                 }
                 else {
                   scope.date.from = $(element).find('input')[0].value;
                   scope.date.to = $(element).find('input')[1].value;
-
                 }
               });
             });
             rendered = true;
           };
 
+          init();
+
           // model -> view
           if(!isRange) {
             scope.$watch('date', function(v,o) {
+
               if (angular.isDefined(v) && angular.isFunction(scope.onChangeFn)) {
                 scope.onChangeFn();
               }
@@ -876,12 +882,14 @@
           }
           else {
             scope.$watchCollection('date', function(v,o) {
-              if (angular.isDefined(v) && v.to && v.from && angular.isFunction(scope.onChangeFn)) {
-                scope.onChangeFn();
+             if(angular.isUndefined(v)) {
+                scope.date = {};
+                return;
               }
+              scope.onChangeFn();
               if(v != o) {
-                $(element).find('input')[0].value = v.from || '';
-                $(element).find('input')[1].value = v.to || '';
+                $(element).find('input')[0].value =(v &&  v.from) || '';
+                $(element).find('input')[1].value =(v &&  v.to) || '';
               }
             });
           }

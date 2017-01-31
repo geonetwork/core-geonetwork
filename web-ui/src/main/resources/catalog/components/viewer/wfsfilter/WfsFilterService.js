@@ -160,6 +160,7 @@
                 field.label = newFields[i].label[gnGlobalSettings.lang];
               }
               field.aggs = newFields[i].aggs;
+              field.display = newFields[i].display;
               break;
             }
           }
