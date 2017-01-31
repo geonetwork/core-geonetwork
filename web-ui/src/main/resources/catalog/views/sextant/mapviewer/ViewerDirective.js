@@ -331,14 +331,14 @@
             (button.data('bs.popover') && button.data('bs.popover').$tip)
             && (button[0] != e.target)
             && (!$.contains(button[0], e.target))
-            && (
-              (!grid && ($(e.target).parents('.popover')[0] != button.data('bs.popover').$tip[0])) ||
-              (grid && ($(e.target).parents('.popover')[0] == button.data('bs.popover').$tip[0]))
-            )
+            && ((!grid && ($(e.target).parents('.popover')[0] !=
+              button.data('bs.popover').$tip[0])) || grid)
           ) {
+            var timeout = (grid && ($(e.target).parents('.popover')[0] ==
+            button.data('bs.popover').$tip[0])) ? 200 : 30;
             $timeout(function(){
               button.popover('hide');
-            }, 30, false);
+            }, timeout, false);
           }
         };
         var onScroll = function() {
