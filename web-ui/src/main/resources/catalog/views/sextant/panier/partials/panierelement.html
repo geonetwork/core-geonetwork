@@ -26,15 +26,18 @@
       </select>
     </div>
 
-    <div class="sxt-wfs-active pull-right" ng-if="element.filter">
+    <div class="sxt-wfs-active pull-right" ng-if="element.filter.params || element.filter.any">
       <span class="btn-group">
           <span type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span translate="">activeFilter</span>&nbsp;
             <span class="caret"></span>
           </span>
           <ul class="dropdown-menu">
-            <li ng-repeat="(key, value) in element.filter.params">
-              {{key}}
+            <li ng-repeat="filter in element.filter.params">
+              {{filter.name}}&nbsp;=&nbsp;{{filter.value}}
+            </li>
+            <li ng-if="element.filter.any">
+              <span translate>fullTextSearch</span>&nbsp;{{element.filter.any}}
             </li>
           </ul>
         </span>
