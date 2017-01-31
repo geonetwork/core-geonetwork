@@ -227,8 +227,17 @@
       }
     };
 
-  geonetwork.GnSolrRequest.prototype.search_es = function() {
-    var esParams = this.reqParams;
+  /**
+   * Search in ES based on current request params.
+   *
+   * @param {Object} override to override es request params.
+   * @returns {angular.Promise}
+   */
+  geonetwork.GnSolrRequest.prototype.search_es = function(override) {
+    var esParams = angular.extend({},this.reqParams, override);
+    return this.$http.post(this.ES_URL, esParams).then(function(response) {
+      return response.data;
+    });
   };
 
   geonetwork.GnSolrRequest.prototype.search = function(qParams, solrParams) {
