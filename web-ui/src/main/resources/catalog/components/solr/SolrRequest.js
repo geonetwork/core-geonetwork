@@ -441,6 +441,7 @@
         var facetField = {
           name: fieldId,
           label: fNameObj && fNameObj.label ? fNameObj.label : fieldId,
+          display: fNameObj.display,
           values: [],
           more: respAgg.sum_other_doc_count
         };
@@ -503,18 +504,47 @@
           facetField.tree = this.gnTreeFromSlash.getTree(respAgg.buckets);
         }
         else if(fieldId.endsWith('_dt')) {
+
+          var bucketDates =  respAgg.buckets.sort(function(a,b) {
+            return a.key - b.key;
+          });
+
           if(!fNameObj.allDates) {
-            fNameObj.allDates = respAgg.buckets.map(function(b) {
+            fNameObj.allDates = bucketDates.map(function(b) {
               return b.key;
             });
           }
           facetField.dates = fNameObj.allDates;
-          facetField.datesCount = respAgg.buckets.map(function(b) {
-            return {
-              value: b.key,
-              count: b.doc_count
-            };
-          });
+
+          if(facetField.display == 'graph' && bucketDates.length > 0) {
+            facetField.datesCount = [];
+            var inRange = false;
+            var bucketIdx = 0;
+
+            // merge buckets with all dates to keep graph shape
+            for(var i = 0; i<facetField.dates.length;i++) {
+              var datetime = facetField.dates[i];
+              if(!inRange && bucketDates[0].key == datetime) {
+                inRange = true;
+              }
+              if(inRange) {
+                var b = bucketDates[bucketIdx];
+                var obj = {
+                  value: datetime,
+                  count: 1
+                };
+                if(b.key == datetime) {
+                  obj.count = b.doc_count;
+                  bucketIdx++;
+                }
+                facetField.datesCount.push(obj);
+
+                if(bucketIdx == bucketDates.length) {
+                  break;
+                }
+              }
+            }
+          }
         }
 
         // terms

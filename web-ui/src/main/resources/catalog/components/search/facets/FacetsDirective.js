@@ -270,24 +270,40 @@
       },
       link: function(scope, element, attrs, controller) {
         if (!scope.field) { return; }
-        var data = scope.field.datesCount.map(function(d) {
-          return {
-            event: d.value,
-            time: {
-              begin: d.value,
-              end: d.value
-            },
-            value: d.count
-          };
-        });
-        data = data.sort(function(a,b) {
-          return a.event > b.event;
-        });
 
-        $timeout(function() {
-          var tm = new TimeLine(element.find('.ui-timeline')[0]);
-          tm.initialize(data, scope.field, scope.callback);
-        }, 100, false);
+        var tm = new TimeLine(element.find('.ui-timeline')[0]);
+        var tmInitialized = false;
+
+        // dates must be sorted ASC
+        scope.$watch('field.datesCount', function(counts) {
+          if(counts) {
+            var data = counts.map(function(d) {
+              return {
+                event: d.value,
+                time: {
+                  begin: d.value,
+                  end: d.value
+                },
+                value: d.count
+              };
+            });
+
+            if(tmInitialized) {
+              tm.setTimeline(data);
+            }
+            else {
+              tm.initialize(data, scope.field, scope.callback);
+              tmInitialized = true;
+              scope.$watch('field.expanded', function(exp) {
+                if(exp) {
+                  setTimeout(function() {
+                    tm.onResize();
+                  });
+                }
+              });
+            }
+          }
+        });
       }
     };
 

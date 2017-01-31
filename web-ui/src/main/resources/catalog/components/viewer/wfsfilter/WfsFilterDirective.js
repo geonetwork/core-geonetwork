@@ -65,6 +65,14 @@
     }
 
 */
+      {
+        "name": "date_max",
+        "display": "graph"
+      },
+      {
+        "name": "date_min",
+        "display": "form"
+      }
       ],
     "treeFields": ["CD_REGION"],
     "tokenizedFields": {
@@ -367,20 +375,34 @@
           scope.onUpdateDate = function(field) {
             var output = scope.output;
             var fieldName = field.name;
-            var date = field.model;
+            var date;
 
-            if((angular.isObject(date) && date.from && date.to) ||
-              angular.isString(date)) {
-              output[fieldName] = {
-                type: 'date',
-                value: date
-              };
+            // mapping from field (timelineZoomable)
+            if(field.model) {
+              date = field.model;
+              if((angular.isObject(date) && date.from && date.to) ||
+                angular.isString(date)) {
+                output[fieldName] = {
+                  type: 'date',
+                  value: date
+                };
+              }
+              else {
+                delete output[fieldName];
+              }
             }
+            // Direct mapping (datepicker)
             else {
-              delete output[fieldName];
-            }
+              date = output[fieldName].value;
 
-            scope.searchInput = '';
+              if((angular.isObject(date) && date.from && date.to) ||
+                angular.isString(date)) {
+                output[fieldName].type = 'date';
+              }
+              else {
+                output[fieldName].type = undefined;
+              }
+            }
             scope.filterFacets();
           };
 

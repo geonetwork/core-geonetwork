@@ -14,7 +14,8 @@ function TimeLine(element, field) {
   var svg;
   var lastQuery = null;
 
-  var zoom
+  var zoom;
+  var onResize;
   var margin = {
     top: 20,
     right: 5,
@@ -22,16 +23,28 @@ function TimeLine(element, field) {
     left: 0
   };
 
-  function initializeTimeline(data, field, callback) {
+  this.setTimeline = setTimeline;
+  this.setTimelineAll = setTimelineAll;
+
+  this.initialize = function(data, field, callback) {
 
     var container = d3.select(element);
     timelineWidth = container.node().offsetWidth - margin.left - margin.right;
     timelineHeight = container.node().offsetHeight - margin.top - margin.bottom - /* scroll */ 15;
-    window.onresize = function(event) {
-      var svg = container.select('svg').node();
-      container.node().removeChild(svg);
-      initializeTimeline(data, field, callback);
-    };
+
+    if(!this.onResize) {
+      this.onResize = function() {
+        if ($(element).find('.context').height() > 0) {
+          return;
+        }
+        var svg = container.select('svg');
+        if(svg && svg.node()) {
+          container.node().removeChild(svg.node());
+        }
+        this.initialize(data, field, callback);
+      };
+      $(window).resize(this.onResize.bind(this));
+    }
 
     // Compute X axis
     var current_first_time = Number.MAX_VALUE;
@@ -112,7 +125,6 @@ function TimeLine(element, field) {
             field.model = field.model || {};
             field.model.from = moment(timelineSelection[0]).format('DD-MM-YYYY');
             field.model.to = moment(timelineSelection[1]).format('DD-MM-YYYY');
-            console.log('field', field);
             callback(field);
           }
         }, 500);
@@ -218,7 +230,7 @@ function TimeLine(element, field) {
       applyZoom();
 
     } else {
-      // get datas 
+      // get datas
       var container = d3.select(element);
       var contextArea = container.select('svg').select('g').select("path.area");
       var dataArray = contextArea.data();
@@ -278,7 +290,4 @@ function TimeLine(element, field) {
       .attr("class", "area")
       .attr("d", timelineArea);
   }
-
-  this.initialize = initializeTimeline;
-
 }
