@@ -1872,7 +1872,7 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        String querys = "+((+(draft:y draft:n) +_dummy:0 -())) +_isTemplate:n";
+        String querys = "+((+(draft:y draft:n) +_dummy:0)) +_isTemplate:n";
         assertEquals("unexpected Lucene query", querys, query.toString());
     }
 
