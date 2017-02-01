@@ -23,17 +23,23 @@
 
 package org.fao.geonet.kernel;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
@@ -43,13 +49,14 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 /**
- * This class is responsible of reading and writing xml on the database. It works on tables like
- * (id, data, lastChangeDate).
+ * This class is responsible of reading and writing xml on the database. 
+ * It works on tables like (id, data, lastChangeDate).
+ * 
+ * TODO: if IMetadata is extended again, this class should be refactorized better
  */
 public abstract class XmlSerializer {
     private static InheritableThreadLocal<ThreadLocalConfiguration> configThreadLocal = new InheritableThreadLocal<XmlSerializer.ThreadLocalConfiguration>();
@@ -159,15 +166,22 @@ public abstract class XmlSerializer {
     protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
         MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
 
-        Metadata metadata = _metadataRepository.findOne(id);
+        IMetadata metadata = _metadataRepository.findOne(id);
 
-        if (metadata == null)
-            return null;
+		if (metadata == null){
+		    MetadataDraftRepository _metadataDraftRepository = 
+		            ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
+
+	        metadata = _metadataDraftRepository.findOne(id);
+		}
+		
+		if(metadata == null) 
+		    return null;
 
         return removeHiddenElements(isIndexingTask, metadata);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, IMetadata metadata) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
@@ -221,12 +235,18 @@ public abstract class XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    protected Metadata insertDb(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
-        if (resolveXLinks()) Processor.removeXLink(dataXml);
+	protected IMetadata insertDb(final IMetadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		if (resolveXLinks()) Processor.removeXLink(dataXml);
 
         newMetadata.setData(Xml.getString(dataXml));
-        return context.getBean(MetadataRepository.class).save(newMetadata);
-    }
+        if(newMetadata instanceof Metadata) {
+            return context.getBean(MetadataRepository.class)
+                        .save((Metadata)newMetadata);
+        } else {
+            return context.getBean(MetadataDraftRepository.class)
+                        .save((MetadataDraft)newMetadata);
+        }
+	}
 
     /**
      * Updates an xml element into the database. The new data replaces the old one.
@@ -239,39 +259,68 @@ public abstract class XmlSerializer {
                             final String uuid) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
 
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
-
+        MetadataRepository _metadataRepository = 
+                ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);
 
-        md.setDataAndFixCR(xml);
-
-        if (updateDateStamp) {
-            if (changeDate == null) {
-                md.getDataInfo().setChangeDate(new ISODate());
-            } else {
-                md.getDataInfo().setChangeDate(new ISODate(changeDate));
+        if(md != null) {
+            md.setDataAndFixCR(xml);
+    
+            if (updateDateStamp)  {
+                if (changeDate == null)	{
+                    md.getDataInfo().setChangeDate( new ISODate());
+                } else {
+                    md.getDataInfo().setChangeDate( new ISODate(changeDate));
+                }
             }
+    
+            if (uuid != null) {
+                md.setUuid(uuid);
+            }
+    
+            _metadataRepository.save(md);
+        } else {
+            MetadataDraftRepository _metadataDraftRepository = 
+                    ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
+            MetadataDraft md2 = _metadataDraftRepository.findOne(metadataId);
+            md2.setDataAndFixCR(xml);
+    
+            if (updateDateStamp)  {
+                if (changeDate == null) {
+                    md2.getDataInfo().setChangeDate( new ISODate());
+                } else {
+                    md2.getDataInfo().setChangeDate( new ISODate(changeDate));
+                }
+            }
+    
+            if (uuid != null) {
+                md2.setUuid(uuid);
+            }
+    
+            _metadataDraftRepository.save(md2);
         }
-
-        if (uuid != null) {
-            md.setUuid(uuid);
-        }
-
-        _metadataRepository.save(md);
-    }
+	}
 
     /**
      * Deletes an xml element given its id.
      */
-    protected void deleteDb(String id) throws Exception {
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+	protected void deleteDb(String id) throws Exception {
+        MetadataRepository _metadataRepository = 
+                ApplicationContextHolder.get().getBean(MetadataRepository.class);
 
-        // TODO: Ultimately we want to remove any xlinks in this document
-        // that aren't already in use from the xlink cache. For now we
-        // rely on the admin clearing cache and reindexing regularly
-        _metadataRepository.delete(Integer.valueOf(id));
-
+		// TODO: Ultimately we want to remove any xlinks in this document
+		// that aren't already in use from the xlink cache. For now we
+		// rely on the admin clearing cache and reindexing regularly
+        if(_metadataRepository.exists(Integer.valueOf(id))) {
+            _metadataRepository.delete(Integer.valueOf(id));
+        } else {
+            MetadataDraftRepository _metadataDraftRepository = 
+                    ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
+            _metadataDraftRepository.delete(Integer.valueOf(id));
+        }
+        
 //        Assert.isTrue(!_metadataRepository.exists(Integer.valueOf(id)), "Metadata should have been deleted");
 
     }
@@ -283,10 +332,10 @@ public abstract class XmlSerializer {
 
     public abstract void update(String id, Element xml,
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
-        throws Exception;
+		 throws Exception;
 
-    public abstract Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
-        throws Exception;
+	public abstract IMetadata insert(IMetadata metadata, Element dataXml, ServiceContext context)
+			 throws Exception;
 
     /**
      * Return metadata xml.

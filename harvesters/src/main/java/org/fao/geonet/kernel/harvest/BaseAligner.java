@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -132,8 +133,8 @@ public abstract class BaseAligner {
                     log.debug("    - Setting privileges for group : " + name);
                 }
 
-                for (int opId : priv.getOperations()) {
-                    name = dataMan.getAccessManager().getPrivilegeName(opId);
+                for (int opId: priv.getOperations()) {
+                    name = context.getBean(AccessManager.class).getPrivilegeName(opId);
 
                     //--- all existing operation
                     if (name != null) {

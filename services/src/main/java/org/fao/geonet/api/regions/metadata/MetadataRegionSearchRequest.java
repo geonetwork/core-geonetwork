@@ -37,6 +37,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -170,7 +172,10 @@ public class MetadataRegionSearchRequest extends Request {
 
     Region parseRegion(Id mdId, Element extentObj) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(DataManager.class).getEditLib().removeEditingInfo(extentObj);
+
+        SchemaManager schemaManager = gc.getBean(SchemaManager.class);
+        EditLib editLib = new EditLib(schemaManager);
+        editLib.removeEditingInfo(extentObj);
 
         String id = null;
         Geometry geometry = null;

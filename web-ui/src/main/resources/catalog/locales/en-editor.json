@@ -164,6 +164,7 @@
     "makeConceptCurrent": "Make this concept the current concept",
     "mefFile": "MEF",
     "metadataContent": "Metadata content",
+    "metadataLocked": "Warning! Requested metadata is locked by another user",
     "metadataNotFound": "Warning! Requested metadata with id {{id}} not found. <a href='#/create'>Create a new one ?</a>",
     "metadataType": "Type of record",
     "hasDqMeasures": "With quality measures",

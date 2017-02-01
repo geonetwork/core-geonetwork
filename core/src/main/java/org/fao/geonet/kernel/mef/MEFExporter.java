@@ -23,12 +23,18 @@
 
 package org.fao.geonet.kernel.mef;
 
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -38,35 +44,37 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Export MEF file
  */
 class MEFExporter {
-    /**
-     * Create a metadata folder according to MEF {@link Version} 1 specification and return file
-     * path. <p> Template or subtemplate could not be exported in MEF format. Use XML export
-     * instead.
-     *
-     * @param uuid   UUID of the metadata record to export.
-     * @param format {@link org.fao.geonet.kernel.mef.MEFLib.Format}
-     * @return the path of the generated MEF file.
-     */
-    public static Path doExport(ServiceContext context, String uuid,
-                                Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-        Pair<Metadata, String> recordAndMetadata =
-            MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
-        Metadata record = recordAndMetadata.one();
-        String xmlDocumentAsString = recordAndMetadata.two();
+	/**
+	 * Create a metadata folder according to MEF {@link Version} 1 specification
+	 * and return file path.
+	 * <p>
+	 * Template or subtemplate could not be exported in MEF format. Use XML
+	 * export instead.
+	 * 
+	 * @param context
+	 * @param uuid
+	 *            UUID of the metadata record to export.
+	 * @param format
+	 *            {@link org.fao.geonet.kernel.mef.MEFLib.Format}
+	 * @param skipUUID
+	 * @return the path of the generated MEF file.
+	 * @throws Exception
+	 */
+	public static Path doExport(ServiceContext context, String uuid,
+			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+		Pair<IMetadata, String> recordAndMetadata =
+				MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
+		IMetadata record = recordAndMetadata.one();
+		String xmlDocumentAsString = recordAndMetadata.two();
 
-        if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-            throw new Exception("Cannot export sub template");
+		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+			throw new Exception("Cannot export sub template");
         }
 
         Path file = Files.createTempFile("mef-", ".mef");

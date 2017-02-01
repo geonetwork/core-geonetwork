@@ -153,7 +153,8 @@ public class InspireAtomFeedRepositoryTest extends AbstractSpringDataTest {
 
     private Metadata newMetadata() {
         int val = _incMetadata.incrementAndGet();
-        Metadata metadata = new Metadata().setUuid("uuid" + val).setData("metadata" + val);
+        Metadata metadata = new Metadata();
+        metadata.setUuid("uuid" + val).setData("metadata" + val);
         metadata.getDataInfo().setSchemaId("customSchema" + val);
         metadata.getSourceInfo().setSourceId("source" + val);
         metadata.getSourceInfo().setOwner(1);

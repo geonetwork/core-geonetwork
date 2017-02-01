@@ -181,8 +181,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         String language = context.getLanguage();
 
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
-            true);
+        final Metadata metadata = (Metadata) dataMan.updateMetadata(context, id, xml, false, false, false, language, changeDate,
+                true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -218,7 +218,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(xml.getQualifiedName()).
@@ -235,7 +236,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 

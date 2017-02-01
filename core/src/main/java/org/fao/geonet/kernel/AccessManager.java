@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Operation;
@@ -40,6 +41,7 @@ import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.User_;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.GroupRepositoryCustom;
@@ -254,7 +256,8 @@ public class AccessManager {
     public boolean isOwner(final ServiceContext context, final String id) throws Exception {
 
         //--- retrieve metadata info
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        IMetadata info = context.getBean(IMetadataManager.class)
+                .getMetadataObject(Integer.valueOf(id));
 
         if (info == null)
             return false;
@@ -346,7 +349,9 @@ public class AccessManager {
      * @param metadataId the id of the metadata
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
-        Metadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(metadataId);
+        IMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataManager.class)
+                .getMetadataObject(Integer.valueOf(metadataId));
+
         if (metadata == null) {
             return false;
         } else {
@@ -395,7 +400,7 @@ public class AccessManager {
      * @param group    the group to check
      * @param opId     the id of the operation to check for
      */
-    public boolean hasPermission(final Metadata metadata, final Group group, final int opId) {
+    public boolean hasPermission(final IMetadata metadata, final Group group, final int opId) {
         OperationAllowedRepository opAllowedRepository = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
         return opAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(group.getId(), metadata.getId(), opId) != null;
     }

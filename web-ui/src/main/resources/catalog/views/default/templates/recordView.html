@@ -5,7 +5,7 @@
        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
     recordNotFound
   </div>
-
+  
   <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
     <button class="btn btn-primary"
@@ -79,11 +79,29 @@
       <i class="fa fa-times"></i>
     </a>
 
-    <a class="btn btn-primary gn-md-edit-btn pull-right"
+    <a class="btn btn-primary gn-md-edit-btn pull-right" href
        data-ng-show="user.canEditRecord(mdView.current.record)"
+       data-ng-disabled="mdView.current.record.isLocked()"
        data-ng-href="catalog.edit#/metadata/{{mdView.current.record.getId()}}"
        title="{{'edit' | translate}}">
       <i class="fa fa-pencil"></i>
+    </a>
+    
+    <a class="btn btn-primary gn-md-edit-btn pull-right"
+       data-ng-show="mdView.current.record.draft == 'Y'"
+       data-ng-href="#/metadata/{{mdView.current.record.getUuid()}}"
+       data-ng-click="showPublished(mdView.current.record.getUuid())"
+       title="{{'see published' | translate}}">
+      <i class="fa fa-clipboard"></i>
+    </a>
+    
+    <a class="btn btn-primary gn-md-edit-btn pull-right"
+       data-ng-show="mdView.current.record.draft == 'E'
+                        && user.canEditRecord(mdView.current.record)"
+       data-ng-href="#/draft/{{mdView.current.record.getUuid()}}"
+       data-ng-click="showDraft(mdView.current.record.getUuid())"
+       title="{{'see draft' | translate}}">
+      <i class="fa fa-clipboard"></i>
     </a>
 
     <div class="gnMdfeedback"></div>
@@ -102,6 +120,9 @@
           {{mdView.current.record.title || mdView.current.record.defaultTitle}}
 
         </h1>
+        <h2     class="text-warning"
+                data-ng-show="mdView.current.record.draft == 'Y'" 
+                data-translate="">Drafted version</h2>
 
         <div class="alert alert-info" data-ng-bind-html="mdView.current.record.abstract | newlines"/>
 

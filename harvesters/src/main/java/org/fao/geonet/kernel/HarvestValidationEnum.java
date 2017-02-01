@@ -23,9 +23,11 @@
 
 package org.fao.geonet.kernel;
 
+import org.fao.geonet.kernel.metadata.IMetadataValidator;
 import jeeves.server.context.ServiceContext;
-
 import org.jdom.Element;
+
+import jeeves.server.context.ServiceContext;
 
 public enum HarvestValidationEnum {
 
@@ -54,7 +56,7 @@ public enum HarvestValidationEnum {
     SCHEMATRONVALIDATION {
         public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
             String schema = context.getBean(SchemaManager.class).autodetectSchema(xml);
-            DataManager.validateMetadata(schema, xml, context);
+            context.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context);
         }
 
     };
@@ -78,5 +80,8 @@ public enum HarvestValidationEnum {
         return HarvestValidationEnum.NOVALIDATION;
     }
 
-    public abstract void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception;
+		public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
+			String schema = context.getBean(SchemaManager.class).autodetectSchema(xml);
+			context.getBean(IMetadataValidator.class).validateMetadata(schema, xml, context);			
+		}
 }

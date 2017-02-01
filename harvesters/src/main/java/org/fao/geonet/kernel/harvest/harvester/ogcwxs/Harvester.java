@@ -386,42 +386,43 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
-        metadata.getDataInfo().
-            setSchemaId(schema).
-            setRoot(md.getQualifiedName()).
-            setType(MetadataType.METADATA);
-        metadata.getSourceInfo().
-            setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
-        metadata.getHarvestInfo().
-            setHarvested(true).
-            setUuid(params.getUuid()).
-            setUri(params.url);
+         Metadata metadata = new Metadata();
+         metadata.setUuid(uuid);
+         metadata.getDataInfo().
+                 setSchemaId(schema).
+                 setRoot(md.getQualifiedName()).
+                 setType(MetadataType.METADATA);
+         metadata.getSourceInfo().
+                 setSourceId(params.getUuid()).
+                 setOwner(Integer.parseInt(params.getOwnerId()));
+         metadata.getHarvestInfo().
+                 setHarvested(true).
+                 setUuid(params.getUuid()).
+                 setUri(params.url);
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
+         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        if (!dataMan.existsMetadataUuid(uuid)) {
-            result.addedMetadata++;
-            metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
-        } else {
-            result.updatedMetadata++;
-            String id = dataMan.getMetadataId(uuid);
-            metadata.setId(Integer.valueOf(id));
-            dataMan.updateMetadata(context, id, md, false, false, false,
-                context.getLanguage(), dataMan.extractDateModified(schema, md), false);
-        }
+         if(!dataMan.existsMetadataUuid(uuid)) {
+             result.addedMetadata++;
+             metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+         } else {
+             result.updatedMetadata++;
+             String id = dataMan.getMetadataId(uuid);
+             metadata.setId(Integer.valueOf(id));
+             dataMan.updateMetadata(context, id, md, false, false, false,
+                     context.getLanguage(), dataMan.extractDateModified(schema, md), false);
+         }
 
-        String id = String.valueOf(metadata.getId());
-        uuids.add(uuid);
+         String id = String.valueOf(metadata.getId());
+         uuids.add(uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-        // Add Thumbnails only after metadata insertion to avoid concurrent transaction
-        // and loaded thumbnails could eventually failed anyway.
-        if (params.ogctype.startsWith("WMS") && params.createThumbnails) {
-            for (WxSLayerRegistry layer : layersRegistry) {
-                loadThumbnail(layer);
+		// Add Thumbnails only after metadata insertion to avoid concurrent transaction
+		// and loaded thumbnails could eventually failed anyway.
+		if (params.ogctype.startsWith("WMS") && params.createThumbnails) {
+        	for (WxSLayerRegistry layer : layersRegistry) {
+                loadThumbnail (layer);
             }
         }
 
@@ -710,8 +711,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             //
             //  insert metadata
             //
-            schema = dataMan.autodetectSchema(xml);
-            Metadata metadata = new Metadata().setUuid(reg.uuid);
+			schema = dataMan.autodetectSchema (xml);
+            Metadata metadata = new Metadata();
+            metadata.setUuid(reg.uuid);
             metadata.getDataInfo().
                 setSchemaId(schema).
                 setRoot(xml.getQualifiedName()).
@@ -731,9 +733,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 }
                 metadata.getCategories().add(metadataCategory);
             }
-            if (!dataMan.existsMetadataUuid(reg.uuid)) {
+
+            if(!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+                metadata = (Metadata) dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);

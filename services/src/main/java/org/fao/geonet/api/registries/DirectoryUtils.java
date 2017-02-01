@@ -4,12 +4,14 @@ import com.google.common.collect.Table;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
@@ -50,7 +52,7 @@ public class DirectoryUtils {
                                    Integer groupOwner,
                                    boolean saveRecord) {
         ServiceContext context = ServiceContext.get();
-        DataManager dataManager = context.getBean(DataManager.class);
+        IMetadataManager dataManager = context.getBean(IMetadataManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Table<String, String, Element> entries = collectResults.getEntries();
         Iterator<String> entriesIterator =
@@ -68,7 +70,8 @@ public class DirectoryUtils {
 
             Metadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
             if (dbSubTemplate == null) {
-                Metadata subtemplate = new Metadata().setUuid(uuid);
+                IMetadata subtemplate = new Metadata();
+                subtemplate.setUuid(uuid);
                 subtemplate.getDataInfo().
                     setSchemaId(record.getDataInfo().getSchemaId()).
                     setRoot(entry.getQualifiedName()).

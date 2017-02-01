@@ -25,12 +25,11 @@ package org.fao.geonet.kernel;
 
 import java.sql.SQLException;
 
+import org.fao.geonet.domain.IMetadata;
+import org.jdom.Element;
+
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.jdom.Element;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like
@@ -65,9 +64,8 @@ public class XmlSerializerDb extends XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    public Metadata insert(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
-        return insertDb(newMetadata, dataXml, context);
-
+    public IMetadata insert(final IMetadata newMetadata, final Element dataXml,ServiceContext context) throws SQLException {
+		return insertDb(newMetadata, dataXml, context);
     }
 
     /**

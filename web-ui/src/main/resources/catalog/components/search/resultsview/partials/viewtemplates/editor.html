@@ -12,9 +12,13 @@
            title="{{('isTemplate' + md.isTemplate) | translate}} ({{('validStatus-' + md.valid) | translate}})"></i>
       </span>
       <a href=""
-         data-ng-show="md.isTemplate != 's'"
-         data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
-         title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
+         data-ng-show="md.isTemplate != 's' && md.draft != 'Y'"
+           data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"
+           title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
+      <a href=""
+         data-ng-show="md.isTemplate != 's' && md.draft == 'Y'"
+           data-ng-href="catalog.search#/draft/{{md.getUuid()}}"
+           title="{{md.abstract}}">{{md.title || md.defaultTitle}}</a>
       <span data-ng-show="md.isTemplate == 's'">{{md.title || md.defaultTitle}}</span>
       <br/>
       <div class="gn-record-details">
@@ -30,8 +34,8 @@
          data-ng-if="user.canEditRecord(md) && user.isEditorOrMore()"
          data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"
          title="{{'privileges' | translate}}">
-        <i class="fa text-muted"
-           data-ng-class="md.isPublished() ? 'fa-unlock' : 'fa-lock'"></i>
+        <i class="fa text-muted" data-ng-style="{'color': (md.draft == 'Y'? 'orange' : '')}"
+           data-ng-class="(md.isPublished() || md.draft == 'Y') ? 'fa-unlock' : 'fa-lock'"></i>
       </a>
     </td>
     <td>

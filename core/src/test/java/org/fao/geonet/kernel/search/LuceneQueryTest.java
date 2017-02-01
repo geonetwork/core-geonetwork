@@ -1752,7 +1752,10 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee) +_isTemplate:n", query.toString());
+        String querys = "+((+(_op0:hatsjekidee _op2:hatsjekidee) "
+                            + "+(+(draft:n draft:e)))) "
+                            + "+_isTemplate:n";
+        assertEquals("unexpected Lucene query", querys, query.toString());
     }
 
     /**
@@ -1774,8 +1777,13 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
-            query.toString());
+        String querys = "+((+(_op0:hatsjekidee _op2:hatsjekidee) "
+                            + "+(+(draft:n draft:e))) "
+                            + "(+(_op0:nou moe _op2:nou moe) "
+                            + "+(+(draft:n draft:e)))) "
+                            + "+_isTemplate:n";
+        assertEquals("unexpected Lucene query", querys,
+                query.toString());
     }
 
     /**
@@ -1800,8 +1808,14 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe) +_isTemplate:n",
-            query.toString());
+        String querys = "+(("
+                            + "+(_op0:hatsjekidee _op2:hatsjekidee) "
+                            + "+(+(draft:n draft:e))) "
+                            + "(+(_op0:nou moe _op2:nou moe) "
+                            + "+(+(draft:n draft:e)))) "
+                            + "+_isTemplate:n";
+        assertEquals("unexpected Lucene query", querys,
+                query.toString());
     }
 
     /**
@@ -1826,8 +1840,14 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _owner:yeah!) " +
-            "+_isTemplate:n", query.toString());
+        String querys = "+((("
+                            + "+(_op0:hatsjekidee _op2:hatsjekidee) "
+                            + "+(+(draft:n draft:e))) "
+                            + "(+(_op0:nou moe _op2:nou moe) "
+                            + "+(+(draft:n draft:e))) -_owner:yeah!) "
+                            + "(+_owner:yeah! +(draft:y draft:n)))"
+                            + " +_isTemplate:n";
+        assertEquals("unexpected Lucene query", querys, query.toString());
     }
 
     /**
@@ -1852,8 +1872,8 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:hatsjekidee _op2:hatsjekidee _op0:nou moe _op2:nou moe _dummy:0) " +
-            "+_isTemplate:n", query.toString());
+        String querys = "+((+(draft:y draft:n) +_dummy:0)) +_isTemplate:n";
+        assertEquals("unexpected Lucene query", querys, query.toString());
     }
 
     /**
@@ -2112,9 +2132,18 @@ public class LuceneQueryTest {
         // build lucene query
         Query query = new LuceneQueryBuilder(luceneConfig, _tokenizedFieldSet, _analyzer, null).build(lQI);
         // verify query
-        assertEquals("unexpected Lucene query", "+(_op0:0 _op2:0 _op0:1 _op2:1) +title:hoi +westBL:[-180.0 TO 180.0] "
-                + "+eastBL:[-180.0 TO 180.0] +northBL:[-90.0 TO 90.0] +southBL:[-90.0 TO 90.0] +_isTemplate:n",
-            query.toString());
+        String querys = "+((+(_op0:0 _op2:0) "
+                            + "+(+(draft:n draft:e))) "
+                            + "(+(_op0:1 _op2:1) "
+                            + "+(+(draft:n draft:e)))) "
+                            + "+title:hoi "
+                            + "+westBL:[-180.0 TO 180.0] "
+                            + "+eastBL:[-180.0 TO 180.0] "
+                            + "+northBL:[-90.0 TO 90.0] "
+                            + "+southBL:[-90.0 TO 90.0] "
+                            + "+_isTemplate:n";
+        assertEquals("unexpected Lucene query", querys,
+                query.toString());
     }
 
     /**

@@ -361,7 +361,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 if (id == null)
                     continue;
 
-                if (!dataMan.getAccessManager().canEdit(context, id))
+                if (!gc.getBean(AccessManager.class).canEdit(context, id))
                     throw new NoApplicableCodeEx("User not allowed to update this metadata(" + id + ").");
 
 
@@ -471,7 +471,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
                 return deleted;
             }
 
-            if (!dataMan.getAccessManager().canEdit(context, id)) {
+            if (!gc.getBean(AccessManager.class).canEdit(context, id)) {
                 throw new NoApplicableCodeEx("User not allowed to delete metadata : " + id);
             }
 

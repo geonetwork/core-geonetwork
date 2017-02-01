@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +42,7 @@ public class LuceneQueryInput extends UserQueryInput {
 
     private String owner;
     private Set<String> groups;
+    private Set<String> editableGroups;
     private Set<String> groupOwners;
     private boolean isReviewer;
     private boolean isUserAdmin;
@@ -67,6 +69,17 @@ public class LuceneQueryInput extends UserQueryInput {
                 groups.add(groupE.getText());
             }
             setGroups(groups);
+        }     
+        @SuppressWarnings("unchecked")
+        List<Element> groupsEd = (List<Element>)jdom.getChildren(SearchParameter.GROUPEDIT);
+        if(groupsEd != null) {
+            Set<String> groups = new HashSet<String>();
+            for(Element groupEd : groupsEd) {
+                for(Object group : groupEd.getChildren()) {
+                    groups.add(((Element)group).getText());
+                }
+            }
+            setEditableGroups(groups);
         }
         @SuppressWarnings("unchecked")
         List<Element> groupOwnersE = (List<Element>) jdom.getChildren(SearchParameter.GROUPOWNER);
@@ -125,14 +138,25 @@ public class LuceneQueryInput extends UserQueryInput {
     }
 
     public Set<String> getGroups() {
+        if(this.groups == null) {
+            this.groups = new LinkedHashSet<String>();
+        }
         return groups;
     }
 
     public void setGroups(Set<String> groups) {
-        if (this.groups == null) {
-            this.groups = new LinkedHashSet<String>();
+       this.groups = groups;
+    }
+
+    public Set<String> getEditableGroups() {
+        if(this.editableGroups == null) {
+            this.editableGroups = new HashSet<String>();
         }
-        this.groups = groups;
+        return editableGroups;
+    }
+
+    public void setEditableGroups(Set<String> editableGroups) {
+        this.editableGroups = editableGroups;
     }
 
     public boolean getReviewer() {

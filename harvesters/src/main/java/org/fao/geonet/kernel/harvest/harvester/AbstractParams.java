@@ -23,17 +23,25 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import static org.quartz.JobBuilder.newJob;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import com.google.common.collect.Maps;
 
 import com.vividsolutions.jts.util.Assert;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestValidationEnum;
 import org.fao.geonet.lib.Lib;
@@ -44,12 +52,8 @@ import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static org.quartz.JobBuilder.newJob;
+import com.google.common.collect.Maps;
+import com.vividsolutions.jts.util.Assert;
 
 /**
  * Params to configure a harvester. It contains things like url, username, password,...
@@ -378,7 +382,8 @@ public abstract class AbstractParams {
             throw new MissingParameterEx("attribute:name", oper);
         }
 
-        int operID = dm.getAccessManager().getPrivilegeId(operName);
+        int operID = ApplicationContextHolder.get().
+                getBean(AccessManager.class).getPrivilegeId(operName);
 
         if (operID == -1) {
             throw new BadParameterEx("attribute:name", operName);

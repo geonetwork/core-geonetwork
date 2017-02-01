@@ -201,11 +201,12 @@ public class Aligner extends BaseAligner {
         if (log.isDebugEnabled())
             log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
 
-        //
-        // insert metadata
-        //
-        int userid = 1;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+		//
+		// insert metadata
+		//
+		int userid = 1;
+        Metadata metadata = new Metadata();
+        metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -221,48 +222,56 @@ public class Aligner extends BaseAligner {
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         dataMan.indexMetadata(id, Math.random() < 0.01);
-        result.addedMetadata++;
-    }
 
-    private void updateMetadata(RecordInfo ri, String id) throws Exception {
-        String date = localUuids.getChangeDate(ri.uuid);
+		result.addedMetadata++;
+	}
 
-        if (date == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
-            }
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug("  - Comparing date " + date + " with harvested date " + ri.changeDate + " Comparison: " + ri.isMoreRecentThan(date));
-            }
-            if (!ri.isMoreRecentThan(date)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("  - Metadata XML not changed for uuid:" + ri.uuid);
-                }
-                result.unchangedMetadata++;
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("  - Updating local metadata for uuid:" + ri.uuid);
-                }
-                Element md = retrieveMetadata(ri.uuid);
+	//--------------------------------------------------------------------------
+	//---
+	//--- Private methods : updateMetadata
+	//---
+	//--------------------------------------------------------------------------
 
-                if (md == null) return;
+	private void updateMetadata(RecordInfo ri, String id) throws Exception
+	{
+		String date = localUuids.getChangeDate(ri.uuid);
 
-                //
-                // update metadata
-                //
-                boolean validate = false;
-                boolean ufo = false;
-                boolean index = false;
-                String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+		if (date == null) {
+			if (log.isDebugEnabled()) {
+				log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.getName());
+			}
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug("  - Comparing date "+date+" with harvested date "+ri.changeDate+" Comparison: "+ri.isMoreRecentThan(date));
+			}
+			if (!ri.isMoreRecentThan(date)) {
+ 				if (log.isDebugEnabled()) {
+					log.debug("  - Metadata XML not changed for uuid:"+ ri.uuid);
+				}
+				result.unchangedMetadata++;
+			} else {
+				if (log.isDebugEnabled()) {
+					log.debug("  - Updating local metadata for uuid:"+ ri.uuid);
+				}
+				Element md = retrieveMetadata(ri.uuid);
+
+				if (md == null) return;
+				
+				//
+				// update metadata
+				//
+				boolean validate = false;
+				boolean ufo = false;
+				boolean index = false;
+				String language = context.getLanguage();
+                final Metadata metadata = (Metadata) dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
                 repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));

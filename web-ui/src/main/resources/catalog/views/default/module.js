@@ -84,11 +84,14 @@
     'gnOwsContextService',
     'hotkeys',
     'gnGlobalSettings',
+    'gnSearchManagerService',
+    'Metadata',
     function($scope, $location, suggestService, $http, $translate,
              gnUtilityService, gnSearchSettings, gnViewerSettings,
              gnMap, gnMdView, mdView, gnWmsQueue,
              gnSearchLocation, gnOwsContextService,
-             hotkeys, gnGlobalSettings) {
+             hotkeys, gnGlobalSettings, gnSearchManagerService,
+             Metadata) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -190,6 +193,67 @@
         } else {
           $scope.openRecord(prevRecordId);
         }
+      };
+
+      $scope.showDraft = function(uuid) {
+        gnSearchManagerService.gnSearch({
+          uuid: uuid,
+          _isTemplate: 'y or n',
+          fast: 'index',
+          _content_type: 'json'
+        }).then(function(data) {
+            var j = -1;
+            if (data.metadata.length >= 1) {
+              var i = 0;
+              angular.forEach(data.metadata, function(md) {
+                data.metadata[i] = new Metadata(data.metadata[i]);
+
+                if (data.metadata[i].draft == 'Y') {
+                    j = i;
+                }
+                
+                i++;
+              });
+
+              if (j < 0) {
+                j = 0;
+              }
+              gnMdView.feedMd(j, undefined, data.metadata);
+
+              $scope.openRecord(j);
+          }
+        });
+      };
+      
+      $scope.showPublished = function(uuid) {
+        gnSearchManagerService.gnSearch({
+          uuid: uuid,
+          _isTemplate: 'y or n',
+          draft: 'n',
+          fast: 'index',
+          _content_type: 'json'
+        }).then(function(data) {
+            var j = -1;
+            if (data.metadata.length >= 1) {
+              var i = 0;
+              angular.forEach(data.metadata, function(md) {
+                data.metadata[i] = new Metadata(data.metadata[i]);
+
+               if (!data.metadata[i].draft != 'Y') {
+                    j = i;
+                }
+                
+                i++;
+              });
+
+              if (j < 0) {
+                j = 0;
+              }
+              gnMdView.feedMd(j, undefined, data.metadata);
+
+              $scope.openRecord(j);
+          }
+        });
       };
 
       $scope.infoTabs = {

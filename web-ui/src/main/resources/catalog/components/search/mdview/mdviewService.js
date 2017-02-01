@@ -45,13 +45,15 @@
     'gnSearchSettings',
     'gnUrlUtils',
     'gnUtilityService',
+    '$location',
     function(gnSearchLocation, $rootScope, gnMdFormatter, Metadata,
              gnMdViewObj, gnSearchManagerService, gnSearchSettings,
-             gnUrlUtils, gnUtilityService) {
+             gnUrlUtils, gnUtilityService, $location) {
 
       // Keep where the metadataview come from to get back on close
       var initFromConfig = function() {
-        if (!gnSearchLocation.isMdView()) {
+        if (!gnSearchLocation.isMdView()
+            && !gnSearchLocation.isDraftView() ) {
           gnMdViewObj.from = gnSearchLocation.path();
         }
       };

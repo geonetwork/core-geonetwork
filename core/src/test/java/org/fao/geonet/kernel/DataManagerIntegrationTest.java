@@ -129,7 +129,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
     static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {
         final Element sampleMetadataXml = test.getSampleMetadataXml();
         final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        return test.importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
+        return test.importMetadataXML(serviceContext, null, stream, MetadataType.METADATA,
             ReservedGroup.all.getId(), Params.GENERATE_UUID);
     }
 

@@ -102,6 +102,17 @@
     </property>
   </bean>
 
+    <!-- Draft or not drafted version -->
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataIndexer" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataManager" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataValidator" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataUtils" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataOperations" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataStatus" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataSchemaUtils" lazy-init="false"/>
+    <bean class="org.fao.geonet.kernel.metadata.DefaultMetadataCategory" lazy-init="false"/>
+    <!-- Draft or not drafted version -->
+
   <bean id="SearchLoggerTask" class="org.fao.geonet.kernel.search.SearchLoggerTask" lazy-init="true"
         scope="prototype"/>
   <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask"

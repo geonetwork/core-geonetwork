@@ -167,6 +167,17 @@
             }).then(function(data) {
               $scope.metadataFound = data.count !== '0';
               $scope.metadataNotFoundId = $routeParams.id;
+              
+              if($scope.metadataFound) {
+                $http({
+                  method: 'GET',
+                  url: '../api/records/' + $routeParams.id + '/checkLock'
+                }).then(function successCallback(response) {
+                    $scope.metadataLocked = response.data;
+                  }, function errorCallback(response) {
+                    $scope.metadataLocked = true;
+                  });                
+              }
 
               $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
               $scope.mdCategories = [];
@@ -288,15 +299,20 @@
        * elements eg. tooltip ?
        */
       $scope.onFormLoad = function() {
-        gnEditor.onFormLoad();
-        $scope.isMinor = gnCurrentEdit.isMinor;
-        $scope.$watch('tocIndex', function(newValue, oldValue) {
-          if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
-            $timeout(function() {
-              $scope.switchToTab(gnCurrentEdit.tab);
-            });
-          }
-        });
+        //Check if for some reason (draft?), we should be redirected to another metadata
+        if($("*[id*='gn-editor']")[0].id.value != this.metadataNotFoundId) {
+          window.location.hash = "#/metadata/" + $("*[id*='gn-editor']")[0].id.value;
+        } else {
+          gnEditor.onFormLoad();
+          $scope.isMinor = gnCurrentEdit.isMinor;
+          $scope.$watch('tocIndex', function(newValue, oldValue) {
+            if (angular.isDefined($scope.tocIndex) && $scope.tocIndex !== null) {
+              $timeout(function() {
+                $scope.switchToTab(gnCurrentEdit.tab);h
+              });
+            }
+          }); 
+        }
       };
 
       /**

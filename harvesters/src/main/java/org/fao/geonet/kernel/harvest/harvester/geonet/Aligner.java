@@ -23,6 +23,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -32,6 +50,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -62,22 +81,8 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -520,7 +525,8 @@ public class Aligner extends BaseAligner {
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -536,7 +542,7 @@ public class Aligner extends BaseAligner {
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, false);
 
-        metadata = dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
+        metadata = (Metadata) dataMan.insertMetadata(context, metadata, md, true, false, ufo, UpdateDatestamp.NO, false, false);
 
         String id = String.valueOf(metadata.getId());
 
@@ -644,9 +650,13 @@ public class Aligner extends BaseAligner {
         return map;
     }
 
-    private void addOperations(String id, String groupId, Set<String> oper) throws Exception {
-        for (String opName : oper) {
-            int opId = dataMan.getAccessManager().getPrivilegeId(opName);
+    //--------------------------------------------------------------------------
+
+    private void addOperations(String id, String groupId, Set<String> oper) throws Exception
+    {
+        for (String opName : oper)
+        {
+            int opId = ApplicationContextHolder.get().getBean(AccessManager.class).getPrivilegeId(opName);
 
             //--- allow only: view, download, dynamic, featured
             if (opId == 0 || opId == 1 || opId == 5 || opId == 6) {

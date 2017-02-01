@@ -320,6 +320,7 @@
           if (md && success === 'success') {
             md.publish();
           }
+          $rootScope.$broadcast('search');
         };
         if (angular.isDefined(md)) {
           return gnHttp.callService(service, {

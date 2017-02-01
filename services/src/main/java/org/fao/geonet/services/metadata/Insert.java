@@ -110,7 +110,7 @@ public class Insert extends NotInReadOnlyModeService {
                 throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
             }
         }
-        if (validate) DataManager.validateMetadata(schema, xml, context);
+        if (validate) dataMan.validateMetadata(schema, xml, context);
 
         //-----------------------------------------------------------------------
         //--- if the uuid does not exist we generate it for metadata and templates

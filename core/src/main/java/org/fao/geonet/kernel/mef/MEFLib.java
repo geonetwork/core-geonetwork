@@ -23,6 +23,10 @@
 
 package org.fao.geonet.kernel.mef;
 
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.FS;
+import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
@@ -73,12 +77,36 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Nonnull;
 
-import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDraft;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
+import org.jdom.Element;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
-import static org.fao.geonet.kernel.mef.MEFConstants.FS;
-import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -161,18 +189,21 @@ public class MEFLib {
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
-    }
+	}
 
-    /**
-     * Get metadata record.
-     *
-     * @return A pair composed of the domain object metadata AND the record to be exported (includes
-     * Xlink resolution and filters depending on user session).
-     */
-    static Pair<Metadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
-        throws Exception {
+	/**
+	 * Get metadata record.
+	 * 
+	 * @param uuid
+	 * @return A pair composed of the domain object metadata
+	 *  AND the record to be exported (includes Xlink resolution
+	 *  and filters depending on user session).
+	 */
+	static Pair<IMetadata, String> retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+			throws Exception {
 
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
+        final IMetadata metadata = context.getBean(IMetadataManager.class)
+                .getMetadataObject(uuid);
 
         if (metadata == null) {
             throw new MetadataNotFoundEx("uuid=" + uuid);
@@ -208,106 +239,129 @@ public class MEFLib {
         addFile(zos, name, new ByteArrayInputStream(string.getBytes("UTF-8")));
     }
 
-    static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
-        throws IOException {
-        ZipEntry entry = null;
-        try {
-            entry = new ZipEntry(name);
-            zos.putNextEntry(entry);
-            BinaryFile.copy(in, zos);
-        } finally {
-            try {
-                if (zos != null) {
-                    zos.closeEntry();
-                }
-            } finally {
-                IOUtils.closeQuietly(in);
-            }
-        }
-    }
+	static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
+			throws IOException {
+	       ZipEntry entry = null;
+	        try {
+	            entry = new ZipEntry(name);
+	            zos.putNextEntry(entry);
+	            BinaryFile.copy(in, zos);
+	        } finally {
+	            try {
+	                if(zos != null) {
+	                    zos.closeEntry();
+	                }
+	            } finally {
+	                IOUtils.closeQuietly(in);
+	            }
+	        }
+	}
 
-    /**
-     * Save public directory (thumbnails or other uploaded documents).
-     *
-     * @param uuid Metadata uuid
-     */
-    static void savePublic(ZipOutputStream zos, String dir, String uuid)
-        throws IOException {
-        File[] files = new File(dir).listFiles(filter);
+	/**
+	 * Save public directory (thumbnails or other uploaded documents).
+	 * 
+	 * @param zos
+	 * @param dir
+	 * @param uuid
+	 *            Metadata uuid
+	 * @throws IOException
+	 */
+	static void savePublic(ZipOutputStream zos, String dir, String uuid)
+			throws IOException {
+		File[] files = new File(dir).listFiles(filter);
 
-        if (files != null)
-            for (File file : files)
-                addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PUBLIC
-                    + file.getName(), new FileInputStream(file));
-    }
+		if (files != null)
+			for (File file : files)
+				addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PUBLIC
+						+ file.getName(), new FileInputStream(file));
+	}
 
-    /**
-     * Save private directory (thumbnails or other uploaded documents).
-     *
-     * @param uuid Metadata uuid
-     */
-    static void savePrivate(ZipOutputStream zos, String dir, String uuid)
-        throws IOException {
-        File[] files = new File(dir).listFiles(filter);
+	/**
+	 * Save private directory (thumbnails or other uploaded documents).
+	 * 
+	 * @param zos
+	 * @param dir
+	 * @param uuid
+	 *            Metadata uuid
+	 * @throws IOException
+	 */
+	static void savePrivate(ZipOutputStream zos, String dir, String uuid)
+			throws IOException {
+		File[] files = new File(dir).listFiles(filter);
 
-        if (files != null)
-            for (File file : files)
-                addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PRIVATE
-                    + file.getName(), new FileInputStream(file));
-    }
+		if (files != null)
+			for (File file : files)
+				addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PRIVATE
+						+ file.getName(), new FileInputStream(file));
+	}
 
-    /**
-     * Build an info file.
-     */
-    static String buildInfoFile(ServiceContext context, Metadata md,
-                                Format format, Path pubDir, Path priDir, boolean skipUUID)
-        throws Exception {
-        Element info = new Element("info");
-        info.setAttribute("version", VERSION);
+	/**
+	 * Build an info file.
+	 * 
+	 * @param context
+	 * @param md
+	 * @param format
+	 * @param pubDir
+	 * @param priDir
+	 * @param skipUUID
+	 * @return
+	 * @throws Exception
+	 */
+	static String buildInfoFile(ServiceContext context, IMetadata md,
+			Format format, Path pubDir, Path priDir, boolean skipUUID)
+			throws Exception {
+		Element info = new Element("info");
+		info.setAttribute("version", VERSION);
 
-        info.addContent(buildInfoGeneral(md, format, skipUUID, context));
-        info.addContent(buildInfoCategories(md));
-        info.addContent(buildInfoPrivileges(context, md));
+		info.addContent(buildInfoGeneral(md, format, skipUUID, context));
+		info.addContent(buildInfoCategories(md));
+		info.addContent(buildInfoPrivileges(context, md));
 
-        info.addContent(buildInfoFiles("public", pubDir.toString()));
-        info.addContent(buildInfoFiles("private", priDir.toString()));
+		info.addContent(buildInfoFiles("public", pubDir.toString()));
+		info.addContent(buildInfoFiles("private", priDir.toString()));
 
-        return Xml.getString(new Document(info));
-    }
+		return Xml.getString(new Document(info));
+	}
 
-    /**
-     * Build general section of info file.
-     *
-     * @param skipUUID If true, do not add uuid, site identifier and site name.
-     */
-    static Element buildInfoGeneral(Metadata md, Format format,
-                                    boolean skipUUID, ServiceContext context) {
-        String id = String.valueOf(md.getId());
-        String uuid = md.getUuid();
-        String schema = md.getDataInfo().getSchemaId();
-        String isTemplate = md.getDataInfo().getType().codeString;
-        String createDate = md.getDataInfo().getCreateDate().getDateAndTime();
-        String changeDate = md.getDataInfo().getChangeDate().getDateAndTime();
-        String siteId = md.getSourceInfo().getSourceId();
-        String rating = "" + md.getDataInfo().getRating();
-        String popularity = "" + md.getDataInfo().getPopularity();
+	/**
+	 * Build general section of info file.
+	 * 
+	 * 
+	 * @param md
+	 * @param format
+	 * @param skipUUID
+	 *            If true, do not add uuid, site identifier and site name.
+	 * @param context
+	 * @return
+	 */
+	static Element buildInfoGeneral(IMetadata md, Format format,
+			boolean skipUUID, ServiceContext context) {
+		String id = String.valueOf(md.getId());
+		String uuid = md.getUuid();
+		String schema = md.getDataInfo().getSchemaId();
+		String isTemplate = md.getDataInfo().getType().codeString;
+		String createDate = md.getDataInfo().getCreateDate().getDateAndTime();
+		String changeDate = md.getDataInfo().getChangeDate().getDateAndTime();
+		String siteId = md.getSourceInfo().getSourceId();
+		String rating = "" + md.getDataInfo().getRating();
+		String popularity = "" + md.getDataInfo().getPopularity();
 
-        Element general = new Element("general").addContent(
-            new Element("createDate").setText(createDate)).addContent(
-            new Element("changeDate").setText(changeDate)).addContent(
-            new Element("schema").setText(schema)).addContent(
-            new Element("isTemplate").setText(isTemplate)).addContent(
-            new Element("localId").setText(id)).addContent(
-            new Element("format").setText(format.toString())).addContent(
-            new Element("rating").setText(rating)).addContent(
-            new Element("popularity").setText(popularity));
+		Element general = new Element("general").addContent(
+				new Element("createDate").setText(createDate)).addContent(
+				new Element("changeDate").setText(changeDate)).addContent(
+				new Element("schema").setText(schema)).addContent(
+				new Element("isTemplate").setText(isTemplate)).addContent(
+				new Element("localId").setText(id)).addContent(
+				new Element("format").setText(format.toString())).addContent(
+				new Element("rating").setText(rating)).addContent(
+				new Element("popularity").setText(popularity));
 
-        if (!skipUUID) {
-            GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
+		if (!skipUUID) {
+			GeonetContext gc = (GeonetContext) context
+					.getHandlerContext(Geonet.CONTEXT_NAME);
 
-            general.addContent(new Element("uuid").setText(uuid));
-            general.addContent(new Element("siteId").setText(siteId));
+			general.addContent(new Element("uuid").setText(uuid));
+			general.addContent(new Element("siteId").setText(siteId));
             general.addContent(new Element("siteName")
                 .setText(gc.getBean(SettingManager.class).getSiteName()));
         }
@@ -315,15 +369,24 @@ public class MEFLib {
         return general;
     }
 
-    /**
-     * Build category section of info file.
-     */
-    static Element buildInfoCategories(Metadata md)
-        throws SQLException {
-        Element categ = new Element("categories");
+	/**
+	 * Build category section of info file.
+	 * 
+	 * @param md
+	 * @return
+	 * @throws SQLException
+	 */
+	static Element buildInfoCategories(IMetadata md)
+			throws SQLException {
+		Element categ = new Element("categories");
 
-
-        for (MetadataCategory category : md.getCategories()) {
+		Set<MetadataCategory> categories = null;
+		if(md instanceof Metadata) {
+		    categories = ((Metadata)md).getCategories();
+		} else {
+		    categories = ((MetadataDraft)md).getCategories();
+		}
+        for (MetadataCategory category : categories) {
             String name = category.getName();
 
             Element cat = new Element("category");
@@ -335,11 +398,16 @@ public class MEFLib {
         return categ;
     }
 
-    /**
-     * Build priviliges section of info file.
-     */
-    static Element buildInfoPrivileges(ServiceContext context, Metadata md)
-        throws Exception {
+	/**
+	 * Build priviliges section of info file.
+	 * 
+	 * @param context
+	 * @param md
+	 * @return
+	 * @throws Exception
+	 */
+	static Element buildInfoPrivileges(ServiceContext context, IMetadata md)
+			throws Exception {
 
         int iId = md.getId();
 

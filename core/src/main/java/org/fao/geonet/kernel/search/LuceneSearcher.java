@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.search;
 
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -90,6 +92,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -107,16 +110,18 @@ import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.data.jpa.domain.Specifications;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 
@@ -1394,6 +1399,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             child.detach();
         }
 
+        //Security meassure:
+        if(request.removeChildren(SearchParameter.GROUPEDIT))
+            Log.warning(Geonet.SEARCH_ENGINE, "Somebody tried to hack us with injecting GROUPEDIT");
+        
         _summaryConfig = _luceneConfig.getSummaryTypes().get(resultType);
 
         final Element summaryItemsEl = request.getChild(Geonet.SearchResult.SUMMARY_ITEMS);
@@ -1525,6 +1534,29 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 // Construct Lucene query (Java)
                 if (Log.isDebugEnabled(Geonet.LUCENE))
                     Log.debug(Geonet.LUCENE, "LuceneSearcher constructing Lucene query (LQB)");
+                
+                //Add editable groups
+                Specifications<UserGroup> spec = 
+                        where(
+                            where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                            .or(UserGroupSpecs.hasProfile(Profile.Editor))
+                            .or(UserGroupSpecs.hasProfile(Profile.UserAdmin)))
+                        .and(UserGroupSpecs.hasUserId(
+                                srvContext.getUserSession().getUserIdAsInt()));
+                List<UserGroup> editableGroups = 
+                        srvContext.getBean(UserGroupRepository.class).
+                            findAll(spec);
+                Element editables = new Element(SearchParameter.GROUPEDIT);
+                
+                for(UserGroup ug : editableGroups) {
+                    editables.addContent(
+                                new Element(ug.getGroup().getName())
+                                        .addContent(Integer.toString(
+                                                ug.getGroup().getId())));
+                }
+                
+                request.addContent(editables);
+                
                 LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
                 luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
 

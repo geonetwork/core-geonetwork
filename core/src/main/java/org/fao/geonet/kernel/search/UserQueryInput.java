@@ -53,7 +53,8 @@ public class UserQueryInput {
         SearchParameter.OWNER,
         SearchParameter.ISADMIN,
         SearchParameter.ISREVIEWER,
-        SearchParameter.ISUSERADMIN);
+        SearchParameter.ISUSERADMIN,
+        SearchParameter.GROUPEDIT);
 
     /**
      * Don't take into account those field in search (those field are not indexed but are search

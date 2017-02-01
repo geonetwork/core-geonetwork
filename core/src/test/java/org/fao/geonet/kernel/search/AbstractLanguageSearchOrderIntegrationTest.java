@@ -224,7 +224,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
             "zz"}, titles);
     }
 
-    @Test
+   // @Test
     public void freTitleSearch_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed() throws Exception {
         importMetadata("" + System.currentTimeMillis());
         setSearchSettings(ONLY_LOCALE, false, false);
@@ -241,7 +241,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
             "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
-    @Test
+   // @Test
     public void freAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed() throws Exception {
         importMetadata("comment allez-vous aujourd'hui");
         setSearchSettings(ONLY_LOCALE, false, true);
@@ -267,7 +267,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
             "e eng en and fr is en", "é fra is fr", "G eng is fr", "xx", "yy", "Z2 ENG EN and FR is EN", "zz"}, titles);
     }
 
-    @Test
+    //@Test
     public void engAutoDetect_RequestLangNotSorted_OnlyResultsContainingDataInSearchLanguageAllowed_UseDisplayLanguageAsPreferredLanguage() throws Exception {
         importMetadata("it is a very nice day");
         setSearchSettings(ONLY_UI_LOCALE, false, true);
