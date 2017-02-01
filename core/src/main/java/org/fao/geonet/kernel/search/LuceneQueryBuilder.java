@@ -1136,7 +1136,6 @@ public class LuceneQueryBuilder {
                     LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
             }
             isAdmin.add(adminClause);
-            isAdmin.add(groupsQuery.clone(), LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
             
             groupsQuery.add(isAdmin, 
                     LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
