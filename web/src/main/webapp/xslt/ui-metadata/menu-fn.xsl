@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2017 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -34,11 +34,13 @@
                     according to the metadata record or
                     the session information. -->
   <xsl:function name="gn-fn-metadata:check-viewtab-visibility" as="xs:boolean">
+    <xsl:param name="root" as="node()?"/>
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="metadata"/>
     <xsl:param name="serviceInfo"/>
     <xsl:param name="displayIfRecord" as="xs:string?"/>
     <xsl:param name="displayIfServiceInfo" as="xs:string?"/>
+    <xsl:param name="displayIfSetting" as="xs:string?"/>
 
     <xsl:variable name="isInRecord" as="xs:boolean">
       <xsl:choose>
@@ -68,19 +70,34 @@
       </xsl:choose>
     </xsl:variable>
 
-    <xsl:choose>
-      <xsl:when test="$displayIfServiceInfo and $displayIfRecord">
-        <xsl:value-of select="$isInServiceInfo and $isInRecord"/>
-      </xsl:when>
-      <xsl:when test="$displayIfServiceInfo">
-        <xsl:value-of select="$isInServiceInfo"/>
-      </xsl:when>
-      <xsl:when test="$displayIfRecord">
-        <xsl:value-of select="$isInRecord"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="true()"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="isInSetting" as="xs:boolean">
+      <xsl:choose>
+        <xsl:when test="$displayIfSetting">
+          <xsl:call-template name="evaluate-boolean">
+
+            <xsl:with-param name="base" select="$root//root/gui/settings"/>
+            <xsl:with-param name="in" select="concat('/', $displayIfSetting)"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:value-of select="(( $displayIfRecord      and $isInRecord )     or not ($displayIfRecord ))     and
+                          (( $displayIfServiceInfo and $isInServiceInfo) or not ($displayIfServiceInfo)) and
+                          (( $displayIfSetting     and $isInSetting)     or not ($displayIfSetting))"/>
+
   </xsl:function>
+
+
+  <!-- Evaluate XPath returning a boolean value. -->
+  <xsl:template name="evaluate-boolean">
+      <xsl:param name="base" as="node()"/>
+      <xsl:param name="in"/>
+
+      <xsl:value-of select="saxon:evaluate(concat('$p1', $in), $base)"/>
+  </xsl:template>
+
 </xsl:stylesheet>
