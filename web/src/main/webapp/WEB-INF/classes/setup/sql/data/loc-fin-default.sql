@@ -523,3 +523,6 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'fin','Retired');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'fin','Submitted');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'fin','Rejected');
 
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'fin','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'fin','Watch list');
+
