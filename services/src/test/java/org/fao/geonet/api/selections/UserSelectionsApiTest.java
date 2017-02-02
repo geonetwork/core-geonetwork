@@ -24,16 +24,13 @@ package org.fao.geonet.api.selections;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.vividsolutions.jts.util.Assert;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.Selection;
-import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
@@ -42,23 +39,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Tests for UserSelectionsApi.
- *
  */
 public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
@@ -72,25 +67,29 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private SelectionRepository selectionRepository;
 
+    @Autowired
+    private MetadataRepository _metadataRepo;
+
+    @Autowired
+    private DataManager _dataManager;
+
+    ServiceContext context;
+
     @Before
     public void setUp() throws Exception {
         this.mockHttpSession = loginAsAdmin();
-        UserSession session = ApiUtils.getUserSession( this.mockHttpSession);
-        ServiceContext context = createServiceContext();
+        context = createServiceContext();
     }
 
     @Test
     public void getSelection() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-
-        UserSession session = ApiUtils.getUserSession( this.mockHttpSession);
-
         this.mockMvc.perform(get("/api/userselections")
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
-            .andExpect(jsonPath("$", hasSize(0)));
+            .andExpect(jsonPath("$", hasSize(2)));
     }
 
 
@@ -105,21 +104,23 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void addPersistentSelection() throws Exception {
+    public void addUserSelection() throws Exception {
         String name = "notification";
 
-        Selection groupToAdd = selectionRepository.findOneByName(name);
-        junit.framework.Assert.assertNull(groupToAdd);
+        Selection newSelection = selectionRepository.findOneByName(name);
+        junit.framework.Assert.assertNull(newSelection);
 
-        groupToAdd = new Selection();
-        groupToAdd.setId(-99);
-        groupToAdd.setName(name);
+        newSelection = new Selection();
+        newSelection.setId(-99);
+        newSelection.setName(name);
+        newSelection.setWatchable(true);
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
-            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations"))
+            // GsonBuilder set watchable property to y instead of true : TODO
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "watchable"))
             .create();
-        String json = gson.toJson(groupToAdd);
+        String json = gson.toJson(newSelection);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -131,9 +132,6 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201));
-
-        Selection groupAdded = selectionRepository.findOneByName(name);
-        junit.framework.Assert.assertNotNull(groupAdded);
     }
 
     @Test
@@ -156,7 +154,7 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
         Gson gson = new GsonBuilder()
             .setFieldNamingStrategy(new JsonFieldNamingStrategy())
-            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "_records"))
+            .setExclusionStrategies(new FieldNameExclusionStrategy("_labelTranslations", "watchable"))
             .create();
         String json = gson.toJson(newSelection);
 
@@ -165,28 +163,61 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Create
-        this.mockMvc.perform(put("/api/userselections")
+        MvcResult r = this.mockMvc.perform(put("/api/userselections")
             .content(json)
             .contentType(MediaType.APPLICATION_JSON)
             .session(this.mockHttpSession)
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(201))
-            .andExpect(content().contentType("application/json"));
-
+            .andExpect(content().contentType("application/json"))
+            .andReturn();
 
         // Check in DB
-        Selection createdSelection = selectionRepository.findOneByName("test");
+        Selection createdSelection = selectionRepository.findOneByName(name);
         assertNotNull(createdSelection);
         assertEquals(name, createdSelection.getName());
-        assertEquals(true, createdSelection.isWatchable());
+        assertEquals(false, createdSelection.isWatchable());
 
         // Check in API
-//        this.mockMvc.perform(get("/api/selections/persistent")
-//            .session(this.mockHttpSession)
-//            .accept(MediaType.parseMediaType("application/json")))
-//            .andExpect(status().isOk())
-//            .andExpect(content().contentType("application/json"))
-//            .andExpect(jsonPath("$", hasSize(1)));
+        // Unknown selection set return 404
+        this.mockMvc.perform(put("/api/userselections/11111/11111")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound());
+
+        // Unknown user return 404
+        this.mockMvc.perform(put("/api/userselections/" + createdSelection.getId() + "/11111")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound());
+
+        // Unkown metadata return 404
+        this.mockMvc.perform(put("/api/userselections/" + createdSelection.getId() + "/1?uuid=ABCD")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound());
+
+
+        String metadataId = importMetadata(context);
+        String metadataUuid = _dataManager.getMetadataUuid(metadataId);
+        this.mockMvc.perform(put("/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isCreated());
+
+        this.mockMvc.perform(get("/api/userselections/" + createdSelection.getId() + "/1")
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[*]", hasItem(metadataUuid)));
+
+        this.mockMvc.perform(delete("/api/userselections/" + createdSelection.getId() + "/1?uuid=" + metadataUuid)
+            .session(this.mockHttpSession)
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNoContent());
+
 
         // Delete
         this.mockMvc.perform(delete("/api/userselections/" + createdSelection.getId())
@@ -195,7 +226,15 @@ public class UserSelectionsApiTest extends AbstractServiceIntegrationTest {
 
 
         // Check in DB
+        assertFalse(selectionRepository.exists(createdSelection.getId()));
+        ;
+    }
 
-        // Check in API
+    private String importMetadata(ServiceContext context) throws Exception {
+        final MEFLibIntegrationTest.ImportMetadata importMetadata =
+            new MEFLibIntegrationTest.ImportMetadata(this, context).invoke();
+
+        assertEquals(1, _metadataRepo.count());
+        return importMetadata.getMetadataIds().get(0);
     }
 }

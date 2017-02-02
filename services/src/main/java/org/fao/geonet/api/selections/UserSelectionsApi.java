@@ -308,10 +308,10 @@ public class UserSelectionsApi {
     @ResponseBody
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Records added to selection set."),
-        @ApiResponse(code = 404, message = "Selection or user not found."),
+        @ApiResponse(code = 404, message = "Selection or user or at least one UUID not found."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    ResponseEntity addToUserSelection(
+    ResponseEntity<String> addToUserSelection(
         @ApiParam(value = "Selection identifier",
             required = true)
         @PathVariable
@@ -362,10 +362,9 @@ public class UserSelectionsApi {
                     e1.printStackTrace();
                 }
             } else {
-                notFoundRecords.add(u);
+                return new ResponseEntity<>(u, HttpStatus.NOT_FOUND);
             }
         }
-        // TODO : report not found
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
