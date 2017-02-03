@@ -14882,6 +14882,10 @@ yx-axis
   margin-bottom: 0px;
   border-bottom: 2px #eeeeee solid;
 }
+.gn .gn-facet .filter-input,
+.g .gn-facet .filter-input {
+  margin-bottom: 10px;
+}
 .gn .gn-facet-breadcrumb,
 .g .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -17266,8 +17270,12 @@ yx-axis
   background: #4ba2d9;
   color: white;
 }
-.gn [sxt-main-viewer] .sxt-layertree-filter:before,
-.g [sxt-main-viewer] .sxt-layertree-filter:before {
+.gn .sxt-layertree-filter,
+.g .sxt-layertree-filter {
+  position: relative;
+}
+.gn .sxt-layertree-filter:before,
+.g .sxt-layertree-filter:before {
   font-family: FontAwesome;
   content: "\f0b0";
   float: right;
@@ -17275,12 +17283,20 @@ yx-axis
   font-size: 16px;
   color: #d3d3d3;
 }
-.gn [sxt-main-viewer] .sxt-layertree-filter .clear,
-.g [sxt-main-viewer] .sxt-layertree-filter .clear {
+.gn .sxt-layertree-filter .clear,
+.g .sxt-layertree-filter .clear {
   right: 2em;
+  position: absolute;
+  top: .75em;
+  color: #666;
 }
-.gn [sxt-main-viewer] .layerfilter,
-.g [sxt-main-viewer] .layerfilter {
+.gn .sxt-layertree-filter .clear:hover,
+.g .sxt-layertree-filter .clear:hover {
+  cursor: pointer;
+  color: #222;
+}
+.gn .sxt-layertree-filter .layerfilter,
+.g .sxt-layertree-filter .layerfilter {
   border: none;
   border-bottom: 1px solid #4BA2D9;
   border-radius: 0;
@@ -20211,32 +20227,26 @@ yx-axis
   font-size: 12px;
   font-weight: bold;
 }
-.gn .gn-grid .popover-content,
-.g .gn-grid .popover-content,
-.gn .sxt-main-tabs .popover-content,
-.g .sxt-main-tabs .popover-content {
-  padding: 6px 10px 5px;
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: bold;
-}
-.gn .gn-grid .popover,
-.g .gn-grid .popover,
-.gn .sxt-main-tabs .popover,
-.g .sxt-main-tabs .popover {
+.gn .gn-grid .popover:not(.sxt-popover-grid),
+.g .gn-grid .popover:not(.sxt-popover-grid),
+.gn .sxt-main-tabs .popover:not(.sxt-popover-grid),
+.g .sxt-main-tabs .popover:not(.sxt-popover-grid) {
   margin-top: 4px;
   border-radius: 2px;
 }
-.gn .gn-grid .popover .arrow,
-.g .gn-grid .popover .arrow,
-.gn .sxt-main-tabs .popover .arrow,
-.g .sxt-main-tabs .popover .arrow {
+.gn .gn-grid .popover:not(.sxt-popover-grid) .arrow,
+.g .gn-grid .popover:not(.sxt-popover-grid) .arrow,
+.gn .sxt-main-tabs .popover:not(.sxt-popover-grid) .arrow,
+.g .sxt-main-tabs .popover:not(.sxt-popover-grid) .arrow {
   display: none;
 }
-.gn .gn-grid .popover-content,
-.g .gn-grid .popover-content,
-.gn .sxt-main-tabs .popover-content,
-.g .sxt-main-tabs .popover-content {
+.gn .gn-grid .popover:not(.sxt-popover-grid) .popover-content,
+.g .gn-grid .popover:not(.sxt-popover-grid) .popover-content,
+.gn .sxt-main-tabs .popover:not(.sxt-popover-grid) .popover-content,
+.g .sxt-main-tabs .popover:not(.sxt-popover-grid) .popover-content {
+  padding: 6px 10px 5px;
+  text-transform: uppercase;
+  font-weight: bold;
   color: red;
   font-size: 11px;
 }
@@ -21021,8 +21031,8 @@ yx-axis
 .g ul.gn-resultview li.gn-grid .gn-md-thumbnail .gn-img-thumbnail {
   max-width: 100%;
 }
-.gn ul.gn-resultview li.gn-grid .popover,
-.g ul.gn-resultview li.gn-grid .popover {
+.gn ul.gn-resultview li.gn-grid .popover:not(.sxt-popover-grid),
+.g ul.gn-resultview li.gn-grid .popover:not(.sxt-popover-grid) {
   top: 10em !important;
 }
 .gn .gn-pager,
@@ -21507,6 +21517,44 @@ yx-axis
 .gn .popover,
 .g .popover {
   height: auto;
+}
+.gn .popover.sxt-popover-grid,
+.g .popover.sxt-popover-grid {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+}
+.gn .popover.sxt-popover-grid .popover-content,
+.g .popover.sxt-popover-grid .popover-content {
+  height: auto;
+  padding: 0;
+  width: 100%;
+  display: inline-block;
+}
+.gn .popover.sxt-popover-grid .popover-content ul.dropdown-menu,
+.g .popover.sxt-popover-grid .popover-content ul.dropdown-menu {
+  padding-bottom: 0;
+  width: 100%;
+}
+.gn .popover.sxt-popover-grid .popover-content li,
+.g .popover.sxt-popover-grid .popover-content li {
+  width: 100%;
+  padding: 3px 10px;
+}
+.gn .popover.sxt-popover-grid .popover-content li.divider,
+.g .popover.sxt-popover-grid .popover-content li.divider {
+  margin: 0;
+  padding: 0;
+}
+.gn .popover.sxt-popover-grid .popover-content li a,
+.g .popover.sxt-popover-grid .popover-content li a {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  line-height: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 .gn .g,
 .g .g {

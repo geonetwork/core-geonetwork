@@ -212,14 +212,14 @@ span.md-action-menu {
     float: left;
     margin-right: 5px;
 }
-.md-links * .x-btn-tl, 
-.md-links * .x-btn-tr, 
-.md-links * .x-btn-tc, 
-.md-links * .x-btn-ml, 
-.md-links * .x-btn-mr, 
-.md-links * .x-btn-mc, 
-.md-links * .x-btn-bl, 
-.md-links * .x-btn-br, 
+.md-links * .x-btn-tl,
+.md-links * .x-btn-tr,
+.md-links * .x-btn-tc,
+.md-links * .x-btn-ml,
+.md-links * .x-btn-mr,
+.md-links * .x-btn-mc,
+.md-links * .x-btn-bl,
+.md-links * .x-btn-br,
 .md-links * .x-btn-bc{
     background: none;
 }
@@ -574,4 +574,22 @@ div.help ul li {
 }
 .gn-metadata-view .img-thumbnail {
     margin-bottom: 1em;
+}
+
+.gn-schema-iso19115-3 article header h1 {
+    font-size: 230%;
+}
+
+.gn-schema-iso19115-3 .gn-related-resources h2 {
+  font-weight: bold;
+  font-size: 17.6px;
+  color: #1b75bc;
+  text-transform: uppercase;
+  font-style: normal;
+  padding-left: .65em;
+}
+
+.gn-schema-iso19115-3 #gn-tab-checkpoint-dps-characteristics > h3.view-header,
+.gn-schema-iso19115-3 #gn-tab-checkpoint-tdp-characteristics > h3.view-header{
+  display: none;
 }

@@ -711,4 +711,29 @@
     }
   ]);
 
+  module.directive('sxtTruncate', [ '$timeout', function($timeout) {
+    return {
+      restrict: 'A',
+      link: {
+        post:function(scope, element, attrs) {
+          var source;
+          var PX_PER_CHAR_AVG = 6.2;
+          var resize = function() {
+            var len = Math.round(element.parent().width()*2 / PX_PER_CHAR_AVG);
+            var text = source.substr(0, len) + ((source.length > len) ? '…' : '');
+            element.text(text);
+          };
+          $timeout(function() {
+            source = element.text();
+            resize();
+          }, 0, false);
+          $(window).on('resize', resize);
+          scope.$on('$destroy', function() {
+            $(window).off('resize', resize);
+          });
+        }
+      }
+    }
+  }]);
+
 })();

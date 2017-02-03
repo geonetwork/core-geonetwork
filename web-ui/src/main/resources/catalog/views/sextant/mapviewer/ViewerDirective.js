@@ -285,17 +285,23 @@
       link: function (scope, element, attrs) {
           var content = element.find('ul').css('display', 'none');
           var button = element.find('.dropdown-toggle');
+          if (attrs['container']) {
+            var grid = element.parents(attrs['container']).first();
+          }
 
           $timeout(function() {
             var className = (attrs['fixedHeight'] != 'false')  ?
                 'popover-dropdown popover-dropdown-'+content.find('li').length : '' ;
+            if (attrs['classname']) {
+              className += ' ' + attrs['classname'];
+            }
             button.popover({
               animation: false,
-              container: '[sxt-main-viewer]',
+              container: (grid) ? grid[0] : '[sxt-main-viewer]',
               placement: attrs['placement'] || 'right',
               content: ' ',
-              template: '<div class="popover ' + className + '">' +
-                '<div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+              template: '<div class="bottom popover ' + className + '">' +
+                '<div class="arrow"></div><div class="popover-content"></div></div>'
             });
           }, 1, false);
 
@@ -304,6 +310,16 @@
             content.css('display', 'inline').appendTo(
               $tip.find('.popover-content')
             );
+            if (grid) {
+              $tip.find('.arrow').css({
+                left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
+              });
+              $tip.css({
+                right: '0',
+                left: '0'
+              });
+              $tip.find('[sxt-custom-scroll]').mCustomScrollbar('update');
+            }
           });
           button.on('hidden.bs.popover', function() {
             content.css('display', 'none').appendTo(element);
@@ -311,13 +327,18 @@
 
           // can’t use dismiss boostrap option: incompatible with opacity slider
         var onMousedown = function(e) {
-          if ( (button.data('bs.popover') && button.data('bs.popover').$tip)
+          if (
+            (button.data('bs.popover') && button.data('bs.popover').$tip)
             && (button[0] != e.target)
             && (!$.contains(button[0], e.target))
-            && ($(e.target).parents('.popover')[0] != button.data('bs.popover').$tip[0])) {
+            && ((!grid && ($(e.target).parents('.popover')[0] !=
+              button.data('bs.popover').$tip[0])) || grid)
+          ) {
+            var timeout = (grid && ($(e.target).parents('.popover')[0] ==
+            button.data('bs.popover').$tip[0])) ? 200 : 30;
             $timeout(function(){
               button.popover('hide');
-            }, 30, false);
+            }, timeout, false);
           }
         };
         var onScroll = function() {

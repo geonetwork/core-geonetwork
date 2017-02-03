@@ -160,10 +160,13 @@
 
               var groups;
               scope.title = attrs['gnFacetMultiselectTitle'];
+              scope.hasFilter = attrs['gnFacetMultiselectFilter'] == 'true';
 
               scope.name = attrs.gnFacetMultiselect;
               scope.contentCollapsed =
                   attrs.gnFacetMultiselectCollapsed == 'true';
+
+              scope.ctrl = {};
 
               gnFacetConfigService.loadConfig('hits').
 
@@ -271,6 +274,18 @@
                 scope.$emit('resetSearch', scope.searchObj.params);
                 e.preventDefault();
               };
+
+              /**
+               * Filter facet inputs depending on text filter
+               * @param {Object} v Facet item.
+               */
+              scope.filterInputs = function(v) {
+                var filter = scope.ctrl.activeFilter;
+                if(!filter) return true;
+                filter = filter.toLowerCase();
+                return v.name.toLowerCase().indexOf(filter) >= 0;
+
+              }
             }
           };
         }

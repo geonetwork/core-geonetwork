@@ -58,7 +58,7 @@
                   });
                   panierItem.filter = {
                     params: filters.length ? filters : undefined,
-                    any: esConfig.any,
+                    any: esConfig.any
                   };
                   if(g) {
                     var extent = [g[0][0], g[1][1], g[1][0], g[0][1]];

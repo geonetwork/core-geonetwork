@@ -101,6 +101,10 @@ public class XslProcessApi {
     @RequestMapping(
         value = "/{process}",
         method = RequestMethod.GET,
+        consumes = {
+            MediaType.TEXT_HTML_VALUE,
+            MediaType.ALL_VALUE
+        },
         produces = {
             MediaType.ALL_VALUE
         })

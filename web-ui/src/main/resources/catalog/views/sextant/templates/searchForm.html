@@ -22,6 +22,7 @@
 
       <!--Standard multi facet panel-->
       <div data-ng-if="::facet.key != 'category'" gn-facet-multiselect="{{::facet.langs[lang] || facet.key}}" gn-facet-multiselect-title="{{facet.labels[lang]}}"
+           gn-facet-multiselect-filter="{{::facet.filter}}"
            gn-facet-multiselect-collapsed="{{::isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
 
       <!--Facet tree for categories-->

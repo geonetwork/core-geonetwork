@@ -757,7 +757,14 @@ public final class XslUtil {
         if (context != null) baseUrl = context.getBaseUrl();
 
         SettingInfo si = new SettingInfo();
-        return si.getSiteUrl() + "/" + baseUrl;
+        return si.getSiteUrl() + baseUrl;
+    }
+
+    public static String getNodeId() {
+        ServiceContext context = ServiceContext.get();
+        String nodeId = "";
+        if (context != null) nodeId = context.getNodeId();
+        return nodeId;
     }
 
     public static String getLanguage() {

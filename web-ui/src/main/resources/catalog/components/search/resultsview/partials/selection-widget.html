@@ -66,6 +66,15 @@
         <a href="" ng-click="mdService.deleteMd(undefined, searchResults.selectionBucket)"
            data-gn-confirm-click="{{'deleteSelectedRecordConfirm' | translate:searchResults}}">
           <i class="fa fa-times"></i>&nbsp;<span translate>delete</span></a></li>
+      <li class="divider" data-ng-if="user.isConnected()"></li>
+      <li ng-if="user.isEditorOrMore()">
+        <a href=""
+           target="_blank"
+           data-ng-href="../api/0.1/processes/report-checkpoint.csv?appendFirst=true">
+        <i class="fa fa-fw"></i>&nbsp;
+          <span translate>dqReportCheckpoint</span>
+        </a>
+      </li>
 
       <!--Custom actions-->
       <li data-ng-repeat="a in customActions">

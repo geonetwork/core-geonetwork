@@ -364,7 +364,8 @@
 
       searchSettings.facetConfig = [{
         key: 'publishedForGroup',
-        index: '_groupPublished'
+        index: '_groupPublished',
+        filter: true
       }, {
         key: 'category'
       }, {

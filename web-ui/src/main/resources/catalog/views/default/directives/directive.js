@@ -77,7 +77,8 @@
         templateUrl: '../../catalog/views/default/directives/' +
         'partials/measures.html',
         scope: {
-          recordId: '=gnDataQualityMeasureRenderer'
+          recordId: '=gnDataQualityMeasureRenderer',
+          cptId: '@'
         },
         link: function linkFn(scope, element, attrs) {
           scope.components = {};
@@ -190,28 +191,31 @@
                   var isQeOrFu = value[0].indexOf('#QE') !== -1,
                       cptId = value[0];
 
+                  if (cptId.indexOf(scope.cptId) === 0) {
+                    if (!isQeOrFu) {
+                      if (!scope.components[cptId]) {
+                        scope.components[cptId] = {
+                          id: cptId,
+                          name: value[1],
+                          measures: []
+                        };
+                      }
 
-                  if (!isQeOrFu) {
-                    if (!scope.components[cptId]) {
-                      scope.components[cptId] = {
-                        id: cptId,
-                        name: value[1],
-                        measures: []
-                      };
+                      var qe = getQe(cptId, value[2]);
+                      var fu = getFu(cptId, value[2]);
+                      getDpsOrTdpValues(cptId, value[2], {
+                        qmName: value[3] + ' (' + value[2] + ')',
+                        qmDefinition: value[7],
+                        qmStatement: value[8],
+                        qm: value[5] != '' ? value[5] + ' ' + value[6] : '',
+                        qeName: qe.name,
+                        qe: qe.value,
+                        fuName: fu.name,
+                        fu: fu.value
+                      }).then(function (values) {
+                        scope.components[cptId].measures.push(values[0]);
+                      });
                     }
-
-                    var qe = getQe(cptId, value[2]);
-                    var fu = getFu(cptId, value[2]);
-                    getDpsOrTdpValues(cptId, value[2], {
-                      qmName: value[3] + ' (' + value[2] + ')',
-                      qm: value[5] != '' ? value[5] + ' ' + value[6] : '',
-                      qeName: qe.name,
-                      qe: qe.value,
-                      fuName: fu.name,
-                      fu: fu.value
-                    }).then(function (values) {
-                      scope.components[cptId].measures.push(values[0]);
-                    });
                   }
                 });
               }

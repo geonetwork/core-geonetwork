@@ -3,9 +3,13 @@
     <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !contentCollapsed, 'gn-field-empty': isFacetsCollapse(facetConfig.key)}"></span>
     {{:: title || (facetConfig.label | translate)}}
   </h5>
+  <div class="row filter-input sxt-layertree-filter" data-ng-show="!contentCollapsed" data-ng-if="hasFilter" >
+    <span class="fa fa-times-circle clear" ng-click="ctrl.activeFilter = ''" ng-show="ctrl.activeFilter" title="{{'clear'|translate}}"></span>
+    <input type="text" class="form-control input-sm layerfilter" placeholder="{{'filter'|translate}}"
+             data-ng-model="ctrl.activeFilter" data-ng-model-options="{debounce: 300}">
+  </div>
   <div class="list-group" ng-class="{'collapse': contentCollapsed}" sxt-custom-scroll>
-
-    <div class="checkbox list-group-item" data-ng-repeat="f in facetObj"
+    <div class="checkbox list-group-item" data-ng-repeat="f in facetObj | filter:filterInputs"
          data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
       <i class="fa" data-ng-class="isInSearch(f['@name']) ? 'fa-check-square' : 'fa-square-o'"></i>{{f['@label'] || f['@name']}}&nbsp;({{f['@count']}})
     </div>
