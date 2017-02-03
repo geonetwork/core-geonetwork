@@ -83,6 +83,7 @@ import org.jdom.JDOMException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -95,7 +96,6 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import net.sf.ehcache.transaction.DeadLockException;
 
 /**
  * Represents a harvester job. Used to launch harvester workers.
@@ -118,7 +118,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 //DO WORK
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -237,51 +236,25 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      */
     public void add(Element node) throws BadInputEx, SQLException {
-        try {
-            if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
-                status = Status.INACTIVE;
-                error = null;
-                id = doAdd(node);
-            } else {
-                log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
-            }
-        } catch (InterruptedException e) {
-            log.error(e);
-        } finally {
-            if(lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
-        }
+        status = Status.INACTIVE;
+        error = null;
+        id = doAdd(node);
     }
 
     public void init(Element node, ServiceContext context) throws BadInputEx, SchedulerException {
-        try {
-            if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
-                id = node.getAttributeValue("id");
-                status = Status.parse(node.getChild("options").getChildText("status"));
-                error = null;
-                this.context = context;
+        id = node.getAttributeValue("id");
+        status = Status.parse(node.getChild("options").getChildText("status"));
+        error = null;
+        this.context = context;
 
-                //--- init harvester
-                doInit(node, context);
+        //--- init harvester
+        doInit(node, context);
 
-                initInfo(context);
+        initInfo(context);
 
-                initializeLog();
-                if (status == Status.ACTIVE) {
-                    doSchedule();
-                }
-            } else {
-                log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
-            }
-        } catch (InterruptedException e) {
-            log.error(e);
-        } finally {
-            if(lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
+        initializeLog();
+        if (status == Status.ACTIVE) {
+            doSchedule();
         }
     }
 
@@ -384,7 +357,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 doDestroy();
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -419,7 +391,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 return OperResult.OK;
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -439,16 +410,18 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SchedulerException
      * @param newStatus
      */
-    public OperResult stop(Status newStatus) throws SQLException, SchedulerException {
+    public OperResult stop(final Status newStatus) throws SQLException, SchedulerException {
         this.cancelMonitor.set(true);
-        getScheduler().interrupt(jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME));
+
+        JobKey jobKey = jobKey(getParams().getUuid(), HARVESTER_GROUP_NAME);
+        if(getScheduler().checkExists(jobKey)) {
+            getScheduler().interrupt(jobKey);            
+        }
 
         try {
-            if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
-                if (this.running) {
-                    this.running = false;
-                }
-
+            if(lock.tryLock(LONG_WAIT, TimeUnit.SECONDS)) {
+                this.running = false;
+                
                 settingMan.setValue("harvesting/id:" + id + "/options/status", newStatus);
                 if (newStatus == Status.INACTIVE) {
                     if (this.status != Status.ACTIVE) {
@@ -461,7 +434,41 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 return OperResult.OK;
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
+                
+                // Sometimes the harvester is frozen
+                // give some time, but if it does not finish properly...
+                // just kill it!!
+                 new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        
+                        //Wait again for proper shutdown
+                        try {
+                            Thread.sleep(LONG_WAIT * 1000);
+                        } catch (InterruptedException e) {
+                            log.error(e);
+                        }
+
+                        //Still running?
+                        if(AbstractHarvester.this.running) {
+                            //Then kill it!
+                            log.error("Forcefully stopping harvester '" + 
+                                    AbstractHarvester.this.getID() + "'.");
+                            try {                
+                                AbstractHarvester.this.running = false;
+                                settingMan.setValue("harvesting/id:" + id + "/options/status", newStatus);
+                                AbstractHarvester.this.status = newStatus;
+                                
+                                //Restart scheduling. Something went terribly wrong!
+                                doUnschedule();
+                                doSchedule();
+                            } catch (SchedulerException e) {
+                                log.error(e);
+                            }
+                        }
+                    }
+                }.start();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -492,7 +499,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 return OperResult.OK;
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -522,7 +528,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 }
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -557,7 +562,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                 }                
             } else {
                 log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
             }
         } catch (InterruptedException e) {
             log.error(e);
@@ -689,8 +693,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     protected OperResult harvest() {
         OperResult operResult = OperResult.OK;
+        Boolean releaseLock = false;
         try {
-            if(lock.tryLock(LONG_WAIT, TimeUnit.SECONDS)) {
+            if(lock.isHeldByCurrentThread() || (releaseLock = lock.tryLock(LONG_WAIT, TimeUnit.SECONDS))) {
                 long startTime = System.currentTimeMillis();
                 running = true;
                 cancelMonitor.set(false);
@@ -757,7 +762,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         } catch (InterruptedException e) {
             log.error(e);
         } finally {
-            if(lock.isHeldByCurrentThread()) {
+            if(lock.isHeldByCurrentThread() && releaseLock) {
                 lock.unlock();
             }
         }
@@ -865,22 +870,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @return
      */
     public AbstractParams getParams() {
-        try {
-            if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
-                return params;
-            } else {
-                log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
-            }
-        } catch (InterruptedException e) {
-            log.error(e);
-        } finally {
-            if(lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
-        }
-        
-        throw new DeadLockException("Harvester '" + this.getID() + "' looks deadlocked.");
+        return params;
     }
 
     /**
@@ -1089,20 +1079,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     public void setParams(AbstractParams params) {
-        try {
-            if(lock.tryLock(SHORT_WAIT, TimeUnit.SECONDS)) {
-                this.params = params;
-            } else {
-                log.error("Harvester '" + this.getID() + "' looks deadlocked.");
-                lock.unlock();
-            }
-        } catch (InterruptedException e) {
-            log.error(e);
-        } finally {
-            if(lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
-        }
+        this.params = params;
     }
 
     /**
@@ -1188,6 +1165,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     private List<HarvestError> errors = Collections.synchronizedList(new LinkedList<HarvestError>());
     private volatile boolean running = false;
+    
+    /**
+     * Should we cancel the harvester?
+     */
     protected volatile AtomicBoolean cancelMonitor = new AtomicBoolean(false);
 
 
