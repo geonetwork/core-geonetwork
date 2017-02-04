@@ -73,17 +73,24 @@
           </li>
         </ul>
       </li>
-      <li data-ng-show="user.isReviewerOrMore()">
+      <li data-ng-show="user.isUserAdminOrMore()">
         <a data-gn-active-tb-item="admin.console"
            title="{{'adminConsole' | translate}}">
           <i class="fa fa-th"></i>
           <span class="visible-lg" data-translate="">adminConsole</span>
         </a>
       </li>
-      <li class="dropdown" data-ng-show="user.isReviewerOrMore() && viewMenuAdmin">
+      <li class="dropdown" data-ng-show="user.isUserAdminOrMore() && viewMenuAdmin">
         <a href="" class="dropdown-toggle" data-toggle="dropdown"
            role="button" aria-expanded="false"><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
+        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
+          <li data-ng-repeat="t in userAdminMenu">
+            <a data-gn-active-tb-item="admin.console{{t.route}}">
+              <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
+            </a>
+          </li>
+        </ul>
+        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in adminMenu">
             <a data-gn-active-tb-item="admin.console{{t.route}}">
               <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
