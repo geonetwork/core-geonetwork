@@ -49,7 +49,7 @@
 
           var unregisterUserWatch = scope.$watch('user', function(user) {
             if(user && user.surname) {
-              scope.prefillUser = user.generic;
+              scope.prefillUser = !user.generic;
               if(scope.prefillUser) {
                 angular.extend(scope.formObj.user, {
                   lastname: user.surname,
