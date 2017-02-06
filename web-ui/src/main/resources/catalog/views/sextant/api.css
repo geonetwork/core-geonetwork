@@ -21079,14 +21079,6 @@ yx-axis
 .g .gn-pager .btn-group li a {
   padding: 2px 10px;
 }
-.gn .gn-facet input[type=checkbox],
-.g .gn-facet input[type=checkbox] {
-  position: static;
-}
-.gn .gn-facet label,
-.g .gn-facet label {
-  padding-left: 0;
-}
 .gn [sxt-main-viewer],
 .g [sxt-main-viewer] {
   position: absolute;
@@ -21635,6 +21627,19 @@ yx-axis
 .gn .gn-facet .list-group-item:hover,
 .g .gn-facet .list-group-item:hover {
   cursor: pointer;
+}
+.gn .gn-facet input[type=checkbox],
+.g .gn-facet input[type=checkbox] {
+  position: static;
+}
+.gn .gn-facet label,
+.g .gn-facet label {
+  padding-left: 0;
+}
+.gn .gn-facet .sxt-layertree-filter,
+.g .gn-facet .sxt-layertree-filter {
+  margin-left: 20px;
+  max-width: 260px;
 }
 .gn .alert,
 .g .alert {
