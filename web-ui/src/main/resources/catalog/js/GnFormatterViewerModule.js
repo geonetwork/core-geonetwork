@@ -94,6 +94,6 @@
     var tpls = '../../catalog/templates/';
 
     $routeProvider.when('/:formatter/:mdId', { templateUrl: tpls +
-          '/formatter-viewer.html', controller: 'GnFormatterViewer'});
+          'formatter-viewer.html', controller: 'GnFormatterViewer'});
   }]);
 })();
