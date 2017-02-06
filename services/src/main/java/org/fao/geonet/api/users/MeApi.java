@@ -86,7 +86,8 @@ public class MeApi {
                 .setName(userSession.getName())
                 .setSurname(userSession.getSurname())
                 .setEmail(userSession.getEmailAddr())
-                .setOrganisation(userSession.getOrganisation()),
+                .setOrganisation(userSession.getOrganisation())
+                .setGeneric(userSession.getPrincipal().isGeneric()),
                     HttpStatus.OK) :
             new ResponseEntity<>(NO_CONTENT);
     }

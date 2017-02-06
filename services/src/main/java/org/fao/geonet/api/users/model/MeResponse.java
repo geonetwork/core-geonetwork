@@ -100,6 +100,15 @@ public class MeResponse {
         return this;
     }
 
+    public boolean getGeneric() {
+        return generic;
+    }
+
+    public MeResponse setGeneric(boolean generic) {
+        this.generic = generic;
+        return this;
+    }
+
     private String id;
     private String profile;
     private String username;
@@ -108,6 +117,7 @@ public class MeResponse {
     private String email;
     private String hash;
     private String organisation;
+    private boolean generic;
 
     public MeResponse() {
     }
