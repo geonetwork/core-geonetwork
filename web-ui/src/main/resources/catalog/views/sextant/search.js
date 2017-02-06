@@ -429,7 +429,7 @@
     'gnMap',
     'sxtGlobals',
     function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
-
+      $scope.ctrl = {};
     }]);
 
   module.controller('gnsSextantSearchForm', [
