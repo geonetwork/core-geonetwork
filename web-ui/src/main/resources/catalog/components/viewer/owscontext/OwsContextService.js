@@ -336,7 +336,7 @@
 
         map.getLayers().forEach(function(layer) {
           var source = layer.getSource();
-          var url = '';
+          var url = '', version = null;
           var name;
 
           // background layers already taken into account
@@ -346,6 +346,7 @@
 
           if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
+            version = source.getParams().VERSION;
             url = source.getUrl();
           } else if (source instanceof ol.source.TileWMS ||
               source instanceof ol.source.ImageWMS) {
@@ -355,7 +356,7 @@
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = layer.get('urlCap');
           }
-          resourceList.layer.push({
+          var layerParams = {
             hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
             name: name,
@@ -368,7 +369,11 @@
               }],
               service: 'urn:ogc:serviceType:WMS'
             }]
-          });
+          };
+          if (version) {
+            layerParams.server[0].version = version;
+          }
+          resourceList.layer.push(layerParams);
         });
 
         var context = {
@@ -462,8 +467,11 @@
           }
         }
         else { // we suppose it's WMS
-
-          return gnMap.addWmsFromScratch(map, res.href, layer.name, createOnly).
+          // TODO: Would be good to attach the MD
+          // even when loaded from a context.
+          return gnMap.addWmsFromScratch(
+              map, res.href, layer.name,
+              createOnly, null, server.version).
               then(function(olL) {
                 if (olL) {
                   try {
