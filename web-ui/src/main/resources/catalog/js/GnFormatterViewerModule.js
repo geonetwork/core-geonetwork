@@ -43,7 +43,7 @@
   goog.require('gn_popup_service');
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
-  goog.require('gn_utility');
+  goog.require('gn_mdview');
 
 
 
@@ -51,45 +51,37 @@
 
 
 
+  var module = angular.module('gn_formatter_viewer',[
+    'ngRoute',
+    'gn',
+    'gn_alert',
+    'gn_catalog_service',
+    'gn_mdactions_service',
+    'gn_utility',
+    'gn_mdview'
+  ]);
 
-  var module = angular.module('gn_formatter_viewer',
-      ['ngRoute', 'gn', 'gn_utility', 'gn_catalog_service',
-        'gn_search_default_directive',
-        'gn_popup_service', 'gn_mdactions_service', 'gn_alert']);
+  module.config(['$LOCALES', 'gnGlobalSettings',
+    function($LOCALES) {
+      $LOCALES.push('search');
+    }]);
 
-  // Define the translation files to load
-  module.constant('$LOCALES', ['core']);
-
-  module.constant('gnSearchSettings', {});
 
   module.controller('GnFormatterViewer',
-      ['$scope', '$http', '$sce', '$routeParams', 'Metadata',
-       function($scope, $http, $sce, $routeParams, Metadata) {
-         $scope.md = {
-           'geonet:info': {}
-         };
-         $scope.metadata = '';
-         $scope.loading = true;
+      ['$scope', '$http', '$sce', '$routeParams', 'Metadata', 'gnMdFormatter',
+       function($scope, $http, $sce, $routeParams, Metadata, gnMdFormatter) {
 
          var formatter = $routeParams.formatter;
          var mdId = $routeParams.mdId;
 
-         var idParam = isNaN(parseInt(mdId)) ? 'uuid=' + mdId : 'id=' + mdId;
+         $scope.loading = true;
+         $scope.$on('mdLoadingEnd', function() {
+           $scope.loading = false;
+         });
 
-         $http.get('md.format.xml?xsl=' + formatter + '&' + idParam).
-         success(function(data) {
-           $scope.loading = undefined;
-           $scope.metadata = $sce.trustAsHtml(data);
-         }).error(function(data) {
-           $scope.loading = undefined;
-           $scope.metadata = $sce.trustAsHtml(data);
-         });
-         var indexField = isNaN(mdId) ? '_uuid' : '_id';
-         $http.get('qi?_content_type=json&fast=index&' + indexField + '=' +
-         mdId).success(function(data) {
-           $scope.md = new Metadata(data.metadata);
-         });
+         gnMdFormatter.load(mdId, '.formatter-container', $scope);
        }]);
+
   module.config(['$routeProvider', function($routeProvider) {
     var tpls = '../../catalog/templates/';
 
