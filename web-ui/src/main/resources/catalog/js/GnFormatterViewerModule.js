@@ -66,6 +66,7 @@
       $LOCALES.push('search');
     }]);
 
+  module.constant('gnSearchSettings', {});
 
   module.controller('GnFormatterViewer',
       ['$scope', '$http', '$sce', '$routeParams', 'Metadata', 'gnMdFormatter',
@@ -79,7 +80,9 @@
            $scope.loading = false;
          });
 
-         gnMdFormatter.load(mdId, '.formatter-container', $scope);
+         var url = '../api/records/' + mdId + '/formatters/' + formatter;
+
+         gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
        }]);
 
   module.config(['$routeProvider', function($routeProvider) {
