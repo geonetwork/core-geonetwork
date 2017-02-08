@@ -44,6 +44,7 @@
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
   goog.require('gn_mdview');
+  goog.require('sxt_directives');
 
 
 
@@ -58,14 +59,43 @@
     'gn_catalog_service',
     'gn_mdactions_service',
     'gn_utility',
-    'gn_mdview'
+    'gn_mdview',
+    'sxt_directives'
   ]);
 
   module.config(['$LOCALES', 'gnGlobalSettings',
     function($LOCALES) {
-      $LOCALES.push('search');
+      $LOCALES.push('sextant', 'search');
     }]);
 
+  module.constant('gnSearchSettings', {
+    formatter: {
+      defaultUrl: function(md) {
+        var url;
+        if(md.getSchema() == 'iso19139.sdn-product') {
+          url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+        } else if(md.getSchema() == 'iso19115-3') {
+          var view =
+            md.standardName ===
+            'ISO 19115-3 - Emodnet Checkpoint - Upstream Data' ? 'medsea' :
+              (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product' ?
+                'checkpoint-tdp' :
+                (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
+                    'checkpoint-dps' : 'default'
+                ));
+          url = 'md.format.xml?root=div&xsl=xsl-view&view=' + view +
+            '&uuid=' + md.getUuid();
+        } else {
+          url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+        }
+        return url;
+      },
+      defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
+      list: [
+        {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
+      ]
+    }
+  });
 
   module.controller('GnFormatterViewer',
       ['$scope', '$http', '$sce', '$routeParams', 'Metadata', 'gnMdFormatter',
