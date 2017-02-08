@@ -205,7 +205,8 @@
         openModal({
           title: $translate.instant('privileges') + ' - ' +
               (md.title || md.defaultTitle),
-          content: '<div gn-share="' + md.getId() + '"></div>'
+          content: '<div gn-share="' + md.getId() + '"></div>',
+          className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
 
@@ -241,7 +242,8 @@
           title: 'privileges',
           content: '<div gn-share="" ' +
               'gn-share-batch="true" ' +
-              'selection-bucket="' + bucket + '"></div>'
+              'selection-bucket="' + bucket + '"></div>',
+          className: 'gn-privileges-popup'
         }, scope, 'PrivilegesUpdated');
       };
       this.openBatchEditing = function(scope) {
