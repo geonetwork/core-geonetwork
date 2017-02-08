@@ -49,9 +49,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.imageio.ImageIO;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -86,6 +89,9 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     private DataManager dataManager;
     @Autowired
     private SourceRepository sourceRepository;
+
+    @PersistenceContext
+    private EntityManager _entityManager;
 
     @Autowired private MetadataRepository metadataRepository;
     @Autowired
@@ -317,11 +323,16 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "xml"))))
             .andExpect(content().string(containsString(this.uuid)))
             .andExpect(xpath("/MD_Metadata/fileIdentifier/CharacterString").string(this.uuid));
+
+        // Seem some issue with the transaction in the tests, requires to use explicitly the entity manager.
+        // In the application looks working fine with the @Transactional annotation in MetadataRepository.incrementPopularity
+        _entityManager.flush();
+        _entityManager.clear();
+
         int newPopularity = metadataRepository.findOneByUuid(this.uuid).getDataInfo().getPopularity();
         Assert.assertThat("Popularity has not been incremented by one", newPopularity, equalTo(popularity + 1));
 
         popularity = newPopularity;
-
 
         mockMvc.perform(get("/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "false")
             .session(mockHttpSession)
@@ -333,6 +344,12 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "xml"))))
             .andExpect(content().string(containsString(this.uuid)))
             .andExpect(xpath("/MD_Metadata/fileIdentifier/CharacterString").string(this.uuid));
+
+        // Seem some issue with the transaction in the tests, requires to use explicitly the entity manager.
+        // In the application looks working fine with the @Transactional annotation in MetadataRepository.incrementPopularity
+        _entityManager.flush();
+        _entityManager.clear();
+
         newPopularity = metadataRepository.findOneByUuid(this.uuid).getDataInfo().getPopularity();
         Assert.assertThat("Popularity has changed", newPopularity, equalTo(popularity));
     }
