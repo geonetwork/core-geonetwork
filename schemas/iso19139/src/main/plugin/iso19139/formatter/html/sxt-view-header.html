@@ -41,13 +41,13 @@
 
         <dl class="dl-horizontal">
 
+          <dt data-fmt-if="abstract" translate="">abstract</dt>
+          <dd data-fmt-if="abstract" class="md-abstract"><p>{{abstract}}</p>
+          </dd>
+
           <dt data-fmt-if="dates" translate="">Date(s)</dt>
           <dd data-fmt-if="dates">
             {{dates}}
-          </dd>
-
-          <dt data-fmt-if="abstract" translate="">abstract</dt>
-          <dd data-fmt-if="abstract"><p>{{abstract}}</p>
           </dd>
 
           <dt data-fmt-if="contacts" translate="">Contacts</dt>
@@ -62,15 +62,24 @@
           <dt data-fmt-if="constraints" translate="">constraints</dt>
           <dd data-fmt-if="constraints">{{constraints}}</dd>
 
+          <dt translate="">associatedResources</dt>
+          <dd data-fmt-if="constraints">
+
+            <div data-gn-related="md"
+                 data-user="user"
+                 template="../../catalog/views/sextant/directives/partials/related.html"
+                 data-types="parent|children|services|datasets">
+              </div>
+          </dd>
         </dl>
+        <sxt-citation metadata="md"></sxt-citation>
+
       </div>
 
       <div class="col-md-3 gn-md-side">
 
-        <section class="links">
+        <section class="links" ng-if="downloads.length > 0 || links.length > 0 ||layers.length > 0">
           <h3 translate="">accessData</h3>
-          <div gn-related="md" types="parent|children"
-               template="../../catalog/views/sextant/templates/related.html"></div>
           <sxt-links-btn></sxt-links-btn>
       </section>
 
@@ -85,6 +94,9 @@
           <p>
             {{extents}}
           </p>
+        </section>
+        <section class="sxt-social">
+          <sxt-social></sxt-social>
         </section>
 
       </div>

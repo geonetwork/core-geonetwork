@@ -1,13 +1,60 @@
-@import "../../../style/gn";
 @import "../../../style/gn_metadata";
 
 .gn-metadata-view {
   .overview {
     dd {
       background-color: #fff;
+      &.md-abstract {
+        border: solid 1px #D0E1FF;
+        border-radius: 2px;
+        background-color: #E6F7FF;
+      }
     }
     dt, dd {
       margin-bottom: 1em
     }
+  }
+
+  .gn-related-resources {
+    .container-list {
+      margin-bottom: 0;
+      > li {
+        background: none;
+      }
+    }
+  }
+
+  .dist-table {
+    display: table;
+    width: 100%;
+
+    h2 {
+      margin-top: 0;
+      font-size: 16px;
+    }
+    .deco-highlight {
+      width: 180px;
+      background-color: #f7f7f7;
+    }
+    .fa-quote-left {
+      color: #ebecec;
+      margin-right: 10px;
+      font-size: 75px;
+    }
+
+    article {
+      padding: 20px 20px;
+      background-color: #ebecec;
+    }
+
+    .cell {
+      display: table-cell;
+      float: none;
+      vertical-align: top;
+    }
+  }
+
+  .sxt-social {
+    margin-top: 30px;
   }
 }
