@@ -26,10 +26,11 @@
 
   goog.require('gn_category');
   goog.require('gn_share');
+  goog.require('gn_popup');
 
 
   var module = angular.module('gn_mdactions_service', [
-    'gn_share', 'gn_category'
+    'gn_share', 'gn_category', 'gn_popup'
   ]);
 
   module.service('gnMetadataActions', [
