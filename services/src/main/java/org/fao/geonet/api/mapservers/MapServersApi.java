@@ -367,8 +367,7 @@ public class MapServersApi {
     @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.GET,
         produces = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE
+            MediaType.TEXT_PLAIN_VALUE
         })
     @ResponseBody
     @PreAuthorize("hasRole('Editor')")
@@ -423,8 +422,7 @@ public class MapServersApi {
     @RequestMapping(value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.PUT,
         produces = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE
+            MediaType.TEXT_PLAIN_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
@@ -479,7 +477,7 @@ public class MapServersApi {
         value = "/{mapserverId}/records/{metadataUuid}",
         method = RequestMethod.DELETE,
         produces = {
-            MediaType.APPLICATION_JSON_VALUE
+            MediaType.TEXT_PLAIN_VALUE
         })
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
