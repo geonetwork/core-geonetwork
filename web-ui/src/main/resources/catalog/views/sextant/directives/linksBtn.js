@@ -16,6 +16,7 @@
         link: function(scope) {
           scope.isMap = searchSettings.mainTabs.map;
           scope.isPanier = searchSettings.mainTabs.panier;
+          scope.container = scope.container || '.links';
         }
       };
     }

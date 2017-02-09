@@ -70,6 +70,8 @@
         return suggestService.getAnySuggestions(val);
       };
 
+      $scope.container = '.gn-grid-item';
+
       $scope.keywordsOptions = {
         mode: 'remote',
         remote: {

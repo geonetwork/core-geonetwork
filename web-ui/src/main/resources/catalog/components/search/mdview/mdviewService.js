@@ -285,6 +285,7 @@
 
             var newscope = scope ? scope.$new() :
                 angular.element($('#sxt-controller')).scope().$new();
+            newscope.container = '.links';
 
             newscope.fragment =
                 $compile(angular.element(response.data))(newscope);
