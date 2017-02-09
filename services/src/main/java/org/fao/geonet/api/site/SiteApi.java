@@ -400,10 +400,9 @@ public class SiteApi {
         @ApiResponse(code = 200, message = "Site information.")
     })
     @ResponseBody
-    public SiteInformation getInformation(
+    public SiteInformation getInformation(HttpServletRequest request
     ) throws Exception {
-        ApplicationContext appContext = ApplicationContextHolder.get();
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
         return new SiteInformation(context, (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME));
     }
