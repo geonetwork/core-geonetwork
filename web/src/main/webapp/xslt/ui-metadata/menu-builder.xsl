@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2017 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -28,6 +28,8 @@
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
+
+  <xsl:variable name="rootNode" select="/"/>
 
   <!--
     Build the menu on top of the metadata
@@ -77,10 +79,11 @@
                 <xsl:variable name="isViewDisplayed"
                               as="xs:boolean"
                               select="gn-fn-metadata:check-viewtab-visibility(
+                                        $rootNode,
                                         $schema, $metadata, $serviceInfo,
                                         @displayIfRecord,
-                                        @displayIfServiceInfo)"/>
-
+                                        @displayIfServiceInfo,
+                                        @displayIfSetting)"/>
 
                 <xsl:if test="$isViewDisplayed">
                   <li>
@@ -162,12 +165,15 @@
 
   <!-- Create a link to a tab based on its identifier -->
   <xsl:template mode="menu-builder" match="tab">
+
     <xsl:variable name="isTabDisplayed"
                   as="xs:boolean"
                   select="gn-fn-metadata:check-viewtab-visibility(
+                                        $rootNode,
                                         $schema, $metadata, $serviceInfo,
                                         @displayIfRecord,
-                                        @displayIfServiceInfo)"/>
+                                        @displayIfServiceInfo,
+                                        @displayIfSetting)"/>
     <!-- When tab displayIf filter return false, the tab is disabled.
      Another option would be to completely hide it:
     <xsl:if test="$isTabDisplayed">
