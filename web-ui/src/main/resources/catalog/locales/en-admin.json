@@ -414,6 +414,8 @@
     "harvesterError": "Harvest error",
     "harvesterFilter": "Search filter",
     "harvesterGroup": "Group",
+    "harvesterUser": "User",
+    "harvesterUserHelp": "User who owns the harvested records",
     "harvesterGroupHelp": "Only the catalog administrator or user admin of this group can manage this node.",
     "harvesterHistory": "Harvester history",
     "harvesterIcon": "Logo",
