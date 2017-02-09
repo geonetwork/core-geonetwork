@@ -91,7 +91,7 @@
 
                 if ($scope.harvesterSelected.searches[0].until) {
                   $scope.harvesterSelected.searches[0].until =
-                    new Date($scope.harvesterSelected.searches[0].until);
+                  new Date($scope.harvesterSelected.searches[0].until);
 
                 }
               }

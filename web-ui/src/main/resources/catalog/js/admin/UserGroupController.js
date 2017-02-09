@@ -107,7 +107,7 @@
 
       $http.get('../api/tags').
           success(function(data) {
-            var nullTag = {id: null, name: '', label:{}};
+            var nullTag = {id: null, name: '', label: {}};
             nullTag.label[$scope.lang] = '';
             $scope.categories = [nullTag].concat(data);
           });

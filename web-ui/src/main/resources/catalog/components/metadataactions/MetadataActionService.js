@@ -24,9 +24,12 @@
 (function() {
   goog.provide('gn_mdactions_service');
 
+
+
+
   goog.require('gn_category');
-  goog.require('gn_share');
   goog.require('gn_popup');
+  goog.require('gn_share');
 
 
   var module = angular.module('gn_mdactions_service', [

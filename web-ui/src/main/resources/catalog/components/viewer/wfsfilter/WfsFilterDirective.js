@@ -265,10 +265,10 @@
           scope.dropFeatures = function() {
             var id = scope.url + '#' + ftName;
             return gnSolrService.deleteDocs('featureTypeId:"' +
-              id + '" id:"' + id + '"').then(function() {
+                id + '" id:"' + id + '"').then(function() {
               scope.initSolrRequest();
-            }, function () {
-                console.warn('Failed to remove features for type ' + id);
+            }, function() {
+              console.warn('Failed to remove features for type ' + id);
             });
           };
           /**

@@ -430,7 +430,7 @@
               uuid: qParams.uuidDS,
               protocol: qParams.protocol,
               process: qParams.process
-            }).then(addDatasetToServiceFn, function (error) {
+            }).then(addDatasetToServiceFn, function(error) {
               // Current user may not be able to edit
               // the targeted dataset. Notify user in this case
               // that only the service will be updated.
