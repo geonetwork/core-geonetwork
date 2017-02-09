@@ -5,7 +5,7 @@
       class="list-group-item">
     <span data-ng-click="toggleNode($event)"
           class="fa fa-fw gn-facet-toggle"
-          data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'hidden'"></span>
+          data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'invisible'"></span>
 
     <label title="{{c['@label'] || c['@value']}}"
            data-ng-class="{'gn-facet-active': isSelected}">
