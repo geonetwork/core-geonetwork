@@ -372,8 +372,10 @@ public class CatalogSearcher implements MetadataRecordSelector {
             removeEmptyBranches(e);
         }
 
-        if (element.getChildren().isEmpty() && element.getTextTrim().isEmpty()
-            && element.getAttribute("fld") == null) {
+        if (element.getChildren().isEmpty() &&
+            element.getTextTrim().isEmpty() &&
+            element.getAttribute("fld") == null &&
+            !element.getName().equals("MatchAllDocsQuery")) {
             element.detach();
         }
     }

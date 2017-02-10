@@ -45,7 +45,7 @@
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
-          }).then(function (response) {
+          }).then(function(response) {
             // TODO: report no email sent
             if (response.status === 200) {
               $scope.success = true;

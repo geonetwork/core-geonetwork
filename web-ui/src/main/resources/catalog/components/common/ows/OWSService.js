@@ -38,7 +38,7 @@
           var result = parser.read(data);
 
           var layers = [];
-          var url = result.Capability.Request.GetCapabilities.
+          var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
 
           // Push all leaves into a flat array of Layers.
@@ -72,6 +72,7 @@
           getFlatLayers(result.Capability.Layer);
           setLayerAsArray(result.Capability);
           result.Capability.layers = layers;
+          result.Capability.version = result.version;
           return result.Capability;
         };
 
@@ -211,6 +212,9 @@
               //check layername
               if (name == layers[i].Name || name == layers[i].Identifier) {
                 layers[i].nameToUse = name;
+                if (capObj.version) {
+                  layers[i].version = capObj.version;
+                }
                 return layers[i];
               }
 
@@ -240,6 +244,9 @@
 
             //FIXME: allow multiple, remove duplicates
             if (needles.length > 0) {
+              if (capObj.version) {
+                needles[0].version = capObj.version;
+              }
               return needles[0];
             }
             else {

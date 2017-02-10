@@ -36,6 +36,7 @@
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        selectionBucket: 'be101',
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
@@ -75,7 +76,7 @@
       $scope.$watch('searchResults.selectedCount',
           function(newvalue, oldvalue) {
             if (oldvalue != newvalue) {
-              $http.get('../api/selections/metadata').
+              $http.get('../api/selections/be101').
                   success(function(uuids) {
                     $http.get('q?_content_type=json&_isTemplate=y or n or s&' +
                           'fast=index&resultType=manager&' +
@@ -112,7 +113,7 @@
       // Get current selection which returns the list of uuids.
       // Then search those records.
       $scope.searchSelection = function(params) {
-        $http.get('../api/selections/metadata').success(function(uuids) {
+        $http.get('../api/selections/be101').success(function(uuids) {
           $scope.searchObj.params = angular.extend({
             _uuid: uuids.join(' or ')
           },

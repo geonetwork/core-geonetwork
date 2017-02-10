@@ -44,6 +44,8 @@
              hbottomRef: '@',
              hleftRef: '@',
              hrightRef: '@',
+             identifierRef: '@',
+             identifier: '@',
              dcRef: '@',
              extentXml: '=?',
              lang: '=',
@@ -155,9 +157,11 @@
                    scope.extent[from],
                    scope.projs[from], scope.projs[to]
                );
-               scope.extent[to] = extent.map(function(coord) {
-                 return Math.round(coord * 10000) / 10000;
-               });
+               if (extent && extent.map) {
+                 scope.extent[to] = extent.map(function(coord) {
+                   return Math.round(coord * 10000) / 10000;
+                 });
+               }
              };
 
              // Init extent from md for map and form
@@ -169,9 +173,11 @@
                var extent = gnMap.reprojExtent(
                    scope.extent.form, oldValue, newValue
                );
-               scope.extent.form = extent.map(function(coord) {
-                 return Math.round(coord * 10000) / 10000;
-               });
+               if (extent && extent.map) {
+                 scope.extent.form = extent.map(function(coord) {
+                   return Math.round(coord * 10000) / 10000;
+                 });
+               }
              });
 
              // TODO: move style in db config
@@ -319,6 +325,11 @@
                    parseFloat(bbox.east),
                    parseFloat(bbox.north)];
                  scope.location = region.name;
+
+                 if (attrs.identifierRef !== undefined) {
+                   scope.identifier = region.id;
+                 }
+
                  reprojExtent('md', 'map');
                  reprojExtent('md', 'form');
                  setDcOutput();

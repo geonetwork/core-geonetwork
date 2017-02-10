@@ -7,6 +7,7 @@ var gnHarvestergeonetwork20 = {
             "@type": "geonetwork20",
             "owner": [""],
             "ownerGroup": [""],
+            "ownerUser": [""],
             "site":   {
               "name": "",
               "uuid": "",
@@ -56,6 +57,7 @@ var gnHarvestergeonetwork20 = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'

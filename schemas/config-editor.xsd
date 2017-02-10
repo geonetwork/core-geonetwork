@@ -70,6 +70,7 @@ a set of views with at least one.
         <xs:element minOccurs="0" maxOccurs="1" ref="fields"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="fieldsWithFieldset"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="multilingualFields"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="tableFields"/>
         <xs:element minOccurs="1" maxOccurs="1" ref="views"/>
         <xs:element minOccurs="0" maxOccurs="1" ref="batchEditing"/>
       </xs:sequence>
@@ -203,6 +204,140 @@ If expanded, then one field per language is displayed with no need to click on t
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="tableFields">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+Defining fields to display as tables
+------------------------------------
+
+Configure here the list of fields to display using a table. This only applies to flat mode views.
+
+.. figure:: ../../user-guide/describing-information/img/table-fields.png
+
+
+.. code-block:: xml
+
+
+    <editor>
+       <fields>...</fields>
+       <fieldsWithFieldset>...</fieldsWithFieldset>
+        <multilingualFields>...</multilingualFields>
+        <tableFields>
+          <table for="gmd:CI_OnlineResource">
+            <header>
+              <hcol label="gmd:protocol"/>
+              <hcol label="gmd:linkage"/>
+              <hcol label="gmd:name"/>
+              <hcol/>
+            </header>
+            <row>
+              <col xpath="gmd:protocol"/>
+              <col xpath="gmd:linkage"/>
+              <col xpath="gmd:name"/>
+              <col del=".."/>
+            </row>
+          </table>
+
+
+
+Tables can also contains subforms.
+
+Configuration is defined in the table config with a section element pointing to the element to add as a new row. In the following example, service operation are displayed in a table:
+
+* with 3 columns: operation name, DCP and connect point.
+
+* if parameters are defined, one subrow will be created per parameters
+
+* and if srv:parameters is in flatModeException, and extra row will be added to allow to add new parameters for the operation
+
+.. code-block:: xml
+
+    <table for="srv:SV_OperationMetadata">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="srv:DCP"/>
+        <col label="srv:connectPoint"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="srv:DCP"/>
+        <col xpath="srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"/>
+        <col del=".."/>
+        <section xpath="srv:SV_OperationMetadata/srv:parameters"
+                 or="parameters" in="srv:SV_OperationMetadata"/>
+      </row>
+    </table>
+
+        ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="table">
+          <xs:complexType>
+            <xs:attribute name="for" use="required">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+Element to match for creating the table.
+                  ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:sequence>
+              <xs:element maxOccurs="1" ref="header"/>
+              <xs:element maxOccurs="1" ref="row"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="header">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+Table header row.
+        ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="col">
+          <xs:complexType>
+            <xs:attribute name="label" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="row">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+Table column.
+        ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="col">
+          <xs:complexType>
+            <xs:attribute name="xpath" type="xs:string" use="optional"/>
+            <xs:attribute name="del" type="xs:string" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" ref="section"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
 
   <xs:element name="expanded">
     <xs:annotation>
@@ -1338,6 +1473,11 @@ contains an XLink.
       <xs:attribute name="xpath" type="xs:string" use="required">
         <xs:annotation>
           <xs:documentation>XPath to get the value from the XML snippet.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="required" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Indicate if the field is required.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="tooltip" type="xs:string" use="optional">

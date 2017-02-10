@@ -30,6 +30,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
@@ -61,6 +62,12 @@ public abstract class BaseAligner {
 
     /**
      * TODO Javadoc.
+     *
+     * @param categories
+     * @param localCateg
+     * @param log
+     * @param saveMetadata
+     * @throws Exception
      */
     public void addCategories(Metadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
                               Logger log, String serverCategory, boolean saveMetadata) {
@@ -146,4 +153,46 @@ public abstract class BaseAligner {
             }
         }
     }
+    
+    /**
+     * Returns the id of the group that owns the harvester. Null if there is no group defined.
+     * @param params
+     * @return
+     */
+    protected Integer getOwnerGroupId(AbstractParams params) {
+        Integer groupId = null;
+        if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerIdGroup()) 
+                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerIdGroup())) {
+            groupId = Integer.parseInt(params.getOwnerIdGroup());
+        }
+        return groupId;
+    }
+
+    /**
+     * Returns the owner of records of the harvester,
+     * the owner of the harvester if no owner of the records is defined 
+     * or the admin user (id=1) as failback. 
+     * This third option should never happen, 
+     * but it is a failback just in case some weird harvester is created.
+     * No record should be userless.
+     * 
+     * @param params
+     * @return
+     */
+    protected Integer getOwnerId(AbstractParams params) {
+        Integer ownerId = null;
+        
+        if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerIdUser()) 
+                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerIdUser())) {
+            ownerId = Integer.parseInt(params.getOwnerIdUser());
+        } else if (!org.apache.commons.lang.StringUtils.isEmpty(params.getOwnerId()) 
+                && org.apache.commons.lang.StringUtils.isNumeric(params.getOwnerId())) {
+            ownerId = Integer.parseInt(params.getOwnerId());
+        } else {
+            ownerId = 1;
+        }
+        
+        return ownerId;
+    }
+
 }

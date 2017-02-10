@@ -28,7 +28,7 @@
   goog.require('gn_facets');
 
   var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets']);
+      ['gn_catalog_service', 'gn_facets', 'pascalprecht.translate']);
 
   /**
    * Controller to create new metadata record.
@@ -59,14 +59,16 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-      $scope.searchObj = {params: {
-        _isTemplate: 's',
-        any: '*',
-        _root: '',
-        sortBy: 'title',
-        sortOrder: 'reverse',
-        resultType: 'subtemplates'
-      }};
+      $scope.searchObj = {
+        selectionBucket: 'd101',
+        params: {
+          _isTemplate: 's',
+          any: '*',
+          _root: '',
+          sortBy: 'title',
+          sortOrder: 'reverse',
+          resultType: 'subtemplates'
+        }};
       $scope.paginationInfo = {
         pages: -1,
         currentPage: 1,
@@ -182,6 +184,15 @@
               .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
+              }).then(function() {
+                // success. Nothing to do.
+              }, function(rejectedValue) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('runServiceError'),
+                  error: rejectedValue,
+                  timeout: 0,
+                  type: 'danger'
+                });
               });
         } else {
           gnEditor.add(gnCurrentEdit.id, ref, name,

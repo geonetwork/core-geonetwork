@@ -1,21 +1,18 @@
-<div class="clearfix gn-share-help row">
-  <div class="col-md-4 form-group gn-searchgroup-input">
-    <h5 translate>whoCanAccess</h5>
-    <input class="form-control input-sm" data-ng-model="groupSearch.$"
-           placeholder="{{'filterGroup' | translate}}"/>
-  </div>
-  <div class="col-md-8">
-    <div ng-if="alertMsg" class="alert alert-warning"
-         role="alert"
-         translate>privilegesBatchAlert
-    </div>
-  </div>
+<h5 translate>whoCanAccess</h5>
+
+<!--Message alert-->
+<div ng-if="alertMsg" class="alert alert-warning"
+     role="alert"
+     translate>privilegesBatchAlert
 </div>
 
+<!--Search inpup-->
 <div class="col-md-4 input-group input-group-sm gn-searchgroup-input">
   <span class="input-group-addon" translate>filter</span>
-  <input type="text" class="form-control input-sm" ng-model="pFilter" placeholder="{{'filterGroup' | translate}}">
+  <input type="text" class="form-control input-sm" ng-model="pFilter"
+         ng-model-options="{debounce: 300}" placeholder="{{'filterGroup' | translate}}">
 </div>
+
 
 <!-- TODO: simplify layout if only one group -->
 <div class="gn-share-grid">
@@ -48,7 +45,6 @@
           <i data-ng-if="sorter.predicate == 'p'" class="fa"
              ng-class="sorter.reverse ? 'fa-long-arrow-up' : 'fa-long-arrow-down'"></i>
         </a>
-        <span data-ng-if="!disableAllCol" translate>setall</span>
         </th>
       </tr>
       </thead>

@@ -155,6 +155,7 @@
                 filter += '&' + key + '=' + value;
               });
           search('q?_content_type=json&fast=index' +
+              '&bucket=' + scope.searchResults.selectionBucket +
               filter +
               '&from=' + (pageOptions.currentPage *
               pageOptions.hitsPerPage + 1) +
@@ -237,28 +238,29 @@
             });
         return defer.promise;
       };
-      var selected = function() {
-        return $http.get('../api/selections/metadata');
+      var selected = function(bucket) {
+        return $http.get('../api/selections/' + (bucket || 'metadata'));
       };
-      var select = function(uuid) {
-        return $http.put('../api/selections/metadata', null, {
+      var select = function(uuid, bucket) {
+        return $http.put('../api/selections/' + (bucket || 'metadata'), null, {
           params: {
             uuid: uuid
           }
         });
       };
-      var unselect = function(uuid) {
-        return $http.delete('../api/selections/metadata', {
-          params: {
-            uuid: uuid
-          }
-        });
+      var unselect = function(uuid, bucket) {
+        return $http.delete('../api/selections/' + (bucket || 'metadata'),
+            {
+              params: {
+                uuid: uuid
+              }
+            });
       };
-      var selectAll = function() {
-        return $http.put('../api/selections/metadata');
+      var selectAll = function(bucket) {
+        return $http.put('../api/selections/' + (bucket || 'metadata'));
       };
-      var selectNone = function() {
-        return $http.delete('../api/selections/metadata');
+      var selectNone = function(bucket) {
+        return $http.delete('../api/selections/' + (bucket || 'metadata'));
       };
 
       return {

@@ -90,4 +90,19 @@
       </td>
     </tr>
   </table>
+
+  <div class="form-group gn-field" data-ng-show="identifierRef !== undefined">
+    <label class="col-sm-3 control-label"
+           data-translate="">bboxIdentifier</label>
+    <div class="col-sm-8 gn-value">
+      <input class="form-control"
+             data-ng-model="identifier"
+             name="{{identifierRef}}"/>
+    </div>
+    <div class="col-sm-1 gn-control">
+      <a class="btn pull-right" data-ng-click="identifier = ''">
+        <i class="fa fa-times text-danger"></i>
+      </a>
+    </div>
+  </div>
 </div>

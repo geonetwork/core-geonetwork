@@ -1,10 +1,9 @@
-<div>
-  <a class="gn-action list-group-item" data-ng-hide="editing" data-ng-click="startEditing()">
+<div class="list-group-item">
+    <a class="gn-action" data-ng-hide="editing" data-ng-click="startEditing()">
     <div class="row">
-      <i class="fa fa-edit" data-ng-class="calculateClassOnDirty('col-sm-1', null)"
-         data-ng-show="isDirty()"/>
-      <div data-ng-class="calculateClassOnDirty('col-sm-10', 'col-sm-11')">{{describeCriteria()}}
-      </div>
+      <i class="fa fa-edit" data-ng-class="calculateClassOnDirty('col-sm-1', null)" data-ng-show="isDirty()"/>
+      <div data-ng-if="(original.uitype | uppercase) !== 'NEW'" data-ng-class="calculateClassOnDirty('col-sm-10', 'col-sm-11')">{{describeCriteria()}}</div>
+      <button data-ng-if="(original.uitype | uppercase) === 'NEW'" class="btn btn-primary" data-ng-class="calculateClassOnDirty('col-sm-10', 'col-sm-11')">{{describeCriteria()}}</button>
 
       <div class="col-sm-1">
         <i class="fa gn-action"
@@ -17,10 +16,10 @@
       </div>
     </div>
   </a>
-  <div class="row">
-    <form class="form-inline" role="form" data-ng-show="editing"
+  <div class="row" data-ng-show="editing">
+        <form class="" role="form"
           data-ng-keyup="handleKeyUp($event.keyCode)">
-      <div class="form-group col-sm-3">
+                <div class="form-group col-sm-4">
         <select
           class="form-control"
           data-ng-change="updateType(); updateTypeAhead(); updateValueField()"
@@ -31,8 +30,7 @@
       <div class="form-group col-sm-6">
         <input type="text"
                class="form-control"
-               data-ng-disabled="criteria.uitype === 'ALWAYS_ACCEPT' || criteria.uitype === 'NEW'"
-               placeholder="{{'criteriaValue' | translate}}"
+                           data-ng-disabled="(criteria.uitype | uppercase) === 'ALWAYS_ACCEPT' || (criteria.uitype | uppercase) === 'NEW'"
                data-ng-model="criteria.uivalue"
         />
       </div>

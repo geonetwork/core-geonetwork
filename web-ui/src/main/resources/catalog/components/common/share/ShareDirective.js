@@ -56,10 +56,11 @@
             'panel.html',
         scope: {
           id: '=gnShare',
-          batch: '@gnShareBatch'
+          batch: '@gnShareBatch',
+          selectionBucket: '@'
         },
         link: function(scope) {
-          var translations = null;
+          var translations = null, isBatch = scope.batch === 'true';
           $translate(['privilegesUpdated',
             'privilegesUpdatedError']).then(function(t) {
             translations = t;
@@ -72,7 +73,7 @@
           scope.icons = gnShareConstants.icons;
 
           angular.extend(scope, {
-            batch: scope.batch === 'true',
+            batch: isBatch,
             lang: scope.$parent.lang,
             user: scope.$parent.user,
             internalOperations: gnShareConstants.internalOperations,
@@ -134,7 +135,7 @@
             if (!replace) {
               var updateCheckBoxes = [];
               $('#opsForm input.ng-dirty[type=checkbox][data-ng-model]')
-                .each(function(c, el) {
+                  .each(function(c, el) {
                     updateCheckBoxes.push($(el).attr('name'));
                   });
               angular.forEach(scope.privileges, function(value, group) {
@@ -147,10 +148,12 @@
                 });
               });
             }
-            return gnShareService.savePrivileges(scope.id,
-                                                 scope.privileges,
-                                                 scope.user,
-                                                 replace).then(
+            return gnShareService.savePrivileges(
+                isBatch ? undefined : scope.id,
+                isBatch ? scope.selectionBucket : undefined,
+                scope.privileges,
+                scope.user,
+                replace).then(
                 function(data) {
                   scope.$emit('PrivilegesUpdated', true);
                   scope.$emit('StatusUpdated', {
@@ -171,7 +174,8 @@
           scope.pFilterFn = function(v) {
             if (scope.pFilter === '') return true;
             var v = $translate.instant('group-' + v.group);
-            return v.indexOf(scope.pFilter) >= 0;
+            return v.toLowerCase().indexOf(
+                scope.pFilter.toLocaleLowerCase()) >= 0;
           };
 
           scope.sorter = {

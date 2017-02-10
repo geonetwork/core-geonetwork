@@ -370,5 +370,8 @@
     "mdinvalid": "La métadonnée n'est pas valide",
     "mdinvalidcantpublish": "Une métadonnée invalide ne peut être publiée",
     "mdnovalidation": "La métadonnée ne dispose pas d'information de validation",
-    "setall": "Activer tous les privilèges"
+    "setall": "Activer tous les privilèges",
+    "print_legend": "Légendes",
+    "print_legend_field": "Inclure les légendes"
+
 }

@@ -53,7 +53,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -78,15 +77,17 @@ public class ApiUtils {
     /**
      * Return a set of UUIDs based on the input UUIDs array or based on the current selection.
      */
-    static public Set<String> getUuidsParameterOrSelection(String[] uuids, UserSession session) {
+    static public Set<String> getUuidsParameterOrSelection(String[] uuids, String bucket, UserSession session) {
         final Set<String> setOfUuidsToEdit;
         if (uuids == null) {
+            if (bucket == null) {
+                bucket = SelectionManager.SELECTION_METADATA;
+            }
             SelectionManager selectionManager =
                 SelectionManager.getManager(session);
             synchronized (
-                selectionManager.getSelection(
-                    SelectionManager.SELECTION_METADATA)) {
-                final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
+                selectionManager.getSelection(bucket)) {
+                final Set<String> selection = selectionManager.getSelection(bucket);
                 setOfUuidsToEdit = Sets.newHashSet(selection);
             }
         } else {

@@ -26,7 +26,7 @@
   goog.provide('gn_formfields_directive');
 
   angular.module('gn_formfields_directive', [])
-  /**
+      /**
    * @ngdoc directive
    * @name gn_formfields.directive:gnTypeahead
    * @restrict A
@@ -221,6 +221,37 @@
         };
       }])
 
+
+
+
+      .directive('usersCombo', ['$http', function($http) {
+        return {
+
+          restrict: 'A',
+          templateUrl: '../../catalog/components/search/formfields/' +
+              'partials/usersCombo.html',
+          scope: {
+            ownerUser: '=',
+            users: '='
+          },
+
+          link: function(scope, element, attrs) {
+            var url = 'info?_content_type=json&type=users';
+
+            $http.get(url, {cache: true}).success(function(data) {
+              scope.users = data !== 'null' ? data.users : null;
+
+              // Select by default the first group.
+              if ((angular.isUndefined(scope.ownerUser) ||
+                  scope.ownerUser === '') &&
+                  data.users && data.users.length > 0) {
+                scope.ownerUser = data.users[0]['@id'];
+              }
+            });
+          }
+
+        };
+      }])
 
       .directive('groupsCombo', ['$http', function($http) {
         return {

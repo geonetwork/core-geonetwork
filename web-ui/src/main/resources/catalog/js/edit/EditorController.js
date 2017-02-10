@@ -53,7 +53,7 @@
        'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker',
-       'ngRoute', 'gn_mdactions_service']);
+       'ngRoute', 'gn_mdactions_service', 'pascalprecht.translate']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
@@ -395,6 +395,13 @@
               .then(function() {
                 gnEditor.add(gnCurrentEdit.id, ref, name,
                     insertRef, position, attribute);
+              }, function(rejectedValue) {
+                $rootScope.$broadcast('StatusUpdated', {
+                  title: $translate.instant('runServiceError'),
+                  error: rejectedValue,
+                  timeout: 0,
+                  type: 'danger'
+                });
               });
         } else {
           return gnEditor.add(gnCurrentEdit.id, ref, name,

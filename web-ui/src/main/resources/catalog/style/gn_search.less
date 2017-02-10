@@ -410,6 +410,7 @@ span.gn-facet-label:first-letter {
 /* Add space between button when pulled right */
 .gn-md-edit-btn.pull-right,
 .gn-md-delete-btn.pull-right,
+.gn-md-actions-btn.pull-right.btn-group,
 .gn-md-actions-btn.pull-right {
   margin-right: 5px;
 }
@@ -583,7 +584,13 @@ button.active [role=tooltip] {
 
   }
 }
-
+.gn-privileges-popup {
+  max-width: 750px;
+  .gn-popup-content {
+    height: 750px;
+    max-height: 750px;
+  }
+}
 .gn-popup-title {
   span {
     display: inline-block;

@@ -378,7 +378,7 @@ form.gn-editor {
       padding-right: 0px;
   }
 
-  .gn-required > label:after {
+  label.gn-required:after, .gn-required > label:after {
       content: "*";
       font-size: 2.5em;
       margin: 7px 0 0 7px;
@@ -517,7 +517,7 @@ form.gn-tab-xml {
 .gn-table {
   /* Compact gn-fields displayed in table mode.
   Label and remove control are hidden. */
-  div.gn-field {
+  :not(.gn-table-label) div.gn-field {
     padding: 0px !important;
     label,
     .col-sm-1.gn-control {
@@ -525,6 +525,17 @@ form.gn-tab-xml {
     }
     .col-sm-9 {
       width: 100%;
+    }
+  }
+  .gn-table-label {
+    div.gn-field {
+      label,
+      .col-sm-1.gn-control {
+        display: block;
+      }
+      .col-sm-9 {
+        width: 75%;
+      }
     }
   }
 }

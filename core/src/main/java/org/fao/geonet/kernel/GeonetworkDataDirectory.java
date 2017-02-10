@@ -86,12 +86,22 @@ public class GeonetworkDataDirectory {
 
     /**
      * Check and create if needed GeoNetwork data directory.
-     *
-     * The data directory is the only mandatory value. If not set, the default location is {@link
-     * #getDefaultDataDir(java.nio.file.Path)}.
-     *
-     * All properties are set using : <ul> <ol> Java environment variable </ol> <ol> Servlet context
-     * parameter </ol> <ol> System environment variable </ol> </ul>
+     * <p>
+     * The data directory is the only mandatory value. If not set, the default location is
+     * {@link #getDefaultDataDir(java.nio.file.Path)}.
+     * <p>
+     * All properties are set using :
+     * <ul>
+     * <ol>
+     * Java environment variable
+     * </ol>
+     * <ol>
+     * Servlet context parameter
+     * </ol>
+     * <ol>
+     * System environment variable
+     * </ol>
+     * </ul>
      */
     public void init(final String webappName, final Path webappDir,
                      final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) throws IOException {
@@ -123,19 +133,20 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Determines the location of a property based on the following lookup mechanism:
-     *
-     * 1) Java environment variable 2) Servlet context variable 3) Config.xml appHandler parameter
-     * 4) System variable
-     *
-     * For each of these, the methods checks that 1) The path exists 2) Is a directory 3) Is
-     * writable
-     *
+     * Determines the location of a property based on the
+     * following lookup mechanism:
+     * <p>
+     * 1) Java environment variable 2) Servlet context variable 3) Config.xml appHandler parameter 4) System
+     * variable
+     * <p>
+     * For each of these, the methods checks that 1) The path exists 2) Is a
+     * directory 3) Is writable
+     * <p>
      * Inspired by GeoServer mechanism.
      *
      * @param handlerConfig TODO
-     * @return String The absolute path to the data directory, or <code>null</code> if it could not
-     * be found.
+     * @return String The absolute path to the data directory, or
+     * <code>null</code> if it could not be found.
      */
     private Path lookupProperty(JeevesServlet jeevesServlet, ServiceConfig handlerConfig, String key) {
 
@@ -329,7 +340,8 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Checks if data directory is empty or not. If empty, add mandatory elements (ie. codelist).
+     * Checks if data directory is empty or not. If empty, add mandatory
+     * elements (ie. codelist).
      */
     private void initDataDirectory() throws IOException {
         Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
@@ -432,11 +444,17 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Try to retrieve from system properties the variable with name <webapp.name>.key. If not set,
-     * create the resource folder using <geonetwork.dir>/folder and set the system property value.
-     * Create the folder if does not exist.
+     * Try to retrieve from system properties the variable with name
+     * <webapp.name>.key. If not set, create the resource folder using
+     * <geonetwork.dir>/folder and set the system property value. Create the
+     * folder if does not exist.
      *
-     * @param handlerKey @return
+     * @param jeevesServlet
+     * @param webappName
+     * @param handlerConfig
+     * @param key
+     * @param handlerKey    @return
+     * @param firstPathSeg
      */
     private Path setDir(JeevesServlet jeevesServlet, String webappName,
                         ServiceConfig handlerConfig, Path dir, String key, String handlerKey, String firstPathSeg, String... otherSegments) {

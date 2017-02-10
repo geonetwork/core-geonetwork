@@ -63,7 +63,8 @@
       'spa': 'es',
       'cze': 'cz',
       'cat': 'ca',
-      'fin': 'fi'
+      'fin': 'fi',
+      'ice': 'is'
     },
     getIso2Lang: function(iso3lang) {
       return this.langs[iso3lang];
@@ -122,7 +123,8 @@
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech', 'fin': 'Suomeksi'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
+        'fin': 'Suomeksi', 'fin': 'Suomeksi', 'ice': 'Íslenska'};
       $scope.url = '';
       $scope.base = '../../catalog/';
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
@@ -287,6 +289,7 @@
               });
         });
       };
+      $scope.userAdminMenu = gnAdminMenu.UserAdmin;
       $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on('loadCatalogInfo', function(event, status) {
         $scope.loadCatalogInfo();

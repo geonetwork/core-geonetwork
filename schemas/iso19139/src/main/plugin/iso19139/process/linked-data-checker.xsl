@@ -67,7 +67,7 @@
     <xsl:variable name="status" select="java:getUrlStatus($url)"/>
     <!--    <xsl:message>Check:<xsl:value-of select="."/>|<xsl:value-of select="$status"/></xsl:message>
     -->
-    <xsl:if test="$status!=''">
+    <xsl:if test="$status != '200'">
       <suggestion process="linked-data-checker" id="{generate-id()}" category="links" target="all">
         <name xml:lang="en">
           <xsl:value-of select="$type"/>
