@@ -370,8 +370,8 @@
 
   <!-- View configuration -->
   <views>
-    <!--Turn off INSPIRE view by default -->
-    <view name="inspire" upAndDownControlHidden="true" disabled="true">
+    <!--Turn on INSPIRE according to system settings -->
+    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
