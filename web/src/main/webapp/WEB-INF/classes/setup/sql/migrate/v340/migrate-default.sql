@@ -9,6 +9,45 @@ DELETE FROM Settings WHERE  name = 'map/isSaveMapInCatalogAllowed';
 DELETE FROM Settings WHERE  name = 'map/bingKey';
 
 
+
+INSERT INTO Selections (id, name, isWatchable) VALUES (0, 'PreferredList', 'n');
+INSERT INTO Selections (id, name, isWatchable) VALUES (1, 'WatchList', 'y');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ara','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'ara','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'cat','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'cat','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'chi','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'chi','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'dut','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'dut','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'eng','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'eng','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'fin','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'fin','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'fre','Fiches préférées');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'fre','Fiches observées');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ger','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'ger','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ita','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'ita','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'nor','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'nor','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'pol','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'pol','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'por','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'por','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'rus','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'rus','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'spa','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'spa','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'tur','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'tur','Watch list');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'vie','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'vie','Watch list');
+
+
+
+
 UPDATE Settings SET value='3.4.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 

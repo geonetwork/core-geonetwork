@@ -183,6 +183,7 @@
 
         scope.$watch('user', function(n, o) {
           if ((n !== o && n && n.id) || scope.selections === null) {
+            scope.selections = null;
             controller.getSelections(scope.user).then(function(selections) {
               scope.selections = selections;
             });

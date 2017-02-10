@@ -21,20 +21,27 @@
                data-params="searchObj.params"
                data-facet-type="facetsSummaryType"
                data-facet-list="facetConfig"
-               data-current-facets="currentFacets"
-               data-tab-field="facetTabField">
+               data-current-facets="currentFacets">
           </div>
         </div>
       </div>
 
     </div>
 
+    <div class="col-md-9"
+         data-gn-facet-dimension-list="searchResults.dimension"
+         data-params="searchObj.params"
+         data-facet-type="facetsSummaryType"
+         data-facet-list="facetConfig"
+         data-current-facets="currentFacets"
+         data-tab-field="facetTabField"></div>
+
     <div class="col-md-3 relative"
          data-ng-show="searchResults.records.length > 0">
-
       <div data-gn-selection-widget=""
            data-results="searchResults"></div>
     </div>
+
     <div class="col-md-6"
          data-ng-show="searchResults.records.length > 0">
       <div class="pull-right"
