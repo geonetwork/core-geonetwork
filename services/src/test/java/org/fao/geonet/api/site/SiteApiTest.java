@@ -66,8 +66,12 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getInformation() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
         this.mockMvc.perform(get("/api/site/info")
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("application/json"))
+            .session(this.mockHttpSession))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.catalogue['data.dataDir']", is(not(isEmptyOrNullString()))))

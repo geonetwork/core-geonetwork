@@ -109,7 +109,7 @@
             <i data-ng-show="stopping" class="fa fa-spinner fa-spin"></i>
           </button>
           <button type="button" class="btn btn-primary pull-right"
-                  data-ng-disabled="deleting.indexOf(harvesterSelected['@id']) > -1"
+                  data-ng-disabled="harvesterSelected.info.running === true ||deleting.indexOf(harvesterSelected['@id']) > -1"
                   data-gn-click-and-spin="saveHarvester('#gn-harvester-edit')">
             <i class="fa fa-save"></i>&nbsp;
             <span data-translate="">saveHarvester</span>

@@ -40,7 +40,6 @@ import com.google.common.collect.Sets;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.eclipse.jetty.util.StringUtil;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
@@ -594,7 +593,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             int id$ = Integer.parseInt(metadataId);
 
             // get metadata, extracting and indexing any xlinks
-            Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true);
+            Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true, false);
             if (getXmlSerializer().resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
@@ -1394,8 +1393,6 @@ public class DataManager implements ApplicationEventPublisherAware {
             // Update the popularity in database
             int iId = Integer.parseInt(id);
             getMetadataRepository().incrementPopularity(iId);
-            _entityManager.flush();
-            _entityManager.clear();
 
             // And register the metadata to be indexed in the near future
             final IndexingList list = srvContext.getBean(IndexingList.class);
@@ -1650,7 +1647,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * in the same transaction.
      */
     public Element getMetadata(String id) throws Exception {
-        Element md = getXmlSerializer().selectNoXLinkResolver(id, false);
+        Element md = getXmlSerializer().selectNoXLinkResolver(id, false, false);
         if (md == null) return null;
         md.detach();
         return md;
@@ -1668,7 +1665,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     public Element getMetadata(ServiceContext srvContext, String id, boolean forEditing,
                                boolean withEditorValidationErrors, boolean keepXlinkAttributes) throws Exception {
         boolean doXLinks = getXmlSerializer().resolveXLinks();
-        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false);
+        Element metadataXml = getXmlSerializer().selectNoXLinkResolver(id, false, forEditing);
         if (metadataXml == null) return null;
 
         String version = null;

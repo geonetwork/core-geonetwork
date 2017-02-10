@@ -311,6 +311,7 @@
         if (testMode != undefined) {
           formParams += '&isTesting=' + testMode;
         }
+        formParams += '&bucket=b101';
 
         var service = '../api/processes/' +
                       (process != undefined ?

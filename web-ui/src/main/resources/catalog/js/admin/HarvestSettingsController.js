@@ -82,14 +82,18 @@
                 gnUtilityService.parseBoolean($scope.harvesterSelected);
               }
               $scope.isLoadingOneHarvester = false;
-              if ($scope.harvesterSelected.searches[0].from) {
-                $scope.harvesterSelected.searches[0].from =
-                   new Date($scope.harvesterSelected.searches[0].from);
-              }
 
-              if ($scope.harvesterSelected.searches[0].until) {
-                $scope.harvesterSelected.searches[0].until =
-                   new Date($scope.harvesterSelected.searches[0].until);
+              if ($scope.harvesterSelected.searches) {
+                if ($scope.harvesterSelected.searches[0].from) {
+                  $scope.harvesterSelected.searches[0].from =
+                     new Date($scope.harvesterSelected.searches[0].from);
+                }
+
+                if ($scope.harvesterSelected.searches[0].until) {
+                  $scope.harvesterSelected.searches[0].until =
+                  new Date($scope.harvesterSelected.searches[0].until);
+
+                }
               }
             }).error(function(data) {
               // TODO

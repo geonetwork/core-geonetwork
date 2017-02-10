@@ -83,6 +83,8 @@
                     gnEditor.refreshEditorForm(snippet);
                     defer.resolve(data);
                   });
+                }, function(error) {
+                  defer.reject(error);
                 });
               }, function(error) {
                 defer.reject(error);

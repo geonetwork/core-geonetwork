@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.geonetwork-opensource</groupId>
+    <artifactId>geonetwork</artifactId>
+    <version>3.0.6-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>geonetwork-client</artifactId>
+  <packaging>jar</packaging>
+  <name>GeoNetwork web client module</name>
+  <description>GUI components in order to easily build applications based on GeoNetwork server module.</description>
+
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+
+  <!-- FIXME set common dependencies to the root pom.xml  -->
+  <dependencies> </dependencies>
+
+  <build>
+    <resources>
+        <!-- The resource that are filtered should only be the fewest possible because
+             It makes the build take longer and if a file that should not have replacements done is filtered
+             the resulting file in the webapp can be wrong.  
+             
+             So only include the specific files to be filtered to keep the build as performant as possible
+             and reduce potential for bugs
+        -->
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+          <includes>
+              <include>**/web-client-wro-sources.xml</include>
+          </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+          <excludes>
+              <exclude>**/web-client-wro-sources.xml</exclude>
+          </excludes>
+      </resource>
+    </resources>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <properties>
+    <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}</geonetwork.build.dir>
+    <minify.verbose>false</minify.verbose>
+  </properties>
+</project>

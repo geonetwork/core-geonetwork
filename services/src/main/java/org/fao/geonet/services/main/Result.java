@@ -60,6 +60,10 @@ public class Result implements Service {
 
         MetaSearcher searcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT + bucket);
 
+        if (searcher == null) {
+            searcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT);
+        }
+
         String fast = _config.getValue("fast", "");
 
         if (StringUtils.isNotEmpty(fast)) {
