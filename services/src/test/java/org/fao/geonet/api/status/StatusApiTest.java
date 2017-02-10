@@ -27,6 +27,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -52,14 +53,19 @@ public class StatusApiTest extends AbstractServiceIntegrationTest {
 
     private MockMvc mockMvc;
 
+    private MockHttpSession mockHttpSession;
 
     @Test
     public void getStatus() throws Exception {
         Long statusValueCount = statusValueRepo.count();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
         this.mockMvc.perform(get("/api/status")
-            .accept(MediaType.parseMediaType("application/json")))
+            .accept(MediaType.parseMediaType("application/json"))
+            .session(this.mockHttpSession))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$", hasSize(statusValueCount.intValue())));
