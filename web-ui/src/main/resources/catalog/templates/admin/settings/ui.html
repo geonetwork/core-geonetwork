@@ -1,0 +1,38 @@
+<div class="panel panel-default" data-ng-controller="GnSystemSettingsController">
+  <div class="panel-heading">
+    <span data-translate="">ui</span>
+    <div class="btn-toolbar">
+      <form class="form-inline pull-right">
+        <button type="submit" class="btn btn-primary"
+                id="gn-btn-settings-save"
+                data-ng-disabled="!gnSettings.$valid"
+                data-ng-click="saveSettings('#gn-settings')">
+          <span class="fa fa-save"></span>
+          {{"saveSettings"|translate}}
+        </button>
+      </form>
+    </div>
+  </div>
+  <div class="panel-body">
+    <form id="gn-settings" name="gnSettings" class="form-horizontal">
+      <fieldset data-ng-repeat="s in settings"
+                data-ng-if="s.name === 'ui/config'">
+        <div
+          data-gn-ui-config="s.value"
+          data-id="s.name"
+        ></div>
+
+        <button type="submit"
+                class="btn btn-primary pull-right"
+                data-ng-disabled="!gnSettings.$valid"
+                data-ng-click="saveSettings('#gn-settings')">
+          <span class="fa fa-save"></span>&nbsp;
+          {{"saveSettings"|translate}}
+        </button>
+      </fieldset>
+    </form>
+
+    <div data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
+         class="pull-right"></div>
+  </div>
+</div>

@@ -59,6 +59,11 @@
               icon: 'fa-cogs',
               href: '#/settings/system'
             },{
+              type: 'ui',
+              label: 'ui',
+              icon: 'fa-puzzle-piece',
+              href: '#/settings/ui'
+            },{
               type: 'logo',
               label: 'manageLogo',
               icon: 'fa-picture-o',

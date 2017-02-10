@@ -23,19 +23,20 @@
 
 package org.fao.geonet.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -128,16 +129,13 @@ public final class XslUtil {
             return "";
         }
 
-        final ServiceContext serviceContext = ServiceContext.get();
-        if (serviceContext != null) {
-            ServiceConfig config = serviceContext.getBean(ServiceConfig.class);
-            if (config != null) {
-                String value = config.getValue(key);
-                if (value != null) {
-                    return value;
-                } else {
-                    return "";
-                }
+        ServiceConfig config = ApplicationContextHolder.get().getBean(ServiceConfig.class);
+        if (config != null) {
+            String value = config.getValue(key);
+            if (value != null) {
+                return value;
+            } else {
+                return "";
             }
         }
         return "";
@@ -151,25 +149,52 @@ public final class XslUtil {
             return "";
         }
 
-        final ServiceContext serviceContext = ServiceContext.get();
-        if (serviceContext != null) {
-            SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
-            if (settingsMan != null) {
-                String value;
-                if ("nodeUrl".equals(key)) {
-                    value = settingsMan.getNodeURL();
-                } else {
-                    value = settingsMan.getValue(key);
-                }
-                if (value != null) {
-                    return value;
-                } else {
-                    return "";
+        SettingManager settingsMan = ApplicationContextHolder.get().getBean(SettingManager.class);
+        if (settingsMan != null) {
+            String value;
+            if ("nodeUrl".equals(key)) {
+                value = settingsMan.getNodeURL();
+            } else {
+                value = settingsMan.getValue(key);
+            }
+            if (value != null) {
+                return value;
+            } else {
+                return "";
+            }
+        }
+
+        return "";
+    }
+
+    public static String getJsonSettingValue(String key, String path) {
+        if (key == null) {
+            return "";
+        }
+        try {
+            final ServiceContext serviceContext = ServiceContext.get();
+            if (serviceContext != null) {
+                SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
+                if (settingsMan != null) {
+                    String json = settingsMan.getValue(key);
+
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Object jsonObj = objectMapper.readValue(json, Object.class);
+
+                    Object value = PropertyUtils.getProperty(jsonObj, path);
+                    if (value != null) {
+                        return value.toString();
+                    } else {
+                        return "";
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return "";
     }
+
 
     /**
      * Check if bean is defined in the context
@@ -341,8 +366,7 @@ public final class XslUtil {
         if (codeListValue != null && codelist != null && langCode != null) {
             String translation = codeListValue;
             try {
-                final GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
-                Translator t = new CodeListTranslator(gc.getBean(SchemaManager.class),
+                Translator t = new CodeListTranslator(ApplicationContextHolder.get().getBean(SchemaManager.class),
                     (String) langCode,
                     (String) codelist);
                 translation = t.translate(codeListValue);
@@ -395,10 +419,8 @@ public final class XslUtil {
                 if (iso3LangCode.length() == 2) {
                     iso2LangCode = iso3LangCode;
                 } else {
-                    if (ServiceContext.get() != null) {
-                        final IsoLanguagesMapper mapper = ServiceContext.get().getBean(IsoLanguagesMapper.class);
-                        iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
-                    }
+                    final IsoLanguagesMapper mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
                 }
             } catch (Exception ex) {
                 Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
@@ -490,14 +512,9 @@ public final class XslUtil {
             return langCode;
         }
 
-        final ServiceContext serviceContext = ServiceContext.get();
-        if (serviceContext != null) {
-            final IsoLanguagesMapper mapper;
-            mapper = serviceContext.getBean(IsoLanguagesMapper.class);
-            return mapper.iso639_1_to_iso639_2(langCode);
-        } else {
-            return langCode;
-        }
+        final IsoLanguagesMapper mapper;
+        mapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
+        return mapper.iso639_1_to_iso639_2(langCode);
 
     }
 
@@ -519,13 +536,12 @@ public final class XslUtil {
     public static String getUserDetails(Object contactIdentifier) {
         String contactDetails = "";
         int contactId = Integer.parseInt((String) contactIdentifier);
-        final ServiceContext serviceContext = ServiceContext.get();
-        if (serviceContext != null) {
-            User user = serviceContext.getBean(UserRepository.class).findOne(contactId);
-            if (user != null) {
-                contactDetails = Xml.getString(user.asXml());
-            }
+
+        User user = ApplicationContextHolder.get().getBean(UserRepository.class).findOne(contactId);
+        if (user != null) {
+            contactDetails = Xml.getString(user.asXml());
         }
+
         return contactDetails;
     }
 

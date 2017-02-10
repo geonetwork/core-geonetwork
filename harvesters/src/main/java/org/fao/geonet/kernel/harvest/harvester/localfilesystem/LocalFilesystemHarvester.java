@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -51,6 +52,7 @@ import org.jdom.Element;
 import com.google.common.collect.Sets;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,6 +84,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         settingMan.add("id:" + siteId, "recordType", lp.recordType);
         settingMan.add("id:" + siteId, "nodelete", lp.nodelete);
         settingMan.add("id:" + siteId, "checkFileLastModifiedForUpdate", lp.checkFileLastModifiedForUpdate);
+        settingMan.add("id:" + siteId, "beforeScript", lp.beforeScript);
     }
 
     @Override
@@ -249,6 +252,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
     @Override
     public void doHarvest(Logger l) throws Exception {
         log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
+        runBeforeScript();
         Path directory = IO.toPath(params.directoryname);
         this.result = align(directory);
     }
@@ -286,4 +290,19 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 
     }
 
+    private void runBeforeScript() throws IOException, InterruptedException {
+		if (StringUtils.isEmpty(params.beforeScript)) {
+			return;  // Nothing to run
+		}
+		log.info("Running the before script: " + params.beforeScript);
+		Process process = new ProcessBuilder(params.beforeScript).
+				redirectError(ProcessBuilder.Redirect.INHERIT).
+				redirectOutput(ProcessBuilder.Redirect.INHERIT).
+				start();
+		int result = process.waitFor();
+		if ( result != 0 ) {
+			log.warning("The beforeScript failed with exit value=" + Integer.toString(result));
+			throw new RuntimeException("The beforeScript returned an error: " + Integer.toString(result));
+		}
+	}
 }

@@ -34,8 +34,10 @@
    * @description
    */
   module.directive('gnMainViewer', [
-    'gnMap', 'gnConfig', 'gnSearchLocation', 'gnSearchSettings',
-    function(gnMap, gnConfig, gnSearchLocation, gnSearchSettings) {
+    'gnMap', 'gnConfig', 'gnSearchLocation',
+    'gnSearchSettings', 'gnViewerSettings',
+    function(gnMap, gnConfig, gnSearchLocation,
+             gnSearchSettings, gnViewerSettings) {
       return {
         restrict: 'A',
         replace: true,
@@ -73,7 +75,8 @@
 
 
               // 3D mode is allowed and disabled by default
-              scope.is3DModeAllowed = gnConfig['map.is3DModeAllowed'] || false;
+              scope.is3DModeAllowed =
+                  gnViewerSettings.mapConfig.is3DModeAllowed || false;
               scope.is3dEnabled = gnConfig['is3dEnabled'] || false;
 
               // By default, synch only background layer

@@ -24,9 +24,11 @@
 (function() {
   goog.provide('gn_system_settings_controller');
 
+  goog.require('gn_ui_config');
+
 
   var module = angular.module('gn_system_settings_controller',
-      []);
+      ['gn_ui_config']);
 
   module.filter('hideLanguages', function() {
     return function(input) {

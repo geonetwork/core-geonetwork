@@ -143,6 +143,11 @@
         <value>WEB-INF/classes/setup/sql/migrate/v305/migrate-</value>
       </list>
     </entry>
+    <entry key="3.0.6">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v306/migrate-</value>
+      </list>
+    </entry>
   </util:map>
 
 
@@ -174,6 +179,11 @@
     <entry key="3.2.1">
       <list>
         <value>WEB-INF/classes/setup/sql/migrate/v321/migrate-</value>
+      </list>
+    </entry>
+    <entry key="3.2.2">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v322/migrate-</value>
       </list>
     </entry>
   </util:map>

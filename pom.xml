@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.2.1-SNAPSHOT</version>
+  <version>3.3.0-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -1169,7 +1169,6 @@
         <module>web-ui-docs</module>
         <module>web</module>
         <module>e2e-tests</module>
-        <module>geoserver</module>
       </modules>
     </profile>
     <profile>
@@ -1203,10 +1202,6 @@
     <geotools.version>16.0</geotools.version>
 
     <lucene.version>4.9.0</lucene.version>
-
-    <!-- Jetty plugin port configuration -->
-    <jetty.port>8080</jetty.port>
-    <jetty.stop.port>8090</jetty.stop.port>
 
     <solr.version>6.0.1</solr.version>
     <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>

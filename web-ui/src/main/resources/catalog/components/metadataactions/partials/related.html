@@ -9,10 +9,20 @@
          data-ng-repeat="r in items track by $index"
          data-ng-init="mainType = config.getType(r, type);">
       <div class="col-xs-1">
-        <strong>
-          <i class="fa"
-             data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+        <!-- OWS have their name overlaid over the globe icon -->
+        <strong data-ng-if="(mainType === 'WMS') || (mainType === 'WMTS') || (mainType === 'WFS') || (mainType === 'WCS')">
+          <span class="fa-stack fa-1x">
+            <i class="fa fa-globe fa-stack-2x" style="opacity: 0.55;"></i>
+            <span class="fa fa-stack-1x">
+              <strong style="font-size:10px;">{{mainType}}</strong>
+            </span>
+          </span>
         </strong>
+        <strong data-ng-if="(mainType !== 'WMS') && (mainType !== 'WMTS') && (mainType !== 'WFS') && (mainType !== 'WCS')">
+          <i class="fa"
+               data-ng-class="config.getClassIcon(mainType)"/>&nbsp;
+        </strong>
+      </strong>
       </div>
       <div class="col-xs-7">
         <!-- WMS & WFS contains layer name in title -->

@@ -646,7 +646,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                                                Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(context.getBean(MetadataRepository.class), id);
-        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md);
+        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md, false);
 
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;

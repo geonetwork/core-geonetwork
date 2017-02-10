@@ -58,7 +58,7 @@
           </a>
         </li>
         <li>
-          <a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xml"
+          <a data-ng-href="{{gnUrl}}api/records/{{md.getUuid()}}/formatters/xml"
                  target="_blank">
             <i class="fa fa-file-code-o"></i>&nbsp;
             <span data-translate="">xmlView</span>
@@ -476,7 +476,7 @@
           <!-- TODO: use map config -->
           <p data-ng-repeat="bbox in mdView.current.record.geoBox">
             <img class="gn-img-thumbnail img-thumbnail gn-img-extent"
-                 data-ng-src="region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
+                 data-ng-src="{{gnUrl}}/{{lang}}/region.getmap.png?mapsrs=EPSG:3857&width=250&background=osm&geomsrs=EPSG:4326&geom={{mdView.current.record.getBoxAsPolygon($index)}}"/>
           </p>
 
         </section>
@@ -559,7 +559,7 @@
             <i class="fa fa-fw fa-cog"></i>
             <span data-translate="">sourceCatalog</span>
           </h4>
-          <img ng-src="../../images/logos/{{mdView.current.record.source}}.png"
+          <img ng-src="{{gnUrl}}../images/logos/{{mdView.current.record.source}}.png"
                class="gn-source-logo"/>
         </section>
         </br>

@@ -227,8 +227,7 @@
         return {
 
           restrict: 'A',
-          templateUrl:
-              '../../catalog/components/search/formfields/' +
+          templateUrl: '../../catalog/components/search/formfields/' +
               'partials/usersCombo.html',
           scope: {
             ownerUser: '=',

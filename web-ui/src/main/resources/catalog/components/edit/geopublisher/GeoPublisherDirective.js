@@ -227,7 +227,7 @@
                         readResponse(r.data, 'check');
                       }
                     }, function(r) {
-                      scope.statusCode = r.data.description;
+                      scope.statusCode = r.data;
                       scope.isPublished = false;
                     });
               };

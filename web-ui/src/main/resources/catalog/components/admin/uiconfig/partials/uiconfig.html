@@ -1,0 +1,499 @@
+<div>
+  <p class="help-block" data-translate="">ui/config-help</p>
+
+  <fieldset data-ng-repeat="(m, mCfg) in jsonConfig.mods">
+    <legend>
+      <input type="checkbox"
+             id="{{m}}-checkbox"
+             data-ng-model="mCfg.enabled"/>&nbsp;
+      <label class="control-label"
+             for="{{m}}-checkbox">{{('ui-mod-' + m) | translate}}</label>
+    </legend>
+
+    <p class="help-block"
+       data-ng-show="(('ui-mod-' + m + '-help') | translate) != ('ui-mod-' + m + '-help')">
+      {{('ui-' + m + '-help') | translate}} </p>
+
+    <div class="col-sm-12"
+         data-ng-repeat="(key, value) in mCfg"
+         data-ng-switch="key">
+      <div data-ng-switch-when="enabled"></div>
+      <div data-ng-switch-when="context"></div>
+      <div data-ng-switch-when="layer"></div>
+
+
+      <!-- arrays -->
+      <div data-ng-switch-when="hitsperpageValues">
+        <label class="col-sm-4 control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="v in mCfg[key] track by $index">
+            <td>
+              <input type="number"
+                     class="form-control"
+                     id="{{key}}-{{$index}}"
+                     data-ng-model="mCfg[key][$index]"/>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], mCfg[key][mCfg[key].length - 1] * 10)">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="facetConfig">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="v in mCfg[key] track by $index">
+            <td>
+              <input type="text"
+                     class="form-control"
+                     id="{{key}}-facet-{{$index}}"
+                     data-ng-model="mCfg[key][$index].key"/>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], {key: 'fieldName'})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+      <div data-ng-switch-when="languages">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="(iso3, iso2) in mCfg[key] track by $index">
+            <td>
+              <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       id="{{iso3}}-{{$index}}"
+                       data-ng-change="updateKey(mCfg[key], iso3, $index)"
+                       data-ng-model="iso3"/>
+                <span class="input-group-addon">=</span>
+                <input type="text"
+                       class="form-control"
+                       id="{{iso2}}-{{$index}}"
+                       data-ng-model="iso2"/>
+              </div>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], iso3)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], {'iso3code': 'iso2code'})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+      <div data-ng-switch-when="sortbyValues">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="opt in mCfg[key] track by $index">
+            <td>
+              <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       id="ui-sortBy-{{$index}}"
+                       data-ng-model="opt.sortBy"/>
+                <span class="input-group-addon"> order </span>
+                <select class="form-control"
+                        id="ui-sortOrder-{{$index}}"
+                        data-ng-options="o for o in sortOrderChoices"
+                        data-ng-model="opt.sortOrder"/>
+              </div>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], {'sortBy': 'fieldName', 'sortOrder': ''})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+
+      <div data-ng-switch-when="filters">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="(f, v) in mCfg[key] track by $index">
+            <td>
+              <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       id="ui-filters-{{$index}}"
+                       data-ng-change="updateKey(mCfg[key], f, $index)"
+                       data-ng-model="f"/>
+                <span class="input-group-addon"> = </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-filters-value-{{$index}}"
+                       data-ng-model="mCfg[key][f]"/>
+              </div>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], f)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], {'field': 'value'})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+      <div data-ng-switch-when="resultViewTpls">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="opt in mCfg[key] track by $index">
+            <td>
+              <div class="input-group">
+                <span class="input-group-addon">Icon </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-tplIcon-{{$index}}"
+                       data-ng-model="opt.icon"/>
+                <span class="input-group-addon">Template URL </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-tplURL-{{$index}}"
+                       data-ng-model="opt.tplUrl"/>
+                <span class="input-group-addon">Tooltip </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-tplTooltip-{{$index}}"
+                       data-ng-model="opt.tooltip"/>
+              </div>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], {'icon': 'fa-fw', 'tplUrl': '', 'tooltip': ''})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+      <div data-ng-switch-when="formatter">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="opt in mCfg[key].list track by $index">
+            <td>
+              <div class="input-group">
+                <span class="input-group-addon">Label </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-formatterLabel-{{$index}}"
+                       data-ng-model="opt.label"/>
+                <span class="input-group-addon">URL </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-formatterURL-{{$index}}"
+                       data-ng-model="opt.url"/>
+              </div>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key].list, $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key].list, {'label': '', 'url': ''})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+      <div data-ng-switch-when="linkTypes">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+          <h3>{{type}}</h3>
+          <table class="table table-striped">
+            <tr data-ng-repeat="protocol in value track by $index">
+              <td>
+                <input type="text"
+                       class="form-control"
+                       id="ui-protocol-{{$index}}"
+                       data-ng-model="mCfg[key][type][$index]"/>
+              </td>
+              <td>
+                <a class="btn btn-link text-danger"
+                   title="{{'remove' | translate}}"
+                   data-ng-click="removeItem(mCfg[key][type], $index)">
+                  <i class="fa fa-times text-danger"/>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a class="btn btn-link"
+                   title="{{'add' | translate}}"
+                   data-ng-click="addItem(mCfg[key][type], 'protocol')">
+                  <i class="fa fa-plus"/>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+
+
+      <div data-ng-switch-when="listOfServices">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <div data-ng-repeat="(type, value) in mCfg[key] track by $index">
+          <h3>{{type}}</h3>
+          <table class="table table-striped">
+            <tr data-ng-repeat="s in value track by $index">
+              <td>
+                <div class="input-group">
+                  <span class="input-group-addon">Label </span>
+                  <input type="text"
+                         class="form-control"
+                         id="ui-service{{type}}-{{$index}}"
+                         data-ng-model="s.name"/>
+                  <span class="input-group-addon">URL </span>
+                  <input type="text"
+                         class="form-control"
+                         id="ui-serviceUrl{{type}}-{{$index}}"
+                         data-ng-model="s.url"/>
+                </div>
+              </td>
+              <td>
+                <a class="btn btn-link text-danger"
+                   title="{{'remove' | translate}}"
+                   data-ng-click="removeItem(mCfg[key][type], $index)">
+                  <i class="fa fa-times text-danger"/>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a class="btn btn-link"
+                   title="{{'add' | translate}}"
+                   data-ng-click="addItem(mCfg[key][type], {'name': 'Service label', 'url': 'http://'})">
+                  <i class="fa fa-plus"/>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+
+      <div data-ng-switch-when="projectionList">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <table class="table table-striped">
+          <tr data-ng-repeat="opt in mCfg[key] track by $index">
+            <td>
+              <div class="input-group">
+                <span class="input-group-addon">Label </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-projectionLabel-{{$index}}"
+                       data-ng-model="opt.label"/>
+                <span class="input-group-addon">Code </span>
+                <input type="text"
+                       class="form-control"
+                       id="ui-projectionCode-{{$index}}"
+                       data-ng-model="opt.code"/>
+              </div>
+            </td>
+            <td>
+              <a class="btn btn-link text-danger"
+                 title="{{'remove' | translate}}"
+                 data-ng-click="removeItem(mCfg[key], $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link"
+                 title="{{'add' | translate}}"
+                 data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:'})">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+
+
+      <!-- numbers -->
+      <div data-ng-switch-when="paginationInfo">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <input type="number"
+               class="form-control"
+               data-ng-model="value.hitsPerPage"/>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+
+      <!-- boolean -->
+      <div data-ng-switch-when="is3DModeAllowed">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="value"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="useOSM">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="value"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-default>
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <input type="text"
+               class="form-control"
+               data-ng-model="mCfg[key]"/>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+    </div>
+  </fieldset>
+  <br/>
+  <span data-translate="">ui-advancedConfig</span>
+  <textarea name="{{id}}" class="form-control">{{jsonConfig}}</textarea>
+  <br/>
+  <button class="btn btn-default"
+          data-ng-click="testClientConfig()">
+    <i class="fa fa-play"/>&nbsp;
+    <span data-translate="">testClientConfig</span>
+  </button>
+  <button class="btn btn-default"
+          data-ng-click="reset()">
+    <i class="fa fa-times"/>&nbsp;
+    <span data-translate="">resetDefaultConfig</span>
+  </button>
+</div>
