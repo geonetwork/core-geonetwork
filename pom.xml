@@ -1309,7 +1309,7 @@
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
-    <language.default>eng</language.default>
+    <language.default>fre</language.default>
     <!-- Define if redirection should ignore HTTP headers,
     Cookie or URL parameters. Set it to true to always redirect
     to the default language. -->
