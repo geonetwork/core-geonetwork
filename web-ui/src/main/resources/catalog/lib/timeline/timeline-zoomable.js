@@ -17,9 +17,9 @@ function TimeLine(element, field) {
   var zoom;
   var onResize;
   var margin = {
-    top: 20,
+    top: 0,
     right: 5,
-    bottom: 30,
+    bottom: 10,
     left: 0
   };
 
@@ -157,13 +157,13 @@ function TimeLine(element, field) {
       .attr('class', 'x timeline')
       .attr('transform', 'scale(1)')
       .selectAll('rect')
-      .attr('y', 21)
+      .attr('y',0)
       .attr('height', timelineHeight);
 
     timelineSvg
       .append('g')
       .attr('class', 'x axis')
-      .attr('transform', 'translate(0,' + (timelineHeight + 21) + ')')
+      .attr('transform', 'translate(0,' + (timelineHeight) + ')')
       .call(timelineXAxis);
 
     setTimelineAll(data);

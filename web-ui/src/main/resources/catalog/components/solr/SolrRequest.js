@@ -505,6 +505,8 @@
         }
         else if(fieldId.endsWith('_dt')) {
 
+          facetField.type = 'date';
+          facetField.display = facetField.display || 'form';
           var bucketDates =  respAgg.buckets.sort(function(a,b) {
             return a.key - b.key;
           });
