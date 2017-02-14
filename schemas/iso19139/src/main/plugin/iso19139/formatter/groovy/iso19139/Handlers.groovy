@@ -542,6 +542,7 @@ public class Handlers {
             def org = el.'gmd:organisationName'
             def contact = [
               name : name,
+              link: el['@uuid'],
               emptyName : name == '',
               mail : mails.join(','),
               org : org

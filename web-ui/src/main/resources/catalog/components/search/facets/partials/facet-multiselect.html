@@ -3,11 +3,10 @@
     <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !contentCollapsed, 'gn-field-empty': isFacetsCollapse(facetConfig.key)}"></span>
     {{:: title || (facetConfig.label | translate)}}
   </h5>
-  <div class="row filter-input" data-ng-show="!contentCollapsed" data-ng-if="hasFilter" >
-    <div class="col-md-8">
-      <input type="text" class="form-control input-sm" placeholder="{{'anyPlaceHolder' | translate}}"
+  <div class="row filter-input sxt-layertree-filter" data-ng-show="!contentCollapsed" data-ng-if="hasFilter" >
+    <span class="fa fa-times-circle clear" ng-click="ctrl.activeFilter = ''" ng-show="ctrl.activeFilter" title="{{'clear'|translate}}"></span>
+    <input type="text" class="form-control input-sm layerfilter" placeholder="{{'filter'|translate}}"
              data-ng-model="ctrl.activeFilter" data-ng-model-options="{debounce: 300}">
-    </div>
   </div>
   <div class="list-group" ng-class="{'collapse': contentCollapsed}" sxt-custom-scroll>
     <div class="checkbox list-group-item" data-ng-repeat="f in facetObj | filter:filterInputs"

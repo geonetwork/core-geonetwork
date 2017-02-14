@@ -10,17 +10,17 @@
       <ul style="display:none" class="list-group">
 
         <!--Zoom To layer-->
-        <li class="list-group-item" ng-if="::member.get('cextent')"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
+        <li class="list-group-item" ng-if="member.get('cextent')"><a href="" data-ng-click="mapService.zoomLayerToExtent(member, map)">
           <!--<i class="fa fa-arrows-alt"></i>&nbsp;--><span translate="">layerExtentZoom</span>
         </a></li>
 
         <!--Open metadata-->
-        <li class="list-group-item" data-ng-if="::member.get('md') || member.get('metadataUrl')"><a href="" data-ng-click="showMetadata()">
+        <li class="list-group-item" data-ng-if="member.get('md') || member.get('metadataUrl')"><a href="" data-ng-click="showMetadata()">
           <!--<i class="fa fa-file"></i>&nbsp;--><span translate="">showMetadata</span>
         </a></li>
 
         <!--downloads-->
-        <li class="list-group-item" data-ng-if="::download">
+        <li class="list-group-item" data-ng-if="download">
           <a href="" data-ng-click="addToPanier(download)">
           <!--<i class="fa fa-download"></i>&nbsp;--><span translate="">download</span>
         </a></li>
@@ -32,7 +32,7 @@
         </li>
 
         <!--NCWMS-->
-        <li class="list-group-item" data-ng-if="::member.get('advanced')"><a href="" data-ng-click="setNCWMS(member)">
+        <li class="list-group-item" data-ng-if="member.get('advanced')"><a href="" data-ng-click="setNCWMS(member)">
           <!--<i class="fa fa-anchor"></i>&nbsp;--><span translate="">ncwms</span>
         </a></li>
 
@@ -46,12 +46,12 @@
             <span class="caret"></span>
           </div>
           <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="p in ::process"><a href="" data-ng-click="showWPS(p)">{{p.desc || p.name}}</a></li>
+            <li ng-repeat="p in process"><a href="" data-ng-click="showWPS(p)">{{p.desc || p.name}}</a></li>
           </ul>
         </li>
 
         <!--WFS Filter-->
-        <li class="list-group-item" data-ng-if="::wfs || (wfsLink && user.canEditRecord(member.get('md')))"><a href="" data-ng-click="showWFSFilter()">
+        <li class="list-group-item" data-ng-if="wfs || (wfsLink && user.canEditRecord(member.get('md')))"><a href="" data-ng-click="showWFSFilter()">
           <span translate="">filter</span>
         </a></li>
 
@@ -64,11 +64,11 @@
 
     <!-- Visibility check box & Layer title-->
     <label>
-      <i ng-if="::!groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'" title="{{'layerVisible'|translate}}" ></i>
-      <i ng-if="::groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-circle' : 'fa-circle'" title="{{'layerVisible'|translate}}" ></i>
+      <i ng-if="!groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'" title="{{'layerVisible'|translate}}" ></i>
+      <i ng-if="groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-circle' : 'fa-circle'" title="{{'layerVisible'|translate}}" ></i>
 
-      <input ng-if="::!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
-      <input ng-if="::groupCombo" ng-value="member" name="{{groupCombo}}" class="hidden"
+      <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
+      <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}" class="hidden"
              type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}"
              data-ng-change="switchGroupCombo(groupCombo)" data-ng-click="setLayerVisibility(groupCombo, member)"/>
       {{member.get('label')}}

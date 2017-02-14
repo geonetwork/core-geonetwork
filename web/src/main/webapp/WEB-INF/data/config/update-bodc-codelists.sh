@@ -17,6 +17,8 @@ wget --output-document=NVS.P03.rdf http://vocab.nerc.ac.uk/collection/P03/curren
 sed -i 's/SeaDataNet Agreed Parameter Groups/Agreed Parameter Groups \(P03\)/g' NVS.P03.rdf
 
 wget --output-document=NVS.P35.rdf http://vocab.nerc.ac.uk/collection/P35/current/
+
+wget --output-document=NVS.A05.rdf http://vocab.nerc.ac.uk/collection/A05/current/
 cd ../../../..
 
 cd codelist/external/thesauri/reference-geographical-area

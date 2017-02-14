@@ -47,8 +47,8 @@
 
   module.directive('sxtCategoryTree', [
     'sxtGlobals',
-    'gnHttp',
-    function(sxtGlobals, gnHttp) {
+    '$filter',
+    function(sxtGlobals, $filter) {
       return {
         restrict: 'A',
         template: '<gn-categorytree-col class="list-group" ' +
@@ -86,6 +86,10 @@
             };
             themesInSearch = scope.searchObj.params[indexField] ?
               scope.searchObj.params[indexField].split(delimiter) : [];
+
+            if(scope.ctrl.activeFilter && scope.ctrl.activeFilter.length > 1) {
+              ts = $filter('filter')(ts, filterFn);
+            }
 
             angular.forEach(ts, function(t) {
               var key = t['@name'], name;
@@ -142,6 +146,25 @@
             getNodesSelected(scope.member, nodesSelected);
             scope.searchObj.params[conf.field] = nodesSelected.join(delimiter);
           });
+
+
+          // Filter input
+          scope.$watch('ctrl.activeFilter', function(v) {
+            if(angular.isDefined(v)) {
+              processThemes(scope.searchResults.facet.sextantThemes);
+            }
+          });
+          function filterFn(theme) {
+            var name = findLabel(theme['@name']);
+            if(!name) {
+              return false;
+            }
+            name = name.toLowerCase();
+            var filter = scope.ctrl.activeFilter &&
+              scope.ctrl.activeFilter.toLowerCase();
+
+            return (name.indexOf(filter) >= 0);
+          };
         }
       };
     }]);

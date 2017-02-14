@@ -310,7 +310,7 @@
             content.css('display', 'inline').appendTo(
               $tip.find('.popover-content')
             );
-            if (grid) {
+            if (grid.length > 0) {
               $tip.find('.arrow').css({
                 left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
               });
@@ -327,13 +327,18 @@
 
           // can’t use dismiss boostrap option: incompatible with opacity slider
         var onMousedown = function(e) {
-          if ( (button.data('bs.popover') && button.data('bs.popover').$tip)
+          if (
+            (button.data('bs.popover') && button.data('bs.popover').$tip)
             && (button[0] != e.target)
             && (!$.contains(button[0], e.target))
-            && ($(e.target).parents('.popover')[0] != button.data('bs.popover').$tip[0])) {
+            && ((!grid && ($(e.target).parents('.popover')[0] !=
+              button.data('bs.popover').$tip[0])) || grid)
+          ) {
+            var timeout = (grid && ($(e.target).parents('.popover')[0] ==
+            button.data('bs.popover').$tip[0])) ? 200 : 30;
             $timeout(function(){
               button.popover('hide');
-            }, 30, false);
+            }, timeout, false);
           }
         };
         var onScroll = function() {
