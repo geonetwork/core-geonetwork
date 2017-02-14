@@ -262,7 +262,7 @@
 
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
-            appProfile = TMP_PROFILE;
+            //appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
 
               solrObject.indexFields =
