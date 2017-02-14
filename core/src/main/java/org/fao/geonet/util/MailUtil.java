@@ -137,26 +137,34 @@ public class MailUtil {
                                    SettingManager settings, String replyTo,
                                    String replyToDesc) {
         // Create data information to compose the mail
-        Email email = new SimpleEmail();
+        boolean isHtml = StringUtils.isNotBlank(htmlMessage);
+        Email email = isHtml ? new HtmlEmail() : new SimpleEmail();
         configureBasics(settings, email);
 
         List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
-        try {
-            addressColl.add(new InternetAddress(replyTo, replyToDesc));
-            email.setReplyTo(addressColl);
-        } catch (UnsupportedEncodingException e2) {
+        if (StringUtils.isNotEmpty(replyTo)) {
+            try {
+                addressColl.add(new InternetAddress(replyTo, replyToDesc));
+                email.setReplyTo(addressColl);
+            } catch (UnsupportedEncodingException e2) {
 
-            Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Characters not supported in \"" + replyToDesc
-                + "\"", e2);
-            return false;
-        } catch (EmailException e) {
-            Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Invalid email address \"" + replyTo + "\"", e);
-            return false;
+                Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Characters not supported in \"" + replyToDesc
+                    + "\"", e2);
+                return false;
+            } catch (EmailException e) {
+                Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Invalid email address \"" + replyTo + "\"", e);
+                return false;
+            }
         }
 
         email.setSubject(subject);
         try {
-            email.setMsg(message);
+            if (StringUtils.isNotBlank(message)) {
+                email.setMsg(message);
+            }
+            if (isHtml) {
+                ((HtmlEmail)email).setHtmlMsg(htmlMessage);
+            }
         } catch (EmailException e1) {
             Log.error(LOG_MODULE_NAME, "Error setting email message", e1);
             return false;
@@ -425,7 +433,7 @@ public class MailUtil {
                                    String message, String htmlMessage, SettingManager sm) {
         List<String> to = new ArrayList<String>(1);
         to.add(email);
-        return sendMail(to, subject, message, htmlMessage, sm);
+        return sendMail(to, subject, message, htmlMessage, sm, null, null);
     }
 
 

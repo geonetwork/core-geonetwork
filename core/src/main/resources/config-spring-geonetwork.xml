@@ -30,6 +30,11 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
+
+  <context:property-placeholder location="classpath*:WEB-INF/config.properties"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
   <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
@@ -102,7 +107,7 @@
   <bean id="watchListNotificationTaskTrigger"
         class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail" ref="watchListNotificationTaskJob"/>
-    <property name="cronExpression" value="${savedselection.watchlist.frequency}"/>
+    <property name="cronExpression" value="${usersavedselection.watchlist.frequency}"/>
     <property name="startDelay" value="60000"/>
   </bean>
 
