@@ -27,8 +27,10 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Selection;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SelectionRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.util.MailUtil;
@@ -114,40 +116,54 @@ public class WatchListNotifier extends QuartzJobBean {
         lastNotificationDate = settingManager.getValue(SYSTEM_USER_LASTNOTIFICATIONDATE);
         nextLastNotificationDate = new ISODate().toString();
 
+        if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
+            Log.debug(Geonet.USER_WATCHLIST, String.format(
+                "Last notification date for saved selection was %s.",
+                lastNotificationDate
+            ));
+        }
+
         userSavedSelectionRepository = appContext.getBean(UserSavedSelectionRepository.class);
         userRepository = appContext.getBean(UserRepository.class);
 
-        Integer selectionId = 1;
-        final List<Integer> allUsers = userSavedSelectionRepository.findAllUsers(selectionId);
+        SelectionRepository selectionRepository = appContext.getBean(SelectionRepository.class);
+        final List<Selection> selectionList = selectionRepository.findAll();
+        for (Selection selection : selectionList) {
+            if (selection.isWatchable()) {
+                Integer selectionId = selection.getId();
 
-        // Start notification after one notification is made
-        if (StringUtils.isNotBlank(lastNotificationDate)) {
-            if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
-                Log.debug(Geonet.USER_WATCHLIST, String.format(
-                    "Notifying %d users about changes since %s in list %d",
-                    allUsers.size(),
-                    lastNotificationDate,
-                    selectionId
-                ));
-            }
-            for (Integer userId : allUsers) {
-                notify(selectionId, userId);
-            }
-        } else {
-            if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
-                Log.debug(Geonet.USER_WATCHLIST, String.format(
-                    "Notification of %d users saved selection %d will start on next run. Last notification date was null",
-                    allUsers.size(),
-                    selectionId
-                ));
+                final List<Integer> allUsers = userSavedSelectionRepository.findAllUsers(selectionId);
+
+                // Start notification after one notification is made
+                if (StringUtils.isNotBlank(lastNotificationDate)) {
+                    if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
+                        Log.debug(Geonet.USER_WATCHLIST, String.format(
+                            "  Notifying %d users about changes since %s in list %d",
+                            allUsers.size(),
+                            lastNotificationDate,
+                            selectionId
+                        ));
+                    }
+                    for (Integer userId : allUsers) {
+                        notify(selectionId, userId);
+                    }
+                } else {
+                    if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
+                        Log.debug(Geonet.USER_WATCHLIST, String.format(
+                            "  Notification of %d users saved selection %d will start on next run. Last notification date was null",
+                            allUsers.size(),
+                            selectionId
+                        ));
+                    }
+                }
             }
         }
+
         settingManager.setValue(SYSTEM_USER_LASTNOTIFICATIONDATE, nextLastNotificationDate);
 
         if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
             Log.debug(Geonet.USER_WATCHLIST, String.format(
-                "Next notification date for saved selection %d is now %s.",
-                selectionId,
+                "Next notification date for saved selection is now %s.",
                 nextLastNotificationDate
             ));
         }
@@ -163,7 +179,7 @@ public class WatchListNotifier extends QuartzJobBean {
 
         if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
             Log.debug(Geonet.USER_WATCHLIST, String.format(
-                "  Notifying user %d about %d changes since %s in list %d",
+                "    Notifying user %d about %d changes since %s in list %d",
                 userId,
                 updatedRecords.size(),
                 lastNotificationDate,
@@ -200,7 +216,7 @@ public class WatchListNotifier extends QuartzJobBean {
 
                 if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
                     Log.debug(Geonet.USER_WATCHLIST, String.format(
-                        "  Sending message with subject %s to user %d",
+                        "    Sending message with subject %s to user %d",
                         mailSubject, userId
                     ));
                 }
@@ -213,7 +229,7 @@ public class WatchListNotifier extends QuartzJobBean {
         } else {
             if (Log.isDebugEnabled(Geonet.USER_WATCHLIST)) {
                 Log.debug(Geonet.USER_WATCHLIST, String.format(
-                    "  No changes for user %d since %s in his/her list %d",
+                    "    No changes for user %d since %s in his/her list %d",
                     userId,
                     lastNotificationDate,
                     selectionId
