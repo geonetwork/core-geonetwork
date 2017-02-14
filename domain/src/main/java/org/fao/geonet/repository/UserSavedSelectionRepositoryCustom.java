@@ -42,4 +42,6 @@ public interface UserSavedSelectionRepositoryCustom {
     int deleteAllBySelectionAndUser(Integer selection, Integer userId);
 
     List<String> findMetadataUpdatedAfter(Integer selectionId, Integer userId, String lastNotificationDate, String nextLastNotificationDate);
+
+    int deleteAllByUuid(String metadataUuid);
 }

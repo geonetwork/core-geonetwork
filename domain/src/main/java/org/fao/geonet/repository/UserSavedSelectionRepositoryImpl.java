@@ -150,6 +150,19 @@ public class UserSavedSelectionRepositoryImpl
     }
 
     @Override
+    public int deleteAllByUuid(String metadataUuid) {
+        final String metadataUuidPath =
+            SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.metadataUuid);
+        final String qlString =
+            "DELETE FROM " + UserSavedSelection.class.getSimpleName() +
+                " WHERE " + metadataUuidPath + " = '" + metadataUuid + "'";
+        final int deleted = _entityManager.createQuery(qlString).executeUpdate();
+        _entityManager.flush();
+        _entityManager.clear();
+        return deleted;
+    }
+
+    @Override
     public int deleteAllBySelectionAndUser(Integer selection, Integer userId) {
         final String selectionIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.selectionId);
