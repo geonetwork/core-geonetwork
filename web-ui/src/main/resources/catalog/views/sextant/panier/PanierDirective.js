@@ -50,7 +50,7 @@
           // because user loading is asynch
           var unregisterUserWatch = scope.$watch('user', function(user) {
             if(user && user.surname) {
-              scope.prefillUser = !(user.generic == 'true');
+              scope.prefillUser = !user.generic;
               if(scope.prefillUser) {
                 angular.extend(scope.formObj.user, {
                   lastname: user.surname,

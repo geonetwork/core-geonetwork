@@ -99,6 +99,7 @@
             },
             link: function(scope, element, attrs, controller) {
               var promise;
+              scope.container = scope.$parent.container || '.links';
               scope.updateRelations = function() {
                 scope.relations = [];
                 if (scope.uuid) {

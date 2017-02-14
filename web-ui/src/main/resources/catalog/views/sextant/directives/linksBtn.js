@@ -5,8 +5,8 @@
   var module = angular.module('sxt_linksbtn', []);
 
 
-  module.directive('sxtLinksBtn', [ 'gnSearchSettings', 'gnViewerSettings',
-    function(searchSettings, viewerSettings) {
+  module.directive('sxtLinksBtn', [ 'gnSearchSettings',
+    function(settings) {
       return {
         restrict: 'E',
         replace: true,
@@ -14,8 +14,9 @@
         templateUrl: '../../catalog/views/sextant/directives/' +
             'partials/linksbtn.html',
         link: function(scope) {
-          scope.isMap = searchSettings.mainTabs.map;
-          scope.isPanier = searchSettings.mainTabs.panier;
+          scope.container = scope.container || '.links';
+          scope.isMap = settings.mainTabs && settings.mainTabs.map;
+          scope.isPanier = settings.mainTabs && settings.mainTabs.panier;
         }
       };
     }
