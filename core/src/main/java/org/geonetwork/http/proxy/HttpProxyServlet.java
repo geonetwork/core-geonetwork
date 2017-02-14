@@ -28,12 +28,14 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -51,6 +53,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -222,8 +225,25 @@ public class HttpProxyServlet extends HttpServlet {
 
         try {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
-            String host = url.split("/")[2];
+            String[] urlCompponents = url.split("/");
+            if (urlCompponents.length < 3) {
+                returnExceptionMessage(response, HttpStatus.SC_BAD_REQUEST, "Not a valid URL");
+                return;
+            }
+            String host = urlCompponents[2];
             final String uri = createURI(request, url);
+
+            try {
+                URI actualUri = URI.create(uri);
+                HttpHost actualHost = URIUtils.extractHost(actualUri);
+                if (actualHost == null) {
+                    returnExceptionMessage(response, HttpStatus.SC_BAD_REQUEST, "Not a valid URL");
+                    return;
+                }
+            } catch (Exception e) {
+                returnExceptionMessage(response, HttpStatus.SC_BAD_REQUEST, "Not a valid URL");
+                return;
+            }
 
 
             // Checks if allowed host
