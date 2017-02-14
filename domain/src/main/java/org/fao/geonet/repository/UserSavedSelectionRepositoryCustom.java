@@ -31,6 +31,8 @@ import java.util.List;
  * Custom methods for loading {@link UserSavedSelection} entities.
  */
 public interface UserSavedSelectionRepositoryCustom {
+    List<Integer> findAllUsers(Integer selectionId);
+
     List<String> findMetadata(Integer selectionId, Integer userId);
 
     int deleteAllBySelection(Integer selectionId);
@@ -38,4 +40,6 @@ public interface UserSavedSelectionRepositoryCustom {
     int deleteAllByUser(Integer userId);
 
     int deleteAllBySelectionAndUser(Integer selection, Integer userId);
+
+    List<String> findMetadataUpdatedAfter(Integer selectionId, Integer userId, String lastNotificationDate, String nextLastNotificationDate);
 }

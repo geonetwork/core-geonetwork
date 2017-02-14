@@ -54,7 +54,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
@@ -153,7 +152,7 @@ public class PasswordApi {
         if (!MailUtil.sendMail(user.getEmail(),
             subject,
             content,
-            sm,
+            null, sm,
             adminEmail, "")) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
@@ -239,7 +238,7 @@ public class PasswordApi {
         if (!MailUtil.sendMail(email,
             subject,
             content,
-            sm,
+            null, sm,
             adminEmail, "")) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);

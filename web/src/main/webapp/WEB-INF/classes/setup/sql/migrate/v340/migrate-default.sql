@@ -45,6 +45,7 @@ INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'tur','Watch list');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'vie','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'vie','Watch list');
 
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y');
 
 
 

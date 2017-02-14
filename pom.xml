@@ -1197,6 +1197,10 @@
     to the default language. -->
     <language.forceDefault>false</language.forceDefault>
 
+    <!-- Define using CRON expression
+     when watchlist notifier is triggered (Default 4AM) -->
+    <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
+
 
     <jetty.version>9.3.9.v20160517</jetty.version>
     <geotools.version>16.0</geotools.version>

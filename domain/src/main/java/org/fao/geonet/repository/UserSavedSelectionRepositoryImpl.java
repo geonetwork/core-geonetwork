@@ -32,9 +32,11 @@ import org.fao.geonet.domain.UserSavedSelection_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,50 @@ public class UserSavedSelectionRepositoryImpl
     @PersistenceContext
     private EntityManager _entityManager;
 
+    @Override
+    public List<Integer> findAllUsers(Integer selectionId) {
+        CriteriaBuilder builder = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserSavedSelection> query = builder.createQuery(UserSavedSelection.class);
+
+        Root<UserSavedSelection> root = query.from(UserSavedSelection.class);
+        final Path integerPath = root.get(UserSavedSelection_.id).get(UserSavedSelectionId_.userId);
+        query.select(integerPath);
+        query.distinct(true);
+
+        ParameterExpression<Integer> selectionParam = builder.parameter(
+            Integer.class,
+            "selectionParam");
+        query.where(builder.equal(
+            selectionParam,
+            root.get(UserSavedSelection_.id).get(UserSavedSelectionId_.selectionId)
+        ));
+        List umsResults = _entityManager.createQuery(query)
+            .setParameter("selectionParam", selectionId)
+            .getResultList();
+        return umsResults;
+    }
+
+    @Override
+    public List<String> findMetadataUpdatedAfter(
+        Integer selectionId, Integer userId,
+        String lastNotificationDate, String nextLastNotificationDate) {
+
+        Query query = _entityManager.createNativeQuery(
+            "SELECT DISTINCT metadataUuid " +
+                "FROM UserSavedSelections u, Metadata m " +
+                "WHERE u.selectionId = :selectionId AND u.userId = :userId AND " +
+                "u.metadataUuid = m.uuid AND " +
+                "m.changeDate >= :lastNotificationDate AND " +
+                "m.changeDate < :nextLastNotificationDate"
+        );
+
+        query.setParameter("selectionId", selectionId);
+        query.setParameter("userId", userId);
+        query.setParameter("lastNotificationDate", lastNotificationDate);
+        query.setParameter("nextLastNotificationDate", nextLastNotificationDate);
+
+        return query.getResultList();
+    }
 
     @Override
     public List<String> findMetadata(Integer selectionId, Integer userId) {
@@ -55,7 +101,6 @@ public class UserSavedSelectionRepositoryImpl
         CriteriaQuery<UserSavedSelection> query = builder.createQuery(UserSavedSelection.class);
 
         Root<UserSavedSelection> root = query.from(UserSavedSelection.class);
-//        query.select();
         ParameterExpression<Integer> selectionParam = builder.parameter(
             Integer.class,
             "selectionParam");
