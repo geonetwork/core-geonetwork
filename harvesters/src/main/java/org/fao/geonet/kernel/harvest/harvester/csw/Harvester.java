@@ -138,6 +138,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         HarvestResult result = new HarvestResult();
+        boolean error = false;
         try {
             records.addAll(search(server, s));
 
@@ -145,19 +146,24 @@ class Harvester implements IHarvester<HarvestResult> {
             Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
             result = aligner.align(records, errors);
         } catch (Exception t) {
+            error = true;
             log.error("Unknown error trying to harvest");
             log.error(t.getMessage());
             log.error(t);
             errors.add(new HarvestError(context, t, log));
         } catch (Throwable t) {
+            error = true;
             log.fatal("Something unknown and terrible happened while harvesting");
             log.fatal(t.getMessage());
             errors.add(new HarvestError(context, t, log));
         }
 
         log.info("Total records processed in all searches :" + records.size());
-        return result;
+        if (error) {
+            log.warning("Due to previous errors the align process has not been called");
+        }
 
+        return result;
     }
     //---------------------------------------------------------------------------
 

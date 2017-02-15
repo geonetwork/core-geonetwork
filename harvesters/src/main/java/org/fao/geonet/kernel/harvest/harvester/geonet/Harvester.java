@@ -197,6 +197,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
             Map<String, String> sources = buildSources(remoteInfo);
             updateSources(records, sources);
+        } else {
+            log.warning("Due to previous errors the align process has not been called");
         }
         return result;
     }
