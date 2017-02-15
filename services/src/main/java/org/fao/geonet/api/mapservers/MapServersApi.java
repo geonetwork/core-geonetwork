@@ -581,7 +581,7 @@ public class MapServersApi {
                     metadataUuid, metadataTitle, metadataAbstract);
             } else {
                 // Get ZIP file from data directory
-                Path f = store.getResource(metadataUuid, resource);
+                Path f = store.getResource(context, metadataUuid, resource);
                 return addZipFile(action, gs,
                     f, resource,
                     metadataUuid, metadataTitle, metadataAbstract);
