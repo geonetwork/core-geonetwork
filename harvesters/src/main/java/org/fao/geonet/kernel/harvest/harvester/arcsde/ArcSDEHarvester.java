@@ -25,7 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.arcsde;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Logger;
-import org.fao.geonet.arcgis.ArcSDEMetadataAdapter;
+import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -61,7 +61,7 @@ import java.util.UUID;
 
 /**
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those
- * are not committed to our svn, you'll need to replace the dummy library arcsde-dummy.jar with the
+ * are not committed to our CVS, you'll need to replace the dummy library arcsde-dummy.jar with the
  * real ones for this to work.
  *
  * @author heikki doeleman
@@ -86,12 +86,13 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         settingMan.add("id:" + siteId, "username", as.getUsername());
         settingMan.add("id:" + siteId, "password", as.getPassword());
         settingMan.add("id:" + siteId, "database", as.database);
+        settingMan.add("id:" + siteId, "connectionType", as.connectionType);
     }
 
     @Override
     protected String doAdd(Element node) throws BadInputEx, SQLException {
     /*	try {
-			@SuppressWarnings("unused")
+            @SuppressWarnings("unused")
 			int test = GeoToolsDummyAPI.DUMMY_API_VERSION;
 			// if you get here, you're using the dummy API
 			System.out.println("ERROR: NO ARCSDE LIBRARIES INSTALLED");
@@ -144,8 +145,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
     @Override
     public void doHarvest(Logger l) throws Exception {
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
-        ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.getUsername(), params.getPassword());
-        List<String> metadataList = adapter.retrieveMetadata(cancelMonitor);
+        ArcSDEConnectionFactory connectionFactory = context.getBean(ArcSDEConnectionFactory.class);
+
+        ArcSDEConnection connection = connectionFactory.getConnection(params.connectionType, params.server, params.port,
+            params.database, params.getUsername(), params.getPassword());
+        List<String> metadataList = connection.retrieveMetadata(cancelMonitor);
         align(metadataList);
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
     }
