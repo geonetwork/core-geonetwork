@@ -128,6 +128,6 @@ public class AttachmentsActionsApi {
             jsonConfig,
             rotationAngle);
 
-        return store.putResource(metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
+        return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC);
     }
 }

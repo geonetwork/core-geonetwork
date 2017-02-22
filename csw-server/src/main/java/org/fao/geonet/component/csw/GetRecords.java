@@ -778,7 +778,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                 if (elementNames == null) {
                     elementNames = new HashSet<String>();
                 }
-                elementNames.add(element.getText());
+                elementNames.add(element.getTextNormalize());
             }
         }
         // TODO in if(isDebugEnabled) condition. Jeeves LOG doesn't provide that useful function though.

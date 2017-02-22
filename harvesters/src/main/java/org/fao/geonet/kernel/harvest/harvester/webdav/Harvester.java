@@ -373,21 +373,22 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
     }
 
     private void updateMetadata(RemoteFile rf, RecordInfo record) throws Exception {
-        if (!rf.isMoreRecentThan(record.changeDate)) {
-            if (log.isDebugEnabled())
-                log.debug("  - Metadata XML not changed for path : " + rf.getPath());
-            result.unchangedMetadata++;
-        } else {
-            if (log.isDebugEnabled())
-                log.debug("  - Updating local metadata for path : " + rf.getPath());
-            Element md = retrieveMetadata(rf);
+        Element md = null;
+
+        // Get the change date from the metadata content. If not possible, get it from the file change date if available
+        // and if not possible use current date
+        String date = null;
+        //--- set uuid inside metadata (on metadata add it's created a new uuid ignoring fileIdentifier uuid).
+        //--- In update we should use db uuid to update the xml uuid and keep in sych both.
+        String schema = null;
+
+        if (rf instanceof WAFRemoteFile) {
+            md = retrieveMetadata(rf);
+
             if (md == null) {
                 return;
             }
 
-            //--- set uuid inside metadata (on metadata add it's created a new uuid ignoring fileIdentifier uuid).
-            //--- In update we should use db uuid to update the xml uuid and keep in sych both.
-            String schema = null;
             try {
                 schema = dataMan.autodetectSchema(md);
 
@@ -401,17 +402,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 return;
             }
 
-            //
-            // update metadata
-            //
-            boolean validate = false;
-            boolean ufo = false;
-            boolean index = false;
-            String language = context.getLanguage();
-
-            // Get the change date from the metadata content. If not possible, get it from the file change date if available
-            // and if not possible use current date
-            String date = null;
 
             try {
                 date = dataMan.extractDateModified(schema, md);
@@ -423,6 +413,60 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                     date = rf.getChangeDate().getDateAndTime();
                 }
             }
+            ((WAFRemoteFile) rf).setChangeDate(date);
+        }
+
+
+        if (!rf.isMoreRecentThan(record.changeDate)) {
+            if (log.isDebugEnabled())
+                log.debug("  - Metadata XML not changed for path : " + rf.getPath());
+            result.unchangedMetadata++;
+        } else {
+            if (log.isDebugEnabled())
+                log.debug("  - Updating local metadata for path : " + rf.getPath());
+
+            if (!(rf instanceof WAFRemoteFile)) {
+                md = retrieveMetadata(rf);
+
+                if (md == null) {
+                    return;
+                }
+
+                try {
+                    schema = dataMan.autodetectSchema(md);
+
+                    //Update only if different
+                    String uuid = dataMan.extractUUID(schema, md);
+                    if (!record.uuid.equals(uuid)) {
+                        md = dataMan.setUUID(schema, record.uuid, md);
+                    }
+                } catch (Exception e) {
+                    log.error("  - Failed to set uuid for metadata with remote path : " + rf.getPath());
+                    return;
+                }
+
+
+                try {
+                    date = dataMan.extractDateModified(schema, md);
+                } catch (Exception ex) {
+                    log.error("WebDavHarvester - updateMetadata - Can't get metadata modified date for metadata id= "
+                        + record.id + ", using current date for modified date");
+                    // WAF harvester, rf.getChangeDate() returns null
+                    if (rf.getChangeDate() != null) {
+                        date = rf.getChangeDate().getDateAndTime();
+                    }
+                }
+            }
+
+
+
+            //
+            // update metadata
+            //
+            boolean validate = false;
+            boolean ufo = false;
+            boolean index = false;
+            String language = context.getLanguage();
 
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
                 date, false);

@@ -273,7 +273,7 @@
     "cswCapabilitiesAdvProperties": "Advanced configuration",
     "cswCapabilitiesProperties": "CSW Service information",
     "noCswCriteriaFoundInCapabilities": "No search criteria found in <a href='{{url}}'>capabilities</a>. All records will be harvested from that server.",
-    "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest.",
+    "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest. Use '%' wildcard character in order to query using like operator (ie. ogc:PropertyIsLike) instead of equal.",
     "errorRetrievingCswCapabilities": "Error occurred while retrieving service <a href='{{url}}'>capabilities</a>. Check service URL or current status.",
     "cswRequest": "CSW request",
     "cswResponse": "CSW response",
