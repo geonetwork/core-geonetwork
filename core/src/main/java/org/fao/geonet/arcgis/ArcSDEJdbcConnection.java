@@ -35,15 +35,9 @@ import java.util.List;
  */
 public abstract class ArcSDEJdbcConnection implements ArcSDEConnection{
 
-    private static final String METADATA_TABLE = "SDE.GDB_USERMETADATA";
-    private static final String METADATA_COLUMN = "SDE.GDB_USERMETADATA.XML";
-    private static final String SQL_QUERY = "SELECT " + METADATA_COLUMN + " FROM " + METADATA_TABLE ;
-
     private BasicDataSource dataSource;
     protected Connection jdbcConnection;
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-
 
     /**
      *

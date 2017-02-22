@@ -50,6 +50,12 @@ public class ArcSDEParams extends AbstractParams {
     /** The type of the connection */
     public ArcSDEConnectionType connectionType;
 
+    /** The ArcSDE version */
+    public String version;
+
+    /** The ArcSDE database type */
+    public String databaseType;
+
     public ArcSDEParams(DataManager dm) {
         super(dm);
     }
@@ -70,8 +76,8 @@ public class ArcSDEParams extends AbstractParams {
         icon = Util.getParam(site, "icon", "arcsde.gif");
         connectionType = ArcSDEConnectionType.valueOf(Util.getParam(site,
             "connectionType", ArcSDEConnectionType.ARCSDE.name()));
-
-
+        version =  Util.getParam(site, "version", "9");
+        databaseType = Util.getParam(site, "databaseType", "");
     }
 
     /**
@@ -90,6 +96,8 @@ public class ArcSDEParams extends AbstractParams {
         icon = Util.getParam(site, "icon", "arcsde.gif");
         connectionType = ArcSDEConnectionType.valueOf(Util.getParam(site,
             "connectionType", ArcSDEConnectionType.ARCSDE.name()));
+        version =  Util.getParam(site, "version", "9");
+        databaseType = Util.getParam(site, "databaseType", "");
     }
 
     //---------------------------------------------------------------------------
@@ -112,6 +120,8 @@ public class ArcSDEParams extends AbstractParams {
         copy.setPassword(getPassword());
         copy.database = database;
         copy.connectionType = connectionType;
+        copy.version = version;
+        copy.databaseType = databaseType;
         return copy;
     }
 }

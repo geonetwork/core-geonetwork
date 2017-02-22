@@ -2,7 +2,6 @@ package org.fao.geonet.arcgis;
 
 import org.fao.geonet.utils.Log;
 import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.Blob;
 import java.sql.ResultSet;
@@ -15,7 +14,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by juanl on 17/02/2017.
  */
-public class ArcSDEOracleJdbcConnection extends ArcSDEJdbcConnection {
+public class ArcSDESqlServerJdbcConnection extends ArcSDEJdbcConnection {
+
+    private static final String METADATA_TABLE = "GDB_ITEMS";
+    private static final String METADATA_COLUMN = "documentation ";
+    private static final String SQL_QUERY = "SELECT " + METADATA_COLUMN + " FROM " + METADATA_TABLE;
+
 
     /**
      * Opens a connection to the specified ArcSDE server database.
@@ -29,7 +33,7 @@ public class ArcSDEOracleJdbcConnection extends ArcSDEJdbcConnection {
      * @param username }
      * @param password
      */
-    public ArcSDEOracleJdbcConnection(String server, int port, String database, String username, String password) {
+    public ArcSDESqlServerJdbcConnection(String server, int port, String database, String username, String password) {
         this("jdbc:oracle:thin:@" + server + ":" + port + ":" + database, username, password);
     }
 
@@ -43,23 +47,16 @@ public class ArcSDEOracleJdbcConnection extends ArcSDEJdbcConnection {
      * @param username
      * @param password
      */
-    public ArcSDEOracleJdbcConnection(String connectionString, String username, String password) {
+    public ArcSDESqlServerJdbcConnection(String connectionString, String username, String password) {
         super(connectionString, username, password);
     }
 
 
     @Override
-    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
+    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSdeVersion) throws Exception {
         List<String> results = new ArrayList<>();
 
-        ArcSDEVersionFactory arcSDEVersionFactory = new ArcSDEVersionFactory();
-        String metadataTable = arcSDEVersionFactory.getTableName(arcSDEVersion);
-        String columnName = arcSDEVersionFactory.getMetadataColumnName(arcSDEVersion);
-
-        String sqlQuery = "SELECT " + columnName + " FROM " + metadataTable;
-
-
-        getJdbcTemplate().query(sqlQuery, new RowCallbackHandler() {
+        getJdbcTemplate().query(SQL_QUERY, new RowCallbackHandler() {
             @Override
             public void processRow(ResultSet rs) throws SQLException {
                 // Cancel processing
@@ -71,10 +68,10 @@ public class ArcSDEOracleJdbcConnection extends ArcSDEJdbcConnection {
                 }
 
                 String document = "";
-                int colId = rs.findColumn(columnName);
+                int colId = rs.findColumn(METADATA_COLUMN);
                 // very simple type check:
                 if (rs.getMetaData().getColumnType(colId) == Types.BLOB) {
-                    Blob blob = rs.getBlob(columnName);
+                    Blob blob = rs.getBlob(METADATA_COLUMN);
                     byte[] bdata = blob.getBytes(1, (int) blob.length());
                     document = new String(bdata);
 

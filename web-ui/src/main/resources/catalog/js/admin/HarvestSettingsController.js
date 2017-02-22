@@ -388,7 +388,17 @@
       //    });
 
 
-      loadHarvesterTypes();
+      // TODO: Check if can be moved to arcsde.js
+      $scope.$watch("harvesterSelected.site.connectionType", function (newValue) {
+        if ($scope.harvesterSelected['@type'] === 'arcsde') {
+            if (newValue === 'ARCSDE') {
+                $scope.harvesterSelected.site.databaseType = '';
+            }
+        }
+      });
+
+
+        loadHarvesterTypes();
 
 
       // ---------------------------------------

@@ -46,11 +46,12 @@ public interface ArcSDEConnection {
      * Retrieves all metadata records found in the ArcSDE database.
      *
      * @param cancelMonitor if true stops the current metadata processing.
+     * @param arcSDEVersion ArcSDE version.
      *
      * @return results the list with all the XML metadata records found.
      * @throws Exception
      */
-    List<String> retrieveMetadata(AtomicBoolean cancelMonitor) throws Exception;
+    List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception;
 
     /**
      * Closes the connection to the ArcSDE server.

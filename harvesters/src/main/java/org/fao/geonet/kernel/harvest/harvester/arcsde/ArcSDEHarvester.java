@@ -86,7 +86,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         settingMan.add("id:" + siteId, "username", as.getUsername());
         settingMan.add("id:" + siteId, "password", as.getPassword());
         settingMan.add("id:" + siteId, "database", as.database);
+        settingMan.add("id:" + siteId, "version", as.version);
         settingMan.add("id:" + siteId, "connectionType", as.connectionType);
+        settingMan.add("id:" + siteId, "databaseType", as.databaseType);
     }
 
     @Override
@@ -147,9 +149,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
         ArcSDEConnectionFactory connectionFactory = context.getBean(ArcSDEConnectionFactory.class);
 
-        ArcSDEConnection connection = connectionFactory.getConnection(params.connectionType, params.server, params.port,
+         ArcSDEConnection connection = connectionFactory.getConnection(params.connectionType, params.server, params.port,
             params.database, params.getUsername(), params.getPassword());
-        List<String> metadataList = connection.retrieveMetadata(cancelMonitor);
+        List<String> metadataList = connection.retrieveMetadata(cancelMonitor, params.version);
         align(metadataList);
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
     }

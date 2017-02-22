@@ -23,6 +23,7 @@
 package org.fao.geonet.arcgis;
 
 import com.esri.sde.sdk.client.*;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.utils.Log;
 
@@ -41,8 +42,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author heikki doeleman
  */
 public class ArcSDEApiConnection implements ArcSDEConnection{
-    private static final String METADATA_TABLE = "GDB_ITEMS";
-    private static final String METADATA_COLUMN = "documentation";
 
     private SeConnection seConnection;
 
@@ -88,15 +87,19 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
     }
 
     @Override
-    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor) throws Exception {
+    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
         Log.info(ARCSDE_LOG_MODULE_NAME, "Start retrieve metadata");
         List<String> results = new ArrayList<String>();
         try {
+            ArcSDEVersionFactory arcSDEVersionFactory = new ArcSDEVersionFactory();
+            String metadataTable = arcSDEVersionFactory.getTableName(arcSDEVersion);
+            String columnName = arcSDEVersionFactory.getMetadataColumnName(arcSDEVersion);
+
             // query table containing XML metadata
             SeSqlConstruct sqlConstruct = new SeSqlConstruct();
-            String[] tables = {METADATA_TABLE};
+            String[] tables = {metadataTable};
             sqlConstruct.setTables(tables);
-            String[] propertyNames = {METADATA_COLUMN};
+            String[] propertyNames = {columnName};
             SeQuery query = new SeQuery(seConnection);
             query.prepareQuery(propertyNames, sqlConstruct);
             query.execute();
@@ -109,13 +112,29 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
                     return Collections.emptyList();
                 }
                 SeRow row = query.fetch();
+
+
                 if (row != null) {
-                    ByteArrayInputStream bytes = row.getBlob(0);
-                    byte[] buff = new byte[bytes.available()];
-                    bytes.read(buff);
-                    String document = new String(buff, Constants.ENCODING);
-                    if (document.contains(ISO_METADATA_IDENTIFIER)) {
-                        Log.info(ARCSDE_LOG_MODULE_NAME, "ISO metadata found");
+                    SeColumnDefinition colDef = row.getColumnDef(0);
+
+                    String document = "";
+
+                    if (colDef.getType() == SeColumnDefinition.TYPE_BLOB ||
+                            colDef.getType() == SeColumnDefinition.TYPE_CLOB) {
+                        ByteArrayInputStream bytes = row.getBlob(0);
+                        byte[] buff = new byte[bytes.available()];
+                        bytes.read(buff);
+                        document = new String(buff, Constants.ENCODING);
+
+                    } else if (colDef.getType() == SeColumnDefinition.TYPE_XML) {
+                        SeXmlDoc xmlDoc = row.getXml(0);
+                        document = xmlDoc.getText();
+
+                    } else if (colDef.getType() == SeColumnDefinition.TYPE_STRING) {
+                        document = row.getString(0);
+                    }
+
+                    if (StringUtils.isNotEmpty(document)) {
                         results.add(document);
                     }
                 } else {
