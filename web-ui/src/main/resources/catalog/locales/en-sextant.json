@@ -56,6 +56,7 @@
   "lastname": "Last name",
   "activeFilter": "Des filtres sont actifs sur cette couche",
   "removeActiveFilter": "Retirer les filtres sur la couche",
+  "citationProposition": "Suggestion of Citation",
   "replaceByThoseOperations": "Update"
 
 }

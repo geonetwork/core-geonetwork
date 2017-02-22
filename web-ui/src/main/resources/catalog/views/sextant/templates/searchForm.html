@@ -31,6 +31,12 @@
           <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !treeFacetCollapsed, 'gn-field-empty': isFacetsCollapse('sextantTheme')}"></span>
           {{'sextantThemes' | translate}}
         </h5>
+        <div class="row filter-input sxt-layertree-filter" data-ng-show="!treeFacetCollapsed" data-ng-if="::facet.filter" >
+          <span class="fa fa-times-circle clear" ng-click="ctrl.activeFilter = ''" ng-show="ctrl.activeFilter" title="{{'clear'|translate}}"></span>
+          <input type="text" class="form-control input-sm layerfilter" placeholder="{{'filter'|translate}}"
+                 data-ng-model="ctrl.activeFilter" data-ng-model-options="{debounce: 300}">
+        </div>
+
         <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': treeFacetCollapsed}" sxt-category-tree-conf="thesaurus[0]" sxt-custom-scroll></div>
       </div>
 

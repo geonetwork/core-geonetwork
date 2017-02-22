@@ -145,8 +145,9 @@
     <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
 
     <facet name="dcsmm-descripteur" indexKey="thesaurus-local.theme.dcsmm-descripteur" label="dcsmm-descripteur"/>
-    <facet name="dcssm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcssm-methode"/>
-    <facet name="dcssm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcssm-type-espace"/>
+    <facet name="dcsmm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcsmm-methode"/>
+    <facet name="dcsmm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcsmm-type-espace"/>
+    <facet name="dcsmm-area" indexKey="thesaurus-local.place.dcsmm.area" label="dcsmm-area"/>    
 
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
@@ -256,8 +257,9 @@
       <item facet="emodnet-checkpoint.environmental.matrix" max="300"/>
       <item facet="emodnet-checkpoint.challenges" max="300"/>
       <item facet="dcsmm-descripteur" max="300"/>
-      <item facet="dcssm-methode" max="300"/>
-      <item facet="dcssm-type-espace" max="300"/>
+      <item facet="dcsmm-methode" max="300"/>
+      <item facet="dcsmm-type-espace" max="300"/>
+      <item facet="dcsmm-area" max="300"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
     <summaryType name="subtemplates">

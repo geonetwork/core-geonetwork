@@ -43,7 +43,8 @@
   goog.require('gn_popup_service');
   goog.require('gn_search_default_directive');
   goog.require('gn_utility');
-  goog.require('gn_utility');
+  goog.require('gn_mdview');
+  goog.require('sxt_directives');
 
 
 
@@ -51,49 +52,70 @@
 
 
 
+  var module = angular.module('gn_formatter_viewer',[
+    'ngRoute',
+    'gn',
+    'gn_alert',
+    'gn_catalog_service',
+    'gn_mdactions_service',
+    'gn_utility',
+    'gn_mdview',
+    'sxt_directives'
+  ]);
 
-  var module = angular.module('gn_formatter_viewer',
-      ['ngRoute', 'gn', 'gn_utility', 'gn_catalog_service',
-        'gn_search_default_directive',
-        'gn_popup_service', 'gn_mdactions_service', 'gn_alert']);
+  module.config(['$LOCALES', 'gnGlobalSettings',
+    function($LOCALES) {
+      $LOCALES.push('sextant', 'search');
+    }]);
 
-  // Define the translation files to load
-  module.constant('$LOCALES', ['core']);
-
-  module.constant('gnSearchSettings', {});
+  module.constant('gnSearchSettings', {
+    formatter: {
+      defaultUrl: function(md) {
+        var url;
+        if(md.getSchema() == 'iso19139.sdn-product') {
+          url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+        } else if(md.getSchema() == 'iso19115-3') {
+          var view =
+            md.standardName ===
+            'ISO 19115-3 - Emodnet Checkpoint - Upstream Data' ? 'medsea' :
+              (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product' ?
+                'checkpoint-tdp' :
+                (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
+                    'checkpoint-dps' : 'default'
+                ));
+          url = 'md.format.xml?root=div&xsl=xsl-view&view=' + view +
+            '&uuid=' + md.getUuid();
+        } else {
+          url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+        }
+        return url;
+      },
+      defaultPdfUrl: 'md.format.pdf?xsl=full_view&uuid=',
+      list: [
+        {label: 'fullView', url: 'md.format.xml?xsl=full_view&uuid='}
+      ]
+    }
+  });
 
   module.controller('GnFormatterViewer',
-      ['$scope', '$http', '$sce', '$routeParams', 'Metadata',
-       function($scope, $http, $sce, $routeParams, Metadata) {
-         $scope.md = {
-           'geonet:info': {}
-         };
-         $scope.metadata = '';
-         $scope.loading = true;
+      ['$scope', '$http', '$sce', '$routeParams', 'Metadata', 'gnMdFormatter',
+       function($scope, $http, $sce, $routeParams, Metadata, gnMdFormatter) {
 
          var formatter = $routeParams.formatter;
          var mdId = $routeParams.mdId;
 
-         var idParam = isNaN(parseInt(mdId)) ? 'uuid=' + mdId : 'id=' + mdId;
+         $scope.loading = true;
+         $scope.$on('mdLoadingEnd', function() {
+           $scope.loading = false;
+         });
 
-         $http.get('md.format.xml?xsl=' + formatter + '&' + idParam).
-         success(function(data) {
-           $scope.loading = undefined;
-           $scope.metadata = $sce.trustAsHtml(data);
-         }).error(function(data) {
-           $scope.loading = undefined;
-           $scope.metadata = $sce.trustAsHtml(data);
-         });
-         var indexField = isNaN(mdId) ? '_uuid' : '_id';
-         $http.get('qi?_content_type=json&fast=index&' + indexField + '=' +
-         mdId).success(function(data) {
-           $scope.md = new Metadata(data.metadata);
-         });
+         gnMdFormatter.load(mdId, '.formatter-container', $scope);
        }]);
+
   module.config(['$routeProvider', function($routeProvider) {
     var tpls = '../../catalog/templates/';
 
     $routeProvider.when('/:formatter/:mdId', { templateUrl: tpls +
-          '/formatter-viewer.html', controller: 'GnFormatterViewer'});
+          'formatter-viewer.html', controller: 'GnFormatterViewer'});
   }]);
 })();

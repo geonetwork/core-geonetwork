@@ -55,5 +55,6 @@
   "lastname": "Nom",
   "activeFilter": "Some filters are active on the layer",
   "removeActiveFilter": "Remove active filters",
+  "citationProposition": "Proposition de Citation",
   "replaceByThoseOperations": "Mettre à jour"
 }

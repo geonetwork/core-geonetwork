@@ -1,6 +1,6 @@
 @import "../../../style/gn_search";
 @import "gn_mapviewer_sextant.less";
-@import "../../../style/gn_metadata";
+@import "formatter.less";
 @import (less) "../../../lib/malihu-custom-scrollbar-plugin-3.0.8/jquery.mCustomScrollbar.css";
 .mCSB_scrollTools .mCSB_buttonUp,
 .mCSB_scrollTools .mCSB_buttonDown,
@@ -1408,6 +1408,16 @@ ul.invalid {
     &:hover {
       cursor: pointer;
     }
+  }
+  input[type=checkbox] {
+    position: static;
+  }
+  label {
+    padding-left: 0;
+  }
+
+  .sxt-layertree-filter {
+    margin-left: 20px;
   }
 
   input[type=checkbox] {
