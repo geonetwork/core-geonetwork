@@ -49,6 +49,7 @@
   geonetwork.GnFeaturesLoader = function(config, $injector) {
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
+    this.urlUtils = this.$injector.get('gnUrlUtils');
     this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
 
     this.layer = config.layer;
@@ -227,6 +228,65 @@
   geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
       geonetwork.GnFeaturesLoader);
 
+  /**
+   * Format an url type attribute to a html link <a href=...">.
+   * @returns {*}
+   * @private
+   */
+  geonetwork.GnFeaturesSOLRLoader.prototype.formatUrlValues_ = function(url) {
+    var $filter = this.$injector.get('$filter');
+
+    url = this.fillUrlWithFilter_(url);
+    var link = $filter('linky')(url, '_blank');
+    if(link != url) {
+      link = link.replace(/>(.)*</,
+        ' ' + 'target="_blank">' + linkTpl + '<'
+      );
+    }
+    return link;
+  };
+
+  /**
+   * Substitutes predefined filter value in urls.
+   * http://www.emso-fr.org?${filtre_param_liste}${filtre_param_group_liste} is
+   * transformed into
+   * http://www.emso-fr.org?param_liste=Escherichia&param_group_liste=Microbio
+   * if those value are set in wfsFilter facets search.
+   * 
+   * @param {string} url
+   * @returns {string} substitued url
+   * @private
+   */
+  geonetwork.GnFeaturesSOLRLoader.prototype.fillUrlWithFilter_ = function(url) {
+
+    var solrFilters = this.solrObject.getState();
+
+    var URL_SUBSTITUTE_PREFIX = 'filtre_';
+    var regex = /\$\{(\w+)\}/g;
+    var placeholders = [];
+    var urlFilters = [];
+    var paramsToAdd = {};
+    var match;
+
+    while (match = regex.exec(url)) {
+      placeholders.push(match[0]);
+      urlFilters.push(match[1].substring(
+        URL_SUBSTITUTE_PREFIX.length, match[1].length));
+    }
+
+    urlFilters.forEach(function(p, i) {
+      var name = p;
+      var idxName = this.solrObject.getIdxNameObj_(name).idxName;
+      var fValue = solrFilters.qParams[idxName];
+      url = url.replace(placeholders[i], '');
+
+      if(fValue) {
+        paramsToAdd[name] = Object.keys(fValue.values)[0];
+      }
+    }.bind(this));
+
+    return this.urlUtils.append(url, this.urlUtils.toKeyValue(paramsToAdd));
+  };
 
   geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
@@ -247,16 +307,15 @@
           titleTooltip: field.label,
           sortable: true,
           formatter: function(val, row, index) {
-            var text = (val) ? val.toString() : '';
-            text = $filter('linky')(text, '_blank');
-            text = text.replace(/>(.)*</,
-                ' ' + 'target="_blank">' + linkTpl + '<'
-                );
-            return text;
-          }
+            var outputValue = val;
+            if(this.urlUtils.isValid(val)) {
+              outputValue = this.formatUrlValues_(val);
+            }
+            return outputValue;
+          }.bind(this)
         });
       }
-    });
+    }.bind(this));
 
     // get an update solr request url with geometry filter based on a point
     var url = this.solrObject.baseUrl;
