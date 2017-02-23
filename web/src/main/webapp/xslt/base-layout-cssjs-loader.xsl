@@ -181,23 +181,6 @@
     <xsl:variable name="appConfig"
                   select="util:getSettingValue('ui/config')"/>
 
-<<<<<<< HEAD
-    <xsl:variable name="mapConfig"
-                  select="util:getSettingValue('map/config')"/>
-
-    <xsl:variable name="bingKey"
-                  select="util:getSettingValue('map/bingKey')"/>
-
-    <xsl:variable name="isMapViewerEnabled">
-      <xsl:choose>
-        <xsl:when test="util:getSettingValue('map/isMapViewerEnabled')">
-          <xsl:value-of select="util:getSettingValue('map/isMapViewerEnabled')"/>
-        </xsl:when>
-        <xsl:otherwise>true</xsl:otherwise> <!-- default value -->
-      </xsl:choose>
-
-    </xsl:variable>
-
     <xsl:if test="$angularApp = 'gn_search'">
       <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js"></script>
       <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js"></script>
@@ -215,16 +198,11 @@
           gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
           gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
         </xsl:if>
-        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        gnViewerSettings.bingKey = '<xsl:value-of select="$bingKey"/>';
         }]);
       </script>
     </xsl:if>
 
-=======
     <!-- XML highlighter JS dependency. -->
->>>>>>> upstream/develop
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js"></script>
