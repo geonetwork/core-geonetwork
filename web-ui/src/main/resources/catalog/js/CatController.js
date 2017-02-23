@@ -26,13 +26,19 @@
 
 
 
+
+
+
+
   goog.require('gn_admin_menu');
+  goog.require('gn_saved_selections');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
 
 
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service', 'gn_admin_menu']);
+      ['gn_search_manager', 'gn_session_service',
+        'gn_admin_menu', 'gn_saved_selections']);
 
 
   module.constant('gnSearchSettings', {});

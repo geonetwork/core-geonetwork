@@ -42,6 +42,9 @@
   <logger name="geonetwork.schemamanager" additivity="false">
     <level value="DEBUG"/>
   </logger>
+  <logger name="geonetwork.userwatchlist" additivity="false">
+    <level value="DEBUG"/>
+  </logger>
   <logger name="geonetwork.thesaurus-man" additivity="false">
     <level value="DEBUG"/>
   </logger>

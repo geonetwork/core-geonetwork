@@ -42,6 +42,9 @@
   <logger name="geonetwork.cors">
     <level value="WARN"/>
   </logger>
+  <logger name="geonetwork.userwatchlist">
+    <level value="WARN"/>
+  </logger>
   <logger name="geonetwork.editor">
     <level value="WARN"/>
   </logger>

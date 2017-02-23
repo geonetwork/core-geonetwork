@@ -1,6 +1,11 @@
 {
     "all": "all",
     "allInPage": "all in page",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Author",
     "none": "none",
     "BadParameterEx": "Wrong parameter",

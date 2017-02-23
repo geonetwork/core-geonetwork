@@ -523,3 +523,5 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'fre','Retiré');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'fre','A valider');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'fre','Rejeté');
 
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'fre','Fiches préférées');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'fre','Fiches observées');
