@@ -849,7 +849,7 @@
               endDate: limits.max,
               //autoClose: true,
               clearBtn: true,
-              todayHighlight: false,
+              todayHighlight: false
               } : {}).on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
