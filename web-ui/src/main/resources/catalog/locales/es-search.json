@@ -77,7 +77,6 @@
     "legalConstraints": "Restricciones legales",
     "scale": "Escala",
     "resolution": "Resolución",
-    "resolutions": "Resoluciones",
     "credit": "Créditos",
     "classification": "Clasificación",
     "resourceStatus": "Estado",
@@ -371,5 +370,7 @@
     "mdinvalid": "Los metadatos no son válidos",
     "mdinvalidcantpublish": "Los metadatos no válidos no pueden ser publicados",
     "mdnovalidation": "Los metadatos no tienen información de validación",
-    "setall": "Ajustar todos los privilegios"
+    "setall": "Ajustar todos los privilegios",
+    "print_legend": "Legend",
+    "print_legend_field": "Include legends"
 }
