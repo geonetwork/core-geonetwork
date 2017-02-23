@@ -1247,8 +1247,8 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>5.0.0</es.version>
-    <es.version.md5>17275e4d3a1fd95d591d504af1a0fd0c</es.version.md5>
+    <es.version>5.2.1</es.version>
+    <es.version.md5>33dbe0aa66b36a522236db2c04af8d49</es.version.md5>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>

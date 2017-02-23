@@ -121,21 +121,21 @@ public class EsWFSFeatureIndexer {
     }
 
     /**
-     * Define for each attribute type the Solr field suffix.
+     * Define for each attribute type the index field suffix.
      */
     private static Map<String, String> XSDTYPES_TO_FIELDSUFFIX;
 
 
     Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-    // TODO: Move attributeType / solr dynamic index field suffix to config
+    // TODO: Move attributeType / dynamic index field suffix to config
     // maybe make a bean taking care of this which could also do more
     // complex mapping like based on feature type column name defined suffix
-    public static final String DEFAULT_SOLRFIELDSUFFIX = "_s";
+    public static final String DEFAULT_FIELDSUFFIX = "_s";
 
     static {
         XSDTYPES_TO_FIELDSUFFIX = ImmutableMap.<String, String>builder()
                 .put("integer", "_ti")
-                .put("string", DEFAULT_SOLRFIELDSUFFIX)
+                .put("string", DEFAULT_FIELDSUFFIX)
                 .put("double", "_d")
                 .put("boolean", "_b")
                 .put("date", "_dt")
@@ -143,27 +143,6 @@ public class EsWFSFeatureIndexer {
                 .build();
     }
 
-    private String solrCollectionUrl;
-
-    public void setSolrCollectionUrl(String solrCollectionUrl) {
-        this.solrCollectionUrl = solrCollectionUrl;
-    }
-
-    public String getSolrCollectionUrl() {
-        return solrCollectionUrl;
-    }
-
-
-    private int solrCommitWithinMs = 10000;
-
-    public int getSolrCommitWithinMs() {
-        return solrCommitWithinMs;
-    }
-
-    public EsWFSFeatureIndexer setSolrCommitWithinMs(int solrCommitWithinMs) {
-        this.solrCommitWithinMs = solrCommitWithinMs;
-        return this;
-    }
 
 
     private int featureCommitInterval = 100;
@@ -178,7 +157,7 @@ public class EsWFSFeatureIndexer {
 
 
     /**
-     * Delete all Solr documents matching a WFS server and a specific
+     * Delete all documents matching a WFS server and a specific
      * typename.
      *
      * @param exchange
@@ -188,10 +167,11 @@ public class EsWFSFeatureIndexer {
         final String url = state.getParameters().getUrl();
         final String typeName = state.getParameters().getTypeName();
 
-        deleteFeatures(url, typeName, logger, client, featureCommitInterval);
+        deleteFeatures(url, typeName, logger, client);
     }
 
-    public static void deleteFeatures(String url, String typeName, Logger logger, EsClient client, int featureCommitInterval) {
+    public static void deleteFeatures(String url, String typeName, Logger logger,
+                                      EsClient client) {
         logger.info(String.format(
                 "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
                 url, typeName, client.getCollection()));
@@ -201,8 +181,8 @@ public class EsWFSFeatureIndexer {
             String msg = client.deleteByQuery(
                 client.getCollection(),
                 String.format(
-                    "+featureTypeId:\\\"%s#%s\\\"", url, typeName),
-                featureCommitInterval);
+                    "+featureTypeId:\\\"%s#%s\\\"", url, typeName)
+            );
             logger.info(String.format(
                     "  Features deleted in %sms.",
                     Duration.between(startTime, ZonedDateTime.now()).toMillis()));
@@ -211,8 +191,8 @@ public class EsWFSFeatureIndexer {
             msg = client.deleteByQuery(
                 client.getCollection(),
                 String.format(
-                    "+id:\\\"%s#%s\\\"", url, typeName),
-                featureCommitInterval);
+                    "+id:\\\"%s#%s\\\"", url, typeName)
+            );
             logger.info(String.format(
                     "  Report deleted in %sms.",
                     Duration.between(startTime, ZonedDateTime.now()).toMillis()));
@@ -451,7 +431,7 @@ public class EsWFSFeatureIndexer {
                     }
                     try {
                         client.bulkRequest(client.getCollection(),
-                            docCollection, docCollection.size());
+                            docCollection);
                     } catch (Exception ex) {
                         state.getHarvesterReport().put("error_ss", String.format(
                                 "Error while indexing block of documents [%d-%d]. Exception is: %s",
@@ -478,7 +458,7 @@ public class EsWFSFeatureIndexer {
                 }
                 try {
                     client.bulkRequest(client.getCollection(),
-                        docCollection, docCollection.size());
+                        docCollection);
                 } catch (Exception ex) {
                     state.getHarvesterReport().put("error_ss", String.format(
                             "Error while indexing block of documents [%d-%d]. Exception is: %s",
