@@ -198,7 +198,7 @@
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // Remap some old settings with new one
         angular.extend(this.gnCfg, config || {});
-        this.gnUrl = gnUrl || '../';
+        this.gnUrl = gnUrl || '';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
@@ -323,7 +323,7 @@
       $scope.getPermalink = gnUtilityService.getPermalink;
 
       var url = gnGlobalSettings.gnUrl || location.href;
-      var tokens = location.href.split('/');
+      var tokens = url.split('/');
       // TODO: this does not work in API mode
       $scope.service = tokens[6].split('?')[0];
 
