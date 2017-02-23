@@ -27,16 +27,15 @@
 
   angular.module('gn_formfields_directive', [])
       /**
-   * @ngdoc directive
-   * @name gn_formfields.directive:gnTypeahead
-   * @restrict A
-   *
-   * @description
-   * It binds a tagsinput to the input for multi select.
-   * By default, the list is shown on click even if the input value is
-   * empty.
-   */
-
+       * @ngdoc directive
+       * @name gn_formfields.directive:gnTypeahead
+       * @restrict A
+       *
+       * @description
+       * It binds a tagsinput to the input for multi select.
+       * By default, the list is shown on click even if the input value is
+       * empty.
+       */
       .directive('gnTypeahead', [function() {
 
         /**
@@ -257,7 +256,8 @@
         return {
 
           restrict: 'A',
-          templateUrl: '../../catalog/components/search/formfields/' +
+          templateUrl:
+              '../../catalog/components/search/formfields/' +
               'partials/groupsCombo.html',
           scope: {
             ownerGroup: '=',

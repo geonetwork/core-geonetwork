@@ -1217,6 +1217,18 @@
   </distributionManagement>
 
   <properties>
+    <!-- Configure database config file to use. Could be
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     -->
+    <db.type>h2</db.type>
+    <db.config.file>../config-db/${db.type}.xml</db.config.file>
+    <db.host>localhost</db.host>
+    <db.port>5432</db.port>
+    <db.name>gn</db.name>
+    <db.username>www-data</db.username>
+    <db.password>www-data</db.password>
+    <db.pool.maxActive>10</db.pool.maxActive>
+
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
@@ -1225,6 +1237,10 @@
     Cookie or URL parameters. Set it to true to always redirect
     to the default language. -->
     <language.forceDefault>false</language.forceDefault>
+
+    <!-- Define using CRON expression
+     when watchlist notifier is triggered (Default 4AM) -->
+    <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
 
     <!-- Jetty plugin port configuration -->

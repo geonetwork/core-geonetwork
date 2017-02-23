@@ -339,46 +339,24 @@
       <url-pattern>/node1/*</url-pattern>
   </servlet-mapping>
    -->
-  <!-- Servlet proxy -->
+
   <servlet>
     <servlet-name>HttpProxy</servlet-name>
-    <servlet-class>org.geonetwork.http.proxy.HttpProxyServlet</servlet-class>
-
-    <!-- List of allowed content types -->
+    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
     <init-param>
-      <param-name>AllowedContentTypes</param-name>
-      <param-value>
-        application/xml,text/xml,
-        text/html,
-        text/plain,
-        image/png,
-        application/vnd.ogc.se_xml,
-        application/vnd.ogc.se+xml,
-        application/vnd.ogc.success+xml,
-        application/vnd.ogc.wms_xml,
-        application/vnd.ogc.context+xml,
-        application/vnd.ogc.gml,
-        application/vnd.ogc.sld+xml,
-        application/vnd.google-earth.kml+xml,
-        application/vnd.google-earth.kmz,
-        application/json
-      </param-value>
+      <param-name>targetUri</param-name>
+      <param-value>{url}</param-value>
     </init-param>
-
-    <!-- List of host allowed to be accessed by the proxy: If not specified or empty, any hosts is allowed -->
     <init-param>
-      <param-name>AllowedHosts</param-name>
-      <param-value/>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
     </init-param>
-
-    <!-- Default proxy url if none is provided -->
-    <init-param>
-      <param-name>DefaultProxyUrl</param-name>
-      <param-value>http://www.openlayers.org</param-value>
-    </init-param>
-
-    <load-on-startup>0</load-on-startup>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>HttpProxy</servlet-name>
+    <url-pattern>/proxy/*</url-pattern>
+  </servlet-mapping>
+
 
   <!-- Spring dispatcher servlet -->
   <servlet>
@@ -412,22 +390,6 @@
   <servlet-mapping>
     <servlet-name>spring</servlet-name>
     <url-pattern>/accessDenied.jsp</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>HttpProxy</servlet-name>
-    <url-pattern>/proxy</url-pattern>
-  </servlet-mapping>
-
-  <!-- Web map context servlet -->
-  <servlet>
-    <servlet-name>wmc</servlet-name>
-    <servlet-class>org.geonetwork.map.wmc.WmcServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>wmc</servlet-name>
-    <url-pattern>/wmc/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

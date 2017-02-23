@@ -30,6 +30,11 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
+
+  <context:property-placeholder location="classpath*:WEB-INF/config.properties"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <context:annotation-config/>
   <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
   <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
@@ -70,18 +75,43 @@
         scope="singleton"/>
 
 
-  <bean id="indexingList" class="org.fao.geonet.kernel.search.index.IndexingList"/>
+  <!-- List of records to index in a moment ...-->
+  <bean id="indexingList"
+        class="org.fao.geonet.kernel.search.index.IndexingList"/>
 
-  <bean name="indexingTaskJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-    <property name="jobClass" value="org.fao.geonet.kernel.search.index.IndexingTask"/>
+  <!-- Task indexing indexingList content -->
+  <bean name="indexingTaskJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.kernel.search.index.IndexingTask"/>
   </bean>
 
+  <!-- Scheduling of the indexing task -->
   <bean id="indexingTaskTrigger"
         class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail" ref="indexingTaskJob"/>
     <property name="cronExpression" value="0/30 * * * * ?"/>
     <property name="startDelay" value="60000"/>
   </bean>
+
+
+
+  <!-- Task notifying user watching records -->
+  <bean name="watchListNotificationTaskJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.kernel.WatchListNotifier"/>
+  </bean>
+
+  <!-- Scheduling of the notification task -->
+  <bean id="watchListNotificationTaskTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="watchListNotificationTaskJob"/>
+    <property name="cronExpression" value="${usersavedselection.watchlist.frequency}"/>
+    <property name="startDelay" value="60000"/>
+  </bean>
+
+
 
   <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="jobFactory">
@@ -90,6 +120,7 @@
     <property name="triggers">
       <list>
         <ref bean="indexingTaskTrigger"/>
+        <ref bean="watchListNotificationTaskTrigger"/>
       </list>
     </property>
     <property name="quartzProperties">
@@ -102,10 +133,16 @@
     </property>
   </bean>
 
-  <bean id="SearchLoggerTask" class="org.fao.geonet.kernel.search.SearchLoggerTask" lazy-init="true"
+  <bean id="SearchLoggerTask"
+        class="org.fao.geonet.kernel.search.SearchLoggerTask"
+        lazy-init="true"
         scope="prototype"/>
-  <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask"
+
+  <bean id="MetadataNotifierTask"
+        class="org.fao.geonet.notifier.MetadataNotifierTask"
         lazy-init="true" scope="prototype"/>
-  <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient"
+
+  <bean id="MetadataNotifierClient"
+        class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
 </beans>

@@ -523,3 +523,6 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'pol','Porzucone')
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'pol','Załadowane');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'pol','Odrzucone');
 
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'pol','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'pol','Watch list');
+
