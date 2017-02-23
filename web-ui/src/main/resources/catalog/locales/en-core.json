@@ -153,6 +153,8 @@
     "organization": "Organization",
     "originator": "Originator",
     "owner": "Owner",
+    "mapLoadError": "Failed to load map from '{{url}}'.",
+    "emptyMapLoadError": "Map from '{{url}}' is empty.",
     "pointOfContact": "Point of Contact",
     "processor": "Processor",
     "principalInvestigator": "Principal Investigator",

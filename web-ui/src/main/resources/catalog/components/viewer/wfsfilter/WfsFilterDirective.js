@@ -292,6 +292,12 @@
               wfsUrl: scope.url,
               featureTypeName: ftName
             };
+
+            scope.status = null;
+            scope.isFeaturesIndexed = false;
+            var docFields = [];
+            scope.countTotal = null;
+
             heatmapsRequest.init(config);
             solrObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
@@ -320,6 +326,8 @@
                 encodeURIComponent(scope.url)
               + '&typeName=' + encodeURIComponent(ftName)).then(function() {
               scope.initSolrRequest();
+            }, function() {
+              console.warn('Failed to remove features for type ' + id);
             });
           };
           /**

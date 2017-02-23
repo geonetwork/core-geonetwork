@@ -110,10 +110,10 @@
                 (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
                 'METADATA',
             sourceUuid: id,
-            isChildOfSource: isChild,
+            isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
             isVisibleByAllGroupMembers: withFullPrivileges,
-            targetUuid: metadataUuid
+            targetUuid: metadataUuid || ''
           });
           return $http.put('../api/records/duplicate?' + url, {
             headers: {

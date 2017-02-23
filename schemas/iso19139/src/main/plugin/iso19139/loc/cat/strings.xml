@@ -23,12 +23,158 @@
   -->
 
 <strings>
-  <understandResource>Information about the dataset</understandResource>
-  <relatedResources>Related services and linked data</relatedResources>
-  <techInfo>Technical information</techInfo>
-  <contactInfo>Contact information</contactInfo>
-  <mdContactInfo>Metadata contact</mdContactInfo>
-  <refDate>Reference date</refDate>
-  <temporalRef>Temporal information</temporalRef>
-  <constraintInfo>Access constraint information</constraintInfo>
+  <understandResource>Informació sobre el conjunt de dades</understandResource>
+  <relatedResources>Serveis relacionats i dades enllaçades</relatedResources>
+  <techInfo>Informació tècnica</techInfo>
+  <contactInfo>Informació de contacte</contactInfo>
+  <mdContactInfo>Contacte de les metadades</mdContactInfo>
+  <refDate>Ddata de referència</refDate>
+  <temporalRef>Informació temporal</temporalRef>
+  <constraintInfo>Informació de restriccions d'accés</constraintInfo>
+  <xml_iso19139>Desar aquestes metadades com un arxiu XML ISO19139</xml_iso19139>
+  <xml_iso19139Tooai_dc>Desar aquestes metadades com un arxiu XML OAI Dublin Core
+  </xml_iso19139Tooai_dc>
+  
+  <!-- New strings added for the AngularJS editor -->
+  <!-- View and tabs -->
+  <advanced>Complet</advanced>
+  <default>Senzill</default>
+  <simple>Senzill</simple>
+  <inspire>INSPIRE</inspire>
+  <inspire_sds>SDS</inspire_sds>
+
+  <resource>Recurs</resource>
+  <xml>XML</xml>
+  <metadata>Metadada</metadata>
+  <identificationInfo>Identificació</identificationInfo>
+  <distributionInfo>Distribució</distributionInfo>
+  <dataQualityInfo>Qualitat</dataQualityInfo>
+  <spatialRepresentationInfo>Representació espacial</spatialRepresentationInfo>
+  <referenceSystemInfo>Sistema de referència</referenceSystemInfo>
+  <contentInfo>Contingut</contentInfo>
+  <portrayalCatalogueInfo>Representació</portrayalCatalogueInfo>
+  <metadataConstraints>Restriccions de la metadada</metadataConstraints>
+  <metadataMaintenance>Manteniment de la metadada</metadataMaintenance>
+  <applicationSchemaInfo>Infomació de l'Esquema</applicationSchemaInfo>
+  <noThesaurusName>Paraules clau</noThesaurusName>
+  <bboxesSection>Cobertura geogràfica</bboxesSection>
+
+  <!-- XSD error translation -->
+  <invalidElement>Element invàlid. S'ha trobat contingut invàlid començant per l'element:
+  </invalidElement>
+  <onElementOf>Un dels elements següents:</onElementOf>
+  <isExpected>esperat.</isExpected>
+  <isNotComplete>no és complert.</isNotComplete>
+  <elementLocated>L'element pare és</elementLocated>
+  <missingElement>Element no trobat. Contingut de l'element:</missingElement>
+  <invalidValue>Valor absent o invàlid.</invalidValue>
+  <notValidFor>no és un valor vàlid per a</notValidFor>
+  <xsdErrorIs>L'error XSD és:</xsdErrorIs>
+  <inElement>a l'element</inElement>
+  <enum1>Valor</enum1>
+  <enum2>no és un valor vàlid per al camp</enum2>
+  <enum3>La llista de valors és:</enum3>
+
+  <!-- INSPIRE view labels and help -->
+  <url>Recurs en línia</url>
+  <identifier>Identificador del recurs</identifier>
+  <rsIdentifier>Projecció</rsIdentifier>
+  <referenceDate>Informació temporal</referenceDate>
+  <creationDate>Data de creació</creationDate>
+  <hierarchyLevel>Jerarquia</hierarchyLevel>
+  <publicationDate>Data de publicació</publicationDate>
+  <revisionDate>Data de revisió</revisionDate>
+  <temporalRangeSection>Extensió temporal</temporalRangeSection>
+  <beginPosition>Inici</beginPosition>
+  <endPosition>Final</endPosition>
+  <conformity>Conformitat</conformity>
+  <conformity_title>Títol</conformity_title>
+  <conformity_date>Data</conformity_date>
+  <explanation>Explicació</explanation>
+  <pass>Conformitat</pass>
+  <indeterminatePosition>Posició indeterminada</indeterminatePosition>
+  <pointOfContact>Informació de contacte per al recurs</pointOfContact>
+  <metadataPointOfContact>Contacte per a la metadada</metadataPointOfContact>
+  <organisationName>Nom de l'Organització</organisationName>
+  <electronicMailAddress>Correu electrònic</electronicMailAddress>
+  <role>Rol</role>
+  <encoding>Codificació</encoding>
+  <inspireTheme>Temes INSPIRE</inspireTheme>
+  <inspireThemeURI>INSPIRE themes</inspireThemeURI>
+  <format>Format</format>
+  <format_version>Versió</format_version>
+  <lineage>Llinatge</lineage>
+  <spatialResolution>Resolució espacial (escala)</spatialResolution>
+  <spatialDistance>Resolució espacial (distància)</spatialDistance>
+  <accessConstraints>Restriccions d'accés</accessConstraints>
+  <useConstraints>Use constraints</useConstraints>
+  <useLimitation>Limitació de l'ús</useLimitation>
+  <add-resource-id>Calcular identificador del recurs
+  </add-resource-id>
+  <add-resource-idHelp>Calcular l'identificador del recurs usant l'URL del catàleg i l'identificador
+    de la metadada (p.e.
+    http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).
+  </add-resource-idHelp>
+  <add-extent-from-geokeywords>Calcular extensió per les paraules clau</add-extent-from-geokeywords>
+  <add-extent-from-geokeywordsHelp>Analitzar cada paraula clau de tipus lloc i afegir-ne l'extensió
+    corresponent.</add-extent-from-geokeywordsHelp>
+
+  <!-- String for INSPIRE SDS tab -->
+
+  <inspire_sds_cc1>Conformance class 1: invocable</inspire_sds_cc1>
+  <inspire_sds_cc2>Conformance class 2: interoperable</inspire_sds_cc2>
+  <inspire_sds_cc3>Conformance class 3: harmonized</inspire_sds_cc3>
+
+  <sds-category>Category</sds-category>
+  <inspire_add_pass>Add pass element</inspire_add_pass>
+  <sds-add-dataquality>Add DataQuality element</sds-add-dataquality>
+  <sds-add-dataqualityHelp>TG4: For each spatial data service, there shall be one and only one set
+    of quality information (dataQualityInfo element) scoped to “service”.</sds-add-dataqualityHelp>
+  <sds-add-tech-spec>Add a technical specification</sds-add-tech-spec>
+  <sds-add-tech-specHelp>TG8: The Specification metadata element shall at least refer to or contain
+    one technical specification to which the invocable spatial data service fully conforms,
+    providing all the necessary technical elements, to actually invoke the service and enable its
+    usage.</sds-add-tech-specHelp>
+  <sds-tech-spec>Technical specification</sds-tech-spec>
+  <conformity_desc>Tech spec title</conformity_desc>
+  <conformity_linkage>Tech spec URL </conformity_linkage>
+
+
+  <sds-section-qos>Quality of Service</sds-section-qos>
+  <sds-add-qualityofservice>Add missing Quality of Service criteria</sds-add-qualityofservice>
+  <sds-add-qualityofserviceHelp>INSPIRE SDS requires three quality of service criteria to be
+    reported in the metadata: Availability, Performance and Capacity. This button will add the
+    missing criteria.</sds-add-qualityofserviceHelp>
+  <qos_measure>Measure: </qos_measure>
+  <qos_uom>UOM</qos_uom>
+  <qos_description>Description</qos_description>
+  <qos_value>Value</qos_value>
+  <sds-section-crs>Coordinate reference system</sds-section-crs>
+
+  <sds-fix-category>Fix the Category element</sds-fix-category>
+  <sds-fix-categoryHelp>(Rec1) Replace gco:CharacterString with gmx:Anchor in the description
+    metadata element.</sds-fix-categoryHelp>
+
+  <sds-accesspoint>Access Point URL</sds-accesspoint>
+  <sds-add-accesspoint>Add Access Point</sds-add-accesspoint>
+
+  <sds-endpoint>Endpoint URL</sds-endpoint>
+  <sds-add-endpoint>Add Endpoint</sds-add-endpoint>
+
+  <sds-addNoConstraints>No Limitation</sds-addNoConstraints>
+  <sds-addNoConstraintsHelp>Add an element that documents that there are no limitation for this
+    service.</sds-addNoConstraintsHelp>
+  <sds-addUnknownConstraints>Unknown Limitation</sds-addUnknownConstraints>
+  <sds-addConstraints>Customizable constraints</sds-addConstraints>
+
+  <sds>
+    <noConditionsApply>No conditions apply</noConditionsApply>
+    <conditionsUnknown>Conditions unknown</conditionsUnknown>
+  </sds>
+
+  <sds-limitation>Limitation</sds-limitation>
+
+  <sds-section-custodian>Responsible custodian</sds-section-custodian>
+  <sds-addOperation>Add Operation</sds-addOperation>
+
 </strings>

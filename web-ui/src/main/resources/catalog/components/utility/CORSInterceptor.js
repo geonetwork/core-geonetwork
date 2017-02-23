@@ -47,7 +47,11 @@
               if (gnLangs.current) {
                 config.headers['Accept-Language'] = gnLangs.current;
               }
-              if (config.url.indexOf('http', 0) === 0) {
+              // For HTTP url and those which
+              // are not targeting the catalog
+              // add proxy if needed
+              if (config.url.indexOf('http', 0) === 0 &&
+                  config.url.indexOf(gnGlobalSettings.gnUrl) !== 0) {
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
@@ -56,6 +60,13 @@
                   config.url = gnGlobalSettings.proxyUrl +
                       encodeURIComponent(config.url);
                 }
+              } else if (gnGlobalSettings.gnUrl) {
+                // Relative URL in API mode
+                // are prefixed with catalog URL
+                // console.log(config.url);
+                config.url = gnGlobalSettings.gnUrl +
+                             (gnLangs.current || 'eng') + '/' +
+                             config.url;
               }
 
               return $q.when(config);

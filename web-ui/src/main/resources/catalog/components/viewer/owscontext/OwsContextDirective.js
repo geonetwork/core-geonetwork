@@ -55,11 +55,11 @@
   module.directive('gnOwsContext', [
     'gnViewerSettings',
     'gnOwsContextService',
-    'gnConfig',
+    'gnGlobalSettings',
     '$translate',
     '$rootScope',
     '$http',
-    function(gnViewerSettings, gnOwsContextService, gnConfig,
+    function(gnViewerSettings, gnOwsContextService, gnGlobalSettings,
         $translate, $rootScope, $http) {
       return {
         restrict: 'A',
@@ -91,7 +91,7 @@
           };
 
           scope.isSaveMapInCatalogAllowed =
-              gnConfig['map.isSaveMapInCatalogAllowed'];
+              gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed || true;
           scope.mapUuid = null;
           scope.mapProps = {
             map_title: '',

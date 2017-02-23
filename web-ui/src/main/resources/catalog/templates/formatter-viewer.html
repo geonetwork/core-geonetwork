@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container formatter-container">
   <div class="row">
     <div class="gn-md-actions-btn pull-right btn-group md-actions" data-gn-md-actions-menu="md"/>
     <a class="btn btn-danger gn-md-delete-btn pull-right"
@@ -16,6 +16,5 @@
       <i class="fa fa-pencil"></i>
     </a>
   </div>
-  <div data-ng-if="loading"><i class="fa fa-spinner fa-spin fa-4x"></i></div>
-  <p ng-bind-html="metadata"></p>
+  <div data-ng-if="loading" class="gn-spinner"><i class="fa fa-spinner fa-spin fa-4x"></i></div>
 </div>

@@ -108,9 +108,8 @@
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
-          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1) or
-          ($editInfo and $editInfo/@min = 1 and $isFirst)">
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
@@ -1497,7 +1496,20 @@
                                   then 'number'
                                   else 'text'}"
                                    name="{$name}"
-                                   value="{*/normalize-space()}"/>
+                                   value="{*/normalize-space()}">
+                              <xsl:if test="@min">
+                                <xsl:attribute name="min" select="@min"/>
+                              </xsl:if>
+                              <xsl:if test="@max">
+                                <xsl:attribute name="max" select="@max"/>
+                              </xsl:if>
+                              <xsl:if test="@step">
+                                <xsl:attribute name="step" select="@step"/>
+                              </xsl:if>
+                              <xsl:if test="@pattern">
+                                <xsl:attribute name="pattern" select="@pattern"/>
+                              </xsl:if>
+                            </input>
                           </xsl:otherwise>
                         </xsl:choose>
                       </xsl:when>

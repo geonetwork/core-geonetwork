@@ -3,21 +3,24 @@
   <!--Collapse all button for first panel-->
   <a class=""
      href
+     data-ng-hide="isTabMode"
      data-ng-click="collapseAll()"
      title="{{'collapseAllFacet' | translate}}">
     <i class="fa fa-lg fa-caret-square-o-right"></i>
   </a>
   <a class=""
      href
+     data-ng-hide="isTabMode"
      data-ng-click="expandAll()"
      title="{{'expandAllFacet' | translate}}">
     <i class="fa fa-lg fa-caret-square-o-down"></i>
   </a>
 
-  <div data-ng-repeat="f in dimension"
-       data-ng-init="fLabel = f['@label'];fLvlCollapse[fLabel] = false"
+  <div data-ng-if="!isTabMode"
+       data-ng-repeat="f in dimension"
+       data-ng-init="fLabel = getLabel(f);fLvlCollapse[fLabel] = false"
        class="gn-facet gn-facet-{{f['@label']}}"
-       data-ng-show="f.category">
+       data-ng-show="f.category && isDisplayed(f)">
 
     <h4 data-gn-collapsible="fLvlCollapse[fLabel]">
       <i class="fa fa-fw" data-ng-class="fLvlCollapse[fLabel] ? 'fa-arrow-circle-right' : 'fa-arrow-circle-down'"></i>
@@ -30,4 +33,19 @@
          data-ng-class="{'collapse': fLvlCollapse[fLabel]}">
     </div>
   </div>
+
+
+
+  <ul class="nav nav-pills" data-ng-if="isTabMode">
+    <li data-ng-repeat="c in tabs.category | orderBy: 'label'"
+        data-ng-init="path = buildPath(c);"
+        role="presentation"
+        data-ng-class="{'active': c.isSelected}">
+      <a href="" title="{{c['@label'] || c['@value']}}"
+         data-ng-click="filter(c, $event)">
+        <span class="gn-facet-label">{{(c['@label'] || c['@value']) | characters:30}}</span>&nbsp;
+        <span class="gn-facet-count">({{c['@count']}})</span>
+      </a>
+    </li>
+  </ul>
 </div>

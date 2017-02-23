@@ -201,6 +201,10 @@ public class MetadataApi implements ApplicationContextAware {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
             boolean increasePopularity,
+        @ApiParam(value = "Add geonet:info details",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean withInfo,
         @RequestHeader(
             value = HttpHeaders.ACCEPT,
             defaultValue = MediaType.APPLICATION_XML_VALUE
@@ -240,7 +244,13 @@ public class MetadataApi implements ApplicationContextAware {
             dataManager.increasePopularity(context, metadata.getId() + "");
         }
 
-        Element xml = metadata.getXmlData(false);
+
+        boolean withValidationErrors = false, keepXlinkAttributes = false, forEditing = false;
+        Element xml  = withInfo ?
+            dataManager.getMetadata(context,
+            metadata.getId() + "", forEditing, withValidationErrors, keepXlinkAttributes) :
+            dataManager.getMetadataNoInfo(context, metadata.getId() + "");
+
         if (addSchemaLocation) {
             Attribute schemaLocAtt = _schemaManager.getSchemaLocation(
                 metadata.getDataInfo().getSchemaId(), context);
