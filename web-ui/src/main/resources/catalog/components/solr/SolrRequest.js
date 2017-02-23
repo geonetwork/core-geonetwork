@@ -534,6 +534,7 @@
                 var b = bucketDates[bucketIdx];
                 var obj = {
                   value: datetime,
+                  values: datetime,
                   count: 1
                 };
                 if(b.key == datetime) {

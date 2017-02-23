@@ -310,7 +310,7 @@
             content.css('display', 'inline').appendTo(
               $tip.find('.popover-content')
             );
-            if (grid.length > 0) {
+            if (grid && grid.length > 0) {
               $tip.find('.arrow').css({
                 left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
               });

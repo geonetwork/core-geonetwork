@@ -27,7 +27,7 @@
           data: panier,
           headers: {'Content-Type': 'application/json'}
         })
-      }
+      };
 
       this.extract = function(panier) {
         return callExtractService(panier);
@@ -50,11 +50,12 @@
                   var g = esConfig.geometry;
                   var filters = [];
                   angular.forEach(esConfig.qParams, function(obj, fName) {
-                    value = obj.values;
-                    filters.push({
-                      name: fName,
-                      value: Object.keys(value)[0]
-                    });
+                    if(Object.keys(obj.values).length) {
+                      filters.push({
+                        name: fName,
+                        value: Object.keys(obj.values)[0]
+                      });
+                    }
                   });
                   panierItem.filter = {
                     params: filters.length ? filters : undefined,
