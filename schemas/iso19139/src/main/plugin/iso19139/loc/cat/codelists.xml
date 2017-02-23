@@ -23,258 +23,237 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<!--
-	
- * Hide in edit mode : If some codelist needs to be hidden
- in edit mode, the hideInEditMode attribute could be added
- to any entries.
- 
- eg.
-	<entry hideInEditMode="true">
-	
- This will restrict the number of available entries for end
- user editors and keep all records ISO compatible when using
- codelist (eg. harvested records could use codelist hidden
- in local node and needs to be displayed in view mode).
- 
- By default, this attribute is not used.
- 
- * editorMode attribute allows to configure the editor form field.
- 
- * - not set -: simple combo box
- * radio : radio button in one line
- * radio_linebreak : radio button with line break
- * radio_withdesc : radion button with line break and codelist entry description
- * select : select box with size set to the number of items if lower than 7 entries.
- 
---><codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+<codelists xmlns:gmd="http://www.isotc211.org/2005/gmd">
+  <!-- ==================================================== -->
+  <codelist name="gmd:CI_DateTypeCode">
+    <entry>
+      <code>creation</code>
+      <label>Creació</label>
+      <description>La data identifica quan va començar a existir el recurs</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>publication</code>
+      <label>Publicació</label>
+      <description>Data que identifica quan es va llançar el recurs</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>revision</code>
+      <label>Revisió</label>
+      <description>La data identifica quan el recurs va ser examinat o re-examinat per millorar-lo
+        o corregir-lo</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:CI_DateTypeCode">
-		<entry>
-			<code>creation</code>
-			<label>Creació</label>
-			<description>La data identifica quan va començar a existir el recurs</description>
-		</entry>
+  <codelist name="gmd:CI_OnLineFunctionCode">
+    <entry>
+      <code>download</code>
+      <label>Descarregar</label>
+      <description>Les instruccions en línia per transferir dades d'un dispositiu o sistema
+        d'emmagatzematge
+        a un altre</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>publication</code>
-			<label>Publicació</label>
-			<description>Data que identifica quan es va llançar el recurs</description>
-		</entry>
+    <entry>
+      <code>information</code>
+      <label>Informació</label>
+      <description>Informació online sobre el recurs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>revision</code>
-			<label>Revisió</label>
-			<description>La data identifica quan el recurs va ser examinat o re-examinat per millorar-lo
-o corregir-lo</description>
-		</entry>
+    <entry>
+      <code>offlineAccess</code>
+      <label>Accés offline</label>
+      <description>Instruccions en línia per demanar un recurs del
+        proveïdor</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+    <entry>
+      <code>order</code>
+      <label>Ordre</label>
+      <description>Procés de comanda en línia per obtenir el recurs</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>search</code>
+      <label>Cercar</label>
+      <description>Interfície de cerca en línia per cercar informació sobre el recurs</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:CI_OnLineFunctionCode">
-		<entry>
-			<code>download</code>
-			<label>Descarregar</label>
-			<description>Les instruccions en línia per transferir dades d'un dispositiu o sistema d'emmagatzematge
-a un altre</description>
-		</entry>
+  <codelist name="gmd:CI_PresentationFormCode">
+    <entry>
+      <code>documentDigital</code>
+      <label>Document digital</label>
+      <description>Representació digital d'un ítem textual primari (pot contenir també
+        il·lustracions)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>information</code>
-			<label>Informació</label>
-			<description>Informació online sobre el recurs</description>
-		</entry>
+    <entry>
+      <code>imageDigital</code>
+      <label>Imatge digital</label>
+      <description>Imatge semblant a coses construïdes per l'home, objectes o accions, adquirides
+        per mitjà de la percepció visual o per mitjà de sensors en qualsevol segment de
+        l'espectre electromagnètic (infrarroig tèrmic, radar d'alta resolució) i emmagatzemats en
+        format digital</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>offlineAccess</code>
-			<label>Accés offline</label>
-			<description>Instruccions en línia per demanar un recurs del
-proveïdor</description>
-		</entry>
+    <entry>
+      <code>documentHardcopy</code>
+      <label>Document en paper</label>
+      <description>Representació d'un ítem en principi textual, però que pot contenir també
+        il·lustracions, en
+        paper, material fotogràfic o un altre suport</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>order</code>
-			<label>Ordre</label>
-			<description>Procés de comanda en línia per obtenir el recurs</description>
-		</entry>
+    <entry>
+      <code>imageHardcopy</code>
+      <label>Imatge en paper</label>
+      <description>Imatge semblant a coses construïdes per l'home, objectes o accions, adquirides
+        per mitjà de la percepció visual o per mitjà de
+        sensors en qualsevol segment de
+        l'espectre electromagnètic (infrarroig tèrmic, radar
+        d'alta resolució) i reproduïts
+        en paper, material fotogràfic o un altre suport per a la seva
+        utilització directa per usuaris humans</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>search</code>
-			<label>Cercar</label>
-			<description>Interfície de cerca en línia per cercar informació sobre el recurs</description>
-		</entry>
+    <entry>
+      <code>mapDigital</code>
+      <label>Mapa digital</label>
+      <description>Mapa representat en forma ràster o vector</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+    <entry>
+      <code>mapHardcopy</code>
+      <label>Mapa en paper</label>
+      <description>Mapa imprès en paper, material fotogràfic o
+        un altre suport per a la seva utilització directa per usuaris humans</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>modelDigital</code>
+      <label>Model digital</label>
+      <description>Representació digital multi-dimensional d'un objecte, d'un
+        procés, etc.</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>modelHardcopy</code>
+      <label>Model en paper</label>
+      <description>Model físic tridimensional</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>profileDigital</code>
+      <label>Perfil digital</label>
+      <description>Secció transversal vertical en format digital</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>profileHardcopy</code>
+      <label>Còpia impresa del perfil</label>
+      <description>Secció transversal vertical impresa en paper, etc.</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tableDigital</code>
+      <label>Taula digital</label>
+      <description>Representació digital de fets o figures sistemàticament
+        presentades, especialment en columnes</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>tableHardcopy</code>
+      <label>Taula en paper</label>
+      <description>Representació de fets o figures
+        representades sistemàticament, especialment en
+        columnes, impresa en paper, material fotogràfic o un altre suport</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>videoDigital</code>
+      <label>Vídeo digital</label>
+      <description>Gravació de vídeo digita</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>videoHardcopy</code>
+      <label>Vídeo en format físic</label>
+      <description>Gravació de vídeo en pel·lícula</description>
+    </entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:CI_PresentationFormCode">
-		<entry>
-			<code>documentDigital</code>
-			<label>Document digital</label>
-			<description>Representació digital d'un ítem textual primari (pot contenir també il·lustracions)</description>
-		</entry>
+  <codelist name="gmd:CI_RoleCode" alias="roleCode">
+    <entry>
+      <code>resourceProvider</code>
+      <label>Proveïdor del recurs</label>
+      <description>Part que suministra el recurs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>imageDigital</code>
-			<label>Imatge digital</label>
-			<description>Imatge semblant a coses construïdes per l'home, objectes o accions, adquirides
-per mitjà de la percepció visual o per mitjà de sensors en qualsevol segment de
-l'espectre electromagnètic (infrarroig tèrmic, radar d'alta resolució) i emmagatzemats en
-format digital</description>
-		</entry>
+    <entry>
+      <code>custodian</code>
+      <label>Custodi</label>
+      <description>Part que assumeix la responsabilitat de les dades i assegura l'atenció i el
+        manteniment del servei</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>documentHardcopy</code>
-			<label>Document en paper</label>
-			<description>Representació d'un ítem en principi textual, però que pot contenir també il·lustracions, en
-paper, material fotogràfic o un altre suport</description>
-		</entry>
+    <entry>
+      <code>owner</code>
+      <label>Propietari</label>
+      <description>Part que posseeix el recurs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>imageHardcopy</code>
-			<label>Imatge en paper</label>
-			<description>Imatge semblant a coses construïdes per l'home, objectes o accions, adquirides
-per mitjà de la percepció visual o per mitjà de
-sensors en qualsevol segment de
-l'espectre electromagnètic (infrarroig tèrmic, radar
-d'alta resolució) i reproduïts
-en paper, material fotogràfic o un altre suport per a la seva
-utilització directa per usuaris humans</description>
-		</entry>
+    <entry>
+      <code>user</code>
+      <label>Usuari</label>
+      <description>Part que usa el recurs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>mapDigital</code>
-			<label>Mapa digital</label>
-			<description>Mapa representat en forma ràster o vector</description>
-		</entry>
+    <entry>
+      <code>distributor</code>
+      <label>Distribuïdor</label>
+      <description>Part que distribueix el recurs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>mapHardcopy</code>
-			<label>Mapa en paper</label>
-			<description>Mapa imprès en paper, material fotogràfic o
-un altre suport per a la seva utilització directa per usuaris humans</description>
-		</entry>
+    <entry>
+      <code>originator</code>
+      <label>Origen</label>
+      <description>Part que crea el recurs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>modelDigital</code>
-			<label>Model digital</label>
-			<description>Representació digital multi-dimensional d'un objecte, d'un
-procés, etc.</description>
-		</entry>
+    <entry>
+      <code>pointOfContact</code>
+      <label>Punt de contacte</label>
+      <description>part a la qual el client pot dirigir-se per adquirir coneixements sobre el servei</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>modelHardcopy</code>
-			<label>Model en paper</label>
-			<description>Model físic tridimensional</description>
-		</entry>
+    <entry>
+      <code>principalInvestigator</code>
+      <label>Investigador principal</label>
+      <description>Responsable d'aplegar informació i efectuar investigacions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>profileDigital</code>
-			<label>Perfil digital</label>
-			<description>Secció transversal vertical en format digital</description>
-		</entry>
+    <entry>
+      <code>processor</code>
+      <label>Processador</label>
+      <description>Part que ha tractat les dades de tal manera que ha modificat el servei</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>profileHardcopy</code>
-			<label>Còpia impresa del perfil</label>
-			<description>Secció transversal vertical impresa en paper, etc.</description>
-		</entry>
+    <entry>
+      <code>publisher</code>
+      <label>Publicador</label>
+      <description>Part que ha publicat el servei</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>tableDigital</code>
-			<label>Taula digital</label>
-			<description>Representació digital de fets o figures sistemàticament
-presentades, especialment en columnes</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>tableHardcopy</code>
-			<label>Taula en paper</label>
-			<description>Representació de fets o figures
-representades sistemàticament, especialment en
-columnes, impresa en paper, material fotogràfic o un altre suport</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>videoDigital</code>
-			<label>Vídeo digital</label>
-			<description>Gravació de vídeo digita</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>videoHardcopy</code>
-			<label>Vídeo en format físic</label>
-			<description>Gravació de vídeo en pel·lícula</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
-	<!-- ==================================================== -->
-	<codelist name="gmd:CI_RoleCode" alias="roleCode">
-		<entry>
-			<code>resourceProvider</code>
-			<label>Proveïdor del recurs</label>
-			<description>Part que suministra el recurs</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>custodian</code>
-			<label>Custodi</label>
-			<description>Part que assumeix la responsabilitat de les dades i assegura l'atenció i el
-manteniment del servei</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>owner</code>
-			<label>Propietari</label>
-			<description>Part que posseeix el recurs</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>user</code>
-			<label>Usuari</label>
-			<description>Part que usa el recurs</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>distributor</code>
-			<label>Distribuïdor</label>
-			<description>Part que distribueix el recurs</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>originator</code>
-			<label>Origen</label>
-			<description>Part que crea el recurs</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>pointOfContact</code>
-			<label>Punt de contacte</label>
-			<description>part a la qual el client pot dirigir-se per adquirir coneixements sobre el servei</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>principalInvestigator</code>
-			<label>Investigador principal</label>
-			<description>Responsable d'aplegar informació i efectuar investigacions</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>processor</code>
-			<label>Processador</label>
-			<description>Part que ha tractat les dades de tal manera que ha modificat el servei</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>publisher</code>
-			<label>Publicador</label>
-			<description>Part que ha publicat el servei</description>
-		</entry>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>author</code>
-			<label>Autor</label>
-			<description>Part autora del recurs</description>
-		</entry>
+    <entry>
+      <code>author</code>
+      <label>Autor</label>
+      <description>Part autora del recurs</description>
+    </entry>
 		<!-- ISO PROFIL CHE ONLY 
 		<entry>
 			<code>editor</code>
@@ -286,755 +265,798 @@ manteniment del servei</description>
 			<label>Partner</label>
 			<description></description>
 		</entry>-->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:DQ_EvaluationMethodTypeCode">
-		<entry>
-			<code>directInternal</code>
-			<label>Interna directa</label>
-			<description>Mètode d'avaluació de la qualitat d'un conjunt de dades basat en la inspecció dels elements pertanyents a ell, on totes les dades requerides són internes al conjunt de dades que s'avalua</description>
-		</entry>
+  <codelist name="gmd:DQ_EvaluationMethodTypeCode">
+    <entry>
+      <code>directInternal</code>
+      <label>Interna directa</label>
+      <description>Mètode d'avaluació de la qualitat d'un conjunt de dades basat en la inspecció
+        dels elements pertanyents a ell, on totes les dades requerides són internes al conjunt de
+        dades que s'avalua</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>directExternal</code>
-			<label>Externa directa</label>
-			<description>Mètode d'avaluació de la qualitat d'un conjunt de dades basat en la inspecció dels elements pertanyents a ell, on es necessita de dades de referència externes al conjunt de dades</description>
-		</entry>
+    <entry>
+      <code>directExternal</code>
+      <label>Externa directa</label>
+      <description>Mètode d'avaluació de la qualitat d'un conjunt de dades basat en la inspecció
+        dels elements pertanyents a ell, on es necessita de dades de referència externes al conjunt
+        de dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>indirect</code>
-			<label>Indirecta</label>
-			<description>Mètode per avaluar la qualitat d'un conjunt de dades basant-se en
-coneixements externs</description>
-		</entry>
+    <entry>
+      <code>indirect</code>
+      <label>Indirecta</label>
+      <description>Mètode per avaluar la qualitat d'un conjunt de dades basant-se en
+        coneixements externs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
-		<entry>
-			<code>crossReference</code>
-			<label>Referència creuada</label>
-			<description>Referència d'un conjunt de dades a un altre</description>
-		</entry>
+  <codelist name="gmd:DS_AssociationTypeCode" alias="associationType">
+    <entry>
+      <code>crossReference</code>
+      <label>Referència creuada</label>
+      <description>Referència d'un conjunt de dades a un altre</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>largerWorkCitation</code>
-			<label>Citació de treball ampliat</label>
-			<description>Referència a un conjunt de dades principal del qual aquest n'és una part</description>
-		</entry>
+    <entry>
+      <code>largerWorkCitation</code>
+      <label>Citació de treball ampliat</label>
+      <description>Referència a un conjunt de dades principal del qual aquest n'és una part</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>partOfSeamlessDatabase</code>
-			<label>Part d'una base de dades</label>
-			<description>Part del mateix conjunt estructurat de dades emplaçats en un ordinador</description>
-		</entry>
+    <entry>
+      <code>partOfSeamlessDatabase</code>
+      <label>Part d'una base de dades</label>
+      <description>Part del mateix conjunt estructurat de dades emplaçats en un ordinador</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>source</code>
-			<label>Origen</label>
-			<description>Informació cartogràfica i gràfica des de la qual s'origina el conjunt de dades</description>
-		</entry>
+    <entry>
+      <code>source</code>
+      <label>Origen</label>
+      <description>Informació cartogràfica i gràfica des de la qual s'origina el conjunt de dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>stereoMate</code>
-			<label>Par estereográfico</label>
-			<description>Part d'un conjunt d'imatges que quan s'usa en conjunt, proporciona imatges tridimensionals</description>
-		</entry>
+    <entry>
+      <code>stereoMate</code>
+      <label>Par estereográfico</label>
+      <description>Part d'un conjunt d'imatges que quan s'usa en conjunt, proporciona imatges
+        tridimensionals</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType">
-		<entry>
-			<code>campaign</code>
-			<label>Campanya</label>
-			<description>Sèrie organitzada d'accions planificades</description>
-		</entry>
+  <codelist name="gmd:DS_InitiativeTypeCode" alias="initiativeType">
+    <entry>
+      <code>campaign</code>
+      <label>Campanya</label>
+      <description>Sèrie organitzada d'accions planificades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>collection</code>
-			<label>Colecció</label>
-			<description>Acumulació de conjunts de dades reunits per a un propòsit específic</description>
-		</entry>
+    <entry>
+      <code>collection</code>
+      <label>Colecció</label>
+      <description>Acumulació de conjunts de dades reunits per a un propòsit específic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>exercise</code>
-			<label>Exercici</label>
-			<description>Acompliment específic d'una funció o grup de funcions</description>
-		</entry>
+    <entry>
+      <code>exercise</code>
+      <label>Exercici</label>
+      <description>Acompliment específic d'una funció o grup de funcions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>experiment</code>
-			<label>Experiment</label>
-			<description>Procés dissenyat per trobar si alguna cosa és eficaç o vàlida</description>
-		</entry>
+    <entry>
+      <code>experiment</code>
+      <label>Experiment</label>
+      <description>Procés dissenyat per trobar si alguna cosa és eficaç o vàlida</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>investigation</code>
-			<label>Investigació</label>
-			<description>Recerca o estudi sistemàtic</description>
-		</entry>
+    <entry>
+      <code>investigation</code>
+      <label>Investigació</label>
+      <description>Recerca o estudi sistemàtic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>mission</code>
-			<label>Misió</label>
-			<description>Funcionament específic d'un sistema de recollida de dades</description>
-		</entry>
+    <entry>
+      <code>mission</code>
+      <label>Misió</label>
+      <description>Funcionament específic d'un sistema de recollida de dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>sensor</code>
-			<label>Sensor</label>
-			<description>Dispositiu o peça d'equipament que detecta o enregistra</description>
-		</entry>
+    <entry>
+      <code>sensor</code>
+      <label>Sensor</label>
+      <description>Dispositiu o peça d'equipament que detecta o enregistra</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>operation</code>
-			<label>Operació</label>
-			<description>Acció que és part d'una sèrie d'accions</description>
-		</entry>
+    <entry>
+      <code>operation</code>
+      <label>Operació</label>
+      <description>Acció que és part d'una sèrie d'accions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>platform</code>
-			<label>Plataforma</label>
-			<description>Vehicle o una altra base de suport que sosté un sensor</description>
-		</entry>
+    <entry>
+      <code>platform</code>
+      <label>Plataforma</label>
+      <description>Vehicle o una altra base de suport que sosté un sensor</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>process</code>
-			<label>Procés</label>
-			<description>Mètode de fer alguna cosa que implica una sèrie de passos</description>
-		</entry>
+    <entry>
+      <code>process</code>
+      <label>Procés</label>
+      <description>Mètode de fer alguna cosa que implica una sèrie de passos</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>program</code>
-			<label>Programa</label>
-			<description>Activitat específica planificada</description>
-		</entry>
+    <entry>
+      <code>program</code>
+      <label>Programa</label>
+      <description>Activitat específica planificada</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>project</code>
-			<label>Projecte</label>
-			<description>Tasca, investigació o desenvolupament organitzat</description>
-		</entry>
+    <entry>
+      <code>project</code>
+      <label>Projecte</label>
+      <description>Tasca, investigació o desenvolupament organitzat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>study</code>
-			<label>Estudi</label>
-			<description>Examen o investigació</description>
-		</entry>
+    <entry>
+      <code>study</code>
+      <label>Estudi</label>
+      <description>Examen o investigació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>task</code>
-			<label>Tasca</label>
-			<description>Obra</description>
-		</entry>
+    <entry>
+      <code>task</code>
+      <label>Tasca</label>
+      <description>Obra</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>trial</code>
-			<label>Assaig</label>
-			<description>Procés de proves per a descobrir o demostrar alguna cosa</description>
-		</entry>
+    <entry>
+      <code>trial</code>
+      <label>Assaig</label>
+      <description>Procés de proves per a descobrir o demostrar alguna cosa</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_CellGeometryCode">
-		<entry>
-			<code>point</code>
-			<label>Punt</label>
-			<description>Cada cel·la representa un punt</description>
-		</entry>
+  <codelist name="gmd:MD_CellGeometryCode">
+    <entry>
+      <code>point</code>
+      <label>Punt</label>
+      <description>Cada cel·la representa un punt</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>area</code>
-			<label>Àrea</label>
-			<description>Cada cel·la representa un àrea</description>
-		</entry>
+    <entry>
+      <code>area</code>
+      <label>Àrea</label>
+      <description>Cada cel·la representa un àrea</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_CharacterSetCode">
-		<entry>
-			<code>ucs2</code>
-			<label>UCS2</label>
-			<description>Conjunt de caràcters universal de mida fixa de 16 bits basat en la norma ISO/IEC 10646</description>
-		</entry>
+  <codelist name="gmd:MD_CharacterSetCode">
+    <entry>
+      <code>ucs2</code>
+      <label>UCS2</label>
+      <description>Conjunt de caràcters universal de mida fixa de 16 bits basat en la norma ISO/IEC
+        10646</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>ucs4</code>
-			<label>UCS4</label>
-			<description>Conjunt de caràcters universal de mida fixa de 32 bits basat en la norma ISO/IEC 10646</description>
-		</entry>
+    <entry>
+      <code>ucs4</code>
+      <label>UCS4</label>
+      <description>Conjunt de caràcters universal de mida fixa de 32 bits basat en la norma ISO/IEC
+        10646</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>utf7</code>
-			<label>UTF7</label>
-			<description>Format de transferència UCS de mida variable de 7 bits basat en la norma ISO/IEC 10646</description>
-		</entry>
+    <entry>
+      <code>utf7</code>
+      <label>UTF7</label>
+      <description>Format de transferència UCS de mida variable de 7 bits basat en la norma ISO/IEC
+        10646</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>utf8</code>
-			<label>UTF</label>
-			<description>Format de transferència UCS de mida variable de 8 bits basat en la norma ISO/IEC 10646</description>
-		</entry>
+    <entry>
+      <code>utf8</code>
+      <label>UTF</label>
+      <description>Format de transferència UCS de mida variable de 8 bits basat en la norma ISO/IEC
+        10646</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>utf16</code>
-			<label>UTF16</label>
-			<description>Format de transferència UCS de mida variable de 16 bits basat en la norma ISO/IEC 10646</description>
-		</entry>
+    <entry>
+      <code>utf16</code>
+      <label>UTF16</label>
+      <description>Format de transferència UCS de mida variable de 16 bits basat en la norma ISO/IEC
+        10646</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part1</code>
-			<label>8859 Part 1</label>
-			<description>ISO/IEC 8859-1, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 1: alfabet llatí No 1</description>
-		</entry>
+    <entry>
+      <code>8859part1</code>
+      <label>8859 Part 1</label>
+      <description>ISO/IEC 8859-1, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 1: alfabet llatí No 1</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part2</code>
-			<label>8859 Part 2</label>
-			<description>ISO/IEC 8859-2, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 2: alfabet llatí No 2</description>
-		</entry>
+    <entry>
+      <code>8859part2</code>
+      <label>8859 Part 2</label>
+      <description>ISO/IEC 8859-2, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 2: alfabet llatí No 2</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part3</code>
-			<label>8859 Part 3</label>
-			<description>ISO/IEC 8859-3, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 3: alfabet llatí No. 3</description>
-		</entry>
+    <entry>
+      <code>8859part3</code>
+      <label>8859 Part 3</label>
+      <description>ISO/IEC 8859-3, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 3: alfabet llatí No. 3</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part4</code>
-			<label>8859 Part 4</label>
-			<description>ISO/IEC 8859-4, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 4: alfabet llatí No. 4</description>
-		</entry>
+    <entry>
+      <code>8859part4</code>
+      <label>8859 Part 4</label>
+      <description>ISO/IEC 8859-4, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 4: alfabet llatí No. 4</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part5</code>
-			<label>8859 Part 5</label>
-			<description>ISO/IEC 8859-5, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 5: alfabet llatí/ciríl·lic</description>
-		</entry>
+    <entry>
+      <code>8859part5</code>
+      <label>8859 Part 5</label>
+      <description>ISO/IEC 8859-5, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 5: alfabet llatí/ciríl·lic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part6</code>
-			<label>8859 Part 6</label>
-			<description>ISO/IEC 8859-6, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 6: alfabet llatí/aràbic</description>
-		</entry>
+    <entry>
+      <code>8859part6</code>
+      <label>8859 Part 6</label>
+      <description>ISO/IEC 8859-6, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 6: alfabet llatí/aràbic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part7</code>
-			<label>8859 Part 7</label>
-			<description>ISO/IEC 8859-7, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 7: alfabet llatí/grec</description>
-		</entry>
+    <entry>
+      <code>8859part7</code>
+      <label>8859 Part 7</label>
+      <description>ISO/IEC 8859-7, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 7: alfabet llatí/grec</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part8</code>
-			<label>8859 Part 8</label>
-			<description>ISO/IEC 8859-8, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 5: alfabet llatí/hebreu</description>
-		</entry>
+    <entry>
+      <code>8859part8</code>
+      <label>8859 Part 8</label>
+      <description>ISO/IEC 8859-8, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 5: alfabet llatí/hebreu</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part9</code>
-			<label>8859 Part 9</label>
-			<description>ISO/IEC 8859-9, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 9: alfabet llatí No. 5</description>
-		</entry>
+    <entry>
+      <code>8859part9</code>
+      <label>8859 Part 9</label>
+      <description>ISO/IEC 8859-9, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 9: alfabet llatí No. 5</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part10</code>
-			<label>8859 Part 10</label>
-			<description>ISO/IEC 8859-10, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 10: alfabet llatí No 6</description>
-		</entry>
+    <entry>
+      <code>8859part10</code>
+      <label>8859 Part 10</label>
+      <description>ISO/IEC 8859-10, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 10: alfabet llatí No 6</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part11</code>
-			<label>8859 Part 11</label>
-			<description>ISO/IEC 8859-11, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 11: alfabet llatí/tailandès</description>
-		</entry>
+    <entry>
+      <code>8859part11</code>
+      <label>8859 Part 11</label>
+      <description>ISO/IEC 8859-11, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 11: alfabet llatí/tailandès</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part13</code>
-			<label>8859 Part 13</label>
-			<description>ISO/IEC 8859-13, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 13: alfabet llatí No. 7</description>
-		</entry>
+    <entry>
+      <code>8859part13</code>
+      <label>8859 Part 13</label>
+      <description>ISO/IEC 8859-13, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 13: alfabet llatí No. 7</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part14</code>
-			<label>8859 Part 14</label>
-			<description>ISO/IEC 8859-14, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 14: alfabet llatí No. 8 (cèltic)</description>
-		</entry>
+    <entry>
+      <code>8859part14</code>
+      <label>8859 Part 14</label>
+      <description>ISO/IEC 8859-14, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 14: alfabet llatí No. 8 (cèltic)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part15</code>
-			<label>8859 Part 15</label>
-			<description>ISO/IEC 8859-15, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 15: alfabet llatí No. 9</description>
-		</entry>
+    <entry>
+      <code>8859part15</code>
+      <label>8859 Part 15</label>
+      <description>ISO/IEC 8859-15, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 15: alfabet llatí No. 9</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8859part16</code>
-			<label>8859 Part 16</label>
-			<description>ISO/IEC 8859-16, Tecnologies de la informació - conjunts de caràcters gràfics codificats com un sol byte de 8 bits - Part 16: alfabet llatí No. 10</description>
-		</entry>
+    <entry>
+      <code>8859part16</code>
+      <label>8859 Part 16</label>
+      <description>ISO/IEC 8859-16, Tecnologies de la informació - conjunts de caràcters gràfics
+        codificats com un sol byte de 8 bits - Part 16: alfabet llatí No. 10</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>jis</code>
-			<label>JIS</label>
-			<description>Codi japonès utilitzat per a la transmissió electrònica</description>
-		</entry>
+    <entry>
+      <code>jis</code>
+      <label>JIS</label>
+      <description>Codi japonès utilitzat per a la transmissió electrònica</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>shiftJIS</code>
-			<label>Shift JIS</label>
-			<description>Codi japonès utilitzat en màquines MS-DOS</description>
-		</entry>
+    <entry>
+      <code>shiftJIS</code>
+      <label>Shift JIS</label>
+      <description>Codi japonès utilitzat en màquines MS-DOS</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>eucJP</code>
-			<label>EUC JP</label>
-			<description>Codi japonès utilitzat en màquines basades en UNIX</description>
-		</entry>
+    <entry>
+      <code>eucJP</code>
+      <label>EUC JP</label>
+      <description>Codi japonès utilitzat en màquines basades en UNIX</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>usAscii</code>
-			<label>US ASCII</label>
-			<description>Conjunt de codis ASCII dels Estats Units (ISO 646 EUA)</description>
-		</entry>
+    <entry>
+      <code>usAscii</code>
+      <label>US ASCII</label>
+      <description>Conjunt de codis ASCII dels Estats Units (ISO 646 EUA)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>ebcdic</code>
-			<label>EBCDIC</label>
-			<description>Conjunt de codis del mainframe IBM</description>
-		</entry>
+    <entry>
+      <code>ebcdic</code>
+      <label>EBCDIC</label>
+      <description>Conjunt de codis del mainframe IBM</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>eucKR</code>
-			<label>EUC KR</label>
-			<description>Conjunt de codis coreà</description>
-		</entry>
+    <entry>
+      <code>eucKR</code>
+      <label>EUC KR</label>
+      <description>Conjunt de codis coreà</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>big5</code>
-			<label>Big 5</label>
-			<description>Conjunt de codis tradicional xinès utilitzat a Taiwan, Hong Kong de la Xina i altres àrees</description>
-		</entry>
+    <entry>
+      <code>big5</code>
+      <label>Big 5</label>
+      <description>Conjunt de codis tradicional xinès utilitzat a Taiwan, Hong Kong de la Xina i
+        altres àrees</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>GB2312</code>
-			<label>GB2312</label>
-			<description>Conjunt de codis de xinès simplificat</description>
-		</entry>
+    <entry>
+      <code>GB2312</code>
+      <label>GB2312</label>
+      <description>Conjunt de codis de xinès simplificat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_ClassificationCode">
-		<entry>
-			<code>unclassified</code>
-			<label>Desclassificat</label>
-			<description>Disponible per a divulgació general</description>
-		</entry>
+  <codelist name="gmd:MD_ClassificationCode">
+    <entry>
+      <code>unclassified</code>
+      <label>Desclassificat</label>
+      <description>Disponible per a divulgació general</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>restricted</code>
-			<label>Restringit</label>
-			<description>No apte per a divulgació general</description>
-		</entry>
+    <entry>
+      <code>restricted</code>
+      <label>Restringit</label>
+      <description>No apte per a divulgació general</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>confidential</code>
-			<label>Confidencial</label>
-			<description>Disponible per als que se'ls pot confiar la informació</description>
-		</entry>
+    <entry>
+      <code>confidential</code>
+      <label>Confidencial</label>
+      <description>Disponible per als que se'ls pot confiar la informació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>secret</code>
-			<label>Secret</label>
-			<description>Mantingut o amb la intenció de mantenir-se privat, ignot o ocult davant tothom excepte un selecte grup de persones</description>
-		</entry>
+    <entry>
+      <code>secret</code>
+      <label>Secret</label>
+      <description>Mantingut o amb la intenció de mantenir-se privat, ignot o ocult davant tothom
+        excepte un selecte grup de persones</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>topSecret</code>
-			<label>Ultra secret</label>
-			<description>Del més alt secret</description>
-		</entry>
+    <entry>
+      <code>topSecret</code>
+      <label>Ultra secret</label>
+      <description>Del més alt secret</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_CoverageContentTypeCode">
-		<entry>
-			<code>image</code>
-			<label>Imatge</label>
-			<description>Representació numèrica significativa d'un paràmetre físic que no és el valor real del paràmetre físic</description>
-		</entry>
+  <codelist name="gmd:MD_CoverageContentTypeCode">
+    <entry>
+      <code>image</code>
+      <label>Imatge</label>
+      <description>Representació numèrica significativa d'un paràmetre físic que no és el valor real
+        del paràmetre físic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>thematicClassification</code>
-			<label>Classificació temàtica</label>
-			<description>Valor de codi sense sentit quantitatiu, usat per representar una magnitud física</description>
-		</entry>
+    <entry>
+      <code>thematicClassification</code>
+      <label>Classificació temàtica</label>
+      <description>Valor de codi sense sentit quantitatiu, usat per representar una magnitud física</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>physicalMeasurement</code>
-			<label>Medició física</label>
-			<description>Valor en unitats físiques de la quantitat que es mesura</description>
-		</entry>
+    <entry>
+      <code>physicalMeasurement</code>
+      <label>Medició física</label>
+      <description>Valor en unitats físiques de la quantitat que es mesura</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_DatatypeCode">
-		<entry>
-			<code>class</code>
-			<label>Classe</label>
-			<description>Descriptor d'un conjunt d'objectes que comparteixen els mateixos atributs, operacions, mètodes, relacions i comportament</description>
-		</entry>
+  <codelist name="gmd:MD_DatatypeCode">
+    <entry>
+      <code>class</code>
+      <label>Classe</label>
+      <description>Descriptor d'un conjunt d'objectes que comparteixen els mateixos atributs,
+        operacions, mètodes, relacions i comportament</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>codelist</code>
-			<label>Llista de codis</label>
-			<description>Descriptor d'un conjunt d'objectes que comparteixen els mateixos atributs, operacions, mètodes, relacions i comportament</description>
-		</entry>
+    <entry>
+      <code>codelist</code>
+      <label>Llista de codis</label>
+      <description>Descriptor d'un conjunt d'objectes que comparteixen els mateixos atributs,
+        operacions, mètodes, relacions i comportament</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>enumeration</code>
-			<label>Enumeració</label>
-			<description>Tipus de dades les instàncies formen una llista no extensible de valors literals</description>
-		</entry>
+    <entry>
+      <code>enumeration</code>
+      <label>Enumeració</label>
+      <description>Tipus de dades les instàncies formen una llista no extensible de valors literals</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>codelistElement</code>
-			<label>Element de llista de codis</label>
-			<description>Valor permissible per a una llista de codis o enumeració</description>
-		</entry>
+    <entry>
+      <code>codelistElement</code>
+      <label>Element de llista de codis</label>
+      <description>Valor permissible per a una llista de codis o enumeració</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>abstractClass</code>
-			<label>Classe abstracta</label>
-			<description>Classe que no es pot instanciar directament</description>
-		</entry>
+    <entry>
+      <code>abstractClass</code>
+      <label>Classe abstracta</label>
+      <description>Classe que no es pot instanciar directament</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>aggregateClass</code>
-			<label>Classe agregada</label>
-			<description>Classe que es compon de classes que estan connectades per una relació d'agregació</description>
-		</entry>
+    <entry>
+      <code>aggregateClass</code>
+      <label>Classe agregada</label>
+      <description>Classe que es compon de classes que estan connectades per una relació d'agregació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>specifiedClass</code>
-			<label>Classe especificada</label>
-			<description>Subclasse que pot ser substituïda per la seva superclasse</description>
-		</entry>
+    <entry>
+      <code>specifiedClass</code>
+      <label>Classe especificada</label>
+      <description>Subclasse que pot ser substituïda per la seva superclasse</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>datatypeClass</code>
-			<label>Classe de tipus</label>
-			<description>Classe utilitzada per a l'especificació d'un domini d'instàncies (objectes), juntament amb les operacions aplicables als objectes. Un tipus pot tenir atributs i associacions</description>
-		</entry>
+    <entry>
+      <code>datatypeClass</code>
+      <label>Classe de tipus</label>
+      <description>Classe utilitzada per a l'especificació d'un domini d'instàncies (objectes),
+        juntament amb les operacions aplicables als objectes. Un tipus pot tenir atributs i
+        associacions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>interfaceClass</code>
-			<label>Classe d'interfície</label>
-			<description>Conjunt designat de les operacions que caracteritzen el comportament d'un element</description>
-		</entry>
+    <entry>
+      <code>interfaceClass</code>
+      <label>Classe d'interfície</label>
+      <description>Conjunt designat de les operacions que caracteritzen el comportament d'un element</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>unionClass</code>
-			<label>Classe d'unió</label>
-			<description>Classe que descriu una selecció d'un dels tipus especificats</description>
-		</entry>
+    <entry>
+      <code>unionClass</code>
+      <label>Classe d'unió</label>
+      <description>Classe que descriu una selecció d'un dels tipus especificats</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>metaClass</code>
-			<label>Metaclasse</label>
-			<description>Classe les instàncies de la qual són classes</description>
-		</entry>
+    <entry>
+      <code>metaClass</code>
+      <label>Metaclasse</label>
+      <description>Classe les instàncies de la qual són classes</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>typeClass</code>
-			<label>Type class</label>
-			<description>Class used for specification of a domain of instances (objects), together with
-				the operations applicable to the objects. A type may have attributes and
-			associations</description>
-		</entry>
+    <entry>
+      <code>typeClass</code>
+      <label>Type class</label>
+      <description>Class used for specification of a domain of instances (objects), together with
+        the operations applicable to the objects. A type may have attributes and
+        associations</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>characterString</code>
-			<label>Cadena de caràcters</label>
-			<description>Camp de text lliure</description>
-		</entry>
+    <entry>
+      <code>characterString</code>
+      <label>Cadena de caràcters</label>
+      <description>Camp de text lliure</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>integer</code>
-			<label>Enter</label>
-			<description>Camp numèric</description>
-		</entry>
+    <entry>
+      <code>integer</code>
+      <label>Enter</label>
+      <description>Camp numèric</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>association</code>
-			<label>Associació</label>
-			<description>Relació semàntica entre dues classes que implica connexions entre les seves instàncies</description>
-		</entry>
+    <entry>
+      <code>association</code>
+      <label>Associació</label>
+      <description>Relació semàntica entre dues classes que implica connexions entre les seves
+        instàncies</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_DimensionNameTypeCode">
-		<entry>
-			<code>row</code>
-			<label>Fila</label>
-			<description>Eix d'ordenades (y)</description>
-		</entry>
+  <codelist name="gmd:MD_DimensionNameTypeCode">
+    <entry>
+      <code>row</code>
+      <label>Fila</label>
+      <description>Eix d'ordenades (y)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>column</code>
-			<label>Columna</label>
-			<description>Eix d'abscisses (x)</description>
-		</entry>
+    <entry>
+      <code>column</code>
+      <label>Columna</label>
+      <description>Eix d'abscisses (x)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>vertical</code>
-			<label>Vertical</label>
-			<description>Eix vertical (z)</description>
-		</entry>
+    <entry>
+      <code>vertical</code>
+      <label>Vertical</label>
+      <description>Eix vertical (z)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>track</code>
-			<label>Pista</label>
-			<description>Al llarg de la direcció del moviment del punt d'exploració</description>
-		</entry>
+    <entry>
+      <code>track</code>
+      <label>Pista</label>
+      <description>Al llarg de la direcció del moviment del punt d'exploració</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>crossTrack</code>
-			<label>Pista transversal</label>
-			<description>Perpendicular a la direcció de moviment del punt d'exploració</description>
-		</entry>
+    <entry>
+      <code>crossTrack</code>
+      <label>Pista transversal</label>
+      <description>Perpendicular a la direcció de moviment del punt d'exploració</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>line</code>
-			<label>Línia</label>
-			<description>Línia d'exploració d'un sensor</description>
-		</entry>
+    <entry>
+      <code>line</code>
+      <label>Línia</label>
+      <description>Línia d'exploració d'un sensor</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>sample</code>
-			<label>Mostra</label>
-			<description>Element al llarg d'una línia d'exploració</description>
-		</entry>
+    <entry>
+      <code>sample</code>
+      <label>Mostra</label>
+      <description>Element al llarg d'una línia d'exploració</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>time</code>
-			<label>Temps</label>
-			<description>Durada</description>
-		</entry>
+    <entry>
+      <code>time</code>
+      <label>Temps</label>
+      <description>Durada</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_GeometricObjectTypeCode">
-		<entry>
-			<code>complex</code>
-			<label>Complex</label>
-			<description>Conjunt de primitives geomètriques tals que els seus límits poden ser representats com una unió d'altres primitives</description>
-		</entry>
+  <codelist name="gmd:MD_GeometricObjectTypeCode">
+    <entry>
+      <code>complex</code>
+      <label>Complex</label>
+      <description>Conjunt de primitives geomètriques tals que els seus límits poden ser
+        representats com una unió d'altres primitives</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>composite</code>
-			<label>Compost</label>
-			<description>Conjunt connectat de corbes, sòlids o superfícies</description>
-		</entry>
+    <entry>
+      <code>composite</code>
+      <label>Compost</label>
+      <description>Conjunt connectat de corbes, sòlids o superfícies</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>curve</code>
-			<label>Corba</label>
-			<description>Primitiva geomètrica unidimensional i acotada que representa la imatge contínua d'una línia</description>
-		</entry>
+    <entry>
+      <code>curve</code>
+      <label>Corba</label>
+      <description>Primitiva geomètrica unidimensional i acotada que representa la imatge contínua
+        d'una línia</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>point</code>
-			<label>Punt</label>
-			<description>Primitiva geomètrica zerodimensional i afitada que representa una posició però no té extensió</description>
-		</entry>
+    <entry>
+      <code>point</code>
+      <label>Punt</label>
+      <description>Primitiva geomètrica zerodimensional i afitada que representa una posició però no
+        té extensió</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>solid</code>
-			<label>Sòlid</label>
-			<description>Primitiva geomètrica tridimensional i afitada que representa la imatge contínua d'una regió de l'espai</description>
-		</entry>
+    <entry>
+      <code>solid</code>
+      <label>Sòlid</label>
+      <description>Primitiva geomètrica tridimensional i afitada que representa la imatge contínua
+        d'una regió de l'espai</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>surface</code>
-			<label>Superfície</label>
-			<description>Primitiva geomètrica bidimensional i afitada que representa la imatge contínua d'una regió d'un pla</description>
-		</entry>
+    <entry>
+      <code>surface</code>
+      <label>Superfície</label>
+      <description>Primitiva geomètrica bidimensional i afitada que representa la imatge contínua
+        d'una regió d'un pla</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_ImagingConditionCode">
-		<entry>
-			<code>blurredImage</code>
-			<label>Imatge borrosa</label>
-			<description>Part de la imatge està borrosa</description>
-		</entry>
+  <codelist name="gmd:MD_ImagingConditionCode">
+    <entry>
+      <code>blurredImage</code>
+      <label>Imatge borrosa</label>
+      <description>Part de la imatge està borrosa</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>cloud</code>
-			<label>Núvol</label>
-			<description>Una porció de la imatge està parcialment coberta per la nuvolositat</description>
-		</entry>
+    <entry>
+      <code>cloud</code>
+      <label>Núvol</label>
+      <description>Una porció de la imatge està parcialment coberta per la nuvolositat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>degradingObliquity</code>
-			<label>Obliqüitat degradant</label>
-			<description>Angle agut entre el pla de l'eclíptica (el pla de l'òrbita de la Terra) i el pla de l'equador celeste</description>
-		</entry>
+    <entry>
+      <code>degradingObliquity</code>
+      <label>Obliqüitat degradant</label>
+      <description>Angle agut entre el pla de l'eclíptica (el pla de l'òrbita de la Terra) i el pla
+        de l'equador celeste</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fog</code>
-			<label>Boira</label>
-			<description>Una porció de la imatge està parcialment coberta per la boira</description>
-		</entry>
+    <entry>
+      <code>fog</code>
+      <label>Boira</label>
+      <description>Una porció de la imatge està parcialment coberta per la boira</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>heavySmokeOrDust</code>
-			<label>Fum dens o pols</label>
-			<description>Una porció de la imatge està parcialment coberta per fum dens o pols</description>
-		</entry>
+    <entry>
+      <code>heavySmokeOrDust</code>
+      <label>Fum dens o pols</label>
+      <description>Una porció de la imatge està parcialment coberta per fum dens o pols</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>night</code>
-			<label>Nit</label>
-			<description>La imatge va ser presa de nit</description>
-		</entry>
+    <entry>
+      <code>night</code>
+      <label>Nit</label>
+      <description>La imatge va ser presa de nit</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>rain</code>
-			<label>Pluja</label>
-			<description>La imatge va ser presa mentre plovia</description>
-		</entry>
+    <entry>
+      <code>rain</code>
+      <label>Pluja</label>
+      <description>La imatge va ser presa mentre plovia</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>semiDarkness</code>
-			<label>Semi obscuretat</label>
-			<description>La imatge va ser presa en condicions de semi-obscuretat (durant el crepuscle)</description>
-		</entry>
+    <entry>
+      <code>semiDarkness</code>
+      <label>Semi obscuretat</label>
+      <description>La imatge va ser presa en condicions de semi-obscuretat (durant el crepuscle)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>shadow</code>
-			<label>Ombra</label>
-			<description>Una porció de la imatge està enfosquida per l'ombra</description>
-		</entry>
+    <entry>
+      <code>shadow</code>
+      <label>Ombra</label>
+      <description>Una porció de la imatge està enfosquida per l'ombra</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>snow</code>
-			<label>Neu</label>
-			<description>Una porció de la imatge està coberta per la neu</description>
-		</entry>
+    <entry>
+      <code>snow</code>
+      <label>Neu</label>
+      <description>Una porció de la imatge està coberta per la neu</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>terrainMasking</code>
-			<label>Emmascarament del terreny</label>
-			<description>Absència de dades en un punt o zona determinada, causada per la ubicació relativa dels elements topogràfics que obstrueixen el camí entre el col·lector de dades i el subjecte d'interès</description>
-		</entry>
+    <entry>
+      <code>terrainMasking</code>
+      <label>Emmascarament del terreny</label>
+      <description>Absència de dades en un punt o zona determinada, causada per la ubicació relativa
+        dels elements topogràfics que obstrueixen el camí entre el col·lector de dades i el subjecte
+        d'interès</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_KeywordTypeCode">
-		<entry>
-			<code>discipline</code>
-			<label>Disciplina</label>
-			<description>Paraula clau que identifica una branca de l'ensenyament o l'aprenentatge especialitzat</description>
-		</entry>
+  <codelist name="gmd:MD_KeywordTypeCode">
+    <entry>
+      <code>discipline</code>
+      <label>Disciplina</label>
+      <description>Paraula clau que identifica una branca de l'ensenyament o l'aprenentatge
+        especialitzat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>place</code>
-			<label>Lloc</label>
-			<description>Paraula clau que identifica una ubicació</description>
-		</entry>
+    <entry>
+      <code>place</code>
+      <label>Lloc</label>
+      <description>Paraula clau que identifica una ubicació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>stratum</code>
-			<label>Estrat</label>
-			<description>Paraula clau que identifica cada una de les capes d'una substància dipositada</description>
-		</entry>
+    <entry>
+      <code>stratum</code>
+      <label>Estrat</label>
+      <description>Paraula clau que identifica cada una de les capes d'una substància dipositada</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>temporal</code>
-			<label>Temporal</label>
-			<description>Paraula clau que identifica un període de temps relacionat amb el conjunt de dades</description>
-		</entry>
+    <entry>
+      <code>temporal</code>
+      <label>Temporal</label>
+      <description>Paraula clau que identifica un període de temps relacionat amb el conjunt de
+        dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>theme</code>
-			<label>Tema</label>
-			<description>Paraula clau que identifica un tema particular</description>
-		</entry>
+    <entry>
+      <code>theme</code>
+      <label>Tema</label>
+      <description>Paraula clau que identifica un tema particular</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_MaintenanceFrequencyCode">
-		<entry>
-			<code>continual</code>
-			<label>Contínuament</label>
-			<description>Les dades s'actualitzen repetidament i amb freqüència</description>
-		</entry>
+  <codelist name="gmd:MD_MaintenanceFrequencyCode">
+    <entry>
+      <code>continual</code>
+      <label>Contínuament</label>
+      <description>Les dades s'actualitzen repetidament i amb freqüència</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>daily</code>
-			<label>Diàriament</label>
-			<description>Les dades s'actualitzen cada dia</description>
-		</entry>
+    <entry>
+      <code>daily</code>
+      <label>Diàriament</label>
+      <description>Les dades s'actualitzen cada dia</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>weekly</code>
-			<label>Setmanalment</label>
-			<description>Les dades s'actualitzen setmanalment</description>
-		</entry>
+    <entry>
+      <code>weekly</code>
+      <label>Setmanalment</label>
+      <description>Les dades s'actualitzen setmanalment</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fortnightly</code>
-			<label>Quinzenalment</label>
-			<description>Les dades s'actualitzen cada dues setmanes</description>
-		</entry>
+    <entry>
+      <code>fortnightly</code>
+      <label>Quinzenalment</label>
+      <description>Les dades s'actualitzen cada dues setmanes</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>monthly</code>
-			<label>Mensualment</label>
-			<description>Les dades s'actualitzen cada mes</description>
-		</entry>
+    <entry>
+      <code>monthly</code>
+      <label>Mensualment</label>
+      <description>Les dades s'actualitzen cada mes</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>quarterly</code>
-			<label>Trimestralment</label>
-			<description>Les dades s'actualitzen cada tres mesos</description>
-		</entry>
+    <entry>
+      <code>quarterly</code>
+      <label>Trimestralment</label>
+      <description>Les dades s'actualitzen cada tres mesos</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>biannually</code>
-			<label>Anualment</label>
-			<description>Les dades s'actualitzen cada any</description>
-		</entry>
+    <entry>
+      <code>biannually</code>
+      <label>Anualment</label>
+      <description>Les dades s'actualitzen cada any</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>annually</code>
-			<label>Annually</label>
-			<description>Data is updated every year</description>
-		</entry>
+    <entry>
+      <code>annually</code>
+      <label>Annually</label>
+      <description>Data is updated every year</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>asNeeded</code>
-			<label>A discreció</label>
-			<description>Les dades s'actualitzen quan es considera necessari</description>
-		</entry>
+    <entry>
+      <code>asNeeded</code>
+      <label>A discreció</label>
+      <description>Les dades s'actualitzen quan es considera necessari</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>irregular</code>
-			<label>Irregularment</label>
-			<description>Les dades s'actualitzen en intervals que són desiguals en durada</description>
-		</entry>
+    <entry>
+      <code>irregular</code>
+      <label>Irregularment</label>
+      <description>Les dades s'actualitzen en intervals que són desiguals en durada</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>notPlanned</code>
-			<label>Sense planificar</label>
-			<description>No hi ha plans per actualitzar les dades</description>
-		</entry>
+    <entry>
+      <code>notPlanned</code>
+      <label>Sense planificar</label>
+      <description>No hi ha plans per actualitzar les dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>unknown</code>
-			<label>Desconegut</label>
-			<description>La freqüència del manteniment de les dades no es coneix</description>
-		</entry>
+    <entry>
+      <code>unknown</code>
+      <label>Desconegut</label>
+      <description>La freqüència del manteniment de les dades no es coneix</description>
+    </entry>
 		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>userDefined</code>
@@ -1042,155 +1064,155 @@ coneixements externs</description>
 			<description></description>
 		</entry>
 		-->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_MediumFormatCode">
-		<entry>
-			<code>cpio</code>
-			<label>CPIO</label>
-			<description>CoPy In / Out (format d'arxiu i comanda UNIX)</description>
-		</entry>
+  <codelist name="gmd:MD_MediumFormatCode">
+    <entry>
+      <code>cpio</code>
+      <label>CPIO</label>
+      <description>CoPy In / Out (format d'arxiu i comanda UNIX)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>tar</code>
-			<label>TAR</label>
-			<description>Format Tape ARchive</description>
-		</entry>
+    <entry>
+      <code>tar</code>
+      <label>TAR</label>
+      <description>Format Tape ARchive</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>highSierra</code>
-			<label>High sierra</label>
-			<description>Sistema de fitxers High Serra</description>
-		</entry>
+    <entry>
+      <code>highSierra</code>
+      <label>High sierra</label>
+      <description>Sistema de fitxers High Serra</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>iso9660</code>
-			<label>ISO9660</label>
-			<description>Sistema d'arxius de CD-ROM</description>
-		</entry>
+    <entry>
+      <code>iso9660</code>
+      <label>ISO9660</label>
+      <description>Sistema d'arxius de CD-ROM</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>iso9660RockRidge</code>
-			<label>ISO9660 Rock Ridge</label>
-			<description>Protocol d'Intercanvi Rock Ridge (RRIP)</description>
-		</entry>
+    <entry>
+      <code>iso9660RockRidge</code>
+      <label>ISO9660 Rock Ridge</label>
+      <description>Protocol d'Intercanvi Rock Ridge (RRIP)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>iso9660AppleHFS</code>
-			<label>ISO9660 Apple HFS</label>
-			<description>Sistema d'arxius jeràrquic de Macintosh</description>
-		</entry>
+    <entry>
+      <code>iso9660AppleHFS</code>
+      <label>ISO9660 Apple HFS</label>
+      <description>Sistema d'arxius jeràrquic de Macintosh</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_MediumNameCode">
-		<entry>
-			<code>cdRom</code>
-			<label>CDROM</label>
-			<description>Disc òptic de només lectura</description>
-		</entry>
+  <codelist name="gmd:MD_MediumNameCode">
+    <entry>
+      <code>cdRom</code>
+      <label>CDROM</label>
+      <description>Disc òptic de només lectura</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>dvd</code>
-			<label>DVD</label>
-			<description>Disc digital versàtil</description>
-		</entry>
+    <entry>
+      <code>dvd</code>
+      <label>DVD</label>
+      <description>Disc digital versàtil</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>dvdRom</code>
-			<label>DVDROM</label>
-			<description>Disc digital versàtil de només lectura</description>
-		</entry>
+    <entry>
+      <code>dvdRom</code>
+      <label>DVDROM</label>
+      <description>Disc digital versàtil de només lectura</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>3halfInchFloppy</code>
-			<label>Disquet de 3 i mig</label>
-			<description>Disc magnètic de 3,5 polzades</description>
-		</entry>
+    <entry>
+      <code>3halfInchFloppy</code>
+      <label>Disquet de 3 i mig</label>
+      <description>Disc magnètic de 3,5 polzades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>5quarterInchFloppy</code>
-			<label>Disquet de 5 i quart</label>
-			<description>Disc magnètic de 5,25 polzades</description>
-		</entry>
+    <entry>
+      <code>5quarterInchFloppy</code>
+      <label>Disquet de 5 i quart</label>
+      <description>Disc magnètic de 5,25 polzades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>7trackTape</code>
-			<label>Cinta de 7 pistes</label>
-			<description>cinta magnètica de 7 pistes</description>
-		</entry>
+    <entry>
+      <code>7trackTape</code>
+      <label>Cinta de 7 pistes</label>
+      <description>cinta magnètica de 7 pistes</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>9trackTape</code>
-			<label>Cinta de 9 pistes</label>
-			<description>cinta magnètica de 9 pistes</description>
-		</entry>
+    <entry>
+      <code>9trackTape</code>
+      <label>Cinta de 9 pistes</label>
+      <description>cinta magnètica de 9 pistes</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>3480Cartridge</code>
-			<label>Cartutx 3480</label>
-			<description>cartutx d'unitat de cinta 3480</description>
-		</entry>
+    <entry>
+      <code>3480Cartridge</code>
+      <label>Cartutx 3480</label>
+      <description>cartutx d'unitat de cinta 3480</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>3490Cartridge</code>
-			<label>Cartutx 3490</label>
-			<description>cartutx d'unitat de cinta 3490</description>
-		</entry>
+    <entry>
+      <code>3490Cartridge</code>
+      <label>Cartutx 3490</label>
+      <description>cartutx d'unitat de cinta 3490</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>3580Cartridge</code>
-			<label>Cartutx 3580</label>
-			<description>cartutx d'unitat de cinta 3580</description>
-		</entry>
+    <entry>
+      <code>3580Cartridge</code>
+      <label>Cartutx 3580</label>
+      <description>cartutx d'unitat de cinta 3580</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>4mmCartridgeTape</code>
-			<label>Cinta de 4 mm</label>
-			<description>cinta magnètica de 4 mil·límetres</description>
-		</entry>
+    <entry>
+      <code>4mmCartridgeTape</code>
+      <label>Cinta de 4 mm</label>
+      <description>cinta magnètica de 4 mil·límetres</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>8mmCartridgeTape</code>
-			<label>Cinta de 8 mm</label>
-			<description>cinta magnètica de 8 mil·límetres</description>
-		</entry>
+    <entry>
+      <code>8mmCartridgeTape</code>
+      <label>Cinta de 8 mm</label>
+      <description>cinta magnètica de 8 mil·límetres</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>1quarterInchCartridgeTape</code>
-			<label>Cinta d'1/4 de polzada</label>
-			<description>cinta magnètica de 0,25 polzades</description>
-		</entry>
+    <entry>
+      <code>1quarterInchCartridgeTape</code>
+      <label>Cinta d'1/4 de polzada</label>
+      <description>cinta magnètica de 0,25 polzades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>digitalLinearTap</code>
-			<label>Cinta lineal digital (DLT)</label>
-			<description>Unitat de cinta de mitja polzada</description>
-		</entry>
+    <entry>
+      <code>digitalLinearTap</code>
+      <label>Cinta lineal digital (DLT)</label>
+      <description>Unitat de cinta de mitja polzada</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>onLine</code>
-			<label>En línia</label>
-			<description>Enllaç directe a un ordinador</description>
-		</entry>
+    <entry>
+      <code>onLine</code>
+      <label>En línia</label>
+      <description>Enllaç directe a un ordinador</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>satellite</code>
-			<label>Satèl·lit</label>
-			<description>Enllaç a través d'un sistema de comunicació per satèl·lit</description>
-		</entry>
+    <entry>
+      <code>satellite</code>
+      <label>Satèl·lit</label>
+      <description>Enllaç a través d'un sistema de comunicació per satèl·lit</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>telephoneLink</code>
-			<label>Enllaç telefònic</label>
-			<description>Comunicació a través d'una xarxa telefònica</description>
-		</entry>
+    <entry>
+      <code>telephoneLink</code>
+      <label>Enllaç telefònic</label>
+      <description>Comunicació a través d'una xarxa telefònica</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>hardcopy</code>
-			<label>En paper</label>
-			<description>Pamflet o fullet amb Informació descriptiva</description>
-		</entry>
+    <entry>
+      <code>hardcopy</code>
+      <label>En paper</label>
+      <description>Pamflet o fullet amb Informació descriptiva</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- ISO PROFIL CHE ONLY 
 		<entry>
@@ -1219,268 +1241,277 @@ coneixements externs</description>
 			<label>Other</label>
 			<description></description>
 		</entry>-->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_ObligationCode">
-		<entry>
-			<code>mandatory</code>
-			<label>Obligatori</label>
-			<description>Element obligatori</description>
-		</entry>
+  <codelist name="gmd:MD_ObligationCode">
+    <entry>
+      <code>mandatory</code>
+      <label>Obligatori</label>
+      <description>Element obligatori</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>optional</code>
-			<label>Opcional</label>
-			<description>L'element no és obligatori</description>
-		</entry>
+    <entry>
+      <code>optional</code>
+      <label>Opcional</label>
+      <description>L'element no és obligatori</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>conditional</code>
-			<label>Condicional</label>
-			<description>L'element és obligatori quan es compleix certa condició</description>
-		</entry>
+    <entry>
+      <code>conditional</code>
+      <label>Condicional</label>
+      <description>L'element és obligatori quan es compleix certa condició</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_PixelOrientationCode">
-		<entry>
-			<code>center</code>
-			<label>Centre</label>
-			<description>El punt a mig camí entre la part inferior esquerra i la part superior dreta del píxel</description>
-		</entry>
+  <codelist name="gmd:MD_PixelOrientationCode">
+    <entry>
+      <code>center</code>
+      <label>Centre</label>
+      <description>El punt a mig camí entre la part inferior esquerra i la part superior dreta del
+        píxel</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>lowerLeft</code>
-			<label>Inferior esquerra</label>
-			<description>La cantonada al píxel més proper a l'origen del SRS; si dues es troben a la mateixa distància des de l'origen, la que té el valor de x més petit</description>
-		</entry>
+    <entry>
+      <code>lowerLeft</code>
+      <label>Inferior esquerra</label>
+      <description>La cantonada al píxel més proper a l'origen del SRS; si dues es troben a la
+        mateixa distància des de l'origen, la que té el valor de x més petit</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>lowerRight</code>
-			<label>Inferior dreta</label>
-			<description>Següent cantonada des de la part inferior esquerra en el sentit contrari a les agulles del rellotge</description>
-		</entry>
+    <entry>
+      <code>lowerRight</code>
+      <label>Inferior dreta</label>
+      <description>Següent cantonada des de la part inferior esquerra en el sentit contrari a les
+        agulles del rellotge</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>upperRight</code>
-			<label>Superior dreta</label>
-			<description>Següent cantonada des de la part inferior dreta en el sentit contrari a les agulles del rellotge</description>
-		</entry>
+    <entry>
+      <code>upperRight</code>
+      <label>Superior dreta</label>
+      <description>Següent cantonada des de la part inferior dreta en el sentit contrari a les
+        agulles del rellotge</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>upperLeft</code>
-			<label>Superior esquerra</label>
-			<description>Següent cantonada des de la part superior dreta en el sentit contrari a les agulles del rellotge</description>
-		</entry>
+    <entry>
+      <code>upperLeft</code>
+      <label>Superior esquerra</label>
+      <description>Següent cantonada des de la part superior dreta en el sentit contrari a les
+        agulles del rellotge</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_ProgressCode">
-		<entry>
-			<code>completed</code>
-			<label>Acabat</label>
-			<description>La producció de les dades s'ha completat</description>
-		</entry>
+  <codelist name="gmd:MD_ProgressCode">
+    <entry>
+      <code>completed</code>
+      <label>Acabat</label>
+      <description>La producció de les dades s'ha completat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>historicalArchive</code>
-			<label>Arxiu històric</label>
-			<description>Les dades s'han emmagatzemat en un mitjà d'emmagatzematge fora de línia</description>
-		</entry>
+    <entry>
+      <code>historicalArchive</code>
+      <label>Arxiu històric</label>
+      <description>Les dades s'han emmagatzemat en un mitjà d'emmagatzematge fora de línia</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>obsolete</code>
-			<label>Obsolet</label>
-			<description>Les dades ja no són rellevants</description>
-		</entry>
+    <entry>
+      <code>obsolete</code>
+      <label>Obsolet</label>
+      <description>Les dades ja no són rellevants</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>onGoing</code>
-			<label>En procés</label>
-			<description>Les dades s'estan actualitzant</description>
-		</entry>
+    <entry>
+      <code>onGoing</code>
+      <label>En procés</label>
+      <description>Les dades s'estan actualitzant</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>planned</code>
-			<label>Planificat</label>
-			<description>S'ha fixat una data en la qual les dades es crearan o s'actualitzaran</description>
-		</entry>
+    <entry>
+      <code>planned</code>
+      <label>Planificat</label>
+      <description>S'ha fixat una data en la qual les dades es crearan o s'actualitzaran</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>required</code>
-			<label>Necessari</label>
-			<description>Les dades necessiten ser generades o actualitzades</description>
-		</entry>
+    <entry>
+      <code>required</code>
+      <label>Necessari</label>
+      <description>Les dades necessiten ser generades o actualitzades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>underDevelopment</code>
-			<label>Sota desenvolupament</label>
-			<description>Les dades es troben actualment en el procés de ser creades
-</description>
-		</entry>
+    <entry>
+      <code>underDevelopment</code>
+      <label>Sota desenvolupament</label>
+      <description>Les dades es troben actualment en el procés de ser creades
+      </description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <entry hideInEditMode="true">
       <code>notobsolete</code>
       <label>Not obsolete</label>
-      <description/>
+      <description />
     </entry>
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_RestrictionCode">
-		<entry>
-			<code>copyright</code>
-			<label>Copyright</label>
-			<description>Dret exclusiu de publicació, producció, o venda dels
-drets d'un treball literari, dramàtic, musical, o artístic, o d'ús
-d'una marca comercial o etiqueta, garantit per llei per a un període especificat
-de temps a un autor, compositor, artista o distribuïdor</description>
-		</entry>
+  <codelist name="gmd:MD_RestrictionCode">
+    <entry>
+      <code>copyright</code>
+      <label>Copyright</label>
+      <description>Dret exclusiu de publicació, producció, o venda dels
+        drets d'un treball literari, dramàtic, musical, o artístic, o d'ús
+        d'una marca comercial o etiqueta, garantit per llei per a un període especificat
+        de temps a un autor, compositor, artista o distribuïdor</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>patent</code>
-			<label>Patent</label>
-			<description>El govern ha atorgat dret exclusiu per fabricar,
-vendre, utilitzar o donar llicències, d'una invenció o descobriment</description>
-		</entry>
+    <entry>
+      <code>patent</code>
+      <label>Patent</label>
+      <description>El govern ha atorgat dret exclusiu per fabricar,
+        vendre, utilitzar o donar llicències, d'una invenció o descobriment</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>patentPending</code>
-			<label>Pendent de patentar</label>
-			<description>informació produïda o venuda esperant una patent</description>
-		</entry>
+    <entry>
+      <code>patentPending</code>
+      <label>Pendent de patentar</label>
+      <description>informació produïda o venuda esperant una patent</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>trademark</code>
-			<label>Marca registrada</label>
-			<description>Nom, símbol o un altre dispositiu d'identificació del producte, registrat oficialment i legalment per a
-l'ús exclusiu del propietari o fabricant</description>
-		</entry>
+    <entry>
+      <code>trademark</code>
+      <label>Marca registrada</label>
+      <description>Nom, símbol o un altre dispositiu d'identificació del producte, registrat
+        oficialment i legalment per a
+        l'ús exclusiu del propietari o fabricant</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>license</code>
-			<label>Llicència</label>
-			<description>Permís formal per a fer quelcom</description>
-		</entry>
+    <entry>
+      <code>license</code>
+      <label>Llicència</label>
+      <description>Permís formal per a fer quelcom</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>intellectualPropertyRights</code>
-			<label>Drets de Propietat Intel·lectual</label>
-			<description>Dret de benefici financer i de control de la distribució d'una propietat intangible,
-que és resultat de la creativitat</description>
-		</entry>
+    <entry>
+      <code>intellectualPropertyRights</code>
+      <label>Drets de Propietat Intel·lectual</label>
+      <description>Dret de benefici financer i de control de la distribució d'una propietat
+        intangible,
+        que és resultat de la creativitat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>restricted</code>
-			<label>Restricted</label>
-			<description>Retingut de circulació general o de la divulgació</description>
-		</entry>
+    <entry>
+      <code>restricted</code>
+      <label>Restricted</label>
+      <description>Retingut de circulació general o de la divulgació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>otherRestrictions</code>
-			<label>Altres restriccions</label>
-			<description>Altres limitacions no llistades</description>
-		</entry>
+    <entry>
+      <code>otherRestrictions</code>
+      <label>Altres restriccions</label>
+      <description>Altres limitacions no llistades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_ScopeCode">
-		<entry>
-			<code>attribute</code>
-			<label>Atribut</label>
-			<description>La informació aplica a la classe d'atribut</description>
-		</entry>
+  <codelist name="gmd:MD_ScopeCode">
+    <entry>
+      <code>attribute</code>
+      <label>Atribut</label>
+      <description>La informació aplica a la classe d'atribut</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>attributeType</code>
-			<label>Tipus d'atribut</label>
-			<description>La informació aplica a la característica d'un objecte geogràfic</description>
-		</entry>
+    <entry>
+      <code>attributeType</code>
+      <label>Tipus d'atribut</label>
+      <description>La informació aplica a la característica d'un objecte geogràfic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>collectionHardware</code>
-			<label>Maquinari de recol·lecció</label>
-			<description>La informació s'aplica a la classe de maquinari de recol·lecció</description>
-		</entry>
+    <entry>
+      <code>collectionHardware</code>
+      <label>Maquinari de recol·lecció</label>
+      <description>La informació s'aplica a la classe de maquinari de recol·lecció</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>collectionSession</code>
-			<label>Sessió de recol·lecció</label>
-			<description>La informació s'aplica a la classe de sessió de recol·lecció</description>
-		</entry>
+    <entry>
+      <code>collectionSession</code>
+      <label>Sessió de recol·lecció</label>
+      <description>La informació s'aplica a la classe de sessió de recol·lecció</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>dataset</code>
-			<label>Conjunt de dades</label>
-			<description>La informació s'aplica al conjunt de dades</description>
-		</entry>
+    <entry>
+      <code>dataset</code>
+      <label>Conjunt de dades</label>
+      <description>La informació s'aplica al conjunt de dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>series</code>
-			<label>Sèries</label>
-			<description>La informació s'aplica a la sèrie</description>
-		</entry>
+    <entry>
+      <code>series</code>
+      <label>Sèries</label>
+      <description>La informació s'aplica a la sèrie</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>nonGeographicDataset</code>
-			<label>Conjunt de dades no geogràfiques</label>
-			<description>La informació s'aplica a dades no geogràfiques</description>
-		</entry>
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Conjunt de dades no geogràfiques</label>
+      <description>La informació s'aplica a dades no geogràfiques</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>dimensionGroup</code>
-			<label>Grup de dimensions</label>
-			<description>La informació s'aplica a un grup de dimensions</description>
-		</entry>
+    <entry>
+      <code>dimensionGroup</code>
+      <label>Grup de dimensions</label>
+      <description>La informació s'aplica a un grup de dimensions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>feature</code>
-			<label>Objecte Geogràfic</label>
-			<description>La informació s'aplica a un objecte geogràfic</description>
-		</entry>
+    <entry>
+      <code>feature</code>
+      <label>Objecte Geogràfic</label>
+      <description>La informació s'aplica a un objecte geogràfic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>featureType</code>
-			<label>Tipus d'objecte geogràfic</label>
-			<description>La informació s'aplica a un tipus d'objecte geogràfic</description>
-		</entry>
+    <entry>
+      <code>featureType</code>
+      <label>Tipus d'objecte geogràfic</label>
+      <description>La informació s'aplica a un tipus d'objecte geogràfic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>propertyType</code>
-			<label>Tipus de propietat</label>
-			<description>La informació s'aplica a un tipus de propietat</description>
-		</entry>
+    <entry>
+      <code>propertyType</code>
+      <label>Tipus de propietat</label>
+      <description>La informació s'aplica a un tipus de propietat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fieldSession</code>
-			<label>Sessió de camp</label>
-			<description>La informació s'aplica a una sessió de camp</description>
-		</entry>
+    <entry>
+      <code>fieldSession</code>
+      <label>Sessió de camp</label>
+      <description>La informació s'aplica a una sessió de camp</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>software</code>
-			<label>Programari</label>
-			<description>La informació s'aplica a una rutina o programa d'ordinador</description>
-		</entry>
+    <entry>
+      <code>software</code>
+      <label>Programari</label>
+      <description>La informació s'aplica a una rutina o programa d'ordinador</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>service</code>
-			<label>Servei</label>
-			<description>La informació s'aplica a una capacitat que una entitat proveïdora de serveis posa
-a disposició d'una entitat usuària de serveis a través d'un conjunt d'interfícies que defineixen un comportament,
-tal com un cas d'ús</description>
-		</entry>
+    <entry>
+      <code>service</code>
+      <label>Servei</label>
+      <description>La informació s'aplica a una capacitat que una entitat proveïdora de serveis posa
+        a disposició d'una entitat usuària de serveis a través d'un conjunt d'interfícies que
+        defineixen un comportament,
+        tal com un cas d'ús</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>model</code>
-			<label>Model</label>
-			<description>La informació s'aplica a una còpia o imitació d'un objecte existent o hipotètic</description>
-		</entry>
+    <entry>
+      <code>model</code>
+      <label>Model</label>
+      <description>La informació s'aplica a una còpia o imitació d'un objecte existent o hipotètic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>tile</code>
-			<label>Tessel·la</label>
-			<description>La informació s'aplica a una tessel·la, un subconjunt espacial de les dades geogràfiques</description>
-		</entry>
+    <entry>
+      <code>tile</code>
+      <label>Tessel·la</label>
+      <description>La informació s'aplica a una tessel·la, un subconjunt espacial de les dades
+        geogràfiques</description>
+    </entry>
 		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>project</code>
@@ -1497,567 +1528,586 @@ tal com un cas d'ús</description>
 			<label>Publication</label>
 			<description>Publication</description>
 		</entry>-->
-
+		
 		<!-- Used for facet translation only and not displayed in editor -->
-		<entry hideInEditMode="true">
-			<code>map</code>
-			<label>Mapa</label>
-			<description/>
-		</entry>
-		<entry hideInEditMode="true">
-			<code>staticMap</code>
-			<label>Mapa estàtic</label>
-			<description/>
-		</entry>
-		<entry hideInEditMode="true">
-			<code>interactiveMap</code>
-			<label>Mapa interactiu</label>
-			<description/>
-		</entry>
+    <entry hideInEditMode="true">
+      <code>map</code>
+      <label>Mapa</label>
+      <description />
+    </entry>
+    <entry hideInEditMode="true">
+      <code>staticMap</code>
+      <label>Mapa estàtic</label>
+      <description />
+    </entry>
+    <entry hideInEditMode="true">
+      <code>interactiveMap</code>
+      <label>Mapa interactiu</label>
+      <description />
+    </entry>
     <entry hideInEditMode="true">
       <code>featureCatalog</code>
       <label>Catàleg d'Objectes Geogràfics</label>
-      <description/>
+      <description />
     </entry>
-	</codelist>
-	<codelist name="gmd:MD_ScopeCode" displayIf="/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
-		<entry>
-			<code>service</code>
-			<label>Service</label>
-			<description>Information applies to a capability which a service provider entity makes
-				available to a service user entity through a set of interfaces that define a behaviour,
-				such as a use case</description>
-		</entry>
-	</codelist>
+  </codelist>
+  <codelist name="gmd:MD_ScopeCode"
+    displayIf="/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
+    <entry>
+      <code>service</code>
+      <label>Service</label>
+      <description>Information applies to a capability which a service provider entity makes
+        available to a service user entity through a set of interfaces that define a behaviour,
+        such as a use case</description>
+    </entry>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_SpatialRepresentationTypeCode">
-		<entry>
-			<code>vector</code>
-			<label>Vector</label>
-			<description>S'utilitzen dades vectorials per representar dades geogràfiques</description>
-		</entry>
+  <codelist name="gmd:MD_SpatialRepresentationTypeCode">
+    <entry>
+      <code>vector</code>
+      <label>Vector</label>
+      <description>S'utilitzen dades vectorials per representar dades geogràfiques</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>grid</code>
-			<label>Malla</label>
-			<description>S'utilitza una malla de dades per representar dades geogràfiques</description>
-		</entry>
+    <entry>
+      <code>grid</code>
+      <label>Malla</label>
+      <description>S'utilitza una malla de dades per representar dades geogràfiques</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>textTable</code>
-			<label>Text, taula</label>
-			<description>S'utilitzen dades textuals o tabulars per a representar dades geogràfiques</description>
-		</entry>
+    <entry>
+      <code>textTable</code>
+      <label>Text, taula</label>
+      <description>S'utilitzen dades textuals o tabulars per a representar dades geogràfiques</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>tin</code>
-			<label>TIN</label>
-			<description>Xarxa irregular de triangles</description>
-		</entry>
+    <entry>
+      <code>tin</code>
+      <label>TIN</label>
+      <description>Xarxa irregular de triangles</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>stereoModel</code>
-			<label>Model estèreo</label>
-			<description>Visió tridimensional formada per les
-interseccions dels raigs homòlegs d'un parell d'imatges solapades
-</description>
-		</entry>
+    <entry>
+      <code>stereoModel</code>
+      <label>Model estèreo</label>
+      <description>Visió tridimensional formada per les
+        interseccions dels raigs homòlegs d'un parell d'imatges solapades
+      </description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>video</code>
-			<label>Vídeo</label>
-			<description>Escena d'una gravació de vídeo</description>
-		</entry>
+    <entry>
+      <code>video</code>
+      <label>Vídeo</label>
+      <description>Escena d'una gravació de vídeo</description>
+    </entry>
 		<!-- ISO PROFIL CHE ONLY
 		<entry>
 			<code>paperMap</code>
 			<label>Paper map</label>
 			<description></description>
 		</entry>-->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_TopicCategoryCode">
-		<entry>
-			<code>farming</code>
-			<label>Agricultura</label>
-			<description>Cria d'animals i/o cultiu de plantes. Exemples:
-agricultura, irrigació, aqüicultura, plantacions, plagues, epidèmies i enfermetats
-que afecten les collites i al bestiar</description>
-		</entry>
+  <codelist name="gmd:MD_TopicCategoryCode">
+    <entry>
+      <code>farming</code>
+      <label>Agricultura</label>
+      <description>Cria d'animals i/o cultiu de plantes. Exemples:
+        agricultura, irrigació, aqüicultura, plantacions, plagues, epidèmies i enfermetats
+        que afecten les collites i al bestiar</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>biota</code>
-			<label>Biota</label>
-			<description>Flora i fauna del medi natural. Exemples: fauna, vegetació, ciències
-biològiques, ecologia, vida salvatge, vida marina, pantans</description>
-		</entry>
+    <entry>
+      <code>biota</code>
+      <label>Biota</label>
+      <description>Flora i fauna del medi natural. Exemples: fauna, vegetació, ciències
+        biològiques, ecologia, vida salvatge, vida marina, pantans</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>boundaries</code>
-			<label>Límits</label>
-			<description>Descriptors legals del terreny. Exemples: límits administratius i polítics</description>
-		</entry>
+    <entry>
+      <code>boundaries</code>
+      <label>Límits</label>
+      <description>Descriptors legals del terreny. Exemples: límits administratius i polítics</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>climatologyMeteorologyAtmosphere</code>
-			<label>Atmosfera, meteorologia, climatologia</label>
-			<description>Processos i fenòmens de l'atmosfera. Exemples: Cobertura de núvols, temps, clima,
-condicions atmosfèriques, canvi climàtic, precipitació</description>
-		</entry>
+    <entry>
+      <code>climatologyMeteorologyAtmosphere</code>
+      <label>Atmosfera, meteorologia, climatologia</label>
+      <description>Processos i fenòmens de l'atmosfera. Exemples: Cobertura de núvols, temps, clima,
+        condicions atmosfèriques, canvi climàtic, precipitació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>economy</code>
-			<label>Economia</label>
-			<description>Activitats econòmiques, condicions i ocupació. Exemples:
-producció, treball,
-ingressos, comerç, indústria, turisme i ecoturisme,
-silvicultura, polítiques pesqueres, caça comercial i de subsistència, exploració y
-explotació de recursos com ara minerals, oli i gas</description>
-		</entry>
+    <entry>
+      <code>economy</code>
+      <label>Economia</label>
+      <description>Activitats econòmiques, condicions i ocupació. Exemples:
+        producció, treball,
+        ingressos, comerç, indústria, turisme i ecoturisme,
+        silvicultura, polítiques pesqueres, caça comercial i de subsistència, exploració y
+        explotació de recursos com ara minerals, oli i gas</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>elevation</code>
-			<label>Elevació</label>
-			<description>Alçada sobre o sota el nivell del mar. Exemples: altitud,
-batimetria, models digitals del terreny, pendent i productes derivats</description>
-		</entry>
+    <entry>
+      <code>elevation</code>
+      <label>Elevació</label>
+      <description>Alçada sobre o sota el nivell del mar. Exemples: altitud,
+        batimetria, models digitals del terreny, pendent i productes derivats</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>environment</code>
-			<label>Medi ambient</label>
-			<description>Recursos mediambientals, protecció i
-conservació. Exemples: contaminació ambiental, tractament i emmagatzemament
-de deixalles, valoració, impacte ambiental, monitorització del risc
-mediambiental, reserves naturals, paisatge</description>
-		</entry>
+    <entry>
+      <code>environment</code>
+      <label>Medi ambient</label>
+      <description>Recursos mediambientals, protecció i
+        conservació. Exemples: contaminació ambiental, tractament i emmagatzemament
+        de deixalles, valoració, impacte ambiental, monitorització del risc
+        mediambiental, reserves naturals, paisatge</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>geoscientificInformation</code>
-			<label>Informació geocientífica</label>
-			<description>Informació pertanyent a
-les ciències de la Terra. Exemples: processos i objectes geofísics, geologia,
-minerals, ciències relacionades amb la composició, estructura i origen de les roques
-de la Terra, risc sísmic, activitat volcànica, eslevissaments, gravimetria,
-sòls, permafrost, hidrologia i erosió</description>
-		</entry>
+    <entry>
+      <code>geoscientificInformation</code>
+      <label>Informació geocientífica</label>
+      <description>Informació pertanyent a
+        les ciències de la Terra. Exemples: processos i objectes geofísics, geologia,
+        minerals, ciències relacionades amb la composició, estructura i origen de les roques
+        de la Terra, risc sísmic, activitat volcànica, eslevissaments, gravimetria,
+        sòls, permafrost, hidrologia i erosió</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>health</code>
-			<label>Salut</label>
-			<description>Salut, serveis de salut, ecologia humana i seguretat. Exemples:
-dolències i malalties, factors que afecten la salut, higiene, abús de
-substàncies, salut mental i física, serveis de salut</description>
-		</entry>
+    <entry>
+      <code>health</code>
+      <label>Salut</label>
+      <description>Salut, serveis de salut, ecologia humana i seguretat. Exemples:
+        dolències i malalties, factors que afecten la salut, higiene, abús de
+        substàncies, salut mental i física, serveis de salut</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>imageryBaseMapsEarthCover</code>
-			<label>Cobertura de la terra amb mapes bàsics i imatges</label>
-			<description>Cartografia bàsica. Exemples: Usos del sòl, mapes
-topogràfics, imatges, imatges sense classificar, anotacions</description>
-		</entry>
+    <entry>
+      <code>imageryBaseMapsEarthCover</code>
+      <label>Cobertura de la terra amb mapes bàsics i imatges</label>
+      <description>Cartografia bàsica. Exemples: Usos del sòl, mapes
+        topogràfics, imatges, imatges sense classificar, anotacions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>intelligenceMilitary</code>
-			<label>Intel·ligència militar</label>
-			<description>Bases militars, estructures, activitats.
-Exemples: casernes, zones d'instrucció, transport militar, allistament</description>
-		</entry>
+    <entry>
+      <code>intelligenceMilitary</code>
+      <label>Intel·ligència militar</label>
+      <description>Bases militars, estructures, activitats.
+        Exemples: casernes, zones d'instrucció, transport militar, allistament</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>inlandWaters</code>
-			<label>Aigües interiors</label>
-			<description>Fenòmens de les aigües interiors, sistemes de
-drenatge i les seves característiques. Exemples: rius i glaceres, llacs d'aigua salada, plans
-d'utilització d'aigües, preses, corrents, inundacions, qualitat d'aigües, plans
-hidrològics</description>
-		</entry>
+    <entry>
+      <code>inlandWaters</code>
+      <label>Aigües interiors</label>
+      <description>Fenòmens de les aigües interiors, sistemes de
+        drenatge i les seves característiques. Exemples: rius i glaceres, llacs d'aigua salada, plans
+        d'utilització d'aigües, preses, corrents, inundacions, qualitat d'aigües, plans
+        hidrològics</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>location</code>
-			<label>Localització</label>
-			<description>Informació i serveis de posicionament. Exemples:
-adreces, xarxes geodèsiques, punts de control, serveis i zones postals,
-noms de llocs</description>
-		</entry>
+    <entry>
+      <code>location</code>
+      <label>Localització</label>
+      <description>Informació i serveis de posicionament. Exemples:
+        adreces, xarxes geodèsiques, punts de control, serveis i zones postals,
+        noms de llocs</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>oceans</code>
-			<label>Oceans</label>
-			<description>Fenòmens i característiques de les aigües salades (excloses les
-aigües interiors). Exemples: marees, moviments de marea, informació de costa,
-esculls</description>
-		</entry>
+    <entry>
+      <code>oceans</code>
+      <label>Oceans</label>
+      <description>Fenòmens i característiques de les aigües salades (excloses les
+        aigües interiors). Exemples: marees, moviments de marea, informació de costa,
+        esculls</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>planningCadastre</code>
-			<label>Planejament cadastral</label>
-			<description>Informació utilitzada per a
-actuacions en relació amb l'ús futur del sòl. Exemples: mapes d'ús del
-sòl, mapes de zones, aixecaments cadastrals, propietat del terreny</description>
-		</entry>
+    <entry>
+      <code>planningCadastre</code>
+      <label>Planejament cadastral</label>
+      <description>Informació utilitzada per a
+        actuacions en relació amb l'ús futur del sòl. Exemples: mapes d'ús del
+        sòl, mapes de zones, aixecaments cadastrals, propietat del terreny</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>society</code>
-			<label>Societat</label>
-			<description>Característiques de la societat i la cultura. Exemples:
-assentaments, l'antropologia, l'arqueologia, l'educació, les creences tradicionals,
-usos i costums, dades demogràfiques i zones d'esbarjo,
-avaluacions d'impacte social, crim i justícia, informació
-censal</description>
-		</entry>
+    <entry>
+      <code>society</code>
+      <label>Societat</label>
+      <description>Característiques de la societat i la cultura. Exemples:
+        assentaments, l'antropologia, l'arqueologia, l'educació, les creences tradicionals,
+        usos i costums, dades demogràfiques i zones d'esbarjo,
+        avaluacions d'impacte social, crim i justícia, informació
+        censal</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>structure</code>
-			<label>Estructura</label>
-			<description>Construccions fetes per l'home. Exemples:
-construccions, museus, esglésies, fàbriques, habitatges, monuments, botigues, torres</description>
-		</entry>
+    <entry>
+      <code>structure</code>
+      <label>Estructura</label>
+      <description>Construccions fetes per l'home. Exemples:
+        construccions, museus, esglésies, fàbriques, habitatges, monuments, botigues, torres</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>transportation</code>
-			<label>Transport</label>
-			<description>Mitjans i ajudes per a transportar persones o
-Béns. Exemples: carreteres, aeroports/pistes d'aterratge, carreteres, vies
-marítimes, túnels, cartes nàutiques, localització de vehicles, vaixells o cartes
-d'aviació, ferrocarrils</description>
-		</entry>
+    <entry>
+      <code>transportation</code>
+      <label>Transport</label>
+      <description>Mitjans i ajudes per a transportar persones o
+        Béns. Exemples: carreteres, aeroports/pistes d'aterratge, carreteres, vies
+        marítimes, túnels, cartes nàutiques, localització de vehicles, vaixells o cartes
+        d'aviació, ferrocarrils</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>utilitiesCommunication</code>
-			<label>Xarxes de suministres</label>
-			<description>Xarxes d'aigua, d'energia, de
-retirada de residus, d'infraestructures de comunicacions i serveis. Exemples:
-hidroelectricitat, fonts d'energia geotèrmica, solar i nuclear, distribució i
-depuració d'aigua, recollida i emmagatzematge d'aigües residuals, distribució
-de gas i energia, comunicació de dades, telecomunicacions, ràdio, xarxes de comunicació</description>
-		</entry>
+    <entry>
+      <code>utilitiesCommunication</code>
+      <label>Xarxes de suministres</label>
+      <description>Xarxes d'aigua, d'energia, de
+        retirada de residus, d'infraestructures de comunicacions i serveis. Exemples:
+        hidroelectricitat, fonts d'energia geotèrmica, solar i nuclear, distribució i
+        depuració d'aigua, recollida i emmagatzematge d'aigües residuals, distribució
+        de gas i energia, comunicació de dades, telecomunicacions, ràdio, xarxes de comunicació</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_TopologyLevelCode">
-		<entry>
-			<code>geometryOnly</code>
-			<label>Només geometria</label>
-			<description>Objectes geomètrics sense cap estructura addicional que en descrigui la topologia</description>
-		</entry>
+  <codelist name="gmd:MD_TopologyLevelCode">
+    <entry>
+      <code>geometryOnly</code>
+      <label>Només geometria</label>
+      <description>Objectes geomètrics sense cap estructura addicional que en descrigui la topologia</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>topology1D</code>
-			<label>Topologia 1D</label>
-			<description>Complex topològic unidimensional, habitualment anomenat topologia de cadena de nodes</description>
-		</entry>
+    <entry>
+      <code>topology1D</code>
+      <label>Topologia 1D</label>
+      <description>Complex topològic unidimensional, habitualment anomenat topologia de cadena de
+        nodes</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>planarGraph</code>
-			<label>Graf pla</label>
-			<description>Complex topològic unidimensional que és planar (és un graf que pot ser dibuixat en el pla sense que cap aresta es creuï excepte en un vèrtex)</description>
-		</entry>
+    <entry>
+      <code>planarGraph</code>
+      <label>Graf pla</label>
+      <description>Complex topològic unidimensional que és planar (és un graf que pot ser dibuixat
+        en el pla sense que cap aresta es creuï excepte en un vèrtex)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fullPlanarGraph</code>
-			<label>Graf pla complet</label>
-			<description>Complex topològic bidimensional que és pla (un complex topològic de 2 dimensions s'anomena habitualment topologia completa en un entorn de cartografia 2D)</description>
-		</entry>
+    <entry>
+      <code>fullPlanarGraph</code>
+      <label>Graf pla complet</label>
+      <description>Complex topològic bidimensional que és pla (un complex topològic de 2 dimensions
+        s'anomena habitualment topologia completa en un entorn de cartografia 2D)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>surfaceGraph</code>
-			<label>Graf de superfície</label>
-			<description>Complex topològic unidimensional que és isomorf a un subconjunt d'una superfície (un complex geomètric és isomorf a un complex topològic si els seus elements estan un respecte a l'altre en una correspondència dimensional un-a-un i preservadora del límit)</description>
-		</entry>
+    <entry>
+      <code>surfaceGraph</code>
+      <label>Graf de superfície</label>
+      <description>Complex topològic unidimensional que és isomorf a un subconjunt d'una superfície
+        (un complex geomètric és isomorf a un complex topològic si els seus elements estan un
+        respecte a l'altre en una correspondència dimensional un-a-un i preservadora del límit)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fullSurfaceGraph</code>
-			<label>Graf de superfície completa</label>
-			<description>Complex topològic bidimensional que és isomorf a un subconjunt d'una superfície</description>
-		</entry>
+    <entry>
+      <code>fullSurfaceGraph</code>
+      <label>Graf de superfície completa</label>
+      <description>Complex topològic bidimensional que és isomorf a un subconjunt d'una superfície</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>topology3D</code>
-			<label>Topologia 3D</label>
-			<description>Complex topològic tridimensional (un complex topològic és una col·lecció de primitives topològiques que estan tancades sota les operacions de contorn)</description>
-		</entry>
+    <entry>
+      <code>topology3D</code>
+      <label>Topologia 3D</label>
+      <description>Complex topològic tridimensional (un complex topològic és una col·lecció de
+        primitives topològiques que estan tancades sota les operacions de contorn)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fullTopology3D</code>
-			<label>Topologia completa 3D</label>
-			<description>La cobertura completa d'un espai euclidià de coordenades 3D</description>
-		</entry>
+    <entry>
+      <code>fullTopology3D</code>
+      <label>Topologia completa 3D</label>
+      <description>La cobertura completa d'un espai euclidià de coordenades 3D</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>abstract</code>
-			<label>Resum</label>
-			<description>Complex topològic sense cap realització geomètrica específica</description>
-		</entry>
+    <entry>
+      <code>abstract</code>
+      <label>Resum</label>
+      <description>Complex topològic sense cap realització geomètrica específica</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MX_ScopeCode">
-		<entry>
-			<code>attribute</code>
-			<label>Atribut</label>
-			<description>La informació aplica a la classe d'atribut</description>
-		</entry>
+  <codelist name="gmd:MX_ScopeCode">
+    <entry>
+      <code>attribute</code>
+      <label>Atribut</label>
+      <description>La informació aplica a la classe d'atribut</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>attributeType</code>
-			<label>Tipus d'atribut</label>
-			<description>La informació aplica a la característica d'un objecte geogràfic</description>
-		</entry>
+    <entry>
+      <code>attributeType</code>
+      <label>Tipus d'atribut</label>
+      <description>La informació aplica a la característica d'un objecte geogràfic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>collectionHardware</code>
-			<label>Maquinari de recol·lecció</label>
-			<description>La informació s'aplica a la classe de maquinari de recol·lecció</description>
-		</entry>
+    <entry>
+      <code>collectionHardware</code>
+      <label>Maquinari de recol·lecció</label>
+      <description>La informació s'aplica a la classe de maquinari de recol·lecció</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>collectionSession</code>
-			<label>Sessió de recol·lecció</label>
-			<description>La informació s'aplica a la classe de sessió de recol·lecció</description>
-		</entry>
+    <entry>
+      <code>collectionSession</code>
+      <label>Sessió de recol·lecció</label>
+      <description>La informació s'aplica a la classe de sessió de recol·lecció</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>dataset</code>
-			<label>Conjunt de dades</label>
-			<description>La informació s'aplica al conjunt de dades</description>
-		</entry>
+    <entry>
+      <code>dataset</code>
+      <label>Conjunt de dades</label>
+      <description>La informació s'aplica al conjunt de dades</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>series</code>
-			<label>Sèries</label>
-			<description>La informació s'aplica a la sèrie</description>
-		</entry>
+    <entry>
+      <code>series</code>
+      <label>Sèries</label>
+      <description>La informació s'aplica a la sèrie</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>nonGeographicDataset</code>
-			<label>Conjunt de dades no geogràfiques</label>
-			<description>La informació s'aplica a dades no geogràfiques</description>
-		</entry>
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Conjunt de dades no geogràfiques</label>
+      <description>La informació s'aplica a dades no geogràfiques</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>dimensionGroup</code>
-			<label>Grup de dimensions</label>
-			<description>La informació s'aplica a un grup de dimensions</description>
-		</entry>
+    <entry>
+      <code>dimensionGroup</code>
+      <label>Grup de dimensions</label>
+      <description>La informació s'aplica a un grup de dimensions</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>feature</code>
-			<label>Objecte Geogràfic</label>
-			<description>La informació s'aplica a un objecte geogràfic</description>
-		</entry>
+    <entry>
+      <code>feature</code>
+      <label>Objecte Geogràfic</label>
+      <description>La informació s'aplica a un objecte geogràfic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>featureType</code>
-			<label>Tipus de feature</label>
-			<description>La informació s'aplica a un tipus d'objecte geogràfic</description>
-		</entry>
+    <entry>
+      <code>featureType</code>
+      <label>Tipus de feature</label>
+      <description>La informació s'aplica a un tipus d'objecte geogràfic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>propertyType</code>
-			<label>Tipus de propietat</label>
-			<description>La informació s'aplica a un tipus de propietat</description>
-		</entry>
+    <entry>
+      <code>propertyType</code>
+      <label>Tipus de propietat</label>
+      <description>La informació s'aplica a un tipus de propietat</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>fieldSession</code>
-			<label>Sessió de camp</label>
-			<description>La informació s'aplica a una sessió de camp</description>
-		</entry>
+    <entry>
+      <code>fieldSession</code>
+      <label>Sessió de camp</label>
+      <description>La informació s'aplica a una sessió de camp</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>software</code>
-			<label>Programari</label>
-			<description>La informació s'aplica a una rutina o programa d'ordinador
-</description>
-		</entry>
+    <entry>
+      <code>software</code>
+      <label>Programari</label>
+      <description>La informació s'aplica a una rutina o programa d'ordinador
+      </description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>service</code>
-			<label>Servei</label>
-			<description>La informació s'aplica a una capacitat que una entitat proveïdora de serveis posa
-a disposició d'una entitat usuària de serveis a través d'un conjunt d'interfícies que defineixen un comportament,
-tal com un cas d'ús</description>
-		</entry>
+    <entry>
+      <code>service</code>
+      <label>Servei</label>
+      <description>La informació s'aplica a una capacitat que una entitat proveïdora de serveis posa
+        a disposició d'una entitat usuària de serveis a través d'un conjunt d'interfícies que
+        defineixen un comportament,
+        tal com un cas d'ús</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>model</code>
-			<label>Model</label>
-			<description>La informació s'aplica a una còpia o imitació d'un objecte existent o hipotètic</description>
-		</entry>
+    <entry>
+      <code>model</code>
+      <label>Model</label>
+      <description>La informació s'aplica a una còpia o imitació d'un objecte existent o hipotètic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>tile</code>
-			<label>Tessel·la</label>
-			<description>La informació s'aplica a una tessel·la, un subconjunt espacial de les dades geogràfiques</description>
-		</entry>
+    <entry>
+      <code>tile</code>
+      <label>Tessel·la</label>
+      <description>La informació s'aplica a una tessel·la, un subconjunt espacial de les dades
+        geogràfiques</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>initiative</code>
-			<label>Iniciativa</label>
-			<description>L'Entitat de referència s'aplica a un agregat de transferència que es va identificar originalment com una iniciativa (DS_Initiative)</description>
-		</entry>
+    <entry>
+      <code>initiative</code>
+      <label>Iniciativa</label>
+      <description>L'Entitat de referència s'aplica a un agregat de transferència que es va
+        identificar originalment com una iniciativa (DS_Initiative)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>stereomate</code>
-			<label>Par estereográfico</label>
-			<description>L'Entitat de referència s'aplica a un agregat de transferència que es va identificar originalment com un parell estereogràfic (DS_StereoMate)</description>
-		</entry>
+    <entry>
+      <code>stereomate</code>
+      <label>Par estereográfico</label>
+      <description>L'Entitat de referència s'aplica a un agregat de transferència que es va
+        identificar originalment com un parell estereogràfic (DS_StereoMate)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>sensor</code>
-			<label>Sensor</label>
-			<description>L'Entitat de referència s'aplica a un agregat de transferència que es va identificar originalment com un sensor (DS_Sensor)</description>
-		</entry>
+    <entry>
+      <code>sensor</code>
+      <label>Sensor</label>
+      <description>L'Entitat de referència s'aplica a un agregat de transferència que es va
+        identificar originalment com un sensor (DS_Sensor)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>platformSeries</code>
-			<label>Sèrie de plataforma</label>
-			<description>L'entitat de referència s'aplica a un agregat de transferència que es va identificar originalment com una sèrie de plataforma (DS_PlatformSeries)</description>
-		</entry>
+    <entry>
+      <code>platformSeries</code>
+      <label>Sèrie de plataforma</label>
+      <description>L'entitat de referència s'aplica a un agregat de transferència que es va
+        identificar originalment com una sèrie de plataforma (DS_PlatformSeries)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>sensorSeries</code>
-			<label>Sèrie de sensors</label>
-			<description>L'entitat de referència s'aplica a un agregat de transferència que es va identificar originalment com una sèrie de sensors (DS_SensorSeries)</description>
-		</entry>
+    <entry>
+      <code>sensorSeries</code>
+      <label>Sèrie de sensors</label>
+      <description>L'entitat de referència s'aplica a un agregat de transferència que es va
+        identificar originalment com una sèrie de sensors (DS_SensorSeries)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>productionSeries</code>
-			<label>Sèrie de producció</label>
-			<description>L'entitat de referència s'aplica a un agregat de transferència que es va identificar originalment com una sèrie de producció (DS_ProductionSeries)</description>
-		</entry>
+    <entry>
+      <code>productionSeries</code>
+      <label>Sèrie de producció</label>
+      <description>L'entitat de referència s'aplica a un agregat de transferència que es va
+        identificar originalment com una sèrie de producció (DS_ProductionSeries)</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>transferAggregate</code>
-			<label>Agregat de transferència</label>
-			<description>L'entitat de referència s'aplica a un agregat de transferència que no té existència fora del context de la transferència</description>
-		</entry>
+    <entry>
+      <code>transferAggregate</code>
+      <label>Agregat de transferència</label>
+      <description>L'entitat de referència s'aplica a un agregat de transferència que no té
+        existència fora del context de la transferència</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry>
-			<code>otherAggregate</code>
-			<label>Un altre agregat</label>
-			<description>L'entitat de referència s'aplica a un agregat de transferència que té una existència fora del context de transferència, però que no es refereix a un tipus d'agregat específic</description>
-		</entry>
+    <entry>
+      <code>otherAggregate</code>
+      <label>Un altre agregat</label>
+      <description>L'entitat de referència s'aplica a un agregat de transferència que té una
+        existència fora del context de transferència, però que no es refereix a un tipus d'agregat
+        específic</description>
+    </entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-	</codelist>
+  </codelist>
 	<!-- ==================================================== -->
-	<codelist name="srv:DCPList">
-			<entry>
-					<description>DCP és XML</description>
-					<code>XML</code>
-					<label>XML</label>
-			</entry>
-			<entry>
-					<description>DCP és CORBA</description>
-					<code>CORBA</code>
-					<label>CORBA</label>
-			</entry>
-			<entry>
-					<description>DCP és JAVA</description>
-					<code>JAVA</code>
-					<label>JAVA</label>
-			</entry>
-			<entry>
-					<description>DCP és COM</description>
-					<code>COM</code>
-					<label>COM</label>
-			</entry>
-			<entry>
-					<description>DCP és SQL</description>
-					<code>SQL</code>
-					<label>SQL</label>
-			</entry>
-			<entry>
-					<description>DCP són Serveis Web</description>
-					<code>WebServices</code>
-					<label>Serveis web</label>
-			</entry>
-	</codelist>
+  <codelist name="srv:DCPList">
+    <entry>
+      <description>DCP és XML</description>
+      <code>XML</code>
+      <label>XML</label>
+    </entry>
+    <entry>
+      <description>DCP és CORBA</description>
+      <code>CORBA</code>
+      <label>CORBA</label>
+    </entry>
+    <entry>
+      <description>DCP és JAVA</description>
+      <code>JAVA</code>
+      <label>JAVA</label>
+    </entry>
+    <entry>
+      <description>DCP és COM</description>
+      <code>COM</code>
+      <label>COM</label>
+    </entry>
+    <entry>
+      <description>DCP és SQL</description>
+      <code>SQL</code>
+      <label>SQL</label>
+    </entry>
+    <entry>
+      <description>DCP són Serveis Web</description>
+      <code>WebServices</code>
+      <label>Serveis web</label>
+    </entry>
+  </codelist>
 	<!--=== CouplingType from ISO19119 ===-->
-	<codelist name="srv:SV_CouplingType">
-			<entry>
-					<code>tight</code>
-					<label>Estret</label>
-					<description>Estretament vinculat: Dades associades</description>
-			</entry>
-			<entry>
-					<code>mixed</code>
-					<label>Mixt</label>
-					<description>Vinculació mixta: dades associades; a més, les dades externes poden ser processades</description>
-			</entry>
-			<entry>
-					<code>loose</code>
-					<label>Solt</label>
-					<description>Units feblement: sense dades associades</description>
-			</entry>
-	</codelist>
-	<codelist name="srv:SV_ParameterDirection">
-		<entry>
-			<code>in</code>
-			<label>Entrada</label>
-		</entry>
-		<entry>
-			<code>out</code>
-			<label>Sortida</label>
-		</entry>
-		<entry>
-			<code>in/out</code>
-			<label>D'entrada i sortida</label>
-		</entry>
-	</codelist>
+  <codelist name="srv:SV_CouplingType">
+    <entry>
+      <code>tight</code>
+      <label>Estret</label>
+      <description>Estretament vinculat: Dades associades</description>
+    </entry>
+    <entry>
+      <code>mixed</code>
+      <label>Mixt</label>
+      <description>Vinculació mixta: dades associades; a més, les dades externes poden ser
+        processades</description>
+    </entry>
+    <entry>
+      <code>loose</code>
+      <label>Solt</label>
+      <description>Units feblement: sense dades associades</description>
+    </entry>
+  </codelist>
+  <codelist name="srv:SV_ParameterDirection">
+    <entry>
+      <code>in</code>
+      <label>Entrada</label>
+    </entry>
+    <entry>
+      <code>out</code>
+      <label>Sortida</label>
+    </entry>
+    <entry>
+      <code>in/out</code>
+      <label>D'entrada i sortida</label>
+    </entry>
+  </codelist>
 
 	<!-- INSPIRE SDS  ================================================== -->
 
-	<codelist name="SDS_category">
-            <entry>
-                <code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
-                <label>harmonised</label>
-                <description>Harmonised</description>
-            </entry>
-            <entry>
-                <code>http://inspire.ec.europa.eu/metadata-codelist/Category/interoperable</code>
-                <label>interoperable</label>
-                <description>Interoperable</description>
-            </entry>
-            <entry>
-                <code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
-                <label>invocable</label>
-                <description>Invocable</description>
-            </entry>
-	</codelist>
+  <codelist name="SDS_category">
+    <entry>
+      <code>http://inspire.ec.europa.eu/metadata-codelist/Category/harmonised</code>
+      <label>harmonised</label>
+      <description>Harmonised</description>
+    </entry>
+    <entry>
+      <code>http://inspire.ec.europa.eu/metadata-codelist/Category/interoperable</code>
+      <label>interoperable</label>
+      <description>Interoperable</description>
+    </entry>
+    <entry>
+      <code>http://inspire.ec.europa.eu/metadata-codelist/Category/invocable</code>
+      <label>invocable</label>
+      <description>Invocable</description>
+    </entry>
+  </codelist>
 
-	<codelist name="SDS_DCP">
-            <entry>
-                <code>xml</code>
-                <label>XML</label>
-                <description>XML</description>
-            </entry>
-            <entry>
-                <code>corba</code>
-                <label>CORBA</label>
-                <description>CORBA</description>
-            </entry>
-            <entry>
-                <code>java</code>
-                <label>JAVA</label>
-                <description>JAVA</description>
-            </entry>
-            <entry>
-                <code>com</code>
-                <label>COM</label>
-                <description>COM</description>
-            </entry>
-            <entry>
-                <code>sql</code>
-                <label>SQL</label>
-                <description>SQL</description>
-            </entry>
-            <entry>
-                <code>webServices</code>
-                <label>Web Services</label>
-                <description>Web Services</description>
-            </entry>
-        </codelist>
+  <codelist name="SDS_DCP">
+    <entry>
+      <code>xml</code>
+      <label>XML</label>
+      <description>XML</description>
+    </entry>
+    <entry>
+      <code>corba</code>
+      <label>CORBA</label>
+      <description>CORBA</description>
+    </entry>
+    <entry>
+      <code>java</code>
+      <label>JAVA</label>
+      <description>JAVA</description>
+    </entry>
+    <entry>
+      <code>com</code>
+      <label>COM</label>
+      <description>COM</description>
+    </entry>
+    <entry>
+      <code>sql</code>
+      <label>SQL</label>
+      <description>SQL</description>
+    </entry>
+    <entry>
+      <code>webServices</code>
+      <label>Web Services</label>
+      <description>Web Services</description>
+    </entry>
+  </codelist>
 
   <codelist name="gco:nilReason">
     <entry>

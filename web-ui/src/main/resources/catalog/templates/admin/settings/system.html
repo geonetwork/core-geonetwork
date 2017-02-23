@@ -84,23 +84,16 @@
                   data-gn-autogrow=""
                   data-gn-json-text=""
                   data-ng-model="s.value"
-                  data-ng-switch-when="map/config" type="text"
-                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
-                ></textarea>
-                <textarea
-                  data-gn-autogrow=""
-                  data-gn-json-text=""
-                  data-ng-model="s.value"
                   data-ng-switch-when="metadata/editor/schemaConfig" type="text"
                   class="form-control" id="{{s['name']}}" name="{{s.name}}"
                 ></textarea>
-                <textarea
-                  data-gn-autogrow=""
-                  data-gn-json-text=""
-                  data-ng-model="s.value"
-                  data-ng-switch-when="map/proj4js" type="text"
-                  class="form-control" id="{{s['name']}}" name="{{s.name}}"
-                ></textarea>
+
+                <!-- UI configuration -->
+                <div
+                  data-gn-ui-config="s.value"
+                  data-id="s['name']"
+                  data-ng-switch-when="ui/config"
+                ></div>
 
 
                 <select data-ng-switch-when="system/server/protocol"

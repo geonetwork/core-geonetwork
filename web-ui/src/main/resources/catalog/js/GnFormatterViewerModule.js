@@ -34,11 +34,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
   goog.require('gn');
   goog.require('gn_alert');
   goog.require('gn_catalog_service');
   goog.require('gn_formatter_lib');
   goog.require('gn_mdactions_service');
+  goog.require('gn_mdview');
   goog.require('gn_popup_directive');
   goog.require('gn_popup_service');
   goog.require('gn_search_default_directive');
@@ -52,7 +63,7 @@
 
 
 
-  var module = angular.module('gn_formatter_viewer',[
+  var module = angular.module('gn_formatter_viewer', [
     'ngRoute',
     'gn',
     'gn_alert',

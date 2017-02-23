@@ -217,7 +217,7 @@
              gnSearchSettings, $q, gnMetadataManager, sxtService, gnMdViewObj) {
 
 
-      this.getFormatterUrl = function(fUrl, scope, uuid) {
+      this.getFormatterUrl = function(fUrl, scope, uuid, opt_url) {
         var url;
         var promiseMd;
         if (scope && scope.md) {
@@ -250,7 +250,7 @@
         });
       };
 
-      this.load = function(uuid, selector, scope) {
+      this.load = function(uuid, selector, scope, opt_url) {
         $rootScope.$broadcast('mdLoadingStart');
         var newscope;
         if (scope) {

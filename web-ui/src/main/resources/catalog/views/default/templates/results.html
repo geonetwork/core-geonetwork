@@ -5,6 +5,17 @@
 
   <div class="row"
        data-ng-show="searchResults.records.length > 0">
+    <div class="col-md-offset-3 col-md-9"
+         data-gn-facet-dimension-list="searchResults.dimension"
+         data-params="searchObj.params"
+         data-facet-type="facetsSummaryType"
+         data-facet-list="facetConfig"
+         data-current-facets="currentFacets"
+         data-tab-field="facetTabField"
+    ></div>
+  </div>
+  <div class="row"
+       data-ng-show="searchResults.records.length > 0">
     <div class="col-md-offset-3 col-md-3 relative">
       <div data-gn-selection-widget=""
            data-results="searchResults"></div>
@@ -31,6 +42,7 @@
            data-gn-facet-dimension-list="searchResults.dimension"
            data-params="searchObj.params"
            data-facet-type="facetsSummaryType"
+           data-facet-list="facetConfig"
            data-current-facets="currentFacets">
       </div>
 

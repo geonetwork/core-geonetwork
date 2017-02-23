@@ -180,7 +180,10 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <xsl:variable name="appConfig"
+                  select="util:getSettingValue('ui/config')"/>
 
+<<<<<<< HEAD
     <xsl:variable name="mapConfig"
                   select="util:getSettingValue('map/config')"/>
 
@@ -221,35 +224,29 @@
       </script>
     </xsl:if>
 
+=======
+    <!-- XML highlighter JS dependency. -->
+>>>>>>> upstream/develop
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js"></script>
-
-      <script type="text/javascript">
-        var module = angular.module('gn_editor');
-        module.config(['gnViewerSettings', 'gnGlobalSettings',
-        function(gnViewerSettings, gnGlobalSettings) {
-        <xsl:if test="$owsContext">
-          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
-        </xsl:if>
-        <xsl:if test="$wmsUrl and $layerName">
-          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
-          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
-        </xsl:if>
-        gnViewerSettings.mapConfig = <xsl:value-of select="$mapConfig"/>;
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
     </xsl:if>
 
-    <xsl:if test="$angularApp = 'gn_admin'">
-      <script type="text/javascript">
-        var module = angular.module('gn_admin');
-        module.config(['gnGlobalSettings',
-        function(gnGlobalSettings) {
-        gnGlobalSettings.isMapViewerEnabled = <xsl:value-of select="$isMapViewerEnabled"/>;
-        }]);
-      </script>
-    </xsl:if>
+    <script type="text/javascript">
+      var module = angular.module('<xsl:value-of select="$angularApp"/>');
+      <xsl:choose>
+        <xsl:when test="$angularApp = 'gn_login'">
+
+        </xsl:when>
+        <xsl:otherwise>
+          module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+          function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+          gnGlobalSettings.init(
+          <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
+          null, gnViewerSettings, gnSearchSettings);
+          }]);
+        </xsl:otherwise>
+      </xsl:choose>
+    </script>
   </xsl:template>
 </xsl:stylesheet>

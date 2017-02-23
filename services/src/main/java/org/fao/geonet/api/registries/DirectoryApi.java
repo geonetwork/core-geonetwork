@@ -43,7 +43,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
 import org.fao.geonet.utils.Log;
-import org.hibernate.exception.ConstraintViolationException;
 import org.jdom.Element;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -54,6 +53,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -133,9 +133,12 @@ public class DirectoryApi {
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
-            String identifierXpath
+            String identifierXpath,
+        HttpServletRequest request
     ) throws Exception {
-        return collectEntries(uuids, bucket, xpath, identifierXpath, false, null);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return collectEntries(context, uuids, bucket, xpath, identifierXpath, false, null);
     }
 
 
@@ -173,22 +176,26 @@ public class DirectoryApi {
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
-            String identifierXpath
+            String identifierXpath,
+        HttpServletRequest request
         // TODO: Add an option to set categories ?
         // TODO: Add an option to set groupOwner ?
         // TODO: Add an option to set privileges ?
     ) throws Exception {
-        return collectEntries(uuids, bucket, xpath, identifierXpath, true, null);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return collectEntries(context, uuids, bucket, xpath, identifierXpath, true, null);
     }
 
 
     private ResponseEntity<Object> collectEntries(
+        ServiceContext context,
         String[] uuids,
         String bucket,
         String xpath,
         String identifierXpath,
         boolean save, String directoryFilterQuery) throws Exception {
-        ServiceContext context = ServiceContext.get();
+
         UserSession session = context.getUserSession();
 
         // Check which records to analyse
@@ -215,10 +222,11 @@ public class DirectoryApi {
                 // Processing
                 try {
                     CollectResults collectResults =
-                        DirectoryUtils.collectEntries(
+                        DirectoryUtils.collectEntries(context,
                             record, xpath, identifierXpath);
                     if (save) {
                         DirectoryUtils.saveEntries(
+                            context,
                             collectResults,
                             siteId, user,
                             1, // TODO: Define group or take a default one
@@ -304,9 +312,12 @@ public class DirectoryApi {
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
-            String fq
+            String fq,
+        HttpServletRequest request
     ) throws Exception {
-        return updateRecordEntries(uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
     }
 
 
@@ -356,13 +367,17 @@ public class DirectoryApi {
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
-            String fq
+            String fq,
+        HttpServletRequest request
     ) throws Exception {
-        return updateRecordEntries(uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
     }
 
 
     private ResponseEntity<Object> updateRecordEntries(
+        ServiceContext context,
         String[] uuids,
         String bucket,
         String xpath,
@@ -370,7 +385,7 @@ public class DirectoryApi {
         List<String> propertiesToCopy,
         boolean substituteAsXLink,
         boolean save, String directoryFilterQuery) throws Exception {
-        ServiceContext context = ServiceContext.get();
+
         UserSession session = context.getUserSession();
         Profile profile = session.getProfile();
 
@@ -410,6 +425,7 @@ public class DirectoryApi {
                 try {
                     CollectResults collectResults =
                         DirectoryUtils.synchronizeEntries(
+                            context,
                             record, xpath, identifierXpath,
                             propertiesToCopy, substituteAsXLink, directoryFilterQuery);
                     listOfRecordInternalId.add(record.getId());

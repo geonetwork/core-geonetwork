@@ -61,7 +61,11 @@ public class Result implements Service
 
         MetaSearcher searcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT + bucket);
 
-        String fast = _config.getValue("fast","");
+        if (searcher == null) {
+            searcher = (MetaSearcher) session.getProperty(Geonet.Session.SEARCH_RESULT);
+        }
+
+        String fast = _config.getValue("fast", "");
 
         if (StringUtils.isNotEmpty(fast)) {
             params.addContent(new Element("fast").setText(fast));

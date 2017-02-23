@@ -122,8 +122,7 @@
       <xsl:choose>
         <xsl:when
           test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
-          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1) or
-          ($editInfo and $editInfo/@min = 1 and $isFirst)">
+          (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
@@ -1528,9 +1527,9 @@
                           <xsl:otherwise>
                             <input class="form-control"
                                    type="{if (@type = 'Real' or @type = 'Integer' or @type = 'Percentage')
-                                          then 'number'
-                                          else 'text'}"
-                                   name="_{$name}"
+                                  then 'number'
+                                  else 'text'}"
+                                   name="{$name}"
                                    value="{*/normalize-space()}">
                               <xsl:if test="@min">
                                 <xsl:attribute name="min" select="@min"/>

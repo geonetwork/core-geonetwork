@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.geonetwork-opensource</groupId>
     <artifactId>geonetwork</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>3.3.0-SNAPSHOT</version>
   </parent>
 
 
@@ -267,7 +267,7 @@
       <artifactId>h2</artifactId>
     </dependency>
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
@@ -758,9 +758,6 @@
         <configuration>
           <contextXml>${basedir}/jetty-context.xml</contextXml>
           <webAppSourceDirectory>${project.build.directory}/geonetwork</webAppSourceDirectory>
-          <httpConnector>
-            <port>${jetty.port}</port>
-          </httpConnector>
           <webApp>
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
@@ -779,7 +776,7 @@
             </systemProperty>
           </systemProperties>
           <stopKey>JETTY_TOP</stopKey>
-          <stopPort>${jetty.stop.port}</stopPort>
+          <stopPort>8090</stopPort>
         </configuration>
       </plugin>
     </plugins>

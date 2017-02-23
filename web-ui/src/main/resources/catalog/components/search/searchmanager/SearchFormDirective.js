@@ -376,8 +376,6 @@
         link: function(scope, element, attrs) {
 
           scope.resetSearch = function(htmlElementOrDefaultSearch) {
-            //TODO: remove geocat ref
-            $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
             if (angular.isObject(htmlElementOrDefaultSearch)) {
               scope.controller.resetSearch(htmlElementOrDefaultSearch);
             } else {

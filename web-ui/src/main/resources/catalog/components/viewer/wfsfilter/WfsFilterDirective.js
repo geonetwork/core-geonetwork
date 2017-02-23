@@ -323,8 +323,8 @@
                 encodeURIComponent(scope.url)
               + '&typeName=' + encodeURIComponent(ftName)).then(function() {
               scope.initSolrRequest();
-            }, function () {
-                console.warn('Failed to remove features for type ' + id);
+            }, function() {
+              console.warn('Failed to remove features for type ' + id);
             });
           };
           /**

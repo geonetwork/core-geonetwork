@@ -47,8 +47,6 @@
     'ngeo'
   ]);
 
-  module.constant('gnSearchSettings', {});
-  module.constant('gnViewerSettings', {});
 
   module.config(['$LOCALES', function($LOCALES) {
     $LOCALES.push('search');
