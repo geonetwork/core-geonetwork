@@ -113,29 +113,33 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
                 }
                 SeRow row = query.fetch();
 
+                if (row != null)  {
+                    if (row.getObject(0) != null) {
+                        Log.info(ARCSDE_LOG_MODULE_NAME, "Retrieving row metadata");
 
-                if (row != null) {
-                    SeColumnDefinition colDef = row.getColumnDef(0);
+                        SeColumnDefinition colDef = row.getColumnDef(0);
 
-                    String document = "";
+                        String document = "";
 
-                    if (colDef.getType() == SeColumnDefinition.TYPE_BLOB ||
-                            colDef.getType() == SeColumnDefinition.TYPE_CLOB) {
-                        ByteArrayInputStream bytes = row.getBlob(0);
-                        byte[] buff = new byte[bytes.available()];
-                        bytes.read(buff);
-                        document = new String(buff, Constants.ENCODING);
+                        if (colDef.getType() == SeColumnDefinition.TYPE_BLOB ||
+                                colDef.getType() == SeColumnDefinition.TYPE_CLOB) {
+                            ByteArrayInputStream bytes = row.getBlob(0);
+                            byte[] buff = new byte[bytes.available()];
+                            bytes.read(buff);
+                            document = new String(buff, Constants.ENCODING);
 
-                    } else if (colDef.getType() == SeColumnDefinition.TYPE_XML) {
-                        SeXmlDoc xmlDoc = row.getXml(0);
-                        document = xmlDoc.getText();
+                        } else if (colDef.getType() == SeColumnDefinition.TYPE_XML) {
+                            SeXmlDoc xmlDoc = row.getXml(0);
+                            document = xmlDoc.getText();
+                        } else if (colDef.getType() == SeColumnDefinition.TYPE_STRING) {
+                            document = row.getString(0);
+                        }
 
-                    } else if (colDef.getType() == SeColumnDefinition.TYPE_STRING) {
-                        document = row.getString(0);
-                    }
-
-                    if (StringUtils.isNotEmpty(document)) {
-                        results.add(document);
+                        if (StringUtils.isNotEmpty(document)) {
+                            results.add(document);
+                        }
+                    } else {
+                        Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring row without metadata");
                     }
                 } else {
                     allRowsFetched = true;

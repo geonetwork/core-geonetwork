@@ -24,16 +24,22 @@ package org.fao.geonet.arcgis;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.fao.geonet.utils.Log;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.sql.Blob;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by juanl on 17/02/2017.
  */
-public abstract class ArcSDEJdbcConnection implements ArcSDEConnection{
+public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
 
     private BasicDataSource dataSource;
     protected Connection jdbcConnection;
@@ -47,13 +53,13 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection{
      * @param username the username to connect to the database.
      * @param password the password to connect to the database.
      */
-    public ArcSDEJdbcConnection(String connectionString, String username, String password) {
+    public ArcSDEJdbcConnection(String driverName, String connectionString, String username, String password) {
 
         try {
             Log.debug(ARCSDE_LOG_MODULE_NAME, "Getting ArcSDE connection (via JDBC)");
 
             BasicDataSource dataSource = new BasicDataSource();
-            dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+            dataSource.setDriverClassName(driverName);
             dataSource.setUrl(connectionString);
             dataSource.setUsername(username);
             dataSource.setPassword(password);
@@ -99,6 +105,65 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection{
 
     protected NamedParameterJdbcTemplate getJdbcTemplate() {
         return this.jdbcTemplate;
+    }
+
+
+    @Override
+    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
+        List<String> results = new ArrayList<>();
+
+        ArcSDEVersionFactory arcSDEVersionFactory = new ArcSDEVersionFactory();
+        String metadataTable = arcSDEVersionFactory.getTableName(arcSDEVersion);
+        String columnName = arcSDEVersionFactory.getMetadataColumnName(arcSDEVersion);
+
+        String sqlQuery = "SELECT " + columnName + " FROM " + metadataTable;
+
+
+        getJdbcTemplate().query(sqlQuery, new RowCallbackHandler() {
+            @Override
+            public void processRow(ResultSet rs) throws SQLException {
+                // Cancel processing
+                if (cancelMonitor.get()) {
+                    Log.warning(ARCSDE_LOG_MODULE_NAME, "Cancelling metadata retrieve using "
+                            + "ArcSDE connection (via JDBC)");
+                    rs.getStatement().cancel();
+                    results.clear();
+                }
+
+                String document = "";
+                int colId = rs.findColumn(columnName);
+                // very simple type check:
+                if (rs.getObject(colId) != null) {
+                    if (rs.getMetaData().getColumnType(colId) == Types.BLOB) {
+                        Blob blob = rs.getBlob(columnName);
+                        byte[] bdata = blob.getBytes(1, (int) blob.length());
+                        document = new String(bdata);
+
+                    } else if (rs.getMetaData().getColumnType(colId) == Types.LONGVARBINARY) {
+                        byte[] byteData = rs.getBytes(colId);
+                        document = new String(byteData);
+
+                    } else if (rs.getMetaData().getColumnType(colId) == Types.LONGNVARCHAR ||
+                            rs.getMetaData().getColumnType(colId) == Types.LONGVARCHAR ||
+                            rs.getMetaData().getColumnType(colId) == Types.VARCHAR) {
+
+                        document = rs.getString(colId);
+
+                    } else {
+                        throw new SQLException("Trying to harvest from a column with an invalid datatype: " +
+                                rs.getMetaData().getColumnTypeName(colId));
+                    }
+
+                    results.add(document);
+                }
+
+            }
+        });
+
+        Log.info(ARCSDE_LOG_MODULE_NAME, "Finished retrieving metadata, found: #" + results.size()
+                + " metadata records");
+
+        return results;
     }
 
 }

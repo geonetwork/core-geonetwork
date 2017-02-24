@@ -22,9 +22,6 @@
  */
 package org.fao.geonet.arcgis;
 
-import com.esri.sde.sdk.client.SeConnection;
-import com.esri.sde.sdk.client.SeError;
-import com.esri.sde.sdk.client.SeException;
 import org.fao.geonet.constants.Geonet;
 
 import java.util.List;

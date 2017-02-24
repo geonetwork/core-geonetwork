@@ -26,6 +26,8 @@ import org.fao.geonet.arcgis.ArcSDEApiConnection;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.arcgis.ArcSDEConnectionException;
 import org.fao.geonet.arcgis.ArcSDEOracleJdbcConnection;
+import org.fao.geonet.arcgis.ArcSDEPostgresJdbcConnection;
+import org.fao.geonet.arcgis.ArcSDESqlServerJdbcConnection;
 import org.springframework.stereotype.Component;
 
 /**
@@ -49,7 +51,7 @@ public class ArcSDEConnectionFactory {
      * @return a specific implementation of {@link ArcSDEConnection} for the passed connection type.
      * @throws ArcSDEConnectionException if the connectionType is not supported
      */
-    public ArcSDEConnection getConnection(ArcSDEConnectionType connectionType, String server, int port,
+    public ArcSDEConnection getConnection(ArcSDEConnectionType connectionType, String dbType, String server, int port,
                                           String database, String username, String password) throws ArcSDEConnectionException {
         ArcSDEConnection connection;
 
@@ -58,7 +60,15 @@ public class ArcSDEConnectionFactory {
                 connection = new ArcSDEApiConnection(server, port, database, username, password);
                 break;
             case JDBC:
-                connection = new ArcSDEOracleJdbcConnection(server, port, database, username, password);
+                if (dbType.equalsIgnoreCase("oracle")) {
+                    connection = new ArcSDEOracleJdbcConnection(server, port, database, username, password);
+                } else if (dbType.equalsIgnoreCase("sqlserver")) {
+                    connection = new ArcSDESqlServerJdbcConnection(server, port, database, username, password);
+                } else if (dbType.equalsIgnoreCase("postgresql")) {
+                    connection = new ArcSDEPostgresJdbcConnection(server, port, database, username, password);
+                } else {
+                    throw new ArcSDEConnectionException("ArcSDEConnectionType " + connectionType.name() + " for database type " + dbType + " not supported");
+                }
                 break;
             default:
                 throw new ArcSDEConnectionException("ArcSDEConnectionType " + connectionType.name() + " not supported");

@@ -23,9 +23,10 @@
 package org.fao.geonet.arcgis;
 
 /**
- * Created by juanl on 17/02/2017.
+ * Connection to ArcSDE postgres database.
+ *
  */
-public class ArcSDESqlServerJdbcConnection extends ArcSDEJdbcConnection {
+public class ArcSDEPostgresJdbcConnection extends ArcSDEJdbcConnection {
 
     /**
      * Opens a connection to the specified ArcSDE server database.
@@ -39,8 +40,8 @@ public class ArcSDESqlServerJdbcConnection extends ArcSDEJdbcConnection {
      * @param username }
      * @param password
      */
-    public ArcSDESqlServerJdbcConnection(String server, int port, String database, String username, String password) {
-        this("jdbc:sqlserver://" + server + ":" + port + ";databaseName=" + database, username, password);
+    public ArcSDEPostgresJdbcConnection(String server, int port, String database, String username, String password) {
+        this("jdbc:postgresql://" + server + ":" + port + "/" + database, username, password);
     }
 
 
@@ -53,7 +54,7 @@ public class ArcSDESqlServerJdbcConnection extends ArcSDEJdbcConnection {
      * @param username
      * @param password
      */
-    public ArcSDESqlServerJdbcConnection(String connectionString, String username, String password) {
-        super("com.microsoft.sqlserver.jdbc.SQLServerDriver", connectionString, username, password);
+    public ArcSDEPostgresJdbcConnection(String connectionString, String username, String password) {
+        super("org.postgresql.Driver", connectionString, username, password);
     }
 }

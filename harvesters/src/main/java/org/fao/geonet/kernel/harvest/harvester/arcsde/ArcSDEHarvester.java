@@ -33,12 +33,14 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
@@ -50,11 +52,13 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import com.google.common.collect.Sets;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,6 +79,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
     private static Path ARC_TO_ISO19115_TRANSFORMER_LOCATION;
     private static Path ISO19115_TO_ISO19139_TRANSFORMER_LOCATION;
     private ArcSDEParams params;
+
+    /**
+     * Contains a list of accumulated errors during the executing of this harvest.
+     */
+    private List<HarvestError> errors = new LinkedList<HarvestError>();
 
     @Override
     protected void storeNodeExtra(AbstractParams params, String path, String siteId, String optionsId) throws SQLException {
@@ -149,8 +158,9 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest starting");
         ArcSDEConnectionFactory connectionFactory = context.getBean(ArcSDEConnectionFactory.class);
 
-         ArcSDEConnection connection = connectionFactory.getConnection(params.connectionType, params.server, params.port,
-            params.database, params.getUsername(), params.getPassword());
+         ArcSDEConnection connection = connectionFactory.getConnection(
+                 params.connectionType, params.databaseType, params.server, params.port,
+                 params.database, params.getUsername(), params.getPassword());
         List<String> metadataList = connection.retrieveMetadata(cancelMonitor, params.version);
         align(metadataList);
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
@@ -174,52 +184,80 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             if (cancelMonitor.get()) {
                 return;
             }
-            result.totalMetadata++;
-            // create JDOM element from String-XML
-            Element metadataElement = Xml.loadString(metadata, false);
-            // transform ESRI output to ISO19115
-            Element iso19115 = Xml.transform(metadataElement, ARC_TO_ISO19115_TRANSFORMER_LOCATION);
-            // transform ISO19115 to ISO19139
-            Element iso19139 = Xml.transform(iso19115, ISO19115_TO_ISO19139_TRANSFORMER_LOCATION);
 
-            String schema = dataMan.autodetectSchema(iso19139, null);
-            if (schema == null) {
-                result.unknownSchema++;
-            }
-            // the xml is recognizable iso19139 format
-            else {
-                String uuid = dataMan.extractUUID(schema, iso19139);
-                if (uuid == null || uuid.equals("")) {
-                    Log.info(ARCSDE_LOG_MODULE_NAME, "Skipping metadata due to failure extracting uuid (uuid null or empty).");
-                    result.badFormat++;
-                } else {
+            try {
+                result.totalMetadata++;
+
+                // create JDOM element from String-XML
+                Element metadataElement = Xml.loadString(metadata, false);
+
+                String schema = null;
+
+                try {
+                    schema = dataMan.autodetectSchema(metadataElement, null);
+                } catch (NoSchemaMatchesException ex) {
+                    // Ignore
+                }
+
+                // No schema detected, try to convert from default ESRI md to ISO1939
+                if (schema == null) {
+                    // transform ESRI output to ISO19115
+                    Element iso19115 = Xml.transform(metadataElement, ARC_TO_ISO19115_TRANSFORMER_LOCATION);
+                    // transform ISO19115 to ISO19139
+                    metadataElement = Xml.transform(iso19115, ISO19115_TO_ISO19139_TRANSFORMER_LOCATION);
 
                     try {
-                        params.getValidate().validate(dataMan, context, iso19139);
-                    } catch (Exception e) {
-                        Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring invalid metadata with uuid " + uuid);
-                        result.doesNotValidate++;
-                        continue;
+                        schema = dataMan.autodetectSchema(metadataElement, null);
+                    } catch (NoSchemaMatchesException ex) {
+                        // Ignore
                     }
-
-                    BaseAligner aligner = new BaseAligner(cancelMonitor) {
-                    };
-                    //
-                    // add / update the metadata from this harvesting result
-                    //
-                    String id = dataMan.getMetadataId(uuid);
-                    if (id == null) {
-                        Log.info(ARCSDE_LOG_MODULE_NAME, "adding new metadata");
-                        id = addMetadata(iso19139, uuid, schema, localGroups, localCateg, aligner);
-                        result.addedMetadata++;
-                    } else {
-                        Log.info(ARCSDE_LOG_MODULE_NAME, "updating existing metadata, id is: " + id);
-                        updateMetadata(iso19139, id, localGroups, localCateg, aligner);
-                        result.updatedMetadata++;
-                    }
-                    idsForHarvestingResult.add(Integer.valueOf(id));
                 }
+
+                if (schema == null) {
+                    result.unknownSchema++;
+                } else {
+                    // the xml is recognizable  format
+                    String uuid = dataMan.extractUUID(schema, metadataElement);
+
+                    if (StringUtils.isEmpty(uuid)) {
+                        Log.info(ARCSDE_LOG_MODULE_NAME, "Skipping metadata due to failure extracting uuid (uuid null or empty).");
+                        result.badFormat++;
+
+                    } else {
+
+                        try {
+                            params.getValidate().validate(dataMan, context, metadataElement);
+                        } catch (Exception e) {
+                            Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring invalid metadata with uuid " + uuid);
+                            result.doesNotValidate++;
+                            continue;
+                        }
+
+                        BaseAligner aligner = new BaseAligner(cancelMonitor) {
+                        };
+                        //
+                        // add / update the metadata from this harvesting result
+                        //
+                        String id = dataMan.getMetadataId(uuid);
+                        if (id == null) {
+                            Log.info(ARCSDE_LOG_MODULE_NAME, "adding new metadata");
+                            id = addMetadata(metadataElement, uuid, schema, localGroups, localCateg, aligner);
+                            result.addedMetadata++;
+                        } else {
+                            Log.info(ARCSDE_LOG_MODULE_NAME, "updating existing metadata, id is: " + id);
+                            updateMetadata(metadataElement, id, localGroups, localCateg, aligner);
+                            result.updatedMetadata++;
+                        }
+                        idsForHarvestingResult.add(Integer.valueOf(id));
+                    }
+                }
+            }catch(Throwable t) {
+                log.error("Unable to process record from arcsde (" + this.params.getName() + ")");
+                log.error("   Record failed. Error is: " + t.getMessage());
+            } finally {
+                result.originalMetadata++;
             }
+
         }
         //
         // delete locally existing metadata from the same source if they were
