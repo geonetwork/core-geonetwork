@@ -354,28 +354,29 @@
       <xsl:with-param name="label" select="if ($title) then $gui/strings/resources else ''"/>
       <xsl:with-param name="content">
         <xsl:choose>
-          <xsl:when test="$remote=false()">
-            <fo:basic-link text-decoration="underline" color="blue">
-              <xsl:attribute name="external-destination"> url('<xsl:value-of
-                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url,'/srv/fre/metadata.formatter.html?xsl=mdviewer&amp;uuid=', $metadata/geonet:info/uuid)"
-              />') </xsl:attribute>
-              <!--<xsl:attribute name="external-destination"> url('<xsl:value-of
-                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url,'?uuid=', $metadata/geonet:info/uuid)"
-                />') </xsl:attribute>-->
-              <xsl:value-of select="$gui/strings/show"/>
-          </fo:basic-link> <xsl:text>|</xsl:text> <fo:basic-link text-decoration="underline" color="blue">
+          <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
             <xsl:attribute name="external-destination"> url('<xsl:value-of
-              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language,'/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
+              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/metadata/', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
-            <xsl:value-of select="$gui/strings/show"/> <xsl:text>(XML)</xsl:text>
+            <xsl:value-of select="$gui/strings/show"/>
+          </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
+            <xsl:attribute name="external-destination"> url('<xsl:value-of
+              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/api/records/', $metadata/geonet:info/uuid, '/formatters/xml')"
+            />') </xsl:attribute>
+            <xsl:text>XML</xsl:text>
+          </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
+            <xsl:attribute name="external-destination"> url('<xsl:value-of
+              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/api/records/', $metadata/geonet:info/uuid, '/formatters/zip')"
+            />') </xsl:attribute>
+            <xsl:text>ZIP</xsl:text>
           </fo:basic-link>
-            <xsl:if test="/root/gui/reqService != 'pdf'"><xsl:text>|</xsl:text>
+            <xsl:if test="/root/gui/reqService != 'pdf'"><xsl:text> | </xsl:text>
               <fo:basic-link text-decoration="underline" color="blue">
-              <xsl:attribute name="external-destination"> url('<xsl:value-of
-                select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/fre/pdf?uuid=', $metadata/geonet:info/uuid)"
-              />') </xsl:attribute>
-              <xsl:value-of select="$gui/strings/show"/> <xsl:text>(PDF)</xsl:text>
-            </fo:basic-link> <xsl:text>|</xsl:text>
+                <xsl:attribute name="external-destination"> url('<xsl:value-of
+                  select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/', /root/gui/language, '/md.format.pdf?xsl=full_view&amp;uuid=', $metadata/geonet:info/uuid)"
+                />') </xsl:attribute>
+                <xsl:text>PDF</xsl:text>
+              </fo:basic-link> <xsl:text> | </xsl:text>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>

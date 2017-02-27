@@ -381,21 +381,26 @@
         <xsl:choose>
           <xsl:when test="$remote=false()"><fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of
-                select="concat($baseURL, '/srv/', $lang, 'metadata.formatter.html?xsl=mdviewer&amp;uuid=', $metadata/geonet:info/uuid)"
+                select="concat($baseURL, '/srv/metadata/', $metadata/geonet:info/uuid)"
                 />') </xsl:attribute>
               <xsl:value-of select="$oldGuiStrings/show"/>
           </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
             <xsl:attribute name="external-destination"> url('<xsl:value-of
-              select="concat($baseURL, '/srv/', $lang, '/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
+              select="concat($baseURL, '/srv/api/records/', $metadata/geonet:info/uuid, '/formatters/xml')"
             />') </xsl:attribute>
-            <xsl:value-of select="$oldGuiStrings/show"/> <xsl:text>(XML)</xsl:text>
+            <xsl:text>XML</xsl:text>
+          </fo:basic-link> | <fo:basic-link text-decoration="underline" color="blue">
+            <xsl:attribute name="external-destination"> url('<xsl:value-of
+              select="concat($baseURL, '/srv/api/records/', $metadata/geonet:info/uuid, '/formatters/zip')"
+            />') </xsl:attribute>
+            <xsl:text>ZIP</xsl:text>
           </fo:basic-link>
           <xsl:if test="/root/gui/reqService != 'pdf'"><xsl:text> | </xsl:text>
             <fo:basic-link text-decoration="underline" color="blue">
               <xsl:attribute name="external-destination"> url('<xsl:value-of
-                  select="concat($baseURL, '/srv/', $lang, '/pdf?uuid=', $metadata/geonet:info/uuid)"
+                  select="concat($baseURL, '/srv/', $lang, '/md.format.pdf?xsl=full_view&amp;uuid=', $metadata/geonet:info/uuid)"
                   />') </xsl:attribute>
-              <xsl:value-of select="$gui/strings/show"/> <xsl:text>(PDF)</xsl:text>
+              <xsl:text>PDF</xsl:text>
             </fo:basic-link> <xsl:text> | </xsl:text>
           </xsl:if>
           </xsl:when>
