@@ -52,7 +52,8 @@
             return (response.data);
           },
           function() {
-            return ($q.reject('Something went wrong'));
+            return ($q.reject('Something went wrong loading ' +
+            'related records of type ' + types));
           }
           );
 

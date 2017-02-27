@@ -16,7 +16,8 @@ var gnHarvesterfilesystem = {
                 "nodelete" : true,
                 "checkFileLastModifiedForUpdate" : true,
                 "recordType" : 'n',
-                "icon" : "blank.png"
+                "icon" : "blank.png",
+                "beforeScript": ""
             },
             "content" : {
                 "validate" : "NOVALIDATION",
@@ -55,6 +56,7 @@ var gnHarvesterfilesystem = {
                 + '    <directory>' + h.site.directory + '</directory>'
                 + '    <recordType>' + h.site.recordType + '</recordType>'
                 + '    <icon>' + h.site.icon + '</icon>'
+                + '    <beforeScript>' + h.site.beforeScript + '</beforeScript>'
                 + '  </site>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'

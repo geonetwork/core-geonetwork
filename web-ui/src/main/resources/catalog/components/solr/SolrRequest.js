@@ -164,6 +164,7 @@
         for (var i = 0; i < docF.length; i++) {
           indexInfos.push({
             label: customF[i],
+            name: customF[i],
             idxName: docF[i],
             isRange: docF[i].endsWith('_d'),
             isTree: docF[i].endsWith('_tree'),
@@ -411,7 +412,7 @@
   geonetwork.GnSolrRequest.prototype.getIdxNameObj_ = function(name) {
     var fields = this.docTypeFieldsInfo || [];
     for (var i = 0; i < fields.length; i++) {
-      if (fields[i].label == name ||
+      if (fields[i].name == name ||
         fields[i].idxName == name) {
         return fields[i];
       }
@@ -533,6 +534,7 @@
                 var b = bucketDates[bucketIdx];
                 var obj = {
                   value: datetime,
+                  values: datetime,
                   count: 1
                 };
                 if(b.key == datetime) {

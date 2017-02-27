@@ -46,9 +46,10 @@
             ' data-ng-options="key as langLabels[key] ' +
             ' for (key, value) in langs"/>',
         link: function(scope) {
-          scope.$watch('lang', function(value) {
+          scope.$watch('lang', function(value, o) {
+            // TODO: Define how to switch from one lang to another
             var url = location.href.split('/');
-            if (value !== url[5]) {
+            if (value !== o) {
               url[5] = value;  // Use ISO3 code
               // if (window.history.pushState) {
               //     // Update translate with no page reload

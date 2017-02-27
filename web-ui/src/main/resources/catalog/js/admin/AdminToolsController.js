@@ -244,7 +244,8 @@
       };
 
       function loadProcessConfig() {
-        $http.get($scope.base + 'config/batch-process-cfg.json')
+        $http.get(gnGlobalSettings.gnUrl +
+            '../catalog/config/batch-process-cfg.json')
             .success(function(data) {
               $scope.batchProcesses = data.config;
 
@@ -310,6 +311,7 @@
         if (testMode != undefined) {
           formParams += '&isTesting=' + testMode;
         }
+        formParams += '&bucket=b101';
 
         var service = '../api/processes/' +
                       (process != undefined ?

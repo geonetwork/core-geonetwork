@@ -12,12 +12,13 @@
 
       return {
         'request': function(config) {
+          return config;
           if(config.url.indexOf('http://') < 0 &&
               config.url.indexOf('https://') < 0) {
             if(!config.url.match(/(partials\/).*(.html)$/)) {
 
               // Temp for chrome to avoid CORS caching issue
-              if(isChrome && config.cache != true
+              if(isChrome && config.method == 'GET' && config.cache != true
                   && config.url != 'q'
                   && config.url.indexOf('qi?') != 0
                   && config.url.indexOf('q?') != 0

@@ -666,9 +666,11 @@
                 metadata = getCapLayer.MetadataURL[0].OnlineResource;
               }
 
-              var layer = this.createOlWMS(map, {
-                LAYERS: getCapLayer.Name
-              }, {
+              var layerParam = {LAYERS: getCapLayer.Name};
+              if (getCapLayer.version) {
+                layerParam.VERSION = getCapLayer.version;
+              }
+              var layer = this.createOlWMS(map, layerParam, {
                 url: url || getCapLayer.url,
                 label: getCapLayer.Title,
                 attribution: attribution,
@@ -986,7 +988,7 @@
            * @param {boolean} createOnly or add it to the map
            * @param {!Object} md object
            */
-          addWmsFromScratch: function(map, url, name, createOnly, md) {
+          addWmsFromScratch: function(map, url, name, createOnly, md, version) {
             var defer = $q.defer();
             var $this = this;
 
@@ -1012,6 +1014,9 @@
                     name: name,
                     msg: 'layerNotInCap'
                   }, errors = [];
+                  if (version) {
+                    o.version = version;
+                  }
                   olL = $this.addWmsToMap(map, o);
 
                   if (!angular.isArray(olL.get('errors'))) {
