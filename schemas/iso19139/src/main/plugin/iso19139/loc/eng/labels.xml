@@ -73,8 +73,8 @@
 	</element>
 	<element name="gco:DateTime">
 		<label>Date and time</label>
-		<description>Date and time or range of date and time on or over which the process step occurred 
-		(YYYY-MM-DDThh:mm:ss)</description> 
+		<description>Date and time or range of date and time on or over which the process step occurred
+		(YYYY-MM-DDThh:mm:ss)</description>
 	</element>
 	<element name="gco:Measure" id="100.0" context="gmd:DQ_Element">
 		<label>Name of Measure</label>
@@ -1484,7 +1484,7 @@
 	<element name="gmd:nameOfMeasure" id="100.0">
 		<label>Name of measure</label>
 		<description>Name of the test applied to the data</description>
-		<!-- ISO19138 Data quality basic measures Annex C - under revision ISO 
+		<!-- ISO19138 Data quality basic measures Annex C - under revision ISO
 			19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
 		<helper rel="gmd:measureDescription">
 			<option value="">-- Completeness --</option>
@@ -2303,6 +2303,7 @@
               contains(gmd:metadataStandardName/gco:CharacterString, 'SEXTANT')]">
       <option value="No condition applies">No condition applies</option>
       <option value="Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html</option>
+      <option value="Creative Commons 0 : https://creativecommons.org/publicdomain/zero/1.0/">Creative Commons 0: https://creativecommons.org/publicdomain/zero/1.0/</option>
       <option value="Creative Commons license to apply : Attribution (BY) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution (BY) : http://creativecommons.org/licenses/?lang=en</option>
       <option value="Creative Commons license to apply : Attribution + No Derivs (BY-ND) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + No Derivs (BY-ND) : http://creativecommons.org/licenses/?lang=en</option>
       <option value="Creative Commons license to apply : Attribution + Non Commercial + No Derivs (BY-NC-ND) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Non Commercial + No Derivs (BY-NC-ND) : http://creativecommons.org/licenses/?lang=en</option>
@@ -2589,10 +2590,10 @@
 			<option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
 			<option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
 			<option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
-			<!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service 
-				type <option value="discovery">Discovery Service (discovery)</option> <option 
-				value="view">View Service (view)</option> <option value="download">Download 
-				Service (download)</option> <option value="transformation">Transformation 
+			<!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
+				type <option value="discovery">Discovery Service (discovery)</option> <option
+				value="view">View Service (view)</option> <option value="download">Download
+				Service (download)</option> <option value="transformation">Transformation
 				Service (transformation)</option> <option value="other">Other Services (other)</option> -->
 		</helper>
 	</element>
@@ -2911,9 +2912,9 @@
 		<label>Period duration</label>
 		<description>
             The duration data type is used to specify a time interval.
-            
+
             The time interval is specified in the following form "PnYnMnDTnHnMnS" where:
-            
+
             * P indicates the period (required)
             * nY indicates the number of years
             * nM indicates the number of months
@@ -2921,7 +2922,7 @@
             * T indicates the start of a time section (required if you are going to specify hours, minutes, or seconds)
             * nH indicates the number of hours
             * nM indicates the number of minutes
-            * nS indicates the number of seconds            
+            * nS indicates the number of seconds
         </description>
     </element>
     <element name="gco:CharacterString">
@@ -2961,25 +2962,25 @@
         <description>Child elements and attributes have been hidden because you do no have access to view those elements</description>
     </element>
     <!-- ==================================================== -->
-    <element name="gmx:name"> 
-        <label>Name</label> 
-        <description>Feature catalogue name</description> 
-    </element> 
-    <element name="gmx:scope"> 
-        <label>Scope</label> 
-        <description>Scope definition</description> 
-    </element> 
-    <element name="gmx:versionNumber"> 
-        <label>Version</label> 
-        <description>Catalogue version</description> 
-    </element> 
-    <element name="gmx:versionDate"> 
-        <label>Date</label> 
-        <description>Catalogue date</description> 
-    </element> 
-    <element name="gmx:fieldOfApplication"> 
-        <label>Field of application</label> 
-        <description>Field of application</description> 
+    <element name="gmx:name">
+        <label>Name</label>
+        <description>Feature catalogue name</description>
+    </element>
+    <element name="gmx:scope">
+        <label>Scope</label>
+        <description>Scope definition</description>
+    </element>
+    <element name="gmx:versionNumber">
+        <label>Version</label>
+        <description>Catalogue version</description>
+    </element>
+    <element name="gmx:versionDate">
+        <label>Date</label>
+        <description>Catalogue date</description>
+    </element>
+    <element name="gmx:fieldOfApplication">
+        <label>Field of application</label>
+        <description>Field of application</description>
     </element>
     <element name="gml:axis">
         <label>Axis</label>
