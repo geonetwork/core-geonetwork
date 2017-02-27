@@ -323,9 +323,10 @@
       $scope.getPermalink = gnUtilityService.getPermalink;
 
       var url = gnGlobalSettings.gnUrl || location.href;
-      var tokens = url.split('/');
+      // var tokens = url.split('/');
       // TODO: this does not work in API mode
-      $scope.service = tokens[6].split('?')[0];
+      // Not used in Sextant.
+      // $scope.service = tokens[6].split('?')[0];
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;

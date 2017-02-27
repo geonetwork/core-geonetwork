@@ -65,7 +65,9 @@
                 // are prefixed with catalog URL
                 // console.log(config.url);
                 config.url = gnGlobalSettings.gnUrl +
+                             (gnLangs.current || 'eng') + '/' +
                              config.url;
+                 // console.log(config.url);
               }
 
               return $q.when(config);
