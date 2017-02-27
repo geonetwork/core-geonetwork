@@ -58,7 +58,7 @@
             "match": "ft_*_dt",
             "mapping": {
               "type": "date",
-              "format": "yyyy-MM-dd'T'HH:mm:ss'Z'||yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd' 'HH:mm:ss.SSS"
+              "format": "yyyy-MM-dd'T'HH:mm:ss'Z'||yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd HH:mm:ss.S"
             }
           }
         },
@@ -66,7 +66,8 @@
           "stringType": {
             "match": "ft_*_s",
             "mapping": {
-              "type": "keyword"
+              "type": "keyword",
+              "fielddata": true
             }
           }
         },
