@@ -1115,7 +1115,7 @@
                     var useProxy =
                         scope.params.url.indexOf(location.hostname) === -1;
                     var url = useProxy ?
-                        '../../proxy?url=' +
+                        gnGlobalSettings.proxyUrl +
                         encodeURIComponent(scope.params.url) : scope.params.url;
                     return $http.get(url).then(function(response) {
                       scope.isUrlOk = response.status === 200;
