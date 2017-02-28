@@ -541,7 +541,6 @@
     };
   }]);
 
-/*
     module.directive('sxtCustomScroll', [ '$window', function($window) {
     return {
       restrict: 'A',
@@ -578,7 +577,6 @@
       }
     };
   }]);
-*/
 
 
   // fix angularjs bug fixed in v1.5.0-beta.1 : some html special char are
