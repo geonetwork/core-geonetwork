@@ -26,9 +26,9 @@
 
 
   var TMP_PROFILE =
-  { "extendOnly": true,
-    "fields":[
-/*
+      { 'extendOnly': true,
+        'fields': [
+          /*
       {
       "name":"WATER_KM",
       "aggs": {
@@ -54,8 +54,10 @@
       "aggs": {
         "filters": {
           "filters": {
-            "48 - 50": {"query_string": {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.52"}},
-            "49 - 53": {"query_string": {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.53"}}
+            "48 - 50": {"query_string":
+            {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.52"}},
+            "49 - 53": {"query_string":
+            {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.53"}}
           }
         }
       }
@@ -64,21 +66,21 @@
       "name": "CARPOOL"
     }
 
-*/
-      {
-        "name": "date_max",
-        "display": "graph"
-      },
-      {
-        "name": "date_min",
-        "display": "form"
-      }
-      ],
-    "treeFields": ["CD_REGION"],
-    "tokenizedFields": {
-      "CGENELIN": "-"
-    }
-  };
+          */
+          {
+            'name': 'date_max',
+            'display': 'graph'
+          },
+          {
+            'name': 'date_min',
+            'display': 'form'
+          }
+        ],
+        'treeFields': ['CD_REGION'],
+        'tokenizedFields': {
+          'CGENELIN': '-'
+        }
+      };
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -96,11 +98,12 @@
     '$rootScope',
     'gnSolrRequestManager',
     'gnSolrService',
+    'gnGlobalSettings',
     'ngeoDebounce',
     'gnFeaturesTableManager',
     function($http, wfsFilterService, $q, $rootScope,
-             gnSolrRequestManager, gnSolrService, ngeoDebounce,
-             gnFeaturesTableManager) {
+             gnSolrRequestManager, gnSolrService, gnGlobalSettings,
+             ngeoDebounce, gnFeaturesTableManager) {
       return {
         restrict: 'A',
         replace: true,
@@ -113,7 +116,7 @@
           layer: '=',
           heatmapConfig: '@'
         },
-        controller: function(){},
+        controller: function() {},
         link: function(scope, element, attrs, ctrl) {
 
           var solrUrl, uuid, ftName, appProfile, appProfilePromise;
@@ -248,7 +251,7 @@
            * @return {HttpPromise} promise
            */
           scope.checkWFSServerUrl = function() {
-            return $http.get('../../proxy?url=' +
+            return $http.get(gnGlobalSettings.proxyUrl +
                 encodeURIComponent(scope.url))
                 .then(function() {
                   scope.isWfsAvailable = true;
@@ -322,9 +325,9 @@
           };
           scope.dropFeatures = function() {
             return $http.delete(
-              '../api/workers/data/wfs/actions?serviceUrl=' +
-                encodeURIComponent(scope.url)
-              + '&typeName=' + encodeURIComponent(ftName)).then(function() {
+                '../api/workers/data/wfs/actions?serviceUrl=' +
+                encodeURIComponent(scope.url) +
+                '&typeName=' + encodeURIComponent(ftName)).then(function() {
               scope.initSolrRequest();
             }, function() {
               console.warn('Failed to remove features for type ' + id);
@@ -375,7 +378,7 @@
               var iS = scope.output[fName].values[value];
               return iS;
             }
-            catch(e) {
+            catch (e) {
               return false;
             }
           };
@@ -386,10 +389,10 @@
             var date;
 
             // mapping from field (timelineZoomable)
-            if(field.model) {
+            if (field.model) {
               date = field.model;
-              if((angular.isObject(date) && date.from && date.to) ||
-                angular.isString(date)) {
+              if ((angular.isObject(date) && date.from && date.to) ||
+                  angular.isString(date)) {
                 output[fieldName] = {
                   type: 'date',
                   value: date
@@ -403,8 +406,8 @@
             else {
               date = output[fieldName].value;
 
-              if((angular.isObject(date) && date.from && date.to) ||
-                angular.isString(date)) {
+              if ((angular.isObject(date) && date.from && date.to) ||
+                  angular.isString(date)) {
                 output[fieldName].type = 'date';
               }
               else {
@@ -669,7 +672,7 @@
             solrObject.pushState();
             var state = solrObject.getState();
 
-            if(!state.any) {
+            if (!state.any) {
               var where = [];
               angular.forEach(state.qParams, function(fObj, fName) {
                 var clause = [];
@@ -717,7 +720,8 @@
         require: {
           wfsFilterCrl: '^^gnWfsFilterFacets'
         },
-        template: '<div gn-wfs-filter-facets-tree-item="treeCtrl.field.tree"></div>',
+        template: '<div gn-wfs-filter-facets-tree-item=' +
+            '"treeCtrl.field.tree"></div>',
         bindToController: true,
         controllerAs: 'treeCtrl',
         controller: function() {
@@ -733,7 +737,7 @@
                 name: this.field.name,
                 value: value
               });
-            }
+            };
           };
         }
       };
@@ -751,7 +755,7 @@
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/wfsfilter/' +
-        'partials/wfsfilterfacetTreeItem.html',
+            'partials/wfsfilterfacetTreeItem.html',
         scope: {
           node: '<gnWfsFilterFacetsTreeItem'
         },
@@ -761,8 +765,8 @@
         bindToController: true,
         controllerAs: 'ctrl',
         controller: ['$attrs', function($attrs) {
-          this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot']
-            === undefined;
+          this.isRoot = $attrs['gnWfsFilterFacetsTreeItemNotroot'] ===
+              undefined;
 
           this.$onInit = function() {
 
@@ -771,13 +775,13 @@
             };
             this.isSelected = function() {
               return this.treeCtrl.isSelected(this.node.key);
-            }
+            };
           };
         }],
-        link: function (scope, el, attrs, ctrls) {
+        link: function(scope, el, attrs, ctrls) {
           scope.toggleNode = function(evt) {
             el.find('.fa').first().toggleClass('fa-minus-square')
-              .toggleClass('fa-plus-square');
+                .toggleClass('fa-plus-square');
             el.children('.list-group').toggle();
             !evt || evt.preventDefault();
             evt.stopPropagation();

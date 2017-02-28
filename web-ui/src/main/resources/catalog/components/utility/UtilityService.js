@@ -433,7 +433,7 @@
       };
     }]);
 
-  module.service('gnTreeFromSlash', [function(){
+  module.service('gnTreeFromSlash', [function() {
     var findChild = function(node, name) {
       var n;
       if (node.nodes) {
@@ -448,7 +448,7 @@
     var sortNodeFn = function(a, b) {
       var aName = a.name;
       var bName = b.name;
-      if (aName < bName) return -1 ;
+      if (aName < bName) return -1;
       if (aName > bName) return 1;
       return 0;
     };
@@ -484,6 +484,6 @@
         createNode(tree, g, 0, e);
       });
       return tree;
-    }
+    };
   }]);
 })();

@@ -223,7 +223,7 @@
 
   /**
    * Format an url type attribute to a html link <a href=...">.
-   * @returns {*}
+   * @return {*}
    * @private
    */
   geonetwork.GnFeaturesSOLRLoader.prototype.formatUrlValues_ = function(url) {
@@ -231,10 +231,10 @@
 
     url = this.fillUrlWithFilter_(url);
     var link = $filter('linky')(url, '_blank');
-    if(link != url) {
+    if (link != url) {
       link = link.replace(/>(.)*</,
-        ' ' + 'target="_blank">' + linkTpl + '<'
-      );
+          ' ' + 'target="_blank">' + linkTpl + '<'
+          );
     }
     return link;
   };
@@ -245,9 +245,9 @@
    * transformed into
    * http://www.emso-fr.org?param_liste=Escherichia&param_group_liste=Microbio
    * if those value are set in wfsFilter facets search.
-   * 
+   *
    * @param {string} url
-   * @returns {string} substitued url
+   * @return {string} substitued url
    * @private
    */
   geonetwork.GnFeaturesSOLRLoader.prototype.fillUrlWithFilter_ = function(url) {
@@ -264,7 +264,7 @@
     while (match = regex.exec(url)) {
       placeholders.push(match[0]);
       urlFilters.push(match[1].substring(
-        URL_SUBSTITUTE_PREFIX.length, match[1].length));
+          URL_SUBSTITUTE_PREFIX.length, match[1].length));
     }
 
     urlFilters.forEach(function(p, i) {
@@ -273,7 +273,7 @@
       var fValue = solrFilters.qParams[idxName];
       url = url.replace(placeholders[i], '');
 
-      if(fValue) {
+      if (fValue) {
         paramsToAdd[name] = Object.keys(fValue.values)[0];
       }
     }.bind(this));
@@ -301,7 +301,7 @@
           sortable: true,
           formatter: function(val, row, index) {
             var outputValue = val;
-            if(this.urlUtils.isValid(val)) {
+            if (this.urlUtils.isValid(val)) {
               outputValue = this.formatUrlValues_(val);
             }
             return outputValue;
