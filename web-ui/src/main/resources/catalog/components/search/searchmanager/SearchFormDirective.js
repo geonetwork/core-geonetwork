@@ -127,7 +127,7 @@
             $scope.searchObj.defaultParams || defaultParams,
             $scope.searchObj.params,
             defaultParams);
-        
+
         // Add hidden filters which may
         // restrict search
         if ($scope.searchObj.filters) {

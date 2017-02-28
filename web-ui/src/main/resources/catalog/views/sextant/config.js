@@ -47,7 +47,7 @@
       // WMS settings
       // If 3D mode is activated, single tile WMS mode is
       // not supported by ol3cesium, so force tiling.
-      if (gnConfig['map.is3DModeAllowed']) {
+      if (viewerSettings.mapConfig.is3DModeAllowed) {
         viewerSettings.singleTileWMS = false;
         // Configure Cesium to use a proxy. This is required when
         // WMS does not have CORS headers. BTW, proxy will slow
@@ -209,13 +209,6 @@
         }
       };
 
-      /** Facets configuration */
-      searchSettings.facetsSummaryType = 'hits';
-
-      /* Custom templates for search result views */
-      searchSettings.resultTemplate = '../../catalog/views/sextant/' +
-          'templates/mdview/grid.html';
-
       searchSettings.formatter = {
         defaultUrl: function(md) {
           var url;
@@ -256,19 +249,6 @@
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
       }];
-
-      /* Hits per page combo values configuration */
-      searchSettings.hitsperpageValues = [20, 50, 100];
-
-      searchSettings.paginationInfo = {
-        hitsPerPage: searchSettings.hitsperpageValues[0]
-      };
-      /* Sort by combo values configuration */
-      searchSettings.sortbyValues = [
-        {sortBy: 'popularity', sortOrder: ''},
-        {sortBy: 'title', sortOrder: 'reverse'},
-        {sortBy: 'changeDate', sortOrder: ''}];
-      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
@@ -362,6 +342,9 @@
       // Define if search should exclude children
       searchSettings.excludeChildrenFromSearch = false;
 
+
+      // TODO: Too many changes made in sextant
+      // compared to GeoNetwork facet config
       searchSettings.facetConfig = [{
         key: 'publishedForGroup',
         index: '_groupPublished',
@@ -423,10 +406,10 @@
         }
       }
 
-      searchSettings.hiddenParams = {
-        type: 'dataset or series or publication or nonGeographicDataset or ' +
-            'feature or featureCatalog or map'
-      };
+      // searchSettings.hiddenParams = {
+      //   type: 'dataset or series or publication or nonGeographicDataset or ' +
+      //       'feature or featureCatalog or map'
+      // };
       searchSettings.configWho = searchSettings.configWho || '';
       if(searchSettings.configWho) {
         angular.extend(searchSettings.hiddenParams, {
