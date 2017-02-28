@@ -329,9 +329,13 @@
       });
       $scope.getPermalink = gnUtilityService.getPermalink;
 
-      var tokens = location.href.split('/');
-      // TODO: this does not work in API mode
-      $scope.service = tokens[6].split('?')[0];
+      try {
+        var tokens = location.href.split('/');
+        $scope.service = tokens[6].split('?')[0];
+        console.log($scope.service);
+      } catch(e) {
+        // console.log("Failed to extract current service from URL.");
+      }
 
       // If gnLangs current already set by config, do not use URL
       $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
