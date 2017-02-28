@@ -189,19 +189,12 @@
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
-      <xsl:choose>
-        <xsl:when test="$angularApp = 'gn_login'">
-
-        </xsl:when>
-        <xsl:otherwise>
-          module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
-          function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
-          gnGlobalSettings.init(
-          <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
-          null, gnViewerSettings, gnSearchSettings);
-          }]);
-        </xsl:otherwise>
-      </xsl:choose>
+      module.config(['gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
+      function(gnViewerSettings, gnSearchSettings, gnGlobalSettings) {
+      gnGlobalSettings.init(
+      <xsl:value-of select="if ($appConfig != '') then $appConfig else '{}'"/>,
+      null, gnViewerSettings, gnSearchSettings);
+      }]);
     </script>
   </xsl:template>
 </xsl:stylesheet>
