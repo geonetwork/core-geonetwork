@@ -511,7 +511,7 @@
             // This is optional if the WMS provides CORS
             if (viewerSettings.cesiumProxy) {
               source.set('olcs.proxy', function(url) {
-                return '../../proxy?url=' + encodeURIComponent(url);
+                return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               });
             }
 
