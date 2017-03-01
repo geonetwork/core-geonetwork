@@ -29,7 +29,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	">
-  <context:property-placeholder location="WEB-INF/config-db/jdbc.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="1"/>
+  <context:property-placeholder location="WEB-INF/config-db/jdbc-${overrides.props}.properties" file-encoding="UTF-8" ignore-unresolvable="true" order="1"/>
 
   <import resource="defaultJdbcDataSource.xml" />
 
@@ -42,7 +42,7 @@
   </bean>
 
   <bean id="jdbcURL" class="java.lang.String">
-    <constructor-arg value="jdbc:postgresql://${jdbc.host}:5432/${jdbc.database}"/>
+    <constructor-arg value="jdbc:postgresql://${jdbc.host}:${jdbc.port}/${jdbc.database}"/>
   </bean>
 
 
