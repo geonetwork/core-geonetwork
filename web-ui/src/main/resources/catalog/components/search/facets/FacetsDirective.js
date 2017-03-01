@@ -292,7 +292,7 @@
       };
     }]);
 
-  module.directive('gnFacetGraph', [ '$timeout', function($timeout) {
+  module.directive('gnFacetGraph', ['$timeout', function($timeout) {
 
     return {
       restrict: 'A',
@@ -311,7 +311,7 @@
 
         // dates must be sorted ASC
         scope.$watch('field.datesCount', function(counts) {
-          if(counts) {
+          if (counts) {
             var data = counts.map(function(d) {
               return {
                 event: d.value,
@@ -323,14 +323,14 @@
               };
             });
 
-            if(tmInitialized) {
+            if (tmInitialized) {
               tm.setTimeline(data);
             }
             else {
               tm.initialize(data, scope.field, scope.callback);
               tmInitialized = true;
               scope.$watch('field.expanded', function(exp) {
-                if(exp) {
+                if (exp) {
                   setTimeout(function() {
                     tm.onResize();
                   });

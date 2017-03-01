@@ -105,6 +105,7 @@
     "createMetadataUniformResourceName": "URN de la fiche",
     "createNewMetadata": "Créer une fiche",
     "createSmall": "Créer une miniature",
+    "cantAddLinkToDataset": "Échec de l'ajout d'un lien vers le jeu de données. Vous n'avez probablement pas les droits d'édition. Seul le service est mis à jour.",
     "current": "actuel",
     "datasetFound": "Jeu de données trouvé et ajouté à la carte",
     "datasetNotFound": "Jeu de données non trouvé - 404",
@@ -328,5 +329,6 @@
     "hasCheckpointCpt": "Has Checkpoint component",
     "hasDqEmptyCptMeasures": "Has empty Checkpoint component",
     "hasDqCptNotCovered": "Has Checkpoint component not covered",
-    "emodnet-checkpoint.challenges": "Checkpoint challenges"
+    "emodnet-checkpoint.challenges": "Checkpoint challenges",
+    "linkToXmlTab": "Certaines erreurs peuvent être corrigées <a href=\"#/metadata/{{metadataId}}/tab/xml\">dans le vue XML</a>."
 }

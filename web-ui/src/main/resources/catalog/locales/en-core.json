@@ -1,6 +1,11 @@
 {
     "all": "all",
     "allInPage": "all in page",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Author",
     "none": "none",
     "dqReportCheckpoint": "Data quality report (Checkpoint)",
@@ -315,7 +320,6 @@
     "directoryManager": "Manage directory",
     "typeOfRecord": "Type of record",
     "load": "Load",
-    "solrAccessError": "Error during Solr access.",
     "gnbbox": "Geographical area",
-    "indexAccessError": "Error during Solr access."
+    "indexAccessError": "Error during index access."
 }

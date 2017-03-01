@@ -28,6 +28,14 @@ mvn exec:exec -Des-start
 curl -X PUT http://localhost:9200/features -d @config/features.json
 ```
 
+To delete your index:
+
+```
+curl -X DELETE http://localhost:9200/features
+```
+
+
+
 ### Production use
 
 Configure ES to start on server startup.

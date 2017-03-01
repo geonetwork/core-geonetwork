@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Přidat nový záznam",
     "createSmall": "Vytvořit malý",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "stávající",
     "datasetFound": "Datová sada nalezena a přidána do náhledu mapy",
     "datasetNotFound": "Datová sada nenalezena - 404",
@@ -303,7 +304,7 @@
     "suggestionListError": "Ajaj, při vyhledávání návrhů se něco nepovedlo!",
     "showHideErrors": "Zobrazit / skrýt chyby",
     "showHideSuccess": "Zobrazit / skrýt úspěšnost",
-    "chooseAFragment": "select component to add",
+    "chooseAFragment": "Select element to add",
     "chooseASourceRecord": "Choose a source record to add element from",
     "sourceRecord": "Source record",
     "deleteField": "Vymazat toto pole",
@@ -321,5 +322,6 @@
     "parentConcept": "Parent concept",
     "moreSpecificConcept": "More specific concepts",
     "associatedConcept": "Associated concepts",
-    "xsd": "Schema validation"
+    "xsd": "Schema validation",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

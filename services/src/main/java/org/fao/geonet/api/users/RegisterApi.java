@@ -139,7 +139,7 @@ public class RegisterApi {
             sm.getNodeURL(),
             sm.getSiteName()
         );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
+        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
@@ -159,7 +159,7 @@ public class RegisterApi {
             sm.getNodeURL(),
             sm.getSiteName()
         );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
+        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }

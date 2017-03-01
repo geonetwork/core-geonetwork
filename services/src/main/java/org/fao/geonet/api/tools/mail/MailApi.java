@@ -48,7 +48,6 @@ package org.fao.geonet.api.tools.mail;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
-import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.MailUtil;
@@ -71,7 +70,6 @@ import javax.servlet.ServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import jeeves.server.context.ServiceContext;
 
 /**
  *
@@ -110,8 +108,13 @@ public class MailApi {
             "mail_config_test_subject"),
             sm.getSiteName(),
             to);
+        String message = String.format(messages.getString(
+            "mail_config_test_message"),
+            sm.getNodeURL(),
+            sm.getNodeURL(),
+            sm.getNodeURL());
         try {
-            MailUtil.testSendMail(to, subject, "Empty message", sm, to, "");
+            MailUtil.testSendMail(to, subject, null, message, sm, to, "");
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_config_test_success"), to), HttpStatus.CREATED);
         } catch (Exception ex) {

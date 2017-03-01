@@ -180,7 +180,7 @@
 
         var allFields = angular.copy(fields);
 
-        if(!appProfile.extendOnly) {
+        if (!appProfile.extendOnly) {
           toRemoveIdx.forEach(function(i) {
             fields.splice(i, 1);
           });
@@ -188,7 +188,7 @@
 
         // Add appProfile extra fields
         newFields.forEach(function(f) {
-          if(mergedF.indexOf(f.name) < 0) {
+          if (mergedF.indexOf(f.name) < 0) {
             f.label = f.name;
             fields.push(f);
           }
@@ -229,7 +229,8 @@
        * @param {string} featuretype name
        * @return {httpPromise} when indexing is done
        */
-      this.indexWFSFeatures = function(url, type, idxConfig, treeFields, uuid, version) {
+      this.indexWFSFeatures = function(
+          url, type, idxConfig, treeFields, uuid, version) {
         return $http.put('../api/0.1/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,

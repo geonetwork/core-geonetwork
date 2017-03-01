@@ -1,0 +1,45 @@
+<div class="panel panel-default"
+     data-ng-show="user.id && selections != null">
+  <div class="panel-heading"
+       data-gn-slide-toggle="">
+    <i class="fa fa-shopping-cart"/>&nbsp;
+    <span data-ng-show="selections.size > 0" data-translate="">basket</span>
+    <span data-ng-hide="selections.size > 0" data-translate="">emptyBasket</span>
+  </div>
+  <div class="panel-body">
+    <fieldset data-ng-repeat="sel in selections.list"
+              data-ng-show="sel.records.length > 0">
+      <legend data-gn-slide-toggle="">
+        {{sel.label[lang]}}
+        <span>({{sel.records.length}})</span>
+        <i class="fa gn-icon-{{sel.name}} pull-right"/>
+      </legend>
+
+      <ul class="list-group" data-ng-repeat="r in sel.records">
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-10">
+              <a data-ng-href="#/metadata/{{r}}">
+              {{selections.labels[r] || r}}
+              </a>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-link pull-right"
+                      data-ng-click="remove(sel.id, r)"
+                      data-title="{{'removeRecordFromSelection' | translate}}">
+                <i class="fa fa-times text-danger"></i>
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <button class="btn btn-default btn-block"
+              data-ng-if="actions[sel.name]"
+              data-ng-click="actions[sel.name].fn(sel.records)">
+        <i class="fa {{actions[sel.name].icon}}"></i>&nbsp;
+        {{actions[sel.name].label | translate}}
+      </button>
+    </fieldset>
+  </div>
+</div>

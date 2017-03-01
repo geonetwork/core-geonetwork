@@ -48,6 +48,7 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
+import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -139,6 +140,8 @@ public class SearchController {
                     Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
             }
             return res;
+        } catch (InvalidParameterValueEx e) {
+            throw e;
         } catch (Exception e) {
             context.error("Error while getting metadata with id : " + id);
             context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
@@ -167,11 +170,10 @@ public class SearchController {
         Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
 
         if (!Files.exists(styleSheet)) {
-            context.warning(
+            throw new InvalidParameterValueEx("OutputSchema",
                 String.format(
-                    "OutputSchema '%s' not supported for metadata with '%s' (%s). Corresponding XSL transformation '%s' does not exist. The record will not be returned in response.",
-                    outputSchema, id, schema, styleSheet.toString()));
-            return null;
+                    "OutputSchema '%s' not supported for metadata with '%s' (%s).\nCorresponding XSL transformation '%s' does not exist for this schema.\nThe record will not be returned in response.",
+                    outputSchema, id, schema, styleSheet.getFileName()));
         } else {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("lang", displayLanguage);
@@ -180,9 +182,12 @@ public class SearchController {
             try {
                 result = Xml.transform(result, styleSheet, params);
             } catch (Exception e) {
-                context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+                String msg = String.format(
+                    "Error occured while transforming metadata with id '%s' using '%s'.",
+                    id, styleSheet.getFileName());
+                context.error(msg);
                 context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-                return null;
+                throw new InvalidParameterValueEx("OutputSchema", msg);
             }
             return result;
         }
@@ -465,6 +470,16 @@ public class SearchController {
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
             typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
+        Element summary = summaryAndSearchResults.one();
+        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
+        if (startPos > numMatches) {
+            throw new InvalidParameterValueEx("startPosition", String.format(
+                "Start position (%d) can't be greater than number of matching records (%d for current search).",
+                startPos, numMatches
+            ));
+        }
+
+
         final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
         String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results
@@ -474,16 +489,19 @@ public class SearchController {
         //
         // properties of search result
         //
-        Element summary = summaryAndSearchResults.one();
-        int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
         results.setAttribute("numberOfRecordsMatched", numMatches + "");
         results.setAttribute("numberOfRecordsReturned", counter + "");
         results.setAttribute("elementSet", setName.toString());
 
-        if (numMatches > counter) {
-            results.setAttribute("nextRecord", counter + startPos + "");
-        } else {
+        int nextRecord = counter + startPos;
+        if (nextRecord >= numMatches) {
+            //  "number of records returned to client nextRecord -
+            // position of next record in the result set
+            // (0 if no records remain)"
+            // Cf. http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
             results.setAttribute("nextRecord", "0");
+        } else {
+            results.setAttribute("nextRecord", nextRecord + "");
         }
 
         return Pair.read(summary, results);
@@ -519,21 +537,27 @@ public class SearchController {
         for (int i = 0; (i < maxRecords) && (i < resultsList.size()); i++) {
             ResultItem resultItem = resultsList.get(i);
             String id = resultItem.getID();
-            Element md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
-            // metadata cannot be retrieved
-            if (md == null) {
-                context.warning("SearchController : Metadata not found or invalid schema : " + id);
-            }
-            // metadata can be retrieved
-            else {
-                // metadata must be included in response
-                if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
-                    results.addContent(md);
+            Element md = null;
+
+            try {
+                md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
+                // metadata cannot be retrieved
+                if (md == null) {
+                    results.addContent(new Comment(String.format("Metadata with id '%s' returned null.", id)));
+                    context.warning("SearchController : Metadata not found or invalid schema : " + id);
                 }
-                counter++;
+                // metadata can be retrieved
+                else {
+                    // metadata must be included in response
+                    if ((resultType == ResultType.RESULTS || resultType == ResultType.RESULTS_WITH_SUMMARY)) {
+                        results.addContent(md);
+                    }
+                }
+            } catch (InvalidParameterValueEx e) {
+                results.addContent(new Comment(e.getMessage()));
             }
+            counter++;
         }
         return counter;
     }
-
 }

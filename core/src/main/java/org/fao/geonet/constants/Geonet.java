@@ -79,6 +79,7 @@ public final class Geonet {
     public static final String CSW_HARVEST = CSW + ".harvest";
     public static final String SRU = GEONETWORK + ".sru";
     public static final String SRU_SEARCH = SRU + ".search";
+    public static final String USER_WATCHLIST = GEONETWORK + ".userwatchlist";
     public static final String OAI = GEONETWORK + ".oai";
     public static final String OAI_HARVESTER = OAI + ".provider";
     // keys for logging search log

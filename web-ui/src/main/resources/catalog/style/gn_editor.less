@@ -4,8 +4,8 @@
 @import (less) "../lib/style/datetimepicker.css";
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
-body {
 
+body {
 }
 
 .gn-line-height {
@@ -92,7 +92,18 @@ input[type=text], input[type=number], select {
 
 .gn-editor-container {
   padding: 20px 5px;
-  margin-top: 45px;
+  margin-top: 60px;
+}
+
+@media only screen and (max-width: 815px) {
+  .gn-editor-container {
+    margin-top: 120px;
+  }
+}
+@media only screen and (max-width: 425px) {
+  .gn-editor-container {
+    margin-top: 160px;
+  }
 }
 
 

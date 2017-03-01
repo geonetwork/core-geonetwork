@@ -523,3 +523,6 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'ita','Ritirato');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'ita','Proposto');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'ita','Respinto');
 
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'ita','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'ita','Watch list');
+
