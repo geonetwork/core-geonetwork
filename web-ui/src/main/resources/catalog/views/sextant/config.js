@@ -127,7 +127,7 @@
        */
       var mapsConfig = {
         zoom: 0,
-        maxResolution: 39135.75848201024
+        maxResolution: 78271.51696402048
       };
 
       if(typeof sxtSettings != 'undefined') {
