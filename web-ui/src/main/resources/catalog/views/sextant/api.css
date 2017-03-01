@@ -17088,6 +17088,7 @@ yx-axis
 .gn [sxt-main-viewer] .panel-carousel,
 .g [sxt-main-viewer] .panel-carousel {
   flex: 1;
+  overflow: auto;
 }
 .gn [sxt-main-viewer] .wps-container,
 .g [sxt-main-viewer] .wps-container {
