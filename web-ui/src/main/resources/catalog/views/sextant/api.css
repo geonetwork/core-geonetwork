@@ -21330,6 +21330,7 @@ yx-axis
   padding: 1em;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
   text-align: center;
+  position: relative;
 }
 .gn [gn-metadata-display] section.links .gn-md-links,
 .g [gn-metadata-display] section.links .gn-md-links {
