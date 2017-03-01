@@ -285,7 +285,11 @@
                 filter = filter.toLowerCase();
                 return v.name.toLowerCase().indexOf(filter) >= 0;
 
-              }
+              };
+
+              scope.$on('beforeSearchReset', function() {
+                scope.ctrl.activeFilter = '';
+              });
             }
           };
         }
