@@ -58,6 +58,9 @@ class SxtSummaryFactory {
 
         //createCollapsablePanel()
 
+      summary.associated.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
+      //summary.associated.add(createDynamicAssociatedHtml(summary))
+
         def toNavBarItem = {s ->
             def name = f.nodeLabel(s, null)
             def abbrName = f.nodeTranslation(s, null, "abbrLabel")
@@ -162,4 +165,5 @@ class SxtSummaryFactory {
             header.addThumbnail(logo.text())
         }
     }
+
 }
