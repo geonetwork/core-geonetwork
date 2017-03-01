@@ -483,7 +483,8 @@
           sxtService.feedMd(scope);
           scope.getScope = function() {
             return scope;
-          }
+          };
+          scope.mdUrl = location.origin + location.pathname + '#/metadata/' + scope.md.getUuid();
         }
       };
     }]);
