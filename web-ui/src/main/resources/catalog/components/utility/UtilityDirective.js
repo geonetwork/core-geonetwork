@@ -828,11 +828,25 @@
     };
   }]);
   module.filter('newlines', function() {
-    return function(text) {
-      if (text) {
-        return text.replace(/(\r)?\n/g, '<br/>');
+    return function(value) {
+      if(angular.isArray(value)) {
+        var finalText = '';
+        angular.forEach(value, function(value, key) {
+          if(value) {
+            finalText +=  '<p>' + value + '</p>';
+          } 
+        });
+
+        return finalText;
+
+      } else if(angular.isString(value)) {
+        if (value) {
+          return value.replace(/(\r)?\n/g, '<br/>');
+        } else {
+          return value;
+        }
       } else {
-        return text;
+        return value;
       }
     }
   });
