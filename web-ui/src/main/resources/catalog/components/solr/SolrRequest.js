@@ -379,12 +379,15 @@
       }
     */
       else if (!field.isRange) {
-        facetParams[field.idxName] = {
-          terms: {
-            field: field.idxName,
-            size: field.isDateTime ? MAX_ROWS : ROWS
-          }
-        };
+        if (angular.isDefined(field.idxName)) {
+          facetParams[field.idxName] = {
+            terms: {
+              field: field.idxName,
+              size: field.isDateTime ? MAX_ROWS :
+                      field.isTree ? FACET_TREE_ROWS : ROWS
+            }
+          };
+        }
       }
       else {
         statParams[field.idxName + '_stats'] = {
