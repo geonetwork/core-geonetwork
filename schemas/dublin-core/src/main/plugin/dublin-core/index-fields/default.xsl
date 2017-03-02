@@ -140,6 +140,51 @@
 
             <Field name="keyword" string="{$place}" store="true" index="true"/>
           </xsl:when>
+
+          <!-- Latitude 4.817 to 88.225; Longitude -179.950 to 180.000 -->
+          <xsl:when test="starts-with(., 'Latitude')">
+            <xsl:variable name="log" select="substring-after($coverage,'Latitude')"/>
+            <xsl:variable name="south" select="normalize-space(substring-before($log, 'to'))"/>
+            <xsl:variable name="log" select="substring-after($log,'to')"/>
+            <xsl:variable name="north" select="normalize-space(substring-before($log, ';'))"/>
+            <xsl:variable name="log" select="substring-after($log,'Longitude')"/>
+            <xsl:variable name="west" select="normalize-space(substring-before($log, 'to'))"/>
+            <xsl:variable name="log" select="substring-after($log,'to')"/>
+            <xsl:variable name="east" select="normalize-space($log)"/>
+
+            <Field name="westBL"  string="{$west}" store="false" index="true"/>
+            <Field name="eastBL"  string="{$east}" store="false" index="true"/>
+            <Field name="southBL" string="{$south}" store="false" index="true"/>
+            <Field name="northBL" string="{$north}" store="false" index="true"/>
+            <Field name="geoBox" string="{concat($west, '|',
+              $south, '|',
+              $east, '|',
+              $north
+              )}" store="true" index="false"/>
+          </xsl:when>
+
+          <!-- 4.817,-179.95 / 88.225,180 (min, max Latitude / min, max Longitude) -->
+          <xsl:when test="ends-with(., '(min, max Latitude / min, max Longitude)')">
+            <xsl:variable name="log" select="$coverage"/>
+            <xsl:variable name="south" select="normalize-space(substring-before($log, ','))"/>
+            <xsl:variable name="log" select="substring-after($log,',')"/>
+            <xsl:variable name="west" select="normalize-space(substring-before($log, '/'))"/>
+            <xsl:variable name="log" select="substring-after($log,'/')"/>
+            <xsl:variable name="north" select="normalize-space(substring-before($log, ','))"/>
+            <xsl:variable name="log" select="substring-after($log,',')"/>
+            <xsl:variable name="east" select="normalize-space(substring-before($log, '(min, max Latitude / min, max Longitude)'))"/>
+
+            <Field name="westBL"  string="{$west}" store="false" index="true"/>
+            <Field name="eastBL"  string="{$east}" store="false" index="true"/>
+            <Field name="southBL" string="{$south}" store="false" index="true"/>
+            <Field name="northBL" string="{$north}" store="false" index="true"/>
+            <Field name="geoBox" string="{concat($west, '|',
+              $south, '|',
+              $east, '|',
+              $north
+              )}" store="true" index="false"/>
+          </xsl:when>
+
           <xsl:otherwise>
             <Field name="keyword" string="{.}" store="true" index="true"/>
           </xsl:otherwise>
