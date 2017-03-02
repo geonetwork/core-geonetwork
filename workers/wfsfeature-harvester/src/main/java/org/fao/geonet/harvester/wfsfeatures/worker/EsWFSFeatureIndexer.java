@@ -369,13 +369,9 @@ public class EsWFSFeatureIndexer {
                             }
                             boolean isTokenized = separator != null;
                             if (isTokenized){
-                                StringTokenizer tokenizer =
-                                        new StringTokenizer((String) attributeValue, separator);
+                                String[] tokens = ((String) attributeValue).split(separator);
                                 ArrayNode arrayNode = mapper.createArrayNode();
-//                                builder.startArray(documentFields.get(attributeName));
-                                while (tokenizer.hasMoreElements()) {
-                                    String token = tokenizer.nextToken();
-//                                    builder.value(token.trim());
+                                for (String token : tokens) {
                                     arrayNode.add(token.trim());
                                 }
                                 rootNode.putPOJO(documentFields.get(attributeName), arrayNode);
