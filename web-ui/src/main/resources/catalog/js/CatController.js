@@ -332,7 +332,6 @@
       try {
         var tokens = location.href.split('/');
         $scope.service = tokens[6].split('?')[0];
-        console.log($scope.service);
       } catch(e) {
         // console.log("Failed to extract current service from URL.");
       }
