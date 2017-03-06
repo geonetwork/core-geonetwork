@@ -16,8 +16,9 @@ var gnHarvesteroaipmh = {
                 "username": "",
                 "password": ""
               },
+              "xslfilter": [],
               "url": "",
-              "icon" : "blank.png"
+              "icon" : "blank.png"              
             },
             "options":   {
               "every": "0 0 0 ? * *",
@@ -53,6 +54,9 @@ var gnHarvesteroaipmh = {
                 + $scope.buildTranslations(h)
                 + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
+                + '    <xslfilter>'
+                + (h.site.xslfilter[0] ? h.site.xslfilter.replace(/&/g, '&amp;') : '')
+                + '    </xslfilter>'
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
                 + '      <username>' + h.site.account.username + '</username>' 

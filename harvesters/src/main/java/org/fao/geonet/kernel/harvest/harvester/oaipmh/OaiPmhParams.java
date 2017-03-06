@@ -62,8 +62,9 @@ public class OaiPmhParams extends AbstractParams
 
 		url      = Util.getParam(site, "url",  "");
 		icon     = Util.getParam(site, "icon", "");
+	    xslfilter = Util.getParam(site, "xslfilter", "");
 
-		addSearches(searches);
+	    addSearches(searches);
 	}
 
 	//---------------------------------------------------------------------------
@@ -81,6 +82,7 @@ public class OaiPmhParams extends AbstractParams
 
 		url      = Util.getParam(site,  "url",  url);
 		icon     = Util.getParam(site,  "icon", icon);
+        xslfilter = Util.getParam(site, "xslfilter", "");
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -110,6 +112,7 @@ public class OaiPmhParams extends AbstractParams
 
 		copy.url  = url;
 		copy.icon = icon;
+		copy.xslfilter = xslfilter;
 
 		copy.setValidate(getValidate());
 
@@ -150,6 +153,16 @@ public class OaiPmhParams extends AbstractParams
 	public String icon;
 
 	private ArrayList<Search> alSearches = new ArrayList<Search>();
+	
+	 /**
+     * The filter is a process (see schema/process folder) which depends on the schema.
+     * It could be composed of parameter which will be sent to XSL transformation using
+     * the following syntax :
+     * <pre>
+     * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
+     * </pre>
+     */
+    public String  xslfilter;
 }
 
 //=============================================================================

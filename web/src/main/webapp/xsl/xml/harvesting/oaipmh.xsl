@@ -13,6 +13,7 @@
 	<xsl:template match="*" mode="site">
 		<url><xsl:value-of select="url/value" /></url>
 		<icon><xsl:value-of select="icon/value" /></icon>
+		<xslfilter><xsl:value-of select="xslfilter"/></xslfilter>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
