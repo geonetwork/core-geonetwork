@@ -119,8 +119,10 @@
    *
    */
   module.directive('gnSavedSelections', [
-    'gnSearchManagerService', 'gnSavedSelectionConfig', '$http', '$q',
-    function(gnSearchManagerService, gnSavedSelectionConfig, $http, $q) {
+    'gnSearchManagerService', 'gnSavedSelectionConfig',
+    '$http', '$q', '$rootScope',
+    function(gnSearchManagerService, gnSavedSelectionConfig,
+             $http, $q, $rootScope) {
 
       // List of persistent selections
       // and user records in each selections
@@ -140,7 +142,11 @@
       // Load metadata record. This is needed to load
       // the title to be displayed in the panel. Only the uuid
       // is stored in saved selections.
-      function loadrecords(defer, selections, allRecords) {
+      SavedSelectionController.prototype.loadrecords =
+          function(defer, selections, allRecords) {
+        selections.notFound = [];
+        var ctrl = this;
+
         // TODO: Handle case when there is
         // too many items in the saved selections
         gnSearchManagerService.search(
@@ -148,13 +154,36 @@
             'fast=index&_uuid=' +
             allRecords.join(' or ')).then(
             function(r) {
+              var foundRecords = [];
               angular.forEach(r.metadata, function(md) {
                 if (md) {
-                  selections.records[md['geonet:info'].uuid] = md;
+                  var uuid = md['geonet:info'].uuid;
+                  selections.records[uuid] = md;
+                  foundRecords.push(uuid);
                 }
               });
+
+              // Identify records which have been deleted
+              // or that current user can't see anymore.
+              // This only applies to session list.
+              selections.notFound = allRecords.filter(function(i) {
+                return foundRecords.indexOf(i) === -1;
+              });
+
+              // Remove not found records from the selection.
+              for (var i = 0; i < selections.notFound.length; i++) {
+                angular.forEach(selections.list, function(sel) {
+                  if (sel.id < 0) {
+                    ctrl.removeFromStore(sel, selections.notFound[i]);
+                  }
+                });
+              }
+
               selections.size = allRecords.length;
               selections.refreshCounter++;
+
+              $rootScope.$broadcast('savedSelectionsUpdate', selections);
+
               defer.resolve(selections);
             });
       };
@@ -164,7 +193,7 @@
       // from db or local/session storage.
       SavedSelectionController.prototype.init =
           function(user, localOnly) {
-        var defer = $q.defer(), allRecords = [];
+        var defer = $q.defer(), allRecords = [], ctrl = this;
         selections.list = [];
 
         angular.forEach(gnSavedSelectionConfig.localList, function(s) {
@@ -174,6 +203,7 @@
         });
 
         // Load user data
+        // List of selections does not change often. Cache them.
         $http.get('../api/userselections', {cache: true}).then(function(r) {
           if (user != undefined) {
             selections.list = selections.list.concat(r.data);
@@ -205,7 +235,7 @@
           });
 
           $q.all(getUserSelections).then(function() {
-            loadrecords(defer, selections, allRecords);
+            ctrl.loadrecords(defer, selections, allRecords);
           });
         });
         return defer.promise;
@@ -288,13 +318,13 @@
           var records = array != 'null' ? angular.fromJson(array) : [];
           var idx = records.indexOf(uuid);
           if (idx > -1) {
-            records.splice(uuid, 1);
+            records.splice(idx, 1);
             window[selection.storage].setItem(key, angular.toJson(records));
           }
         }
         var idx = selection.records.indexOf(uuid);
         if (idx > -1) {
-          selection.records.splice(uuid, 1);
+          selection.records.splice(idx, 1);
           this.init(this.userId, true);
         }
       };
@@ -343,7 +373,6 @@
 
         scope.$watch('user', function(n, o) {
           if (n !== o || scope.selections === null) {
-            console.log('watch');
             scope.selections = null;
             controller.getSelections(scope.user).then(function(selections) {
               scope.selections = selections;
@@ -388,140 +417,109 @@
   /**
    * Button to add or remove item from user saved selection.
    */
-  module.directive('gnSavedSelectionsAction', ['gnSavedSelectionConfig',
-    function(gnSavedSelectionConfig) {
-      function link(scope, element, attrs, controller) {
-        scope.selectionsWithRecord = [];
-        scope.selections = {};
-        scope.uuid = scope.record['geonet:info'].uuid;
+  module.directive('gnSavedSelectionsAction',
+      ['gnSavedSelectionConfig', '$rootScope',
+       function(gnSavedSelectionConfig, $rootScope) {
+         function link(scope, element, attrs, controller) {
+           scope.selectionsWithRecord = [];
+           scope.selections = {};
+           scope.uuid = scope.record['geonet:info'].uuid;
 
-        scope.$watchCollection('selections', function(n, o) {
-          if (n.refreshCounter !== o.refreshCounter) {
-            // Check in which selection this record is in
-            scope.selectionsWithRecord = [];
-            for (var i = 0; i < scope.selections.list.length; i++) {
-              var s = scope.selections.list[i];
-              if (s.records) {
-                for (var j = 0; j < s.records.length; j++) {
-                  if (s.records[j] === scope.uuid) {
-                    scope.selectionsWithRecord.push(s.id);
-                    break;
-                  }
-                }
-              }
-            }
-          }
-        });
+           $rootScope.$on('savedSelectionsUpdate', function(e, n, o) {
+             scope.selections = n;
+             // Check in which selection this record is in
+             scope.selectionsWithRecord = [];
+             for (var i = 0; i < scope.selections.list.length; i++) {
+               var s = scope.selections.list[i];
+               if (s.records) {
+                 for (var j = 0; j < s.records.length; j++) {
+                   if (s.records[j] === scope.uuid) {
+                     scope.selectionsWithRecord.push(s.id);
+                     break;
+                   }
+                 }
+               }
+             }
+           });
 
-        controller.getSelections(scope.user).then(function(selections) {
-          scope.selections = selections;
-        });
+           controller.getSelections(scope.user).then(function(selections) {
+             scope.selections = selections;
+           });
 
-        scope.add = function(selection) {
-          controller.add(selection, scope.user, scope.uuid);
-        };
+           scope.add = function(selection) {
+             controller.add(selection, scope.user, scope.uuid);
+           };
 
-        scope.remove = function(selection) {
-          controller.remove(selection, scope.user, scope.uuid);
-        };
+           scope.remove = function(selection) {
+             controller.remove(selection, scope.user, scope.uuid);
+           };
 
 
-        function canBeAdded(selection) {
-          // Authenticated user can't use local anymous selections
-          if (scope.user && scope.user.id !== undefined &&
+           function check(selection, canBeAdded) {
+             // Authenticated user can't use local anymous selections
+             if (scope.user && scope.user.id !== undefined &&
               selection.isAnonymousOnly === true) {
-            return false;
-          }
+               return false;
+             }
 
-          // Check if selection has an advanced filter
-          var selConfig = gnSavedSelectionConfig.actions[selection.name];
-          var isValidRecord = false;
-          if (selConfig && selConfig.filterFn &&
+             // Check if selection has an advanced filter
+             var selConfig = gnSavedSelectionConfig.actions[selection.name];
+             var isValidRecord = false;
+             if (selConfig && selConfig.filterFn &&
               angular.isFunction(selConfig.filterFn)) {
-            isValidRecord = selConfig.filterFn(scope.record);
-          } else {
-            isValidRecord = true;
-          }
+               isValidRecord = selConfig.filterFn(scope.record);
+             } else {
+               isValidRecord = true;
+             }
 
-          if (isValidRecord) {
-            // Check if record already in current selection
-            return selection.records.indexOf(scope.uuid) === -1;
-          } else {
-            return false;
-          }
-        }
+             if (isValidRecord && canBeAdded) {
+               // Check if record already in current selection
+               return selection.records.indexOf(scope.uuid) === -1;
+             } else if (isValidRecord && canBeAdded === false) {
+               // Check if record not already in current selection
+               return selection.records.indexOf(scope.uuid) !== -1;
+             } else {
+               return false;
+             }
+           }
 
-        function canBeRemoved(selection) {
-          // Authenticated user can't use local anymous selections
-          if (scope.user && scope.user.id !== undefined &&
-              selection.isAnonymousOnly === true) {
-            return false;
-          }
+           function checkStatus(selection, addedOrRemoved) {
+             if (selection) {
+               return check(selection, addedOrRemoved);
+             } else {
+               var result = false;
+               if (scope.selections.list === undefined) {
+                 return false;
+               }
+               for (var i = 0; i < scope.selections.list.length; i++) {
+                 if (check(scope.selections.list[i], addedOrRemoved)) {
+                   result = true;
+                 }
+               }
+               return result;
+             }
+           }
 
-          // Check if selection has an advanced filter
-          var selConfig = gnSavedSelectionConfig.actions[selection.name];
-          var isValidRecord = false;
-          if (selConfig && selConfig.filterFn &&
-              angular.isFunction(selConfig.filterFn)) {
-            isValidRecord = selConfig.filterFn(scope.record);
-          } else {
-            isValidRecord = true;
-          }
+           scope.canBeAdded = function(selection) {
+             return checkStatus(selection, true);
+           };
+           scope.canBeRemoved = function(selection) {
+             return checkStatus(selection, false);
+           };
 
-          if (isValidRecord) {
-            // Check if record already in current selection
-            return selection.records.indexOf(scope.uuid) !== -1;
-          } else {
-            return false;
-          }
-        }
-
-        scope.canBeAdded = function(selection) {
-          if (selection) {
-            return canBeAdded(selection);
-          } else {
-            var result = false;
-            if (scope.selections.list === undefined) {
-              return false;
-            }
-            for (var i = 0; i < scope.selections.list.length; i++) {
-              if (canBeAdded(scope.selections.list[i])) {
-                result = true;
-              }
-            }
-            return result;
-          }
-        };
-        scope.canBeRemoved = function(selection) {
-          if (selection) {
-            return canBeRemoved(selection);
-          } else {
-            var result = false;
-            if (scope.selections.list === undefined) {
-              return false;
-            }
-            for (var i = 0; i < scope.selections.list.length; i++) {
-              if (canBeRemoved(scope.selections.list[i])) {
-                result = true;
-              }
-            }
-            return result;
-          }
-        };
-
-      }
-      return {
-        restrict: 'A',
-        templateUrl: '../../catalog/components/common/' +
+         }
+         return {
+           restrict: 'A',
+           templateUrl: '../../catalog/components/common/' +
             'savedselections/partials/action.html',
-        require: '^gnSavedSelections',
-        link: link,
-        scope: {
-          selection: '@gnSavedSelectionsAction',
-          record: '=',
-          user: '=',
-          lang: '='
-        }
-      };
-    }]);
+           require: '^gnSavedSelections',
+           link: link,
+           scope: {
+             selection: '@gnSavedSelectionsAction',
+             record: '=',
+             user: '=',
+             lang: '='
+           }
+         };
+       }]);
 })();
