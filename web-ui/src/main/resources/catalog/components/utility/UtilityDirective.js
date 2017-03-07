@@ -828,11 +828,25 @@
     };
   }]);
   module.filter('newlines', function() {
-    return function(text) {
-      if (text) {
-        return text.replace(/(\r)?\n/g, '<br/>');
+    return function(value) {
+      if(angular.isArray(value)) {
+        var finalText = '';
+        angular.forEach(value, function(value, key) {
+          if(value) {
+            finalText +=  '<p>' + value + '</p>';
+          } 
+        });
+
+        return finalText;
+
+      } else if(angular.isString(value)) {
+        if (value) {
+          return value.replace(/(\r)?\n/g, '<br/>');
+        } else {
+          return value;
+        }
       } else {
-        return text;
+        return value;
       }
     }
   });
@@ -903,4 +917,40 @@
       }
     };
   });
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility.directive:gnLynky
+   *
+   * @description
+   * If the text provided contains the following format:
+   * link|URL|Text, it's converted to an hyperlink, otherwise
+   * the text is displayed without any formatting.
+   *
+   */
+  module.directive('gnLynky', ['$compile',
+    function($compile) {
+      return {
+        restrict: 'A',
+        scope: {
+          text: '@gnLynky'
+        },
+        link: function(scope, element, attrs) {
+          if ((scope.text.indexOf('link') == 0) &&
+              (scope.text.split('|').length == 3)) {
+            scope.link = scope.text.split('|')[1];
+            scope.value = scope.text.split('|')[2];
+
+            element.replaceWith($compile('<a data-ng-href="{{link}}" ' +
+                'data-ng-bind-html="value"></a>')(scope));
+          } else {
+
+            element.replaceWith($compile('<span ' +
+                'data-ng-bind-html="text"></span>')(scope));
+          }
+        }
+
+      };
+    }
+  ]);
 })();

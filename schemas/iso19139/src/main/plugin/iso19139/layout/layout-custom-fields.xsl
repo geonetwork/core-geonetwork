@@ -11,7 +11,8 @@
   xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="#all">
 
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
-
+  <xsl:include href="layout-custom-fields-sds.xsl"/>
+  
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19139" priority="2000" match="gmd:fileIdentifier|gmd:dateStamp">
 
@@ -137,4 +138,5 @@
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
+
 </xsl:stylesheet>

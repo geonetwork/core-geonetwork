@@ -43,13 +43,11 @@ public class UserModified implements GeonetworkEntityListener<User>,
      */
     @Override
     public void handleEvent(PersistentEventType type, User entity) {
-        if (entity.getId() == 0
-                && (type == PersistentEventType.PrePersist || type == PersistentEventType.PreUpdate)) {
+        if (type == PersistentEventType.PrePersist) {
             this.eventPublisher.publishEvent(new UserCreated(entity));
-        } else if ((type == PersistentEventType.PostPersist || type == PersistentEventType.PostUpdate)
-                && entity.getId() != 0) {
+        } else if (type == PersistentEventType.PreUpdate) {
             this.eventPublisher.publishEvent(new UserUpdated(entity));
-        } else if (type == PersistentEventType.PostRemove) {
+        } else if (type == PersistentEventType.PreRemove) {
             this.eventPublisher.publishEvent(new UserDeleted(entity));
         }
     }

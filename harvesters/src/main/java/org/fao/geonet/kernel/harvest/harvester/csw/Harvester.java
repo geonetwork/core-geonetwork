@@ -221,6 +221,8 @@ class Harvester implements IHarvester<HarvestResult>
 
         // Use the preferred HTTP method and check one exist.
         configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD);
+        // Force csw:Record outputSchema
+        request.setOutputSchema(Csw.NAMESPACE_CSW.getURI());
 
         if (params.isUseAccount()) {
             log.debug("Logging into server (" + params.getUsername() + ")");
@@ -239,11 +241,18 @@ class Harvester implements IHarvester<HarvestResult>
             errors.add(new HarvestError(ex, log));
 
             configRequest(request, oper, server, s, PREFERRED_HTTP_METHOD.equals("GET") ? "POST" : "GET");
+            // Force csw:Record outputSchema
+            request.setOutputSchema(Csw.NAMESPACE_CSW.getURI());
         }
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         while (true) {
+            if(this.cancelMonitor.get()) {
+              log.error("Harvester stopped in the middle of running!");
+              //Returning whatever, we have to move on and finish!
+              return records;
+            }
             request.setStartPosition(start);
             Element response = doSearch(request, start, GETRECORDS_REQUEST_MAXRECORDS);
             if (log.isDebugEnabled()) {
@@ -262,6 +271,11 @@ class Harvester implements IHarvester<HarvestResult>
                 }
             }
 
+            if(this.cancelMonitor.get()) {
+              log.error("Harvester stopped in the middle of running!");
+              //Returning whatever, we have to move on and finish!
+              return records;
+            }
             @SuppressWarnings("unchecked")
             List<Element> list = results.getChildren();
             int foundCnt = 0;
@@ -288,7 +302,10 @@ class Harvester implements IHarvester<HarvestResult>
             //--- check to see if we have to perform other searches
             int matchedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_MATCHED);
             int returnedCount = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_RETURNED);
-            int nextRecord = getSearchResultAttribute(results, ATTRIB_SEARCHRESULT_NEXT);
+
+            // nextRecord *is* required by CSW specifications, but some servers (e.g. terra catalog) are not returning this attribute
+            // See https://github.com/geonetwork/core-geonetwork/issues/1429
+            Integer nextRecord = getOptionalSearchResultAttribute(results, ATTRIB_SEARCHRESULT_NEXT);
 
             if (log.isDebugEnabled()) {
                 log.debug("Records matched by the query : " + matchedCount);
@@ -296,6 +313,8 @@ class Harvester implements IHarvester<HarvestResult>
                 log.debug("Records found in response    : " + foundCnt);
                 log.debug("Next record                  : " + nextRecord);
             }
+
+            //== Some log lines, in case we do not like some of the received values
 
             if (returnedCount != GETRECORDS_REQUEST_MAXRECORDS) {
                 log.warning("Declared number of returned records (" + returnedCount + ") does not match requested record count (" + GETRECORDS_REQUEST_MAXRECORDS + ")");
@@ -305,17 +324,39 @@ class Harvester implements IHarvester<HarvestResult>
                 log.warning("Declared number of returned records (" + returnedCount + ") does not match actual record count (" + foundCnt + ")");
             }
 
+            if(nextRecord == null) {
+                log.warning("Declared nextRecord is null");
+            }
 
-            // As indicated in CSW: A value of 0 means all records have been returned.
-            // And in case the CSW does not advertised the correct nextRecord
-            // check that we do not try to go over the last page.
-            if (nextRecord == 0 ||
-                start + GETRECORDS_REQUEST_MAXRECORDS > matchedCount) {
+            //== Find out if the harvesting loop has completed
+            
+            // Check for standard CSW: A value of 0 means all records have been returned.
+            if (nextRecord != null && nextRecord == 0) {
+                break;
+            }
+
+            // Misbehaving CSW server:
+            // GN 3.0.x: see https://github.com/geonetwork/core-geonetwork/issues/1537
+            // startPosition=493&maxRecords=1
+            //    <csw:SearchResults numberOfRecordsMatched="493" numberOfRecordsReturned="1" elementSet="summary" nextRecord="494">
+            // startPosition=494&maxRecords=1
+            //    <csw:SearchResults numberOfRecordsMatched="493" numberOfRecordsReturned="0" elementSet="summary" nextRecord="494">
+
+            if (nextRecord != null && nextRecord > matchedCount) {
+                log.warning("Forcing harvest end since next > matched");
+                break;
+            }
+
+            // Another way to escape from an infinite loop
+
+            if (returnedCount == 0) {
+                log.warning("Forcing harvest end since numberOfRecordsReturned = 0");
                 break;
             }
 
             // Start position of next record.
-            start = start + GETRECORDS_REQUEST_MAXRECORDS;
+            // Note that some servers may return less records than requested (it's ok for CSW protocol)
+            start += returnedCount;
         }
 
         log.info("Records added to result list : " + records.size());
@@ -598,6 +639,20 @@ class Harvester implements IHarvester<HarvestResult>
             }
 
             return Integer.parseInt(value);
+	}
+
+        private Integer getOptionalSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx	{
+            String value = results.getAttributeValue(attribName);
+
+            if (value == null) {
+                return null;
+            }
+
+            if (!Lib.type.isInteger(value)) {
+                throw new OperationAbortedEx("Bad value for '" + attribName + "'", value);
+            }
+
+            return Integer.valueOf(value);
 	}
 
 	//---------------------------------------------------------------------------

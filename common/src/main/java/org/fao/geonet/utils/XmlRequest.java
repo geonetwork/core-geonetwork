@@ -96,9 +96,10 @@ public class XmlRequest extends AbstractHttpRequest {
         final ClientHttpResponse httpResponse = doExecute(httpMethod);
 
         if (httpResponse.getRawStatusCode() > 399) {
-            throw new BadServerResponseEx(httpResponse.getStatusText() + 
-                    " -- URI: " + httpMethod.getURI() +
-                    " -- Response Code: " + httpResponse.getRawStatusCode());
+            httpMethod.releaseConnection();
+            throw new BadServerResponseEx(httpResponse.getStatusText() +
+                " -- URI: " + httpMethod.getURI() +
+                " -- Response Code: " + httpResponse.getRawStatusCode());
         }
 
         byte[] data = null;

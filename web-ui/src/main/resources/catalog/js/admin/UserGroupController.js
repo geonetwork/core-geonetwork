@@ -74,6 +74,13 @@
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
 
+      // This is to force IE11 NOT to cache json requests
+      if (!$http.defaults.headers.get) {
+          $http.defaults.headers.get = {};
+      }
+      $http.defaults.headers.get['Cache-Control'] = 'no-cache';
+      $http.defaults.headers.get['Pragma'] = 'no-cache';
+
       $http.get('info?type=categories&_content_type=json').
           success(function(data) {
             $scope.categories = data.metadatacategory;
@@ -262,7 +269,11 @@
           password2: $scope.resetPassword2
         };
 
-        $http.post('admin.user.resetpassword', null, {params: params})
+        $http.post('admin.user.resetpassword',
+            $.param(params),
+            {
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $scope.resetPassword1 = null;
               $scope.resetPassword2 = null;
@@ -347,8 +358,12 @@
        * Save a user.
        */
       $scope.saveUser = function(formId) {
-        $http.get('admin.user.update?' + $(formId).serialize() +
-                '&enabled=' + $scope.userIsEnabled)
+        $http.post('admin.user.update',
+            $(formId).serialize() +
+            '&enabled=' + $scope.userIsEnabled,
+            {
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $scope.unselectUser();
               loadUsers();

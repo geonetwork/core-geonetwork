@@ -20,9 +20,9 @@ l[it]="it"
 l[ko]="ko"
 l[du]="nl"
 l[cz]="cs_CZ"
+l[ca]="ca"
 
-
-for lang in du es fr ge it ko cz
+for lang in du es fr ge it ko cz ca
 do
   echo "Language $lang"
   for mod in admin core editor search

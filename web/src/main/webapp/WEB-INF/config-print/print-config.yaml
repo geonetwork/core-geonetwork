@@ -128,7 +128,7 @@ layouts:
               backgroundColor: white
               layerFontSize: 9
   #===========================================================================
-  A4 paysage:
+  A4 landscape:
     mainPage:
       rotation: false
       pageSize: LEGAL

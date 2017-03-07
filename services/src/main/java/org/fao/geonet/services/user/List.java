@@ -25,6 +25,8 @@ package org.fao.geonet.services.user;
 
 import com.google.common.collect.Sets;
 import jeeves.server.ServiceConfig;
+
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
@@ -86,6 +88,7 @@ public class List {
         if (context == null || context.getAuthentication() == null) {
             throw new AuthenticationCredentialsNotFoundException("User needs to log in");
         }
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
         User me = userRepository.findOneByUsername(context.getAuthentication().getName());
 
         if (me == null) {
@@ -162,7 +165,9 @@ public class List {
     private Set<Integer> getGroups(final int id, final Profile profile)
             throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
-
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+        GroupRepository groupRepository = ApplicationContextHolder.get().getBean(GroupRepository.class);
+        UserGroupRepository userGroupRepo = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
         if (profile == Profile.Administrator) {
             hs.addAll(groupRepository.findIds());
         } else if (profile == Profile.UserAdmin) {
@@ -174,18 +179,6 @@ public class List {
 
         return hs;
     }
-
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-    @PersistenceContext
-    private EntityManager entityManager;
-    @Autowired
-    private GroupRepository groupRepository;
-    @Autowired
-    private UserGroupRepository userGroupRepo;
-    @Autowired
-    private UserRepository userRepository;
-
 }
 
 // =============================================================================

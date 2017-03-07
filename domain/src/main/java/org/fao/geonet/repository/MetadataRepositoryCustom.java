@@ -90,5 +90,13 @@ public interface MetadataRepositoryCustom {
      * @return a map of metadataId -> SourceInfo
      */
     Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<Metadata> spec);
+    
+    /**
+     * Load only the basic info for a metadata. Used in harvesters, mostly.
+     * 
+     * @param spec
+     * @return
+     */
+    List<SimpleMetadata> findAllSimple(String harvestUuid);
 
 }

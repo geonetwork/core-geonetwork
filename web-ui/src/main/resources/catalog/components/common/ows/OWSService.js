@@ -18,7 +18,7 @@
           var result = parser.read(data);
 
           var layers = [];
-          var url = result.Capability.Request.GetCapabilities.
+          var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
 
           // Push all leaves into a flat array of Layers.
@@ -189,7 +189,7 @@
 
             for (var i = 0, len = layers.length; i < len; i++) {
               //check layername
-              if (name == layers[i].Name) {
+              if (name == layers[i].Name || name == layers[i].Identifier) {
                 layers[i].nameToUse = name;
                 return layers[i];
               }
