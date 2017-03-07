@@ -66,7 +66,7 @@
 
       // Retrieve the angular value config object
       if (!$injector.has(configName)) {
-        console.error('The Solr config is not defined: ' + configName);
+        console.error('The index config is not defined: ' + configName);
         return;
       }
 
