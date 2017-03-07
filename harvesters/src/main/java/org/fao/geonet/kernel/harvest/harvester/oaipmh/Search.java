@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -60,7 +61,7 @@ class Search
 
 		try
 		{
-		    if (!from.equals("") && !from.equals("Invalid Date")) {
+		    if (StringUtils.isNotEmpty(from) && !from.equalsIgnoreCase("Invalid Date")) {
 				fromDate = new ISODate(from);
 				from     = fromDate.getDateAsString();
 			} else {
@@ -77,7 +78,7 @@ class Search
 
 		try
 		{
-		    if (!until.equals("") && !until.equals("Invalid Date")) {
+		    if (StringUtils.isNotEmpty(until) && !until.equalsIgnoreCase("Invalid Date")) {
 				untilDate = new ISODate(until);
 				until     = untilDate.getDateAsString();
 			} else {
