@@ -888,8 +888,8 @@
                 scope.date = {};
                 return;
               }
-              scope.onChangeFn();
               if (v != o) {
+                scope.onChangeFn();
                 $(element).find('input')[0].value = (v && v.from) || '';
                 $(element).find('input')[1].value = (v && v.to) || '';
 
