@@ -1217,7 +1217,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 			LuceneConfigNumericField fieldConfig = numericFieldSet .get(fld);
 			if (fieldConfig != null) {
-				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType());
+				returnValue = LuceneQueryBuilder.buildNumericRangeQueryForType(fld, lowerTxt, upperTxt, inclusive, inclusive, fieldConfig.getType(), fieldConfig.getPrecisionStep());
 			} else {
 				lowerTxt = (lowerTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, lowerTxt, analyzer, tokenizedFieldSet));
 				upperTxt = (upperTxt == null ? null : LuceneSearcher.analyzeQueryText(fld, upperTxt, analyzer, tokenizedFieldSet));

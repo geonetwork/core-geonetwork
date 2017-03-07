@@ -1,10 +1,16 @@
 package org.fao.geonet.services.main;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.JeevesEngine;
-import jeeves.server.UserSession;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.ServiceRequestFactory;
+import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
@@ -15,22 +21,46 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.nio.file.Path;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jeeves.constants.Jeeves;
+import jeeves.server.JeevesEngine;
+import jeeves.server.UserSession;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.ServiceRequestFactory;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 @Controller
 public class GenericController {
     public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
+    
+    /**
+     * Detect crawlers. Useful to avoid creating sessions for them.
+     */
+    private Pattern regex = Pattern.compile(ServiceManager.BOT_REGEXP, Pattern.CASE_INSENSITIVE);
 
     @RequestMapping(value = "/{lang}/{service}")
     @ResponseBody
     public void dispatch(@PathVariable String lang,
                          @PathVariable String service, HttpServletRequest request,
-                         HttpServletResponse response, HttpSession httpSession)
+                         HttpServletResponse response)
             throws Exception {
-
+        HttpSession httpSession = request.getSession(false);
+        
+        String userAgent = request.getHeader("user-agent");
+        
+        Matcher m = regex.matcher(userAgent);
+        boolean notCrawler = !m.find();
+        
+        
+        if(httpSession == null && notCrawler) {
+            httpSession = request.getSession(true);
+        } else if(httpSession != null && !notCrawler) {
+            //Shouldn't get here, but in any case, free the memory
+            request.getSession().invalidate();
+            httpSession = null;
+        }
+        
         String ip = request.getRemoteAddr();
         // if we do have the optional x-forwarded-for request header then
         // use whatever is in it to record ip address of client
@@ -53,20 +83,29 @@ public class GenericController {
         }
 
         if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
+            if(httpSession != null) {
+                Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
+            } else {
+                Log.debug(Log.REQUEST, "No session created");                
+            }
         }
-        UserSession session = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
 
-        if (session == null) {
-            // --- create session
-
-            session = new UserSession();
-
-            httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
-            session.setsHttpSession(httpSession);
-
-            if (Log.isDebugEnabled(Log.REQUEST))
-                Log.debug(Log.REQUEST, "Session created for client : " + ip);
+        UserSession session = null;
+        
+        if(httpSession != null) {
+            session = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
+    
+            if (session == null) {
+                // --- create session
+    
+                session = new UserSession();
+    
+                httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
+                session.setsHttpSession(httpSession);
+    
+                if (Log.isDebugEnabled(Log.REQUEST))
+                    Log.debug(Log.REQUEST, "Session created for client : " + ip);
+            }
         }
 
         ServiceRequest srvReq = null;
@@ -102,7 +141,22 @@ public class GenericController {
         }
 
         // --- execute request
+        try {
+            jeeves.dispatch(srvReq, session);
+        } finally {
+            // Cleanup uploaded resources
+            if (request instanceof MultipartRequest) {
+                Map<String, MultipartFile> files = ((MultipartRequest) request).getFileMap();
+                Iterator<Map.Entry<String, MultipartFile>> it =
+                        files.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, MultipartFile> file = it.next();
 
-        jeeves.dispatch(srvReq, session);
+                    Path uploadedFile = jeeves.getUploadDir().resolve(file.getValue().getOriginalFilename());
+                    FileUtils.deleteQuietly(uploadedFile.toFile());
+                }
+            }
+
+        }
     }
 }

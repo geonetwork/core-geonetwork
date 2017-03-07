@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <schematron.title>Geonetwork Validation Rules</schematron.title>
+    <schematron.title>Geonetwork Rules</schematron.title>
     <M500>[Language] - Metadata language is not defined and other language are declared and Main metadata language MUST NOT be defined in other language section.</M500>
     <alert.M500>
         <div>Check that the main metadata language is not defined and other languages (ie.

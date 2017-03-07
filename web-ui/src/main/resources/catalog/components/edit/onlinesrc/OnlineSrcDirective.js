@@ -684,17 +684,7 @@
                         }
                       }
                       else {
-                        // TODO: Check the appropriate WMS service
-                        // or list URLs if many
-                        links = links.concat(
-                            gnCurrentEdit.metadata.getLinksByType('OGC:WMS'));
-                        links = links.concat(
-                            gnCurrentEdit.metadata.getLinksByType('wms'));
-                        var serviceUrl = links[0].url;
-                        scope.loadWMSCapabilities(serviceUrl);
-                        scope.srcParams.url = serviceUrl;
                         scope.srcParams.uuidDS = md.getUuid();
-                        scope.srcParams.uuidSrv = gnCurrentEdit.uuid;
                       }
                     }
                   });

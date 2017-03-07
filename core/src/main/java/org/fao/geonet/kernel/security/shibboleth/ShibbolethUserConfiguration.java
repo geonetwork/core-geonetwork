@@ -53,6 +53,9 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setSurnameKey(String surnameKey) {
+        if(surnameKey == null) {
+            surnameKey = "";
+        }
         this.surnameKey = surnameKey;
     }
 
@@ -61,6 +64,9 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setFirstnameKey(String firstnameKey) {
+        if(firstnameKey == null) {
+            firstnameKey = "";
+        }
         this.firstnameKey = firstnameKey;
     }
 
@@ -69,6 +75,9 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setProfileKey(String profileKey) {
+        if(profileKey == null) {
+            profileKey = "";
+        }
         this.profileKey = profileKey;
     }
 
@@ -77,6 +86,9 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setGroupKey(String groupKey) {
+        if(groupKey == null) {
+            groupKey = "";
+        }
         this.groupKey = groupKey;
     }
 
@@ -85,6 +97,9 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setDefaultGroup(String defaultGroup) {
+        if(defaultGroup == null) {
+            defaultGroup = "";
+        }
         this.defaultGroup = defaultGroup;
     }
 
@@ -115,6 +130,9 @@ public class ShibbolethUserConfiguration {
     }
 
     public void setEmailKey(String emailKey) {
+        if(emailKey == null) {
+            emailKey = "";
+        }
         this.emailKey = emailKey;
     }
 }

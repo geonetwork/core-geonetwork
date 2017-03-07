@@ -23,26 +23,24 @@
 
 package jeeves.server.dispatchers;
 
-import com.yammer.metrics.core.TimerContext;
-import jeeves.component.ProfileManager;
-import jeeves.constants.ConfigFile;
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.monitor.MonitorManager;
-import jeeves.monitor.timer.ServiceManagerGuiServicesTimer;
-import jeeves.monitor.timer.ServiceManagerServicesTimer;
-import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.Call;
-import jeeves.server.dispatchers.guiservices.GuiService;
-import jeeves.server.dispatchers.guiservices.XmlFile;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.ServiceRequest.InputMethod;
-import jeeves.server.sources.ServiceRequest.OutputMethod;
-import jeeves.server.sources.http.HttpServiceRequest;
-import jeeves.server.sources.http.JeevesServlet;
+import java.io.ByteArrayOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.io.EofException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -62,19 +60,27 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import com.yammer.metrics.core.TimerContext;
+
+import jeeves.component.ProfileManager;
+import jeeves.constants.ConfigFile;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.monitor.MonitorManager;
+import jeeves.monitor.timer.ServiceManagerGuiServicesTimer;
+import jeeves.monitor.timer.ServiceManagerServicesTimer;
+import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.Call;
+import jeeves.server.dispatchers.guiservices.GuiService;
+import jeeves.server.dispatchers.guiservices.XmlFile;
+import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.ServiceRequest.InputMethod;
+import jeeves.server.sources.ServiceRequest.OutputMethod;
+import jeeves.server.sources.http.HttpServiceRequest;
+import jeeves.server.sources.http.JeevesServlet;
 
 //=============================================================================
 public class ServiceManager {
@@ -91,7 +97,15 @@ public class ServiceManager {
     private boolean defaultLocal;
     private JeevesServlet servlet;
     private boolean startupError = false;
-    private Map<String, String> startupErrors;
+    private Map<String, String> startupErrors;  
+    
+    /**
+     * Detect crawlers. Useful to avoid creating sessions for them.
+     */
+    public static final String BOT_REGEXP = ".*(bot|crawler|baiduspider|80legs|ia_archiver|"
+            + "voyager|yahoo! slurp|mediapartners-google).*";
+    private Pattern regex = Pattern.compile(BOT_REGEXP, Pattern.CASE_INSENSITIVE);
+    
 
 
     @PersistenceContext
@@ -361,20 +375,31 @@ public class ServiceManager {
 
         String ip = request.getRemoteAddr();
 
-        final HttpSession httpSession = request.getSession(true);
-        UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
-        if (session == null) {
-            session = new UserSession();
+        boolean notCrawler = true;
 
-            httpSession.setAttribute(Jeeves.Elem.SESSION, session);
-            session.setsHttpSession(httpSession);
+        String userAgent = request.getHeader("user-agent");
 
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "Session created for client : " + ip);
-            }
+        if(StringUtils.isNotBlank(userAgent)) {
+            Matcher m = regex.matcher(userAgent);
+            notCrawler = !m.find();
         }
 
-        context.setUserSession(session);
+        if(notCrawler) {
+            final HttpSession httpSession = request.getSession(true);
+            UserSession session = (UserSession) httpSession.getAttribute(Jeeves.Elem.SESSION);
+            if (session == null) {
+                session = new UserSession();
+    
+                httpSession.setAttribute(Jeeves.Elem.SESSION, session);
+                session.setsHttpSession(httpSession);
+    
+                if (Log.isDebugEnabled(Log.REQUEST)) {
+                    Log.debug(Log.REQUEST, "Session created for client : " + ip);
+                }
+            }
+    
+            context.setUserSession(session);
+        }
         return context;
     }
 

@@ -5,7 +5,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>3.0.4-SNAPSHOT</version>
+  <version>3.0.6-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -560,7 +560,7 @@
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.13</version>
+        <version>1.2.17</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -1198,7 +1198,7 @@
     <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.9.0</lucene.version>
-    <spring.version>3.2.5.RELEASE</spring.version>
+    <spring.version>3.2.9.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>

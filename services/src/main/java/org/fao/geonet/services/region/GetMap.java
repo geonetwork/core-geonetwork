@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.region.RegionNotFoundEx;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.region.Request;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -68,6 +69,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Map;
 import java.util.SortedSet;
@@ -272,7 +274,9 @@ public class GetMap{
             InputStream in = null;
             try {
                 URL imageUrl = new URL(background);
-                in = imageUrl.openStream();
+                // Setup the proxy for the request if required
+                URLConnection conn = Lib.net.setupProxy(context, imageUrl);
+                in = conn.getInputStream();
                 image = ImageIO.read(in);
             } catch (IOException e) {
                 image = new BufferedImage(imageDimensions.width, imageDimensions.height, BufferedImage.TYPE_INT_ARGB);

@@ -143,6 +143,7 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -3432,6 +3433,10 @@ public class DataManager implements ApplicationEventPublisherAware {
                     }
                 });
 
+    }
+
+    public void forceIndexChanges() throws IOException {
+        getSearchManager().forceIndexChanges();
     }
 
     public int batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {

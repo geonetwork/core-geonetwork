@@ -191,6 +191,12 @@
         </gmd:keyword>
       </xsl:for-each>
 
+      <!-- If no keyword, add one to avoid invalid metadata -->
+      <xsl:if test="count(//keyword[thesaurus/key = $currentThesaurus]) = 0">
+        <gmd:keyword gco:nilReason="missing">
+          <gco:CharacterString></gco:CharacterString>
+        </gmd:keyword>
+      </xsl:if>
 
       <xsl:copy-of select="geonet:add-thesaurus-info($currentThesaurus, $withThesaurusAnchor, /root/gui/thesaurus/thesauri, not(/root/request/keywordOnly))" />
     </gmd:MD_Keywords>

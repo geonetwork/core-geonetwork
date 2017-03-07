@@ -265,6 +265,7 @@
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
+          <xsl:variable name="forceLabel" select="@forceLabel"/>
           <xsl:for-each select="$nodes/*">
             <!-- Retrieve matching key values 
               Only text values are supported. Separator is #.
@@ -427,7 +428,7 @@
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
               <xsl:with-param name="refToDelete" select="if ($refToDelete) then $refToDelete/gn:element else ''"/>
-              <xsl:with-param name="isFirst" select="position() = 1"/>
+              <xsl:with-param name="isFirst" select="$forceLabel or position() = 1"/>
             </xsl:call-template>
           </xsl:for-each>
           
@@ -527,8 +528,16 @@
       <xsl:variable name="btnLabel" select="@btnLabel"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
 
+      <!-- It tries to search using the prefix, but we can't add a prefix on $strings -->
+      <xsl:variable name="nameCleanUp">
+        <xsl:choose>
+          <xsl:when test="string($strings/*[name() = $name]) != ''"><xsl:value-of select="$name"/></xsl:when>
+          <xsl:otherwise><xsl:value-of select="replace($name, ':', '-')"/></xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      
       <xsl:call-template name="render-element-template-field">
-        <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
+        <xsl:with-param name="name" select="$strings/*[name() = $nameCleanUp]"/>
         <xsl:with-param name="id" select="concat('_X', 
           $nonExistingChildParent/*[position() = last()]/gn:element/@ref, '_', 
           $nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, 'COLON', @or)"/>

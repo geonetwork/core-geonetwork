@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <xsl:stylesheet version="1.0" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gco="http://www.isotc211.org/2005/gco"
-    xmlns:gml="http://www.opengis.net/gml"
-    xmlns:gmx="http://www.isotc211.org/2005/gmx"
-    xmlns:srv="http://www.isotc211.org/2005/srv"
-    xmlns:util="java:org.fao.geonet.util.XslUtil"
-    xmlns:java="java:org.fao.geonet.util.XslUtil"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    >
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:geonet="http://www.fao.org/geonetwork"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                exclude-result-prefixes="#all">
 
     <!--This file defines what parts of the metadata are indexed by Lucene
         Searches can be conducted on indexes defined here.
@@ -21,6 +24,14 @@
 
     <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="no" />
     <xsl:include href="../convert/functions.xsl"/>
+    <xsl:include href="../../../xsl/utils-fn.xsl" />
+    <xsl:include href="inspire-util.xsl" />
+
+    <xsl:param name="thesauriDir"/>
+    <xsl:param name="inspire">false</xsl:param>
+
+    <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
+    <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
 
     <!-- ========================================================================================= -->
     <xsl:variable name="isoDocLangId">
@@ -70,7 +81,7 @@
                 <Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true" />
             </xsl:if>
             <xsl:variable name="title"
-                select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
+                          select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:identificationInfo//gmd:citation//gmd:title//gmd:LocalisedCharacterString[@locale=$poundLangId]"/>
 
             <!-- not tokenized title for sorting -->
             <xsl:choose>
@@ -112,8 +123,28 @@
         <!-- the double // here seems needed to index MD_DataIdentification when
             it is nested in a SV_ServiceIdentification class -->
 
+        <xsl:for-each select="gmd:contact/*/gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]">
+            <Field name="metadataPOC" string="{string(.)}" store="true" index="true"/>
+
+            <xsl:variable name="role" select="../../../../gmd:role/*/@codeListValue"/>
+            <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
+            <xsl:variable name="logo" select="../../../..//gmx:FileName/@src"/>
+            <xsl:variable name="email" select="../../../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
+            <xsl:variable name="phone" select="../../../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
+            <xsl:variable name="individualName" select="../../../../gmd:individualName/gco:CharacterString/text()"/>
+            <xsl:variable name="positionName" select="../../../../gmd:positionName/gco:CharacterString/text()"/>
+            <xsl:variable name="address" select="string-join(../../../../gmd:contactInfo/*/gmd:address/*/(
+                                          gmd:deliveryPoint|gmd:postalCode|gmd:city|
+                                          gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
+
+            <Field name="responsibleParty"
+                   string="{concat($roleTranslation, '|metadata|', ., '|', $logo, '|', string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
+                   store="true" index="false"/>
+        </xsl:for-each>
+
+
         <xsl:for-each select="gmd:identificationInfo/*">
-        
+
 
 
             <xsl:for-each select="gmd:citation/gmd:CI_Citation">
@@ -166,7 +197,7 @@
                 <Field name="abstract" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-            
+
             <xsl:for-each select="*/gmd:EX_Extent">
                 <xsl:apply-templates select="gmd:geographicElement/gmd:EX_GeographicBoundingBox" mode="latLon"/>
 
@@ -208,7 +239,53 @@
 
             <xsl:for-each select="*/gmd:MD_Keywords">
                 <xsl:for-each select="gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]">
-                    <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+                    <xsl:variable name="keyword" select="string(.)"/>
+
+                    <Field name="keyword" string="{$keyword}" store="true" index="true"/>
+
+                  <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
+                         and index annex, theme and theme in english. -->
+                  <xsl:if test="$inspire='true'">
+                    <xsl:if test="string-length(.) &gt; 0">
+
+                      <xsl:variable name="inspireannex">
+                        <xsl:call-template name="determineInspireAnnex">
+                          <xsl:with-param name="keyword" select="$keyword"/>
+                          <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                        </xsl:call-template>
+                      </xsl:variable>
+
+                      <xsl:variable name="inspireThemeAcronym">
+                        <xsl:call-template name="getInspireThemeAcronym">
+                          <xsl:with-param name="keyword" select="$keyword"/>
+                        </xsl:call-template>
+                      </xsl:variable>
+
+                      <!-- Add the inspire field if it's one of the 34 themes -->
+                      <xsl:if test="normalize-space($inspireannex)!=''">
+                        <Field name="inspiretheme" string="{$keyword}" store="true" index="true"/>
+                        <Field name="inspirethemewithac"
+                               string="{concat($inspireThemeAcronym, '|', $keyword)}"
+                               store="true" index="true"/>
+
+                        <!--<Field name="inspirethemeacronym" string="{$inspireThemeAcronym}" store="true" index="true"/>-->
+                        <xsl:variable name="inspireThemeURI"  select="$inspire-theme[skos:prefLabel = $keyword]/@rdf:about"/>
+                        <Field name="inspirethemeuri" string="{$inspireThemeURI}" store="true" index="true"/>
+
+                        <xsl:variable name="englishInspireTheme">
+                          <xsl:call-template name="translateInspireThemeToEnglish">
+                            <xsl:with-param name="keyword" select="$keyword"/>
+                            <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                          </xsl:call-template>
+                        </xsl:variable>
+
+                        <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true" index="true"/>
+                        <Field name="inspireannex" string="{$inspireannex}" store="true" index="true"/>
+                        <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
+                        <Field name="inspirecat" string="true" store="false" index="true"/>
+                      </xsl:if>
+                    </xsl:if>
+                  </xsl:if>
                 </xsl:for-each>
 
                 <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
@@ -221,12 +298,29 @@
             <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]">
                 <Field name="orgName" string="{string(.)}" store="true" index="true"/>
                 <Field name="_orgName" string="{string(.)}" store="true" index="true"/>
+
+                <xsl:variable name="role"    select="../../../../gmd:role/*/@codeListValue"/>
+                <xsl:variable name="roleTranslation" select="util:getCodelistTranslation('gmd:CI_RoleCode', string($role), string($isoLangId))"/>
+                <xsl:variable name="logo"    select="../../../..//gmx:FileName/@src"/>
+                <xsl:variable name="email"   select="../../../../gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString"/>
+                <xsl:variable name="phone"   select="../../../../gmd:contactInfo/*/gmd:phone/*/gmd:voice[normalize-space(.) != '']/*/text()"/>
+                <xsl:variable name="individualName" select="../../../../gmd:individualName/gco:CharacterString/text()"/>
+                <xsl:variable name="positionName"   select="../../../../gmd:positionName/gco:CharacterString/text()"/>
+                <xsl:variable name="address" select="string-join(../../../../gmd:contactInfo/*/gmd:address/*/(
+                                          gmd:deliveryPoint|gmd:postalCode|gmd:city|
+                                          gmd:administrativeArea|gmd:country)/gco:CharacterString/text(), ', ')"/>
+
+                <Field name="responsibleParty"
+                       string="{concat($roleTranslation, '|resource|', ., '|', $logo, '|',  string-join($email, ','), '|', $individualName, '|', $positionName, '|', $address, '|', string-join($phone, ','))}"
+                       store="true" index="false"/>
             </xsl:for-each>
+
             <xsl:for-each select="gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString|
 				gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualFirstName/gco:CharacterString|
 				gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualLastName/gco:CharacterString">
                 <Field name="creator" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
+
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -244,9 +338,9 @@
             <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
                 <Field name="topicCat" string="{string(.)}" store="true" index="true"/>
                 <Field name="keyword"
-                    string="{java:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
-                    store="true"
-                    index="true"/>
+                       string="{java:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+                       store="true"
+                       index="true"/>
             </xsl:for-each>
 
             <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -394,9 +488,100 @@
 
             <!-- index online protocol -->
 
-            <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol//gmd:LocalisedCharacterString[@locale=$langId]">
-                <Field name="protocol" string="{string(.)}" store="true" index="true"/>
+            <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
+                <xsl:variable name="tPosition" select="position()"></xsl:variable>
+                <xsl:for-each select="gmd:onLine/gmd:CI_OnlineResource[gmd:linkage/gmd:URL!='']">
+                    <xsl:variable name="download_check">
+                        <xsl:text>&amp;fname=&amp;access</xsl:text>
+                    </xsl:variable>
+                    <xsl:variable name="linkage" select="gmd:linkage/gmd:URL" />
+
+                    <xsl:variable name="t">
+                        <xsl:choose>
+                            <xsl:when test="string(gmd:name//gmd:LocalisedCharacterString[@locale=$langId])"><xsl:value-of
+                                    select="gmd:name//gmd:LocalisedCharacterString[@locale=$langId]|gmd:name/gmx:MimeFileType" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of
+                                    select="gmd:name/gco:CharacterString|gmd:name/gmx:MimeFileType" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="title" select="normalize-space($t)"/>
+
+                    <xsl:variable name="d">
+                        <xsl:choose>
+                            <xsl:when test="string(gmd:description//gmd:LocalisedCharacterString[@locale=$langId])"><xsl:value-of
+                                    select="gmd:description//gmd:LocalisedCharacterString[@locale=$langId]" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of
+                                    select="gmd:description/gco:CharacterString" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="desc" select="normalize-space($d)"/>
+
+                    <xsl:variable name="p">
+                        <xsl:choose>
+                            <xsl:when test="string(gmd:protocol//gmd:LocalisedCharacterString[@locale=$langId])"><xsl:value-of
+                                    select="gmd:protocol//gmd:LocalisedCharacterString[@locale=$langId]" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of
+                                    select="gmd:protocol/gco:CharacterString" /></xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="protocol" select="normalize-space($p)"/>
+                    <xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage, $protocol, gmd:name/gmx:MimeFileType/@type)"/>
+
+                    <!-- If the linkage points to WMS service and no protocol specified, manage as protocol OGC:WMS -->
+                    <xsl:variable name="wmsLinkNoProtocol" select="contains(lower-case($linkage), 'service=wms') and not(string($protocol))" />
+
+                    <!-- ignore empty downloads -->
+                    <xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">
+                        <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
+                    </xsl:if>
+
+                    <xsl:if test="string($title)!='' and string($desc)!='' and not(contains($linkage,$download_check))">
+                        <Field name="linkage_name_des" string="{string(concat($title, ':::', $desc))}" store="true" index="true"/>
+                    </xsl:if>
+
+                    <xsl:if test="normalize-space($mimetype)!=''">
+                        <Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
+                    </xsl:if>
+
+                    <xsl:if test="contains($protocol, 'WWW:DOWNLOAD')">
+                        <Field name="download" string="true" store="false" index="true"/>
+                    </xsl:if>
+
+                    <xsl:if test="contains($protocol, 'OGC:WMS') or $wmsLinkNoProtocol">
+                        <Field name="dynamic" string="true" store="false" index="true"/>
+                    </xsl:if>
+
+                    <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
+                    <xsl:if test="not($wmsLinkNoProtocol)">
+                        <Field name="link" string="{concat($title, '|', $desc, '|', $linkage, '|', $protocol, '|', $mimetype, '|', $tPosition)}" store="true" index="false"/>
+                    </xsl:if>
+
+                    <!-- Add KML link if WMS -->
+                    <xsl:if test="starts-with($protocol,'OGC:WMS') and string($linkage)!='' and string($title)!=''">
+                        <!-- FIXME : relative path -->
+                        <Field name="link" string="{concat($title, '|', $desc, '|',
+                                                '../../srv/en/google.kml?uuid=', /gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString, '&amp;layers=', $title,
+                                                '|application/vnd.google-earth.kml+xml|application/vnd.google-earth.kml+xml', '|', $tPosition)}" store="true" index="false"/>
+                    </xsl:if>
+
+                    <!-- Try to detect Web Map Context by checking protocol or file extension -->
+                    <xsl:if test="starts-with($protocol,'OGC:WMC') or contains($linkage,'.wmc')">
+                        <Field name="link" string="{concat($title, '|', $desc, '|',
+                                                $linkage, '|application/vnd.ogc.wmc|application/vnd.ogc.wmc', '|', $tPosition)}" store="true" index="false"/>
+                    </xsl:if>
+                    <!-- Try to detect OWS Context by checking protocol or file extension -->
+                    <xsl:if test="starts-with($protocol,'OGC:OWS-C') or contains($linkage,'.ows')">
+                        <Field name="link" string="{concat($title, '|', $desc, '|',
+                                                $linkage, '|application/vnd.ogc.ows|application/vnd.ogc.ows', '|', $tPosition)}" store="true" index="false"/>
+                    </xsl:if>
+
+                    <xsl:if test="$wmsLinkNoProtocol">
+                        <Field name="link" string="{concat($title, '|', $desc, '|',
+                                                $linkage, '|OGC:WMS|application/vnd.ogc.wms_xml', '|', $tPosition)}" store="true" index="false"/>
+                    </xsl:if>
+                </xsl:for-each>
             </xsl:for-each>
+
         </xsl:for-each>
 
 
@@ -452,9 +637,14 @@
 
         <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
             <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
-                <xsl:variable name="crs" select="concat(string(gmd:codeSpace/gco:CharacterString),'::',string(gmd:code/gco:CharacterString))"/>
+                <xsl:variable name="crs">
+                    <xsl:for-each select="gmd:codeSpace/gco:CharacterString/text() | gmd:code/gco:CharacterString/text()">
+                        <xsl:value-of select="."/>
+                        <xsl:if test="not(position() = last())">::</xsl:if>
+                    </xsl:for-each>
+                </xsl:variable>
 
-                <xsl:if test="$crs != '::'">
+                <xsl:if test="$crs != ''">
                     <Field name="crs" string="{$crs}" store="true" index="true"/>
                 </xsl:if>
             </xsl:for-each>
@@ -464,7 +654,9 @@
         <!-- === Free text search === -->
         <Field name="any" store="false" index="true">
             <xsl:attribute name="string">
-                <xsl:value-of select="normalize-space(//node()[@locale=$langId])"/>
+              <xsl:for-each select="//node()[@locale=$langId]">
+                <xsl:value-of select="concat(normalize-space(.), ' ')"/>
+              </xsl:for-each>
                 <xsl:text> </xsl:text>
                 <xsl:for-each select="//@codeListValue">
                     <xsl:value-of select="concat(., ' ')"/>
@@ -472,17 +664,33 @@
             </xsl:attribute>
         </Field>
 
+        <xsl:variable name="identification" select="gmd:identificationInfo//gmd:MD_DataIdentification|
+                        gmd:identificationInfo//*[contains(@gco:isoType, 'MD_DataIdentification')]|
+                        gmd:identificationInfo/srv:SV_ServiceIdentification"/>
 
-      <!-- Index all codelist -->
-      <xsl:for-each select=".//*[*/@codeListValue != '']">
-        <Field name="cl_{local-name()}"
-               string="{*/@codeListValue}"
-               store="true" index="true"/>
-        <Field name="cl_{concat(local-name(), '_text')}"
-               string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
-               store="true" index="true"/>
-      </xsl:for-each>
+        <Field name="anylight" store="false" index="true">
+            <xsl:attribute name="string">
+                <xsl:for-each
+                        select="$identification/gmd:citation/gmd:CI_Citation/gmd:title//gmd:LocalisedCharacterString[@locale=$langId]|
+                    $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle//gmd:LocalisedCharacterString[@locale=$langId]|
+                    $identification/gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]|
+                    $identification/gmd:credit//gmd:LocalisedCharacterString[@locale=$langId]|
+                    $identification//gmd:organisationName//gmd:LocalisedCharacterString[@locale=$langId]|
+                    $identification/gmd:supplementalInformation//gmd:LocalisedCharacterString[@locale=$langId]|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword//gmd:LocalisedCharacterString[@locale=$langId]">
+                    <xsl:value-of select="concat(., ' ')"/>
+                </xsl:for-each>
+            </xsl:attribute>
+        </Field>
+
+        <!-- Index all codelist -->
+        <xsl:for-each select=".//*[*/@codeListValue != '']">
+            <Field name="cl_{local-name()}"
+                   string="{*/@codeListValue}"
+                   store="true" index="true"/>
+            <Field name="cl_{concat(local-name(), '_text')}"
+                   string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
+                   store="true" index="true"/>
+        </xsl:for-each>
     </xsl:template>
-
-
 </xsl:stylesheet>

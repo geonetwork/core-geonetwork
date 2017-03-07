@@ -260,4 +260,11 @@
 		<Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
 		<Method name="parseBuilder"/>
 	</Match>
+
+    <!-- Common function handles an illegalArgumentException, nullpointerexception etc by checking the base recursively this is not a bug -->
+    <Match>
+        <Class name="org.fao.geonet.utils.nio.NioPathAwareCatalogResolver"/>
+        <Bug pattern="REC_CATCH_EXCEPTION"/>
+        <Method name="resolve"/>
+    </Match>
 </FindBugsFilter>

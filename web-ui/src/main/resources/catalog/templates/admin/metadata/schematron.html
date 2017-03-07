@@ -11,8 +11,10 @@
                         <p>{{confirmationDialog.message}}</p>
                     </div>
                     <div class="modal-footer">
-                        <button data-dismiss="modal" data-ng-click="confirmationDialog.deleteConfirmed()">{{'confirm' | translate}}</button>
-                        <button data-dismiss="modal">{{'cancel' | translate}}</button>
+                        <button data-dismiss="modal" data-ng-click="confirmationDialog.deleteConfirmed()"
+                                class="btn btn-warning">{{'confirm' | translate}}
+                        </button>
+                        <button data-dismiss="modal" class="btn btn-default">{{'cancel' | translate}}</button>
                     </div>
                 </div>
             </div>
@@ -28,7 +30,8 @@
                         <h5><strong>{{schema.name}}</strong></h5>
 
                         <div class="list-group">
-                            <a class="list-group-item" data-ng-repeat="schematron in schema.schematron | filter:schematronSearch"
+                            <a class="list-group-item"
+                               data-ng-repeat="schematron in schema.schematron | filter:schematronSearch"
                                data-ng-click="selectSchematron(schema, schematron)"
                                data-ng-class="{active: selection.schematron === schematron}">
                                 <i class="fa"
@@ -47,10 +50,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><span data-translate="">schematronApplicationCriteria</span>
                         <i id="schematronCriteriaGroupsQuestion" class="fa fa-question-circle"
-                             data-ng-mouseover="isShowSchematronGroupHelp = true"
-                             data-ng-mouseleave="isShowSchematronGroupHelp = false"></i>
+                           data-ng-mouseover="isShowSchematronGroupHelp = true"
+                           data-ng-mouseleave="isShowSchematronGroupHelp = false"></i>
                         <div style="padding-left: 2em; padding-top: 1em" data-ng-show="isShowSchematronGroupHelp">
-                           {{'schematronInfo' | translate}}
+                            {{'schematronInfo' | translate}}
                         </div>
                     </div>
                     <div class="panel-body">
@@ -65,7 +68,7 @@
                                                data-ng-blur="cancelGroupEdit()"
                                                data-ng-model="editGroup.updatedGroup.id.name"
                                                data-ng-keyup="handleGroupEditKeyPress($event.keyCode)"
-                                               id="{{group.id.name}}_NameInput"type="text" value="{{group.id.name}}" />
+                                               id="{{group.id.name}}_NameInput" type="text" value="{{group.id.name}}"/>
                                         <i class="fa gn-action"
                                            title="{{'schematronCopy' | translate}}"
                                            data-ng-class="hoverDup"
@@ -83,7 +86,7 @@
                                     </a>
                                 </li>
                                 <li data-ng-class="{active: !selection.group}"
-                                        data-ng-click="createSchematronGroup()">
+                                    data-ng-click="createSchematronGroup()">
                                     <a class="fa fa-plus"></a>
                                 </li>
                             </ul>
@@ -96,11 +99,12 @@
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <li role="presentation" data-ng-repeat="requirement in requirements"
                                             data-ng-hide="selection.group.requirement === requirement">
-                                            <a role="menuitem" data-ng-click="setRequirement(requirement)" tabindex="-1">{{'requirement'+requirement | translate}}</a></li>
+                                            <a role="menuitem" data-ng-click="setRequirement(requirement)"
+                                               tabindex="-1">{{'requirement'+requirement | translate}}</a></li>
                                     </ul>
                                 </div>
                             </div>
-                            <ul class="list-group" data-ng-if="selection.group">
+                            <ul class="criteria-list-group" data-ng-if="selection.group">
                                 <gn-criteria-editor
                                         criteria="criteria"
                                         schema="selection.schema"
