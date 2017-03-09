@@ -60,6 +60,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -161,12 +162,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
          ArcSDEConnection connection = connectionFactory.getConnection(
                  params.connectionType, params.databaseType, params.server, params.port,
                  params.database, params.getUsername(), params.getPassword());
-        List<String> metadataList = connection.retrieveMetadata(cancelMonitor, params.version);
+        Map<String, String> metadataList = connection.retrieveMetadata(cancelMonitor, params.version);
         align(metadataList);
         Log.info(ARCSDE_LOG_MODULE_NAME, "ArcSDE harvest finished");
     }
 
-    private void align(List<String> metadataList) throws Exception {
+    private void align(Map<String, String> metadataList) throws Exception {
         Log.info(ARCSDE_LOG_MODULE_NAME, "Start of alignment for : " + params.getName());
         result = new HarvestResult();
         //----------------------------------------------------------------
@@ -180,7 +181,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         List<Integer> idsForHarvestingResult = new ArrayList<Integer>();
         //-----------------------------------------------------------------------
         //--- insert/update metadata
-        for (String metadata : metadataList) {
+        for (Map.Entry<String, String> entry : metadataList.entrySet()) {
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+
+            String uuid =  entry.getKey();
+            String metadata =  entry.getValue();
+
             if (cancelMonitor.get()) {
                 return;
             }
@@ -216,8 +222,10 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                 if (schema == null) {
                     result.unknownSchema++;
                 } else {
+                    dataMan.setUUID(schema, uuid, metadataElement);
+
                     // the xml is recognizable  format
-                    String uuid = dataMan.extractUUID(schema, metadataElement);
+                    //String uuid = dataMan.extractUUID(schema, metadataElement);
 
                     if (StringUtils.isEmpty(uuid)) {
                         Log.info(ARCSDE_LOG_MODULE_NAME, "Skipping metadata due to failure extracting uuid (uuid null or empty).");

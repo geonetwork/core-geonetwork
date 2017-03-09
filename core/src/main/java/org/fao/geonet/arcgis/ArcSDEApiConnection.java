@@ -30,7 +30,9 @@ import org.fao.geonet.utils.Log;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -87,9 +89,9 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
     }
 
     @Override
-    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
+    public Map<String, String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
         Log.info(ARCSDE_LOG_MODULE_NAME, "Start retrieve metadata");
-        List<String> results = new ArrayList<String>();
+        Map<String, String> results = new HashMap<>();
         try {
             ArcSDEVersionFactory arcSDEVersionFactory = new ArcSDEVersionFactory();
             String metadataTable = arcSDEVersionFactory.getTableName(arcSDEVersion);
@@ -99,7 +101,7 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
             SeSqlConstruct sqlConstruct = new SeSqlConstruct();
             String[] tables = {metadataTable};
             sqlConstruct.setTables(tables);
-            String[] propertyNames = {columnName};
+            String[] propertyNames = {columnName, "uuid"};
             SeQuery query = new SeQuery(seConnection);
             query.prepareQuery(propertyNames, sqlConstruct);
             query.execute();
@@ -109,7 +111,7 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
             boolean allRowsFetched = false;
             while (!allRowsFetched) {
                 if (cancelMonitor.get()) {
-                    return Collections.emptyList();
+                    return Collections.emptyMap();
                 }
                 SeRow row = query.fetch();
 
@@ -136,7 +138,8 @@ public class ArcSDEApiConnection implements ArcSDEConnection{
                         }
 
                         if (StringUtils.isNotEmpty(document)) {
-                            results.add(document);
+                            String uuid = row.getString(1);
+                            results.put(uuid, document);
                         }
                     } else {
                         Log.info(ARCSDE_LOG_MODULE_NAME, "Ignoring row without metadata");

@@ -33,7 +33,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -109,14 +111,14 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
 
 
     @Override
-    public List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
-        List<String> results = new ArrayList<>();
+    public Map<String, String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception {
+        Map<String, String> results = new HashMap<>();
 
         ArcSDEVersionFactory arcSDEVersionFactory = new ArcSDEVersionFactory();
         String metadataTable = arcSDEVersionFactory.getTableName(arcSDEVersion);
         String columnName = arcSDEVersionFactory.getMetadataColumnName(arcSDEVersion);
 
-        String sqlQuery = "SELECT " + columnName + " FROM " + metadataTable;
+        String sqlQuery = "SELECT " + columnName + ", UUID FROM " + metadataTable;
 
 
         getJdbcTemplate().query(sqlQuery, new RowCallbackHandler() {
@@ -132,6 +134,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
 
                 String document = "";
                 int colId = rs.findColumn(columnName);
+                int colIdUuid = rs.findColumn("UUID");
                 // very simple type check:
                 if (rs.getObject(colId) != null) {
                     if (rs.getMetaData().getColumnType(colId) == Types.BLOB) {
@@ -154,7 +157,8 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
                                 rs.getMetaData().getColumnTypeName(colId));
                     }
 
-                    results.add(document);
+                    String uuid =  rs.getString(colIdUuid);;
+                    results.put(uuid, document);
                 }
 
             }

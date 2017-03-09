@@ -25,6 +25,7 @@ package org.fao.geonet.arcgis;
 import org.fao.geonet.constants.Geonet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -48,7 +49,7 @@ public interface ArcSDEConnection {
      * @return results the list with all the XML metadata records found.
      * @throws Exception
      */
-    List<String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception;
+    Map<String, String> retrieveMetadata(AtomicBoolean cancelMonitor, String arcSDEVersion) throws Exception;
 
     /**
      * Closes the connection to the ArcSDE server.
