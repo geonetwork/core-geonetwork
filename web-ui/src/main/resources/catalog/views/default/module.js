@@ -229,8 +229,19 @@
       });
 
       $scope.resultviewFns = {
+        addMdLayerToMapSimple: function (link, md) {
+          if (gnMap.isLayerInMap(viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).then(function (layer) {
+            if (layer) {
+              gnMap.feedLayerWithRelated(layer, link.group);
+            }
+          });
+        },
+        // Add to basket first and then trigger add to map
         addMdLayerToMap: function (link, md) {
-
           if (gnMap.isLayerInMap(viewerMap,
               link.name, link.url)) {
             return;
