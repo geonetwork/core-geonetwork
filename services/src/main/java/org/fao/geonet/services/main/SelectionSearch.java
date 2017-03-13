@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -41,16 +42,12 @@ import org.jdom.Element;
 import java.nio.file.Path;
 import java.util.Iterator;
 
-//=============================================================================
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_BUCKET;
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+
 @Deprecated
 public class SelectionSearch implements Service {
     private ServiceConfig _config;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
 
     public void init(Path appPath, ServiceConfig config) throws Exception {
         _config = config;
@@ -67,21 +64,12 @@ public class SelectionSearch implements Service {
 
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
-        String restoreLastSearch = _config.getValue("restoreLastSearch", "no");
+        String bucket = Util.getParam(params, SELECTION_BUCKET, SELECTION_METADATA);
+        params.removeChild(SELECTION_BUCKET);
 
         // store or possibly close old searcher
         UserSession session = context.getUserSession();
-        Object oldSearcher = session.getProperty(Geonet.Session.SEARCH_RESULT);
 
-        if (oldSearcher != null) {
-            if (restoreLastSearch.equals("yes")) {
-                session.setProperty(Geonet.Session.LAST_SEARCH_RESULT, oldSearcher);
-            } else {
-                if (oldSearcher instanceof LuceneSearcher) ((LuceneSearcher) oldSearcher).close();
-            }
-        }
-
-        context.info("Get selected metadata");
         SelectionManager sm = SelectionManager.getManager(session);
 
         // Get the sortBy params in order to apply on new result list.
@@ -96,8 +84,8 @@ public class SelectionSearch implements Service {
         if (sm != null) {
             String uuids = "";
             boolean first = true;
-            synchronized (sm.getSelection("metadata")) {
-                for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
+            synchronized (sm.getSelection(bucket)) {
+                for (Iterator<String> iter = sm.getSelection(bucket).iterator(); iter.hasNext(); ) {
                     String uuid = (String) iter.next();
                     if (first) {
                         uuids = (String) uuid;
@@ -121,16 +109,13 @@ public class SelectionSearch implements Service {
 
         searcher.search(context, params, _config);
 
-        session.setProperty(Geonet.Session.SEARCH_RESULT, searcher);
+        session.setProperty(Geonet.Session.SEARCH_RESULT + bucket, searcher);
 
         context.info("Getting summary");
 
         Element summary = searcher.getSummary();
-        summary.addContent(new Element(Geonet.SearchResult.RESTORELASTSEARCH).setText(restoreLastSearch));
-
+        summary.addContent(new Element(SELECTION_BUCKET).setText(bucket));
         return summary;
 
     }
 }
-
-//=============================================================================

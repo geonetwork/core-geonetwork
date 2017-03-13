@@ -21,25 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.geonetwork.http.proxy.util;
+(function() {
+  goog.provide('gn_ui_config');
 
-import javax.servlet.ServletConfig;
+  goog.require('gn_ui_config_directive');
 
-public class ServletConfigUtil {
-    /**
-     * Removes unwanted characters from a servlet init parameter  value
-     */
-    public static String getInitParamValue(ServletConfig servletConfig, String paramName) {
-        String paramValue = servletConfig.getInitParameter(paramName);
-
-        if (paramValue != null) {
-            paramValue = paramValue.replaceAll("\n", "");
-            paramValue = paramValue.replaceAll("\r", "");
-            paramValue = paramValue.replaceAll("\t", "");
-            paramValue = paramValue.replaceAll(" ", "");
-        }
-
-        return paramValue;
-
-    }
-}
+  angular.module('gn_ui_config', [
+    'gn_ui_config_directive'
+  ]);
+})();

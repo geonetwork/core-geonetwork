@@ -240,6 +240,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             value = "mdpath",
             required = false)
         final String mdPath,
+        @RequestParam(
+            value = "output",
+            required = false)
+        final String output,
         @ApiIgnore
         final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
@@ -252,6 +256,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
         // if application/x-gn-<formatterId>+(xml|html|pdf|text)
+        // Force PDF ouutput when URL parameter is set.
+        // This is useful when making GET link to PDF which
+        // can not use headers.
+        if ("pdf".equals(output)) {
+            acceptHeader = "application/pdf";
+        }
+
         FormatType formatType = FormatType.find(acceptHeader);
         if (formatType == null) {
             formatType = FormatType.xml;
@@ -635,7 +646,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                                                Boolean hide_withheld) throws Exception {
 
         Metadata md = loadMetadata(context.getBean(MetadataRepository.class), id);
-        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md);
+        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md, false);
 
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;

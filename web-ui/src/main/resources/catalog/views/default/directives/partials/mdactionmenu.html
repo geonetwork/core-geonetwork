@@ -18,7 +18,7 @@
       </a></li>
       <li data-ng-if="md.isOwned() && user.isUserAdminOrMore()">
         <a data-ng-href=""
-           data-ng-click="mdService.openTransferOwnership(md, getCatScope())">
+           data-ng-click="mdService.openTransferOwnership(md, null, getCatScope())">
           <i class="fa fa-user"></i>&nbsp;
           <span data-translate="">transferOwnership</span>
         </a></li>
@@ -31,7 +31,7 @@
                     (!md.hasValidation() ? 'mdnovalidation':
                       (allowPublishInvalidMd() === false ? 'mdinvalidcantpublish' : 'mdinvalid'))) : '') | translate }}"
       >
-        <a data-ng-click="mdService.publish(md)">
+        <a data-ng-click="mdService.publish(md, undefined, undefined, getCatScope())">
           <i class="fa"
              data-ng-class="md.isPublished() ? 'fa-lock' : 'fa-unlock'"></i>&nbsp;
           <span data-ng-if="md.isPublished()"
@@ -101,7 +101,7 @@
         <i class="fa fa-file-zip-o"></i>&nbsp;
         <span data-translate="">exportMEF</span>
       </a></li>
-      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/pdf"
+      <li><a data-ng-href="../api/records/{{md.getUuid()}}/formatters/xsl-view?root=div&output=pdf"
              target="_blank">
         <i class="fa fa-file-pdf-o"></i>&nbsp;
         <span data-translate="">exportPDF</span>

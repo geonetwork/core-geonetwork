@@ -47,7 +47,7 @@
     'ga_print_directive'
   ])
 
-  /**
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
    *
@@ -1087,7 +1087,7 @@
                                 scope.layers.push(l);
                               }
                             });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     } else if (scope.OGCProtocol == 'WFS') {
@@ -1107,7 +1107,7 @@
                                    });
                                  }
                                });
-                          }).catch (function(error) {
+                          }).catch(function(error) {
                             scope.isUrlOk = error === 200;
                           });
                     }
@@ -1115,7 +1115,7 @@
                     var useProxy =
                         scope.params.url.indexOf(location.hostname) === -1;
                     var url = useProxy ?
-                        '../../proxy?url=' +
+                        gnGlobalSettings.proxyUrl +
                         encodeURIComponent(scope.params.url) : scope.params.url;
                     return $http.get(url).then(function(response) {
                       scope.isUrlOk = response.status === 200;

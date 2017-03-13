@@ -1,0 +1,33 @@
+<!-- Single button -->
+<div class="btn-group"
+     data-ng-show="selections.list.length > 0">
+  <button type="button"
+          class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false">
+    <i class="fa fa-thumb-tack"></i>&nbsp;
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header"
+        data-ng-show="canBeAdded()"
+        data-translate="">addToSelection</li>
+    <li data-ng-repeat="s in selections.list"
+        data-ng-show="canBeAdded(s)">
+      <a data-ng-click="add(s)">
+        {{s.label[lang] || (s.name | translate)}}
+      </a>
+    </li>
+
+    <li class="dropdown-header"
+        data-ng-show="canBeRemoved()"
+        data-translate="">removeFromSelection</li>
+    <li data-ng-repeat="s in selections.list"
+        data-ng-show="canBeRemoved(s)">
+      <a data-ng-click="remove(s)">
+        {{s.label[lang] || (s.name | translate)}}
+      </a>
+    </li>
+  </ul>
+</div>

@@ -173,7 +173,7 @@ Insert is made in first transferOptions found.
       layer/featureType.
       -->
       <xsl:choose>
-        <xsl:when test="starts-with($protocol, 'OGC:')">
+        <xsl:when test="starts-with($protocol, 'OGC:') and $name != ''">
           <xsl:for-each select="tokenize($name, ',')">
             <xsl:variable name="pos" select="position()"/>
             <gmd:onLine>
@@ -269,7 +269,6 @@ Insert is made in first transferOptions found.
         <xsl:otherwise>
           <!-- ... the name is simply added in the newly
           created online element. -->
-
           <gmd:onLine>
             <xsl:if test="$uuidref">
               <xsl:attribute name="uuidref" select="$uuidref"/>

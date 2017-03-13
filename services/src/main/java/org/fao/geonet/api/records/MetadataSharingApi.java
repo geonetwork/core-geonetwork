@@ -182,6 +182,9 @@ public class MetadataSharingApi {
         @ApiParam(value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
+        @ApiParam(value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(required = false) String bucket,
         @ApiParam(
             value = "Privileges",
             required = true
@@ -199,7 +202,7 @@ public class MetadataSharingApi {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
             final ApplicationContext appContext = ApplicationContextHolder.get();
@@ -329,7 +332,7 @@ public class MetadataSharingApi {
 
     @ApiOperation(
         value = "Get record sharing settings",
-        notes = "Return currnt sharing options for a record.",
+        notes = "Return current sharing options for a record.",
         nickname = "getRecordSharingSettings")
     @RequestMapping(
         value = "/{metadataUuid}/sharing",
@@ -573,6 +576,13 @@ public class MetadataSharingApi {
         )
             Integer groupIdentifier,
         @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+        String bucket,
+        @ApiParam(
             value = "User identifier",
             required = true
         )
@@ -589,7 +599,7 @@ public class MetadataSharingApi {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();

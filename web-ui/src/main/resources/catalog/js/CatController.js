@@ -26,47 +26,264 @@
 
 
 
+
+
+
+
   goog.require('gn_admin_menu');
+  goog.require('gn_saved_selections');
   goog.require('gn_search_manager');
   goog.require('gn_session_service');
 
 
   var module = angular.module('gn_cat_controller',
-      ['gn_search_manager', 'gn_session_service', 'gn_admin_menu']);
+      ['gn_search_manager', 'gn_session_service',
+        'gn_admin_menu', 'gn_saved_selections']);
 
 
-  module.constant('gnGlobalSettings', {
-    proxyUrl: '../../proxy?url=',
-    locale: {},
-    isMapViewerEnabled: false,
-    requireProxy: [],
-    is3DModeAllowed: false,
-    docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
-    //docUrl: '../../doc/',
-    modelOptions: {
-      updateOn: 'default blur',
-      debounce: {
-        default: 300,
-        blur: 0
+  module.constant('gnSearchSettings', {});
+  module.constant('gnViewerSettings', {});
+  module.constant('gnGlobalSettings', function() {
+    var defaultConfig = {
+      'langDetector': {
+        'fromHtmlTag': false,
+        'regexp': '^\/[a-zA-Z0-9_\-]+\/[a-zA-Z0-9_\-]+\/([a-z]{3})\/',
+        'default': 'eng'
+      },
+      'nodeDetector': {
+        'regexp': '^\/[a-zA-Z0-9_\-]+\/([a-zA-Z0-9_\-]+)\/[a-z]{3}\/',
+        'default': 'srv'
+      },
+      'mods': {
+        'header': {
+          'enabled': true,
+          'languages': {
+            'eng': 'en',
+            'dut': 'du',
+            'fre': 'fr',
+            'ger': 'ge',
+            'kor': 'ko',
+            'spa': 'es',
+            'cze': 'cz',
+            'cat': 'ca',
+            'fin': 'fi',
+            'ice': 'is'
+          }
+        },
+        'home': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.search#/home'
+        },
+        'search': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.search#/search',
+          'hitsperpageValues': [10, 50, 100],
+          'paginationInfo': {
+            'hitsPerPage': 20
+          },
+          'facetsSummaryType': 'details',
+          'facetTabField': '',
+          'facetConfig': [
+            // {
+            // key: 'createDateYear',
+            // labels: {
+            //   eng: 'Published',
+            //   fre: 'Publication'
+            // }}
+          ],
+          'filters': {},
+          'sortbyValues': [{
+            'sortBy': 'relevance',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'changeDate',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'title',
+            'sortOrder': 'reverse'
+          }, {
+            'sortBy': 'rating',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'popularity',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'denominatorDesc',
+            'sortOrder': ''
+          }, {
+            'sortBy': 'denominatorAsc',
+            'sortOrder': 'reverse'
+          }],
+          'sortBy': 'relevance',
+          'resultViewTpls': [{
+            'tplUrl': '../../catalog/components/' +
+                'search/resultsview/partials/viewtemplates/grid.html',
+            'tooltip': 'Grid',
+            'icon': 'fa-th'
+          }],
+          'resultTemplate': '../../catalog/components/' +
+              'search/resultsview/partials/viewtemplates/grid.html',
+          'formatter': {
+            'list': [{
+              'label': 'full',
+              'url' : '../api/records/{{md.getUuid()}}/' +
+                  'formatters/xsl-view?root=div&view=advanced'
+            }]
+          },
+          'linkTypes': {
+            'links': ['LINK', 'kml'],
+            'downloads': ['DOWNLOAD'],
+            'layers': ['OGC'],
+            'maps': ['ows']
+          }
+        },
+        'map': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.search#/map',
+          'is3DModeAllowed': true,
+          'isSaveMapInCatalogAllowed': true,
+          'bingKey':
+              'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
+          'storage': 'sessionStorage',
+          'map': '../../map/config-viewer.xml',
+          'listOfServices': {
+            'wms': [],
+            'wmts': []
+          },
+          'useOSM': true,
+          'context': '',
+          'layer': {
+            'url': 'http://www2.demis.nl/mapserver/wms.asp?',
+            'layers': 'Countries',
+            'version': '1.1.1'
+          },
+          'projection': 'EPSG:3857',
+          'projectionList': [{
+            'code': 'EPSG:4326',
+            'label': 'WGS84 (EPSG:4326)'
+          }, {
+            'code': 'EPSG:3857',
+            'label': 'Google mercator (EPSG:3857)'
+          }]
+        },
+        'editor': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.edit'
+        },
+        'admin': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/admin.console'
+        },
+        'signin': {
+          'enabled': true,
+          'appUrl': '../../srv/{{lang}}/catalog.signin'
+        },
+        'signout': {
+          'appUrl': '../../signout'
+        }
       }
-    },
-    current: null
-  });
+    };
+
+    return {
+      proxyUrl: '',
+      locale: {},
+      isMapViewerEnabled: false,
+      requireProxy: [],
+      gnCfg: angular.copy(defaultConfig),
+      gnUrl: '',
+      docUrl: 'http://geonetwork-opensource.org/manuals/trunk/',
+      //docUrl: '../../doc/',
+      modelOptions: {
+        updateOn: 'default blur',
+        debounce: {
+          default: 300,
+          blur: 0
+        }
+      },
+      current: null,
+      init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
+        // Remap some old settings with new one
+        angular.extend(this.gnCfg, config || {});
+        this.gnUrl = gnUrl || '../';
+        this.proxyUrl = this.gnUrl + '../proxy?url=';
+        gnViewerSettings.mapConfig = this.gnCfg.mods.map;
+        angular.extend(gnSearchSettings, this.gnCfg.mods.search);
+        this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
+        gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
+        gnViewerSettings.owsContext = this.gnCfg.mods.map.context;
+        gnViewerSettings.wmsUrl = this.gnCfg.mods.map.layer.url;
+        gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
+      },
+      getDefaultConfig: function() {
+        return angulaWr.copy(defaultConfig);
+      }
+    };
+  }());
 
   module.constant('gnLangs', {
-    langs: {
-      'eng': 'en',
-      'dut': 'du',
-      'fre': 'fr',
-      'ger': 'ge',
-      'kor': 'ko',
-      'spa': 'es',
-      'cze': 'cz',
-      'cat': 'ca',
-      'fin': 'fi'
+    langs: {},
+    current: null,
+    detectLang: function(detector, gnGlobalSettings) {
+      // If already detected
+      if (gnGlobalSettings.iso3lang) {
+        return gnGlobalSettings.iso3lang;
+      }
+
+      var iso2lang, iso3lang;
+
+      // Init language list
+      this.langs =
+          gnGlobalSettings.gnCfg.mods.header.languages;
+
+      // Detect language from HTML lang tag, regex on URL
+      if (detector) {
+        if (detector.fromHtmlTag) {
+          iso2lang = $('html').attr('lang').substr(0, 2);
+        } else if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            var urlLang = res[1];
+            if (this.isValidIso2Lang(urlLang)) {
+              iso2lang = urlLang;
+            } else if (this.isValidIso3Lang(urlLang)) {
+              iso2lang = this.getIso2Lang(urlLang);
+            } else {
+              console.warn('URL lang \'' + urlLang +
+                  '\' is not a valid language code.');
+            }
+          }
+        } else if (detector.default) {
+          iso2lang = detector.default;
+        }
+        iso3lang = this.getIso3Lang(iso2lang || detector.default);
+      }
+      this.current = iso3lang || 'eng';
+
+      // Set locale to global settings. This is
+      // used by locale loader.
+      gnGlobalSettings.iso3lang = this.current;
+      gnGlobalSettings.lang = this.getIso2Lang(this.current);
+      gnGlobalSettings.locale = {
+        iso3lang: this.current
+      };
+      return this.current;
+    },
+    getCurrent: function() {
+      return this.current;
+    },
+    isValidIso3Lang: function(lang) {
+      return angular.isDefined(this.langs[lang]);
+    },
+    isValidIso2Lang: function(lang) {
+      for (p in this.langs) {
+        if (this.langs[p] == lang) {
+          return true;
+        }
+      }
+      return false;
     },
     getIso2Lang: function(iso3lang) {
-      return this.langs[iso3lang];
+      return this.langs[iso3lang] || 'en';
     },
     getIso3Lang: function(iso2lang) {
       for (p in this.langs) {
@@ -74,6 +291,7 @@
           return p;
         }
       }
+      return 'eng';
     }
   });
 
@@ -90,12 +308,14 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
-    'gnLangs', 'gnAdminMenu',
+    'gnLangs', 'gnAdminMenu', 'gnViewerSettings', 'gnSearchSettings',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
             gnGlobalSettings, $location, gnUtilityService, gnSessionService,
-            gnLangs, gnAdminMenu) {
+            gnLangs, gnAdminMenu, gnViewerSettings, gnSearchSettings) {
       $scope.version = '0.0.1';
+
+
       //Display or not the admin menu
       if ($location.absUrl().indexOf('/admin.console') != -1) {
         $scope.viewMenuAdmin = true;
@@ -109,31 +329,42 @@
       });
       $scope.getPermalink = gnUtilityService.getPermalink;
 
-      // TODO : add language
-      var tokens = location.href.split('/');
-      $scope.service = tokens[6].split('?')[0];
-      $scope.lang = tokens[5];
-      gnLangs.current = $scope.lang;
-      $scope.iso2lang = gnLangs.getIso2Lang(tokens[5]);
-      $scope.nodeId = tokens[4];
-      // TODO : get list from server side
-      $scope.langs = gnLangs.langs;
+      try {
+        var tokens = location.href.split('/');
+        $scope.service = tokens[6].split('?')[0];
+      } catch(e) {
+        // console.log("Failed to extract current service from URL.");
+      }
+
+      // If gnLangs current already set by config, do not use URL
+      $scope.langs = gnGlobalSettings.gnCfg.mods.header.languages;
+      $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
+      $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
+
+      function detectNode(detector) {
+        if (detector.regexp) {
+          var res = new RegExp(detector.regexp).exec(location.pathname);
+          if (angular.isArray(res)) {
+            return res[1];
+          }
+        }
+        return detector.default || 'srv';
+      }
+      $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
-        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech', 'fin': 'Suomeksi'};
+        'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
+        'fin': 'Suomeksi', 'fin': 'Suomeksi', 'ice': 'Íslenska'};
       $scope.url = '';
-      $scope.base = '../../catalog/';
+      $scope.gnUrl = gnGlobalSettings.gnUrl;
+      $scope.gnCfg = gnGlobalSettings.gnCfg;
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
-      $scope.logoPath = '../../images/harvesting/';
+      $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
 
-      $scope.pages = {
-        home: 'home',
-        signin: 'catalog.signin'
-      };
 
       $scope.layout = {
         hideTopToolBar: false
@@ -281,12 +512,17 @@
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
           var url = 'qi?_content_type=json&summaryOnly=true';
+          angular.forEach(gnGlobalSettings.gnCfg.mods.search.filters,
+              function(v, k) {
+                url += '&' + k + '=' + v;
+              });
           return gnSearchManagerService.search(url).
               then(function(data) {
                 $scope.searchInfo = data;
               });
         });
       };
+      $scope.userAdminMenu = gnAdminMenu.UserAdmin;
       $scope.adminMenu = gnAdminMenu.Administrator;
       $scope.$on('loadCatalogInfo', function(event, status) {
         $scope.loadCatalogInfo();

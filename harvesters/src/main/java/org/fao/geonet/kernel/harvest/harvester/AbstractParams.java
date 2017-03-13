@@ -77,6 +77,10 @@ public abstract class AbstractParams {
     private Element node;
     private String ownerId;
     private String ownerIdGroup;
+    
+    private String ownerIdUser;
+
+
     private List<Privileges> alPrivileges = new ArrayList<>();
     private List<String> alCategories = new ArrayList<>();
 
@@ -140,6 +144,19 @@ public abstract class AbstractParams {
 
         if (StringUtils.isEmpty(getOwnerId())) {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
+        }
+
+        Element ownerIdUserE = site.getChild("ownerUser");
+        if (ownerIdUserE == null) {
+            ownerIdUserE = node.getChild("ownerUser");
+        }
+        if (ownerIdUserE != null) {
+            Element idE = ownerIdUserE.getChild("id");
+            if (idE != null) {
+                setOwnerIdUser(idE.getText());
+            } else if (!ownerIdUserE.getTextTrim().isEmpty()) {
+                setOwnerIdUser(ownerIdUserE.getTextTrim());
+            }
         }
 
         Element ownerIdGroupE = site.getChild("ownerGroup");
@@ -210,6 +227,16 @@ public abstract class AbstractParams {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + getName() + " (" + getUuid() + ")");
         }
 
+        Element ownerIdUserE = node.getChild("ownerUser");
+        if (ownerIdUserE != null) {
+            Element idE = ownerIdUserE.getChild("id");
+            if (idE != null) {
+                setOwnerIdUser(idE.getText());
+            } else {
+                setOwnerIdUser(ownerIdUserE.getText());
+            }
+        }
+        
         Element ownerIdGroupE = node.getChild("ownerGroup");
         if (ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
@@ -532,5 +559,17 @@ public abstract class AbstractParams {
 
     public void setOwnerIdGroup(String ownerIdGroup) {
         this.ownerIdGroup = ownerIdGroup;
+    }
+
+    /**
+     * User who should own the harvested records
+     * @return
+     */
+    public String getOwnerIdUser() {
+        return ownerIdUser;
+    }
+
+    public void setOwnerIdUser(String ownerIdUser) {
+        this.ownerIdUser = ownerIdUser;
     }
 }

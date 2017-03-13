@@ -258,12 +258,33 @@ public class DefaultStatusActions implements StatusActions {
             String curMdDetails = statusMetadataDetails;
             // First substitution for variables not stored in the index
             curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
-
-            for (String f : fields) {
-                String mdf = XslUtil.getIndexField(null, md.getUuid(), f, this.language);
-                curMdDetails = curMdDetails.replace("{{index:" + f + "}}", mdf);
-            }
+            curMdDetails = compileMessageWithIndexFields(curMdDetails, md.getUuid(), this.language);
             message = message.concat(curMdDetails + "\r\n");
+        }
+        return message;
+    }
+
+    /**
+     * Substitute lucene index field values in message.
+     * Lucene field are identified using {{index:fieldName}} tag.
+     *
+     * @param message   The message to work on
+     * @param uuid      The record UUID
+     * @param language  The language (define the index to look into)
+     * @return  The message with field substituted by values
+     */
+    public static String compileMessageWithIndexFields(String message, String uuid, String language) {
+        // Search lucene field to replace
+        Matcher m = metadataLuceneField.matcher(message);
+        ArrayList<String> fields = new ArrayList<String>();
+        while (m.find()) {
+            fields.add(m.group(1));
+        }
+
+        // First substitution for variables not stored in the index
+        for (String f : fields) {
+            String mdf = XslUtil.getIndexField(null, uuid, f, language);
+            message = message.replace("{{index:" + f + "}}", mdf);
         }
         return message;
     }

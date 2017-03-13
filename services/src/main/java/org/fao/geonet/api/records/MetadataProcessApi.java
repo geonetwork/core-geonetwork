@@ -31,6 +31,7 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.processing.XslProcessUtils;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.api.records.model.suggestion.SuggestionType;
@@ -53,6 +54,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -131,7 +134,15 @@ public class MetadataProcessApi {
                 context, String.valueOf(metadata.getId()),
                 forEditing, withValidationErrors, keepXlinkAttributes);
 
-            Element xmlSuggestions = Xml.transform(md, xslProcessing, xslParameter);
+            Element xmlSuggestions;
+            try {
+                xmlSuggestions = Xml.transform(md, xslProcessing, xslParameter);
+            } catch (TransformerConfigurationException e) {
+                throw new WebApplicationException(String.format(
+                        "Error while retrieving suggestion for record '%s'. " +
+                        "Check your suggest.xsl process (and all its imports).",
+                    metadataUuid, xslProcessing), e);
+            }
             SuggestionsType suggestions = (SuggestionsType) Xml.unmarshall(xmlSuggestions, SuggestionsType.class);
 
             return suggestions.getSuggestion();

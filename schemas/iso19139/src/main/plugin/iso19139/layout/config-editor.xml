@@ -117,6 +117,14 @@
         data-template-type="contact"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
+    <for name="gmd:report" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-filter='{"_root": "gmd:DQ_DomainConsistency"}'
+        data-template-type="report"/>
+    </for>
 
 
     <!-- Example configuration: Add onLine source from subtemplate
@@ -175,6 +183,7 @@
     <name>gmd:attributes</name>
     <name>gmd:geographicBox</name>
     <name>gmd:EX_TemporalExtent</name>
+    <name>gmd:EX_VerticalExtent</name>
     <name>gmd:MD_Distributor</name>
     <name>srv:containsOperations</name>
     <name>srv:SV_Parameter</name>
@@ -253,6 +262,8 @@
       <name>gmd:condition</name>
       <name>gmd:maximumOccurence</name>
       <name>gmd:domainValue</name>
+      <name>gmd:minimumValue</name>
+      <name>gmd:maximumValue</name>
       <name>gmd:densityUnits</name>
       <name>gmd:descriptor</name>
       <name>gmd:denominator</name>
@@ -269,11 +280,98 @@
     </exclude>
   </multilingualFields>
 
+  <tableFields>
+    <table for="gmd:CI_ResponsibleParty">
+      <header>
+        <!-- TODO: Add label from strings.xml / label with context-->
+        <col label="gmd:organisationName"/>
+        <col label="gmd:individualName"/>
+        <col label="gmd:electronicMailAddress"/>
+        <col label="gmd:role"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:organisationName"/>
+        <col xpath="gmd:individualName"/>
+        <col xpath="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress"/>
+        <col xpath="gmd:role"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gmd:CI_OnlineResource">
+      <header>
+        <col label="gmd:protocol"/>
+        <col label="gmd:linkage"/>
+        <col label="gmd:name"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:protocol"/>
+        <col xpath="gmd:linkage"/>
+        <col xpath="gmd:name"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="srv:SV_OperationMetadata">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="srv:DCP"/>
+        <col label="srv:connectPoint"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="srv:DCP"/>
+        <col xpath="srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"/>
+        <col del=".."/>
+        <section xpath="srv:SV_OperationMetadata/srv:parameters"
+                 or="parameters" in="srv:SV_OperationMetadata"/>
+      </row>
+    </table>
+    <table for="srv:SV_CoupledResource">
+      <header>
+        <col label="srv:operationName"/>
+        <col label="gco:ScopedName"/>
+        <col label="srv:identifier"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="srv:operationName"/>
+        <col xpath="gco:ScopedName"/>
+        <col xpath="srv:identifier"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gmd:MD_Format">
+      <header>
+        <col label="gmd:name"/>
+        <col label="gmd:version"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:name"/>
+        <col xpath="gmd:version"/>
+        <col del=".."/>
+      </row>
+    </table>
+    <table for="gmd:PT_Locale">
+      <header>
+        <col label="gmd:languageCode"/>
+        <col label="gmd:characterEncoding"/>
+        <col/>
+      </header>
+      <row>
+        <col xpath="gmd:languageCode"/>
+        <col xpath="gmd:characterEncoding"/>
+        <col del=".."/>
+      </row>
+    </table>
+  </tableFields>
 
   <!-- View configuration -->
   <views>
-    <!--Turn off INSPIRE view by default -->
-    <view name="inspire" upAndDownControlHidden="true" disabled="true">
+    <!--Turn on INSPIRE according to system settings -->
+    <view name="inspire" upAndDownControlHidden="true" displayIfServiceInfo="/settings/system/inspire/enable='true'">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
@@ -1915,9 +2013,11 @@
         <for name="gmd:spatialResolution"/>
         <for name="gmd:pointOfContact"/>
         <for name="gmd:distributor"/>
+        <for name="gmd:distributionFormat"/>
         <for name="gmd:contact"/>
         <for name="gmd:processor"/>
         <for name="gmd:topicCategory"/>
+        <for name="srv:parameters"/>
       </flatModeExceptions>
 
       <!--

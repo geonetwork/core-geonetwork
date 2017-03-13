@@ -100,8 +100,6 @@ public class TagsApiTest extends AbstractServiceIntegrationTest {
             .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test

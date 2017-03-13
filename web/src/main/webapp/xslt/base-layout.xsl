@@ -79,7 +79,7 @@
           <xsl:otherwise>
 
             <!-- AngularJS application -->
-            <xsl:if test="$angularApp != 'gn_search' and $angularApp != 'gn_viewer'">
+            <xsl:if test="$angularApp != 'gn_search' and $angularApp != 'gn_viewer' and $angularApp != 'gn_formatter_viewer'">
               <div class="navbar navbar-default gn-top-bar"
                    data-ng-hide="layout.hideTopToolBar"
                    data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>

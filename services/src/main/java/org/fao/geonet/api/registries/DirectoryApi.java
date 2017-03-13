@@ -57,9 +57,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
-import io.swagger.annotations.AuthorizationScope;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import javax.servlet.http.HttpServletRequest;
 
 @EnableWebMvc
 @Service
@@ -120,6 +121,13 @@ public class DirectoryApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiParam(value = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
@@ -129,9 +137,12 @@ public class DirectoryApi {
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
-            String identifierXpath
+            String identifierXpath,
+        HttpServletRequest request
     ) throws Exception {
-        return collectEntries(uuids, xpath, identifierXpath, false, null);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return collectEntries(context, uuids, bucket, xpath, identifierXpath, false, null);
     }
 
 
@@ -153,6 +164,13 @@ public class DirectoryApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiParam(value = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
@@ -162,25 +180,30 @@ public class DirectoryApi {
             required = false,
             example = "@uuid")
         @RequestParam(required = false)
-            String identifierXpath
+            String identifierXpath,
+        HttpServletRequest request
         // TODO: Add an option to set categories ?
         // TODO: Add an option to set groupOwner ?
         // TODO: Add an option to set privileges ?
     ) throws Exception {
-        return collectEntries(uuids, xpath, identifierXpath, true, null);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return collectEntries(context, uuids, bucket, xpath, identifierXpath, true, null);
     }
 
 
     private ResponseEntity<Object> collectEntries(
+        ServiceContext context,
         String[] uuids,
+        String bucket,
         String xpath,
         String identifierXpath,
         boolean save, String directoryFilterQuery) throws Exception {
-        ServiceContext context = ServiceContext.get();
+
         UserSession session = context.getUserSession();
 
         // Check which records to analyse
-        final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, session);
+        final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
         DataManager dataMan = context.getBean(DataManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
@@ -203,10 +226,11 @@ public class DirectoryApi {
                 // Processing
                 try {
                     CollectResults collectResults =
-                        DirectoryUtils.collectEntries(
+                        DirectoryUtils.collectEntries(context,
                             record, xpath, identifierXpath);
                     if (save) {
                         DirectoryUtils.saveEntries(
+                            context,
                             collectResults,
                             siteId, user,
                             1, // TODO: Define group or take a default one
@@ -261,6 +285,13 @@ public class DirectoryApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiParam(value = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
@@ -285,9 +316,12 @@ public class DirectoryApi {
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
-            String fq
+            String fq,
+        HttpServletRequest request
     ) throws Exception {
-        return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, false, fq);
     }
 
 
@@ -307,6 +341,13 @@ public class DirectoryApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiParam(value = APIPARAM_XPATH,
             required = true,
             example = ".//gmd:CI_ResponsibleParty")
@@ -330,25 +371,30 @@ public class DirectoryApi {
             required = false,
             example = "groupPublished:IFREMER")
         @RequestParam(required = false)
-            String fq
+            String fq,
+        HttpServletRequest request
     ) throws Exception {
-        return updateRecordEntries(uuids, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        return updateRecordEntries(context, uuids, bucket, xpath, identifierXpath, propertiesToCopy, substituteAsXLink, true, fq);
     }
 
 
     private ResponseEntity<Object> updateRecordEntries(
+        ServiceContext context,
         String[] uuids,
+        String bucket,
         String xpath,
         String identifierXpath,
         List<String> propertiesToCopy,
         boolean substituteAsXLink,
         boolean save, String directoryFilterQuery) throws Exception {
-        ServiceContext context = ServiceContext.get();
+
         UserSession session = context.getUserSession();
         Profile profile = session.getProfile();
 
         // Check which records to analyse
-        final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, session);
+        final Set<String> setOfUuidsToEdit = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
 
         DataManager dataMan = context.getBean(DataManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
@@ -372,6 +418,7 @@ public class DirectoryApi {
                 try {
                     CollectResults collectResults =
                         DirectoryUtils.synchronizeEntries(
+                            context,
                             record, xpath, identifierXpath,
                             propertiesToCopy, substituteAsXLink, directoryFilterQuery);
                     listOfRecordInternalId.add(record.getId());

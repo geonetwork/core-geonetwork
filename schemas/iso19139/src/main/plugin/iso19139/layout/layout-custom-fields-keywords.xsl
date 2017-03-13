@@ -59,7 +59,9 @@
         <xsl:when test="normalize-space($thesaurusTitleEl/gco:CharacterString) != ''">
           <xsl:value-of select="if ($overrideLabel != '')
               then $overrideLabel
-              else normalize-space($thesaurusTitleEl/gco:CharacterString)"/>
+              else concat(
+                      $iso19139strings/keywordFrom,
+                      normalize-space($thesaurusTitleEl/gco:CharacterString))"/>
         </xsl:when>
         <xsl:when test="normalize-space($thesaurusTitleEl/gmd:PT_FreeText/
                           gmd:textGroup/gmd:LocalisedCharacterString[
@@ -96,7 +98,7 @@
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
-                      select="if ($thesaurusTitle)
+        select="if ($thesaurusTitle !='')
                 then $thesaurusTitle
                 else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="editInfo" select="gn:element"/>

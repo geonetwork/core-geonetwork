@@ -119,7 +119,7 @@
 
   <xsl:variable name="is3DModeAllowed"
                 select="if ($service = 'catalog.search' and
-                            ($env/map/is3DModeAllowed = 'true' or /root/request/with3d))
+                            (util:getJsonSettingValue('ui/config', 'mods.map.is3DModeAllowed') = 'true' or /root/request/with3d))
                         then true()
                         else false()"/>
 

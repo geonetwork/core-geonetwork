@@ -77,8 +77,9 @@
             var defer = $q.defer();
             var params = [];
             var url = '../api/records/tags?' +
-                      (replace ? 'clear=true&id=' : 'id=');
-
+                        '&bucket=' +
+                (attrs.selectionBucket || 'metadata') + '&' +
+                        (replace ? 'clear=true&id=' : 'id=');
             angular.forEach(scope.categories, function(c) {
               if (c.checked === true) {
                 params.push(c.id);
