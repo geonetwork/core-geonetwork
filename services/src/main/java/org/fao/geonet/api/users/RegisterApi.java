@@ -95,10 +95,20 @@ public class RegisterApi {
         throws Exception {
 
 
+
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         ServiceContext context = ApiUtils.createServiceContext(request);
+
+        SettingManager sm = context.getBean(SettingManager.class);
+        boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
+        if (!selfRegistrationEnabled) {
+            return new ResponseEntity<>(String.format(
+                    messages.getString("self_registration_disabled")
+            ), HttpStatus.PRECONDITION_FAILED);
+        }
+
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(user.getEmail()) != null) {
             return new ResponseEntity<>(String.format(
@@ -124,7 +134,6 @@ public class RegisterApi {
         }
 
 
-        SettingManager sm = context.getBean(SettingManager.class);
         String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("register_email_admin_subject"),
