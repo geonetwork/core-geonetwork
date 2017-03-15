@@ -273,7 +273,7 @@
     "cswCapabilitiesAdvProperties": "고급 구성",
     "cswCapabilitiesProperties": "CSW 서비스 정보",
     "noCswCriteriaFoundInCapabilities": "<a href='{{url}}'> 기능에서 어떠한 검색 기준도 찾을 수 없습니다. 서버에서 모든 레코드가 수집됩니다.",
-    "CswCriteriaFoundInCapabilities": "Optionally use one or more search criteria below to restrict the records to harvest. Use '%' wildcard character in order to query using like operator (ie. ogc:PropertyIsLike) instead of equal.",
+    "CswCriteriaFoundInCapabilities": "선택적으로 아래의 하나 이상의 검색 기준을 사용하여 레코드 수집을 제한하십시오. '=' 연산자 대신에 '%' 와일드 카드 문자를 사용하십시오 (예 : ogc : PropertyIsLike).",
     "errorRetrievingCswCapabilities": "<a href='{{url}}'> 서비스의 기능을 추출하는 동안 오류가 발생했습니다. 서비스 URL 또는 현재 상태를 확인하십시오.",
     "cswRequest": "CSW 요청",
     "cswResponse": "CSW 응답",

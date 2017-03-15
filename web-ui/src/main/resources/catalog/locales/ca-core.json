@@ -1,6 +1,13 @@
 {
     "all": "tots",
     "allInPage": "tots en una pàgina",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "AnonymousUserlist": "Preferred records",
+    "MapLayerlist": "Add to map list",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Autor",
     "none": "cap",
     "BadParameterEx": "Paràmetre erroni",

@@ -313,6 +313,7 @@
     "deleteHarvesterHelp": "Delete harvester and all related records",
     "deleteHarvesterHistory": "Delete",
     "deleteHarvesterRecords": "Remove <strong>{{records}}</strong> records",
+    "assignHarvestedRecordToLocalNode": "Assign <strong>{{records}}</strong> records to local node",
     "deleteHarvesterRecordsHelp": "Delete all node's records",
     "deleteThesaurus": "Delete",
     "deleteUser": "Delete",

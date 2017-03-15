@@ -1,6 +1,13 @@
 {
     "all": "Alles selektieren",
     "allInPage": "in der Seite alles selektieren",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "AnonymousUserlist": "Preferred records",
+    "MapLayerlist": "Add to map list",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Author",
     "none": "Auswahl löschen",
     "BadParameterEx": "Falscher Parameter",
