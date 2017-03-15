@@ -114,16 +114,6 @@
             <i class="fa fa-save"></i>&nbsp;
             <span data-translate="">saveHarvester</span>
           </button>
-          <button type="button" class="btn btn-warning pull-right"
-                  data-ng-hide="harvesterSelected['@id'] == ''"
-                  data-gn-click-and-spin="deleteHarvesterRecord(harvesterSelected['@id'])"
-                  data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
-                  title="{{'deleteHarvesterRecordsHelp' | translate}}">
-            <span class="fa fa-trash-o"></span>&nbsp;
-          <span data-translate=""
-                data-translate-values="{records: '{{harvesterSelected.info.result.total}}'}">
-            deleteHarvesterRecords</span>
-          </button>
           <button type="button" class="btn btn-danger pull-right"
                   data-ng-hide="harvesterSelected['@id'] == ''"
                   data-gn-click-and-spin="deleteHarvester(harvesterSelected['@id'])"
@@ -199,7 +189,9 @@
               <div class="timeline-heading" data-ng-if="h.info[0]['stack'] === undefined">
                 <h4 data-ng-show="h.deleted == 'true'">
                   <strong>{{h.info[0][0]['@recordsRemoved']}}</strong>
-                  <span data-translate="">recordsRemoved</span></h4>
+                  <span data-ng-show="h.info[0][0]['@recordsRemoved']" data-translate="">recordsRemoved</span></h4>
+                  <strong>{{h.info[0][0]['@recordsTransfered']}}</strong>
+                  <span data-ng-show="h.info[0][0]['@recordsTransfered']" data-translate="">recordsTransfered</span></h4>
                 <h4 data-ng-show="h.deleted == 'false'" class="timeline-title">
                   <strong>{{h.info[0].total}}</strong>
                   <span data-translate="">recordsHarvestedIn</span>
@@ -263,8 +255,29 @@
     <div class="panel panel-default"
          data-ng-hide="harvesterSelected['@id'] == '' || isLoadingOneHarvester || deleting.indexOf(harvesterSelected['@id']) > -1"
          data-ng-search-form=""
-         data-ng-show="searchResults.count != 0">
-      <div class="panel-heading" data-translate="">harvesterRecords</div>
+         data-ng-show="searchResults.count != '0'">
+      <div class="panel-heading">
+        <span data-translate="">harvesterRecords</span>
+        <div class="btn-toolbar pull-right">
+          <button type="button" class="btn btn-primary btn-warning"
+                  data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
+                  data-gn-click-and-spin="assignHarvestedRecordToLocalNode()">
+            <span class="fa fa-database"></span>
+            <span data-translate=""
+                  data-translate-values="{records: '{{searchResults.count}}'}">assignHarvestedRecordToLocalNode</span>
+          </button>
+
+          <button type="button" class="btn btn-warning"
+                  data-gn-click-and-spin="deleteHarvesterRecord(harvesterSelected['@id'])"
+                  data-ng-disabled="harvesterSelected.info.running === true || deleting.indexOf(harvesterSelected['@id']) > -1"
+                  title="{{'deleteHarvesterRecordsHelp' | translate}}">
+            <span class="fa fa-trash-o"></span>&nbsp;
+            <span data-translate=""
+                  data-translate-values="{records: '{{searchResults.count}}'}">
+            deleteHarvesterRecords</span>
+          </button>
+        </div>
+      </div>
 
       <div class="panel-body">
         <!-- This information is not relevant for GeoNetwork protocol

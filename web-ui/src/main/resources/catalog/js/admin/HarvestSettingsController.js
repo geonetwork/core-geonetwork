@@ -332,6 +332,18 @@
               console.log(data);
             });
       };
+      $scope.assignHarvestedRecordToLocalNode = function() {
+        $http.post('../api/harvesters/' + $scope.harvesterSelected.site.uuid +
+                   '/assign?source=' + $scope.info['system/site/siteId'])
+            .success(function(data) {
+              $scope.harvesterSelected = {};
+              $scope.harvesterUpdated = false;
+              $scope.harvesterNew = false;
+              $scope.$parent.loadHarvesters();
+            }).error(function(data) {
+              console.log(data);
+            });
+      };
       $scope.deleteHarvesterHistory = function() {
         return $http.get('admin.harvester.history.delete?uuid=' +
             $scope.harvesterSelected.site.uuid)
