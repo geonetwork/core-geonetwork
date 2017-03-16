@@ -24,16 +24,11 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.BadServerResponseEx;
-import org.fao.geonet.exceptions.BadSoapResponseEx;
-import org.fao.geonet.exceptions.BadXmlResponseEx;
-import org.fao.geonet.exceptions.OperationAbortedEx;
-import org.fao.geonet.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -53,13 +48,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 //=============================================================================
@@ -156,6 +145,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
+        boolean error = false;
         for (Search s : params.getSearches()) {
             if (cancelMonitor.get()) {
                 return new HarvestResult();
@@ -164,11 +154,13 @@ class Harvester implements IHarvester<HarvestResult> {
             try {
                 records.addAll(search(req, s));
             } catch (Exception t) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
                 errors.add(new HarvestError(context, t, log));
             } catch (Throwable t) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
@@ -181,11 +173,13 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.debug("Doing an empty search");
                 records.addAll(search(req, Search.createEmptySearch()));
             } catch (Exception t) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
                 log.error(t);
                 errors.add(new HarvestError(context, t, log));
             } catch (Throwable t) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
                 t.printStackTrace();
@@ -196,13 +190,16 @@ class Harvester implements IHarvester<HarvestResult> {
         log.info("Total records processed in all searches :" + records.size());
 
         //--- align local node
+        HarvestResult result = new HarvestResult();
+        if (!error) {
+            Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
+            result = aligner.align(records, errors);
 
-        Aligner aligner = new Aligner(cancelMonitor, log, context, req, params, remoteInfo);
-        HarvestResult result = aligner.align(records, errors);
-
-        Map<String, String> sources = buildSources(remoteInfo);
-        updateSources(records, sources);
-
+            Map<String, String> sources = buildSources(remoteInfo);
+            updateSources(records, sources);
+        } else {
+            log.warning("Due to previous errors the align process has not been called");
+        }
         return result;
     }
 
@@ -290,7 +287,7 @@ class Harvester implements IHarvester<HarvestResult> {
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
-        } catch(Exception e) {
+        } catch (Exception e) {
             HarvestError harvestError = new HarvestError(context, e, log);
             harvestError.setDescription("Error while searching on "
                 + params.getName() + ". ");

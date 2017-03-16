@@ -165,6 +165,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
+        boolean error = false;
         for (Search s : params.getSearches()) {
 
             if (cancelMonitor.get()) {
@@ -174,11 +175,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             try {
                 records.addAll(search(req, s));
             } catch (Exception e) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
                 e.printStackTrace();
                 errors.add(new HarvestError(context, e, log));
             } catch (Throwable e) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
                 e.printStackTrace();
@@ -191,11 +194,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 log.debug("Doing an empty search");
                 records.addAll(search(req, Search.createEmptySearch()));
             } catch (Exception e) {
+                error = true;
                 log.error("Unknown error trying to harvest");
                 log.error(e.getMessage());
                 e.printStackTrace();
                 errors.add(new HarvestError(context, e, log));
             } catch(Throwable e) {
+                error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(e.getMessage());
                 e.printStackTrace();
@@ -206,10 +211,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         log.info("Total records processed in all searches :" + records.size());
 
         //--- align local node
-
-        if (records.size() != 0)
+        if (!error) {
             align(t, records);
-
+        } else {
+            log.warning("Due to previous errors the align process has not been called");
+        }
         return result;
     }
 
