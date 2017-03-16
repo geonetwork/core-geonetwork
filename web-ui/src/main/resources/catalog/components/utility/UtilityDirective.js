@@ -64,7 +64,8 @@
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
           $http.get('../api/regions?categoryId=' +
-              'http://geonetwork-opensource.org/regions%23country', {}, {
+              'http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country',
+              {}, {
                 cache: true
               }).success(function(response) {
             var data = response.region;

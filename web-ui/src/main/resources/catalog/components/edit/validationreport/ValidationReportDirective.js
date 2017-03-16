@@ -79,6 +79,8 @@
                   scope.ruleTypes = scope.ruleTypes.concat(optional);
                   scope.hasSuccess = scope.ruleTypes.length > 0;
                   scope.loading = false;
+                }).finally(function() {
+                  scope.loading = false;
                 });
               };
 

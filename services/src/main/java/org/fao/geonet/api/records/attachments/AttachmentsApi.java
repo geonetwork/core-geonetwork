@@ -26,9 +26,11 @@
 package org.fao.geonet.api.records.attachments;
 
 import io.swagger.annotations.*;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
@@ -50,6 +52,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,6 +61,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Metadata resource related operations.
@@ -169,10 +173,12 @@ public class AttachmentsApi {
             Sort sort,
         @RequestParam(required = false,
             defaultValue = FilesystemStore.DEFAULT_FILTER)
-            String filter)
-        throws
-        Exception {
-        List<MetadataResource> list = store.getResources(metadataUuid, sort, filter);
+            String filter,
+        @ApiIgnore
+            HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        List<MetadataResource> list = store.getResources(context, metadataUuid, sort, filter);
         return list;
     }
 
@@ -192,8 +198,12 @@ public class AttachmentsApi {
         required = true,
         example = "43d7c186-2187-4bcd-8843-41e575a5ef56")
                              @PathVariable
-                                 String metadataUuid) throws Exception {
-        store.delResource(metadataUuid);
+                                 String metadataUuid,
+                             @ApiIgnore
+                                     HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        store.delResource(context, metadataUuid);
     }
 
     @ApiOperation(
@@ -222,9 +232,12 @@ public class AttachmentsApi {
             MetadataResourceVisibility visibility,
         @ApiParam(value = "The file to upload")
         @RequestParam("file")
-            MultipartFile file)
-        throws Exception {
-        return store.putResource(metadataUuid, file, visibility);
+            MultipartFile file,
+        @ApiIgnore
+            HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        return store.putResource(context, metadataUuid, file, visibility);
     }
 
     @ApiOperation(
@@ -252,9 +265,12 @@ public class AttachmentsApi {
             MetadataResourceVisibility visibility,
         @ApiParam(value = "The URL to load in the store")
         @RequestParam("url")
-            URL url)
-        throws Exception {
-        return store.putResource(metadataUuid, url, visibility);
+            URL url,
+        @ApiIgnore
+            HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        return store.putResource(context, metadataUuid, url, visibility);
     }
 
     @ApiOperation(
@@ -279,9 +295,12 @@ public class AttachmentsApi {
         @ApiParam(value = "The resource identifier (ie. filename)",
             required = true)
         @PathVariable
-            String resourceId
+            String resourceId,
+        @ApiIgnore
+            HttpServletRequest request
     ) throws Exception {
-        Path file = store.getResource(metadataUuid, resourceId);
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        Path file = store.getResource(context, metadataUuid, resourceId);
 
         // TODO: Check user privileges
 
@@ -321,8 +340,11 @@ public class AttachmentsApi {
                                               required = true,
                                               example = "public")
                                           @RequestParam(required = true)
-                                              MetadataResourceVisibility visibility) throws Exception {
-        return store.patchResourceStatus(metadataUuid, resourceId, visibility);
+                                              MetadataResourceVisibility visibility,
+                                          @ApiIgnore
+                                          HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        return store.patchResourceStatus(context, metadataUuid, resourceId, visibility);
     }
 
     @ApiOperation(
@@ -345,7 +367,11 @@ public class AttachmentsApi {
                             @ApiParam(value = "The resource identifier (ie. filename)",
                                 required = true)
                             @PathVariable
-                                String resourceId) throws Exception {
-        store.delResource(metadataUuid, resourceId);
+                                String resourceId,
+                            @ApiIgnore
+                                    HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        store.delResource(context, metadataUuid, resourceId);
     }
 }

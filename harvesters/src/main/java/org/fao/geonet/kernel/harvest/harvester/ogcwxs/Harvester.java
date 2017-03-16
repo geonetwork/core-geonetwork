@@ -256,7 +256,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.batchIndexInThreadPool(context, ids);
 
-        result.totalMetadata = result.addedMetadata + result.layer + result.updatedMetadata;
+        result.totalMetadata = result.addedMetadata + result.updatedMetadata;
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
