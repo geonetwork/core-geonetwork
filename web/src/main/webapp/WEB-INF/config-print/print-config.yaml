@@ -26,6 +26,7 @@ scales:
   - 25000000
   - 50000000
   - 100000000
+  - 200000000
 
 formats:
   - pdf
@@ -76,6 +77,19 @@ layouts:
                 font: Helvetica
                 fontSize: 704
                 text: ' '
+        - !columns
+          condition: hasTitle
+          backgroundColor: #ffffff
+          width: 544
+          height: 700
+          absoluteX: 25
+          absoluteY: 780
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 700
+                text: ' '
         - !map
           condition: hasTitle
           spacingAfter: 10
@@ -95,6 +109,19 @@ layouts:
                 backgroundColor: #000000
                 font: Helvetica
                 fontSize: 748
+                text: ' '
+        - !columns
+          condition: hasNoTitle
+          backgroundColor: #ffffff
+          width: 544
+          height: 745
+          absoluteX: 25
+          absoluteY: 816
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 745
                 text: ' '
         - !map
           condition: hasNoTitle
@@ -203,6 +230,19 @@ layouts:
                 fontSize: 519
                 text: ' '
         - !columns
+          condition: hasNoTitle
+          backgroundColor: #ffffff
+          width: 958
+          height: 516
+          absoluteX: 25
+          absoluteY: 588
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 516
+                text: ' '
+        - !columns
           condition: hasTitle
           width: 962
           height: 518
@@ -213,6 +253,19 @@ layouts:
                 backgroundColor: #000000
                 font: Helvetica
                 fontSize: 483
+                text: ' '
+        - !columns
+          condition: hasTitle
+          backgroundColor: #ffffff
+          width: 958
+          height: 481
+          absoluteX: 25
+          absoluteY: 552
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 480
                 text: ' '
         - !map
           condition: hasTitle

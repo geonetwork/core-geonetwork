@@ -498,7 +498,8 @@
           sxtService.feedMd(scope);
           scope.getScope = function() {
             return scope;
-          }
+          };
+          scope.mdUrl = location.origin + location.pathname + '#/metadata/' + scope.md.getUuid();
         }
       };
     }]);
@@ -556,7 +557,6 @@
     };
   }]);
 
-/*
     module.directive('sxtCustomScroll', [ '$window', function($window) {
     return {
       restrict: 'A',
@@ -593,7 +593,6 @@
       }
     };
   }]);
-*/
 
 
   // fix angularjs bug fixed in v1.5.0-beta.1 : some html special char are

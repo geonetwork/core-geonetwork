@@ -22,7 +22,7 @@
             <description>Not any more operational</description>
         </entry>
     </codelist>
-    
+
     <codelist name="gmd:MD_KeywordTypeCode">
         <entry>
             <code>discipline</code>
@@ -72,7 +72,7 @@
             <description>Domain for which the current product is applicable : marine safety, marine resources, coastal and marine environment, weather, climate and seasonal forecasting</description>
         </entry>
     </codelist>
-    
+
     <codelist name="gmd:DS_AssociationTypeCode">
         <entry>
             <code>crossReference</code>
@@ -80,7 +80,7 @@
             <description>Reference from one dataset to another</description>
         </entry>
     </codelist>
-    
+
     <codelist name="gmd:DS_InitiativeTypeCode">
         <entry>
             <code>upstream-validation</code>
@@ -98,8 +98,8 @@
             <description></description>
         </entry>
     </codelist>
-    
-    
+
+
     <codelist name="gmd:CI_RoleCode">
         <entry>
             <code>custodian</code>
@@ -129,5 +129,89 @@
 			<description>Dissemination Unit</description>
 		</entry>
     </codelist>
-    
+
+  <codelist name="gmd:MD_MaintenanceFrequencyCode">
+    <entry>
+      <code>continual</code>
+      <label>Continue</label>
+      <description>Mise à jour continue</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>daily</code>
+      <label>Journalière</label>
+      <description>Mise à jour quotidienne</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>weekly</code>
+      <label>Hebdomadaire</label>
+      <description>Mise à jour hebdomadaire</description>
+    </entry>
+    <entry>
+      <code>twiceWeekly</code>
+      <label>Bihebdomadaire</label>
+      <description>Mise à jour 2 fois par semaine</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>fortnightly</code>
+      <label>Bi-mensuelle</label>
+      <description>Mise à jour 2 fois par mois</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>monthly</code>
+      <label>Mensuelle</label>
+      <description>Mise à jour mensuelle</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>quarterly</code>
+      <label>Trimestrielle</label>
+      <description>Mise à jour trimestrielle</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>biannually</code>
+      <label>Bi-annuelle</label>
+      <description>Mise à jour bi-annuelle</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>annually</code>
+      <label>Annuelle</label>
+      <description>Mise à jour annuelle</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>asNeeded</code>
+      <label>Lorsque nécessaire</label>
+      <description>Mise à jour lorsque cela est jugé nécessaire</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>irregular</code>
+      <label>Irrégulière</label>
+      <description>Mise à jour irrégulière</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>notPlanned</code>
+      <label>Non planifiée</label>
+      <description>Mise à jour non planifiée</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>unknown</code>
+      <label>Inconnue</label>
+      <description>Mise à jour inconnue</description>
+    </entry>
+    <!-- ISO PROFIL CHE ONLY
+        <entry>
+            <code>userDefined</code>
+            <label>Fréquence personnalisée</label>
+            <description>Dans ce cas l'attribut définissant une fréquence personnalisée doit être utilisée</description>
+        </entry>-->
+  </codelist>
 </codelists>

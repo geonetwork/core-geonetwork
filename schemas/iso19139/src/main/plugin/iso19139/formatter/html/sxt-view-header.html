@@ -1,4 +1,5 @@
 <div class="container gn-metadata-view">
+
   <script type="application/javascript" fmt-if="isHTML">
     //<![CDATA[
     document.title="{{pageTitle}}";
@@ -14,9 +15,6 @@
 
   <ul fmt-if="!isPDF" class="view-outline nav nav-tabs">
     <li fmt-if="addOverviewNavItem"><a href="" rel=".overview" fmt-translate="">overview</a></li>
-    <li fmt-if="associated">
-      <a href="" rel=".container > .associated"><span fmt-translate="">associated-link</span>&amp;nbsp; <i class="fa fa-circle-o-notch fa-spin associated-spinner"></i></a>
-    </li>
     <li fmt-if="addCompleteNavItem"><a fmt-translate="" href="" rel=".container > .entry:not(.overview)">complete</a></li>
     <li fmt-repeat="item in navBar" title="{{item.name | escapeXmlAttrs}}">
       <a fmt-if="item.href" href="{{item.href | escapeXmlAttrs}}" target="_blank">{{item.abbrName | escapeXmlContent}}</a>
@@ -62,16 +60,9 @@
           <dt data-fmt-if="constraints" translate="">constraints</dt>
           <dd data-fmt-if="constraints">{{constraints}}</dd>
 
-          <dt translate="">associatedResources</dt>
-          <dd data-fmt-if="constraints">
-
-            <div data-gn-related="md"
-                 data-user="user"
-                 template="../../catalog/views/sextant/directives/partials/related.html"
-                 data-types="parent|children|services|datasets">
-              </div>
-          </dd>
+          <div fmt-include="html/sxt-associated.html" fmt-include-replace="true"/>
         </dl>
+
         <sxt-citation metadata="md"></sxt-citation>
 
       </div>
@@ -95,8 +86,24 @@
             {{extents}}
           </p>
         </section>
-        <section class="sxt-social">
-          <sxt-social></sxt-social>
+
+
+        <section class="sxt-social links">
+          <a
+            href="https://plus.google.com/share?url={{socialMediaLink}}"
+            target="_blank"
+            class="btn  btn-default"><i class="fa fa-fw fa-google-plus"></i></a>
+          <a href="https://twitter.com/share?url={{socialMediaLink}}"
+             target="_blank"
+             class="btn  btn-default"><i class="fa fa-fw fa-twitter"></i></a>
+          <a
+            href="https://www.facebook.com/sharer.php?u={{socialMediaLink}}"
+            target="_blank"
+            class="btn  btn-default"><i class="fa fa-fw fa-facebook"></i></a>
+          <a
+            href="mailto:?subject={{title}}&amp;body={{socialMediaLink}}"
+            target="_blank"
+            class="btn  btn-default"><i class="fa fa-fw fa-envelope-o"></i></a>
         </section>
 
       </div>

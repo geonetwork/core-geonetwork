@@ -165,8 +165,16 @@
 
             return (name.indexOf(filter) >= 0);
           };
+
+          scope.$on('beforeSearchReset', function() {
+            scope.ctrl.activeFilter = '';
+          });
+
         }
+
+
       };
+
     }]);
 
   module.directive('gnCategorytreeCol', [
