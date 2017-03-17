@@ -892,7 +892,7 @@
       </properties>
     </profile>
     <profile>
-      <id>ifr-visi-sextant-v6</id>
+      <id>ifr-visi-sxt-6.5</id>
       <activation>
         <property>
           <name>env</name>
@@ -901,22 +901,7 @@
       </activation>
       <properties>
         <env>prod</env>
-        <server>ifr-visi-sextant-v6</server>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>ifr-visi-sextant</id>
-      <activation>
-        <property>
-          <name>env</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <env>prod</env>
-        <server>ifr-visi-sextant</server>
+        <server>ifr-visi-sxt-6.5</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
         <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
       </properties>
