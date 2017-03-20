@@ -568,8 +568,10 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         // Request each type
         for (RelatedItemType type : RelatedItemType.values()) {
-            if (type == RelatedItemType.hassources || type == RelatedItemType.related
-                || type == RelatedItemType.thumbnails) {
+            if (type == RelatedItemType.hassources ||
+                type == RelatedItemType.related ||
+                type == RelatedItemType.hasfeaturecats ||
+                type == RelatedItemType.thumbnails) {
                 // TODO modify mef2-related.zip test metadata to contain a valid hassources value
                 continue;
             }
