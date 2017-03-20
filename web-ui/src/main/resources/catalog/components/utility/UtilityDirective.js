@@ -560,7 +560,7 @@
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
     var testObj = angular.element('<textarea ' +
-        ' style="height: 0px; position: absolute; visibility: hidden;"/>');
+        ' style="height: 0px; position: absolute; top: 0; visibility: hidden;"/>');
     angular.element(window.document.body).append(testObj);
 
     return {
