@@ -515,6 +515,7 @@
 
           <field name="temporalRangeSection"
                  templateModeOnly="true"
+                 notDisplayedIfMissing="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement">
             <template>
               <values>
@@ -549,6 +550,26 @@
               </snippet>
             </template>
           </field>
+
+
+          <action type="add" name="temporalRangeSection" or="temporalElement"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*">
+            <template>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        <gml:beginPosition/>
+                        <gml:endPosition/>
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </action>
+
         </section>
       </tab>
       <tab id="sextant-usage" mode="flat">
