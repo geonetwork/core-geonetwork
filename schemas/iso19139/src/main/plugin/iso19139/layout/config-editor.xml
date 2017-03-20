@@ -417,6 +417,7 @@
 
           <field name="temporalRangeSection"
                  templateModeOnly="true"
+                 notDisplayedIfMissing="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement">
             <template>
               <values>
