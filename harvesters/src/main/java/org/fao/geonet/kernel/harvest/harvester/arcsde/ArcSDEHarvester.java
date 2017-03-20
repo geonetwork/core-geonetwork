@@ -22,11 +22,17 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
+import com.google.common.base.Function;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -47,14 +53,18 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import com.google.common.collect.Sets;
-import org.springframework.util.StringUtils;
+import org.jdom.Namespace;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -211,6 +221,8 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                     continue;
                 }
 
+                String thumbnailContent = "";
+
                 // create JDOM element from String-XML
                 Element metadataElement = Xml.loadString(metadata, false);
 
@@ -226,8 +238,21 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                 if (schema == null) {
                     log.info("Convert metadata to ISO19139 - start");
 
+                    // Extract picture if available
+                    List<Namespace> esriMdNamespaces = new ArrayList<>();
+                    esriMdNamespaces.add(metadataElement.getNamespace());
+                    esriMdNamespaces.addAll(metadataElement.getAdditionalNamespaces());
+
+                    // select all nodes that match the XPath
+                    Element thumbnailEl = Xml.selectElement(metadataElement, "Binary/Thumbnail/Data", esriMdNamespaces);
+
+                    if (thumbnailEl != null) {
+                        thumbnailContent = thumbnailEl.getText();
+                    }
+
                     // transform ESRI output to ISO19115
                     Element iso19115 = Xml.transform(metadataElement, ArcToISO19115Transformer);
+
                     // transform ISO19115 to ISO19139
                     metadataElement = Xml.transform(iso19115, ISO19115ToISO19139Transformer);
 
@@ -247,7 +272,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                     log.info("Metadata schema: " + schema);
                     log.info("Assigning metadata uuid: " + uuid);
 
-                    dataMan.setUUID(schema, uuid, metadataElement);
+                    metadataElement = dataMan.setUUID(schema, uuid, metadataElement);
 
                     // the xml is recognizable  format
                     //String uuid = dataMan.extractUUID(schema, metadataElement);
@@ -279,6 +304,11 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
                             updateMetadata(metadataElement, id, localGroups, localCateg, aligner);
                             result.updatedMetadata++;
                         }
+
+                        if (StringUtils.isNotEmpty(thumbnailContent)) {
+                            loadMetadataThumbnail(thumbnailContent, id, uuid);
+                        }
+
                         idsForHarvestingResult.add(Integer.valueOf(id));
                     }
                 }
@@ -422,6 +452,58 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         params = copy;
         super.setParams(params);
+    }
+
+
+
+    private void loadMetadataThumbnail(String thumbnail, String metadataId, String uuid) {
+        log.info("  - Creating thumbnail for metadata uuid: " + uuid);
+
+        org.fao.geonet.services.thumbnail.Set s = new org.fao.geonet.services.thumbnail.Set();
+
+        try {
+            String filename = uuid + ".png";
+            Path dir = context.getUploadDir();
+
+            byte[] thumbnailImg =  Base64.decodeBase64(thumbnail);
+
+            try (OutputStream fo = Files.newOutputStream(dir.resolve(filename));
+                 InputStream in = new ByteArrayInputStream(thumbnailImg);) {
+                BinaryFile.copy(in, fo);
+            }
+
+
+            if (log.isDebugEnabled()) log.debug("  - File: " + filename);
+
+            Element par = new Element("request");
+            par.addContent(new Element("id").setText(metadataId));
+            par.addContent(new Element("version").setText("10"));
+            par.addContent(new Element("type").setText("large"));
+
+            Element fname = new Element("fname").setText(filename);
+            fname.setAttribute("content-type", "image/png");
+            fname.setAttribute("type", "file");
+            fname.setAttribute("size", "");
+
+            par.addContent(fname);
+            par.addContent(new Element("add").setText("Add"));
+            par.addContent(new Element("createSmall").setText("on"));
+            par.addContent(new Element("smallScalingFactor").setText("180"));
+            par.addContent(new Element("smallScalingDir").setText("width"));
+
+            // Call the services
+            s.execOnHarvest(par, context, dataMan);
+
+            dataMan.flush();
+
+            result.thumbnails++;
+
+        } catch (Exception e) {
+            log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
+            e.printStackTrace();
+            result.thumbnailsFailed++;
+        }
+
     }
 
 }
