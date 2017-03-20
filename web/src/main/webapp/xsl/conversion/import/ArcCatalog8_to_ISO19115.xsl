@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
   <xsl:output method="xml"/>
   <!--  <xsl:output method="xml" doctype-system="ISO_19115.dtd"/> -->
   <xsl:template match="/">
@@ -14,7 +14,9 @@
       <xsl:for-each select="metadata/mdHrLvName">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
+
       <xsl:apply-templates select="metadata/mdContact"/>
+
       <xsl:apply-templates select="metadata/mdDateSt"/>
       <xsl:apply-templates select="metadata/mdStanName"/>
       <xsl:apply-templates select="metadata/mdStanVer"/>
@@ -785,7 +787,8 @@
           <xsl:apply-templates select="@value"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:value-of select="."/>
+      <!-- Strip html tags -->
+      <xsl:value-of select="replace(., '&lt;/?\w+[^&lt;]*&gt;', '')"/>
     </xsl:element>
   </xsl:template>
 
