@@ -530,32 +530,21 @@
             if (!inRange && bucketDates[0].key == datetime) {
               inRange = true;
             }
-            if (inRange) {
+            if(inRange) {
               var b = bucketDates[bucketIdx];
               var obj = {
                 value: datetime,
+                values: datetime,
                 count: 1
               };
-              if (b.key == datetime) {
+              if(b.key == datetime) {
                 obj.count = b.doc_count;
                 bucketIdx++;
               }
-              if(inRange) {
-                var b = bucketDates[bucketIdx];
-                var obj = {
-                  value: datetime,
-                  values: datetime,
-                  count: 1
-                };
-                if(b.key == datetime) {
-                  obj.count = b.doc_count;
-                  bucketIdx++;
-                }
-                facetField.datesCount.push(obj);
+              facetField.datesCount.push(obj);
 
-                if(bucketIdx == bucketDates.length) {
-                  break;
-                }
+              if(bucketIdx == bucketDates.length) {
+                break;
               }
             }
           }
