@@ -11,7 +11,6 @@
   goog.require('gn_wps');
   goog.require('sxt_directives');
   goog.require('sxt_panier');
-  goog.require('sxt_interceptors');
   goog.require('sxt_mdactionmenu');
   goog.require('sxt_linksbtn');
   goog.require('gn_sxt_utils');
@@ -26,7 +25,6 @@
     'gn_wps',
     'sxt_directives',
     'sxt_panier',
-    'sxt_interceptors',
     'sxt_mdactionmenu',
     'sxt_linksbtn',
     'gn_sxt_utils'
@@ -38,39 +36,12 @@
     var catModule = angular.module('gn_cat_controller');
     catModule.config(['gnGlobalSettings', 'gnLangs',
       function(gnGlobalSettings, gnLangs) {
-        var iso2lang,
-            iso3lang,
-            lCfg = sxtSettings.langDetector;
 
-        if(lCfg) {
-          if(lCfg.fromHtmlTag) {
-            iso2lang = $('html').attr('lang').substr(0,2);
-          }
-          else if(lCfg.regexp) {
-            var res = new RegExp(lCfg.regexp).exec(location.pathname);
-            if(angular.isArray(res)) {
-              iso2lang = res[1];
-            }
-          }
-          else if (lCfg.lang) {
-            iso2lang = lCfg.lang
-          }
+        if(typeof sxtSettings != 'undefined') {
+          gnGlobalSettings.gnCfg.mods.search.resultTemplate =
+            '../../catalog/views/sextant/templates/mdview/grid.html';
+          gnGlobalSettings.gnCfg.langDetector = sxtSettings.langDetector;
 
-          iso3lang = gnLangs.getIso3Lang(iso2lang);
-        }
-        iso3lang = iso3lang || 'eng';
-
-        gnGlobalSettings.locale = {
-          iso3lang: iso3lang
-        };
-
-        // ${api.gn.url}
-        if(sxtGnUrl) {
-          gnGlobalSettings.gnUrl =
-              sxtGnUrl + iso3lang + '/';
-        }
-        else {
-          console.error('The variable sxtGnUrl is not defined !');
         }
       }]);
   }

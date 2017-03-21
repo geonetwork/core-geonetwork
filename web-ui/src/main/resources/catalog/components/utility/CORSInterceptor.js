@@ -26,6 +26,9 @@
 
   var module = angular.module('gn_cors_interceptor', []);
 
+  var isChrome = /Chrome/.test(navigator.userAgent) &&
+    /Google Inc/.test(navigator.vendor);
+
   /**
    * CORS Interceptor
    *
@@ -60,10 +63,26 @@
                   config.url = gnGlobalSettings.proxyUrl +
                       encodeURIComponent(config.url);
                 }
-              } else if (gnGlobalSettings.gnUrl) {
+              } else if (gnGlobalSettings.gnUrl &&
+                config.url.indexOf('http://') < 0 &&
+                config.url.indexOf('https://') < 0 &&
+                !config.url.match(/(partials\/).*(.html)$/)) {
                 // Relative URL in API mode
                 // are prefixed with catalog URL
                 // console.log(config.url);
+
+                if(isChrome && config.method == 'GET' && config.cache != true
+                  && config.url != 'q'
+                  && config.url.indexOf('qi?') != 0
+                  && config.url.indexOf('q?') != 0
+                  && config.url.indexOf('GetFeatureInfo') < 0 ) {
+
+                  var param = {
+                    __id: Math.floor(Math.random() * (99999999999 - 0))
+                  };
+                  config.params = angular.extend({}, config.params, param);
+                }
+
                 config.url = gnGlobalSettings.gnUrl +
                              (gnLangs.current || 'eng') + '/' +
                              config.url;
