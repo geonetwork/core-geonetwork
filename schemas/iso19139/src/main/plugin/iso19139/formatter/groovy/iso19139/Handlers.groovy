@@ -616,18 +616,25 @@ public class Handlers {
                 useConstraintsLabel : useConstraintsLabel,
                 otherConstraintsLabel : otherConstraintsLabel
         ]
+        def hasContraints = false;
+
         if (accessConstraints != '') {
             replacements.accessConstraints = accessConstraints
+            hasContraints = true;
         }
         if (useLimitation != '') {
             replacements.useLimitation = useLimitation
+            hasContraints = true;
         }
         if (useConstraints != '') {
             replacements.useConstraints = useConstraints
+            hasContraints = true;
         }
         if (otherConstraints.size() > 0) {
             replacements.otherConstraints = otherConstraints
+            hasContraints = true;
         }
-        return handlers.fileResult("html/sxt-constraints.html", replacements)
+
+        return hasContraints ? handlers.fileResult("html/sxt-constraints.html", replacements) : ''
     }
 }

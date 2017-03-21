@@ -1300,6 +1300,18 @@
   </distributionManagement>
 
   <properties>
+    <!-- Configure database config file to use. Could be
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     -->
+    <!--<db.type>postgres</db.type>-->
+    <!--<db.config.file>../config-db/${db.type}.xml</db.config.file>-->
+    <db.host>localhost</db.host>
+    <db.port>5432</db.port>
+    <db.name>sextant65x</db.name>
+    <db.username>sxtcatal</db.username>
+    <db.password>www-data</db.password>
+    <db.pool.maxActive>10</db.pool.maxActive>
+
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
@@ -1309,13 +1321,17 @@
     to the default language. -->
     <language.forceDefault>false</language.forceDefault>
 
+    <!-- Define using CRON expression
+     when watchlist notifier is triggered (Default 4AM) -->
+    <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
+
 
     <!-- Jetty plugin port configuration -->
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>5.0.0</es.version>
-    <es.version.md5>17275e4d3a1fd95d591d504af1a0fd0c</es.version.md5>
+    <es.version>5.2.1</es.version>
+    <es.version.md5>33dbe0aa66b36a522236db2c04af8d49</es.version.md5>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>

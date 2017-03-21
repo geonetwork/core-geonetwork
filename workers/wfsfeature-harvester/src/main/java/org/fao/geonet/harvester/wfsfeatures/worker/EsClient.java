@@ -99,7 +99,7 @@ public class EsClient implements InitializingBean {
         this.collection = collection;
     }
 
-    public boolean bulkRequest(String index, Map<String, String> docs, int commitInterval) throws IOException {
+    public boolean bulkRequest(String index, Map<String, String> docs) throws IOException {
         boolean success = true;
         Bulk.Builder bulk = new Bulk.Builder()
             .defaultIndex(index)
@@ -175,7 +175,7 @@ public class EsClient implements InitializingBean {
     }
 
 
-    public String deleteByQuery(String index, String query, int scrollSize) throws Exception {
+    public String deleteByQuery(String index, String query) throws Exception {
 
         String searchQuery = "{\"query\": {\"query_string\": {" +
             "\"query\": \"" + query + "\"" +

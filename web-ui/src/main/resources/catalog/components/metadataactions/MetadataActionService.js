@@ -121,7 +121,7 @@
        * @param {string} prefix
        */
       this.metadataPrint = function(params, bucket) {
-        var url;
+        var url = '';
         if (angular.isObject(params) && params.sortBy) {
           url += gnHttp.getService('mdGetPDFSelection');
           url += '?sortBy=' + params.sortBy;
@@ -134,10 +134,10 @@
         else if (angular.isString(params)) {
           // TODO: May depend on schema
           url += gnSearchSettings.formatter.defaultPdfUrl + params;
-        }
-        if (url) {
           $window.open(url, '_blank');
         }
+        // if (url) {
+        // }
         // else if (angular.isString(params)) {
         //   gnMdFormatter.getFormatterUrl(null,
         // null, params).then(function(url) {
@@ -148,9 +148,9 @@
         //     });
         //   });
         // }
-        else {
-          console.error('Error while exporting PDF');
-        }
+        // else {
+        //   console.error('Error while exporting PDF');
+        // }
       };
 
       /**

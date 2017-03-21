@@ -44,7 +44,8 @@
     'gnUrlUtils',
     'gnOwsCapabilities',
     '$http',
-    function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnViewerSettings) {
+    'gnGlobalSettings',
+    function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnGlobalSettings) {
 
       /**
        * @ngdoc method
@@ -87,7 +88,7 @@
        */
       this.feedOlLayer = function(layer) {
         var url = this.getMetadataUrl(layer);
-        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+        var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
 
         $http.get(proxyUrl)
             .success(function(json) {
@@ -270,8 +271,7 @@
 
         var url = gnUrlUtils.append(layer.get('url'), gnUrlUtils.toKeyValue(p));
 
-        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-        return $http.get(proxyUrl);
+        return $http.get(gnGlobalSettings.proxyUrl + encodeURIComponent(url));
       };
 
       /**

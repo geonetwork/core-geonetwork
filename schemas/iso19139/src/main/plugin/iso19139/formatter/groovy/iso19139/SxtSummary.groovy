@@ -47,6 +47,8 @@ class SxtSummary extends Summary {
         params.put("dates", dates);
         params.put("contacts", contacts);
         params.put("constraints", constraints);
+        params.put("metadataUUID", env.metadataUUID);
+        params.put("socialMediaLink", URLEncoder.encode(this.env.localizedUrl + "catalog.search#/metadata/" + env.metadataUUID));
 
         return handlers.fileResult("html/sxt-view-header.html", params);
     }

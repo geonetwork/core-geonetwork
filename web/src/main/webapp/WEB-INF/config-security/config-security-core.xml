@@ -42,7 +42,6 @@
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
         <sec:filter-chain pattern="/index/**" filters=""/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
-        <sec:filter-chain pattern="/proxy**" filters=""/>
         <sec:filter-chain pattern="/apps/**" filters="" />
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
@@ -56,7 +55,6 @@
         <sec:filter-chain pattern="/*.css" filters=""/>
         <sec:filter-chain pattern="/images/**" filters=""/>
         <sec:filter-chain pattern="/map/**" filters=""/>
-        <sec:filter-chain pattern="/wmc/**" filters=""/>
         <sec:filter-chain pattern="/htmlcache/**" filters=""/>
         <sec:filter-chain pattern="/pdf/**" filters=""/>
         <sec:filter-chain pattern="/loc/**" filters=""/>

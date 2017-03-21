@@ -292,7 +292,7 @@ public class Importer {
                 if (!style.equals("_none_")) {
                     final GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
                     Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
-                    Path xsltPath = stylePath.resolve(style);
+                    Path xsltPath = stylePath.resolve(style + ".xsl");
                     if (Files.exists(xsltPath)) {
                         md.add(index, Xml.transform(md.get(index), xsltPath));
                     } else {
