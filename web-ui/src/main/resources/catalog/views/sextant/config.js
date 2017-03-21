@@ -415,17 +415,17 @@
       // };
       searchSettings.configWho = searchSettings.configWho || '';
       if(searchSettings.configWho) {
-        angular.extend(searchSettings.hiddenParams, {
+        angular.extend(searchSettings.filters, {
           orgName: searchSettings.configWho.replace(/,/g, ' or ')
         })
       }
       if(searchSettings.excludeChildrenFromSearch) {
-        searchSettings.hiddenParams.isChild = 'false';
+        searchSettings.filters.isChild = 'false';
       }
 
       searchSettings.configWhat = searchSettings.configWhat || '';
       if(searchSettings.configWhat) {
-        angular.extend(searchSettings.hiddenParams, {
+        angular.extend(searchSettings.filters, {
           _groupPublished: searchSettings.configWhat.replace(/,/g, ' or ')
         })
       }
