@@ -126,7 +126,7 @@ public class ListIdentifiers extends AbstractTokenLister {
 
         //--- find and add categories (here called sets)
 
-        for (MetadataCategory category : metadata.getCategories()) {
+        for (MetadataCategory category : metadata.getMetadataCategories()) {
             h.addSet(category.getName());
         }
 
