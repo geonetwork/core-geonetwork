@@ -323,7 +323,7 @@ public class MEFLib {
         Element categ = new Element("categories");
 
 
-        for (MetadataCategory category : md.getCategories()) {
+        for (MetadataCategory category : md.getMetadataCategories()) {
             String name = category.getName();
 
             Element cat = new Element("category");

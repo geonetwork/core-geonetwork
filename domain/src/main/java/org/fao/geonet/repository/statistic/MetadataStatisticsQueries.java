@@ -75,7 +75,7 @@ public class MetadataStatisticsQueries {
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);
         final Root<MetadataCategory> metadataCategoryRoot = cbQuery.from(MetadataCategory.class);
 
-        final Expression<Set<MetadataCategory>> metadataCategoriesPath = metadataRoot.get(Metadata_.categories);
+        final Expression<Set<MetadataCategory>> metadataCategoriesPath = metadataRoot.get(Metadata_.metadataCategories);
         cbQuery.where(cb.isMember(metadataCategoryRoot, metadataCategoriesPath));
 
         final Path<Integer> metadataCategoryIdPath = metadataCategoryRoot.get(MetadataCategory_.id);

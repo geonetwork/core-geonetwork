@@ -368,7 +368,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-        metadata.getCategories().clear();
+        metadata.getMetadataCategories().clear();
         aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
         dataMan.flush();
