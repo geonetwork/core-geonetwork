@@ -26,7 +26,7 @@
 
 
   var TMP_PROFILE =
-      { 'extendOnly': true,
+      { 'extendOnly': false,
         'fields': [
           /*
       {
@@ -50,31 +50,37 @@
       }
     },
       {
-      "name": "P_SEXE",
-      "aggs": {
-        "filters": {
-          "filters": {
-            "48 - 50": {"query_string":
-            {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.52"}},
-            "49 - 53": {"query_string":
-            {"query": "+ft_P_MALE_d:>0.48 +ft_P_FEMALE_d:<0.53"}}
-          }
-        }
-      }
-    },
-      {
       "name": "CARPOOL"
     }
 
           */
           {
-            'name': 'date_max',
-            'display': 'graph'
+            "name": "CUSTOM_POS",
+            "aggs": {
+              "filters": {
+                "filters": {
+                  "48 - 50": {"query_string":
+                  {"query": "+ft_ent_longitude_s:<0.03 +ft_ent_latitude_s:<44"}},
+                  "49 - 53": {"query_string":
+                  {"query": "+ft_ent_longitude_s:>0.03 +ft_ent_latitude_s:>45"}}
+                }
+              }
+            }
+          }, {
+            "name": "range_Date",
+            "type": "rangeDate",
+            "minField": "date_min",
+            "maxField": "date_max",
+            "display": "graph"
           },
           {
             'name': 'date_min',
-            'display': 'form'
-          }
+            'display': 'graph'
+          }/*,
+          {
+            'name': 'date_min',
+            'display': 'graph'
+          }*/
         ],
         'treeFields': ['CD_REGION'],
         'tokenizedFields': {
@@ -391,7 +397,7 @@
               if ((angular.isObject(date) && date.from && date.to) ||
                   angular.isString(date)) {
                 output[fieldName] = {
-                  type: 'date',
+                  type: field.type || 'date',
                   value: date
                 };
               }

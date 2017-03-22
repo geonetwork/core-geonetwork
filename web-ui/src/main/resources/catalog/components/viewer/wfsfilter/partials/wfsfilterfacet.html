@@ -41,7 +41,8 @@
     <!--Facet fields-->
     <div data-ng-if="isFeaturesIndexed"
          class="gn-facet"
-         data-ng-repeat="field in fields track by field.name" data-ng-show="field.values.length > 0 || field.dates.length > 0">
+         data-ng-repeat="field in fields track by field.name"
+         data-ng-show="field.values.length > 0 || field.dates.length > 0 || field.tree.nodes.length > 0">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name] || !(output[field.name].type == 'date' && output[field.name].value.from && output[field.name].value.to)}"></span>
@@ -75,12 +76,10 @@
           <div data-ng-if="field.datesCount && field.display == 'graph'"
                gn-facet-graph field="field" callback="onUpdateDate"
                class="list-group"></div>
-
         </div>
         <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
       </div>
     </div>
-
     <!--Geometry Field-->
     <div class="gn-facet"
          ng-if="isFeaturesIndexed && solrObject.geomField">

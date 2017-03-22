@@ -77,7 +77,8 @@
             "mapping": {
               "type":     "string",
               "fielddata": true,
-              "analyzer": "pathAnalyzer"
+              "analyzer": "pathAnalyzer",
+              "search_analyzer": "keyword"
             }
           }
         }
