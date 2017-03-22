@@ -142,7 +142,7 @@
               for (var i = 0; i < $scope.settings.length; i++) {
                 var tokens = $scope.settings[i].name.split('/');
                 // Extract level 1 and 2 sections
-                if (tokens) {
+                if (tokens && $scope.settings[i].name != 'ui/config') {
                   var level1name = tokens[0];
                   if (sectionsLevel1.indexOf(level1name) === -1) {
                     sectionsLevel1.push(level1name);
