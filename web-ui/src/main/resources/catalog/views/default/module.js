@@ -260,10 +260,18 @@
         $scope.activeTab = $location.path().
             match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
 
-        if (gnSearchLocation.isSearch() && (!angular.isArray(
+        // resize search map for any views exluding viewer
+        if (!gnSearchLocation.isMap() && (!angular.isArray(
             searchMap.getSize()) || searchMap.getSize()[0] < 0)) {
           setTimeout(function() {
             searchMap.updateSize();
+
+            // if an extent was obtained from a loaded context, apply it
+            if(searchMap.get('initExtent')) {
+              searchMap.getView().fit(
+                searchMap.get('initExtent'),
+                searchMap.getSize(), { nearest: true });
+            }
 
             // TODO: load custom context to the search map
             //gnOwsContextService.loadContextFromUrl(
@@ -272,10 +280,14 @@
 
           }, 0);
         }
+
+        // resize viewer map for corresponding view
         if (gnSearchLocation.isMap() && (!angular.isArray(
             viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
           setTimeout(function() {
             viewerMap.updateSize();
+
+            // if an extent was obtained from a loaded context, apply it
             if(viewerMap.get('initExtent')) {
               viewerMap.getView().fit(
                 viewerMap.get('initExtent'),
