@@ -272,5 +272,33 @@
         }
       };
 
+      this.toUrlParams = function(esObj) {
+
+        var state = esObj.getState();
+
+        if(!state.any) {
+          var where = [];
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var clause = [];
+            angular.forEach(fObj.values, function(v, k) {
+              clause.push(fName + '=' + k);
+            });
+            where.push('(' + clause.join(' OR ') + ')');
+          });
+          return(where.join(' AND '));
+        }
+        else {
+          esObj.search_es({
+            size: scope.count || 10000,
+            aggs: {}
+          }).then(function(data) {
+            var where = data.hits.hits.map(function(res) {
+              return res._id;
+            });
+            return(where.join(' OR '));
+          });
+        }
+      };
+
     }]);
 })();

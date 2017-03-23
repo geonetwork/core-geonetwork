@@ -30,8 +30,21 @@
     search: 'search'
   };
 
+  Array.prototype.unique = function() {
+    var a = this.concat();
+    for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+        if(a[i] === a[j])
+          a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  };
+
   var ROWS = 20;
   var MAX_ROWS = 2000;
+  var FACET_TREE_ROWS = 1000;
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
@@ -216,9 +229,13 @@
       return this.searchQuiet(qParams, this.initialParams.stats).then(
           function(resp) {
             var statsP =
-                this.createFacetSpecFromStats_(resp.solrData.aggregations);
+              this.createFacetSpecFromStats_(resp.solrData.aggregations);
+
+            var rangeDateP =
+              this.createFacetSpecFromDateRanges_(resp.solrData.aggregations);
+
             return this.search(qParams, angular.extend(
-                {}, this.initialParams.facets, statsP, aggs)
+                {}, this.initialParams.facets, rangeDateP, aggs)
             );
           }.bind(this));
     }
@@ -311,7 +328,7 @@
           var resp = {
             solrData: r.data,
             records: r.data.hits.hits,
-            facets: this.createFacetData_(r.data, params),
+            facets: quiet ? undefined : this.createFacetData_(r.data, params),
             count: r.data.hits.total
           };
           if (!quiet) {
@@ -364,6 +381,7 @@
 
     var facetParams = {};
     var statParams = {};
+    var rangeDates = {};
 
     this.filteredDocTypeFieldsInfo.forEach(function(field) {
 
@@ -377,13 +395,35 @@
 
       }
     */
+
+      // Keep info of date range, like field for max and min dates
+      // Also add info in stats to get all date values.
+      else if (field.type == "rangeDate") {
+        var rangeDate = {};
+        ['minField', 'maxField'].forEach(function(k) {
+          var fObj = this.getIdxNameObj_(field[k]);
+          if (fObj) {
+            statParams[fObj.idxName] = {
+              terms: {
+                field: fObj.idxName,
+                size: MAX_ROWS
+              }
+            };
+            rangeDate[k] = fObj.idxName;
+          };
+        }.bind(this));
+        rangeDates[field.name] = rangeDate;
+      }
       else if (!field.isRange) {
-        facetParams[field.idxName] = {
-          terms: {
-            field: field.idxName,
-            size: field.isDateTime ? MAX_ROWS : ROWS
-          }
-        };
+        if (angular.isDefined(field.idxName)) {
+          facetParams[field.idxName] = {
+            terms: {
+              field: field.idxName,
+              size: field.isDateTime ? MAX_ROWS :
+                      field.isTree ? FACET_TREE_ROWS : ROWS
+            }
+          };
+        }
       }
       else {
         statParams[field.idxName + '_stats'] = {
@@ -392,11 +432,12 @@
           }
         };
       }
-    });
+    }.bind(this));
 
     this.initialParams = angular.extend({}, this.initialParams, {
       facets: facetParams,
-      stats: statParams
+      stats: statParams,
+      rangeDates:rangeDates
     });
   };
 
@@ -411,13 +452,22 @@
    * @return {*}
    */
   geonetwork.GnSolrRequest.prototype.getIdxNameObj_ = function(name) {
-    var fields = this.docTypeFieldsInfo || [];
+    var fields = this.filteredDocTypeFieldsInfo || [];
     for (var i = 0; i < fields.length; i++) {
       if (fields[i].name == name ||
           fields[i].idxName == name) {
         return fields[i];
       }
     }
+
+    fields = this.docTypeFieldsInfo || [];
+    for (var i = 0; i < fields.length; i++) {
+      if (fields[i].name == name ||
+        fields[i].idxName == name) {
+        return fields[i];
+      }
+    }
+
   };
 
   /**
@@ -443,7 +493,8 @@
       var facetField = {
         name: fieldId,
         label: fNameObj && fNameObj.label ? fNameObj.label : fieldId,
-        display: fNameObj.display,
+        display: fNameObj ? fNameObj.display : '',
+        type: fNameObj ? fNameObj.type : undefined,
         values: [],
         more: respAgg.sum_other_doc_count
       };
@@ -490,27 +541,28 @@
           });
         });
       }
-    // filters - response bucket is object instead of array
-      else if (reqAgg.hasOwnProperty('filters')) {
-        facetField.type = 'filters';
-        for (var p in respAgg.buckets) {
-          facetField.values.push({
-            value: p,
-            query: reqAgg.filters.
-                filters[p].query_string.query,
-            count: respAgg.buckets[p].doc_count
-          });
-        }
-      }
       else if (fieldId.endsWith('_tree')) {
         facetField.tree = this.gnTreeFromSlash.getTree(respAgg.buckets);
       }
-      else if (fieldId.endsWith('_dt')) {
+      // date types
+      else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
+
+        if(facetField.type == 'rangeDate') {
+          var rangebuckets = [];
+          for (var p in respAgg.buckets) {
+            var b = respAgg.buckets[p];
+            b.key = parseInt(p);
+            rangebuckets.push(b);
+          }
+          respAgg.buckets = rangebuckets;
+        }
+        else {
           facetField.type = 'date';
-          facetField.display = facetField.display || 'form';
-          var bucketDates =  respAgg.buckets.sort(function(a,b) {
-            return a.key - b.key;
-          });
+        }
+        facetField.display = facetField.display || 'form';
+        var bucketDates = respAgg.buckets.sort(function(a, b) {
+          return a.key - b.key;
+        });
 
         if (!fNameObj.allDates) {
           fNameObj.allDates = bucketDates.map(function(b) {
@@ -530,35 +582,38 @@
             if (!inRange && bucketDates[0].key == datetime) {
               inRange = true;
             }
-            if (inRange) {
+            if(inRange) {
               var b = bucketDates[bucketIdx];
               var obj = {
                 value: datetime,
+                values: datetime,
                 count: 1
               };
-              if (b.key == datetime) {
+              if(b.key == datetime) {
                 obj.count = b.doc_count;
                 bucketIdx++;
               }
-              if(inRange) {
-                var b = bucketDates[bucketIdx];
-                var obj = {
-                  value: datetime,
-                  values: datetime,
-                  count: 1
-                };
-                if(b.key == datetime) {
-                  obj.count = b.doc_count;
-                  bucketIdx++;
-                }
-                facetField.datesCount.push(obj);
+              facetField.datesCount.push(obj);
 
-                if(bucketIdx == bucketDates.length) {
-                  break;
-                }
+              if(bucketIdx == bucketDates.length) {
+                break;
               }
             }
           }
+        }
+      }
+      // filters - response bucket is object instead of array
+      else if (reqAgg.hasOwnProperty('filters')) {
+        facetField.type = 'filters';
+        for (var p in respAgg.buckets) {
+          var o = {
+            value: p,
+            count: respAgg.buckets[p].doc_count
+          };
+          if(reqAgg.filters.filters[p].query_string) {
+            o.query = reqAgg.filters.filters[p].query_string.query;
+          }
+          facetField.values.push(o);
         }
       }
 
@@ -628,6 +683,49 @@
       }
     }
     return histograms;
+  };
+
+  /**
+   * Build ES aggs params (filters) from both dates values.
+   * The params is a filter, where all entries are a combo of 2 single ranges.
+   * @param {Object} aggs
+   * @returns {{}}
+   * @private
+   */
+  geonetwork.GnSolrRequest.prototype.createFacetSpecFromDateRanges_ = function(aggs) {
+    var filters = {};
+    var ret = {};
+
+    angular.forEach(this.initialParams.rangeDates, function(v,k) {
+      var minF = aggs[v.minField];
+      var maxF = aggs[v.maxField];
+      var allD = minF.buckets.concat(maxF.buckets).unique();
+
+      allD.forEach(function(b) {
+        var rangeSpec = {
+          bool: {
+            must: [{range: {}}, {range: {}}]
+          }
+        };
+        rangeSpec.bool.must[0].range[v.minField] = {
+          lte: b.key,
+          format: 'epoch_millis'
+        };
+        rangeSpec.bool.must[1].range[v.maxField] = {
+          gte: b.key,
+          format: 'epoch_millis'
+        };
+        filters[b.key] = rangeSpec;
+      }.bind(this));
+
+      ret[k] = {
+        filters: {
+          filters: filters
+        }
+      };
+    });
+
+    return ret;
   };
 
   /**
@@ -742,25 +840,44 @@
     }
 
     angular.forEach(qParams.params, function(field, fieldName) {
-      if (field.type == 'date') {
-        var gte, lfe, range = {};
+      if (field.type == 'date' || field.type == 'rangeDate') {
+        var gte, lte, range = {};
         if (angular.isObject(field.value)) {
           gte = field.value.from;
-          lfe = field.value.to;
+          lte = field.value.to;
         }
         else {
-          gte = lfe = field.value;
+          gte = lte = field.value;
         }
-        range[fieldName] = {
-          gte: gte,
-          lte: lfe,
-          format: 'dd-MM-YYYY'
-        };
-        params.query.bool.must.push({
-          range: range
-        });
+        if(field.type == 'date') {
+          range[fieldName] = {
+            gte: gte,
+            lte: lte,
+            format: 'dd-MM-YYYY'
+          };
+          params.query.bool.must.push({
+            range: range
+          });
+        }
+        else {
+          range[this.initialParams.rangeDates[fieldName].minField] = {
+            lte: lte,
+            format: 'dd-MM-YYYY'
+          };
+          params.query.bool.must.push({
+            range: range
+          });
+          range = {};
+          range[this.initialParams.rangeDates[fieldName].maxField] = {
+            gte: gte,
+            format: 'dd-MM-YYYY'
+          };
+          params.query.bool.must.push({
+            range: range
+          });
+        }
       }
-    });
+    }.bind(this));
 
     return params;
   };

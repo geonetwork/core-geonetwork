@@ -18,9 +18,13 @@
 
     function(searchSettings, viewerSettings, gnPanierSettings,
              gnGlobalSettings, gnMap, gnConfig, gnConfigService) {
-     gnGlobalSettings.init({},
-       (typeof sxtGnUrl != 'undefined') ? sxtGnUrl : undefined,
-       viewerSettings, searchSettings);
+
+      if(typeof sxtSettings != 'undefined') {
+        gnGlobalSettings.init({},
+          (typeof sxtGnUrl != 'undefined') ? sxtGnUrl : undefined,
+          viewerSettings, searchSettings);
+      }
+
 
       gnGlobalSettings.isMapViewerEnabled =
           gnGlobalSettings.isMapViewerEnabled || true;
