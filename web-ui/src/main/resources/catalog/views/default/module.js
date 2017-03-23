@@ -276,11 +276,16 @@
             viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
           setTimeout(function() {
             viewerMap.updateSize();
+            if(viewerMap.get('initExtent')) {
+              viewerMap.getView().fit(
+                viewerMap.get('initExtent'),
+                viewerMap.getSize(), { nearest: true });
+            }
           }, 0);
         }
+
+        viewerMap.resized;
       });
-
-
 
       angular.extend($scope.searchObj, {
         advancedMode: false,

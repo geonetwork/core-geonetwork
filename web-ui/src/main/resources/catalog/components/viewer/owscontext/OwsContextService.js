@@ -130,9 +130,15 @@
         gnViewerSettings.initialExtent = extent;
 
         // $timeout used to avoid map no rendered (eg: null size)
-        $timeout(function() {
-          map.getView().fit(extent, map.getSize(), { nearest: true });
-        }, 0, false);
+        if(!angular.isArray(
+            map.getSize()) || map.getSize()[0] <= 0) {
+              map.set('initExtent', extent);
+          }
+          else {
+            $timeout(function() {
+              map.getView().fit(extent, map.getSize(), { nearest: true });
+            }, 0, false);
+          }
 
         // load the resources
         var layers = context.resourceList.layer;
