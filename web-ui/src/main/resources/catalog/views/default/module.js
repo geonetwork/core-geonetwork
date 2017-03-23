@@ -267,9 +267,9 @@
             searchMap.updateSize();
 
             // if an extent was obtained from a loaded context, apply it
-            if(searchMap.get('initExtent')) {
+            if(searchMap.get('lastExtent')) {
               searchMap.getView().fit(
-                searchMap.get('initExtent'),
+                searchMap.get('lastExtent'),
                 searchMap.getSize(), { nearest: true });
             }
 
@@ -288,9 +288,9 @@
             viewerMap.updateSize();
 
             // if an extent was obtained from a loaded context, apply it
-            if(viewerMap.get('initExtent')) {
+            if(viewerMap.get('lastExtent')) {
               viewerMap.getView().fit(
-                viewerMap.get('initExtent'),
+                viewerMap.get('lastExtent'),
                 viewerMap.getSize(), { nearest: true });
             }
           }, 0);

@@ -141,14 +141,12 @@
                 }
               });
               if (!ol.extent.isEmpty(extent)) {
-                // if the map has no valid size, save this extent for later use
-                if(!angular.isArray(
-                  scope.map.getSize()) || scope.map.getSize()[0] <= 0) {
-                    scope.map.set('initExtent', extent);
-                }
-                else {
-                  scope.map.getView().fit(extent, scope.map.getSize());
-                }
+                // fit extent in map
+                scope.map.getView().fit(extent, scope.map.getSize());
+
+                // save this extent for later use (for example if the map
+                // is not currently visible)
+                scope.map.set('lastExtent', extent);
               }
             }
           });
