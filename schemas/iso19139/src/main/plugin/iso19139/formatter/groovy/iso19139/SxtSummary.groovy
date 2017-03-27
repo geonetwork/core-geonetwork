@@ -18,6 +18,7 @@ class SxtSummary extends Summary {
     def dates;
     def contacts;
     def constraints;
+    def citation;
 
     public SxtSummary(Handlers handlers, Environment env, Functions functions) throws Exception {
         super(handlers, env, functions)
@@ -49,6 +50,7 @@ class SxtSummary extends Summary {
         params.put("constraints", constraints);
         params.put("metadataUUID", env.metadataUUID);
         params.put("socialMediaLink", URLEncoder.encode(this.env.localizedUrl + "catalog.search#/metadata/" + env.metadataUUID));
+        params.put("citation", citation);
 
         return handlers.fileResult("html/sxt-view-header.html", params);
     }

@@ -17908,6 +17908,10 @@ yx-axis
 .g .gn-metadata-view .sxt-social {
   margin-top: 30px;
 }
+.gn .gn-metadata-view .md-abstract,
+.g .gn-metadata-view .md-abstract {
+  padding-right: 1em;
+}
 .gn .mCustomScrollbar,
 .g .mCustomScrollbar {
   -ms-touch-action: none;
@@ -21742,6 +21746,8 @@ yx-axis
   border-bottom-color: #fff;
   box-shadow: none;
 }
+.gn h3,
+.g h3,
 .gn h4,
 .g h4 {
   display: block;
@@ -21751,6 +21757,7 @@ yx-axis
   font-size: 12px;
   border: none;
   margin: 0;
+  clear: none;
 }
 .gn table td,
 .g table td,
