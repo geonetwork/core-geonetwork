@@ -295,8 +295,6 @@
             }
           }, 0);
         }
-
-        viewerMap.resized;
       });
 
       angular.extend($scope.searchObj, {
