@@ -54,6 +54,20 @@
                 scope.layerTabs.legend.active = false;
               };
 
+              scope.closeLayerTab = function() {
+                for(var p in scope.layerTabs) {
+                  if (scope.layerTabs[p].active) {
+                    scope.layerTabSelect(p);
+                  }
+                }
+              };
+              scope.isLayerTabActive = function() {
+                for(var p in scope.layerTabs) {
+                  if (scope.layerTabs[p].active) return true;
+                }
+                return false;
+              };
+
               scope.zoom = function(map, delta) {
                 gnMap.zoom(map, delta);
               };

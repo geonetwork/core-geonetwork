@@ -82,6 +82,10 @@
           <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
             <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
           </button>
+          <button class="btn btn-default btn-xs pull-right tools-bar-close-btn" ng-class="{'sxt-hidden': isSeparatedTool()}"
+                  ng-show="isLayerTabActive()" ng-click="closeLayerTab()">
+            <i class="fa fa-close"></i>
+          </button>
           <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': isSeparatedTool()}">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
               <span translate>legend</span>
