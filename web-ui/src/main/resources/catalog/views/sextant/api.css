@@ -16652,6 +16652,11 @@ yx-axis
   width: 1.7em;
   visibility: hidden;
 }
+.gn [sxt-main-viewer] .tools .tools-bar-close-btn,
+.g [sxt-main-viewer] .tools .tools-bar-close-btn {
+  position: absolute;
+  right: 1em;
+}
 .gn [sxt-main-viewer] .tools .layers-tools-expanded button[sxt-layer-tools-toggle],
 .g [sxt-main-viewer] .tools .layers-tools-expanded button[sxt-layer-tools-toggle] {
   visibility: visible;
