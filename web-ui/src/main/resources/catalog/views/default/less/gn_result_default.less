@@ -1,6 +1,11 @@
 // styling for a single result: metadata view
 .gn-md-view {
-
+  .gn-metadata-display .table-striped td {
+      padding-left: 10px;
+  }
+  .gn-metadata-display .table-striped td ul {
+      padding-left: 20px;
+}
   .gn-metadata-display-title {
     padding-top: 80px;
     background: #fff;
@@ -64,5 +69,18 @@
     left:-75px;
     top:50%;
     margin-top:-1.25em;
+  }
+
+  // contact
+  .gn-contact {
+    h3 {
+      display: none;
+    }
+    address {
+      margin-bottom: 0;
+    }
+    .col-md-8 {
+      padding-left: 0;
+    }
   }
 }
