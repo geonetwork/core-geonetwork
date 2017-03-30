@@ -382,7 +382,7 @@
        data-gn-click-and-spin="remove({$editInfo/@ref}, {$editInfo/@parent})"
        data-gn-field-highlight-remove="{$editInfo/@ref}"
        title="{{{{'deleteFieldSet' | translate}}}}">
-      <i class="fa fa-trash-o text-danger"/>
+      <i class="fa fa-times text-danger"/>
     </a>
   </xsl:template>
 
@@ -1199,7 +1199,7 @@
          data-gn-click-and-spin="remove({$elementToRemove/@ref}, {$elementToRemove/@parent}, {$editInfo/@ref})"
          data-gn-field-highlight-remove="{$editInfo/@ref}"
          data-toggle="tooltip" data-placement="top" title="{{{{'deleteField' | translate}}}}">
-        <i class="fa fa-trash-o text-danger gn-control"/>
+        <i class="fa fa-times text-danger gn-control"/>
       </a>
     </xsl:if>
   </xsl:template>
@@ -1307,7 +1307,7 @@
         <a class="btn pull-right"
            data-gn-click-and-spin="removeAttribute('{$fieldName}')" data-toggle="tooltip"
            data-placement="top" title="{{{{'deleteField' | translate}}}}">
-          <i class="fa fa-trash-o text-danger"/>
+          <i class="fa fa-times text-danger"/>
         </a>
       </div>
     </div>
