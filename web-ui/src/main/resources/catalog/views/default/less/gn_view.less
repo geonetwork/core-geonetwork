@@ -414,3 +414,116 @@ body, html {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(0,0,0,0.4); 
 }
+
+// default
+
+// ----- menu
+.menu-home {
+  display: none;
+}
+.menu-logo {
+  display: block;
+}
+
+// minimal
+.gn-minimal {
+
+  // menu
+  .menu-home {
+    display: block;
+  }
+  .menu-logo {
+    display: none;
+  }
+  
+  // panel
+  .panel {
+    border: 0;
+    box-shadow: none;
+    [data-gn-slide-toggle].panel-heading {
+      padding-left: 0;
+    }
+    [data-gn-slide-toggle].panel-heading:before {
+      display: none;
+    }
+    [data-gn-slide-toggle].panel-heading:after {
+      content: "\f107";
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      position: absolute;
+      right: 16px;
+      font-size: 16px;
+    }
+    .panel-heading {
+      background: transparent;
+    }
+    .panel-body {
+      padding: 0;
+    }
+    .panel-footer {
+
+    }
+  }
+
+  // fieldset
+  fieldset {
+    legend[data-gn-slide-toggle] {
+      font-weight: bold;
+    }
+    legend[data-gn-slide-toggle]:before {
+      content: "\f107";
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: normal;
+      text-decoration: inherit;
+      position: absolute;
+      margin-left: -17px;
+      font-size: 16px;
+      margin-top: -2px;
+    }
+    .list-group-item {
+      .col-md-10 {
+        padding: 4px 0 4px 17px;
+      }
+    }
+  }
+  [data-gn-saved-selections-panel] button {
+    margin-left: 18px;
+    margin-bottom: 8px;
+  }
+  
+
+  // search result
+  .gn-resultview {
+    .list-group-item.gn-grid {
+      input {
+        display: none;
+      }
+      .row {
+        padding-left: 0 !important;
+      }
+      .gn-md-col2 {
+        margin-left: 0;
+        .pull-right {
+          img {
+            display: none;
+          }
+        }
+        h3 .fa {
+          display: none;
+        }
+        [data-gn-metadata-rate] {
+          display: none;
+        }
+        .gn-md-category {
+          display: none;
+        }
+        .gn-md-details {
+          display: none;
+        }
+      }
+    }
+  }
+}
