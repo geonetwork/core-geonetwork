@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid gn-minimal">
   <div class="navbar-header">
     <button type="button"
             class="navbar-toggle collapsed"
@@ -16,11 +16,13 @@
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
 
-      <!-- <li>
-        <a data-gn-active-tb-item="catalog.search#/home">
-          <span data-translate="">Home</span> -->
+      <li data-ng-if="gnCfg.mods.home.enabled" class="menu-home">
+        <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
+          <span data-translate="">Home</span>
+        </a>
+      </li>
 
-      <li data-ng-if="gnCfg.mods.home.enabled">
+      <li data-ng-if="gnCfg.mods.home.enabled" class="menu-logo">
         <a data-gn-active-tb-item="{{gnCfg.mods.home.appUrl}}">
           <img class="gn-logo"
                data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"/>
@@ -28,6 +30,7 @@
 
         </a>
       </li>
+
       <li data-ng-if="gnCfg.mods.search.enabled">
         <a data-gn-active-tb-item="{{gnCfg.mods.search.appUrl}}"
            title="{{'search' | translate}}">
@@ -51,29 +54,29 @@
       </li>
       <li data-ng-if="gnCfg.mods.editor.enabled"
           class="dropdown" data-ng-show="authenticated && user.isEditorOrMore()">
-        <a href="" class="dropdown-toggle gn-nopadding-left gn-nopadding-right" data-toggle="dropdown
+        <a href="" class="dropdown-toggle gn-nopadding-left gn-nopadding-right" data-toggle="dropdown"
            role="button" aria-expanded="false"><span class="caret"></span></a>
-        <ul class="dropdown-menu" role="menu">
+        <ul class="dropdown-menu dropdown-grid" role="menu">
           <li>
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
-              <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
+              <i class="fa fa-plus"/><br><span data-translate="">addRecord</span>
             </a>
           </li>
           <li>
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/import">
-              <i class="fa fa-upload"/>&nbsp;<span data-translate="">ImportRecord</span>
+              <i class="fa fa-upload"/><br><span data-translate="">ImportRecord</span>
             </a>
           </li>
           <li>
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/directory"
                data-ng-if="user.isReviewerOrMore()">
-              <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
+              <i class="fa fa-list-ul"/><br><span data-translate="">directoryManager</span>
             </a>
           </li>
           <li>
             <a data-gn-active-tb-item="catalog.edit#/batchedit"
                data-ng-if="user.isReviewerOrMore()">
-              <i class="fa fa-pencil"/>&nbsp;<span data-translate="">batchEditing</span>
+              <i class="fa fa-pencil"/><br><span data-translate="">batchEditing</span>
             </a>
           </li>
         </ul>
@@ -87,17 +90,17 @@
       <li class="dropdown" data-ng-show="user.isUserAdminOrMore() && viewMenuAdmin">
         <a href="" class="dropdown-toggle" data-toggle="dropdown"
            role="button" aria-expanded="false"><span class="caret"></span></a>
-        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
+        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu dropdown-grid dropdown-grid-3" role="menu">
           <li data-ng-repeat="t in userAdminMenu">
             <a data-gn-active-tb-item="admin.console{{t.route}}">
-              <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
+              <i class="fa {{t.icon}}"/><br><span data-translate="">{{t.name | translate}}</span>
             </a>
           </li>
         </ul>
-        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu" role="menu">
+        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu dropdown-grid dropdown-grid-3" role="menu">
           <li data-ng-repeat="t in adminMenu">
             <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
-              <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
+              <i class="fa {{t.icon}}"/><br><span data-translate="">{{t.name | translate}}</span>
             </a>
           </li>
         </ul>
