@@ -112,7 +112,8 @@
         restrict: 'AE',
         scope: {
           map: '=',
-          wpsLink: '='
+          wpsLink: '=',
+          hideExecuteButton: '='
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||

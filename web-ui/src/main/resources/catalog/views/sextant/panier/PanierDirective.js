@@ -1,6 +1,8 @@
 (function() {
   goog.provide('sxt_panier_directive');
 
+  goog.require('gn_popup');
+
   var module = angular.module('sxt_panier_directive', [
   ]);
 
@@ -10,7 +12,9 @@
    *
    * @description
    */
-  module.directive('sxtPanier', [ 'sxtPanierService', 'gnSearchLocation',
+  module.directive('sxtPanier', [
+    'sxtPanierService',
+    'gnSearchLocation',
     function(sxtPanierService, gnSearchLocation) {
       return {
         restrict: 'A',
@@ -113,7 +117,9 @@
     'gnSearchSettings',
     'gnPanierSettings',
     'sxtOgcLinksService',
-    function(gnMap, gnSearchSettings, gnPanierSettings, sxtOgcLinksService) {
+    'gnPopup',
+    function(gnMap, gnSearchSettings, gnPanierSettings, sxtOgcLinksService,
+      gnPopup) {
       return {
         restrict: 'A',
         require: '^sxtPanier',
@@ -288,11 +294,33 @@
               };
 
               // Generate WPS form
-              scope.$watch('element.wps', function(process) {
+              scope.currentWPS = null;
+              scope.editWPSForm = function(process) {
                 if(process) {
-                  sxtOgcLinksService.wpsForm(scope, iElement, process);
+                  // open modal
+                  var popup = gnPopup.create({
+                    title: 'editWpsForm',
+                    content: '<div class="sxt-processes-form"/>' +
+                      '<button type="button" class="btn btn-default" ' +
+                        'ng-click="$parent.close()">' +
+                        '{{ "wpsSaveForm" | translate }}' +
+                      '</button>',
+                    className: 'wps-form-modal',
+                    onCloseCallback: function () {
+                      scope.currentWPS = null;
+                    }
+                  }, scope);
+
+                  var wpsFormRoot = $('.wps-form-modal .sxt-processes-form');
+                  wpsFormRoot.empty();
+                  sxtOgcLinksService.wpsForm(scope, wpsFormRoot, process,
+                    { hideExecuteButton: true });
+                  scope.currentWPS = process;
                 }
-              });
+              };
+              scope.closeWPSForm = function() {
+                scope.currentWPS = null;
+              };
             }
           };
         }

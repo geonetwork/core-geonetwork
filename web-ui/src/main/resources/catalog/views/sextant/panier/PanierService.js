@@ -84,8 +84,9 @@
                   // TODO test synchrone
                   // TODO can we have loop ?
                   p.layer = layer;
-                  panierItem.wps = p;
+                  // panierItem.wps = p;
                 });
+                panierItem.processes = wps;
               }
               else {
                 panierItem.filter = null;
