@@ -112,7 +112,8 @@
     'gnMap',
     'gnSearchSettings',
     'gnPanierSettings',
-    function(gnMap, gnSearchSettings, gnPanierSettings) {
+    'sxtOgcLinksService',
+    function(gnMap, gnSearchSettings, gnPanierSettings, sxtOgcLinksService) {
       return {
         restrict: 'A',
         require: '^sxtPanier',
@@ -285,6 +286,13 @@
               scope.removeFilters = function() {
                 scope.element.filter = null;
               };
+
+              // Generate WPS form
+              scope.$watch('element.wps', function(process) {
+                if(process) {
+                  sxtOgcLinksService.wpsForm(scope, iElement, process);
+                }
+              });
             }
           };
         }

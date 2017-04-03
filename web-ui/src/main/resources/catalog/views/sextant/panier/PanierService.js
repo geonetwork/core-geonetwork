@@ -33,10 +33,19 @@
         return callExtractService(panier);
       };
 
+      /**
+       * The basket contains only links. This method is used to bind downloads
+       * object with respective layers.
+       *
+       * @param {Object} panier All layers to download.
+       * @param {ol.Map} map viewer map.
+       */
       this.bindPanierWithLayers = function(panier, map) {
         map.getLayers().forEach(function(layer){
           var downloads = layer.get('downloads');
           if(downloads) {
+
+            // Find layers binded to download
             panier.forEach(function(panierItem) {
               if(downloads.some(function(d) {
                   var l = panierItem.link;
@@ -44,6 +53,8 @@
                     d.name == l.name &&
                     d.protocol == l.protocol;
                 })) {
+
+                // 1. Check if a WFS filter is applied
                 var esObject = layer.get('solrObject');
                 if(esObject) {
                   var esConfig = esObject.getState();
@@ -66,6 +77,15 @@
                     panierItem.filter.extent = extent
                   }
                 }
+
+                // 2. Check if WPS is present
+                var wps = layer.get('processes');
+                wps.forEach(function(p) {
+                  // TODO test synchrone
+                  // TODO can we have loop ?
+                  p.layer = layer;
+                  panierItem.wps = p;
+                });
               }
               else {
                 panierItem.filter = null;
