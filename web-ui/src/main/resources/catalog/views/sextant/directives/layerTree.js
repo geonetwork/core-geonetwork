@@ -12,7 +12,9 @@
     'gnWmsQueue',
     '$timeout',
     'gnViewerSettings',
-    function (gnLayerFilters, $filter, gnWmsQueue, $timeout, gnViewerSettings) {
+    'sxtOgcLinksService',
+    function (gnLayerFilters, $filter, gnWmsQueue, $timeout, gnViewerSettings,
+              sxtOgcLinksService) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +
@@ -24,14 +26,10 @@
           this.setWPS = function(wpsLink, layer) {
             $scope.loadTool('wps', layer);
 
-            var scope = $scope.$new();
             wpsLink.layer = layer;
-            scope.wpsLink = wpsLink;
-            var el = angular.element('<gn-wps-process-form map="map" data-wps-link="wpsLink"></gn-wps-process-form>');
-            $compile(el)(scope);
-            var element = $('.sxt-wps-panel');
-            element.empty();
-            element.append(el);
+            var el = $('.sxt-wps-panel');
+            el.empty();
+            sxtOgcLinksService.wpsForm($scope.$new(), el, wpsLink)
           };
 
           /**
