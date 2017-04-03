@@ -36,8 +36,8 @@
         </div>
       </div>
 
-      <div ng-if="describeResponse.processDescription">
-        <div ng-repeat="processDescription in describeResponse.processDescription">
+      <div ng-if="processDescription">
+        <div>
           <form novalidate>
 
             <!-- Inputs -->
@@ -131,7 +131,6 @@
 
           </form>
         </div>
-      </div>
 
       <div ng-if="executeState == 'failed'" class="row">
         <h4><span translate>wpsExecuteFailed</span></h4>

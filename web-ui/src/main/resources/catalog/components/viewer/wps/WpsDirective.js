@@ -147,10 +147,17 @@
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
 
-                if (response.processDescription != undefined) {
-                  scope.processDescription = response.processDescription[0];
+                if (response.processDescription) {
+
+                  // Bind input directly in link object
+                  scope.processDescription = scope.wpsLink.processDescription ||
+                    response.processDescription[0];
+                  scope.wpsLink.processDescription = scope.processDescription;
+
                   angular.forEach(scope.processDescription.dataInputs.input,
                       function(input) {
+
+                        if(input.value) return;
                         var value;
                         var defaultValue;
 
