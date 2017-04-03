@@ -54,5 +54,8 @@
   "firstname": "Prénom",
   "lastname": "Nom",
   "citationProposition": "Proposition de Citation",
-  "replaceByThoseOperations": "Mettre à jour"
+  "replaceByThoseOperations": "Mettre à jour",
+  "wpsAvailableProcesses": "Traitements disponibles",
+  "wpsProcess": "Traitement",
+  "wpsProcesses": "Traitements"
 }

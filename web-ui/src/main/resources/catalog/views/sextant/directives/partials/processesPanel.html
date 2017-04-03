@@ -1,0 +1,20 @@
+<div class="panel-body">
+  <div class="btn-group" role="group" ng-if="::processes && processes.length > 1">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="ng-binding">{{ 'wpsAvailableProcesses' | translate }}</span>&nbsp;
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li data-ng-repeat="p in ::processes" class="ng-scope">
+          <a ng-click="$parent.switchProcess(p)">
+            <span class="fa"
+              ng-class="($parent.selectedProcess == p) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
+            {{ p.desc || p.name }}
+          </a>
+      </li>
+      </ul>
+    </div>
+
+  <div class="sxt-processes-form">
+  </div>
+</div>

@@ -44,6 +44,14 @@
         <span class="fa fa-anchor"></span>
         <span role="tooltip" data-translate="">Espèces benthiques</span>
       </button>
+
+      <button ng-if="processes && processes.length > 0" sxt-tool gi-btn class="btn btn-default" ng-model="activeTools.processes"
+        type="submit" rel="#process-panel" gnv-tools-btn>
+        <span class="fa fa-cogs"></span>
+        <span ng-if="processes.length == 1" role="tooltip">{{ 'wpsProcess' | translate }}: {{ processes[0].desc || processes[0].name }}</span>
+        <span ng-if="processes.length > 1" role="tooltip">{{ 'wpsProcesses' | translate }}</span>
+      </button>
+
     </div>
 
     <div class="panel-tools-container" ng-class="{'sxt-tab-open': active.tool }">
@@ -222,6 +230,10 @@
           <div class="sxt-benthique" sxtb-panel="map">
           </div>
         </div>
+      </div>
+
+      <!--process panel-->
+      <div class="panel panel-default force-hide panel-tools" id="process-panel" sxt-processes-panel>
       </div>
 
     <div class="panel panel-default force-hide panel-tools" id="print" sxt-custom-scroll>

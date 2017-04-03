@@ -186,6 +186,9 @@
                   e.element.get('wpsfilter-el').remove();
                 }
               });
+
+              // save processes from viewer settings
+              scope.processes = gnViewerSettings.processes;
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 
