@@ -9,6 +9,65 @@
   <div class="row gn-md-view"
        data-ng-show="mdView.current.record">
 
+<!--     <button class="btn btn-primary"
+            data-ng-click="closeRecord(mdView.current.record)">
+      <i class="fa fa-search"></i>
+      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
+    </button>
+
+    <button class="btn btn-link"
+            data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
+            data-ng-show="mdView.records.length > 1"
+            data-ng-click="previousRecord()">
+      <i class="fa fa-angle-left"></i>
+      <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
+      <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
+    </button>
+
+    <button class="btn btn-link"
+            data-ng-class="mdView.current.index === mdView.records.length - 1 &&
+                           searchObj.params.to > searchInfo.count &&
+                           searchInfo.count > searchObj.params.from ? 'disabled' : ''"
+            data-ng-show="mdView.records.length > 1"
+            data-ng-click="nextRecord()">
+      <span data-ng-show="mdView.current.index === mdView.records.length - 1" data-translate="">nextPage</span>
+      <span data-ng-hide="mdView.current.index === mdView.records.length - 1" data-translate="">next</span>
+      <i class="fa fa-angle-right"></i>
+    </button>
+
+
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-expanded="false">
+        <i class="fa fa-eye"></i>&nbsp;
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li class="dropdown-header" data-translate="">chooseAView</li>
+        <li data-ng-class="currentFormatter == undefined ? 'disabled' : ''">
+          <a href="" data-ng-click="format()">
+            <i class="fa fa-fw"></i>
+            <span data-translate="">defaultView</span>
+          </a>
+        </li>
+        <li data-ng-repeat="f in formatter.list"
+            data-ng-class="f === currentFormatter ? 'disabled' : ''">
+          <a href="" data-ng-click="format(f)">
+            <i class="fa fa-fw"></i>
+            {{f.label | translate}}
+          </a>
+        </li>
+        <li>
+          <a data-ng-href="{{gnUrl}}api/records/{{md.getUuid()}}/formatters/xml"
+                 target="_blank">
+            <i class="fa fa-file-code-o"></i>&nbsp;
+            <span data-translate="">xmlView</span>
+          </a>
+        </li>
+      </ul>
+    </div> -->
+
     <div class="gn-sub-bar clearfix">
 
       <div class="btn-toolbar pull-left">

@@ -1,5 +1,7 @@
 .gn-facet-list {
-  margin-top: 15px;
+  a {
+    color: #333;
+  }
 	.gn-facet {
 		h4 {
 			font-weight: normal;
@@ -25,6 +27,7 @@
         cursor: pointer;
         margin-left: 2px;
         line-height: 1.5em;
+
         .gn-facet-label {
           float: left;
           padding-right: 5px;
@@ -33,12 +36,21 @@
           overflow: hidden;
           white-space: nowrap;
           height: 18px;
-          max-width: 150px;
+          max-width: 180px;
+        }
+        &.gn-facet-active {
+          .gn-facet-label {
+            color: #000;
+            text-decoration: underline;
+          }
         }
         .gn-facet-count {
           float: left;
         }
       }
+      .list-group {
+          margin: 0;
+        }
       .btn-link {
         text-decoration: underline;
       }
@@ -53,8 +65,18 @@
         font-size: .9em;
       }
     }
+    .gn-facet-toggle {
+      display: none;
+    }
 	}
 }
+// facet list in panel
+.panel {
+  .gn-facet-list {
+    margin-top: 15px;
+  }
+}
+
 /* Facet / this is a hack to hide a facet
  not to be displayed because used to get complex
  field for rendering properly INSPIRE theme icons

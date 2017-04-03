@@ -208,3 +208,36 @@ ul.gn-resultview {
     }
   }
 }
+
+// gridview for search results
+.list-results-grid {
+  ul.gn-resultview {
+    .clearfix();
+    // title
+    .gn-md-title {
+      h3 {
+        font-size: 19px !important;
+      }
+    }
+    // single item
+    li.list-group-item {
+      float: left;
+      width: 50%;
+    }
+    li.list-group-item:nth-child(odd) {
+      padding-right: 15px;
+    }
+    li.list-group-item:nth-child(even) {
+      padding-left: 15px;
+    }
+
+    .gn-md-abstract p {
+      height: 150px;
+    }
+
+    .gn-md-keywords {
+      display: none;
+    }
+  }
+}
+

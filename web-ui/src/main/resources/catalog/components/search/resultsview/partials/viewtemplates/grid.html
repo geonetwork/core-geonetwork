@@ -26,13 +26,13 @@
           <!--Source catalog Logo-->
           <div class="pull-right">
             <a data-ng-if="md.groupWebsite"
-         href="{{md.groupWebsite}}" target="_blank">
-        <img data-ng-src="{{gnUrl}}..{{md.logo}}"
-             class="gn-source-logo"/>
-      </a>
-      <img data-ng-if="!md.groupWebsite"
-           data-ng-src="{{gnUrl}}..{{md.logo}}"
-           class="gn-source-logo"/>
+               href="{{md.groupWebsite}}" target="_blank">
+              <img data-ng-src="../..{{md.logo}}"
+                   class="gn-source-logo"/>
+            </a>
+            <img data-ng-if="!md.groupWebsite"
+                 data-ng-src="../..{{md.logo}}"
+                 class="gn-source-logo"/>
           </div>
         </div>
         <div data-gn-metadata-rate="md"
@@ -84,7 +84,7 @@
             <h5 data-translate="">license</h5>
             <span data-ng-repeat="c in ::md.Constraints">{{c}}, </span>
           </p> -->
-          <p data-ng-if="md.keyword">
+          <p data-ng-if="md.keyword" class="gn-md-keywords">
             <span class="badge" data-ng-repeat="k in ::md.keyword">{{k}}</span>
           </p>
       </div>

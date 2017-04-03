@@ -1,12 +1,13 @@
-<div class="navbar navbar-default gn-top-bar"
+<div class="navbar navbar-default gn-top-bar gn-minimal"
      role="navigation"
      data-ng-show="gnCfg.mods.header.enabled"
      data-ng-include="'../../catalog/templates/top-toolbar.html'"
      xmlns="http://www.w3.org/1999/html">
+     <!-- data-ng-include="'../../catalog/views/default/templates/top-toolbar.html'" -->
 </div>
 <div data-gn-alert-manager=""></div>
 
-<div class="gn-search-page"
+<div class="gn-search-page gn-minimal"
      data-ng-controller="GnSearchController">
   <cookiewarning></cookiewarning>
   <div class=""
