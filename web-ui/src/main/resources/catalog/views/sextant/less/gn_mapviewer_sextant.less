@@ -515,6 +515,17 @@
       visibility: hidden;
     }
     .tools-bar-close-btn {
+      background: white;
+      color: @sxt-base-color;
+      height: 24px;
+      width: 2em;
+      margin-right: -.5em;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      margin-left: .5em;
+    }
+
+    .tools-bar-close-btn-single {
       position: absolute;
       right: 1em;
     }
@@ -673,22 +684,11 @@
     width: auto;
     margin-top: -1px;
     display: block;
-    button.btn {
+    button.btn.active {
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
       width: auto;
       padding: 0 .5em;
       line-height: 2em;
-    }
-    span.btn {
-      background: white;
-      color: @sxt-base-color;
-      margin-top: -2px;
-      height: 2.2em;
-      width: 2em;
-      line-height: 2em;
-      margin-right: -.5em;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-      margin-left: .5em;
     }
   }
 
