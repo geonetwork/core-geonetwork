@@ -110,10 +110,10 @@
                 (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
                 'METADATA',
             sourceUuid: id,
-            isChildOfSource: isChild,
+            isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
             isVisibleByAllGroupMembers: withFullPrivileges,
-            targetUuid: metadataUuid
+            targetUuid: metadataUuid || ''
           });
           return $http.put('../api/records/duplicate?' + url, {
             headers: {
@@ -254,6 +254,7 @@
     // wfs indexing
     solrproxy: '../api/0.1/search'
   });
+
 
   /**
    * @ngdoc service
@@ -408,7 +409,7 @@
          */
         load: function() {
           return $http.get('../api/site/settings', {cache: true})
-            .then(function(response) {
+              .then(function(response) {
                 angular.extend(gnConfig, response.data);
                 // Replace / by . in settings name
                 angular.forEach(gnConfig, function(value, key) {

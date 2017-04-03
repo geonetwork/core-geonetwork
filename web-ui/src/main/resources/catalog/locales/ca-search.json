@@ -77,7 +77,6 @@
     "legalConstraints": "Restriccions legals",
     "scale": "Escala",
     "resolution": "Resolució",
-    "resolutions": "Resolucions",
     "credit": "Crèdits",
     "classification": "Classificació",
     "resourceStatus": "Estat",
@@ -371,5 +370,7 @@
     "mdinvalid": "La metadada no és vàlida",
     "mdinvalidcantpublish": "Les metadades invàlides no es poden publicar",
     "mdnovalidation": "La metadada no té informació de validació",
-    "setall": "Aplicar tots els privilegis"
+    "setall": "Aplicar tots els privilegis",
+    "print_legend": "Legend",
+    "print_legend_field": "Include legends"
 }

@@ -64,7 +64,8 @@
         link: function(scope, element, attrs) {
           element.attr('placeholder', '...');
           $http.get('../api/regions?categoryId=' +
-              'http://geonetwork-opensource.org/regions%23country', {}, {
+              'http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country',
+              {}, {
                 cache: true
               }).success(function(response) {
             var data = response.region;
@@ -114,12 +115,12 @@
           scope.gnRegionService = gnRegionService;
 
           var addGeonames = !attrs['disableGeonames'];
-
+          scope.regionTypes = [];
           /**
           * Load list on init to fill the dropdown
           */
           gnRegionService.loadList().then(function(data) {
-            scope.regionTypes = data;
+            scope.regionTypes = angular.copy(data);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: 'Geonames',
@@ -559,7 +560,7 @@
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
     var testObj = angular.element('<textarea ' +
-        ' style="height: 0px; position: absolute; visibility: hidden;"/>');
+        ' style="height: 0px; position: absolute; top: 0; visibility: hidden;"/>');
     angular.element(window.document.body).append(testObj);
 
     return {
@@ -1004,55 +1005,57 @@
    * to the parent element (required to highlight
    * element in navbar)
    */
-  module.directive('gnActiveTbItem', ['$location', function($location) {
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs) {
-        var link = attrs.gnActiveTbItem, href,
-            isCurrentService = false;
+  module.directive('gnActiveTbItem', ['$location', 'gnLangs',
+    function($location, gnLangs) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          var link = attrs.gnActiveTbItem, href,
+              isCurrentService = false;
 
-        // Insert debug mode between service and route
-        if (link.indexOf('#') !== -1) {
-          var tokens = link.split('#');
-          isCurrentService = window.location.pathname.
-              match('.*' + tokens[0] + '$') !== null;
-          href =
-              (isCurrentService ? '' :
-              tokens[0] + (scope.isDebug ? '?debug' : '')
-              ) + '#' +
-              tokens[1];
-        } else {
-          isCurrentService = window.location.pathname.
-              match('.*' + link + '$') !== null;
-          href =
-              isCurrentService ? '#/' : link + (scope.isDebug ? '?debug' : '');
-
-        }
-
-        // Set the href attribute for the element
-        // with the link containing the debug mode
-        // or not
-        element.attr('href', href);
-
-        function checkActive() {
-          // Ignore the service parameters and
-          // check url contains path
-          var isActive = $location.absUrl().replace(/\?.*#/, '#').
-              match('.*' + link + '.*') !== null;
-
-          if (isActive) {
-            element.parent().addClass('active');
+          // Insert debug mode between service and route
+          if (link.indexOf('#') !== -1) {
+            var tokens = link.split('#');
+            isCurrentService = window.location.pathname.
+                match('.*' + tokens[0] + '$') !== null;
+            href =
+                (isCurrentService ? '' :
+                tokens[0] + (scope.isDebug ? '?debug' : '')
+                ) + '#' +
+                tokens[1];
           } else {
-            element.parent().removeClass('active');
+            isCurrentService = window.location.pathname.
+                match('.*' + link + '$') !== null;
+            href =
+                isCurrentService ? '#/' : link +
+                (scope.isDebug ? '?debug' : '');
+
           }
+
+          // Set the href attribute for the element
+          // with the link containing the debug mode
+          // or not
+          element.attr('href', href.replace('{{lang}}', gnLangs.getCurrent()));
+
+          function checkActive() {
+            // Ignore the service parameters and
+            // check url contains path
+            var isActive = $location.absUrl().replace(/\?.*#/, '#').
+                match('.*' + link + '.*') !== null;
+
+            if (isActive) {
+              element.parent().addClass('active');
+            } else {
+              element.parent().removeClass('active');
+            }
+          }
+
+          scope.$on('$locationChangeSuccess', checkActive);
+
+          checkActive();
         }
-
-        scope.$on('$locationChangeSuccess', checkActive);
-
-        checkActive();
-      }
-    };
-  }]);
+      };
+    }]);
   module.filter('newlines', function() {
     return function(text) {
       if (text) {
@@ -1216,8 +1219,8 @@
           text: '@gnLynky'
         },
         link: function(scope, element, attrs) {
-          if (scope.text.startsWith('link') &&
-              scope.text.split('|').length == 3) {
+          if ((scope.text.indexOf('link') == 0) &&
+              (scope.text.split('|').length == 3)) {
             scope.link = scope.text.split('|')[1];
             scope.value = scope.text.split('|')[2];
 

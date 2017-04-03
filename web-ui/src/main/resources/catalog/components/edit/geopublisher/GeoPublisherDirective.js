@@ -29,7 +29,7 @@
   /**
    */
   angular.module('gn_geopublisher_directive',
-      ['gn_owscontext_service'])
+      ['gn_owscontext_service', 'pascalprecht.translate'])
       .directive('gnGeoPublisher', [
         'gnMap',
         'gnOwsContextService',
@@ -39,9 +39,10 @@
         'gnCurrentEdit',
         '$timeout',
         '$translate',
+        '$rootScope',
         function(gnMap, gnOwsContextService, gnOnlinesrc,
             gnGeoPublisher, gnEditor, gnCurrentEdit,
-            $timeout, $translate) {
+            $timeout, $translate, $rootScope) {
           return {
             restrict: 'A',
             replace: true,
@@ -150,7 +151,16 @@
                 }
 
                 $timeout(function() {
-                  gnEditor.save(true);
+                  gnEditor.save(true).then(function() {
+                    // success. Nothing to do.
+                  }, function(rejectedValue) {
+                    $rootScope.$broadcast('StatusUpdated', {
+                      title: $translate.instant('runServiceError'),
+                      error: rejectedValue,
+                      timeout: 0,
+                      type: 'danger'
+                    });
+                  });
                 });
               };
               scope.openStyler = function() {
@@ -217,7 +227,7 @@
                         readResponse(r.data, 'check');
                       }
                     }, function(r) {
-                      scope.statusCode = r.data.description;
+                      scope.statusCode = r.data;
                       scope.isPublished = false;
                     });
               };
@@ -246,7 +256,7 @@
                   map.removeLayer(scope.layer);
                 }
                 gnGeoPublisher.unpublishNode(scope.gsNode.id, scope.name)
-                  .success(function(data) {
+                    .success(function(data) {
                       scope.statusCode = data;
                       scope.isPublished = false;
                     }).error(function(data) {

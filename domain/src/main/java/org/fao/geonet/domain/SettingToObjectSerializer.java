@@ -51,19 +51,25 @@ public class SettingToObjectSerializer extends JsonSerializer<Setting> {
     }
 
     public static void writeSettingValue(Setting s, JsonGenerator jsonGenerator) throws IOException {
-        if (StringUtils.isNotEmpty(s.getValue())) {
-            if (s.getDataType() == SettingDataType.BOOLEAN) {
-                jsonGenerator.writeBoolean(Boolean.parseBoolean(s.getValue()));
-            } else if (s.getDataType() == SettingDataType.INT) {
-                jsonGenerator.writeNumber(Integer.parseInt(s.getValue()));
-            } else if (s.getDataType() == SettingDataType.JSON) {
-                ObjectMapper mapper = new ObjectMapper();
-                jsonGenerator.writeTree(mapper.readTree(s.getValue()));
+        try {
+            if (StringUtils.isNotEmpty(s.getValue())) {
+                if (s.getDataType() == SettingDataType.BOOLEAN) {
+                    jsonGenerator.writeBoolean(Boolean.parseBoolean(s.getValue()));
+                } else if (s.getDataType() == SettingDataType.INT) {
+                    jsonGenerator.writeNumber(Integer.parseInt(s.getValue()));
+                } else if (s.getDataType() == SettingDataType.JSON) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    jsonGenerator.writeTree(mapper.readTree(s.getValue()));
+                } else {
+                    jsonGenerator.writeString(s.getValue());
+                }
             } else {
-                jsonGenerator.writeString(s.getValue());
+                jsonGenerator.writeNull();
             }
-        } else {
+        } catch (Exception e) {
             jsonGenerator.writeNull();
+            jsonGenerator.writeStringField("erroneousValue", s.getValue());
+            jsonGenerator.writeStringField("error", e.getMessage());
         }
     }
 }

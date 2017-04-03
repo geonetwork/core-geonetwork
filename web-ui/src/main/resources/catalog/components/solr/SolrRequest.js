@@ -54,14 +54,14 @@
     this.totalCount;
 
     /**
-     * @type {Array<Object}>}
+     * @type {Array<Object>}
      * An array of all index fields info for a given doc type.
      */
     this.docTypeFieldsInfo;
 
     /**
-     * @type {Array<Object}>
-     * `this.docTypeFieldsInfo` filtered through `config.excludedFields`
+     * @type {Array<Object>
+     * `this.docTypeFieldsInfo` filtered through `config.excludedFields`}
      */
     this.filteredDocTypeFieldsInfo = [];
 

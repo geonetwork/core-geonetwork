@@ -36,7 +36,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -145,7 +144,7 @@ public class Change extends NotInReadOnlyModeService {
         String content = elEmail.getChildText("content");
 
         // send password changed email
-        if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
+        if (!MailUtil.sendMail(to, subject, content, null, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");
         }
 

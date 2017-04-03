@@ -254,7 +254,7 @@
       <artifactId>h2</artifactId>
     </dependency>
     <dependency>
-      <groupId>postgresql</groupId>
+      <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
     <dependency>
@@ -498,7 +498,11 @@
       <version>${project.version}</version>
     </dependency>
 
-
+    <dependency>
+      <groupId>org.mitre.dsmiley.httpproxy</groupId>
+      <artifactId>smiley-http-proxy-servlet</artifactId>
+      <version>1.8</version>
+    </dependency>
   </dependencies>
 
 

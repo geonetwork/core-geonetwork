@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -138,26 +137,33 @@ class Harvester implements IHarvester<HarvestResult> {
             }
         }
 
+        HarvestResult result = new HarvestResult();
+        boolean error = false;
         try {
             records.addAll(search(server, s));
+
+            //--- align local node
+            Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
+            result = aligner.align(records, errors);
         } catch (Exception t) {
+            error = true;
             log.error("Unknown error trying to harvest");
             log.error(t.getMessage());
             log.error(t);
             errors.add(new HarvestError(context, t, log));
         } catch (Throwable t) {
+            error = true;
             log.fatal("Something unknown and terrible happened while harvesting");
             log.fatal(t.getMessage());
             errors.add(new HarvestError(context, t, log));
         }
 
         log.info("Total records processed in all searches :" + records.size());
+        if (error) {
+            log.warning("Due to previous errors the align process has not been called");
+        }
 
-        //--- align local node
-
-        Aligner aligner = new Aligner(cancelMonitor, log, context, server, params);
-
-        return aligner.align(records, errors);
+        return result;
     }
     //---------------------------------------------------------------------------
 
@@ -175,7 +181,7 @@ class Harvester implements IHarvester<HarvestResult> {
         if (params.capabUrl.contains("GetCapabilities")) {
             req = requestFactory.createXmlRequest(new URL(params.capabUrl));
         } else {
-          req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
+            req = requestFactory.createXmlRequest(new URL(params.capabUrl + (params.capabUrl.contains("?") ? "&" : "?") + GETCAPABILITIES_PARAMETERS));
         }
 
         Lib.net.setupProxy(context, req);
@@ -183,11 +189,11 @@ class Harvester implements IHarvester<HarvestResult> {
         if (params.isUseAccount())
             req.setCredentials(params.getUsername(), params.getPassword());
         CswServer server = null;
-        try{
+        try {
             Element capabil = req.execute();
 
-            if(log.isDebugEnabled())
-                log.debug("Capabilities:\n"+Xml.getString(capabil));
+            if (log.isDebugEnabled())
+                log.debug("Capabilities:\n" + Xml.getString(capabil));
 
             if (capabil.getName().equals("ExceptionReport"))
                 CatalogException.unmarshal(capabil);
@@ -200,7 +206,7 @@ class Harvester implements IHarvester<HarvestResult> {
             if (!checkOperation(log, server, "GetRecordById"))
                 throw new OperationAbortedEx("GetRecordById operation not found");
 
-        } catch(BadXmlResponseEx e) {
+        } catch (BadXmlResponseEx e) {
             errors.add(new HarvestError(context, e, log, params.capabUrl));
             throw e;
         }
@@ -546,7 +552,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
 		/*
-		buildCqlQueryable(queryables, "csw:AnyText", s.freeText);
+        buildCqlQueryable(queryables, "csw:AnyText", s.freeText);
 		buildCqlQueryable(queryables, "dc:title", s.title);
 		buildCqlQueryable(queryables, "dct:abstract", s.abstrac);
 		buildCqlQueryable(queryables, "dc:subject", s.subject);
@@ -597,15 +603,13 @@ class Harvester implements IHarvester<HarvestResult> {
             }
 
             return response;
-        }
-        catch(Exception e)
-        {
-          errors.add(new HarvestError(context, e, log));
-          log.warning("Raised exception when searching : "+ e);
-          log.warning("Url: " + request.getHost());
-          log.warning("Method: " + request.getMethod());
-          log.warning("Sent request " + request.getSentData());
-          throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
+        } catch (Exception e) {
+            errors.add(new HarvestError(context, e, log));
+            log.warning("Raised exception when searching : " + e);
+            log.warning("Url: " + request.getHost());
+            log.warning("Method: " + request.getMethod());
+            log.warning("Sent request " + request.getSentData());
+            throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
         }
     }
 

@@ -27,7 +27,7 @@
   angular.module('gn_searchsuggestion_service', [
   ])
 
-  /**
+      /**
    * @ngdoc service
    * @kind function
    * @name gn_searchsuggestion.service:suggestService

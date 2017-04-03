@@ -23,9 +23,11 @@
 
 package org.fao.geonet.services.logo;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -78,15 +80,11 @@ public class Add implements ApplicationContextAware {
                 logoDir = this.logoDirectory;
             }
 
-            if (fname.getName().contains("..")) {
-                throw new BadParameterEx(
-                    "Invalid character found in resource name.",
-                    fname.getName());
-            }
+            FilePathChecker.verify(fname.getName());
 
-            if ("".equals(fname.getName())) {
-                throw new Exception("Logo name is not defined.");
-            }
+			if (StringUtils.isEmpty(fname.getName())) {
+				throw new Exception("Logo name is not defined.");
+			}
 
             Path serverFile = logoDir.resolve(fname.getOriginalFilename());
             if (Files.exists(serverFile)) {

@@ -26,6 +26,7 @@ package org.fao.geonet.kernel;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Metadata;
@@ -480,10 +481,11 @@ public class AccessManager {
 
         SettingRepository settingRepository= ApplicationContextHolder.get().getBean(SettingRepository.class);
         Setting network = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
-        Setting netmask = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETWORK);
+        Setting netmask = settingRepository.findOne(Settings.SYSTEM_INTRANET_NETMASK);
 
         try {
-            if (network != null && netmask != null) {
+            if (network != null && netmask != null &&
+                StringUtils.isNotEmpty(network.getValue()) && StringUtils.isNotEmpty(netmask.getValue())) {
                 long lIntranetNet = getAddress(network.getValue());
                 long lIntranetMask = getAddress(netmask.getValue());
                 long lAddress = getAddress(ip.split(",")[0]);

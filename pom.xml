@@ -343,7 +343,7 @@
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
-        <version>2.3.7</version>
+        <version>2.3.11</version>
       </dependency>
 
       <!-- universal character set detector -->
@@ -444,7 +444,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.3.1</version>
+        <version>1.3.2</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -474,7 +474,7 @@
       <dependency>
         <groupId>batik</groupId>
         <artifactId>batik-ext</artifactId>
-        <version>1.6</version>
+        <version>1.6-1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -812,21 +812,15 @@
       </dependency>
 
       <!-- db -->
-      <!--<dependency>-->
-      <!--<groupId>postgresql</groupId>-->
-      <!--<artifactId>postgresql</artifactId>-->
-      <!--<version>9.1-901.jdbc3</version>-->
-      <!--</dependency>-->
       <dependency>
         <groupId>org.postgis</groupId>
         <artifactId>postgis-jdbc</artifactId>
         <version>1.3.3</version>
       </dependency>
-      <!-- Postgres JDBC4 for Java 1.6 -->
       <dependency>
-        <groupId>postgresql</groupId>
+        <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
-        <version>9.1-901.jdbc4</version>
+        <version>${pg.version}</version>
       </dependency>
       <dependency>
         <groupId>mysql</groupId>
@@ -990,17 +984,17 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.5.2</version>
+        <version>2.5.5</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>2.5.2</version>
+        <version>2.5.5</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>2.5.2</version>
+        <version>2.5.5</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1188,6 +1182,18 @@
   </distributionManagement>
 
   <properties>
+    <!-- Configure database config file to use. Could be
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
+     -->
+    <db.type>h2</db.type>
+    <db.config.file>../config-db/${db.type}.xml</db.config.file>
+    <db.host>localhost</db.host>
+    <db.port>5432</db.port>
+    <db.name>gn</db.name>
+    <db.username>www-data</db.username>
+    <db.password>www-data</db.password>
+    <db.pool.maxActive>10</db.pool.maxActive>
+
 
     <!-- Default catalog language when accessing the home page
     ie. http://localhost:8080/geonetwork. -->
@@ -1197,20 +1203,27 @@
     to the default language. -->
     <language.forceDefault>false</language.forceDefault>
 
+    <!-- Define using CRON expression
+     when watchlist notifier is triggered (Default 4AM) -->
+    <savedselection.watchlist.frequency>0 0 4 * * ?</savedselection.watchlist.frequency>
 
-    <jetty.version>9.3.9.v20160517</jetty.version>
-    <geotools.version>16.0</geotools.version>
 
-    <lucene.version>4.9.0</lucene.version>
+    <!-- Jetty plugin port configuration -->
+    <jetty.port>8080</jetty.port>
+    <jetty.stop.port>8090</jetty.stop.port>
 
+
+    <!-- Index server -->
     <solr.version>6.0.1</solr.version>
     <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>
     <solr.port>8984</solr.port>
     <solr.url>http://localhost:${solr.port}/solr</solr.url>
     <solr.collection>catalog_srv</solr.collection>
 
+
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>
+
 
     <!-- List of comma separated values of hosts for which
     CORS headers are added (eg. www.geonetwork-opensource.org,osgeo.org).
@@ -1221,6 +1234,17 @@
      may be a bit slower as it requires to check for every
      request the list of hosts (but JPA cache db queries). -->
     <cors.allowedHosts>*</cors.allowedHosts>
+
+
+    <jetty.version>9.3.9.v20160517</jetty.version>
+
+
+    <!-- NOTE: When updating GeoTools, check which version
+    of Postgres is used and update pg.version if needed. -->
+    <geotools.version>16.0</geotools.version>
+    <pg.version>9.4.1211</pg.version>
+
+    <lucene.version>4.9.0</lucene.version>
 
     <spring.version>4.2.4.RELEASE</spring.version>
     <spring.security.version>3.2.0.RELEASE</spring.security.version>
@@ -1234,7 +1258,7 @@
     <xmlunit.version>2.1.1</xmlunit.version>
     <print-lib.version>2.1.1</print-lib.version>
     <flying-saucer>9.0.7</flying-saucer>
-    <camel.version>2.14.0</camel.version>
+    <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
     <slf4j.version>1.7.7</slf4j.version>
     <xbean.version>3.18</xbean.version>

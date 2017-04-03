@@ -55,6 +55,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -263,7 +265,7 @@ public class Aligner extends BaseAligner {
         }
 
         if (!params.xslfilter.equals("")) {
-            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+            md = processMetadata(context,
                 md, processName, processParams, log);
         }
         //
@@ -334,7 +336,7 @@ public class Aligner extends BaseAligner {
                 }
                 String schema = dataMan.autodetectSchema(md, null);
                 if (!params.xslfilter.equals("")) {
-                    md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                    md = processMetadata(context,
                         md, processName, processParams, log);
                 }
 
@@ -496,5 +498,39 @@ public class Aligner extends BaseAligner {
             }
         }
         return false;
+    }
+
+    /**
+     *
+     * Filter the metadata if process parameter is set and corresponding XSL transformation
+     * exists in xsl/conversion/import.
+     *
+     * @param context
+     * @param md
+     * @param processName
+     * @param processParams
+     * @param log
+     * @return
+     */
+    private Element processMetadata(ServiceContext context,
+                                    Element md,
+                                    String processName,
+                                    Map<String, Object> processParams,
+                                    Logger log) {
+        Path filePath = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("conversion/import").resolve(processName + ".xsl");
+        if (!Files.exists(filePath)) {
+            log.info("     processing instruction  " + processName + ". Metadata not filtered.");
+        } else {
+            Element processedMetadata;
+            try {
+                processedMetadata = Xml.transform(md, filePath, processParams);
+                if (log.isDebugEnabled()) log.debug("     metadata filtered.");
+                md = processedMetadata;
+            } catch (Exception e) {
+                log.warning("     processing error (" + processName + "): "
+                        + e.getMessage());
+            }
+        }
+        return md;
     }
 }

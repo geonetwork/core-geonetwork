@@ -169,6 +169,19 @@
           return defer.promise;
         },
 
+        publish: function(metadataId, bucket, onOrOff, user) {
+          var privileges = [{
+            group: 1,
+            operations: {
+              view: onOrOff,
+              download: onOrOff,
+              dynamic: onOrOff
+            }
+          }];
+          return this.savePrivileges(
+              metadataId, bucket, privileges, user, !onOrOff);
+        },
+
         /**
          * @ngdoc method
          * @methodOf gn_share.service:gnShareService
@@ -183,12 +196,16 @@
          *
          * @return {HttpPromise} Future object.
          */
-        savePrivileges: function(metadataId, privileges, user, replace) {
+        savePrivileges: function(
+            metadataId, bucket, privileges, user, replace) {
           var defer = $q.defer();
           var url = '../api/records' + (
               angular.isDefined(metadataId) ? '/' + metadataId : '') +
               '/sharing';
 
+          if (angular.isDefined(bucket)) {
+            url += '?bucket=' + bucket;
+          }
           var ops = [];
           angular.forEach(privileges, function(g) {
             // Do not submit internal groups info

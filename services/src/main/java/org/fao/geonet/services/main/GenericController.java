@@ -24,6 +24,8 @@
 package org.fao.geonet.services.main;
 
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
@@ -47,6 +50,8 @@ import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 @Controller
 public class GenericController {
@@ -140,7 +145,22 @@ public class GenericController {
         }
 
         // --- execute request
+        try {
+            jeeves.dispatch(srvReq, session);
+        } finally {
+            // Cleanup uploaded resources
+            if (request instanceof MultipartRequest) {
+                Map<String, MultipartFile> files = ((MultipartRequest) request).getFileMap();
+                Iterator<Map.Entry<String, MultipartFile>> it =
+                        files.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, MultipartFile> file = it.next();
 
-        jeeves.dispatch(srvReq, session);
+                    Path uploadedFile = jeeves.getUploadDir().resolve(file.getValue().getOriginalFilename());
+                    FileUtils.deleteQuietly(uploadedFile.toFile());
+                }
+            }
+
+        }
     }
 }

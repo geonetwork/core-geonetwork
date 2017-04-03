@@ -168,7 +168,7 @@
                     appProfile = angular.fromJson(response.data['0']);
                     return appProfile;
                   }
-                }).catch (function() {});
+                }).catch(function() {});
 
             solrObject =
                 gnSolrRequestManager.register('WfsFilter',
@@ -193,7 +193,7 @@
           scope.checkWFSServerUrl = function() {
             return $http.get('../../proxy?url=' +
                 encodeURIComponent(scope.url))
-              .then(function() {
+                .then(function() {
                   scope.isWfsAvailable = true;
                 }, function() {
                   scope.isWfsAvailable = false;
@@ -234,6 +234,12 @@
               wfsUrl: scope.url,
               featureTypeName: ftName
             };
+
+            scope.status = null;
+            scope.isFeaturesIndexed = false;
+            var docFields = [];
+            scope.countTotal = null;
+
             heatmapsRequest.init(config);
             solrObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
@@ -257,9 +263,12 @@
             });
           };
           scope.dropFeatures = function() {
-            return gnSolrService.deleteDocs('+featureTypeId:"' +
-                scope.url + '#' + ftName + '"').then(function() {
+            var id = scope.url + '#' + ftName;
+            return gnSolrService.deleteDocs('featureTypeId:"' +
+                id + '" id:"' + id + '"').then(function() {
               scope.initSolrRequest();
+            }, function() {
+              console.warn('Failed to remove features for type ' + id);
             });
           };
           /**
@@ -412,7 +421,7 @@
                     SLD: sldURL
                   });
                 }
-              }).finally (function() {
+              }).finally(function() {
                 defer.resolve();
               });
             } else {

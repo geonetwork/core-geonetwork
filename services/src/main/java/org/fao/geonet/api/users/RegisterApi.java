@@ -24,6 +24,7 @@
 package org.fao.geonet.api.users;
 
 import org.fao.geonet.api.API;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
@@ -53,7 +54,7 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -90,14 +91,24 @@ public class RegisterApi {
             required = true)
         @RequestBody
             User user,
-        ServletRequest request)
+        HttpServletRequest request)
         throws Exception {
+
 
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
-        ServiceContext context = ServiceContext.get();
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        SettingManager sm = context.getBean(SettingManager.class);
+        boolean selfRegistrationEnabled = sm.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_ENABLE);
+        if (!selfRegistrationEnabled) {
+            return new ResponseEntity<>(String.format(
+                    messages.getString("self_registration_disabled")
+            ), HttpStatus.PRECONDITION_FAILED);
+        }
+
         final UserRepository userRepository = context.getBean(UserRepository.class);
         if (userRepository.findOneByEmail(user.getEmail()) != null) {
             return new ResponseEntity<>(String.format(
@@ -123,7 +134,6 @@ public class RegisterApi {
         }
 
 
-        SettingManager sm = context.getBean(SettingManager.class);
         String catalogAdminEmail = sm.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
         String subject = String.format(
             messages.getString("register_email_admin_subject"),
@@ -138,7 +148,7 @@ public class RegisterApi {
             sm.getNodeURL(),
             sm.getSiteName()
         );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
+        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
@@ -158,7 +168,7 @@ public class RegisterApi {
             sm.getNodeURL(),
             sm.getSiteName()
         );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
+        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, null, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }

@@ -745,7 +745,8 @@ public class MetadataEditingApi {
         for (String schema : schemaManager.getSchemas()) {
             // Load schema and schema dependency localization files
             if (schema.equals(schemaToLoad) ||
-                schemaToLoad.startsWith(schema)
+                schemaToLoad.startsWith(schema) ||
+                schemaManager.getDependencies(schemaToLoad).contains(schema)
                 ) {
                 try {
                     Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);

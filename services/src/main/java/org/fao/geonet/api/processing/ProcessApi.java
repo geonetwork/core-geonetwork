@@ -150,6 +150,13 @@ public class ProcessApi {
         @RequestParam(required = false)
             String[] uuids,
         @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        @ApiParam(
             value = ApiParams.API_PARAM_PROCESS_TEST_ONLY,
             required = false)
         @RequestParam(defaultValue = "false")
@@ -180,7 +187,7 @@ public class ProcessApi {
             ApplicationContext applicationContext = ApplicationContextHolder.get();
             DataManager dataMan = applicationContext.getBean(DataManager.class);
 
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, userSession);
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             report.setTotalRecords(records.size());
             MetadataSearchAndReplace m = new MetadataSearchAndReplace(

@@ -23,6 +23,8 @@ l=(
     'du::nl'
     'cz::cs_CZ'
     'ca::ca'
+    'fi::fi'
+    'is::is'
 )
 
 for index in "${l[@]}" ; do

@@ -155,26 +155,27 @@ public abstract class XmlSerializer {
      * and the string read is converted into xml.
      *
      * @param isIndexingTask If true, then withheld elements are not removed.
+     * @param forEditing If true, then withheld elements are not removed.
      */
-    protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
+    protected Element internalSelect(String id, boolean isIndexingTask, boolean forEditing) throws Exception {
         MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
 
-        Metadata metadata = _metadataRepository.findOne(id);
+        Metadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
 
         if (metadata == null)
             return null;
 
-        return removeHiddenElements(isIndexingTask, metadata);
+        return removeHiddenElements(isIndexingTask, metadata, forEditing);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata, boolean forEditing) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
         String id = String.valueOf(metadata.getId());
         Element metadataXml = metadata.getXmlData(false);
 
-        if (!isIndexingTask) {
+        if (!isIndexingTask && !forEditing) {
             ServiceContext context = ServiceContext.get();
             MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
 
@@ -295,7 +296,7 @@ public abstract class XmlSerializer {
      */
     public abstract Element select(ServiceContext context, String id) throws Exception;
 
-    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask)
+    public abstract Element selectNoXLinkResolver(String id, boolean isIndexingTask, boolean forEditing)
         throws Exception;
 
     public static class ThreadLocalConfiguration {

@@ -127,35 +127,44 @@ public class MailUtil {
      * @param toAddress
      * @param subject
      * @param message
+     * @param htmlMessage
      * @param settings
      * @param replyTo
-     * @param replyToDesc
-     * @throws EmailException
+     * @param replyToDesc    @throws EmailException
      */
     public static Boolean sendMail(List<String> toAddress, String subject,
-                                   String message, SettingManager settings, String replyTo,
+                                   String message, String htmlMessage,
+                                   SettingManager settings, String replyTo,
                                    String replyToDesc) {
         // Create data information to compose the mail
-        Email email = new SimpleEmail();
+        boolean isHtml = StringUtils.isNotBlank(htmlMessage);
+        Email email = isHtml ? new HtmlEmail() : new SimpleEmail();
         configureBasics(settings, email);
 
         List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
-        try {
-            addressColl.add(new InternetAddress(replyTo, replyToDesc));
-            email.setReplyTo(addressColl);
-        } catch (UnsupportedEncodingException e2) {
+        if (StringUtils.isNotEmpty(replyTo)) {
+            try {
+                addressColl.add(new InternetAddress(replyTo, replyToDesc));
+                email.setReplyTo(addressColl);
+            } catch (UnsupportedEncodingException e2) {
 
-            Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Characters not supported in \"" + replyToDesc
-                + "\"", e2);
-            return false;
-        } catch (EmailException e) {
-            Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Invalid email address \"" + replyTo + "\"", e);
-            return false;
+                Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Characters not supported in \"" + replyToDesc
+                    + "\"", e2);
+                return false;
+            } catch (EmailException e) {
+                Log.error(LOG_MODULE_NAME, "Error setting email replyTo. Invalid email address \"" + replyTo + "\"", e);
+                return false;
+            }
         }
 
         email.setSubject(subject);
         try {
-            email.setMsg(message);
+            if (StringUtils.isNotBlank(message)) {
+                email.setMsg(message);
+            }
+            if (isHtml) {
+                ((HtmlEmail)email).setHtmlMsg(htmlMessage);
+            }
         } catch (EmailException e1) {
             Log.error(LOG_MODULE_NAME, "Error setting email message", e1);
             return false;
@@ -421,41 +430,48 @@ public class MailUtil {
     }
 
     public static Boolean sendMail(String email, String subject,
-                                   String message, SettingManager sm) {
+                                   String message, String htmlMessage, SettingManager sm) {
         List<String> to = new ArrayList<String>(1);
         to.add(email);
-        return sendMail(to, subject, message, sm);
+        return sendMail(to, subject, message, htmlMessage, sm, null, null);
     }
 
 
-    public static Boolean sendMail(String to, String subject, String message,
+    public static Boolean sendMail(String to, String subject,
+                                   String message, String htmlMessage,
                                    SettingManager sm, String replyTo, String replyToDescr) {
         List<String> to_ = new ArrayList<String>(1);
         to_.add(to);
-        return sendMail(to_, subject, message, sm, replyTo, replyToDescr);
+        return sendMail(to_, subject, message, htmlMessage, sm, replyTo, replyToDescr);
     }
 
     public static void testSendMail(String to, String subject, String message,
-                                    SettingManager sm, String replyTo, String replyToDescr) throws Exception {
+                                    String htmlMessage, SettingManager sm, String replyTo, String replyToDescr) throws Exception {
         List<String> to_ = new ArrayList<String>(1);
         to_.add(to);
-        testSendMail(to_, subject, message, sm, replyTo, replyToDescr);
+        testSendMail(to_, subject, message, htmlMessage, sm, replyTo, replyToDescr);
     }
 
     public static void testSendMail(List<String> toAddress, String subject,
-                                    String message, SettingManager settings, String replyTo,
+                                    String message, String htmlMessage, SettingManager settings, String replyTo,
                                     String replyToDesc) throws Exception {
         // Create data information to compose the mail
-        Email email = new SimpleEmail();
+        boolean isHtml = StringUtils.isNotBlank(htmlMessage);
+        Email email = isHtml ? new HtmlEmail() : new SimpleEmail();
         configureBasics(settings, email);
 
         List<InternetAddress> addressColl = new ArrayList<InternetAddress>();
 
         addressColl.add(new InternetAddress(replyTo, replyToDesc));
         email.setReplyTo(addressColl);
-
         email.setSubject(subject);
-        email.setMsg(message);
+
+        if (StringUtils.isNotBlank(message)) {
+            email.setMsg(message);
+        }
+        if (isHtml) {
+            ((HtmlEmail)email).setHtmlMsg(htmlMessage);
+        }
 
         // send to all mails extracted from settings
         for (String add : toAddress) {

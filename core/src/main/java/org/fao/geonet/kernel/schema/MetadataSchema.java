@@ -391,8 +391,9 @@ public class MetadataSchema {
         Path schematronResourceDir = basePath.resolve("WEB-INF").resolve("classes").resolve(SCHEMATRON_DIR);
         Path schemaSchematronDir = schemaDir.resolve(SCHEMATRON_DIR);
         Path schematronCompilationFile = schematronResourceDir.resolve("iso_svrl_for_xslt2.xsl");
+        Path schematronExpandFile = schematronResourceDir.resolve("iso_abstract_expand.xsl");
 
-        if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+        if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
             Log.debug(Geonet.SCHEMA_MANAGER, "     Schematron compilation for schema " + schemaName);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - compiling with " + schematronCompilationFile);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - rules location is " + schemaSchematronDir);
@@ -411,7 +412,9 @@ public class MetadataSchema {
 
                     try (OutputStream schematronXsl = Files.newOutputStream(schematronXslFilePath)) {
                         Element schematronRule = Xml.loadFile(schemaSchematronDir.resolve(rule));
-                        Xml.transform(schematronRule, schematronCompilationFile, schematronXsl);
+                        // Expand schematron abstract rules
+                        Element schematronExpandXml = Xml.transform(schematronRule, schematronExpandFile);
+                        Xml.transform(schematronExpandXml, schematronCompilationFile, schematronXsl);
                     } catch (FileNotFoundException e) {
                         Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath
                             + ". Error is " + e.getMessage());

@@ -21,5 +21,10 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<overrides>
+<overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="overrides/config-overrides.xsd">
+  <file name=".*/WEB-INF/config.xml">
+    <replaceText xpath="general/debug">true</replaceText>
+
+  </file>
 </overrides>

@@ -87,8 +87,8 @@
                    (attrs['searchQuery'] &&
                    angular.fromJson(
                        attrs['searchQuery']
-                         .replace('{uuid}', gnCurrentEdit.uuid)
-                         .replace(/'/g, '\"')
+                   .replace('{uuid}', gnCurrentEdit.uuid)
+                   .replace(/'/g, '\"')
                    )) || {};
                  }
 

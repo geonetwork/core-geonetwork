@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Metadata uniforme bron naam",
     "createNewMetadata": "Voeg een nieuw document toe",
     "createSmall": "Maak kleine",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "huidige",
     "datasetFound": "Dataset gevonden en toegevoegd aan voorbeeldkaart",
     "datasetNotFound": "Dataset niet gevonden - 404",
@@ -321,5 +322,6 @@
     "parentConcept": "Parent concept",
     "moreSpecificConcept": "Meer specifieke concepten",
     "associatedConcept": "Geassocieerde concepten",
-    "xsd": "Schema validatie"
+    "xsd": "Schema validatie",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

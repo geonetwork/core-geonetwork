@@ -82,6 +82,7 @@ public class Settings {
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
     public static final String SYSTEM_USERFEEDBACK_ENABLE = "system/userFeedback/enable";
+    public static final String SYSTEM_USER_LASTNOTIFICATIONDATE = "system/userFeedback/lastNotificationDate";
     public static final String SYSTEM_LOCALRATING_ENABLE = "system/localrating/enable";
     public static final String SYSTEM_XLINK_RESOLVER_IGNORE = "system/xlinkResolver/ignore";
     public static final String SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING = "system/hidewithheldelements/enableLogging";
