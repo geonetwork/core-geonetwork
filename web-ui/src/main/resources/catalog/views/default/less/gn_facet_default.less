@@ -27,6 +27,7 @@
         cursor: pointer;
         margin-left: 2px;
         line-height: 1.5em;
+
         .gn-facet-label {
           float: left;
           padding-right: 5px;
@@ -35,12 +36,21 @@
           overflow: hidden;
           white-space: nowrap;
           height: 18px;
-          max-width: 200px;
+          max-width: 180px;
+        }
+        &.gn-facet-active {
+          .gn-facet-label {
+            color: #000;
+            text-decoration: underline;
+          }
         }
         .gn-facet-count {
           float: left;
         }
       }
+      .list-group {
+          margin: 0;
+        }
       .btn-link {
         text-decoration: underline;
       }
@@ -54,6 +64,9 @@
         width: auto;
         font-size: .9em;
       }
+    }
+    .gn-facet-toggle {
+      display: none;
     }
 	}
 }
