@@ -10,5 +10,8 @@
   "xml": "XML",
   "uncategorizedKeywords": "Uncategorized",
   "uncategorized": "Uncategorized",
-  "related-link": "Relations"
+  "related-link": "Relations",
+  "citationPOTitle": "Warning",
+  "citationPOContent": "Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.",
+  "socialTitle": "Share"
 }

@@ -15,7 +15,8 @@
             'partials/linksbtn.html',
         link: function(scope) {
           scope.container = scope.container || '.links';
-          scope.isMap = settings.mainTabs && settings.mainTabs.map;
+          scope.isMap = settings.mainTabs && settings.mainTabs.map ||
+            settings.viewerUrl;
           scope.isPanier = settings.mainTabs && settings.mainTabs.panier;
         }
       };

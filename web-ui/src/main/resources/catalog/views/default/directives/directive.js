@@ -116,10 +116,9 @@
             var tokens = cptId.split('/');
             var dpsKey = tokens[0];
             var q1 = $q.defer();
-            var q2 = $q.defer();
 
             if (scope.isUd || scope.isTdp) {
-              $http.get('q?fast=index&_content_type=json&_uuid=' + dpsKey, {
+              $http.get('qi?fast=index&_content_type=json&_uuid=' + dpsKey, {
                 cache: true
               }).then(function (r) {
                 if (r.data.metadata && r.data.metadata.dqValues) {
@@ -137,36 +136,43 @@
                 }
                 q1.resolve(qm);
               });
-            } else {
-              q1.resolve(qm);
-            }
 
-
-            if (scope.isUd) {
-              if (tokens.length === 3) {
-                var tdpKey = tokens[2];
-                $http.get('q?fast=index&_content_type=json&_uuid=' + tdpKey, {
-                  cache: true
-                }).then(function (r) {
-                  if (r.data.metadata && r.data.metadata.dqValues) {
-                    var values = r.data.metadata.dqValues;
-                    for(var i = 0; i < values.length; i ++) {
-                      var v = values[i];
-                      if (v.indexOf(cptId) === 0 && v.indexOf(mId) !== -1) {
-                        var t = v.split('|');
-                        qm.tdp = t[5] != '' ? t[5] + ' ' + t[6] : '';
-                        q2.resolve(qm);
-                        break;
+              if (scope.isUd) {
+                if (tokens.length === 4) {
+                  var tdpKey = tokens[2];
+                  var q2 = $q.defer();
+                  $http.get('qi?fast=index&_content_type=json&_uuid=' + tdpKey, {
+                    cache: true
+                  }).then(function (r) {
+                    if (r.data.metadata && r.data.metadata.dqValues) {
+                      var values = r.data.metadata.dqValues;
+                      for(var i = 0; i < values.length; i ++) {
+                        var v = values[i];
+                        if (v.indexOf(tokens[0] + '/' + tokens[1] + '/' + tokens[2]) === 0 &&
+                            v.indexOf(mId) !== -1) {
+                          var t = v.split('|');
+                          qm.tdp = t[5] != '' ? t[5] + ' ' + t[6] : '';
+                          q2.resolve(qm);
+                          break;
+                        }
                       }
                     }
-                  }
-                  q2.resolve(qm);
-                });
+                    q2.resolve(qm);
+                  });
+                  return $q.all([q1.promise, q2.promise]);
+                } else {
+                  // Should not happen
+                  return q1.promise;
+                }
+              } else {
+                // TDP return DPS data collection only
+                return q1.promise;
               }
             } else {
-              q2.resolve(qm);
+              // DPS: nothing else to load
+              q1.resolve(qm);
+              return q1.promise;
             }
-            return $q.all([q1.promise, q2.promise]);
           };
 
           function loadValues() {
@@ -213,7 +219,7 @@
                         fuName: fu.name,
                         fu: fu.value
                       }).then(function (values) {
-                        scope.components[cptId].measures.push(values[0]);
+                        scope.components[cptId].measures.push(angular.isArray(values) ? values[0] : values);
                       });
                     }
                   }

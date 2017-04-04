@@ -71,6 +71,10 @@
     if (navAnchors.length > 0) {
       selectGroup(navAnchors.first());
     }
+
+    // Sextant
+    $('.sxt-popover').popover();
+
   };
 
   gnFormatter.depth = function(linkBlockEl) {

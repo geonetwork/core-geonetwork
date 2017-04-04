@@ -44,6 +44,17 @@
         <span class="fa fa-anchor"></span>
         <span role="tooltip" data-translate="">Espèces benthiques</span>
       </button>
+
+      <button ng-if="::processes && processes.length > 0" sxt-tool gi-btn class="btn btn-default" ng-model="activeTools.processes"
+        type="submit" rel="#process-panel" gnv-tools-btn>
+        <span class="fa fa-cogs"></span>
+        <span ng-if="::processes.length == 1" role="tooltip">
+          <span data-translate>wpsProcess</span>:
+          {{ processes[0].desc || processes[0].name }}
+        </span>
+        <span ng-if="::processes.length > 1" role="tooltip" data-translate>wpsProcesses</span>
+      </button>
+
     </div>
 
     <div class="panel-tools-container" ng-class="{'sxt-tab-open': active.tool }">
@@ -63,24 +74,27 @@
           <hr class="sxt-layer-separator">
           <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.ncwms.active">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('ncwms')" ng-class="{'active': layerTabs.ncwms.active}">
-              <span class="btn btn-default btn-xs pull-right">&times;</span>
+              <span class="tools-bar-close-btn pull-right">&times;</span>
               <span translate>ncwms</span>
             </button>
           </div>
           <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.wps.active">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('wps')" ng-class="{'active': layerTabs.wps.active}">
-              <span class="btn btn-default btn-xs pull-right">&times;</span>
+              <span class="tools-bar-close-btn pull-right">&times;</span>
               <span translate>process</span>
             </button>
           </div>
           <div class="btn-group sxt-layer-tabs sxt-ncwms-tabs" ng-show="layerTabs.wfsfilter.active">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('wfsfilter')" ng-class="{'active': layerTabs.wfsfilter.active}">
-              <span class="btn btn-default btn-xs pull-right">&times;</span>
+              <span class="tools-bar-close-btn pull-right">&times</span>
               <span translate>filter</span>
             </button>
           </div>
           <button class="btn btn-default btn-xs" sxt-layer-tools-toggle>
             <i class="fa" ng-class="{ 'fa-plus': !active.maximized, 'fa-minus': active.maximized }"></i>
+          </button>
+          <button class="tools-bar-close-btn tools-bar-close-btn-single pull-right" ng-class="{'sxt-hidden': isSeparatedTool()}"
+                  ng-show="isLayerTabActive()" ng-click="closeLayerTab()"><span class="">&times;</span>
           </button>
           <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': isSeparatedTool()}">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
@@ -218,6 +232,10 @@
           <div class="sxt-benthique" sxtb-panel="map">
           </div>
         </div>
+      </div>
+
+      <!--process panel-->
+      <div class="panel panel-default force-hide panel-tools" id="process-panel" sxt-processes-panel>
       </div>
 
     <div class="panel panel-default force-hide panel-tools" id="print" sxt-custom-scroll>

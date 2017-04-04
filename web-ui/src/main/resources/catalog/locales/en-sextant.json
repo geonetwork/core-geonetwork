@@ -57,6 +57,8 @@
   "activeFilter": "Des filtres sont actifs sur cette couche",
   "removeActiveFilter": "Retirer les filtres sur la couche",
   "citationProposition": "Suggestion of Citation",
-  "replaceByThoseOperations": "Update"
-
+  "replaceByThoseOperations": "Update",
+  "wpsAvailableProcesses": "Available Processes",
+  "wpsProcess": "Process",
+  "wpsProcesses": "Processes"
 }

@@ -127,7 +127,9 @@
           var defaults = scope.$eval(attrs['defaults']) ||
               scope.wpsLink.applicationProfile;
 
-          scope.wpsLink.layer.set('wpsfilter-el', element);
+          if (scope.wpsLink.layer) {
+            scope.wpsLink.layer.set('wpsfilter-el', element);
+          }
 
           if (defaults) {
             defaults = parseKvpParams(defaults);
@@ -341,7 +343,8 @@
                       response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
 
-                    if (response.status.processSucceeded) {
+                    if (response.status.processSucceeded
+                      && scope.wpsLink.layer) {
                       gnWpsService.extractWmsLayerFromResponse(
                         response, scope.map, scope.wpsLink.layer, {
                           exclude: /^OUTPUT_/
