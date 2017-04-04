@@ -18,9 +18,9 @@
        * @param scope
        * @param element
        * @param {Object} wpsLink
-       * @param {Object} options can contain: hideExecuteButton (bool)
        * @param {Object} wfsLink optional WFS link for input overload based
        *  on filter values
+       * @param {Object} options can contain: hideExecuteButton (bool)
        */
       this.wpsForm = function(scope, element, wpsLink, wfsLink, options) {
 

@@ -121,7 +121,6 @@
         scope: {
           map: '=',
           wpsLink: '=',
-          hideExecuteButton: '=',
           wfsLink: '='
         },
         templateUrl: function(elem, attrs) {
@@ -150,6 +149,8 @@
             identifier: '',
             mimeType: ''
           };
+
+          scope.hideExecuteButton = attrs.hideExecuteButton;
 
           gnWpsService.describeProcess(uri, processId)
               .then(
