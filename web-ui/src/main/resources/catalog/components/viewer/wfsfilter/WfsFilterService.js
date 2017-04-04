@@ -300,5 +300,28 @@
         }
       };
 
+      /**
+       * takes an ElasticSearch request object as input and ouputs a simplified
+       * object with properties describing names and values of the defined
+       * filters.
+       * note: only qParams are taken into account.
+       *
+       * @param {Object} elasticSearchObject
+       */
+       this.toObjectProperties = function (esObject) {
+         var state = esObject.getState();
+         var result = {};
+
+         angular.forEach(state.qParams, function(fObj, fName) {
+
+           // only the last value found will be kept
+           angular.forEach(fObj.values, function(value, key) {
+             result[fName] = key;
+           });
+         });
+
+         return result;
+       }
+
     }]);
 })();

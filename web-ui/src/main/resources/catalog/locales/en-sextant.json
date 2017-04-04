@@ -60,6 +60,6 @@
   "replaceByThoseOperations": "Update",
   "editWpsForm": "Edit Inputs",
   "wpsIncludedProcesses": "Processes",
-  "wpsSaveForm": "Save and Close"
-
+  "wpsSaveForm": "Save and Close",
+  "inputIsOverloaded": "This value is set in a WFS filter"
 }

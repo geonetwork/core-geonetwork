@@ -32,14 +32,21 @@
             var process = l._element.processes[0];
 
             if (process && process.included) {
-              var paramString = '';
-
+              // params object with existing WPS inputs
+              var params = {};
               for (var i = 0; i < process.processDescription.dataInputs.input.length; i++) {
                 var input = process.processDescription.dataInputs.input[i];
-                var title = input.title.value;
-                paramString += title + '=' + input.value + '&';
+                params[input.identifier.value] = input.value;
               }
 
+              // serializing params
+              var paramString = '';
+              var keys = Object.keys(params);
+              for (var i = 0; i < keys.length; i++) {
+                paramString += keys[i] + '=' + params[keys[i]] + '&';
+              }
+
+              // final additionalInput object
               panierLayer.additionalInput = {
                 protocol: 'WPS',
                 linkage: process.url,

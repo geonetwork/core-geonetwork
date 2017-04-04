@@ -318,6 +318,8 @@
                   var wpsFormRoot = $('.wps-form-modal .sxt-processes-form');
                   wpsFormRoot.empty();
                   sxtOgcLinksService.wpsForm(scope, wpsFormRoot, process,
+                    scope.element.link.protocol == 'OGC:WFS' ?  // send WFS link
+                      scope.element.link : null,
                     { hideExecuteButton: true });
                   scope.currentWPS = process;
                 }

@@ -24,6 +24,8 @@
 (function() {
   goog.provide('gn_wps_directive');
 
+  goog.require('gn_wfsfilter_service');
+
   var module = angular.module('gn_wps_directive', [
   ]);
 
@@ -35,6 +37,11 @@
    * @description
    * The `gnWpsProcessForm` build up a HTML form from the describe process
    * response object (after call the describe process request).
+   * @param {Object} map
+   * @param {Object} wpsLink
+   * @param {boolean} hideExecuteButton if true, the 'execute' button is hidden
+   * @param {Object} wfsLink the WFS link object will be used to overload
+   *  inputs based on active WFS feature filters
    *
    * TODO: Add batch mode using md.privileges.batch
    * and md.privileges.batch.update services.
@@ -45,7 +52,8 @@
     'gnWpsService',
     'gnUrlUtils',
     '$timeout',
-    function(gnWpsService, gnUrlUtils, $timeout) {
+    'wfsFilterService',
+    function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService) {
 
       var inputTypes = {
         string: 'text',
@@ -113,7 +121,8 @@
         scope: {
           map: '=',
           wpsLink: '=',
-          hideExecuteButton: '='
+          hideExecuteButton: '=',
+          wfsLink: '='
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -182,6 +191,13 @@
                           }
                           if (defaultValue != undefined) {
                             value = defaultValue;
+                          }
+
+                          // use overloaded value if applicable
+                          if (scope.inputOverloads &&
+                            scope.inputOverloads[input.identifier.value]) {
+                            value = scope.inputOverloads[input.identifier.value]
+                              .currentValue;
                           }
 
                           // Format conversion
@@ -421,6 +437,89 @@
               }
             }
           });
+
+          // helpers for accessing input values
+          var getInputValue = function (name) {
+            if (!scope.processDescription) { return; }
+
+            var result = null;
+            angular.forEach(scope.processDescription.dataInputs.input,
+              function(input) {
+                if (input.identifier.value == name) {
+                  result = input.value;
+                }
+              });
+            return result;
+          }
+          var setInputValue = function (name, value) {
+            if (!scope.processDescription) { return; }
+
+            angular.forEach(scope.processDescription.dataInputs.input,
+              function(input) {
+                if (input.identifier.value == name) {
+                  input.value = value;
+                }
+              });
+          };
+
+          // handle input overload from WFS link
+          if (scope.wfsLink) {
+            // this is the object holding current filter values
+            scope.esObject = wfsFilterService.getEsObject(scope.wfsLink.url,
+              scope.wfsLink.name);
+
+            // this will hold input overload info
+            // keys are overloaded inputs names, values are objects like so:
+            //  { currentValue: any, oldValue: any }
+            scope.inputOverloads = {};
+
+            // on esObject change (deep check), input overload info is refreshed
+            scope.$watch('esObject', function(newValue, oldValue) {
+              // do nothing if the object is not present
+              if (!newValue) { return; }
+
+              // TEMP: this is supposed to be on the WPS link object!!
+              var appProfile = {
+                DATAINPUTS: {
+                  'produit_id': 'ft_ent_prog_cd_s',
+                  limits: 'filtre_EFG'
+                },
+              };
+
+              // get list of filters
+              var filterValues = wfsFilterService.toObjectProperties(newValue);
+
+              // transform according to app profile
+              var inputValues = {};
+              Object.keys(appProfile.DATAINPUTS).forEach(function (key) {
+                if (filterValues[appProfile.DATAINPUTS[key]]) {
+                  inputValues[key] = filterValues[appProfile.DATAINPUTS[key]];
+                }
+              });
+
+              // loop on these
+              Object.keys(inputValues).forEach(function (name) {
+                // new overload
+                if (!scope.inputOverloads[name]) {
+                  scope.inputOverloads[name] = {
+                    oldValue: getInputValue(name)
+                  }
+                }
+                scope.inputOverloads[name].currentValue = inputValues[name];
+                setInputValue(name, inputValues[name]);
+              });
+
+              // clear non existing overloads
+              Object.keys(scope.inputOverloads).forEach(function (name) {
+                // new overload
+                if (!inputValues[name]) {
+                  setInputValue(name, scope.inputOverloads[name].oldValue);
+                  delete scope.inputOverloads[name];
+                }
+              });
+
+            }, true);
+          }
         }
       };
     }
