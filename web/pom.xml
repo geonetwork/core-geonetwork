@@ -1168,6 +1168,21 @@
         <web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
       </properties>
     </profile>
+    <profile>
+      <id>oguyot_local</id>
+      <activation>
+        <property>
+          <name>env</name>
+          <value>dev</value>
+        </property>
+      </activation>
+      <properties>
+        <env>dev</env>
+        <server>oguyot_local</server>
+        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
+        <geonetwork.webapp.name>geonetwork</geonetwork.webapp.name>
+      </properties>
+    </profile>
 
   </profiles>
 

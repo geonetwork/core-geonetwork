@@ -35,7 +35,6 @@
               console.error('Invalid process:', process);
             }
             processFormContainer.empty();
-            process.layer = process.layer || new ol.layer.Image();   // to avoid errors with wps directive
             sxtOgcLinksService.wpsForm(scope, processFormContainer, process);
           };
 
