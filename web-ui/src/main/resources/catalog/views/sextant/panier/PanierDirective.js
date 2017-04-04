@@ -189,7 +189,11 @@
                   format: scope.formats[0].value,
                   epsg: inputCrs,
                   name: scope.element.link.name
-                }
+                },
+
+                // this ref to the element will not be sent to the extractor
+                // and is only used to add additional inputs to the form object
+                _element: scope.element
               };
 
               if(!scope.isCopyfile) {

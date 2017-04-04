@@ -26,7 +26,7 @@
         scope.wpsLink = wpsLink;
         var el = angular.element('' +
           '<gn-wps-process-form map="map" ' +
-          (options.hideExecuteButton ? 'hide-execute-button="true" ' : '') +
+          (options && options.hideExecuteButton ? 'hide-execute-button="true" ' : '') +
           'data-wps-link="wpsLink">' +
           '</gn-wps-process-form>');
 

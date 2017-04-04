@@ -12,7 +12,42 @@
       var panierUrl = 'extractor.doExtract';
 
       var callExtractService = function(panier) {
+        // this object is temporary and will be sent to the extractor
+        var panierData = {
+          user: panier.user,
+          layers: []
+        };
+
         panier.layers.forEach(function(l) {
+          var panierLayer = {};
+          panierData.layers.push(panierLayer);
+
+          // copying values from original object
+          panierLayer.id = l.id;
+          panierLayer.input = l.input;
+          panierLayer.output = l.output;
+
+          // including WPS processes
+          if (l._element && l._element.processes) {
+            var process = l._element.processes[0];
+
+            if (process && process.included) {
+              var paramString = '';
+
+              for (var i = 0; i < process.processDescription.dataInputs.input.length; i++) {
+                var input = process.processDescription.dataInputs.input[i];
+                var title = input.title.value;
+                paramString += title + '=' + input.value + '&';
+              }
+
+              panierLayer.additionalInput = {
+                protocol: 'WPS',
+                linkage: process.url,
+                params: paramString
+              };
+            }
+          }
+
           var es = wfsFilterService.getEsObject(l.input.linkage, l.output.name);
           if(!es) {
             console.error('ES object is null maybe because spec are different' +
@@ -24,7 +59,7 @@
         return $http({
           url: panierUrl,
           method: 'POST',
-          data: panier,
+          data: panierData,
           headers: {'Content-Type': 'application/json'}
         })
       };
@@ -84,7 +119,6 @@
                   // TODO test synchrone
                   // TODO can we have loop ?
                   p.layer = layer;
-                  // panierItem.wps = p;
                 });
                 panierItem.processes = wps;
               }
