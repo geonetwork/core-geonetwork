@@ -171,8 +171,15 @@
                   var opt;
                   if (layer.name.match(re)) {
                     var lyr = re.exec(layer.name)[1];
-                    opt = {name: lyr};
+
+                    if(layer.server){
+                        var server = layer.server[0];
+                        var res = server.onlineResource[0].href;
+                    }
+                    opt = {name: lyr,
+                            url: res};
                   }
+
                   var olLayer =
                       gnMap.createLayerForType(type, opt, layer.title);
                   if (olLayer) {
