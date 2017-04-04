@@ -133,6 +133,8 @@ public class DefaultMetadataIndexer
 
     @Autowired
     protected SearchManager searchManager;
+    
+    private ServiceContext context;
 
     /**
      * @param context
@@ -153,6 +155,7 @@ public class DefaultMetadataIndexer
         this.inspireAtomFeedRepository = context
                 .getBean(InspireAtomFeedRepository.class);
         this.setSchemaManager(context.getBean(SchemaManager.class));
+        this.context = context;
     }
 
     /**
@@ -635,8 +638,9 @@ public class DefaultMetadataIndexer
     }
 
     protected ServiceContext getServiceContext() {
-        // TODO
-        ServiceContext context = ServiceContext.get();
+        if(context == null) {
+          context = ServiceContext.get();
+        }
         return context;
     }
 
