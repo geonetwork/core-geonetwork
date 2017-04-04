@@ -411,6 +411,9 @@
           searchSettings.excludeChildrenFromSearch =
             sxtSettings.excludeChildrenFromSearch;
         }
+        if(sxtSettings.processes)  {
+          viewerSettings.processes = sxtSettings.processes;
+        }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;
         }
