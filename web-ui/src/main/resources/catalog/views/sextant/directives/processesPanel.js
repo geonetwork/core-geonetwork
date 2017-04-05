@@ -32,7 +32,7 @@
           scope.showWPS = function() {
             var process = scope.selectedProcess;
             if (!process) {
-              console.error('Invalid process:', process);
+              return;
             }
             processFormContainer.empty();
             sxtOgcLinksService.wpsForm(scope, processFormContainer, process);
