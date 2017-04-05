@@ -60,55 +60,6 @@
         float: 'number'
       };
 
-      // var parseKvpParams = function(str) {
-      //   var escaper = function(match, p1) {
-      //     return '=' + gnUrlUtils.encodeUriQuery(p1, true);
-      //   };
-      //   str = str.replace(/=\[([^&]*)\]/gi, escaper);
-      //
-      //   var queryParams = gnUrlUtils.parseKeyValue(str);
-      //   var defaults = {};
-      //   for (var prop in queryParams) {
-      //     if (queryParams.hasOwnProperty(prop)) {
-      //       defaults[prop.toLowerCase()] = queryParams[prop];
-      //     }
-      //   }
-      //
-      //   var parseDataInputs = function(value) {
-      //     var datainputs = {};
-      //
-      //     if (value === undefined) {
-      //       return datainputs;
-      //     }
-      //
-      //     value.split(';').map(function(str) {
-      //       var list = str.split('@');
-      //
-      //       var input = list[0].split('=');
-      //       var identifier = input[0];
-      //       var value = input[1];
-      //       list = list.slice(1);
-      //
-      //       var attributes = {};
-      //       list.map(function(attribute) {
-      //         keyValue = attribute.split('=');
-      //         attributes[keyValue[0].toLowerCase()] = keyValue[1];
-      //       });
-      //
-      //       datainputs[identifier] = {
-      //         value: value,
-      //         attributes: attributes
-      //       };
-      //     });
-      //     return datainputs;
-      //   };
-      //
-      //   defaults.datainputs = parseDataInputs(defaults.datainputs);
-      //   defaults.responsedocument = parseDataInputs(defaults.responsedocument);
-      //
-      //   return defaults;
-      // };
-
       var toBool = function(str, defaultVal) {
         if (str === undefined) {
           return defaultVal;
@@ -442,10 +393,10 @@
 
           // helpers for accessing input values
           var getInputValue = function (name) {
-            if (!scope.processDescription) { return; }
+            if (!scope.wpsLink.processDescription) { return; }
 
             var result = null;
-            angular.forEach(scope.processDescription.dataInputs.input,
+            angular.forEach(scope.wpsLink.processDescription.dataInputs.input,
               function(input) {
                 if (input.identifier.value == name) {
                   result = input.value;
@@ -454,9 +405,9 @@
             return result;
           }
           var setInputValue = function (name, value) {
-            if (!scope.processDescription) { return; }
+            if (!scope.wpsLink.processDescription) { return; }
 
-            angular.forEach(scope.processDescription.dataInputs.input,
+            angular.forEach(scope.wpsLink.processDescription.dataInputs.input,
               function(input) {
                 if (input.identifier.value == name) {
                   input.value = value;
@@ -467,7 +418,7 @@
           // handle input overload from WFS link
           if (scope.wfsLink) {
             // this is the object holding current filter values
-            scope.esObject = wfsFilterService.getEsObject(scope.wfsLink.url,
+            var esObject = wfsFilterService.getEsObject(scope.wfsLink.url,
               scope.wfsLink.name);
 
             // this will hold input overload info
@@ -475,16 +426,13 @@
             //  { currentValue: any, oldValue: any }
             scope.inputOverloads = {};
 
-            // on esObject change (deep check), input overload info is refreshed
-            scope.$watch('esObject', function(newValue, oldValue) {
-              // do nothing if the object is not present
-              if (!newValue) { return; }
-
+            // use filter values in ElasticSearch object state to overload input
+            if (esObject) {
               var wfsFilterLinks = applicationProfile ?
                 applicationProfile.wfsFilterLinks : {};
 
               // get list of filters
-              var filterValues = wfsFilterService.toObjectProperties(newValue);
+              var filterValues = wfsFilterService.toObjectProperties(esObject);
 
               // transform according to app profile
               var inputValues = {};
@@ -527,8 +475,7 @@
                   delete scope.inputOverloads[name];
                 }
               });
-
-            }, true);
+            }
           }
         }
       };
