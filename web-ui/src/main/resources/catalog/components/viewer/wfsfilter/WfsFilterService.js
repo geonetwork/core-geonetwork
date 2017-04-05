@@ -312,13 +312,23 @@
          var state = esObject.getState();
          var result = {};
 
-         angular.forEach(state.qParams, function(fObj, fName) {
-
-           // only the last value found will be kept
-           angular.forEach(fObj.values, function(value, key) {
-             result[fName] = key;
+         if (state) {
+           // add query params (qParams)
+           angular.forEach(state.qParams, function(fObj, fName) {
+             // only the last value found will be kept
+             angular.forEach(fObj.values, function(value, key) {
+               result[fName] = key;
+             });
            });
-         });
+
+           // add geometry
+           if (state.geometry) {
+             result.geometry = state.geometry[0][0] + ',' +
+             state.geometry[1][1] + ',' +
+             state.geometry[0][1] + ',' +
+             state.geometry[1][0];
+           }
+         }
 
          return result;
        }

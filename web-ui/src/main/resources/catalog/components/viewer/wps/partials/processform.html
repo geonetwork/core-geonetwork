@@ -70,12 +70,14 @@
                   data-crs="input._default.crs"
                   data-value="input.value"
                   data-map="map"
+                  ng-disabled="inputOverloads[input.identifier.value]"
                   data-required="true">
                 </gn-bbox-input>
                 <gn-bbox-input ng-if="!input.minOccurs" id="{{::input.identifier.value}}"
                     data-crs="input._default.crs"
                     data-value="input.value"
                     data-map="map"
+                    ng-disabled="inputOverloads[input.identifier.value]"
                     data-required="false">
                 </gn-bbox-input>
               </div>

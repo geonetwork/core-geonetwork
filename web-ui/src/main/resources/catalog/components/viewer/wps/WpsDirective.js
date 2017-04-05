@@ -37,10 +37,10 @@
    * @description
    * The `gnWpsProcessForm` build up a HTML form from the describe process
    * response object (after call the describe process request).
-   * @param {Object} map
-   * @param {Object} wpsLink
-   * @param {boolean} hideExecuteButton if true, the 'execute' button is hidden
-   * @param {Object} wfsLink the WFS link object will be used to overload
+   * @directiveInfo {Object} map
+   * @directiveInfo {Object} wpsLink
+   * @directiveInfo {boolean} hideExecuteButton if true, the 'execute' button is hidden
+   * @directiveInfo {Object} wfsLink the WFS link object will be used to overload
    *  inputs based on active WFS feature filters
    *
    * TODO: Add batch mode using md.privileges.batch
@@ -60,54 +60,54 @@
         float: 'number'
       };
 
-      var parseKvpParams = function(str) {
-        var escaper = function(match, p1) {
-          return '=' + gnUrlUtils.encodeUriQuery(p1, true);
-        };
-        str = str.replace(/=\[([^&]*)\]/gi, escaper);
-
-        var queryParams = gnUrlUtils.parseKeyValue(str);
-        var defaults = {};
-        for (var prop in queryParams) {
-          if (queryParams.hasOwnProperty(prop)) {
-            defaults[prop.toLowerCase()] = queryParams[prop];
-          }
-        }
-
-        var parseDataInputs = function(value) {
-          var datainputs = {};
-
-          if (value === undefined) {
-            return datainputs;
-          }
-
-          value.split(';').map(function(str) {
-            var list = str.split('@');
-
-            var input = list[0].split('=');
-            var identifier = input[0];
-            var value = input[1];
-            list = list.slice(1);
-
-            var attributes = {};
-            list.map(function(attribute) {
-              keyValue = attribute.split('=');
-              attributes[keyValue[0].toLowerCase()] = keyValue[1];
-            });
-
-            datainputs[identifier] = {
-              value: value,
-              attributes: attributes
-            };
-          });
-          return datainputs;
-        };
-
-        defaults.datainputs = parseDataInputs(defaults.datainputs);
-        defaults.responsedocument = parseDataInputs(defaults.responsedocument);
-
-        return defaults;
-      };
+      // var parseKvpParams = function(str) {
+      //   var escaper = function(match, p1) {
+      //     return '=' + gnUrlUtils.encodeUriQuery(p1, true);
+      //   };
+      //   str = str.replace(/=\[([^&]*)\]/gi, escaper);
+      //
+      //   var queryParams = gnUrlUtils.parseKeyValue(str);
+      //   var defaults = {};
+      //   for (var prop in queryParams) {
+      //     if (queryParams.hasOwnProperty(prop)) {
+      //       defaults[prop.toLowerCase()] = queryParams[prop];
+      //     }
+      //   }
+      //
+      //   var parseDataInputs = function(value) {
+      //     var datainputs = {};
+      //
+      //     if (value === undefined) {
+      //       return datainputs;
+      //     }
+      //
+      //     value.split(';').map(function(str) {
+      //       var list = str.split('@');
+      //
+      //       var input = list[0].split('=');
+      //       var identifier = input[0];
+      //       var value = input[1];
+      //       list = list.slice(1);
+      //
+      //       var attributes = {};
+      //       list.map(function(attribute) {
+      //         keyValue = attribute.split('=');
+      //         attributes[keyValue[0].toLowerCase()] = keyValue[1];
+      //       });
+      //
+      //       datainputs[identifier] = {
+      //         value: value,
+      //         attributes: attributes
+      //       };
+      //     });
+      //     return datainputs;
+      //   };
+      //
+      //   defaults.datainputs = parseDataInputs(defaults.datainputs);
+      //   defaults.responsedocument = parseDataInputs(defaults.responsedocument);
+      //
+      //   return defaults;
+      // };
 
       var toBool = function(str, defaultVal) {
         if (str === undefined) {
@@ -129,17 +129,19 @@
         },
 
         link: function(scope, element, attrs) {
-          var defaults;
-
           var processId = attrs['processId'] || scope.wpsLink.name;
           var uri = attrs['uri'] || scope.wpsLink.url;
-          var defaults = scope.$eval(attrs['defaults']) ||
-              scope.wpsLink.applicationProfile;
 
           scope.wpsLink.layer.set('wpsfilter-el', element);
 
-          if (defaults) {
-            defaults = parseKvpParams(defaults);
+          // parse application profile as JSON
+          var applicationProfile = scope.wpsLink.applicationProfile ?
+            JSON.parse(scope.wpsLink.applicationProfile) : null;
+
+          // getting defaults
+          var defaults = scope.$eval(attrs['defaults']);
+          if (!defaults && applicationProfile) {
+            defaults = applicationProfile.defaults;
           }
 
           scope.describeState = 'sended';
@@ -172,12 +174,15 @@
                         var value;
                         var defaultValue;
 
-                        if (defaults) {
-                          var datainput =
-                              defaults.datainputs[input.identifier.value];
-                          if (datainput != undefined) {
-                            defaultValue = datainput.value;
-                          }
+                        if (defaults && defaults[input.identifier.value]) {
+                          defaultValue = defaults[input.identifier.value];
+                        }
+
+                        // use overloaded value if applicable
+                        if (scope.inputOverloads &&
+                          scope.inputOverloads[input.identifier.value]) {
+                          defaultValue = scope.inputOverloads[input.identifier.value]
+                            .currentValue;
                         }
 
                         if (input.literalData != undefined) {
@@ -192,13 +197,6 @@
                           }
                           if (defaultValue != undefined) {
                             value = defaultValue;
-                          }
-
-                          // use overloaded value if applicable
-                          if (scope.inputOverloads &&
-                            scope.inputOverloads[input.identifier.value]) {
-                            value = scope.inputOverloads[input.identifier.value]
-                              .currentValue;
                           }
 
                           // Format conversion
@@ -217,32 +215,35 @@
                             input.value = defaultValue.split(',')
                               .slice(0, 4).join(',');
                           }
+
                         }
                       }
                   );
 
                   angular.forEach(
-                      scope.processDescription.processOutputs.output,
-                      function(output, idx) {
-                        output.asReference = true;
+                    scope.processDescription.processOutputs.output,
+                    function(output, idx) {
+                      output.asReference = true;
 
-                        var outputDefault = defaults &&
-                            defaults.responsedocument[output.identifier.value];
-                        if (outputDefault) {
-                          output.value = true;
-                          var defaultAsReference =
-                            outputDefault.attributes['asreference'];
-                          if (defaultAsReference !== undefined) {
-                            output.asReference = toBool(defaultAsReference);
-                          }
-                          scope.selectedOutput.identifier =
-                              output.identifier.value;
+                      // untested code
+                      var outputDefault = defaults &&
+                        defaults.responsedocument &&
+                        defaults.responsedocument[output.identifier.value];
+                      if (outputDefault) {
+                        output.value = true;
+                        var defaultAsReference =
+                          outputDefault.attributes['asreference'];
+                        if (defaultAsReference !== undefined) {
+                          output.asReference = toBool(defaultAsReference);
                         }
-                        else if (idx == 0) {
-                          scope.selectedOutput.identifier =
-                              output.identifier.value;
-                        }
+                        scope.selectedOutput.identifier =
+                            output.identifier.value;
                       }
+                      else if (idx == 0) {
+                        scope.selectedOutput.identifier =
+                            output.identifier.value;
+                      }
+                    }
                   );
                   var output = scope.processDescription.processOutputs.output;
                   if (output.length == 1) {
@@ -479,22 +480,30 @@
               // do nothing if the object is not present
               if (!newValue) { return; }
 
-              // TEMP: this is supposed to be on the WPS link object!!
-              var appProfile = {
-                DATAINPUTS: {
-                  'produit_id': 'ft_ent_prog_cd_s',
-                  limits: 'filtre_EFG'
-                },
-              };
+              var wfsFilterLinks = applicationProfile ?
+                applicationProfile.wfsFilterLinks : {};
 
               // get list of filters
               var filterValues = wfsFilterService.toObjectProperties(newValue);
 
               // transform according to app profile
               var inputValues = {};
-              Object.keys(appProfile.DATAINPUTS).forEach(function (key) {
-                if (filterValues[appProfile.DATAINPUTS[key]]) {
-                  inputValues[key] = filterValues[appProfile.DATAINPUTS[key]];
+              Object.keys(wfsFilterLinks).forEach(function (key) {
+
+                // prefix & suffix are added to the raw filter key
+                var filterKey = wfsFilterLinks[key];
+                var stringFilterKey = 'ft_' + wfsFilterLinks[key] + '_s';
+                var dateFilterKey = 'ft_' + wfsFilterLinks[key] + '_dt';
+
+                // testing each case
+                if (filterValues[filterKey]) {
+                  inputValues[key] = filterValues[filterKey];
+                }
+                else if (filterValues[stringFilterKey]) {
+                  inputValues[key] = filterValues[stringFilterKey];
+                }
+                else if (filterValues[dateFilterKey]) {
+                  inputValues[key] = filterValues[dateFilterKey];
                 }
               });
 
