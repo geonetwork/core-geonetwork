@@ -127,7 +127,7 @@
                 id: 'geonames'
               });
             }
-            scope.regionType = data[0];
+            scope.regionType = scope.regionTypes[0];
           });
 
           scope.setRegion = function(regionType) {
