@@ -12,7 +12,50 @@
       var panierUrl = 'extractor.doExtract';
 
       var callExtractService = function(panier) {
+        // this object is temporary and will be sent to the extractor
+        var panierData = {
+          user: panier.user,
+          layers: []
+        };
+
         panier.layers.forEach(function(l) {
+          var panierLayer = {};
+          panierData.layers.push(panierLayer);
+
+          // copying values from original object
+          panierLayer.id = l.id;
+          panierLayer.input = l.input;
+          panierLayer.output = l.output;
+          panierLayer.additionalInput = [];
+
+          // include selected WPS processes as additionalInputs
+          if (l._element && l._element.processes) {
+            l._element.processes.forEach(function (process, index) {
+              if (process && process.included) {
+                // params object with existing WPS inputs
+                var params = {};
+                for (var i = 0; i < process.processDescription.dataInputs.input.length; i++) {
+                  var input = process.processDescription.dataInputs.input[i];
+                  params[input.identifier.value] = input.value;
+                }
+
+                // serializing params
+                var paramString = '';
+                var keys = Object.keys(params);
+                for (var i = 0; i < keys.length; i++) {
+                  paramString += keys[i] + '=' + params[keys[i]] + '&';
+                }
+
+                // final additionalInput object
+                panierLayer.additionalInput.push({
+                  protocol: 'WPS',
+                  linkage: process.url,
+                  params: paramString
+                });
+              }
+            });
+          }
+
           var es = wfsFilterService.getEsObject(l.input.linkage, l.output.name);
           if(!es) {
             console.error('ES object is null maybe because spec are different' +
@@ -24,7 +67,7 @@
         return $http({
           url: panierUrl,
           method: 'POST',
-          data: panier,
+          data: panierData,
           headers: {'Content-Type': 'application/json'}
         })
       };
@@ -84,8 +127,8 @@
                   // TODO test synchrone
                   // TODO can we have loop ?
                   p.layer = layer;
-                  panierItem.wps = p;
                 });
+                panierItem.processes = wps;
               }
               else {
                 panierItem.filter = null;

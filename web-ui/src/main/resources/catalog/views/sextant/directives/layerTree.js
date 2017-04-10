@@ -23,13 +23,13 @@
           var $this = this;
           this.user = $scope.user;
 
-          this.setWPS = function(wpsLink, layer) {
+          this.setWPS = function(wpsLink, layer, wfsLink) {
             $scope.loadTool('wps', layer);
 
             wpsLink.layer = layer;
             var el = $('.sxt-wps-panel');
             el.empty();
-            sxtOgcLinksService.wpsForm($scope.$new(), el, wpsLink)
+            sxtOgcLinksService.wpsForm($scope.$new(), el, wpsLink, wfsLink)
           };
 
           /**
@@ -380,7 +380,7 @@
           };
 
           scope.showWPS = function(process) {
-            controller.setWPS(process, scope.member);
+            controller.setWPS(process, scope.member, wfsLink);
             $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
               $(button).popover('hide');
             });

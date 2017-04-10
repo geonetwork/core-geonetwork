@@ -44,6 +44,21 @@
       <span class="btn fa fa-trash" ng-click="removeFilters()" title="{{'removeActiveFilter' | translate}}"></span>
     </div>
 
+    <div class="form-group sxt-processes-list" ng-show="element.processes && element.processes.length > 0">
+      <label for="processesPF" class="control-label" translate>wpsIncludedProcesses</label>&nbsp;:&nbsp;
+      <div ng-repeat="p in element.processes" class="sxt-process">
+        <label>
+          <input type="checkbox" ng-model="p.included" />
+          <!-- <i class="fa sxt-layer-visibility" ng-class="p.included ? 'fa-check-square' : 'fa-square'" title="{{ wpsIncluded }}"></i> -->
+          <span class="wps-label">{{ p.desc || p.name }}</span>
+        </label>
+        <button type="button" data-ng-disabled="!p.included" class="btn btn-default" ng-click="editWPSForm(p)">
+          <i class="fa fa-cogs"></i>&nbsp;
+          <span translate="" class="ng-scope">{{ 'editWpsForm' | translate }}</span>
+        </button>
+      </div>
+    </div>
+
   </div>
 
 

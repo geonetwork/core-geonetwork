@@ -57,6 +57,9 @@
   "activeFilter": "Des filtres sont actifs sur cette couche",
   "removeActiveFilter": "Retirer les filtres sur la couche",
   "citationProposition": "Suggestion of Citation",
-  "replaceByThoseOperations": "Update"
-
+  "replaceByThoseOperations": "Update",
+  "editWpsForm": "Edit Inputs",
+  "wpsIncludedProcesses": "Processes",
+  "wpsSaveForm": "Save and Close",
+  "inputIsOverloaded": "This value is set in a WFS filter"
 }
