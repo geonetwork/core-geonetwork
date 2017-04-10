@@ -59,5 +59,9 @@
   "replaceByThoseOperations": "Mettre à jour",
   "wpsAvailableProcesses": "Traitements disponibles",
   "wpsProcess": "Traitement",
-  "wpsProcesses": "Traitements"
+  "wpsProcesses": "Traitements",
+  "editWpsForm": "Paramètres du traitement",
+  "wpsIncludedProcesses": "Traitements",
+  "wpsSaveForm": "Sauvegarder et fermer",
+  "inputIsOverloaded": "Cette valeur provient d'un filtre WFS"
 }

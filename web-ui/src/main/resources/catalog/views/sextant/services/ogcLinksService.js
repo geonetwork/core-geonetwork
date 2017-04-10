@@ -18,14 +18,21 @@
        * @param scope
        * @param element
        * @param {Object} wpsLink
+       * @param {Object} wfsLink optional WFS link for input overload based
+       *  on filter values
+       * @param {Object} options can contain: hideExecuteButton (bool)
        */
-      this.wpsForm = function(scope, element, wpsLink) {
+      this.wpsForm = function(scope, element, wpsLink, wfsLink, options) {
 
         scope.wpsLink = wpsLink;
+        if (wfsLink) { scope.wfsLink = wfsLink; }
+
         var el = angular.element('' +
           '<gn-wps-process-form map="map" ' +
-          'data-wps-link="wpsLink">' +
-          '</gn-wps-process-form>');
+          'data-wps-link="wpsLink" ' +
+          (options && options.hideExecuteButton ? 'hide-execute-button="true" ' : '') +
+          (wfsLink ? 'data-wfs-link="wfsLink" ' : '') +
+          '/>');
 
         $compile(el)(scope);
         element.append(el);

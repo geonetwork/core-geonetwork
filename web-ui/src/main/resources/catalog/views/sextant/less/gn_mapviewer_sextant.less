@@ -897,62 +897,6 @@
 
   }
 
-  .sxt-wps-panel, .sxt-processes-form {
-    .panel {
-      border: none;
-    }
-    .panel-heading {
-      height: 2em;
-      line-height: 2em;
-      border-bottom: 1px solid @sxt-base-color;
-      > button {
-        display: none;
-      }
-    }
-    .panel-body {
-      font-size: @sxt-fontsize;
-    }
-    .gn-outputs {
-      position: relative;
-    }
-    .gn-single-output {
-      position: absolute;
-      right: 0;
-      top: -4em;
-    }
-    label {
-      font-weight: normal;
-      text-transform: uppercase;
-    }
-    .dropdown-menu {
-      label {
-        text-transform: none;
-      }
-      input[type=radio] {
-        margin: 0;
-        vertical-align: middle;
-      }
-      ul {
-        padding: .5em 1em;
-      }
-      .form-group, ul {
-        margin-bottom: 0;
-      }
-    }
-    button[type="submit"] {
-      padding: 0 1em;
-      width: auto;
-      border-radius: 2px 0 0 2px;
-    }
-    button ~ button {
-      margin-left: -2px;
-      border-radius: 0 2px 2px 0;
-    }
-
-    .form-group.optional {
-      display: none;
-    }
-  }
   .gn-draw-styleform {
     .gn-draw-text-stroke {
       display: none;
@@ -966,6 +910,71 @@
     }
   }
 }
+
+[sxt-main-viewer] .sxt-wps-panel, .sxt-processes-form {
+  .panel {
+    border: none;
+  }
+  .panel-heading {
+    height: 2em;
+    line-height: 2em;
+    border-bottom: 1px solid @sxt-base-color;
+    padding: 0 15px;
+    > button {
+      display: none;
+    }
+  }
+  .panel-body {
+    font-size: @sxt-fontsize;
+  }
+  .gn-outputs {
+    position: relative;
+  }
+  .gn-single-output {
+    position: absolute;
+    right: 0;
+    top: -4em;
+  }
+  label {
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+  .dropdown-menu {
+    label {
+      text-transform: none;
+    }
+    input[type=radio] {
+      margin: 0;
+      vertical-align: middle;
+    }
+    ul {
+      padding: .5em 1em;
+    }
+    .form-group, ul {
+      margin-bottom: 0;
+    }
+  }
+  button[type="submit"] {
+    padding: 0 1em;
+    width: auto;
+    border-radius: 2px 0 0 2px;
+  }
+  button ~ button {
+    margin-left: -2px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .form-group.optional {
+    display: none;
+  }
+
+  .overload-warning {
+    opacity: 0.6;
+    font-style: italic;
+    text-transform: none;
+  }
+}
+
 .sxt-layertree-filter {
   position: relative;
   &:before {
