@@ -247,19 +247,34 @@
       this.toCQL = function(esObj) {
 
         var state = esObj.getState();
+        var where;
 
         if(!state.any) {
-          var where = [];
+          where = [];
           angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObj.getIdxNameObj_(fName);
+            console.log(config);
             var clause = [];
-            angular.forEach(fObj.values, function(v, k) {
-              clause.push(fName + '=' + k);
+            var values = fObj.values;
+            if (config.isDate) {
+              where.concat([
+                '(' + fName + '>' + values.from +')',
+                '(' + fName + '<' + values.to +')'
+              ]);
+              return;
+            }
+            angular.forEach(values, function(v, k) {
+              clause.push(
+                (config.isTokenize) ?
+                '(' + fName + " LIKE '%" + k +"%')" :
+                '(' + fName + '=' + k + ')'
+              );
             });
+            if (clause.length == 0) return;
             where.push('(' + clause.join(' OR ') + ')');
           });
-          return(where.join(' AND '));
-        }
-        else {
+          return where.join(' AND ');
+        } else {
           esObj.search_es({
             size: scope.count || 10000,
             aggs: {}
@@ -267,7 +282,7 @@
             var where = data.hits.hits.map(function(res) {
               return res._id;
             });
-            return(where.join(' OR '));
+            return where.join(' OR ');
           });
         }
       };
