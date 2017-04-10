@@ -34,9 +34,12 @@
               if (process && process.included) {
                 // params object with existing WPS inputs
                 var params = {};
-                for (var i = 0; i < process.processDescription.dataInputs.input.length; i++) {
-                  var input = process.processDescription.dataInputs.input[i];
-                  params[input.identifier.value] = input.value;
+                if (process.processDescription) {
+                  var inputs = process.processDescription.dataInputs.input;
+                  for (var i = 0; i < inputs.length; i++) {
+                    var input = inputs[i];
+                    params[input.identifier.value] = input.value;
+                  }
                 }
 
                 // serializing params
