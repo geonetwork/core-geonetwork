@@ -204,8 +204,10 @@
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // Remap some old settings with new one
         angular.extend(this.gnCfg, config || {});
-        this.gnUrl = gnUrl || '../';
-        this.proxyUrl = this.gnUrl + '../proxy?url=';
+        if(gnUrl) {
+          this.gnUrl = gnUrl + this.iso3lang + '/';
+        }
+        this.proxyUrl = this.gnUrl + '../../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
@@ -215,7 +217,7 @@
         gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
       },
       getDefaultConfig: function() {
-        return angulaWr.copy(defaultConfig);
+        return angular.copy(defaultConfig);
       }
     };
   }());
@@ -362,7 +364,7 @@
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
       $scope.proxyUrl = gnGlobalSettings.proxyUrl;
-      $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
+      $scope.logoPath = gnGlobalSettings.gnUrl + '../../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
 

@@ -54,15 +54,15 @@
               // are not targeting the catalog
               // add proxy if needed
               if (config.url.indexOf('http', 0) === 0 &&
-                  config.url.indexOf(gnGlobalSettings.gnUrl) !== 0) {
+                (gnGlobalSettings.gnUrl == ''|| config.url.indexOf(gnGlobalSettings.gnUrl) !== 0)) {
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
-                if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
+                //if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
                   // require proxy
                   config.url = gnGlobalSettings.proxyUrl +
                       encodeURIComponent(config.url);
-                }
+                //}
               } else if (gnGlobalSettings.gnUrl &&
                 config.url.indexOf('http://') < 0 &&
                 config.url.indexOf('https://') < 0 &&
@@ -83,10 +83,7 @@
                   config.params = angular.extend({}, config.params, param);
                 }
 
-                config.url = gnGlobalSettings.gnUrl +
-                             (gnLangs.current || 'eng') + '/' +
-                             config.url;
-                 // console.log(config.url);
+                config.url = gnGlobalSettings.gnUrl + config.url;
               }
 
               return $q.when(config);

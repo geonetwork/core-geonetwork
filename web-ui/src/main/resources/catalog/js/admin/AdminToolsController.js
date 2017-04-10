@@ -245,7 +245,7 @@
 
       function loadProcessConfig() {
         $http.get(gnGlobalSettings.gnUrl +
-            '../catalog/config/batch-process-cfg.json')
+            '../../catalog/config/batch-process-cfg.json')
             .success(function(data) {
               $scope.batchProcesses = data.config;
 

@@ -32,8 +32,7 @@
     var printRectangle;
     var deregister;
 
-    var printConfigUrlPrefix = (gnGlobalSettings.gnUrl) ?
-        gnGlobalSettings.gnUrl : '';
+    var printConfigUrlPrefix = gnGlobalSettings.gnUrl;
 
     if (printConfigUrlPrefix.indexOf('//') === 0) {
       printConfigUrlPrefix = location.protocol + printConfigUrlPrefix;

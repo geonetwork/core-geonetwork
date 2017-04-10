@@ -33,6 +33,7 @@
 
   var module = angular.module('gn_login', [
     'gn',
+    'ngSanitize',
     'gn_login_controller',
     'gn_cat_controller'
   ]);
