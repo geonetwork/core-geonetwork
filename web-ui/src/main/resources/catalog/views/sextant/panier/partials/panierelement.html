@@ -26,22 +26,24 @@
       </select>
     </div>
 
-    <div class="sxt-wfs-active pull-right" ng-if="element.filter.params || element.filter.any">
-      <span class="btn-group">
-          <span type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span translate="">activeFilter</span>&nbsp;
-            <span class="caret"></span>
-          </span>
-          <ul class="dropdown-menu">
-            <li ng-repeat="filter in element.filter.params">
-              {{filter.name}}&nbsp;=&nbsp;{{filter.value}}
-            </li>
-            <li ng-if="element.filter.any">
-              <span translate>fullTextSearch</span>&nbsp;{{element.filter.any}}
-            </li>
-          </ul>
-        </span>
-      <span class="btn fa fa-trash" ng-click="removeFilters()" title="{{'removeActiveFilter' | translate}}"></span>
+    <div class="form-group sxt-active-filters dropdown" ng-if="element.filter.params || element.filter.any">
+      <label>
+        <input type="checkbox" ng-model="form.useFilters" />
+        <span translate>activeFilters</span>
+      </label>
+      <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+        class="btn btn-default dropdown-toggle">
+        <span translate class="ng-scope">activeFiltersDetails</span>
+        <i class="fa fa-caret-down"></i>&nbsp;
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <li ng-repeat="filter in element.filter.params">
+          <a>{{filter.name}}&nbsp;=&nbsp;{{filter.value}}</a>
+        </li>
+        <li ng-if="element.filter.any">
+          <a><span translate>fullTextSearch</span>&nbsp;{{element.filter.any}}</a>
+        </li>
+      </ul>
     </div>
 
     <div class="form-group sxt-processes-list" ng-show="element.processes && element.processes.length > 0">

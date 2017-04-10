@@ -34,9 +34,12 @@
               if (process && process.included) {
                 // params object with existing WPS inputs
                 var params = {};
-                for (var i = 0; i < process.processDescription.dataInputs.input.length; i++) {
-                  var input = process.processDescription.dataInputs.input[i];
-                  params[input.identifier.value] = input.value;
+                if (process.processDescription) {
+                  var inputs = process.processDescription.dataInputs.input;
+                  for (var i = 0; i < inputs.length; i++) {
+                    var input = inputs[i];
+                    params[input.identifier.value] = input.value;
+                  }
                 }
 
                 // serializing params
@@ -56,13 +59,11 @@
             });
           }
 
+          // fetch ElasticSearch; if not available, no filters are set
           var es = wfsFilterService.getEsObject(l.input.linkage, l.output.name);
-          if(!es) {
-            console.error('ES object is null maybe because spec are different' +
-              'between download and wfsfilter');
-            return;
+          if(es && l.useFilters) {
+            panierLayer.input.filter = wfsFilterService.toCQL(es);
           }
-          l.input.filter = wfsFilterService.toCQL(es);
         });
         return $http({
           url: panierUrl,

@@ -1250,7 +1250,7 @@ ul.gn-resultview {
   }
   .form-group {
     font-size: 14px;
-    padding-top: .5em;
+    margin-top: .5em;
     label {
       font-weight: 400;
       height: 30px;
@@ -1302,13 +1302,33 @@ ul.gn-resultview {
     }
   }
 
-  .sxt-processes-list .sxt-process {
+  .panier-element .sxt-processes-list .sxt-process {
     margin-bottom: 6px;
+    display: flex;
+    flex-direction: row;
 
     label {
-      min-width: 240px;
+      flex-grow: 1;
 
-      & > span { margin-left: 8px; }
+      & > span { margin-left: 4px; }
+    }
+  }
+
+  .panier-element .sxt-active-filters {
+    background: #dcffd7;
+    padding: 6px;
+    border-radius: 3px;
+    margin-left: 14px;
+    margin-bottom: -2px;
+    margin-right: -6px;
+    margin-top: calc(~".5em - 2px");
+    display: flex;
+    flex-direction: row;
+
+    label {
+      flex-grow: 1;
+
+      & > span { margin-left: 4px; }
     }
   }
 }
@@ -1464,26 +1484,4 @@ ul.invalid {
     background-color: transparent;
     box-shadow: none;
   }
-}
-
-.sxt-wfs-active {
-  margin-top: 15px;
-  color: green;
-  .btn:hover {
-    color: darkgreen !important;
-  }
-  .btn-group {
-    border-radius: 8px;
-    border: 2px green solid;
-    &.open .dropdown-toggle {
-      box-shadow: none;
-    }
-  }
-
-  &.pull-right .dropdown-menu {
-    left: 0;
-    padding-left: 20px;
-    color: inherit;
-  }
-
 }

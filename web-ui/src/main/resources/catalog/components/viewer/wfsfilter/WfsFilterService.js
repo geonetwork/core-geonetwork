@@ -156,6 +156,7 @@
 
         var toRemoveIdx = [], mergedF = [];
         var newFields = appProfile.fields;
+        var tokenizedFields = appProfile.tokenizedFields || [];
 
         // Merge field objects and detect if we need to remove some
         fields.forEach(function(field, idx) {
@@ -169,6 +170,9 @@
               }
               field.aggs = newFields[i].aggs;
               field.display = newFields[i].display;
+
+              // add a flag for tokenized fields
+              field.isTokenized = tokenizedFields[field.name] != null;
               break;
             }
           }
@@ -265,7 +269,7 @@
             }
             angular.forEach(values, function(v, k) {
               clause.push(
-                (config.isTokenize) ?
+                (config.isTokenized) ?
                 '(' + fName + " LIKE '%" + k +"%')" :
                 '(' + fName + '=' + k + ')'
               );
