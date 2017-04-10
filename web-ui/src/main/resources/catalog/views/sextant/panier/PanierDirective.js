@@ -257,6 +257,8 @@
                 scope.form.output.format= '';
               }
 
+              // by default, include WFS filters if there are any
+              scope.form.useFilters = true;
             },
             post: function preLink(scope, iElement, iAttrs, controller) {
 
