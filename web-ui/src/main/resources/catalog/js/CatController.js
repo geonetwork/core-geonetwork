@@ -569,8 +569,8 @@
             var casLoginFrame = document.createElement('iframe');
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
-            casLoginFrame.setAttribute('src', (gnGlobalSettings.gnUrl ?
-                gnGlobalSettings.gnUrl : '') + 'info?casLogin');
+            casLoginFrame.setAttribute('src', gnGlobalSettings.gnUrl +
+              'info?casLogin');
             casLoginFrame.setAttribute('style', 'display:none');
             document.body.appendChild(casLoginFrame);
 

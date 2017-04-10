@@ -95,9 +95,6 @@
 
       gnViewerSettings.storage = 'sessionStorage';
 
-
-      $scope.gnUrl = gnGlobalSettings.gnUrl || '';
-
       if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {
           if(gnSearchLocation.isMdView()) {
