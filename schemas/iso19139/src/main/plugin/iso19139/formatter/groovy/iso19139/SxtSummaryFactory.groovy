@@ -3,6 +3,7 @@ package iso19139
 import org.fao.geonet.api.records.formatters.FormatType
 import org.fao.geonet.api.records.formatters.groovy.Environment
 import org.fao.geonet.api.records.formatters.groovy.util.*
+import org.fao.geonet.domain.ISODate
 import java.text.SimpleDateFormat
 
 /**
@@ -163,10 +164,20 @@ class SxtSummaryFactory {
 
         def year = '';
         if(dateElts.size() > 0) {
-          SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-          Date date = format.parse(dateElts[0].'gmd:date'.'gco:Date'.text());
-          SimpleDateFormat df = new SimpleDateFormat("yyyy");
-          year = df.format(date);
+          def sDate = dateElts[0].'gmd:date'.'gco:Date'.text();
+          if(sDate == null || sDate == "") {
+            sDate = dateElts[0].'gmd:date'.'gco:DateTime'.text();
+          }
+          if(sDate != null && sDate != "") {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = format.parse(sDate);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy");
+            year = df.format(date);
+
+//            ISODate date = new ISODate(sDate);
+//            year = date.getYears();
+          }
+
         }
 
         def contacts = [];
