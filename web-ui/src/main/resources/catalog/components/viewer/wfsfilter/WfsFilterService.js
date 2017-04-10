@@ -85,13 +85,14 @@
        */
       var buildSldFilter = function(key, type, multiValued) {
         var res;
+        //TODO: date/numeric type
         if (type == 'interval' || type == 'range') {
           res = {
             filter_type: 'PropertyIsBetween',
             params: key.match(/\d+(?:[.]\d+)*/g)
           };
         }
-        else if (type == 'field') {
+        else if (type == 'terms') {
           res = {
             filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
             params: [multiValued ? '*' + key + '*' : key]
@@ -112,6 +113,7 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
+          if(Object.keys(attrValue.values).length == 0) return;
           var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
           var field = {
             // TODO : remove the field type suffix
