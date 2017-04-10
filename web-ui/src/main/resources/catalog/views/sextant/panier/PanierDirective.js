@@ -293,10 +293,6 @@
                 }
               });
 
-              scope.removeFilters = function() {
-                scope.element.filter = null;
-              };
-
               // Generate WPS form
               scope.currentWPS = null;
               scope.editWPSForm = function(process) {

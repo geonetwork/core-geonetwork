@@ -59,13 +59,11 @@
             });
           }
 
+          // fetch ElasticSearch; if not available, no filters are set
           var es = wfsFilterService.getEsObject(l.input.linkage, l.output.name);
-          if(!es) {
-            console.error('ES object is null maybe because spec are different' +
-              'between download and wfsfilter');
-            return;
+          if(es && l.useFilters) {
+            panierLayer.input.filter = wfsFilterService.toCQL(es);
           }
-          l.input.filter = wfsFilterService.toCQL(es);
         });
         return $http({
           url: panierUrl,
