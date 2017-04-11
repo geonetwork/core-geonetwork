@@ -36,6 +36,7 @@
   goog.require('OWS_1_0_0');
   goog.require('SLD_1_0_0');
   goog.require('XLink_1_0');
+  goog.require('gn_wfsfilter_service');
 
   var module = angular.module('gn_owscontext_service', []);
 
@@ -77,8 +78,10 @@
     '$rootScope',
     '$timeout',
     'gnGlobalSettings',
+    'wfsFilterService',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter, $rootScope, $timeout, gnGlobalSettings) {
+             $translate, $q, $filter, $rootScope, $timeout, gnGlobalSettings,
+             wfsFilterService) {
 
 
       var firstLoad = true;
@@ -374,6 +377,11 @@
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = layer.get('urlCap');
           }
+
+          // fetch current filters state (the whole object will be saved)
+          var esObj = wfsFilterService.getEsObject(url, name);
+          var filters = esObj ? esObj.getState() : null;
+
           var layerParams = {
             hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
@@ -386,7 +394,11 @@
                 href: url
               }],
               service: 'urn:ogc:serviceType:WMS'
-            }]
+            }],
+            extension: {
+              name: 'Extension',
+              any: filters ? JSON.stringify(filters) : null,
+            }
           };
           if (version) {
             layerParams.server[0].version = version;
