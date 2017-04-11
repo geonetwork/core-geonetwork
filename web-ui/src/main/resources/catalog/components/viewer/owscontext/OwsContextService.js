@@ -193,6 +193,16 @@
                     overlays[layer.get('tree_index')] = layer;
                   });
                 }
+
+                // import saved filters if available
+                if (layer.extension && server.onlineResource) {
+                  var url = server.onlineResource[0].href;
+
+                  // get ES object and save filters on it
+                  // (will be used by the WfsFilterDirective when initializing)
+                  var esObj = wfsFilterService.registerEsObject(url, layer.name);
+                  esObj.initialFilters = JSON.parse(layer.extension.any);
+                }
               }
             }
             firstLoad = false;

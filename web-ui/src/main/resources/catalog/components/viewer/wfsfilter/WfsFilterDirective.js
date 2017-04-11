@@ -484,9 +484,26 @@
            */
           scope.resetFacets = function() {
 
+            // get initial filters if available (and then clear it)
+            var initialFilters = solrObject.initialFilters;
+            solrObject.initialFilters = null;
+
             // output structure to send to filter service
-            scope.output = {};
-            scope.searchInput = '';
+            // use initial filters if available
+            if (initialFilters) {
+              scope.output = initialFilters.qParams;
+              scope.searchInput = initialFilters.any;
+              if (initialFilters.geometry) {
+                scope.ctrl.searchGeometry =
+                  initialFilters.geometry[0][0] + ',' +
+                  initialFilters.geometry[1][1] + ',' +
+                  initialFilters.geometry[1][0] + ',' +
+                  initialFilters.geometry[0][1];
+              }
+            } else {
+              scope.output = {};
+              scope.searchInput = '';
+            }
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
@@ -497,7 +514,13 @@
             scope.layer.set('esConfig', null);
 
             // load all facet and fill ui structure for the list
-            return solrObject.searchWithFacets({}).
+            // use initial filters if available (first reset)
+            return solrObject.searchWithFacets(
+              initialFilters ? {
+                params: initialFilters.qParams,
+                any: initialFilters.any,
+                geometry: initialFilters.geometry
+              } : {}).
                 then(function(resp) {
                   solrObject.pushState();
                   scope.fields = resp.facets;
