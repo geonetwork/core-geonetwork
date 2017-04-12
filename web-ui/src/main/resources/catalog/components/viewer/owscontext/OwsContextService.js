@@ -192,8 +192,8 @@
                   var extension = JSON.parse(layer.extension.any);
 
                   // import saved filters if available
-                  if (extension.filters && server.onlineResource) {
-                    var url = server.onlineResource[0].href;
+                  if (extension.filters && extension.wfsUrl) {
+                    var url = extension.wfsUrl;
 
                     // get ES object and save filters on it
                     // (will be used by the WfsFilterDirective when initializing)
@@ -219,7 +219,7 @@
                     // add processes default inputs taken from OWS context
                     // this is done by modifying the applicationProfile value
                     processes.forEach(function (process) {
-                      if (defaultInputs[process.name]) {
+                      if (defaultInputs && defaultInputs[process.name]) {
                         var appProfile = JSON.parse(process.applicationProfile
                           || '{}');
                         appProfile.defaults = appProfile.defaults || {};
@@ -422,11 +422,16 @@
             url = layer.get('urlCap');
           }
 
-          // fetch current filters state (the whole object will be saved)
-          var esObj = wfsFilterService.getEsObject(url, name);
-          var filters = null;
-          if (esObj && esObj.getState()) {
-            filters = esObj.getState();
+          var wfsUrl = null;
+          if (layer.get('wfs') && layer.get('wfs')[0]) {
+            wfsUrl = layer.get('wfs')[0].url;
+
+            // fetch current filters state (the whole object will be saved)
+            var esObj = wfsFilterService.getEsObject(wfsUrl, name);
+            var filters = null;
+            if (esObj && esObj.getState()) {
+              filters = esObj.getState();
+            }
           }
 
           // add processes inputs if available
@@ -463,7 +468,10 @@
           // apply filters & processes inputs in extension if needed
           if (filters || processInputs) {
             var extension = {};
-            if (filters) { extension.filters = filters; }
+            if (filters && wfsUrl) {
+              extension.filters = filters;
+              extension.wfsUrl = wfsUrl;
+            }
             if (processInputs) { extension.processInputs = processInputs; }
 
             layerParams.extension = {
