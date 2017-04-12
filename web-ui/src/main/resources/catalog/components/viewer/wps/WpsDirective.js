@@ -431,7 +431,8 @@
 
             // use filter values in ElasticSearch object state to overload input
             if (esObject) {
-              var wfsFilterLinks = applicationProfile ?
+              var wfsFilterLinks = applicationProfile
+                && applicationProfile.wfsFilterLinks ?
                 applicationProfile.wfsFilterLinks : {};
 
               // get list of filters
