@@ -1056,6 +1056,14 @@
         }
       };
     }]);
+  module.filter('signInLink',['$location', 'gnLangs',
+    function($location, gnLangs) {
+    return function(href) {
+      href = href.replace('{{lang}}', gnLangs.getCurrent()) +
+       '?redirect=' + encodeURIComponent(window.location.href);
+      return href;
+    }}
+  ]);
   module.filter('newlines', function() {
     return function(text) {
       if (text) {
