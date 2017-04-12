@@ -321,6 +321,7 @@
     var url = this.solrObject.baseUrl;
     var state = this.solrObject.getState();
     var searchQuery = this.solrObject.getSearhQuery(state);
+    var coordinates = this.coordinates;
 
     // sxt specific
     var gSetting = this.$injector.get('gnGlobalSettings');
@@ -350,10 +351,30 @@
           params.sort.push(sort);
         }
 
-
-        if (state.geometry || this.coordinates) {
+        if (state.geometry || coordinates) {
           var geomFilter = {};
-          if (state.geometry) {
+          if (coordinates) {
+            var coords = ol.proj.transform(coordinates,
+                map.getView().getProjection(), 'EPSG:4326');
+            geomFilter = {'geo_distance' : {
+              'distance': map.getView().getResolution() / 400 + 'km',
+              'geom': {
+                'lat': coords[1],
+                'lon': coords[0]
+              }
+            }};
+            geomFilter = {'geo_shape': {
+              'geom': {
+                'shape': {
+                  'type': 'circle',
+                  'radius': map.getView().getResolution() / 400 + 'km',
+                  'coordinates': coords
+                },
+                'relation': 'intersects'
+              }
+            }};
+          }
+          else if (state.geometry) {
             geomFilter = {'geo_shape': {
               'geom': {
                 'shape': {
@@ -362,20 +383,9 @@
                 },
                 'relation': 'intersects'
               }
-            }
-            };
-          } else if (this.coordinates) {
-            var coords = ol.proj.transform(this.coordinates,
-                map.getView().getProjection(), 'EPSG:4326');
-            geomFilter = {'geo_distance' : {
-              'distance': map.getView().getResolution() / 400 + 'km',
-              'geom': {
-                'lat': coords[1],
-                'lon': coords[0]
-              }
-            }
-            };
+            }};
           }
+
           params.query = {
             'bool': {
               'must': {
