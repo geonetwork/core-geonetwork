@@ -93,28 +93,28 @@
           ],
           'filters': {},
           'sortbyValues': [{
-            'sortBy': 'relevance',
-            'sortOrder': ''
-          }, {
-            'sortBy': 'changeDate',
+            'sortBy': 'popularity',
             'sortOrder': ''
           }, {
             'sortBy': 'title',
             'sortOrder': 'reverse'
           }, {
-            'sortBy': 'rating',
+            'sortBy': 'changeDate',
             'sortOrder': ''
-          }, {
-            'sortBy': 'popularity',
-            'sortOrder': ''
-          }, {
-            'sortBy': 'denominatorDesc',
-            'sortOrder': ''
-          }, {
-            'sortBy': 'denominatorAsc',
-            'sortOrder': 'reverse'
+            // }, {
+            //   'sortBy': 'rating',
+            //   'sortOrder': ''
+          // }, {
+          //   'sortBy': 'popularity',
+          //   'sortOrder': ''
+            // }, {
+            //   'sortBy': 'denominatorDesc',
+            //   'sortOrder': ''
+            // }, {
+            //   'sortBy': 'denominatorAsc',
+            //   'sortOrder': 'reverse'
           }],
-          'sortBy': 'relevance',
+          'sortBy': 'popularity',
           'resultViewTpls': [{
             'tplUrl': '../../catalog/components/' +
                 'search/resultsview/partials/viewtemplates/grid.html',
