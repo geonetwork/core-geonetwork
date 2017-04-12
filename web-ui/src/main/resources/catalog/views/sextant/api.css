@@ -16460,7 +16460,7 @@ yx-axis
 .g [gn-wfs-filter-facets] .btn-group {
   margin-top: 15px;
   margin-bottom: 15px;
-  display: inline-block !important;
+  display: block;
 }
 .gn [data-gn-wfs-filter-facets] .close,
 .g [data-gn-wfs-filter-facets] .close,
@@ -18984,103 +18984,6 @@ yx-axis
   display: block;
   margin: -2.5em auto 0;
 }
-.gn [sxt-main-viewer] .sxt-wps-panel .panel,
-.g [sxt-main-viewer] .sxt-wps-panel .panel,
-.gn [sxt-main-viewer] .sxt-processes-form .panel,
-.g [sxt-main-viewer] .sxt-processes-form .panel {
-  border: none;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading,
-.g [sxt-main-viewer] .sxt-wps-panel .panel-heading,
-.gn [sxt-main-viewer] .sxt-processes-form .panel-heading,
-.g [sxt-main-viewer] .sxt-processes-form .panel-heading {
-  height: 2em;
-  line-height: 2em;
-  border-bottom: 1px solid #4BA2D9;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading > button,
-.g [sxt-main-viewer] .sxt-wps-panel .panel-heading > button,
-.gn [sxt-main-viewer] .sxt-processes-form .panel-heading > button,
-.g [sxt-main-viewer] .sxt-processes-form .panel-heading > button {
-  display: none;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .panel-body,
-.g [sxt-main-viewer] .sxt-wps-panel .panel-body,
-.gn [sxt-main-viewer] .sxt-processes-form .panel-body,
-.g [sxt-main-viewer] .sxt-processes-form .panel-body {
-  font-size: 12px;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .gn-outputs,
-.g [sxt-main-viewer] .sxt-wps-panel .gn-outputs,
-.gn [sxt-main-viewer] .sxt-processes-form .gn-outputs,
-.g [sxt-main-viewer] .sxt-processes-form .gn-outputs {
-  position: relative;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .gn-single-output,
-.g [sxt-main-viewer] .sxt-wps-panel .gn-single-output,
-.gn [sxt-main-viewer] .sxt-processes-form .gn-single-output,
-.g [sxt-main-viewer] .sxt-processes-form .gn-single-output {
-  position: absolute;
-  right: 0;
-  top: -4em;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel label,
-.g [sxt-main-viewer] .sxt-wps-panel label,
-.gn [sxt-main-viewer] .sxt-processes-form label,
-.g [sxt-main-viewer] .sxt-processes-form label {
-  font-weight: normal;
-  text-transform: uppercase;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu label,
-.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu label,
-.gn [sxt-main-viewer] .sxt-processes-form .dropdown-menu label,
-.g [sxt-main-viewer] .sxt-processes-form .dropdown-menu label {
-  text-transform: none;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu input[type=radio],
-.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu input[type=radio],
-.gn [sxt-main-viewer] .sxt-processes-form .dropdown-menu input[type=radio],
-.g [sxt-main-viewer] .sxt-processes-form .dropdown-menu input[type=radio] {
-  margin: 0;
-  vertical-align: middle;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
-.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
-.gn [sxt-main-viewer] .sxt-processes-form .dropdown-menu ul,
-.g [sxt-main-viewer] .sxt-processes-form .dropdown-menu ul {
-  padding: .5em 1em;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu .form-group,
-.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu .form-group,
-.gn [sxt-main-viewer] .sxt-processes-form .dropdown-menu .form-group,
-.g [sxt-main-viewer] .sxt-processes-form .dropdown-menu .form-group,
-.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
-.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
-.gn [sxt-main-viewer] .sxt-processes-form .dropdown-menu ul,
-.g [sxt-main-viewer] .sxt-processes-form .dropdown-menu ul {
-  margin-bottom: 0;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel button[type="submit"],
-.g [sxt-main-viewer] .sxt-wps-panel button[type="submit"],
-.gn [sxt-main-viewer] .sxt-processes-form button[type="submit"],
-.g [sxt-main-viewer] .sxt-processes-form button[type="submit"] {
-  padding: 0 1em;
-  width: auto;
-  border-radius: 2px 0 0 2px;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel button ~ button,
-.g [sxt-main-viewer] .sxt-wps-panel button ~ button,
-.gn [sxt-main-viewer] .sxt-processes-form button ~ button,
-.g [sxt-main-viewer] .sxt-processes-form button ~ button {
-  margin-left: -2px;
-  border-radius: 0 2px 2px 0;
-}
-.gn [sxt-main-viewer] .sxt-wps-panel .form-group.optional,
-.g [sxt-main-viewer] .sxt-wps-panel .form-group.optional,
-.gn [sxt-main-viewer] .sxt-processes-form .form-group.optional,
-.g [sxt-main-viewer] .sxt-processes-form .form-group.optional {
-  display: none;
-}
 .gn [sxt-main-viewer] .gn-draw-styleform .gn-draw-text-stroke,
 .g [sxt-main-viewer] .gn-draw-styleform .gn-draw-text-stroke {
   display: none;
@@ -19093,6 +18996,112 @@ yx-axis
 .g [sxt-main-viewer] .gn-draw-styleform div.btn-group button {
   background: #4BA2D9;
   color: white;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel,
+.g [sxt-main-viewer] .sxt-wps-panel .panel,
+.gn .sxt-processes-form .panel,
+.g .sxt-processes-form .panel {
+  border: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading,
+.g [sxt-main-viewer] .sxt-wps-panel .panel-heading,
+.gn .sxt-processes-form .panel-heading,
+.g .sxt-processes-form .panel-heading {
+  height: 2em;
+  line-height: 2em;
+  border-bottom: 1px solid #4BA2D9;
+  padding: 0 15px;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-heading > button,
+.g [sxt-main-viewer] .sxt-wps-panel .panel-heading > button,
+.gn .sxt-processes-form .panel-heading > button,
+.g .sxt-processes-form .panel-heading > button {
+  display: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .panel-body,
+.g [sxt-main-viewer] .sxt-wps-panel .panel-body,
+.gn .sxt-processes-form .panel-body,
+.g .sxt-processes-form .panel-body {
+  font-size: 12px;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .gn-outputs,
+.g [sxt-main-viewer] .sxt-wps-panel .gn-outputs,
+.gn .sxt-processes-form .gn-outputs,
+.g .sxt-processes-form .gn-outputs {
+  position: relative;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .gn-single-output,
+.g [sxt-main-viewer] .sxt-wps-panel .gn-single-output,
+.gn .sxt-processes-form .gn-single-output,
+.g .sxt-processes-form .gn-single-output {
+  position: absolute;
+  right: 0;
+  top: -4em;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel label,
+.g [sxt-main-viewer] .sxt-wps-panel label,
+.gn .sxt-processes-form label,
+.g .sxt-processes-form label {
+  font-weight: normal;
+  text-transform: uppercase;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu label,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu label,
+.gn .sxt-processes-form .dropdown-menu label,
+.g .sxt-processes-form .dropdown-menu label {
+  text-transform: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu input[type=radio],
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu input[type=radio],
+.gn .sxt-processes-form .dropdown-menu input[type=radio],
+.g .sxt-processes-form .dropdown-menu input[type=radio] {
+  margin: 0;
+  vertical-align: middle;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
+.gn .sxt-processes-form .dropdown-menu ul,
+.g .sxt-processes-form .dropdown-menu ul {
+  padding: .5em 1em;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu .form-group,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu .form-group,
+.gn .sxt-processes-form .dropdown-menu .form-group,
+.g .sxt-processes-form .dropdown-menu .form-group,
+.gn [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
+.g [sxt-main-viewer] .sxt-wps-panel .dropdown-menu ul,
+.gn .sxt-processes-form .dropdown-menu ul,
+.g .sxt-processes-form .dropdown-menu ul {
+  margin-bottom: 0;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel button[type="submit"],
+.g [sxt-main-viewer] .sxt-wps-panel button[type="submit"],
+.gn .sxt-processes-form button[type="submit"],
+.g .sxt-processes-form button[type="submit"] {
+  padding: 0 1em;
+  width: auto;
+  border-radius: 2px 0 0 2px;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel button ~ button,
+.g [sxt-main-viewer] .sxt-wps-panel button ~ button,
+.gn .sxt-processes-form button ~ button,
+.g .sxt-processes-form button ~ button {
+  margin-left: -2px;
+  border-radius: 0 2px 2px 0;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .form-group.optional,
+.g [sxt-main-viewer] .sxt-wps-panel .form-group.optional,
+.gn .sxt-processes-form .form-group.optional,
+.g .sxt-processes-form .form-group.optional {
+  display: none;
+}
+.gn [sxt-main-viewer] .sxt-wps-panel .overload-warning,
+.g [sxt-main-viewer] .sxt-wps-panel .overload-warning,
+.gn .sxt-processes-form .overload-warning,
+.g .sxt-processes-form .overload-warning {
+  opacity: 0.6;
+  font-style: italic;
+  text-transform: none;
 }
 .gn .sxt-layertree-filter,
 .g .sxt-layertree-filter {
@@ -23340,7 +23349,7 @@ yx-axis
 .gn .sxt-panier .form-group,
 .g .sxt-panier .form-group {
   font-size: 14px;
-  padding-top: .5em;
+  margin-top: .5em;
 }
 .gn .sxt-panier .form-group label,
 .g .sxt-panier .form-group label {
@@ -23428,6 +23437,40 @@ yx-axis
 .gn .sxt-panier .panier-element .form-group label,
 .g .sxt-panier .panier-element .form-group label {
   min-width: 90px;
+}
+.gn .sxt-panier .panier-element .sxt-processes-list .sxt-process,
+.g .sxt-panier .panier-element .sxt-processes-list .sxt-process {
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: row;
+}
+.gn .sxt-panier .panier-element .sxt-processes-list .sxt-process label,
+.g .sxt-panier .panier-element .sxt-processes-list .sxt-process label {
+  flex-grow: 1;
+}
+.gn .sxt-panier .panier-element .sxt-processes-list .sxt-process label > span,
+.g .sxt-panier .panier-element .sxt-processes-list .sxt-process label > span {
+  margin-left: 4px;
+}
+.gn .sxt-panier .panier-element .sxt-active-filters,
+.g .sxt-panier .panier-element .sxt-active-filters {
+  background: #dcffd7;
+  padding: 6px;
+  border-radius: 3px;
+  margin-left: 14px;
+  margin-bottom: -2px;
+  margin-right: -6px;
+  margin-top: calc(.5em - 2px);
+  display: flex;
+  flex-direction: row;
+}
+.gn .sxt-panier .panier-element .sxt-active-filters label,
+.g .sxt-panier .panier-element .sxt-active-filters label {
+  flex-grow: 1;
+}
+.gn .sxt-panier .panier-element .sxt-active-filters label > span,
+.g .sxt-panier .panier-element .sxt-active-filters label > span {
+  margin-left: 4px;
 }
 .gn .modal-content,
 .g .modal-content {
@@ -23604,30 +23647,6 @@ yx-axis
   color: #8a6d3b;
   background-color: transparent;
   box-shadow: none;
-}
-.gn .sxt-wfs-active,
-.g .sxt-wfs-active {
-  margin-top: 15px;
-  color: green;
-}
-.gn .sxt-wfs-active .btn:hover,
-.g .sxt-wfs-active .btn:hover {
-  color: darkgreen !important;
-}
-.gn .sxt-wfs-active .btn-group,
-.g .sxt-wfs-active .btn-group {
-  border-radius: 8px;
-  border: 2px green solid;
-}
-.gn .sxt-wfs-active .btn-group.open .dropdown-toggle,
-.g .sxt-wfs-active .btn-group.open .dropdown-toggle {
-  box-shadow: none;
-}
-.gn .sxt-wfs-active.pull-right .dropdown-menu,
-.g .sxt-wfs-active.pull-right .dropdown-menu {
-  left: 0;
-  padding-left: 20px;
-  color: inherit;
 }
 .gn [sxt-main-viewer] .sx-toolbar[gn-localisation-input],
 .g [sxt-main-viewer] .sx-toolbar[gn-localisation-input] {
