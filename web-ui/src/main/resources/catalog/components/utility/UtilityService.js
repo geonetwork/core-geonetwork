@@ -230,7 +230,7 @@
              // TODO; stop loop when found
            });
           return parameterValue != null ?
-            decodeURIComponent(parameterValue) : undefined;
+          decodeURIComponent(parameterValue) : undefined;
         };
 
         var CSVToArray = function(strData, strDelimiter) {

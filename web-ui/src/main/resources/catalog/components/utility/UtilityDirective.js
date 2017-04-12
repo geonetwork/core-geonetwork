@@ -560,7 +560,8 @@
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
     var testObj = angular.element('<textarea ' +
-        ' style="height: 0px; position: absolute; top: 0; visibility: hidden;"/>');
+        ' style="height: 0px; position: ' +
+        'absolute; top: 0; visibility: hidden;"/>');
     angular.element(window.document.body).append(testObj);
 
     return {
@@ -1056,13 +1057,13 @@
         }
       };
     }]);
-  module.filter('signInLink',['$location', 'gnLangs',
+  module.filter('signInLink', ['$location', 'gnLangs',
     function($location, gnLangs) {
-    return function(href) {
-      href = href.replace('{{lang}}', gnLangs.getCurrent()) +
-       '?redirect=' + encodeURIComponent(window.location.href);
-      return href;
-    }}
+      return function(href) {
+        href = href.replace('{{lang}}', gnLangs.getCurrent()) +
+            '?redirect=' + encodeURIComponent(window.location.href);
+        return href;
+      }}
   ]);
   module.filter('newlines', function() {
     return function(text) {
