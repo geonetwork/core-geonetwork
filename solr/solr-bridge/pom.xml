@@ -46,7 +46,7 @@
               <resources>
                 <resource>
                   <directory>${basedir}/src/main/resources</directory>
-                  <filtering>true</filtering>
+                  <filtering>false</filtering>
                   <targetPath>${project.build.directory}/classes</targetPath>
                 </resource>
               </resources>
