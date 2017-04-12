@@ -54,6 +54,9 @@
     }
 
           */
+          {"name": "param_group_liste"},
+          {"name": "ent_prog_cd"},
+          {"name": "param_liste"},
           {
             "name": "CUSTOM_POS",
             "aggs": {
@@ -278,6 +281,9 @@
                   wfsFilterService.solrMergeApplicationProfile(
                   solrObject.filteredDocTypeFieldsInfo, appProfile);
               solrObject.initBaseParams();
+              if(!appProfile.extendOnly) {
+                solrObject.setFielsdOrder();
+              }
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
 

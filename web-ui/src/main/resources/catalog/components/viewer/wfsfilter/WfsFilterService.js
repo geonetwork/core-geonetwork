@@ -160,23 +160,32 @@
         var newFields = appProfile.fields;
         var tokenizedFields = appProfile.tokenizedFields || [];
 
+        var getNewFieldIdx = function(field) {
+          for (var i = 0; i < newFields.length; i++) {
+            if (field.label == newFields[i].name) {
+              return i;
+            }
+          }
+          return -1;
+        };
+
         // Merge field objects and detect if we need to remove some
         fields.forEach(function(field, idx) {
           var keep;
-          for (var i = 0; i < newFields.length; i++) {
-            if (field.label == newFields[i].name) {
-              keep = true;
-              mergedF.push(field.label);
-              if (newFields[i].label) {
-                field.label = newFields[i].label[gnGlobalSettings.lang];
-              }
-              field.aggs = newFields[i].aggs;
-              field.display = newFields[i].display;
 
-              // add a flag for tokenized fields
-              field.isTokenized = tokenizedFields[field.name] != null;
-              break;
+          var newFieldIdx = getNewFieldIdx(field);
+          if(newFieldIdx >= 0) {
+            var newField = newFields[newFieldIdx];
+            keep = true;
+            mergedF.push(field.label);
+            if (newField.label) {
+              field.label = newField.label[gnGlobalSettings.lang];
             }
+            field.aggs = newField.aggs;
+            field.display = newField.display;
+
+            // add a flag for tokenized fields
+            field.isTokenized = tokenizedFields[field.name] != null;
           }
           if (!keep) {
             toRemoveIdx.unshift(idx);
@@ -199,6 +208,12 @@
             fields.push(f);
           }
         });
+
+        if(!appProfile.extendOnly) {
+          fields.sort(function(a, b) {
+            return getNewFieldIdx(a) - getNewFieldIdx(b)
+          });
+        }
 
 
         return allFields;
