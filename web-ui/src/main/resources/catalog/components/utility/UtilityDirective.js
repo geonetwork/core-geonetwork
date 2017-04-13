@@ -848,6 +848,7 @@
               },
               startDate: limits.min,
               endDate: limits.max,
+              container: typeof sxtSettings != 'undefined' ? '.g' : 'body', // sextant
                 autoclose: true,
                   keepEmptyValues:true,
               clearBtn: true,
