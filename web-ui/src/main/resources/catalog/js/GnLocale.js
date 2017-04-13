@@ -122,9 +122,11 @@
     }]);
 
 
-  module.config(['$translateProvider', '$LOCALES', 'gnGlobalSettings',
+  module.config(['$translateProvider', '$LOCALES',
+    'gnViewerSettings', 'gnSearchSettings', 'gnGlobalSettings',
     'gnLangs',
-    function($translateProvider, $LOCALES, gnGlobalSettings, gnLangs) {
+    function($translateProvider, $LOCALES,
+             gnViewerSettings, gnSearchSettings, gnGlobalSettings, gnLangs) {
       $translateProvider.useLoader('localeLoader', {
         locales: $LOCALES,
         prefix: (gnGlobalSettings.locale.path || '../../') + 'catalog/locales/',

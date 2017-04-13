@@ -29,36 +29,36 @@
 
 
   module.service('wfsFilterService', [
-    'gnSolrRequestManager',
+    'gnIndexRequestManager',
     'gnHttp',
     'gnUrlUtils',
     'gnGlobalSettings',
     '$http',
     '$q',
     '$translate',
-    function(gnSolrRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
+    function(gnIndexRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
              $http, $q, $translate) {
 
-      var solrProxyUrl = gnHttp.getService('indexproxy');
+      var indexProxyUrl = gnHttp.getService('indexproxy');
 
-      var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
+      var indexObject = gnIndexRequestManager.register('WfsFilter', 'facets');
 
-      var buildSolrUrl = function(params) {
-        return gnUrlUtils.append(solrProxyUrl + '/query',
+      var buildIndexUrl = function(params) {
+        return gnUrlUtils.append(indexProxyUrl + '/query',
             gnUrlUtils.toKeyValue(params));
       };
 
       this.registerEsObject = function(url, ftName) {
-        return gnSolrRequestManager.register('WfsFilter', url + '#' + ftName);
+        return gnIndexRequestManager.register('WfsFilter', url + '#' + ftName);
       };
       this.getEsObject = function(url, ftName) {
-        return gnSolrRequestManager.get('WfsFilter', url + '#' + ftName);
+        return gnIndexRequestManager.get('WfsFilter', url + '#' + ftName);
       };
 
 
       /**
        * Retrieve the index field object from the array given from feature type
-       * info. The object contains the feature type attribute name, the solr
+       * info. The object contains the feature type attribute name, the index
        * indexed name, and its label from applicationProfile.
        * You can retrieve this object with the ftName or the docName.
        *
@@ -113,7 +113,7 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
-          if(Object.keys(attrValue.values).length == 0) return;
+          if (Object.keys(attrValue.values).length == 0) return;
           var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
           var field = {
             // TODO : remove the field type suffix
@@ -154,7 +154,7 @@
        * @param {Array} fields index fields definition
        * @param {Object} appProfile Config object.
        */
-      this.solrMergeApplicationProfile = function(fields, appProfile) {
+      this.indexMergeApplicationProfile = function(fields, appProfile) {
 
         var toRemoveIdx = [], mergedF = [];
         var newFields = appProfile.fields;
@@ -270,7 +270,7 @@
         var state = esObj.getState();
         var where;
 
-        if(!state.any) {
+        if (!state.any) {
           where = [];
           angular.forEach(state.qParams, function(fObj, fName) {
             var config = esObj.getIdxNameObj_(fName);
@@ -279,16 +279,16 @@
             var values = fObj.values;
             if (config.isDate) {
               where.concat([
-                '(' + fName + '>' + values.from +')',
-                '(' + fName + '<' + values.to +')'
+                '(' + fName + '>' + values.from + ')',
+                '(' + fName + '<' + values.to + ')'
               ]);
               return;
             }
             angular.forEach(values, function(v, k) {
               clause.push(
-                (config.isTokenized) ?
-                '(' + fName + " LIKE '%" + k +"%')" :
-                '(' + fName + '=' + k + ')'
+                  (config.isTokenized) ?
+                  '(' + fName + " LIKE '%" + k + "%')" :
+                  '(' + fName + '=' + k + ')'
               );
             });
             if (clause.length == 0) return;
@@ -312,7 +312,7 @@
 
         var state = esObj.getState();
 
-        if(!state.any) {
+        if (!state.any) {
           var where = [];
           angular.forEach(state.qParams, function(fObj, fName) {
             var clause = [];
@@ -321,7 +321,7 @@
             });
             where.push('(' + clause.join(' OR ') + ')');
           });
-          return(where.join(' AND '));
+          return (where.join(' AND '));
         }
         else {
           esObj.search_es({
@@ -331,7 +331,7 @@
             var where = data.hits.hits.map(function(res) {
               return res._id;
             });
-            return(where.join(' OR '));
+            return (where.join(' OR '));
           });
         }
       };
@@ -344,30 +344,30 @@
        *
        * @param {Object} elasticSearchObject
        */
-       this.toObjectProperties = function (esObject) {
-         var state = esObject.getState();
-         var result = {};
+      this.toObjectProperties = function(esObject) {
+        var state = esObject.getState();
+        var result = {};
 
-         if (state) {
-           // add query params (qParams)
-           angular.forEach(state.qParams, function(fObj, fName) {
-             // only the last value found will be kept
-             angular.forEach(fObj.values, function(value, key) {
-               result[fName] = key;
-             });
-           });
+        if (state) {
+          // add query params (qParams)
+          angular.forEach(state.qParams, function(fObj, fName) {
+            // only the last value found will be kept
+            angular.forEach(fObj.values, function(value, key) {
+              result[fName] = key;
+            });
+          });
 
-           // add geometry
-           if (state.geometry) {
-             result.geometry = state.geometry[0][0] + ',' +
-             state.geometry[1][1] + ',' +
-             state.geometry[1][0] + ',' +
-             state.geometry[0][1];
-           }
-         }
+          // add geometry
+          if (state.geometry) {
+            result.geometry = state.geometry[0][0] + ',' +
+                state.geometry[1][1] + ',' +
+                state.geometry[1][0] + ',' +
+                state.geometry[0][1];
+          }
+        }
 
-         return result;
-       }
+        return result;
+      };
 
     }]);
 })();

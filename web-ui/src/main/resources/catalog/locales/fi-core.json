@@ -1,6 +1,13 @@
 {
     "all": "kaikki",
     "allInPage": "kaikki sivulla",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "AnonymousUserlist": "Preferred records",
+    "MapLayerlist": "Add to map list",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Tekijä",
     "none": "ei mitään",
     "BadParameterEx": "Väärä parametri",
@@ -314,5 +321,5 @@
     "directoryManager": "Hakemiston hallinta",
     "typeOfRecord": "Tietueen tyyppi",
     "load": "Lataa",
-    "indexAccessError": "Virhe Solr käytön aikana."
+    "indexAccessError": "Virhe index käytön aikana."
 }

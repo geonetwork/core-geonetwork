@@ -44,18 +44,45 @@
 
 
 
-  goog.require('gn');
-  goog.require('gn_alert');
-  goog.require('gn_catalog_service');
-  goog.require('gn_formatter_lib');
-  goog.require('gn_mdactions_service');
+
+
+
+
+
   goog.require('gn_mdview');
-  goog.require('gn_popup_directive');
-  goog.require('gn_popup_service');
-  goog.require('gn_search_default_directive');
-  goog.require('gn_utility');
-  goog.require('gn_mdview');
-  goog.require('sxt_directives');
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+goog.require('gn');
+goog.require('gn_alert');
+goog.require('gn_catalog_service');
+goog.require('gn_formatter_lib');
+goog.require('gn_mdactions_service');
+goog.require('gn_mdview');
+goog.require('gn_popup_directive');
+goog.require('gn_popup_service');
+goog.require('gn_search_default_directive');
+goog.require('gn_utility');
+goog.require('sxt_directives');
 
 
 
@@ -83,19 +110,19 @@
     formatter: {
       defaultUrl: function(md) {
         var url;
-        if(md.getSchema() == 'iso19139.sdn-product') {
+        if (md.getSchema() == 'iso19139.sdn-product') {
           url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
-        } else if(md.getSchema() == 'iso19115-3') {
+        } else if (md.getSchema() == 'iso19115-3') {
           var view =
-            md.standardName ===
-            'ISO 19115-3 - Emodnet Checkpoint - Upstream Data' ? 'medsea' :
+              md.standardName ===
+              'ISO 19115-3 - Emodnet Checkpoint - Upstream Data' ? 'medsea' :
               (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Targeted Data Product' ?
-                'checkpoint-tdp' :
-                (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
-                    'checkpoint-dps' : 'default'
-                ));
+              'checkpoint-tdp' :
+              (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
+              'checkpoint-dps' : 'default'
+              ));
           url = 'md.format.xml?root=div&xsl=xsl-view&view=' + view +
-            '&uuid=' + md.getUuid();
+              '&uuid=' + md.getUuid();
         } else {
           url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
         }

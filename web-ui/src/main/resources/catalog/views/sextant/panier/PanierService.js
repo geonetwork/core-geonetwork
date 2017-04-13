@@ -99,7 +99,7 @@
                 })) {
 
                 // 1. Check if a WFS filter is applied
-                var esObject = layer.get('solrObject');
+                var esObject = layer.get('indexObject');
                 if(esObject) {
                   var esConfig = esObject.getState();
                   var g = esConfig.geometry;

@@ -256,9 +256,10 @@
        * @param {object} response excecuteProcess response object.
        * @param {ol.Map} map
        * @param {ol.layer.Base} parentLayer
-       * @param {object} opt_options
+       * @param {object=} opt_options
        */
-      this.extractWmsLayerFromResponse = function(response, map, parentLayer, opt_options) {
+      this.extractWmsLayerFromResponse =
+          function(response, map, parentLayer, opt_options) {
 
         try {
           var ref = response.processOutputs.output[0].reference;
@@ -268,15 +269,16 @@
                   layers.forEach(function(l) {
                     l.set('fromWps', true);
                     l.set('wpsParent', parentLayer);
-                    if (opt_options && !opt_options.exclude.test(l.get('label'))) {
+                    if (opt_options &&
+                        !opt_options.exclude.test(l.get('label'))) {
                       map.addLayer(l);
                     }
                   });
                 });
           }
         } catch (e) { // no WMS found }
+        }
       };
-    }
     }
   ]);
 

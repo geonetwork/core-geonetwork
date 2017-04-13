@@ -88,14 +88,6 @@
                   class="form-control" id="{{s['name']}}" name="{{s.name}}"
                 ></textarea>
 
-                <!-- UI configuration -->
-                <div
-                  data-gn-ui-config="s.value"
-                  data-id="s['name']"
-                  data-ng-switch-when="ui/config"
-                ></div>
-
-
                 <select data-ng-switch-when="system/server/protocol"
                         class="form-control"
                         name="{{s.name}}">

@@ -595,6 +595,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             // get metadata, extracting and indexing any xlinks
             Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true, false);
+            final ServiceContext serviceContext = getServiceContext();
             if (getXmlSerializer().resolveXLinks()) {
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
@@ -684,26 +685,25 @@ public class DataManager implements ApplicationEventPublisherAware {
                     }
                 }
             }
-            if (logoUUID == null) {
-                logoUUID = source;
+
+            // Group logo are in the harvester folder and contains extension in file name
+            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(serviceContext);
+            boolean added = false;
+            if (StringUtils.isNotEmpty(logoUUID)) {
+                final Path logoPath = harvesterLogosDir.resolve(logoUUID);
+                if (Files.exists(logoPath)) {
+                    added = true;
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/harvesting/" + logoPath.getFileName(), true, false));
+                }
             }
 
-            if (logoUUID != null) {
-                final Path logosDir = Resources.locateLogosDir(getServiceContext());
-                final String[] logosExt = {"png", "PNG", "gif", "GIF", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP",
-                    "tif", "TIF", "tiff", "TIFF"};
-                boolean added = false;
-                for (String ext : logosExt) {
-                    final Path logoPath = logosDir.resolve(logoUUID + "." + ext);
-                    if (Files.exists(logoPath)) {
-                        added = true;
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoPath.getFileName(), true, false));
-                        break;
-                    }
-                }
-
-                if (!added) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID + ".png", true, false));
+            // If not available, use the local catalog logo
+            if (!added) {
+                logoUUID = source + ".png";
+                final Path logosDir = Resources.locateLogosDir(serviceContext);
+                final Path logoPath = logosDir.resolve(logoUUID);
+                if (Files.exists(logoPath)) {
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID, true, false));
                 }
             }
 

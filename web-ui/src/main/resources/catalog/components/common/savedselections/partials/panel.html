@@ -1,5 +1,5 @@
 <div class="panel panel-default"
-     data-ng-show="user.id && selections != null">
+     data-ng-show="selections != null">
   <div class="panel-heading"
        data-gn-slide-toggle="">
     <i class="fa fa-shopping-cart"/>&nbsp;
@@ -8,9 +8,10 @@
   </div>
   <div class="panel-body">
     <fieldset data-ng-repeat="sel in selections.list"
-              data-ng-show="sel.records.length > 0">
+              data-ng-hide="(user.id !== undefined && sel.isAnonymousOnly) ||
+                            sel.records.length === 0">
       <legend data-gn-slide-toggle="">
-        {{sel.label[lang]}}
+        {{sel.label[lang] || (sel.name | translate)}}
         <span>({{sel.records.length}})</span>
         <i class="fa gn-icon-{{sel.name}} pull-right"/>
       </legend>
@@ -20,12 +21,12 @@
           <div class="row">
             <div class="col-md-10">
               <a data-ng-href="#/metadata/{{r}}">
-              {{selections.labels[r] || r}}
+              {{selections.records[r].title || selections.records[r].defaultTitle || r}}
               </a>
             </div>
             <div class="col-md-2">
               <button class="btn btn-link pull-right"
-                      data-ng-click="remove(sel.id, r)"
+                      data-ng-click="remove(sel, r)"
                       data-title="{{'removeRecordFromSelection' | translate}}">
                 <i class="fa fa-times text-danger"></i>
               </button>
@@ -36,7 +37,7 @@
 
       <button class="btn btn-default btn-block"
               data-ng-if="actions[sel.name]"
-              data-ng-click="actions[sel.name].fn(sel.records)">
+              data-ng-click="doAction(sel)">
         <i class="fa {{actions[sel.name].icon}}"></i>&nbsp;
         {{actions[sel.name].label | translate}}
       </button>

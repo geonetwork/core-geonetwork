@@ -89,10 +89,10 @@
           var fillGrid = function(data) {
             scope.privileges = data.privileges;
             // Define profile label
-            if(scope.displayProfile) {
+            if (scope.displayProfile) {
               var admin = scope.user.isAdministrator();
               scope.privileges.forEach(function(p) {
-                if(admin) {
+                if (admin) {
                   p.profiles = $translate.instant('Administrator');
                 }
                 else {

@@ -104,9 +104,9 @@
             // }, {
             //   'sortBy': 'rating',
             //   'sortOrder': ''
-          // }, {
-          //   'sortBy': 'popularity',
-          //   'sortOrder': ''
+            // }, {
+            //   'sortBy': 'popularity',
+            //   'sortOrder': ''
             // }, {
             //   'sortBy': 'denominatorDesc',
             //   'sortOrder': ''
@@ -204,7 +204,7 @@
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // Remap some old settings with new one
         angular.extend(this.gnCfg, config || {});
-        if(gnUrl) {
+        if (gnUrl) {
           this.gnUrl = gnUrl + this.iso3lang + '/';
         }
         this.proxyUrl = this.gnUrl + '../../proxy?url=';
@@ -335,7 +335,7 @@
       try {
         var tokens = location.href.split('/');
         $scope.service = tokens[6].split('?')[0];
-      } catch(e) {
+      } catch (e) {
         // console.log("Failed to extract current service from URL.");
       }
 
@@ -570,7 +570,7 @@
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
             casLoginFrame.setAttribute('src', gnGlobalSettings.gnUrl +
-              'info?casLogin');
+                'info?casLogin');
             casLoginFrame.setAttribute('style', 'display:none');
             document.body.appendChild(casLoginFrame);
 

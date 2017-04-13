@@ -26,6 +26,39 @@
       <p class="help-block" data-translate="">arcsde-databaseHelp</p>
     </div>
 
+    <div>
+      <label class="control-label" data-translate="">arcsde-version</label>
+      <select class="form-control" data-ng-model="harvesterSelected.site.version">
+        <option value="8">{{'arcsde-version-8' | translate}}</option>
+        <option value="9">{{'arcsde-version-9' | translate}}</option>
+      </select>
+
+      <p class="help-block" data-translate="">arcsde-versionHelp</p>
+    </div>
+
+    <div>
+      <label class="control-label" data-translate="">arcsde-connection</label>
+      <p class="help-block" data-translate="">arcsde-connectionHelp</p>
+
+      <label class="control-label">
+        <input type="radio" data-ng-model="harvesterSelected.site.connectionType" value="ARCSDE">
+        <span data-translate="">arcsde-connection-sde</span></label>
+      </label><br/>
+      <label  class="control-label">
+        <input type="radio" data-ng-model="harvesterSelected.site.connectionType" value="JDBC">
+        <span data-translate="">arcsde-connection-database</span></label>
+      </label><br/>
+
+      <label class="control-label" data-translate="">arcsde-connection-database-type</label>
+      <select class="form-control" data-ng-model="harvesterSelected.site.databaseType"
+              data-ng-disabled="harvesterSelected.site.connectionType != 'JDBC'">
+        <option value="oracle">{{'arcsde-oracle' | translate}}</option>
+        <option value="postgres">{{'arcsde-postgres' | translate}}</option>
+        <option value="sqlserver">{{'arcsde-sqlserver' | translate}}</option>
+      </select>
+      <p class="help-block" data-translate="">arcsde-connection-databaseHelp</p>
+    </div>
+
     <div data-gn-harvester-account="harvesterSelected"/>
 
   </fieldset>

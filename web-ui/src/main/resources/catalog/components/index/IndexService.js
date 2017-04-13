@@ -22,17 +22,17 @@
  */
 
 (function() {
-  goog.provide('gn_solr_service');
+  goog.provide('gn_index_service');
 
-  var module = angular.module('gn_solr_service', []);
+  var module = angular.module('gn_index_service', []);
 
 
-  module.provider('gnSolrService',
+  module.provider('gnIndexService',
       function() {
         this.$get = ['$http',
           function($http) {
             /**
-             * Return Solr query heatmap parameters
+             * Return index query heatmap parameters
              * based on current map extent and map zoom.
              *
              * @param {ol.map} map The OL map
@@ -62,7 +62,7 @@
 
               // Compute grid level based on current zoom
               // Zoom goes from 1 to 28
-              // GridLevel 1 to 11 but Solr may return exception
+              // GridLevel 1 to 11 but index may return exception
               // if too many cells are requested (depends on extent).
               // Restrict between 3 and 11
               var gridLevel = function(z) {
@@ -76,7 +76,7 @@
                 if (18 < z && z <= 20) {return 9;}
                 if (20 < z && z <= 24) {return 10;}
                 if (24 < z) {return 11;}
-                // Depends on distErrPct in Solr geom field configuration
+                // Depends on distErrPct in geom field configuration
                 // TODO: Maybe compute another lower grid level
                 // when the following exception occur: Caused by:
                 // java.lang.IllegalArgumentException: Too many cells
@@ -109,9 +109,9 @@
               };
             };
             /**
-             * Convert a Solr heatmap in an array of features.
+             * Convert a heatmap in an array of features.
              *
-             * @param {object} heatmap The heatmap object from the Solr response
+             * @param {object} heatmap The heatmap object from the response
              * @param {string} proj  The map projection to create feature into.
              * @param {string} asGrid Use a grid instead of points
              * in cell center

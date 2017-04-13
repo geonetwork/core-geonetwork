@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
   <xsl:output method="xml"/>
   <!--  <xsl:output method="xml" doctype-system="ISO_19115.dtd"/> -->
   <xsl:template match="/">
@@ -14,7 +14,9 @@
       <xsl:for-each select="metadata/mdHrLvName">
         <xsl:apply-templates select="."/>
       </xsl:for-each>
+
       <xsl:apply-templates select="metadata/mdContact"/>
+
       <xsl:apply-templates select="metadata/mdDateSt"/>
       <xsl:apply-templates select="metadata/mdStanName"/>
       <xsl:apply-templates select="metadata/mdStanVer"/>
@@ -46,6 +48,7 @@
       </xsl:for-each>
     </Metadata>
   </xsl:template>
+
   <!-- contInfo-->
   <xsl:template match="contInfo">
     <contInfo>
@@ -776,7 +779,7 @@
   <!-- Template with "xsl:value-of" -->
   <!-- <xsl:template match="mdFileID | rpIndName | spatObj | spatSchName | asSchLang | asCstLang | asAscii | asGraFile | asSwDevFile | asSwDevFiFt | mdParentID | rpOrgName | rpPosName | city | adminArea | postCode | country | linkage | protocol | appProfile | orName | orDesc | cntHours | cntInstr | mdDateSt | mdStanName | mdStanVer | formatName | formatVer | formatAmdNum | formatSpec | fileDecmTech | resFees | planAvDtTm | ordInstr | handDesc | userNote | classSys | uomName | Real | Decimal | Integer | bgFileType | bgFileDesc | bgFileName | issn | isbn | collTitle | otherCitDet | artPage | issId | seriesName | resEdDate | resEd | resAltTitle | seconds | minutes | hours | timeIndicator | days | months | years | designator | other | datasetSet | attribIntSet | featIntSet | featSet | attribSet | usrDetLim | usageDate | specUsage | identCode | exTypeCode | envirDesc | suppInfo | exDesc | vertMaxVal | vertMinVal | end | begin | clkTime | calDate | coordinates | zone | longCntMer | latProjOri | falEastng | falNorthng | sclFacEqu | hgtProsPt | longProjCnt | latProjCnt | sclFacCnt | stVrLongPl | sclFacPrOr | aziPtLong | aziAngle | obLineLong | obLineLat | semiMajAx | denFlatRat | medNote | medVol | medDenUnits | transSize | unitsODist | ordTurn | resTitle | idAbs | idPurp | languageCode | rfDenom | mdHrLvName | dateNext | maintNote | voiceNum | faxNum | delPoint | eMailAdd | citId | citIdType | othConsts | useLimit | stanPara | idCredit | medDensity | keyword | statement | srcDesc | stepDesc | stepRat | stepDateTm | measName | measureDescription | evalMethDesc | measDateTm | conExpl | conPass | quanValType | errStat | quanValue | Result | numDims | tranParaAv | chkPtAv | chkPtDesc | transDimDesc | transDimMap | dimSize | ctrlPtAv | orieParaAv | orieParaDesc | georefPars | TopLvlCd | geoObjCnt | ContInfo | attDesc | scope | aName | dimDescrp | maxVal | minVal | pkResp | bitsPerVal | toneGrad | sclFac | offset | compCode | incWithDS | illElevAng | illAziAng | cloudCovPer | cmpGenQuan | trianInd | radCalDatAv | camCalInAv | filmDistInAv | lensDistInAv | westBL | eastBL | southBL | northBL"> -->
   <xsl:template
-    match="mdFileID | rpIndName | spatObj | spatSchName | asSchLang | asCstLang | asAscii | asGraFile | asSwDevFile | asSwDevFiFt | mdParentID | rpOrgName | rpPosName | city | adminArea | postCode | country | linkage | protocol | appProfile | orName | cntHours | cntInstr | mdDateSt | mdStanName | mdStanVer | formatName | formatVer | formatAmdNum | formatSpec | fileDecmTech | resFees | planAvDtTm | ordInstr | handDesc | userNote | classSys | uomName | Real | Decimal | Integer | bgFileType | bgFileDesc | bgFileName | issn | isbn | collTitle | otherCitDet | artPage | issId | seriesName | resEdDate | resEd | resAltTitle | seconds | minutes | hours | timeIndicator | days | months | years | designator | other | datasetSet | attribIntSet | featIntSet | featSet | attribSet | usrDetLim | usageDate | specUsage | identCode | exTypeCode | envirDesc | suppInfo | exDesc | vertMaxVal | vertMinVal | end | begin | clkTime | calDate | coordinates | zone | longCntMer | latProjOri | falEastng | falNorthng | sclFacEqu | hgtProsPt | longProjCnt | latProjCnt | sclFacCnt | stVrLongPl | sclFacPrOr | aziPtLong | aziAngle | obLineLong | obLineLat | semiMajAx | denFlatRat | medNote | medVol | medDenUnits | ordTurn | resTitle | idAbs | idPurp | languageCode | rfDenom | mdHrLvName | dateNext | maintNote | voiceNum | faxNum | delPoint | eMailAdd | citId | citIdType | othConsts | useLimit | stanPara | idCredit | medDensity | keyword | statement | srcDesc | stepDesc | stepRat | stepDateTm | measName | measureDescription | evalMethDesc | measDateTm | conExpl | conPass | quanValType | errStat | quanValue | Result | numDims | tranParaAv | chkPtAv | chkPtDesc | transDimDesc | transDimMap | dimSize | ctrlPtAv | orieParaAv | orieParaDesc | georefPars | TopLvlCd | geoObjCnt | ContInfo | attDesc | scope | aName | dimDescrp | maxVal | minVal | pkResp | bitsPerVal | toneGrad | sclFac | offset | compCode | incWithDS | illElevAng | illAziAng | cloudCovPer | cmpGenQuan | trianInd | radCalDatAv | camCalInAv | filmDistInAv | lensDistInAv | westBL | eastBL | southBL | northBL">
+    match="mdFileID | rpIndName | spatObj | spatSchName | asSchLang | asCstLang | asAscii | asGraFile | asSwDevFile | asSwDevFiFt | mdParentID | rpOrgName | rpPosName | city | adminArea | postCode | country | linkage | protocol | appProfile | orName | cntHours | cntInstr | mdStanName | mdStanVer | formatName | formatVer | formatAmdNum | formatSpec | fileDecmTech | resFees | planAvDtTm | ordInstr | handDesc | userNote | classSys | uomName | Real | Decimal | Integer | bgFileType | bgFileDesc | bgFileName | issn | isbn | collTitle | otherCitDet | artPage | issId | seriesName | resEdDate | resEd | resAltTitle | seconds | minutes | hours | timeIndicator | days | months | years | designator | other | datasetSet | attribIntSet | featIntSet | featSet | attribSet | usrDetLim | usageDate | specUsage | identCode | exTypeCode | envirDesc | suppInfo | exDesc | vertMaxVal | vertMinVal | end | begin | clkTime | calDate | coordinates | zone | longCntMer | latProjOri | falEastng | falNorthng | sclFacEqu | hgtProsPt | longProjCnt | latProjCnt | sclFacCnt | stVrLongPl | sclFacPrOr | aziPtLong | aziAngle | obLineLong | obLineLat | semiMajAx | denFlatRat | medNote | medVol | medDenUnits | ordTurn | resTitle | idAbs | idPurp | languageCode | rfDenom | mdHrLvName | dateNext | maintNote | voiceNum | faxNum | delPoint | eMailAdd | citId | citIdType | othConsts | useLimit | stanPara | idCredit | medDensity | keyword | statement | srcDesc | stepDesc | stepRat | stepDateTm | measName | measureDescription | evalMethDesc | measDateTm | conExpl | conPass | quanValType | errStat | quanValue | Result | numDims | tranParaAv | chkPtAv | chkPtDesc | transDimDesc | transDimMap | dimSize | ctrlPtAv | orieParaAv | orieParaDesc | georefPars | TopLvlCd | geoObjCnt | ContInfo | attDesc | scope | aName | dimDescrp | maxVal | minVal | pkResp | bitsPerVal | toneGrad | sclFac | offset | compCode | incWithDS | illElevAng | illAziAng | cloudCovPer | cmpGenQuan | trianInd | radCalDatAv | camCalInAv | filmDistInAv | lensDistInAv | westBL | eastBL | southBL | northBL">
     <xsl:variable name="name" select="local-name(.)"/>
     <xsl:element name="{$name}">
       <xsl:if test="@value">
@@ -784,9 +787,31 @@
           <xsl:apply-templates select="@value"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:value-of select="."/>
+      <!-- Strip html tags -->
+      <xsl:value-of select="replace(., '&lt;/?\w+[^&lt;]*&gt;', '')"/>
     </xsl:element>
   </xsl:template>
+
+  <xsl:template
+          match="mdDateSt">
+    <xsl:variable name="name" select="local-name(.)"/>
+    <xsl:element name="{$name}">
+      <xsl:if test="@value">
+        <xsl:attribute name="value">
+          <xsl:apply-templates select="@value"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="string-length(.) = 8">
+          <xsl:value-of select="substring(., 1, 4)"/>-<xsl:value-of select="substring(., 5, 2)"/>-<xsl:value-of select="substring(., 7, 2)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="."/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:element>
+  </xsl:template>
+
   <xsl:template match="conversionToISOstandardUnit">
     <conversionToISOstandarUnit>
       <xsl:value-of select="."/>
@@ -910,7 +935,7 @@
   <!-- When no resRefDate is found in the source document, the whole citation object is neglected/skipped!!! -->
   <xsl:template
     match="portCatCit | asName | identAuth | thesaName | idCitation | srcCitatn | evaluationProcedure | conSpec | paraCit | catCitation">
-    <xsl:if test="resRefDate/refDateType">
+    <!--<xsl:if test="resRefDate/refDateType">-->
       <xsl:variable name="name" select="local-name(.)"/>
       <xsl:element name="{$name}">
         <xsl:apply-templates select="resTitle"/>
@@ -951,7 +976,7 @@
         <xsl:apply-templates select="isbn"/>
         <xsl:apply-templates select="issn"/>
       </xsl:element>
-    </xsl:if>
+    <!--</xsl:if>-->
   </xsl:template>
 
   <!-- Template with unitsODist transSize onLineSrc onLineMed-->

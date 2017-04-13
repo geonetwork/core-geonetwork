@@ -22,11 +22,11 @@
  */
 
 (function() {
-  goog.provide('gn_solr_request_config');
+  goog.provide('gn_index_request_config');
 
-  var module = angular.module('gn_solr_request_config', []);
+  var module = angular.module('gn_index_request_config', []);
 
-  module.factory('gnSolrWfsFilterConfig', ['gnHttp', function(gnHttp) {
+  module.factory('gnIndexWfsFilterConfig', ['gnHttp', function(gnHttp) {
 
     return {
       url: gnHttp.getService('indexproxy'),
@@ -43,7 +43,7 @@
     };
   }]);
 
-  module.factory('gnSolrDefaultConfig', ['gnHttp', function(gnHttp) {
+  module.factory('gnIndexDefaultConfig', ['gnHttp', function(gnHttp) {
     return {
       url: gnHttp.getService('indexproxy'),
       facets: true,

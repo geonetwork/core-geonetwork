@@ -180,7 +180,7 @@
         if (nextRecordId === mdView.records.length) {
           // When last record of page reached, go to next page...
           // Not the most elegant way to do it, but it will
-          // be easier using Solr search components
+          // be easier using index search components
           $scope.$broadcast('nextPage');
         } else {
           $scope.openRecord(nextRecordId);
@@ -229,8 +229,19 @@
       });
 
       $scope.resultviewFns = {
+        addMdLayerToMapSimple: function (link, md) {
+          if (gnMap.isLayerInMap(viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).then(function (layer) {
+            if (layer) {
+              gnMap.feedLayerWithRelated(layer, link.group);
+            }
+          });
+        },
+        // Add to basket first and then trigger add to map
         addMdLayerToMap: function (link, md) {
-
           if (gnMap.isLayerInMap(viewerMap,
               link.name, link.url)) {
             return;

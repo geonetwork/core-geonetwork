@@ -44,9 +44,9 @@
             function update() {
               $('#' + scope.id).toggleClass('hidden', scope.covered);
               $('#' + scope.id + '-table')
-                .toggleClass('hidden', !scope.covered);
+              .toggleClass('hidden', !scope.covered);
               $('#gn-field-' + scope.titleId)
-                .val(scope.covered ? '' : 'Component not covered');
+              .val(scope.covered ? '' : 'Component not covered');
               var abs = $('#gn-field-' + scope.abstractId);
               if (abs.val() === '') {
                 abs.val(scope.covered ? '' : '-- Explain why --');
@@ -81,7 +81,7 @@
                // edited.
                $http.get('q?fast=index&_content_type=json&_title=' +
                titleEl.val(), {cache: true})
-              .then(function(r) {
+               .then(function(r) {
                  var records = gnSearchManagerService.format(r.data);
 
                  // Don't take pagination in account, we don't expect

@@ -651,8 +651,8 @@
     <!--<xsl:message>## Add action</xsl:message>
     <xsl:message><xsl:copy-of select="."/></xsl:message>
     <xsl:message>Is displayed: <xsl:copy-of select="$isDisplayed"/> because no if provided or if attribute XPath '<xsl:value-of select="@if"/>' expression found a match.</xsl:message>
-    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>
-    -->
+    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>-->
+
     <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
       <xsl:variable name="childName" select="@or"/>
 
@@ -665,8 +665,10 @@
                     select="if ($btnOverrideName)
                             then $strings/*[name() = $btnOverrideName]
                             else ''"/>
+
+      <!-- If multiple elements $elementName contains multiple values. Use the first one in getLabel to avoid failure. -->
       <xsl:variable name="labelConfig"
-                    select="gn-fn-metadata:getLabel($schema, $elementName, $labels)"/>
+                    select="gn-fn-metadata:getLabel($schema, $elementName[1], $labels)"/>
       <xsl:variable name="name"
                     select="if ($btnName != '')
                             then $btnName
