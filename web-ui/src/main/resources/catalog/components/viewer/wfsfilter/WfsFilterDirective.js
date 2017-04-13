@@ -499,8 +499,8 @@
             // output structure to send to filter service
             // use initial filters if available
             if (initialFilters) {
-              scope.output = initialFilters.qParams;
-              scope.searchInput = initialFilters.any;
+              scope.output = initialFilters.qParams || {};
+              scope.searchInput = initialFilters.any || '';
               if (initialFilters.geometry) {
                 scope.ctrl.searchGeometry =
                   initialFilters.geometry[0][0] + ',' +
