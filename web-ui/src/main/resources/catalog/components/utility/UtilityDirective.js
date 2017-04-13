@@ -848,7 +848,8 @@
               },
               startDate: limits.min,
               endDate: limits.max,
-              //autoClose: true,
+                autoclose: true,
+                  keepEmptyValues:true,
               clearBtn: true,
               todayHighlight: false
             } : {}).on('changeDate clearDate', function(ev) {
