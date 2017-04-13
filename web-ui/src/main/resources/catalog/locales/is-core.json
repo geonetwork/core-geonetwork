@@ -321,5 +321,5 @@
     "directoryManager": "Stjórna skrá",
     "typeOfRecord": "Tegund færslu",
     "load": "Hlaða",
-    "solrAccessError": "Villa við Solr aðgang."
+    "indexAccessError": "Villa við index aðgang."
 }

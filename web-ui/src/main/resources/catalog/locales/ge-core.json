@@ -321,5 +321,5 @@
     "directoryManager": "Verzeichnis verwalten",
     "typeOfRecord": "Datensatz-Typ",
     "load": "Lade",
-    "solrAccessError": "Error during Solr access."
+    "indexAccessError": "Error during index access."
 }

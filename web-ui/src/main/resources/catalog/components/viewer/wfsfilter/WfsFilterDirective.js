@@ -25,68 +25,8 @@
   goog.provide('gn_wfsfilter_directive');
 
 
-  var TMP_PROFILE =
-      { 'extendOnly': false,
-        'fields': [
-          /*
-      {
-      "name":"WATER_KM",
-      "aggs": {
-
-        "histogram": {
-          "interval": 5000,
-          "extended_bounds" : {
-            "min" : 2000,
-            "max" : 100000
-          }
-        }
-        ,"range" : {
-          "ranges" : [
-            { "to" : 7500 },
-            { "from" : 7500, "to" : 50000 },
-            { "from" : 50000 }
-          ]
-        }
-      }
-    },
-      {
-      "name": "CARPOOL"
-    }
-
-          */
-          {
-            "name": "CUSTOM_POS",
-            "aggs": {
-              "filters": {
-                "filters": {
-                  "48 - 50": {"query_string":
-                  {"query": "+ft_ent_longitude_s:<0.03 +ft_ent_latitude_s:<44"}},
-                  "49 - 53": {"query_string":
-                  {"query": "+ft_ent_longitude_s:>0.03 +ft_ent_latitude_s:>45"}}
-                }
-              }
-            }
-          }, {
-            "name": "range_Date",
-            "type": "rangeDate",
-            "minField": "date_min",
-            "maxField": "date_max",
-            "display": "graph"
-          },
-          {
-            'name': 'date_min',
-            'display': 'graph'
-          }/*,
-          {
-            'name': 'date_min',
-            'display': 'graph'
-          }*/
-        ],
-        'treeFields': ['CD_REGION'],
-        'tokenizedFields': {
-          'CGENELIN': '-'
-        }
-      };
+  var TMP_PROFILE = {
+  };
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -102,13 +42,13 @@
     'wfsFilterService',
     '$q',
     '$rootScope',
-    'gnSolrRequestManager',
-    'gnSolrService',
+    'gnIndexRequestManager',
+    'gnIndexService',
     'gnGlobalSettings',
     'ngeoDebounce',
     'gnFeaturesTableManager',
     function($http, wfsFilterService, $q, $rootScope,
-             gnSolrRequestManager, gnSolrService, gnGlobalSettings,
+             gnIndexRequestManager, gnIndexService, gnGlobalSettings,
              ngeoDebounce, gnFeaturesTableManager) {
       return {
         restrict: 'A',
@@ -125,7 +65,7 @@
         controller: function() {},
         link: function(scope, element, attrs, ctrl) {
 
-          var solrUrl, uuid, ftName, appProfile, appProfilePromise;
+          var indexUrl, uuid, ftName, appProfile, appProfilePromise;
           scope.map = scope.$parent.map;
           var map = scope.map;
 
@@ -141,11 +81,11 @@
             searchGeometry: undefined
           };
 
-          // Get an instance of solr object
-          var solrObject, geometry, extentFilter;
+          // Get an instance of index object
+          var indexObject, geometry, extentFilter;
 
           var heatmapsRequest =
-              gnSolrRequestManager.register('WfsFilter', 'heatmaps');
+              gnIndexRequestManager.register('WfsFilter', 'heatmaps');
           var defaultHeatmapConfig = {
             radius: 30,
             blur: 55,
@@ -236,15 +176,15 @@
                   }
                 }).catch(function() {});
 
-            solrObject =
-                gnSolrRequestManager.register('WfsFilter',
+            indexObject =
+                gnIndexRequestManager.register('WfsFilter',
                     scope.url + '#' + ftName);
-            scope.solrObject = solrObject;
-            scope.layer.set('solrObject', solrObject);
+            scope.indexObject = indexObject;
+            scope.layer.set('indexObject', indexObject);
 
 
             scope.checkWFSServerUrl();
-            scope.initSolrRequest();
+            scope.initIndexRequest();
 
             if (scope.map) {
               resetHeatMap();
@@ -267,7 +207,7 @@
           };
 
           /**
-           * Init the solr Request Object, either from meta index or from
+           * Init the index Request Object, either from meta index or from
            * application profile.
            */
           function loadFields() {
@@ -277,10 +217,10 @@
             appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
 
-              solrObject.indexFields =
-                  wfsFilterService.solrMergeApplicationProfile(
-                  solrObject.filteredDocTypeFieldsInfo, appProfile);
-              solrObject.initBaseParams();
+              indexObject.indexFields =
+                  wfsFilterService.indexMergeApplicationProfile(
+                  indexObject.filteredDocTypeFieldsInfo, appProfile);
+              indexObject.initBaseParams();
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
 
@@ -296,7 +236,7 @@
             return null;
           }
 
-          scope.initSolrRequest = function() {
+          scope.initIndexRequest = function() {
             var config = {
               wfsUrl: scope.url,
               featureTypeName: ftName
@@ -308,11 +248,11 @@
             scope.countTotal = null;
 
             heatmapsRequest.init(config);
-            solrObject.getDocTypeInfo(config).then(function() {
+            indexObject.getDocTypeInfo(config).then(function() {
               scope.isFeaturesIndexed = true;
               scope.status = null;
-              var docFields = solrObject.filteredDocTypeFieldsInfo;
-              scope.countTotal = solrObject.totalCount;
+              var docFields = indexObject.filteredDocTypeFieldsInfo;
+              scope.countTotal = indexObject.totalCount;
 
               if (scope.md && scope.md.attributeTable) {
                 for (var i = 0; i < docFields.length; i++) {
@@ -334,7 +274,7 @@
                 '../api/workers/data/wfs/actions?serviceUrl=' +
                 encodeURIComponent(scope.url) +
                 '&typeName=' + encodeURIComponent(ftName)).then(function() {
-              scope.initSolrRequest();
+              scope.initIndexRequest();
             }, function() {
               console.warn('Failed to remove features for type ' + id);
             });
@@ -424,7 +364,7 @@
           };
 
           /**
-           * Send a new filtered request to solr to update the facet ui
+           * Send a new filtered request to index to update the facet ui
            * structure.
            * This method is called each time the user check or uncheck a box
            * from the ui, or when he updates the filter input.
@@ -440,13 +380,13 @@
               }
             });
 
-            solrObject.searchWithFacets({
+            indexObject.searchWithFacets({
               params: scope.output,
               any: scope.searchInput,
               geometry: geometry
             }).
                 then(function(resp) {
-                  solrObject.pushState();
+                  indexObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   angular.forEach(scope.fields, function(f) {
@@ -465,24 +405,24 @@
                 params: scope.output,
                 any: scope.searchInput
               },
-              gnSolrService.getHeatmapParams(scope.map)).
+              gnIndexService.getHeatmapParams(scope.map)).
                   then(function(resp) {
                     scope.heatmaps = resp.aggs;
-                    // resp.solrData.facet_counts.facet_heatmaps;
+                    // resp.indexData.facet_counts.facet_heatmaps;
                   });
             }
           }
 
 
           scope.getMore = function(field) {
-            solrObject.getFacetMoreResults(field).then(function(response) {
+            indexObject.getFacetMoreResults(field).then(function(response) {
               field.values = response.facets[0].values;
             });
           };
 
           /**
            * reset and init the facet structure.
-           * call the solr service to get info on all facet fields and bind it
+           * call the index service to get info on all facet fields and bind it
            * to the output structure to generate the ui.
            */
           scope.resetFacets = function() {
@@ -500,9 +440,9 @@
             scope.layer.set('esConfig', null);
 
             // load all facet and fill ui structure for the list
-            return solrObject.searchWithFacets({}).
+            return indexObject.searchWithFacets({}).
                 then(function(resp) {
-                  solrObject.pushState();
+                  indexObject.pushState();
                   scope.fields = resp.facets;
                   scope.count = resp.count;
                   refreshHeatmap();
@@ -526,8 +466,8 @@
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             var layer = scope.layer;
 
-            solrObject.pushState();
-            layer.set('esConfig', solrObject.getState());
+            indexObject.pushState();
+            layer.set('esConfig', indexObject.getState());
             if (!extentFilter) {
               layer.setExtent();
             }
@@ -567,7 +507,7 @@
           };
 
           /**
-           * Trigger the SOLR indexation of the feature type.
+           * Trigger the indexation of the feature type.
            * Only available for administrators.
            */
           scope.indexWFSFeatures = function(version) {
@@ -641,14 +581,14 @@
             }
           });
 
-          // Update heatmap layers from Solr response
+          // Update heatmap layers from index response
           scope.$watch('heatmaps', function(n, o) {
             if (n != o) {
               // TODO: May contains multiple heatmaps
               if (angular.isArray(n.geom)) {
                 scope.source.clear();
                 scope.source.addFeatures(
-                    gnSolrService.heatmapToFeatures(
+                    gnIndexService.heatmapToFeatures(
                     n.geom,
                     scope.map.getView().getProjection())
                 );
@@ -660,10 +600,10 @@
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
               name: scope.layer.get('label') || scope.layer.get('name'),
-              type: 'solr'
+              type: 'index'
             }, {
               map: scope.map,
-              solrObject: solrObject,
+              indexObject: indexObject,
               layer: scope.layer
             });
           };
@@ -675,8 +615,8 @@
 
 
           scope.toSqlOgr = function() {
-            solrObject.pushState();
-            var state = solrObject.getState();
+            indexObject.pushState();
+            var state = indexObject.getState();
 
             if (!state.any) {
               var where = [];
@@ -690,7 +630,7 @@
               console.log(where.join(' AND '));
             }
             else {
-              solrObject.search_es({
+              indexObject.search_es({
                 size: scope.count || 10000,
                 aggs: {}
               }).then(function(data) {

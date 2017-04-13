@@ -22,31 +22,31 @@
  */
 
 (function() {
-  goog.provide('gn_solr_requestmanager');
+  goog.provide('gn_index_requestmanager');
 
-  goog.require('gn_solr_request');
-  goog.require('gn_solr_request_config');
+  goog.require('gn_index_request');
+  goog.require('gn_index_request_config');
 
-  var module = angular.module('gn_solr_requestmanager', [
-    'gn_solr_request', 'gn_solr_request_config'
+  var module = angular.module('gn_index_requestmanager', [
+    'gn_index_request', 'gn_index_request_config'
   ]);
 
   /**
-   * The SolrRequestManager manage a pool of solr request objects. Each object
-   * is a state of a current solr search.
+   * The IndexRequestManager manage a pool of index request objects. Each object
+   * is a state of a current index search.
    *
    * @param {object} $injector angular injector
    * @constructor
    */
-  var GnSolrRequestManager = function($injector) {
+  var gnIndexRequestManager = function($injector) {
 
     var pool_ = [];
 
     /**
-     * Register a Solr request object with a given type and name.
+     * Register a index request object with a given type and name.
      * The manager will check in the pool if such an object has already been
      * instantiated, returns it or instantiate it.
-     * The solr request object is initialize following its type. For the given
+     * The index request object is initialize following its type. For the given
      * type, an config angular Value must exist with the corresponding name.
      *
      * @param {string} type used to init the object
@@ -62,7 +62,7 @@
       }
 
       var objId = this.getObjectId_(type, name);
-      var configName = 'gnSolr' + type + 'Config';
+      var configName = 'gnIndex' + type + 'Config';
 
       // Retrieve the angular value config object
       if (!$injector.has(configName)) {
@@ -70,21 +70,21 @@
         return;
       }
 
-      // Instanciate the solr request object
+      // Instanciate the index request object
       if (!pool_[objId]) {
-        var solrObj = new geonetwork.GnSolrRequest(
+        var indexObj = new geonetwork.gnIndexRequest(
             $injector.get(configName), $injector);
-        pool_[objId] = solrObj;
+        pool_[objId] = indexObj;
       }
       return pool_[objId];
     };
 
     /**
-     * Get a Solr request object with a given type and name from the pool.
+     * Get an index request object with a given type and name from the pool.
      *
      * @param {string} type used to init the object
      * @param {string} name identify the object in the pool
-     * @return {*} the solr request object.
+     * @return {*} the index request object.
      */
 
     this.get = function(type, name) {
@@ -96,7 +96,7 @@
     };
 
     /**
-     * Unregister the solr request object from manager. The object is deleted.
+     * Unregister the index request object from manager. The object is deleted.
      * @param {string} type
      * @param {string} name
      */
@@ -112,7 +112,7 @@
     };
   };
 
-  module.service('gnSolrRequestManager', ['$injector', GnSolrRequestManager]);
+  module.service('gnIndexRequestManager', ['$injector', gnIndexRequestManager]);
 
 
 })();

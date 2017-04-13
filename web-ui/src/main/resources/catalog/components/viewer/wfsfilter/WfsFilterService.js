@@ -29,28 +29,28 @@
 
 
   module.service('wfsFilterService', [
-    'gnSolrRequestManager',
+    'gnIndexRequestManager',
     'gnHttp',
     'gnUrlUtils',
     'gnGlobalSettings',
     '$http',
     '$q',
     '$translate',
-    function(gnSolrRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
+    function(gnIndexRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
              $http, $q, $translate) {
 
-      var solrProxyUrl = gnHttp.getService('indexproxy');
+      var indexProxyUrl = gnHttp.getService('indexproxy');
 
-      var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
+      var indexObject = gnIndexRequestManager.register('WfsFilter', 'facets');
 
-      var buildSolrUrl = function(params) {
-        return gnUrlUtils.append(solrProxyUrl + '/query',
+      var buildIndexUrl = function(params) {
+        return gnUrlUtils.append(indexProxyUrl + '/query',
             gnUrlUtils.toKeyValue(params));
       };
 
       /**
        * Retrieve the index field object from the array given from feature type
-       * info. The object contains the feature type attribute name, the solr
+       * info. The object contains the feature type attribute name, the index
        * indexed name, and its label from applicationProfile.
        * You can retrieve this object with the ftName or the docName.
        *
@@ -144,7 +144,7 @@
        * @param {Array} fields index fields definition
        * @param {Object} appProfile Config object.
        */
-      this.solrMergeApplicationProfile = function(fields, appProfile) {
+      this.indexMergeApplicationProfile = function(fields, appProfile) {
 
         var toRemoveIdx = [], mergedF = [];
         var newFields = appProfile.fields;

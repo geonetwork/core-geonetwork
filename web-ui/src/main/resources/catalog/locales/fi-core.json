@@ -321,5 +321,5 @@
     "directoryManager": "Hakemiston hallinta",
     "typeOfRecord": "Tietueen tyyppi",
     "load": "Lataa",
-    "indexAccessError": "Virhe Solr käytön aikana."
+    "indexAccessError": "Virhe index käytön aikana."
 }

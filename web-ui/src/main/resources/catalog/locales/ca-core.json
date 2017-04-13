@@ -321,5 +321,5 @@
     "directoryManager": "Administrar directori",
     "typeOfRecord": "Tipus d'entrada",
     "load": "Carregar",
-    "solrAccessError": "Error mentre s'accedia a Solr."
+    "indexAccessError": "Error mentre s'accedia a index."
 }

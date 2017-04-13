@@ -22,19 +22,19 @@
  */
 
 (function() {
-  goog.provide('gn_solr_request');
+  goog.provide('gn_index_request');
 
-  var module = angular.module('gn_solr_request', []);
+  var module = angular.module('gn_index_request', []);
 
-  var solrRequestEvents = {
+  var indexRequestEvents = {
     search: 'search'
   };
 
   Array.prototype.unique = function() {
     var a = this.concat();
-    for(var i=0; i<a.length; ++i) {
-      for(var j=i+1; j<a.length; ++j) {
-        if(a[i] === a[j])
+    for (var i = 0; i < a.length; ++i) {
+      for (var j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j])
           a.splice(j--, 1);
       }
     }
@@ -48,7 +48,7 @@
   var FACET_RANGE_COUNT = 5;
   var FACET_RANGE_DELIMITER = ' - ';
 
-  geonetwork.GnSolrRequest = function(config, $injector) {
+  geonetwork.gnIndexRequest = function(config, $injector) {
 
     this.ES_URL = config.url + '/_search';
 
@@ -83,7 +83,8 @@
     this.filteredDocTypeFieldsInfo = [];
 
     /**
-     * The base solr url for the given solr request, made of solr service url,
+     * The base index url for the given index request,
+     * made of index service url,
      * and document identifier fq param.
      *
      * ex:
@@ -94,8 +95,8 @@
 
     /**
      * @type {object}
-     * Contain current params for the solr request param.
-     * Any and Q params will help to generate the Q request param. The solr
+     * Contain current params for the index request param.
+     * Any and Q params will help to generate the Q request param. The index
      * params object are other request params.
      *
      * {
@@ -106,7 +107,7 @@
      *      values: {
      *        GIT-CPTu01: true
      * }},
-     * solrParams: {
+     * indexParams: {
      *   facet:true,
      *   facet.field: [
      *     0: 'ft_OPE_COPE_s',
@@ -127,14 +128,14 @@
     this.eventsListener = {};
 
     /**
-     * Keep a tracking on solr request states
+     * Keep a tracking on index request states
      * @type {Array<Object>} store all search params as an object
      * @private
      */
     this.states_ = [];
 
     // Initialize all events
-    angular.forEach(solrRequestEvents, function(k) {
+    angular.forEach(indexRequestEvents, function(k) {
       this.eventsListener[k] = [];
     }.bind(this));
 
@@ -145,7 +146,7 @@
    *
    * @param {object} options
    */
-  geonetwork.GnSolrRequest.prototype.init = function(options) {
+  geonetwork.gnIndexRequest.prototype.init = function(options) {
     this.initBaseRequest_(options);
   };
 
@@ -157,7 +158,7 @@
    * @param {string} wfsUrl url of the wfs service
    * @return {httpPromise} return array of field names
    */
-  geonetwork.GnSolrRequest.prototype.getDocTypeInfo = function(options) {
+  geonetwork.gnIndexRequest.prototype.getDocTypeInfo = function(options) {
     var docTypeId = this.config.idDoc(options);
     var defer = this.$q.defer();
     this.$http.post(this.ES_URL, {
@@ -221,18 +222,23 @@
     return defer.promise;
   };
 
-  geonetwork.GnSolrRequest.prototype.searchWithFacets =
+  geonetwork.gnIndexRequest.prototype.searchWithFacets =
       function(qParams, aggs) {
 
     if (Object.keys(this.initialParams.stats).length > 0) {
-
+      angular.forEach(this.initialParams.stats, function(value, key) {
+        if (key == 'undefined') {
+          delete this.initialParams.stats[key];
+        }
+      }.bind(this));
       return this.searchQuiet(qParams, this.initialParams.stats).then(
           function(resp) {
             var statsP =
-              this.createFacetSpecFromStats_(resp.solrData.aggregations);
+                this.createFacetSpecFromStats_(resp.indexData.aggregations);
 
             var rangeDateP =
-              this.createFacetSpecFromDateRanges_(resp.solrData.aggregations);
+                this.createFacetSpecFromDateRanges_(
+                resp.indexData.aggregations);
 
             return this.search(qParams, angular.extend(
                 {}, this.initialParams.facets, rangeDateP, aggs)
@@ -252,22 +258,22 @@
    * @param {Object} override to override es request params.
    * @return {angular.Promise}
    */
-  geonetwork.GnSolrRequest.prototype.search_es = function(override) {
+  geonetwork.gnIndexRequest.prototype.search_es = function(override) {
     var esParams = angular.extend({},this.reqParams, override);
     return this.$http.post(this.ES_URL, esParams).then(function(response) {
       return response.data;
     });
   };
 
-  geonetwork.GnSolrRequest.prototype.search = function(qParams, solrParams) {
+  geonetwork.gnIndexRequest.prototype.search = function(qParams, indexParams) {
     angular.extend(this.requestParams, {
       any: qParams.any,
       qParams: qParams.params,
-      solrParams: solrParams,
+      indexParams: indexParams,
       geometry: qParams.geometry,
       filter: this.initialParams.filter
     });
-    return this.search_(qParams, solrParams);
+    return this.search_(qParams, indexParams);
   };
 
   /**
@@ -275,7 +281,7 @@
    * @param {object} field to get more elements from.
    * @return {promise} The search promise.
    */
-  geonetwork.GnSolrRequest.prototype.getFacetMoreResults = function(field) {
+  geonetwork.gnIndexRequest.prototype.getFacetMoreResults = function(field) {
     var aggs = {};
     var agg = this.reqParams.aggs[field.name];
     agg[field.type].size += ROWS;
@@ -287,27 +293,27 @@
     }, aggs, true);
   };
 
-  geonetwork.GnSolrRequest.prototype.searchQuiet =
-      function(qParams, solrParams) {
-    return this.search_(qParams, solrParams, true);
+  geonetwork.gnIndexRequest.prototype.searchQuiet =
+      function(qParams, indexParams) {
+    return this.search_(qParams, indexParams, true);
   };
 
-  geonetwork.GnSolrRequest.prototype.updateSearch =
-      function(params, any, solrParams) {
+  geonetwork.gnIndexRequest.prototype.updateSearch =
+      function(params, any, indexParams) {
     return this.search_(
         angular.extend(this.requestParams.qParams, params),
         any,
-        angular.extend(this.requestParams.solrParams, solrParams)
+        angular.extend(this.requestParams.indexParams, indexParams)
     );
   };
 
 
   /**
-   * Update solr url depending on the current facet ui selection state.
+   * Update index url depending on the current facet ui selection state.
    * Each time a facet is selected, we trigger a new search on the index
    * to build the facet ui again with updated occurencies.
    *
-   * Will build the solr Q query like:
+   * Will build the index Q query like:
    *  +(LABEL_s:"Abyssal" LABEL_s:Infralittoral)
    *  +featureTypeId:*IFR_AAMP_ZONES_BIO_ATL_P
    *
@@ -315,7 +321,7 @@
    * @param {string} any Filter on any field
    * @return {string} the updated url
    */
-  geonetwork.GnSolrRequest.prototype.search_ =
+  geonetwork.gnIndexRequest.prototype.search_ =
       function(qParams, aggs, quiet) {
 
     var params = this.buildESParams(qParams, aggs);
@@ -326,7 +332,7 @@
         function(r) {
 
           var resp = {
-            solrData: r.data,
+            indexData: r.data,
             records: r.data.hits.hits,
             facets: quiet ? undefined : this.createFacetData_(r.data, params),
             count: r.data.hits.total
@@ -340,14 +346,14 @@
         }));
   };
 
-  geonetwork.GnSolrRequest.prototype.next = function() {
+  geonetwork.gnIndexRequest.prototype.next = function() {
     this.page = {
       from: this.page.start + ROWS,  // TODO: Max on total
       size: ROWS
     };
     this.search();
   };
-  geonetwork.GnSolrRequest.prototype.previous = function() {
+  geonetwork.gnIndexRequest.prototype.previous = function() {
     this.page = {
       from: Math.max(this.page.start - ROWS, 0),
       size: ROWS
@@ -355,14 +361,14 @@
     this.search();
   };
   /**
-   * Init the SolRRequest object values: baseUrl, and initial params for
+   * Init the IndexRequest object values: baseUrl, and initial params for
    * facets and stats. If configuration contains a docIdField then
    * a filter query is added to the parameters.
    *
-   * @param {Object} options from SolrRequest object type config.
+   * @param {Object} options from IndexRequest object type config.
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.initBaseRequest_ = function(options) {
+  geonetwork.gnIndexRequest.prototype.initBaseRequest_ = function(options) {
     this.initialParams = angular.extend({}, this.initialParams, {filter: ''});
     if (this.config.docIdField) {
       this.initialParams.filter = '+' + this.config.docIdField +
@@ -377,7 +383,7 @@
    * All params form the `aggs` request object.
    * It's done on request init, but can be overwritten by application.
    */
-  geonetwork.GnSolrRequest.prototype.initBaseParams = function() {
+  geonetwork.gnIndexRequest.prototype.initBaseParams = function() {
 
     var facetParams = {};
     var statParams = {};
@@ -398,7 +404,7 @@
 
       // Keep info of date range, like field for max and min dates
       // Also add info in stats to get all date values.
-      else if (field.type == "rangeDate") {
+      else if (field.type == 'rangeDate') {
         var rangeDate = {};
         ['minField', 'maxField'].forEach(function(k) {
           var fObj = this.getIdxNameObj_(field[k]);
@@ -410,7 +416,7 @@
               }
             };
             rangeDate[k] = fObj.idxName;
-          };
+          }
         }.bind(this));
         rangeDates[field.name] = rangeDate;
       }
@@ -437,21 +443,21 @@
     this.initialParams = angular.extend({}, this.initialParams, {
       facets: facetParams,
       stats: statParams,
-      rangeDates:rangeDates
+      rangeDates: rangeDates
     });
   };
 
 
   /**
    * Retrieve the index field object from the array given from feature type
-   * info. The object contains the feature type attribute name, the solr
+   * info. The object contains the feature type attribute name, the index
    * indexed name, and its label from applicationProfile.
    * You can retrieve this object with the ftName or the docName.
    *
    * @param {string} name
    * @return {*}
    */
-  geonetwork.GnSolrRequest.prototype.getIdxNameObj_ = function(name) {
+  geonetwork.gnIndexRequest.prototype.getIdxNameObj_ = function(name) {
     var fields = this.filteredDocTypeFieldsInfo || [];
     for (var i = 0; i < fields.length; i++) {
       if (fields[i].name == name ||
@@ -463,7 +469,7 @@
     fields = this.docTypeFieldsInfo || [];
     for (var i = 0; i < fields.length; i++) {
       if (fields[i].name == name ||
-        fields[i].idxName == name) {
+          fields[i].idxName == name) {
         return fields[i];
       }
     }
@@ -475,11 +481,11 @@
    * The return object is used for the UI to display all facet list.
    * The object is created from histogram, range, terms or trees
    *
-   * @param {Object} solrData  solr response object
+   * @param {Object} indexData  index response object
    * @return {Array} Facet config
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.createFacetData_ =
+  geonetwork.gnIndexRequest.prototype.createFacetData_ =
       function(response, requestParam) {
 
     var fields = [];
@@ -547,7 +553,7 @@
       // date types
       else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
 
-        if(facetField.type == 'rangeDate') {
+        if (facetField.type == 'rangeDate') {
           var rangebuckets = [];
           for (var p in respAgg.buckets) {
             var b = respAgg.buckets[p];
@@ -609,7 +615,7 @@
             value: p,
             count: respAgg.buckets[p].doc_count
           };
-          if(reqAgg.filters.filters[p].query_string) {
+          if (reqAgg.filters.filters[p].query_string) {
             o.query = reqAgg.filters.filters[p].query_string.query;
           }
           facetField.values.push(o);
@@ -633,7 +639,7 @@
   };
 
   /**
-   * Create solr request parameters to generate range facet from stats result.
+   * Create index request parameters to generate range facet from stats result.
    *
    * CARPOOL_d: {
    *   count: 49
@@ -648,11 +654,11 @@
    *    f.CARPOOL_d.facet.range.gap:401583.2
    * }
    *
-   * @param {Object} solrData object return from solr Request
+   * @param {Object} indexData object return from index Request
    * @return {{[facet.range]: Array}}
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.createFacetSpecFromStats_ =
+  geonetwork.gnIndexRequest.prototype.createFacetSpecFromStats_ =
       function(aggs) {
 
     var histograms = {};
@@ -688,14 +694,17 @@
    * Build ES aggs params (filters) from both dates values.
    * The params is a filter, where all entries are a combo of 2 single ranges.
    * @param {Object} aggs
-   * @returns {{}}
+   * @return {{}}
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.createFacetSpecFromDateRanges_ = function(aggs) {
+  geonetwork.gnIndexRequest.prototype.createFacetSpecFromDateRanges_ =
+      function(aggs) {
     var filters = {};
     var ret = {};
 
-    angular.forEach(this.initialParams.rangeDates, function(v,k) {
+    angular.forEach(this.initialParams.rangeDates, function(v, k) {
+      if (v.minField == undefined) return;
+
       var minF = aggs[v.minField];
       var maxF = aggs[v.maxField];
       var allD = minF.buckets.concat(maxF.buckets).unique();
@@ -728,46 +737,46 @@
   };
 
   /**
-   * Merge the current solr request params with the given ones and build the
-   * result url. Doesn't update the state of the solr object.
+   * Merge the current index request params with the given ones and build the
+   * result url. Doesn't update the state of the index object.
    * If state param is provided, the url is computed from the state object
-   * instead of current solr request params.
+   * instead of current index request params.
    *
    * @param {object} qParams all element that helps to build the `q` param
-   * @param {object} solrParams a map with all params name and value for solr
+   * @param {object} indexParams a map with all params name and value for index
    * @param {undefined|object} state of `this.requestParams`
    * @return {string} The merged url
    */
-  geonetwork.GnSolrRequest.prototype.getMergedUrl =
-      function(qParams_, solrParams_, state) {
+  geonetwork.gnIndexRequest.prototype.getMergedUrl =
+      function(qParams_, indexParams_, state) {
 
-    var p = this.getMergedParams_(qParams_, solrParams_, state);
-    return this.getRequestUrl_(p.qParams, p.solrParams);
+    var p = this.getMergedParams_(qParams_, indexParams_, state);
+    return this.getRequestUrl_(p.qParams, p.indexParams);
   };
 
   /**
-   * Get solr request parameters (q and others) from an given state
-   * object or the current solr param state, merged with the given parameters.
+   * Get index request parameters (q and others) from an given state
+   * object or the current index param state, merged with the given parameters.
    *
    * @param {object} qParams all element that helps to build the `q` param
-   * @param {object} solrParams a map with all params name and value for solr
+   * @param {object} indexParams a map with all params name and value for index
    * @param {undefined|object} state of `this.requestParams`
    * @return {string} The merged url
    */
-  geonetwork.GnSolrRequest.prototype.getMergedParams_ =
-      function(qParams_, solrParams_, state) {
+  geonetwork.gnIndexRequest.prototype.getMergedParams_ =
+      function(qParams_, indexParams_, state) {
 
     var baseObj = state || this.requestParams;
     return {
       qParams: this.getMergedQParams_(qParams_, baseObj),
-      solrParams: this.getMergedSolrParams_(solrParams_, baseObj)
+      indexParams: this.getMergedindexParams_(indexParams_, baseObj)
     };
   };
 
   //TODO: confusing types, qParams is an object with (params,any,geometry) keys,
   //TODO: while this.requestParams.qParams is just the params object
   //TODO: change the this.requestParams type to reflect all method signatures
-  geonetwork.GnSolrRequest.prototype.getMergedQParams_ =
+  geonetwork.gnIndexRequest.prototype.getMergedQParams_ =
       function(qParams_, baseObj) {
 
     return {
@@ -777,22 +786,22 @@
     };
   };
 
-  geonetwork.GnSolrRequest.prototype.getMergedSolrParams_ =
-      function(solrParams_, baseObj) {
-    return angular.extend({}, baseObj.solrParams, solrParams_);
+  geonetwork.gnIndexRequest.prototype.getMergedindexParams_ =
+      function(indexParams_, baseObj) {
+    return angular.extend({}, baseObj.indexParams, indexParams_);
   };
 
-  geonetwork.GnSolrRequest.prototype.getRequestUrl_ =
-      function(qParams, solrParams) {
-    return this.baseUrl + this.buildUrlParams_(qParams, solrParams);
+  geonetwork.gnIndexRequest.prototype.getRequestUrl_ =
+      function(qParams, indexParams) {
+    return this.baseUrl + this.buildUrlParams_(qParams, indexParams);
   };
 
-  geonetwork.GnSolrRequest.prototype.buildUrlParams_ =
-      function(qParams, solrParams) {
+  geonetwork.gnIndexRequest.prototype.buildUrlParams_ =
+      function(qParams, indexParams) {
     return this.buildQParam_(qParams) +
-        this.parseKeyValue_(solrParams);
+        this.parseKeyValue_(indexParams);
   };
-  geonetwork.GnSolrRequest.prototype.getSearhQuery =
+  geonetwork.gnIndexRequest.prototype.getSearhQuery =
       function(params) {
     return this.buildQParam_(params, params.qParams);
   };
@@ -805,7 +814,7 @@
    *     type
    *     values
    */
-  geonetwork.GnSolrRequest.prototype.buildESParams =
+  geonetwork.gnIndexRequest.prototype.buildESParams =
       function(qParams, aggs) {
 
     var params = {
@@ -848,7 +857,7 @@
         else {
           gte = lte = field.value;
         }
-        if(field.type == 'date') {
+        if (field.type == 'date') {
           range[fieldName] = {
             gte: gte,
             lte: lte,
@@ -913,7 +922,7 @@
    * @return {string} the query string
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.buildQParam_ = function(qParams) {
+  geonetwork.gnIndexRequest.prototype.buildQParam_ = function(qParams) {
     var fieldsQ = [],
         qParam = '',
         any = qParams.any,
@@ -998,7 +1007,7 @@
    * @return {string} url param
    * @private
    */
-  geonetwork.GnSolrRequest.prototype.parseKeyValue_ = function(params) {
+  geonetwork.gnIndexRequest.prototype.parseKeyValue_ = function(params) {
     var urlParams = '';
     angular.forEach(params, function(v, k) {
 
@@ -1015,24 +1024,24 @@
 
 
   // === EVENTS LISTENER ====
-  geonetwork.GnSolrRequest.prototype.on = function(key, callback, opt_this) {
+  geonetwork.gnIndexRequest.prototype.on = function(key, callback, opt_this) {
     this.eventsListener[key].push({callback: callback, this: opt_this});
   };
-  geonetwork.GnSolrRequest.prototype.sendEvent = function(key, args) {
+  geonetwork.gnIndexRequest.prototype.sendEvent = function(key, args) {
     this.eventsListener[key].forEach(angular.bind(this, function(event) {
       event.callback.call(event.this || this, args);
     }));
   };
 
   // === STATE MANAGEMENT ====
-  geonetwork.GnSolrRequest.prototype.pushState = function(state) {
+  geonetwork.gnIndexRequest.prototype.pushState = function(state) {
     var state_ = state || angular.copy(this.requestParams);
     this.states_.push(state_);
   };
-  geonetwork.GnSolrRequest.prototype.popState = function(state) {
+  geonetwork.gnIndexRequest.prototype.popState = function(state) {
     return this.states_.pop();
   };
-  geonetwork.GnSolrRequest.prototype.getState = function(idx) {
+  geonetwork.gnIndexRequest.prototype.getState = function(idx) {
     var idx_ = idx || this.states_.length - 1;
     return idx_ >= 0 && this.states_[idx_] || null;
   };

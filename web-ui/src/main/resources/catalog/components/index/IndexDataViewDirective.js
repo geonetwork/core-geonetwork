@@ -22,9 +22,9 @@
  */
 
 (function() {
-  goog.provide('gn_solr_data_view_directive');
+  goog.provide('gn_index_data_view_directive');
 
-  var module = angular.module('gn_solr_data_view_directive', []);
+  var module = angular.module('gn_index_data_view_directive', []);
 
   module.directive('gnDataFilterView',
       [
@@ -35,7 +35,7 @@
            scope: {
              map: '=gnDataFilterView'
            },
-           templateUrl: '../../catalog/components/solr/' +
+           templateUrl: '../../catalog/components/index/' +
            'partials/datafilterview.html',
            link: function(scope, element, attrs) {
              scope.currentLayer = null;
@@ -73,8 +73,8 @@
   });
 
   module.directive('gnDataTable',
-      ['$http', '$translate', 'gnSolrRequestManager',
-       function($http, $translate, gnSolrRequestManager) {
+      ['$http', '$translate', 'gnIndexRequestManager',
+       function($http, $translate, gnIndexRequestManager) {
 
          return {
            restrict: 'A',
@@ -83,23 +83,23 @@
              q: '=gnDataTable',
              excludeCols: '='
            },
-           templateUrl: '../../catalog/components/solr/' +
+           templateUrl: '../../catalog/components/index/' +
            'partials/datatable.html',
            link: function(scope, element, attrs) {
              var pageList = [5, 10, 50, 100];
              var table = element.find('table');
              scope.url = null;
 
-             var solrObject = gnSolrRequestManager.register(
-                 attrs['gnDataTableSolrType'],
-                 attrs['gnDataTableSolrName']);
+             var indexObject = gnIndexRequestManager.register(
+                 attrs['gnDataTableIndexType'],
+                 attrs['gnDataTableIndexName']);
 
              scope.$watch(function() {
-               return solrObject.baseUrl;
-             }, function(solrUrl, oldValue) {
-               if (solrUrl) {
+               return indexObject.baseUrl;
+             }, function(indexUrl, oldValue) {
+               if (indexUrl) {
                  var columns = [],
-                     fields = solrObject.filteredDocTypeFieldsInfo;
+                     fields = indexObject.filteredDocTypeFieldsInfo;
 
                  fields.forEach(function(field) {
                    if ($.inArray(field.idxName, scope.excludeCols) === -1) {
@@ -112,8 +112,8 @@
 
                  // TODO: Should use the solObject to get table of results
                  // and do paging/sorting instead of re-running the query
-                 solrObject.on('search', function(event) {
-                   var url = solrUrl; // .replace('from=0', '');
+                 indexObject.on('search', function(event) {
+                   var url = indexUrl; // .replace('from=0', '');
 
                    table.bootstrapTable('destroy');
                    table.bootstrapTable({
@@ -137,7 +137,7 @@
                      columns: columns,
                      pagination: true,
                      sidePagination: 'server',
-                     totalRows: solrObject.totalCount,
+                     totalRows: indexObject.totalCount,
                      pageSize: pageList[0],
                      pageList: pageList
                    });
