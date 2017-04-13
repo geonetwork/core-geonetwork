@@ -450,7 +450,7 @@
       <div data-ng-switch-when="is3DModeAllowed">
         <input type="checkbox"
                id="{{key}}-checkbox"
-               data-ng-model="value"/>&nbsp;
+               data-ng-model="mCfg[key]"/>&nbsp;
         <label class="control-label"
                for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
 
@@ -462,7 +462,7 @@
       <div data-ng-switch-when="useOSM">
         <input type="checkbox"
                id="{{key}}-checkbox"
-               data-ng-model="value"/>&nbsp;
+               data-ng-model="mCfg[key]"/>&nbsp;
         <label class="control-label"
                for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
 

@@ -1,6 +1,13 @@
 {
     "all": "Allt",
     "allInPage": "allt á einni síðu",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "AnonymousUserlist": "Preferred records",
+    "MapLayerlist": "Add to map list",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Author",
     "none": "ekkert",
     "BadParameterEx": "Röng breyta",

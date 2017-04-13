@@ -1,6 +1,13 @@
 {
     "all": "Tout sélectionner",
     "allInPage": "Tout sélectionner dans la page",
+    "addToSelection": "Ajouter à ...",
+    "removeFromSelection": "Supprimer de ...",
+    "AnonymousUserlist": "Fiches préférées",
+    "MapLayerlist": "Liste d'ajout à la carte",
+    "basket": "Paniers",
+    "emptyBasket": "Panier vide",
+    "searchSelectedRecord": "Rechercher les fiches",
     "author": "Auteur",
     "none": "Tout désélectionner",
     "BadParameterEx": "Paramètre incorrect",

@@ -337,7 +337,8 @@
             } else {
               url += mdUuid + '/ownership?';
             }
-            return $http.put(url + 'userIdentifier=' + scope.selectedUserGroup.userId +
+            return $http.put(url +
+                'userIdentifier=' + scope.selectedUserGroup.userId +
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
                 .then(function(r) {
                   $rootScope.$broadcast('StatusUpdated', {

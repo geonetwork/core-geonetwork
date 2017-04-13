@@ -1,6 +1,13 @@
 {
     "all": "모두",
     "allInPage": "페이지의 모두",
+    "addToSelection": "추가하기 ...",
+    "removeFromSelection": "제거하기 ...",
+    "AnonymousUserlist": "선호하는 레코드",
+    "MapLayerlist": "지도 목록에 추가",
+    "basket": "장바구니",
+    "emptyBasket": "장바구니에 아무것도 없습니다",
+    "searchSelectedRecord": "레코드 검색",
     "author": "저자",
     "none": "없음",
     "BadParameterEx": "잘못된 매개변수",

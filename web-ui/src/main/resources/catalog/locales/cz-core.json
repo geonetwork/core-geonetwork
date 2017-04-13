@@ -1,6 +1,13 @@
 {
     "all": "všechny",
     "allInPage": "Všechny na stránce",
+    "addToSelection": "Add to ...",
+    "removeFromSelection": "Remove from ...",
+    "AnonymousUserlist": "Preferred records",
+    "MapLayerlist": "Add to map list",
+    "basket": "Basket",
+    "emptyBasket": "Nothing in basket",
+    "searchSelectedRecord": "Search records",
     "author": "Author",
     "none": "žádný",
     "BadParameterEx": "Špatný parametr",

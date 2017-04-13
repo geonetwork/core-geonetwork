@@ -58,9 +58,9 @@
               var md = new Metadata(record);
               return md.getLinksByType('OGC:WMS').length > 0;
             },
-            fn: function(uuid, records) {
-              for (var i = 0; i < uuid.length; i++) {
-                var uuid = uuid[i], record = records[uuid];
+            fn: function(uuids, records) {
+              for (var i = 0; i < uuids.length; i++) {
+                var uuid = uuids[i], record = records[uuid];
 
                 var md = new Metadata(record);
                 angular.forEach(md.getLinksByType('OGC:WMS'), function(link) {
