@@ -413,7 +413,7 @@
             }
             // Direct mapping (datepicker)
             else {
-              date = output[fieldName].value;
+              date = output[fieldName].values;
 
               if ((angular.isObject(date) && date.from && date.to) ||
                   angular.isString(date)) {
@@ -423,7 +423,9 @@
                 output[fieldName].type = undefined;
               }
             }
-            scope.filterFacets();
+            if(output[fieldName].type) {
+              scope.filterFacets();
+            }
           };
 
           /**

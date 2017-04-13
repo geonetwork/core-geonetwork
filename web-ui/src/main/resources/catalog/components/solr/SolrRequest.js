@@ -861,12 +861,13 @@
     angular.forEach(qParams.params, function(field, fieldName) {
       if (field.type == 'date' || field.type == 'rangeDate') {
         var gte, lte, range = {};
-        if (angular.isObject(field.value)) {
-          gte = field.value.from;
-          lte = field.value.to;
+        var date = field.value || field.values;
+        if (angular.isObject(date)) {
+          gte = date.from;
+          lte = date.to;
         }
         else {
-          gte = lte = field.value;
+          gte = lte = date;
         }
         if(field.type == 'date') {
           range[fieldName] = {
@@ -942,6 +943,9 @@
     // TODO move this in createFacetData_ ? query param
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
+      if(field.type == 'date') {
+        return;
+      }
       for (var p in field.values) {
         if (field.type == 'histogram' || field.type == 'range') {
           var value;
