@@ -229,7 +229,8 @@
              }
              // TODO; stop loop when found
            });
-          return parameterValue;
+          return parameterValue != null ?
+          decodeURIComponent(parameterValue) : undefined;
         };
 
         var CSVToArray = function(strData, strDelimiter) {

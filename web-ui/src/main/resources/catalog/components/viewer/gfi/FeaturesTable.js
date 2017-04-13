@@ -59,15 +59,15 @@
 
     // See http://stackoverflow.com/a/13382873/29655
     function getScrollbarWidth() {
-      var outer = document.createElement("div");
-      outer.style.visibility = "hidden";
-      outer.style.width = "100px";
-      outer.style.msOverflowStyle = "scrollbar";
+      var outer = document.createElement('div');
+      outer.style.visibility = 'hidden';
+      outer.style.width = '100px';
+      outer.style.msOverflowStyle = 'scrollbar';
       document.body.appendChild(outer);
       var widthNoScroll = outer.offsetWidth;
-      outer.style.overflow = "scroll";
-      var inner = document.createElement("div");
-      inner.style.width = "100%";
+      outer.style.overflow = 'scroll';
+      var inner = document.createElement('div');
+      inner.style.width = '100%';
       outer.appendChild(inner);
       var widthWithScroll = inner.offsetWidth;
       outer.parentNode.removeChild(outer);
@@ -113,7 +113,7 @@
               once = false;
               var el = $('.fixed-table-header');
               setTimeout(function() {
-                var width = getScrollbarWidth()
+                var width = getScrollbarWidth();
                 if (parseInt(el.css('margin-right'), 10) > width) {
                   el.css('margin-right', width + 'px');
                 }

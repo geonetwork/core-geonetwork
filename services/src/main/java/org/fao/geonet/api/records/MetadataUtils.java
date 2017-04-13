@@ -207,7 +207,7 @@ public class MetadataUtils {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(search(uuid, "hasfeaturecat", context, from, to, fast));
+            relatedRecords.addContent(search(uuid, "hasfeaturecats", context, from, to, fast));
         }
 
         // XSL transformation is used on the metadata record to extract
@@ -237,7 +237,7 @@ public class MetadataUtils {
                 parameters.addContent(new Element("parentUuid").setText(uuid));
             else if ("services".equals(type))
                 parameters.addContent(new Element("operatesOn").setText(uuid));
-            else if ("hasfeaturecat".equals(type))
+            else if ("hasfeaturecats".equals(type))
                 parameters.addContent(new Element("hasfeaturecat").setText(uuid));
             else if ("hassource".equals(type))
                 parameters.addContent(new Element("hassource").setText(uuid));

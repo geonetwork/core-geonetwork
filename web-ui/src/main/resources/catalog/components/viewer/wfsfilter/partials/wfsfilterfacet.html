@@ -82,14 +82,14 @@
     </div>
     <!--Geometry Field-->
     <div class="gn-facet"
-         ng-if="isFeaturesIndexed && solrObject.geomField">
-      <h5 gn-collapsible="solrObject.geomField.expanded">
+         ng-if="isFeaturesIndexed && indexObject.geomField">
+      <h5 gn-collapsible="indexObject.geomField.expanded">
         <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': solrObject.geomField.expanded, 'gn-field-empty': !output[solrObject.geomField.name]}"></span>
+              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !output[indexObject.geomField.name]}"></span>
         {{'gnbbox' | translate}}
       </h5>
       <div class="list-group"
-           data-ng-class="{'collapse': !solrObject.geomField.expanded}">
+           data-ng-class="{'collapse': !indexObject.geomField.expanded}">
         <gn-bbox-input data-value="ctrl.searchGeometry"
                        data-map="map"
         />
@@ -106,7 +106,7 @@
       </button>
       <button class="btn btn-default btn-xs"
          title="{{'refresh' | translate}}"
-         data-ng-click="initSolrRequest()">
+         data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>
       </button>
       <button data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'"
@@ -130,7 +130,7 @@
           </a>
         </li>
         <li>
-          <a href="" data-ng-click="initSolrRequest()">
+          <a href="" data-ng-click="initIndexRequest()">
             <i class="fa fa-refresh"></i>&nbsp;
             <span data-translate="">refresh</span>
           </a>

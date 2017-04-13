@@ -27,7 +27,7 @@
   var module = angular.module('gn_cors_interceptor', []);
 
   var isChrome = /Chrome/.test(navigator.userAgent) &&
-    /Google Inc/.test(navigator.vendor);
+      /Google Inc/.test(navigator.vendor);
 
   /**
    * CORS Interceptor
@@ -54,28 +54,30 @@
               // are not targeting the catalog
               // add proxy if needed
               if (config.url.indexOf('http', 0) === 0 &&
-                (gnGlobalSettings.gnUrl == ''|| config.url.indexOf(gnGlobalSettings.gnUrl) !== 0)) {
+                  (gnGlobalSettings.gnUrl == '' ||
+                  config.url.indexOf(gnGlobalSettings.gnUrl) !== 0)) {
                 var url = config.url.split('/');
                 url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
                 //if ($.inArray(url, gnGlobalSettings.requireProxy) != -1) {
-                  // require proxy
-                  config.url = gnGlobalSettings.proxyUrl +
-                      encodeURIComponent(config.url);
+                // require proxy
+                config.url = gnGlobalSettings.proxyUrl +
+                    encodeURIComponent(config.url);
                 //}
               } else if (gnGlobalSettings.gnUrl &&
-                config.url.indexOf('http://') < 0 &&
-                config.url.indexOf('https://') < 0 &&
-                !config.url.match(/(partials\/).*(.html)$/)) {
+                  config.url.indexOf('http://') < 0 &&
+                  config.url.indexOf('https://') < 0 &&
+                  !config.url.match(/(partials\/).*(.html)$/)) {
                 // Relative URL in API mode
                 // are prefixed with catalog URL
                 // console.log(config.url);
 
-                if(isChrome && config.method == 'GET' && config.cache != true
-                  && config.url != 'q'
-                  && config.url.indexOf('qi?') != 0
-                  && config.url.indexOf('q?') != 0
-                  && config.url.indexOf('GetFeatureInfo') < 0 ) {
+                if (isChrome && config.method == 'GET' &&
+                    config.cache != true &&
+                    config.url != 'q' &&
+                    config.url.indexOf('qi?') != 0 &&
+                    config.url.indexOf('q?') != 0 &&
+                    config.url.indexOf('GetFeatureInfo') < 0) {
 
                   var param = {
                     __id: Math.floor(Math.random() * (99999999999 - 0))

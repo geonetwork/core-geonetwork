@@ -488,7 +488,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation,
-                  scope.langs, scope.langsWithId,
+               scope.langs, scope.langsWithId,
                    scope.textgroupOnly).then(
                function(data) {
                  scope.snippet = data;

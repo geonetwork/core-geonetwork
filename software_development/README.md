@@ -206,6 +206,11 @@ and then execute the following maven command::
 
 After a moment, GeoNetwork should be accessible at: http://localhost:8080/geonetwork
 
+For changes related to the user interface in the `web-ui` module or the metadata schemas in the `schemas` module, can be deployed in jetty executing the following maven command in the **web** module::
+
+    $ mvn process-resources
+
+
 ### Source code documentation
 
 The GeoNetwork Java source code is based on Javadoc. Javadoc is a tool for

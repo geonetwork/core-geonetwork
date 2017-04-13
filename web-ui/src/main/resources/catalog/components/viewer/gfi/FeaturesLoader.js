@@ -217,15 +217,15 @@
    *
    * @constructor
    */
-  geonetwork.GnFeaturesSOLRLoader = function(config, $injector) {
+  geonetwork.GnFeaturesINDEXLoader = function(config, $injector) {
     geonetwork.GnFeaturesLoader.call(this, config, $injector);
 
     this.layer = config.layer;
     this.coordinates = config.coordinates;
-    this.solrObject = config.solrObject;
+    this.indexObject = config.indexObject;
   };
 
-  geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
+  geonetwork.inherits(geonetwork.GnFeaturesINDEXLoader,
       geonetwork.GnFeaturesLoader);
 
   /**
@@ -233,7 +233,7 @@
    * @return {*}
    * @private
    */
-  geonetwork.GnFeaturesSOLRLoader.prototype.formatUrlValues_ = function(url) {
+  geonetwork.GnFeaturesINDEXLoader.prototype.formatUrlValues_ = function(url) {
     var $filter = this.$injector.get('$filter');
 
     url = this.fillUrlWithFilter_(url);
@@ -257,9 +257,10 @@
    * @return {string} substitued url
    * @private
    */
-  geonetwork.GnFeaturesSOLRLoader.prototype.fillUrlWithFilter_ = function(url) {
+  geonetwork.GnFeaturesINDEXLoader.prototype.fillUrlWithFilter_ =
+      function(url) {
 
-    var solrFilters = this.solrObject.getState();
+    var indexFilters = this.indexObject.getState();
 
     var URL_SUBSTITUTE_PREFIX = 'filtre_';
     var regex = /\$\{(\w+)\}/g;
@@ -276,8 +277,8 @@
 
     urlFilters.forEach(function(p, i) {
       var name = p;
-      var idxName = this.solrObject.getIdxNameObj_(name).idxName;
-      var fValue = solrFilters.qParams[idxName];
+      var idxName = this.indexObject.getIdxNameObj_(name).idxName;
+      var fValue = indexFilters.qParams[idxName];
       url = url.replace(placeholders[i], '');
 
       if (fValue) {
@@ -288,16 +289,16 @@
     return this.urlUtils.append(url, this.urlUtils.toKeyValue(paramsToAdd));
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
+  geonetwork.GnFeaturesINDEXLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
     var $filter = this.$injector.get('$filter');
 
     var pageList = [5, 10, 50, 100],
         columns = [],
-        solr = this.solrObject,
+        index = this.indexObject,
         map = this.map,
-        fields = solr.indexFields || solr.filteredDocTypeFieldsInfo;
+        fields = index.indexFields || index.filteredDocTypeFieldsInfo;
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
@@ -317,10 +318,10 @@
       }
     }.bind(this));
 
-    // get an update solr request url with geometry filter based on a point
-    var url = this.solrObject.baseUrl;
-    var state = this.solrObject.getState();
-    var searchQuery = this.solrObject.getSearhQuery(state);
+    // get an update index request url with geometry filter based on a point
+    var url = this.indexObject.baseUrl;
+    var state = this.indexObject.getState();
+    var searchQuery = this.indexObject.getSearhQuery(state);
 
     // sxt specific
     var gSetting = this.$injector.get('gnGlobalSettings');
@@ -335,7 +336,8 @@
       contentType: 'application/json',
       method: 'POST',
       queryParams: function(p) {
-        // TODO: Should use solrObject.search_ ?
+
+        // TODO: Should use indexObject.search_ ?
         var params = angular.extend({},
             {
               query: {query_string: {query: searchQuery}}},
@@ -414,19 +416,19 @@
       columns: columns,
       pagination: true,
       sidePagination: 'server',
-      totalRows: this.solrObject.totalCount,
+      totalRows: this.indexObject.totalCount,
       pageSize: pageList[1],
       pageList: pageList
     });
     return defer.promise;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getCount = function() {
+  geonetwork.GnFeaturesINDEXLoader.prototype.getCount = function() {
     return this.count;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getFeatureFromRow = function(row) {
-    var geom = row[this.solrObject.geomField.idxName];
+  geonetwork.GnFeaturesINDEXLoader.prototype.getFeatureFromRow = function(row) {
+    var geom = row[this.indexObject.geomField.idxName];
     if (angular.isArray(geom)) {
       geom = geom[0];
     }

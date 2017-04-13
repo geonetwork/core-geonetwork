@@ -281,7 +281,7 @@
                */
               scope.filterInputs = function(v) {
                 var filter = scope.ctrl.activeFilter;
-                if(!filter) return true;
+                if (!filter) return true;
                 filter = filter.toLowerCase();
                 return v.name.toLowerCase().indexOf(filter) >= 0;
 
