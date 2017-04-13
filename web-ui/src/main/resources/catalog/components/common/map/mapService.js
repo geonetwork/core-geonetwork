@@ -768,7 +768,7 @@
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
                 var url = layer.Style[layer.Style.length - 1]
-                    .LegendURL[0];
+                    .LegendURL[0] || url;
                 if (url) {
                   legend = url.OnlineResource;
                 }
@@ -817,7 +817,7 @@
 
                   this.loadingLayer = true;
 
-                  var parts = url.split('?');
+                  var parts = this.url_.split('?');
 
                   var url = gnUrlUtils.append(parts[0],
                       gnUrlUtils.toKeyValue({
@@ -855,7 +855,8 @@
                       });
                 },
                 strategy: ol.loadingstrategy.bbox,
-                projection: map.getView().getProjection().getCode()
+                projection: map.getView().getProjection().getCode(),
+                url: url
               });
 
               var extent = null;
