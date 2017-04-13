@@ -493,8 +493,8 @@
           scope.resetFacets = function() {
 
             // get initial filters if available (and then clear it)
-            var initialFilters = solrObject.initialFilters;
-            solrObject.initialFilters = null;
+            var initialFilters = indexObject.initialFilters;
+            indexObject.initialFilters = null;
 
             // output structure to send to filter service
             // use initial filters if available

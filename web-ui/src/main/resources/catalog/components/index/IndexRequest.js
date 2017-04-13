@@ -819,7 +819,7 @@
    * Put in `fieldsOrder_` the order of the fields to display in facets.
    * This order comes from application profile if not extended.
    */
-  geonetwork.GnSolrRequest.prototype.setFielsdOrder = function() {
+  geonetwork.gnIndexRequest.prototype.setFielsdOrder = function() {
     this.fieldsOrder_ = [];
     this.filteredDocTypeFieldsInfo.forEach(function(f) {
       this.fieldsOrder_.push(f.idxName || f.name);
