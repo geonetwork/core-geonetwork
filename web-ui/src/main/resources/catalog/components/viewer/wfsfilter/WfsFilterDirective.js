@@ -25,8 +25,71 @@
   goog.provide('gn_wfsfilter_directive');
 
 
-  var TMP_PROFILE = {
-  };
+  var TMP_PROFILE =
+      { 'extendOnly': false,
+        'fields': [
+          /*
+      {
+      "name":"WATER_KM",
+      "aggs": {
+
+        "histogram": {
+          "interval": 5000,
+          "extended_bounds" : {
+            "min" : 2000,
+            "max" : 100000
+          }
+        }
+        ,"range" : {
+          "ranges" : [
+            { "to" : 7500 },
+            { "from" : 7500, "to" : 50000 },
+            { "from" : 50000 }
+          ]
+        }
+      }
+    },
+      {
+      "name": "CARPOOL"
+    }
+
+          */
+          {"name": "param_group_liste"},
+          {"name": "ent_prog_cd"},
+          {"name": "param_liste"},
+          {
+            "name": "CUSTOM_POS",
+            "aggs": {
+              "filters": {
+                "filters": {
+                  "48 - 50": {"query_string":
+                  {"query": "+ft_ent_longitude_s:<0.03 +ft_ent_latitude_s:<44"}},
+                  "49 - 53": {"query_string":
+                  {"query": "+ft_ent_longitude_s:>0.03 +ft_ent_latitude_s:>45"}}
+                }
+              }
+            }
+          }, {
+            "name": "range_Date",
+            "type": "rangeDate",
+            "minField": "date_min",
+            "maxField": "date_max",
+            "display": "graph"
+          },
+          {
+            'name': 'date_min',
+            'display': 'graph'
+          }/*,
+          {
+            'name': 'date_min',
+            'display': 'graph'
+          }*/
+        ],
+        'treeFields': ['CD_REGION'],
+        'tokenizedFields': {
+          'CGENELIN': '-'
+        }
+      };
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -218,6 +281,9 @@
                   wfsFilterService.indexMergeApplicationProfile(
                   indexObject.filteredDocTypeFieldsInfo, appProfile);
               indexObject.initBaseParams();
+              if(!appProfile.extendOnly) {
+                indexObject.setFielsdOrder();
+              }
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
 
@@ -424,9 +490,26 @@
            */
           scope.resetFacets = function() {
 
+            // get initial filters if available (and then clear it)
+            var initialFilters = solrObject.initialFilters;
+            solrObject.initialFilters = null;
+
             // output structure to send to filter service
-            scope.output = {};
-            scope.searchInput = '';
+            // use initial filters if available
+            if (initialFilters) {
+              scope.output = initialFilters.qParams;
+              scope.searchInput = initialFilters.any;
+              if (initialFilters.geometry) {
+                scope.ctrl.searchGeometry =
+                  initialFilters.geometry[0][0] + ',' +
+                  initialFilters.geometry[1][1] + ',' +
+                  initialFilters.geometry[1][0] + ',' +
+                  initialFilters.geometry[0][1];
+              }
+            } else {
+              scope.output = {};
+              scope.searchInput = '';
+            }
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
@@ -437,7 +520,13 @@
             scope.layer.set('esConfig', null);
 
             // load all facet and fill ui structure for the list
-            return indexObject.searchWithFacets({}).
+            // use initial filters if available (first reset)
+            return indexObject.searchWithFacets(
+              initialFilters ? {
+                params: initialFilters.qParams,
+                any: initialFilters.any,
+                geometry: initialFilters.geometry
+              } : {}).
                 then(function(resp) {
                   indexObject.pushState();
                   scope.fields = resp.facets;

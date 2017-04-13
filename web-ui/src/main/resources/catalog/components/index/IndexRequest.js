@@ -636,6 +636,14 @@
       }
       fields.push(facetField);
     }
+
+    // Sort facets depending on application profile order if any
+    if(this.fieldsOrder_) {
+      fields.sort(function(a,b) {
+        return this.fieldsOrder_.indexOf(a.name) -
+          this.fieldsOrder_.indexOf(b.name);
+      }.bind(this));
+    }
     return fields;
   };
 
@@ -805,6 +813,17 @@
   geonetwork.gnIndexRequest.prototype.getSearhQuery =
       function(params) {
     return this.buildQParam_(params, params.qParams);
+  };
+
+  /**
+   * Put in `fieldsOrder_` the order of the fields to display in facets.
+   * This order comes from application profile if not extended.
+   */
+  geonetwork.GnSolrRequest.prototype.setFielsdOrder = function() {
+    this.fieldsOrder_ = [];
+    this.filteredDocTypeFieldsInfo.forEach(function(f) {
+      this.fieldsOrder_.push(f.idxName || f.name);
+    }.bind(this));
   };
 
   /**
