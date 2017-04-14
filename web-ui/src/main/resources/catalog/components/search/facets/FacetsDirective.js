@@ -310,8 +310,8 @@
       link: function(scope, element, attrs, controller) {
         if (!scope.field) { return; }
 
-        var tm = new TimeLine(element.find('.ui-timeline')[0]);
-        var tmInitialized = false;
+        var tm = new TimeLine(element.find('.ui-timeline')[0],
+          scope.field, scope.callback);
 
         // dates must be sorted ASC
         scope.$watch('field.datesCount', function(counts) {
@@ -327,20 +327,17 @@
               };
             });
 
-            if (tmInitialized) {
-              tm.setTimeline(data);
-            }
-            else {
-              tm.initialize(data, scope.field, scope.callback);
-              tmInitialized = true;
-              scope.$watch('field.expanded', function(exp) {
-                if (exp) {
-                  setTimeout(function() {
-                    tm.onResize();
-                  });
-                }
-              });
-            }
+            // apply data to graph
+            tm.setTimeline(data);
+          }
+        });
+
+        // call graph resize when it is expanded
+        scope.$watch('field.expanded', function(exp) {
+          if (exp) {
+            setTimeout(function() {
+              tm.recomputeSize();
+            });
           }
         });
       }
