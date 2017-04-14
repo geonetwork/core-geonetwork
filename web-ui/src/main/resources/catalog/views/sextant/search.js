@@ -533,10 +533,10 @@
       link: {
         post: function(scope, element, attrs) {
           var axis = attrs['axis'] || 'y';
-          var advanced = {
+          var advanced = angular.extend({
             updateOnContentResize: true,
             updateOnImageLoad: true
-          };
+          }, scope.$eval(attrs['advanced']));
           if (axis.indexOf('x')>=0) {
             advanced.autoExpandHorizontalScroll = 1;
           }

@@ -73,7 +73,7 @@
             <span class="input-group-addon">to</span>
             <input type="text" class="input-sm form-control" name="end" value="{{::output[field.name].values.to}}" />
           </div>
-          <div data-ng-if="field.datesCount && field.display == 'graph'"
+          <div data-ng-if="field.display == 'graph'"
                gn-facet-graph field="field" callback="onUpdateDate"
                class="list-group"></div>
         </div>

@@ -46,7 +46,7 @@ function TimeLine(element, field, callback) {
 
     // Compute X axis
     var current_first_time = Number.MAX_VALUE;
-    var timeExtent = d3.extent(this.graphData, function(d) {
+    var timeExtent = d3.extent(this.graphMaxData, function(d) {
       var begin = d.time.begin;
       var end = d.time.end;
       if (begin < current_first_time) {
@@ -120,10 +120,10 @@ function TimeLine(element, field, callback) {
           }
           if (lastQuery != timeQuery) {
             lastQuery = timeQuery;
-            this.fieldInfo.model = this.fieldInfo.model || {};
-            this.fieldInfo.model.from = moment(timelineSelection[0]).format('DD-MM-YYYY');
-            this.fieldInfo.model.to = moment(timelineSelection[1]).format('DD-MM-YYYY');
-            this.callback(this.fieldInfo);
+            me.fieldInfo.model = me.fieldInfo.model || {};
+            me.fieldInfo.model.from = moment(timelineSelection[0]).format('DD-MM-YYYY');
+            me.fieldInfo.model.to = moment(timelineSelection[1]).format('DD-MM-YYYY');
+            me.callback(me.fieldInfo);
           }
         }, 500);
 
@@ -180,12 +180,7 @@ function TimeLine(element, field, callback) {
   }
 
   function initAppControls() {
-
-
-    timelineSvg.selectAll(".zoomBtn")
-      .call(zoom)
-      .call(zoom.event);
-    d3.selectAll('.zoomBtn').on('click', function() {
+    d3.select(element).selectAll('.zoomBtn').on('click', function(event) {
       var currentZoom = zoom.scale();
       var scale = zoom.scale(),
         extent = zoom.scaleExtent(),
@@ -230,6 +225,12 @@ function TimeLine(element, field, callback) {
 
   function timelineZoom() {
 
+    // prevent event propagation if possible
+    if (d3.event && d3.event.sourceEvent) {
+        d3.event.sourceEvent.preventDefault();
+        d3.event.sourceEvent.stopPropagation();
+    }
+
     // get transformation
     if (d3.event !== null) {
       timelineXTranslate = d3.event.translate[0];
@@ -258,7 +259,7 @@ function TimeLine(element, field, callback) {
     var dataArray = contextArea.data();
     me.graphData = dataArray[0];
     // calculate zone
-    refreshGraphData(data);
+    refreshGraphData();
     setZoom(timelineXTranslate, timelineXScale);
   }
 
