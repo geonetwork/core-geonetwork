@@ -579,32 +579,12 @@
 
         if (facetField.display == 'graph' && bucketDates.length > 0) {
           facetField.datesCount = [];
-          var inRange = false;
-          var bucketIdx = 0;
-
-          // merge buckets with all dates to keep graph shape
-          for (var i = 0; i < facetField.dates.length; i++) {
-            var datetime = facetField.dates[i];
-            if (!inRange && bucketDates[0].key == datetime) {
-              inRange = true;
-            }
-            if (inRange) {
-              var b = bucketDates[bucketIdx];
-              var obj = {
-                value: datetime,
-                values: datetime,
-                count: 1
-              };
-              if (b.key == datetime) {
-                obj.count = b.doc_count;
-                bucketIdx++;
-              }
-              facetField.datesCount.push(obj);
-
-              if (bucketIdx == bucketDates.length) {
-                break;
-              }
-            }
+          for (var i = 0; i < bucketDates.length; i++) {
+            facetField.datesCount.push({
+              value: bucketDates[i].key,
+              values: bucketDates[i].key,
+              count: bucketDates[i].doc_count
+            });
           }
         }
       }

@@ -79,6 +79,10 @@
           {
             'name': 'date_min',
             'display': 'graph'
+          },
+          {
+            'name': 'date_max',
+            'display': 'form'
           }/*,
           {
             'name': 'date_min',
@@ -274,7 +278,7 @@
 
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
-            //appProfile = TMP_PROFILE;
+            // appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
 
               indexObject.indexFields =
@@ -287,7 +291,7 @@
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
 
-            scope.resetFacets();
+            scope.resetFacets().then(scope.restoreInitialFilters);
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -492,26 +496,9 @@
            */
           scope.resetFacets = function() {
 
-            // get initial filters if available (and then clear it)
-            var initialFilters = indexObject.initialFilters;
-            indexObject.initialFilters = null;
+            scope.output = {};
+            scope.searchInput = '';
 
-            // output structure to send to filter service
-            // use initial filters if available
-            if (initialFilters) {
-              scope.output = initialFilters.qParams || {};
-              scope.searchInput = initialFilters.any || '';
-              if (initialFilters.geometry) {
-                scope.ctrl.searchGeometry =
-                  initialFilters.geometry[0][0] + ',' +
-                  initialFilters.geometry[1][1] + ',' +
-                  initialFilters.geometry[1][0] + ',' +
-                  initialFilters.geometry[0][1];
-              }
-            } else {
-              scope.output = {};
-              scope.searchInput = '';
-            }
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
@@ -522,13 +509,7 @@
             scope.layer.set('esConfig', null);
 
             // load all facet and fill ui structure for the list
-            // use initial filters if available (first reset)
-            return indexObject.searchWithFacets(
-              initialFilters ? {
-                params: initialFilters.qParams,
-                any: initialFilters.any,
-                geometry: initialFilters.geometry
-              } : {}).
+            return indexObject.searchWithFacets({}).
                 then(function(resp) {
                   indexObject.pushState();
                   scope.fields = resp.facets;
@@ -536,6 +517,50 @@
                   refreshHeatmap();
                 });
 
+          };
+
+          /**
+           * alter form values & resend a search in case there are initial
+           * filters loaded from the context. This must only happen once
+           */
+          scope.restoreInitialFilters = function() {
+            // no initial filter: leave
+            if (!indexObject.initialFilters) {
+              return;
+            }
+
+            var initialFilters = indexObject.initialFilters;
+
+            // apply filters to form
+            scope.output = initialFilters.qParams || {};
+            scope.searchInput = initialFilters.any || '';
+            if (initialFilters.geometry) {
+              scope.ctrl.searchGeometry =
+                initialFilters.geometry[0][0] + ',' +
+                initialFilters.geometry[1][1] + ',' +
+                initialFilters.geometry[1][0] + ',' +
+                initialFilters.geometry[0][1];
+            }
+
+            // resend a search with initial filters to alter the facets
+            return indexObject.searchWithFacets({
+              params: initialFilters.qParams,
+              any: initialFilters.any,
+              geometry: initialFilters.geometry
+            }).then(function(resp) {
+              indexObject.pushState();
+              scope.fields = resp.facets;
+              scope.count = resp.count;
+
+              // look for date graph fields; call onUpdateDate to refresh them
+              angular.forEach(scope.fields, function (field) {
+                if (field.display == 'graph') {
+                  // scope.onUpdateDate(field);
+                }
+              });
+
+              refreshHeatmap();
+            });
           };
 
           scope.resetSLDFilters = function() {
