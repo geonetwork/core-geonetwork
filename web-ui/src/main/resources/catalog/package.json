@@ -1,0 +1,16 @@
+{
+  "name": "gn-api",
+  "version": "0.0.1",
+  "homepage": "https://github.com/geonetwork/core-geonetwork",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/geonetwork/core-geonetwork.git"
+  },
+  "devDependencies": {
+    "less":""
+  },
+  "scripts": {
+    // Put your script here to build the css
+    "postinstall": "./views/sextant/api/css.sh"
+  }
+}

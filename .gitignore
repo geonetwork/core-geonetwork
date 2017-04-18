@@ -74,6 +74,10 @@ web-ui/transifex-src
 web-ui/src/main/resources/catalog/lib/gn*.min.js
 web-ui/src/main/resources/catalog/style/gn*.css
 web-ui/src/main/resources/catalog/style/gn.css
+web-ui/src/main/resources/catalog/node_modules
+web-ui/src/main/resources/catalog/views/sextant/api/*.css
+web-ui/node
+
 datadir_node1/
 web/src/main/webapp/WEB-INF/data_*
 e2e-tests/node
