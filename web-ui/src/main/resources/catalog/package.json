@@ -11,6 +11,6 @@
   },
   "scripts": {
     // Put your script here to build the css
-    "postinstall": ""
+    "postinstall": "./views/sextant/api/css.sh"
   }
 }
