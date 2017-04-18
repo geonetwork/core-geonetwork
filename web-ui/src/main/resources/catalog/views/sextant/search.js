@@ -46,6 +46,15 @@
 
         }
       }]);
+
+    // api css loading
+    var theme = sxtSettings.theme || 'default';
+    var link = document.createElement("link");
+    link.href = sxtGnUrl + '../static/api-' + theme + '.css';
+    link.rel = "stylesheet";
+    link.media = "screen";
+    document.querySelector('head').appendChild(link);
+
   }
 
 

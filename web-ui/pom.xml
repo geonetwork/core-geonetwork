@@ -79,6 +79,39 @@
         </excludes>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <id>install-node-and-npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>install --unsafe-perm</arguments>
+              <installDirectory>${project.basedir}</installDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <nodeVersion>v4.6.0</nodeVersion>
+          <npmVersion>2.15.11</npmVersion>
+          <installDirectory>${project.basedir}</installDirectory>
+          <workingDirectory>${project.basedir}/src/main/resources/catalog</workingDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
   <properties>
     <geonetwork.build.dir>${project.build.directory}/${project.build.finalName}
