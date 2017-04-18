@@ -53,7 +53,7 @@
     link.href = sxtGnUrl + '../static/api-' + theme + '.css';
     link.rel = "stylesheet";
     link.media = "screen";
-    document.getElementsByTagName("head")[0].appendChild(link);
+    document.querySelector('head').appendChild(link);
 
   }
 
