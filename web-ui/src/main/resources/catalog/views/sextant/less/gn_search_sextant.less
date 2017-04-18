@@ -48,11 +48,18 @@
 @ellipsis-height: 124px;
 @results-toolbar-height: 2.8em;
 
-@sxt-base-color-dark: #2F6383;
-@sxt-base-color: lighten(@sxt-base-color-dark, 20%);
-@sxt-base-color: #4BA2D9;
-@sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
-@sxt-base-color-light: #81BEE4;
+// generic theme colors; should not appear if a theme is set
+@sxt-base-color-dark: grey;
+@sxt-base-color: darkgrey;
+@sxt-base-color-light: lightgrey;
+
+// theme import (overrides colors)
+@theme-name: "default";
+@import "./themes/@{theme-name}.less";
+
+// overrides bootstrap colors to fit our theme
+@brand-primary: @sxt-base-color;
+@badge-bg: @sxt-base-color;
 
 @sxt-viewer-top: 4em;
 @sxt-vieweritem-top: 1.5em;
@@ -64,7 +71,6 @@
 @sxt-fontsize-small: 11px;
 
 @sxt-searchbtn-height: 50px;
-
 
 @media (min-width: @screen-md-min) {
   body {
@@ -1240,7 +1246,7 @@ ul.gn-resultview {
       color: @sxt-base-color;
       box-shadow: none;
       &:hover span, &:focus span {
-        color: #2a6496;
+        color: @sxt-base-color-dark;
         text-decoration: underline;
       }
       &:focus {
@@ -1437,6 +1443,7 @@ ul.invalid {
 
     &:hover {
       cursor: pointer;
+      color: @sxt-base-color;
     }
   }
   input[type=checkbox] {
