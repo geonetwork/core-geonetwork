@@ -154,12 +154,31 @@ class SxtSummaryFactory {
         }
 
         def el = doiElts[0]
+
+        // contacts: all author, if none all originators
         def contactElts = metadata.'gmd:identificationInfo'."**".findAll{
           it.name() == 'gmd:CI_ResponsibleParty' &&
-            (it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == 'author' ||
-              it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == 'originator' )}
+            (it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == 'author')}
 
-        def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
+        if(contactElts.size() == 0 ) {
+          contactElts = metadata.'gmd:identificationInfo'."**".findAll{
+            it.name() == 'gmd:CI_ResponsibleParty' &&
+                it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == 'originator' }
+        }
+        def contacts = [];
+        contactElts.forEach{it ->
+          def name = it.'gmd:individualName'.'gco:CharacterString'.text()
+          if(name == null || name == "") {
+            name = it.'gmd:organisationName'.'gco:CharacterString'.text()
+          }
+          if(name != null && !name.equals('')) {
+            contacts.push(name)
+          }
+        }
+
+
+
+      def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
            it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'publication'}
 
         def year = '';
@@ -180,20 +199,13 @@ class SxtSummaryFactory {
 
         }
 
-        def contacts = [];
-        contactElts.forEach{it ->
-            def name = it.'gmd:individualName'.text()
-            if(name != null && !name.equals('')) {
-              contacts.push(name)
-            }
-        }
 
 
         def replacements
             replacements = [
                 url: el.'gmd:linkage'.'gmd:URL',
                 year: year,
-                abstr: summary.abstr,
+                title: summary.title,
                 citationPOTitle: this.f.translate('citationPOTitle'),
                 citationPOContent: this.f.translate('citationPOContent'),
                 contacts: String.join(', ', contacts)
