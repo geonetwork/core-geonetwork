@@ -44,6 +44,10 @@
 @sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
 @sxt-base-color-light: #81BEE4;
 
+// overrides bootstrap colors to fit our theme
+@brand-primary: @sxt-base-color;
+@badge-bg: @sxt-base-color;
+
 @sxt-viewer-top: 4em;
 @sxt-vieweritem-top: 1.5em;
 
@@ -1251,7 +1255,7 @@ ul.gn-resultview {
       color: @sxt-base-color;
       box-shadow: none;
       &:hover span, &:focus span {
-        color: #2a6496;
+        color: @sxt-base-color-dark;
         text-decoration: underline;
       }
       &:focus {
@@ -1419,6 +1423,7 @@ ul.invalid {
 
     &:hover {
       cursor: pointer;
+      color: @sxt-base-color;
     }
   }
   input[type=checkbox] {
