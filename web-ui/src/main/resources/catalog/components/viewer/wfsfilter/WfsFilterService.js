@@ -76,29 +76,76 @@
       };
 
       /**
-       * Create a SLD filter for the facet rule. Those filters while be
-       * gathered to create the full SLD filter config to send to the
+       * Create an array of SLD filters for the facet rule. Those filters will
+       * be gathered to create the full SLD filter config to send to the
        * generateSLD service.
        *
        * @param {string} key index key of the field
        * @param {string} type of the facet field (range, field etc..)
+       * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(key, type, multiValued) {
-        var res;
-        //TODO: date/numeric type
-        if (type == 'interval' || type == 'range') {
-          res = {
-            filter_type: 'PropertyIsBetween',
-            params: key.match(/\d+(?:[.]\d+)*/g)
-          };
+      var buildSldFilter = function(name, value, type, multiValued) {
+        var filterFields = [];
+
+        // date
+        if (type == 'date' || type == 'rangeDate') {
+
+          // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
+          // TODO: externalize this?
+          function transformDate(d) {
+            return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+          }
+
+          filterFields.push({
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [ transformDate(value.from) ]
+            }]
+          }, {
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [ transformDate(value.to) ]
+            }]
+          });
         }
+
+        // numeric range
+        else if (type == 'range') {
+          filterFields.push({
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [ value.from ]
+            }]
+          }, {
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [ value.to ]
+            }]
+          });
+        }
+
+        // strings
         else if (type == 'terms') {
-          res = {
-            filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
-            params: [multiValued ? '*' + key + '*' : key]
-          };
+          var filters = [];
+
+          angular.forEach(value, function(v, k) {
+            filters.push({
+              filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
+              params: [multiValued ? '*' + k + '*' : k]
+            });
+          });
+
+          filterFields.push({
+            field_name: name,
+            filter: filters
+          });
         }
-        return res;
+
+        return filterFields;
       };
 
 
@@ -113,19 +160,25 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
-          if (Object.keys(attrValue.values).length == 0) return;
+          // fetch field info from attr name (expects 'ft_xxx_yy')
           var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
-          var field = {
-            // TODO : remove the field type suffix
-            field_name: fieldInfo[1],
-            filter: []
-          };
-          var multiValued = fieldInfo[3] != undefined;
-          angular.forEach(attrValue.values, function(v, k) {
-            field.filter.push(buildSldFilter(k, attrValue.type, multiValued));
-          });
-          sldConfig.filters.push(field);
+          var fieldName = fieldInfo ? fieldInfo[1] : attrName;
+
+          // multiple values
+          if(attrValue.values && Object.keys(attrValue.values).length) {
+            var multiValued = fieldInfo[3] != undefined;
+
+            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
+              fieldName, attrValue.values, attrValue.type, multiValued));
+          }
+
+          // single value
+          else if (attrValue.value) {
+            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
+              fieldName, attrValue.value, attrValue.type, false));
+          }
         });
+
         return sldConfig;
       };
 
