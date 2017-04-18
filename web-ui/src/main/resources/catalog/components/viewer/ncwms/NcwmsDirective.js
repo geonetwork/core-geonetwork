@@ -171,14 +171,19 @@
 
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
-
-            layer.set('cextent', ol.proj.transformExtent([
+            var proj = map.getView().getProjection();
+            var bbox = [
               parseFloat(ncInfo.bbox[0]),
               parseFloat(ncInfo.bbox[1]),
               parseFloat(ncInfo.bbox[2]),
-              parseFloat(ncInfo.bbox[3])],
-            'EPSG:4326',
-            map.getView().getProjection().getCode())
+              parseFloat(ncInfo.bbox[3])
+            ];
+
+            // use bbox only if it is contained in the world extent
+            layer.set('cextent',
+              ol.extent.containsExtent(proj.getWorldExtent(), bbox) ?
+                ol.proj.transformExtent(bbox, 'EPSG:4326', proj.getCode()) :
+                proj.getExtent()
             );
 
             scope.params = layer.getSource().getParams() || {};
