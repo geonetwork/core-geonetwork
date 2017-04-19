@@ -123,7 +123,7 @@
                   scope.filestoreUploadOptions = {
                     autoUpload: scope.autoUpload,
                     url: '../api/0.1/records/' + scope.uuid +
-                        '/attachments?share=' + defaultStatus,
+                        '/attachments?visibility=' + defaultStatus,
                     dropZone: $('#' + scope.id),
                     singleUpload: false,
                     // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
