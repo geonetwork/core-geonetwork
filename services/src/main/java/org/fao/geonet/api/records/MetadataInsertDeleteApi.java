@@ -53,6 +53,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -865,6 +866,7 @@ public class MetadataInsertDeleteApi {
         if (!transformWith.equals("_none_")) {
             GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
             Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+            FilePathChecker.verify(transformWith);
             Path xslFile = folder.resolve(transformWith + ".xsl");
             if (Files.exists(xslFile)) {
                 xmlElement = Xml.transform(xmlElement, xslFile);

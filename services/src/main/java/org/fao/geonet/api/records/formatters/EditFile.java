@@ -29,6 +29,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.utils.FilePathChecker;
 import org.jdom.Element;
 
 import java.net.URLDecoder;
@@ -54,16 +55,23 @@ public class EditFile extends AbstractFormatService implements Service {
             schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
         }
 
+        FilePathChecker.verify(file);
+
         Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
 
         // Check that the requested file is actually nested into formatDir
         String absformatDir = formatDir.toAbsolutePath().toString();
         String absFile = formatDir.resolve(file).toAbsolutePath().toString();
         if (!absFile.startsWith(absformatDir)) {
-            throw new BadParameterEx("fname", absFile);
+            throw new BadParameterEx("fname", file);
         }
 
         Element result = new Element("data");
+
+        Path filePath = formatDir.resolve(file);
+        if (!Files.exists(filePath)) {
+            throw new BadParameterEx("fname", file);
+        }
 
         String data = new String(Files.readAllBytes(formatDir.resolve(file)), Constants.ENCODING);
 
