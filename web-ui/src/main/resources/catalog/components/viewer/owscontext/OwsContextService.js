@@ -134,6 +134,10 @@
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
 
+        // save this extent for later use (for example if the map
+        // is not currently visible)
+        map.set('lastExtent', extent);
+
         // load the resources
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];

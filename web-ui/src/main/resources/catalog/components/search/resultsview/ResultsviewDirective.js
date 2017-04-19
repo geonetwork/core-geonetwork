@@ -141,7 +141,12 @@
                 }
               });
               if (!ol.extent.isEmpty(extent)) {
+                // fit extent in map
                 scope.map.getView().fit(extent, scope.map.getSize());
+
+                // save this extent for later use (for example if the map
+                // is not currently visible)
+                scope.map.set('lastExtent', extent);
               }
             }
           });
