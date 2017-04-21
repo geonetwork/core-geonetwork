@@ -133,6 +133,26 @@
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
 
+  <!-- XFrameOptionsFilter to avoid Clickjacking attacks.
+     See https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet.
+  -->
+  <filter>
+    <filter-name>XFrameOptionsFilter</filter-name>
+    <filter-class>
+      org.fao.geonet.web.XFrameOptionsFilter
+    </filter-class>
+    <!-- Mode: DENY, SAMEORIGIN. Any other value will default to DENY -->
+    <init-param>
+      <param-name>mode</param-name>
+      <param-value>DENY</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>XFrameOptionsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
   <!-- Resources servlet -->
   <filter>
     <filter-name>resources</filter-name>
