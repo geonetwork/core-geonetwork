@@ -1302,8 +1302,18 @@
               var projectionExtent = projection.getExtent();
               var resolutions = new Array(nbMatrix);
               var matrixIds = new Array(nbMatrix);
+
+              // sort tile resolutions
+              var tileMatrices = matrixSet.TileMatrix.splice(0)
+                .sort(function (a, b) {
+                  var id1 = parseInt(a.Identifier);
+                  var id2 = parseInt(b.Identifier);
+                  return id1 > id2 ? 1 :
+                    (id1 < id2 ? -1 : 0);
+                });
+
               for (var z = 0; z < nbMatrix; ++z) {
-                var matrix = matrixSet.TileMatrix[z];
+                var matrix = tileMatrices[z];
                 var size = ol.extent.getWidth(projectionExtent) /
                     matrix.TileWidth;
                 resolutions[z] = matrix.ScaleDenominator * 0.00028 /
