@@ -9,6 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>es</artifactId>
+  <packaging>pom</packaging>
 
   <profiles>
     <profile>
@@ -77,6 +78,9 @@
       </properties>
     </profile>
   </profiles>
+  <modules>
+    <module>es-core</module>
+  </modules>
 
   <properties>
     <es.executable>elasticsearch</es.executable>

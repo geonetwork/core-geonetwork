@@ -52,6 +52,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PreDestroy;
 
+import jeeves.server.ServiceConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -140,7 +141,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Indexes metadata using Lucene.
  */
-public class SearchManager {
+public class SearchManager implements ISearchManager {
     public static final String INDEXING_ERROR_FIELD = "_indexingError";
     private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
@@ -556,12 +557,22 @@ public class SearchManager {
         _luceneOptimizerManager = new LuceneOptimizerManager(this, settingInfo);
     }
 
+    @Override
+    public void init(ServiceConfig handlerConfig) throws Exception {
+
+    }
+
     @PreDestroy
     public void end() throws Exception {
         // the tracker is closed when the ApplicationContext is closed.
 
         _spatial.end();
         _luceneOptimizerManager.shutdown();
+    }
+
+    @Override
+    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
+        return null;
     }
 
     /**
@@ -615,7 +626,8 @@ public class SearchManager {
     /**
      * TODO javadoc.
      */
-    public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
+    public synchronized void rescheduleOptimizer(
+        Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
         _luceneOptimizerManager.reschedule(optimizerBeginAt, optimizerInterval);
     }
 
@@ -917,6 +929,16 @@ public class SearchManager {
         } finally {
             releaseIndexReader(indexAndTaxonomy);
         }
+    }
+
+    @Override
+    public void delete(String txt) throws Exception {
+
+    }
+
+    @Override
+    public void delete(List<String> txts) throws Exception {
+
     }
 
     public ISODate getDocChangeDate(String mdId) throws Exception {
@@ -1232,12 +1254,12 @@ public class SearchManager {
      *
      * @param xlinks        Search all docs with XLinks, clear the XLinks cache and index all
      *                      records found.
-     * @param fromSelection Reindex all records from selection.
+     * @param bucket Reindex all records from selection bucket.
      */
     public boolean rebuildIndex(ServiceContext context,
                                 boolean xlinks,
                                 boolean reset,
-                                boolean fromSelection) throws Exception {
+                                String bucket) throws Exception {
         DataManager dataMan = context.getBean(DataManager.class);
         LuceneIndexLanguageTracker _tracker = context.getBean(LuceneIndexLanguageTracker.class);
         try {
@@ -1246,8 +1268,8 @@ public class SearchManager {
                     setupIndex(false);
                 }
             }
-            if (fromSelection) {
-                dataMan.rebuildIndexForSelection(context, xlinks);
+            if (StringUtils.isNotBlank(bucket)) {
+                dataMan.rebuildIndexForSelection(context, bucket, xlinks);
             } else if (xlinks) {
                 dataMan.rebuildIndexXLinkedMetadata(context);
             } else {

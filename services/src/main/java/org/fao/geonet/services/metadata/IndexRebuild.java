@@ -74,7 +74,7 @@ public class IndexRebuild implements Service {
 
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
-        boolean info = searchMan.rebuildIndex(context, xlinks, reset, fromSelection);
+        boolean info = searchMan.rebuildIndex(context, xlinks, reset, fromSelection ? "metadata" : null);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         elResp.addContent(new Element("status").setText((info ? "true" : "false")));

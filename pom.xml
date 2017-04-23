@@ -1267,6 +1267,7 @@
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>
     <es.index.features>features</es.index.features>
+    <es.index.records>records</es.index.records>
     <es.username></es.username>
     <es.password></es.password>
 
