@@ -20,3 +20,227 @@
 .gn-md-feedback-btn {
   margin-right: 5px;
 }
+
+.gn-userfeedback {
+  .bootstrap-table {
+    margin-top: 10px;
+    margin-bottom: 10px;          
+  }
+  .fixed-table-container {
+    border: 0;
+  }
+}
+
+// general
+// 
+// ----- quotes
+q, blockquote {
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+// ----- feedback styles
+.gn-userfeedback-title {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+  h3 {
+    border-bottom: 3px solid #ddd;
+    margin-bottom: 0;
+    padding-bottom: 8px;
+    display: inline-block;
+  }
+}
+.gn-userfeedback-score {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+// buttonbar for reply links and buttons
+.gn-userfeedback-reply {
+  a {
+    color: #999;
+  }
+}
+
+// homepage
+.gn-userfeedback-card {
+  width: calc(~"50% - 20px");
+  float: left;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  q, blockquote {
+    padding-left: 18px;
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 15px;
+  }
+  q:before, blockquote:before {
+    font-size: 30px;
+    margin: 0;
+    position: absolute;
+    margin-left: -18px;
+    margin-top: -8px;
+  }
+  q:after, blockquote:after {
+    font-size: 30px;
+    position: absolute;
+    margin-left: 4px;
+    margin-top: -7px;
+  }
+  .gn-userfeedback-score {
+    float: left;
+    margin-bottom: 0;
+    font-size: 20px;
+    line-height: 36px;
+    color: #5d5b5b;
+  }
+  .gn-userfeedback-badge {
+    background-color: @brand-success;
+    color: #fff;
+    margin-right: 5px;
+    padding: 1px 16px;
+  }
+  .gn-userfeedback-reply {
+    float: left;
+    border-left: 1px solid #ddd;
+    margin-left: 10px;
+    padding-left: 10px;
+    a {
+      color: @brand-primary;
+    }
+  }
+}
+
+// detailpage - sidebar
+.gn-userfeedback-sidebar {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  h1 {
+    margin: 10px 0;
+    font-size: 24px;
+  }
+}
+
+.gn-userfeedback-list {
+  list-style: none;
+  padding: 0;
+  .gn-userfeedback-item {
+    margin-bottom: 10px;
+    .gn-userfeedback-image {
+      margin: 4px 8px 0 0;
+    }
+    .gn-userfeedback-comment-user {
+      width: 70%;
+    }
+    .gn-userfeedback-comment {
+      border: 1px solid #ccc;
+      background-color: #efefef;
+      padding: 10px;
+    }
+    .gn-userfeedback-user {
+      margin-top: 25px;
+      span {
+        display: block;
+        line-height: 1.5em;
+      }
+    }
+    // list in list
+    .gn-userfeedback-list {
+      padding-left: 43px;
+    }
+
+    // arrows
+    .gn-arrow-bottom {
+      position: relative;
+      background: #efefef;
+      border: 1px solid #cccccc;
+    }
+    .gn-arrow-bottom:after, .gn-arrow-bottom:before {
+      top: 100%;
+      left: 10%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    .gn-arrow-bottom:after {
+      border-color: rgba(239, 239, 239, 0);
+      border-top-color: #efefef;
+      border-width: 15px;
+      margin-left: -15px;
+    }
+    .gn-arrow-bottom:before {
+      border-color: rgba(204, 204, 204, 0);
+      border-top-color: #cccccc;
+      border-width: 16px;
+      margin-left: -16px;
+    }
+  }
+}
+
+// slight modifations for the standard modal dialog
+.gn-userfeedback-modal {
+  .modal-dialog {
+    width: 80%;
+    max-width: 1000px;
+    .modal-footer {
+      // dropdown in the footer (dropup)
+      .dropdown {
+        margin-top: -5px;
+        margin-left: 12px
+      }
+      .dropdown-menu {
+        text-align: left;
+        top: auto;
+        bottom: 5px;
+      }
+    }
+  }
+  .gn-userfeedback-list {
+    max-height: 500px;
+    overflow: auto;
+  }
+}
+
+
+
+
+
+
+
+.gn-userfeedback-categories {
+  padding-top: 10px;
+  .list-group-item {
+    border: 0;
+    padding: 0;
+    .progress {
+      height: 15px;
+      margin-bottom: 10px;
+      border-radius: 2px;
+    }
+  }
+}
+
+// styling for the scrollbar
+::-webkit-scrollbar {
+  width: 2px;
+}
+// ----- track
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); 
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+// ----- handle
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  background: #efefef; 
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0,0,0,0.4); 
+}
