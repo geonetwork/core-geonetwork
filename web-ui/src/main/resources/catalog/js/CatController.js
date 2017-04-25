@@ -91,7 +91,9 @@
             //   fre: 'Publication'
             // }}
           ],
-          'filters': {},
+          'filters': {
+            'type': 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog or map'
+          },
           'sortbyValues': [{
             'sortBy': 'popularity',
             'sortOrder': ''
