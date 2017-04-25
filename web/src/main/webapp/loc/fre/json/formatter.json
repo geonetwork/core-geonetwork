@@ -9,5 +9,9 @@
   "testString": "Cette chaine de caractères est là pour un test, ne pas la supprimer",
   "xml": "XML",
   "uncategorizedKeywords": "Non classé",
-  "related-link": "Relations"
+  "related-link": "Relations",
+  "citationPOTitle": "Attention",
+  "citationPOContent": "Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.",
+  "socialTitle": "Partager"
+
 }

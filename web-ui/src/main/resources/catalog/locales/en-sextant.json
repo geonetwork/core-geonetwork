@@ -55,6 +55,8 @@
   "firstname": "First name",
   "lastname": "Last name",
   "citationProposition": "Suggestion of Citation",
-  "replaceByThoseOperations": "Update"
-
+  "replaceByThoseOperations": "Update",
+  "wpsAvailableProcesses": "Available Processes",
+  "wpsProcess": "Process",
+  "wpsProcesses": "Processes"
 }

@@ -3,6 +3,8 @@ package iso19139
 import org.fao.geonet.api.records.formatters.FormatType
 import org.fao.geonet.api.records.formatters.groovy.Environment
 import org.fao.geonet.api.records.formatters.groovy.util.*
+import org.fao.geonet.domain.ISODate
+import java.text.SimpleDateFormat
 
 /**
  * Creates the {@link org.fao.geonet.services.metadata.format.groovy.util.Summary} instance for the iso19139 class.
@@ -55,7 +57,7 @@ class SxtSummaryFactory {
         configureDates(metadata, summary)
         configureContacts(metadata, summary)
         configureConstraints(metadata, summary)
-
+        configureDoi(metadata, summary)
         //createCollapsablePanel()
 
       summary.associated.add(isoHandlers.commonHandlers.loadHierarchyLinkBlocks())
@@ -138,6 +140,78 @@ class SxtSummaryFactory {
         if (!statementsString.isEmpty() && statementsString.get(0)) {
             summary.formats = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString()
         }
+    }
+
+    def configureDoi(metadata, summary) {
+        def doiElts = metadata."**".findAll{
+            it.name() == 'gmd:CI_OnlineResource' &&
+            it.'gmd:protocol'.'gco:CharacterString' == 'WWW:LINK-1.0-http--metadata-URL'
+        }
+
+        if(doiElts.size() < 1) {
+          summary.citation = ''
+          return
+        }
+
+        def el = doiElts[0]
+
+        // contacts: all author, if none all originators
+        def contactElts = metadata.'gmd:identificationInfo'."**".findAll{
+          it.name() == 'gmd:CI_ResponsibleParty' &&
+            (it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == 'author')}
+
+        if(contactElts.size() == 0 ) {
+          contactElts = metadata.'gmd:identificationInfo'."**".findAll{
+            it.name() == 'gmd:CI_ResponsibleParty' &&
+                it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == 'originator' }
+        }
+        def contacts = [];
+        contactElts.forEach{it ->
+          def name = it.'gmd:individualName'.'gco:CharacterString'.text()
+          if(name == null || name == "") {
+            name = it.'gmd:organisationName'.'gco:CharacterString'.text()
+          }
+          if(name != null && !name.equals('')) {
+            contacts.push(name)
+          }
+        }
+
+
+
+      def dateElts = metadata.'gmd:identificationInfo'.'*'.'gmd:citation'."**".findAll{it.name() == 'gmd:CI_Date' &&
+           it.'gmd:dateType'.'gmd:CI_DateTypeCode'['@codeListValue'] == 'publication'}
+
+        def year = '';
+        if(dateElts.size() > 0) {
+          def sDate = dateElts[0].'gmd:date'.'gco:Date'.text();
+          if(sDate == null || sDate == "") {
+            sDate = dateElts[0].'gmd:date'.'gco:DateTime'.text();
+          }
+          if(sDate != null && sDate != "") {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = format.parse(sDate);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy");
+            year = df.format(date);
+
+//            ISODate date = new ISODate(sDate);
+//            year = date.getYears();
+          }
+
+        }
+
+
+
+        def replacements
+            replacements = [
+                url: el.'gmd:linkage'.'gmd:URL',
+                year: year,
+                title: summary.title,
+                citationPOTitle: this.f.translate('citationPOTitle'),
+                citationPOContent: this.f.translate('citationPOContent'),
+                contacts: String.join(', ', contacts)
+            ]
+
+      summary.citation = this.handlers.fileResult("html/sxt-citation.html", replacements)
     }
 
     def createCollapsablePanel() {

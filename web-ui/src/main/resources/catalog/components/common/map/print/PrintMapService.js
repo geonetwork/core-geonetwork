@@ -31,7 +31,7 @@
     var self = this;
 
     var options = {
-      heightMargin: 50,
+      heightMargin: 0,
       widthMargin: 100
     };
 

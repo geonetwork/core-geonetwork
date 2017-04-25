@@ -12,7 +12,7 @@
     <div class="">
       <select class="form-control"
               data-ng-model="config.layout"
-              data-ng-options="l.name for l in config.layouts"></select>
+              data-ng-options="l.name | translate for l in config.layouts"></select>
     </div>
   </div>
 
@@ -58,23 +58,6 @@
       <span ng-if="!printing">{{'Print'|translate}}</span>
       <span ng-if="printing">{{'Printing'|translate}}</span>
     </button>
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-      <li>
-        <label>
-          <input type="radio" value="pdf" ng-model="config.format">
-          PDF
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="radio" value="png" ng-model="config.format">
-          Image
-        </label>
-      </li>
-    </ul>
   </div>
 
 </form>
