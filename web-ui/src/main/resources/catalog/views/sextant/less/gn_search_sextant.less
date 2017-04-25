@@ -163,9 +163,6 @@
   }
 }
 .sxt-max-md {
-  .sxt-main-tabs .btn-group.sxt-panel-button {
-    margin-left: 29.7em;
-  }
   .sxt-left-panel {
     width: 33.333%;
   }
@@ -253,11 +250,6 @@
     box-shadow: @sxt-shadow;
     &.sxt-panel-button {
       margin-left: 29.7em;
-      @media (min-width:  1680px) {
-        .gn &{
-          margin-left: ~"calc(25% + 1.2em)";
-        }
-      }
     }
     &.sxt-adminbtn {
       margin-right: 1.2em;
@@ -275,6 +267,15 @@
   }
 
 }
+
+// special margin for tab switch when in search tab
+.sxt-search-tab.sxt-main-tabs .sxt-panel-button {
+  margin-left: calc(~"33% + 2em");
+  @media (min-width: 1200px) {
+    margin-left: ~"calc(25% + 1.8em)";
+  }
+}
+
 .gn-grid,
 .sxt-main-tabs {
   .popover:not(.sxt-popover-grid) {
