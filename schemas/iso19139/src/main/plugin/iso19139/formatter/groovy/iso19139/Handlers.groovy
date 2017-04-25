@@ -548,20 +548,20 @@ public class Handlers {
               org : org
             ]
             // Check that name already in list
-            def exist = false;
+            def exist = false
             contacts.each {c ->
-              if (c.name == contact.name) {
-                exist = true;
+              if (c.name == contact.name && c.mail == contact.mail) {
+                exist = true
               }
             }
 //          TODO: Could be relevant to group contact with same name and
 //          different roles or orgs
-//            if (!exist) {
-//              if(contact.name != "" || contact.org != '') {
-//                  contacts.push(contact)
-//              }
-//            }
-            contacts.push(contact)
+            if (!exist) {
+              if(contact.name != "" || contact.org != '') {
+                  contacts.push(contact)
+              }
+            }
+//            contacts.push(contact)
             if(org && orgs.indexOf(org) < 0) {
                 orgs.push(org)
             }
