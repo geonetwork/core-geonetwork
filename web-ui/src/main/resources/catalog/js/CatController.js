@@ -142,7 +142,7 @@
         'map': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
-          'is3DModeAllowed': true,
+          'is3DModeAllowed': false,
           'isSaveMapInCatalogAllowed': true,
           'bingKey':
               'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
