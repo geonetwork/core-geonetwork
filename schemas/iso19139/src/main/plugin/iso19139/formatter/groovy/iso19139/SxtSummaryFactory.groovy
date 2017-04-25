@@ -188,7 +188,8 @@ class SxtSummaryFactory {
             sDate = dateElts[0].'gmd:date'.'gco:DateTime'.text();
           }
           if(sDate != null && sDate != "") {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat format = new SimpleDateFormat(
+              sDate.size() == 7 ? "yyyy-MM" : "yyyy-MM-dd");
             Date date = format.parse(sDate);
             SimpleDateFormat df = new SimpleDateFormat("yyyy");
             year = df.format(date);
