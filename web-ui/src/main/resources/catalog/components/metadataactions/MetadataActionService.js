@@ -32,9 +32,9 @@
 
 
 
-  
-  
-  
+
+
+
 goog.require('gn_category');
 goog.require('gn_popup');
 goog.require('gn_share');
@@ -63,8 +63,8 @@ goog.require('gn_share');
     function($window, $rootScope, $timeout, $location, gnHttp,
              gnMetadataManager, gnAlertService, gnSearchSettings,
              gnUtilityService, gnShareService, gnPopup,
-             $translate, $q, $http) {
-
+             $translate, $q, $http, gnGlobalSettings) {
+      var printConfigUrlPrefix = (gnGlobalSettings.gnUrl) ? gnGlobalSettings.gnUrl : '';
       var windowName = 'geonetwork';
       var windowOption = '';
       var translations = null;
