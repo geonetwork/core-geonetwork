@@ -42,7 +42,7 @@
                   $http.get(
                      'md.relations?_content_type=json&uuid=' +
                      scope.uuid + (scope.types ? '&type=' +
-                     scope.types : ''), {cache: true})
+                         encodeURI(scope.types) : ''), {cache: true})
                             .success(function(data, status, headers, config) {
                        if (data && data != 'null' && data.relation) {
                          if (!angular.isArray(data.relation)) {
