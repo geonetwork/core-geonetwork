@@ -517,11 +517,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>schema-iso19139.sextant</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139.emodnet.hydrography</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -646,10 +641,6 @@
                 </resource>
                 <resource>
                   <directory>${project.basedir}/../schemas/iso19115-3/src/main/plugin</directory>
-                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
-                </resource>
-                <resource>
-                  <directory>${project.basedir}/../schemas/iso19139.sextant/src/main/plugin</directory>
                   <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
                 </resource>
                 <resource>

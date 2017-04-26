@@ -11,7 +11,7 @@
 
   <!-- Load labels. -->
   <xsl:variable name="lang" select="substring-before(substring-after(/root/locUrl, 'srv/'), '/')" />
-  <xsl:variable name="label" select="/root/schemas/iso19139.sextant" />
+  <xsl:variable name="label" select="/root/schemas/iso19139" />
   <xsl:variable name="labelIso" select="/root/schemas/iso19139" />
   <xsl:template xmlns:geonet="http://www.fao.org/geonetwork"
                 mode="iso19139" match="geonet:info" />
@@ -226,7 +226,7 @@
                            select="gmd:contactInfo//gmd:electronicMailAddress" />
 
       <li>
-        <b><xsl:value-of select="/root/schemas/iso19139.sextant/strings/role" /> : </b>
+        <b><xsl:value-of select="/root/schemas/iso19139/strings/role" /> : </b>
         <xsl:variable name="choiceValue" select="gmd:role/gmd:CI_RoleCode/@codeListValue" />
         <xsl:variable name="name" select="'gmd:CI_RoleCode'" />
         <xsl:value-of select="string($labelIso/codelists/codelist[@name = $name]/entry[code = $choiceValue]/label)" />
@@ -391,7 +391,7 @@
                     </div>
                   </div>
 
-                  <h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/constraints_access" /></h5>
+                  <h5><xsl:value-of select="/root/schemas/iso19139/strings/constraints_access" /></h5>
                   <div class="result-metadata-modal-content">
                     <div class="result-metadata-modal-resume">
                       <p><b>
@@ -403,7 +403,7 @@
                     </div>
                   </div>
 
-                  <h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/contact" /></h5>
+                  <h5><xsl:value-of select="/root/schemas/iso19139/strings/contact" /></h5>
                   <div class="result-metadata-modal-content">
                     <p></p>
                     <ul>
@@ -464,7 +464,7 @@
                   <div class="result-metadata-modal-content">
                     <p><xsl:apply-templates mode="iso19139" select="gmx:scope" /></p>
                   </div>
-                  <h5><xsl:value-of select="/root/schemas/iso19139.sextant/strings/contact" /></h5>
+                  <h5><xsl:value-of select="/root/schemas/iso19139/strings/contact" /></h5>
                   <div class="result-metadata-modal-content">
                     <p></p>
                     <ul>

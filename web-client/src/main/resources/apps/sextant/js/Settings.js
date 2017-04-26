@@ -42,7 +42,7 @@ GeoNetwork.Settings.editor = {
     editMode: {
         'iso19139.myocean': 'myocean',
         'iso19139.myocean.short': 'myocean.simple',
-        'iso19139.sextant': 'sextant',
+        'iso19139': 'sextant',
         'iso19139.sdn-product': 'sdnProduct',
         'iso19139.emodnet.chemistry': 'emodnet.chemistry',
         'iso19139.emodnet.hydrography': 'emodnet.hydrography'
@@ -87,7 +87,7 @@ GeoNetwork.Settings.results = {
         // Parameters to set bounding box highlighter colors
         // Use a custom single color for bounding box
         featurecolor: 'orange',
-        // Use a random color map with 2 colors 
+        // Use a random color map with 2 colors
         //colormap: GeoNetwork.Util.generateColorMap(2),
         // Use a default color map with 10 colors
         //colormap: GeoNetwork.Util.defaultColorMap,
@@ -109,7 +109,7 @@ GeoNetwork.defaultViewMode = 'view-simple';
 Ext.BLANK_IMAGE_URL = 'images/s.gif';
 
 GeoNetwork.AnnuaireGroupMapping = {
-  "iso19139.sextant": undefined,
+  "iso19139": undefined,
   "iso19139.myocean": "CONTACTS_MYOCEAN",
   "iso19139.sdn-product" : "CONTACTS_EDMO"
 };
