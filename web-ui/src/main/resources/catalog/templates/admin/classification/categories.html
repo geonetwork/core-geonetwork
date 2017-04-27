@@ -33,6 +33,7 @@
 
   <div class="col-lg-7" data-ng-hide="categorySelected.id==null">
     <form name="gnCategoryFrom" class="form-horizontal">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
       <div class="panel panel-default">
         <div class="panel-heading">
           <span data-ng-hide="categorySelected.id == ''" data-translate="">updateCategory</span>

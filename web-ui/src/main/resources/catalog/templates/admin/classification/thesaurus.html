@@ -73,6 +73,7 @@
       </ul>-->
         <form id="gn-edit-thesaurus" name="gn-edit-thesaurus">
           <fieldset>
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div>
               <label class="control-label" data-translate="">thesaurusTitle</label>
               <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
@@ -129,6 +130,7 @@
 
       <div class="panel-body">
         <form class="form-horizontal" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="form-group">
             <label for="keywordFilter" class="col-lg-4 control-label" data-translate=""
             >keywordFilter</label>
@@ -188,7 +190,7 @@
           <!-- File import form -->
           <form id="gn-upload-thesaurus" name="gn-upload-thesaurus"
                 data-ng-show="importAs == 'file' || importAs == 'url'"
-                action="thesaurus.upload?_content_type=json"
+                action="{{'thesaurus.upload?_content_type=json&_csrf=' + csrf}}"
                 method="POST" enctype="multipart/form-data"
                 data-file-upload="thesaurusUploadOptions">
             <span data-ng-show="importAs == 'file'"
@@ -235,6 +237,7 @@
           <!-- User entry form -->
           <form id="gn-create-thesaurus" name="gn-create-thesaurus"
                 data-ng-show="importAs == 'new'">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div>
               <label class="control-label" data-translate="">thesaurusTitle</label>
               <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
@@ -300,6 +303,7 @@
         </div>
         <div class="modal-body">
           <form id="gn-edit-keyword" name="gn-edit-keyword">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div>
               <label class="control-label" data-translate="">keywordLabel</label>
               <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"

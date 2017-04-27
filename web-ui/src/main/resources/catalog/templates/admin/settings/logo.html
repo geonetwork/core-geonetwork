@@ -16,7 +16,7 @@
           <span data-translate="">addNewLogo</span>
         </div>
         <div class="panel-body">
-          <form id="fileupload" action="../api/logos" method="POST"
+          <form id="fileupload" action="{{'../api/logos?_csrf=' + csrf}}" method="POST"
                 enctype="multipart/form-data" data-file-upload="logoUploadOptions">
             <span class="btn btn-success btn-block fileinput-button"
                   ng-class="{disabled: disabled}">

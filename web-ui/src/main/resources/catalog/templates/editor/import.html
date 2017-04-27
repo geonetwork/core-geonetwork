@@ -40,6 +40,7 @@
           <form id="gn-import" class="form-horizontal" role="form"
                 method="POST" enctype="{{enctype}}" action="{{action}}"
                 data-file-upload="mdImportUploadOptions">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
             <!-- Folder Path and subfolder options -->
             <div class="form-group" data-ng-if="importMode === 'importFromDir'">
