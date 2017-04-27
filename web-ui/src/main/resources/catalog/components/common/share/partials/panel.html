@@ -20,6 +20,7 @@
 
   <form name="opsForm" id="opsForm"
         data-ng-class="{'gn-sharing-batch': batch}">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <table class="table table-striped" data-ng-show="privileges.length > 0">
       <thead>
       <tr>
