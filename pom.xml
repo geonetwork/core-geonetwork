@@ -1006,6 +1006,13 @@
         <artifactId>jaxb-impl</artifactId>
         <version>2.2.7</version>
       </dependency>
+
+      <!-- Apache commons csv -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-csv</artifactId>
+        <version>1.2</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
