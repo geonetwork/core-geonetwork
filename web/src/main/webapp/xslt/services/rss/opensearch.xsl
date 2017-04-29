@@ -17,7 +17,7 @@
       </Description>
       <Tags>Catalogue Metadata ISO19115 ISO19139 DC</Tags>
       <Contact>
-        <xsl:value-of select="//feedback/email"/>
+        <xsl:value-of select="(//feedback/email)[1]"/>
       </Contact>
       <Url type="application/rss+xml">
         <xsl:attribute name="template">
@@ -27,7 +27,7 @@
       </Url>
       <Url type="application/rdf+xml">
         <xsl:attribute name="template">
-          <xsl:value-of select="concat('http://',//server/host,':',//server/port,/root/gui/locService,'/rdf.search?')"/>
+          <xsl:value-of select="concat($fullURLForService,'/rdf.search?')"/>
           <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
         </xsl:attribute>
       </Url>
