@@ -6,7 +6,7 @@
     <span class="fa fa-code-fork"></span>
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" role="menu" sxt-custom-scroll>
+  <ul class="dropdown-menu small-dropdown" role="menu">
     <li data-ng-repeat="r in ::relations.parent track by $index">
       <a href="#/metadata/{{r.id}}"
          title="{{r.title | gnLocalized: lang}}">

@@ -8,7 +8,7 @@
     <input type="text" class="form-control input-sm layerfilter" placeholder="{{'filter'|translate}}"
              data-ng-model="ctrl.activeFilter" data-ng-model-options="{debounce: 300}">
   </div>
-  <div class="list-group" ng-class="{'collapse': contentCollapsed}" sxt-custom-scroll>
+  <div class="list-group" ng-class="{'collapse': contentCollapsed}">
     <div class="checkbox list-group-item" data-ng-repeat="f in facetObj | filter:filterInputs"
          data-ng-click="updateSearch(f['@name'], $event)" data-ng-class="{'selected': isInSearch(f['@name'])}">
       <i class="fa" data-ng-class="isInSearch(f['@name']) ? 'fa-check-square' : 'fa-square-o'"></i>{{f['@label'] || f['@name']}}&nbsp;({{f['@count']}})
