@@ -10,16 +10,16 @@ import javax.persistence.PersistenceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@Ignore("This integration test requires a real PostGreSQL database.")
+@IfProfileValue(name="postgresqlPerformanceTest", value="true")
 @ContextConfiguration(locations = { "classpath:issue1876-context.xml" })
 public class MetadataRepositoryIssue1876IntegrationTest {
 
