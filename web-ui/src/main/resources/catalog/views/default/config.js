@@ -115,11 +115,25 @@
 
           var searchMap = new ol.Map({
             controls:[],
-            layers: [new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })],
+            layers: [],
             view: new ol.View(angular.extend({}, mapsConfig))
           });
+
+          // initialize search map layers according to settings
+          // (default is OSM)
+          if (!viewerSettings.mapConfig.searchMapLayers) {
+            searchMap.addLayer(new ol.layer.Tile({
+              source: new ol.source.OSM()
+            }));
+          } else {
+            viewerSettings.mapConfig.searchMapLayers
+              .forEach(function (layerInfo) {
+                var result = gnMap.createLayerForType(layerInfo.type, {
+                  name: layerInfo.name,
+                  url: layerInfo.url
+                }, layerInfo.title, searchMap);
+              });
+          }
 
           // Set custom config in gnSearchSettings
           angular.extend(searchSettings, {

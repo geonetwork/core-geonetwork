@@ -1424,9 +1424,11 @@
            *
            * @param {string} type of the layer to create
            * @param {Object} opt for url or layer name
+           * @param {string} title optional title
+           * @param {ol.Map} map required for WMTS
            * @return {ol.layer} layer
            */
-          createLayerForType: function(type, opt, title) {
+          createLayerForType: function(type, opt, title, map) {
             switch (type) {
               case 'mapquest':
                 return new ol.layer.Tile({
@@ -1467,7 +1469,7 @@
                         var info = gnOwsCapabilities.getLayerInfoFromCap(
                             opt.name, capObj);
                         //info.group = layer.group;
-                        return that.addWmtsToMapFromCap(undefined, info,
+                        return that.addWmtsToMapFromCap(map, info,
                             capObj);
                         /*
                           l.setOpacity(layer.opacity);
