@@ -1,16 +1,6 @@
 @import "../../../style/gn_search";
 @import "gn_mapviewer_sextant.less";
 @import "formatter.less";
-@import (less) "../../../lib/malihu-custom-scrollbar-plugin-3.0.8/jquery.mCustomScrollbar.css";
-.mCSB_scrollTools .mCSB_buttonUp,
-.mCSB_scrollTools .mCSB_buttonDown,
-.mCSB_scrollTools .mCSB_buttonLeft,
-.mCSB_scrollTools .mCSB_buttonRight{
-  background-image: url(../catalog/style/mCSB_buttons.png);
-}
-.mCSB_inside > .mCSB_container {
-  margin-right: 15px;
-}
 
 .sm-max-and-api(@rules) {
   @media (max-width: @screen-sm-max) {
@@ -133,20 +123,12 @@
     }
   }
 }
-/*
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background-color: white;
-  border: none;
 
+// IE scrollbar
+.gn, .g {
+  scrollbar-face-color: gray;
+  scrollbar-track-color: transparent;
 }
-::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  border-radius: 3px;
-}
-*/
 
 @media (min-width: @screen-lg-min) {
   .sxt-left-panel {
@@ -521,7 +503,8 @@
 
   .sxt-searchform-content {
     padding: 15px;
-    height: ~"calc(100% - 200px - 6em)";
+    padding-bottom: 0px;
+    height: ~"calc(100% - 200px - 9em)";
     overflow-y: auto;
   }
   .sxt-categorytree {

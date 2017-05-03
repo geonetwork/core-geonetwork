@@ -64,7 +64,7 @@
         <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools}">
 
 
-          <div class="sxt-layertree" sxt-custom-scroll>
+          <div class="sxt-layertree">
             <div gn-baselayerswitcher="" gn-baselayerswitcher-map="map"></div>
             <div gn-terrain-switcher="ol3d"
                  ng-show="is3dEnabled"></div>
@@ -116,7 +116,7 @@
                 <i class="fa fa-picture-o fa-fw"></i>
                 <span translate>legends</span>
               </tab-heading>
-              <div class="panel-carousel" gn-legend-panel="map" sxt-custom-scroll axis="yx"></div>
+              <div class="panel-carousel" gn-legend-panel="map"></div>
             </tab>
 
             <tab active="layerTabs.sort.active">
@@ -124,7 +124,7 @@
                 <i class="fa fa-sort fa-fw"></i>
                 <span translate>sort</span>
               </tab-heading>
-              <div class="panel-carousel" gn-layerorder-panel="map" sxt-custom-scroll></div>
+              <div class="panel-carousel" gn-layerorder-panel="map"></div>
             </tab>
 
             <tab active="layerTabs.source.active">
@@ -132,7 +132,7 @@
                 <i class="fa fa-info fa-fw"></i>
                 <span translate>sources</span>
               </tab-heading>
-              <div class="panel-carousel" gn-layersources-panel="map" sxt-custom-scroll></div>
+              <div class="panel-carousel" gn-layersources-panel="map"></div>
             </tab>
 
             <tab active="layerTabs.ncwms.active">
@@ -140,7 +140,7 @@
                 <i class="fa fa-anchor fa-fw"></i>
                 <span translate>ncwms</span>
               </tab-heading>
-              <div class="ncwms-root" sxt-custom-scroll>
+              <div class="ncwms-root">
                 <div ng-repeat="layer in map.getLayers().getArray()" class="ncwms-item">
                   <div ng-show="active.NCWMS == layer && layer.visible" class="panel panel-default panel-ncwms-container" ng-if="layer.ncInfo">
                     <div class="panel-heading">{{layer.get('label')}}</div>
@@ -155,7 +155,7 @@
                 <i class="fa fa-cog"></i>
                 <span translate>process</span>
               </tab-heading>
-              <div class="wps-container" sxt-custom-scroll>
+              <div class="wps-container">
                 <div class="sxt-wps-panel"></div>
               </div>
             </tab>
@@ -165,7 +165,7 @@
                 <i class="fa fa-cog"></i>
                 <span translate>filter</span>
               </tab-heading>
-              <div class="wps-container" sxt-custom-scroll>
+              <div class="wps-container">
                 <div class="sxt-wfsfilter-panel"></div>
               </div>
             </tab>
@@ -187,9 +187,9 @@
 
           <div class="panel-carousel-window">
             <div class="panel-carousel-container">
-              <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map" sxt-custom-scroll></div>
-              <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map" sxt-custom-scroll></div>
-              <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map" sxt-custom-scroll></div>
+              <div class="panel-carousel" gn-wms-import="wms" gn-wms-import-map="map"></div>
+              <div class="panel-carousel" gn-wms-import="wmts" gn-wms-import-map="map"></div>
+              <div class="panel-carousel" gn-kml-import="" gn-kml-import-map="map"></div>
             </div>
           </div>
         </div>
@@ -238,7 +238,7 @@
       <div class="panel panel-default force-hide panel-tools" id="process-panel" sxt-processes-panel>
       </div>
 
-    <div class="panel panel-default force-hide panel-tools" id="print" sxt-custom-scroll>
+    <div class="panel panel-default force-hide panel-tools" id="print">
 
       <div class="panel-body">
         <div gn-mapprint="" print-active="activeTools.print" map="map"></div>

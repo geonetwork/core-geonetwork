@@ -544,44 +544,6 @@
     };
   }]);
 
-    module.directive('sxtCustomScroll', [ '$window', function($window) {
-    return {
-      restrict: 'A',
-      link: {
-        post: function(scope, element, attrs) {
-          var axis = attrs['axis'] || 'y';
-          var advanced = {
-            updateOnContentResize: true,
-            updateOnImageLoad: true
-          };
-          if (axis.indexOf('x')>=0) {
-            advanced.autoExpandHorizontalScroll = 1;
-          }
-
-          element.mCustomScrollbar({
-            theme: 'dark-3',
-            axis: axis,
-            advanced: advanced,
-            scrollButtons: {
-              enable: true
-            },
-            callbacks: {
-              onScrollStart: function() {
-                element.trigger('scroll');
-              }
-            }
-          });
-
-          $($window).on('resize', function() {
-            element.mCustomScrollbar('update');
-          });
-
-        }
-      }
-    };
-  }]);
-
-
   // fix angularjs bug fixed in v1.5.0-beta.1 : some html special char are
   // interpreted: &param => %B6m
   module.directive('sxtFixLinks', [ '$filter', '$sce',
