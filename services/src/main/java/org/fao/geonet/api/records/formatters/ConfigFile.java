@@ -23,7 +23,6 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import com.google.common.collect.Lists;
 import org.fao.geonet.Constants;
 import org.fao.geonet.utils.IO;
 
@@ -61,15 +60,13 @@ public class ConfigFile {
      */
     public ConfigFile(Path bundleDir, boolean searchParentDir, Path schemaDir) throws IOException {
         this.config = new Properties();
-        List<Path> properties;
+        List<Path> properties = new ArrayList<>();
         if (searchParentDir) {
             if (schemaDir == null) {
-                properties = Lists.newArrayList(
-                    bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME),
-                    bundleDir.resolve(CONFIG_PROPERTIES_FILENAME));
+                properties.add(bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME));
+                properties.add(bundleDir.resolve(CONFIG_PROPERTIES_FILENAME));
 
             } else {
-                properties = Lists.newArrayList();
                 Path current = bundleDir;
                 while (current.getParent() != null && !schemaDir.equals(current) && Files.exists(current.getParent())) {
                     properties.add(current.resolve(CONFIG_PROPERTIES_FILENAME));
@@ -78,7 +75,7 @@ public class ConfigFile {
                 properties.add(schemaDir.resolve(CONFIG_PROPERTIES_FILENAME));
             }
         } else {
-            properties = Lists.newArrayList(bundleDir.resolve(CONFIG_PROPERTIES_FILENAME));
+            properties.add(bundleDir.resolve(CONFIG_PROPERTIES_FILENAME));
         }
 
         // Reverse to allow override (issue #1973):
