@@ -138,6 +138,7 @@
                     iElement.find('.panel-wps').remove();
                   }
                   scope.active.layersTools = false;
+                  scope.active.maximized = false;
                   scope.layerTabs[tab].active = false;
                   activeTab = null;
                   iElement.find('.main-tools').removeClass('sxt-maximize-layer-tools');
