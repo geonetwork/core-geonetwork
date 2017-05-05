@@ -514,6 +514,7 @@ public class DefaultMetadataValidator implements IMetadataValidator {
         return valid;
     }
 
+    @Override
     public Pair<Element, String> doValidate(UserSession session, String schema,
             String metadataId, Element md, String lang, boolean forEditing)
                     throws Exception {

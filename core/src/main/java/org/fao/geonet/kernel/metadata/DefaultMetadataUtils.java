@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Edit;
@@ -107,9 +108,6 @@ public class DefaultMetadataUtils implements IMetadataUtils {
     private MetadataStatusRepository mdStatusRepository;
 
     @Autowired
-    private MetadataRatingByIpRepository ratingByIpRepository;
-
-    @Autowired
     private SearchManager searchManager;
 
     @Autowired(required = false)
@@ -133,8 +131,6 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         this.mdRepository = context.getBean(MetadataRepository.class);
         this.mdStatusRepository = context
                 .getBean(MetadataStatusRepository.class);
-        this.ratingByIpRepository = context
-                .getBean(MetadataRatingByIpRepository.class);
         this.searchManager = context.getBean(SearchManager.class);
         this.svnManager = context.getBean(SvnManager.class);
         this.dataDirectory = context.getBean(GeonetworkDataDirectory.class);
@@ -227,7 +223,27 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         return Xml.transform(root, styleSheet);
 
     }
+    
+    @Override
+    public String extractTitle(String schema, Element md, String language) throws Exception {
+      
+      throw new NotImplementedException("Waiting for other commits to be ready");
+      
+//      Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_TITLE);
+//      Map<String, Object> params = new HashMap<String, Object>();
+//      params.put("language", language);
+//      String title       = Xml.transform(md, styleSheet, params).getText().trim();
+//
+//      if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+//          Log.debug(Geonet.DATA_MANAGER, "Extracted Title '"+ title +"' for schema '"+ schema +"'");
+//
+//      //--- needed to detach md from the document
+//      md.detach();
+//
+//      return title;
+    }
 
+    
     /**
      * @see org.fao.geonet.kernel.metadata.IMetadataUtils#extractSummary(org.jdom.Element)
      * @param md
@@ -265,6 +281,18 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         return String.valueOf(idList.get(0));
     }
 
+
+    /**
+     * @see org.fao.geonet.kernel.metadata.IMetadataUtils#getMetadataId(java.lang.String, java.lang.Integer)
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String getMetadataId(String uuid, int userIdAsInt) throws Exception {
+      return getMetadataId(uuid);
+    }
+    
     /**
      * @see org.fao.geonet.kernel.metadata.IMetadataUtils#getMetadataUuid(java.lang.String)
      * @param id

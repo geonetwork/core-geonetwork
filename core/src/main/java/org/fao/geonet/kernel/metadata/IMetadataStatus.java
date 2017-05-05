@@ -90,4 +90,6 @@ public interface IMetadataStatus {
      */
     public void activateWorkflowIfConfigured(ServiceContext context,
             String newId, String groupOwner) throws Exception;
+
+    public MetadataStatus getPreviousStatus(int metadataId) throws Exception;
 }

@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +17,6 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -95,10 +94,9 @@ import jeeves.xlink.Processor;
 public class DefaultMetadataIndexer
         implements IMetadataIndexer, ApplicationEventPublisherAware {
 
-    protected Set<String> waitForIndexing = new HashSet<String>();
-    protected Set<String> indexing = new HashSet<String>();
-    Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
-    protected Lock indexLock = new ReentrantLock();
+    protected Set<String> waitForIndexing = Collections.synchronizedSet(new HashSet<String>());
+    protected Set<String> indexing = Collections.synchronizedSet(new HashSet<String>());
+    protected Set<IndexMetadataTask> batchIndex = Collections.synchronizedSet(new HashSet<IndexMetadataTask>());
 
     protected ApplicationEventPublisher applicationEventPublisher;
 
@@ -133,8 +131,6 @@ public class DefaultMetadataIndexer
 
     @Autowired
     protected SearchManager searchManager;
-    
-    private ServiceContext context;
 
     /**
      * @param context
@@ -155,7 +151,6 @@ public class DefaultMetadataIndexer
         this.inspireAtomFeedRepository = context
                 .getBean(InspireAtomFeedRepository.class);
         this.setSchemaManager(context.getBean(SchemaManager.class));
-        this.context = context;
     }
 
     /**
@@ -306,11 +301,9 @@ public class DefaultMetadataIndexer
      */
     @Override
     public boolean isIndexing() {
-        indexLock.lock();
         try {
             return !indexing.isEmpty() || !batchIndex.isEmpty();
         } finally {
-            indexLock.unlock();
         }
     }
 
@@ -339,7 +332,6 @@ public class DefaultMetadataIndexer
     @Override
     public void indexMetadata(final String metadataId,
             boolean forceRefreshReaders) throws Exception {
-        indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
                 return;
@@ -348,7 +340,7 @@ public class DefaultMetadataIndexer
                 try {
                     waitForIndexing.add(metadataId);
                     // don't index the same metadata 2x
-                    wait(200);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     return;
                 } finally {
@@ -357,7 +349,6 @@ public class DefaultMetadataIndexer
             }
             indexing.add(metadataId);
         } finally {
-            indexLock.unlock();
         }
         Metadata fullMd;
 
@@ -418,11 +409,9 @@ public class DefaultMetadataIndexer
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
         } finally {
-            indexLock.lock();
             try {
                 indexing.remove(metadataId);
             } finally {
-                indexLock.unlock();
             }
         }
         if (fullMd != null) {
@@ -638,9 +627,8 @@ public class DefaultMetadataIndexer
     }
 
     protected ServiceContext getServiceContext() {
-        if(context == null) {
-          context = ServiceContext.get();
-        }
+        // TODO
+        ServiceContext context = ServiceContext.get();
         return context;
     }
 

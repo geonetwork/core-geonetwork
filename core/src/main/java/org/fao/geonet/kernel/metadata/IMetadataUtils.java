@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.jdom.Element;
@@ -83,6 +84,15 @@ public interface IMetadataUtils {
     public @Nullable String getMetadataId(@Nonnull String uuid)
             throws Exception;
 
+    /**
+     * Get the id of the metadata only if the user can see it. Useful for advanced MetadataManagers like Draft.
+     * @param uuid
+     * @param userIdAsInt
+     * @return
+     * @throws Exception
+     */
+    public @Nullable String getMetadataId(@Nonnull String uuid, @Nonnull int userIdAsInt)
+            throws Exception;
     /**
      *
      * @param id
@@ -298,6 +308,18 @@ public interface IMetadataUtils {
     public Set<String> updateChildren(ServiceContext srvContext,
             String parentUuid, String[] children, Map<String, Object> params)
                     throws Exception;
+    
+    
+    /**
+     * Extract Title from the metadata record using the schema
+     * XSL for Title extraction ({@link Geonet.File#EXTRACT_TITLE})
+     *
+     * @param schema
+     * @param md
+     * @return
+     * @throws Exception
+     */
+    public String extractTitle(String schema, Element md, String language) throws Exception;
 
     /**
      * Add privileges information about metadata record which depends on context

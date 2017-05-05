@@ -172,7 +172,6 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
             superIndexMetadata(metadataId, forceRefreshReaders, (mdD != null));
         } else {
             //It is a draft
-            indexLock.lock();
             try {
                 if (waitForIndexing.contains(metadataId)) {
                     return;
@@ -181,7 +180,7 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
                     try {
                         waitForIndexing.add(metadataId);
                         // don't index the same metadata 2x
-                        wait(200);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         return;
                     } finally {
@@ -190,7 +189,6 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
                 }
                 indexing.add(metadataId);
             } finally {
-                indexLock.unlock();
             }
             MetadataDraft fullMd;
 
@@ -238,11 +236,9 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
                 Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
                 fullMd = null;
             } finally {
-                indexLock.lock();
                 try {
                     indexing.remove(metadataId);
                 } finally {
-                    indexLock.unlock();
                 }
             }
             if (fullMd != null) {
@@ -260,25 +256,23 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
      */
     public void superIndexMetadata(final String metadataId,
             boolean forceRefreshReaders, boolean hasDraft) throws Exception {
-        indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
                 return;
             }
-            while (indexing.contains(metadataId)) {
+            if (!indexing.contains(metadataId)) {
                 try {
                     waitForIndexing.add(metadataId);
                     // don't index the same metadata 2x
-                    wait(200);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    return;
+                  return;
                 } finally {
                     waitForIndexing.remove(metadataId);
                 }
             }
             indexing.add(metadataId);
         } finally {
-            indexLock.unlock();
         }
         Metadata fullMd;
 
@@ -322,11 +316,9 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
             fullMd = null;
         } finally {
-            indexLock.lock();
             try {
                 indexing.remove(metadataId);
             } finally {
-                indexLock.unlock();
             }
         }
         if (fullMd != null) {

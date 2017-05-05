@@ -991,91 +991,84 @@ public class LuceneQueryBuilder {
         BooleanClause haveDraftClause = new BooleanClause(haveDraftQuery, 
                 LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
 
+        //to extract not editable metadata
         canEditQuery.add(draftClause); 
         canEditQuery.add(noHaveDraftClause); 
-        cannotEditQuery.add(noHaveDraftClause);
+        
+        //to extract editable metadata
         cannotEditQuery.add(haveDraftClause);
+        cannotEditQuery.add(noHaveDraftClause);
         
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
         boolean admin = luceneQueryInput.getAdmin();
+                
+        //This is the subquery to get all the editable metadata
         
-        //We need this query to combine it with the view privilege (see comments forward)
-        BooleanQuery notPresentInEditableGroups = null;
-
-        if(!editableGroups.isEmpty()) {
-            notPresentInEditableGroups = new BooleanQuery();
-        }
-        for(String editableGroup : editableGroups) {
-            BooleanQuery editableQuery = new BooleanQuery();
+        if(!editableGroups.isEmpty()) {   
+          BooleanQuery editableQuery = new BooleanQuery();
             
+          for(String editableGroup : editableGroups) {        
             //group has edit privileges
             TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, editableGroup.trim()));
 
             editableQuery.add(editQuery, 
-                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-            editableQuery.add(cannotEditQuery, 
-                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-            
-            notPresentInEditableGroups.add(editableQuery,
-                    LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
+          }
+          
+          BooleanQuery editDraftedQuery = new BooleanQuery();          
+          editDraftedQuery.add(editableQuery, 
+              LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+
+          
+          //Do we want to force see the non drafted version?
+          if(!noDraft) {
+            editDraftedQuery.add(canEditQuery, 
+                LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+          } else {
+            editDraftedQuery.add(cannotEditQuery, 
+                LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+          }
+          
+          groupsQuery.add(editDraftedQuery, 
+                      LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
+          
+          groupsQueryEmpty = false;
         }
 
+        //Now we need the subquery for all viewable and not editable metadata
         if (!editable && !admin) {
             if (!CollectionUtils.isEmpty(groups)) {
-                for (String group : groups) {
-                    if (StringUtils.isNotBlank(group)) {  
-                        //at least one groupQuery is added
-                        groupsQueryEmpty = false;
-                        
-                        //query to show md in group "group"
-                        BooleanQuery editableQuery = new BooleanQuery();
-                        
-                        //group has view privileges
-                        TermQuery viewEditQuery = 
-                                new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
-                        BooleanClause viewClause = new BooleanClause(viewEditQuery, 
-                                LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
-                        
-                        //group has edit privileges
-                        TermQuery editQuery = new TermQuery(new Term(LuceneIndexField._OP2, group.trim()));
-                        BooleanClause editClause = new BooleanClause(editQuery, 
-                                LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
-                        
-                        //merged previous view and edit group privileges query with an OR
-                        BooleanQuery groupQuery = new BooleanQuery();
-                        groupQuery.add(viewClause); 
-                        groupQuery.add(editClause);
-                        
-                        //add previous OR to general group query
-                        editableQuery.add(groupQuery, 
-                                LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+              groupsQueryEmpty = false;
+              
+              //query to show md in group "group"
+              BooleanQuery viewQuery = new BooleanQuery();
+              for (String group : groups) {
+                  if (StringUtils.isNotBlank(group) && !editableGroups.contains(group)) {
+                      groupsQueryEmpty = false;
+                      
+                      //group has view privileges
+                      TermQuery viewTerm = 
+                              new TermQuery(new Term(LuceneIndexField._OP0, group.trim()));
+                      
+                      BooleanClause viewClause = new BooleanClause(viewTerm, 
+                              LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
+                      
+                      viewQuery.add(viewClause);
+                  }                     
+               }
+              
+              BooleanQuery viewDraftedQuery = new BooleanQuery();
 
-                        //Show draft or not depending if user have edit privileges over group
-                        if(editableGroups.contains(group) && !noDraft) {
-                            editableQuery.add(canEditQuery, 
-                                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-                        } else {        
-                            //We have to make sure we don't have privileges to edit this md somewhere else
-                            //because if we can edit it, it will break the query 
-                            //showing both draft and non-draft version
-                            BooleanQuery nonEditableQuery = new BooleanQuery();
-                            nonEditableQuery.add(cannotEditQuery, 
-                                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-                            if(notPresentInEditableGroups != null) {
-                                nonEditableQuery.add(notPresentInEditableGroups, 
-                                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-                            }
-                                
-                            editableQuery.add(nonEditableQuery, 
-                                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-                        }
-                        
-                        // add to general groups query with OR
-                        groupsQuery.add(new BooleanClause(editableQuery, 
-                                LuceneUtils.convertRequiredAndProhibitedToOccur(false, false)));
-                    }                     
-                }
+              
+              viewDraftedQuery.add(viewQuery, 
+                  LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+              
+              viewDraftedQuery.add(cannotEditQuery, 
+                  LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+              
+              groupsQuery.add(viewDraftedQuery, 
+                          LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
             }
         }
     
@@ -1142,6 +1135,7 @@ public class LuceneQueryBuilder {
         }
 
         // Add the privilege part of the query
+
         if (!groupsQueryEmpty) {
             BooleanClause.Occur groupsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause groupsClause = new BooleanClause(groupsQuery, groupsOccur);
