@@ -3033,4 +3033,82 @@
   <element name="gmd:LI_Lineage">
     <label>Abstammung</label>
   </element>
+  <element name="gmd:useLimitation">
+    <label>Nutzungsbeschränkung</label>
+  </element>
+  <element name="srv:couplingType">
+    <label>Kopplungstyp</label>
+  </element>
+  <element name="gmd:accessConstraints">
+    <label>Zugangsprobleme</label>
+  </element>
+  <element name="gmd:useConstraints">
+    <label>Nutzungsprobleme</label>
+  </element>
+  <element name="gmd:MD_SecurityConstraints">
+    <label>Sicherheitsprobleme</label>
+  </element>
+  <element name="gmd:classification">
+    <label>Klassifizierung</label>
+  </element>
+  <element name="srv:serviceType">
+    <label>Diensttyp</label>
+  </element>
+  <element name="gmd:extent">
+    <label>Gröβe</label>
+  </element>
+  <element name="srv:extent">
+    <label>Gröβe</label>
+  </element>
+  <element name="srv:SV_CoupledResource">
+    <label>gekoppelte Ressource</label>
+  </element>
+  <element name="srv:operationName">
+    <label>Vorgangsname</label>
+  </element>
+  <element name="gmd:identifier">
+    <label>Identifikator</label>
+  </element>
+  <element name="srv:identifier">
+    <label>Identifikator</label>
+  </element>
+  <element name="srv:containsOperations">
+    <label>Vorgangsinhalt</label>
+  </element>
+  <element name="srv:DCP">
+    <label>DCP</label>
+  </element>
+  <element name="srv:connectPoint">
+    <label>Anschlusspunkt</label>
+  </element>
+  <element name="srv:operatesOn">
+    <label>vorgeht am</label>
+  </element>
+  <element name="gmd:DQ_DataQuality">
+    <label>Datenqualität</label>
+  </element>
+  <element name="gmd:scope">
+    <label>Rahmen</label>
+  </element>
+  <element name="gmd:report">
+    <label>Bericht</label>
+  </element>
+  <element name="gmd:lineage">
+    <label>Abstammung</label>
+  </element>
+  <element name="gmd:hierarchyLevel">
+    <label>hierarchische Ebene</label>
+  </element>
+  <element name="gmd:MD_Resolution">
+    <label>Auflösung</label>
+  </element>
+  <element name="gmd:equivalentScale">
+    <label>gleichwertiger Maßstab </label>
+  </element>
+  <element name="gmd:processStep">
+    <label>Prozeβschritt</label>
+  </element>
+  <element name="gmd:LI_ProcessStep">
+    <label>Prozeβschritt</label>
+  </element>
 </labels>
