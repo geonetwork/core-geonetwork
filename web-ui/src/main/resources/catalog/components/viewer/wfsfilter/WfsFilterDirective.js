@@ -76,6 +76,9 @@
             searchGeometry: undefined
           };
 
+          // if true, the "apply filters" button will be available
+          scope.filtersChanged = false;
+
           // Get an instance of solr object
           var solrObject, geometry, extentFilter;
 
@@ -311,6 +314,7 @@
            * @param {boolean} formInput the filter comes from input change
            */
           scope.filterFacets = function(formInput) {
+            scope.filtersChanged = true;
 
             // Update the facet UI
             var expandedFields = [];
@@ -361,6 +365,7 @@
             // output structure to send to filter service
             scope.output = {};
             scope.searchInput = '';
+            scope.filtersChanged = true;
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
@@ -422,12 +427,14 @@
                 }
               }).finally (function() {
                 defer.resolve();
+                scope.filtersChanged = false;   // reset 'apply filters' button
               });
             } else {
               scope.layer.getSource().updateParams({
                 SLD: null
               });
               defer.resolve();
+              scope.filtersChanged = false;
             }
             return defer.promise;
           };
