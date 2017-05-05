@@ -145,9 +145,6 @@
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;
                 }
-                $timeout(function() {
-                  $('.sxt-layertree').mCustomScrollbar('update');
-                }, 0);
               };
 
               scope.loadTool = function(tab, layer) {
@@ -335,7 +332,6 @@
                 right: '0',
                 left: '0'
               });
-              $tip.find('[sxt-custom-scroll]').mCustomScrollbar('update');
             }
           });
           button.on('hidden.bs.popover', function() {

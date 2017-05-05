@@ -111,7 +111,7 @@
     float: left;
   }
   .sxt-left-panel {
-    width: 33.333%;
+    width: 33.3%;
     &.sxt-collapsed {
       width: 50%;
     }
@@ -124,10 +124,42 @@
   }
 }
 
-// IE scrollbar
-.gn, .g {
-  scrollbar-face-color: gray;
+// custom scrollbars (IE and Chrome)
+div.gn, div.g, * {
+  scrollbar-face-color: rgba(90, 90, 90, 1);
   scrollbar-track-color: transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(90, 90, 90, 1);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: rgba(90, 90, 90, 0.12);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-button {
+    background-image: url(../catalog/style/mCSB_buttons.png);
+    opacity: 0.7;
+    &:hover { opacity: 1; }
+
+    &:vertical {
+      width: 8px;
+      height: 16px;
+      &:start { background-position: -116px -74px; }
+      &:end { background-position: -116px -94px; }
+    }
+    &:horizontal {
+      width: 16px;
+      height: 8px;
+      &:start { background-position: -122px -116px; }
+      &:end { background-position: -122px -132px; }
+    }
+  }
 }
 
 @media (min-width: @screen-lg-min) {
@@ -140,7 +172,7 @@
 }
 .sxt-max-md {
   .sxt-left-panel {
-    width: 33.333%;
+    width: 33.3%;
   }
   .sxt-center-panel {
     width: 66.666%;
@@ -399,11 +431,11 @@
     height: 100%;
   }
   .sxt-reset-btn {
-    position: absolute;
-    bottom: -1em;
+    position: relative;
+    bottom: 1em;
     opacity: 1;
     left: 50%;
-    margin-left: -5em;
+    transform: translate(-50%, 0%);
     box-shadow: @sxt-shadow;
     border-radius: 2px;
     &[disabled] {
@@ -503,7 +535,6 @@
 
   .sxt-searchform-content {
     padding: 15px;
-    padding-bottom: 0px;
     height: ~"calc(100% - 200px - 9em)";
     overflow-y: auto;
   }
