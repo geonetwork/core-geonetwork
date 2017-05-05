@@ -47,6 +47,25 @@
               (viewerSettings.mapConfig.map || '../../map/config-viewer.xml');
           viewerSettings.owsContext = $location.search().map;
 
+          // these layers will be added along the default context
+          // (transform settings to be usable by the OwsContextService)
+          var viewerMapLayers = viewerSettings.mapConfig.viewerMapLayers
+          viewerSettings.additionalMapLayers =
+            viewerMapLayers && viewerMapLayers.map ?
+            viewerMapLayers.map(function (layer) {
+              return {
+                name: '{type=' + layer.type + ', name=' + layer.name + '}',
+                title: layer.title,
+                group: 'Background layers',
+                server: [{
+                  service: 'urn:ogc:serviceType:WMS',
+                  onlineResource: [{
+                    href: layer.url
+                  }]
+                }]
+              }
+            }) : [];
+
           // Keep one layer in the background
           // while the context is not yet loaded.
           viewerSettings.bgLayers = [
@@ -121,18 +140,18 @@
 
           // initialize search map layers according to settings
           // (default is OSM)
-          if (!viewerSettings.mapConfig.searchMapLayers) {
+          var searchMapLayers = viewerSettings.mapConfig.searchMapLayers;
+          if (!searchMapLayers || !searchMapLayers.length) {
             searchMap.addLayer(new ol.layer.Tile({
               source: new ol.source.OSM()
             }));
           } else {
-            viewerSettings.mapConfig.searchMapLayers
-              .forEach(function (layerInfo) {
-                var result = gnMap.createLayerForType(layerInfo.type, {
-                  name: layerInfo.name,
-                  url: layerInfo.url
-                }, layerInfo.title, searchMap);
-              });
+            searchMapLayers.forEach(function (layerInfo) {
+              var result = gnMap.createLayerForType(layerInfo.type, {
+                name: layerInfo.name,
+                url: layerInfo.url
+              }, layerInfo.title, searchMap);
+            });
           }
 
           // Set custom config in gnSearchSettings
