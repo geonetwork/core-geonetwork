@@ -61,7 +61,7 @@
         {{field.label}}
       </h5>
       <div class="list-group"
-           data-ng-class="{'collapse': !field.expanded}" sxt-custom-scroll>
+           data-ng-class="{'collapse': !field.expanded}">
         <div class="checkbox list-group-item"
              data-ng-repeat="facet in field.values | filter:searchInput"
              data-ng-click="onCheckboxClick(field.name, facet.value, field.type)"

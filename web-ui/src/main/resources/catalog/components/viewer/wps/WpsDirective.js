@@ -235,10 +235,6 @@
                   };
                   scope.optionsVisible = true;
                 }
-                setTimeout(function() {
-                  element.parents('[sxt-custom-scroll]').
-                      mCustomScrollbar('update');
-                }, 0);
               },
               function(response) {
                 scope.describeState = 'failed';

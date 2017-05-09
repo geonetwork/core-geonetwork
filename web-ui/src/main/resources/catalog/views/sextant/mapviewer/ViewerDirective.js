@@ -138,6 +138,7 @@
                     iElement.find('.panel-wps').remove();
                   }
                   scope.active.layersTools = false;
+                  scope.active.maximized = false;
                   scope.layerTabs[tab].active = false;
                   activeTab = null;
                   iElement.find('.main-tools').removeClass('sxt-maximize-layer-tools');
@@ -145,9 +146,6 @@
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;
                 }
-                $timeout(function() {
-                  $('.sxt-layertree').mCustomScrollbar('update');
-                }, 0);
               };
 
               scope.loadTool = function(tab, layer) {
@@ -335,7 +333,6 @@
                 right: '0',
                 left: '0'
               });
-              $tip.find('[sxt-custom-scroll]').mCustomScrollbar('update');
             }
           });
           button.on('hidden.bs.popover', function() {
