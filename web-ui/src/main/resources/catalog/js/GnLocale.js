@@ -140,7 +140,7 @@
       // $translateProvider.useSanitizeValueStrategy('escape');
       $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
-      moment.lang(gnGlobalSettings.lang);
+      moment.locale(gnGlobalSettings.lang);
     }]);
 
 })();
