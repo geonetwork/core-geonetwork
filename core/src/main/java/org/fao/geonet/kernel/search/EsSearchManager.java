@@ -32,22 +32,34 @@ import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo_;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,6 +67,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -175,9 +188,14 @@ public class EsSearchManager implements ISearchManager {
         return null;
     }
 
+    private int commitInterval = 200;
+    private Map<String, String> listOfDocumentsToIndex = new HashMap<>();
+
     @Override
     public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders) throws Exception {
+
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
         Element docs = new Element("docs");
         Element allFields = new Element("doc");
@@ -195,11 +213,24 @@ public class EsSearchManager implements ISearchManager {
         String catalog = doc.get("source").asText();
         doc.remove("source");
         doc.put("sourceCatalogue", catalog);
+        doc.put("territory", settingManager.getSiteName());
+        doc.put("harvesterUuid", settingManager.getSiteId());
+        doc.put("harvesterId", settingManager.getNodeURL());
         Map<String, String> docListToIndex = new HashMap<>();
         docListToIndex.put(id, mapper.writeValueAsString(doc));
-        client.bulkRequest(index, docListToIndex);
-        if (forceRefreshReaders) {
-//            client.commit();
+        listOfDocumentsToIndex.put(id, mapper.writeValueAsString(doc));
+        if (listOfDocumentsToIndex.size() == commitInterval) {
+            sendDocumentsToIndex();
+        }
+    }
+
+    private void sendDocumentsToIndex() throws IOException {
+        synchronized (this) {
+            if (listOfDocumentsToIndex.size() > 0) {
+                System.out.println(String.format("Sending %d document to index", listOfDocumentsToIndex.size()));
+                client.bulkRequest(index, listOfDocumentsToIndex);
+                listOfDocumentsToIndex.clear();
+            }
         }
     }
 
@@ -276,11 +307,6 @@ public class EsSearchManager implements ISearchManager {
     }
     @Override
     public void forceIndexChanges() throws IOException {
-//        try {
-//            client.commit();
-//        } catch (SolrServerException e) {
-//            throw new IOException(e);
-//        }
     }
 
     @Override
@@ -294,24 +320,48 @@ public class EsSearchManager implements ISearchManager {
         }
 
         if (StringUtils.isNotBlank(bucket)) {
-            dataMan.rebuildIndexForSelection(context, bucket, xlinks);
-        } else {
+            ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
+            UserSession session = context.getUserSession();
+            SelectionManager sm = SelectionManager.getManager(session);
 
-        }
-
-//        final List<Metadata> metadataList = new ArrayList();
-//        metadataList.add(metadataRepository.findOneByUuid("419534c7-060b-4448-8e96-813a70e31c17"));
-        final List<Metadata> metadataList = metadataRepository.findAll();
-        for(Metadata metadata : metadataList) {
-            if (metadata != null) {
-                dataMan.indexMetadata(metadata.getId() + "", false, this);
+            synchronized (sm.getSelection(bucket)) {
+                for (Iterator<String> iter = sm.getSelection(bucket).iterator();
+                     iter.hasNext(); ) {
+                    String uuid = (String) iter.next();
+//                    String id = dataMan.getMetadataId(uuid);
+                    Metadata metadata = metadataRepository.findOneByUuid(uuid);
+                    if (metadata != null) {
+                        listOfIdsToIndex.add(metadata.getId() + "");
+                    } else {
+                        System.out.println(String.format(
+                            "Selection contains uuid '%s' not found in database", uuid));
+                    }
+                }
             }
+            for(String id : listOfIdsToIndex) {
+                dataMan.indexMetadata(id + "", false, this);
+            }
+            sendDocumentsToIndex();
+        } else {
+            final Specifications<Metadata> metadataSpec =
+                Specifications.where(MetadataSpecs.isType(MetadataType.METADATA))
+                    .or(MetadataSpecs.isType(MetadataType.TEMPLATE));
+            final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
+                Specifications.where(metadataSpec)
+            );
+            for(Integer id : metadataIds) {
+                dataMan.indexMetadata(id + "", false, this);
+            }
+            sendDocumentsToIndex();
         }
+
         return true;
     }
 
     public void clearIndex() throws Exception {
-        client.deleteByQuery(index, DOC_TYPE + ":metadata");
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        client.deleteByQuery(index,
+            "harvesterUuid:\\\"" + settingManager.getSiteId() + "\\\"");
     }
 
 //    public void iterateQuery(SolrQuery params, final Consumer<SolrDocument> callback) throws IOException, SolrServerException {
