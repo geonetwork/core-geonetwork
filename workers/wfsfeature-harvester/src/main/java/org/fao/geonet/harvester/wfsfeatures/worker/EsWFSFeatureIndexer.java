@@ -215,7 +215,8 @@ public class EsWFSFeatureIndexer {
         try {
             DocumentResult response = client.getClient().execute(index);
             logger.info(String.format(
-                    "Report saved. '%s'.",
+                    "Report saved for %s. Error is '%s'.",
+                    state.getParameters().getTypeName(),
                     response.getErrorMessage()));
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,6 +329,7 @@ public class EsWFSFeatureIndexer {
 
             StringBuffer bulkRequest = new StringBuffer();
             ObjectMapper mapper = new ObjectMapper();
+            boolean isPointOnly = true;
 
             while (features.hasNext()) {
                 ObjectNode rootNode = mapper.createObjectNode();
@@ -402,6 +404,8 @@ public class EsWFSFeatureIndexer {
                                             "location",
                                             point.y + "," + point.x
                                         );
+                                    } else {
+                                        isPointOnly = false;
                                     }
                                 } else {
 //                                    builder.field(
@@ -425,8 +429,8 @@ public class EsWFSFeatureIndexer {
                     docCollection.put(id, mapper.writeValueAsString(rootNode));
                 } catch (Exception ex) {
                     state.getHarvesterReport().put("error_ss", String.format(
-                            "Error while creating document for feature %d. Exception is: %s",
-                            nbOfFeatures, ex.getMessage()
+                        "Error while creating document for %s feature %d. Exception is: %s",
+                        typeName, nbOfFeatures, ex.getMessage()
                     ));
                     continue;
                 }
@@ -437,24 +441,24 @@ public class EsWFSFeatureIndexer {
                     startCommitTime = ZonedDateTime.now();
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                                "  %d features to index.",
-                                nbOfFeatures));
+                                "  %s - %d features to index.",
+                                typeName, nbOfFeatures));
                     }
                     try {
                         client.bulkRequest(client.getCollection(),
                             docCollection);
                     } catch (Exception ex) {
                         state.getHarvesterReport().put("error_ss", String.format(
-                                "Error while indexing block of documents [%d-%d]. Exception is: %s",
-                                nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
+                            "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
+                            typeName, nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
                         ));
                     }
                     docCollection.clear();
                     numInBatch = 0;
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format(
-                                "  %d features indexed in %dms.",
-                                nbOfFeatures,
+                            "  %s - %d features indexed in %dms.",
+                            typeName, nbOfFeatures,
                                 Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
                         ));
                     }
@@ -464,29 +468,30 @@ public class EsWFSFeatureIndexer {
                 startCommitTime = ZonedDateTime.now();
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format(
-                            "  %d features to index.",
-                            nbOfFeatures));
+                        "  %s - %d features to index.",
+                        typeName, nbOfFeatures));
                 }
                 try {
                     client.bulkRequest(client.getCollection(),
                         docCollection);
                 } catch (Exception ex) {
                     state.getHarvesterReport().put("error_ss", String.format(
-                            "Error while indexing block of documents [%d-%d]. Exception is: %s",
-                            nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
+                        "Error while indexing %s block of documents [%d-%d]. Exception is: %s",
+                        typeName, nbOfFeatures, nbOfFeatures + numInBatch, ex.getMessage()
                     ));
                 }
                 logger.debug(String.format(
-                    "  %d features indexed in %dms.",
-                    nbOfFeatures,
+                    "  %s - %d features indexed in %dms.",
+                    typeName, nbOfFeatures,
                     Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
                 ));
             }
             logger.info(String.format(
-                "Total number of features indexed is %d in %dms.",
-                nbOfFeatures,
+                "Total number of %s features indexed is %d in %dms.",
+                typeName, nbOfFeatures,
                 Duration.between(startCommitTime, ZonedDateTime.now()).toMillis()
             ));
+            state.getHarvesterReport().put("isPointOnly", isPointOnly);
             state.getHarvesterReport().put("status_s", "success");
             state.getHarvesterReport().put("totalRecords_i", nbOfFeatures);
             final DateTime dateTime = new DateTime(DateTimeZone.UTC);
