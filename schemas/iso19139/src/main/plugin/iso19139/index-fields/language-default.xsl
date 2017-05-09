@@ -202,6 +202,19 @@
       <xsl:for-each select="gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]">
         <Field name="abstract" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
+
+      <xsl:choose>
+        <xsl:when test="gmd:credit//gmd:LocalisedCharacterString[@locale=$langId]">
+          <xsl:for-each select="gmd:credit//gmd:LocalisedCharacterString[@locale=$langId]">
+            <Field name="credit" string="{string(.)}" store="true" index="true"/>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="gmd:credit/gco:CharacterString">
+            <Field name="credit" string="{string(.)}" store="true" index="true"/>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each select="*/gmd:EX_Extent">
