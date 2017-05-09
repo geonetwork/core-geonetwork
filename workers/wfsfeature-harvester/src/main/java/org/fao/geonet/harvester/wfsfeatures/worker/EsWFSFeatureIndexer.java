@@ -29,7 +29,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import org.apache.camel.Exchange;
@@ -378,9 +380,10 @@ public class EsWFSFeatureIndexer {
 //                                builder.endArray();
                             } else {
                                 if (documentFields.get(attributeName).equals("geom")) {
+                                    Geometry geom = (Geometry) feature.getDefaultGeometry();
                                     // Convert to JSON
                                     String gjson = new GeometryJSON().toString(
-                                        (Geometry) feature.getDefaultGeometry()
+                                        geom
                                     );
                                     JsonNode obj = mapper.readTree(gjson.getBytes(StandardCharsets.UTF_8));
 //                                    builder.rawField(
@@ -388,6 +391,18 @@ public class EsWFSFeatureIndexer {
                                         documentFields.get(attributeName),
                                         obj
                                     );
+
+                                    // Index point geometry in location field
+                                    // of type geo_point
+                                    boolean isPoint = geom instanceof Point;
+                                    if (isPoint) {
+                                        Coordinate point = geom.getCoordinate();
+                                        // Strin with format lat,lon
+                                        rootNode.put(
+                                            "location",
+                                            point.y + "," + point.x
+                                        );
+                                    }
                                 } else {
 //                                    builder.field(
                                     rootNode.put(
