@@ -225,7 +225,7 @@
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
                       select="$labelConfig/label"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
 
