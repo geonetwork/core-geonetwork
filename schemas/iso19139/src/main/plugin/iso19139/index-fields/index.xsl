@@ -140,6 +140,7 @@
       </xsl:for-each>
 
       <!-- Harvester details
+      <territory>GN</territory>
       <territory>
         <xsl:value-of select="util:getSettingValue('system/site/name')"/>
       </territory>
@@ -376,14 +377,12 @@
                 <xsl:value-of select="$inspireTheme"/>
               </inspireThemeFirst>
               <inspireAnnexForFirstTheme>
-                <xsl:value-of
-                  select="'TODO'"/>
+                <xsl:value-of select="$inspireTheme"/>
                 <!--select="solr:analyzeField('synInspireAnnexes', $inspireTheme)"/>-->
               </inspireAnnexForFirstTheme>
             </xsl:if>
             <inspireAnnex>
-              <xsl:value-of
-                select="'TODO'"/>
+              <xsl:value-of select="text()"/>
             </inspireAnnex>
           </xsl:for-each>
         </xsl:for-each>

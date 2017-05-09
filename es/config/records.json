@@ -6,7 +6,9 @@
           "synInspireAnnexes": {
             "tokenizer": "keyword",
             "filter": [
-              "synInspireAnnexes"
+              "synInspireThemes",
+              "synInspireAnnexes",
+              "keepInspireAnnexes"
             ]
           },
           "synInspireThemes": {
@@ -994,6 +996,39 @@
               "type": "keyword"
             }
           }
+        },
+        {
+          "synInspireAnnexesType": {
+            "match": "inspireAnnex*",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "synInspireAnnexes",
+              "search_analyzer": "keyword"
+            }
+          }
+        },
+        {
+          "synInspireThemeType": {
+            "match": "inspireTheme*",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "synInspireThemes",
+              "search_analyzer": "keyword"
+            }
+          }
+        },
+        {
+          "inspireServiceType": {
+            "match": "inspireServiceType",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "keepInspireServiceTypes",
+              "search_analyzer": "keyword"
+            }
+          }
         }
       ]
     },
@@ -1055,21 +1090,6 @@
         },
         "isAboveThreshold": {
           "type": "boolean"
-        },
-        "inspireAnnex": {
-          "type": "keyword"
-        },
-        "inspireAnnexForFirstTheme": {
-          "type": "keyword"
-        },
-        "inspireServiceType": {
-          "type": "keyword"
-        },
-        "inspireTheme": {
-          "type": "keyword"
-        },
-        "inspireThemeFirst": {
-          "type": "keyword"
         },
         "inspireThemeFirst_syn": {
           "type": "keyword"
