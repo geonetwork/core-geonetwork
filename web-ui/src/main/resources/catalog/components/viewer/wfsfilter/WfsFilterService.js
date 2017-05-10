@@ -48,6 +48,14 @@
             gnUrlUtils.toKeyValue(params));
       };
 
+      this.registerEsObject = function(url, ftName) {
+        return gnIndexRequestManager.register('WfsFilter', url + '#' + ftName);
+      };
+      this.getEsObject = function(url, ftName) {
+        return gnIndexRequestManager.get('WfsFilter', url + '#' + ftName);
+      };
+
+
       /**
        * Retrieve the index field object from the array given from feature type
        * info. The object contains the feature type attribute name, the index
@@ -68,28 +76,76 @@
       };
 
       /**
-       * Create a SLD filter for the facet rule. Those filters while be
-       * gathered to create the full SLD filter config to send to the
+       * Create an array of SLD filters for the facet rule. Those filters will
+       * be gathered to create the full SLD filter config to send to the
        * generateSLD service.
        *
        * @param {string} key index key of the field
        * @param {string} type of the facet field (range, field etc..)
+       * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(key, type, multiValued) {
-        var res;
-        if (type == 'interval' || type == 'range') {
-          res = {
-            filter_type: 'PropertyIsBetween',
-            params: key.match(/\d+(?:[.]\d+)*/g)
-          };
+      var buildSldFilter = function(name, value, type, multiValued) {
+        var filterFields = [];
+
+        // date
+        if (type == 'date' || type == 'rangeDate') {
+
+          // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
+          // TODO: externalize this?
+          function transformDate(d) {
+            return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+          }
+
+          filterFields.push({
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [ transformDate(value.from) ]
+            }]
+          }, {
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [ transformDate(value.to) ]
+            }]
+          });
         }
-        else if (type == 'field') {
-          res = {
-            filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
-            params: [multiValued ? '*' + key + '*' : key]
-          };
+
+        // numeric range
+        else if (type == 'range') {
+          filterFields.push({
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [ value.from ]
+            }]
+          }, {
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [ value.to ]
+            }]
+          });
         }
-        return res;
+
+        // strings
+        else if (type == 'terms') {
+          var filters = [];
+
+          angular.forEach(value, function(v, k) {
+            filters.push({
+              filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
+              params: [multiValued ? '*' + k + '*' : k]
+            });
+          });
+
+          filterFields.push({
+            field_name: name,
+            filter: filters
+          });
+        }
+
+        return filterFields;
       };
 
 
@@ -104,18 +160,25 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
+          // fetch field info from attr name (expects 'ft_xxx_yy')
           var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
-          var field = {
-            // TODO : remove the field type suffix
-            field_name: fieldInfo[1],
-            filter: []
-          };
-          var multiValued = fieldInfo[3] != undefined;
-          angular.forEach(attrValue.values, function(v, k) {
-            field.filter.push(buildSldFilter(k, attrValue.type, multiValued));
-          });
-          sldConfig.filters.push(field);
+          var fieldName = fieldInfo ? fieldInfo[1] : attrName;
+
+          // multiple values
+          if(attrValue.values && Object.keys(attrValue.values).length) {
+            var multiValued = fieldInfo[3] != undefined;
+
+            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
+              fieldName, attrValue.values, attrValue.type, multiValued));
+          }
+
+          // single value
+          else if (attrValue.value) {
+            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
+              fieldName, attrValue.value, attrValue.type, false));
+          }
         });
+
         return sldConfig;
       };
 
@@ -148,21 +211,34 @@
 
         var toRemoveIdx = [], mergedF = [];
         var newFields = appProfile.fields;
+        var tokenizedFields = appProfile.tokenizedFields || [];
+
+        var getNewFieldIdx = function(field) {
+          for (var i = 0; i < newFields.length; i++) {
+            if (field.label == newFields[i].name) {
+              return i;
+            }
+          }
+          return -1;
+        };
 
         // Merge field objects and detect if we need to remove some
         fields.forEach(function(field, idx) {
           var keep;
-          for (var i = 0; i < newFields.length; i++) {
-            if (field.label == newFields[i].name) {
-              keep = true;
-              mergedF.push(field.label);
-              if (newFields[i].label) {
-                field.label = newFields[i].label[gnGlobalSettings.lang];
-              }
-              field.aggs = newFields[i].aggs;
-              field.display = newFields[i].display;
-              break;
+
+          var newFieldIdx = getNewFieldIdx(field);
+          if(newFieldIdx >= 0) {
+            var newField = newFields[newFieldIdx];
+            keep = true;
+            mergedF.push(field.label);
+            if (newField.label) {
+              field.label = newField.label[gnGlobalSettings.lang];
             }
+            field.aggs = newField.aggs;
+            field.display = newField.display;
+
+            // add a flag for tokenized fields
+            field.isTokenized = tokenizedFields[field.name] != null;
           }
           if (!keep) {
             toRemoveIdx.unshift(idx);
@@ -185,6 +261,12 @@
             fields.push(f);
           }
         });
+
+        if(!appProfile.extendOnly) {
+          fields.sort(function(a, b) {
+            return getNewFieldIdx(a) - getNewFieldIdx(b)
+          });
+        }
 
 
         return allFields;
@@ -235,5 +317,110 @@
         }, function(response) {
         });
       };
+
+      this.toCQL = function(esObj) {
+
+        var state = esObj.getState();
+        var where;
+
+        if (!state.any) {
+          where = [];
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObj.getIdxNameObj_(fName);
+            console.log(config);
+            var clause = [];
+            var values = fObj.values;
+            if (config.isDate) {
+              where.concat([
+                '(' + fName + '>' + values.from + ')',
+                '(' + fName + '<' + values.to + ')'
+              ]);
+              return;
+            }
+            angular.forEach(values, function(v, k) {
+              clause.push(
+                  (config.isTokenized) ?
+                  '(' + fName + " LIKE '%" + k + "%')" :
+                  '(' + fName + '=' + k + ')'
+              );
+            });
+            if (clause.length == 0) return;
+            where.push('(' + clause.join(' OR ') + ')');
+          });
+          return where.join(' AND ');
+        } else {
+          esObj.search_es({
+            size: scope.count || 10000,
+            aggs: {}
+          }).then(function(data) {
+            var where = data.hits.hits.map(function(res) {
+              return res._id;
+            });
+            return where.join(' OR ');
+          });
+        }
+      };
+
+      this.toUrlParams = function(esObj) {
+
+        var state = esObj.getState();
+
+        if (!state.any) {
+          var where = [];
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var clause = [];
+            angular.forEach(fObj.values, function(v, k) {
+              clause.push(fName + '=' + k);
+            });
+            where.push('(' + clause.join(' OR ') + ')');
+          });
+          return (where.join(' AND '));
+        }
+        else {
+          esObj.search_es({
+            size: scope.count || 10000,
+            aggs: {}
+          }).then(function(data) {
+            var where = data.hits.hits.map(function(res) {
+              return res._id;
+            });
+            return (where.join(' OR '));
+          });
+        }
+      };
+
+      /**
+       * takes an ElasticSearch request object as input and ouputs a simplified
+       * object with properties describing names and values of the defined
+       * filters.
+       * note: only qParams are taken into account.
+       *
+       * @param {Object} elasticSearchObject
+       */
+      this.toObjectProperties = function(esObject) {
+        var state = esObject.getState();
+        var result = {};
+
+        if (state) {
+          // add query params (qParams)
+          angular.forEach(state.qParams, function(fObj, fName) {
+            // only the last value found will be kept
+            angular.forEach(fObj.values, function(value, key) {
+              result[fName] = key;
+            });
+          });
+
+          // add geometry
+          if (state.geometry) {
+            result.geometry = state.geometry[0][0] + ',' +
+                state.geometry[1][1] + ',' +
+                state.geometry[1][0] + ',' +
+                state.geometry[0][1];
+          }
+        }
+
+        return result;
+      };
+
     }]);
 })();

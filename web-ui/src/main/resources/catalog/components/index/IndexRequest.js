@@ -579,31 +579,12 @@
 
         if (facetField.display == 'graph' && bucketDates.length > 0) {
           facetField.datesCount = [];
-          var inRange = false;
-          var bucketIdx = 0;
-
-          // merge buckets with all dates to keep graph shape
-          for (var i = 0; i < facetField.dates.length; i++) {
-            var datetime = facetField.dates[i];
-            if (!inRange && bucketDates[0].key == datetime) {
-              inRange = true;
-            }
-            if (inRange) {
-              var b = bucketDates[bucketIdx];
-              var obj = {
-                value: datetime,
-                count: 1
-              };
-              if (b.key == datetime) {
-                obj.count = b.doc_count;
-                bucketIdx++;
-              }
-              facetField.datesCount.push(obj);
-
-              if (bucketIdx == bucketDates.length) {
-                break;
-              }
-            }
+          for (var i = 0; i < bucketDates.length; i++) {
+            facetField.datesCount.push({
+              value: bucketDates[i].key,
+              values: bucketDates[i].key,
+              count: bucketDates[i].doc_count
+            });
           }
         }
       }
@@ -634,6 +615,14 @@
         }
       }
       fields.push(facetField);
+    }
+
+    // Sort facets depending on application profile order if any
+    if(this.fieldsOrder_) {
+      fields.sort(function(a,b) {
+        return this.fieldsOrder_.indexOf(a.name) -
+          this.fieldsOrder_.indexOf(b.name);
+      }.bind(this));
     }
     return fields;
   };
@@ -807,6 +796,17 @@
   };
 
   /**
+   * Put in `fieldsOrder_` the order of the fields to display in facets.
+   * This order comes from application profile if not extended.
+   */
+  geonetwork.gnIndexRequest.prototype.setFielsdOrder = function() {
+    this.fieldsOrder_ = [];
+    this.filteredDocTypeFieldsInfo.forEach(function(f) {
+      this.fieldsOrder_.push(f.idxName || f.name);
+    }.bind(this));
+  };
+
+  /**
    * qParams:
    *   any
    *   geometry
@@ -850,12 +850,13 @@
     angular.forEach(qParams.params, function(field, fieldName) {
       if (field.type == 'date' || field.type == 'rangeDate') {
         var gte, lte, range = {};
-        if (angular.isObject(field.value)) {
-          gte = field.value.from;
-          lte = field.value.to;
+        var date = field.value || field.values;
+        if (angular.isObject(date)) {
+          gte = date.from;
+          lte = date.to;
         }
         else {
-          gte = lte = field.value;
+          gte = lte = date;
         }
         if (field.type == 'date') {
           range[fieldName] = {
@@ -931,6 +932,9 @@
     // TODO move this in createFacetData_ ? query param
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
+      if(field.type == 'date') {
+        return;
+      }
       for (var p in field.values) {
         if (field.type == 'histogram' || field.type == 'range') {
           var value;
@@ -1038,7 +1042,7 @@
     var state_ = state || angular.copy(this.requestParams);
     this.states_.push(state_);
   };
-  geonetwork.gnIndexRequest.prototype.popState = function(state) {
+  geonetwork.gnIndexRequest.prototype.popState = function() {
     return this.states_.pop();
   };
   geonetwork.gnIndexRequest.prototype.getState = function(idx) {
