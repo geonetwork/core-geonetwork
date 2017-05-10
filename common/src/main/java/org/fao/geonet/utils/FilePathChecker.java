@@ -23,6 +23,7 @@
 
 package org.fao.geonet.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.exceptions.BadParameterEx;
 
 import java.nio.file.Path;
@@ -42,7 +43,9 @@ public class FilePathChecker {
      * @param filePath
      * @throws Exception
      */
-    public static void verify(String filePath) throws Exception {
+    public static void verify(String filePath) throws BadParameterEx {
+        if (StringUtils.isEmpty(filePath)) return;
+
         if (filePath.contains("..")) {
             throw new BadParameterEx(
                     "Invalid character found in path.",
@@ -52,7 +55,7 @@ public class FilePathChecker {
         Path path = Paths.get(filePath);
         if (path.isAbsolute() || filePath.startsWith("/") ||
                 filePath.startsWith("://", 1))  {
-            throw new SecurityException("Wrong filename");
+            throw new BadParameterEx("Invalid character found in path.", filePath);
         }
     }
 }

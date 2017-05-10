@@ -35,6 +35,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -125,6 +126,7 @@ public class SendLink extends MailSendingService {
         root.addContent(new Element("siteURL").setText(siteURL));
         root.addContent(new Element("changeKey").setText(changeKey));
 
+        FilePathChecker.verify(template);
         Path emailXslt = stylePath.resolve(template);
         Element elEmail = Xml.transform(root, emailXslt);
 
