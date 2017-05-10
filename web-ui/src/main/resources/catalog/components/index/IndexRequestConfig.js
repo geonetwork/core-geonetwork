@@ -33,6 +33,7 @@
       docTypeIdField: 'id',
       docIdField: 'featureTypeId',
       idDoc: function(config) {
+        this.params = config;
         return config.wfsUrl + '#' +
             config.featureTypeName.replace(':', '\\:');
       },
