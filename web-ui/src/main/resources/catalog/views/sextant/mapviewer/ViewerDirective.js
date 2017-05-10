@@ -206,7 +206,9 @@
 
               scope.isNcwms = function(layer) {
                 return layer.ncInfo;
-              }
+              };
+
+              scope.hasGeoSearch = !!gnViewerSettings.localisations;
             }
           };
         }
