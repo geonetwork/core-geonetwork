@@ -241,7 +241,7 @@
                 resp.indexData.aggregations);
 
             return this.search(qParams, angular.extend(
-                {}, this.initialParams.facets, rangeDateP, aggs)
+                {}, this.initialParams.facets, rangeDateP, statsP, aggs)
             );
           }.bind(this));
     }
