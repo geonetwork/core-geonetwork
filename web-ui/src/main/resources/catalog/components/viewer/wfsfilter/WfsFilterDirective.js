@@ -80,6 +80,7 @@
           scope.filtersChanged = false;
           scope.previousFilterState = {
             params: {},
+            any: '',
             geometry: ''
           };
 
@@ -404,6 +405,7 @@
             // save this filter state for future comparison
             scope.previousFilterState.params = angular.merge({}, scope.output);
             scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
+            scope.previousFilterState.any = scope.searchInput;
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
@@ -566,11 +568,19 @@
             // or equal to ',,,' or '', which all amount to the same thing
             function normalize(s) { return (s || '').replace(',,,', ''); }
 
+            var inputChanged = scope.searchInput !=
+              scope.previousFilterState.any;
             var geomChanged = normalize(scope.ctrl.searchGeometry) !==
               normalize(scope.previousFilterState.geometry);
-            var paramsChanged = !angular.equals(
-              scope.previousFilterState.params, scope.output);
-            scope.filtersChanged = paramsChanged || geomChanged;
+
+            // only compare params object if necessary
+            var paramsChanged = false;
+            if (!inputChanged && !geomChanged) {
+              paramsChanged = !angular.equals(
+                scope.previousFilterState.params, scope.output);
+            }
+
+            scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
           });
         }
       };
