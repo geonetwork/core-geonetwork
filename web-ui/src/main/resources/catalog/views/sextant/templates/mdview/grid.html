@@ -55,7 +55,7 @@
               <span class="fa fa-gear"></span>
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu" sxt-custom-scroll>
+            <ul class="dropdown-menu small-dropdown" role="menu">
               <!-- Open Ext or Angular editor based on standard name -->
               <li data-ng-if="::md.isUsingAngularEditor()"><a ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank"><i class="fa fa-pencil"></i>&nbsp;<span translate>edit</span></a></li>
               <li data-ng-if="::!md.isUsingAngularEditor()"><a ng-href="{{::gnUrl}}../../apps/sextant/?edit={{::md['geonet:info'].id}}&hl={{lang}}" target="_blank"><i class="fa fa-pencil"></i>&nbsp;<span translate>edit</span></a></li>
@@ -75,10 +75,10 @@
               <li data-ng-if="::(user.profile != 'Editor')"><a ng-href="" data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i class="fa fa-key"></i>&nbsp;<span translate>privileges</span></a></li>
               <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a ng-href=""><i class="fa fa-key"></i>&nbsp;<span translate>privileges</span></a></li>
 
-              <li data-ng-if="::(md.isWorkflowEnabled() && !cantStatus)" ><a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
-              <li data-ng-if="::(md.isWorkflowEnabled() && cantStatus)" class="disabled"><a href="" data-ng-click=""><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
+              <li data-ng-if="(md.isWorkflowEnabled() && !cantStatus)" ><a href="" data-ng-click="mdService.openUpdateStatusPanel(getScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
+              <li data-ng-if="(md.isWorkflowEnabled() && cantStatus)" class="disabled"><a href="" data-ng-click=""><i class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a></li>
 
-              <li><a href="" data-ng-if="::!md.isWorkflowEnabled()" data-ng-click="mdService.startWorkflow(md, getCatScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">enableWorkflow</span></a></li>
+              <li><a href="" data-ng-if="!md.isWorkflowEnabled()" data-ng-click="mdService.startWorkflow(md, getCatScope())"><i class="fa fa-bell"></i>&nbsp;<span data-translate="">enableWorkflow</span></a></li>
             </ul>
         </div>
 

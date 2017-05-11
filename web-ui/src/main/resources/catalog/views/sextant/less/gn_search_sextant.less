@@ -1,16 +1,6 @@
 @import "../../../style/gn_search";
 @import "gn_mapviewer_sextant.less";
 @import "formatter.less";
-@import (less) "../../../lib/malihu-custom-scrollbar-plugin-3.0.8/jquery.mCustomScrollbar.css";
-.mCSB_scrollTools .mCSB_buttonUp,
-.mCSB_scrollTools .mCSB_buttonDown,
-.mCSB_scrollTools .mCSB_buttonLeft,
-.mCSB_scrollTools .mCSB_buttonRight{
-  background-image: url(../catalog/style/mCSB_buttons.png);
-}
-.mCSB_inside > .mCSB_container {
-  margin-right: 15px;
-}
 
 .sm-max-and-api(@rules) {
   @media (max-width: @screen-sm-max) {
@@ -127,7 +117,7 @@
     float: left;
   }
   .sxt-left-panel {
-    width: 33.333%;
+    width: 33.3%;
     &.sxt-collapsed {
       width: 50%;
     }
@@ -139,20 +129,44 @@
     }
   }
 }
-/*
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background-color: white;
-  border: none;
 
+// custom scrollbars (IE and Chrome)
+div.gn, div.g, * {
+  scrollbar-face-color: rgba(90, 90, 90, 1);
+  scrollbar-track-color: transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(90, 90, 90, 1);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: rgba(90, 90, 90, 0.12);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-button {
+    background-image: url(../catalog/style/mCSB_buttons.png);
+    opacity: 0.7;
+    &:hover { opacity: 1; }
+
+    &:vertical {
+      width: 8px;
+      height: 16px;
+      &:start { background-position: -116px -74px; }
+      &:end { background-position: -116px -94px; }
+    }
+    &:horizontal {
+      width: 16px;
+      height: 8px;
+      &:start { background-position: -122px -116px; }
+      &:end { background-position: -122px -132px; }
+    }
+  }
 }
-::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  border-radius: 3px;
-}
-*/
 
 @media (min-width: @screen-lg-min) {
   .sxt-left-panel {
@@ -164,7 +178,7 @@
 }
 .sxt-max-md {
   .sxt-left-panel {
-    width: 33.333%;
+    width: 33.3%;
   }
   .sxt-center-panel {
     width: 66.666%;
@@ -423,11 +437,11 @@
     height: 100%;
   }
   .sxt-reset-btn {
-    position: absolute;
-    bottom: -1em;
+    position: relative;
+    bottom: 1em;
     opacity: 1;
     left: 50%;
-    margin-left: -5em;
+    transform: translate(-50%, 0%);
     box-shadow: @sxt-shadow;
     border-radius: 2px;
     &[disabled] {
@@ -527,7 +541,7 @@
 
   .sxt-searchform-content {
     padding: 15px;
-    height: ~"calc(100% - 200px - 6em)";
+    height: ~"calc(100% - 200px - 9em)";
     overflow-y: auto;
   }
   .sxt-categorytree {
@@ -539,7 +553,6 @@
       li {
         display: block;
         padding: 10px -10px;
-        margin-bottom: -1px;
         label {
           margin-bottom: 2px;
           font-weight: normal;

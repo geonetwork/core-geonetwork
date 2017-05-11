@@ -162,6 +162,10 @@
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
+    
+    <facet name="odatis_variables" indexKey="thesaurus-local.theme.odatis_variables" label="odatis_variables"/>
+
+    <facet name="myocean_discipline" indexKey="thesaurus-local.discipline.myocean.discipline" label="myocean_discipline"/>
   </facets>
 
   <summaryTypes>
@@ -269,6 +273,8 @@
       <item facet="dcsmm-methode" max="300"/>
       <item facet="dcsmm-type-espace" max="300"/>
       <item facet="dcsmm-area" max="300"/>
+      <item facet="odatis_variables" max="300"/>
+      <item facet="myocean_discipline" max="300"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
     <summaryType name="subtemplates">

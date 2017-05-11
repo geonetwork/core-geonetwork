@@ -88,10 +88,7 @@
           }]
       };
 
-      viewerSettings.localisations = [{
-        name: 'France',
-        extent: [-817059, 4675034, 1719426, 7050085]
-      }];
+      viewerSettings.localisations = [];
 
       proj4.defs('EPSG:2154', '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 ' +
           '+lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,' +
@@ -378,12 +375,14 @@
         if(sxtSettings.servicesUrl) {
           viewerSettings.servicesUrl = sxtSettings.servicesUrl;
         }
-        if(sxtSettings.localisations) {
+        if(angular.isDefined(sxtSettings.localisations)) {
           viewerSettings.localisations = sxtSettings.localisations;
-          viewerSettings.localisations.forEach(function(loc) {
-            loc.extent = ol.proj.transformExtent(loc.extent,
+          if(angular.isArray(viewerSettings.localisations)){
+            viewerSettings.localisations.forEach(function(loc) {
+              loc.extent = ol.proj.transformExtent(loc.extent,
                 'EPSG:4326', viewerMap.getView().getProjection());
-          });
+            });
+          }
         }
         if(sxtSettings.layerFilter)  {
           viewerSettings.layerFilter = sxtSettings.layerFilter;
