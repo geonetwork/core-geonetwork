@@ -78,7 +78,10 @@
 
           // if true, the "apply filters" button will be available
           scope.filtersChanged = false;
-          scope.previousFilterState = {};
+          scope.previousFilterState = {
+            params: {},
+            geometry: ''
+          };
 
           // Get an instance of solr object
           var solrObject, geometry, extentFilter;
@@ -399,7 +402,8 @@
            */
           scope.filterWMS = function() {
             // save this filter state for future comparison
-            scope.previousFilterState = angular.merge({}, scope.output);
+            scope.previousFilterState.params = angular.merge({}, scope.output);
+            scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
 
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
@@ -503,7 +507,8 @@
               geometry = undefined;
               scope.filterFacets();
             }
-            // do nothing when reset from wfsFilter directive
+            // reset from wfsFilter directive: only signal change of filter
+            scope.$emit('filtersChanged');
           });
 
           function resetHeatMap() {
@@ -557,8 +562,15 @@
 
           // triggered when the filter state is changed (compares with previous state)
           scope.$on('filtersChanged', function (event, args) {
-            scope.filtersChanged = !angular.equals(scope.previousFilterState,
-              scope.output);
+            // this handles the cases where bbox string value is undefined
+            // or equal to ',,,' or '', which all amount to the same thing
+            function normalize(s) { return (s || '').replace(',,,', ''); }
+
+            var geomChanged = normalize(scope.ctrl.searchGeometry) !==
+              normalize(scope.previousFilterState.geometry);
+            var paramsChanged = !angular.equals(
+              scope.previousFilterState.params, scope.output);
+            scope.filtersChanged = paramsChanged || geomChanged;
           });
         }
       };
