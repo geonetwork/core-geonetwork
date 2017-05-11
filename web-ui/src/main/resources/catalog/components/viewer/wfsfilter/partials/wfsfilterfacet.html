@@ -95,7 +95,6 @@
       </div>
     </div>
 
-
     <div class="btn-group dropup">
       <a class="btn btn-default btn-xs"
          data-ng-if="!isFeaturesIndexed && (user.canEditRecord(md) || md.isHarvested == 'y')"
@@ -135,11 +134,11 @@
           </a>
         </li>
       </ul>
-      <button class="btn btn-default btn-xs"
-              data-ng-if="isFeaturesIndexed"
-              data-gn-click-and-spin="filterWMS()">
+      <button class="btn btn-default btn-xs" ng-class="{ disabled: !filtersChanged }"
+        data-gn-click-and-spin="filterWMS()"
+        data-gn-click-and-spin-stay-disabled="true">
         <i class="fa fa-filter"></i>&nbsp;
-        <span data-translate="">filter</span>
+        <span data-translate="">applyFilter</span>
       </button>
       <button class="btn btn-default btn-xs"
               data-ng-if="isFeaturesIndexed"

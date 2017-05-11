@@ -149,6 +149,14 @@
             searchGeometry: undefined
           };
 
+          // if true, the "apply filters" button will be available
+          scope.filtersChanged = false;
+          scope.previousFilterState = {
+            params: {},
+            any: '',
+            geometry: ''
+          };
+
           // Get an instance of index object
           var indexObject, geometry, extentFilter;
 
@@ -441,6 +449,7 @@
            * @param {boolean} formInput the filter comes from input change
            */
           scope.filterFacets = function(formInput) {
+            scope.$broadcast('FiltersChanged');
 
             // Update the facet UI
             var expandedFields = [];
@@ -508,6 +517,7 @@
             }
 
             scope.layer.set('esConfig', null);
+            scope.$broadcast('FiltersChanged');
 
             // load all facet and fill ui structure for the list
             return indexObject.searchWithFacets({}).
@@ -560,6 +570,7 @@
                 }
               });
 
+              scope.$broadcast('FiltersChanged');
               refreshHeatmap();
             });
           };
@@ -576,6 +587,11 @@
            * that will be send to generateSLD service.
            */
           scope.filterWMS = function() {
+            // save this filter state for future comparison
+            scope.previousFilterState.params = angular.merge({}, scope.output);
+            scope.previousFilterState.geometry = scope.ctrl.searchGeometry;
+            scope.previousFilterState.any = scope.searchInput;
+
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             var layer = scope.layer;
@@ -608,13 +624,15 @@
                     SLD: sldURL
                   });
                 }
-              }).finally(function() {
+                scope.filtersChanged = false;   // reset 'apply filters' button
+              }).finally (function() {
                 defer.resolve();
               });
             } else {
               layer.getSource().updateParams({
                 SLD: null
               });
+              scope.filtersChanged = false;
               defer.resolve();
             }
             return defer.promise;
@@ -680,7 +698,8 @@
               geometry = undefined;
               scope.filterFacets();
             }
-            // do nothing when reset from wfsFilter directive
+            // reset from wfsFilter directive: only signal change of filter
+            scope.$broadcast('FiltersChanged');
           });
 
           function resetHeatMap() {
@@ -714,6 +733,7 @@
             }
           });
 
+
           scope.showTable = function() {
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
@@ -730,7 +750,6 @@
             scope.$destroy();
             resetHeatMap();
           });
-
 
           scope.toSqlOgr = function() {
             indexObject.pushState();
@@ -759,6 +778,27 @@
               });
             }
           };
+
+          // triggered when the filter state is changed (compares with previous state)
+          scope.$on('FiltersChanged', function (event, args) {
+            // this handles the cases where bbox string value is undefined
+            // or equal to ',,,' or '', which all amount to the same thing
+            function normalize(s) { return (s || '').replace(',,,', ''); }
+
+            var inputChanged = scope.searchInput !=
+              scope.previousFilterState.any;
+            var geomChanged = normalize(scope.ctrl.searchGeometry) !==
+              normalize(scope.previousFilterState.geometry);
+
+            // only compare params object if necessary
+            var paramsChanged = false;
+            if (!inputChanged && !geomChanged) {
+              paramsChanged = !angular.equals(
+                scope.previousFilterState.params, scope.output);
+            }
+
+            scope.filtersChanged = inputChanged || paramsChanged || geomChanged;
+          });
         }
       };
     }]);
