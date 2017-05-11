@@ -78,6 +78,7 @@
 
           // if true, the "apply filters" button will be available
           scope.filtersChanged = false;
+          scope.previousFilterState = {};
 
           // Get an instance of solr object
           var solrObject, geometry, extentFilter;
@@ -314,7 +315,7 @@
            * @param {boolean} formInput the filter comes from input change
            */
           scope.filterFacets = function(formInput) {
-            scope.filtersChanged = true;
+            scope.$emit('filtersChanged');
 
             // Update the facet UI
             var expandedFields = [];
@@ -365,13 +366,14 @@
             // output structure to send to filter service
             scope.output = {};
             scope.searchInput = '';
-            scope.filtersChanged = true;
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
             if (boxElt.length) {
               angular.element(boxElt).scope().clear();
             }
+
+            scope.$emit('filtersChanged');
 
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
@@ -396,6 +398,9 @@
            * that will be send to generateSLD service.
            */
           scope.filterWMS = function() {
+            // save this filter state for future comparison
+            scope.previousFilterState = angular.merge({}, scope.output);
+
             var defer = $q.defer();
             var sldConfig = wfsFilterService.createSLDConfig(scope.output);
             solrObject.pushState();
@@ -426,15 +431,15 @@
                   });
                 }
               }).finally (function() {
-                defer.resolve();
                 scope.filtersChanged = false;   // reset 'apply filters' button
+                defer.resolve();
               });
             } else {
               scope.layer.getSource().updateParams({
                 SLD: null
               });
-              defer.resolve();
               scope.filtersChanged = false;
+              defer.resolve();
             }
             return defer.promise;
           };
@@ -548,6 +553,12 @@
           element.on('$destroy', function() {
             scope.$destroy();
             resetHeatMap();
+          });
+
+          // triggered when the filter state is changed (compares with previous state)
+          scope.$on('filtersChanged', function (event, args) {
+            scope.filtersChanged = !angular.equals(scope.previousFilterState,
+              scope.output);
           });
         }
       };
