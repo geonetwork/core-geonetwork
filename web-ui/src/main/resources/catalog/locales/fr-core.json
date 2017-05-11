@@ -322,5 +322,6 @@
     "directoryManager": "Gestion des annuaires",
     "typeOfRecord": "Type de fiche",
     "load": "Charger",
-    "indexAccessError": "Error during index access."
+    "indexAccessError": "Error during index access.",
+    "applyFilter": "Filtrer"
 }

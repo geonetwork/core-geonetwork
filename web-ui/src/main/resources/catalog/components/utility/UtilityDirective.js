@@ -605,7 +605,7 @@
     };
   });
 
-
+  
   /**
    * Make an element able to collapse/expand
    * the next element. An icon is added before
@@ -652,7 +652,7 @@
         restrict: 'A',
         compile: function(scope, element, attr) {
           var fn = $parse(element['gnClickAndSpin'], null, true);
-          return function ngEventHandler(scope, element) {
+          return function ngEventHandler(scope, element, attr) {
             var running = false;
             var icon = element.find('i');
             var spinner = null;
@@ -667,7 +667,10 @@
             var done = function() {
               running = false;
               element.removeClass('running');
-              element.removeClass('disabled');
+              var stayDisabled = attr['gnClickAndSpinStayDisabled'];
+              if (!stayDisabled) {
+                element.removeClass('disabled');
+              }
               element.find('i').first().remove();
               icon.removeClass('hidden');
             };
