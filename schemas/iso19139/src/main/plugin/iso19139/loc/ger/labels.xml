@@ -3053,6 +3053,18 @@
   </element>
   <element name="srv:serviceType">
     <label>Diensttyp</label>
+    <helper>
+      <option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
+      <option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
+      <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
+      <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
+      <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
+      <option value="discovery">INSPIRE Discovery Service (discovery)</option> 
+      <option value="view">INSPIRE View Service (view)</option> 
+      <option value="download">INSPIRE Download Service (download)</option> 
+      <option value="transformation">INSPIRE Transformation Service (transformation)</option> 
+      <option value="other">INSPIRE Other Services (other)</option>
+    </helper>    
   </element>
   <element name="gmd:extent">
     <label>Gröβe</label>
