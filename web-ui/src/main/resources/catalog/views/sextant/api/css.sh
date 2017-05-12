@@ -15,7 +15,7 @@ do
   echo "Compiling theme ${CSS_NAME}"
   ./node_modules/less/bin/lessc ./views/sextant/less/gn_search_sextant.less $CSS_NAME --modify-var="theme-name=$THEME_NAME"
   sed 's/calc(\(.*\))/~"calc(\1)"/' $CSS_NAME > ./views/sextant/less/tmp.css
-  ./node_modules/less/bin/lessc ./views/sextant/less/sxt-api.less tmp.css
+  ./node_modules/less/bin/lessc ./views/sextant/less/sxt-api.less tmp.css --modify-var="theme-name=$THEME_NAME"
   sed -i 's/.gn .sxt-max-sm/.gn.sxt-max-sm/' tmp.css
   sed 's/.gn .sxt-max-md/.gn.sxt-max-md/' tmp.css > $CSS_NAME
   sed  's/.gn .gn-img-modal/.gn-img-modal/' $CSS_NAME
