@@ -380,6 +380,18 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             }
         }
 
+        // Apply custom transformation if requested
+        Path importXsl = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+        String importXslFile = params.getImportXslt();
+        if ( importXslFile != null && ! importXslFile.equals("none")) {
+            if(! importXslFile.endsWith("xsl")) {
+                importXslFile = importXslFile+".xsl";
+            }
+            importXsl = importXsl.resolve(importXslFile);
+            log.info("Applying custom import XSL " + importXsl.getFileName());
+            md = Xml.transform(md, importXsl);
+        }
+
         // Save iso19119 metadata in DB
         log.info("  - Adding metadata for services with " + uuid);
 
