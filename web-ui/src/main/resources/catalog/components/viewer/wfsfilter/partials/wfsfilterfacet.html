@@ -49,7 +49,7 @@
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name] || !(output[field.name].type == 'date' && output[field.name].value.from && output[field.name].value.to)}"></span>
         {{field.label}}
       </h5>
-      <div data-ng-class="{'collapse': !field.expanded}">
+      <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
         <div class="list-group">
           <div class="list-group-item"
                data-ng-repeat="facet in field.values | filter:searchInput"
