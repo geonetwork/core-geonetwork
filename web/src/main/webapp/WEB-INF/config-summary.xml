@@ -164,6 +164,7 @@
            label="maintenanceAndUpdateFrequencies"/>
     
     <facet name="odatis_variables" indexKey="thesaurus-local.theme.odatis_variables" label="odatis_variables"/>
+    <facet name="odatis_centre_donnees" indexKey="thesaurus-local.theme.odatis_centre_donnees" label="odatis_centre_donnees"/>
 
     <facet name="myocean_discipline" indexKey="thesaurus-local.discipline.myocean.discipline" label="myocean_discipline"/>
   </facets>
@@ -274,6 +275,7 @@
       <item facet="dcsmm-type-espace" max="300"/>
       <item facet="dcsmm-area" max="300"/>
       <item facet="odatis_variables" max="300"/>
+      <item facet="odatis_centre_donnees" max="300"/>
       <item facet="myocean_discipline" max="300"/>
       <!--<item facet="metadataPOC" max="15"/>-->
     </summaryType>
