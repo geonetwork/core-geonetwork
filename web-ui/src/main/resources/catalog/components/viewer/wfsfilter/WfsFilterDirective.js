@@ -319,7 +319,7 @@
            * @param {boolean} formInput the filter comes from input change
            */
           scope.filterFacets = function(formInput) {
-            scope.$emit('filtersChanged');
+            scope.$broadcast('FiltersChanged');
 
             // Update the facet UI
             var expandedFields = [];
@@ -377,7 +377,7 @@
               angular.element(boxElt).scope().clear();
             }
 
-            scope.$emit('filtersChanged');
+            scope.$broadcast('FiltersChanged');
 
             // load all facet and fill ui structure for the list
             return solrObject.searchWithFacets({}).
@@ -436,8 +436,8 @@
                     SLD: sldURL
                   });
                 }
-              }).finally (function() {
                 scope.filtersChanged = false;   // reset 'apply filters' button
+              }).finally (function() {
                 defer.resolve();
               });
             } else {
@@ -510,7 +510,7 @@
               scope.filterFacets();
             }
             // reset from wfsFilter directive: only signal change of filter
-            scope.$emit('filtersChanged');
+            scope.$broadcast('FiltersChanged');
           });
 
           function resetHeatMap() {
@@ -563,7 +563,7 @@
           });
 
           // triggered when the filter state is changed (compares with previous state)
-          scope.$on('filtersChanged', function (event, args) {
+          scope.$on('FiltersChanged', function (event, args) {
             // this handles the cases where bbox string value is undefined
             // or equal to ',,,' or '', which all amount to the same thing
             function normalize(s) { return (s || '').replace(',,,', ''); }
