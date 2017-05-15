@@ -15787,6 +15787,20 @@
   height: calc(100% - 4.35em);
   padding-bottom: 1em;
 }
+.gn [sxt-main-viewer] .main-tools > .sxt-panel-button,
+.g [sxt-main-viewer] .main-tools > .sxt-panel-button {
+  display: flex;
+  justify-content: center;
+  padding: .5em;
+  padding-right: .2em;
+}
+.gn [sxt-main-viewer] .main-tools > .sxt-panel-button button,
+.g [sxt-main-viewer] .main-tools > .sxt-panel-button button {
+  margin: 0px;
+  margin-right: .3em;
+  min-width: 2.2em;
+  width: auto;
+}
 .gn [sxt-main-viewer] .sxt-panel-toggle,
 .g [sxt-main-viewer] .sxt-panel-toggle,
 .gn [sxt-main-viewer] .main-tools button,
