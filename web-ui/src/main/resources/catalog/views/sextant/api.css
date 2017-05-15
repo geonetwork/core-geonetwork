@@ -16972,8 +16972,8 @@
   transition: left 0.3s ease;
   display: flex;
 }
-.gn [sxt-main-viewer] .panel-carousel,
-.g [sxt-main-viewer] .panel-carousel {
+.gn [sxt-main-viewer] .panel-carousel-container .panel-carousel,
+.g [sxt-main-viewer] .panel-carousel-container .panel-carousel {
   flex-shrink: 0;
   flex-grow: 0;
   width: 33.33%;
