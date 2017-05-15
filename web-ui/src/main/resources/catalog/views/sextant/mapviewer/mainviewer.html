@@ -48,10 +48,7 @@
       <button ng-if="::processes && processes.length > 0" sxt-tool gi-btn class="btn btn-default" ng-model="activeTools.processes"
         type="submit" rel="#process-panel" gnv-tools-btn>
         <span class="fa fa-cogs"></span>
-        <span ng-if="::processes.length == 1" role="tooltip">
-          <span data-translate>wpsProcess</span>:
-          {{ processes[0].desc || processes[0].name }}
-        </span>
+        <span ng-if="::processes.length == 1" role="tooltip" data-translate>wpsProcess</span>
         <span ng-if="::processes.length > 1" role="tooltip" data-translate>wpsProcesses</span>
       </button>
 

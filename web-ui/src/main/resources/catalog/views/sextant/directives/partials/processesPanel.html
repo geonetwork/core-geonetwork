@@ -9,7 +9,7 @@
           <a ng-click="switchProcess(p)">
             <span class="fa"
               ng-class="(selectedProcess == p) ? 'fa-dot-circle-o' : 'fa-circle-o'"></span>
-            {{ p.desc || p.name }}
+            {{ ::getLabel(p) }}
           </a>
       </li>
       </ul>

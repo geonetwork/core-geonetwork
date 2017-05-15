@@ -8,7 +8,8 @@
   module.directive('sxtProcessesPanel', [
     'gnViewerSettings',
     'sxtOgcLinksService',
-    function(gnViewerSettings, sxtOgcLinksService) {
+    '$translate',
+    function(gnViewerSettings, sxtOgcLinksService, $translate) {
       return {
         restrict: 'A',
         scope: true,
@@ -29,7 +30,7 @@
           }
 
           // show process function & switch tab
-          scope.showWPS = function() {
+          scope.showWPS = function () {
             var process = scope.selectedProcess;
             if (!process) {
               return;
@@ -40,6 +41,18 @@
 
           // initially show first process available
           scope.showWPS();
+
+          // outputs a label based on process info
+          scope.getLabel = function (p) {
+            var currentLang = $translate.use();
+            if (p.labels) {
+              return p.labels[currentLang];
+            } else if (p.label) {
+              return p.label;
+            } else {
+              return p.name;
+            }
+          }
         }
 
       };
