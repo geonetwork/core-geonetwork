@@ -196,6 +196,7 @@
                 // show panel & hide others
                 if (handlePanelToggle) {
                   scope.active.tool = true;
+                  scope.activeTools.processes = true;
                   $('.panel-tools').addClass('force-hide');
                   $('#process-panel').removeClass('force-hide');
                 }
