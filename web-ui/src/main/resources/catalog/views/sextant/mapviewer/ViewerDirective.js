@@ -17,7 +17,9 @@
     'gnSearchLocation',
     'gnConfig',
     'gnViewerSettings',
-    function($window, $timeout, gnMap, gnSearchLocation, gnConfig, gnViewerSettings) {
+    '$translate',
+    function($window, $timeout, gnMap, gnSearchLocation, gnConfig,
+      gnViewerSettings, $translate) {
       return {
         restrict: 'A',
         replace: true,
@@ -187,6 +189,32 @@
 
               // save processes from viewer settings
               scope.processes = gnViewerSettings.processes;
+              scope.selectedProcess = scope.processes && scope.processes[0];
+
+              // selects a process
+              scope.selectProcess = function (p, handlePanelToggle) {
+                // show panel & hide others
+                if (handlePanelToggle) {
+                  scope.active.tool = true;
+                  $('.panel-tools').addClass('force-hide');
+                  $('#process-panel').removeClass('force-hide');
+                }
+
+                // select process (this is watched by sxtProcessesPanel directive)
+                scope.selectedProcess = p;
+              }
+
+              // outputs a label based on process info
+              scope.getProcessLabel = function (p) {
+                var currentLang = $translate.use();
+                if (p.labels) {
+                  return p.labels[currentLang];
+                } else if (p.label) {
+                  return p.label;
+                } else {
+                  return p.name;
+                }
+              }
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 

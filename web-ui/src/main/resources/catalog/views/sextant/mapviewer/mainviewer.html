@@ -45,12 +45,27 @@
         <span role="tooltip" data-translate="">Espèces benthiques</span>
       </button>
 
-      <button ng-if="::processes && processes.length > 0" sxt-tool gi-btn class="btn btn-default" ng-model="activeTools.processes"
-        type="submit" rel="#process-panel" gnv-tools-btn>
+      <button ng-if="::processes && processes.length == 1" sxt-tool gi-btn class="btn btn-default" ng-model="activeTools.processes"
+        type="submit" rel="#process-panel" gnv-tools-btn ng-click="selectProcess(p)">
         <span class="fa fa-cogs"></span>
-        <span ng-if="::processes.length == 1" role="tooltip" data-translate>wpsProcess</span>
-        <span ng-if="::processes.length > 1" role="tooltip" data-translate>wpsProcesses</span>
+        <span role="tooltip" data-translate>wpsProcess</span>
       </button>
+
+      <div class="btn-group" role="group" ng-if="::processes && processes.length > 1">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <span class="fa fa-cogs"></span>
+          <span role="tooltip" data-translate>wpsProcesses</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right text-left">
+          <li data-ng-repeat="p in ::processes">
+            <a ng-click="selectProcess(p, true)">
+              <span class="fa fa-cog"></span>
+              {{ ::getProcessLabel(p) }}
+            </a>
+          </li>
+        </ul>
+      </div>
 
     </div>
 
@@ -232,7 +247,8 @@
       </div>
 
       <!--process panel-->
-      <div class="panel panel-default force-hide panel-tools" id="process-panel" sxt-processes-panel>
+      <div class="panel panel-default force-hide panel-tools" id="process-panel"
+        sxt-processes-panel show-process="selectedProcess">
       </div>
 
     <div class="panel panel-default force-hide panel-tools" id="print">
