@@ -53,6 +53,20 @@
       height: ~"calc(100% - 4.35em)";
       padding-bottom: 1em;
     }
+
+    & > .sxt-panel-button {
+      display: flex;
+      justify-content: center;
+      padding: .5em;
+      padding-right: .2em;
+
+      button {
+        margin: 0px;
+        margin-right: .3em;
+        min-width: @sxt-btn-size;
+        width: auto;
+      }
+    }
   }
 
   .sxt-panel-toggle,
@@ -837,7 +851,7 @@
     left: 0;
     transition: left @transition-params;
     display: flex;
-    
+
     .panel-carousel {
       flex-shrink: 0;
       flex-grow: 0;
