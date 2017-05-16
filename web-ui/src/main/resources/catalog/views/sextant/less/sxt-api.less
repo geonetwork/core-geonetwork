@@ -1,9 +1,19 @@
+@import "sextant-variables.less";
+
+// theme import (overrides variables)
+@theme-name: "default";
+@import "./themes/@{theme-name}.less";
+
+// overrides bootstrap colors to fit our theme
+@brand-primary: @sxt-base-color;
+@badge-bg: @sxt-base-color;
+
 .gn, .g {
   display: table;
   width: 100%;
   position: relative;
   font-size: 14px;
-  font-family: Roboto, sans-serif;
+  font-family: @sxt-font-family;
   color: black;
   letter-spacing: normal;
   & > div:first-of-type {
