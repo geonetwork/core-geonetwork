@@ -35,7 +35,7 @@
    * config.js
    */
   module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
-    function get(uuid, types) {
+    this.get = function(uuid, types) {
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
@@ -68,9 +68,16 @@
           }
       );
       return (promise);
-    }
-    return {
-      get: get
+    };
+
+    this.getMdsRelated = function(uuids, types) {
+      var url = '../api/related';
+      return $http.get(url, {
+        params: {
+          type: types,
+          uuid: uuids
+        }
+      });
     };
   }]);
   module
