@@ -261,6 +261,8 @@
         label: {eng: 'Sextant', fre: 'Sextant'}
       }];
 
+      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
+      
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
         viewerMap: viewerMap,
