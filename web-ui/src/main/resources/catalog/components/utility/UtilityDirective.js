@@ -722,8 +722,8 @@
   /**
    * Use to initialize bootstrap datepicker
    */
-  module.directive('gnBootstrapDatepicker', [
-    function() {
+  module.directive('gnBootstrapDatepicker', ['$timeout',
+    function($timeout) {
 
       // to MM-dd-yyyy
       var formatDate = function(day, month, year) {
@@ -867,6 +867,19 @@
               });
             });
             rendered = true;
+
+            // set initial dates (use $timeout to avoid messing with ng digest)
+            if (scope.date) {
+              $timeout(function () {
+                var picker = $(element).data('datepicker');
+                if (isRange) {
+                  picker.pickers[0].setDate(scope.date.from);
+                  picker.pickers[1].setDate(scope.date.to);
+                } else {
+                  picker.pickers[0].setDate(scope.date);
+                }
+              });
+            }
           };
 
           init();
