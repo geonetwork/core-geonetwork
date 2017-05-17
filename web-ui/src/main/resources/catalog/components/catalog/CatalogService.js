@@ -252,7 +252,7 @@
     selectionLayers: 'selection.layers',
 
     // wfs indexing
-    solrproxy: '../api/0.1/search'
+    indexproxy: '../../index'
   });
 
 

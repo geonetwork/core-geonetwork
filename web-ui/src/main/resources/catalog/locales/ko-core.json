@@ -321,5 +321,5 @@
     "directoryManager": "디렉토리 관리",
     "typeOfRecord": "레코드의 형태",
     "load": "불러오기",
-    "solrAccessError": "Solr 접근 중 오류가 발생했습니다."
+    "indexAccessError": "Index 접근 중 오류가 발생했습니다."
 }

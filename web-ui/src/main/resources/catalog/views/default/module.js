@@ -181,7 +181,7 @@
         if (nextRecordId === mdView.records.length) {
           // When last record of page reached, go to next page...
           // Not the most elegant way to do it, but it will
-          // be easier using Solr search components
+          // be easier using index search components
           $scope.$broadcast('nextPage');
         } else {
           $scope.openRecord(nextRecordId);

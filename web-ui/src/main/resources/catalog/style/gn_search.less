@@ -75,6 +75,25 @@
   .list-group-item:hover {
     color: @brand-primary;
   }
+  .input-daterange {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .gn-graph {
+    margin-left: -15px;
+    margin-right: -15px;
+    overflow-x: hidden;
+    max-height: none;
+  }
+  .gn-graph-buttons {
+    position: absolute;
+    left: 1em;
+    top: 0;
+  }
+  .ui-timeline {
+    position: relative;
+  }
+
 }
 .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -607,6 +626,13 @@ button.active [role=tooltip] {
   font-weight: normal;
 }
 
+//datepicker highlight
+.gn-date-hl {
+  text-decoration: underline;
+}
+.datepicker-dropdown.datepicker-orient-bottom:before {
+  border: none;
+}
 .gn-related-list {
   padding: 0;
   list-style: none;

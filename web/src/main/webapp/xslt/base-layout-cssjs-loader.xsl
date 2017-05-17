@@ -181,6 +181,27 @@
     <xsl:variable name="appConfig"
                   select="util:getSettingValue('ui/config')"/>
 
+    <xsl:if test="$angularApp = 'gn_search'">
+      <script src="{$uiResourcesPath}lib/d3_timeseries/d3.min.js"></script>
+      <script src="{$uiResourcesPath}lib/timeline/timeline-zoomable.js"></script>
+      <link rel="stylesheet" href="{$uiResourcesPath}lib/timeline/timeline.css"/>
+      <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
+      <script type="text/javascript">
+        var module = angular.module('gn_search');
+        module.config(['gnViewerSettings', 'gnGlobalSettings',
+        function(gnViewerSettings, gnGlobalSettings) {
+        <xsl:if test="$owsContext">
+          gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+        </xsl:if>
+        <xsl:if test="$wmsUrl and $layerName">
+          gnViewerSettings.wmsUrl = '<xsl:value-of select="$wmsUrl"/>';
+          gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
+          gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
+        </xsl:if>
+        }]);
+      </script>
+    </xsl:if>
+
     <!-- XML highlighter JS dependency. -->
     <xsl:if test="$angularApp = 'gn_editor'">
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js"></script>

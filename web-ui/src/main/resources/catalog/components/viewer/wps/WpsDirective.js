@@ -24,6 +24,8 @@
 (function() {
   goog.provide('gn_wps_directive');
 
+  goog.require('gn_wfsfilter_service');
+
   var module = angular.module('gn_wps_directive', [
   ]);
 
@@ -35,6 +37,13 @@
    * @description
    * The `gnWpsProcessForm` build up a HTML form from the describe process
    * response object (after call the describe process request).
+   * @directiveInfo {Object} map
+   * @directiveInfo {Object} wpsLink
+   * @directiveInfo {boolean} hideExecuteButton if true,
+   * the 'execute' button is hidden
+   * @directiveInfo {Object} wfsLink the WFS link object
+   * will be used to overload
+   *  inputs based on active WFS feature filters
    *
    * TODO: Add batch mode using md.privileges.batch
    * and md.privileges.batch.update services.
@@ -45,60 +54,12 @@
     'gnWpsService',
     'gnUrlUtils',
     '$timeout',
-    function(gnWpsService, gnUrlUtils, $timeout) {
+    'wfsFilterService',
+    function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService) {
 
       var inputTypes = {
         string: 'text',
         float: 'number'
-      };
-
-      var parseKvpParams = function(str) {
-        var escaper = function(match, p1) {
-          return '=' + gnUrlUtils.encodeUriQuery(p1, true);
-        };
-        str = str.replace(/=\[([^&]*)\]/gi, escaper);
-
-        var queryParams = gnUrlUtils.parseKeyValue(str);
-        var defaults = {};
-        for (var prop in queryParams) {
-          if (queryParams.hasOwnProperty(prop)) {
-            defaults[prop.toLowerCase()] = queryParams[prop];
-          }
-        }
-
-        var parseDataInputs = function(value) {
-          var datainputs = {};
-
-          if (value === undefined) {
-            return datainputs;
-          }
-
-          value.split(';').map(function(str) {
-            var list = str.split('@');
-
-            var input = list[0].split('=');
-            var identifier = input[0];
-            var value = input[1];
-            list = list.slice(1);
-
-            var attributes = {};
-            list.map(function(attribute) {
-              keyValue = attribute.split('=');
-              attributes[keyValue[0].toLowerCase()] = keyValue[1];
-            });
-
-            datainputs[identifier] = {
-              value: value,
-              attributes: attributes
-            };
-          });
-          return datainputs;
-        };
-
-        defaults.datainputs = parseDataInputs(defaults.datainputs);
-        defaults.responsedocument = parseDataInputs(defaults.responsedocument);
-
-        return defaults;
       };
 
       var toBool = function(str, defaultVal) {
@@ -112,7 +73,8 @@
         restrict: 'AE',
         scope: {
           map: '=',
-          wpsLink: '='
+          wpsLink: '=',
+          wfsLink: '='
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
@@ -120,15 +82,21 @@
         },
 
         link: function(scope, element, attrs) {
-          var defaults;
-
           var processId = attrs['processId'] || scope.wpsLink.name;
           var uri = attrs['uri'] || scope.wpsLink.url;
-          var defaults = scope.$eval(attrs['defaults']) ||
-              scope.wpsLink.applicationProfile;
 
-          if (defaults) {
-            defaults = parseKvpParams(defaults);
+          if (scope.wpsLink.layer) {
+            scope.wpsLink.layer.set('wpsfilter-el', element);
+          }
+
+          // parse application profile as JSON
+          var applicationProfile = scope.wpsLink.applicationProfile ?
+              JSON.parse(scope.wpsLink.applicationProfile) : null;
+
+          // getting defaults
+          var defaults = scope.$eval(attrs['defaults']);
+          if (!defaults && applicationProfile) {
+            defaults = applicationProfile.defaults;
           }
 
           scope.describeState = 'sended';
@@ -139,25 +107,38 @@
             mimeType: ''
           };
 
+          scope.hideExecuteButton = attrs.hideExecuteButton;
+
           gnWpsService.describeProcess(uri, processId)
               .then(
               function(response) {
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
 
-                if (response.processDescription != undefined) {
-                  scope.processDescription = response.processDescription[0];
+                if (response.processDescription) {
+
+                  // Bind input directly in link object
+                  scope.processDescription = scope.wpsLink.processDescription ||
+                  response.processDescription[0];
+                  scope.wpsLink.processDescription = scope.processDescription;
+
                   angular.forEach(scope.processDescription.dataInputs.input,
                       function(input) {
+
+                        if (input.value) return;
                         var value;
                         var defaultValue;
 
-                        if (defaults) {
-                          var datainput =
-                              defaults.datainputs[input.identifier.value];
-                          if (datainput != undefined) {
-                            defaultValue = datainput.value;
-                          }
+                        if (defaults && defaults[input.identifier.value]) {
+                          defaultValue = defaults[input.identifier.value];
+                        }
+
+                        // use overloaded value if applicable
+                        if (scope.inputOverloads &&
+                          scope.inputOverloads[input.identifier.value]) {
+                          defaultValue =
+                            scope.inputOverloads[input.identifier.value]
+                            .currentValue;
                         }
 
                         if (input.literalData != undefined) {
@@ -195,27 +176,29 @@
                   );
 
                   angular.forEach(
-                      scope.processDescription.processOutputs.output,
-                      function(output, idx) {
-                        output.asReference = true;
+                  scope.processDescription.processOutputs.output,
+                  function(output, idx) {
+                    output.asReference = true;
 
-                        var outputDefault = defaults &&
-                            defaults.responsedocument[output.identifier.value];
-                        if (outputDefault) {
-                          output.value = true;
-                          var defaultAsReference =
-                            outputDefault.attributes['asreference'];
-                          if (defaultAsReference !== undefined) {
-                            output.asReference = toBool(defaultAsReference);
-                          }
-                          scope.selectedOutput.identifier =
-                              output.identifier.value;
-                        }
-                        else if (idx == 0) {
-                          scope.selectedOutput.identifier =
-                              output.identifier.value;
-                        }
+                    // untested code
+                    var outputDefault = defaults &&
+                        defaults.responsedocument &&
+                        defaults.responsedocument[output.identifier.value];
+                    if (outputDefault) {
+                      output.value = true;
+                      var defaultAsReference =
+                          outputDefault.attributes['asreference'];
+                      if (defaultAsReference !== undefined) {
+                        output.asReference = toBool(defaultAsReference);
                       }
+                      scope.selectedOutput.identifier =
+                            output.identifier.value;
+                    }
+                    else if (idx == 0) {
+                      scope.selectedOutput.identifier =
+                            output.identifier.value;
+                    }
+                  }
                   );
                   var output = scope.processDescription.processOutputs.output;
                   if (output.length == 1) {
@@ -269,7 +252,16 @@
 
             var inputs = scope.processDescription.dataInputs.input.reduce(
                 function(o, v, i) {
-                  o[v.identifier.value] = v.value;
+                  if (v.identifier.value == 'limits' &&
+                  (v.value == '' || v.value == ',,,')) {
+                    if (v.minOccurs > 0) {
+                      o['limits'] = 'NaN,NaN,NaN,NaN';
+                    }
+                  } else {
+                    if (v.minOccurs > 0 || v.value) {
+                      o[v.identifier.value] = v.value;
+                    }
+                  }
                   return o;
                 }, {});
 
@@ -302,10 +294,10 @@
             };
 
             processResponse = function(response) {
-              if (response.TYPE_NAME = 'OWS_1_1_0.ExceptionReport') {
+              if (response.TYPE_NAME === 'OWS_1_1_0.ExceptionReport') {
                 scope.executeState = 'finished';
               }
-              if (response.TYPE_NAME = 'WPS_1_0_0.ExecuteResponse') {
+              if (response.TYPE_NAME === 'WPS_1_0_0.ExecuteResponse') {
                 if (response.status != undefined) {
                   if (response.status.processAccepted != undefined ||
                       response.status.processPaused != undefined ||
@@ -319,9 +311,13 @@
                       response.status.processFailed != undefined) {
                     scope.executeState = 'finished';
 
-                    if (response.status.processSucceeded) {
+                    if (response.status.processSucceeded &&
+                        scope.wpsLink.layer) {
                       gnWpsService.extractWmsLayerFromResponse(
-                          response, scope.map, scope.wpsLink.layer);
+                          response, scope.map, scope.wpsLink.layer, {
+                            exclude: /^OUTPUT_/
+                          }
+                      );
                     }
                   }
                 }
@@ -395,6 +391,94 @@
               }
             }
           });
+
+          // helpers for accessing input values
+          var getInputValue = function(name) {
+            if (!scope.wpsLink.processDescription) { return; }
+
+            var result = null;
+            angular.forEach(scope.wpsLink.processDescription.dataInputs.input,
+                function(input) {
+                  if (input.identifier.value == name) {
+                    result = input.value;
+                  }
+                });
+            return result;
+          };
+          var setInputValue = function(name, value) {
+            if (!scope.wpsLink.processDescription) { return; }
+
+            angular.forEach(scope.wpsLink.processDescription.dataInputs.input,
+                function(input) {
+                  if (input.identifier.value == name) {
+                    input.value = value;
+                  }
+                });
+          };
+
+          // handle input overload from WFS link
+          if (scope.wfsLink) {
+            // this is the object holding current filter values
+            var esObject = wfsFilterService.getEsObject(scope.wfsLink.url,
+                scope.wfsLink.name);
+
+            // this will hold input overload info
+            // keys are overloaded inputs names, values are objects like so:
+            //  { currentValue: any, oldValue: any }
+            scope.inputOverloads = {};
+
+            // use filter values in ElasticSearch object state to overload input
+            if (esObject) {
+              var wfsFilterLinks = applicationProfile &&
+                  applicationProfile.wfsFilterLinks ?
+                  applicationProfile.wfsFilterLinks : {};
+
+              // get list of filters
+              var filterValues = wfsFilterService.toObjectProperties(esObject);
+
+              // transform according to app profile
+              var inputValues = {};
+              Object.keys(wfsFilterLinks).forEach(function(key) {
+
+                // prefix & suffix are added to the raw filter key
+                var filterKey = wfsFilterLinks[key];
+                var stringFilterKey = 'ft_' + wfsFilterLinks[key] + '_s';
+                var dateFilterKey = 'ft_' + wfsFilterLinks[key] + '_dt';
+
+                // testing each case
+                if (filterValues[filterKey]) {
+                  inputValues[key] = filterValues[filterKey];
+                }
+                else if (filterValues[stringFilterKey]) {
+                  inputValues[key] = filterValues[stringFilterKey];
+                }
+                else if (filterValues[dateFilterKey]) {
+                  inputValues[key] = filterValues[dateFilterKey];
+                }
+              });
+
+              // loop on these
+              Object.keys(inputValues).forEach(function(name) {
+                // new overload
+                if (!scope.inputOverloads[name]) {
+                  scope.inputOverloads[name] = {
+                    oldValue: getInputValue(name)
+                  };
+                }
+                scope.inputOverloads[name].currentValue = inputValues[name];
+                setInputValue(name, inputValues[name]);
+              });
+
+              // clear non existing overloads
+              Object.keys(scope.inputOverloads).forEach(function(name) {
+                // new overload
+                if (!inputValues[name]) {
+                  setInputValue(name, scope.inputOverloads[name].oldValue);
+                  delete scope.inputOverloads[name];
+                }
+              });
+            }
+          }
         }
       };
     }

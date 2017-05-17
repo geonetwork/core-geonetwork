@@ -105,4 +105,78 @@
       </a>
     </div>
   </div>
+
+  <!-- Hidden field that match xml metadata schema -->
+  <div class="hidden">
+    <input data-ng-model="extent.md[0]" name="{{hleftRef}}"/>
+    <input data-ng-model="extent.md[1]" name="{{hbottomRef}}"/>
+    <input data-ng-model="extent.md[2]" name="{{hrightRef}}"/>
+    <input data-ng-model="extent.md[3]" name="{{htopRef}}"/>
+    <input data-ng-model="dcExtent" name="{{dcRef}}"/>
+  </div>
+
+  <!--Map and coordinates inputs-->
+  <table class="text-center">
+    <tr align="center" valign="middle">
+      <td align="left">
+
+        <!--Projection selector-->
+        <div class="btn-group">
+          <button type="button" class="btn btn-link dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  title="{{'chooseAProj' | translate}}">
+            {{projs.formLabel}} <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li data-ng-repeat="proj in projs.list">
+              <a href="" data-ng-click="projs.form = proj.code; formLabel = proj.label">
+                {{proj.label}}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </td>
+      <td>
+        <div class="form-group">
+          <input
+            data-ng-model="extent.form[3]" type="number"
+            id="drawbbox-top" placeholder="{{'north' | translate}}"
+            data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr valign="middle" align="center">
+      <td class="col-left">
+        <div class="form-group">
+          <input data-ng-model="extent.form[0]" type="number"
+                 id="drawbbox-left" placeholder="{{'west' | translate}}"
+                 data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+      <td class="col-middle">
+        <div id="{{mapId}}" class="map"></div>
+      </td>
+      <td class="col-right">
+        <div class="form-group">
+          <input
+            data-ng-model="extent.form[2]"
+            type="number" id="drawbbox-right"
+            placeholder="{{'east' | translate}}" data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+    </tr>
+    <tr align="center">
+      <td colspan="3">
+        <div class="form-group">
+          <input
+            data-ng-model="extent.form[1]" type="number"
+            id="drawbbox-bottom" placeholder="{{'south' | translate}}"
+            data-ng-change="updateBbox(true)"/>
+        </div>
+      </td>
+    </tr>
+  </table>
 </div>
