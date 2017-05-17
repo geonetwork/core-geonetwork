@@ -63,5 +63,6 @@
   "editWpsForm": "Paramètres du traitement",
   "wpsIncludedProcesses": "Traitements",
   "wpsSaveForm": "Sauvegarder et fermer",
-  "inputIsOverloaded": "Cette valeur provient d'un filtre WFS"
+  "inputIsOverloaded": "Cette valeur provient d'un filtre WFS",
+  "fullTextSearch": "Filtre"
 }

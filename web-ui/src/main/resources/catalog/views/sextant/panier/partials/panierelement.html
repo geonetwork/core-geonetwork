@@ -38,10 +38,10 @@
       </button>
       <ul class="dropdown-menu dropdown-menu-right">
         <li ng-repeat="filter in element.filter.params">
-          <a>{{filter.name}}&nbsp;=&nbsp;{{filter.value}}</a>
+          <a><i class="fa fa-search"/>&nbsp;{{filter.name}}&nbsp;=&nbsp;{{filter.value}}</a>
         </li>
         <li ng-if="element.filter.any">
-          <a><span translate>fullTextSearch</span>&nbsp;=&nbsp;{{element.filter.any}}</a>
+          <a><i class="fa fa-search"/>&nbsp;<span translate>fullTextSearch</span>&nbsp;=&nbsp;{{element.filter.any}}</a>
         </li>
       </ul>
     </div>
