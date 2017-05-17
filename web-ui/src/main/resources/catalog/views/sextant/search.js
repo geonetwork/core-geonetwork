@@ -16,6 +16,7 @@
   goog.require('sxt_linksbtn');
   goog.require('gn_sxt_utils');
   goog.require('sxt_ogclinks_service');
+  goog.require('gn_gridrelated_directive');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
@@ -31,7 +32,8 @@
     'sxt_mdactionmenu',
     'sxt_linksbtn',
     'gn_sxt_utils',
-    'sxt_ogclinks_service'
+    'sxt_ogclinks_service',
+    'gn_gridrelated_directive'
   ]);
 
   $(document.body).append($('<div class="g"></div>'));

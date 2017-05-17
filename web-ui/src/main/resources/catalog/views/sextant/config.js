@@ -352,6 +352,9 @@
         map: false
       };
 
+      searchSettings.gridRelated = ['parent', 'children',
+        'sources', 'hassources'];
+
       viewerSettings.menuExpanded = true;
 
       // Define if children button must be displayed in search results.

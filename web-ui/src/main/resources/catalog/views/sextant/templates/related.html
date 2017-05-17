@@ -1,4 +1,4 @@
-<div class="btn-group" ng-if="relationFound" sxt-popover-dropdown placement="bottom" container="{{container}}" className="sxt-popover-grid">
+<div class="btn-group" ng-if="::relations" sxt-popover-dropdown placement="bottom" container="{{$parent.$parent.container}}" className="sxt-popover-grid">
   <button type="button"
           class="btn dropdown-toggle btn-sm btn-default"
           data-toggle="dropdown"
@@ -7,20 +7,14 @@
     <span class="caret"></span>
   </button>
   <ul class="dropdown-menu small-dropdown" role="menu">
-    <li data-ng-repeat="r in ::relations.parent track by $index">
-      <a href="#/metadata/{{r.id}}"
-         title="{{r.title | gnLocalized: lang}}">
-        {{r.title | gnLocalized: lang}}
-      </a>
-    </li>
-    <li data-ng-if="relations.parent.length > 0 && relations.children.length > 0"
-        role="presentation"
-        class="divider"></li>
-    <li data-ng-repeat="r in ::relations.children track by $index">
-      <a href="#/metadata/{{r.id}}"
-         title="{{r.title | gnLocalized: lang}}">
-        {{r.title | gnLocalized: lang}}
-      </a>
-    </li>
+    <ul ng-repeat="type in ::types" ng-if="::relations[type]" class="gn-related-list">
+      <li class="gn-related-type"><b>{{type | translate}}</b></li>
+      <li ng-repeat="r in ::relations[type]" >
+        <a href="#/metadata/{{r.id}}"
+           title="{{r.title | gnLocalized: lang}}">
+          {{r.title | gnLocalized: lang}}
+        </a>
+      </li>
+    </ul>
   </ul>
 </div>

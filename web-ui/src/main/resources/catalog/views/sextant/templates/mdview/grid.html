@@ -83,10 +83,8 @@
         </div>
 
         <sxt-links-btn></sxt-links-btn>
-        <div class="gn-md-relations pull-right" ng-if="::md.type == 'series'">
-          <div gn-related="::md" types="parent|children"
-               template="../../catalog/views/sextant/templates/related.html"></div>
-         </div>
+        <div gn-grid-related gn-grid-related-uuid="::md.getUuid()" class="gn-md-relations pull-right"
+             template="../../catalog/views/sextant/templates/related.html"></div>
 
 
 
