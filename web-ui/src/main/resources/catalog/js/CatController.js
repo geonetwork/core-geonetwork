@@ -130,6 +130,9 @@
                   'formatters/xsl-view?root=div&view=advanced'
             }]
           },
+          'grid': {
+            'related': ['parent', 'children', 'services', 'datasets']
+          },
           'linkTypes': {
             'links': ['LINK', 'kml'],
             'downloads': ['DOWNLOAD'],
@@ -203,7 +206,7 @@
       current: null,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // Remap some old settings with new one
-        angular.extend(this.gnCfg, config || {});
+        angular.extend(this.gnCfg, config, {});
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
@@ -215,7 +218,7 @@
         gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
       },
       getDefaultConfig: function() {
-        return angulaWr.copy(defaultConfig);
+        return angular.copy(defaultConfig);
       }
     };
   }());
