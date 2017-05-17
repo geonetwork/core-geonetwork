@@ -103,17 +103,8 @@
                 if(esObject) {
                   var esConfig = esObject.getState();
                   var g = esConfig.geometry;
-                  var filters = [];
-                  angular.forEach(esConfig.qParams, function(obj, fName) {
-                    if(Object.keys(obj.values).length) {
-                      filters.push({
-                        name: fName,
-                        value: Object.keys(obj.values)[0]
-                      });
-                    }
-                  });
                   panierItem.filter = {
-                    params: filters.length ? filters : undefined,
+                    params: wfsFilterService.toReadableObject(esObject),
                     any: esConfig.any
                   };
                   if(g) {

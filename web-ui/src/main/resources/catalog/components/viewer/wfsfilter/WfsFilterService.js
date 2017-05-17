@@ -48,6 +48,11 @@
             gnUrlUtils.toKeyValue(params));
       };
 
+      // transform date from dd-MM-YYYY to ISO (YYYY-MM-dd)
+      function transformDate(d) {
+        return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+      }
+
       this.registerEsObject = function(url, ftName) {
         return gnIndexRequestManager.register('WfsFilter', url + '#' + ftName);
       };
@@ -323,10 +328,6 @@
         var state = esObj.getState();
         var where;
 
-        function transformDate(d) {
-          return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
-        }
-
         where = [];
         angular.forEach(state.qParams, function(fObj, fName) {
           var config = esObj.getIdxNameObj_(fName);
@@ -369,6 +370,16 @@
         if (state) {
           // add query params (qParams)
           angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObject.getIdxNameObj_(fName);
+
+            // special case: date time, use 'from' property
+            if (config.isDateTime) {
+              if (fObj.values.from != '') {
+                result[fName] = transformDate(fObj.values.from);
+              }
+              return;
+            }
+
             // only the last value found will be kept
             angular.forEach(fObj.values, function(value, key) {
               result[fName] = key;
@@ -386,6 +397,50 @@
 
         return result;
       };
+
+      /**
+       * takes an ElasticSearch request object as input and ouputs an object
+       * with human readable properties.
+       * note: full text search & bbox extent are ignored
+       *
+       * @param {Object} elasticSearchObject
+       */
+      this.toReadableObject = function(esObject) {
+        var state = esObject.getState();
+        var result = {};
+
+        if (state) {
+          // add query params (qParams)
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObject.getIdxNameObj_(fName);
+            var paramName = config.label || config.name;
+
+            // special case: date time, use 'from' property
+            if (config.isDateTime) {
+              if (fObj.values.from != '' && fObj.values.to) {
+                result[fName] = {
+                  name: paramName,
+                  value: fObj.values.from + ', ' + fObj.values.to
+                };
+              }
+              return;
+            }
+
+            // values separated by comma
+            result[fName] = {
+              name: paramName,
+              value: ''
+            };
+            angular.forEach(fObj.values, function(value, key) {
+              result[fName].value += ', ' + key;
+            });
+            result[fName].value = result[fName].value.substring(2);
+          });
+        }
+
+        return result;
+      };
+
 
     }]);
 })();
