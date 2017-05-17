@@ -270,6 +270,14 @@
                       search.splice(idx, 1);
                     }
                   }
+                  else {
+                    if(search == value) {
+                      scope.searchObj.params[key] = undefined;
+                    }
+                    else {
+                      scope.searchObj.params[key] = [search].concat([value]);
+                    }
+                  }
                 }
                 scope.$emit('resetSearch', scope.searchObj.params);
                 e.preventDefault();
