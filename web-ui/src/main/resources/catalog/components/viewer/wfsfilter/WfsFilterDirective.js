@@ -25,8 +25,75 @@
   goog.provide('gn_wfsfilter_directive');
 
 
-  var TMP_PROFILE = {
-  };
+  var TMP_PROFILE =
+      { 'extendOnly': false,
+        'fields': [
+          /*
+      {
+      "name":"WATER_KM",
+      "aggs": {
+
+        "histogram": {
+          "interval": 5000,
+          "extended_bounds" : {
+            "min" : 2000,
+            "max" : 100000
+          }
+        }
+        ,"range" : {
+          "ranges" : [
+            { "to" : 7500 },
+            { "from" : 7500, "to" : 50000 },
+            { "from" : 50000 }
+          ]
+        }
+      }
+    },
+      {
+      "name": "CARPOOL"
+    }
+
+          */
+          {"name": "param_group_liste"},
+          {"name": "ent_prog_cd"},
+          {"name": "param_liste"},
+          {
+            "name": "CUSTOM_POS",
+            "aggs": {
+              "filters": {
+                "filters": {
+                  "48 - 50": {"query_string":
+                  {"query": "+ft_ent_longitude_s:<0.03 +ft_ent_latitude_s:<44"}},
+                  "49 - 53": {"query_string":
+                  {"query": "+ft_ent_longitude_s:>0.03 +ft_ent_latitude_s:>45"}}
+                }
+              }
+            }
+          }, {
+            "name": "range_Date",
+            "type": "rangeDate",
+            "minField": "date_min",
+            "maxField": "date_max",
+            "display": "graph"
+          },
+          {
+            'name': 'date_min',
+            'display': 'graph'
+          },
+          {
+            'name': 'date_max',
+            'display': 'form'
+          }/*,
+          {
+            'name': 'date_min',
+            'display': 'graph'
+          }*/
+        ],
+        'treeFields': ['CD_REGION'],
+        'tokenizedFields': {
+          'CGENELIN': '-'
+        }
+      };
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -91,7 +158,7 @@
             blur: 55,
             opacity: .7,
             //gradient: ['#0f0', '#ff0', '#f00', '#fff'],
-            visible: true
+            visible: false
           };
           var hmEventKeys = [];
 
@@ -100,7 +167,6 @@
           scope.source = null;
           if (scope.map) {
             scope.source = new ol.source.Vector();
-            scope.isHeatMapVisible = true;
             scope.heatmapLayer = new ol.layer.Heatmap(
                 angular.extend({
                   source: scope.source,
@@ -176,9 +242,7 @@
                   }
                 }).catch(function() {});
 
-            indexObject =
-                gnIndexRequestManager.register('WfsFilter',
-                    scope.url + '#' + ftName);
+            indexObject = wfsFilterService.registerEsObject(scope.url, ftName);
             scope.indexObject = indexObject;
             scope.layer.set('indexObject', indexObject);
 
@@ -214,17 +278,20 @@
 
             // If an app profile is defined, then we update s
             // `olrObject.initialParams` with external config
-            appProfile = TMP_PROFILE;
+            // appProfile = TMP_PROFILE;
             if (appProfile && appProfile.fields) {
 
               indexObject.indexFields =
                   wfsFilterService.indexMergeApplicationProfile(
                   indexObject.filteredDocTypeFieldsInfo, appProfile);
               indexObject.initBaseParams();
+              if(!appProfile.extendOnly) {
+                indexObject.setFielsdOrder();
+              }
             }
             scope.hmActive = appProfile && appProfile.heatmap || true;
 
-            scope.resetFacets();
+            scope.resetFacets().then(scope.restoreInitialFilters);
           }
           function getDataModelLabel(fieldId) {
             for (var j = 0; j < scope.md.attributeTable.length; j++) {
@@ -350,7 +417,7 @@
             }
             // Direct mapping (datepicker)
             else {
-              date = output[fieldName].value;
+              date = output[fieldName].values;
 
               if ((angular.isObject(date) && date.from && date.to) ||
                   angular.isString(date)) {
@@ -360,7 +427,9 @@
                 output[fieldName].type = undefined;
               }
             }
-            scope.filterFacets();
+            if(output[fieldName].type) {
+              scope.filterFacets();
+            }
           };
 
           /**
@@ -427,9 +496,9 @@
            */
           scope.resetFacets = function() {
 
-            // output structure to send to filter service
             scope.output = {};
             scope.searchInput = '';
+
             scope.resetSLDFilters();
 
             var boxElt = element.find('.gn-bbox-input');
@@ -450,6 +519,50 @@
 
           };
 
+          /**
+           * alter form values & resend a search in case there are initial
+           * filters loaded from the context. This must only happen once
+           */
+          scope.restoreInitialFilters = function() {
+            // no initial filter: leave
+            if (!indexObject.initialFilters) {
+              return;
+            }
+
+            var initialFilters = indexObject.initialFilters;
+
+            // apply filters to form
+            scope.output = initialFilters.qParams || {};
+            scope.searchInput = initialFilters.any || '';
+            if (initialFilters.geometry) {
+              scope.ctrl.searchGeometry =
+                initialFilters.geometry[0][0] + ',' +
+                initialFilters.geometry[1][1] + ',' +
+                initialFilters.geometry[1][0] + ',' +
+                initialFilters.geometry[0][1];
+            }
+
+            // resend a search with initial filters to alter the facets
+            return indexObject.searchWithFacets({
+              params: initialFilters.qParams,
+              any: initialFilters.any,
+              geometry: initialFilters.geometry
+            }).then(function(resp) {
+              indexObject.pushState();
+              scope.fields = resp.facets;
+              scope.count = resp.count;
+
+              // look for date graph fields; call onUpdateDate to refresh them
+              angular.forEach(scope.fields, function (field) {
+                if (field.display == 'graph') {
+                  // scope.onUpdateDate(field);
+                }
+              });
+
+              refreshHeatmap();
+            });
+          };
+
           scope.resetSLDFilters = function() {
             scope.layer.getSource().updateParams({
               SLD: null
@@ -467,7 +580,7 @@
             var layer = scope.layer;
 
             indexObject.pushState();
-            layer.set('esConfig', indexObject.getState());
+            layer.set('esConfig', indexObject);
             if (!extentFilter) {
               layer.setExtent();
             }
@@ -560,6 +673,10 @@
             }
             // when reset from gnBbox directive
             else if (old && geom != '') {
+              scope.filterFacets();
+            }
+            else if (!old && geom === ',,,') {
+              geometry = undefined;
               scope.filterFacets();
             }
             // do nothing when reset from wfsFilter directive

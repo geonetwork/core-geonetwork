@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WMS_Capabilities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" xmlns="http://www.opengis.net/wms" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/sld_capabilities.xsd http://www.qgis.org/wms http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/survalSERVICE=WMS&amp;REQUEST=GetSchemaExtension" xmlns:sld="http://www.opengis.net/sld" xmlns:qgs="http://www.qgis.org/wms">
+  <Service>
+    <Name>WMS</Name>
+    <Title></Title>
+    <Abstract></Abstract>
+    <KeywordList>
+      <Keyword vocabulary="ISO">infoMapAccessService</Keyword>
+    </KeywordList>
+    <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant.ifremer.fr"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson></ContactPerson>
+        <ContactOrganization></ContactOrganization>
+        <ContactPosition></ContactPosition>
+      </ContactPersonPrimary>
+      <ContactVoiceTelephone></ContactVoiceTelephone>
+      <ContactElectronicMailAddress></ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>no conditions apply</Fees>
+    <AccessConstraints>otherRestrictions</AccessConstraints>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/jpeg</Format>
+        <Format>image/png</Format>
+        <Format>image/png; mode=16bit</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/png; mode=1bit</Format>
+        <Format>application/dxf</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>text/plain</Format>
+        <Format>text/html</Format>
+        <Format>text/xml</Format>
+        <Format>application/vnd.ogc.gml</Format>
+        <Format>application/vnd.ogc.gml/3.1.1</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+      <sld:GetLegendGraphic>
+        <Format>image/jpeg</Format>
+        <Format>image/png</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </sld:GetLegendGraphic>
+      <sld:DescribeLayer>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </sld:DescribeLayer>
+      <qgs:GetStyles>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </qgs:GetStyles>
+    </Request>
+    <Exception>
+      <Format>text/xml</Format>
+    </Exception>
+    <sld:UserDefinedSymbolization RemoteWFS="0" RemoteWCS="0" InlineFeature="0" UserStyle="1" SupportSLD="1" UserLayer="0"/>
+    <Layer queryable="1">
+      <Name>surval</Name>
+      <Title>surval</Title>
+      <CRS>EPSG:4326</CRS>
+      <CRS>EPSG:3857</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>-62.983</westBoundLongitude>
+        <eastBoundLongitude>55.8644</eastBoundLongitude>
+        <southBoundLatitude>-21.3871</southBoundLatitude>
+        <northBoundLatitude>51.4043</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="EPSG:3857" maxx="6.2188e+06" minx="-7.01124e+06" maxy="6.69312e+06" miny="-2.4381e+06"/>
+      <BoundingBox CRS="EPSG:4326" maxx="51.4043" minx="-21.3871" maxy="55.8644" miny="-62.983"/>
+      <Layer queryable="1">
+        <Name>surval_30140_all_point_12_12_2016_postgis</Name>
+        <Title>surval_30140_all_point_12_12_2016_postgis</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-5.17667</westBoundLongitude>
+          <eastBoundLongitude>9.65561</eastBoundLongitude>
+          <southBoundLatitude>41.3412</southBoundLatitude>
+          <northBoundLatitude>51.2013</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="1.07486e+06" minx="-576264" maxy="6.65698e+06" miny="5.0628e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="51.2013" minx="41.3412" maxy="9.65561" miny="-5.17667"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=surval_30140_all_point_12_12_2016_postgis&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+        <MetadataURL type="">
+          <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/geonetwork/srv/fre/csw?request=GetRecordById&amp;elementSetName=full&amp;service=CSW&amp;version=2.0.2&amp;id=94c01d83-ca59-4411-bae8-7db3e0b7181b&amp;OutputSchema=http://www.isotc211.org/2005/gmd"/>
+        </MetadataURL>
+      </Layer>
+      <Layer queryable="1">
+        <Name>surval_30140_all_point_12_12_2016</Name>
+        <Title>surval_30140_all_point_12_12_2016</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-62.983</westBoundLongitude>
+          <eastBoundLongitude>55.8645</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>51.1675</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.2188e+06" minx="-7.01124e+06" maxy="6.65097e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="51.1675" minx="-21.3871" maxy="55.8645" miny="-62.983"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=surval_30140_all_point_12_12_2016&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+        <MetadataURL type="">
+          <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/geonetwork/srv/fre/csw?request=GetRecordById&amp;elementSetName=full&amp;service=CSW&amp;version=2.0.2&amp;id=94c01d83-ca59-4411-bae8-7db3e0b7181b&amp;OutputSchema=http://www.isotc211.org/2005/gmd"/>
+        </MetadataURL>
+      </Layer>
+      <Layer queryable="1">
+        <Name>surval_30140_all_point_postgis</Name>
+        <Title>Lieu de surveillance (Ponctuelle) - QGIS-postgis</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-54.4747</westBoundLongitude>
+          <eastBoundLongitude>9.89099</eastBoundLongitude>
+          <southBoundLatitude>3.57238</southBoundLatitude>
+          <northBoundLatitude>51.4043</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="1.10106e+06" minx="-6.06409e+06" maxy="6.69312e+06" miny="397933"/>
+        <BoundingBox CRS="EPSG:4326" maxx="51.4043" minx="3.57238" maxy="9.89099" miny="-54.4747"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=surval_30140_all_point_postgis&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/geonetwork/srv/fre/csw?request=GetRecordById&amp;elementSetName=full&amp;service=CSW&amp;version=2.0.2&amp;id=94c01d83-ca59-4411-bae8-7db3e0b7181b&amp;OutputSchema=http://www.isotc211.org/2005/gmd"/>
+        </MetadataURL>
+      </Layer>
+      <Layer queryable="1">
+        <Name>surval_30140_all_point</Name>
+        <Title>Lieu de surveillance (Ponctuelle) - QGIS</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>-62.983</westBoundLongitude>
+          <eastBoundLongitude>55.8645</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>51.1675</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.2188e+06" minx="-7.01124e+06" maxy="6.65097e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="51.1675" minx="-21.3871" maxy="55.8645" miny="-62.983"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=surval_30140_all_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+        <MetadataURL type="ISO19115:2003">
+          <Format>text/xml</Format>
+          <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/geonetwork/srv/fre/csw?request=GetRecordById&amp;elementSetName=full&amp;service=CSW&amp;version=2.0.2&amp;id=94c01d83-ca59-4411-bae8-7db3e0b7181b&amp;OutputSchema=http://www.isotc211.org/2005/gmd"/>
+        </MetadataURL>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_autres_paramètres_point</Name>
+        <Title>30220_autres_paramètres_point</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>55.257</westBoundLongitude>
+          <eastBoundLongitude>55.809</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>-20.8591</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.21263e+06" minx="6.15118e+06" maxy="-2.37508e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-20.8591" minx="-21.3871" maxy="55.809" miny="55.257"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_autres_paramètres_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_benthos_substrats_meubles_point</Name>
+        <Title>30220_benthos_substrats_meubles_point</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>55.2567</westBoundLongitude>
+          <eastBoundLongitude>55.809</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>-20.8591</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.21263e+06" minx="6.15114e+06" maxy="-2.37508e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-20.8591" minx="-21.3871" maxy="55.809" miny="55.2567"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_benthos_substrats_meubles_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_phytoplancton_point</Name>
+        <Title>30220_phytoplancton_point</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>55.206</westBoundLongitude>
+          <eastBoundLongitude>55.5638</eastBoundLongitude>
+          <southBoundLatitude>-21.3747</southBoundLatitude>
+          <northBoundLatitude>-20.882</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.18534e+06" minx="6.1455e+06" maxy="-2.37781e+06" miny="-2.43662e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-20.882" minx="-21.3747" maxy="55.5638" miny="55.206"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_phytoplancton_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_hydrologie_point</Name>
+        <Title>30220_hydrologie_point</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>44.9712</westBoundLongitude>
+          <eastBoundLongitude>55.8645</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>-12.6235</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.2188e+06" minx="5.00617e+06" maxy="-1.41675e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-12.6235" minx="-21.3871" maxy="55.8645" miny="44.9712"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_hydrologie_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_contaminants_chimiques_point</Name>
+        <Title>30220_contaminants_chimiques_point</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>55.283</westBoundLongitude>
+          <eastBoundLongitude>55.3249</eastBoundLongitude>
+          <southBoundLatitude>-20.9438</southBoundLatitude>
+          <northBoundLatitude>-20.9311</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.15874e+06" minx="6.15407e+06" maxy="-2.38366e+06" miny="-2.38518e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-20.9311" minx="-20.9438" maxy="55.3249" miny="55.283"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_contaminants_chimiques_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_all_point_shp</Name>
+        <Title>30220_all_point_shp</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>44.9712</westBoundLongitude>
+          <eastBoundLongitude>55.7393</eastBoundLongitude>
+          <southBoundLatitude>-21.2695</southBoundLatitude>
+          <northBoundLatitude>-12.6235</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.20487e+06" minx="5.00617e+06" maxy="-1.41675e+06" miny="-2.42404e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-12.6235" minx="-21.2695" maxy="55.7393" miny="44.9712"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_all_point_shp&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>P_30220_ENTITY_POINT</Name>
+        <Title>P_30220_ENTITY_POINT</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>44.9712</westBoundLongitude>
+          <eastBoundLongitude>55.8645</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>-12.6235</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.2188e+06" minx="5.00617e+06" maxy="-1.41675e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-12.6235" minx="-21.3871" maxy="55.8645" miny="44.9712"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=P_30220_ENTITY_POINT&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+      <Layer queryable="1">
+        <Name>30220_all_point</Name>
+        <Title>30220_all_point</Title>
+        <CRS>EPSG:4326</CRS>
+        <CRS>EPSG:3857</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>44.9712</westBoundLongitude>
+          <eastBoundLongitude>55.8645</eastBoundLongitude>
+          <southBoundLatitude>-21.3871</southBoundLatitude>
+          <northBoundLatitude>-12.6235</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3857" maxx="6.2188e+06" minx="5.00617e+06" maxy="-1.41675e+06" miny="-2.4381e+06"/>
+        <BoundingBox CRS="EPSG:4326" maxx="-12.6235" minx="-21.3871" maxy="55.8645" miny="44.9712"/>
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL>
+            <Format>image/png</Format>
+            <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval?SERVICE=WMS&amp;VERSION=1.3.0&amp;REQUEST=GetLegendGraphic&amp;LAYER=30220_all_point&amp;FORMAT=image/png&amp;STYLE=default&amp;SLD_VERSION=1.1.0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>
