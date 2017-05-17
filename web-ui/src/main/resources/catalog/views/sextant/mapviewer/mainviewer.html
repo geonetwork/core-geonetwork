@@ -1,66 +1,79 @@
 <div class="wrapper" data-ng-controller="gnViewerController">
   <div class="sxt-main-tabs">
 
-    <!-- <button class="btn btn-default btn-xs sxt-panel-toggle" ng-show="active.tool"> -->
-    <!--   <span class="fa" ng-class="(active.tool) ? 'fa-minus' : 'fa-minus'"></span> -->
-    <!-- </button> -->
-
     <sxt-tab-switcher />
   </div>
   <div id="map" ngeo-map="map" class="map"></div>
-  <div gn-gfi="" dismiss=".popover" map="map" ng-class="{'leftBarExpanded': active.tool}"></div>
-  <gn-features-tables gn-features-tables-map="map" ng-class="{'leftBarExpanded': active.tool}" gn-active="active.tool"></gn-features-tables>
+  <div gn-gfi="" dismiss=".popover" map="map" ng-class="{'leftBarExpanded': isContainterOpened()}"></div>
+  <gn-features-tables gn-features-tables-map="map" ng-class="{'leftBarExpanded': isContainterOpened()}" gn-active="isContainterOpened()"></gn-features-tables>
 
 
   <!-- Left buttons - Tools-->
-  <div class="tools main-tools" ng-class="{'activeTool': active.tool, 'sxt-maximize-layer-tools': active.maximized }">
+  <div class="tools main-tools" ng-class="{'activeTool': isContainterOpened(), 'sxt-maximize-layer-tools': active.maximized }">
 
-    <div gi-btn-group gnv-close-panel data-ng-controller="toolsController" class="sxt-panel-button">
-      <button sxt-tool class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
+    <div gi-btn-group class="sxt-panel-button">
+      <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn="active">
         <span class="fsxt">c</span>
         <span role="tooltip" data-translate="">Layers</span>
       </button>
-      <button sxt-tool class="btn btn-default" ng-model="activeTools.import" type="submit" rel="#importLayer" gi-btn gnv-tools-btn>
+      <button class="btn btn-default" ng-model="activeTools.import" type="submit" rel="#importLayer" gi-btn="active">
         <span class="fsxt">d</span>
         <span role="tooltip" data-translate="">add</span>
       </button>
-      <button sxt-tool class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
+      <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn="active">
         <span class="fa fa-bookmark"></span>
         <span role="tooltip" data-translate="">Contexts</span>
       </button>
-      <button sxt-tool class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn gnv-tools-btn>
+      <button class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn="active">
         <span class="fa fa-print"></span>
         <span role="tooltip" data-translate="">Print</span>
       </button>
-      <button sxt-tool gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
+      <button gi-btn="active" class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures">
         <span class="fsxt">a</span>
         <span role="tooltip" data-translate="">Measure</span>
       </button>
-      <button sxt-tool gi-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
+      <button gi-btn="active" class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap">
         <span class="fa fa-pencil"></span>
         <span role="tooltip" data-translate="">Annotations</span>
       </button>
-      <button ng-if="benthique" sxt-tool gi-btn class="btn btn-default" type="submit" rel="#benthique" ng-model="activeTools.benthique" gnv-tools-btn>
+      <button ng-if="benthique" gi-btn="active" class="btn btn-default" type="submit" rel="#benthique" ng-model="activeTools.benthique">
         <span class="fa fa-anchor"></span>
         <span role="tooltip" data-translate="">Espèces benthiques</span>
       </button>
 
-      <button ng-if="::processes && processes.length > 0" sxt-tool gi-btn class="btn btn-default" ng-model="activeTools.processes"
-        type="submit" rel="#process-panel" gnv-tools-btn>
+      <button ng-if="::processes && processes.length == 1" gi-btn="active"
+        class="btn btn-default" ng-model="activeTools.processes" type="submit"
+        rel="#process-panel" ng-click="selectProcess(p)">
         <span class="fa fa-cogs"></span>
-        <span ng-if="::processes.length == 1" role="tooltip">
-          <span data-translate>wpsProcess</span>:
-          {{ processes[0].desc || processes[0].name }}
-        </span>
-        <span ng-if="::processes.length > 1" role="tooltip" data-translate>wpsProcesses</span>
+        <span role="tooltip" data-translate>wpsProcess</span>
       </button>
 
-    </div>
+      <!--Hidden btn to bind activeTools.processes in thg gi-btn-grp-->
+      <button ng-if="::processes && processes.length > 1" gi-btn
+              class="hidden" ng-model="activeTools.processes"></button>
+      <div class="btn-group" role="group" ng-if="::processes && processes.length > 1">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+          ng-class="{active: activeTools.processes}">
+          <span class="fa fa-cogs"></span>
+          <span role="tooltip" data-translate>wpsProcesses</span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right text-left">
+          <li data-ng-repeat="p in ::processes">
+            <a ng-click="selectProcess(p, true)">
+              <span class="fa fa-cog"></span>
+              {{ ::getProcessLabel(p) }}
+            </a>
+          </li>
+        </ul>
+      </div>
 
-    <div class="panel-tools-container" ng-class="{'sxt-tab-open': active.tool }">
+
+    </div>
+    <div class="panel-tools-container" ng-class="{'sxt-tab-open': isContainterOpened() }">
 
       <!--Layer tree & background layers-->
-      <div class="panel panel-default force-hide panel-tools" id="layers" gnv-layermanager-btn>
+      <div class="panel panel-default panel-tools" id="layers" gnv-layermanager-btn ng-show="activeTools.layers">
         <div class="layers clearfix" ng-class="{'layers-tools-expanded': active.layersTools}">
 
 
@@ -96,6 +109,7 @@
           <button class="tools-bar-close-btn tools-bar-close-btn-single pull-right" ng-class="{'sxt-hidden': isSeparatedTool()}"
                   ng-show="isLayerTabActive()" ng-click="closeLayerTab()"><span class="">&times;</span>
           </button>
+
           <div class="btn-group sxt-layer-tabs" ng-class="{'sxt-hidden': isSeparatedTool()}">
             <button class="btn btn-default btn-xs" ng-click="layerTabSelect('legend')" ng-class="{'active': layerTabs.legend.active}">
               <span translate>legend</span>
@@ -176,7 +190,7 @@
       </div>
 
       <!--Import layer WMS,WMTS,KML-->
-      <div class="panel panel-default force-hide panel-tools" id="importLayer" gnv-layermanager-btn>
+      <div class="panel panel-default panel-tools" id="importLayer" gnv-layermanager-btn ng-show="activeTools.import">
         <div class="panel-body">
 
           <div class="btn-group flux">
@@ -195,30 +209,30 @@
         </div>
       </div>
 
-      <div class="panel panel-default force-hide panel-tools" id="contexts">
+      <div class="panel panel-default panel-tools" id="contexts" ng-show="activeTools.contexts">
 
       <div class="panel-body">
         <div gn-ows-context="" map="map"></div>
       </div>
     </div>
 
-    <!--Measure Info Panel-->
-    <div class="panel panel-default force-hide panel-tools" id="measures">
-      <div class="panel-body panel-sm">
-        <div class="gn-measure-text">
-          <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
-          <dl class="dl-horizontal">
-            <dt>{{'Distance' | translate}}</dt>
-            <dd>{{measureObj.distance | measure}}</dd>
-            <dt>{{'Surface' | translate}}</dt>
-            <dd>{{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</dd>
-          </dl>
+      <!--Measure Info Panel-->
+      <div class="panel panel-default panel-tools" id="measures" ng-show="mInteraction.active">
+        <div class="panel-body panel-sm">
+          <div class="gn-measure-text">
+            <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
+            <dl class="dl-horizontal">
+              <dt>{{'Distance' | translate}}</dt>
+              <dd>{{measureObj.distance | measure}}</dd>
+              <dt>{{'Surface' | translate}}</dt>
+              <dd>{{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</dd>
+            </dl>
+          </div>
         </div>
       </div>
-    </div>
 
       <!--Draw Panel-->
-      <div class="panel panel-default force-hide panel-tools" id="draw">
+      <div class="panel panel-default panel-tools" id="draw" ng-show="drawVector.inmap">
         <div class="panel-body">
           <div class="gn-draw-styleform" gn-draw="" map="map" vector="drawVector">
           </div>
@@ -226,7 +240,7 @@
       </div>
 
       <!--Espece benthique panel-->
-      <div ng-if="benthique" class="panel panel-default force-hide panel-tools" id="benthique">
+      <div ng-if="benthique" class="panel panel-default panel-tools" id="benthique" ng-show="activeTools.benthique">
         <div class="panel-body">
           <h5 data-translate="">benthiqueSpicies</h5>
           <div class="sxt-benthique" sxtb-panel="map">
@@ -235,10 +249,11 @@
       </div>
 
       <!--process panel-->
-      <div class="panel panel-default force-hide panel-tools" id="process-panel" sxt-processes-panel>
+      <div class="panel panel-default panel-tools" id="process-panel" ng-show="activeTools.processes"
+        sxt-processes-panel show-process="selectedProcess">
       </div>
 
-    <div class="panel panel-default force-hide panel-tools" id="print">
+    <div class="panel panel-default panel-tools" id="print" ng-show="activeTools.print">
 
       <div class="panel-body">
         <div gn-mapprint="" print-active="activeTools.print" map="map"></div>
@@ -251,7 +266,7 @@
 
 
   <!--Top right buttons - Navigation-->
-  <div class="btn-group sx-toolbar tools" gn-localisation-input map="map"></div>
+  <div ng-if="hasGeoSearch" class="btn-group sx-toolbar tools" gn-localisation-input map="map"></div>
   <div class="btn-group sx-toolbar tools basket-tools">
   </div>
 
@@ -285,7 +300,7 @@
   </div>
 
 
-  <footer ng-class="{'leftBarExpanded': active.tool}">
+  <footer ng-class="{'leftBarExpanded': isContainterOpened()}">
     <div sxt-mouse-position></div>
   </footer>
 

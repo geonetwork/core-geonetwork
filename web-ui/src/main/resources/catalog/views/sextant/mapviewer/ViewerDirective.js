@@ -17,7 +17,10 @@
     'gnSearchLocation',
     'gnConfig',
     'gnViewerSettings',
-    function($window, $timeout, gnMap, gnSearchLocation, gnConfig, gnViewerSettings) {
+    '$translate',
+    'gnMeasure',
+    function($window, $timeout, gnMap, gnSearchLocation, gnConfig,
+      gnViewerSettings, $translate, gnMeasure) {
       return {
         restrict: 'A',
         replace: true,
@@ -148,6 +151,17 @@
                 }
               };
 
+              scope.isContainterOpened = function() {
+                try {
+                  return scope.activeTools.layers || scope.activeTools.import ||
+                    scope.activeTools.contexts || scope.activeTools.print ||
+                    scope.mInteraction.active || scope.drawVector.inmap ||
+                    scope.activeTools.benthique || scope.activeTools.processes;
+                }
+                catch (e) {}
+                return false;
+              };
+
               scope.loadTool = function(tab, layer) {
                   scope.layerTabs[tab].active = true;
                   scope.active.layersTools = true;
@@ -185,14 +199,37 @@
                 }
               });
 
+              // create measure interaction
+              scope.mInteraction = gnMeasure.create(map,
+                scope.measureObj, scope);
+
+
               // save processes from viewer settings
               scope.processes = gnViewerSettings.processes;
+              scope.selectedProcess = scope.processes && scope.processes[0];
+
+              // selects a process
+              scope.selectProcess = function (p) {
+                // show panel & hide others
+                  scope.activeTools.processes = true;
+
+                // select process (this is watched by sxtProcessesPanel directive)
+                scope.selectedProcess = p;
+              };
+
+              // outputs a label based on process info
+              scope.getProcessLabel = function (p) {
+                var currentLang = $translate.use();
+                if (p.labels) {
+                  return p.labels[currentLang];
+                } else if (p.label) {
+                  return p.label;
+                } else {
+                  return p.name;
+                }
+              }
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
-
-              iElement.find('.panel-tools .btn-default.close').click(function() {
-                scope.active.tool = false;
-              });
 
               //TODO: find another solution to render the map
               setTimeout(function() {
@@ -206,36 +243,16 @@
 
               scope.isNcwms = function(layer) {
                 return layer.ncInfo;
-              }
+              };
+
+              scope.hasGeoSearch = !!gnViewerSettings.localisations;
+
+
             }
           };
         }
       };
     }]);
-
-  module.directive('sxtTool', [ function() {
-    return {
-      restrict: 'A',
-      link: function (scope, element) {
-        element.on('click', function() {
-          scope.active.tool = !$(this).hasClass('active');
-        });
-      }
-    }
-  }]);
-
-  module.directive('sxtCloseTool', [ function() {
-    return {
-      restrict: 'A',
-      link: function (scope, element) {
-        element.on('click', function() {
-          scope.$apply(function() {
-            scope.active.tool = false;
-          });
-        });
-      }
-    }
-  }]);
 
   module.directive('sxtMousePosition', [ function() {
     return {
@@ -422,6 +439,5 @@
         }
       };
     }]);
-
 
 })();

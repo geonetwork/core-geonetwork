@@ -15787,6 +15787,20 @@
   height: calc(100% - 4.35em);
   padding-bottom: 1em;
 }
+.gn [sxt-main-viewer] .main-tools > .sxt-panel-button,
+.g [sxt-main-viewer] .main-tools > .sxt-panel-button {
+  display: flex;
+  justify-content: center;
+  padding: .5em;
+  padding-right: .2em;
+}
+.gn [sxt-main-viewer] .main-tools > .sxt-panel-button button,
+.g [sxt-main-viewer] .main-tools > .sxt-panel-button button {
+  margin: 0px;
+  margin-right: .3em;
+  min-width: 2.2em;
+  width: auto;
+}
 .gn [sxt-main-viewer] .sxt-panel-toggle,
 .g [sxt-main-viewer] .sxt-panel-toggle,
 .gn [sxt-main-viewer] .main-tools button,
@@ -16972,8 +16986,8 @@
   transition: left 0.3s ease;
   display: flex;
 }
-.gn [sxt-main-viewer] .panel-carousel,
-.g [sxt-main-viewer] .panel-carousel {
+.gn [sxt-main-viewer] .panel-carousel-container .panel-carousel,
+.g [sxt-main-viewer] .panel-carousel-container .panel-carousel {
   flex-shrink: 0;
   flex-grow: 0;
   width: 33.33%;
@@ -20163,4 +20177,16 @@
 }
 #sns_sextant_content .gn-search-input > input {
   z-index: initial;
+}
+table.portlet-layout {
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+table.portlet-layout tbody,
+table.portlet-layout tr,
+table.portlet-layout td {
+  margin: 0px;
+  padding: 0px;
+  border: none;
 }

@@ -490,6 +490,7 @@
               if (val) {
                 map.addLayer(vector);
               } else {
+                map.removeLayer(vector);
                 drawPolygon.active = false;
                 drawPoint.active = false;
                 drawLine.active = false;

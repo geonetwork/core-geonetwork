@@ -69,7 +69,23 @@
               label: 'GeoTiff'
             }]
           }
-        }
+        },
+
+        processes: [
+          {
+            applicationProfile: '{ "defaults": { "produit_id": "123456", "limits": "100, 200, 300, 400" } }',
+            label: 'Extraction Surval',
+            name: 'r:extractionsurval',
+            url: 'http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R'
+          }, {
+            labels: {
+              fre: 'Essai de label (FR)',
+              eng: 'Test label (EN)'
+            },
+            name: 'r:extractionsurval',
+            url: 'http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R'
+          }
+        ]
       };
 
     </script>
