@@ -87,20 +87,14 @@
         </div>
 
         <div class="row gn-md-details">
-          <p data-ng-repeat="c in md.getAllContacts().resource">
-            <img data-ng-if="c.logo"
+          <p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
+          <p data-ng-repeat="c in ::md.getAllContacts().resource">
+            <img data-ng-if="::c.logo"
                  data-ng-src="{{::c.logo}}"
                  class="gn-source-logo"
                  title="{{::c.name}} ({{::c.role}})"/>
             {{::c.name}}
           </p>
-          <!--<p data-ng-if="md.Constraints">
-            <h5 data-translate="">license</h5>
-            <span data-ng-repeat="c in ::md.Constraints">{{c}}, </span>
-          </p>-->
-          <!--<p data-ng-if="md.keyword">
-            <span class="badge" data-ng-repeat="k in ::md.keyword">{{k}}</span>
-          </p>-->
         </div>
       </div>
 
@@ -109,8 +103,11 @@
 
     <!--start bottom row-->
     <div>
+      <div gn-grid-related gn-grid-related-uuid="::md.getUuid()"
+           template="../../catalog/views/default/templates/gridRelated.html"></div>
       <gn-links-btn></gn-links-btn>
     </div>
+
     </div>
     <!--end bottom row-->
     <div style="clear: both;"></div>
