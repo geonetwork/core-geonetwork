@@ -323,10 +323,5 @@
     "parentConcept": "Concept parent",
     "moreSpecificConcept": "Concepts plus spécifiques",
     "associatedConcept": "Concepts associés",
-    "xsd": "Validation du standard (XSD)",
-    "checkpointType": "Checkpoint resource",
-    "hasCheckpointCpt": "Has Checkpoint component",
-    "hasDqEmptyCptMeasures": "Has empty Checkpoint component",
-    "hasDqCptNotCovered": "Has Checkpoint component not covered",
-    "emodnet-checkpoint.challenges": "Checkpoint challenges"
+    "xsd": "Validation du standard (XSD)"
 }

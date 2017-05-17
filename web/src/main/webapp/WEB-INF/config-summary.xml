@@ -93,6 +93,18 @@
     <facet name="spatialRepresentationType" indexKey="cl_spatialRepresentationType"
            label="spatialRepresentationTypes"/>
     <facet name="orgName" indexKey="orgName" label="orgNames" localized="true"/>
+    <facet name="resource_responsibleParty_edmerp"
+           indexKey="resource_responsibleParty_edmerp"
+           label="edmerp"
+           localized="true"/>
+    <facet name="resource_responsibleParty_edmo"
+           indexKey="resource_responsibleParty_edmo"
+           label="edmo"
+           localized="true"/>
+    <facet name="resource_responsibleParty_originator"
+           indexKey="resource_responsibleParty_originator"
+           label="originator"
+           localized="true"/>
     <facet name="orgNameTree" indexKey="orgNameTree" label="orgNamesTree" classifier="slashSplitClassifier"/>
     <facet name="metadataPOC" indexKey="metadataPOC" label="metadataPOCs"/>
     <facet name="serviceType" indexKey="serviceType" label="serviceTypes"/>
@@ -128,7 +140,7 @@
     <facet name="A05"
            label="A05"
            indexKey="thesaurus-external.parameter.NVS.A05"/>
-		   
+
     <facet name="atlantos_element"
            label="atlantos_element"
            indexKey="thesaurus-local.theme.atlantos_element"/>
@@ -150,11 +162,13 @@
 
     <facet name="emodnet-checkpoint.environmental.matrix" indexKey="thesaurus-local.theme.emodnet-checkpoint.environmental.matrix" label="emodnet-checkpoint.environmental.matrix"/>
     <facet name="emodnet-checkpoint.challenges" indexKey="thesaurus-local.theme.emodnet-checkpoint.challenges" label="emodnet-checkpoint.challenges"/>
+    <facet name="emodnet-checkpoint.level.of.characteristics" indexKey="thesaurus-local.theme.emodnet-checkpoint.level.of.characteristics" label="emodnet-checkpoint.level.of.characteristics"/>
+    <facet name="emodnet-checkpoint.production.mode" indexKey="thesaurus-local.theme.emodnet-checkpoint.production.mode" label="emodnet-checkpoint.production.mode"/>
 
     <facet name="dcsmm-descripteur" indexKey="thesaurus-local.theme.dcsmm-descripteur" label="dcsmm-descripteur"/>
     <facet name="dcsmm-methode" indexKey="thesaurus-local.theme.dcsmm-methode" label="dcsmm-methode"/>
     <facet name="dcsmm-type-espace" indexKey="thesaurus-local.theme.dcsmm-type-espace" label="dcsmm-type-espace"/>
-    <facet name="dcsmm-area" indexKey="thesaurus-local.place.dcsmm.area" label="dcsmm-area"/>    
+    <facet name="dcsmm-area" indexKey="thesaurus-local.place.dcsmm.area" label="dcsmm-area"/>
 
     <facet name="groupOwner" indexKey="_groupOwner" label="groupOwners"/>
     <facet name="publishedForGroup" indexKey="_groupPublished" label="publishedForGroup"/>
@@ -162,7 +176,7 @@
 
     <facet name="maintenanceAndUpdateFrequency" indexKey="cl_maintenanceAndUpdateFrequency"
            label="maintenanceAndUpdateFrequencies"/>
-    
+
     <facet name="odatis_variables" indexKey="thesaurus-local.theme.odatis_variables" label="odatis_variables"/>
 
     <facet name="myocean_discipline" indexKey="thesaurus-local.discipline.myocean.discipline" label="myocean_discipline"/>
@@ -182,6 +196,9 @@
       <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
       <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
       <item facet="orgName" max="15"/>
+      <item facet="resource_responsibleParty_edmerp" max="200"/>
+      <item facet="resource_responsibleParty_edmo" max="200"/>
+      <item facet="resource_responsibleParty_originator" max="200"/>
       <item facet="metadataPOC" max="15"/>
       <item facet="maintenanceAndUpdateFrequency" translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
       <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
@@ -195,6 +212,8 @@
       <item facet="p03" max="300"/>
       <item facet="p35" max="300"/>
       <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
+      <item facet="emodnet-checkpoint.production.mode" max="300"/>
       <item facet="portail-donnees-facette-discipline" max="300"/>
       <item facet="portail-donnees-facette-type" max="300"/>
       <item facet="portail-donnees-facette-comment" max="300"/>
@@ -246,6 +265,9 @@
       <item facet="denominator" sortBy="numValue" sortOrder="desc"/>
       <item facet="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
       <item facet="orgName" max="15"/>
+      <item facet="resource_responsibleParty_edmerp" max="200"/>
+      <item facet="resource_responsibleParty_edmo" max="200"/>
+      <item facet="resource_responsibleParty_originator" max="200"/>
       <item facet="metadataPOC" max="15"/>
       <item facet="maintenanceAndUpdateFrequency" translator="codelist:gmd:MD_MaintenanceFrequencyCode"/>
       <item facet="status" translator="codelist:gmd:MD_ProgressCode"/>
@@ -269,6 +291,9 @@
       <item facet="SIH_Categories_Engins" max="300"/>
       <item facet="emodnet-checkpoint.environmental.matrix" max="300"/>
       <item facet="emodnet-checkpoint.challenges" max="300"/>
+      <item facet="emodnet-checkpoint.level.of.characteristics" max="300"/>
+      <item facet="emodnet-checkpoint.production.mode" max="300"/>
+      <item facet="checkpointType" max="3" sortBy="value" translator="apploc:"/>
       <item facet="dcsmm-descripteur" max="300"/>
       <item facet="dcsmm-methode" max="300"/>
       <item facet="dcsmm-type-espace" max="300"/>
