@@ -96,6 +96,10 @@
 
           };
 
+          // Display related links in grid ?
+          searchSettings.gridRelated = ['parent', 'children',
+            'services', 'datasets'];
+
           // Object to store the current Map context
           viewerSettings.storage = 'sessionStorage';
 

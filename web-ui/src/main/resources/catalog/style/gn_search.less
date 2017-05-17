@@ -590,6 +590,7 @@ button.active [role=tooltip] {
   font-weight: normal;
 }
 
+<<<<<<< HEAD
 .gn-wkt-polygon-input {
   .nav > li > a {
     padding: 3px 15px;
@@ -616,5 +617,33 @@ button.active [role=tooltip] {
   }
   .col-sm-offset-3 {
     margin-left: 95px;
+  }
+}
+
+.gn-related-list {
+  padding: 0;
+  list-style: none;
+  > li {
+    padding-left: 25px;
+    &:hover {
+      text-decoration: none;
+      color: #262626;
+      background-color: #f5f5f5;
+    }
+    &.gn-related-type {
+      padding-left: 15px;
+      padding-bottom: 1px;
+      min-width: 250px;
+      &:hover {
+        background-color: transparent;
+        cursor: default !important;
+      }
+      &:first-letter {
+        text-transform: uppercase;
+      }
+    }
+    &:not(.gn-related-type) {
+      font-size: 12px;
+    }
   }
 }
