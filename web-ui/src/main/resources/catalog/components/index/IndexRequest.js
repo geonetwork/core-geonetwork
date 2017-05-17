@@ -618,10 +618,10 @@
     }
 
     // Sort facets depending on application profile order if any
-    if(this.fieldsOrder_) {
-      fields.sort(function(a,b) {
+    if (this.fieldsOrder_) {
+      fields.sort(function(a, b) {
         return this.fieldsOrder_.indexOf(a.name) -
-          this.fieldsOrder_.indexOf(b.name);
+            this.fieldsOrder_.indexOf(b.name);
       }.bind(this));
     }
     return fields;
@@ -932,7 +932,7 @@
     // TODO move this in createFacetData_ ? query param
     angular.forEach(qParams.params, function(field, fieldName) {
       var valuesQ = [];
-      if(field.type == 'date') {
+      if (field.type == 'date') {
         return;
       }
       for (var p in field.values) {

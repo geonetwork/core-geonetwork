@@ -263,7 +263,7 @@
       restrict: 'A',
       replace: true,
       templateUrl: '../../catalog/components/search/facets/' +
-      'partials/facet-graph.html',
+          'partials/facet-graph.html',
       scope: {
         field: '=',
         callback: '='
@@ -272,7 +272,7 @@
         if (!scope.field) { return; }
 
         var tm = new TimeLine(element.find('.ui-timeline')[0],
-          scope.field, scope.callback);
+            scope.field, scope.callback);
 
         // dates must be sorted ASC
         scope.$watch('field.datesCount', function(counts) {

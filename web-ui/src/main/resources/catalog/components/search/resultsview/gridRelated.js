@@ -51,9 +51,9 @@
             var uuids = mds.map(function(md) {
               return md.getUuid();
             });
-            if(uuids.length) {
+            if (uuids.length) {
               gnGridRelatedList.promise =
-                gnRelatedService.getMdsRelated(uuids, types).then(
+                  gnRelatedService.getMdsRelated(uuids, types).then(
                   function(response) {
                     gnGridRelatedList.list = response.data;
                   });
@@ -74,12 +74,12 @@
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
-            '../../catalog/components/metadataactions/partials/related.html';
+              '../../catalog/components/metadataactions/partials/related.html';
         },
         link: function(scope, element, attrs) {
           gnGridRelatedList.promise.then(function() {
             var related = gnGridRelatedList.list[scope.uuid];
-            if(related) {
+            if (related) {
               scope.types = gnGridRelatedList.types;
               scope.relations = related;
             }

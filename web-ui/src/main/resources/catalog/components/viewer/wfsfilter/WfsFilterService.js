@@ -100,13 +100,13 @@
             field_name: name,
             filter: [{
               filter_type: 'PropertyIsGreaterThanOrEqualTo',
-              params: [ transformDate(value.from) ]
+              params: [transformDate(value.from)]
             }]
           }, {
             field_name: name,
             filter: [{
               filter_type: 'PropertyIsLessThanOrEqualTo',
-              params: [ transformDate(value.to) ]
+              params: [transformDate(value.to)]
             }]
           });
         }
@@ -117,13 +117,13 @@
             field_name: name,
             filter: [{
               filter_type: 'PropertyIsGreaterThanOrEqualTo',
-              params: [ value.from ]
+              params: [value.from]
             }]
           }, {
             field_name: name,
             filter: [{
               filter_type: 'PropertyIsLessThanOrEqualTo',
-              params: [ value.to ]
+              params: [value.to]
             }]
           });
         }
@@ -165,17 +165,17 @@
           var fieldName = fieldInfo ? fieldInfo[1] : attrName;
 
           // multiple values
-          if(attrValue.values && Object.keys(attrValue.values).length) {
+          if (attrValue.values && Object.keys(attrValue.values).length) {
             var multiValued = fieldInfo[3] != undefined;
 
             Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-              fieldName, attrValue.values, attrValue.type, multiValued));
+                fieldName, attrValue.values, attrValue.type, multiValued));
           }
 
           // single value
           else if (attrValue.value) {
             Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
-              fieldName, attrValue.value, attrValue.type, false));
+                fieldName, attrValue.value, attrValue.type, false));
           }
         });
 
@@ -227,7 +227,7 @@
           var keep;
 
           var newFieldIdx = getNewFieldIdx(field);
-          if(newFieldIdx >= 0) {
+          if (newFieldIdx >= 0) {
             var newField = newFields[newFieldIdx];
             keep = true;
             mergedF.push(field.label);
@@ -262,9 +262,9 @@
           }
         });
 
-        if(!appProfile.extendOnly) {
+        if (!appProfile.extendOnly) {
           fields.sort(function(a, b) {
-            return getNewFieldIdx(a) - getNewFieldIdx(b)
+            return getNewFieldIdx(a) - getNewFieldIdx(b);
           });
         }
 
