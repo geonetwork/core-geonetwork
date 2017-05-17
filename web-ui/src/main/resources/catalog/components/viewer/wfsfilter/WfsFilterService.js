@@ -48,6 +48,11 @@
             gnUrlUtils.toKeyValue(params));
       };
 
+      // transform date from dd-MM-YYYY to ISO (YYYY-MM-dd)
+      function transformDate(d) {
+        return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+      }
+
       this.registerEsObject = function(url, ftName) {
         return gnIndexRequestManager.register('WfsFilter', url + '#' + ftName);
       };
@@ -215,7 +220,7 @@
 
         var getNewFieldIdx = function(field) {
           for (var i = 0; i < newFields.length; i++) {
-            if (field.label == newFields[i].name) {
+            if (field.name == newFields[i].name) {
               return i;
             }
           }
@@ -323,70 +328,31 @@
         var state = esObj.getState();
         var where;
 
-        if (!state.any) {
-          where = [];
-          angular.forEach(state.qParams, function(fObj, fName) {
-            var config = esObj.getIdxNameObj_(fName);
-            console.log(config);
-            var clause = [];
-            var values = fObj.values;
-            if (config.isDate) {
-              where.concat([
-                '(' + fName + '>' + values.from + ')',
-                '(' + fName + '<' + values.to + ')'
+        where = [];
+        angular.forEach(state.qParams, function(fObj, fName) {
+          var config = esObj.getIdxNameObj_(fName);
+          var clause = [];
+          var values = fObj.values;
+          if (config.isDateTime) {
+            if (values.from != '' && values.to != '') {
+              where = where.concat([
+                '(' + fName + '>' + transformDate(values.from) + ')',
+                '(' + fName + '<' + transformDate(values.to) + ')'
               ]);
-              return;
             }
-            angular.forEach(values, function(v, k) {
-              clause.push(
-                  (config.isTokenized) ?
-                  '(' + fName + " LIKE '%" + k + "%')" :
-                  '(' + fName + '=' + k + ')'
-              );
-            });
-            if (clause.length == 0) return;
-            where.push('(' + clause.join(' OR ') + ')');
+            return;
+          }
+          angular.forEach(values, function(v, k) {
+            clause.push(
+                (config.isTokenized) ?
+                '(' + fName + " LIKE '%" + k + "%')" :
+                '(' + fName + '=' + k + ')'
+            );
           });
-          return where.join(' AND ');
-        } else {
-          esObj.search_es({
-            size: scope.count || 10000,
-            aggs: {}
-          }).then(function(data) {
-            var where = data.hits.hits.map(function(res) {
-              return res._id;
-            });
-            return where.join(' OR ');
-          });
-        }
-      };
-
-      this.toUrlParams = function(esObj) {
-
-        var state = esObj.getState();
-
-        if (!state.any) {
-          var where = [];
-          angular.forEach(state.qParams, function(fObj, fName) {
-            var clause = [];
-            angular.forEach(fObj.values, function(v, k) {
-              clause.push(fName + '=' + k);
-            });
-            where.push('(' + clause.join(' OR ') + ')');
-          });
-          return (where.join(' AND '));
-        }
-        else {
-          esObj.search_es({
-            size: scope.count || 10000,
-            aggs: {}
-          }).then(function(data) {
-            var where = data.hits.hits.map(function(res) {
-              return res._id;
-            });
-            return (where.join(' OR '));
-          });
-        }
+          if (clause.length == 0) return;
+          where.push('(' + clause.join(' OR ') + ')');
+        });
+        return where.join(' AND ');
       };
 
       /**
@@ -404,6 +370,16 @@
         if (state) {
           // add query params (qParams)
           angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObject.getIdxNameObj_(fName);
+
+            // special case: date time, use 'from' property
+            if (config.isDateTime) {
+              if (fObj.values.from != '') {
+                result[fName] = transformDate(fObj.values.from);
+              }
+              return;
+            }
+
             // only the last value found will be kept
             angular.forEach(fObj.values, function(value, key) {
               result[fName] = key;
@@ -421,6 +397,50 @@
 
         return result;
       };
+
+      /**
+       * takes an ElasticSearch request object as input and ouputs an object
+       * with human readable properties.
+       * note: full text search & bbox extent are ignored
+       *
+       * @param {Object} elasticSearchObject
+       */
+      this.toReadableObject = function(esObject) {
+        var state = esObject.getState();
+        var result = {};
+
+        if (state) {
+          // add query params (qParams)
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObject.getIdxNameObj_(fName);
+            var paramName = config.label || config.name;
+
+            // special case: date time, use 'from' property
+            if (config.isDateTime) {
+              if (fObj.values.from != '' && fObj.values.to) {
+                result[fName] = {
+                  name: paramName,
+                  value: fObj.values.from + ', ' + fObj.values.to
+                };
+              }
+              return;
+            }
+
+            // values separated by comma
+            result[fName] = {
+              name: paramName,
+              value: ''
+            };
+            angular.forEach(fObj.values, function(value, key) {
+              result[fName].value += ', ' + key;
+            });
+            result[fName].value = result[fName].value.substring(2);
+          });
+        }
+
+        return result;
+      };
+
 
     }]);
 })();
