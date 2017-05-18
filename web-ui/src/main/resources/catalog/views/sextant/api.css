@@ -15713,6 +15713,40 @@
 .g .gn-bbox-input .col-sm-offset-3 {
   margin-left: 95px;
 }
+.gn .gn-related-list,
+.g .gn-related-list {
+  padding: 0;
+  list-style: none;
+}
+.gn .gn-related-list > li,
+.g .gn-related-list > li {
+  padding-left: 25px;
+}
+.gn .gn-related-list > li:hover,
+.g .gn-related-list > li:hover {
+  text-decoration: none;
+  color: #262626;
+  background-color: #f5f5f5;
+}
+.gn .gn-related-list > li.gn-related-type,
+.g .gn-related-list > li.gn-related-type {
+  padding-left: 15px;
+  padding-bottom: 1px;
+  min-width: 250px;
+}
+.gn .gn-related-list > li.gn-related-type:hover,
+.g .gn-related-list > li.gn-related-type:hover {
+  background-color: transparent;
+  cursor: default !important;
+}
+.gn .gn-related-list > li.gn-related-type:first-letter,
+.g .gn-related-list > li.gn-related-type:first-letter {
+  text-transform: uppercase;
+}
+.gn .gn-related-list > li:not(.gn-related-type),
+.g .gn-related-list > li:not(.gn-related-type) {
+  font-size: 12px;
+}
 .gn [sxt-main-viewer] .sxt-clearfix:before,
 .g [sxt-main-viewer] .sxt-clearfix:before,
 .gn [sxt-main-viewer] .sxt-clearfix:after,
@@ -15795,11 +15829,14 @@
   padding-right: .2em;
 }
 .gn [sxt-main-viewer] .main-tools > .sxt-panel-button button,
-.g [sxt-main-viewer] .main-tools > .sxt-panel-button button {
+.g [sxt-main-viewer] .main-tools > .sxt-panel-button button,
+.gn [sxt-main-viewer] .main-tools > .sxt-panel-button button.active,
+.g [sxt-main-viewer] .main-tools > .sxt-panel-button button.active {
   margin: 0px;
   margin-right: .3em;
   min-width: 2.2em;
   width: auto;
+  position: relative;
 }
 .gn [sxt-main-viewer] .sxt-panel-toggle,
 .g [sxt-main-viewer] .sxt-panel-toggle,
@@ -17796,6 +17833,14 @@
   border-radius: 2px;
   background-color: #E6F7FF;
 }
+.gn .gn-metadata-view .overview dd td,
+.g .gn-metadata-view .overview dd td {
+  padding-left: 0;
+}
+.gn .gn-metadata-view .overview dd tr:first-child td,
+.g .gn-metadata-view .overview dd tr:first-child td {
+  border: none;
+}
 .gn .gn-metadata-view .overview dt,
 .g .gn-metadata-view .overview dt,
 .gn .gn-metadata-view .overview dd,
@@ -18912,10 +18957,6 @@
 .g [data-ng-search-form] .sxt-categorytree ul li label {
   margin-bottom: 2px;
   font-weight: normal;
-}
-.gn [data-ng-search-form] .sxt-categorytree > ul,
-.g [data-ng-search-form] .sxt-categorytree > ul {
-  padding-left: 0;
 }
 .gn [data-ng-search-form] .sxt-categorytree .sxt-categorytree-leaf,
 .g [data-ng-search-form] .sxt-categorytree .sxt-categorytree-leaf {
