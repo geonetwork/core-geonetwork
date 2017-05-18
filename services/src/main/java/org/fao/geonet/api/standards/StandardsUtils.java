@@ -25,6 +25,7 @@ package org.fao.geonet.api.standards;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.SchemaManager;
@@ -37,6 +38,26 @@ import java.util.Set;
  * Created by francois on 23/06/16.
  */
 public class StandardsUtils {
+    public static Element getCodelists(String codelist, SchemaManager schemaManager,
+                                       String schema,
+                                       String parent, String xpath,
+                                       String isoType, ServiceContext context)
+        throws Exception {
+        String elementName = StandardsUtils.findNamespace(codelist, schemaManager, schema);
+        Element e = StandardsUtils.getHelp(schemaManager, "codelists.xml",
+            schema, elementName, parent, xpath, isoType, context);
+        if (e == null) {
+            if (schema.startsWith("iso19139.")) {
+                e = StandardsUtils.getHelp(schemaManager, "codelists.xml",
+                    "iso19139", elementName, parent, xpath, isoType, context);
+            }
+            if (e == null) {
+                throw new ResourceNotFoundException(String.format(
+                    "'%s' not found.", codelist));
+            }
+        }
+        return e;
+    }
     public static Element getHelp(SchemaManager scm, String fileName, String schema,
                                   String name, String parent, String xpath, String isoType, ServiceContext context)
         throws Exception {

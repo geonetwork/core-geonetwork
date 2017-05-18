@@ -202,13 +202,9 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        String elementName = StandardsUtils.findNamespace(codelist, schemaManager, schema);
-        Element e = StandardsUtils.getHelp(schemaManager, "codelists.xml",
-            schema, elementName, parent, xpath, isoType, context);
-        if (e == null) {
-            throw new ResourceNotFoundException(String.format(
-                "'%s' not found.", codelist));
-        }
+        Element e = StandardsUtils.getCodelists(codelist, schemaManager,
+            schema, parent, xpath, isoType, context);
+
         List<Element> listOfEntry = e.getChildren("entry");
         for (Element entry : listOfEntry) {
             response.put(entry.getChildText("code"), entry.getChildText("label"));
@@ -243,13 +239,9 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        String elementName = StandardsUtils.findNamespace(codelist, schemaManager, schema);
-        Element e = StandardsUtils.getHelp(schemaManager, "codelists.xml",
-            schema, elementName, parent, xpath, isoType, context);
-        if (e == null) {
-            throw new ResourceNotFoundException(String.format(
-                "'%s' not found.", codelist));
-        }
+        Element e = StandardsUtils.getCodelists(codelist, schemaManager,
+            schema, parent, xpath, isoType, context);
+
         return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
     }
 
