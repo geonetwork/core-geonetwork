@@ -79,6 +79,7 @@
                 match="gmd:CI_Date/gmd:date">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="listOfValues" select="$iso19139codelists" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -97,7 +98,7 @@
         <xsl:variable name="codelist"
                       select="gn-fn-metadata:getCodeListValues($schema,
                                   'gmd:CI_DateTypeCode',
-                                  $codelists,
+                                  $listOfValues,
                                   .)"/>
         <xsl:call-template name="render-codelist-as-select">
           <xsl:with-param name="listOfValues" select="$codelist"/>
