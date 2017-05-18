@@ -70,6 +70,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -681,5 +682,11 @@ public final class XslUtil {
             ex.printStackTrace();
             return str;
         }
+    }
+    
+    private static final Random RANDOM = new Random();
+
+    public static String randomId() {
+        return "N" + RANDOM.nextInt(Integer.MAX_VALUE);
     }
 }

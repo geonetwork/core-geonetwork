@@ -178,15 +178,15 @@
     this.gnFeaturesTableManager.clear();
     layers.forEach(function(layer) {
 
-      var solrObject = layer.get('solrObject');
-      var type = solrObject ? 'solr' : 'gfi';
+      var indexObject = layer.get('indexObject');
+      var type = indexObject ? 'index' : 'gfi';
 
       this.gnFeaturesTableManager.addTable({
         name: layer.get('label') || layer.get('name'),
         type: type
       }, {
         map: this.map,
-        solrObject: solrObject,
+        indexObject: indexObject,
         layer: layer,
         coordinates: coordinates
       });

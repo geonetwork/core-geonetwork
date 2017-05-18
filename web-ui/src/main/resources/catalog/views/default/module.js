@@ -32,13 +32,14 @@
   goog.require('gn_mdactions_directive');
   goog.require('gn_related_directive');
   goog.require('gn_search');
+  goog.require('gn_gridrelated_directive');
   goog.require('gn_search_default_config');
   goog.require('gn_search_default_directive');
 
   var module = angular.module('gn_search_default',
       ['gn_search', 'gn_search_default_config',
        'gn_search_default_directive', 'gn_related_directive',
-       'cookie_warning', 'gn_mdactions_directive']);
+       'cookie_warning', 'gn_mdactions_directive', 'gn_gridrelated_directive']);
 
 
   module.controller('gnsSearchPopularController', [
@@ -180,7 +181,7 @@
         if (nextRecordId === mdView.records.length) {
           // When last record of page reached, go to next page...
           // Not the most elegant way to do it, but it will
-          // be easier using Solr search components
+          // be easier using index search components
           $scope.$broadcast('nextPage');
         } else {
           $scope.openRecord(nextRecordId);

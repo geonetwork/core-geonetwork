@@ -25,22 +25,32 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cm="http://camel.apache.org/schema/spring"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://camel.apache.org/schema/spring
         http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+  <context:property-placeholder location="WEB-INF/config.properties"
+                                file-encoding="UTF-8"
+                                ignore-unresolvable="true" />
+
   <bean id="wfsfeaturesHarvesterRouteBuilder"
         class="org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder">
     <property name="startsFromXMLConfigurationFile" value="false"/>
   </bean>
+  <bean id="WFSFeatureIndexer"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer">
+    <property name="featureCommitInterval" value="100"/>
+  </bean>
 
-  <bean id="solrWFSFeatureIndexer"
-        class="org.fao.geonet.harvester.wfsfeatures.worker.SolrWFSFeatureIndexer">
-    <property name="solrCollectionUrl" value="${solr.url}/${solr.collection}"/>
-    <property name="featureCommitInterval" value="500"/>
-    <property name="solrCommitWithinMs" value="10000"/>
+  <bean id="esClient"
+        class="org.fao.geonet.harvester.wfsfeatures.worker.EsClient">
+    <property name="serverUrl" value="${es.url}"/>
+    <property name="collection" value="${es.index.features}"/>
   </bean>
 
 

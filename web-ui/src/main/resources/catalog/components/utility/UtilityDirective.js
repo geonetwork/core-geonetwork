@@ -117,8 +117,8 @@
           var addGeonames = !attrs['disableGeonames'];
           scope.regionTypes = [];
           /**
-          * Load list on init to fill the dropdown
-          */
+           * Load list on init to fill the dropdown
+           */
           gnRegionService.loadList().then(function(data) {
             scope.regionTypes = angular.copy(data);
             if (addGeonames) {
@@ -402,13 +402,13 @@
              var params = angular.fromJson(element.attr('params') || '{}');
 
              var url = gnUrlUtils.append('q?_content_type=json',
-             gnUrlUtils.toKeyValue(angular.extend({
+              gnUrlUtils.toKeyValue(angular.extend({
                _isTemplate: 'n',
                any: '*QUERY*',
                sortBy: 'title',
                fast: 'index'
              }, params)
-             )
+              )
              );
              var parseResponse = function(data) {
                var records = gnSearchManagerService.format(data);
@@ -505,15 +505,15 @@
              element.attr('placeholder', '...');
 
              var url = gnUrlUtils.append('q@json',
-             gnUrlUtils.toKeyValue({
-               _isTemplate: 's',
-               any: '*QUERY*',
-               _root: 'gmd:CI_ResponsibleParty',
-               sortBy: 'title',
-               sortOrder: 'reverse',
-               resultType: 'subtemplates',
-               fast: 'index'
-             })
+              gnUrlUtils.toKeyValue({
+                _isTemplate: 's',
+                any: '*QUERY*',
+                _root: 'gmd:CI_ResponsibleParty',
+                sortBy: 'title',
+                sortOrder: 'reverse',
+                resultType: 'subtemplates',
+                fast: 'index'
+              })
              );
              var parseResponse = function(data) {
                var records = gnSearchManagerService.format(data);
@@ -782,47 +782,123 @@
         restrict: 'A',
         scope: {
           date: '=gnBootstrapDatepicker',
-          dates: '=dateAvailable'
+          dates: '=dateAvailable',
+          onChangeFn: '&?'
         },
-        link: function(scope, element, attrs, ngModelCtrl) {
+        link: function(scope, element, attrs) {
 
-          var available = function(date) {
-            if (scope.dates[date.getFullYear()] &&
-                scope.dates[date.getFullYear()][date.getMonth()] &&
-                $.inArray(date.getDate(),
-                    scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
-              return true;
-            } else {
-              return false;
-            }
-          };
+          var available, limits;
+          var rendered = false;
+          var isRange = ($(element).find('input').length == 2);
+          var highlight = attrs['dateOnlyHighlight'] === 'true';
 
-          var limits;
-          if (scope.dates) {
-            limits = getMaxInProp(scope.dates);
-
+          if (isRange && ! scope.date) {
+            scope.date = {};
           }
 
-          $(element).datepicker(angular.isDefined(scope.dates) ? {
-            beforeShowDay: function(dt, a, b) {
-              return available(dt);
-            },
-            startDate: limits.min,
-            endDate: limits.max
-          } : {}).on('changeDate', function(ev) {
-            // view -> model
-            scope.$apply(function() {
-              scope.date = $(element).find('input')[0].value;
-            });
+          scope.$watch('dates', function(dates, old) {
+
           });
+          var init = function() {
+            if (scope.dates) {
+              // Time epoch
+              if (angular.isArray(scope.dates) &&
+                  Number.isInteger(scope.dates[0])) {
+
+                limits = {
+                  min: new Date(Math.min.apply(null, scope.dates)),
+                  max: new Date(Math.max.apply(null, scope.dates))
+                };
+
+                scope.times = scope.dates.map(function(time) {
+                  return moment(time).format('YYYY-MM-DD');
+                });
+
+                available = function(date) {
+                  return scope.times.indexOf(
+                      moment(date).format('YYYY-MM-DD')) >= 0;
+                };
+              }
+
+              // ncwms dates object (year/month/day)
+              else if (angular.isObject(scope.dates)) {
+
+                limits = getMaxInProp(scope.dates);
+
+                available = function(date) {
+                  if (scope.dates[date.getFullYear()] &&
+                      scope.dates[date.getFullYear()][date.getMonth()] &&
+                      $.inArray(date.getDate(),
+                      scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                };
+              }
+            }
+
+            if (rendered) {
+              $(element).datepicker('destroy');
+            }
+            $(element).datepicker(angular.isDefined(scope.dates) ? {
+              beforeShowDay: function(dt, a, b) {
+                var isEnable = available(dt);
+                return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+                    isEnable;
+              },
+              startDate: limits.min,
+              endDate: limits.max,
+              container: typeof sxtSettings != 'undefined' ?
+                  '.g' : 'body',
+              autoclose: true,
+              keepEmptyValues: true,
+              clearBtn: true,
+              todayHighlight: false
+            } : {}).on('changeDate clearDate', function(ev) {
+              // view -> model
+              scope.$apply(function() {
+                if (!isRange) {
+                  scope.date = $(element).find('input')[0].value;
+                }
+                else {
+                  scope.date.from = $(element).find('input')[0].value;
+                  scope.date.to = $(element).find('input')[1].value;
+                }
+              });
+            });
+            rendered = true;
+          };
+
+          init();
 
           // model -> view
-          scope.$watch('date', function(v) {
-            if (angular.isUndefined(v)) {
-              v = '';
-            }
-            $(element).find('input')[0].value = v;
-          });
+          if (!isRange) {
+            scope.$watch('date', function(v, o) {
+
+              if (angular.isDefined(v) &&
+                  angular.isFunction(scope.onChangeFn)) {
+                scope.onChangeFn();
+              }
+              if (v != o) {
+                $(element).find('input')[0].value = v || '';
+
+              }
+            });
+          }
+          else {
+            scope.$watchCollection('date', function(v, o) {
+              if (angular.isUndefined(v)) {
+                scope.date = {};
+                return;
+              }
+              if (v != o) {
+                scope.onChangeFn();
+                $(element).find('input')[0].value = (v && v.from) || '';
+                $(element).find('input')[1].value = (v && v.to) || '';
+              }
+            });
+          }
         }
       };
     }]);

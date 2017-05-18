@@ -65,7 +65,7 @@
           scope.updateStatus = function() {
             return $http.put('../api/records/' + metadataId +
                 '/status?status=' + scope.newStatus.value +
-                '&comment=' + scope.changeMessage
+                '&comment=' + (scope.changeMessage || '')
             ).then(
                 function(data) {
                   gnMetadataManager.updateMdObj(scope.md);
