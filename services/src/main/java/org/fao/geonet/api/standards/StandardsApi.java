@@ -202,7 +202,7 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        Element e = StandardsUtils.getCodelists(codelist, schemaManager,
+        Element e = StandardsUtils.getCodelist(codelist, schemaManager,
             schema, parent, xpath, isoType, context);
 
         List<Element> listOfEntry = e.getChildren("entry");
@@ -239,7 +239,7 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        Element e = StandardsUtils.getCodelists(codelist, schemaManager,
+        Element e = StandardsUtils.getCodelist(codelist, schemaManager,
             schema, parent, xpath, isoType, context);
 
         return (Codelists.Codelist) Xml.unmarshall(e, Codelists.Codelist.class);
@@ -273,13 +273,9 @@ public class StandardsApi implements ApplicationContextAware {
         Locale language = languageUtils.parseAcceptLanguage(request.getLocales());
         context.setLanguage(language.getISO3Language());
 
-        String elementName = StandardsUtils.findNamespace(element, schemaManager, schema);
-        Element e = StandardsUtils.getHelp(schemaManager, "labels.xml",
-            schema, elementName, parent, xpath, isoType, context);
-        if (e == null) {
-            throw new ResourceNotFoundException(String.format(
-                "'%s' not found.", element));
-        }
+        Element e = StandardsUtils.getLabel(element, schemaManager,
+            schema, parent, xpath, isoType, context);
+
         return (org.fao.geonet.kernel.schema.labels.Element) Xml.unmarshall(e, org.fao.geonet.kernel.schema.labels.Element.class);
     }
 }
