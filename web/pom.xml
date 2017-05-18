@@ -275,6 +275,14 @@
     <dependency>
       <groupId>org.postgis</groupId>
       <artifactId>postgis-jdbc</artifactId>
+      <exclusions>
+        <!-- excluded because it redefines some classes provided by the JDBC postgresql driver,
+             polluting the classloader. -->
+        <exclusion>
+          <groupId>org.postgis</groupId>
+          <artifactId>postgis-stubs</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
