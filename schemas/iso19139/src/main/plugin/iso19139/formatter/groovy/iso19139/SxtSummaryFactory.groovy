@@ -193,7 +193,7 @@ class SxtSummaryFactory {
     publisherElts.forEach{it ->
       def name = it.'gmd:organisationName'.'gco:CharacterString'.text()
       if(name != null && !name.equals('')) {
-        if(!containsString(contacts, name)) {
+        if(!containsString(publishers, name)) {
           publishers.push(name)
         }
       }
