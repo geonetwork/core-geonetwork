@@ -1,30 +1,25 @@
 package org.fao.geonet.services.extractor.mapping;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.xml.annotate.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.xml.annotate.JacksonXmlRootElement;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "extract")
 public class ExtractRequestSpec {
 
+	@JsonProperty
+	@JacksonXmlElementWrapper
 	private List<LayerSpec> layers;
+	@JsonProperty
 	private UserSpec user;
 
-	public ExtractRequestSpec() {}
-
-	@JsonCreator
-	public ExtractRequestSpec(Map<String,Object> props) {
-		layers = (List<LayerSpec>) props.get("layers");
-		user  = (UserSpec) props.get("user");
-
-	}
-	
 	public List<LayerSpec> getLayers() {
 		return layers;
 	}
