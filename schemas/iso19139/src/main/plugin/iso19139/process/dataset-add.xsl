@@ -26,12 +26,14 @@
 Stylesheet used to update metadata for a service and
 attached it to the metadata for data.
 -->
-<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0"
->
+                exclude-result-prefixes="#all">
 
   <xsl:param name="uuidref"/>
   <xsl:param name="scopedName"/>
@@ -258,6 +260,22 @@ attached it to the metadata for data.
                 gmd:propertyType|
                 gmd:featureType|
                 gmd:featureAttribute"/>
+
+      <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
+
     </xsl:copy>
   </xsl:template>
+
+
+  <!-- Do a copy of every nodes and attributes -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- Always remove geonet:* elements. -->
+  <xsl:template match="geonet:*" priority="2"/>
+
 </xsl:stylesheet>

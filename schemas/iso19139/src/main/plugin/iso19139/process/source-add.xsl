@@ -67,9 +67,6 @@ Stylesheet used to update metadata adding a reference to a source record.
       <xsl:apply-templates select="
         gmd:portrayalCatalogueInfo | gmd:metadataConstraints | gmd:applicationSchemaInfo | gmd:metadataMaintenance |
         gmd:series | gmd:describes | gmd:propertyType | gmd:featureType | gmd:featureAttribute"/>
-
-      <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
-                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
     </xsl:copy>
   </xsl:template>
 
@@ -89,6 +86,9 @@ Stylesheet used to update metadata adding a reference to a source record.
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:copy-of select="gmd:statement|gmd:processStep|gmd:source"/>
+
+      <!-- Only one parent identifier allowed
+      - overwriting existing one. -->
       <gmd:source uuidref="{$sourceUuid}"/>
     </xsl:copy>
   </xsl:template>
