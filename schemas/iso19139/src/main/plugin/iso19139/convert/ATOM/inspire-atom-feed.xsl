@@ -614,46 +614,55 @@
 
         <xsl:variable name="crs" select="$metadata//gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString/text()" />
 
-        <xsl:variable name="crsEpsgCode">
-            <xsl:analyze-string select="$crs" regex="EPSG:\d+" >
-                <xsl:matching-substring>
-                    <xsl:value-of select="."/>
-                </xsl:matching-substring>
-            </xsl:analyze-string>
-        </xsl:variable>
-
-        <xsl:variable name="epsgCode" select="substring-after($crsEpsgCode, 'EPSG:')" />
-
         <xsl:choose>
-            <xsl:when test="$epsgCode">
-                <xsl:variable name="crsLabel">
-                    <xsl:choose>
-                        <xsl:when test="$epsgCode = '2154'">RGF93 / Lambert-93</xsl:when>
-                        <xsl:when test="$epsgCode = '32620'">WGS 84 / UTM zone 20N</xsl:when>
-                        <xsl:when test="$epsgCode = '2972'">RGFG95 / UTM zone 22N</xsl:when>
-                        <xsl:when test="$epsgCode = '2975'">RGR92 / UTM zone 40S</xsl:when>
-                        <xsl:when test="$epsgCode = '4467'">RGSPM06 / UTM zone 21N</xsl:when>
-                        <xsl:when test="$epsgCode = '4467'">RGM04 / UTM zone 38S</xsl:when>
-                        <xsl:otherwise><xsl:value-of select="$crs"/></xsl:otherwise>
-                    </xsl:choose>
+            <xsl:when test="$crs">
+
+               <xsl:variable name="crsEpsgCode">
+                    <xsl:analyze-string select="$crs" regex="EPSG:\d+" >
+                        <xsl:matching-substring>
+                            <xsl:value-of select="."/>
+                        </xsl:matching-substring>
+                    </xsl:analyze-string>
                 </xsl:variable>
 
-                <category term="{concat('http://www.opengis.net/def/crs/EPSG/0/', $epsgCode)}" label="{$crsLabel}" />
+                <xsl:variable name="epsgCode" select="substring-after($crsEpsgCode, 'EPSG:')" />
 
+                <xsl:choose>
+                    <xsl:when test="$epsgCode">
+                        <xsl:variable name="crsLabel">
+                            <xsl:choose>
+                                <xsl:when test="$epsgCode = '2154'">RGF93 / Lambert-93</xsl:when>
+                                <xsl:when test="$epsgCode = '32620'">WGS 84 / UTM zone 20N</xsl:when>
+                                <xsl:when test="$epsgCode = '2972'">RGFG95 / UTM zone 22N</xsl:when>
+                                <xsl:when test="$epsgCode = '2975'">RGR92 / UTM zone 40S</xsl:when>
+                                <xsl:when test="$epsgCode = '4467'">RGSPM06 / UTM zone 21N</xsl:when>
+                                <xsl:when test="$epsgCode = '4467'">RGM04 / UTM zone 38S</xsl:when>
+                                <xsl:otherwise><xsl:value-of select="$crs"/></xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable>
+
+                        <category term="{concat('http://www.opengis.net/def/crs/EPSG/0/', $epsgCode)}" label="{$crsLabel}" />
+
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="inferredCode">
+                            <xsl:choose>
+                                <xsl:when test="$crs = 'WGS 84'">4326</xsl:when>
+                                <xsl:when test="$crs = 'WGS84'">4326</xsl:when>
+                                <xsl:otherwise>unknown</xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable>
+
+                        <category term="{concat('http://www.opengis.net/def/crs/EPSG/0/', $inferredCode)}" label="{$crs}" />
+                    </xsl:otherwise>
+               </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="inferredCode">
-                    <xsl:choose>
-                        <xsl:when test="$crs = 'WGS 84'">4326</xsl:when>
-                        <xsl:when test="$crs = 'WGS84'">4326</xsl:when>
-                        <xsl:otherwise>unknown</xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
-
-                <category term="{concat('http://www.opengis.net/def/crs/EPSG/0/', $inferredCode)}" label="{$crs}" />
+                <category term="http://www.opengis.net/def/crs/EPSG/0/unknown" label="Unknown" />
             </xsl:otherwise>
+	        
         </xsl:choose>
-
+        
     </xsl:template>
 
 
