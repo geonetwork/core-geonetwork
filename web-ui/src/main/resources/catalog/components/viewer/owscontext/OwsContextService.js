@@ -307,7 +307,7 @@
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         //        }
-        $http.get(url).then(function(r) {
+        $http.get(url, {headers: {accept: 'application/xml'}}).then(function(r) {
           if (r.data === '') {
             var msg = $translate.instant('emptyMapLoadError', {
               url: url
