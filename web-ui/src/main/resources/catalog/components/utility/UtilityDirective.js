@@ -127,7 +127,7 @@
                 id: 'geonames'
               });
             }
-            scope.regionType = data[0];
+            scope.regionType = scope.regionTypes[0];
           });
 
           scope.setRegion = function(regionType) {
@@ -171,8 +171,8 @@
    * to catch event from selection.
    */
   module.directive('gnRegionPickerInput', [
-    'gnRegionService', 'gnUrlUtils',
-    function(gnRegionService, gnUrlUtils) {
+    'gnRegionService', 'gnUrlUtils', 'gnGlobalSettings',
+    function(gnRegionService, gnUrlUtils, gnGlobalSettings) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -200,6 +200,8 @@
                   name_startsWith: 'QUERY',
                   username: 'georchestra'
                 }));
+
+                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
 
                 var autocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
