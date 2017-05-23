@@ -17846,6 +17846,7 @@
 .gn .gn-metadata-view .overview dd tr:first-child td,
 .g .gn-metadata-view .overview dd tr:first-child td {
   border: none;
+  padding-top: 0px;
 }
 .gn .gn-metadata-view .overview dt,
 .g .gn-metadata-view .overview dt,
