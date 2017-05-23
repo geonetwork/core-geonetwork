@@ -41,7 +41,7 @@
           md: '='
         },
         templateUrl: '../../catalog/components/' +
-        'viewer/wms/partials/wmsDownload.html',
+            'viewer/wms/partials/wmsDownload.html',
         link: function(scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.capabilities = null;
@@ -57,15 +57,15 @@
 
               scope.projections = [];
               scope.checkWmsUrl().then(
-                function() {
+                  function() {
 				  if (scope.capabilities.layers && scope.capabilities.layers.length != 0) {
-                    scope.isWmsAvailable = true;
-                    //here check wms/wmts
-                    
-                    scope.isLayerInCapabilities = gnWmsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
+                      scope.isWmsAvailable = true;
+                      //here check wms/wmts
+
+                      scope.isLayerInCapabilities = gnWmsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
 				  }
-                }, function() {
-                }
+                  }, function() {
+                  }
 
               ).finally(function() {
                 scope.capabilitiesChecked = true;
@@ -78,9 +78,9 @@
 
           scope.checkWmsUrl = function() {
             return gnWmsService.getCapabilities(scope.url)
-              .then(function(capabilities) {
-                scope.capabilities = capabilities;
-              });
+                .then(function(capabilities) {
+                  scope.capabilities = capabilities;
+                });
           };
 
           scope.addSelectedLayerToMap = function(layerSelected) {
@@ -93,7 +93,7 @@
           };
 
           scope.hasName = function(layer) {
-            return ("Name" in layer) && layer.Name;
+            return ('Name' in layer) && layer.Name;
           };
 
           scope.addWmsLayer = function() {

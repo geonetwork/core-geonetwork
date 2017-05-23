@@ -41,29 +41,29 @@
   // WFS Client
   // Jsonix wrapper to read or write WFS response or request
   var context100 = new Jsonix.Context(
-    [XLink_1_0, OWS_1_0_0, Filter_1_0_0,
-      GML_2_1_2, SMIL_2_0, SMIL_2_0_Language,
-      WFS_1_0_0],
-    {
-      namespacePrefixes: {
-        'http://www.opengis.net/wfs': 'wfs'
+      [XLink_1_0, OWS_1_0_0, Filter_1_0_0,
+       GML_2_1_2, SMIL_2_0, SMIL_2_0_Language,
+       WFS_1_0_0],
+      {
+        namespacePrefixes: {
+          'http://www.opengis.net/wfs': 'wfs'
+        }
       }
-    }
-  );
+      );
   var context110 = new Jsonix.Context(
-    [XLink_1_0, OWS_1_0_0,
-      Filter_1_1_0,
-      GML_3_1_1,
-      SMIL_2_0, SMIL_2_0_Language,
-      WFS_1_1_0],
-    {
-      namespacePrefixes: {
-        'http://www.w3.org/1999/xlink': 'xlink',
-        'http://www.opengis.net/ows/1.1': 'ows',
-        'http://www.opengis.net/wfs': 'wfs'
+      [XLink_1_0, OWS_1_0_0,
+       Filter_1_1_0,
+       GML_3_1_1,
+       SMIL_2_0, SMIL_2_0_Language,
+       WFS_1_1_0],
+      {
+        namespacePrefixes: {
+          'http://www.w3.org/1999/xlink': 'xlink',
+          'http://www.opengis.net/ows/1.1': 'ows',
+          'http://www.opengis.net/wfs': 'wfs'
+        }
       }
-    }
-  );
+      );
   var unmarshaller100 = context100.createUnmarshaller();
   var unmarshaller110 = context110.createUnmarshaller();
 
@@ -178,7 +178,7 @@
           for (var p in Params) {
             urlParams[p] = Params[p];
           }
-          return gnUrlUtils.append(parts[0],gnUrlUtils.toKeyValue(urlParams));
+          return gnUrlUtils.append(parts[0], gnUrlUtils.toKeyValue(urlParams));
         };
         var mergeDefaultParams = function(url, defaultParams) {
           //merge URL parameters with default ones
@@ -269,12 +269,12 @@
                 $http.get(url, {
                   cache: true
                 })
-                  .success(function(data, status, headers, config) {
-                    defer.resolve(parseWFSCapabilities(data));
-                  })
-                  .error(function(data, status, headers, config) {
-                    defer.reject(status);
-                  });
+                    .success(function(data, status, headers, config) {
+                      defer.resolve(parseWFSCapabilities(data));
+                    })
+                    .error(function(data, status, headers, config) {
+                      defer.reject(status);
+                    });
               }
             }
             return defer.promise;
@@ -330,18 +330,18 @@
             var layers = capObj.layers || capObj.Layer;
 
 			//non namespaced lowercase name
-			nameNoNamespace = name.split(':')[name.split(':').length-1].toLowerCase();
+			nameNoNamespace = name.split(':')[name.split(':').length - 1].toLowerCase();
 
             for (var i = 0, len = layers.length; i < len; i++) {
               //Add Info for Requests:
-              if(capObj.Request) {
+              if (capObj.Request) {
                 layers[i].capRequest = capObj.Request;
               }
 
               //check layername
-              capName = layers[i].Name || layers[i].Identifier || "";
+              capName = layers[i].Name || layers[i].Identifier || '';
               //non namespaced lowercase capabilities name
-              capNameNoNamespace = capName.split(':')[capName.split(':').length-1].toLowerCase();
+              capNameNoNamespace = capName.split(':')[capName.split(':').length - 1].toLowerCase();
 
               //either names match or non namespaced names
               if (name == capName || nameNoNamespace == capNameNoNamespace) {

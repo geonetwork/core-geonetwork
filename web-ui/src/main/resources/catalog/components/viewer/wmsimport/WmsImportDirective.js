@@ -130,19 +130,19 @@
           scope.$on(event, function(e, url) {
             var addLayersPanel = $('[id=addLayers]');
             if (addLayersPanel) {
-                $timeout(function() {
+              $timeout(function() {
                 addLayersPanel.removeClass('force-hide');
 
-                var layerTypeTab = $('[heading='+type+']');
+                var layerTypeTab = $('[heading=' + type + ']');
                 if (layerTypeTab && !layerTypeTab.hasClass('active')) {
-                  var layerTypeAction = layerTypeTab.find("a");
+                  var layerTypeAction = layerTypeTab.find('a');
 
                   if (layerTypeAction) {
                     layerTypeAction.click();
                   }
-                  }
-                });
-              }
+                }
+              });
+            }
             scope.setUrl(url);
           });
 

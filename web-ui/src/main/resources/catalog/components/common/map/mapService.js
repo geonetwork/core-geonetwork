@@ -744,14 +744,14 @@
                 }
               } else if (layer.defaultSRS) {
                 var mapProjection = map.getView().
-                getProjection().getCode();
+                    getProjection().getCode();
                 var srs = layer.defaultSRS;
                 if ((srs.indexOf('urn:ogc:def:crs:EPSG::') === 0) ||
                     (srs.indexOf('urn:x-ogc:def:crs:EPSG::') === 0)) {
-                  srs = 'EPSG:' + srs.split('::')[srs.split('::').length-1];
+                  srs = 'EPSG:' + srs.split('::')[srs.split('::').length - 1];
                 } else if ((srs.indexOf('urn:ogc:def:crs:EPSG:') === 0) ||
                            (srs.indexOf('urn:x-ogc:def:crs:EPSG:') === 0)) {
-                  srs = 'EPSG:' + srs.split(':')[srs.split(':').length-1];
+                  srs = 'EPSG:' + srs.split(':')[srs.split(':').length - 1];
                 }
                 if (srs === mapProjection) {
                   isLayerAvailableInMapProjection = true;
@@ -763,10 +763,10 @@
                   var srs = layer.otherSRS[i];
                   if ((srs.indexOf('urn:ogc:def:crs:EPSG::') === 0) ||
                       (srs.indexOf('urn:x-ogc:def:crs:EPSG::') === 0)) {
-                    srs = 'EPSG:' + srs.split('::')[srs.split('::').length-1];
+                    srs = 'EPSG:' + srs.split('::')[srs.split('::').length - 1];
                   } else if ((srs.indexOf('urn:ogc:def:crs:EPSG:') === 0) ||
                              (srs.indexOf('urn:x-ogc:def:crs:EPSG:') === 0)) {
-                    srs = 'EPSG:' + srs.split(':')[srs.split(':').length-1];
+                    srs = 'EPSG:' + srs.split(':')[srs.split(':').length - 1];
                   }
                   if (srs === mapProjection) {
                     isLayerAvailableInMapProjection = true;

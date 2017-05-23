@@ -41,7 +41,7 @@
           md: '='
         },
         templateUrl: '../../catalog/components/' +
-        'viewer/wmts/partials/wmtsDownload.html',
+            'viewer/wmts/partials/wmtsDownload.html',
         link: function(scope, element, attrs, ctrls) {
           scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
           scope.capabilities = null;
@@ -57,13 +57,13 @@
 
               scope.projections = [];
               scope.checkWmtsUrl().then(
-                function() {
+                  function() {
 				  if (scope.capabilities.Layer && scope.capabilities.Layer.length != 0) {
-                    scope.isWmtsAvailable = true;
-                    scope.isLayerInCapabilities = gnWmtsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
+                      scope.isWmtsAvailable = true;
+                      scope.isLayerInCapabilities = gnWmtsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
 				  }
-                }, function() {
-                }
+                  }, function() {
+                  }
 
               ).finally(function() {
                 scope.capabilitiesChecked = true;
@@ -76,22 +76,22 @@
 
           scope.checkWmtsUrl = function() {
             return gnWmtsService.getCapabilities(scope.url)
-              .then(function(capabilities) {
-                scope.capabilities = capabilities;
-              });
+                .then(function(capabilities) {
+                  scope.capabilities = capabilities;
+                });
           };
 
           scope.addSelectedLayerToMap = function(layerSelected) {
             if (!layerSelected) {
               return;
             }
-            gnWmtsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap,scope.capabilities);
+            gnWmtsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap, scope.capabilities);
             gnSearchLocation.setMap();
 
           };
 
           scope.hasName = function(layer) {
-            return ("Name" in layer) && layer.Name;
+            return ('Name' in layer) && layer.Name;
           };
 
           scope.addWmtsLayer = function() {

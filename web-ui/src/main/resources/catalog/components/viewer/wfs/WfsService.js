@@ -101,34 +101,34 @@
               cache: true
             }).then(function(response) {
 			  try {
-              //First cleanup not supported INSPIRE extensions:
-              var xml = $.parseXML(response.data);
-              if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
-                var cleanup = function(i, el) {
-                  if (el.tagName.endsWith('ExtendedCapabilities')) {
-                    el.parentNode.removeChild(el);
-                  } else {
-                    $.each(el.children, cleanup);
-                  }
-                };
+                //First cleanup not supported INSPIRE extensions:
+                var xml = $.parseXML(response.data);
+                if (xml.getElementsByTagName('ExtendedCapabilities').length > 0) {
+                  var cleanup = function(i, el) {
+                    if (el.tagName.endsWith('ExtendedCapabilities')) {
+                      el.parentNode.removeChild(el);
+                    } else {
+                      $.each(el.children, cleanup);
+                    }
+                  };
 
-                $.each(xml.childNodes[0].children, cleanup);
-              }
+                  $.each(xml.childNodes[0].children, cleanup);
+                }
 
-              //Now process the capabilities
-              var xfsCap;
-              if (version === '1.1.0') {
-                xfsCap = unmarshaller110.unmarshalDocument(xml).value;
-              } else if (version === '1.0.0') {
-                xfsCap = unmarshaller100.unmarshalDocument(xml).value;
-              }
-              if (xfsCap.exception != undefined) {
-                defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                  owsExceptionReport: xfsCap});
-              }
-              else {
-                defer.resolve(xfsCap);
-              }
+                //Now process the capabilities
+                var xfsCap;
+                if (version === '1.1.0') {
+                  xfsCap = unmarshaller110.unmarshalDocument(xml).value;
+                } else if (version === '1.0.0') {
+                  xfsCap = unmarshaller100.unmarshalDocument(xml).value;
+                }
+                if (xfsCap.exception != undefined) {
+                  defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                    owsExceptionReport: xfsCap});
+                }
+                else {
+                  defer.resolve(xfsCap);
+                }
 			  } catch (e) {
 				  //alert('WFS version not supported.');
 				  defer.reject({msg: 'wfsGetCapabilitiesFailed', owsExceptionReport: e.message});

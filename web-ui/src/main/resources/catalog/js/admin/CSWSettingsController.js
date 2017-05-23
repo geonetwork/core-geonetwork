@@ -143,12 +143,12 @@
         $http({
           method: 'POST',
           url: 'admin.config.csw.customelementset.save',
-          data:  '_content_type=json&' + $(formId).serialize(),
+          data: '_content_type=json&' + $(formId).serialize(),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
-          .success(function(data) {
-            loadCSWElementSetName();
-          });
+            .success(function(data) {
+              loadCSWElementSetName();
+            });
       };
 
       /**
@@ -170,7 +170,7 @@
         $http({
           method: 'POST',
           url: service,
-          data:   gnUtilityService.serialize(formId),
+          data: gnUtilityService.serialize(formId),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
             .success(function(data) {
