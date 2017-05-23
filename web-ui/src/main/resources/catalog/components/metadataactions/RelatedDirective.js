@@ -25,9 +25,11 @@
 
   goog.provide('gn_related_directive');
   goog.require('gn_relatedresources_service');
-
+  goog.require('gn_wms');
+  goog.require('gn_wmts');
+  
   var module = angular.module('gn_related_directive', [
-    'gn_relatedresources_service'
+    'gn_relatedresources_service', 'gn_wms', 'gn_wmts'
   ]);
 
   /**
@@ -85,8 +87,9 @@
           [
         'gnRelatedService',
         'gnGlobalSettings',
+        'gnSearchSettings',
         'gnRelatedResources',
-        function(gnRelatedService, gnGlobalSettings, gnRelatedResources) {
+        function(gnRelatedService, gnGlobalSettings, gnSearchSettings, gnRelatedResources) {
           return {
             restrict: 'A',
             templateUrl: function(elem, attrs) {
@@ -128,12 +131,17 @@
               scope.hasAction = function(mainType) {
                 var fn = gnRelatedResources.map[mainType].action;
                 // If function name ends with ToMap do not display the action
-                if (fn.name.match(/.*ToMap$/) &&
+                if (fn&&fn.name&&fn.name.match(/.*ToMap$/) &&
                    gnGlobalSettings.isMapViewerEnabled === false) {
                   return false;
                 }
                 return angular.isFunction(fn);
               };
+
+              scope.isLayerProtocol = function(mainType) {
+                return gnSearchSettings.mapProtocols.layers.indexOf(mainType) > -1;
+              };
+
               scope.config = gnRelatedResources;
 
               scope.$watchCollection('md', function(n, o) {
