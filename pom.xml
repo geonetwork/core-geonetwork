@@ -1217,6 +1217,12 @@
   </distributionManagement>
 
   <properties>
+    <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
+    <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
+
+    <app.properties>WEB-INF/config.properties</app.properties>
+    <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
+
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
      -->
