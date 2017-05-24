@@ -111,11 +111,13 @@
     '$q',
     'gnUrlUtils',
     'gnGlobalSettings',
+    'gnOwsContextService',
     function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-             $translate, $q, gnUrlUtils, gnGlobalSettings) {
+             $translate, $q, gnUrlUtils, gnGlobalSettings,
+             gnOwsContextService) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -283,6 +285,21 @@
             url = url.replace('${wmsurl}', link.url);
             url = url.replace('${layername}', link.name);
             window.open(url, '_blank');
+            return;
+          }
+
+          // if this is a context: handle it differently
+          if (link.protocol.indexOf('OGC:OWS-C') > -1) {
+            gnOwsContextService.loadContextFromUrl(link.url,
+              $scope.searchObj.viewerMap);
+
+            // clear md scope
+            if(gnSearchLocation.isMdView()) {
+              angular.element($('[gn-metadata-display]')).scope().dismiss();
+            }
+
+            // switch to map
+            gnSearchLocation.setMap();
             return;
           }
 
