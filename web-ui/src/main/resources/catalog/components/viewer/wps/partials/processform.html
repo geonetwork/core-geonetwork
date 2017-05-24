@@ -81,6 +81,9 @@
                     data-required="false">
                 </gn-bbox-input>
               </div>
+              <div ng-if="::input.complexData">
+                <span>Type: {{input.geometryType}}</span>
+              </div>
               <div ng-if="input.invalid">
                 <p class="text-danger">{{input.invalid}}</p>
               </div>
