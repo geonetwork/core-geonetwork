@@ -1,0 +1,24 @@
+<div class="btn-group">
+
+  <button class="btn btn-default draw-button"
+    ng-class="{ active: currentMode === 1 }"
+    ng-click="startDraw()">
+    <span class="fa fa-pencil"></span>
+    <span ng-translate>drawGeometry</span>
+  </button>
+
+  <button class="btn btn-default modify-button"
+    ng-if="allowModify !== undefined"
+    ng-class="{ active: currentMode === 2 }"
+    ng-click="toggleModify()">
+    <span class="fa fa-pencil"></span>
+    <span ng-translate>modifyGeometry</span>
+  </button>
+
+  <button class="btn btn-default btn-icon reset-button"
+    ng-if="allowReset !== undefined"
+    ng-click="reset()">
+    <span class="fa fa-trash-o"></span>
+  </button>
+
+</div>

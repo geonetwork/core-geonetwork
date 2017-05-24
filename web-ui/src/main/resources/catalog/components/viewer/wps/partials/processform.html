@@ -82,7 +82,9 @@
                 </gn-bbox-input>
               </div>
               <div ng-if="::input.complexData">
-                <span>Type: {{input.geometryType}}</span>
+                <gn-geometry-tool allow-reset allow-modify output="input.value"
+                  output-format="gml" geometry-type="input.geometryType"
+                  map="map"/>
               </div>
               <div ng-if="input.invalid">
                 <p class="text-danger">{{input.invalid}}</p>

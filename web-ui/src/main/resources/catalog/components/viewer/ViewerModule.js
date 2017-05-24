@@ -91,6 +91,7 @@
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
+  goog.require('gn_geometry');
   goog.require('gn_graticule');
   goog.require('gn_index');
   goog.require('gn_layermanager');
@@ -141,7 +142,8 @@
     'gn_wfsfilter',
     'gn_index',
     'gn_wps',
-    'gn_featurestable'
+    'gn_featurestable',
+    'gn_geometry'
   ]);
 
   module.controller('gnViewerController', [
