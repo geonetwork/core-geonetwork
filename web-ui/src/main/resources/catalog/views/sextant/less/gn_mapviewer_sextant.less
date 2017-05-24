@@ -68,12 +68,19 @@
         position: relative;
       }
     }
+
+    // renders processing list nicely
+    .popover-dropdown {
+      width: auto;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
   }
 
   .sxt-panel-toggle,
   .main-tools button,
   .control-tools button {
-    background: @sxt-base-color;
+    background: @sxt-button-color;
     color: white;
     border: none;
     border-radius: 2px;
@@ -82,7 +89,7 @@
     box-shadow: @sxt-shadow;
     height: 2em;
     &.active {
-      background: @sxt-base-color-light;
+      background: @sxt-button-color-light;
       border-radius: 2px;
       width: @sxt-btn-size;
       margin-left: 0;
@@ -514,7 +521,7 @@
       font-weight: bold;
       &.active {
         box-shadow: inset @sxt-shadow;
-        background: @sxt-base-color;
+        background: @sxt-button-color;
         color: white;
       }
     }
@@ -641,9 +648,6 @@
   }
 
   [data-gnv-layer-indicator] {
-    .badge {
-      background-color: #4BA2D9;
-    }
     margin-left: 1em;
   }
 
@@ -786,7 +790,7 @@
     }
     input[type='text'] {
       border: none;
-      border-bottom: 1px solid #4BA2D9;
+      border-bottom: 1px solid @sxt-base-color;
       border-radius: 0;
       box-shadow: none;
     }
@@ -875,7 +879,7 @@
     }
     &:hover {
       button {
-        background: @sxt-base-color-light;
+        background: @sxt-button-color-light;
       }
     }
     input:hover {
@@ -1006,7 +1010,7 @@
 
   .layerfilter {
     border: none;
-    border-bottom: 1px solid #4BA2D9;
+    border-bottom: 1px solid @sxt-base-color;
     border-radius: 0;
     box-shadow: none;
     width: 90%;

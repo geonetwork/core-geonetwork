@@ -51,7 +51,9 @@
       <!--Hidden btn to bind activeTools.processes in thg gi-btn-grp-->
       <button ng-if="::processes && processes.length > 1" gi-btn
               class="hidden" ng-model="activeTools.processes"></button>
-      <div class="btn-group" role="group" ng-if="::processes && processes.length > 1">
+      <div class="btn-group" role="group" sxt-popover-dropdown placement="bottom"
+        className="sxt-popover-grid" container="{{container}}"
+        ng-if="::processes && processes.length > 1">
         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"
           ng-class="{active: activeTools.processes}">
           <span class="fa fa-cogs"></span>
