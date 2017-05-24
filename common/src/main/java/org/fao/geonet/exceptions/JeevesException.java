@@ -74,7 +74,7 @@ public abstract class JeevesException extends RuntimeException {
         }
 
         Element error = new Element(Constants.ERROR)
-            .addContent(new Element("message").setText(msg))
+            .addContent(new Element("message").setText(msg).replaceAll("\\<.*?\\>", ""))
             .addContent(new Element("class").setText(cls))
             .addContent(getStackTrace(t, 10));
 
