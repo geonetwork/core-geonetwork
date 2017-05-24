@@ -101,7 +101,9 @@
               types: '@',
               title: '@',
               list: '@',
-              user: '='
+              filter: '@',
+              user: '=',
+              hasResults: '=?'
             },
             link: function(scope, element, attrs, controller) {
               var promise;
@@ -113,10 +115,26 @@
                   (promise = gnRelatedService.get(
                      scope.uuid, scope.types)
                   ).then(function(data) {
-                       scope.relations = data;
-                       angular.forEach(data, function(value) {
+                       scope.relations = {};
+                       angular.forEach(data, function(value, idx) {
                          if (value) {
                            scope.relationFound = true;
+                         }
+                         if (!scope.relations[idx]) {
+                           scope.relations[idx] = [];
+                         }
+                         if (scope.filter && angular.isArray(value)) {
+                           var tokens = scope.filter.split(':'),
+                               field = tokens[0],
+                               filter = tokens[1];
+                           scope.relations[idx] = [];
+                           for (var i = 0; i < value.length; i++) {
+                             if (value[i][field] === filter) {
+                                scope.relations[idx].push(value[i]);
+                             }
+                           }
+                         } else {
+                           scope.relations[idx] = value;
                          }
                        });
                      });
