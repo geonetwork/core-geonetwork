@@ -34,31 +34,19 @@
   src: url('../catalog/views/sextant/less/fonts/sextant-large.ttf') format('truetype'), url('../catalog/views/sextant/less/fonts/sextant-large.eot') format('eot');
 }
 
-@sxt-orange: #F28033;
-@ellipsis-height: 124px;
-@results-toolbar-height: 2.8em;
+@import "sextant-variables.less";
 
-@sxt-base-color-dark: #2F6383;
-@sxt-base-color: lighten(@sxt-base-color-dark, 20%);
-@sxt-base-color: #4BA2D9;
-@sxt-base-color-light: lighten(@sxt-base-color-dark, 28%);
-@sxt-base-color-light: #81BEE4;
+// theme import (overrides variables)
+@theme-name: "default";
+@import "./themes/@{theme-name}.less";
 
-@sxt-viewer-top: 4em;
-@sxt-vieweritem-top: 1.5em;
-
-@sxt-shadow: 0px 1px 3px rgba(0,0,0,0.4);
-
-@sxt-fontsize-big: 14px;
-@sxt-fontsize: 12px;
-@sxt-fontsize-small: 11px;
-
-@sxt-searchbtn-height: 50px;
-
+// overrides bootstrap colors to fit our theme
+@brand-primary: @sxt-base-color;
+@badge-bg: @sxt-base-color;
 
 @media (min-width: @screen-md-min) {
   body {
-    font-family: Roboto, sans-serif;
+    font-family: @sxt-font-family;
   }
   html, body,
   body > div,
@@ -198,17 +186,17 @@ div.gn, div.g, * {
 
 .btn-default {
   &, &.dropdown-toggle, .open &.dropdown-toggle {
-    background: @sxt-base-color;
+    background: @sxt-button-color;
     color: white;
     border: none;
   }
   border-radius: 2px;
   &.active, &:hover, &:focus {
-    background: @sxt-base-color-light;
+    background: @sxt-button-color-light;
     color: white;
   }
   &.disabled, &[disabled], &.disabled:focus, &[disabled]:focus {
-    background: @sxt-base-color-light;
+    background: @sxt-button-color-light;
     color: white;
   }
 }
@@ -439,7 +427,7 @@ div.gn, div.g, * {
     box-shadow: @sxt-shadow;
     border-radius: 2px;
     &[disabled] {
-      background: #81BEE4;
+      background: @sxt-button-color-light;
     }
   }
 }
@@ -1251,7 +1239,7 @@ ul.gn-resultview {
       color: @sxt-base-color;
       box-shadow: none;
       &:hover span, &:focus span {
-        color: #2a6496;
+        color: @sxt-base-color-dark;
         text-decoration: underline;
       }
       &:focus {
@@ -1419,6 +1407,7 @@ ul.invalid {
 
     &:hover {
       cursor: pointer;
+      color: @sxt-base-color;
     }
   }
   input[type=checkbox] {
