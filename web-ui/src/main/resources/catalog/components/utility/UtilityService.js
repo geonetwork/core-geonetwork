@@ -418,11 +418,14 @@
             listDefer = $q.defer();
             $http.get('../api/regions/types').success(function(data) {
               angular.forEach(data, function(value, key) {
-                if (value.id && value.id.indexOf('#') >= 0) {
+                if (value.id) {
+                  var tokens = value.id.split('#'),
+                      asHash = tokens.length > 0,
+                      name = asHash ? tokens[1] : value.id;
                   regionsList.push({
                     id: value.id,
-                    name: value.id.split('#')[1],
-                    label: value.label || value.id.split('#')[1]
+                    name: name,
+                    label: value.label || name
                   });
                 }
               });
