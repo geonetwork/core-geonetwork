@@ -590,6 +590,8 @@ div.help ul li {
 }
 
 .gn-schema-iso19115-3 #gn-tab-checkpoint-dps-characteristics > h3.view-header,
-.gn-schema-iso19115-3 #gn-tab-checkpoint-tdp-characteristics > h3.view-header{
+.gn-schema-iso19115-3 #gn-tab-checkpoint-tdp-characteristics > h3.view-header,
+.gn-schema-iso19115-3 #gn-tab-checkpoint-tdp-characteristics div dl.gn-keyword:nth-of-type(1),
+.gn-schema-iso19115-3 #gn-tab-medsea-metadata div dl:nth-of-type(1) {
   display: none;
 }
