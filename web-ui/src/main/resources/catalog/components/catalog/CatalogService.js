@@ -169,7 +169,7 @@
             if (tab) {
               path += '/tab/' + tab;
             }
-            $location.path(path);
+            $location.path(path).search('justcreated');
           });
         },
 
