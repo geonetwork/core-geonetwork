@@ -73,7 +73,13 @@
           <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
         </header>
-        <xsl:apply-templates mode="render-view" select="$viewConfig/*"/>
+
+        <xsl:for-each select="$viewConfig/*">
+          <xsl:sort select="@formatter-order"
+                    data-type="number"/>
+          <xsl:apply-templates mode="render-view"
+                               select="."/>
+        </xsl:for-each>
 
 
         <!--
