@@ -129,8 +129,8 @@
                                filter = tokens[1];
                            scope.relations[idx] = [];
                            for (var i = 0; i < value.length; i++) {
-                             if (value[i][field] === filter) {
-                                scope.relations[idx].push(value[i]);
+                             if (filter.indexOf(value[i][field]) !== -1) {
+                               scope.relations[idx].push(value[i]);
                              }
                            }
                          } else {
