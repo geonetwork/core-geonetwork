@@ -1,30 +1,27 @@
 <div data-ng-controller="GnMdViewController" class="container">
-  <div class="alert alert-warning"
-       data-ng-hide="mdView.current.record"
-       data-translate=""
-       data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
-    recordNotFound
-  </div>
+  <div class="alert alert-warning" data-ng-hide="mdView.current.record"
+    data-translate=""
+    data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
+    recordNotFound</div>
 
-  <div class="row gn-md-view"
-       data-ng-show="mdView.current.record">
+  <div class="row gn-md-view" data-ng-show="mdView.current.record">
     <button class="btn btn-primary"
-            data-ng-click="closeRecord(mdView.current.record)">
-      <i class="fa fa-search"></i>
-      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
+      data-ng-click="closeRecord(mdView.current.record)">
+      <i class="fa fa-search"></i> <span><span>{{'backTo' +
+          (fromView || 'search') | translate}}</span></span>
     </button>
 
     <button class="btn btn-link"
-            data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
-            data-ng-show="mdView.records.length > 1"
-            data-ng-click="previousRecord()">
-      <i class="fa fa-angle-left"></i>
-      <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
+      data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
+      data-ng-show="mdView.records.length > 1"
+      data-ng-click="previousRecord()">
+      <i class="fa fa-angle-left"></i> <span
+        data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
       <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
     </button>
 
     <button class="btn btn-link"
-            data-ng-class="mdView.current.index === mdView.records.length - 1 &&
+      data-ng-class="mdView.current.index === mdView.records.length - 1 &&
                            searchObj.params.to > searchInfo.count &&
                            searchInfo.count > searchObj.params.from ? 'disabled' : ''"
             data-ng-show="mdView.records.length > 1"
@@ -130,17 +127,19 @@
           <tbody>
           <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                           mdView.current.record.inspirethemewithac.length > 0">
-            <th data-translate="">inspireThemes</th>
-            <td>
-              <button data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
-                   data-ng-click="search({'inspirethemewithac': cat})"
-                   class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
-                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
-                <span class="iti-{{cat.split('|')[0]}}"></span>
-              </button>
-            </td>
-          </tr>
-          <tr data-ng-if="mdView.current.record.category.length > 0 ||
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <button
+                  data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                  data-ng-click="search({'inspirethemewithac': cat})"
+                  class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                  title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+                  <span class="iti-{{cat.split('|')[0]}}"></span>
+                </button>
+              </td>
+            </tr>
+            <tr
+              data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
             <td>
@@ -397,245 +396,23 @@
           </div>
         </section>
         </br>
-
-
-        <section>
-          <h2>
-            <span data-translate="">rate</span>
-          </h2>
-          <div data-gn-metadata-rate="mdView.current.record"/>
-
-        </section>
-
-        <section class="gn-userfeedback-sidebar">
-          <h1>5.2 Needs improvement</h1>
-          <p>42 user comments</p>
-
-          <ul class="gn-userfeedback-list">
-            <li class="gn-userfeedback-item">
-              <div class="gn-userfeedback-comment gn-arrow-bottom">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-              </div>
-              <div class="gn-userfeedback-user">
-                <span><strong>Michel Gabriël</strong></span>
-                <span>GeoCat</span>
-              </div>
-            </li>
-            <li class="gn-userfeedback-item">
-              <div class="gn-userfeedback-comment gn-arrow-bottom">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-              </div>
-              <div class="gn-userfeedback-user">
-                <span><strong>Michel Gabriël</strong></span>
-                <span>GeoCat</span>
-              </div>
-            </li>
-            <li class="gn-userfeedback-item">
-              <div class="gn-userfeedback-comment gn-arrow-bottom">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-              </div>
-              <div class="gn-userfeedback-user">
-                <span><strong>Michel Gabriël</strong></span>
-                <span>GeoCat</span>
-              </div>
-            </li>
-          </ul>
-          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#gn-userfeedback-allcomments">See all feedback</button>
-          <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#gn-userfeedback-addcomment"><span class="fa fa-plus"></span> Add rating</button>
-        </section>
-
-        <!-- All comments modal -->
-        <div class="modal fade gn-userfeedback-modal" id="gn-userfeedback-allcomments" tabindex="-1" role="dialog" aria-labelledby="gn-userfeedback-allcomments">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Ratings & Comments</h4>
-              </div>
-              <div class="modal-body row">
-                <div class="col-md-7">
-                  <h2>The Geoffrey's Tube Z3950 Server</h2>
-                  <p>Last comment on 19-04-2016. 11 new comments since 01-04-2017 (<a>show</a>)</p>
-                  <div class="gn-userfeedback-title">
-                    <h3>42 comments</h3>
-                  </div>
-                  <ul class="gn-userfeedback-list">
-                    <li class="gn-userfeedback-item clearfix">
-                      <div class="pull-left btn btn-warning gn-userfeedback-image">
-                        <span class="fa fa-user"></span>
-                      </div>
-                      <div class="pull-left gn-userfeedback-comment-user">
-                        <a>Michel Gabriël</a>
-                        <p>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-                        </p>
-                        <p class="gn-userfeedback-reply">
-                          <a>Reply</a> | <a>Share</a>
-                        </p>
-                      </div>
-                    </li>
-                    <li class="gn-userfeedback-item">
-                      <ul class="gn-userfeedback-list">
-                        <li class="gn-userfeedback-item clearfix">
-                          <div class="pull-left btn btn-success gn-userfeedback-image">
-                            <span class="fa fa-rocket"></span>
-                          </div>
-                          <div class="pull-left gn-userfeedback-comment-user">
-                            <a>Ikke</a>
-                            <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-                            </p>
-                            <p class="gn-userfeedback-reply">
-                              <a>Reply</a> | <a>Share</a>
-                            </p>
-                          </div>
-                        </li>
-                        <li class="gn-userfeedback-item clearfix">
-                          <div class="pull-left btn btn-warning gn-userfeedback-image">
-                            <span class="fa fa-user"></span>
-                          </div>
-                          <div class="pull-left gn-userfeedback-comment-user">
-                            <a>Michel Gabriël</a>
-                            <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-                            </p>
-                            <p class="gn-userfeedback-reply">
-                              <a>Reply</a> | <a>Share</a>
-                            </p>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="gn-userfeedback-item clearfix">
-                      <div class="pull-left btn btn-warning gn-userfeedback-image">
-                        <span class="fa fa-user"></span>
-                      </div>
-                      <div class="pull-left gn-userfeedback-comment-user">
-                        <a>Michel Gabriël</a>
-                        <p>
-                          Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-                        </p>
-                        <p class="gn-userfeedback-reply">
-                          <a>Reply</a> | <a>Share</a>
-                        </p>
-                      </div>
-                    </li>                    
-                  </ul>
-                </div>
-                <div class="col-md-5">
-                  <div class="gn-userfeedback-title">
-                    <h3>Ratings per category</h3>
-                  </div>
-                  <ul class="list-group gn-userfeedback-categories">
-                    <li class="list-group-item">
-                      <p>Complete</p>
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
-                          <span class="sr-only">75% Complete</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <p>Findability</p>
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                          <span class="sr-only">80% Complete</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <p>Readability</p>
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
-                          <span class="sr-only">20% Complete</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <p>Something else</p>
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" style="width: 55%">
-                          <span class="sr-only">55% Complete</span>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <div class="dropdown">
-                  <button id="gn-userfeedback-add" type="button" data-toggle="dropdown" class="btn btn-danger btn-round btn-lg pull-left">
-                    <span class="fa fa-plus"></span>
-                  </button>
-                  <ul class="dropdown-menu" aria-labelledby="gn-userfeedback-add">
-                    <li>
-                      <a href="">Add comment</a>
-                    </li>
-                    <li>
-                      <a href="">Add rating</a>
-                    </li>
-                  </ul>
-                </div>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              </div>
-            </div>
+        
+        <div data-gn-userfeedback='{{mdView.current.record.getUuid()}}'
+                  data-gn-user={{user.username}} data-ng-show="isUserFeedbackEnabled">
+        </div>
+        <div class="gn-md-feedback-buttons clearfix">
+          <div class="pull-left"
+                  data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}'
+                  data-gn-user={{user.username}}
+                  data-ng-show="isUserFeedbackEnabled">
+          </div>
+          <div class="pull-left"
+                  data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}'
+                  data-gn-user={{user.username}}
+                  data-ng-show="isUserFeedbackEnabled">
           </div>
         </div>
-        <!-- /#gn-userfeedback-allcomments -->
 
-        <!-- Add comment Modal -->
-        <div class="modal fade gn-userfeedback-modal" id="gn-userfeedback-addcomment" tabindex="-1" role="dialog" aria-labelledby="gn-userfeedback-addcomment">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add rating</h4>
-              </div>
-              <div class="modal-body row">
-                <div class="col-md-7">
-                  <h2>The Geoffrey's Tube Z3950 Server</h2>
-                  <p>Give your opinion on the different categories.</p>
-
-                  <div class="gn-userfeedback-title">
-                    <h3>Categories</h3>
-                  </div>
-                  <h3>Complete</h3>
-                  <div data-gn-metadata-rate="mdView.current.record"/>
-                  <h3>Findability</h3>
-                  <div data-gn-metadata-rate="mdView.current.record"/>
-                  <h3>Readability</h3>
-                  <div data-gn-metadata-rate="mdView.current.record"/>
-                  <h3>Something else</h3>
-                  <div data-gn-metadata-rate="mdView.current.record"/>
-                </div>
-                <div class="col-md-5">
-                  <div class="gn-userfeedback-title">
-                    <h3>Current score</h3>
-                  </div>
-                  <div class="gn-userfeedback-score">
-                    <span>9.3</span>
-                    Excellent
-                  </div>
-                  <div class="gn-userfeedback-title">
-                    <h3>User information</h3>
-                  </div>
-                  <p>You are currently logged in as <a>Michel</a></p>
-                  <p>
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox"> Show my username in comments and ratings
-                      </label>
-                    </div>
-                  </p>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <section data-ng-if="mdView.current.record.geoBox.length > 0">
           <h4>
@@ -662,31 +439,33 @@
                              mdView.current.record.tempExtentBegin ||
                              mdView.current.record.tempExtentEnd">
           <h4>
-            <i class="fa fa-fw fa-clock-o"></i>
-            <span data-translate="">tempExtent</span>
+            <i class="fa fa-fw fa-clock-o"></i> <span data-translate="">tempExtent</span>
           </h4>
 
           <p>
           <dl data-ng-show="mdView.current.record.creationDate">
             <dt data-translate>creationDate</dt>
             <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
-                data-format="YYYY-MM-DD"/>
+              data-format="YYYY-MM-DD" />
           </dl>
           <dl data-ng-show="mdView.current.record.publicationDate">
             <dt data-translate>publicationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
-                data-format="YYYY-MM-DD"/>
+            <dd
+              data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+              data-format="YYYY-MM-DD" />
           </dl>
           <dl data-ng-show="mdView.current.record.revisionDate">
             <dt data-translate>revisionDate</dt>
             <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
-                data-format="YYYY-MM-DD"/>
+              data-format="YYYY-MM-DD" />
           </dl>
-          <dl data-ng-show="mdView.current.record.tempExtentBegin ||
+          <dl
+            data-ng-show="mdView.current.record.tempExtentBegin ||
                               mdView.current.record.tempExtentEnd">
             <dt data-translate>tempExtentBegin</dt>
             <dd>
-              <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+              <span
+                data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}" />
               &nbsp;<i class="fa fa-forward"></i>&nbsp;
               <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
             </dd>
@@ -785,6 +564,15 @@
             class="btn btn-default"><i class="fa fa-fw fa-link"></i></a>
         </section>
         </br>
+
+        <section data-ng-show="isRatingEnabled">
+          <h4>
+            <i class="fa fa-fw"></i>
+            <span data-translate="">rate</span>
+          </h4>
+          <div data-gn-metadata-rate="mdView.current.record"/>
+
+          </section>
 
       </div>
 
