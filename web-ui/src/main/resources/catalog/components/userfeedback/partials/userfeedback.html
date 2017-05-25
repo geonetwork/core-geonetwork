@@ -1,0 +1,151 @@
+
+	<section>
+		<h2>
+			<span data-translate="">rate</span>
+		</h2>
+		<div data-gn-metadata-rate="mdView.current.record" />
+
+	</section>
+
+	<section class="gn-userfeedback-sidebar">
+		<h1>{{rating.avgRating}}</h1>
+		<p>{{rating.commentsCount}} user comments</p>
+
+		<ul class="gn-userfeedback-list">
+			<li class="gn-userfeedback-item" data-ng-repeat="row in fewCommentsList">
+				<div class="gn-userfeedback-comment gn-arrow-bottom">{{row.comment}}</div>
+				<div class="gn-userfeedback-user">
+					<span><strong>{{row.user.name}}</strong></span> <span>{{row.user.organisation}}</span>
+				</div>
+			</li>
+			
+		</ul>
+		<button class="btn btn-default btn-sm" data-toggle="modal"
+			data-target="#gn-userfeedback-allcomments">See all feedback</button>
+		<button class="btn btn-default btn-sm" data-toggle="modal"
+			data-target="#gn-userfeedback-addcomment">
+			<span class="fa fa-plus"></span> Add rating
+		</button>
+	</section>
+
+	<!-- All comments modal -->
+	<div class="modal fade gn-userfeedback-modal"
+		id="gn-userfeedback-allcomments" tabindex="-1" role="dialog"
+		aria-labelledby="gn-userfeedback-allcomments">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Ratings & Comments</h4>
+				</div>
+				<div class="modal-body row">
+					<div class="col-md-7">
+						<h2>The Geoffrey's Tube Z3950 Server</h2>
+						<p>
+							Last comment on 19-04-2016. 11 new comments since 01-04-2017 (<a>show</a>)
+						</p>
+						<div class="gn-userfeedback-title">
+							<h3>42 comments</h3>
+						</div>
+						<ul class="gn-userfeedback-list">
+							<li class="gn-userfeedback-item clearfix">
+								<div class="pull-left btn btn-warning gn-userfeedback-image">
+									<span class="fa fa-user"></span>
+								</div>
+								<div class="pull-left gn-userfeedback-comment-user">
+									<a>Michel Gabriël</a>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+										Etiam ultrices ligula urna. Ut cursus, mauris sed auctor
+										accumsan, quam ligula gravida lectus, ut condimentum velit sem
+										a risus.</p>
+									<p class="gn-userfeedback-reply">
+										<a>Reply</a> | <a>Share</a>
+									</p>
+								</div>
+							</li>							
+						</ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="dropdown">
+						<button id="gn-userfeedback-add" type="button"
+							data-toggle="dropdown"
+							class="btn btn-danger btn-round btn-lg pull-left">
+							<span class="fa fa-plus"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="gn-userfeedback-add">
+							<li><a href="">Add comment</a></li>
+							<li><a href="">Add rating</a></li>
+						</ul>
+					</div>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /#gn-userfeedback-allcomments -->
+
+	<!-- Add comment Modal -->
+	<div class="modal fade gn-userfeedback-modal"
+		id="gn-userfeedback-addcomment" tabindex="-1" role="dialog"
+		aria-labelledby="gn-userfeedback-addcomment">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Add rating</h4>
+				</div>
+				<div class="modal-body row">
+					<div class="col-md-7">
+						<h2>The Geoffrey's Tube Z3950 Server</h2>
+						<p>Give your opinion on the different categories.</p>
+
+						<div class="gn-userfeedback-title">
+							<h3>Categories</h3>
+						</div>
+						<h3>Complete</h3>
+						<div data-gn-metadata-rate="mdView.current.record" />
+						<h3>Findability</h3>
+						<div data-gn-metadata-rate="mdView.current.record" />
+						<h3>Readability</h3>
+						<div data-gn-metadata-rate="mdView.current.record" />
+						<h3>Something else</h3>
+						<div data-gn-metadata-rate="mdView.current.record" />
+					</div>
+					<div class="col-md-5">
+						<div class="gn-userfeedback-title">
+							<h3>Current score</h3>
+						</div>
+						<div class="gn-userfeedback-score">
+							<span>9.3</span> Excellent
+						</div>
+						<div class="gn-userfeedback-title">
+							<h3>User information</h3>
+						</div>
+						<p>
+							You are currently logged in as <a>Michel</a>
+						</p>
+						<p>
+						<div class="checkbox">
+							<label> <input type="checkbox"> Show my username
+								in comments and ratings
+							</label>
+						</div>
+						</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
