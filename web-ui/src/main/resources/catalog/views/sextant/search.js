@@ -89,7 +89,9 @@
   }
 
 
-  module.value('sxtGlobals', {});
+  module.value('sxtGlobals', {
+    keywords: {}
+  });
 
   module.config(['$LOCALES', 'gnGlobalSettings',
     function($LOCALES, gnGlobalSettings) {
@@ -120,11 +122,13 @@
     '$q',
     'gnUrlUtils',
     'gnGlobalSettings',
+    'gnOwsContextService',
     function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
-             $translate, $q, gnUrlUtils, gnGlobalSettings) {
+             $translate, $q, gnUrlUtils, gnGlobalSettings,
+             gnOwsContextService) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -210,10 +214,11 @@
       });
 
       // Manage sextantTheme thesaurus translation
+      sxtGlobals.keywords['sextantThemePromise'] =
       gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
         gnGlobalSettings.locale.iso3lang, 200).then(function(data) {
-            sxtGlobals.sextantTheme = data;
-            $scope.$broadcast('sextantThemeLoaded');
+            sxtGlobals.keywords.sextantTheme = data;
+            return data;
           });
 
       ///////////////////////////////////////////////////////////////////
@@ -295,13 +300,29 @@
             return;
           }
 
+          // if this is a context: handle it differently
+          if (link.protocol.indexOf('OGC:OWS-C') > -1) {
+            gnOwsContextService.loadContextFromUrl(link.url,
+              $scope.searchObj.viewerMap);
+
+            // clear md scope
+            if(gnSearchLocation.isMdView()) {
+              angular.element($('[gn-metadata-display]')).scope().dismiss();
+            }
+
+            // switch to map
+            gnSearchLocation.setMap();
+            return;
+          }
+
           var loadLayerPromise = gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
               link.url, link.name, undefined, md).then(function(layer) {
                 if(layer) {
                   var group, theme = md.sextantTheme;
-                  if(angular.isArray(sxtGlobals.sextantTheme)) {
-                    for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
-                      var t = sxtGlobals.sextantTheme[i];
+                  var themes = sxtGlobals.keywords.sextantTheme;
+                  if(angular.isArray(themes)) {
+                    for (var i = 0; i < themes.length; i++) {
+                      var t = themes[i];
                       if (t.props.uri == theme) {
                         group = t.label;
                         break;

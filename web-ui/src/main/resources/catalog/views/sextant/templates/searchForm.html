@@ -21,24 +21,14 @@
     <div data-ng-repeat="facet in ::facetConfig">
 
       <!--Standard multi facet panel-->
-      <div data-ng-if="::facet.key != 'category'" gn-facet-multiselect="{{::facet.langs[lang] || facet.key}}" gn-facet-multiselect-title="{{facet.labels[lang]}}"
+      <div data-ng-if="::!facet.tree" gn-facet-multiselect="{{::facet.langs[lang] || facet.key}}" gn-facet-multiselect-title="{{facet.labels[lang]}}"
            gn-facet-multiselect-filter="{{::facet.filter}}"
            gn-facet-multiselect-collapsed="{{::isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
 
-      <!--Facet tree for categories-->
-      <div class="gn-facet" data-ng-if="::facet.key == 'category'">
-        <h5 gn-collapsible="treeFacetCollapsed">
-          <span class="fa fa-arrow-circle-right" ng-class="{'fa-rotate-90': !treeFacetCollapsed, 'gn-field-empty': isFacetsCollapse('sextantTheme')}"></span>
-          {{'sextantThemes' | translate}}
-        </h5>
-        <div class="row filter-input sxt-layertree-filter" data-ng-show="!treeFacetCollapsed" data-ng-if="::facet.filter" >
-          <span class="fa fa-times-circle clear" ng-click="ctrl.activeFilter = ''" ng-show="ctrl.activeFilter" title="{{'clear'|translate}}"></span>
-          <input type="text" class="form-control input-sm layerfilter" placeholder="{{'filter'|translate}}"
-                 data-ng-model="ctrl.activeFilter" data-ng-model-options="{debounce: 300}">
-        </div>
-
-        <div sxt-category-tree class="sxt-categorytree" ng-class="{'collapse': treeFacetCollapsed}" sxt-category-tree-conf="thesaurus[0]"></div>
-      </div>
+      <!--Tree facets-->
+      <div data-ng-if="::facet.tree" sxt-facet-tree="{{::facet.langs[lang] || facet.key}}" sxt-facet-tree-title="{{facet.labels[lang]}}"
+           sxt-facet-tree-filter="{{::facet.filter}}"
+           sxt-facet-tree-collapsed="{{::isFacetsCollapse(facet.langs[lang] || facet.index || facet.key)}}"></div>
 
     </div>
   </div>
