@@ -10,95 +10,21 @@
       <input data-gn-selection-md type="checkbox"
              data-ng-model="md['geonet:info'].selected"
              data-ng-change="change()"/>
-      <div class="gn-md-col2">
-        <div class="clearfix">
-          <div class="gn-md-title"
-               data-ng-click="openRecord($index, md, searchResults.records)">
-            <h3>
-              <a href=""
-                 title="{{md.title || md.defaultTitle}}">
-                <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
-                <span>{{(md.title || md.defaultTitle) | characters:80}}</span>
-              </a>
-            </h3>
-          </div>
 
-          <!--Source catalog Logo-->
-          <div class="pull-right">
-            <a data-ng-if="md.groupWebsite"
-               href="{{md.groupWebsite}}" target="_blank">
-              <img data-ng-src="../..{{md.logo}}"
-                   class="gn-source-logo"/>
-            </a>
-            <img data-ng-if="!md.groupWebsite"
-                 data-ng-src="../..{{md.logo}}"
-                 class="gn-source-logo"/>
-          </div>
-        </div>
-        <div data-gn-metadata-rate="md"
-             data-readonly="true"/>
-      </div>
-    </div>
-    <!--end top row-->
+      <!--Source catalog Logo-->
+      <a data-ng-if="md.groupWebsite"
+         href="{{md.groupWebsite}}" target="_blank">
+        <img data-ng-src="{{gnUrl}}..{{md.logo}}"
+             class="gn-source-logo"/>
+      </a>
+      <img data-ng-if="!md.groupWebsite"
+           data-ng-src="{{gnUrl}}..{{md.logo}}"
+           class="gn-source-logo"/>
 
-    <!--start middle row-->
-    <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
-         data-ng-click="openRecord($index, md, searchResults.records)"
-         class="gn-md-col2 gn-margintop">
-
-      <!-- Thumbnail -->
-      <div class="gn-md-thumbnail hidden">
-        <img class="gn-img-thumbnail"
-             data-ng-src="{{md.getThumbnails().list[0].url}}"
-             data-ng-if="md.getThumbnails().list[0].url"/>
-
-        <!-- Display the first metadata status (apply to ISO19139 record) -->
-        <div data-ng-if="md.status_text.length > 0"
-             title="{{md.status_text[0]}}"
-             class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
-        </div>
-      </div>
-      <!-- /.gn-md-thumbnail -->
-
-      <div>
-
-        <div class="gn-md-abstract">
-          <div>
-            <p>{{(md.abstract || md.defaultAbstract) | striptags}}</p>
-          </div>
-        </div>
-        <!-- /.gn-md-abstract -->
-
-        <div class="row gn-md-details">
-          <p data-ng-repeat="c in md.getAllContacts().resource">
-            <img data-ng-if="c.logo"
-                 data-ng-src="{{::c.logo}}"
-                 class="gn-source-logo"
-                 title="{{::c.name}} ({{::c.role}})"/>
-            {{::c.name}}
-          </p>
-
-        </div>
-        <!-- /.gn-md-details -->
-          <!-- <p data-ng-if="md.Constraints">
-            <h5 data-translate="">license</h5>
-            <span data-ng-repeat="c in ::md.Constraints">{{c}}, </span>
-          </p> -->
-          <p data-ng-if="md.keyword" class="gn-md-keywords">
-            <span class="badge" data-ng-repeat="k in ::md.keyword">{{k}}</span>
-          </p>
-      </div>
-
-    </div>
-    <!--end middle row-->
-
-    <!--start bottom row-->
-    <div class="gn-md-col2 gn-md-footer clearfix">
-      <div class="gn-md-category pull-left"
+      <div class="gn-md-category"
            data-ng-class="md.category.length > 0 ||
                             md.topicCat.length > 0 ||
                             md.inspirethemewithac.length > 0 ? '' : 'invisible'">
-
         <span data-translate="">listOfCategories</span>
         <a data-ng-repeat="cat in ::md.category"
            title="{{('cat-' + cat) | translate}}"
@@ -120,8 +46,66 @@
           </i>
         </a>
       </div>
+      <div data-gn-metadata-rate="md"
+           data-readonly="true"
+           class="pull-right"/>
+    </div>
+    <!--end top row-->
+    <div class="row gn-md-title"
+         data-ng-click="openRecord($index, md, searchResults.records)">
+      <h3>
+        <a data-ng-href="#/metadata/{{md.getUuid()}}"
+           title="{{md.title || md.defaultTitle}}">
 
-      <gn-links-btn class="pull-right"></gn-links-btn>
+          <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
+          {{(md.title || md.defaultTitle) | characters:80}}</a>
+      </h3>
+    </div>
+
+    <!--start middle row-->
+    <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+         data-ng-click="openRecord($index, md, searchResults.records)">
+      <!-- Thumbnail -->
+      <div class="gn-md-thumbnail">
+        <img class="gn-img-thumbnail"
+             data-ng-src="{{md.getThumbnails().list[0].url}}"
+             data-ng-if="md.getThumbnails().list[0].url"/>
+
+        <!-- Display the first metadata status (apply to ISO19139 record) -->
+        <div data-ng-if="md.status_text.length > 0"
+             title="{{md.status_text[0]}}"
+             class="gn-status gn-status-{{md.status[0]}}">{{md.status_text[0]}}
+        </div>
+      </div>
+
+      <div style="float:left; display:block; width: calc(100% - 162px)">
+
+        <div class="text-justify gn-md-abstract ellipsis">
+          <div>
+            <p>{{(md.abstract || md.defaultAbstract) | striptags}}</p>
+          </div>
+        </div>
+
+        <div class="row gn-md-details">
+          <p ng-if="::!md.getAllContacts().resource">&nbsp;</p>
+          <p data-ng-repeat="c in ::md.getAllContacts().resource">
+            <img data-ng-if="::c.logo"
+                 data-ng-src="{{::c.logo}}"
+                 class="gn-source-logo"
+                 title="{{::c.name}} ({{::c.role}})"/>
+            {{::c.name}}
+          </p>
+        </div>
+      </div>
+
+    </div>
+    <!--end middle row-->
+
+    <!--start bottom row-->
+    <div>
+      <div gn-grid-related gn-grid-related-uuid="::md.getUuid()"
+           template="../../catalog/views/default/templates/gridRelated.html"></div>
+      <gn-links-btn></gn-links-btn>
     </div>
 
     </div>

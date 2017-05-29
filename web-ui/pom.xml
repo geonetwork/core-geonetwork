@@ -127,7 +127,7 @@
                     <argument>--strict</argument>
                     <argument>--custom_jsdoc_tags</argument>
                     <argument>
-                      ngdoc,methodOf,deprecated,restrict,requires,kind,name,function,description,example,abstract
+                      ngdoc,methodOf,deprecated,directiveInfo,restrict,requires,kind,name,function,description,example,abstract
                     </argument>
                     <argument>-r</argument>
                     <!-- Each source file in this directory will be checked. -->

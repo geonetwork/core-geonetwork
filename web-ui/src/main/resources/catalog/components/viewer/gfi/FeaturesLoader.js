@@ -49,6 +49,7 @@
   geonetwork.GnFeaturesLoader = function(config, $injector) {
     this.$injector = $injector;
     this.$http = this.$injector.get('$http');
+    this.urlUtils = this.$injector.get('gnUrlUtils');
     this.gnProxyUrl = this.$injector.get('gnGlobalSettings').proxyUrl;
 
     this.layer = config.layer;
@@ -209,28 +210,88 @@
    *
    * @constructor
    */
-  geonetwork.GnFeaturesSOLRLoader = function(config, $injector) {
+  geonetwork.GnFeaturesINDEXLoader = function(config, $injector) {
     geonetwork.GnFeaturesLoader.call(this, config, $injector);
 
     this.layer = config.layer;
     this.coordinates = config.coordinates;
-    this.solrObject = config.solrObject;
+    this.indexObject = config.indexObject;
   };
 
-  geonetwork.inherits(geonetwork.GnFeaturesSOLRLoader,
+  geonetwork.inherits(geonetwork.GnFeaturesINDEXLoader,
       geonetwork.GnFeaturesLoader);
 
+  /**
+   * Format an url type attribute to a html link <a href=...">.
+   * @return {*}
+   * @private
+   */
+  geonetwork.GnFeaturesINDEXLoader.prototype.formatUrlValues_ = function(url) {
+    var $filter = this.$injector.get('$filter');
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getBsTableConfig = function() {
+    url = this.fillUrlWithFilter_(url);
+    var link = $filter('linky')(url, '_blank');
+    if (link != url) {
+      link = link.replace(/>(.)*</,
+          ' ' + 'target="_blank">' + linkTpl + '<'
+          );
+    }
+    return link;
+  };
+
+  /**
+   * Substitutes predefined filter value in urls.
+   * http://www.emso-fr.org?${filtre_param_liste}${filtre_param_group_liste} is
+   * transformed into
+   * http://www.emso-fr.org?param_liste=Escherichia&param_group_liste=Microbio
+   * if those value are set in wfsFilter facets search.
+   *
+   * @param {string} url
+   * @return {string} substitued url
+   * @private
+   */
+  geonetwork.GnFeaturesINDEXLoader.prototype.fillUrlWithFilter_ =
+      function(url) {
+
+    var indexFilters = this.indexObject.getState();
+
+    var URL_SUBSTITUTE_PREFIX = 'filtre_';
+    var regex = /\$\{(\w+)\}/g;
+    var placeholders = [];
+    var urlFilters = [];
+    var paramsToAdd = {};
+    var match;
+
+    while (match = regex.exec(url)) {
+      placeholders.push(match[0]);
+      urlFilters.push(match[1].substring(
+          URL_SUBSTITUTE_PREFIX.length, match[1].length));
+    }
+
+    urlFilters.forEach(function(p, i) {
+      var name = p;
+      var idxName = this.indexObject.getIdxNameObj_(name).idxName;
+      var fValue = indexFilters.qParams[idxName];
+      url = url.replace(placeholders[i], '');
+
+      if (fValue) {
+        paramsToAdd[name] = Object.keys(fValue.values)[0];
+      }
+    }.bind(this));
+
+    return this.urlUtils.append(url, this.urlUtils.toKeyValue(paramsToAdd));
+  };
+
+  geonetwork.GnFeaturesINDEXLoader.prototype.getBsTableConfig = function() {
     var $q = this.$injector.get('$q');
     var defer = $q.defer();
     var $filter = this.$injector.get('$filter');
 
     var pageList = [5, 10, 50, 100],
         columns = [],
-        solr = this.solrObject,
+        index = this.indexObject,
         map = this.map,
-        fields = solr.indexFields || solr.filteredDocTypeFieldsInfo;
+        fields = index.indexFields || index.filteredDocTypeFieldsInfo;
 
     fields.forEach(function(field) {
       if ($.inArray(field.idxName, this.excludeCols) === -1) {
@@ -240,52 +301,91 @@
           titleTooltip: field.label,
           sortable: true,
           formatter: function(val, row, index) {
-            var text = (val) ? val.toString() : '';
-            text = $filter('linky')(text, '_blank');
-            text = text.replace(/>(.)*</,
-                ' ' + 'target="_blank">' + linkTpl + '<'
-                );
-            return text;
-          }
+            var outputValue = val;
+            if (this.urlUtils.isValid(val)) {
+              outputValue = this.formatUrlValues_(val);
+            }
+            return outputValue;
+          }.bind(this)
         });
       }
-    });
+    }.bind(this));
 
-    // get an update solr request url with geometry filter based on a point
-    var url = this.coordinates ?
-        this.solrObject.getMergedUrl({}, {
-          pt: ol.proj.transform(this.coordinates,
-              map.getView().getProjection(), 'EPSG:4326').reverse().join(','),
-          //5 pixels radius tolerance
-          d: map.getView().getResolution() / 400,
-          sfield: solr.geomField.idxName
-        }, this.solrObject.getState()) +
-        '&fq={!geofilt sfield=' + solr.geomField.idxName + '}' :
-            this.solrObject.getMergedUrl({}, {}, this.solrObject.getState());
+    // get an update index request url with geometry filter based on a point
+    var url = this.indexObject.baseUrl;
+    var state = this.indexObject.getState();
+    var searchQuery = this.indexObject.getSearhQuery(state);
 
-    url = url.replace('rows=0', '');
-    if (url.indexOf('&q=') === -1) {
-      url += '&q=*:*';
-    }
     this.loading = true;
     defer.resolve({
       url: url,
+      contentType: 'application/json',
+      method: 'POST',
       queryParams: function(p) {
-        var params = {
-          rows: p.limit,
-          start: p.offset
-        };
+
+        // TODO: Should use indexObject.search_ ?
+        var params = angular.extend({},
+            {
+              query: {query_string: {query: searchQuery}}},
+            {
+              size: p.limit,
+              from: p.offset
+            });
         if (p.sort) {
-          params.sort = p.sort + ' ' + p.order;
+          params.sort = [];
+          var sort = {};
+          sort[p.sort] = {'order' : p.order};
+          params.sort.push(sort);
         }
-        return params;
+
+
+        if (state.geometry || this.coordinates) {
+          var geomFilter = {};
+          if (state.geometry) {
+            geomFilter = {'geo_shape': {
+              'geom': {
+                'shape': {
+                  'type': 'envelope',
+                  'coordinates': state.geometry
+                },
+                'relation': 'intersects'
+              }
+            }
+            };
+          } else if (this.coordinates) {
+            var coords = ol.proj.transform(this.coordinates,
+                map.getView().getProjection(), 'EPSG:4326');
+            geomFilter = {'geo_distance' : {
+              'distance': map.getView().getResolution() / 400 + 'km',
+              'geom': {
+                'lat': coords[1],
+                'lon': coords[0]
+              }
+            }
+            };
+          }
+          params.query = {
+            'bool': {
+              'must': {
+                'query_string': params.query.query_string || '*:*'
+              },
+              'filter': geomFilter
+            }
+          };
+        }
+
+        return JSON.stringify(params);
       },
       //data: scope.data.response.docs,
       responseHandler: function(res) {
-        this.count = res.response.numFound;
+        this.count = res.hits.total;
+        var rows = [];
+        for (var i = 0; i < res.hits.hits.length; i++) {
+          rows.push(res.hits.hits[i]._source);
+        }
         return {
-          total: res.response.numFound,
-          rows: res.response.docs
+          total: res.hits.total,
+          rows: rows
         };
       }.bind(this),
       onSort: function() {
@@ -302,27 +402,27 @@
       columns: columns,
       pagination: true,
       sidePagination: 'server',
-      totalRows: this.solrObject.totalCount,
+      totalRows: this.indexObject.totalCount,
       pageSize: pageList[1],
       pageList: pageList
     });
     return defer.promise;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getCount = function() {
+  geonetwork.GnFeaturesINDEXLoader.prototype.getCount = function() {
     return this.count;
   };
 
-  geonetwork.GnFeaturesSOLRLoader.prototype.getFeatureFromRow = function(row) {
-    var geom = row[this.solrObject.geomField.idxName];
+  geonetwork.GnFeaturesINDEXLoader.prototype.getFeatureFromRow = function(row) {
+    var geom = row[this.indexObject.geomField.idxName];
     if (angular.isArray(geom)) {
       geom = geom[0];
     }
-    geom = new ol.format.WKT().readFeature(geom, {
+    geom = new ol.format.GeoJSON().readGeometry(geom, {
       dataProjection: 'EPSG:4326',
       featureProjection: this.map.getView().getProjection()
     });
-    return geom;
+    return new ol.Feature({geometry: geom});
   };
 
 

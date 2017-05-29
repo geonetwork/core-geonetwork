@@ -229,7 +229,8 @@
              }
              // TODO; stop loop when found
            });
-          return parameterValue;
+          return parameterValue != null ?
+          decodeURIComponent(parameterValue) : undefined;
         };
 
         var CSVToArray = function(strData, strDelimiter) {
@@ -417,11 +418,14 @@
             listDefer = $q.defer();
             $http.get('../api/regions/types').success(function(data) {
               angular.forEach(data, function(value, key) {
-                if (value.id && value.id.indexOf('#') >= 0) {
+                if (value.id) {
+                  var tokens = value.id.split('#'),
+                      asHash = tokens.length > 0,
+                      name = asHash ? tokens[1] : value.id;
                   regionsList.push({
                     id: value.id,
-                    name: value.id.split('#')[1],
-                    label: value.label || value.id.split('#')[1]
+                    name: name,
+                    label: value.label || name
                   });
                 }
               });
@@ -432,4 +436,58 @@
         }
       };
     }]);
+
+  module.service('gnTreeFromSlash', [function() {
+    var findChild = function(node, name) {
+      var n;
+      if (node.nodes) {
+        for (var i = 0; i < node.nodes.length; i++) {
+          n = node.nodes[i];
+          if (name == n.name) {
+            return n;
+          }
+        }
+      }
+    };
+    var sortNodeFn = function(a, b) {
+      var aName = a.name;
+      var bName = b.name;
+      if (aName < bName) return -1;
+      if (aName > bName) return 1;
+      return 0;
+    };
+
+    var createNode = function(node, g, index, e) {
+      var group = g[index];
+      if (group) {
+        var newNode = findChild(node, group);
+        if (!newNode) {
+          newNode = {
+            name: group,
+            value: group
+            //selected: themesInSearch.indexOf(t['@name']) >= 0 ? true : false
+          };
+          if (!node.nodes) node.nodes = [];
+          node.nodes.push(newNode);
+          //node.nodes.sort(sortNodeFn);
+        }
+        createNode(newNode, g, index + 1, e);
+      } else {
+        node.key = e.key;
+        node.count = e.doc_count;
+      }
+    };
+
+    this.getTree = function(list) {
+      var tree = {
+        nodes: []
+      };
+      list.forEach(function(e) {
+        var name = e.key;
+        var g = name.split('/');
+        createNode(tree, g, 0, e);
+      });
+      return tree;
+    };
+  }]);
 })();

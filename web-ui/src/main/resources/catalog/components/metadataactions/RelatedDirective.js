@@ -35,7 +35,7 @@
    * config.js
    */
   module.service('gnRelatedService', ['$http', '$q', function($http, $q) {
-    function get(uuid, types) {
+    this.get = function(uuid, types) {
       var canceller = $q.defer();
       var request = $http({
         method: 'get',
@@ -68,9 +68,16 @@
           }
       );
       return (promise);
-    }
-    return {
-      get: get
+    };
+
+    this.getMdsRelated = function(uuids, types) {
+      var url = '../api/related';
+      return $http.get(url, {
+        params: {
+          type: types,
+          uuid: uuids
+        }
+      });
     };
   }]);
   module
@@ -93,6 +100,7 @@
               types: '@',
               title: '@',
               list: '@',
+              filter: '@',
               user: '=',
               hasResults: '=?'
             },
@@ -105,11 +113,27 @@
                   (promise = gnRelatedService.get(
                      scope.uuid, scope.types)
                   ).then(function(data) {
-                       scope.relations = data;
-                       angular.forEach(data, function(value) {
+                       scope.relations = {};
+                       angular.forEach(data, function(value, idx) {
                          if (value) {
                            scope.relationFound = true;
                            scope.hasResults = true;
+                         }
+                         if (!scope.relations[idx]) {
+                           scope.relations[idx] = [];
+                         }
+                         if (scope.filter && angular.isArray(value)) {
+                           var tokens = scope.filter.split(':'),
+                               field = tokens[0],
+                               filter = tokens[1];
+                           scope.relations[idx] = [];
+                           for (var i = 0; i < value.length; i++) {
+                             if (filter.indexOf(value[i][field]) !== -1) {
+                                scope.relations[idx].push(value[i]);
+                             }
+                           }
+                         } else {
+                           scope.relations[idx] = value;
                          }
                        });
                      });

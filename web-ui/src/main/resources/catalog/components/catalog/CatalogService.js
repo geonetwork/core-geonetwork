@@ -169,7 +169,7 @@
             if (tab) {
               path += '/tab/' + tab;
             }
-            $location.path(path);
+            $location.path(path).search('justcreated');
           });
         },
 
@@ -252,7 +252,7 @@
     selectionLayers: 'selection.layers',
 
     // wfs indexing
-    solrproxy: '../api/0.1/search'
+    indexproxy: '../../index'
   });
 
 

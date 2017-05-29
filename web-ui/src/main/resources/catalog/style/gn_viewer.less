@@ -529,13 +529,10 @@
 [data-gn-wfs-filter-facets], [gn-wfs-filter-facets] {
   font-size:12px;
   .gn-facet {
-    .list-group {
-      border-left: 1px dotted rgba(0, 0, 0, 0.2);
-      margin-left: .5em;
-      padding-left: 1em;
-      margin-bottom: 0;
+    > .list-group {
       overflow: auto;
       max-height: 10em;
+      margin-bottom: 10px;
     }
 
     .list-group-item:hover {
@@ -556,7 +553,15 @@
   .close {
     font-size: 14px;
   }
+}
 
+[gn-wfs-filter-facets-tree] {
+  .list-group .list-group{
+    display: none;
+  }
+  .gn-leaf {
+    margin-left: 16px;
+  }
 }
 
 gn-features-tables {

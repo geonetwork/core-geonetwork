@@ -36,6 +36,7 @@
   goog.require('OWS_1_0_0');
   goog.require('SLD_1_0_0');
   goog.require('XLink_1_0');
+  goog.require('gn_wfsfilter_service');
 
   var module = angular.module('gn_owscontext_service', []);
 
@@ -77,8 +78,10 @@
     '$rootScope',
     '$timeout',
     'gnGlobalSettings',
+    'wfsFilterService',
     function(gnMap, gnOwsCapabilities, $http, gnViewerSettings,
-             $translate, $q, $filter, $rootScope, $timeout, gnGlobalSettings) {
+             $translate, $q, $filter, $rootScope, $timeout, gnGlobalSettings,
+             wfsFilterService) {
 
 
       var firstLoad = true;
@@ -134,6 +137,10 @@
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
 
+        // save this extent for later use (for example if the map
+        // is not currently visible)
+        map.set('lastExtent', extent);
+
         // load the resources
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
@@ -183,11 +190,58 @@
                 }
               } else if (layer.server) {
                 var server = layer.server[0];
+
+                // load extension content (JSON)
+                if (layer.extension && layer.extension.any) {
+                  var extension = JSON.parse(layer.extension.any);
+
+                  // import saved filters if available
+                  if (extension.filters && extension.wfsUrl) {
+                    var url = extension.wfsUrl;
+
+                    // get ES object and save filters on it
+                    // (will be used by the WfsFilterDirective
+                    // when initializing)
+                    var esObj =
+                        wfsFilterService.registerEsObject(url, layer.name);
+                    esObj.initialFilters = extension.filters;
+                  }
+
+                  // this object holds the WPS input values
+                  var defaultInputs = extension.processInputs || {};
+                }
+
+                // create WMS layer
                 if (server.service == 'urn:ogc:serviceType:WMS') {
                   var p = self.createLayer(layer, map, undefined, i);
                   promises.push(p);
                   p.then(function(layer) {
                     overlays[layer.get('tree_index')] = layer;
+
+                    // get WPS processes on the layer
+                    var processes = layer.get('processes');
+                    if (!processes) { return; }
+
+                    // add processes default inputs taken from OWS context
+                    // this is done by modifying the applicationProfile value
+                    processes.forEach(function(process) {
+                      if (defaultInputs && defaultInputs[process.name]) {
+                        var appProfile =
+                            JSON.parse(process.applicationProfile ||
+                            '{}');
+                        appProfile.defaults = appProfile.defaults || {};
+
+                        // apply new default values
+                        defaultInputs[process.name].forEach(function(input) {
+                          var id = input.identifier.value;
+                          appProfile.defaults[id] = input.value ||
+                              appProfile.defaults[id];
+                        });
+
+                        // rewrite modified appProfile to process desc
+                        process.applicationProfile = JSON.stringify(appProfile);
+                      }
+                    });
                   });
                 }
               }
@@ -253,7 +307,7 @@
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         //        }
-        $http.get(url).then(function(r) {
+        $http.get(url, {headers: {accept: 'application/xml'}}).then(function(r) {
           if (r.data === '') {
             var msg = $translate.instant('emptyMapLoadError', {
               url: url
@@ -374,6 +428,29 @@
             name = '{type=wmts,name=' + layer.get('name') + '}';
             url = layer.get('urlCap');
           }
+
+          // fetch current filters state (the whole object will be saved)
+          var esObj = layer.get('indexObject');
+          if (esObj) {
+            var filters = null;
+            if (esObj && esObj.getState()) {
+              filters = esObj.getState();
+            }
+          }
+
+          // add processes inputs if available
+          var processes = layer.get('processes');
+          var processInputs = null;
+          if (processes) {
+            processes.forEach(function(process) {
+              if (!process.processDescription ||
+                  !process.processDescription.dataInputs) { return; }
+              processInputs = processInputs || {};
+              processInputs[process.name] =
+                  process.processDescription.dataInputs.input;
+            });
+          }
+
           var layerParams = {
             hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
@@ -391,6 +468,25 @@
           if (version) {
             layerParams.server[0].version = version;
           }
+
+          // apply filters & processes inputs in extension if needed
+          if (filters || processInputs) {
+            var extension = {};
+            if (esObj) {
+              var wfsUrl = esObj.config.params.wfsUrl;
+              if (wfsUrl) {
+                extension.filters = filters;
+                extension.wfsUrl = wfsUrl;
+              }
+            }
+            if (processInputs) { extension.processInputs = processInputs; }
+
+            layerParams.extension = {
+              name: 'Extension',
+              any: JSON.stringify(extension)
+            };
+          }
+
           resourceList.layer.push(layerParams);
         });
 

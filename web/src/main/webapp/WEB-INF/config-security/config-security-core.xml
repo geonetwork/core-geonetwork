@@ -40,6 +40,7 @@
       <list>
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
+        <sec:filter-chain pattern="/index/**" filters=""/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.

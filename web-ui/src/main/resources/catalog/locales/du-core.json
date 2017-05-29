@@ -321,5 +321,5 @@
     "directoryManager": "Beheer adressenboek",
     "typeOfRecord": "Type",
     "load": "Laden",
-    "solrAccessError": "Fout tijdens SOLR toegang"
+    "indexAccessError": "Fout tijdens index toegang"
 }

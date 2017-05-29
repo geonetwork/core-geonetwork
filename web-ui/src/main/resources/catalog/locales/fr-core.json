@@ -321,5 +321,5 @@
     "directoryManager": "Gestion des annuaires",
     "typeOfRecord": "Type de fiche",
     "load": "Charger",
-    "solrAccessError": "Erreur lors de l'accès à l'index."
+    "indexAccessError": "Erreur lors de l'accès à l'index."
 }

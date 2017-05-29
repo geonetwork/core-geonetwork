@@ -301,11 +301,10 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-      <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>
         <artifactId>urlrewritefilter</artifactId>
-        <version>3.2.0</version>
+        <version>4.0.3</version>
       </dependency>
 
       <!-- XML -->
@@ -489,12 +488,27 @@
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.17</version>
+        <version>${log4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>${httpcomponents.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.3.6</version>
+        <version>${httpcomponents.version}</version>
       </dependency>
       <dependency>
         <groupId>xerces</groupId>
@@ -593,6 +607,11 @@
       <dependency>
         <groupId>org.geotools.xsd</groupId>
         <artifactId>gt-xsd-gml3</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-geojson</artifactId>
         <version>${geotools.version}</version>
       </dependency>
       <dependency>
@@ -1006,6 +1025,22 @@
         <artifactId>jaxb-impl</artifactId>
         <version>2.2.7</version>
       </dependency>
+
+      <!--<dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>${es.version}</version>
+      </dependency>-->
+      <!--Require Lucene 5 <dependency>
+        <groupId>org.elasticsearch.client</groupId>
+        <artifactId>transport</artifactId>
+        <version>${es.version}</version>
+      </dependency>-->
+      <dependency>
+        <groupId>io.searchbox</groupId>
+        <artifactId>jest</artifactId>
+        <version>2.0.3</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1138,7 +1173,7 @@
     <module>services</module>
     <module>wro4j</module>
     <module>inspire-atom</module>
-    <module>solr</module>
+    <module>es</module>
     <module>workers</module>
     <module>messaging</module>
   </modules>
@@ -1212,13 +1247,14 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-
-    <!-- Index server -->
-    <solr.version>6.0.1</solr.version>
-    <solr.version.md5>fc9a4a6ee127dff21135dd4941c92c15</solr.version.md5>
-    <solr.port>8984</solr.port>
-    <solr.url>http://localhost:${solr.port}/solr</solr.url>
-    <solr.collection>catalog_srv</solr.collection>
+    <es.version>5.4.0</es.version>
+    <es.version.md5>3f28a77368118aec107be24ec9fb6498</es.version.md5>
+    <es.port>9200</es.port>
+    <es.host>localhost</es.host>
+    <es.url>http://${es.host}:${es.port}</es.url>
+    <es.index.features>features</es.index.features>
+    <es.username></es.username>
+    <es.password></es.password>
 
 
     <jms.url>tcp://localhost:61616</jms.url>
@@ -1260,7 +1296,9 @@
     <flying-saucer>9.0.7</flying-saucer>
     <camel.version>2.14.4</camel.version>
     <log4j.version>1.2.17</log4j.version>
+    <log4j2.version>2.7</log4j2.version>
     <slf4j.version>1.7.7</slf4j.version>
     <xbean.version>3.18</xbean.version>
+    <httpcomponents.version>4.4.1</httpcomponents.version>
   </properties>
 </project>

@@ -4,6 +4,7 @@
       data-ng-if="$index < maxItems"
       class="list-group-item">
     <span data-ng-click="toggleNode($event)"
+          data-ng-dblclick="toggleAllNode($event)"
           class="fa fa-fw gn-facet-toggle"
           data-ng-class="c.category?(isSelected?'fa-minus-square':'fa-plus-square'):'invisible'"></span>
 

@@ -312,16 +312,18 @@
           <tr data-ng-if="mdView.current.record.legalConstraints">
             <th data-translate="">legalConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index">
-                {{c}}</p>
+              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index"
+                 data-ng-bind-html="c | newlines">
+              </p>
             </td>
           </tr>
 
           <tr data-ng-if="mdView.current.record.securityConstraints">
             <th data-translate="">securityConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index">
-                {{c}}</p>
+              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index"
+                 data-ng-bind-html="c | newlines">
+              </p>
             </td>
           </tr>
 
@@ -329,8 +331,9 @@
           <tr data-ng-if="mdView.current.record.resourceConstraints">
             <th data-translate="">resourceConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index">
-                {{c}}</p>
+              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index"
+                 data-ng-bind-html="c | newlines">
+              </p>
             </td>
           </tr>
 
@@ -450,7 +453,7 @@
               <p data-ng-bind-html="::mdView.current.record.lineage | newlines"/>
             </td>
           </tr>
-          <tr data-ng-if="hasRelations.sources || hasRelations.hassources">
+          <tr>
             <th></th>
             <td>
               <div data-gn-related="mdView.current.record"

@@ -1,13 +1,12 @@
-<div class="navbar navbar-default gn-top-bar gn-minimal"
+<div class="navbar navbar-default gn-top-bar"
      role="navigation"
      data-ng-show="gnCfg.mods.header.enabled"
      data-ng-include="'../../catalog/templates/top-toolbar.html'"
      xmlns="http://www.w3.org/1999/html">
-     <!-- data-ng-include="'../../catalog/views/default/templates/top-toolbar.html'" -->
 </div>
 <div data-gn-alert-manager=""></div>
 
-<div class="gn-search-page gn-minimal"
+<div class="gn-search-page"
      data-ng-controller="GnSearchController">
   <cookiewarning></cookiewarning>
   <div class=""
@@ -28,6 +27,7 @@
   </div>
 </div>
 
-<div data-ng-include="'../../catalog/views/default/templates/footer.html'">
+
+<div class="navbar navbar-default gn-bottom-bar" role="navigation"
+     data-ng-include="'../../catalog/views/default/templates/footer.html'">
 </div>
-<!-- /footer -->

@@ -1,98 +1,48 @@
-<!-- footer -->
-<div class="row gn-row-footer">
-  <div class="col-sm-8 col-sm-offset-2">
-    <div class="row">
-      <!-- block 1 -->
-      <div class="col-sm-6 gn-nopadding-left">
-        <h4 class="clearfix">
-          <!-- <img class="gn-logo" class="pull-left gn-margin-left" 
-               data-ng-src="../../images/logos/{{info['system/site/siteId']}}.png?{{info['system/site/lastUpdate']}}"/> -->
-          <span>{{info['system/site/name']}}</span>
-        </h4>
-        <p>
-          GeoNetwork is a catalog application to manage spatially referenced resources. It provides powerful metadata editing and search functions as well as an interactive web map viewer. It is currently used in numerous Spatial Data Infrastructure initiatives across the world.
-        </p>
-      </div>
-      <!-- /block 1 -->
-
-      <!-- block 2 -->
-      <div class="col-sm-3">
-        <h4>Sitemap</h4>
-        <ul>
-          <li>
-            <a data-gn-active-tb-item="catalog.search#/home">
-              <!-- <span class="visible-lg">{{info['system/site/name']}}</span> -->
-              <span data-translate="">Home</span>
-            </a>
-          </li>   
-          <li>
-            <a data-gn-active-tb-item="catalog.search#/search"
-               title="{{'search' | translate}}">
-              <span data-translate="">search</span>
-            </a>
-          </li>
-          <li data-ng-if="isMapViewerEnabled">
-            <a data-gn-active-tb-item="catalog.search#/map"
-               title="{{'map' | translate}}">
-              <span data-translate="">makeYourMap</span>
-            </a>
-          </li>
-          <li>
-            <a data-gn-active-tb-item="http://geonetwork-opensource.org/"
-               title="{{'about' | translate}}"
-               target="_blank">
-              <span data-translate="">about</span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <!-- /block 2 -->
-
-      <!-- block 3 -->
-      <div class="col-sm-3">
-        <h4>Links</h4>
-        <ul>
-          <li class="hidden-sm"><a href="https://github.com/geonetwork/core-geonetwork">
-            <i class="fa fa-github"></i>
-            <span data-translate="">github</span></a></li>
-          <li>
-            <a href="../../doc/api" title="{{'learnTheApi' | translate}}">API</a>
-          </li>
-        </ul>
-      </div>
-      <!-- /block 3 -->
-    </div>
-  </div>
-</div>
-<!-- /.gn-row-footer -->
-
-<div class="navbar navbar-default gn-bottom-bar">
-  <ul class="nav navbar-nav">
-    <li class="footer-text">
-      <span data-translate=""
-            data-translate-values="{platform: '{{info['system/platform/name']}}', version: '{{info['system/platform/version']}}', subversion: '{{info['system/platform/subVersion']}}'}">
-        versionDetails</span>
-    </li>
-    <li class="footer-text" ng-hide="showSocialMediaLink">
-      <span data-translate="">shareOn</span>
-    </li>
-    <li class="socialmedia" ng-hide="showSocialMediaLink">
-      <a href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
-         target="_blank" title="Facebook"><i class="fa fa-facebook"></i></a>
-      <a href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
-         target="_blank" title="Twitter"><i class="fa fa-twitter"></i></a>
-      <a
-        href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{socialMediaLink | encodeURIComponent}}"
-        target="_blank" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
-      <a href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
-         target="_blank" title="Google+"><i class="fa fa-google-plus"></i></a>
-      <a href="mailto:?subject={{info.site.name}}&amp;body={{socialMediaLink | encodeURIComponent}}"
-         target="_blank" title="Email"><i class="fa fa-envelope-o"></i></a>
-      <a href="rss.search?sortBy=changeDate&georss=simplepoint"
-         title="{{'lastRecords' | translate}}">
-        <i class="fa fa-rss"/>
-      </a>
-    </li>
-  </ul>
-</div>
-<!-- /.gn-bottom-bar -->
+<ul class="nav navbar-nav">
+  <li class="gn-footer-text">
+    <span data-translate=""
+          data-translate-values="{platform: '{{info['system/platform/name']}}', version: '{{info['system/platform/version']}}', subversion: '{{info['system/platform/subVersion']}}'}">
+      versionDetails</span>
+  </li>
+  <li><a href="http://geonetwork-opensource.org/">
+    <i class="fa fa-fw"></i>
+    <span data-translate="">about</span></a>
+  </li>
+  <li class="hidden-sm"><a href="https://github.com/geonetwork/core-geonetwork">
+    <i class="fa fa-github"></i>
+    <span data-translate="">github</span></a></li>
+  <li>
+    <a href="../../doc/api" title="{{'learnTheApi' | translate}}">API</a>
+  </li>
+  <li class="gn-footer-text" ng-hide="showSocialMediaLink">
+    <span data-translate="">shareOn</span>
+  </li>
+  <li class="socialmedia" ng-hide="showSocialMediaLink">
+    <a href="https://twitter.com/share?url={{socialMediaLink | encodeURIComponent}}"
+       target="_blank" title="{{'shareOnTwitter' | translate}}"><i class="fa fa-twitter"></i>
+    </a>
+    <a href="https://plus.google.com/share?url={{socialMediaLink | encodeURIComponent}}"
+       target="_blank" title="{{'shareOnGooglePlus' | translate}}"><i class="fa fa-google-plus"></i>
+    </a>
+    <a href="https://www.facebook.com/sharer.php?u={{socialMediaLink | encodeURIComponent}}"
+       target="_blank" title="{{'shareOnFacebook' | translate}}"><i class="fa fa-facebook"></i>
+    </a>
+    <a
+      href="http://www.linkedin.com/shareArticle?mini=true&amp;url={{socialMediaLink | encodeURIComponent}}"
+      target="_blank" title="{{'shareOnLinkedIn' | translate}}"><i class="fa fa-linkedin"></i>
+    </a>
+    <a href="mailto:?subject={{info.site.name}}&amp;body={{socialMediaLink | encodeURIComponent}}"
+       target="_blank" title="{{'shareByEmail' | translate}}"><i class="fa fa-envelope-o"></i>
+    </a>
+    <a
+      href=""
+      data-ng-click="getPermalink('', socialMediaLink)"
+      title="{{'permalink' | translate}}"><i class="fa fa-fw fa-link"></i></a>
+  </li>
+  <li>
+    <a href="rss.search?sortBy=changeDate&georss=simplepoint"
+       title="{{'lastRecords' | translate}}">
+      <i class="fa fa-rss"/>
+    </a>
+  </li>
+</ul>

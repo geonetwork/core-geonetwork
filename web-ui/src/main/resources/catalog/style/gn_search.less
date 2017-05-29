@@ -75,6 +75,25 @@
   .list-group-item:hover {
     color: @brand-primary;
   }
+  .input-daterange {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .gn-graph {
+    margin-left: -15px;
+    margin-right: -15px;
+    overflow-x: hidden;
+    max-height: none;
+  }
+  .gn-graph-buttons {
+    position: absolute;
+    left: 1em;
+    top: 0;
+  }
+  .ui-timeline {
+    position: relative;
+  }
+
 }
 .gn-facet-breadcrumb {
   margin-top: 8px;
@@ -175,21 +194,21 @@ span.gn-facet-label:first-letter {
 }
 
 .tt-dropdown-menu {
-  margin-top: 4px;
-  margin-left: -8px;
+  margin-top: 7px;
+  margin-left: -7px;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
   -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
   box-shadow: 0 5px 10px rgba(0,0,0,.2);
   max-height: 350px;
   overflow-y: auto;
-  width: inherit;
+  width: calc(~"100% + 14px");
 }
 
 .tt-suggestion {
@@ -606,4 +625,39 @@ button.active [role=tooltip] {
   content: " *";
   color: #a94442;
   font-weight: normal;
+}
+
+//datepicker highlight
+.gn-date-hl {
+  text-decoration: underline;
+}
+.datepicker-dropdown.datepicker-orient-bottom:before {
+  border: none;
+}
+.gn-related-list {
+  padding: 0;
+  list-style: none;
+  > li {
+    padding-left: 25px;
+    &:hover {
+      text-decoration: none;
+      color: #262626;
+      background-color: #f5f5f5;
+    }
+    &.gn-related-type {
+      padding-left: 15px;
+      padding-bottom: 1px;
+      min-width: 250px;
+      &:hover {
+        background-color: transparent;
+        cursor: default !important;
+      }
+      &:first-letter {
+        text-transform: uppercase;
+      }
+    }
+    &:not(.gn-related-type) {
+      font-size: 12px;
+    }
+  }
 }

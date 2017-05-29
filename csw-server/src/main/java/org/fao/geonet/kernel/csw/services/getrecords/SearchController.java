@@ -472,7 +472,7 @@ public class SearchController {
 
         Element summary = summaryAndSearchResults.one();
         int numMatches = Integer.parseInt(summary.getAttributeValue("count"));
-        if (startPos > numMatches) {
+        if (numMatches != 0 && startPos > numMatches) {
             throw new InvalidParameterValueEx("startPosition", String.format(
                 "Start position (%d) can't be greater than number of matching records (%d for current search).",
                 startPos, numMatches

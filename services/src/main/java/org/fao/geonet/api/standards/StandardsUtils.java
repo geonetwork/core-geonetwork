@@ -25,6 +25,7 @@ package org.fao.geonet.api.standards;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.SchemaManager;
@@ -37,6 +38,46 @@ import java.util.Set;
  * Created by francois on 23/06/16.
  */
 public class StandardsUtils {
+    public static Element getCodelist(String codelist, SchemaManager schemaManager,
+                                       String schema,
+                                       String parent, String xpath,
+                                       String isoType, ServiceContext context)
+        throws Exception {
+        return getCodelistOrLabel(codelist, schemaManager, schema,
+                                    parent, xpath, isoType, context, "codelists.xml");
+    }
+
+    public static Element getLabel(String element, SchemaManager schemaManager,
+                                   String schema,
+                                   String parent, String xpath,
+                                   String isoType, ServiceContext context)
+        throws Exception {
+        return getCodelistOrLabel(element, schemaManager, schema,
+                                    parent, xpath, isoType, context, "labels.xml");
+    }
+
+    private static Element getCodelistOrLabel(String element, SchemaManager schemaManager,
+                                              String schema, String parent, String xpath,
+                                              String isoType, ServiceContext context,
+                                              String fileName) throws Exception {
+        String elementName = StandardsUtils.findNamespace(element, schemaManager, schema);
+        Element e = StandardsUtils.getHelp(schemaManager, fileName,
+            schema, elementName, parent, xpath, isoType, context);
+        if (e == null) {
+            if (schema.startsWith("iso19139.")) {
+                e = StandardsUtils.getHelp(schemaManager, fileName,
+                    "iso19139", elementName, parent, xpath, isoType, context);
+            }
+            if (e == null) {
+                throw new ResourceNotFoundException(String.format(
+                    "Element '%s' from schema '%s' not found in '%s'.",
+                    elementName, schema, fileName));
+            }
+        }
+        return e;
+    }
+
+
     public static Element getHelp(SchemaManager scm, String fileName, String schema,
                                   String name, String parent, String xpath, String isoType, ServiceContext context)
         throws Exception {

@@ -140,7 +140,7 @@
         </a>
       </li>
       <li data-ng-show="!authenticated && service !== 'catalog.signin'">
-        <a href="{{gnCfg.mods.signin.appUrl}}"
+        <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            data-ng-keypress="$event">
           {{'signIn' | translate}}
