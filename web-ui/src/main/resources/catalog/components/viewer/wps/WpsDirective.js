@@ -178,6 +178,9 @@
                           // this will be a {ol.Feature} object once drawn
                           input.feature = null;
 
+                          // output format: TODO: guess based on mimeType
+                          input.outputFormat = 'gml';
+
                           // guess geometry type from schema url
                           var url = input.complexData._default.format.schema;
                           var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);

@@ -30,18 +30,22 @@
   goog.require('OWS_1_1_0');
   goog.require('WPS_1_0_0');
   goog.require('XLink_1_0');
+  goog.require('GML_3_1_1');
+  goog.require('SMIL_2_0');
+  goog.require('SMIL_2_0_Language');
 
   var module = angular.module('gn_wps_service', []);
 
   // WPS Client
   // Jsonix wrapper to read or write WPS response or request
   var context = new Jsonix.Context(
-      [XLink_1_0, OWS_1_1_0, WPS_1_0_0],
+      [XLink_1_0, OWS_1_1_0, WPS_1_0_0, GML_3_1_1, SMIL_2_0, SMIL_2_0_Language],
       {
         namespacePrefixes: {
           'http://www.w3.org/1999/xlink': 'xlink',
           'http://www.opengis.net/ows/1.1': 'ows',
-          'http://www.opengis.net/wps/1.0.0': 'wps'
+          'http://www.opengis.net/wps/1.0.0': 'wps',
+          'http://www.opengis.net/gml': 'gml'
         }
       }
       );
@@ -158,6 +162,19 @@
                     data: {
                       literalData: {
                         value: data.toString()
+                      }
+                    }
+                  });
+                }
+                if (input.complexData && data) {
+                  request.value.dataInputs.input.push({
+                    identifier: {
+                      value: input.identifier.value
+                    },
+                    data: {
+                      complexData: {
+                        mimeType: 'text/xml',
+                        content: [ unmarshaller.unmarshalString(data) ]
                       }
                     }
                   });
