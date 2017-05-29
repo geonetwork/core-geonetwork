@@ -89,7 +89,9 @@
   }
 
 
-  module.value('sxtGlobals', {});
+  module.value('sxtGlobals', {
+    keywords: {}
+  });
 
   module.config(['$LOCALES', 'gnGlobalSettings',
     function($LOCALES, gnGlobalSettings) {
@@ -212,10 +214,11 @@
       });
 
       // Manage sextantTheme thesaurus translation
+      sxtGlobals.keywords['sextantThemePromise'] =
       gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
         gnGlobalSettings.locale.iso3lang, 200).then(function(data) {
-            sxtGlobals.sextantTheme = data;
-            $scope.$broadcast('sextantThemeLoaded');
+            sxtGlobals.keywords.sextantTheme = data;
+            return data;
           });
 
       ///////////////////////////////////////////////////////////////////
@@ -316,9 +319,10 @@
               link.url, link.name, undefined, md).then(function(layer) {
                 if(layer) {
                   var group, theme = md.sextantTheme;
-                  if(angular.isArray(sxtGlobals.sextantTheme)) {
-                    for (var i = 0; i < sxtGlobals.sextantTheme.length; i++) {
-                      var t = sxtGlobals.sextantTheme[i];
+                  var themes = sxtGlobals.keywords.sextantTheme;
+                  if(angular.isArray(themes)) {
+                    for (var i = 0; i < themes.length; i++) {
+                      var t = themes[i];
                       if (t.props.uri == theme) {
                         group = t.label;
                         break;
