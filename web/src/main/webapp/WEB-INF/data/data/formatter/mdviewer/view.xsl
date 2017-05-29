@@ -17,13 +17,13 @@
 					Metadata:
 					<xsl:value-of select="$title" />
 				</title>
-				
-				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/js/ext/resources/css/ext-all.css"/>
-				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/js/ext/resources/css/xtheme-gray.css"/>
-				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/sextant/css/gndefault.css"/>
-				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/sextant/css/gnmetadatadefault.css"/>
-				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/sextant/css/main.css"/>
-				<link rel="stylesheet" type="text/css" href="{root/url}../../apps/sextant/css/schema/main.css"/>
+
+				<link rel="stylesheet" type="text/css" href="{replace(/root/url, 'http:', '')}../../apps/js/ext/resources/css/ext-all.css"/>
+				<link rel="stylesheet" type="text/css" href="{replace(/root/url, 'http:', '')}../../apps/js/ext/resources/css/xtheme-gray.css"/>
+				<link rel="stylesheet" type="text/css" href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/gndefault.css"/>
+				<link rel="stylesheet" type="text/css" href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/gnmetadatadefault.css"/>
+				<link rel="stylesheet" type="text/css" href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/main.css"/>
+				<link rel="stylesheet" type="text/css" href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/main.css"/>
 			</head>
 			<body class="view-win">
 
@@ -33,19 +33,19 @@
         var title = '<xsl:value-of select="translate($title,$apos,concat('\', $apos))" />';
       </script>
 
-      <script src="{root/url}../../apps/js/ext/adapter/ext/ext-base.js">//</script>
-      <script src="{root/url}../../apps/js/ext/ext-all.js">//</script>
-      <script src="{root/url}../../static/geonetwork-client-mini-nomap.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/js/ext/adapter/ext/ext-base.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/js/ext/ext-all.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../static/geonetwork-client-mini-nomap.js">//</script>
 
-      <script src="{root/url}../../apps/sextant/js/cat.lang/fr.js">//</script>
-      <script src="{root/url}../../apps/sextant/js/cat.lang/en.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/sextant/js/cat.lang/fr.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/sextant/js/cat.lang/en.js">//</script>
 
-      <script src="{root/url}../../apps/sextant/js/Settings.js">//</script>
-      <script src="{root/url}../../apps/sextant/js/cat.map/Settings.js">//</script>
-      <script src="{root/url}../../apps/sextant/js/cat.ViewWindow.js">//</script>
-      <script src="{root/url}../../apps/sextant/js/cat.ViewPanel.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/sextant/js/Settings.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/sextant/js/cat.map/Settings.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/sextant/js/cat.ViewWindow.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}../../apps/sextant/js/cat.ViewPanel.js">//</script>
 
-      <script src="{root/url}md.formatter.resource?id=mdviewer&amp;fname=js/fmt-mdviewer-main.js">//</script>
+      <script src="{replace(/root/url, 'http:', '')}md.formatter.resource?id=mdviewer&amp;fname=js/fmt-mdviewer-main.js">//</script>
 
     </html>
 	</xsl:template>
