@@ -367,7 +367,8 @@
         index: '_groupPublished',
         filter: true
       }, {
-        key: 'category'
+        key: 'sextantTheme',
+        tree: true
       }, {
         langs: {
           eng: 'inspireTheme_en',
