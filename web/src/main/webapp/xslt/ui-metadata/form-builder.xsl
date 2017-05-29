@@ -1440,7 +1440,7 @@
     <xsl:param name="values" as="node()"/>
     <xsl:param name="addControl" as="node()?"/>
 
-    <table class="table table-striped gn-table">
+    <table class="table gn-table">
       <xsl:for-each select="$values/header">
         <thead>
           <tr>
