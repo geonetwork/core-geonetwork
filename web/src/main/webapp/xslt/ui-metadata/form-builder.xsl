@@ -1446,6 +1446,9 @@
           <tr>
             <xsl:for-each select="col">
               <th>
+                <xsl:if test="@class">
+                  <xsl:attribute name="class" select="@class"/>
+                </xsl:if>
                 <div class="th-inner ">
                   <xsl:value-of select="."/>
                 </div>
@@ -1464,6 +1467,9 @@
               <td>
                 <xsl:if test="@colspan">
                   <xsl:attribute name="colspan" select="@colspan"/>
+                </xsl:if>
+                <xsl:if test="@class">
+                  <xsl:attribute name="class" select="@class"/>
                 </xsl:if>
                 <xsl:if test="@title">
                   <xsl:attribute name="title" select="@title"/>
