@@ -33,12 +33,46 @@
    * @requires gnMap
    *
    * @description
-   * The `gnGeometryService` service provides utility related to handling vector
-   * features on an OpenLayers map.
+   * The `gnGeometryService` service provides utility related to handling
+   * geometry and mime types
    */
   module.service('gnGeometryService', [
     function() {
-      
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_geometry.service:getFormatFromMimeType
+       * @name gnGeometryService#getFormatFromMimeType
+       *
+       * @description
+       * Guess the output format to use in a gn-geometry-tool directive based
+       * on a mime type received from a DescribeProcess call.
+       *
+       * @param {string} mimeType mime type from the process description
+       * @return {string} format to be used by a gn-geometry-tool directive
+       */
+      this.getFormatFromMimeType = function (mimeType) {
+        var parts = mimeType.split(';');
+        parts.forEach(function (p) {
+          p = p.trim().toLowerCase();
+        });
+
+        switch (parts[0]) {
+          case 'application/json':
+            return 'geojson';
+
+          case 'application/wkt':
+            return 'wkt';
+
+          case 'application/gml+xml':
+          case 'text/xml':
+            return 'gml';
+
+          default:
+            return 'object';
+        }
+      }
+
     }
   ]);
 })();

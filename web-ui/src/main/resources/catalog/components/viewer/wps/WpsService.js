@@ -167,13 +167,14 @@
                   });
                 }
                 if (input.complexData && data) {
+                  var mimeType = input.complexData._default.format.mimeType;
                   request.value.dataInputs.input.push({
                     identifier: {
                       value: input.identifier.value
                     },
                     data: {
                       complexData: {
-                        mimeType: 'text/xml',
+                        mimeType: mimeType,
                         content: [ unmarshaller.unmarshalString(data) ]
                       }
                     }

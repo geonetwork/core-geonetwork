@@ -55,7 +55,9 @@
     'gnUrlUtils',
     '$timeout',
     'wfsFilterService',
-    function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService) {
+    'gnGeometryService',
+    function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
+      gnGeometryService) {
 
       var inputTypes = {
         string: 'text',
@@ -178,8 +180,11 @@
                           // this will be a {ol.Feature} object once drawn
                           input.feature = null;
 
-                          // output format: TODO: guess based on mimeType
-                          input.outputFormat = 'gml';
+                          // output format
+                          input.outputFormat = gnGeometryService
+                            .getFormatFromMimeType(
+                              input.complexData._default.format.mimeType
+                            ) || 'gml';
 
                           // guess geometry type from schema url
                           var url = input.complexData._default.format.schema;
