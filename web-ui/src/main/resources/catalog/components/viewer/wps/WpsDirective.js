@@ -179,6 +179,7 @@
                         if (input.complexData != undefined) {
                           // this will be a {ol.Feature} object once drawn
                           input.feature = null;
+                          input.value = null;
 
                           // output format
                           input.outputFormat = gnGeometryService

@@ -24,6 +24,9 @@
 (function() {
   goog.provide('gn_geometry_directive');
 
+
+  goog.require('ngeo.DecorateInteraction');
+
   var module = angular.module('gn_geometry_directive', []);
 
   /**
@@ -42,143 +45,129 @@
       return {
         restrict: 'E',
         scope: {
-          map: '=',
-          geometryType: '=',
+          map: '<',
+          geometryType: '<',
           output: '=',
-          outputFormat: '=',
+          outputFormat: '<',
           allowReset: '@',
           allowModify: '@'
         },
         templateUrl: '../../catalog/components/viewer/geometry/' +
             'partials/geometrytool.html',
-        link: function (scope, element, attrs) {
-          // internal vars
-          var source = new ol.source.Vector({
-            useSpatialIndex: false
-          });
-          var layer = new ol.layer.Vector({
-            source: source,
-            style: [
-              new ol.style.Style({          // this is the default editing style
-                fill: new ol.style.Fill({
-                  color: 'rgba(255, 255, 255, 0.5)'
-                }),
-                stroke: new ol.style.Stroke({
-                  color: 'white',
-                  width: 5
-                })
-              }),
-              new ol.style.Style({
-                stroke: new ol.style.Stroke({
-                  color: 'rgba(0, 153, 255, 1)',
-                  width: 3
-                }),
-                image: new ol.style.Circle({
-                  radius: 6,
+        controller: ['$scope', 'ngeoDecorateInteraction',
+          function GeometryToolController($scope, ngeoDecorateInteraction) {
+            // internal vars
+            var source = new ol.source.Vector({
+              useSpatialIndex: false
+            });
+            var layer = new ol.layer.Vector({
+              source: source,
+              style: [
+                new ol.style.Style({          // this is the default editing style
                   fill: new ol.style.Fill({
-                    color: 'rgba(0, 153, 255, 1)'
+                    color: 'rgba(255, 255, 255, 0.5)'
                   }),
                   stroke: new ol.style.Stroke({
                     color: 'white',
-                    width: 1.5
+                    width: 5
+                  })
+                }),
+                new ol.style.Style({
+                  stroke: new ol.style.Stroke({
+                    color: 'rgba(0, 153, 255, 1)',
+                    width: 3
+                  }),
+                  image: new ol.style.Circle({
+                    radius: 6,
+                    fill: new ol.style.Fill({
+                      color: 'rgba(0, 153, 255, 1)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: 'white',
+                      width: 1.5
+                    })
                   })
                 })
-              })
-            ]
-          });
-          var drawInteraction = new ol.interaction.Draw({
-            type: scope.geometryType,
-            source: source
-          });
-          var modifyInteraction = new ol.interaction.Modify({
-            features: source.getFeaturesCollection()
-          });
+              ]
+            });
+            $scope.drawInteraction = new ol.interaction.Draw({
+              type: $scope.geometryType,
+              source: source
+            });
+            $scope.modifyInteraction = new ol.interaction.Modify({
+              features: source.getFeaturesCollection()
+            });
 
-          // add our layer&interactions to the map
-          scope.map.addLayer(layer);
-          scope.map.addInteraction(drawInteraction);
-          scope.map.addInteraction(modifyInteraction);
-          drawInteraction.setActive(false);
-          modifyInteraction.setActive(false);
+            // add our layer&interactions to the map
+            $scope.map.addLayer(layer);
+            $scope.map.addInteraction($scope.drawInteraction);
+            $scope.map.addInteraction($scope.modifyInteraction);
+            $scope.drawInteraction.setActive(false);
+            $scope.modifyInteraction.setActive(false);
+            ngeoDecorateInteraction($scope.drawInteraction);
+            ngeoDecorateInteraction($scope.modifyInteraction);
 
-          // modifies the output value
-          var updateOutput = function (feature) {
-            if (!feature) {
-              scope.output = null;
-              return;
+            // modifies the output value
+            var updateOutput = function (feature) {
+              if (!feature) {
+                $scope.output = null;
+                return;
+              }
+
+              var formatLabel = ($scope.outputFormat || '').toLowerCase();
+              var format;
+              var outputValue;
+              switch (formatLabel) {
+                case 'json':
+                case 'geojson':
+                  format = new ol.format.GeoJSON();
+                  outputValue = format.writeGeometry(feature.getGeometry());
+                  break;
+
+                case 'wkt':
+                  format = new ol.format.WKT();
+                  outputValue = format.writeGeometry(feature.getGeometry());
+                  break;
+
+                case 'gml':
+                  format = new ol.format.GML();
+                  outputValue = format.writeGeometryNode(feature.getGeometry())
+                    .innerHTML;
+                  break;
+
+                // no valid format specified: output as object + give warning
+                default:
+                  console.warn('No valid output format specified for '+
+                    'gn-geometry-tool (value=' + $scope.outputFormat + '); ' +
+                    'outputting geometry as object');
+
+                case 'object':
+                  outputValue = feature.getGeometry().clone();
+                  break;
+              }
+
+              $scope.output = outputValue;
             }
 
-            var formatLabel = (scope.outputFormat || '').toLowerCase();
-            var format;
-            var outputValue;
-            switch (formatLabel) {
-              case 'json':
-              case 'geojson':
-                format = new ol.format.GeoJSON();
-                outputValue = format.writeGeometry(feature.getGeometry());
-                break;
+            // clear existing features on draw end
+            $scope.drawInteraction.on('drawend', function (event) {
+              source.clear();
+              updateOutput(event.feature);
+              $scope.drawInteraction.setActive(false);
+            });
 
-              case 'wkt':
-                format = new ol.format.WKT();
-                outputValue = format.writeGeometry(feature.getGeometry());
-                break;
+            // update output on modify end
+            $scope.modifyInteraction.on('modifyend', function (event) {
+              updateOutput(event.feature);
+            })
 
-              case 'gml':
-                format = new ol.format.GML();
-                outputValue = format.writeGeometryNode(feature.getGeometry())
-                  .innerHTML;
-                break;
-
-              // no valid format specified: output as object + give warning
-              default:
-                console.warn('No valid output format specified for '+
-                  'gn-geometry-tool (value=' + scope.outputFormat + '); ' +
-                  'outputting geometry as object');
-
-              case 'object':
-                outputValue = feature.getGeometry().clone();
-                break;
-            }
-
-            scope.output = outputValue;
-          }
-
-          // clear existing features on draw end
-          drawInteraction.on('drawend', function (event) {
-            source.clear();
-            stop();
-            updateOutput(event.feature);
-          });
-
-          // update output on modify end
-          modifyInteraction.on('modifyend', function (event) {
-            updateOutput(event.feature);
-          })
-
-          // state handling
-          scope.currentMode = 0;    // 0: nothing, 1: drawing, 2: modifying
-          scope.startDraw = function () {
-            scope.currentMode = 1;
-            drawInteraction.setActive(true);
-          }
-          scope.toggleModify = function () {
-            if (scope.currentMode === 0) {
-              scope.currentMode = 2;
-              modifyInteraction.setActive(true);
-            } else {
-              stop();
+            // reset drawing
+            $scope.reset = function () {
+              source.clear();
+              updateOutput();
             }
           }
-          var stop = function () {
-            scope.currentMode = 0;
-            drawInteraction.setActive(false);
-            modifyInteraction.setActive(false);
-          }
-          scope.reset = function () {
-            scope.currentMode = 0;
-            source.clear();
-          }
-        }
+        ]
       };
     }]);
 })();

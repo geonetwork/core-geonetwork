@@ -1,16 +1,14 @@
-<div class="btn-group">
+<div gi-btn-group class="btn-group">
 
   <button class="btn btn-default draw-button"
-    ng-class="{ active: currentMode === 1 }"
-    ng-click="startDraw()">
+    gi-btn="active" ng-model="drawInteraction.active">
     <span class="fa fa-pencil"></span>
     <span ng-translate>drawGeometry</span>
   </button>
 
   <button class="btn btn-default modify-button"
     ng-if="allowModify !== undefined"
-    ng-class="{ active: currentMode === 2 }"
-    ng-click="toggleModify()">
+    gi-btn="active" ng-model="modifyInteraction.active">
     <span class="fa fa-pencil"></span>
     <span ng-translate>modifyGeometry</span>
   </button>
