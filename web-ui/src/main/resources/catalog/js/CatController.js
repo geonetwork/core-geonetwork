@@ -206,7 +206,7 @@
       current: null,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // Remap some old settings with new one
-        angular.merge(this.gnCfg, config, {});
+        angular.extend(this.gnCfg, config, {});
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
