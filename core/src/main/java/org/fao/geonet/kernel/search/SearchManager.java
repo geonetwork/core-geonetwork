@@ -933,12 +933,12 @@ public class SearchManager implements ISearchManager {
 
     @Override
     public void delete(String txt) throws Exception {
-
+        delete("_id", txt);
     }
 
     @Override
     public void delete(List<String> txts) throws Exception {
-
+        delete("_id", txts);
     }
 
     public ISODate getDocChangeDate(String mdId) throws Exception {
