@@ -48,7 +48,8 @@
             'multilingualfield/partials/multilingualfield.html',
         scope: {
           mainLanguage: '@',
-          expanded: '@'
+          expanded: '@',
+          currentLanguage: '=?'
         },
         link: function(scope, element, attrs) {
           // Only inputs and textarea could be multilingual fields
