@@ -33,7 +33,11 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 public class ConfigFile {
     private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
