@@ -59,14 +59,17 @@
   <!-- Convert an element gco:CharacterString
   to the GN localized string structure -->
   <xsl:template mode="get-iso19139-localized-string" match="*">
+
+    <xsl:variable name="mainLanguage"
+                  select="string(ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:language/gco:CharacterString)"/>
+
     <xsl:for-each select="gco:CharacterString|
                           gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
       <xsl:variable name="localeId"
                     select="substring-after(@locale, '#')"/>
-      <xsl:variable name="mainLanguage"
-                    select="ancestor::gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
+
       <value lang="{if (@locale)
-                  then ancestor::gmd:MD_Metadata/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
+                  then ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
                   else if ($mainLanguage) then $mainLanguage else $lang}">
         <xsl:value-of select="."/>
       </value>
