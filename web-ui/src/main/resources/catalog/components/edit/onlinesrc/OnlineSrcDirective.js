@@ -96,6 +96,20 @@
               var loadRelations = function() {
                 gnOnlinesrc.getAllResources()
                     .then(function(data) {
+
+                      // If multilingual, get current lang url to
+                      // diplay the resource in the list (img, link)
+                      // lUrl means localize Url
+                      angular.forEach(data.onlines, function(src) {
+                        src.lUrl = src.url[scope.lang] ||
+                          src.url[gnCurrentEdit.mdLanguage] ||
+                          src.url[Object.keys(src.url)[0]];
+                      });
+                      angular.forEach(data.thumbnails, function(img) {
+                        img.lUrl = img.url[scope.lang] ||
+                          img.url[gnCurrentEdit.mdLanguage] ||
+                          img.url[Object.keys(img.url)[0]];
+                      });
                       scope.relations = data;
                     });
               };
@@ -188,6 +202,8 @@
                 };
                 scope.modelOptions =
                     angular.copy(gnGlobalSettings.modelOptions);
+
+                scope.ctrl = {};
               },
               post: function(scope, element, attrs) {
                 scope.popupid = attrs['gnPopupid'];
@@ -272,7 +288,8 @@
                         },
                         'name': {param: 'thumbnail_desc'}
                       }
-                    }]
+                    }],
+                    multilingualFields: ['name', 'desc']
                   },
                   'iso19115-3': {
                     display: 'select',
@@ -959,62 +976,68 @@
 
                     // Create a key which will be sent to XSL processing
                     // for finding which element to edit.
-                    var keysuffix = $filter('gnLocalized')(linkToEdit.title);
+                    var keyName = $filter('gnLocalized')(linkToEdit.title);
+                    var keyUrl = $filter('gnLocalized')(linkToEdit.url);
                     if (scope.isMdMultilingual) {
                       // Key in multilingual mode is
                       // the title in the main language
-                      keysuffix =
-                          linkToEdit.title[Object.keys(scope.mdLangs)[0]];
-                      if (angular.isUndefined(keysuffix)) {
+                      keyName = linkToEdit.title[scope.mdLang];
+                      keyUrl = linkToEdit.url[scope.mdLang];
+                      if (!keyName || ! keyUrl) {
                         console.warn(
                             'Failed to compute key for updating the resource.');
                       }
                     }
-                    scope.editingKey = [linkToEdit.url,
-                                        linkToEdit.protocol,
-                                        keysuffix].join('');
+                    scope.editingKey = [keyUrl, linkToEdit.protocol,
+                      keyName].join('');
 
                     scope.OGCProtocol = checkIsOgc(linkToEdit.protocol);
-
-                    var name = $filter('gnLocalized')(linkToEdit.title),
-                        desc = $filter('gnLocalized')(linkToEdit.description);
 
                     // For multilingual record, build
                     // name and desc based on loc IDs
                     // and no iso3letter code.
                     // If OGC, only take into account, the first element
-                    if (scope.isMdMultilingual && scope.OGCProtocol == null) {
-                      name = {};
-                      desc = {};
-                      $.each(scope.mdLangs, function(key, v) {
-                        name[v] =
-                            (linkToEdit.title && linkToEdit.title[key]) || '';
-                      });
-                      $.each(scope.mdLangs, function(key, v) {
-                        desc[v] =
-                            (linkToEdit.description &&
-                             linkToEdit.description[key]) || '';
-                      });
-                    }
+                    var fields = {
+                      name: 'title',
+                      desc: 'description',
+                      url: 'url'
+                    };
+
+                    angular.forEach(fields, function(value, field){
+                      if(scope.isFieldMultilingual(field)) {
+                        var e = {};
+                        $.each(scope.mdLangs, function(key, v) {
+                          e[v] =
+                            (linkToEdit[fields[field]] &&
+                            linkToEdit[fields[field]][key]) || '';
+                        });
+                        fields[field] = e;
+                      }
+                      else {
+                        fields[field] = $filter('gnLocalized')
+                        (linkToEdit[fields[field]]);
+                      }
+                    });
 
                     scope.params = {
                       linkType: typeConfig,
                       url: fields.url,
                       protocol: linkToEdit.protocol,
-                      name: name,
-                      desc: desc,
+                      name: fields.name,
+                      desc: fields.desc,
                       applicationProfile: linkToEdit.applicationProfile,
                       function: linkToEdit.function,
                       selectedLayers: []
-                      };
-                      } else{
-                      scope.editingKey= null;
-                      scope.params.linkType= scope.config.types[0];
-                      scope.params.protocol= null;
-                      setParameterValue(scope.params.name, '');
-                      setParameterValue(scope.params.desc, '');
-                    }
-                  });
+                    };
+                  } else {
+                    scope.editingKey= null;
+                    scope.params.linkType= scope.config.types[0];
+                    scope.params.protocol= null;
+                    scope.params.name = '';
+                    scope.params.desc = '';
+                    initMultilingualFields();
+                  };
+                });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
                 scope.mode = 'url';
@@ -1045,8 +1068,9 @@
                   scope.layers = [];
                   scope.OGCProtocol = false;
                   if (scope.params && !scope.isEditing) {
-                    scope.params.name = scope.isMdMultilingual ? {} : '';
-                    scope.params.desc = scope.isMdMultilingual ? {} : '';
+                    scope.params.name = '';
+                    scope.params.desc = '';
+                    initMultilingualFields();
                     scope.params.selectedLayers = [];
                     scope.params.layers = [];
                   }
@@ -1095,6 +1119,7 @@
                   } else {
                     p[pName] = value;
                   }
+                  return param;
                 }
 
                 /**
@@ -1104,9 +1129,10 @@
                  *  If it is an URL, we just call a $http.get
                  */
                 scope.addOnlinesrc = function() {
-                  scope.params.name = buildObjectParameter(scope.params.name);
-                  scope.params.desc = buildObjectParameter(scope.params.desc);
+                  scope.config.multilingualFields.forEach(function(f) {
+                    scope.params[f] = buildObjectParameter(scope.params[f]);
 
+                  });
 
                   var processParams = {};
                   angular.forEach(scope.params.linkType.fields,
@@ -1146,15 +1172,20 @@
                  * passed to the layers grid directive.
                  */
                 scope.loadCurrentLink = function(reportError) {
-                  if (angular.isUndefined(scope.params.url) ||
-                      scope.params.url == '') {
+
+                  // If multilingual or not
+                  var url = scope.params.url;
+                  if(angular.isObject(url)) {
+                    url = url[scope.ctrl.urlCurLang];
+                  }
+
+                  if (!url) {
                     return;
                   }
                   if (scope.OGCProtocol) {
                     scope.layers = [];
                     if (scope.OGCProtocol == 'WMS') {
-                      return gnOwsCapabilities.getWMSCapabilities(
-                          scope.params.url)
+                      return gnOwsCapabilities.getWMSCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
@@ -1167,8 +1198,7 @@
                             scope.isUrlOk = error === 200;
                           });
                     } else if (scope.OGCProtocol == 'WFS') {
-                      return gnWfsService.getCapabilities(
-                          scope.params.url)
+                      return gnWfsService.getCapabilities(url)
                           .then(function(capabilities) {
                             scope.layers = [];
                             scope.isUrlOk = true;
@@ -1187,18 +1217,14 @@
                             scope.isUrlOk = error === 200;
                           });
                     }
-                  } else if (scope.params.url.indexOf('http') === 0) {
-                    var useProxy =
-                        scope.params.url.indexOf(location.hostname) === -1;
-                    var url = useProxy ?
-                        gnGlobalSettings.proxyUrl +
-                        encodeURIComponent(scope.params.url) : scope.params.url;
-                    return $http.get(url).then(function(response) {
+                  } else if (url.indexOf('http') === 0) {
+                    return $http.get(url, {
+                      gnNoProxy: false
+                    }).then(function(response) {
                       scope.isUrlOk = response.status === 200;
                     },
                     function(response) {
-                      // Proxy may return 500 when document is not proxyable
-                      scope.isUrlOk = response.status === 200;
+                      scope.isUrlOk = response.status === 500;
                     });
                   } else {
                     scope.isUrlOk = true;
@@ -1206,7 +1232,8 @@
                 };
 
                 function checkIsOgc(protocol) {
-                  if (protocol && protocol.indexOf('OGC:WMS') >= 0) {
+
+                  if(/OGC:WMS-[0-9].[0-9].[0-9]-http-get-map/.exec(protocol)) {
                     return 'WMS';
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
@@ -1240,13 +1267,20 @@
                  * On URL change, reload WMS capabilities
                  * if the protocol is WMS
                  */
-                scope.$watch('params.url', function() {
-                  if (!angular.isUndefined(scope.params.url)) {
+                var updateImageTag = function() {
+                  scope.isImage = false;
+                  var urls = scope.params.url;
+                  var curUrl = angular.isObject(urls) ?
+                    urls[scope.ctrl.urlCurLang] : urls;
+
+                  if(curUrl) {
                     scope.loadCurrentLink();
-                    scope.isImage =
-                        scope.params.url.match(/.*.(png|jpg|gif)$/i);
+                    scope.isImage = curUrl.match(/.*.(png|jpg|gif)$/i);
                   }
-                });
+
+                };
+                scope.$watch('params.url', updateImageTag, true);
+                scope.$watch('ctrl.urlCurLang', updateImageTag, true);
 
                 /**
                  * Concat layer names and title in params names
@@ -1266,10 +1300,18 @@
                           names.push(layer.Name || layer.name);
                           descs.push(layer.Title || layer.title);
                         });
-                    angular.extend(scope.params, {
-                      name: names.join(','),
-                      desc: descs.join(',')
-                    });
+
+                    if(scope.isMdMultilingual) {
+                      var langCode = scope.mdLangs[scope.mdLang];
+                      scope.params.name[langCode] = names.join(',');
+                      scope.params.desc[langCode] = descs.join(',');
+                    }
+                    else {
+                      angular.extend(scope.params, {
+                        name: names.join(','),
+                        desc: descs.join(',')
+                      });
+                    }
                   }
                 });
 
