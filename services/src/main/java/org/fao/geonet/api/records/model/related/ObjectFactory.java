@@ -69,10 +69,17 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link org.fao.geonet.api.records.model.related.RelatedItem.Title }
+     * Create an instance of {@link RelatedItem.MultilingualValue }
      */
-    public org.fao.geonet.api.records.model.related.RelatedItem.Title createRelatedItemTitle() {
-        return new org.fao.geonet.api.records.model.related.RelatedItem.Title();
+    public RelatedItem.MultilingualValue createRelatedItemTitle() {
+        return new RelatedItem.MultilingualValue();
+    }
+
+    /**
+     * Create an instance of {@link RelatedItem.MultilingualValue }
+     */
+    public RelatedItem.MultilingualValue createRelatedItemUrl() {
+        return new RelatedItem.MultilingualValue();
     }
 
     /**
