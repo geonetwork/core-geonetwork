@@ -8,7 +8,7 @@
   </button>
   <ul class="dropdown-menu small-dropdown" role="menu">
     <ul ng-repeat="type in ::types" ng-if="::relations[type]" class="gn-related-list">
-      <li class="gn-related-type">{{type | translate}}</li>
+      <li class="gn-related-type">{{('link-' + type) | translate}}</li>
       <li ng-repeat="r in ::relations[type]" >
         <a href="#/metadata/{{r.id}}"
            title="{{r.title | gnLocalized: lang}}">

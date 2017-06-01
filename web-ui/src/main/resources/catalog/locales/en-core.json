@@ -306,5 +306,9 @@
     "typeOfRecord": "Type of record",
     "load": "Load",
     "solrAccessError": "Error during Solr access.",
-    "gnbbox": "Geographical area"
+    "gnbbox": "Geographical area",
+    "link-children": "children",
+    "link-parent": "parent",
+    "link-sources": "Source of other metadatas",
+    "link-hassources": "Metadata sources"
 }

@@ -302,5 +302,9 @@
     "typeOfRecord": "Type de fiche",
     "load": "Charger",
     "solrAccessError": "Erreur lors de l'accès à l'index.",
-    "gnbbox": "Zone géographique"
+    "gnbbox": "Zone géographique",
+    "link-children": "enfants",
+    "link-parent": "parents",
+    "link-sources": "Source d'autres métadonnée",
+    "link-hassources": "Métadonnées sources"
 }
