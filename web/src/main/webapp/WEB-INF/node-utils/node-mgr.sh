@@ -39,7 +39,7 @@ else
   GNLIB=../lib/
   WEB_FILE=../web.xml
   WEB_FILE_OUT=../web-temp.xml
-  CSS_FILE=../catalog/style/${gnnodeid}_custom_style.css
+  CSS_FILE=../../catalog/style/${gnnodeid}_custom_style.css
 fi
 
 function showUsage
