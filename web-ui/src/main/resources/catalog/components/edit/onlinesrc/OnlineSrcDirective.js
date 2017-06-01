@@ -999,7 +999,22 @@
                   }
                 };
 
+                var initMultilingualFields = function() {
+                  scope.config.multilingualFields.forEach(function(f) {
+                    scope.params[f] = {};
+                    setParameterValue(f, '');
+                  });
+                };
 
+
+                /**
+                 * Build the multingual structure if need for the onlinesrc
+                 * param (name, desc, url).
+                 * Struct like {'ger':'', 'eng': ''}
+                 *
+                 * @param param
+                 * @returns {*}
+                 */
                 function buildObjectParameter(param) {
                   if (angular.isObject(param)) {
                     var name = [];
@@ -1011,13 +1026,21 @@
                   return param;
                 }
 
-                function setParameterValue(param, value) {
-                  if (scope.isMdMultilingual) {
+                /**
+                 * Set a vlue to a onlinesrc parameter (url, desc, name).
+                 * Value as string if monolingual, else set to each lang.
+                 *
+                 * @param {String} pName name of attribute in `scope.params`
+                 * @param {string} value of the attribute
+                 */
+                function setParameterValue(pName, value) {
+                  var p = scope.params;
+                  if (scope.isFieldMultilingual(pName)) {
                     $.each(scope.mdLangs, function(key, v) {
-                      param[v] = value;
+                      p[pName][v] = value;
                     });
                   } else {
-                    param = value;
+                    p[pName] = value;
                   }
                 }
 
@@ -1233,15 +1256,27 @@
                 });
 
                 scope.resource = null;
-                scope.$watch('resource', function() {
-                  if (scope.resource && scope.resource.url) {
-                    scope.params.url = '';
-                    setParameterValue(scope.params.name, '');
-                    $timeout(function() {
-                      scope.params.url = scope.resource.url;
-                      setParameterValue(scope.params.name,
-                          scope.resource.id.split('/').splice(2).join('/'));
-                    }, 100);
+
+                /**
+                 * Update url and name from uploaded resource.
+                 * Triggered on file store selection change.
+                 */
+                scope.$watch('resource', function(rsrc) {
+
+                  if (rsrc && rsrc.url) {
+                    var o = {
+                      name: rsrc.id.split('/').splice(2).join('/'),
+                      url: rsrc.url
+                    };
+                    ['url', 'name'].forEach(function(pName) {
+                      var value = o[pName];
+                      if(scope.isFieldMultilingual(pName)) {
+                        scope.params[pName][scope.ctrl.urlCurLang] = value;
+                      }
+                      else {
+                        scope.params[pName] = value;
+                      }
+                    });
                   }
                 });
 
