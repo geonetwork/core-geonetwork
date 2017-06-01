@@ -1558,6 +1558,7 @@
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope) {
+                  scope.ctrl = {};
                   scope.searchObj = {
                     any: '',
                     defaultParams: {
