@@ -1193,7 +1193,43 @@ XPath:
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation><![CDATA[
+When type is add, add optional directive attributes.
+
+.. code-block:: xml
+
+          <action type="add"
+                  name="checkpoint-tdp-add-component"
+                  or="dataQualityInfo"
+                  in="/mdb:MD_Metadata"
+                  if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) > 0"
+                  addDirective="data-gn-record-fragment-selector">
+            <directiveAttributes data-source-records="xpath::string-join(
+              //mri:associatedResource/*[mri:initiativeType/*/@codeListValue = 'specification']
+                /mri:metadataReference/@uuidref, ',')"/>
+          </action>
+
+When type is associatedResource, optional options can be added
+to open the panel with additional parameters.
+
+For example, for sibling panel, the association type and initiative type could be set:
+
+.. code-block:: xml
+
+        <action type="associatedResource"
+                name="checkpoint-linkToUpstreamData"
+                if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) = 1"
+                process="sibling">
+          <options>{"associationType": "crossReference", "initiativeType": "upstreamData"}</options>
+        </action>
+
+
+]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
