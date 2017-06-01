@@ -42,11 +42,11 @@ else
   CSS_FILE=../catalog/style/${gnnodeid}_custom_style.css
 fi
 
-function showUsage 
+function showUsage
 {
 
   echo -e "\nThis script is used to create a new node configuration"
-  echo -e "\n  Default pool size: $gnpoolsize_default" 
+  echo -e "\n  Default pool size: $gnpoolsize_default"
   echo -e "  Default db driver: $gndbdriver_default"
   echo -e "  Default webapp path: $GEONETWORK_HOME"
   echo
@@ -107,8 +107,8 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -PARAM dbDriver $gndbdriver \
         -PARAM dbUrl $gndburl \
         -PARAM poolSize $gnpoolsize \
-        -IN ../config-node/srv.xml -XSL generate-spring-config.xsl \
-        -OUT ../config-node/$gnnodeid.xml
+        -IN ../../../webResources/WEB-INF/config-node/srv.xml -XSL generate-spring-config.xsl \
+        -OUT ../../../webResources/WEB-INF/config-node/$gnnodeid.xml
 
 # Replace j2e: by empty string in web.xml
 if [ "$(uname)" == "Darwin" ]
