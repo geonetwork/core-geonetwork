@@ -120,7 +120,7 @@
           <div class="row">
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
-              <a data-ng-href="{{resource.url}}"
+              <a data-ng-href="{{resource.url | gnLocalized: lang}}"
                  data-ng-if="resource.url.match('^http|ftp') !== null"
                  target="_blank">
                 <i class="fa fa-fw"
