@@ -23,29 +23,28 @@
 
 package org.fao.geonet.api.userfeedback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import io.swagger.annotations.*;
+import jeeves.server.UserSession;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.utils.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = {
         "/api",
@@ -57,7 +56,7 @@ public class UserFeedbackAPI {
 
     public static final String API_PARAM_CSW_SERVICE_IDENTIFIER = "Service identifier";
     public static final String API_PARAM_CSW_SERVICE_DETAILS = "Service details";
-    
+
     // GET
     @ApiOperation(
             value = "Finds a list of usercomment records",
@@ -76,9 +75,12 @@ public class UserFeedbackAPI {
             final HttpServletResponse response) throws Exception {
 
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComments");
-        
-        
-        return list;
+
+        IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+        String uuid = "";
+
+        return userFeedbackService.retrieveUserFeedbackForMetadata(uuid);
     }
 
     @ApiOperation(
@@ -99,7 +101,10 @@ public class UserFeedbackAPI {
 
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComment");
 
-        return list.get(0);
+        IUserFeedbackService userFeedbackService =
+            (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
+
+        return userFeedbackService.retrieveUserFeedback(uuid);
     }
 
     @ApiOperation(
@@ -117,12 +122,14 @@ public class UserFeedbackAPI {
             final HttpServletRequest request,
             final HttpServletResponse response
             ) throws Exception {
-        
-        Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");       
 
-        return rating;
+        Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
+
+        IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+        return userFeedbackService.retrieveMetadataRating(uuid);
     }
-    
+
     @ApiOperation(
             value = "Publishes a record, send notification ",
             notes = "Publishes a record, send notification ",
@@ -131,23 +138,34 @@ public class UserFeedbackAPI {
             value = "/userfeedback/{uuid}/publish",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('Reviewer')")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "User feedback puvlished."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
     @ResponseBody
-    public boolean publish(
+    public ResponseEntity publish(
             @PathVariable(value = "uuid") final String uuid,
             final HttpServletRequest request,
-            final HttpServletResponse response
+            final HttpServletResponse response,
+            final HttpSession httpSession
             ) throws Exception {
-        
+
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "publish");
 
-        return true;
+        UserSession session = ApiUtils.getUserSession(httpSession);
+
+        IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+        userFeedbackService.publishUserFeedback(uuid, session.getPrincipal());
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    
-    
+
+
     // PUT
-    
+
     @ApiOperation(
             value = "Create a userfeedback (draft), send notification to owner ",
             notes = "Create a userfeedback (draft), send notification to owner ",
@@ -156,29 +174,43 @@ public class UserFeedbackAPI {
             value = "/userfeedback",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public boolean newUserFeedback(final HttpServletRequest request,
+    public ResponseEntity newUserFeedback(
+        @ApiParam(
+            name = "userFeedback"
+        )
+        @RequestBody
+            UserFeedback userFeedback,
+            final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
-        
+
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "newUserFeedback");
 
-        return true;
+        IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+        userFeedbackService.saveUserFeedback(userFeedback);
+
+        return new ResponseEntity(HttpStatus.CREATED);
     }
-    
-    
+
+
     // DELETE
     @ApiOperation(
-            value = "Removes a record",
-            notes = "Removes a record",
+            value = "Removes a user feedback",
+            notes = "Removes a user feedback",
             nickname = "deleteUserFeedback")
     @RequestMapping(
             value = "/userfeedback/{uuid}",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "User feedback removed."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
     @ResponseBody
-    public boolean deleteUserFeedback(
+    public ResponseEntity deleteUserFeedback(
             @PathVariable(value = "uuid") final String uuid,
             final HttpServletRequest request,
             final HttpServletResponse response
@@ -186,74 +218,14 @@ public class UserFeedbackAPI {
 
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "deleteUserFeedback");
 
-        return true;
-    }
-    
-    // TODO: REMOVE Mockup data
-    private static List<UserFeedback> list = new ArrayList<UserFeedback>();
-    
-    private static Rating rating = new Rating();
-    
-    static {
-        UserFeedback uf1;
-        list.add(uf1 = new UserFeedback());
-        uf1.setComment("Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                + " Etiam ultrices ligula urna. Ut cursus, mauris sed auctor"
-                + " accumsan, quam ligula gravida lectus, ut condimentum velit sem "
-                + "a risus.");
-        User u1;
-        uf1.setUser(u1 = new User());
-        u1.setName("Marco Polo");
-        u1.setOrganisation("SomethingGeo");
-        
-        UserFeedback uf2;
-        list.add(uf2 = new UserFeedback());
-        uf2.setComment("Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                + " Etiam ultrices ligula urna. Ut cursus, mauris sed auctor"
-                + " accumsan, quam ligula gravida lectus, ut condimentum velit sem "
-                + "a risus.");
-        User u2;
-        uf2.setUser(u2 = new User());
-        u2.setName("Cristoforo Colombo");
-        u2.setOrganisation("GeoWhathever");       
-        
-        UserFeedback uf3;
-        list.add(uf3 = new UserFeedback());
-        uf3.setComment("Indeed");
-        uf3.setUser(u1);
-        
-        UserFeedback uf4;
-        list.add(uf4 = new UserFeedback());
-        uf4.setComment("Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                + " Etiam ultrices ligula urna. Ut cursus, mauris sed auctor"
-                + " accumsan, quam ligula gravida lectus, ut condimentum velit sem "
-                + "a risus.");
-        uf4.setUser(u2);
-        
-        UserFeedback uf5;
-        list.add(uf5 = new UserFeedback());
-        uf5.setComment("Yes, you're right");
-        uf5.setUser(u1);
-        
-        UserFeedback uf6;
-        list.add(uf6 = new UserFeedback());
-        uf6.setComment("Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                + " Etiam ultrices ligula urna. Ut cursus, mauris sed auctor"
-                + " accumsan, quam ligula gravida lectus, ut condimentum velit sem "
-                + "a risus.");
-        uf6.setUser(u2);
-        
-        
-        
-        
-        rating.setAvgRating(4);
-        
-        rating.setCommentsCount(list.size());
+        IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-    
+        userFeedbackService.removeUserFeedback(uuid);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-    
-    
-    // ************************
-    
+
+    private IUserFeedbackService getUserFeedbackService() {
+        return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
+    }
 }
