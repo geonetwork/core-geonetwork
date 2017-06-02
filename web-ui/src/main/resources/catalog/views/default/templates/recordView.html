@@ -72,8 +72,6 @@
 			title="{{'edit' | translate}}"> <i class="fa fa-pencil"></i>
 		</a>
 
-		<div class="gnMdfeedback"></div>
-
 		<div data-ng-show="usingFormatter" id="gn-metadata-display"
 			class="gn-metadata-display"></div>
 
@@ -424,7 +422,7 @@
 				</section>
 				</br>
 
-				<div data-gn-userfeedback parentUuid='ciao' ></div>
+				<div data-gn-userfeedback='{{recordIdentifierRequested | htmlToPlaintext}}' ></div>
 
 				<section data-ng-if="mdView.current.record.geoBox.length > 0">
 					<h4>

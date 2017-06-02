@@ -30,12 +30,13 @@ public interface IUserFeedbackService {
     UserFeedback retrieveUserFeedback(String feedbackUuid);
 
     /**
-     * Retrieves the rating associated to a metadata.
+     * Retrieves the ratings associated to metadata.
      *
      * @param feedbackUuid
      * @return
      */
-    Rating retrieveMetadataRating(String feedbackUuid);
+    public List<Rating> retrieveMetadataRatings(String metadataUuid);
+   
 
     /**
      * Saves a user feedback.

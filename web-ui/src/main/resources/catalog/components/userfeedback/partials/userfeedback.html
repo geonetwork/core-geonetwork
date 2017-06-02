@@ -8,14 +8,14 @@
 	</section>
 
 	<section class="gn-userfeedback-sidebar">
-		<h1>{{rating.avgRating}}</h1>
-		<p>{{rating.commentsCount}} user comments</p>
+		<h1>{{rating.ratingAverage}}</h1>
+		<p>{{rating.userfeedbackCount}} user comments</p>
 
 		<ul class="gn-userfeedback-list">
 			<li class="gn-userfeedback-item" data-ng-repeat="row in fewCommentsList">
 				<div class="gn-userfeedback-comment gn-arrow-bottom">{{row.comment}}</div>
 				<div class="gn-userfeedback-user">
-					<span><strong>{{row.user.name}}</strong></span> <span>{{row.user.organisation}}</span>
+					<span><strong>{{row.user.username}}</strong></span> <span>{{row.user.organisation}}</span>
 				</div>
 			</li>
 			
