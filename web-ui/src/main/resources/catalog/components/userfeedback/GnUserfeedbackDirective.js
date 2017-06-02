@@ -37,7 +37,7 @@
               replace: false,
               controller: 'gnUserfeedbackController',
               scope: {
-            	parentUuid: '@'
+            	parentUuid: '@gnUserfeedback'
               },
               templateUrl: '../../catalog/components/userfeedback/partials/userfeedback.html',
               link: function(scope, elem, attrs) {

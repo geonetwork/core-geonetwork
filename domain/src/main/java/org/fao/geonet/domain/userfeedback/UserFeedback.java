@@ -22,15 +22,20 @@
  */
 package org.fao.geonet.domain.userfeedback;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -39,47 +44,62 @@ import javax.persistence.Table;
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
+import org.hibernate.annotations.Type;
 
-@Entity(name = "UserFeedback")
-@Table(name = "UserFeedback")
-public class UserFeedback extends GeonetEntity {
+@Entity(name = "GUF_UserFeedback")
+@Table(name = "GUF_UserFeedbacks")
+public class UserFeedback extends GeonetEntity implements Serializable {
     
+    private static final long serialVersionUID = -5537639171291203188L;
+
     @Id
     private String uuid;
 
     @Column
     private String comment;
+    
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "rating_id", referencedColumnName = "id")
+    private Rating rating;
 
     @ManyToOne
+    @JoinColumn(name = "metadata_uuid", referencedColumnName = "uuid")
     private Metadata metadata;
 
     @ManyToOne
+    @JoinColumn(name = "parent_uuid", referencedColumnName = "uuid")
     private UserFeedback parent;
 
     @ManyToOne
-    private User user;
+    @Nullable
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
 
-    @ManyToMany
-    private Set<Keyword> keyword;
+    @ManyToMany(cascade=CascadeType.ALL)
+    @JoinTable(name = "GUF_userfeedback_keyword", joinColumns = @JoinColumn(name = "userfeedback_uuid", referencedColumnName = "uuid"), inverseJoinColumns = @JoinColumn(name = "keyword_id", referencedColumnName = "id"))
+    private Set<Keyword> keywords;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRatingStatus status;
 
     @ManyToOne
+    @Nullable
+    @JoinColumn(name = "approver_id", referencedColumnName = "id")
     private User approver;
 
     @Column(nullable = false)
     private Date date;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "citation_id", referencedColumnName = "id")
     private Citation citation;
 
     public UserFeedback() {
         this.uuid = UUID.randomUUID().toString();
     }    
    
-    enum UserRatingStatus {
+    public enum UserRatingStatus {
         PUBLISHED, WAITING_FOR_APPROVAL;
     } 
     
@@ -136,6 +156,16 @@ public class UserFeedback extends GeonetEntity {
     }
 
 
+    public Rating getRating() {
+        return rating;
+    }
+
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+
     public Metadata getMetadata() {
         return metadata;
     }
@@ -156,23 +186,23 @@ public class UserFeedback extends GeonetEntity {
     }
 
 
-    public User getUser() {
-        return user;
+    public User getAuthor() {
+        return author;
     }
 
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
 
-    public Set<Keyword> getKeyword() {
-        return keyword;
+    public Set<Keyword> getKeywords() {
+        return keywords;
     }
 
 
-    public void setKeyword(Set<Keyword> keyword) {
-        this.keyword = keyword;
+    public void setKeyword(Set<Keyword> keywords) {
+        this.keywords = keywords;
     }
 
 
@@ -214,7 +244,8 @@ public class UserFeedback extends GeonetEntity {
     public void setCitation(Citation citation) {
         this.citation = citation;
     }
-    
+
+
     
 
 }
