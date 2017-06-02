@@ -130,7 +130,7 @@
                     }
                   });
               scope.sortLinks = function(g) {
-                return $filter('gnLocalized')(g);
+                return $filter('gnLocalized')(g.title);
               };
             }
           };
@@ -305,13 +305,15 @@
                       icon: 'fa gn-icon-map',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true}
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -328,11 +330,13 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WMS', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'OGC:WMS', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true}
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -349,13 +353,16 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WMS', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'OGC:WMS', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true},
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false},
                         'applicationProfile': {
-                          value: 'inspire-view', hidden: true
+                          value: 'inspire-view', hidden: true,
+                          isMultilingual: false
                         }
                       }
                     }, {
@@ -373,11 +380,13 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WMTS', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'OGC:WMTS', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true}
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -394,11 +403,13 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'ESRI:REST', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'ESRI:REST', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true}
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -412,14 +423,17 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true},
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false},
                         'applicationProfile': {
                           value: 'application/vnd.google-earth.kml+xml',
-                          hidden: true
+                          hidden: true,
+                          isMultilingual: false
                         }
                       }
                     }, {
@@ -432,14 +446,15 @@
                       icon: 'fa gn-icon-map',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'browsing', hidden: true},
-                        'applicationProfile': 'applicationProfile'
+                        'function': {value: 'browsing', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDownload',
@@ -451,13 +466,15 @@
                       icon: 'fa gn-icon-onlinesrc',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'download', hidden: true}
+                        'function': {value: 'download', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDownload',
@@ -469,16 +486,19 @@
                       icon: 'fa gn-icon-onlinesrc',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'download', hidden: true},
+                        'function': {value: 'download', hidden: true,
+                          isMultilingual: false},
                         'applicationProfile': {
                           value: 'application/vnd.google-earth.kml+xml',
-                          hidden: true
+                          hidden: true,
+                          isMultilingual: false
                         }
                       }
                     }, {
@@ -491,13 +511,15 @@
                       icon: 'fa gn-icon-onlinesrc',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'download', hidden: true}
+                        'function': {value: 'download', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDownload',
@@ -514,11 +536,13 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WFS', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'OGC:WFS', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'download', hidden: true}
+                        'function': {value: 'download', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDownload',
@@ -535,11 +559,13 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WCS', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'OGC:WCS', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'download', hidden: true}
+                        'function': {value: 'download', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineDownload',
@@ -556,13 +582,16 @@
                       },
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
-                        'protocol': {value: 'OGC:WFS', hidden: true},
+                        'url': {isMultilingual: false},
+                        'protocol': {value: 'OGC:WFS', hidden: true,
+                          isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'function': {value: 'download', hidden: true},
+                        'function': {value: 'download', hidden: true,
+                          isMultilingual: false},
                         'applicationProfile': {
-                          value: 'inspire-download', hidden: true
+                          value: 'inspire-download', hidden: true,
+                          isMultilingual: false
                         }
                       }
                     }, {
@@ -575,7 +604,7 @@
                       icon: 'fa fa-table',
                       process: 'fcats-file-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {}
                       }
                     }, {
@@ -588,10 +617,11 @@
                       icon: 'fa fa-table',
                       process: 'dq-report-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'type': {param: 'type', value: 'qualityReport'}
+                        'type': {param: 'type', value: 'qualityReport',
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineUse',
@@ -603,10 +633,11 @@
                       icon: 'fa fa-table',
                       process: 'dq-report-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'type': {param: 'type', value: 'qualitySpecification'}
+                        'type': {param: 'type', value: 'qualitySpecification',
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineUse',
@@ -618,10 +649,11 @@
                       icon: 'fa fa-table',
                       process: 'dq-report-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {},
                         'desc': {},
-                        'type': {param: 'type', value: 'lineage'}
+                        'type': {param: 'type', value: 'lineage',
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineUse',
@@ -634,7 +666,7 @@
                       icon: 'fa fa-table',
                       process: 'legend-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {}
                       }
                     }, {
@@ -648,7 +680,7 @@
                       icon: 'fa fa-table',
                       process: 'legend-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {}
                       }
                     }, {
@@ -662,7 +694,7 @@
                       icon: 'fa fa-table',
                       process: 'legend-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {}
                       }
                       //},{
@@ -696,13 +728,15 @@
                       icon: 'fa gn-icon-onlinesrc',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'information', hidden: true}
+                        'function': {value: 'information', hidden: true,
+                          isMultilingual: false}
                       }
                     }, {
                       group: 'onlineMore',
@@ -714,13 +748,15 @@
                       icon: 'fa gn-icon-onlinesrc',
                       process: 'onlinesrc-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK-1.0-http--link', hidden: true
+                          value: 'WWW:LINK-1.0-http--link', hidden: true,
+                          isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
-                        'function': {value: 'information', hidden: true}
+                        'function': {value: 'information', hidden: true,
+                          isMultilingual: false}
                       }
                     }]
                   }
