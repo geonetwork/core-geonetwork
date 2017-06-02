@@ -304,7 +304,7 @@
                       fileStoreFilter: '*.{jpg,JPG,png,PNG,gif,GIF}',
                       process: 'thumbnail-add',
                       fields: {
-                        'url': {},
+                        'url': {isMultilingual: false},
                         'name': {param: 'desc'}
                       }
                     }, {
@@ -1119,7 +1119,6 @@
                   } else {
                     p[pName] = value;
                   }
-                  return param;
                 }
 
                 /**
