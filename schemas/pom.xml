@@ -48,6 +48,8 @@
     <module>dublin-core</module>
     <module>iso19110</module>
     <module>iso19139</module>
+    <module>guf10</module>
+    <module>iso19115-3</module>
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>
