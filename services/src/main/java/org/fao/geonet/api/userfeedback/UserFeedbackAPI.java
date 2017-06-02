@@ -35,6 +35,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
@@ -78,7 +79,7 @@ public class UserFeedbackAPI {
 
         IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-        String uuid = "";
+        String uuid = request.getParameter("target");
 
         return userFeedbackService.retrieveUserFeedbackForMetadata(uuid);
     }
@@ -112,12 +113,12 @@ public class UserFeedbackAPI {
             notes = "Provides an average rating for a metadata record",
             nickname = "getMetadataUserComments")
     @RequestMapping(
-            value = "/metadata/{uuid}/userfeedback",
+            value = "/metadata/{uuid}/userfeedbackrating",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public Rating getMetadataRating(
+    public RatingAverage getMetadataRating(
             @PathVariable(value = "uuid") final String uuid,
             final HttpServletRequest request,
             final HttpServletResponse response
@@ -126,8 +127,10 @@ public class UserFeedbackAPI {
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
 
         IUserFeedbackService userFeedbackService = getUserFeedbackService();
+        
+        UserFeedbackUtils utils = new UserFeedbackUtils();
 
-        return userFeedbackService.retrieveMetadataRating(uuid);
+        return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(uuid));
     }
 
     @ApiOperation(

@@ -32,7 +32,7 @@
     	
     	$scope.fewCommentsList = [];   	
     	$scope.rating;
-    	$scope.metatdataUUID = "fgfgffg";
+    	$scope.metatdataUUID = $scope.parentUuid;
     	
     	 $http({
              method : "GET",
@@ -46,7 +46,7 @@
     	 
     	 $http({
              method : "GET",
-             url : "../api/metadata/" + $scope.metatdataUUID + "/userfeedback",
+             url : "../api/metadata/" + $scope.metatdataUUID + "/userfeedbackrating",
              isArray: false
          }).then(function mySuccess(response) {
         	 $scope.rating = response.data;
