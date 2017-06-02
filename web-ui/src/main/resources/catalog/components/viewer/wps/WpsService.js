@@ -175,7 +175,7 @@
                     data: {
                       complexData: {
                         mimeType: mimeType,
-                        content: [ unmarshaller.unmarshalString(data) ]
+                        cdata: data
                       }
                     }
                   });

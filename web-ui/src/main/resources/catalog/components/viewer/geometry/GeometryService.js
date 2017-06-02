@@ -27,9 +27,9 @@
   var module = angular.module('gn_geometry_service', []);
 
   /**
-   * @ngdoc Geometry Service
+   * @ngdoc service
    * @kind function
-   * @name gn_viewer.service:gnGeometryService
+   * @name gn_geometry.service:gnGeometryService
    * @requires gnMap
    *
    * @description
@@ -41,7 +41,7 @@
 
       /**
        * @ngdoc method
-       * @methodOf gn_geometry.service:getFormatFromMimeType
+       * @methodOf gn_geometry.service:gnGeometryService
        * @name gnGeometryService#getFormatFromMimeType
        *
        * @description

@@ -25,8 +25,6 @@
   goog.provide('gn_geometry_directive');
 
 
-  goog.require('ngeo.DecorateInteraction');
-
   var module = angular.module('gn_geometry_directive', []);
 
   /**
