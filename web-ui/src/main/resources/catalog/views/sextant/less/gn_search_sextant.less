@@ -1337,6 +1337,15 @@ ul.gn-resultview {
       line-height: normal;
       .text-overflow();
       width: 100%;
+      position: relative;
+      padding-left: 23px;
+
+      & > span:first-child, & > i:first-child {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
   }
 }
