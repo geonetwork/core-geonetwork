@@ -30,6 +30,7 @@ then
   # When running from the source code
   echo -e "Running from the source code"
   GNLIB=../../../../../target/geonetwork/WEB-INF/lib/
+  CONFIGNODE_FOLDER=../../../webResources/WEB-INF/config-node
   WEB_FILE=../../../webResources/WEB-INF/web.xml
   WEB_FILE_OUT=../../../webapp/WEB-INF/web.xml
   CSS_FILE=../../../../../target/geonetwork/catalog/style/${gnnodeid}_custom_style.css
@@ -37,6 +38,7 @@ else
   # When running from the app
   echo -e "Running from the app"
   GNLIB=../lib/
+  CONFIGNODE_FOLDER=../config-node
   WEB_FILE=../web.xml
   WEB_FILE_OUT=../web-temp.xml
   CSS_FILE=../../catalog/style/${gnnodeid}_custom_style.css
@@ -107,8 +109,8 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -PARAM dbDriver $gndbdriver \
         -PARAM dbUrl $gndburl \
         -PARAM poolSize $gnpoolsize \
-        -IN ../../../webResources/WEB-INF/config-node/srv.xml -XSL generate-spring-config.xsl \
-        -OUT ../../../webResources/WEB-INF/config-node/$gnnodeid.xml
+        -IN $CONFIGNODE_FOLDER/srv.xml -XSL generate-spring-config.xsl \
+        -OUT $CONFIGNODE_FOLDER/$gnnodeid.xml
 
 # Replace j2e: by empty string in web.xml
 if [ "$(uname)" == "Darwin" ]
