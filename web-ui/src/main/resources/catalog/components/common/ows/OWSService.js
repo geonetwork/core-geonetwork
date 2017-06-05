@@ -149,7 +149,12 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
-                      defer.resolve(parseWMTSCapabilities(data));
+                      if(data) {
+                        defer.resolve(parseWMTSCapabilities(data));
+                      }
+                      else {
+                        defer.reject();
+                      }
                     })
                     .error(function(data, status, headers, config) {
                       defer.reject(status);
