@@ -185,14 +185,28 @@
                         }
                       }));
                 }
-              } else if (layer.server) {
+              }
+              // WMS layer not in background
+              else if (layer.server) {
                 var server = layer.server[0];
                 if (server.service == 'urn:ogc:serviceType:WMS') {
-                  var p = self.createLayer(layer, map, undefined, i);
-                  promises.push(p);
-                  p.then(function(layer) {
-                    overlays[layer.get('tree_index')] = layer;
+
+                  var loadingLayer = new ol.layer.Image({
+                    loading: true,
+                    label: 'loading',
+                    url: '',
+                    visible: false
                   });
+                  loadingLayer.displayInLayerManager = true;
+
+                  var layerIndex = map.getLayers().push(loadingLayer);
+                  var p = self.createLayer(layer, map, undefined, i);
+
+                  (function(idx) {
+                    p.then(function(layer) {
+                      map.getLayers().setAt(idx, layer);
+                    });
+                  })(layerIndex);
                 }
               }
             }
@@ -233,11 +247,6 @@
               map.getLayers().insertAt(0, l);
               firstVisibleBgLayer = false;
             }
-          }
-          if (overlays.length > 0) {
-            map.getLayers().extend(overlays.filter(function(l) {
-              return !!l;
-            }));
           }
         });
       };
