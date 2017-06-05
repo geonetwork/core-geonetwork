@@ -140,11 +140,24 @@
 
         // load the resources
         var layers = context.resourceList.layer;
-        var i, j, olLayer, bgLayers = [];
+        var i, j, olLayer;
         var self = this;
         var promises = [];
         var overlays = [];
         if (angular.isArray(layers)) {
+
+          // ----  Clean bg layers
+          if (map.getLayers().getLength() > 0) {
+            map.getLayers().removeAt(0);
+          }
+          if (!gnViewerSettings.bgLayers) {
+            gnViewerSettings.bgLayers = [];
+          }
+          gnViewerSettings.bgLayers.length = 0;
+          var bgLayers = gnViewerSettings.bgLayers;
+          var isFirstBgLayer = false;
+          // -------
+
           for (i = 0; i < layers.length; i++) {
             var type, layer = layers[i];
             if (layer.name) {
@@ -163,27 +176,52 @@
                   var olLayer =
                       gnMap.createLayerForType(type, opt, layer.title);
                   if (olLayer) {
-                    bgLayers.push({layer: olLayer, idx: i});
                     olLayer.displayInLayerManager = false;
                     olLayer.background = true;
                     olLayer.set('group', 'Background layers');
                     olLayer.setVisible(!layer.hidden);
+                    bgLayers.push(olLayer);
+
+                    if (!layer.hidden && !isFirstBgLayer) {
+                      isFirstBgLayer = true;
+                      map.getLayers().insertAt(0, olLayer);
+                    }
                   }
                 }
 
                 // {type=wmts,name=Ocean_Basemap} or WMS
                 else {
-                  promises.push(this.createLayer(layer, map, i).then(
-                      function(olLayer) {
-                        if (olLayer) {
-                          bgLayers.push({
-                            layer: olLayer,
-                            idx: olLayer.get('bgIdx')
-                          });
-                          olLayer.displayInLayerManager = false;
-                          olLayer.background = true;
-                        }
-                      }));
+
+                  var loadingLayer = new ol.layer.Image({
+                    loading: true,
+                    label: 'loading',
+                    url: '',
+                    visible: false
+                  });
+
+                  if (!layer.hidden && !isFirstBgLayer) {
+                    isFirstBgLayer = true;
+                    loadingLayer.set('bgLayer', true);
+                  }
+
+                  var layerIndex = bgLayers.push(loadingLayer);
+                  var p = self.createLayer(layer, map, i);
+
+                  (function(idx) {
+                    p.then(function(layer) {
+                      bgLayers[idx-1] = layer;
+
+                      if(!layer) {
+                        return;
+                      }
+                      layer.displayInLayerManager = false;
+                      layer.background = true;
+
+                      if(loadingLayer.get('bgLayer')) {
+                        map.getLayers().insertAt(0, layer);
+                      }
+                    });
+                  })(layerIndex);
                 }
               }
               // WMS layer not in background
@@ -204,7 +242,7 @@
 
                   (function(idx) {
                     p.then(function(layer) {
-                      map.getLayers().setAt(idx, layer);
+                      map.getLayers().setAt(idx-1, layer);
                     });
                   })(layerIndex);
                 }
@@ -213,42 +251,6 @@
             firstLoad = false;
           }
         }
-
-        // if there's at least one valid bg layer in the context use them for
-        // the application otherwise use the defaults from config
-        $q.all(promises).then(function() {
-          if (bgLayers.length > 0) {
-            // make sure we remove any existing bglayer
-            if (map.getLayers().getLength() > 0) {
-              map.getLayers().removeAt(0);
-            }
-
-            // first clear settings bgLayers
-            if (!gnViewerSettings.bgLayers) {
-              gnViewerSettings.bgLayers = [];
-            }
-
-            gnViewerSettings.bgLayers.length = 0;
-
-            var firstVisibleBgLayer = true;
-            bgLayers = $filter('orderBy')(bgLayers, 'idx');
-
-            $.each(bgLayers, function(index, item) {
-              gnViewerSettings.bgLayers.push(item.layer);
-              // the first visible bg layer wins and get displayed in the map
-              if (item.layer.getVisible() && firstVisibleBgLayer) {
-                map.getLayers().insertAt(0, item.layer);
-                firstVisibleBgLayer = false;
-              }
-            });
-            if (firstVisibleBgLayer && gnViewerSettings.bgLayers.length) {
-              var l = gnViewerSettings.bgLayers[0];
-              l.setVisible(true);
-              map.getLayers().insertAt(0, l);
-              firstVisibleBgLayer = false;
-            }
-          }
-        });
       };
 
       /**
