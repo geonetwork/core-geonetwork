@@ -562,7 +562,8 @@
             scope: {
               selectedInfo: '=',
               lang: '=',
-              allowBlank: '@'
+              allowBlank: '@',
+              infos: '=?schemaInfoComboValues'
             },
             link: function(scope, element, attrs) {
               var initialized = false;
@@ -570,7 +571,8 @@
 
               var addBlankValueAndSetDefault = function() {
                 var blank = {label: '', code: ''};
-                if (scope.infos != null && scope.allowBlank !== undefined) {
+                if (scope.infos != null && scope.infos.length &&
+                  scope.allowBlank !== undefined) {
                   scope.infos.unshift(blank);
                 }
                 // Search default value
