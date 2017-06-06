@@ -336,6 +336,6 @@
     "indexAccessError": "Error during index access.",
     "link-children": "children",
     "link-parent": "parent",
-    "link-sources": "Source of other metadatas",
-    "link-hassources": "Metadata sources"
+    "link-sources": "Is source dataset of",
+    "link-hassources": "Source datasets"
 }

@@ -336,6 +336,6 @@
     "indexAccessError": "Erreur lors de l'accès à l'index.",
     "link-children": "enfants",
     "link-parent": "parents",
-    "link-sources": "Source d'autres métadonnée",
-    "link-hassources": "Métadonnées sources"
+    "link-sources": "Est une source pour",
+    "link-hassources": "Données sources"
 }
