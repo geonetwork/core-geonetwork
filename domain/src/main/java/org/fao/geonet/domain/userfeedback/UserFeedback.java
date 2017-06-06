@@ -24,6 +24,7 @@ package org.fao.geonet.domain.userfeedback;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,18 +39,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
-import org.hibernate.annotations.Type;
 
 @Entity(name = "GUF_UserFeedback")
 @Table(name = "GUF_UserFeedbacks")
 public class UserFeedback extends GeonetEntity implements Serializable {
-    
+
     private static final long serialVersionUID = -5537639171291203188L;
 
     @Id
@@ -57,11 +58,10 @@ public class UserFeedback extends GeonetEntity implements Serializable {
 
     @Column
     private String comment;
-    
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "rating_id", referencedColumnName = "id")
-    private Rating rating;
 
+    @OneToMany(cascade=CascadeType.ALL)
+    private List<Rating> detailedRatingList;
+    
     @ManyToOne
     @JoinColumn(name = "metadata_uuid", referencedColumnName = "uuid")
     private Metadata metadata;
@@ -97,12 +97,12 @@ public class UserFeedback extends GeonetEntity implements Serializable {
 
     public UserFeedback() {
         this.uuid = UUID.randomUUID().toString();
-    }    
-   
+    }
+
     public enum UserRatingStatus {
         PUBLISHED, WAITING_FOR_APPROVAL;
-    } 
-    
+    }
+
     @Override
     public String toString() {
         return String.format("Entity of type %s with id: %s", this.getClass().getName(), getUuid());
@@ -142,7 +142,11 @@ public class UserFeedback extends GeonetEntity implements Serializable {
 
 
     public void setUuid(String uuid) {
-        this.uuid = uuid;
+        if(uuid==null || uuid.equals("")) {
+            this.uuid = UUID.randomUUID().toString();
+        } else {
+            this.uuid = uuid;
+        }
     }
 
 
@@ -151,18 +155,18 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     }
 
 
+    public List<Rating> getDetailedRatingList() {
+        return detailedRatingList;
+    }
+
+
+    public void setDetailedRatingList(List<Rating> detailedRatingList) {
+        this.detailedRatingList = detailedRatingList;
+    }
+
+
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-
-    public Rating getRating() {
-        return rating;
-    }
-
-
-    public void setRating(Rating rating) {
-        this.rating = rating;
     }
 
 
@@ -201,7 +205,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     }
 
 
-    public void setKeyword(Set<Keyword> keywords) {
+    public void setKeywords(Set<Keyword> keywords) {
         this.keywords = keywords;
     }
 
@@ -246,6 +250,6 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     }
 
 
-    
+
 
 }

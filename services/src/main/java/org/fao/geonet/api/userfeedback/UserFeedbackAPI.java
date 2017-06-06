@@ -24,6 +24,7 @@
 package org.fao.geonet.api.userfeedback;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,7 +73,7 @@ public class UserFeedbackAPI {
             method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public List<UserFeedback> getUserComments(final HttpServletRequest request,
+    public List<UserFeedbackDTO> getUserComments(final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
 
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComments");
@@ -80,9 +81,13 @@ public class UserFeedbackAPI {
         IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
         String uuid = request.getParameter("target");
-
-        return userFeedbackService.retrieveUserFeedbackForMetadata(uuid);
+        
+        List<UserFeedback> listUserfeedback = userFeedbackService.retrieveUserFeedbackForMetadata(uuid);
+        
+        return listUserfeedback.stream().map(feedback -> UserFeedbackUtils.convertToDto(feedback)).collect(Collectors.toList());
     }
+    
+   
 
     @ApiOperation(
             value = "Finds a specific usercomment",
@@ -94,7 +99,7 @@ public class UserFeedbackAPI {
             method = RequestMethod.GET)
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    public UserFeedback getUserComment(
+    public UserFeedbackDTO getUserComment(
             @PathVariable(value = "uuid") final String uuid,
             final HttpServletRequest request,
             final HttpServletResponse response
@@ -104,8 +109,16 @@ public class UserFeedbackAPI {
 
         IUserFeedbackService userFeedbackService =
             (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
+        
+        UserFeedback userfeedback = userFeedbackService.retrieveUserFeedback(uuid);
+        
+        UserFeedbackDTO dto = null;
+        
+        if(userfeedback!=null) {
+            dto = UserFeedbackUtils.convertToDto(userfeedback);
+        }
 
-        return userFeedbackService.retrieveUserFeedback(uuid);
+        return dto;
     }
 
     @ApiOperation(
@@ -184,17 +197,26 @@ public class UserFeedbackAPI {
             name = "userFeedback"
         )
         @RequestBody
-            UserFeedback userFeedback,
+            UserFeedbackDTO userFeedbackDto,
             final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            final HttpServletResponse response,
+            final HttpSession httpSession) throws Exception {
+        
+        try {
+        
+        UserSession session = ApiUtils.getUserSession(httpSession);
 
         Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "newUserFeedback");
 
         IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-        userFeedbackService.saveUserFeedback(userFeedback);
+        userFeedbackService.saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session!=null?session.getPrincipal():null));
 
         return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 
@@ -231,4 +253,5 @@ public class UserFeedbackAPI {
     private IUserFeedbackService getUserFeedbackService() {
         return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
     }
+    
 }
