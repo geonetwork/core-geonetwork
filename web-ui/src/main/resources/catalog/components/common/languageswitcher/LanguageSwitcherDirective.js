@@ -61,7 +61,7 @@
               location.href = url.join('/');
               // }
               if (moment) {
-                moment.lang(scope.langs[value]);
+                moment.locale(scope.langs[value]);
               }
             }
           });

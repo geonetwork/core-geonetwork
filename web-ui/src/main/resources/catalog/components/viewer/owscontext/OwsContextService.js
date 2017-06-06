@@ -137,6 +137,10 @@
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
 
+        // save this extent for later use (for example if the map
+        // is not currently visible)
+        map.set('lastExtent', extent);
+
         // load the resources
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
@@ -422,12 +426,9 @@
             url = layer.get('urlCap');
           }
 
-          var wfsUrl = null;
-          if (layer.get('wfs') && layer.get('wfs')[0]) {
-            wfsUrl = layer.get('wfs')[0].url;
-
-            // fetch current filters state (the whole object will be saved)
-            var esObj = wfsFilterService.getEsObject(wfsUrl, name);
+          // fetch current filters state (the whole object will be saved)
+          var esObj = layer.get('indexObject');
+          if (esObj) {
             var filters = null;
             if (esObj && esObj.getState()) {
               filters = esObj.getState();
@@ -468,9 +469,12 @@
           // apply filters & processes inputs in extension if needed
           if (filters || processInputs) {
             var extension = {};
-            if (filters && wfsUrl) {
-              extension.filters = filters;
-              extension.wfsUrl = wfsUrl;
+            if (esObj) {
+              var wfsUrl = esObj.config.params.wfsUrl;
+              if(wfsUrl) {
+                extension.filters = filters;
+                extension.wfsUrl = wfsUrl;
+              }
             }
             if (processInputs) { extension.processInputs = processInputs; }
 

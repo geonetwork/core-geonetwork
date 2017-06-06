@@ -310,7 +310,7 @@
       restrict: 'A',
       replace: true,
       templateUrl: '../../catalog/components/search/facets/' +
-          'partials/facet-graph.html',
+      'partials/facet-graph.html',
       scope: {
         field: '=',
         callback: '='
