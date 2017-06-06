@@ -61,6 +61,7 @@
     "validStatus-0": "Ei pätevä",
     "validStatus--1": "Ei testattu",
     "fre": "ranskaksi",
+    "roh": "Rumantsch",
     "ara": "Arabia",
     "kor": "koreaksi",
     "by": "by",
@@ -321,5 +322,5 @@
     "directoryManager": "Hakemiston hallinta",
     "typeOfRecord": "Tietueen tyyppi",
     "load": "Lataa",
-    "indexAccessError": "Virhe index käytön aikana."
+    "indexAccessError": "Error during index access."
 }

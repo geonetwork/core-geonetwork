@@ -61,6 +61,7 @@
     "validStatus-0": "Invàlid",
     "validStatus--1": "Mai ha estat validat",
     "fre": "Francès",
+    "roh": "Rumantsch",
     "ara": "عربي",
     "kor": "Coreà",
     "by": "per",
@@ -321,5 +322,5 @@
     "directoryManager": "Administrar directori",
     "typeOfRecord": "Tipus d'entrada",
     "load": "Carregar",
-    "indexAccessError": "Error mentre s'accedia a index."
+    "indexAccessError": "Error during index access."
 }

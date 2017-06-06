@@ -61,6 +61,7 @@
     "validStatus-0": "잘못된",
     "validStatus--1": "검증되지 않은",
     "fre": "프랑스어",
+    "roh": "로만슈어",
     "ara": "아랍어",
     "kor": "한국어",
     "by": "으로",
@@ -321,5 +322,5 @@
     "directoryManager": "디렉토리 관리",
     "typeOfRecord": "레코드의 형태",
     "load": "불러오기",
-    "indexAccessError": "Index 접근 중 오류가 발생했습니다."
+    "indexAccessError": "인덱스 접근 중 오류가 발생했습니다."
 }
