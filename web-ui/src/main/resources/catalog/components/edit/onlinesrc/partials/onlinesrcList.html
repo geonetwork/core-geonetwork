@@ -88,7 +88,7 @@
           <img class="thumb-small"
                title="{{thumb.title | gnLocalized: lang}}"
                data-gn-img-modal="thumb"
-               data-ng-src="{{thumb.id}}"/>
+               data-ng-src="{{thumb.lUrl || thumb.id}}"/>
 
           <a href="" class="onlinesrc-remove"
              data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
@@ -118,19 +118,20 @@
         <li class="list-group-item" href=""
             data-ng-repeat="resource in relations.onlines | orderBy:sortLinks">
           <div class="row">
+            <!--Specific geocat: use lUrl instead of url-->
             <div class="col-md-11"
                  title="{{resource.description | gnLocalized: lang}}">
-              <a data-ng-href="{{resource.url}}"
-                 data-ng-if="resource.url.match('^http|ftp') !== null"
+              <a data-ng-href="{{resource.lUrl}}"
+                 data-ng-if="resource.lUrl.match('^http|ftp') !== null"
                  target="_blank">
                 <i class="fa fa-fw"
                    data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
-                {{(resource.title | gnLocalized: lang) || resource.url}}
+                {{(resource.title | gnLocalized: lang) || resource.lUrl}}
               </a>
-              <span data-ng-if="resource.url.match('^http|ftp') === null">
+              <span data-ng-if="resource.lUrl.match('^http|ftp') === null">
                 <i class="fa fa-fw"
                    data-ng-class="onlinesrcService.getIconByProtocol(resource)"/>
-                {{(resource.title | gnLocalized: lang) || resource.url}}
+                {{(resource.title | gnLocalized: lang) || resource.lUrl}}
               </span>
             </div>
             <div class="col-md-1">
