@@ -61,8 +61,10 @@
           };
 
           var addWMSToMap = function(link, md) {
-            var url = $filter('gnLocalized')(record.url);
-            var layerName = $filter('gnLocalized')(link.title);
+            // Link is localized when using associated resource service
+            // and is not when using search
+            var url = $filter('gnLocalized')(link.url) || link.url;
+            var layerName = $filter('gnLocalized')(link.title) || link.title;
             if (layerName) {
               gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
                  url, layerName, false, md);
@@ -75,7 +77,7 @@
 
 
           var addWFSToMap = function(link, md) {
-            var url = $filter('gnLocalized')(record.url);
+            var url = $filter('gnLocalized')(link.url) || link.url;
             var ftName = $filter('gnLocalized')(link.title);
             if (ftName) {
               gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
@@ -88,7 +90,7 @@
 
 
           function addWMTSToMap(link, md) {
-            var url = $filter('gnLocalized')(record.url);
+            var url = $filter('gnLocalized')(link.url) || link.url;
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
@@ -116,14 +118,14 @@
           };
 
           function addKMLToMap(record, md) {
-            var url = $filter('gnLocalized')(record.url);
+            var url = $filter('gnLocalized')(record.url) || record.url;
             gnMap.addKmlToMap(record.name, url,
                gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
           function addMapToMap(record, md) {
-            var url = $filter('gnLocalized')(record.url);
+            var url = $filter('gnLocalized')(record.url) || record.url;
             gnOwsContextService.loadContextFromUrl(url,
                 gnSearchSettings.viewerMap);
 
@@ -135,7 +137,7 @@
           };
 
           var openLink = function(record, link) {
-            var url = $filter('gnLocalized')(record.url);
+            var url = $filter('gnLocalized')(record.url) || record.url;
             if (url.indexOf('http') == 0 ||
                 url.indexOf('ftp') == 0) {
               return window.open(url, '_blank');
