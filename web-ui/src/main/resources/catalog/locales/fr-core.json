@@ -305,6 +305,6 @@
     "gnbbox": "Zone géographique",
     "link-children": "enfants",
     "link-parent": "parents",
-    "link-sources": "Source d'autres métadonnée",
-    "link-hassources": "Métadonnées sources"
+    "link-sources": "Est une source pour",
+    "link-hassources": "Données sources"
 }
