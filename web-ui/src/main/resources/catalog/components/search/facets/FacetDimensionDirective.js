@@ -259,19 +259,22 @@
 
                 scope.toggleAllNode = function(evt) {
                   el = evt ?
-                    $(evt.currentTarget).parent() :
-                    element.find('span.fa');
+                  $(evt.currentTarget).parent() :
+                  element.find('span.fa');
                   var isExpanded = undefined;
-                  el.find('.fa').each(function (idx, e) {
+                  el.find('.fa').each(function(idx, e) {
                     e = $(e);
                     if (angular.isUndefined(isExpanded)) {
                       isExpanded = !e.hasClass('fa-plus-square');
                     }
-                    e.removeClass(isExpanded ? 'fa-minus-square' : 'fa-plus-square');
-                    e.addClass(isExpanded ? 'fa-plus-square' : 'fa-minus-square');
+                    e.removeClass(isExpanded ?
+                    'fa-minus-square' : 'fa-plus-square');
+                    e.addClass(isExpanded ?
+                    'fa-plus-square' : 'fa-minus-square');
                   });
-                  el.find('div[data-gn-facet-dimension-category]').each(function (idx, e) {
-                    if(isExpanded) {
+                  el.find('div[data-gn-facet-dimension-category]')
+                  .each(function(idx, e) {
+                    if (isExpanded) {
                       $(e).addClass('hidden');
                     } else {
                       $(e).removeClass('hidden');

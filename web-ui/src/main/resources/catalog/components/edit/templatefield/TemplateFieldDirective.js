@@ -39,7 +39,7 @@
            link: function(scope, element, attrs) {
              var textarea = $(element).parent()
                  .find('textarea[name=' + scope.id + ']'),
-               hasChoice =
+             hasChoice =
                  angular.isDefined($(element).attr('data-has-choice'));
 
              // Unregister this textarea to the form
@@ -54,17 +54,17 @@
                   // success. Do nothing
                }, function(rejectedValue) {
                   $rootScope.$broadcast('StatusUpdated', {
-                      title: $translate.instant('runServiceError'),
-                      error: rejectedValue,
-                      timeout: 0,
-                      type: 'danger'
+                   title: $translate.instant('runServiceError'),
+                   error: rejectedValue,
+                   timeout: 0,
+                   type: 'danger'
                   });
                });
              };
 
              var chooseTemplate = function(id) {
                textarea.val($(element).parent()
-                 .find('textarea#' + id + '-value').val());
+               .find('textarea#' + id + '-value').val());
 
                scope.addFromTemplate();
              };
@@ -77,12 +77,12 @@
              } else {
                // Register click on each choices
                var choices = $(element)
-                 .find('ul > li > a')
-               choices.each(function (idx, e) {
+               .find('ul > li > a');
+               choices.each(function(idx, e) {
                  var id = $(e).attr('id');
-                 $(e).click(function () {
+                 $(e).click(function() {
                    chooseTemplate(id);
-                 })
+                 });
                });
              }
            }

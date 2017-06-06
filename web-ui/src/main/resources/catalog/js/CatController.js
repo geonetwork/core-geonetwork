@@ -359,7 +359,7 @@
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
-        'ita': 'Italiano', 'fin': 'Suomeksi', 'fin': 'Suomeksi', 
+        'ita': 'Italiano', 'fin': 'Suomeksi', 'fin': 'Suomeksi',
         'ice': 'Íslenska'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;

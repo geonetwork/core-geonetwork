@@ -307,27 +307,28 @@
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         //        }
-        $http.get(url, {headers: {accept: 'application/xml'}}).then(function(r) {
-          if (r.data === '') {
-            var msg = $translate.instant('emptyMapLoadError', {
-              url: url
-            });
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: msg,
-              timeout: 0,
-              type: 'danger'});
-          }
+        $http.get(url, {headers: {accept: 'application/xml'}})
+            .then(function(r) {
+              if (r.data === '') {
+                var msg = $translate.instant('emptyMapLoadError', {
+                  url: url
+                });
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: msg,
+                  timeout: 0,
+                  type: 'danger'});
+              }
 
-          self.loadContext(r.data, map);
-        }, function(r) {
-          var msg = $translate.instant('mapLoadError', {
-            url: url
-          });
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: msg,
-            timeout: 0,
-            type: 'danger'});
-        });
+              self.loadContext(r.data, map);
+            }, function(r) {
+              var msg = $translate.instant('mapLoadError', {
+                url: url
+              });
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: msg,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       /**
