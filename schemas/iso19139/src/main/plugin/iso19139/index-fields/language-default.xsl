@@ -710,15 +710,26 @@
     <xsl:for-each select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem">
         <xsl:for-each select="gmd:referenceSystemIdentifier/gmd:RS_Identifier">
             <xsl:variable name="crs">
+                <xsl:for-each select="gmd:codeSpace/*/text() | gmd:code/*/text()">
+                    <xsl:value-of select="."/>
+                    <xsl:if test="not(position() = last())">::</xsl:if>
+                </xsl:for-each>
+            </xsl:variable>
+
+            <xsl:if test="$crs != ''">
+                <Field name="crs" string="{$crs}" store="true" index="true"/>
+            </xsl:if>
+
+            <xsl:variable name="crsDetails">
             {
-              "code": "<xsl:value-of select="gmd:codeSpace/*/text()"/>:<xsl:value-of select="gmd:code/*/text()"/>",
-              "name": "<xsl:value-of select="gmd:code/*/@xlink:title"/>",
-              "url": "<xsl:value-of select="gmd:code/*/@xlink:href"/>"
+             "code": "<xsl:value-of select="gmd:codeSpace/*/text()"/>:<xsl:value-of select="gmd:code/*/text()"/>",
+             "name": "<xsl:value-of select="gmd:code/*/@xlink:title"/>",
+             "url": "<xsl:value-of select="gmd:code/*/@xlink:href"/>"
             }
             </xsl:variable>
 
-            <Field name="crs"
-                   string="{normalize-space($crs)}"
+            <Field name="crsDetails"
+                   string="{normalize-space($crsDetails)}"
                    store="true"
                    index="false"/>
         </xsl:for-each>
