@@ -1786,7 +1786,18 @@ public class DataManager implements ApplicationEventPublisherAware {
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
+
+            // Notifies the metadata change to metatada notifier service
+            final Metadata metadata = getMetadataRepository().findOne(metadataId);
+
+            String uuid = null;
+
+            if (getSchemaManager().getSchema(schema).isReadwriteUUID()
+                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+                uuid = extractUUID(schema, metadataXml);
+            }
+
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuid, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
         //--- force namespace prefix for iso19139 metadata
