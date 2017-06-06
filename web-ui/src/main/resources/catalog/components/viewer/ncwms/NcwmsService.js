@@ -138,7 +138,7 @@
               }
             }
             else if (s == 'contour') {
-              t[s] = s + '/' + p;
+              t[s] = s ; // TODO ????? + '/' + p;
             }
           });
         }
