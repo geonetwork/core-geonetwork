@@ -1,6 +1,6 @@
-<div class="btn-group" ng-if="::relations" sxt-popover-dropdown placement="bottom" container="{{$parent.$parent.container}}" className="sxt-popover-grid">
+<div class="btn-group" ng-if="::relations"  placement="bottom" container="{{container}}">
   <button type="button"
-          class="btn dropdown-toggle btn-sm btn-default"
+          class="btn dropdown-toggle btn-default"
           data-toggle="dropdown"
           title="Relations">
     <span class="fa fa-code-fork"></span>
@@ -8,7 +8,7 @@
   </button>
   <ul class="dropdown-menu small-dropdown" role="menu">
     <ul ng-repeat="type in ::types" ng-if="::relations[type]" class="gn-related-list">
-      <li class="gn-related-type"><b>{{('link-' + type) | translate}}</b></li>
+      <li class="gn-related-type">{{('link-' + type) | translate}}</li>
       <li ng-repeat="r in ::relations[type]" >
         <a href="#/metadata/{{r.id}}"
            title="{{r.title | gnLocalized: lang}}">

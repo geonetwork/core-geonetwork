@@ -61,6 +61,16 @@
     "validStatus-1": "Valide",
     "validStatus-0": "Invalide",
     "validStatus--1": "Non validé",
+    "edmerp": "Program/Project name",
+    "edmo": "Data provider",
+    "originator": "Data originator",
+    "emodnet-checkpoint.level.of.characteristics": "Level of characteristics",
+    "emodnet-checkpoint.production.mode": "Production mode",
+    "checkpointType": "Checkpoint resource",
+    "hasCheckpointCpt": "Has Checkpoint component",
+    "hasDqEmptyCptMeasures": "Has empty Checkpoint component",
+    "hasDqCptNotCovered": "Has Checkpoint component not covered",
+    "emodnet-checkpoint.challenges": "Checkpoint challenges",
     "fre": "Français",
     "ara": "عربي",
     "kor": "Coréen",
@@ -323,5 +333,9 @@
     "typeOfRecord": "Type de fiche",
     "load": "Charger",
     "gnbbox": "Zone géographique",
-    "indexAccessError": "Erreur lors de l'accès à l'index."
+    "indexAccessError": "Erreur lors de l'accès à l'index.",
+    "link-children": "enfants",
+    "link-parent": "parents",
+    "link-sources": "Source d'autres métadonnée",
+    "link-hassources": "Métadonnées sources"
 }

@@ -48,7 +48,7 @@
               data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name] || !(output[field.name].type == 'date' && output[field.name].value.from && output[field.name].value.to)}"></span>
         {{field.label}}
       </h5>
-      <div data-ng-class="{'collapse': !field.expanded}" sxt-custom-scroll>
+      <div data-ng-class="{'collapse': !field.expanded}">
         <div class="list-group">
           <div class="list-group-item"
                data-ng-repeat="facet in field.values | filter:searchInput"
@@ -76,6 +76,7 @@
           <div data-ng-if="field.display == 'graph'"
                gn-facet-graph field="field" callback="onUpdateDate"
                class="list-group"></div>
+
         </div>
         <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
       </div>
@@ -96,13 +97,13 @@
       </div>
     </div>
 
-
-    <div class="btn-group dropup">
-      <button class="btn btn-default btn-xs"
-         data-ng-if="!isFeaturesIndexed && (user.canEditRecord(md) || md.isHarvested == 'y')"
-         data-ng-click="indexWFSFeatures('1.0.0')">
-        <i class="fa fa-codiepie"></i>&nbsp;
-        <span data-translate="">indexWFSFeatures</span>
+    <!--admin buttons-->
+    <div class="btn-group dropup wfs-filter-group">
+      <button class="btn btn-default btn-xs" ng-class="{ disabled: !filtersChanged }"
+        data-gn-click-and-spin="filterWMS()"
+        data-gn-click-and-spin-stay-disabled="true">
+        <i class="fa fa-filter"></i>&nbsp;
+        <span data-translate="">applyFilter</span>
       </button>
       <button  ng-if="::sextant" class="btn btn-default btn-xs"
          title="{{'refresh' | translate}}"
@@ -142,12 +143,12 @@
           </a>
         </li>
       </ul>
-      <button class="btn btn-default btn-xs"
+      <!--<button class="btn btn-default btn-xs"
               data-ng-if="isFeaturesIndexed"
               data-gn-click-and-spin="filterWMS()">
         <i class="fa fa-filter"></i>&nbsp;
         <span data-translate="">filter</span>
-      </button>
+      </button>-->
       <button class="btn btn-default btn-xs"
               data-ng-if="isFeaturesIndexed"
               ng-click="showTable()">

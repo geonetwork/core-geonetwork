@@ -1636,6 +1636,8 @@
                   gnOnlinesrc.register('sibling', function(config) {
                     $(scope.popupid).modal('show');
 
+                    scope.getFragments();
+                    
                     if (config && !angular.isObject(config)) {
                       config = angular.fromJson(config);
                     }
@@ -1685,7 +1687,6 @@
                   scope.$watchCollection('config', function(n, o) {
                     if (n && n !== o) {
                       setSearchParamsPerType();
-                      scope.getFragments();
                     }
                   });
 

@@ -53,12 +53,34 @@
       height: ~"calc(100% - 4.35em)";
       padding-bottom: 1em;
     }
+
+    & > .sxt-panel-button {
+      display: flex;
+      justify-content: center;
+      padding: .5em;
+      padding-right: .2em;
+
+      button, button.active {
+        margin: 0px;
+        margin-right: .3em;
+        min-width: @sxt-btn-size;
+        width: auto;
+        position: relative;
+      }
+    }
+
+    // renders processing list nicely
+    .popover-dropdown {
+      width: auto;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
   }
 
   .sxt-panel-toggle,
   .main-tools button,
   .control-tools button {
-    background: @sxt-base-color;
+    background: @sxt-button-color;
     color: white;
     border: none;
     border-radius: 2px;
@@ -67,7 +89,7 @@
     box-shadow: @sxt-shadow;
     height: 2em;
     &.active {
-      background: @sxt-base-color-light;
+      background: @sxt-button-color-light;
       border-radius: 2px;
       width: @sxt-btn-size;
       margin-left: 0;
@@ -499,7 +521,7 @@
       font-weight: bold;
       &.active {
         box-shadow: inset @sxt-shadow;
-        background: @sxt-base-color;
+        background: @sxt-button-color;
         color: white;
       }
     }
@@ -653,7 +675,6 @@
       height: 100%;
     }
     .panel-carousel {
-      .mCSB_container { min-height: 100%; }
       height: 100%;
       min-height: 100%;
     }
@@ -835,10 +856,13 @@
     left: 0;
     transition: left @transition-params;
     display: flex;
-  }
-  .panel-carousel {
-    flex: 1;
-    overflow: auto;
+
+    .panel-carousel {
+      flex-shrink: 0;
+      flex-grow: 0;
+      width: 33.33%;
+      overflow: auto;
+    }
   }
 
   .wps-container {
@@ -855,7 +879,7 @@
     }
     &:hover {
       button {
-        background: @sxt-base-color-light;
+        background: @sxt-button-color-light;
       }
     }
     input:hover {
@@ -1003,20 +1027,28 @@
 
 }
 
-.dropdown-menu[sxt-custom-scroll] li {
-  line-height: 1.5em;
-  padding: 0 .5em;
-  &:hover {
-    background-color: #f5f5f5;
-  }
-  a {
-    color: rgb(51, 51, 51);
-    display: block;
-
+.dropdown-menu {
+  li {
+    line-height: 1.5em;
+    padding: 0 .5em;
     &:hover {
       background-color: #f5f5f5;
-      text-decoration: none;
     }
+    a {
+      color: rgb(51, 51, 51);
+      display: block;
+
+      &:hover {
+        background-color: #f5f5f5;
+        text-decoration: none;
+      }
+    }
+  }
+
+  // limited height for dropdowns in grid view
+  &.small-dropdown {
+    max-height: 158px;
+    overflow-y: auto;
   }
 }
 

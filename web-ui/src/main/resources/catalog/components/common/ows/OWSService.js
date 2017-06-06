@@ -156,7 +156,11 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
-                      defer.resolve(parseWMTSCapabilities(data));
+                      if (!data) {
+                        defer.reject('noData');
+                      } else {
+                        defer.resolve(parseWMTSCapabilities(data));
+                      }
                     })
                     .error(function(data, status, headers, config) {
                       defer.reject(status);

@@ -596,6 +596,13 @@ section which is not used often by the end-user. More than one tab could be grou
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="formatter-order" type="xs:int">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Define the ordering index of this tab in the XSLT formatter (Note used for editor).
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 

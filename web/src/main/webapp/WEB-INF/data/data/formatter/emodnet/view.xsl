@@ -27,9 +27,9 @@
 			<body>
 
 				<link rel="stylesheet" type="text/css"
-					href="{/root/url}../../apps/sextant/css/schema/reset.css" />
+					href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/reset.css" />
 				<link rel="stylesheet" type="text/css"
-					href="{/root/url}../../apps/sextant/css/schema/emodnet.css" />
+					href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/emodnet.css" />
 				<div class="tpl-emodnet">
 					<div class="ui-layout-content">
 						<table class="print_table" border="0" cellpadding="0"
@@ -75,10 +75,10 @@
 												<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview[position()=1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString" />
 											</xsl:attribute>
 										</img>
-									</td>	
+									</td>
 									<td class="print_bounding">
 										<xsl:value-of select="//gmd:eastBoundLongitude/gco:Decimal" />
-									</td>									
+									</td>
 								</tr>
 								<tr>
 																<td/>
@@ -134,7 +134,7 @@
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata//gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:pointInPixel | /root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator"/>
 
-								<xsl:if test="/root/gmd:MD_Metadata//gmd:axisDimensionProperties/gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='column']/gmd:dimensionSize or 
+								<xsl:if test="/root/gmd:MD_Metadata//gmd:axisDimensionProperties/gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='column']/gmd:dimensionSize or
 								/root/gmd:MD_Metadata//gmd:axisDimensionProperties/gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='row']/gmd:dimensionSize">
 									<tr valign="top">
 										<td class="print_ttl_h1">
@@ -143,7 +143,7 @@
 										</td>
 										<td class="print_data"/>
 									</tr>
-									
+
 									<tr valign="top">
 										<td class="print_desc">
 											<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/nbLinesTitle" />
@@ -246,7 +246,7 @@
 									select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_NonQuantitativeAttributeAccuracy/gmd:measureDescription" />
 
 								<xsl:if test="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_GriddedDataPositionalAccuracy/gmd:measureDescription/gco:CharacterString!=''
-								or /root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record!='' 
+								or /root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record!=''
 								or /root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_GriddedDataPositionalAccuracy/gmd:evaluationMethodDescription/gco:CharacterString!=''
 								">
 									<tr valign="top">
@@ -305,7 +305,7 @@
 									<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_QuantitativeAttributeAccuracy/gmd:evaluationMethodDescription" />
 
-								</xsl:if>		
+								</xsl:if>
 
 
 								<xsl:if test="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString!=''">
@@ -561,7 +561,7 @@
 										</td>
 										<td class="print_data"/>
 									</tr>
-								</xsl:if>							
+								</xsl:if>
 								<xsl:apply-templates mode="iso19139"
 									select="root/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage" />
 
@@ -575,7 +575,7 @@
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata//gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName|
 											 /root/gmd:MD_Metadata//gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress" />
-							
+
 															<!-- ******************************************* METADATA INFO ************************************* -->
 								<tr valign="top">
 									<td class="print_ttl">
@@ -620,8 +620,8 @@
 
 
 								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:dateStamp" />	
-							
+									select="/root/gmd:MD_Metadata/gmd:dateStamp" />
+
 							</tbody>
 						</table>
 					</div>

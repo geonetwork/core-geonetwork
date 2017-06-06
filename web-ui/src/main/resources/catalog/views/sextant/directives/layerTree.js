@@ -342,6 +342,9 @@
               if(angular.isArray(wfsLink) && downloadable) {
                 wfsLink = wfsLink[0];
               }
+              else {
+                wfsLink = undefined;
+              }
               scope.user = controller.user;
 
               if(wfsLink) {

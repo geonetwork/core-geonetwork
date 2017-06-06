@@ -17,26 +17,28 @@
     this.feedMd = function(scope) {
       var md = scope.md;
 
-      if(md.type.indexOf('dataset')>=0) {
-        md.icon = {cls: 'fa-database', title: 'dataset'}
-      }
-      else if(md.type.indexOf('series')>=0) {
-        md.icon = {cls: 'fa-database', title: 'series'}
-      }
-      else if(md.type.indexOf('software')>=0) {
-        md.icon = {cls: 'fa-hdd-o', title: 'software'}
-      }
-      else if(md.type.indexOf('map')>=0) {
-        md.icon = {cls: 'fa-globe', title: 'map'}
-      }
-      else if(md.type.indexOf('application')>=0) {
-        md.icon = {cls: 'fa-hdd-o', title: 'application'}
-      }
-      else if(md.type.indexOf('basicgeodata')>=0) {
-        md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
-      }
-      else if(md.type.indexOf('service')>=0) {
-        md.icon = {cls: 'fa-globe', title: 'service'}
+      if (md.type) {
+        if(md.type.indexOf('dataset')>=0) {
+          md.icon = {cls: 'fa-database', title: 'dataset'}
+        }
+        else if(md.type.indexOf('series')>=0) {
+          md.icon = {cls: 'fa-database', title: 'series'}
+        }
+        else if(md.type.indexOf('software')>=0) {
+          md.icon = {cls: 'fa-hdd-o', title: 'software'}
+        }
+        else if(md.type.indexOf('map')>=0) {
+          md.icon = {cls: 'fa-globe', title: 'map'}
+        }
+        else if(md.type.indexOf('application')>=0) {
+          md.icon = {cls: 'fa-hdd-o', title: 'application'}
+        }
+        else if(md.type.indexOf('basicgeodata')>=0) {
+          md.icon = {cls: 'fa-globe', title: 'basicgeodata'}
+        }
+        else if(md.type.indexOf('service')>=0) {
+          md.icon = {cls: 'fa-globe', title: 'service'}
+        }
       }
 
       var thumbs = md.getThumbnails();
@@ -46,7 +48,7 @@
 
       var status = md.mdStatus;
       var user = scope.user;
-      scope.cantStatus = ((status == 4 || status == 2 || status == 3)
+      scope.cantStatus = user && ((status == 4 || status == 2 || status == 3)
       && user.isReviewerOrMore && !user.isReviewerOrMore());
 
 
