@@ -61,6 +61,7 @@
     "validStatus-0": "Ógildur",
     "validStatus--1": "Ekki verið fullgilt",
     "fre": "Franska",
+    "roh": "Rumantsch",
     "ara": "Arabíska",
     "kor": "Kóreska",
     "by": "með",
@@ -321,5 +322,5 @@
     "directoryManager": "Stjórna skrá",
     "typeOfRecord": "Tegund færslu",
     "load": "Hlaða",
-    "indexAccessError": "Villa við index aðgang."
+    "indexAccessError": "Error during index access."
 }

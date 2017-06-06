@@ -57,11 +57,11 @@ import javax.xml.bind.annotation.XmlType;
 public abstract class RelatedItem {
 
     protected String id;
-    protected String url;
+    protected MultilingualValue url;
     protected String type;
 
     @XmlElement(required = true)
-    protected RelatedItem.Title title;
+    protected MultilingualValue title;
 
     /**
      * Gets the value of the id property.
@@ -84,18 +84,18 @@ public abstract class RelatedItem {
     /**
      * Gets the value of the url property.
      *
-     * @return possible object is {@link String }
+     * @return possible object is {@link MultilingualValue }
      */
-    public String getUrl() {
+    public MultilingualValue getUrl() {
         return url;
     }
 
     /**
      * Sets the value of the url property.
      *
-     * @param value allowed object is {@link String }
+     * @param value allowed object is {@link MultilingualValue }
      */
-    public void setUrl(String value) {
+    public void setUrl(MultilingualValue value) {
         this.url = value;
     }
 
@@ -120,18 +120,18 @@ public abstract class RelatedItem {
     /**
      * Gets the value of the title property.
      *
-     * @return possible object is {@link RelatedItem.Title }
+     * @return possible object is {@link MultilingualValue }
      */
-    public RelatedItem.Title getTitle() {
+    public MultilingualValue getTitle() {
         return title;
     }
 
     /**
      * Sets the value of the title property.
      *
-     * @param value allowed object is {@link RelatedItem.Title }
+     * @param value allowed object is {@link MultilingualValue }
      */
-    public void setTitle(RelatedItem.Title value) {
+    public void setTitle(MultilingualValue value) {
         this.title = value;
     }
 
@@ -159,7 +159,7 @@ public abstract class RelatedItem {
         "value"
     })
     @JsonSerialize(using = LocalizedStringSerializer.class)
-    public static class Title implements ILocalizedStringProperty {
+    public static class MultilingualValue implements ILocalizedStringProperty {
         protected List<LocalizedString> value;
 
         /**

@@ -127,7 +127,7 @@
                 id: 'geonames'
               });
             }
-            scope.regionType = data[0];
+            scope.regionType = scope.regionTypes[0];
           });
 
           scope.setRegion = function(regionType) {
@@ -171,8 +171,8 @@
    * to catch event from selection.
    */
   module.directive('gnRegionPickerInput', [
-    'gnRegionService', 'gnUrlUtils',
-    function(gnRegionService, gnUrlUtils) {
+    'gnRegionService', 'gnUrlUtils', 'gnGlobalSettings',
+    function(gnRegionService, gnUrlUtils, gnGlobalSettings) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -200,6 +200,8 @@
                   name_startsWith: 'QUERY',
                   username: 'georchestra'
                 }));
+
+                url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
 
                 var autocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -731,7 +733,7 @@
       // to MM-dd-yyyy
       var formatDate = function(day, month, year) {
         return ('0' + day).slice(-2) + '-' +
-          ('0' + month).slice(-2) + '-' + year;
+            ('0' + month).slice(-2) + '-' + year;
       };
 
       var getMaxInProp = function(obj) {
@@ -806,7 +808,7 @@
             if (scope.dates) {
               // Time epoch
               if (angular.isArray(scope.dates) &&
-                Number.isInteger(scope.dates[0])) {
+                  Number.isInteger(scope.dates[0])) {
 
                 limits = {
                   min: new Date(Math.min.apply(null, scope.dates)),
@@ -830,8 +832,8 @@
 
                 available = function(date) {
                   if (scope.dates[date.getFullYear()] &&
-                    scope.dates[date.getFullYear()][date.getMonth()] &&
-                    $.inArray(date.getDate(),
+                      scope.dates[date.getFullYear()][date.getMonth()] &&
+                      $.inArray(date.getDate(),
                       scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
                     return true;
                   } else {
@@ -845,19 +847,20 @@
               $(element).datepicker('destroy');
             }
             $(element).datepicker(angular.isDefined(scope.dates) ? {
-                beforeShowDay: function(dt, a, b) {
-                  var isEnable = available(dt);
-                  return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+              beforeShowDay: function(dt, a, b) {
+                var isEnable = available(dt);
+                return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
                     isEnable;
-                },
-                startDate: limits.min,
-                endDate: limits.max,
-                container: typeof sxtSettings != 'undefined' ? '.g' : 'body', // sextant
-                autoclose: true,
-                keepEmptyValues:true,
-                clearBtn: true,
-                todayHighlight: false
-              } : {}).on('changeDate clearDate', function(ev) {
+              },
+              startDate: limits.min,
+              endDate: limits.max,
+              container: typeof sxtSettings != 'undefined' ?
+                  '.g' : 'body',
+              autoclose: true,
+              keepEmptyValues: true,
+              clearBtn: true,
+              todayHighlight: false
+            } : {}).on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
                 if (!isRange) {
@@ -892,7 +895,7 @@
             scope.$watch('date', function(v, o) {
 
               if (angular.isDefined(v) &&
-                angular.isFunction(scope.onChangeFn)) {
+                  angular.isFunction(scope.onChangeFn)) {
                 scope.onChangeFn();
               }
               if (v != o) {

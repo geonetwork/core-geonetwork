@@ -200,8 +200,10 @@
                     var url = extension.wfsUrl;
 
                     // get ES object and save filters on it
-                    // (will be used by the WfsFilterDirective when initializing)
-                    var esObj = wfsFilterService.registerEsObject(url, layer.name);
+                    // (will be used by the WfsFilterDirective
+                    // when initializing)
+                    var esObj =
+                        wfsFilterService.registerEsObject(url, layer.name);
                     esObj.initialFilters = extension.filters;
                   }
 
@@ -222,17 +224,18 @@
 
                     // add processes default inputs taken from OWS context
                     // this is done by modifying the applicationProfile value
-                    processes.forEach(function (process) {
+                    processes.forEach(function(process) {
                       if (defaultInputs && defaultInputs[process.name]) {
-                        var appProfile = JSON.parse(process.applicationProfile
-                          || '{}');
+                        var appProfile =
+                            JSON.parse(process.applicationProfile ||
+                            '{}');
                         appProfile.defaults = appProfile.defaults || {};
 
                         // apply new default values
-                        defaultInputs[process.name].forEach(function (input) {
+                        defaultInputs[process.name].forEach(function(input) {
                           var id = input.identifier.value;
-                          appProfile.defaults[id] = input.value
-                            || appProfile.defaults[id];
+                          appProfile.defaults[id] = input.value ||
+                              appProfile.defaults[id];
                         });
 
                         // rewrite modified appProfile to process desc
@@ -304,27 +307,28 @@
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         //        }
-        $http.get(url).then(function(r) {
-          if (r.data === '') {
-            var msg = $translate.instant('emptyMapLoadError', {
-              url: url
-            });
-            $rootScope.$broadcast('StatusUpdated', {
-              msg: msg,
-              timeout: 0,
-              type: 'danger'});
-          }
+        $http.get(url, {headers: {accept: 'application/xml'}})
+            .then(function(r) {
+              if (r.data === '') {
+                var msg = $translate.instant('emptyMapLoadError', {
+                  url: url
+                });
+                $rootScope.$broadcast('StatusUpdated', {
+                  msg: msg,
+                  timeout: 0,
+                  type: 'danger'});
+              }
 
-          self.loadContext(r.data, map);
-        }, function(r) {
-          var msg = $translate.instant('mapLoadError', {
-            url: url
-          });
-          $rootScope.$broadcast('StatusUpdated', {
-            msg: msg,
-            timeout: 0,
-            type: 'danger'});
-        });
+              self.loadContext(r.data, map);
+            }, function(r) {
+              var msg = $translate.instant('mapLoadError', {
+                url: url
+              });
+              $rootScope.$broadcast('StatusUpdated', {
+                msg: msg,
+                timeout: 0,
+                type: 'danger'});
+            });
       };
 
       /**
@@ -439,12 +443,12 @@
           var processes = layer.get('processes');
           var processInputs = null;
           if (processes) {
-            processes.forEach(function (process) {
-              if (!process.processDescription
-                || !process.processDescription.dataInputs) { return; }
+            processes.forEach(function(process) {
+              if (!process.processDescription ||
+                  !process.processDescription.dataInputs) { return; }
               processInputs = processInputs || {};
               processInputs[process.name] =
-                process.processDescription.dataInputs.input;
+                  process.processDescription.dataInputs.input;
             });
           }
 
@@ -471,7 +475,7 @@
             var extension = {};
             if (esObj) {
               var wfsUrl = esObj.config.params.wfsUrl;
-              if(wfsUrl) {
+              if (wfsUrl) {
                 extension.filters = filters;
                 extension.wfsUrl = wfsUrl;
               }
@@ -481,7 +485,7 @@
             layerParams.extension = {
               name: 'Extension',
               any: JSON.stringify(extension)
-            }
+            };
           }
 
           resourceList.layer.push(layerParams);

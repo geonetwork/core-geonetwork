@@ -38,13 +38,14 @@
         'gnMap',
         'gnNcWms',
         'gnGlobalSettings',
+        '$location',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnNcWms, gnGlobalSettings) {
+                 gnMap, gnNcWms, gnGlobalSettings, $location) {
 
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
-            viewerSettings.mapConfig.map ||
-            '../../map/config-viewer.xml';
+              (viewerSettings.mapConfig.map || '../../map/config-viewer.xml');
+          viewerSettings.owsContext = $location.search().map;
 
           // Keep one layer in the background
           // while the context is not yet loaded.

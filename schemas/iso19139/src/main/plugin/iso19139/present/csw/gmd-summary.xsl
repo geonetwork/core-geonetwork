@@ -23,11 +23,14 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                version="1.0">
+                exclude-result-prefixes="#all"
+                version="2.0">
 
   <xsl:param name="displayInfo"/>
 
@@ -35,7 +38,7 @@
 
   <xsl:template match="gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
     <xsl:variable name="info" select="geonet:info"/>
-    <xsl:copy>
+    <xsl:element name="{if (@gco:isoType) then @gco:isoType else name()}">
       <xsl:apply-templates select="gmd:fileIdentifier"/>
       <xsl:apply-templates select="gmd:language"/>
       <xsl:apply-templates select="gmd:characterSet"/>
@@ -56,7 +59,7 @@
         <xsl:copy-of select="$info"/>
       </xsl:if>
 
-    </xsl:copy>
+    </xsl:element>
   </xsl:template>
 
   <!-- =================================================================== -->
@@ -158,12 +161,12 @@
   </xsl:template>
 
   <!-- =================================================================== -->
-  <!-- === Data === -->
-  <!-- =================================================================== -->
 
-  <xsl:template match="gmd:MD_DataIdentification
-    |*[contains(@gco:isoType, 'MD_DataIdentification')]|*[contains(@gco:isoType, 'CI_Date')]">
-    <xsl:copy>
+  <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification|
+                       gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
+                       gmd:identificationInfo/srv:SV_ServiceIdentification|
+                       gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]">
+    <xsl:element name="{if (@gco:isoType) then @gco:isoType else name()}">
       <gmd:citation>
         <gmd:CI_Citation>
           <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:title"/>
@@ -179,35 +182,12 @@
       <xsl:apply-templates select="gmd:language"/>
       <xsl:apply-templates select="gmd:characterSet"/>
       <xsl:apply-templates select="gmd:topicCategory"/>
-      <xsl:apply-templates select="gmd:extent[child::gmd:EX_Extent
-        [child::gmd:geographicElement]]"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- =================================================================== -->
-  <!-- === Services === -->
-  <!-- =================================================================== -->
-
-  <xsl:template match="srv:SV_ServiceIdentification|
-    *[contains(@gco:isoType, 'SV_ServiceIdentification')]|*[contains(@gco:isoType, 'CI_Date')]">
-    <xsl:copy>
-      <gmd:citation>
-        <gmd:CI_Citation>
-          <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:title"/>
-          <xsl:apply-templates select="gmd:citation/gmd:CI_Citation/gmd:date"/>
-        </gmd:CI_Citation>
-      </gmd:citation>
-      <xsl:apply-templates select="gmd:abstract"/>
-      <xsl:apply-templates select="gmd:pointOfContact"/>
-      <xsl:apply-templates select="gmd:graphicOverview"/>
-      <xsl:apply-templates select="gmd:resourceConstraints"/>
       <xsl:apply-templates select="srv:serviceType"/>
       <xsl:apply-templates select="srv:serviceTypeVersion"/>
-      <xsl:apply-templates select="srv:extent[child::gmd:EX_Extent
-        [child::gmd:geographicElement]]"/>
+      <xsl:apply-templates select="*:extent[child::gmd:EX_Extent[child::gmd:geographicElement]]"/>
       <xsl:apply-templates select="srv:couplingType"/>
       <xsl:apply-templates select="srv:containsOperations"/>
-    </xsl:copy>
+    </xsl:element>
   </xsl:template>
 
   <!-- =================================================================== -->
@@ -230,8 +210,9 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- =================================================================== -->
-
+  <!-- Avoid insertion of schema location in the CSW
+  response - which is invalid. -->
+  <xsl:template match="@xsi:schemaLocation"/>
 </xsl:stylesheet>
 
 

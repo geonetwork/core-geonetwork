@@ -34,8 +34,8 @@
   });
 
   module.directive('gnGridRelatedQuery', [
-    'gnSearchSettings', 'gnRelatedService', 'gnGridRelatedList',
-    function(searchSettings, gnRelatedService, gnGridRelatedList) {
+    'gnGlobalSettings', 'gnRelatedService', 'gnGridRelatedList',
+    function(gnGlobalSettings, gnRelatedService, gnGridRelatedList) {
 
       return {
         restrict: 'A',
@@ -44,16 +44,16 @@
         },
         link: function(scope, element, attrs) {
 
-          var types = searchSettings.gridRelated;
+          var types = gnGlobalSettings.gnCfg.mods.search.grid.related;
           gnGridRelatedList.types = types;
 
           scope.$watch('records', function(mds) {
             var uuids = mds.map(function(md) {
               return md.getUuid();
             });
-            if(uuids.length) {
+            if (uuids.length) {
               gnGridRelatedList.promise =
-                gnRelatedService.getMdsRelated(uuids, types).then(
+                  gnRelatedService.getMdsRelated(uuids, types).then(
                   function(response) {
                     gnGridRelatedList.list = response.data;
                   });
@@ -74,7 +74,7 @@
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
-            '../../catalog/components/metadataactions/partials/related.html';
+              '../../catalog/components/metadataactions/partials/related.html';
         },
         link: function(scope, element, attrs) {
           gnGridRelatedList.promise.then(function() {

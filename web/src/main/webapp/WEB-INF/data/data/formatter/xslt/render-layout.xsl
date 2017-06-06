@@ -75,7 +75,7 @@
         </header>
 
         <xsl:for-each select="$viewConfig/*">
-          <xsl:sort select="@formatter-order"
+          <xsl:sort select="@formatter-order" 
                     data-type="number"/>
           <xsl:apply-templates mode="render-view"
                                select="."/>

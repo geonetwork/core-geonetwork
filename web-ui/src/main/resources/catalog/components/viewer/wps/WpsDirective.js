@@ -39,8 +39,10 @@
    * response object (after call the describe process request).
    * @directiveInfo {Object} map
    * @directiveInfo {Object} wpsLink
-   * @directiveInfo {boolean} hideExecuteButton if true, the 'execute' button is hidden
-   * @directiveInfo {Object} wfsLink the WFS link object will be used to overload
+   * @directiveInfo {boolean} hideExecuteButton if true,
+   * the 'execute' button is hidden
+   * @directiveInfo {Object} wfsLink the WFS link object
+   * will be used to overload
    *  inputs based on active WFS feature filters
    *
    * TODO: Add batch mode using md.privileges.batch
@@ -134,7 +136,8 @@
                         // use overloaded value if applicable
                         if (scope.inputOverloads &&
                           scope.inputOverloads[input.identifier.value]) {
-                          defaultValue = scope.inputOverloads[input.identifier.value]
+                          defaultValue =
+                            scope.inputOverloads[input.identifier.value]
                             .currentValue;
                         }
 
@@ -168,7 +171,6 @@
                             input.value = defaultValue.split(',')
                               .slice(0, 4).join(',');
                           }
-
                         }
                       }
                   );
@@ -427,9 +429,9 @@
 
             // use filter values in ElasticSearch object state to overload input
             if (esObject) {
-              var wfsFilterLinks = applicationProfile
-                && applicationProfile.wfsFilterLinks ?
-                applicationProfile.wfsFilterLinks : {};
+              var wfsFilterLinks = applicationProfile &&
+                  applicationProfile.wfsFilterLinks ?
+                  applicationProfile.wfsFilterLinks : {};
 
               // get list of filters
               var filterValues = wfsFilterService.toObjectProperties(esObject);

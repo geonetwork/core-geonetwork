@@ -132,7 +132,7 @@
                            scope.relations[idx] = [];
                            for (var i = 0; i < value.length; i++) {
                              if (filter.indexOf(value[i][field]) !== -1) {
-                               scope.relations[idx].push(value[i]);
+                                scope.relations[idx].push(value[i]);
                              }
                            }
                          } else {

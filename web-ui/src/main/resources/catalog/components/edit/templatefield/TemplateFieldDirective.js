@@ -38,7 +38,10 @@
            },
            link: function(scope, element, attrs) {
              var textarea = $(element).parent()
-             .find('textarea[name=' + scope.id + ']');
+                 .find('textarea[name=' + scope.id + ']'),
+             hasChoice =
+                 angular.isDefined($(element).attr('data-has-choice'));
+
              // Unregister this textarea to the form
              // It will be only submitted if user click the add button
              textarea.removeAttr('name');
@@ -48,18 +51,40 @@
 
                // Save and refreshform
                gnEditor.save(gnCurrentEdit.id, true).then(function() {
-                 // success. Do nothing
+                  // success. Do nothing
                }, function(rejectedValue) {
-                 $rootScope.$broadcast('StatusUpdated', {
+                  $rootScope.$broadcast('StatusUpdated', {
                    title: $translate.instant('runServiceError'),
                    error: rejectedValue,
                    timeout: 0,
                    type: 'danger'
-                 });
+                  });
                });
              };
 
-             $(element).click(scope.addFromTemplate);
+             var chooseTemplate = function(id) {
+               textarea.val($(element).parent()
+               .find('textarea#' + id + '-value').val());
+
+               scope.addFromTemplate();
+             };
+
+             if (!hasChoice) {
+               // Register click event on main button
+               // which will add snippet from the single
+               // textarea
+               $(element).click(scope.addFromTemplate);
+             } else {
+               // Register click on each choices
+               var choices = $(element)
+               .find('ul > li > a');
+               choices.each(function(idx, e) {
+                 var id = $(e).attr('id');
+                 $(e).click(function() {
+                   chooseTemplate(id);
+                 });
+               });
+             }
            }
          };
        }]);

@@ -174,7 +174,7 @@
               if (tab) {
                 path += '/tab/' + tab;
               }
-              $location.path(path);
+              $location.path(path).search('justcreated');
             }
           });
         },
@@ -522,6 +522,7 @@
       var linkInfos = sLink.split('|');
       return {
         name: linkInfos[0],
+        title: linkInfos[0],
         url: linkInfos[2],
         desc: linkInfos[1],
         protocol: linkInfos[3],

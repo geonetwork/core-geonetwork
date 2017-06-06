@@ -61,6 +61,7 @@
     "validStatus-0": "Invalide",
     "validStatus--1": "Niet eerder gevalideerd",
     "fre": "Français",
+    "roh": "Rumantsch",
     "ara": "عربي",
     "kor": "Koreaans",
     "by": "door",
@@ -321,5 +322,5 @@
     "directoryManager": "Beheer adressenboek",
     "typeOfRecord": "Type",
     "load": "Laden",
-    "indexAccessError": "Fout tijdens index toegang"
+    "indexAccessError": "Error during index access."
 }

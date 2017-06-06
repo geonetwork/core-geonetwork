@@ -24,76 +24,77 @@
 (function() {
   goog.provide('gn_wfsfilter_directive');
 
+  // Custom feature and facet configuration example
+  // var TMP_PROFILE =
+  // { 'extendOnly': false,
+  // 'fields': [
+  // {
+  // "name":"WATER_KM",
+  // "aggs": {
+  //
+  // "histogram": {
+  // "interval": 5000,
+  // "extended_bounds" : {
+  //   "min" : 2000,
+  //   "max" : 100000
+  // }
+  // }
+  // ,"range" : {
+  // "ranges" : [
+  //   { "to" : 7500 },
+  //   { "from" : 7500, "to" : 50000 },
+  //   { "from" : 50000 }
+  // ]
+  // }
+  // }
+  // },
+  // {
+  // "name": "CARPOOL"
+  // }
+  //
+  // {'name': 'param_group_liste'},
+  // {'name': 'ent_prog_cd'},
+  // {'name': 'param_liste'},
+  // {
+  //   'name': 'CUSTOM_POS',
+  //   'aggs': {
+  //     'filters': {
+  //       'filters': {
+  //         '48 - 50': {'query_string':
+  //               {'query':
+  //                 '+ft_ent_longitude_s:<0.03 +ft_ent_latitude_s:<44'}},
+  //         '49 - 53': {'query_string':
+  //               {'query':
+  //                 '+ft_ent_longitude_s:>0.03 +ft_ent_latitude_s:>45'}}
+  //       }
+  //     }
+  //   }
+  // }, {
+  //   'name': 'range_Date',
+  //   'type': 'rangeDate',
+  //   'minField': 'date_min',
+  //   'maxField': 'date_max',
+  //   'display': 'graph'
+  // },
+  // {
+  //   'name': 'date_min',
+  //   'display': 'graph'
+  // },
+  // {
+  //   'name': 'date_max',
+  //   'display': 'form'
+  // },
+  // {
+  //   'name': 'date_min',
+  //   'display': 'graph'
+  // }
+  // ],
+  // 'treeFields': ['CD_REGION'],
+  // 'tokenizedFields': {
+  // 'CGENELIN': '-'
+  // }
+  // };
 
-  var TMP_PROFILE =
-      { 'extendOnly': false,
-        'fields': [
-          /*
-      {
-      "name":"WATER_KM",
-      "aggs": {
-
-        "histogram": {
-          "interval": 5000,
-          "extended_bounds" : {
-            "min" : 2000,
-            "max" : 100000
-          }
-        }
-        ,"range" : {
-          "ranges" : [
-            { "to" : 7500 },
-            { "from" : 7500, "to" : 50000 },
-            { "from" : 50000 }
-          ]
-        }
-      }
-    },
-      {
-      "name": "CARPOOL"
-    }
-
-          */
-          {"name": "param_group_liste"},
-          {"name": "ent_prog_cd"},
-          {"name": "param_liste"},
-          {
-            "name": "CUSTOM_POS",
-            "aggs": {
-              "filters": {
-                "filters": {
-                  "48 - 50": {"query_string":
-                  {"query": "+ft_ent_longitude_s:<0.03 +ft_ent_latitude_s:<44"}},
-                  "49 - 53": {"query_string":
-                  {"query": "+ft_ent_longitude_s:>0.03 +ft_ent_latitude_s:>45"}}
-                }
-              }
-            }
-          }, {
-            "name": "range_Date",
-            "type": "rangeDate",
-            "minField": "date_min",
-            "maxField": "date_max",
-            "display": "graph"
-          },
-          {
-            'name': 'date_min',
-            'display': 'graph'
-          },
-          {
-            'name': 'date_max',
-            'display': 'form'
-          }/*,
-          {
-            'name': 'date_min',
-            'display': 'graph'
-          }*/
-        ],
-        'treeFields': ['CD_REGION'],
-        'tokenizedFields': {
-          'CGENELIN': '-'
-        }
-      };
 
   var module = angular.module('gn_wfsfilter_directive', [
   ]);
@@ -293,7 +294,7 @@
                   wfsFilterService.indexMergeApplicationProfile(
                   indexObject.filteredDocTypeFieldsInfo, appProfile);
               indexObject.initBaseParams();
-              if(!appProfile.extendOnly) {
+              if (!appProfile.extendOnly) {
                 indexObject.setFielsdOrder();
               }
             }
@@ -435,7 +436,7 @@
                 output[fieldName].type = undefined;
               }
             }
-            if(output[fieldName].type) {
+            if (output[fieldName].type) {
               scope.filterFacets();
             }
           };
@@ -546,10 +547,10 @@
             scope.searchInput = initialFilters.any || '';
             if (initialFilters.geometry) {
               scope.ctrl.searchGeometry =
-                initialFilters.geometry[0][0] + ',' +
-                initialFilters.geometry[1][1] + ',' +
-                initialFilters.geometry[1][0] + ',' +
-                initialFilters.geometry[0][1];
+                  initialFilters.geometry[0][0] + ',' +
+                  initialFilters.geometry[1][1] + ',' +
+                  initialFilters.geometry[1][0] + ',' +
+                  initialFilters.geometry[0][1];
             }
 
             // resend a search with initial filters to alter the facets
@@ -563,7 +564,7 @@
               scope.count = resp.count;
 
               // look for date graph fields; call onUpdateDate to refresh them
-              angular.forEach(scope.fields, function (field) {
+              angular.forEach(scope.fields, function(field) {
                 if (field.display == 'graph') {
                   // scope.onUpdateDate(field);
                 }

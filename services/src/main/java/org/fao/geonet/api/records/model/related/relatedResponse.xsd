@@ -147,7 +147,14 @@
   <xs:complexType name="relatedItem" abstract="true">
     <xs:sequence>
       <xs:element name="id" type="xs:string" minOccurs="0"/>
-      <xs:element name="url" type="xs:string" minOccurs="0"/>
+      <xs:element name="url">
+        <xs:complexType>
+          <xs:sequence>
+            <!--<xs:any processContents="skip" maxOccurs="unbounded" minOccurs="0" />-->
+            <xs:element name="value" type="localizedString" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:element name="title">
         <xs:complexType>
           <xs:sequence>
