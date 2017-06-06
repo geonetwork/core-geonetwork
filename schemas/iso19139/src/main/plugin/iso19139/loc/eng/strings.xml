@@ -238,7 +238,7 @@
   <emodnetAbstractTitle>Abstract</emodnetAbstractTitle>
   <emodnetNbLinesTitle>Number of lines</emodnetNbLinesTitle>
   <emodnetNbColumnsTitle>Number of columns</emodnetNbColumnsTitle>
-  <emodnetQualityTitle>Quality / Accuracy / Calibration</emodnetQualityTitle>
+  <emodnetQualityTitle>Accuracy / Calibration</emodnetQualityTitle>
   <emodnetDataSourcesTitle>Description of processed data sources</emodnetDataSourcesTitle>
   <emodnetDataProcessingTitle>Description of data processing</emodnetDataProcessingTitle>
   <emodnetVertAccuracyTitle>Vert. accuracy</emodnetVertAccuracyTitle>
