@@ -199,17 +199,58 @@ q, blockquote {
     }
   }
   .gn-userfeedback-list {
-    max-height: 500px;
+    max-height: 450px;
     overflow: auto;
+  }
+  // panels
+  .panel {
+    border: 0;
+  }
+  // heading
+  .panel-heading {
+    padding: 10px 0px;
+    height: auto;
+    background-color: #fff;
+    border: 0;
+    .btn-round {
+      padding: 7px 14px;
+      margin-right: 5px;
+    }
+    a {
+      color: #555;
+      &:hover {
+        text-decoration: none;
+        color: #000;
+        cursor: pointer;
+      }
+    }
+  }
+  // body
+  .panel-body {
+    border: 0;
+  }
+  .panel-group .panel-heading + .panel-collapse .panel-body {
+    border-top-color: #f5f5f5;
   }
 }
 
+// text area for adding a review
+.gn-userfeedback-comment-area {
+  min-height: 100px;
+  margin-bottom: 10px;
+}
 
+// user is not logged in
+// 
+// inputs for entering user data
+.gn-userfeedback-loggedout {
+  .form-control {
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+}
 
-
-
-
-
+// list with categories to review
 .gn-userfeedback-categories {
   padding-top: 10px;
   .list-group-item {
@@ -225,7 +266,8 @@ q, blockquote {
 
 // styling for the scrollbar
 ::-webkit-scrollbar {
-  width: 2px;
+  width: 3px;
+  height: 3px;
 }
 // ----- track
 ::-webkit-scrollbar-track {
