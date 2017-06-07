@@ -2626,7 +2626,7 @@ public class DataManager implements ApplicationEventPublisherAware {
      * then set status to draft to enable workflow.
      */
     public void activateWorkflowIfConfigured(ServiceContext context, String newId, String groupOwner) throws Exception {
-        if (groupOwner == null) {
+        if (StringUtils.isEmpty(groupOwner)) {
             return;
         }
         String groupMatchingRegex =
