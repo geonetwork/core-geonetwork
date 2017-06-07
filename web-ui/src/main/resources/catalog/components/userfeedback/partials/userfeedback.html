@@ -1,4 +1,4 @@
-
+<div>
 	<section>
 		<h2>
 			<span data-translate="">rate</span>
@@ -29,7 +29,7 @@
 	</section>
 
 	<!-- All comments modal -->
-	<div class="modal fade gn-userfeedback-modal"
+	<div class="modal gn-userfeedback-modal"
 		id="gn-userfeedback-allcomments" tabindex="-1" role="dialog"
 		aria-labelledby="gn-userfeedback-allcomments">
 		<div class="modal-dialog" role="document">
@@ -41,36 +41,98 @@
 					</button>
 					<h4 class="modal-title" id="myModalLabel">Ratings & Comments</h4>
 				</div>
-				<div class="modal-body row">
-					<div class="col-md-7">
-						<h2>The Geoffrey's Tube Z3950 Server</h2>
-						<p>
-							Last comment on 19-04-2016. 11 new comments since 01-04-2017 (<a>show</a>)
-						</p>
-						<div class="gn-userfeedback-title">
-							<h3>42 comments</h3>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<h2>The Geoffrey's Tube Z3950 Server</h2>
+							<p>
+								Last comment on 19-04-2016. 11 new comments since 01-04-2017 (<a>show</a>)
+							</p>
 						</div>
-						<ul class="gn-userfeedback-list">
-							<li class="gn-userfeedback-item clearfix">
-								<div class="pull-left btn btn-warning gn-userfeedback-image">
-									<span class="fa fa-user"></span>
-								</div>
-								<div class="pull-left gn-userfeedback-comment-user">
-									<a>Michel Gabriël</a>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-										Etiam ultrices ligula urna. Ut cursus, mauris sed auctor
-										accumsan, quam ligula gravida lectus, ut condimentum velit sem
-										a risus.</p>
-									<p class="gn-userfeedback-reply">
-										<a>Reply</a> | <a>Share</a>
-									</p>
-								</div>
-							</li>							
-						</ul>
+					</div>
+					<div class="row">
+						<div class="col-md-7">
+
+							<div class="gn-userfeedback-title">
+								<h3>42 Reviews</h3>
+							</div>
+              <ul class="gn-userfeedback-list">
+                <li class="gn-userfeedback-item clearfix">
+                  <div class="pull-left btn btn-warning gn-userfeedback-image">
+                    <span class="fa fa-user"></span>
+                  </div>
+                  <div class="pull-left gn-userfeedback-comment-user">
+                    <a>Michel Gabriël</a>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
+                    </p>
+                    <p class="gn-userfeedback-reply">
+                      <a>Reply</a> | <a>Share</a>
+                    </p>
+                  </div>
+                </li>
+                <li class="gn-userfeedback-item">
+                  <ul class="gn-userfeedback-list">
+                    <li class="gn-userfeedback-item clearfix">
+                      <div class="pull-left btn btn-success gn-userfeedback-image">
+                        <span class="fa fa-rocket"></span>
+                      </div>
+                      <div class="pull-left gn-userfeedback-comment-user">
+                        <a>Ikke</a>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
+                        </p>
+                        <p class="gn-userfeedback-reply">
+                          <a>Reply</a> | <a>Share</a>
+                        </p>
+                      </div>
+                    </li>
+                    <li class="gn-userfeedback-item clearfix">
+                      <div class="pull-left btn btn-warning gn-userfeedback-image">
+                        <span class="fa fa-user"></span>
+                      </div>
+                      <div class="pull-left gn-userfeedback-comment-user">
+                        <a>Michel Gabriël</a>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
+                        </p>
+                        <p class="gn-userfeedback-reply">
+                          <a>Reply</a> | <a>Share</a>
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li class="gn-userfeedback-item clearfix">
+                  <div class="pull-left btn btn-warning gn-userfeedback-image">
+                    <span class="fa fa-user"></span>
+                  </div>
+                  <div class="pull-left gn-userfeedback-comment-user">
+                    <a>Michel Gabriël</a>
+                    <p>
+                      Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
+                    </p>
+                    <p class="gn-userfeedback-reply">
+                      <a>Reply</a> | <a>Share</a>
+                    </p>
+                  </div>
+                </li>                    
+              </ul>
+
+						</div>
+						<div class="col-md-5">
+							<div class="gn-userfeedback-title">
+								<h3>Add a review</h3>
+							</div>
+							<textarea class="form-control gn-userfeedback-comment-area">
+								
+							</textarea>
+							<button type="button" class="btn btn-primary">Add</button>
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<div class="dropdown">
+					<!-- <div class="dropdown">
 						<button id="gn-userfeedback-add" type="button"
 							data-toggle="dropdown"
 							class="btn btn-danger btn-round btn-lg pull-left">
@@ -80,7 +142,7 @@
 							<li><a href="">Add comment</a></li>
 							<li><a href="">Add rating</a></li>
 						</ul>
-					</div>
+					</div> -->
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -89,7 +151,7 @@
 	<!-- /#gn-userfeedback-allcomments -->
 
 	<!-- Add comment Modal -->
-	<div class="modal fade gn-userfeedback-modal"
+	<div class="modal gn-userfeedback-modal"
 		id="gn-userfeedback-addcomment" tabindex="-1" role="dialog"
 		aria-labelledby="gn-userfeedback-addcomment">
 		<div class="modal-dialog" role="document">
@@ -104,19 +166,69 @@
 				<div class="modal-body row">
 					<div class="col-md-7">
 						<h2>The Geoffrey's Tube Z3950 Server</h2>
-						<p>Give your opinion on the different categories.</p>
 
-						<div class="gn-userfeedback-title">
-							<h3>Categories</h3>
+						<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+						  <div class="panel panel-default">
+						    <div class="panel-heading" role="tab" id="headingOne">
+						      <h4 class="panel-title">
+						        <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+											<span class="btn btn-primary btn-round">1</span> Give your opinion on the different categories.
+						        </a>
+						      </h4>
+						    </div>
+    						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      						<div class="panel-body">
+										<div class="gn-userfeedback-title">
+											<h3>Categories</h3>
+										</div>
+										<h3>Complete</h3>
+										<div data-gn-metadata-rate="mdView.current.record" />
+										<h3>Findability</h3>
+										<div data-gn-metadata-rate="mdView.current.record" />
+										<h3>Readability</h3>
+										<div data-gn-metadata-rate="mdView.current.record" />
+										<h3>Something else</h3>
+										<div data-gn-metadata-rate="mdView.current.record" />
+									</div>
+    						</div>
+  						</div>
+  						<!-- /.panel -->
+  						<div class="panel panel-default">
+						    <div class="panel-heading" role="tab" id="headingTwo">
+						      <h4 class="panel-title">
+						        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						          <span class="btn btn-primary btn-round">2</span> Give your opinion about the dataset
+						        </a>
+						      </h4>
+						    </div>
+						    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+						      <div class="panel-body">
+						        <div class="gn-userfeedback-title">
+											<h3>Add your review</h3>
+										</div>
+										<textarea class="form-control" rows="8"></textarea>
+						      </div>
+						    </div>
+						  </div>
+						  <!-- /.panel -->
+						  <div class="panel panel-default">
+						    <div class="panel-heading" role="tab" id="headingThree">
+						      <h4 class="panel-title">
+						        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						          <span class="btn btn-primary btn-round">3</span> Help us improve the dataset even more..
+						        </a>
+						      </h4>
+						    </div>
+						    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+						      <div class="panel-body">
+						        <div class="gn-userfeedback-title">
+											<h3>Add keywords</h3>
+										</div>
+						      </div>
+						    </div>
+						  </div>
+						  <!-- /.panel -->
 						</div>
-						<h3>Complete</h3>
-						<div data-gn-metadata-rate="mdView.current.record" />
-						<h3>Findability</h3>
-						<div data-gn-metadata-rate="mdView.current.record" />
-						<h3>Readability</h3>
-						<div data-gn-metadata-rate="mdView.current.record" />
-						<h3>Something else</h3>
-						<div data-gn-metadata-rate="mdView.current.record" />
 					</div>
 					<div class="col-md-5">
 						<div class="gn-userfeedback-title">
@@ -128,13 +240,23 @@
 						<div class="gn-userfeedback-title">
 							<h3>User information</h3>
 						</div>
-						<p>
-							You are currently logged in as <a>Michel</a>
-						</p>
+						<div class="gn-userfeedback-loggedin hidden">
+							<p>
+								You are currently logged in as <a>Michel</a>
+							</p>
+						</div>
+						<div class="gn-userfeedback-loggedout">
+							<p>
+								You are not logged in, please fill in your name, email and organization
+							</p>
+							<input type="text" name="user-name" class="form-control" placeholder="Your Name">
+							<input type="text" name="user-email" class="form-control" placeholder="Your Email">
+							<input type="text" name="user-organization" class="form-control" placeholder="Your Organization">
+						</div>
 						<p>
 						<div class="checkbox">
 							<label> <input type="checkbox"> Show my username
-								in comments and ratings
+								in reviews and ratings
 							</label>
 						</div>
 						</p>
@@ -148,4 +270,4 @@
 		</div>
 	</div>
 	
-
+</div>
