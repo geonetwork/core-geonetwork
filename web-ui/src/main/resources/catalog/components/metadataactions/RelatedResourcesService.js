@@ -297,13 +297,14 @@
               } else if (protocolOrType.match(/kml/i)) {
                 return 'KML';
               } else if (protocolOrType.match(/download/i)) {
-                if (resource.url.match(/zip/i)) {
+                var url = $filter('gnLocalized')(resource.url) || resource.url;
+                if (url.match(/zip/i)) {
                   return 'LINKDOWNLOAD-ZIP';
-                } else if (resource.url.match(/pdf/i)) {
+                } else if (url.match(/pdf/i)) {
                   return 'LINKDOWNLOAD-PDF';
-                } else if (resource.url.match(/xml/i)) {
+                } else if (url.match(/xml/i)) {
                   return 'LINKDOWNLOAD-XML';
-                } else if (resource.url.match(/rdf/i)) {
+                } else if (url.match(/rdf/i)) {
                   return 'LINKDOWNLOAD-RDF';
                 } else {
                   return 'LINKDOWNLOAD';
