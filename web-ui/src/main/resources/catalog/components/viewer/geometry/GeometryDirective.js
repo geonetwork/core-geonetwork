@@ -108,6 +108,15 @@
             ngeoDecorateInteraction($scope.drawInteraction);
             ngeoDecorateInteraction($scope.modifyInteraction);
 
+            // cleanup when scope is destroyed
+            // FIXME: this event is not triggered!
+            // (when switching form, the DOM is simply cleared with jQuery)
+            $scope.$on('$destroy', function () {
+              $scope.map.removeLayer(layer);
+              $scope.map.removeInteraction($scope.drawInteraction);
+              $scope.map.removeInteraction($scope.modifyInteraction);
+            });
+
             // modifies the output value
             var updateOutput = function (feature) {
               if (!feature) {

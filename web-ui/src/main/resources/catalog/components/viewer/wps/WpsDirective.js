@@ -214,29 +214,34 @@
                   );
 
                   angular.forEach(
-                  scope.processDescription.processOutputs.output,
-                  function(output, idx) {
-                    output.asReference = true;
+                    scope.processDescription.processOutputs.output,
+                    function(output, idx) {
+                      output.asReference = true;
 
-                    // untested code
-                    var outputDefault = defaults &&
-                        defaults.responsedocument &&
-                        defaults.responsedocument[output.identifier.value];
-                    if (outputDefault) {
-                      output.value = true;
-                      var defaultAsReference =
-                          outputDefault.attributes['asreference'];
-                      if (defaultAsReference !== undefined) {
-                        output.asReference = toBool(defaultAsReference);
+                      // FIXME: look for an actual way to determine the output type...
+                      if (scope.processDescription.identifier.value == 'script:computemultirasterprofile') {
+                        output.asReference = false;
                       }
-                      scope.selectedOutput.identifier =
-                            output.identifier.value;
+
+                      // untested code
+                      var outputDefault = defaults &&
+                          defaults.responsedocument &&
+                          defaults.responsedocument[output.identifier.value];
+                      if (outputDefault) {
+                        output.value = true;
+                        var defaultAsReference =
+                            outputDefault.attributes['asreference'];
+                        if (defaultAsReference !== undefined) {
+                          output.asReference = toBool(defaultAsReference);
+                        }
+                        scope.selectedOutput.identifier =
+                              output.identifier.value;
+                      }
+                      else if (idx == 0) {
+                        scope.selectedOutput.identifier =
+                              output.identifier.value;
+                      }
                     }
-                    else if (idx == 0) {
-                      scope.selectedOutput.identifier =
-                            output.identifier.value;
-                    }
-                  }
                   );
                   var output = scope.processDescription.processOutputs.output;
                   if (output.length == 1) {
