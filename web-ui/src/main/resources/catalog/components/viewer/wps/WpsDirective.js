@@ -56,8 +56,9 @@
     '$timeout',
     'wfsFilterService',
     'gnGeometryService',
+    'gnViewerService',
     function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
-      gnGeometryService) {
+      gnGeometryService, gnViewerService) {
 
       var inputTypes = {
         string: 'text',
@@ -123,6 +124,14 @@
                   scope.processDescription = scope.wpsLink.processDescription ||
                   response.processDescription[0];
                   scope.wpsLink.processDescription = scope.processDescription;
+
+                  // check if we need to get into 'profile graph' mode
+                  // FIXME: look for an actual way to determine the output type...
+                  if (scope.processDescription.identifier.value == 'script:computemultirasterprofile') {
+                    scope.outputAsGraph = true;
+                  } else {
+                    scope.outputAsGraph = false;
+                  }
 
                   angular.forEach(scope.processDescription.dataInputs.input,
                       function(input) {
@@ -216,12 +225,7 @@
                   angular.forEach(
                     scope.processDescription.processOutputs.output,
                     function(output, idx) {
-                      output.asReference = true;
-
-                      // FIXME: look for an actual way to determine the output type...
-                      if (scope.processDescription.identifier.value == 'script:computemultirasterprofile') {
-                        output.asReference = false;
-                      }
+                      output.asReference = scope.outputAsGraph ? false : true;
 
                       // untested code
                       var outputDefault = defaults &&
@@ -366,6 +370,15 @@
                 }
               }
               scope.executeResponse = response;
+
+              // save raw graph data on view controller & hide it in wps form
+              if (scope.outputAsGraph) {
+                gnViewerService.displayProfileGraph(
+                  response.processOutputs.output[0]
+                    .data.complexData.content[0]
+                );
+                scope.executeResponse = null;
+              }
             };
 
             scope.running = true;

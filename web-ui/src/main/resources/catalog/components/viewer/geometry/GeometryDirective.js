@@ -153,7 +153,7 @@
                 case 'gml':
                   format = new ol.format.GML({
                     featureNS: 'http://mapserver.gis.umn.edu/mapserver',
-                    featureType: 'features',
+                    featureType: 'features'
                     // srsName: $scope.map.getView().getProjection().getCode()
                   });
 
