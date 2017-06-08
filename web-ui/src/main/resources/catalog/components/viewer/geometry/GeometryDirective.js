@@ -37,6 +37,8 @@
    * of geometry, and update the linked output object.
    * Possible output formats are: 'object' (ol.Geometry reference), 'gml',
    * 'geojson', 'wkt'; default if undefined is 'object'
+   * If 'outputAsFeatures' is true, a FeatureCollection object will be output
+   * instead of a single feature
    */
   module.directive('gnGeometryTool', [
     function() {
@@ -48,7 +50,8 @@
           output: '=',
           outputFormat: '<',
           allowReset: '@',
-          allowModify: '@'
+          allowModify: '@',
+          outputAsFeatures: '@'
         },
         templateUrl: '../../catalog/components/viewer/geometry/' +
             'partials/geometrytool.html',
@@ -112,6 +115,9 @@
                 return;
               }
 
+              // set id on feature
+              feature.setId('geometry-tool-output');
+
               var formatLabel = ($scope.outputFormat || '').toLowerCase();
               var format;
               var outputValue;
@@ -119,18 +125,44 @@
                 case 'json':
                 case 'geojson':
                   format = new ol.format.GeoJSON();
-                  outputValue = format.writeGeometry(feature.getGeometry());
+                  if ($scope.outputAsFeatures) {
+                    outputValue = format.writeFeatures([feature]);
+                  } else {
+                    outputValue = format.writeGeometry(feature.getGeometry());
+                  }
                   break;
 
                 case 'wkt':
                   format = new ol.format.WKT();
-                  outputValue = format.writeGeometry(feature.getGeometry());
+                  if ($scope.outputAsFeatures) {
+                    outputValue = format.writeFeatures([feature]);
+                  } else {
+                    outputValue = format.writeGeometry(feature.getGeometry());
+                  }
                   break;
 
                 case 'gml':
-                  format = new ol.format.GML();
-                  outputValue = format.writeGeometryNode(feature.getGeometry())
-                    .innerHTML;
+                  format = new ol.format.GML({
+                    featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+                    featureType: 'features',
+                    // srsName: $scope.map.getView().getProjection().getCode()
+                  });
+
+                  // TODO: refactor this: first clone geom & transform, then if necessary create a new feature with this geom
+                  var feature2 = new ol.Feature({
+                    id: 'geometry-tool-output',
+                    geometry: feature.getGeometry().clone()
+                  })
+                  feature2.getGeometry().transform($scope.map.getView().getProjection(), 'EPSG:4326');
+
+                  if ($scope.outputAsFeatures) {
+                    outputValue = '<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs">' +
+                      format.writeFeatures([feature2]) +
+                      '</wfs:FeatureCollection>';
+                  } else {
+                    outputValue = format.writeGeometryNode(feature2.getGeometry())
+                      .innerHTML;
+                  }
                   break;
 
                 // no valid format specified: output as object + give warning
@@ -140,7 +172,11 @@
                     'outputting geometry as object');
 
                 case 'object':
-                  outputValue = feature.getGeometry().clone();
+                  if ($scope.outputAsFeatures) {
+                    outputValue = [feature];
+                  } else {
+                    outputValue = feature.getGeometry().clone();
+                  }
                   break;
               }
 
