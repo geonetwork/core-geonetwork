@@ -1,0 +1,182 @@
+<div>
+
+	<button class="btn btn-default btn-sm" data-toggle="modal"
+		data-target="#gn-userfeedback-addcomment" data-ng-click="initPopup()">
+		<span class="fa fa-plus"></span> Add rating
+	</button>
+
+	<!-- Add comment Modal -->
+	<div class="modal gn-userfeedback-modal"
+		id="gn-userfeedback-addcomment" tabindex="-1" role="dialog"
+		aria-labelledby="gn-userfeedback-addcomment">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Add rating</h4>
+				</div>
+				<div class="modal-body row">
+					<div class="col-md-7">
+						<h2>{{rating.metadataTitle}}</h2>
+
+						<div class="panel-group" id="accordion" role="tablist"
+							aria-multiselectable="true">
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingOne">
+									<h4 class="panel-title">
+										<a role="button" data-toggle="collapse"
+											data-parent="#accordion" data-target="#collapseOne"
+											aria-expanded="true" aria-controls="collapseOne"> <span
+											class="btn btn-primary btn-round">1</span> Give your opinion
+											on the different categories.
+										</a>
+									</h4>
+								</div>
+								<div id="collapseOne" class="panel-collapse collapse in"
+									role="tabpanel" aria-labelledby="headingOne">
+									<div class="panel-body">
+										<div class="gn-userfeedback-title">
+											<h3>Categories</h3>
+										</div>
+										<h3>Complete</h3>
+										<div data-rating=""
+								     data-ng-model="uf.ratingCOMPLETE"
+								     data-max="5"
+								     data-state-on="'fa fa-fw fa-star'"
+								     data-state-off="'fa fa-fw fa-star-o'"
+								     data-on-hover="hoveringOver(value)"
+								     data-on-leave="overStar = null"
+								     data-ng-click="rateForRecord(rate)"
+								     class="text-muted"
+								     title="{{readonly ? '' : ('clickToRate' | translate)}}"/>
+										<h3>Findability</h3>
+										<div data-rating=""
+                     data-ng-model="uf.ratingFINDABILITY"
+                     data-max="5"
+                     data-state-on="'fa fa-fw fa-star'"
+                     data-state-off="'fa fa-fw fa-star-o'"
+                     data-on-hover="hoveringOver(value)"
+                     data-on-leave="overStar = null"
+                     data-ng-click="rateForRecord(rate)"
+                     class="text-muted"
+                     title="{{readonly ? '' : ('clickToRate' | translate)}}"/>
+										<h3>Readability</h3>
+										 <div data-rating=""
+                     data-ng-model="uf.ratingREADABILITY"
+                     data-max="5"
+                     data-state-on="'fa fa-fw fa-star'"
+                     data-state-off="'fa fa-fw fa-star-o'"
+                     data-on-hover="hoveringOver(value)"
+                     data-on-leave="overStar = null"
+                     data-ng-click="rateForRecord(rate)"
+                     class="text-muted"
+                     title="{{readonly ? '' : ('clickToRate' | translate)}}"/>
+										<h3>Something else</h3>
+										<div data-rating=""
+                     data-ng-model="uf.ratingOTHER"
+                     data-max="5"
+                     data-state-on="'fa fa-fw fa-star'"
+                     data-state-off="'fa fa-fw fa-star-o'"
+                     data-on-hover="hoveringOver(value)"
+                     data-on-leave="overStar = null"
+                     data-ng-click="rateForRecord(rate)"
+                     class="text-muted"
+                     title="{{readonly ? '' : ('clickToRate' | translate)}}"/>
+									</div>
+								</div>
+							</div>
+							<!-- /.panel -->
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingTwo">
+									<h4 class="panel-title">
+										<a class="collapsed" role="button" data-toggle="collapse"
+											data-parent="#accordion" data-target="#collapseTwo"
+											aria-expanded="false" aria-controls="collapseTwo"> <span
+											class="btn btn-primary btn-round">2</span> Give your opinion
+											about the dataset
+										</a>
+									</h4>
+								</div>
+								<div id="collapseTwo" class="panel-collapse collapse"
+									role="tabpanel" aria-labelledby="headingTwo">
+									<div class="panel-body">
+										<div class="gn-userfeedback-title">
+											<h3>Add your review</h3>
+										</div>
+										<textarea class="form-control" rows="8" data-ng-model="uf.comment" required></textarea>
+										<p data-ng-show="uf.comment.$invalid" class="help-block">Your review is required.</p>
+									</div>
+								</div>
+							</div>
+							<!-- /.panel -->
+							<div class="panel panel-default">
+								<div class="panel-heading" role="tab" id="headingThree">
+									<h4 class="panel-title">
+										<a class="collapsed" role="button" data-toggle="collapse"
+											data-parent="#accordion" data-target="#collapseThree"
+											aria-expanded="false" aria-controls="collapseThree"> <span
+											class="btn btn-primary btn-round">3</span> Help us improve
+											the dataset even more..
+										</a>
+									</h4>
+								</div>
+								<div id="collapseThree" class="panel-collapse collapse"
+									role="tabpanel" aria-labelledby="headingThree">
+									<div class="panel-body">
+										<div class="gn-userfeedback-title">
+											<h3>Add keywords</h3>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /.panel -->
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="gn-userfeedback-title">
+							<h3>Current score</h3>
+						</div>
+						<div class="gn-userfeedback-score">
+							{{rating.ratingAverage}} / 5 <span class="fa fa-fw fa-star">&nbsp;</span>
+						</div>
+						<div class="gn-userfeedback-title">
+							<h3>User information</h3>
+						</div>
+						<div class="gn-userfeedback-loggedin hidden">
+							<p>
+								You are currently logged in as <a>{{uf.authorName}}</a>
+							</p>
+						</div>
+						<div class="gn-userfeedback-loggedout">
+							<p>You are not logged in, please fill in your name, email and	organization</p>
+								<input type="text" name="authorName" class="form-control"	placeholder="Your Name" data-ng-model="uf.authorName" data-ng-maxlength="64" required> 
+								<p data-ng-show="uf.authorName.$invalid" class="help-block">Username is required.</p>
+								<p data-ng-show="uf.authorName.$error.maxlength" class="help-block">Username is too long.</p>
+									
+								<input type="email" name="authorEmail" class="form-control" placeholder="Your Email" data-ng-model="uf.authorEmail" data-ng-maxlength="64" required>
+								<p data-ng-show="uf.authorEmail.$invalid" class="help-block">Email is required.</p>
+								<p data-ng-show="uf.authorEmail.$error.maxlength" class="help-block">Email is too long.</p>
+									
+								<input type="text" name="authorOrganization" class="form-control" placeholder="Your Organization" data-ng-model="uf.authorOrganization" data-ng-maxlength="64">
+								<p data-ng-show="uf.authorOrganization.$error.maxlength" class="help-block">Organization is too long.</p>
+						</div>
+						<p>
+						<div class="checkbox">
+							<label> <input type="checkbox" data-ng-model="uf.optionPrivacy" value="1"> Show my username
+								in reviews and ratings
+							</label>
+						</div>
+						</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" data-ng-click="submitForm()" data-dismiss="modal">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

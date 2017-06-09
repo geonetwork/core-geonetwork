@@ -422,7 +422,9 @@
 				</section>
 				</br>
 
-				<div data-gn-userfeedback='{{recordIdentifierRequested | htmlToPlaintext}}' ></div>
+				<div data-gn-userfeedback='{{mdView.current.record.getUuid()}}' ></div>
+				<div data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}' ></div>
+				<div data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}' ></div>
 
 				<section data-ng-if="mdView.current.record.geoBox.length > 0">
 					<h4>

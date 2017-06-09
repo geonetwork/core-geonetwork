@@ -1,0 +1,101 @@
+<div>
+	<button class="btn btn-default btn-sm" data-toggle="modal"
+		data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments">See
+		all feedback</button>
+
+
+	<!-- All comments modal -->
+	<div class="modal gn-userfeedback-modal"
+		id="gn-userfeedback-allcomments" tabindex="-1" role="dialog"
+		aria-labelledby="gn-userfeedback-allcomments">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Ratings & Comments</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<h2>{{rating.metadataTitle}}</h2>
+							<p>
+								{{rating.userfeedbackCount}} comments, last comment on {{rating.lastComment | date:'medium'}}.  
+							</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-7">
+
+							<div class="gn-userfeedback-title">
+								<h3>{{rating.userfeedbackCount}} Reviews</h3>
+							</div>
+							<ul class="gn-userfeedback-list">
+
+								<li class="gn-userfeedback-item clearfix"
+									data-ng-repeat="row in fullCommentsList" data-ng-show="row.comment">
+									<div class="pull-left btn btn-warning gn-userfeedback-image">
+										<span class="fa fa-user"></span>
+									</div>
+									<div class="pull-left gn-userfeedback-comment-user">
+										<a>{{row.authorName}}</a>
+										<p>{{row.comment}}</p>
+										<p class="gn-userfeedback-reply">
+											{{row.date | date:'medium'}}
+										</p>
+									</div>
+								</li>
+
+								<!-- li class="gn-userfeedback-item">
+                  <ul class="gn-userfeedback-list">
+                    <li class="gn-userfeedback-item clearfix">
+                      <div class="pull-left btn btn-success gn-userfeedback-image">
+                        <span class="fa fa-rocket"></span>
+                      </div>
+                      <div class="pull-left gn-userfeedback-comment-user">
+                        <a>Ikke</a>
+                        <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
+                        </p>
+                        <p class="gn-userfeedback-reply">
+                          <a>Reply</a> | <a>Share</a>
+                        </p>
+                      </div>
+                    </li  -->
+
+							</ul>
+
+						</div>
+						<div class="col-md-5 hidden">
+							<div class="gn-userfeedback-title">
+								<h3>Add a review</h3>
+							</div>
+							<textarea class="form-control gn-userfeedback-comment-area">
+                
+              </textarea>
+							<button type="button" class="btn btn-primary">Add</button>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<!-- <div class="dropdown">
+            <button id="gn-userfeedback-add" type="button"
+              data-toggle="dropdown"
+              class="btn btn-danger btn-round btn-lg pull-left">
+              <span class="fa fa-plus"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="gn-userfeedback-add">
+              <li><a href="">Add comment</a></li>
+              <li><a href="">Add rating</a></li>
+            </ul>
+          </div> -->
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /#gn-userfeedback-allcomments -->
+
+</div>
