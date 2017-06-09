@@ -1,6 +1,7 @@
 (function() {
   goog.provide('sxt_viewer_directive');
 
+
   var module = angular.module('sxt_viewer_directive', []);
 
   /**
@@ -151,7 +152,7 @@
                 }
               };
 
-              scope.isContainterOpened = function() {
+              scope.isContainerOpened = function() {
                 try {
                   return scope.activeTools.layers || scope.activeTools.import ||
                     scope.activeTools.contexts || scope.activeTools.print ||
