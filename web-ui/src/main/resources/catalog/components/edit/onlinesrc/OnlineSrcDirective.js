@@ -450,7 +450,7 @@
                       fields: {
                         'url': {},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
@@ -475,7 +475,7 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
@@ -495,7 +495,7 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
@@ -515,7 +515,7 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
@@ -540,7 +540,7 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
@@ -757,7 +757,7 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
@@ -777,7 +777,7 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
