@@ -864,11 +864,14 @@
               // view -> model
               scope.$apply(function() {
                 if (!isRange) {
-                  scope.date = $(element).find('input')[0].value;
+                  var date = $(element).find('input')[0].value;
+                  scope.date = date !== '' ? date : undefined;
                 }
                 else {
-                  scope.date.from = $(element).find('input')[0].value;
-                  scope.date.to = $(element).find('input')[1].value;
+                  var from = $(element).find('input')[0].value;
+                  scope.date.from = from !== '' ? from : undefined;
+                  var to = $(element).find('input')[1].value;
+                  scope.date.to = to !== '' ? to : undefined;
                 }
               });
             });
