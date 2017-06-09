@@ -333,13 +333,14 @@
                       fields: {
                         'url': {isMultilingual: false},
                         'protocol': {
-                          value: 'WWW:LINK', hidden: true
+                          value: 'WWW:LINK', hidden: true,
                           isMultilingual: false
                         },
                         'name': {},
                         'desc': {},
                         'function': {value: 'browsing', hidden: true,
-                          isMultilingual: false}
+                          isMultilingual: false
+                        }
                       }
                     }, {
                       group: 'onlineDiscover',
@@ -1782,7 +1783,7 @@
                     $(scope.popupid).modal('show');
 
                     scope.getFragments();
-                    
+
                     if (config && !angular.isObject(config)) {
                       config = angular.fromJson(config);
                     }
