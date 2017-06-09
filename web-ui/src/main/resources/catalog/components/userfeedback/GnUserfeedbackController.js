@@ -23,40 +23,35 @@
 
 (function() {
   goog.provide('gn_userfeedback_controller');
-
-  var module = angular.module('gn_userfeedback_controller', []);
+  
+  var module = angular.module('gn_userfeedback_controller', ['ui.bootstrap.modal', 'ui.bootstrap.tpls']);
 
   module.controller('gnUserfeedbackController', [
-    '$scope', '$http', 'gnConfig',
-    function($scope, $http, gnConfig) {
+    '$scope', '$http', 'gnConfig', '$modal', '$document',
+    function($scope, $http, gnConfig, $modal, $document) {
     	
-    	$scope.fewCommentsList = [];   	
-    	$scope.rating;
-    	$scope.metatdataUUID = $scope.parentUuid;
+    
     	
-    	 $http({
-             method : "GET",
-             url : "../api/userfeedback?target="+$scope.metatdataUUID,
-             isArray: true
-         }).then(function mySuccess(response) {
-        	 $scope.fewCommentsList = $scope.fewCommentsList.concat(response.data);
-         }, function myError(response) {
-        	 console.log(response.statusText);
-         });
-    	 
-    	 $http({
-             method : "GET",
-             url : "../api/metadata/" + $scope.metatdataUUID + "/userfeedbackrating",
-             isArray: false
-         }).then(function mySuccess(response) {
-        	 $scope.rating = response.data;
-         }, function myError(response) {
-        	 console.log(response.statusText);
-         });
-    	
-    	
-      
-    }
+    }  	      
+   
   ]);
+  
+  
+  module.controller('gnUserfeedbackControllerFull', [
+	    '$scope', '$http', 'gnConfig', '$modal', '$document',
+	    function($scope, $http, gnConfig, $modal, $document) {
+
+	    }  		      
+	   
+	  ]);
+  
+  module.controller('gnUserfeedbackControllerNew', [
+	    '$scope', '$http', 'gnConfig', '$modal', '$document',
+	    function($scope, $http, gnConfig, $modal, $document) {
+
+	    }  		      
+	   
+	  ]);
+  
 
 })();
