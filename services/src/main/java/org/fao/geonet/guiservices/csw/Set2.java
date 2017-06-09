@@ -34,6 +34,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -47,8 +48,9 @@ import java.util.List;
 @Controller("admin.config.csw.save")
 public class Set2 {
 
-    @RequestMapping(value = "/{lang}/admin.config.csw.save", produces = {
-        MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{lang}/admin.config.csw.save",
+        method = {RequestMethod.POST, RequestMethod.PUT},
+        produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public
     @ResponseBody
     OkResponse exec(@RequestParam MultiValueMap parameters) throws Exception {

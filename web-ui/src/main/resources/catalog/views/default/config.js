@@ -97,6 +97,8 @@
 
           };
 
+          // Object to store the current Map context
+          viewerSettings.storage = 'sessionStorage';
 
           // Start location. This is usually overriden
           // by context for large map and search records

@@ -301,6 +301,7 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
+      <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>
         <artifactId>urlrewritefilter</artifactId>
@@ -1040,6 +1041,13 @@
         <groupId>io.searchbox</groupId>
         <artifactId>jest</artifactId>
         <version>2.0.3</version>
+      </dependency>
+
+      <!-- Apache commons csv -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-csv</artifactId>
+        <version>1.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -278,6 +278,11 @@ class Harvester implements IHarvester<HarvestResult> {
         Set<RecordInfo> records = new HashSet<RecordInfo>();
 
         while (true) {
+            if(this.cancelMonitor.get()) {
+              log.error("Harvester stopped in the middle of running!");
+              //Returning whatever, we have to move on and finish!
+              return records;
+            }
             request.setStartPosition(start);
             Element response = doSearch(request, start, GETRECORDS_REQUEST_MAXRECORDS);
             if (log.isDebugEnabled()) {
@@ -296,6 +301,11 @@ class Harvester implements IHarvester<HarvestResult> {
                 }
             }
 
+            if(this.cancelMonitor.get()) {
+              log.error("Harvester stopped in the middle of running!");
+              //Returning whatever, we have to move on and finish!
+              return records;
+            }
             @SuppressWarnings("unchecked")
             List<Element> list = results.getChildren();
             int foundCnt = 0;

@@ -17,6 +17,9 @@
     <icon>
       <xsl:value-of select="icon/value"/>
     </icon>
+    <xslfilter>
+      <xsl:value-of select="xslfilter"/>
+    </xslfilter>
   </xsl:template>
 
   <!-- ============================================================================================= -->

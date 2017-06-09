@@ -6,6 +6,7 @@
             class="form-horizontal"
             role="form"
             method="POST">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
         <div class="onlinesrc-container">
 
           <div data-ng-show="config.types.length > 1 && config.display == 'radio'">
@@ -235,6 +236,7 @@
         <div class="panel-body">
           <form class="form-horizontal" role="form"
                 data-ng-search-form="">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="input-group">
               <span class="input-group-addon">
                 <i class="fa fa-search"/>

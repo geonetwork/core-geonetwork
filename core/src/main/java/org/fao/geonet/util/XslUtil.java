@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2017 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -683,10 +683,23 @@ public final class XslUtil {
             return str;
         }
     }
-    
+
     private static final Random RANDOM = new Random();
 
     public static String randomId() {
         return "N" + RANDOM.nextInt(Integer.MAX_VALUE);
+    }
+
+    public static String getMax(Object values) {
+        String[] strings = values.toString().split(" ");
+        String max = "";
+
+        for (int i = 0; i < strings.length; i++) {
+            String val = strings[i];
+            if(val.compareTo(max) > 0) {
+                max = val;
+            }
+        }
+        return max;
     }
 }

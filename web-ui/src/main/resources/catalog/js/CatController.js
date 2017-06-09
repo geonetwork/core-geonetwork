@@ -311,11 +311,11 @@
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
     'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
-    'gnLangs', 'gnAdminMenu', 'gnViewerSettings', 'gnSearchSettings',
+    'gnLangs', 'gnAdminMenu', 'gnViewerSettings', 'gnSearchSettings', '$cookies',
     function($scope, $http, $q, $rootScope, $translate,
             gnSearchManagerService, gnConfigService, gnConfig,
             gnGlobalSettings, $location, gnUtilityService, gnSessionService,
-            gnLangs, gnAdminMenu, gnViewerSettings, gnSearchSettings) {
+            gnLangs, gnAdminMenu, gnViewerSettings, gnSearchSettings, $cookies) {
       $scope.version = '0.0.1';
 
 
@@ -359,8 +359,7 @@
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
-        'ita': 'Italiano', 'fin': 'Suomeksi', 'fin': 'Suomeksi',
-        'ice': 'Íslenska'};
+        'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
@@ -373,6 +372,18 @@
       $scope.layout = {
         hideTopToolBar: false
       };
+
+      /**
+       * CSRF support
+       */
+
+      //Comment the following lines if you want to remove csrf support
+      $http.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+      $http.defaults.xsrfCookieName = 'XSRF-TOKEN';
+      $scope.$watch(function() { return $cookies.get('XSRF-TOKEN'); }, function(value){
+        $rootScope.csrf=value;
+      }) ;
+      //Comment the upper lines if you want to remove csrf support
 
       /**
        * Number of selected metadata records.

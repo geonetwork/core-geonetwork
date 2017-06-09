@@ -767,10 +767,10 @@
 
               // TODO: parse better legend & attribution
               if (angular.isArray(layer.Style) && layer.Style.length > 0) {
-                var url = layer.Style[layer.Style.length - 1]
-                    .LegendURL[0] || url;
-                if (url) {
-                  legend = url.OnlineResource;
+                var urlLegend = layer.Style[layer.Style.length - 1]
+                    .LegendURL[0];
+                if (urlLegend) {
+                  legend = urlLegend.OnlineResource;
                 }
               }
               if (angular.isDefined(layer.Attribution)) {
@@ -817,9 +817,9 @@
 
                   this.loadingLayer = true;
 
-                  var parts = this.url_.split('?');
+                  var parts = url.split('?');
 
-                  var url = gnUrlUtils.append(parts[0],
+                  var urlGetFeature = gnUrlUtils.append(parts[0],
                       gnUrlUtils.toKeyValue({
                         service: 'WFS',
                         request: 'GetFeature',
@@ -830,7 +830,7 @@
                                    getCapLayer.name.localPart}));
 
                   $.ajax({
-                    url: url
+                    url: urlGetFeature
                   })
                       .done(function(response) {
                         // TODO: Check WFS exception
@@ -855,8 +855,7 @@
                       });
                 },
                 strategy: ol.loadingstrategy.bbox,
-                projection: map.getView().getProjection().getCode(),
-                url: url
+                projection: map.getView().getProjection().getCode()
               });
 
               var extent = null;

@@ -81,7 +81,15 @@
             var related = gnGridRelatedList.list[scope.uuid];
             if (related) {
               scope.types = gnGridRelatedList.types;
-              scope.relations = related;
+              var hasProp = false;
+              for (var p in related ) {
+                if(related[p]) {
+                  hasProp = true;
+                }
+              }
+              if(hasProp) {
+                scope.relations = related;
+              }
             }
           });
         }

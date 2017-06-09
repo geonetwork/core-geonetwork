@@ -128,7 +128,8 @@
                     singleUpload: false,
                     // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                     done: uploadResourceSuccess,
-                    fail: uploadResourceFailed
+                    fail: uploadResourceFailed,
+                    headers: {'X-XSRF-TOKEN': $rootScope.csrf}
                   };
                 }
               });

@@ -126,7 +126,7 @@
             .success(function(data) {
               if (data) {
                 $scope.cswElementSetName =
-                    $.isArray(data.xpath) ? data.xpath : [data.xpath];
+                    $.isArray(data.xpaths) ? data.xpaths : [data.xpaths];
               } else {
                 $scope.cswElementSetName = [];
               }
@@ -140,11 +140,15 @@
         $scope.cswElementSetName.splice(index, 1);
       };
       $scope.saveCSWElementSetName = function(formId) {
-        $http.get('admin.config.csw.customelementset.save?_content_type=json&' +
-                $(formId).serialize())
-            .success(function(data) {
-              loadCSWElementSetName();
-            });
+        $http({
+          method: 'POST',
+          url: 'admin.config.csw.customelementset.save',
+          data:  '_content_type=json&' + $(formId).serialize(),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+          .success(function(data) {
+            loadCSWElementSetName();
+          });
       };
 
       /**
@@ -163,8 +167,12 @@
       };
       var saveSettings = function(formId, service) {
 
-        $http.get(service + '?' +
-                gnUtilityService.serialize(formId))
+        $http({
+          method: 'POST',
+          url: service,
+          data:   gnUtilityService.serialize(formId),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('settingsUpdated'),
