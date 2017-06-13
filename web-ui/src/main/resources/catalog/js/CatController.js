@@ -67,7 +67,8 @@
             'cze': 'cz',
             'cat': 'ca',
             'fin': 'fi',
-            'ice': 'is'
+            'ice': 'is',
+            'ita' : 'it'
           }
         },
         'home': {

@@ -45,7 +45,8 @@
       'pol' : 'pl',
       'wel' : 'cy',
       'dut' : 'nl',
-      'ice' : 'is'
+      'ice' : 'is',
+      'ita' : 'it'
     };
     var lang = specialCases[threeCharLang];
     if (angular.isDefined(lang)) {
