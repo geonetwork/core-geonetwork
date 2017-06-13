@@ -46,7 +46,7 @@ import static org.junit.Assert.assertSame;
 
 public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
-    List<String> uuids = new ArrayList();
+    List<String> uuids = new ArrayList<String>();
     String firstMetadataId = null;
     ServiceContext context;
     @Autowired
