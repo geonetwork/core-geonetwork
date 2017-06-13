@@ -86,7 +86,12 @@
       <artifactId>camel-quartz2</artifactId>
       <version>${camel.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-testng</artifactId>
+      <version>${camel.version}</version>
+      <scope>test</scope>
+    </dependency>
     <!--Log4j-->
     <dependency>
       <groupId>log4j</groupId>
