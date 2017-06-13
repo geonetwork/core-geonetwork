@@ -62,7 +62,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
 @RequestMapping(value = { "/api/records",
@@ -106,7 +105,7 @@ public class MetadataLockApi {
         this.accessMan = applicationContext.getBean(AccessManager.class);
 
         String md = Integer.toString(id);
-        if (!accessMan.canEdit(ServiceContext.get(), md)) {
+        if (!accessMan.canEdit(md)) {
             throw new SecurityException("The user cannot edit this metadata.");
         }
 
@@ -135,7 +134,7 @@ public class MetadataLockApi {
         this.accessMan = applicationContext.getBean(AccessManager.class);
 
         String md = Integer.toString(id);
-        if (!accessMan.canEdit(ServiceContext.get(), md)) {
+        if (!accessMan.canEdit(md)) {
             throw new SecurityException("The user cannot edit this metadata.");
         }
 

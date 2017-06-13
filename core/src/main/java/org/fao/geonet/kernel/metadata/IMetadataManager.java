@@ -366,5 +366,5 @@ public interface IMetadataManager {
      * Saves the metadata on the database
      * @param md
      */
-    public void save(IMetadata md);
+    public IMetadata save(IMetadata md);
 }

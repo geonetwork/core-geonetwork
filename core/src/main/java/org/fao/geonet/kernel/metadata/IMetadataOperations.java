@@ -3,6 +3,9 @@
  */
 package org.fao.geonet.kernel.metadata;
 
+import java.util.List;
+import java.util.Map;
+
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -26,6 +29,11 @@ public interface IMetadataOperations {
      * @param context
      */
     public void init(ServiceContext context);
+    
+    /**
+     * Get all operations from a metadata.
+     */
+    public List<OperationAllowed> getAllOperations(Integer mdId);
 
     /**
      * Adds a permission to a group. Metadata is not reindexed.
@@ -37,6 +45,23 @@ public interface IMetadataOperations {
      */
     public void setOperation(ServiceContext context, String mdId, String grpId,
             ReservedOperation op) throws Exception;
+
+    /**
+     * Adds operation without checking if user privileges allows the operation.
+     * This may be useful when a user is an editor and internal operations needs
+     * to update privilages for reserved group. eg.
+     * {@link org.fao.geonet.kernel.metadata.DefaultStatusActions}
+     *
+     *Metadata is not reindexed.
+     *
+     * @param context
+     * @param mdId
+     * @param groupId
+     * @param operId
+     * @throws Exception
+     */
+    public Boolean forceSetOperation(ServiceContext context, int mdId,
+            int groupId,  int opId) throws Exception;
 
     /**
      * Adds a permission to a group. Metadata is not reindexed.
@@ -73,6 +98,30 @@ public interface IMetadataOperations {
      */
     public boolean setOperation(ServiceContext context, int mdId, int grpId,
             int opId) throws Exception;
+
+    /**
+     * Set metadata privileges.
+     *
+     * Administrator can set operation for any groups.
+     *
+     * For reserved group (ie. Internet, Intranet & Guest), user MUST be
+     * reviewer of one group. For other group, if
+     * "Only set privileges to user's groups" is set in catalog configuration
+     * user MUST be a member of the group.
+     *
+     * @param context
+     * @param mdId
+     *            The metadata identifier
+     * @param grpId
+     *            The group identifier
+     * @param op
+     *            The operation identifier
+     *
+     * @return true if the operation was set.
+     * @throws Exception
+     */
+    public boolean setOperation(ServiceContext context, Integer mdId, Integer grpId,
+            ReservedOperation op) throws Exception;
 
     /**
      * Check that the operation has not been added and if not that it can be

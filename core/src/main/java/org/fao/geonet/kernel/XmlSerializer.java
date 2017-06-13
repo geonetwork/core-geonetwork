@@ -26,8 +26,6 @@ package org.fao.geonet.kernel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
@@ -37,10 +35,11 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -164,21 +163,13 @@ public abstract class XmlSerializer {
      * @param isIndexingTask If true, then withheld elements are not removed.
      */
     protected Element internalSelect(String id, boolean isIndexingTask) throws Exception {
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
-
-        IMetadata metadata = _metadataRepository.findOne(id);
-
-		if (metadata == null){
-		    MetadataDraftRepository _metadataDraftRepository = 
-		            ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
-
-	        metadata = _metadataDraftRepository.findOne(id);
-		}
+      IMetadataManager mm = ApplicationContextHolder.get().getBean(IMetadataManager.class);
+      IMetadata metadata = mm.getMetadataObject(Integer.valueOf(id));
 		
-		if(metadata == null) 
+      if(metadata == null) 
 		    return null;
 
-        return removeHiddenElements(isIndexingTask, metadata);
+      return removeHiddenElements(isIndexingTask, metadata);
     }
 
     public Element removeHiddenElements(boolean isIndexingTask, IMetadata metadata) throws Exception {
@@ -258,37 +249,23 @@ public abstract class XmlSerializer {
                             final boolean updateDateStamp,
                             final String uuid) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
-
-        MetadataRepository _metadataRepository = 
-                ApplicationContextHolder.get().getBean(MetadataRepository.class);
         
-        int metadataId = Integer.valueOf(id);
-        Metadata md = _metadataRepository.findOne(metadataId);
+        Integer metadataId = Integer.valueOf(id);
+        
+        MetadataRepository _metadataRepository = 
+            ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadata md2 = _metadataRepository.findOne(metadataId);
 
-        if(md != null) {
-            md.setDataAndFixCR(xml);
-    
-            if (updateDateStamp)  {
-                if (changeDate == null)	{
-                    md.getDataInfo().setChangeDate( new ISODate());
-                } else {
-                    md.getDataInfo().setChangeDate( new ISODate(changeDate));
-                }
-            }
-    
-            if (uuid != null) {
-                md.setUuid(uuid);
-            }
-    
-            _metadataRepository.save(md);
-        } else {
-            MetadataDraftRepository _metadataDraftRepository = 
-                    ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
-            MetadataDraft md2 = _metadataDraftRepository.findOne(metadataId);
+        MetadataDraftRepository _metadataDraftRepository = 
+                ApplicationContextHolder.get().getBean(MetadataDraftRepository.class);
+        if(md2 == null) {
+          md2 = _metadataDraftRepository.findOne(metadataId);
+        }
+        
             md2.setDataAndFixCR(xml);
     
             if (updateDateStamp)  {
-                if (changeDate == null) {
+                if (changeDate == null)	{
                     md2.getDataInfo().setChangeDate( new ISODate());
                 } else {
                     md2.getDataInfo().setChangeDate( new ISODate(changeDate));
@@ -298,8 +275,10 @@ public abstract class XmlSerializer {
             if (uuid != null) {
                 md2.setUuid(uuid);
             }
-    
-            _metadataDraftRepository.save(md2);
+        if(md2 instanceof Metadata) {
+            _metadataRepository.save((Metadata) md2);
+        } else {
+            _metadataDraftRepository.save((MetadataDraft) md2);
         }
 	}
 

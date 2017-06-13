@@ -100,9 +100,17 @@ public class Resources {
      */
     public static Path locateLogosDir(ServiceContext context) {
         ServletContext servletContext = null;
-        if (context.getServlet() != null) {
+        
+        if(context == null) {
+          context = ServiceContext.get();
+        }
+        
+        if(context == null) {
+          throw new RuntimeException("Null Context found!!!!");
+        } else if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
+        
         return locateLogosDir(servletContext, context.getApplicationContext(),
             context.getAppPath());
     }

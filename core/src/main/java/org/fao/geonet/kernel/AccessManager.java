@@ -36,6 +36,7 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
@@ -60,13 +61,16 @@ import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -183,6 +187,24 @@ public class AccessManager {
         }
         return hs;
     }
+    
+
+    public Set<Integer> getReviewerGroups(User user) throws Exception {
+        Set<Integer> hs = new HashSet<Integer>();
+        UserGroupRepository _userGroupRepository = ApplicationContextHolder.get().getBean(UserGroupRepository.class);
+
+        // get other groups
+        Specification<UserGroup> spec =
+            UserGroupSpecs.hasUserId(user.getId());
+        spec = Specifications
+            .where(spec)
+            .and(UserGroupSpecs.hasProfile(Profile.Reviewer));
+
+        hs.addAll(_userGroupRepository.findGroupIds(spec));
+        
+        return hs;
+    }
+
 
     public Set<Integer> getReviewerGroups(UserSession usrSess) throws Exception {
         Set<Integer> hs = new HashSet<Integer>();
@@ -267,14 +289,24 @@ public class AccessManager {
      */
     public boolean isOwner(final ServiceContext context, final String id) throws Exception {
 
-        //--- retrieve metadata info
-        IMetadata info = context.getBean(IMetadataManager.class)
-                .getMetadataObject(Integer.valueOf(id));
+      if(id == null) {
+        Log.error(Geonet.ACCESS_MANAGER, "id parameter on AccessManager.isOwner is null. This shouldn't be happening.");
+        return false;
+      }
+      
+      if(context == null) {
+        Log.error(Geonet.ACCESS_MANAGER, "context parameter on AccessManager.isOwner is null. This shouldn't be happening.");
+        return false;
+      }
+      
+      //--- retrieve metadata info
+      IMetadata info = context.getBean(IMetadataManager.class)
+              .getMetadataObject(Integer.valueOf(id));
 
-        if (info == null)
-            return false;
-        final MetadataSourceInfo sourceInfo = info.getSourceInfo();
-        return isOwner(context, sourceInfo);
+      if (info == null)
+          return false;
+      final MetadataSourceInfo sourceInfo = info.getSourceInfo();
+      return isOwner(context, sourceInfo);
     }
     
     /**
@@ -356,19 +388,25 @@ public class AccessManager {
      * @param sourceInfo The metadata source/owner information
      */
     public boolean isOwner(MetadataSourceInfo sourceInfo) throws Exception {      
-        UserSession us = ServiceContext.get().getUserSession();
-        if (us == null || !us.isAuthenticated()) {
+
+        final SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
             return false;
         }
+        
+        UserRepository userRepo = ApplicationContextHolder.get().getBean(UserRepository.class);
 
         //--- check if the user is an administrator
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        User us = userRepo.findOneByUsername(userDetails.getUsername());
         final Profile profile = us.getProfile();
         if (profile == Profile.Administrator)
             return true;
 
         //--- check if the user is the metadata owner
         //
-        if (us.getUserIdAsInt() == sourceInfo.getOwner())
+        if (sourceInfo.getOwner().equals(us.getId()))
             return true;
 
         //--- check if the user is a reviewer or useradmin

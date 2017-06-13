@@ -1002,11 +1002,13 @@ public class LuceneQueryBuilder {
         BooleanClause.Occur groupOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
 
         boolean admin = luceneQueryInput.getAdmin();
-                
-        //This is the subquery to get all the editable metadata
         
-        if(!editableGroups.isEmpty()) {   
-          BooleanQuery editableQuery = new BooleanQuery();
+        //This subquery is needed to prevent see both draft and non drafted versions
+        BooleanQuery editableQuery = null;
+        
+        //This is the subquery to get all the editable metadata
+        if(!editableGroups.isEmpty()) {
+          editableQuery = new BooleanQuery();
             
           for(String editableGroup : editableGroups) {        
             //group has edit privileges
@@ -1039,7 +1041,6 @@ public class LuceneQueryBuilder {
         //Now we need the subquery for all viewable and not editable metadata
         if (!editable && !admin) {
             if (!CollectionUtils.isEmpty(groups)) {
-              groupsQueryEmpty = false;
               
               //query to show md in group "group"
               BooleanQuery viewQuery = new BooleanQuery();
@@ -1061,16 +1062,51 @@ public class LuceneQueryBuilder {
               BooleanQuery viewDraftedQuery = new BooleanQuery();
 
               
-              viewDraftedQuery.add(viewQuery, 
-                  LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
-              
+              if(!groupsQueryEmpty) {
+                viewDraftedQuery.add(viewQuery, 
+                    LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+              }
+
               viewDraftedQuery.add(cannotEditQuery, 
                   LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+              
+              if(editableQuery != null) {
+                viewDraftedQuery.add(editableQuery, 
+                  LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
+              }
+              
+              groupsQuery.add(viewDraftedQuery, 
+                          LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
+            } else {
+              
+              BooleanQuery viewDraftedQuery = new BooleanQuery();
+
+              viewDraftedQuery.add(cannotEditQuery, 
+                  LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+              
+              if(editableQuery != null) {
+                viewDraftedQuery.add(editableQuery, 
+                  LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
+              }
               
               groupsQuery.add(viewDraftedQuery, 
                           LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
             }
+        } else if (editable) {
+            BooleanQuery viewDraftedQuery = new BooleanQuery();
+
+            viewDraftedQuery.add(canEditQuery, 
+                LuceneUtils.convertRequiredAndProhibitedToOccur(true, false));
+            
+            if(editableQuery != null) {
+              viewDraftedQuery.add(editableQuery, 
+                LuceneUtils.convertRequiredAndProhibitedToOccur(false, true));
+            }
+            
+            groupsQuery.add(viewDraftedQuery, 
+                        LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
         }
+        
     
 
         //
@@ -1082,12 +1118,13 @@ public class LuceneQueryBuilder {
         
         String owner = luceneQueryInput.getOwner();
         if (owner != null) {
+            groupsQueryEmpty = false;
+          
             BooleanQuery ownQuery = new BooleanQuery();
             
             TermQuery ownerQuery = new TermQuery(new Term(LuceneIndexField.OWNER, owner));
             BooleanClause.Occur ownerOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
             BooleanClause ownerClause = new BooleanClause(ownerQuery, ownerOccur);
-            groupsQueryEmpty = false;
             ownQuery.add(ownerClause);
             
 
@@ -1135,12 +1172,10 @@ public class LuceneQueryBuilder {
         }
 
         // Add the privilege part of the query
-
-        if (!groupsQueryEmpty) {
-            BooleanClause.Occur groupsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
-            BooleanClause groupsClause = new BooleanClause(groupsQuery, groupsOccur);
-            query.add(groupsClause);
-        }
+        BooleanClause.Occur groupsOccur = LuceneUtils.convertRequiredAndProhibitedToOccur(true, false);
+        BooleanClause groupsClause = new BooleanClause(groupsQuery, groupsOccur);
+        query.add(groupsClause);
+        
         
     }
 

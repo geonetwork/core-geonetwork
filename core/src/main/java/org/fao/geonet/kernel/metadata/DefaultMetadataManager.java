@@ -127,7 +127,7 @@ public class DefaultMetadataManager implements IMetadataManager {
     private IMetadataIndexer metadataIndexer;
 
     @Autowired
-    private IMetadataOperations metadataOperations;
+    protected IMetadataOperations metadataOperations;
 
     @Autowired
     protected MetadataRepository mdRepository;
@@ -250,6 +250,12 @@ public class DefaultMetadataManager implements IMetadataManager {
         boolean withValidationErrors = false;
         Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing,
                 withValidationErrors, keepXlinkAttributes);
+        
+        //Check
+        if(metadataBeforeAnyChanges == null) {
+          throw new RuntimeException("We are trying to edit a metadata that doesn't exist! id:" + id);
+        }
+        
         userSession.setProperty(
                 Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id,
                 metadataBeforeAnyChanges);
@@ -1449,8 +1455,8 @@ public class DefaultMetadataManager implements IMetadataManager {
      * @param md
      */
     @Override
-    public void save(IMetadata md) {
-        mdRepository.save((Metadata)md);
+    public IMetadata save(IMetadata md) {
+        return mdRepository.save((Metadata)md);
     }
 
     /**

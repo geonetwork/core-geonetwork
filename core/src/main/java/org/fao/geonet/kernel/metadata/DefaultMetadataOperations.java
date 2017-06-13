@@ -6,6 +6,7 @@ package org.fao.geonet.kernel.metadata;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
@@ -24,6 +25,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,38 @@ public class DefaultMetadataOperations implements IMetadataOperations, Applicati
     }
 
     @Override
+    public boolean setOperation(ServiceContext context, Integer mdId, Integer grpId,
+            ReservedOperation opId) throws Exception {
+        return setOperation(context, mdId, grpId, opId.getId());
+    }
+
+    @Override
+    public Boolean forceSetOperation(ServiceContext context, int mdId, int grpId,
+            int opId) throws Exception {
+        Optional<OperationAllowed> opAllowed = getOperationAllowedToAdd(context,
+                mdId, grpId, opId, false);
+
+        // Set operation
+        if (opAllowed.isPresent()) {
+            operationAllowedRepository.save(opAllowed.get());
+            context.getBean(SvnManager.class).setHistory(mdId + "", context);
+            
+            //If it is published/unpublished, throw event
+            if(opId == ReservedOperation.view.getId() 
+                    && grpId == ReservedGroup.all.getId()) {
+                IMetadataManager mdManager = context
+                        .getBean(IMetadataManager.class);
+                this.eventPublisher.publishEvent(new MetadataPublished(
+                        mdManager.getMetadataObject(Integer.valueOf(mdId))));
+            }
+            
+            return true;
+        }
+
+        return false;
+    }
+    
+    @Override
     public boolean setOperation(ServiceContext context, int mdId, int grpId,
             int opId) throws Exception {
         Optional<OperationAllowed> opAllowed = getOperationAllowedToAdd(context,
@@ -107,16 +141,23 @@ public class DefaultMetadataOperations implements IMetadataOperations, Applicati
         return false;
     }
 
+
     @Override
     public Optional<OperationAllowed> getOperationAllowedToAdd(
             final ServiceContext context, final int mdId, final int grpId,
             final int opId) {
+        return getOperationAllowedToAdd(context, mdId, grpId, opId, true);
+    }
+
+    public Optional<OperationAllowed> getOperationAllowedToAdd(
+            final ServiceContext context, final int mdId, final int grpId,
+            final int opId, boolean checkPrivileges) {
         UserGroupRepository userGroupRepo = context
                 .getBean(UserGroupRepository.class);
         final OperationAllowed operationAllowed = operationAllowedRepository
                 .findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
 
-            if (operationAllowed == null) {
+            if (operationAllowed == null && checkPrivileges) {
                 checkOperationPermission(context, grpId, userGroupRepo);
             }
 
@@ -190,10 +231,8 @@ public class DefaultMetadataOperations implements IMetadataOperations, Applicati
             int groupId, int operId) throws Exception {
         OperationAllowedId id = new OperationAllowedId().setGroupId(groupId)
                 .setMetadataId(mdId).setOperationId(operId);
-        final OperationAllowedRepository repository = context
-                .getBean(OperationAllowedRepository.class);
-        if (repository.exists(id)) {
-            repository.delete(id);
+        if (operationAllowedRepository.exists(id)) {
+          operationAllowedRepository.delete(id);
             SvnManager svnManager = context.getBean(SvnManager.class);
             if (svnManager != null) {
                 svnManager.setHistory(mdId + "", context);
@@ -233,5 +272,11 @@ public class DefaultMetadataOperations implements IMetadataOperations, Applicati
             setOperation(context, id, groupId, ReservedOperation.dynamic);
         }
         // Ultimately this should be configurable elsewhere
+    }
+
+    @Override
+    public List<OperationAllowed> getAllOperations(Integer mdId) {
+      Specification<OperationAllowed> spec = OperationAllowedSpecs.hasMetadataId(mdId);
+      return operationAllowedRepository.findAll(spec );
     }
 }
