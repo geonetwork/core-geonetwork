@@ -147,7 +147,7 @@
             }));
           } else {
             searchMapLayers.forEach(function (layerInfo) {
-              var result = gnMap.createLayerForType(layerInfo.type, {
+              gnMap.createLayerForType(layerInfo.type, {
                 name: layerInfo.name,
                 url: layerInfo.url
               }, layerInfo.title, searchMap);

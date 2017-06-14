@@ -530,7 +530,8 @@
               advanced: options.advanced,
               minResolution: options.minResolution,
               maxResolution: options.maxResolution,
-              cextent: options.extent
+              cextent: options.extent,
+              name: layerParams.LAYERS
             };
             if (viewerSettings.singleTileWMS) {
               olLayer = new ol.layer.Image(layerOptions);
@@ -1425,7 +1426,7 @@
            * @param {string} type of the layer to create
            * @param {Object} opt for url or layer name
            * @param {string} title optional title
-           * @param {ol.Map} map required for WMTS
+           * @param {ol.Map} map required for WMTS and WMS
            * @return {ol.layer} layer
            */
           createLayerForType: function(type, opt, title, map) {
@@ -1461,27 +1462,41 @@
                   source: source,
                   title: title ||  'Stamen'
                 });
+
               case 'wmts':
-                var that = this;
-                if (opt.name && opt.url) {
-                  gnOwsCapabilities.getWMTSCapabilities(opt.url).
-                      then(function(capObj) {
-                        var info = gnOwsCapabilities.getLayerInfoFromCap(
-                            opt.name, capObj);
-                        //info.group = layer.group;
-                        return that.addWmtsToMapFromCap(map, info,
-                            capObj);
-                        /*
-                          l.setOpacity(layer.opacity);
-                          l.setVisible(!layer.hidden);
-                        */
-                      });
+                if (!opt.name || !opt.url) {
+                  $log.warn('One of the required parameters (name, url) ' +
+                    'is missing in the specified WMTS layer:',
+                    opt);
+                  break;
                 }
-                else {
-                  console.warn('cant load wmts, url or name not provided');
-                }
+                this.addWmtsFromScratch(map, opt.url, opt.name)
+                  .then(function(layer) {
+                    if (title) {
+                      layer.set('title', title);
+                      layer.set('label', title);
+                    }
+                    return layer;
+                  });
+                break;
+
+                case 'wms':
+                  if (!opt.name || !opt.url) {
+                    $log.warn('One of the required parameters (name, url) ' +
+                      'is missing in the specified WMS layer:',
+                      opt);
+                    break;
+                  }
+                  this.addWmsFromScratch(map, opt.url, opt.name)
+                    .then(function(layer) {
+                      if (title) {
+                        layer.set('title', title);
+                        layer.set('label', title);
+                      }
+                      return layer;
+                    });
+                  break;
             }
-            $log.warn('Unsupported layer type: ', type);
           },
 
           /**

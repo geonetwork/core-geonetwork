@@ -175,13 +175,14 @@
 
                 // {type=bing_aerial} (mapquest, osm ...)
                 var re = this.getREForPar('type');
-                if (layer.name.match(re) &&
-                    (type = re.exec(layer.name)[1]) != 'wmts') {
-                  re = this.getREForPar('name');
+                type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
+                if (type && type != 'wmts' && type != 'wms') {
                   var opt;
+                  re = this.getREForPar('name');
                   if (layer.name.match(re)) {
-                    var lyr = re.exec(layer.name)[1];
-                    opt = {name: lyr};
+                    opt = {
+                      name: re.exec(layer.name)[1]
+                    };
                   }
                   var olLayer =
                       gnMap.createLayerForType(type, opt, layer.title);
@@ -386,12 +387,12 @@
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
-          } else if (source instanceof ol.source.ImageWMS) {
-            var s = layer.getSource();
-            name = s.getParams().LAYERS;
+          } else if (source instanceof ol.source.ImageWMS ||
+            source instanceof ol.source.TileWMS) {
+            name = '{type=wms,name=' + layer.get('name') + '}';
             params.server = [{
               onlineResource: [{
-                href: s.getUrl()
+                href: layer.get('url')
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
@@ -555,26 +556,33 @@
         if (layer.name.match(reT)) {
           var type = reT.exec(layer.name)[1];
           var name = reL.exec(layer.name)[1];
+          var promise;
 
           if (type == 'wmts') {
-            return gnMap.addWmtsFromScratch(map, res.href, name, createOnly).
-                then(function(olL) {
-                  olL.set('group', layer.group);
-                  olL.set('groupcombo', layer.groupcombo);
-                  olL.setOpacity(layer.opacity);
-                  olL.setVisible(!layer.hidden);
-                  if (layer.title) {
-                    olL.set('title', layer.title);
-                    olL.set('label', layer.title);
-                  }
-                  if (bgIdx) {
-                    olL.set('bgIdx', bgIdx);
-                  } else if (index) {
-                    olL.set('tree_index', index);
-                  }
-                  return olL;
-                }).catch(function() {});
+            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
           }
+
+          // if it's not WMTS, let's assume it is wms (so as to be sure to return something)
+          else {
+            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
+          }
+
+          return promise.then(function(olL) {
+            olL.set('group', layer.group);
+            olL.set('groupcombo', layer.groupcombo);
+            olL.setOpacity(layer.opacity);
+            olL.setVisible(!layer.hidden);
+            if (layer.title) {
+              olL.set('title', layer.title);
+              olL.set('label', layer.title);
+            }
+            if (bgIdx) {
+              olL.set('bgIdx', bgIdx);
+            } else if (index) {
+              olL.set('tree_index', index);
+            }
+            return olL;
+          }).catch(function() {});
         }
         else { // we suppose it's WMS
           // TODO: Would be good to attach the MD
