@@ -39,7 +39,10 @@
             'uiconfig.html',
         link: function(scope, element, attrs) {
           var testAppUrl = '../../catalog/views/api/?config=';
-          scope.jsonConfig = angular.fromJson(scope.config);
+
+          // start from the default config to make sure every field is present
+          scope.jsonConfig = angular.merge(gnGlobalSettings.getDefaultConfig(),
+            angular.fromJson(scope.config));
 
           scope.sortOrderChoices = ['', 'reverse'];
 

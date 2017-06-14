@@ -168,7 +168,10 @@
           }, {
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
-          }]
+          }],
+          'disabledTools': {
+            'processes': true
+          }
         },
         'editor': {
           'enabled': true,
