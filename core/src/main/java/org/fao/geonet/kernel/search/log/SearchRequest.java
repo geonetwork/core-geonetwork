@@ -21,31 +21,12 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain.statistic;
+package org.fao.geonet.kernel.search.log;
 
-import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.entitylistener.SearchRequestEntityListenerManager;
-import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.AttributeOverride;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * An entity representing a search request that was made by a user. This is part of the statistics
@@ -57,11 +38,6 @@ import javax.persistence.Table;
  *
  * @author Jesse
  */
-@Entity
-@Access(AccessType.PROPERTY)
-@Table(name = "Requests")
-@EntityListeners(SearchRequestEntityListenerManager.class)
-@SequenceGenerator(name = SearchRequest.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class SearchRequest {
     static final String ID_SEQ_NAME = "search_request_id_seq";
     private int _id;
@@ -85,8 +61,6 @@ public class SearchRequest {
      *
      * @return the id of the {@link SearchRequest} entity object.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -106,7 +80,6 @@ public class SearchRequest {
      *
      * @return the parameters object associated with this request entity.
      */
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "request", orphanRemoval = true)
     public List<SearchRequestParam> getParams() {
         return _params;
     }
@@ -127,7 +100,6 @@ public class SearchRequest {
      *
      * @return the date and time that the request was executed.
      */
-    @AttributeOverride(name = "dateAndTime", column = @Column(name = "requestdate", length = 30))
     public ISODate getRequestDate() {
         return _requestDate;
     }
@@ -148,7 +120,6 @@ public class SearchRequest {
      *
      * @return the IP address of the requester.
      */
-    @Column(name = "ip", length = Constants.IP_ADDRESS_COLUMN_LENGTH)
     public String getIpAddress() {
         return _ipAddress;
     }
@@ -169,10 +140,6 @@ public class SearchRequest {
      *
      * @return the Query data sent by the user. The query should be a lucene query in string form.
      */
-    @Lob
-    @Column(name = "query")
-    @Type(type = "org.hibernate.type.StringClobType")
-    // this is a work around for postgres so postgres can correctly load clobs
     public String getLuceneQuery() {
         return _luceneQuery;
     }
@@ -195,7 +162,6 @@ public class SearchRequest {
      *
      * @return the number of hits (metadata elements found by query).
      */
-    @Column(nullable = false)
     public int getHits() {
         return _hits;
     }
@@ -216,7 +182,6 @@ public class SearchRequest {
      *
      * @return the language the search was made in.
      */
-    @Column(length = 16)
     public String getLang() {
         return _lang;
     }
@@ -237,7 +202,6 @@ public class SearchRequest {
      *
      * @return the sortby parameter used in the request.
      */
-    @Column(name = "sortby")
     public String getSortBy() {
         return _sortBy;
     }
@@ -260,10 +224,6 @@ public class SearchRequest {
      * @return the spatial filter used to further refine the search. The value is in OGC filter spec
      * XML.
      */
-    @Column(name = "spatialfilter")
-    @Lob
-    @Type(type = "org.hibernate.type.StringClobType")
-    // this is a work around for postgres so postgres can correctly load clobs
     public String getSpatialFilter() {
         return _spatialFilter;
     }
@@ -286,10 +246,6 @@ public class SearchRequest {
      *
      * @return the type of metadata requested.
      */
-    @Lob
-    @Column(name = "type")
-    @Type(type = "org.hibernate.type.StringClobType")
-    // this is a work around for postgres so postgres can correctly load clobs
     public String getMetadataType() {
         return _metadataType;
     }

@@ -76,6 +76,7 @@ web/src/main/webapp/WEB-INF/data/data/upload/
 transifex/transifex-format/
 datadir_*
 es/elasticsearch-*
+es/es-dashboards/kibana-*
 web/src/main/webapp/WEB-INF/data/harvester_*
 camel-harvesters/wfsfeature-harvester/logs
 web/src/main/webapp/doc/en

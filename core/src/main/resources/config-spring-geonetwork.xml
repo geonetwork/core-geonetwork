@@ -80,6 +80,7 @@
   <bean id="indexingList"
         class="org.fao.geonet.kernel.search.index.IndexingList"/>
 
+
   <!-- Task indexing indexingList content -->
   <bean name="indexingTaskJob"
         class="org.springframework.scheduling.quartz.JobDetailFactoryBean">

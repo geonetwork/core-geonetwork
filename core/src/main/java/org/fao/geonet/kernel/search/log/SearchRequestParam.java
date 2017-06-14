@@ -21,10 +21,9 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain.statistic;
+package org.fao.geonet.kernel.search.log;
 
 import org.fao.geonet.domain.Constants;
-import org.fao.geonet.entitylistener.SearchRequestParamEntityListenerManager;
 
 import javax.persistence.*;
 
@@ -33,11 +32,6 @@ import javax.persistence.*;
  *
  * @author Jesse
  */
-@Entity
-@Access(AccessType.PROPERTY)
-@Table(name = "Params")
-@EntityListeners(SearchRequestParamEntityListenerManager.class)
-@SequenceGenerator(name = SearchRequestParam.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class SearchRequestParam {
     static final String ID_SEQ_NAME = "search_request_params_id_seq";
     private int _id;
@@ -57,8 +51,6 @@ public class SearchRequestParam {
      *
      * @return the id of the request parameters this entity represents.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -79,8 +71,6 @@ public class SearchRequestParam {
      *
      * @return the request associated with this entity.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id", name = "requestid")
     public SearchRequest getRequest() {
         return _request;
     }
@@ -99,7 +89,6 @@ public class SearchRequestParam {
      *
      * @return the type of query parameter.
      */
-    @Column(name = "querytype")
     public LuceneQueryParamType getQueryType() {
         return _queryType;
     }
@@ -120,7 +109,6 @@ public class SearchRequestParam {
      *
      * @return the name of the term used in the search parameter.
      */
-    @Column(name = "termfield")
     public String getTermField() {
         return _termField;
     }
@@ -141,7 +129,6 @@ public class SearchRequestParam {
      *
      * @return the value searched for in the current search parameter.
      */
-    @Column(name = "termtext")
     public String getTermText() {
         return _termText;
     }
@@ -182,7 +169,6 @@ public class SearchRequestParam {
      *
      * @return the lower level if the search parameter is a range query.
      */
-    @Column(name = "lowertext")
     public String getLowerText() {
         return _lowerText;
     }
@@ -203,7 +189,6 @@ public class SearchRequestParam {
      *
      * @return the upper level if the search parameter is a range query.
      */
-    @Column(name = "uppertext")
     public String getUpperText() {
         return _upperText;
     }
@@ -224,7 +209,6 @@ public class SearchRequestParam {
      * workaround to allow this until future versions of JPA that allow different ways of
      * controlling how types are mapped to the database.
      */
-    @Column(name = "inclusive", length = 1, nullable = true)
     protected char getInclusive_JPAWorkaround() {
         return _inclusive;
     }
