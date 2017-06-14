@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.harvester.wfsfeatures.CamelWorkers;
 import org.fao.geonet.inspireatom.InspireAtomType;
 import org.fao.geonet.inspireatom.harvester.InspireAtomHarvesterScheduler;
 import org.fao.geonet.kernel.*;
@@ -226,6 +227,11 @@ public class Geonetwork implements ApplicationHandler {
           logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
           e.printStackTrace();
         }
+
+        //------------------------------------------------------------------------
+        //--- initialize CamelWorkers
+        startCamelWorkersIfEnabled(_applicationContext, settingMan);
+
 
         //------------------------------------------------------------------------
         //--- initialize SchemaManager
@@ -667,5 +673,28 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("NOTE: Using shapefile for spatial index, this can be slow for larger catalogs");
         return ids;
+    }
+
+    void startCamelWorkersIfEnabled(ApplicationContext context, SettingManager settings) {
+        if (!settings.getValueAsBool(Settings.SYSTEM_CAMELWORKERS_ENABLED)) {
+            return;
+        }
+        CamelWorkers camelWorkers = context.getBean(CamelWorkers.class);
+        try {
+            camelWorkers.start();
+        } catch (Exception e) {
+            logger.info("failed to start camel workers.");
+        }
+    }
+
+    void stopCamelWorkers(ApplicationContext context) {
+        // this method seems to be of no use as stop declared in spring bean destroy slot
+        // (workers/wfsfeature-harvester/src/main/resources/config-spring-geonetwork-parent.xml)
+        CamelWorkers camelWorkers = context.getBean(CamelWorkers.class);
+        try {
+            camelWorkers.stop();
+        } catch (Exception e) {
+            logger.info("failed to stop camel workers.");
+        }
     }
 }
