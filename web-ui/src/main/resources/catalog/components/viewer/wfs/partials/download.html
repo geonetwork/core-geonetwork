@@ -1,3 +1,18 @@
+
+<div data-ng-if="url && url!=''">
+    <div data-ng-if="typename!=''"
+         data-translate=""
+         data-translate-values="{url:'{{url}}', layer:'{{ftSelected.title}} ({{typename}})'}">
+              wfsLinkDetails
+    </div>
+
+    <div data-ng-if="typename==''"
+         data-translate=""
+         data-translate-values="{url:'{{url}}'}">
+              wfsServiceLinkDetails
+    </div><br/>
+</div>
+
 <p data-ng-show="formats.length > 0 && featureType" data-translate="">wfsDownloadDataInstruction</p>
 <div data-ng-hide="isWfsAvailable"><i class="fa fa-warning fa-2x fa-fw pull-left" /> {{'Unable_to_connect_to_service'|translate}}</div>
 <div class="btn-group "
@@ -33,6 +48,7 @@
     </li>
   </ul>
 </div>
+
 <div data-ng-if="formats.length == 0 && featureType" class="clearfix">
   <div class="fa fa-warning fa-2x fa-fw pull-left"></div>
   <div class="pull-left" data-translate="">wfsNoOutputFormats</div>
@@ -85,3 +101,4 @@
     </div>
   </div>
 </div>
+

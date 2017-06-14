@@ -84,6 +84,7 @@
 
 
           var addWFSToMap = function(link, md) {
+
             var isServiceLink =
                gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
 

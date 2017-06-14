@@ -27,9 +27,10 @@
   goog.require('gn_relatedresources_service');
   goog.require('gn_wms');
   goog.require('gn_wmts');
+  goog.require('gn_atom');
 
   var module = angular.module('gn_related_directive', [
-    'gn_relatedresources_service', 'gn_wms', 'gn_wmts'
+    'gn_relatedresources_service', 'gn_wms', 'gn_wmts', 'gn_atom'
   ]);
 
   /**

@@ -1,4 +1,18 @@
-<div data-ng-if="capabilitiesChecked">
+<div data-ng-show="url && url!=''">
+    <div data-ng-show="layerName!=''"
+         data-translate=""
+         data-translate-values="{url:'{{url}}', layer:'{{layerSelected.Title}} ({{layerName}})'}">
+              wmtsLinkDetails
+    </div>
+
+    <div data-ng-show="layerName==''"
+         data-translate=""
+         data-translate-values="{url:'{{url}}'}">
+              wmtsServiceLinkDetails
+    </div> <br/>
+</div>
+
+
   <div class="btn-group" data-ng-if="isWmtsAvailable && isLayerInCapabilities && isMapViewerEnabled">
 
     <button type="button"
