@@ -31,7 +31,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
-  <context:property-placeholder location="classpath*:WEB-INF/config.properties"
+  <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
 
