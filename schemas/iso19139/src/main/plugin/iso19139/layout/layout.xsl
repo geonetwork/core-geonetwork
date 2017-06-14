@@ -224,7 +224,10 @@
                     not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@ancestor) and
                     not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@child) and
                     not($editorConfig/editor/multilingualFields/exclude/name[. = $elementName]/@parent)) or
-                      $exclusionMatchesAncestor = true() or $exclusionMatchesParent = true() or $exclusionMatchesChild = true()"/>
+                      $exclusionMatchesAncestor = true() or 
+                      $exclusionMatchesParent = true() or 
+                      $exclusionMatchesChild = true() or
+                      count(gco:Boolean) > 0"/>
 
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>
