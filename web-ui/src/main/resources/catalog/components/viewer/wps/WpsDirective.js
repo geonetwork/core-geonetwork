@@ -55,7 +55,9 @@
     'gnUrlUtils',
     '$timeout',
     'wfsFilterService',
-    function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService) {
+    '$window',
+    function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
+      $window) {
 
       var inputTypes = {
         string: 'text',
@@ -95,6 +97,9 @@
           // this will hold pre-loaded process descriptions
           // keys are: '<processId>@<uri>'
           scope.loadedDescriptions = {};
+
+          // maximum number of processes id saved in local storage
+          var maxHistoryCount = attrs['maxHistory'] || 6;
 
           // query a process description when a new wps link is given
           // note: a deep equality is required, since what we are actually
@@ -253,6 +258,7 @@
           scope.close = function() {
             scope.wpsLink.name = '';
             scope.wpsLink.url = '';
+            scope.describeState = 'standby';
           };
 
           scope.toggleOutputs = function() {
@@ -355,11 +361,14 @@
               scope.executeResponse = response;
             };
 
+            var processUri = attrs['uri'] || scope.wpsLink.url;
+            var processId = attrs['processId'] || scope.wpsLink.name;
+
             scope.running = true;
             scope.executeState = 'sent';
             gnWpsService.execute(
-                attrs['uri'] || scope.wpsLink.url,
-                attrs['processId'] || scope.wpsLink.name,
+                processUri,
+                processId,
                 inputs,
                 scope.responseDocument
             ).then(
@@ -374,6 +383,32 @@
                 function() {
                   scope.running = false;
                 });
+
+            // update local storage
+            if ($window.localStorage) {
+              var key = 'gn-wps-processes-history';
+              var processKey = processId + '@' + processUri;
+              var history = JSON.parse(
+                $window.localStorage.getItem(key) || '{}');
+              history.processes = history.processes || [];
+              history.processes.unshift(processKey);
+
+              // remove dupes and apply limit
+              var count = 0;
+              history.processes = history.processes.filter(
+                function (value, index, array) {
+                  if (array.indexOf(value) !== index
+                    || count >= maxHistoryCount) {
+                    return false;
+                  } else {
+                    count++;
+                    return true;
+                  }
+                }
+              );
+
+              $window.localStorage.setItem(key, JSON.stringify(history));
+            }
           };
 
           scope.cancel = function() {
@@ -594,9 +629,35 @@
         replace: true,
         templateUrl: '../../catalog/components/viewer/wps/' +
            'partials/recentprocesses.html',
-        scope: true,
-        controller: ['$scope', function ($scope) {
-          // TODO
+        scope: {
+          wpsLink: '='
+        },
+        controllerAs: 'ctrl',
+        controller: ['$scope', '$window', function ($scope, $window) {
+          if (!$window.localStorage) {
+            $scope.notSupported = true;
+            return;
+          }
+
+          $scope.processes = [];
+
+          $scope.$watch(function () {
+            return $window.localStorage.getItem('gn-wps-processes-history') || '{}';
+          }, function (value) {
+            $scope.processes = JSON.parse(value).processes.map(function (p) {
+              var values = p.split('@');
+              return {
+                name: values[0],
+                url: values[1]
+              }
+            })
+          });
+
+          this.select = function (p) {
+            if (!$scope.wpsLink) { return; }
+            $scope.wpsLink.name = p.name;
+            $scope.wpsLink.url = p.url;
+          }
         }]
       };
     }]
