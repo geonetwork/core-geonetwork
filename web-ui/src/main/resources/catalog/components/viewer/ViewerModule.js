@@ -219,12 +219,4 @@
       });
     }]);
 
-  module.controller('toolsController',
-      ['$scope', 'gnMeasure',
-        function($scope, gnMeasure) {
-          $scope.mInteraction = gnMeasure.create($scope.map,
-              $scope.measureObj, $scope);
-        }
-      ]);
-
 })();

@@ -34,10 +34,14 @@
    * @description
    */
   module.directive('gnMainViewer', [
-    'gnMap', 'gnConfig', 'gnSearchLocation',
-    'gnSearchSettings', 'gnViewerSettings',
+    'gnMap',
+    'gnConfig',
+    'gnSearchLocation',
+    'gnSearchSettings',
+    'gnViewerSettings',
+    'gnMeasure',
     function(gnMap, gnConfig, gnSearchLocation,
-             gnSearchSettings, gnViewerSettings) {
+             gnSearchSettings, gnViewerSettings, gnMeasure) {
       return {
         restrict: 'A',
         replace: true,
@@ -58,11 +62,22 @@
               /** Define object to receive measure info */
               scope.measureObj = {};
 
+              // measure interaction
+              scope.mInteraction = gnMeasure.create(scope.map,
+                  scope.measureObj, scope);
+
               /** Define vector layer used for drawing */
               scope.drawVector;
 
               /** print definition */
-              scope.activeTools = {};
+              scope.activeTools = {
+                addLayers: false,
+                contexts: false,
+                filter: false,
+                layers: false,
+                print: false,
+                processes: false
+              };
 
               scope.zoom = function(map, delta) {
                 gnMap.zoom(map, delta);
@@ -229,6 +244,11 @@
         };
       }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer_directive:gnvToolsBtn
+   * @deprecated Use giBtn and giBtnGroup instead
+   */
   module.directive('gnvToolsBtn', [
     function() {
       return {
@@ -261,6 +281,11 @@
       };
     }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_viewer_directive:gnvClosePanel
+   * @deprecated Use giBtn and giBtnGroup instead
+   */
   module.directive('gnvClosePanel', [
     function() {
       return {

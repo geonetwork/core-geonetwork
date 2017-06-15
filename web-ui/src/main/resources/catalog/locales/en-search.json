@@ -395,5 +395,6 @@
   "print_legend_field": "Include legends",
   "wfsDownloadDataInstruction": "Choose a data format to download:",
   "wfsTypenameNotAvailable": "The featuretype '{{typename}}' is not available in the WFS service. You can select from available featuretypes instead",
-  "wfsChooseFeatureTypeToDownload": "Choose a featuretype to download"
+  "wfsChooseFeatureTypeToDownload": "Choose a featuretype to download",
+  "processesTool": "Use a WPS process"
 }
