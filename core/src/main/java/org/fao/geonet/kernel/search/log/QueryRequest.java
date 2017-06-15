@@ -29,7 +29,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.es.EsClient;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
@@ -382,7 +384,9 @@ public class QueryRequest {
                 try {
                     listOfDocumentsToIndex.put(pId, mapper.writeValueAsString(paramsDoc));
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                    Log.debug(Geonet.SEARCH_LOGGER, String.format(
+                        "Error occured while building search requests: %s", e.getMessage()
+                    ));
                 }
             });
 
@@ -391,10 +395,14 @@ public class QueryRequest {
             client = ApplicationContextHolder.get().getBean(EsClient.class);
             client.bulkRequest(index, listOfDocumentsToIndex);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            Log.debug(Geonet.SEARCH_LOGGER, String.format(
+                "Error occured while building JSON for search requests: %s", e.getMessage()
+            ));
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.debug(Geonet.SEARCH_LOGGER, String.format(
+                "Error occured while sending search requests to index: %s", e.getMessage()
+            ));
             return false;
         }
         return true;
