@@ -396,5 +396,8 @@
   "wfsDownloadDataInstruction": "Choose a data format to download:",
   "wfsTypenameNotAvailable": "The featuretype '{{typename}}' is not available in the WFS service. You can select from available featuretypes instead",
   "wfsChooseFeatureTypeToDownload": "Choose a featuretype to download",
-  "processesTool": "Use a WPS process"
+  "processesTool": "Use a WPS process",
+  "wpsGetCapError": "Error while parsing WPS capabilities: ",
+  "wpsByUrl": "Search processes",
+  "wpsRecent": "Recent Processes"
 }

@@ -483,4 +483,79 @@
       };
     }
   ]);
+
+
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnWpsUrlDiscovery
+   * @restrict E
+   *
+   * @description
+   * This directive allows the user to input a URL and receive a list of WPS
+   * processes based on a GetCapabilities call to that URL.
+   */
+  module.directive('gnWpsUrlDiscovery', [
+    'gnWpsService',
+    'gnUrlUtils',
+    function(gnWpsService, gnUrlUtils) {
+      return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '../../catalog/components/viewer/wps/' +
+           'partials/urldiscovery.html',
+        scope: true,
+        controller: ['$scope', function ($scope) {
+          $scope.loading = false;
+          $scope.processes = [];
+          $scope.error = null;
+          $scope.url = '';
+
+          $scope.doRequest = function () {
+            // do nothing if invalid url
+            if (!gnUrlUtils.isValid($scope.url)) {
+              return;
+            }
+
+            $scope.loading = true;
+            $scope.processes = [];
+            $scope.error = null;
+
+            gnWpsService.getCapabilities($scope.url).then(function (data) {
+              $scope.loading = false;
+              $scope.processes = data.processOfferings.process;
+            }, function (error) {
+              $scope.loading = false;
+              $scope.error = error.status + ' ' + error.statusText
+            });
+          }
+        }]
+      };
+    }]
+  );
+
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnWpsRecentList
+   * @restrict E
+   *
+   * @description
+   * This directive outputs a list of recently used WPS processes based on
+   * local storage.
+   */
+  module.directive('gnWpsRecentList', [
+    'gnWpsService',
+    function(gnWpsService) {
+      return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '../../catalog/components/viewer/wps/' +
+           'partials/recentprocesses.html',
+        scope: true,
+        controller: ['$scope', function ($scope) {
+          // TODO
+        }]
+      };
+    }]
+  );
+
 })();

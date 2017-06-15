@@ -109,6 +109,34 @@
       /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#getCapabilities
+       *
+       * @description
+       * Get a list of processes available on the URL through a GetCap call.
+       *
+       * @param {string} url of the wps service
+       */
+      this.getCapabilities = function(url) {
+        url = gnOwsCapabilities.mergeDefaultParams(url, {
+          service: 'WPS',
+          version: '1.0.0',
+          request: 'GetCapabilities'
+        });
+
+        // send request and decode result
+        return $http.get(url, {
+          cache: true
+        }).then(function(response) {
+          if (!response.data) {
+            return;
+          }
+          return unmarshaller.unmarshalString(response.data).value;
+        });
+      };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
        * @name gnWpsService#execute
        *
        * @description

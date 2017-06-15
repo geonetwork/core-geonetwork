@@ -62,14 +62,14 @@
               /** Define object to receive measure info */
               scope.measureObj = {};
 
-              // measure interaction
+              /** measure interaction */
               scope.mInteraction = gnMeasure.create(scope.map,
                   scope.measureObj, scope);
 
               /** Define vector layer used for drawing */
               scope.drawVector;
 
-              /** print definition */
+              /** active tool selector */
               scope.activeTools = {
                 addLayers: false,
                 contexts: false,
@@ -78,6 +78,15 @@
                 print: false,
                 processes: false
               };
+
+              /** optional tabs **/
+              scope.disabledTools = gnViewerSettings.mapConfig.disabledTools;
+
+              /** wps process tabs */
+              scope.wpsTabs = {
+                byUrl: true,
+                recent: false
+              }
 
               scope.zoom = function(map, delta) {
                 gnMap.zoom(map, delta);

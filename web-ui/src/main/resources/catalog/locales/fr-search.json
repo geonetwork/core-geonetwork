@@ -373,5 +373,8 @@
     "setall": "Activer tous les privilèges",
     "print_legend": "Légende",
     "print_legend_field": "Inclure la légende",
-    "processesTool": "Traitement WPS"
+    "processesTool": "Traitement WPS",
+    "wpsGetCapError": "Erreur lors de l'analyse du service WPS : ",
+    "wpsByUrl": "Recherche",
+    "wpsRecent": "Derniers traitements"
 }
