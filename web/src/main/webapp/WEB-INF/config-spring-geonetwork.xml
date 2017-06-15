@@ -184,8 +184,9 @@
   </bean>
   -->
   
-  <!-- Draft workspace/workflow -->    
-  <!--  <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataIndexer" 
+  <!-- Draft workspace/workflow -->   
+  <!-- Comment to go back to non draft editing version on published data --> 
+    <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataIndexer" 
         lazy-init="false"
        primary="true"/>
     <bean class="org.fao.geonet.kernel.metadata.draft.DraftMetadataManager" 
@@ -208,6 +209,8 @@
     <bean class="org.fao.geonet.kernel.metadata.draft.DraftUnpublish"  
        lazy-init="false"
        primary="true"
-       /> -->
+       />
+  
+  <!-- Draft workspace/workflow -->    
 
 </beans>

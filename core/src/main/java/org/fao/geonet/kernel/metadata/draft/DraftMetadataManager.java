@@ -287,7 +287,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
 
     // Copy privileges from original metadata
     for (OperationAllowed op : metadataOperations.getAllOperations(templateMetadata.getId())) {
-      if(!ReservedGroup.all.equals(op.getId().getGroupId())) { //except for group All
+      if(ReservedGroup.all.getId() != op.getId().getGroupId()) { //except for group All
         try {
           metadataOperations.setOperation(context, finalId, op.getId().getGroupId(), op.getId().getOperationId());
         } catch(Throwable t) {
@@ -582,16 +582,17 @@ public class DraftMetadataManager extends DefaultMetadataManager {
   @Override
   public IMetadata getMetadataObject(Integer id) throws Exception {
     IMetadata md = super.getMetadataObject(id);
-    if (md == null && existsMetadata(id)) {
+    if (md == null && mdDraftRepository.exists(id)) {
       md = mdDraftRepository.findOne(id);
     }
     
-    try {
-      if(md == null)  
-      throw new Exception("getMetadataObject(" + id + ") -> null" );
-    } catch(Throwable t) {
-      t.printStackTrace();
-    }
+    //For debugging purposes
+//    try {
+//      if(md == null)  
+//      throw new Exception("getMetadataObject(" + id + ") -> null" );
+//    } catch(Throwable t) {
+//      t.printStackTrace();
+//    }
     
     return md;
   }

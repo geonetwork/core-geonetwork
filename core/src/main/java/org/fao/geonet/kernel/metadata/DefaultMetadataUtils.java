@@ -109,6 +109,9 @@ public class DefaultMetadataUtils implements IMetadataUtils {
 
     @Autowired
     private SearchManager searchManager;
+    
+    @Autowired
+    private MetadataNotifierManager mdNotifierManager;
 
     @Autowired(required = false)
     private SvnManager svnManager;
@@ -135,6 +138,7 @@ public class DefaultMetadataUtils implements IMetadataUtils {
         this.svnManager = context.getBean(SvnManager.class);
         this.dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         this.setSchemaManager(context.getBean(SchemaManager.class));
+        this.mdNotifierManager = context.getBean(MetadataNotifierManager.class);
     }
 
     /**
@@ -1053,8 +1057,8 @@ public class DefaultMetadataUtils implements IMetadataUtils {
                     mds.getNamespaces());
 
             String uuid = getMetadataUuid(metadataId);
-            ServiceContext.get().getBean(MetadataNotifierManager.class)
-                    .updateMetadata(md, metadataId, uuid, ServiceContext.get());
+            mdNotifierManager
+                    .updateMetadata(md, metadataId, uuid);
         }
     }
 
