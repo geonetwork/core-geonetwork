@@ -37,7 +37,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
  */
 public class IndexHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Remote index") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

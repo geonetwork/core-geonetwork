@@ -38,7 +38,7 @@ import java.lang.management.ThreadMXBean;
  */
 public class DeadlockedThreadsHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Deadlocked Threads") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 ThreadMXBean bean = ManagementFactory.getThreadMXBean();

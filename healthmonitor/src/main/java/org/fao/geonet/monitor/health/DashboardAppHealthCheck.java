@@ -41,7 +41,7 @@ import org.springframework.http.client.ClientHttpResponse;
  */
 public class DashboardAppHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Dashboard application") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 final GeonetHttpRequestFactory httpRequestFactory = context.getBean(GeonetHttpRequestFactory.class);
