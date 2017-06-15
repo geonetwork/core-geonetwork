@@ -124,7 +124,7 @@
     top: auto;
     bottom: @viewport-padding;
   }
-  .panel {
+  & > .panel {
     background: rgba(255,255,255,.8);
   }
   .panel-tools {
@@ -620,6 +620,26 @@ gn-wps-process-form {
 
   ul {
     list-style: none;
+  }
+
+  .panel {
+      background: none;
+      margin-bottom: 0px;
+      border: none;
+      box-shadow: none;
+
+      .panel-heading {
+        height: 2em;
+        line-height: 1.6em;
+
+        .close {
+          margin-right: -0.2em;
+        }
+      }
+
+      .panel-body {
+        padding: 0px;
+      }
   }
 }
 

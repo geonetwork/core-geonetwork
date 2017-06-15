@@ -87,6 +87,7 @@
                 byUrl: true,
                 recent: false
               }
+              scope.selectedWps = {};
 
               scope.zoom = function(map, delta) {
                 gnMap.zoom(map, delta);

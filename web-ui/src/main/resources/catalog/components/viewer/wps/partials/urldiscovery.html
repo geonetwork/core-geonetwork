@@ -1,7 +1,7 @@
 <form role="form">
   <div class="form-group">
     <input class="form-control input-sm" type="text" data-toggle="dropdown"
-           data-ng-model="url" data-ng-change="doRequest()"
+           data-ng-model="url" data-ng-change="ctrl.doRequest()"
            data-ng-model-options="{debounce:500}"
            placeholder="{{'serviceUrl' | translate}}"/>
   </div>
@@ -14,14 +14,15 @@
     <strong translate>wpsGetCapError</strong>{{ error }}
   </div>
 
-  <ul class="list-group">
-    <a href="#" class="list-group-item list-group-item-action"
-       data-ng-repeat="p in processes">
+  <ul class="list-group processes-list">
+    <a href class="list-group-item list-group-item-action"
+       data-ng-repeat="p in processes" ng-click="ctrl.select(p)"
+       ng-class="{active: p.identifier.value == wpsLink.name && url == wpsLink.url}">
       <i class="fa fa-cog"/>
       {{ p.title.value }}<br />
       <small class="text-muted">{{ p.identifier.value }}</small>
       <small class="text-muted" ng-show="p.processVersion !== undefined">
-         - {{ p.processVersion }}</small>
+         - v. {{ p.processVersion }}</small>
     </a>
   </ul>
 </form>

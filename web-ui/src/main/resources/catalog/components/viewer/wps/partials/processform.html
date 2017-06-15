@@ -1,14 +1,13 @@
-<div class="panel">
+<div>
+  <div class="panel panel-default">
+    <h4 class="panel-heading" ng-if="describeState == 'succeeded'">
+      {{processDescription.title.value}}
+      <button type="button" class="btn btn-default close" data-ng-click="close()">
+        &times;
+      </button>
+    </h4>
 
-  <div class="panel-heading">
-    {{::processDescription.title.value}}
-    <button type="button" class="btn btn-default close" data-ng-click="close()">×</button>
-  </div>
-
-  <div class="panel-body panel-wps">
-
-
-    <div ng-if="describeState == 'sended'">
+    <div ng-if="describeState == 'sent'">
       <h5>
         <i class="fa fa-spinner fa-spin fa-fw margin-bottom"></i>
         <span translate>wpsLoadingProcessDescription</span>
@@ -16,18 +15,20 @@
     </div>
 
     <div ng-if="describeState == 'failed'">
-      <h4><span translate>wpsDescribeProcessFailed</span></h4>
-      <div>
-        <span translate>wpsErrorCodeReturned</span>
-        {{describeResponse.status}} - {{describeResponse.statusText}}
+      <div class="alert alert-danger" role="alert" ng-show="error !== null">
+        <strong translate>wpsDescribeProcessFailed</strong><br />
+        <div>
+          <span translate>wpsErrorCodeReturned</span>
+          {{describeResponse.status}} - {{describeResponse.statusText}}
+        </div>
+        <div>{{describeResponse.data}}</div>
       </div>
-      <div>{{describeResponse.data}}</div>
     </div>
 
 
     <div ng-if="describeState == 'succeeded'">
 
-      <div ng-if="describeResponse.exception">
+      <div class="panel-body" ng-if="describeResponse.exception">
         <h4><span translate>wpsDescribeProcessFailed</span></h4>
         <div ng-repeat="exception in describeResponse.exception">
           <div ng-repeat="(key, value) in exception">
@@ -88,7 +89,7 @@
 
             <!-- ResponseDocument -->
             <div class="form-group popover-parent dropup gn-execute">
-              <button type="submit" class="btn btn-default" data-ng-click="submit()" ng-show="!hideExecuteButton">
+              <button type="submit" class="btn btn-primary" data-ng-click="submit()" ng-show="!hideExecuteButton">
                 <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>
                 &nbsp;<span translate>wpsExecute</span>
               </button>

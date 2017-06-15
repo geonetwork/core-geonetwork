@@ -467,6 +467,13 @@ ul.gn-resultview {
     .panel-heading {
       background-color: transparent;
     }
+
+    .processes-list .list-group-item {
+      &.active {
+        background-color: @btn-primary-bg;
+        * { color: @btn-primary-color; }
+      }
+    }
   }
 
   .nav-tabs {
