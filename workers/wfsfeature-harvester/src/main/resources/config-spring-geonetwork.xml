@@ -22,7 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans profile="routes-to-harvesters"
+        xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cm="http://camel.apache.org/schema/spring"
        xmlns:context="http://www.springframework.org/schema/context"

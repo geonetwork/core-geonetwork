@@ -782,6 +782,12 @@
         <env>inspire</env>
       </properties>
     </profile>
+    <profile>
+      <id>routes-to-harvesters</id>
+      <properties>
+        <es.spring.profile>routes-to-harvesters</es.spring.profile>
+      </properties>
+    </profile>
   </profiles>
 
   <properties>
