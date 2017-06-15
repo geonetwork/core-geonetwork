@@ -83,6 +83,10 @@ public class EsSearchManager implements ISearchManager {
     @Value("${es.index.records}")
     private String index = "records";
 
+    public String getIndex() {
+        return index;
+    }
+
     @Autowired
     private EsClient client;
 
