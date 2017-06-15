@@ -282,10 +282,10 @@ public enum LuceneQueryParamType {
 
     };
 
-    private static final Pattern excludedFieldPattern =
+    public static final Pattern excludedFieldPattern =
         Pattern.compile("_op.*|_isTemplate|_locale|_owner|_groupOwner|_dummy|type");
 
-    public boolean isExcludedField(String field) {
+    public static boolean isExcludedField(String field) {
         return excludedFieldPattern.matcher(field).matches();
     }
 

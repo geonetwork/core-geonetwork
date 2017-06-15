@@ -50,6 +50,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.fao.geonet.kernel.search.log.LuceneQueryParamType.isExcludedField;
+
 /**
  */
 public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask {
@@ -83,7 +85,7 @@ public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask 
                     while (paramsResultSet.next()) {
 
                         String term = paramsResultSet.getString(4);
-                        if (!term.startsWith("_op")) {
+                        if (!isExcludedField(term)) {
                             SearchRequestParam searchRequestParam = new SearchRequestParam();
                             searchRequestParam.setId(paramsResultSet.getInt(1));
                             //                    searchRequestParam.setQueryType(paramsResultSet.getString(3));
