@@ -69,13 +69,18 @@
           'cf5d74b0-2c25-11e7-8cd9-338183f2da0f?embed=true&_g=()')
       }, {
         type: 'statistics',
+        label: 'validationStatistics',
+        icon: 'fa-bar-chart',
+        href: '#/dashboard/statistics?dashboard=' +
+        encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
+          '915983d0-2c2e-11e7-a889-7bfa00c573d3?embed=true&_g=()')
+      }, {
+        type: 'statistics',
         label: 'searchStatistics',
         icon: 'fa-search',
         href: '#/dashboard/statistics?dashboard=' +
         encodeURIComponent('../../dashboards/app/kibana#/dashboard/' +
-          '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&' +
-          '_g=(refreshInterval%3A(display%3AOff%2Cpause%3A!f%2Cvalue%3A0)' +
-          '%2Ctime%3A(from%3Anow-24h%2Cmode%3Aquick%2Cto%3Anow))')
+          '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
       }];
 
 
