@@ -150,7 +150,10 @@
             } else if (version === '1.0.0') {
               xfsCap = unmarshaller100.unmarshalDocument(xml).value;
             }
-            if (xfsCap.exception != undefined) {
+
+            return xfsCap;
+
+           /* if (xfsCap.exception != undefined) {
               //defer.reject({msg: 'wfsGetCapabilitiesFailed',
               //  owsExceptionReport: xfsCap});
               return xfsCap;
@@ -158,11 +161,11 @@
             else {
               //defer.resolve(xfsCap);
               return xfsCap;
-            }
+            }*/
           } catch (e) {
             //alert('WFS version not supported.');
             //defer.reject({msg: 'wfsGetCapabilitiesFailed', owsExceptionReport: e.message});
-            return e.message;
+            //return e.message;
           }
 
           //result.contents.Layer = result.contents.layers;
@@ -255,26 +258,35 @@
             return defer.promise;
           },
 
-          getWFSCapabilities: function(url) {
+          getWFSCapabilities: function(url, version) {
             var defer = $q.defer();
             if (url) {
+              defaultVersion = '1.1.0';
+              version = version || defaultVersion;
               url = mergeDefaultParams(url, {
                 REQUEST: 'GetCapabilities',
                 service: 'WFS',
-                version: '1.1.0'
+                version: version
               });
 
               if (gnUrlUtils.isValid(url)) {
-
                 $http.get(url, {
                   cache: true
                 })
-                    .success(function(data, status, headers, config) {
-                      defer.resolve(parseWFSCapabilities(data));
-                    })
-                    .error(function(data, status, headers, config) {
-                      defer.reject(status);
-                    });
+                .success(function(data, status, headers, config) {
+                  var xfsCap = parseWFSCapabilities(data);
+
+                  if (!xfsCap || xfsCap.exception != undefined) {
+                    defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                      owsExceptionReport: xfsCap});
+                  } else {
+                     defer.resolve(xfsCap);
+                  }
+
+                })
+                .error(function(data, status, headers, config) {
+                  defer.reject(status);
+                });
               }
             }
             return defer.promise;
