@@ -80,6 +80,21 @@ public class ExtractRequestSpecTest {
 
     }
 
+    /**
+     * See https://forge.ifremer.fr/mantis/view.php?id=36515
+     * @throws Exception
+     */
+    @Test
+    public void testSurvalMantis36515() throws Exception {
+        String f = ExtractRequestSpecTest.class.getResource("issue-36515.json").getFile();
+
+        String jsonString = FileUtils.readFileToString(new File(f));
+        ObjectMapper mapper = new ObjectMapper();
+        TypeFactory fac = mapper.getTypeFactory();
+        ExtractRequestSpec s = mapper.readValue(jsonString, ExtractRequestSpec.class);
+        assertTrue(s.getLayers().get(0).getAdditionalInput() != null);
+    }
+
     @Test
     public void testSurvalExtractionSpec() throws Exception {
         String f = ExtractRequestSpecTest.class.getResource("extract-surval-spec.json").getFile();
