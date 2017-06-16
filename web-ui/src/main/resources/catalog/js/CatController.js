@@ -209,8 +209,19 @@
       },
       current: null,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
-        // Remap some old settings with new one
-        angular.extend(this.gnCfg, config, {});
+        // start from the default config to make sure every field is present
+        // and override with config arg if required
+        angular.merge(this.gnCfg, config, {});
+
+        // secial case: languages (replace with object from config if available)
+        this.gnCfg.mods.header.languages = angular.extend({
+          mods: {
+            header: {
+              languages: {}
+            }
+          }
+        }, config).mods.header.languages;
+
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
