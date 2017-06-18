@@ -85,7 +85,7 @@
        *
        * @param {string} uri of the wps service
        * @param {string} processId of the process
-       * @param {Object} options
+       * @param {Object} options object
        * @param {boolean} options.cancelPrevious if true, previous ongoing
        *  requests are cancelled
        */
@@ -128,7 +128,7 @@
        * Get a list of processes available on the URL through a GetCap call.
        *
        * @param {string} url of the wps service
-       * @param {Object} options
+       * @param {Object} options object
        * @param {boolean} options.cancelPrevious if true, previous ongoing
        *  requests are cancelled
        */

@@ -613,9 +613,6 @@ gn-features-tables {
 gn-wps-process-form {
   .popover-parent {
     position: relative;
-    .dropdown-menu {
-      padding:5px;
-    }
   }
 
   ul {
@@ -623,23 +620,27 @@ gn-wps-process-form {
   }
 
   .panel {
-      background: none;
-      margin-bottom: 0px;
-      border: none;
-      box-shadow: none;
+    background: none;
+    margin-bottom: 0px;
+    border: none;
+    box-shadow: none;
 
-      .panel-heading {
-        height: 2em;
-        line-height: 1.6em;
+    .panel-heading {
+      height: 2em;
+      line-height: 1.6em;
 
-        .close {
-          margin-right: -0.2em;
-        }
+      .close {
+        margin-right: -0.2em;
       }
+    }
 
-      .panel-body {
-        padding: 0px;
-      }
+    .panel-body {
+      padding: 0px;
+    }
+  }
+
+  .form-group .btn-group.output-selection {
+    display: inline-block;
   }
 }
 

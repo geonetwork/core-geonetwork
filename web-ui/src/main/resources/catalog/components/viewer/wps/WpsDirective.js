@@ -216,10 +216,14 @@
                         }
                         scope.selectedOutput.identifier =
                               output.identifier.value;
+                        scope.selectedOutput.mimeType =
+                          output.complexOutput._default.format.mimeType
                       }
                       else if (idx == 0) {
                         scope.selectedOutput.identifier =
                               output.identifier.value;
+                        scope.selectedOutput.mimeType =
+                          output.complexOutput._default.format.mimeType
                       }
                     }
                   );
@@ -310,7 +314,7 @@
                       scope.selectedOutput.identifier) {
                     outputs.push({
                       asReference: output.asReference,
-                      mimeType: output.mimeType,
+                      mimeType: scope.selectedOutput.mimeType,
                       identifier: {
                         value: output.identifier.value
                       }
@@ -427,37 +431,11 @@
           };
 
           // Guess the mimeType associated with the selected output.
-          scope.$watch('selectedOutput.identifier', function(v) {
-            if (v) {
-              try {
-                scope.selectedOutput.mimeType = '';
-                var os = scope.describeResponse.
-                    processDescription[0].processOutputs.output;
-
-                for (var i = 0; i < os.length; i++) {
-                  var o = os[i];
-                  if (v == o.identifier.value) {
-                    for (var j = 0;
-                         j < o.complexOutput.supported.format.length;
-                         j++) {
-                      var f = o.complexOutput.supported.format[j];
-                      if (f.mimeType == gnWpsService.WMS_MIMETYPE) {
-                        o.mimeType = f.mimeType;
-                        break;
-                      }
-                    }
-                    if (!o.mimeType) {
-                      o.mimeType = o.complexOutput._default.format.mimeType;
-                    }
-                    break;
-                  }
-                }
-              }
-              catch (e) {
-                // can't auto find mimetype
-              }
-            }
-          });
+          // scope.$watch('selectedOutput.identifier', function(v) {
+          scope.setOutput = function (identifier, mimeType) {
+            scope.selectedOutput.identifier = identifier;
+            scope.selectedOutput.mimeType = mimeType;
+          };
 
           // helpers for accessing input values
           var getInputValue = function(name) {
