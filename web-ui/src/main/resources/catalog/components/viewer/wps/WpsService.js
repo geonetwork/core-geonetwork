@@ -85,19 +85,32 @@
        *
        * @param {string} uri of the wps service
        * @param {string} processId of the process
+       * @param {Object} options
+       * @param {boolean} options.cancelPrevious if true, previous ongoing
+       *  requests are cancelled
        */
-      this.describeProcess = function(uri, processId) {
+      this.describeProcess = function(uri, processId, options) {
         url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: 'WPS',
           version: '1.0.0',
           request: 'DescribeProcess',
           identifier: processId
         });
+        options = options || {};
+
+        // cancel ongoing request
+        if (options.cancelPrevious && this.descProcCanceller) {
+          this.descProcCanceller.resolve();
+        }
+
+        // create a promise (will be used to cancel request)
+        this.descProcCanceller = $q.defer();
 
         //send request and decode result
         if (gnUrlUtils.isValid(url)) {
           return $http.get(url, {
-            cache: true
+            cache: true,
+            timeout: this.descProcCanceller.promise
           }).then(
               function(response) {
                 return unmarshaller.unmarshalString(response.data).value;
@@ -115,18 +128,32 @@
        * Get a list of processes available on the URL through a GetCap call.
        *
        * @param {string} url of the wps service
+       * @param {Object} options
+       * @param {boolean} options.cancelPrevious if true, previous ongoing
+       *  requests are cancelled
        */
-      this.getCapabilities = function(url) {
+      this.getCapabilities = function(url, options) {
         url = gnOwsCapabilities.mergeDefaultParams(url, {
           service: 'WPS',
           version: '1.0.0',
           request: 'GetCapabilities'
         });
+        options = options || {};
+
+        // cancel ongoing request
+        if (options.cancelPrevious && this.getCapCanceller) {
+          this.getCapCanceller.resolve();
+        }
+
+        // create a promise (will be used to cancel request)
+        this.getCapCanceller = $q.defer();
 
         // send request and decode result
         return $http.get(url, {
-          cache: true
+          cache: true,
+          timeout: this.getCapCanceller.promise
         }).then(function(response) {
+          this.getCapCanceller = null;
           if (!response.data) {
             return;
           }

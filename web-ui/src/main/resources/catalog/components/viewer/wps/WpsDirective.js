@@ -134,8 +134,10 @@
             }
 
             // query a description and build up the form
-            gnWpsService.describeProcess(newLink.uri, newLink.processId)
-              .then(function(response) {
+            gnWpsService.describeProcess(newLink.uri, newLink.processId, {
+              cancelPrevious: true
+            }).then(
+              function(response) {
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
 
@@ -248,11 +250,11 @@
                     angular.extend({}, scope.processDescription);
                 }
               },
-                function(response) {
-                  scope.describeState = 'failed';
-                  scope.describeResponse = response;
-                }
-              );
+              function(response) {
+                scope.describeState = 'failed';
+                scope.describeResponse = response;
+              }
+            );
           }, true);
 
           scope.close = function() {
@@ -588,7 +590,9 @@
             $scope.processes = [];
             $scope.error = null;
 
-            gnWpsService.getCapabilities($scope.url).then(function (data) {
+            gnWpsService.getCapabilities($scope.url, {
+              cancelPrevious: true
+            }).then(function (data) {
               $scope.loading = false;
 
               if (!data) {
@@ -598,6 +602,7 @@
               $scope.processes = data.processOfferings.process;
             }, function (error) {
               $scope.loading = false;
+              $scope.processes = [];
               $scope.error = error.status + ' ' + error.statusText
             });
           }
