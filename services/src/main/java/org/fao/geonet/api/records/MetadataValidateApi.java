@@ -33,12 +33,12 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.validation.Reports;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Schematron;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.utils.IO;
@@ -93,6 +93,8 @@ public class MetadataValidateApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    MetadataValidationRepository metadataValidationRepository;
 
     @ApiOperation(
         value = "Validate a record",
@@ -120,6 +122,11 @@ public class MetadataValidateApi {
             required = true)
         @PathVariable
             String metadataUuid,
+        @ApiParam(
+            value = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw ",
+            required = false)
+        @RequestParam (required = false)
+            boolean isvalid,
         HttpServletRequest request,
         @ApiParam(hidden = true)
         @ApiIgnore
@@ -135,6 +142,18 @@ public class MetadataValidateApi {
         String schemaName = dataManager.getMetadataSchema(id);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // Valid a subtemplate
+        if(metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+            MetadataValidation metadataValidation = new MetadataValidation().
+                    setId(new MetadataValidationId(metadata.getId(), "subtemplate")).
+                    setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID).
+                    setRequired(false).
+                    setNumTests(0).
+                    setNumFailures(0);
+            this.metadataValidationRepository.save(metadataValidation);
+            return new Reports();
+        }
 
         //--- validate metadata from session
         Element errorReport;
