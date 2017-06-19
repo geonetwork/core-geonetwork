@@ -115,6 +115,7 @@ public final class Geonet {
         public static final String EXTRACT_THUMBNAILS = "extract-thumbnails.xsl";
         public static final String SET_CREATIVECOMMONS = "set-creativecommons.xsl";
         public static final String SET_DATACOMMONS = "set-datacommons.xsl";
+        public static final String UPDATE_THUMBNAIL_LINKS = "update-thumbnail-links.xsl";
         public static final String SET_THUMBNAIL = "set-thumbnail.xsl";
         public static final String UNSET_THUMBNAIL = "unset-thumbnail.xsl";
         public static final String SCHEMA_SUGGESTIONS = "schema-suggestions.xml";

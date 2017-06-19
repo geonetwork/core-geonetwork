@@ -51,6 +51,7 @@ import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -590,6 +591,8 @@ public class Importer {
         String docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
 
+        md.set(index, updateThumbnailLinks(context, schema, md.get(index)));
+
         String metadataId = dm.insertMetadata(context, schema, md.get(index), uuid,
             userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
 
@@ -599,6 +602,52 @@ public class Importer {
 
     }
 
+    // --------------------------------------------------------------------------
+
+    /**
+     * Applies a xslt process to update thumbnail links if apply.
+     *
+     * GeoNetwork versions prior to 3.2.0 stored in the thumbnail the name of the file,
+     * but since 3.2 is required a full url to the service returning the thumbnail.
+     *
+     * This process "fixes" the thumbnail links in metadata files created
+     * with versions previous to 3.2.0.
+     *
+     * @param context   ServiceContext.
+     * @param schema    Metadata schema.
+     * @param md        Metadata to process.
+     *
+     * @return Updated metadata.
+     *
+     * @throws Exception    Xslt process exception.
+     */
+    public static Element updateThumbnailLinks(final ServiceContext context,
+                                               final String schema,
+                                               final Element md)  throws Exception {
+
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dm = gc.getBean(DataManager.class);
+
+        //--- do an XSL  transformation
+        Path styleSheetPath = dm.getSchemaDir(schema).resolve(Geonet.File.UPDATE_THUMBNAIL_LINKS);
+
+        if (Files.exists(styleSheetPath)) {
+            SettingManager sm = gc.getBean(SettingManager.class);
+            Element env = new Element("env");
+            env.addContent(new Element("url").setText(sm.getNodeURL()));
+
+            Element root = new Element("root");
+            root.addContent(md);
+            root.addContent(env);
+
+            Element mdUpdated = Xml.transform(root, styleSheetPath);
+            mdUpdated.detach();
+
+            return mdUpdated;
+        } else {
+            return md;
+        }
+    }
     // --------------------------------------------------------------------------
 
     private static void saveFile(ServiceContext context, String id,
