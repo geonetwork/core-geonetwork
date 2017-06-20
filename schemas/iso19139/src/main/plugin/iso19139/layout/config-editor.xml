@@ -784,14 +784,20 @@
     <!--
        Emodnet view
        https://forge.ifremer.fr/mantis/view.php?id=24534
+       https://forge.ifremer.fr/mantis/view.php?id=35695
        -->
-    <view name="emodnetHydrography" upAndDownControlHidden="true"
+    <view name="emodnetHydrography"
+          hideTimeInCalendar="true"
+          upAndDownControlHidden="true"
           displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString,
-          'EMODNET - HYDROGRAPHY')">
+          'EMODNET')">
 
       <thesaurusList>
-        <thesaurus key="local.theme.emodnet.catalogue-type" maxtags="1"/>
-        <thesaurus key="external.parameter.NVS.P02"/>
+        <thesaurus key="local.theme.emodnet.catalogue-type" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.EMODNET_QI_Horizontal" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.EMODNET_QI_Vertical" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.EMODNET_QI_Purpose" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.parameter.NVS.P02" transformations="to-iso19139-keyword"/>
       </thesaurusList>
 
 
@@ -812,7 +818,7 @@
 
           <!-- TODO: Check label -->
           <field name="emodnetShortName"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier"/>
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
 
           <field name="emodnetDisseminationLevel"
                  xpath="/gmd:MD_Metadata/gmd:metadataConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
@@ -822,6 +828,18 @@
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'NVS.P02')]"/>
+
+          <!-- Survey purpose TODO-->
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          ends-with(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'NVS.L05')]"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'NVS.L05POS')]"/>
 
         </section>
 
@@ -905,16 +923,40 @@
                             gmd:DQ_QuantitativeAttributeAccuracy/gmd:evaluationMethodDescription"/>
           </section>
 
-          <!-- TODO: Should be a boolean ? -->
-          <field name="emodnetShoalBias"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
-                          gmd:DQ_NonQuantitativeAttributeAccuracy/gmd:measureDescription"/>
+          <section name="emodnetShoalBias">
+
+            <field name="emodnetShoalBias"
+                   xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                          gmd:DQ_NonQuantitativeAttributeAccuracy/gmd:result/
+                           *[gmd:specification/*/gmd:title = 'Shoal bias']/
+                              gmd:pass"/>
+            <field name="emodnetShoalBiasDetails"
+                   xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
+                            gmd:DQ_NonQuantitativeAttributeAccuracy/gmd:result/
+                           *[gmd:specification/*/gmd:title = 'Shoal bias']/
+                                gmd:explanation"/>
+          </section>
 
           <section name="emodnetSuitabilty">
             <field name="emodnetSuitabilityTitle"
                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
           </section>
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Horizontal')]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Vertical')]"/>
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Purpose')]"/>
+
         </section>
 
       </tab>
@@ -981,6 +1023,71 @@
             </template>
           </field>
 
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>7.4</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs4258">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>8.6</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3035">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>ETRS89 / LAEA Europe (EPSG:3035)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>8.6</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+<!--
           <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
                   or="referenceSystemInfo" in="/gmd:MD_Metadata">
             <template>
@@ -998,7 +1105,14 @@
                 </gmd:referenceSystemInfo>
               </snippet>
             </template>
-          </action>
+          </action>-->
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'L11')]"/>
+
         </section>
       </tab>
 
@@ -1174,6 +1288,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~originator"/>
           </action>
 
@@ -1245,6 +1360,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
           </action>
 
@@ -1316,6 +1432,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~author"/>
           </action>
         </section>
@@ -1391,6 +1508,7 @@
               data-search-action="true"
               data-popup-action="true"
               data-template-type="contact"
+              data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~distributor"/>
           </action>
 
@@ -1443,6 +1561,9 @@
               </snippet>
             </template>
           </action>
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions//gmd:MD_DigitalTransferOptions"/>
         </section>
 
 
@@ -1455,6 +1576,14 @@
                           gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints"/>
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+
+
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          ends-with(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'NVS.L08')]"/>
+
         </section>
 
 
