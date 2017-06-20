@@ -366,7 +366,48 @@ relevant to have parent defined to have more control over the list.
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="name"/>
+        <xs:element name="name" minOccurs="1" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[
+        The element name including its namespace prefix (eg.
+        gmd:identificationInfo).
+        ]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="parent" type="xs:string" use="optional">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+          The parent element name including its namespace prefix (eg.
+          gmd:identificationInfo).
+          ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="ancestor" type="xs:string" use="optional">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+          One of the element ancestors name including its namespace prefix (eg.
+          gmd:identificationInfo).
+          ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="child" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                <![CDATA[
+          The first child name including its namespace prefix (eg.
+          gmd:identificationInfo).
+          ]]>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
