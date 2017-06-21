@@ -320,6 +320,8 @@
                  gnGlobalSettings.modelOptions);
                },
                post: function postLink(scope, iElement, iAttrs) {
+                 scope.ctrl = {};
+
                  scope.defaultRoleCode = iAttrs['defaultRole'] || null;
                  scope.defaultRole = null;
                  angular.forEach(scope.roles, function(r) {

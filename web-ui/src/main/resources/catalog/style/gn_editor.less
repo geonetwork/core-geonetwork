@@ -128,19 +128,6 @@ input[type=text], input[type=number], select {
   }
 }
 
-.gn-autocomplete-list {
-  position: absolute;
-  margin-top: 35px;
-  width: inherit;
-  z-index: 999;
-
-  /**/
-  .tt-suggestion:hover {
-    color: #fff;
-    background-color: #0097cf;
-  }
-}
-
 form.gn-editor {
   /* Move each sub fieldset to the left */
   @editor-fieldset-padding-left: 5px;
@@ -216,21 +203,6 @@ form.gn-editor {
     font-family: courier;
     font-size: 12px;
     min-height: 700px;
-  }
-
-  .gn-autocomplete-list {
-    position: absolute;
-    margin-top: 35px;
-    width: inherit;
-    z-index: 999;
-    max-height: 80vh;
-    overflow: auto;
-
-    /**/
-    .tt-suggestion:hover {
-      color: #fff;
-      background-color: #0097cf;
-    }
   }
 
   .gn-debug {
@@ -404,6 +376,21 @@ form.gn-editor {
 
 }
 
+.gn-autocomplete-list {
+  position: absolute;
+  margin-top: 35px;
+  width: inherit;
+  z-index: 999;
+  max-height: 25em;
+  overflow: auto;
+
+  .tt-suggestion {
+    &:hover {
+      background-color: lightgrey;
+    }
+  }
+}
+
 form.gn-tab-inspire {
   .control-label {
     color: inherit;
@@ -434,15 +421,20 @@ form.gn-tab-inspire {
     overflow: auto;
   }
   .list-group.fixed {
+    padding: 5px;
     min-height: 100px;
     /* Avoid the content of the div
     to be higher than view port
     as the modal does not have overflow. */
     max-height: 50vh;
-    li.active {
-        background-color: #428bca;
+  }
+
+  .gn-record {
+    &.active {
+      background-color: #428bca;
     }
   }
+
 }
 
 table.gn-data-store {
@@ -470,9 +462,6 @@ table.gn-data-store {
   .gn-record-type > a.list-group-item {
     text-align: center;
   }
-}
-
-.gn-popover {
 }
 
 .gn-schematron-title {
@@ -586,5 +575,46 @@ form.gn-tab-xml {
   }
   .tt-hint {
     color: transparent;
+  }
+}
+
+[gn-directory-entry-list-selector] {
+  .gn-form-any {
+    margin-bottom:30px;
+  }
+
+  .gn-record {
+    border-radius: 0;
+    border: none;
+    margin: 8px;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+    &.active {
+      background-color: #5384e6;
+    }
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0px 2px 3px rgba(66, 139, 202, 0.4);
+    }
+    strong {
+      font-weight: normal;
+    }
+    .fa {
+      display: none;
+    }
+  }
+
+  ng-pluralize {
+    color: #aaa;
+  }
+
+  .bottom-bar {
+    bottom: 20px;
+    position: absolute;
+  }
+}
+
+[data-gn-directory-entry-selector] {
+  .gn-autocomplete-list {
+    top:0 !important;
   }
 }

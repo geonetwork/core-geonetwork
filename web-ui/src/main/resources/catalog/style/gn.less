@@ -384,14 +384,6 @@ img.thumb-small {
   width: inherit;
 }
 
-/* Do not show scrollbar as this dropdown contains
-   dropdown button (eg. for choosing contact role)
-   whose content will not be displayed properly
-   with a scrollbar. */
-*[data-gn-directory-entry-selector] .tt-dropdown-menu {
-  overflow: visible;
-}
-
 .tt-suggestion {
   padding: 3px 20px;
   font-size: 1em;
@@ -657,17 +649,18 @@ button, .btn, .btn:active, a {
   height: auto;
   border-radius: 2px;
   font-size: 12px;
-  &.popover-dropdown .popover-content {
+  .popover-content {
     display: table-cell;
     vertical-align: middle;
     height: 19em;
     ul {
       margin: 0;
-      font-size: 1em;
+      list-style: none;
+      padding: 0;
     }
     li {
       font-size: 12px;
-      padding: 8px 10px;
+      padding: 2px 5px;
       border-left: none;
       border-right: none;
       border-radius: 0;
