@@ -28,7 +28,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
-import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -45,13 +44,6 @@ import javax.annotation.Nullable;
  * @author Jesse
  */
 public interface MetadataRepositoryCustom {
-    /**
-     * Return an object that contains functions for calculating several different statistical
-     * calculations (related to the metadata) based on the data in the database.
-     *
-     * @return an object for performing statistic calculation queries.
-     */
-    MetadataStatisticsQueries getMetadataStatistics();
 
     /**
      * Return an object that contains functions for calculating several different statistical

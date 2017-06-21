@@ -58,6 +58,7 @@
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
   <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
+  <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
   <bean id="LuceneIndexLanguageTracker"
         class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
   <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager"
@@ -78,6 +79,7 @@
   <!-- List of records to index in a moment ...-->
   <bean id="indexingList"
         class="org.fao.geonet.kernel.search.index.IndexingList"/>
+
 
   <!-- Task indexing indexingList content -->
   <bean name="indexingTaskJob"

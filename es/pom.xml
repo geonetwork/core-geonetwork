@@ -9,6 +9,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>es</artifactId>
+  <name>GeoNetwork index using Elasticsearch</name>
+  <packaging>pom</packaging>
 
   <profiles>
     <profile>
@@ -77,6 +79,10 @@
       </properties>
     </profile>
   </profiles>
+  <modules>
+    <module>es-core</module>
+    <module>es-dashboards</module>
+  </modules>
 
   <properties>
     <es.executable>elasticsearch</es.executable>

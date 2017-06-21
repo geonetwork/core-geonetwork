@@ -195,7 +195,7 @@ public class Aligner {
                 //--- maybe the metadata was unretrievable
 
                 if (id != null) {
-                    dataMan.indexMetadata(id, true);
+                    dataMan.indexMetadata(id, true, null);
                 }
             }
         }
