@@ -47,7 +47,7 @@
   <!-- The default language is also added as gmd:locale
   for multilingual metadata records. -->
   <xsl:variable name="mainLanguage"
-                select="/root/*/gmd:language/gco:CharacterString/text|
+                select="/root/*/gmd:language/gco:CharacterString/text()|
                         /root/*/gmd:language/gmd:LanguageCode/@codeListValue"/>
 
   <xsl:variable name="isMultilingual"
