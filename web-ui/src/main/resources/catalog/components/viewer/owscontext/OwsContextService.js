@@ -267,7 +267,7 @@
 
                   (function(idx) {
                     p.then(function(layer) {
-                      map.getLayers().setAt(idx-1, layer);
+                      map.getLayers().setAt(idx, layer);
                     });
                   })(layerIndex);
                 }
