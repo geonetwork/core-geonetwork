@@ -62,6 +62,12 @@
               <li class="list-group-item"
                   data-ng-repeat="e in searchResults.records"
                   data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
+                <span
+                  data-ng-class="e.valid == 1 ? 'text-success' : (md.valid == 0 ? 'text-danger' : 'text-muted')">
+                  <i class="fa"
+                     data-ng-class="'gn-recordtype-' + e.isTemplate"
+                     title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
+                </span>
                 <a href="" data-ng-click="selectEntry(e)">{{e.title}}</a>
                 <div class="pull-right">
                   <a href=""
