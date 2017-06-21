@@ -347,8 +347,9 @@
       $scope.copyEntry = function(e) {
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
         gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
-            fullPrivileges,
-            'SUB_TEMPLATE').then(searchEntries);
+          fullPrivileges,
+          e.isTemplate === 't' ? 'TEMPLATE_OF_SUB_TEMPLATE' : 'SUB_TEMPLATE'
+        ).then(searchEntries);
       };
 
       init();
