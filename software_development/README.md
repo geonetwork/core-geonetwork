@@ -12,7 +12,7 @@ http://geonetwork-opensource.org/manuals/trunk/eng/users/index.html
 GeoNetwork is a Java application that runs as a servlet so the Java Runtime
 Environment (JRE) must be installed in order to run it.
 You can get the JRE from http://openjdk.java.net/ or http://www.oracle.com/technetwork/java/javase/downloads and
-you have to download Java 7 or 8. GeoNetwork won’t run with Java 1.4, 1.5, 1.6.
+you have to download Java 8. GeoNetwork won’t run with Java 1.4, 1.5, 1.6, 7.
 
 
 Being written in Java, GeoNetwork can run on any
@@ -24,7 +24,7 @@ which is fast and well suited for most applications. If you need a stronger one,
 can install Tomcat from the Apache Software Foundation (http://tomcat.apache.org).
 It provides load balancing, fault tolerance and other production features. If you
 work for an organisation, it is probable that you already use Tomcat.
-The tested version is 7.x or 8.x.
+The tested version is 8.x.
 
 
 Regarding storage, you need a Database Management System (DBMS) like Oracle,
@@ -52,7 +52,7 @@ using:
 
 The following tools are required to be installed to setup a development environment for GeoNetwork:
 
-* **Java** - Developing with GeoNetwork requires Java Development Kit (JDK) 1.7 or greater.
+* **Java** - Developing with GeoNetwork requires Java Development Kit (JDK) 1.8 or greater.
 * **Maven** 3.1.0+ - GeoNetwork uses [Maven](http://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
 * **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of git clients are avalaible. Check in http://git-scm.com/downloads/guis for some alternatives.  Good documentation can be found on the git website: http://git-scm.com/documentation and on the Github website https://help.github.com/.
 * **Ant** - GeoNetwork uses [Ant](http://ant.apache.org/) to build the installer.  Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the ant command in your path (on Windows systems, you have to open a shell to check).
@@ -98,6 +98,13 @@ git submodule update
 
 Then build the application.
 
+### Compilation options
+
+Some components (eg. WFS feature indexing) of the application rely on an Elasticsearch instance. To enable those options, build the application with the ```es``` profile.
+
+```
+mvn clean install -Pes
+```
 
 ### Pull requests and branches
 
