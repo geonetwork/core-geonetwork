@@ -1794,7 +1794,8 @@ public class DataManager implements ApplicationEventPublisherAware {
             String uuid = null;
 
             if (getSchemaManager().getSchema(schema).isReadwriteUUID()
-                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+                && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
                 uuid = extractUUID(schema, metadataXml);
             }
 
@@ -1809,7 +1810,8 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         String uuid = null;
         if (getSchemaManager().getSchema(schema).isReadwriteUUID()
-            && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+            && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = extractUUID(schema, metadataXml);
         }
 

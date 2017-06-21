@@ -317,21 +317,21 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
         Map<MetadataType, Integer> typeToStatMap = _metadataRepository.getMetadataStatistics()
             .getMetadataTypeToStatMap(metadataCount());
-        assertEquals(3, typeToStatMap.size());
+        assertEquals(4, typeToStatMap.size());
         assertEquals(2, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(1, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         typeToStatMap = _metadataRepository.getMetadataStatistics()
             .getMetadataTypeToStatMap(popularitySum());
-        assertEquals(3, typeToStatMap.size());
+        assertEquals(4, typeToStatMap.size());
         assertEquals(2 * POPULARITY, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(POPULARITY, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         typeToStatMap = _metadataRepository.getMetadataStatistics()
             .getMetadataTypeToStatMap(ratingSum());
-        assertEquals(3, typeToStatMap.size());
+        assertEquals(4, typeToStatMap.size());
         assertEquals(2 * RATING, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(RATING, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
@@ -671,7 +671,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         final Map<MetadataType, Integer> metadataTypeToStatMap = metadataStatistics.getMetadataTypeToStatMap(metadataCount());
         metadataStatistics.getMetadataTypeToStatMap(ratingSum());
         metadataStatistics.getMetadataTypeToStatMap(popularitySum());
-        assertEquals(3, metadataTypeToStatMap.size());
+        assertEquals(4, metadataTypeToStatMap.size());
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.TEMPLATE).intValue());

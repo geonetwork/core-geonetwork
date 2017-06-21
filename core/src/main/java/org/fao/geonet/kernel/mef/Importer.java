@@ -347,6 +347,9 @@ public class Importer {
                     } else if (isTemplate == MetadataType.SUB_TEMPLATE) {
                         // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
+                    } else if (isTemplate == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+                        // Get subtemplate uuid if defined in @uuid at root
+                        uuid = md.get(index).getAttributeValue("uuid");
                     }
 
                 } else {

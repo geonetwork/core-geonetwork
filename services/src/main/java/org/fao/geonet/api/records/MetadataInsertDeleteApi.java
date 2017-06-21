@@ -158,7 +158,9 @@ public class MetadataInsertDeleteApi {
         DataManager dataManager = appContext.getBean(DataManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
-        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+            metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
+            withBackup) {
             MetadataUtils.backupRecord(metadata, context);
         }
 
@@ -228,7 +230,9 @@ public class MetadataInsertDeleteApi {
             } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
-                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+                    metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
+                    withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
                 }
 
@@ -902,7 +906,8 @@ public class MetadataInsertDeleteApi {
 
         //--- if the uuid does not exist we generate it for metadata and templates
         String uuid;
-        if (metadataType == MetadataType.SUB_TEMPLATE) {
+        if (metadataType == MetadataType.SUB_TEMPLATE ||
+            metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = UUID.randomUUID().toString();
         } else {
             uuid = dataMan.extractUUID(schema, xmlElement);

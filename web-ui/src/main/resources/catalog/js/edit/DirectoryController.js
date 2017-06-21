@@ -62,7 +62,7 @@
       $scope.searchObj = {
         selectionBucket: 'd101',
         params: {
-          _isTemplate: 's',
+          _isTemplate: 's or t',
           any: '*',
           _root: '',
           sortBy: 'title',
