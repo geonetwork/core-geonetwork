@@ -53,7 +53,6 @@
             gnMetadataManager,
             gnGlobalSettings) {
 
-      $scope.isTemplate = 's';
       $scope.hasEntries = false;
       $scope.mdList = null;
       $scope.activeType = null;
@@ -62,18 +61,35 @@
       $scope.searchObj = {
         selectionBucket: 'd101',
         params: {
-          _isTemplate: 's or t',
-          any: '*',
+          _isTemplate: 's',
+          any: '',
           _root: '',
           sortBy: 'title',
           sortOrder: 'reverse',
           resultType: 'subtemplates'
-        }};
+        },
+        sortbyValues: [
+          {
+            sortBy: 'title'
+          },
+          {
+            sortBy: 'owner'
+          },
+          {
+            sortBy: 'changeDate',
+            sortOrder: 'reverse'
+          }
+        ]
+      };
       $scope.paginationInfo = {
         pages: -1,
         currentPage: 1,
         hitsPerPage: 10
       };
+
+      // TODO: actually check permission
+      $scope.userCanEditTemplates = true;
+      $scope.currentEditorAction = '';    // can be: newEntry, newTemplate, editEntry, editTemplate
 
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
@@ -122,24 +138,34 @@
               $scope.$broadcast('setPagination', $scope.paginationInfo);
               $scope.mdList = data;
               $scope.hasEntries = data.count != '0';
-              var types = [];
-              angular.forEach(data.facet.subTemplateTypes, function(value) {
-                if ($.inArray(value, dataTypesToExclude) === -1) {
-                  types.push(value['@name']);
+
+              // get types info & sort them
+              $scope.mdTypes = data.facet.subTemplateTypes.map(
+                function (type) {
+                  return {
+                    name: type['@name'],
+                    count: type['@count']
+                  }
                 }
+              );
+              $scope.mdTypes.sort(function (a, b) {
+                var nameA = a.name;
+                var nameB = b.name;
+                return nameA < nameB ? -1 : (nameA > nameB ? 1 : 0);
+              })
+              var typeNames = $scope.mdTypes.map(function (t) {
+                return t.name;
               });
-              types.sort();
-              $scope.mdTypes = types;
 
               // Select the default one or the first one
               if ($scope.activeType &&
-                  $.inArray($scope.activeType, $scope.mdTypes) !== -1) {
+                  $.inArray(defaultType, typeNames) !== -1) {
                 $scope.selectType($scope.activeType);
               } else if (defaultType &&
-                  $.inArray(defaultType, $scope.mdTypes) !== -1) {
+                  $.inArray(defaultType, typeNames) !== -1) {
                 $scope.selectType(defaultType);
               } else if ($scope.mdTypes[0]) {
-                $scope.selectType($scope.mdTypes[0]);
+                $scope.selectType($scope.mdTypes[0].name);
               } else {
                 // No templates available ?
               }
@@ -232,11 +258,11 @@
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         return false;
       };
-      $scope.close = function() {
+      $scope.saveAndClose = function() {
         gnEditor.save(false)
             .then(function(form) {
               $scope.gnCurrentEdit = '';
-              $scope.selectEntry(null);
+              $scope.closeEditor();
               searchEntries();
             }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
@@ -274,44 +300,6 @@
       // switching from one entry to another
       var i = 0;
 
-      /**
-       * Open the editor for the selected entry
-       */
-      $scope.selectEntry = function(e) {
-        // TODO: alert when changing from
-        // import action to editing to avoid
-        // losing information.
-        $scope.isImporting = false;
-        $scope.activeEntry = e;
-
-        if (e) {
-          angular.extend(gnCurrentEdit, {
-            id: e['geonet:info'].id,
-            formId: '#gn-editor-' + e['geonet:info'].id,
-            tab: 'simple',
-            displayTooltips: false,
-            compileScope: $scope,
-            sessionStartTime: moment()
-          });
-
-          $scope.gnCurrentEdit = gnCurrentEdit;
-          $scope.editorFormUrl = gnEditor
-              .buildEditUrlPrefix('editor') +
-              '&starteditingsession=yes&random=' + i++;
-        }
-      };
-
-      $scope.isImporting = false;
-      $scope.xml = '';
-      $scope.startImportEntry = function() {
-        $scope.selectEntry(null);
-        $scope.isImporting = true;
-        $scope.importData = {
-          metadataType: 'SUB_TEMPLATE',
-          group: $scope.groups[0].id
-        };
-      };
-
       $scope.importEntry = function(xml) {
         gnMetadataManager.importFromXml(
             gnUrlUtils.toKeyValue($scope.importData), xml).then(
@@ -324,33 +312,123 @@
                   type: 'danger'});
               } else {
                 searchEntries();
-                $scope.isImporting = false;
-                $scope.xml = null;
+                $scope.closeEditor();
               }
             }
         );
       };
 
-      $scope.startSharing = function() {
-        $('#gn-share').modal('show');
-      };
+      // ACTIONS
 
-      $scope.$on('PrivilegesUpdated', function() {
-        $('#gn-share').modal('hide');
-      });
-
-      $scope.delEntry = function(e) {
+      $scope.delEntry = function (e) {
         // md.delete?uuid=b09b1b16-769f-4dad-b213-fc25cfa9adc7
         gnMetadataManager.remove(e['geonet:info'].id).then(searchEntries);
       };
 
-      $scope.copyEntry = function(e) {
+      $scope.copyEntry = function (e) {
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
         gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
           fullPrivileges,
           e.isTemplate === 't' ? 'TEMPLATE_OF_SUB_TEMPLATE' : 'SUB_TEMPLATE'
         ).then(searchEntries);
       };
+
+      $scope.convertToTemplate = function (e) {
+        if (e.isTemplate !== 's') {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('notADirectoryEntry'),
+            error: '',
+            timeout: 0,
+            type: 'danger'});
+          return;
+        }
+
+        // conversion to template is done by duplicating into template type
+        // the original entry is kept
+        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
+          fullPrivileges,
+          'TEMPLATE_OF_SUB_TEMPLATE').then(searchEntries);
+      };
+
+      $scope.validateEntry = function (e) {
+        gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, true)
+          .then(searchEntries);
+      };
+
+      $scope.rejectEntry = function (e) {
+        gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, false)
+          .then(searchEntries);
+      };
+
+      // begin creation of a new entry
+      $scope.startImporting = function (asTemplate) {
+        $scope.activeEntry = null;
+        $scope.currentEditorAction =
+          (asTemplate ? 'newTemplate' : 'newEntry');
+
+        // import data depends on type (template or entry)
+        $scope.importData = {
+          metadataType: asTemplate ? 'TEMPLATE_OF_SUB_TEMPLATE'
+            : 'SUB_TEMPLATE',
+          group: $scope.groups[0].id
+        };
+      };
+
+      // begin edition of an entry
+      $scope.startEditing = function (e) {
+        $scope.activeEntry = e;
+        $scope.currentEditorAction =
+          (e.isTemplate === 't' ? 'editTemplate' : 'editEntry');
+
+        angular.extend(gnCurrentEdit, {
+          id: e['geonet:info'].id,
+          formId: '#gn-editor-' + e['geonet:info'].id,
+          tab: 'simple',
+          displayTooltips: false,
+          compileScope: $scope,
+          sessionStartTime: moment()
+        });
+
+        $scope.gnCurrentEdit = gnCurrentEdit;
+        $scope.editorFormUrl = gnEditor
+            .buildEditUrlPrefix('editor') +
+            '&starteditingsession=yes&random=' + i++;
+      };
+
+      $scope.closeEditor = function (e) {
+        $scope.activeEntry = null;
+        $scope.currentEditorAction = '';
+        $scope.xml = '';
+      }
+
+      $scope.startPermissionsEdit = function (e) {
+        $scope.activeEntry = e;
+        $('#gn-share').modal('show');
+      };
+      $scope.$on('PrivilegesUpdated', function() {
+        $scope.activeEntry = null;
+        $('#gn-share').modal('hide');
+      });
+
+      // UI utils
+      $scope.getOwnerName = function (e) {
+        return e.userinfo.split('|')[0];
+      }
+      $scope.getCreateDate = function (e) {
+        return moment(e['geonet:info'].createDate).format('LLL');
+      }
+      $scope.getChangeDate = function (e) {
+        return moment(e['geonet:info'].changeDate).format('LLL');
+      }
+
+      // switch to templates (b === true) or entries (b === false)
+      $scope.showTemplates = function (b) {
+        $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
+        $scope.$broadcast('search');
+      }
+      $scope.templatesShown = function () {
+        return $scope.searchObj.params._isTemplate === 't';
+      }
 
       init();
     }
