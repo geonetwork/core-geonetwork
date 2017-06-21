@@ -330,7 +330,8 @@
       $scope.getTpl = function(pageMenu) {
         $scope.type = pageMenu.defaultTab;
         $.each(pageMenu.tabs, function(index, value) {
-          if (value.type === $routeParams.tab) {
+          if (value.href === $routeParams.tab ||
+              value.type === $routeParams.tab) {
             $scope.type = $routeParams.tab;
           }
         });

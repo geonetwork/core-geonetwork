@@ -40,7 +40,12 @@
       <list>
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
+
+        <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
+
+        <sec:filter-chain pattern="/dashboards/**" filters=""/>
+
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
@@ -347,11 +352,11 @@
       <ref bean="csrfTokenRepository"/>
     </constructor-arg>
   </bean>
-  
+
   <bean class="org.fao.geonet.security.web.csrf.CookieCsrfTokenRepository"
         id="csrfTokenRepository">
     <property name="cookieHttpOnly" value="false"/>
   </bean>
-      
+
 
 </beans>

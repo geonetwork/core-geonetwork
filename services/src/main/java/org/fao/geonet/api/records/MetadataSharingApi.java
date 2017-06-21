@@ -159,7 +159,7 @@ public class MetadataSharingApi {
 
         List<GroupOperations> privileges = sharing.getPrivileges();
         setOperations(sharing, dataManager, context, metadata, operationMap, privileges);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
 
@@ -321,7 +321,7 @@ public class MetadataSharingApi {
         if (!hasValidation) {
             dm.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
                 new Document(metadata.getXmlData(false)), context.getLanguage());
-            dm.indexMetadata(metadata.getId() + "", true);
+            dm.indexMetadata(metadata.getId() + "", true, null);
         }
 
         boolean isInvalid =
@@ -481,7 +481,7 @@ public class MetadataSharingApi {
 
         metadata.getSourceInfo().setGroupOwner(groupIdentifier);
         metadataRepository.save(metadata);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
 
@@ -690,7 +690,7 @@ public class MetadataSharingApi {
                 report, dataManager, accessMan, metadataRepository,
                 serviceContext, listOfUpdatedRecords, metadataUuid);
             dataManager.flush();
-            dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+            dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
 
         } catch (Exception exception) {
             report.addError(exception);

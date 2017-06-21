@@ -43,7 +43,7 @@ import org.jdom.Element;
  */
 public class NoIndexErrorsHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Metadata Index Errors") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

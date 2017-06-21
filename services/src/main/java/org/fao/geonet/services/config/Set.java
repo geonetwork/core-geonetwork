@@ -43,7 +43,7 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.repository.PathSpec;
 import org.jdom.Element;
 
 import java.util.HashMap;
