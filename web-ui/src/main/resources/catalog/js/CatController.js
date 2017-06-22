@@ -355,6 +355,7 @@
         return detector.default || 'srv';
       }
       $scope.nodeId = detectNode(gnGlobalSettings.gnCfg.nodeDetector);
+      gnGlobalSettings.nodeId = $scope.nodeId;
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',

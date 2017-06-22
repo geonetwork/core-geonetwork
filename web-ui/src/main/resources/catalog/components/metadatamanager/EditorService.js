@@ -164,6 +164,8 @@
                }
              }
 
+             $('.popover').remove();
+
              gnCurrentEdit.working = true;
              $http.post('../api/records/' + gnCurrentEdit.id + '/editor?' +
              (refreshForm ? '' : '&commit=true') +
