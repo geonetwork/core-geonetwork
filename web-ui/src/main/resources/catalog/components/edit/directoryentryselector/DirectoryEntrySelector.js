@@ -120,12 +120,10 @@
                   // snippet
                   var separator = '&&&';
 
-                  // Define type of XLinks: local:// or http:// based on
-                  // catalog configuration.
-                  var url =
-                 (gnConfig[gnConfig.key.isXLinkLocal] === true ?
-                      'local://' : gnConfigService.getServiceURL()) +
-                 'api/registries/entries/';
+                  // Only local mode (faster)
+                  var url = 'local://' + gnGlobalSettings.nodeId +
+                    '/api/registries/entries/';
+
                   scope.gnConfig = gnConfig;
                   // If true, display button to add the element
                   // without using the subtemplate selector.
