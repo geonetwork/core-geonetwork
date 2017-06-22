@@ -251,10 +251,17 @@
 
       <p ng-show="activeEntry">
         <span class="text-muted" translate>directoryEntryEditing</span>
+        &nbsp;
+        <span ng-class="activeEntry.valid == 1 ? 'text-success' : (activeEntry.valid == 0 ? 'text-danger' : 'text-muted')">
+          <i class="fa gn-recordtype-{{activeEntry.isTemplate}}"
+             title="{{('isTemplate' + activeEntry.isTemplate) | translate}} ({{('validStatus-' + activeEntry.valid) | translate}})"></i>
+        </span>
         {{activeEntry.title || activeEntry.defaultTitle}}
+        &nbsp;
+        <a href ng-click="closeEditor()">({{'cancel' | translate}})</a>
       </p>
 
-      <p class="text-muted" translate ng-show="!activeEntry">
+      <p ng-show="!activeEntry" class="text-muted" translate>
         directoryManagerSubtitleImport
       </p>
     </div>
@@ -318,6 +325,7 @@
     <div class="col-sm-12 col-md-8">
       <div class="panel-default panel entry-editor">
         <div class="panel-heading">
+
           <span translate class="entry-editor-title">
             directoryEntryEditor</span>
 
@@ -326,6 +334,31 @@
           <div class="entry-editor-controls">
             <div gn-metadata-group-updater="activeEntry.groupOwner"
                  metadata-id="activeEntry['geonet:info'].id">
+            </div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown"
+                  ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                  ng-class="{'btn-primary': activeEntry.valid==1, 'btn-danger': !activeEntry.valid}">
+                <i class="fa fa-check"/>
+                <span translate class="hidden-xs hidden-sm hidden-md">
+                  isValid</span>
+                &nbsp;
+                <i class="caret"/>
+              </button>
+              <ul class="dropdown-menu pull-right" role="menu">
+                <li><a href ng-click="validateEntry(activeEntry)"
+                  ng-disabled="activeEntry.valid==1">
+                  <i class="fa fa-check fa-fw text-success" />&nbsp;
+                  {{'directoryEntryValidate' | translate}}</a>
+                </li>
+                <li><a href ng-click="rejectEntry(activeEntry)"
+                  ng-disabled="!activeEntry.valid">
+                  <i class="fa fa-ban fa-fw text-danger" />&nbsp;
+                  {{'directoryEntryReject' | translate}}</a>
+                </li>
+              </ul>
             </div>
 
             <button type="button" class="btn btn-default"
@@ -340,25 +373,17 @@
                 ng-click="save()"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
               <i class="fa fa-save"/>&nbsp;
-              <span translate class="hidden-xs hidden-sm">
+              <span translate class="hidden-xs">
                 save</span>
             </button>
 
-            <button type="button" class="btn btn-default hidden-xs hidden-sm"
+            <button type="button" class="btn btn-default hidden-xs"
                 ng-click="saveAndClose()"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
                 title="{{'closeEditor' | translate}}">
               <i class="fa fa-save"/>&nbsp;
               <span translate>
                 closeEditor</span>
-            </button>
-
-            <button type="button" class="btn btn-default"
-                ng-click="closeEditor()"
-                title="{{'cancel' | translate}}">
-              <i class="fa fa-close"/>&nbsp;
-              <span translate class="hidden-xs hidden-sm hidden-md">
-                cancel</span>
             </button>
           </div>
         </div>

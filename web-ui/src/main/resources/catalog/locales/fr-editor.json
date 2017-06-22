@@ -342,5 +342,7 @@
     "directoryManagerMode-newEntry": "nouvel élement",
     "directoryManagerMode-editEntry": "édition d'élément",
     "directoryManagerMode-newTemplate": "nouveau gabarit",
-    "directoryManagerMode-editTemplate": "édition de gabarit"
+    "directoryManagerMode-editTemplate": "édition de gabarit",
+    "notADirectoryEntry": "Seul un élément réutilisable peut être converti en gabarit.",
+    "notADirectoryEntryTemplate": "Ceci n'est pas un gabarit d'élément réutilisable."
 }

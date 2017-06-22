@@ -84,7 +84,7 @@
       $scope.paginationInfo = {
         pages: -1,
         currentPage: 1,
-        hitsPerPage: 10
+        hitsPerPage: 20
       };
 
       // TODO: actually check permission
