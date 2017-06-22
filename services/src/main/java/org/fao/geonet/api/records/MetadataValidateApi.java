@@ -156,10 +156,10 @@ public class MetadataValidateApi {
         boolean isSubtemplate = metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE;
         boolean validSet = (isvalid != null);
         if (!isSubtemplate && validSet) {
-            throw new BadParameterEx("Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.", isvalid);
+            throw new BadParameterEx("Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.");
         }
         if (isSubtemplate && !validSet) {
-            throw new BadParameterEx("Parameter isvalid MUST be set for subtemplate.", isvalid);
+            throw new BadParameterEx("Parameter isvalid MUST be set for subtemplate.");
         }
         if (isSubtemplate) {
             MetadataValidation metadataValidation = new MetadataValidation().
