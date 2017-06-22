@@ -24,11 +24,13 @@
           <i class="caret"/>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
-          <li class="dropdown-header text-left">Category A</li>
-          <li><a href translate>placeholder</a></li>
-          <li class="dropdown-header text-left">Category B</li>
-          <li><a href translate>placeholder</a></li>
-          <li><a href translate>placeholder</a></li>
+          <li class="dropdown-header text-left" translate
+            ng-repeat-start="(typeName, templates) in templates | groupBy: 'root'">
+            {{typeName}}</li>
+          <li ng-repeat="t in templates" ng-repeat-end>
+            <a href ng-click="createFromTemplate(t)">
+              {{t.title}}</a>
+          </li>
           <li class="divider"/>
           <li><a href translate ng-click="startImporting(false)">
             directoryEntryFromScratch</a></li>
@@ -68,6 +70,7 @@
 
       <div gn-need-help="administrator-guide/managing-classification-systems/managing-directories.html">
       </div>
+      <br />
       <br />
     </div>
 
@@ -280,7 +283,7 @@
             <button type="button" class="btn btn-default"
                 ng-click="closeEditor()"
                 title="{{'cancel' | translate}}">
-              <i class="fa fa-sign-out"/>&nbsp;
+              <i class="fa fa-close"/>&nbsp;
               <span translate>
                 cancel</span>
             </button>
@@ -341,13 +344,21 @@
                 save</span>
             </button>
 
-            <button type="button" class="btn btn-default"
+            <button type="button" class="btn btn-default hidden-xs hidden-sm"
                 ng-click="saveAndClose()"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
                 title="{{'closeEditor' | translate}}">
-              <i class="fa fa-sign-out"/>&nbsp;
-              <span translate class="hidden-xs hidden-sm">
+              <i class="fa fa-save"/>&nbsp;
+              <span translate>
                 closeEditor</span>
+            </button>
+
+            <button type="button" class="btn btn-default"
+                ng-click="closeEditor()"
+                title="{{'cancel' | translate}}">
+              <i class="fa fa-close"/>&nbsp;
+              <span translate class="hidden-xs hidden-sm hidden-md">
+                cancel</span>
             </button>
           </div>
         </div>
