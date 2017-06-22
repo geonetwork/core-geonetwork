@@ -78,6 +78,8 @@
               // the schema id to properly retrieve the codelists.
               schema: '@',
               selectEntryCb: '='
+              // Can restrict how to insert the entry (xlink, text ..)
+              // insertModes: '@'
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -104,6 +106,16 @@
                  gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
+
+
+                  var insertModes = iAttrs.insertModes;
+                  if(insertModes) {
+                    insertModes = insertModes.split(',');
+                  }
+
+                  scope.insertAsXlink = !insertModes || insertModes.indexOf('xlink') >= 0;
+                  scope.insertAsText = !insertModes || insertModes.indexOf('text') >= 0;
+
                   // Separator between each contact XML
                   // snippet
                   var separator = '&&&';

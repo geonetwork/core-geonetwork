@@ -46,9 +46,9 @@
           <!--Add contact as Xlink-->
             <div ngeo-popover class="pull-right"
                  ngeo-popover-dismiss=".content"
-                 data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
+                 data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink"
                  title="{{'addContactAsLink-help' | translate}}">
-               <button ngeo-popover-anchor type="button" class="btn btn-default">
+               <button ngeo-popover-anchor type="button" class="btn btn-default btn-sm">
                 <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
               </button>
               <div ngeo-popover-content>
@@ -65,10 +65,10 @@
           <!-- Add contact as text block -->
             <div ngeo-popover class="pull-right"
                  ngeo-popover-dismiss=".content"
-                 data-ng-show="isContact && hasDynamicVariable"
+                 data-ng-if="isContact && hasDynamicVariable && insertAsText"
                  title="{{'addContactAsText-help' | translate}}">
                <button ngeo-popover-anchor type="button"
-                       class="btn btn-default">
+                       class="btn btn-default btn-sm">
                 <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
               </button>
               <div ngeo-popover-content>
