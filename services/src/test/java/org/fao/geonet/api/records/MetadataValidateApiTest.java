@@ -114,7 +114,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
-                .andExpect(jsonPath("$.description").value("<Null> is not a valid value for: isvalid"));
+                .andExpect(jsonPath("$.description").value("Parameter isvalid MUST be set for subtemplate."));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());
@@ -156,7 +156,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message").value("BadParameterEx"))
-                .andExpect(jsonPath("$.description").value("<not Null for not subTemplate> is not a valid value for: isvalid"));
+                .andExpect(jsonPath("$.description").value("Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template."));
 
         List<MetadataValidation> validations = metadataValidationRepository.findAllById_MetadataId(subTemplate.getId());
         assertEquals(0, validations.size());

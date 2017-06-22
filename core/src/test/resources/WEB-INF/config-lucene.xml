@@ -125,7 +125,6 @@
       <field name="_valid_schematron-rules-iso" tagName="valid_schematron-rules-iso"/>
       <field name="_valid_schematron-rules-inspire" tagName="valid_schematron-rules-inspire"/>
       <field name="_valid_xsd" tagName="valid_xsd"/>
-      <field name="_valid_subtemplate" tagName="valid_subtemplate"/>
       <field name="_selected" tagName="selected"/>
       <field name="_source" tagName="source"/>
       <field name="_edit" tagName="edit"/>
