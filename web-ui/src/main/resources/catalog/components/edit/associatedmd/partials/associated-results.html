@@ -1,0 +1,42 @@
+<div>
+  <form data-ng-search-form ng-click="$event.stopPropagation()">
+    <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+    <div class="form-controls">
+      <input class="form-control filter-text" type="search"
+        data-ng-change="triggerSearch()"
+        data-ng-model-options="modelOptions"
+        placeholder="{{'filter' | translate}}" autofocus=""
+        data-ng-model="searchObj.params.any"/>
+      <div class="spacer"></div>
+      <div data-gn-pagination="paginationInfo"/>
+    </div>
+
+    <div translate ng-show="searchResults.count == 0"
+      class="text-muted disabled">
+      noRecordFound
+    </div>
+
+    <div class="associated-md-list">
+      <li class="associated-md"
+        data-ng-repeat="e in searchResults.records">
+          <span ng-class="e.valid == 1 ? 'text-success' : (e.valid == 0 ? 'text-danger' : 'text-muted')">
+            <i class="fa gn-recordtype-{{e.isTemplate}}"
+               title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
+          </span>
+
+          <a href="catalog.search#/metadata/{{e['geonet:info'].uuid}}"
+            class="spacer"
+            title="{{e.title || e.defaultTitle}}">
+            {{e.title || e.defaultTitle}}</a>
+
+          <a class="btn btn-primary btn-sm"
+             data-ng-href="#/metadata/{{e['geonet:info'].id}}"
+             title="{{'edit' | translate}}">
+            <i class="fa fa-pencil" />
+          </a>
+      </li>
+    </div>
+
+  </form>
+</div>

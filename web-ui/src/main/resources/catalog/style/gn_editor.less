@@ -141,7 +141,7 @@ input[type=text], input[type=number], select {
   }
 
   .directory-entries-list {
-    li {
+    & > li {
       display: flex;
       flex-direction: column;
       @padding: 6px;
@@ -730,5 +730,48 @@ form.gn-tab-xml {
 [data-gn-directory-entry-selector] {
   .gn-autocomplete-list {
     top:0 !important;
+  }
+}
+
+gn-associated-md {
+  // add margin if we're in a dropdown menu
+  ul.dropdown-menu & {
+    margin: 8px 12px;
+    width: 30em;
+    display: block;
+  }
+
+  // general purpose flex spacer
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .form-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    & > * {
+      flex-shrink: 0;
+    }
+    input.filter-text {
+      flex-shrink: 1;
+      margin-right: 12px;
+    }
+  }
+
+  .associated-md {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+    padding-top: 6px;
+    &:not(:last-child) {
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 6px;
+    }
   }
 }

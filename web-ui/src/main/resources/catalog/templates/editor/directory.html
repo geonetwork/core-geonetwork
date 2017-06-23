@@ -29,7 +29,7 @@
             {{typeName}}</li>
           <li ng-repeat="t in templates" ng-repeat-end>
             <a href ng-click="createFromTemplate(t)">
-              {{t.title}}</a>
+              {{t.title || t.defaultTitle}}</a>
           </li>
           <li class="divider"/>
           <li><a href translate ng-click="startImporting(false)">
@@ -97,7 +97,7 @@
 
               <div class="flex-spacer"></div>
 
-              <input class="form-control filter-text" type="text"
+              <input class="form-control filter-text" type="search"
                      data-ng-change="triggerSearch()"
                      data-ng-model-options="modelOptions"
                      placeholder="{{'filter' | translate}}" autofocus=""
@@ -144,8 +144,8 @@
                          title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
                     </span>
 
-                    <a href ng-click="startEditing(e)" title="{{e.title}}">
-                      {{e.title}}</a>
+                    <a href ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
+                      {{e.title || e.defaultTitle}}</a>
                   </div>
 
                   <div class="entry-info" ng-if="!templatesShown()">
@@ -196,13 +196,14 @@
 
                     <div class="btn-group">
                       <button class="btn btn-default btn-sm dropdown-toggle"
+                        ng-click="e.openAssociatedMD = true"
                         data-toggle="dropdown">
                         {{'directoryEntryAssociatedMetadata' |  translate}}
                         &nbsp;<i class="caret"/>
                       </button>
                       <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a href>
-                          placeholder</a>
+                        <li ng-if="e.openAssociatedMD">
+                          <gn-associated-md entry-id="e['geonet:info'].uuid" />
                         </li>
                       </ul>
                     </div>
@@ -216,7 +217,7 @@
                     </span>
 
                     <a href ng-click="startEditing(e)" title="{{e.title}}">
-                      {{e.title}}</a>
+                      {{e.title || e.defaultTitle}}</a>
 
                     <div class="flex-spacer"></div>
 
@@ -446,7 +447,7 @@
           <span translate>directoryEntryAssociatedMetadata</span>
         </div>
         <div class="panel-body">
-          (placeholder)
+          <gn-associated-md entry-id="activeEntry['geonet:info'].uuid" />
         </div>
       </div>
     </div>

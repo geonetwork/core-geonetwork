@@ -26,9 +26,14 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_facets');
+  goog.require('gn_associatedmd');
 
-  var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets', 'pascalprecht.translate']);
+  var module = angular.module('gn_directory_controller', [
+    'gn_catalog_service',
+    'gn_facets',
+    'gn_associatedmd',
+    'pascalprecht.translate'
+  ]);
 
   /**
    * Controller to create new metadata record.
@@ -65,7 +70,6 @@
           any: '',
           _root: '',
           sortBy: 'title',
-          sortOrder: 'reverse',
           resultType: 'subtemplates'
         },
         sortbyValues: [
@@ -198,7 +202,8 @@
         if (type) {
           $scope.searchObj.params._root = type;
         }
-        $scope.$broadcast('resetSearch', $scope.searchObj.params);
+        $scope.$broadcast('clearResults');
+        $scope.$broadcast('search');
         return false;
       };
 
@@ -491,6 +496,7 @@
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function (b) {
         $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
+        $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
       }
       $scope.templatesShown = function () {
