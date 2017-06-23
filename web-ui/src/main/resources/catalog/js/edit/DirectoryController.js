@@ -394,12 +394,28 @@
 
       $scope.validateEntry = function (e) {
         gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, true)
-          .then(refreshEntriesInfo);
+          .then(function () {
+            refreshEntriesInfo();
+            return gnMetadataManager.getMdObjById(e['geonet:info'].id, 's or t');
+          })
+          .then(function (e) {
+            if ($scope.activeEntry) {
+              $scope.activeEntry = e;
+            }
+          });
       };
 
       $scope.rejectEntry = function (e) {
         gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, false)
-          .then(refreshEntriesInfo);
+          .then(function () {
+            refreshEntriesInfo();
+            return gnMetadataManager.getMdObjById(e['geonet:info'].id, 's or t');
+          })
+          .then(function (e) {
+            if ($scope.activeEntry) {
+              $scope.activeEntry = e;
+            }
+          });
       };
 
       // begin creation of a new entry

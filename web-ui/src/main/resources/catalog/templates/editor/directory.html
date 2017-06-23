@@ -121,7 +121,7 @@
                     data-ng-repeat="e in searchResults.records">
 
                   <div class="entry-title" ng-if="!templatesShown()">
-                    <span ng-class="e.valid == 1 ? 'text-success' : (md.valid == 0 ? 'text-danger' : 'text-muted')">
+                    <span ng-class="e.valid == 1 ? 'text-success' : (e.valid == 0 ? 'text-danger' : 'text-muted')">
                       <i class="fa gn-recordtype-s"
                          title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
                     </span>
@@ -336,42 +336,46 @@
                  metadata-id="activeEntry['geonet:info'].id">
             </div>
 
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle"
-                  data-toggle="dropdown"
-                  ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
-                  ng-class="{'btn-primary': activeEntry.valid==1, 'btn-danger': !activeEntry.valid}">
-                <i class="fa fa-check"/>
-                <span translate class="hidden-xs hidden-sm hidden-md">
-                  isValid</span>
-                &nbsp;
-                <i class="caret"/>
-              </button>
-              <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href ng-click="validateEntry(activeEntry)"
-                  ng-disabled="activeEntry.valid==1">
-                  <i class="fa fa-check fa-fw text-success" />&nbsp;
-                  {{'directoryEntryValidate' | translate}}</a>
-                </li>
-                <li><a href ng-click="rejectEntry(activeEntry)"
-                  ng-disabled="!activeEntry.valid">
-                  <i class="fa fa-ban fa-fw text-danger" />&nbsp;
-                  {{'directoryEntryReject' | translate}}</a>
-                </li>
-              </ul>
-            </div>
-
             <button type="button" class="btn btn-default"
                 ng-click="startPermissionsEdit()"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                title="{{'directoryEntryPermissions' | translate}}">
               <i class="fa fa-key"/>&nbsp;
               <span translate class="hidden-xs hidden-sm hidden-md">
                 directoryEntryPermissions</span>
             </button>
 
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown"
+                  ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                  ng-class="{'btn-success': activeEntry.valid == 1, 'btn-danger': activeEntry.valid == 0}"
+                  title="{{'isValid' | translate}}">
+                <i class="fa fa-check" ng-show="activeEntry.valid != 0"/>
+                <i class="fa fa-ban" ng-show="activeEntry.valid == 0"/>
+                <span translate class="hidden-xs hidden-sm hidden-md hidden-lg">
+                  isValid</span>
+                &nbsp;
+                <i class="caret"/>
+              </button>
+              <ul class="dropdown-menu pull-right" role="menu">
+                <li ng-class="{disabled: activeEntry.valid == 1}">
+                  <a href ng-click="validateEntry(activeEntry)">
+                    <i class="fa fa-check fa-fw text-success" />&nbsp;
+                    {{'directoryEntryValidate' | translate}}</a>
+                </li>
+                <li ng-class="{disabled: activeEntry.valid == 0}">
+                  <a href ng-click="rejectEntry(activeEntry)">
+                    <i class="fa fa-ban fa-fw text-danger" />&nbsp;
+                    {{'directoryEntryReject' | translate}}</a>
+                </li>
+              </ul>
+            </div>
+
             <button type="button" class="btn btn-primary"
                 ng-click="save()"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                title="{{'save' | translate}}">
               <i class="fa fa-save"/>&nbsp;
               <span translate class="hidden-xs">
                 save</span>
