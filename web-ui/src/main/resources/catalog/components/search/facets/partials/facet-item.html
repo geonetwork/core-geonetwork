@@ -1,6 +1,6 @@
 <div class="gn-facet" data-ng-show="facetResults[facet].length > 1">
   <h5 data-gn-collapsible="collapsed">
-    <i class="fa" data-ng-class="collapsed ? 'fa-arrow-circle-right' : 'fa-arrow-circle-bottom'"></i>
+    <i class="fa" data-ng-class="collapsed ? 'fa-arrow-circle-right' : 'fa-arrow-circle-down'"></i>
     <span data-translate="">{{facet}}</span>
   </h5>
   <div class="list-group"
@@ -10,8 +10,8 @@
        data-ng-click="add(f)"
        href=""
        data-ng-if="$index < maxItems">
-      <span class="badge">{{f['@count']}}</span>
       <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
+      <span class="badge">{{f['@count']}}</span>
     </a>
     <button data-ng-click="toggle()"
             data-ng-if="facetResults[facet].length-initialMaxItems > 0"

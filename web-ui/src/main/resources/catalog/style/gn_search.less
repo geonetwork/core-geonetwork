@@ -48,6 +48,7 @@
     color: #555555;
     border: none;
     display: flex;
+    align-items: center;
     flex-direction: row;
     * { flex-shrink: 0; }
 
@@ -74,9 +75,13 @@
     }
     .gn-facet-label {
       flex-shrink: 1;
+      flex-grow: 1;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
+    }
+    .badge {
+      margin: 0px 6px;
     }
   }
   .gn-facet-count, .list-group-item > span.fa {

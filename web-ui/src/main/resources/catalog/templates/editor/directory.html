@@ -101,7 +101,25 @@
                      data-ng-change="triggerSearch()"
                      data-ng-model-options="modelOptions"
                      placeholder="{{'filter' | translate}}" autofocus=""
-                     data-ng-model="searchObj.params.any"/>
+                     data-ng-model="searchObj.params.any"/>&nbsp;
+
+              <div class="btn-group">
+                <button type="button"
+                  class="btn btn-default dropdown-toggle btn-sm"
+                  data-toggle="dropdown"
+                  title="{{'filterGroup' | translate}}">
+                  <span translate class="hidden-xs">filterGroup</span>
+                  &nbsp;<i class="caret" />
+                </button>
+                <ul class="dropdown-menu gn-facet-dropdown pull-right">
+                  <div data-gn-facet="searchResults.facet"
+                       data-current-facets="currentFacets"
+                       data-no-collapse="true"
+                       data-facet="groupOwners"
+                       data-index-key="_groupOwner"></div>
+                  <div data-gn-facet-breadcrumb=""></div>
+                </ul>
+              </div>
             </div>
             <div class="panel-body">
 
