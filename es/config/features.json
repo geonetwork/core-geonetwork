@@ -90,7 +90,7 @@
               "fielddata": true
             }
           }
-        },
+        }
       ],
       "properties": {
         "id": {

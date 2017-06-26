@@ -21,17 +21,14 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.repository.statistic;
+package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.statistic.SearchRequest;
-import org.fao.geonet.repository.GeonetRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 /**
- * Data Access object for accessing {@link org.fao.geonet.domain.MetadataCategory} entities.
- *
- * @author Jesse
+ * Interface for defining a path. User: Jesse Date: 10/2/13 Time: 6:43 PM
  */
-public interface SearchRequestRepository extends GeonetRepository<SearchRequest, Integer>,
-    JpaSpecificationExecutor<SearchRequest>, SearchRequestRepositoryCustom {
+public interface PathSpec<E, T> {
+    Path<T> getPath(Root<E> root);
 }

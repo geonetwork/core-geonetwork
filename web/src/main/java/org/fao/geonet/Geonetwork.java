@@ -247,13 +247,6 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Search...");
 
-        boolean logSpatialObject = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_SPATIAL_OBJECTS));
-        boolean logAsynch = "true".equalsIgnoreCase(handlerConfig.getMandatoryValue(Geonet.Config.STAT_LOG_ASYNCH));
-        logger.info("  - Log spatial object: " + logSpatialObject);
-        logger.info("  - Log in asynch mode: " + logAsynch);
-
-        String luceneTermsToExclude = "";
-        luceneTermsToExclude = handlerConfig.getMandatoryValue(Geonet.Config.STAT_LUCENE_TERMS_EXCLUDE);
 
         LuceneConfig lc = _applicationContext.getBean(LuceneConfig.class);
         lc.configure(luceneConfigXmlFile);
@@ -283,9 +276,7 @@ public class Geonetwork implements ApplicationHandler {
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
         searchMan = _applicationContext.getBean(SearchManager.class);
-        searchMan.init(logAsynch,
-            logSpatialObject, luceneTermsToExclude,
-            maxWritesInTransaction);
+        searchMan.init(maxWritesInTransaction);
 
 
         // if the validator exists the proxyCallbackURL needs to have the external host and

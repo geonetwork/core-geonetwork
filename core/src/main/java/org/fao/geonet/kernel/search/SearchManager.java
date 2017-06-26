@@ -168,12 +168,8 @@ public class SearchManager implements ISearchManager {
     private static DocumentBoosting _documentBoostClass;
     private static PerFieldAnalyzerWrapper _defaultAnalyzer;
     private Path _stylesheetsDir;
-    private String _luceneTermsToExclude;
-    private boolean _logSpatialObject;
     private Path _htmlCacheDir;
     private Spatial _spatial;
-
-    private boolean _logAsynch;
     private LuceneOptimizerManager _luceneOptimizerManager;
 
     /**
@@ -516,8 +512,7 @@ public class SearchManager implements ISearchManager {
     /**
      * TODO javadoc.
      */
-    public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
-                     int maxWritesInTransaction) throws Exception {
+    public void init(int maxWritesInTransaction) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory geonetworkDataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
 
@@ -526,12 +521,11 @@ public class SearchManager implements ISearchManager {
         createAnalyzer();
         createDocumentBoost();
 
-        initNonStaticData(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
+        initNonStaticData(maxWritesInTransaction);
     }
 
     @VisibleForTesting
-    public void initNonStaticData(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
-                                  int maxWritesInTransaction) throws Exception {
+    public void initNonStaticData(int maxWritesInTransaction) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         GeonetworkDataDirectory geonetworkDataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
@@ -547,10 +541,6 @@ public class SearchManager implements ISearchManager {
         _htmlCacheDir = htmlCacheDirTest.toAbsolutePath();
 
         _spatial = new Spatial(applicationContext.getBean(DataStore.class), maxWritesInTransaction);
-
-        _logAsynch = logAsynch;
-        _logSpatialObject = logSpatialObject;
-        _luceneTermsToExclude = luceneTermsToExclude;
 
         initLucene();
 
@@ -660,19 +650,6 @@ public class SearchManager implements ISearchManager {
         return _htmlCacheDir;
     }
 
-    // indexing methods
-
-    public boolean getLogAsynch() {
-        return _logAsynch;
-    }
-
-    public boolean getLogSpatialObject() {
-        return _logSpatialObject;
-    }
-
-    public String getLuceneTermsToExclude() {
-        return _luceneTermsToExclude;
-    }
 
     /**
      * Force the index to wait until all changes are processed and the next reader obtained will get

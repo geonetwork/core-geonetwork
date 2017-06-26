@@ -104,15 +104,6 @@
     <param name="jzkitConfig" value="JZkitApplicationContext.xml"/>
     <param name="metadataNotifierConfig" value="WEB-INF/config-notifier.xml"/>
 
-    <!-- search statistics stuff -->
-    <!-- true to log into DB WKT of spatial objects involved in a search operation
-        CAUTION ! this can lead to HUGE database and CSV export if detailed geo objects are used:
-        several Gb for instance...-->
-    <param name="statLogSpatialObjects" value="false"/>
-    <param name="statLogAsynch" value="true"/>
-    <!-- The list of Lucene term fields to exlucde from log, to avoid storing unecessary information -->
-    <param name="statLuceneTermsExclude"
-           value="_op0,_op1,_op2,_op3,_op4,_op5,_op6,_isTemplate,_locale,_owner,_groupOwner,_dummy,type"/>
 
     <!-- The maximum number of writes in a transaction on the spatial index
 
@@ -280,8 +271,6 @@
   <include>config/config-service-admin-geoserver-publication.xml</include>
   <include>config/config-service-admin-transfert-privileges.xml</include>
   <include>config/config-service-admin-formatter.xml</include>
-
-  <include>config/config-service-statistics.xml</include>
 
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>

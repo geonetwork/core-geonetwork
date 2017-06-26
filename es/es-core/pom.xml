@@ -8,8 +8,9 @@
     <version>3.3.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
   <artifactId>es-core</artifactId>
+  <name>GeoNetwork index Elasticsearch client</name>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

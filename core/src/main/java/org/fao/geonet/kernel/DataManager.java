@@ -116,7 +116,7 @@ import org.fao.geonet.repository.specification.MetadataStatusSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
