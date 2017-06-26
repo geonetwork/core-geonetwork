@@ -352,6 +352,7 @@
         ).then(refreshEntriesInfo);
       };
 
+      // this is not used for now
       $scope.convertToTemplate = function (e) {
         if (e.isTemplate !== 's') {
           $rootScope.$broadcast('StatusUpdated', {
