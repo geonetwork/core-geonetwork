@@ -22,16 +22,22 @@
  */
 
 (function() {
-  goog.provide('gn_associatedmd');
+  goog.provide('gn_mdtypewidget');
 
-
-  goog.require('gn_associatedmd_directive');
-  goog.require('gn_associatedmd_service');
-  goog.require('gn_mdtypewidget');
-
-  angular.module('gn_associatedmd', [
-    'gn_associatedmd_service',
-    'gn_associatedmd_directive',
-    'gn_mdtypewidget'
+  var module = angular.module('gn_mdtypewidget', [
   ]);
+
+  module.directive('gnMdTypeWidget', [
+    function() {
+      return {
+        restrict: 'E',
+        scope: {
+          metadata: '='
+        },
+        templateUrl: '../../catalog/components/utility/'+
+          'partials/typewidget.html'
+      };
+    }
+  ]);
+
 })();

@@ -20,10 +20,7 @@
     <div class="associated-md-list">
       <li class="associated-md"
         data-ng-repeat="e in searchResults.records">
-          <span ng-class="e.valid == 1 ? 'text-success' : (e.valid == 0 ? 'text-danger' : 'text-muted')">
-            <i class="fa gn-recordtype-{{e.isTemplate}}"
-               title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
-          </span>
+          <gn-md-type-widget metadata="e"></gn-md-type-widget>
 
           <a href="catalog.search#/metadata/{{e['geonet:info'].uuid}}"
             class="spacer"

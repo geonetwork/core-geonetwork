@@ -139,11 +139,7 @@
                     data-ng-repeat="e in searchResults.records">
 
                   <div class="entry-title" ng-if="!templatesShown()">
-                    <span ng-class="e.valid == 1 ? 'text-success' : (e.valid == 0 ? 'text-danger' : 'text-muted')">
-                      <i class="fa gn-recordtype-s"
-                         title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
-                    </span>
-
+                    <gn-md-type-widget metadata="e"></gn-md-type-widget>
                     <a href ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
                       {{e.title || e.defaultTitle}}</a>
                   </div>
@@ -211,10 +207,7 @@
 
                   <div class="entry-title entry-is-template"
                     ng-if="templatesShown()">
-                    <span ng-class="e.valid == 1 ? 'text-success' : (md.valid == 0 ? 'text-danger' : 'text-muted')">
-                      <i class="fa gn-recordtype-t"
-                         title="{{('isTemplate' + e.isTemplate) | translate}} ({{('validStatus-' + e.valid) | translate}})"></i>
-                    </span>
+                    <gn-md-type-widget metadata="e"></gn-md-type-widget>
 
                     <a href ng-click="startEditing(e)" title="{{e.title}}">
                       {{e.title || e.defaultTitle}}</a>
@@ -271,10 +264,7 @@
       <p ng-show="activeEntry">
         <span class="text-muted" translate>directoryEntryEditing</span>
         &nbsp;
-        <span ng-class="activeEntry.valid == 1 ? 'text-success' : (activeEntry.valid == 0 ? 'text-danger' : 'text-muted')">
-          <i class="fa gn-recordtype-{{activeEntry.isTemplate}}"
-             title="{{('isTemplate' + activeEntry.isTemplate) | translate}} ({{('validStatus-' + activeEntry.valid) | translate}})"></i>
-        </span>
+        <gn-md-type-widget metadata="activeEntry"></gn-md-type-widget>
         {{activeEntry.title || activeEntry.defaultTitle}}
         &nbsp;
         <a href ng-click="closeEditor()">({{'cancel' | translate}})</a>

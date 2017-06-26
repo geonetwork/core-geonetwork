@@ -27,12 +27,14 @@
   goog.require('gn_catalog_service');
   goog.require('gn_facets');
   goog.require('gn_associatedmd');
+  goog.require('gn_mdtypewidget');
 
   var module = angular.module('gn_directory_controller', [
     'gn_catalog_service',
     'gn_facets',
     'gn_associatedmd',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'gn_mdtypewidget'
   ]);
 
   /**
