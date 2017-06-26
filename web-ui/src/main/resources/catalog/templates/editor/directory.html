@@ -391,7 +391,8 @@
             </div>
 
             <button type="button" class="btn btn-primary"
-                ng-click="save()"
+                gn-click-and-spin="save(true)"
+                ng-if="!userCanEditTemplates"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
                 title="{{'save' | translate}}">
               <i class="fa fa-save"/>&nbsp;
@@ -399,8 +400,29 @@
                 save</span>
             </button>
 
+            <div class="btn-group" ng-if="userCanEditTemplates">
+              <button type="button"
+                      gn-click-and-spin="save(true)"
+                      class="btn btn-primary">
+                <i class="fa fa-save"/>&nbsp;
+                <span translate class="hidden-xs">
+                  save</span>
+              </button>
+              <button type="button" class="btn btn-primary dropdown-toggle"
+                      data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <li><a href title="{{(activeEntry.isTemplate === 't' ? 'saveAsMetadata' : 'saveAsTemplate') | translate}}"
+                       data-gn-click-and-spin="switchTypeAndSave(true)">
+                  {{(activeEntry.isTemplate === 't' ? 'saveAsDirectoryEntry' : 'saveAsTemplate') | translate}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
             <button type="button" class="btn btn-default hidden-xs"
-                ng-click="saveAndClose()"
+                gn-click-and-spin="saveAndClose()"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
                 title="{{'closeEditor' | translate}}">
               <i class="fa fa-save"/>&nbsp;

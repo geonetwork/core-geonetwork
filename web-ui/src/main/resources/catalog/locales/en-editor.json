@@ -347,5 +347,6 @@
     "directoryManagerMode-newTemplate": "New Template",
     "directoryManagerMode-editTemplate": "Edit Template",
     "notADirectoryEntry": "Only directory entries can be converted to templates",
-    "notADirectoryEntryTemplate": "This entry is not a directory entry template."
+    "notADirectoryEntryTemplate": "This entry is not a directory entry template.",
+    "saveAsDirectoryEntry": "Save as Directory Entry"
 }

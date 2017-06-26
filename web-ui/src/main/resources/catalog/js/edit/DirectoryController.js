@@ -259,7 +259,7 @@
         return false;
       };
       $scope.save = function(refreshForm) {
-        gnEditor.save(refreshForm)
+        var promise = gnEditor.save(refreshForm)
             .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
@@ -275,10 +275,10 @@
                 type: 'danger'});
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
-        return false;
+        return promise;
       };
       $scope.saveAndClose = function() {
-        gnEditor.save(false)
+        return gnEditor.save(false)
             .then(function(form) {
               $scope.gnCurrentEdit = '';
               $scope.closeEditor();
@@ -290,8 +290,14 @@
                 timeout: 0,
                 type: 'danger'});
             });
-
-        return false;
+      };
+      $scope.switchTypeAndSave = function(refreshForm) {
+        gnCurrentEdit.isTemplate = gnCurrentEdit.isTemplate === 't' ? 's' : 't';
+        $('#template')[0].value = gnCurrentEdit.isTemplate;
+        if ($scope.activeEntry) {
+          $scope.activeEntry.isTemplate = gnCurrentEdit.isTemplate;
+        }
+        return $scope.save(refreshForm);
       };
 
       /**
@@ -446,7 +452,8 @@
           tab: 'simple',
           displayTooltips: false,
           compileScope: $scope,
-          sessionStartTime: moment()
+          sessionStartTime: moment(),
+          isTemplate: e.isTemplate
         });
 
         $scope.gnCurrentEdit = gnCurrentEdit;
