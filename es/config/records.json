@@ -1,0 +1,1267 @@
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "analyzer": {
+          "synInspireAnnexes": {
+            "tokenizer": "keyword",
+            "filter": [
+              "synInspireThemes",
+              "synInspireAnnexes",
+              "keepInspireAnnexes"
+            ]
+          },
+          "synInspireThemes": {
+            "tokenizer": "keyword",
+            "filter": [
+              "synInspireThemes"
+            ]
+          },
+          "keepInspireServiceTypes": {
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase", "keepInspireServiceTypes"
+            ]
+          },
+          "keepInspireAnnexes": {
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase", "keepInspireAnnexes"
+            ]
+          },
+          "keepInspireThemes": {
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase", "keepInspireThemes"
+            ]
+          },
+          "synCheckpoint": {
+            "tokenizer": "keyword",
+            "filter": [
+              "synCheckpoint"
+            ]
+          }
+        },
+        "filter": {
+          "keepInspireServiceTypes": {
+            "type": "keep",
+            "keep_words": [
+              "discovery",
+              "view",
+              "download",
+              "invoke",
+              "transformation",
+              "other"
+            ]
+          },
+          "keepInspireAnnexes": {
+            "type": "keep",
+            "keep_words": [
+              "i",
+              "ii",
+              "iii"
+            ]
+          },
+          "keepInspireThemes": {
+            "type": "keep",
+            "keep_words": [
+              "Coordinate reference systems",
+              "Elevation",
+              "Land cover",
+              "Orthoimagery",
+              "Geology",
+              "Statistical units",
+              "Buildings",
+              "Soil",
+              "Land use",
+              "Human health and safety",
+              "Utility and governmental services",
+              "Geographical grid systems",
+              "Environmental monitoring facilities",
+              "Production and industrial facilities",
+              "Agricultural and aquaculture facilities",
+              "Population distribution — demography",
+              "Area management/restriction/regulation zones and reporting units",
+              "Natural risk zones",
+              "Atmospheric conditions",
+              "Meteorological geographical features",
+              "Oceanographic geographical features",
+              "Sea regions",
+              "Geographical names",
+              "Bio-geographical regions",
+              "Habitats and biotopes",
+              "Species distribution",
+              "Energy resources",
+              "Mineral resources",
+              "Administrative units",
+              "Addresses",
+              "Cadastral parcels",
+              "Transport networks",
+              "Hydrography",
+              "Protected sites"
+            ]
+          },
+          "synInspireAnnexes": {
+            "type": "synonym",
+            "tokenizer": "keyword",
+            "ignore_case": true,
+            "synonyms": [
+              "Coordinate reference systems => I",
+              "Elevation => II",
+              "Land cover => II",
+              "Orthoimagery => II",
+              "Geology => II",
+              "Statistical units => III",
+              "Buildings => III",
+              "Soil => III",
+              "Land use => III",
+              "Human health and safety => III",
+              "Utility and governmental services => III",
+              "Geographical grid systems => I",
+              "Environmental monitoring facilities => III",
+              "Production and industrial facilities => III",
+              "Agricultural and aquaculture facilities => III",
+              "Population distribution — demography => III",
+              "Area management/restriction/regulation zones and reporting units => III",
+              "Natural risk zones => III",
+              "Atmospheric conditions => III",
+              "Meteorological geographical features => III",
+              "Oceanographic geographical features => III",
+              "Sea regions => III",
+              "Geographical names => I",
+              "Bio-geographical regions => III",
+              "Habitats and biotopes => III",
+              "Species distribution => III",
+              "Energy resources => III",
+              "Mineral resources => III",
+              "Administrative units => I",
+              "Addresses => I",
+              "Cadastral parcels => I",
+              "Transport networks => I",
+              "Hydrography => I",
+              "Protected sites => I"
+            ]
+          },
+          "synInspireThemes": {
+            "type": "synonym",
+            "tokenizer": "keyword",
+            "ignore_case": true,
+            "synonyms": [
+              "Referenskoordinatsystem => Coordinate reference systems",
+              "Referenčni koordinatni sistemi => Coordinate reference systems",
+              "Súradnicové referenčné systémy => Coordinate reference systems",
+              "Sisteme de coordonate de referință => Coordinate reference systems",
+              "Sisteme de coordonate de referinţă => Coordinate reference systems",
+              "Systemy odniesienia za pomocą współrzędnych => Coordinate reference systems",
+              "Sistemas de referencia => Coordinate reference systems",
+              "Systemen voor verwijzing door middel van coördinaten => Coordinate reference systems",
+              "Sistemi ta' referenza ta' koordinati => Coordinate reference systems",
+              "Koordinātu atskaites sistēmas => Coordinate reference systems",
+              "Koordinačių atskaitos sistemos => Coordinate reference systems",
+              "Sistemi di coordinate => Coordinate reference systems",
+              "Koordinátarendszerek => Coordinate reference systems",
+              "Référentiels de coordonnées => Coordinate reference systems",
+              "Koordinaattijärjestelmät => Coordinate reference systems",
+              "Sistemas de coordenadas de referencia => Coordinate reference systems",
+              "Koordinaatsüsteemid => Coordinate reference systems",
+              "Συστήματα συντεταγμένων => Coordinate reference systems",
+              "Koordinatenreferenzsysteme => Coordinate reference systems",
+              "Координатни справочни системи => Coordinate reference systems",
+              "Koordinatsystemer => Coordinate reference systems",
+              "Souřadnicové referenční systémy => Coordinate reference systems",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/1 => Coordinate reference systems",
+              "Höjd => Elevation",
+              "Altitude => Elevation",
+              "Elevaţie => Elevation",
+              "Elevație => Elevation",
+              "Digitalni model višin => Elevation",
+              "Výška => Elevation",
+              "Ukształtowanie terenu => Elevation",
+              "Hoogte => Elevation",
+              "Elevazzjoni => Elevation",
+              "Augstums => Elevation",
+              "Aukštis => Elevation",
+              "Elevazione => Elevation",
+              "Korkeus => Elevation",
+              "Domborzat => Elevation",
+              "Υψομετρία => Elevation",
+              "Elevaciones => Elevation",
+              "Kõrgused => Elevation",
+              "Höhe => Elevation",
+              "Højde => Elevation",
+              "Nadmořská výška => Elevation",
+              "Релеф => Elevation",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/10 => Elevation",
+              "Landtäcke => Land cover",
+              "Pokrovnost tal => Land cover",
+              "Ocupação do solo => Land cover",
+              "Krajinná pokrývka (land cover) => Land cover",
+              "Acoperire terestră => Land cover",
+              "Bodemgebruik => Land cover",
+              "Użytkowanie terenu => Land cover",
+              "Zemes virsma => Land cover",
+              "Kopertura ta' l-art => Land cover",
+              "Žemės danga => Land cover",
+              "A felszín borítása => Land cover",
+              "Occupation des terres => Land cover",
+              "Copertura del suolo => Land cover",
+              "Cubierta terrestre => Land cover",
+              "Maakate => Land cover",
+              "Maanpeite => Land cover",
+              "Κάλυψη γης => Land cover",
+              "Bodenbedeckung => Land cover",
+              "Krajinný pokryv => Land cover",
+              "Arealdække => Land cover",
+              "Земна покривка => Land cover",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/11 => Land cover",
+              "Ortofoto => Orthoimagery",
+              "Ortoimagini => Orthoimagery",
+              "Ortometria => Orthoimagery",
+              "Sporządzanie ortoobrazów => Orthoimagery",
+              "Ortoimagens => Orthoimagery",
+              "Orthobeeldvorming => Orthoimagery",
+              "Orthoimagery => Orthoimagery",
+              "Ortofotogrāfija => Orthoimagery",
+              "Ortofotografinis vaizdavimas => Orthoimagery",
+              "Orto immagini => Orthoimagery",
+              "Ortofotók => Orthoimagery",
+              "Ortho-imagerie => Orthoimagery",
+              "Ortoimágenes => Orthoimagery",
+              "Ortoilmakuvat => Orthoimagery",
+              "Ortokujutised => Orthoimagery",
+              "Ορθοφωτογραφία => Orthoimagery",
+              "Orthofotografie => Orthoimagery",
+              "Ortofotosnímky => Orthoimagery",
+              "Ортоизображение => Orthoimagery",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/12 => Orthoimagery",
+              "Geologia => Geology",
+              "Geologie => Geology",
+              "Geológia => Geology",
+              "Geologija => Geology",
+              "Geologi => Geology",
+              "Ġeologija => Geology",
+              "Ģeoloģija => Geology",
+              "Földtan => Geology",
+              "Géologie => Geology",
+              "Geología => Geology",
+              "Geoloogia => Geology",
+              "Γεωλογία => Geology",
+              "Геология => Geology",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/13 => Geology",
+              "Unidades estatísticas => Statistical units",
+              "Unităţi statistice => Statistical units",
+              "Štatistické jednotky => Statistical units",
+              "Statistični okoliši => Statistical units",
+              "Statistiska enheter => Statistical units",
+              "Statistische eenheden => Statistical units",
+              "Jednostki statystyczne => Statistical units",
+              "Statistiniai vienetai => Statistical units",
+              "Unitajiet statistiċi => Statistical units",
+              "Unități statistice => Statistical units",
+              "Statistikas vienības => Statistical units",
+              "Unità statistiche => Statistical units",
+              "Tilastoyksiköt => Statistical units",
+              "Unités statistiques => Statistical units",
+              "Statisztikai egységek => Statistical units",
+              "Unidades estadísticas => Statistical units",
+              "Statistilised üksused => Statistical units",
+              "Statistische Einheiten => Statistical units",
+              "Στατιστικές μονάδες => Statistical units",
+              "Statistické jednotky => Statistical units",
+              "Statistiske enheder => Statistical units",
+              "Статистически единици => Statistical units",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/14 => Statistical units",
+              "Stavbe => Buildings",
+              "Byggnader => Buildings",
+              "Clădiri => Buildings",
+              "Stavby => Buildings",
+              "Edifícios => Buildings",
+              "Budynki => Buildings",
+              "Ēkas => Buildings",
+              "Bini => Buildings",
+              "Gebouwen => Buildings",
+              "Κτίρια => Buildings",
+              "Edificios => Buildings",
+              "Ehitised => Buildings",
+              "Rakennukset => Buildings",
+              "Pastatai => Buildings",
+              "Edifici => Buildings",
+              "Épületek => Buildings",
+              "Bâtiments => Buildings",
+              "Сгради => Buildings",
+              "Budovy => Buildings",
+              "Bygninger => Buildings",
+              "Gebäude => Buildings",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/15 => Buildings",
+              "Tla => Soil",
+              "Mark => Soil",
+              "Soluri => Soil",
+              "Gleba => Soil",
+              "Pôda => Soil",
+              "Solo => Soil",
+              "Augsne => Soil",
+              "Bodem => Soil",
+              "Ħamrija => Soil",
+              "Suolo => Soil",
+              "Dirvožemis => Soil",
+              "Talaj => Soil",
+              "Sols => Soil",
+              "Maaperä => Soil",
+              "Pinnas => Soil",
+              "Suelo => Soil",
+              "Έδαφος => Soil",
+              "Boden => Soil",
+              "Jord => Soil",
+              "Půda => Soil",
+              "Почва => Soil",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/16 => Soil",
+              "Markanvändning => Land use",
+              "Namenska raba tal => Land use",
+              "Zagospodarowanie przestrzenne => Land use",
+              "Uso do solo => Land use",
+              "Utilizarea terenului => Land use",
+              "Využitie územia => Land use",
+              "Zemes izmantošana => Land use",
+              "Użu ta' l-art => Land use",
+              "Landgebruik => Land use",
+              "Földhasználat => Land use",
+              "Žemės naudojimas => Land use",
+              "Utilizzo del territorio => Land use",
+              "Maakasutus => Land use",
+              "Maankäyttö => Land use",
+              "Usage des sols => Land use",
+              "Χρήσεις γης => Land use",
+              "Uso del suelo => Land use",
+              "Ползване на земята => Land use",
+              "Využití území => Land use",
+              "Arealanvendelse => Land use",
+              "Bodennutzung => Land use",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/17 => Land use",
+              "Människors hälsa och säkerhet => Human health and safety",
+              "Zdravje in varnost prebivalstva => Human health and safety",
+              "Ľudské zdravie a bezpečnosť => Human health and safety",
+              "Zdrowie i bezpieczeństwo ludzi => Human health and safety",
+              "Sănătate şi siguranţă umană => Human health and safety",
+              "Sănătate și siguranță umană => Human health and safety",
+              "Saúde humana e segurança => Human health and safety",
+              "Žmonių sveikata ir sauga => Human health and safety",
+              "Cilvēku veselība un drošība => Human health and safety",
+              "Is-saħħa u s-siġurtà tal-bniedem => Human health and safety",
+              "Menselijke gezondheid en veiligheid => Human health and safety",
+              "Salute umana e sicurezza => Human health and safety",
+              "Emberi egészség és biztonság => Human health and safety",
+              "Santé et sécurité des personnes => Human health and safety",
+              "Väestön terveys ja turvallisuus => Human health and safety",
+              "Salud y seguridad humanas => Human health and safety",
+              "Inimeste tervis ja ohutus => Human health and safety",
+              "Sikkerhed => Human health and safety",
+              "Gesundheit und Sicherheit => Human health and safety",
+              "Ανθρώπινη υγεία και ασφάλεια => Human health and safety",
+              "Здраве и безопасност на човека => Human health and safety",
+              "Lidské zdraví a bezpečnost => Human health and safety",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/18 => Human health and safety",
+              "Allmännyttiga och offentliga tjänster => Utility and governmental services",
+              "Komunalne in javne storitve => Utility and governmental services",
+              "Servicii de utilitate publică şi servicii publice => Utility and governmental services",
+              "Servicii de utilitate publică și servicii publice => Utility and governmental services",
+              "Verejné a štátne služby => Utility and governmental services",
+              "Usługi użyteczności publicznej i służby państwowe => Utility and governmental services",
+              "Serviços de utilidade pública e do Estado => Utility and governmental services",
+              "Nutsdiensten en overheidsdiensten => Utility and governmental services",
+              "Komunalinės įmonės ir valstybės tarnybos => Utility and governmental services",
+              "Servizzi ta' utilità u tal-gvern => Utility and governmental services",
+              "Komunālie un valsts dienesti => Utility and governmental services",
+              "Servizi di pubblica utilità e servizi amministrativi => Utility and governmental services",
+              "Services d'utilité publique et services publics => Utility and governmental services",
+              "Közüzemi és közszolgáltatások => Utility and governmental services",
+              "Yleishyödylliset ja muut julkiset palvelut => Utility and governmental services",
+              "Servicios de utilidad pública y estatales => Utility and governmental services",
+              "Kommunaal- ja riiklikud teenused => Utility and governmental services",
+              "Offentlig forsyningsvirksomhed og offentlige tjenesteydelser => Utility and governmental services",
+              "Versorgungswirtschaft und staatliche Dienste => Utility and governmental services",
+              "Комунално-битови и обществени услуги => Utility and governmental services",
+              "Επιχειρήσεις κοινής ωφελείας και κρατικές υπηρεσίες => Utility and governmental services",
+              "Veřejné služby a služby veřejné správy => Utility and governmental services",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/19 => Utility and governmental services",
+              "Geografska koordinatna mreža => Geographical grid systems",
+              "Geografiska rutnätssystem => Geographical grid systems",
+              "Sisteme de caroiaj geografic => Geographical grid systems",
+              "Geografické systémy sietí => Geographical grid systems",
+              "Systemy siatek geograficznych => Geographical grid systems",
+              "Sistemas de quadrículas geográficas => Geographical grid systems",
+              "Sistemi ta' grilji ġeografiċi => Geographical grid systems",
+              "Geografisch rastersysteem => Geographical grid systems",
+              "Ģeogrāfisko koordinātu tīklu sistēmas => Geographical grid systems",
+              "Geografinio tinklelio sistemos => Geographical grid systems",
+              "Sistemi di griglie geografiche => Geographical grid systems",
+              "Systèmes de maillage géographique => Geographical grid systems",
+              "Földrajzi rácsrendszerek => Geographical grid systems",
+              "Paikannusruudustot => Geographical grid systems",
+              "Sistema de cuadrículas geográficas => Geographical grid systems",
+              "Geograafilised ruutvõrgud => Geographical grid systems",
+              "Συστήματα γεωγραφικού καννάβου => Geographical grid systems",
+              "Geografiske kvadratnetsystemer => Geographical grid systems",
+              "Geografische Gittersysteme => Geographical grid systems",
+              "Географски координатни системи => Geographical grid systems",
+              "Zeměpisné soustavy souřadnicových sítí => Geographical grid systems",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/2 => Geographical grid systems",
+              "Anläggningar för miljöövervakning => Environmental monitoring facilities",
+              "Naprave in objekti za monitoring okolja => Environmental monitoring facilities",
+              "Zariadenia na monitorovanie životného prostredia => Environmental monitoring facilities",
+              "Instalações de monitorização do ambiente => Environmental monitoring facilities",
+              "Milieubewakingsvoorzieningen => Environmental monitoring facilities",
+              "Urządzenia do monitorowania środowiska => Environmental monitoring facilities",
+              "Instalaţii de supraveghere a mediului => Environmental monitoring facilities",
+              "Instalații de supraveghere a mediului => Environmental monitoring facilities",
+              "Faċilitajiet ta' monitoraġġ ambjentali => Environmental monitoring facilities",
+              "Aplinkos stebėsenos priemonės => Environmental monitoring facilities",
+              "Vides monitoringa iekārtas => Environmental monitoring facilities",
+              "Környezetvédelmi monitoringlétesítmények => Environmental monitoring facilities",
+              "Impianti di monitoraggio ambientale => Environmental monitoring facilities",
+              "Installations de suivi environnemental => Environmental monitoring facilities",
+              "Keskkonnaseirerajatised => Environmental monitoring facilities",
+              "Ympäristön tilan seurantalaitteet => Environmental monitoring facilities",
+              "Instalaciones de observación del medio ambiente => Environmental monitoring facilities",
+              "Εγκαταστάσεις παρακολούθησης του περιβάλλοντος => Environmental monitoring facilities",
+              "Miljøovervågningsfaciliteter => Environmental monitoring facilities",
+              "Umweltüberwachung => Environmental monitoring facilities",
+              "Zařízení pro sledování životního prostředí => Environmental monitoring facilities",
+              "Съоръжения за управление на околната среда => Environmental monitoring facilities",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/20 => Environmental monitoring facilities",
+              "Produktions- och industrianläggningar => Production and industrial facilities",
+              "Instalaţii de producţie şi industriale => Production and industrial facilities",
+              "Instalații de producție și industriale => Production and industrial facilities",
+              "Proizvodni in industrijski objekti in naprave => Production and industrial facilities",
+              "Výrobné a priemyselné zariadenia => Production and industrial facilities",
+              "Faciliteiten voor productie en industrie => Production and industrial facilities",
+              "Instalações industriais e de produção => Production and industrial facilities",
+              "Obiekty produkcyjne i przemysłowe => Production and industrial facilities",
+              "Ražošanas un rūpniecības iekārtas => Production and industrial facilities",
+              "Faċilitajiet ta' produzzjoni u industrijali => Production and industrial facilities",
+              "Produzione e impianti industriali => Production and industrial facilities",
+              "Gamybos ir pramonės įrenginiai => Production and industrial facilities",
+              "Tuotanto- ja teollisuuslaitokset => Production and industrial facilities",
+              "Lieux de production et sites industriels => Production and industrial facilities",
+              "Termelő és ipari létesítmények => Production and industrial facilities",
+              "Tootmis- ja tööstusrajatised => Production and industrial facilities",
+              "Instalaciones de producción e industriales => Production and industrial facilities",
+              "Εγκαταστάσεις παραγωγής και βιομηχανικές εγκαταστάσεις => Production and industrial facilities",
+              "Produktions- und Industrieanlagen => Production and industrial facilities",
+              "Výrobní a průmyslová zařízení => Production and industrial facilities",
+              "Produktions- og industrifaciliteter => Production and industrial facilities",
+              "Производствени и промишлени съоръжения => Production and industrial facilities",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/21 => Production and industrial facilities",
+              "Jordbruks- och vattenbruksanläggningar => Agricultural and aquaculture facilities",
+              "Objekti in naprave za kmetijstvo in ribogojstvo => Agricultural and aquaculture facilities",
+              "Poľnohospodárske zariadenia a zariadenia akvakultúry => Agricultural and aquaculture facilities",
+              "Instalações agrícolas e aquícolas => Agricultural and aquaculture facilities",
+              "Instalaţii agricole şi pentru acvacultură => Agricultural and aquaculture facilities",
+              "Instalații agricole și pentru acvacultură => Agricultural and aquaculture facilities",
+              "Obiekty rolnicze oraz akwakultury => Agricultural and aquaculture facilities",
+              "Faċilitajiet agrikoli u ta' l-akwakultura => Agricultural and aquaculture facilities",
+              "Faciliteiten voor landbouw en aquacultuur => Agricultural and aquaculture facilities",
+              "Lauksaimniecības un akvakultūras iekārtas => Agricultural and aquaculture facilities",
+              "Žemės ūkio ir akvakultūros infrastruktūra => Agricultural and aquaculture facilities",
+              "Impianti agricoli e di acquacoltura => Agricultural and aquaculture facilities",
+              "Γεωργικές εγκαταστάσεις και εγκαταστάσεις υδατοκαλλιέργειας => Agricultural and aquaculture facilities",
+              "Mezőgazdasági és akvakultúra-ágazati létesítmények => Agricultural and aquaculture facilities",
+              "Installations agricoles et aquacoles => Agricultural and aquaculture facilities",
+              "Maatalous- ja vesiviljelylaitokset => Agricultural and aquaculture facilities",
+              "Põllumajandus- ja vesiviljelusrajatised => Agricultural and aquaculture facilities",
+              "Instalaciones agrícolas y de acuicultura => Agricultural and aquaculture facilities",
+              "Селскостопански и водностопански съоръжения => Agricultural and aquaculture facilities",
+              "Zemědělská a akvakulturní zařízení => Agricultural and aquaculture facilities",
+              "Landwirtschaftliche Anlagen und Aquakulturanlagen => Agricultural and aquaculture facilities",
+              "Landbrugs- og akvakulturanlæg => Agricultural and aquaculture facilities",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/22 => Agricultural and aquaculture facilities",
+              "Befolkningsfördelning – demografi => Population distribution — demography",
+              "Porazdelitev prebivalstva – demografski podatki => Population distribution — demography",
+              "Repartizarea populaţiei – demografie => Population distribution — demography",
+              "Repartizarea populației – demografie => Population distribution — demography",
+              "Rozmiestnenie obyvateľstva – demografia => Population distribution — demography",
+              "Distribuição da população — demografia => Population distribution — demography",
+              "Spreiding van de bevolking — demografie => Population distribution — demography",
+              "Rozmieszczenie ludności – demografia => Population distribution — demography",
+              "Iedzīvotāju sadalījums – demogrāfija => Population distribution — demography",
+              "Distribuzzjoni tal-popolazzjoni – demografija => Population distribution — demography",
+              "Distribuzione della popolazione — demografia => Population distribution — demography",
+              "Gyventojų pasiskirstymas – demografija => Population distribution — demography",
+              "Répartition de la population — démographie => Population distribution — demography",
+              "A népesség eloszlása – demográfia => Population distribution — demography",
+              "Elanikkonna jaotumine – demograafia => Population distribution — demography",
+              "Väestöjakauma – demografia => Population distribution — demography",
+              "Distribución de la población — demografía => Population distribution — demography",
+              "Κατανομή πληθυσμού — δημογραφία => Population distribution — demography",
+              "Rozložení obyvatelstva – demografie => Population distribution — demography",
+              "Verteilung der Bevölkerung — Demografie => Population distribution — demography",
+              "Befolkningsfordeling — demografi => Population distribution — demography",
+              "Разпределение на населението — демография => Population distribution — demography",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/23 => Population distribution — demography",
+              "Spravované/obmedzené/regulované zóny a jednotky podávajúce správy => Area management/restriction/regulation zones and reporting units",
+              "Områden med särskild förvaltning/begränsningar/reglering samt enheter för rapportering => Area management/restriction/regulation zones and reporting units",
+              "Območja upravljanja/zaprta območja/regulirana območja in poročevalske enote => Area management/restriction/regulation zones and reporting units",
+              "Zone de administrare/restricţie/reglementare şi unităţi de raportare => Area management/restriction/regulation zones and reporting units",
+              "Zone de administrare/restricție/reglementare și unități de raportare => Area management/restriction/regulation zones and reporting units",
+              "Gebiedsbeheer, gebieden waar beperkingen gelden, gereguleerde gebieden en rapportage-eenheden => Area management/restriction/regulation zones and reporting units",
+              "Zonas de gestão/restrição/regulamentação e unidades de referência => Area management/restriction/regulation zones and reporting units",
+              "Gospodarowanie obszarem/strefy ograniczone/regulacyjne oraz jednostki sprawozdawcze => Area management/restriction/regulation zones and reporting units",
+              "Apgabala pārvaldības/ierobežojumu/reglamentētas zonas un ziņošanas vienības => Area management/restriction/regulation zones and reporting units",
+              "Zone sottoposte a gestione/limitazioni/regolamentazione e unità con obbligo di comunicare dati => Area management/restriction/regulation zones and reporting units",
+              "Amministrazzjoni ta' żoni/restrizzjoni/żoni regolati u unitajiet ta' rapportar => Area management/restriction/regulation zones and reporting units",
+              "Tvarkomos teritorijos, ribojamos ir reglamentuojamos zonos bei vienetai, už kuriuos atsiskaitoma => Area management/restriction/regulation zones and reporting units",
+              "Területgazdálkodási/-korlátozási/-szabályozási övezetek és adatszolgáltató egységek => Area management/restriction/regulation zones and reporting units",
+              "Zones de gestion, de restriction ou de réglementation et unités de déclaration => Area management/restriction/regulation zones and reporting units",
+              "Aluesuunnittelun, rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt => Area management/restriction/regulation zones and reporting units",
+              "Üldplaneering/piirangu-/reguleeritud tsoonid ja aruandlusüksused => Area management/restriction/regulation zones and reporting units",
+              "Zonas sujetas a ordenación, a restricciones o reglamentaciones y unidades de notificación => Area management/restriction/regulation zones and reporting units",
+              "Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten => Area management/restriction/regulation zones and reporting units",
+              "Ζώνες διαχείρισης/περιορισμού/ρύθμισης εκτάσεων και μονάδες αναφοράς => Area management/restriction/regulation zones and reporting units",
+              "Forvaltede og regulerede områder samt områder med brugsbegrænsning og indberetningsenheder => Area management/restriction/regulation zones and reporting units",
+              "Správní oblasti/chráněná pásma/regulovaná území a jednotky podávající hlášení => Area management/restriction/regulation zones and reporting units",
+              "Управление на територията/ограничени/регулирани зони и отчетни единици => Area management/restriction/regulation zones and reporting units",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/24 => Area management/restriction/regulation zones and reporting units",
+              "Območja nevarnosti naravnih nesreč => Natural risk zones",
+              "Naturliga riskområden => Natural risk zones",
+              "Zóny prírodného rizika => Natural risk zones",
+              "Zone de risc natural => Natural risk zones",
+              "Zonas de risco natural => Natural risk zones",
+              "Strefy zagrożenia naturalnego => Natural risk zones",
+              "Żoni ta' riskju naturali => Natural risk zones",
+              "Gebieden met natuurrisico'es => Natural risk zones",
+              "Gebieden met natuurrisico's => Natural risk zones",
+              "Dabas apdraudējuma zonas => Natural risk zones",
+              "Gamtinių pavojų zonos => Natural risk zones",
+              "Természeti kockázati zónák => Natural risk zones",
+              "Zone a rischio naturale => Natural risk zones",
+              "Zones à risque naturel => Natural risk zones",
+              "Luonnonriskialueet => Natural risk zones",
+              "Looduslikud ohutsoonid => Natural risk zones",
+              "Zonas de riesgos naturales => Natural risk zones",
+              "Ζώνες φυσικών κινδύνων => Natural risk zones",
+              "Природни рискови зони => Natural risk zones",
+              "Områder med naturlige risici => Natural risk zones",
+              "Gebiete mit naturbedingten Risiken => Natural risk zones",
+              "Oblasti ohrožené přírodními riziky => Natural risk zones",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/25 => Natural risk zones",
+              "Ozračje => Atmospheric conditions",
+              "Atmosfäriska förhållanden => Atmospheric conditions",
+              "Condiţii atmosferice => Atmospheric conditions",
+              "Condiții atmosferice => Atmospheric conditions",
+              "Atmosférické podmienky => Atmospheric conditions",
+              "Warunki atmosferyczne => Atmospheric conditions",
+              "Condições atmosféricas => Atmospheric conditions",
+              "Atmosferische omstandigheden => Atmospheric conditions",
+              "Kondizzjonijiet atmosferiċi => Atmospheric conditions",
+              "Atmosfēras apstākļi => Atmospheric conditions",
+              "Condizioni atmosferiche => Atmospheric conditions",
+              "Atmosferos sąlygos => Atmospheric conditions",
+              "Conditions atmosphériques => Atmospheric conditions",
+              "Légköri viszonyok => Atmospheric conditions",
+              "Atmosfääritingimused => Atmospheric conditions",
+              "Ilmakehän tila => Atmospheric conditions",
+              "Condiciones atmosféricas => Atmospheric conditions",
+              "Atmosphärische Bedingungen => Atmospheric conditions",
+              "Ατμοσφαιρικές συνθήκες => Atmospheric conditions",
+              "Stav ovzduší => Atmospheric conditions",
+              "Atmosfæriske forhold => Atmospheric conditions",
+              "Атмосферни условия => Atmospheric conditions",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/26 => Atmospheric conditions",
+              "Meteorološke značilnosti => Meteorological geographical features",
+              "Geografiska meteorologiska förhållanden => Meteorological geographical features",
+              "Meteorologické geografické prvky => Meteorological geographical features",
+              "Características geometeorológicas => Meteorological geographical features",
+              "Caracteristici geografice meteorologice => Meteorological geographical features",
+              "Warunki meteorologiczno-geograficzne => Meteorological geographical features",
+              "Meteorologische geografische kenmerken => Meteorological geographical features",
+              "Karatteristiċi ġeografiċi meteoroloġiċi => Meteorological geographical features",
+              "Meteoroloģiski ģeogrāfiskie raksturlielumi => Meteorological geographical features",
+              "Meteorologinės geografinės sąlygos => Meteorological geographical features",
+              "Elementi geografici meteorologici => Meteorological geographical features",
+              "Meteorológiai földrajzi jellemzők => Meteorological geographical features",
+              "Ilmaston maantieteelliset ominaispiirteet => Meteorological geographical features",
+              "Caractéristiques géographiques météorologiques => Meteorological geographical features",
+              "Meteoroloogilis-geograafilised tunnusjooned => Meteorological geographical features",
+              "Μετεωρολογικά γεωγραφικά χαρακτηριστικά => Meteorological geographical features",
+              "Aspectos geográficos de carácter meteorológico => Meteorological geographical features",
+              "Meteorologisch-geografische Kennwerte => Meteorological geographical features",
+              "Meteorologisk-geografiske forhold => Meteorological geographical features",
+              "Метеорологични географски характеристики => Meteorological geographical features",
+              "Zeměpisné meteorologické prvky => Meteorological geographical features",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/27 => Meteorological geographical features",
+              "Geografiska oceanografiska förhållanden => Oceanographic geographical features",
+              "Oceanogeografske značilnosti => Oceanographic geographical features",
+              "Características oceanográficas => Oceanographic geographical features",
+              "Caracteristici geografice oceanografice => Oceanographic geographical features",
+              "Oceánografické geografické prvky => Oceanographic geographical features",
+              "Warunki oceanograficzno-geograficzne => Oceanographic geographical features",
+              "Karatteristiċi ġeografiċi oċeanografiċi => Oceanographic geographical features",
+              "Oceanografische geografische kenmerken => Oceanographic geographical features",
+              "Okeanogrāfiski ģeogrāfiskie raksturlielumi => Oceanographic geographical features",
+              "Elementi geografici oceanografici => Oceanographic geographical features",
+              "Okeanografinės geografinės sąlygos => Oceanographic geographical features",
+              "Oceanográfiai földrajzi jellemzők => Oceanographic geographical features",
+              "Caractéristiques géographiques océanographiques => Oceanographic geographical features",
+              "Merentutkimuksen maantieteelliset ominaispiirteet => Oceanographic geographical features",
+              "Okeanograafilis-geograafilised tunnusjooned => Oceanographic geographical features",
+              "Rasgos geográficos oceanográficos => Oceanographic geographical features",
+              "Oceanografiske/geografiske forhold => Oceanographic geographical features",
+              "Ozeanografisch-geografische Kennwerte => Oceanographic geographical features",
+              "Ωκεανογραφικά γεωγραφικά χαρακτηριστικά => Oceanographic geographical features",
+              "Zeměpisné oceánografické prvky => Oceanographic geographical features",
+              "Океанографски географски характеристики => Oceanographic geographical features",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/28 => Oceanographic geographical features",
+              "Havsområden => Sea regions",
+              "Morske regije => Sea regions",
+              "Morské regióny => Sea regions",
+              "Regiuni maritime => Sea regions",
+              "Zeegebieden => Sea regions",
+              "Regiony morskie => Sea regions",
+              "Regiões marinhas => Sea regions",
+              "Reġjuni tal-baħar => Sea regions",
+              "Jūru reģioni => Sea regions",
+              "Jūrų regionai => Sea regions",
+              "Regioni marine => Sea regions",
+              "Tengeri régiók => Sea regions",
+              "Régions maritimes => Sea regions",
+              "Merepiirkonnad => Sea regions",
+              "Merialueet => Sea regions",
+              "Regiones marinas => Sea regions",
+              "Θαλάσσιες περιοχές => Sea regions",
+              "Mořské oblasti => Sea regions",
+              "Havområder => Sea regions",
+              "Meeresregionen => Sea regions",
+              "Морски региони => Sea regions",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/29 => Sea regions",
+              "Zemljepisna imena => Geographical names",
+              "Geografiska namn => Geographical names",
+              "Zemepisné názvy => Geographical names",
+              "Denumiri geografice => Geographical names",
+              "Nazwy geograficzne => Geographical names",
+              "Toponímia => Geographical names",
+              "Toponīmi => Geographical names",
+              "Ismijiet ġeografiċi => Geographical names",
+              "Geografische namen => Geographical names",
+              "Dénominations géographiques => Geographical names",
+              "Földrajzi nevek => Geographical names",
+              "Nomi geografici => Geographical names",
+              "Geografiniai pavadinimai => Geographical names",
+              "Paikannimet => Geographical names",
+              "Geograafilised nimed => Geographical names",
+              "Nombres geográficos => Geographical names",
+              "Τοπωνύμια => Geographical names",
+              "Geografische Bezeichnungen => Geographical names",
+              "Географски наименования => Geographical names",
+              "Zeměpisné názvy => Geographical names",
+              "Stednavne => Geographical names",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/3 => Geographical names",
+              "Biogeografiska regioner => Bio-geographical regions",
+              "Biogeografske regije => Bio-geographical regions",
+              "Biogeografické regióny => Bio-geographical regions",
+              "Regiuni biogeografice => Bio-geographical regions",
+              "Regiony biogeograficzne => Bio-geographical regions",
+              "Regiões biogeográficas => Bio-geographical regions",
+              "Biogeografische gebieden => Bio-geographical regions",
+              "Biogeografiniai regionai => Bio-geographical regions",
+              "Bioģeogrāfiskie reģioni => Bio-geographical regions",
+              "Reġjuni bijo-ġeografiċi => Bio-geographical regions",
+              "Regioni biogeografiche => Bio-geographical regions",
+              "Biogeográfiai régiók => Bio-geographical regions",
+              "Régions biogéographiques => Bio-geographical regions",
+              "Biomaantieteelliset alueet => Bio-geographical regions",
+              "Bio-geograafilised piirkonnad => Bio-geographical regions",
+              "Regiones biogeográficas => Bio-geographical regions",
+              "Βιογεωγραφικές περιοχές => Bio-geographical regions",
+              "Biogeografische Regionen => Bio-geographical regions",
+              "Biogeografiske regioner => Bio-geographical regions",
+              "Bioregiony => Bio-geographical regions",
+              "Биогеографски региони => Bio-geographical regions",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/30 => Bio-geographical regions",
+              "Naturtyper och biotoper => Habitats and biotopes",
+              "Habitati in biotopi => Habitats and biotopes",
+              "Habitaty a biotopy => Habitats and biotopes",
+              "Habitate şi biotopuri => Habitats and biotopes",
+              "Habitate și biotopuri => Habitats and biotopes",
+              "Habitats e biótopos => Habitats and biotopes",
+              "Siedliska i obszary przyrodniczo jednorodne => Habitats and biotopes",
+              "Habitats en biotopen => Habitats and biotopes",
+              "L-abitati naturali u l-bijotopi => Habitats and biotopes",
+              "Dzīvotnes un biotopi => Habitats and biotopes",
+              "Buveinės ir biotopai => Habitats and biotopes",
+              "Habitat e biotopi => Habitats and biotopes",
+              "Élőhelyek és biotópok => Habitats and biotopes",
+              "Habitats et biotopes => Habitats and biotopes",
+              "Elinympäristöt ja biotoopit => Habitats and biotopes",
+              "Elupaigad ja biotoobid => Habitats and biotopes",
+              "Hábitats y biotopos => Habitats and biotopes",
+              "Ενδιαιτήματα και βιότοποι => Habitats and biotopes",
+              "Lebensräume und Biotope => Habitats and biotopes",
+              "Levesteder og biotoper => Habitats and biotopes",
+              "Местообитания и биотопи => Habitats and biotopes",
+              "Stanoviště a biotopy => Habitats and biotopes",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/31 => Habitats and biotopes",
+              "Arters utbredning => Species distribution",
+              "Porazdelitev vrst => Species distribution",
+              "Výskyt druhov => Species distribution",
+              "Repartizarea speciilor => Species distribution",
+              "Distribuição das espécies => Species distribution",
+              "Rozmieszczenie gatunków => Species distribution",
+              "Spreiding van soorten => Species distribution",
+              "Distribuzzjoni ta' l-ispeċi => Species distribution",
+              "Sugu izplatība => Species distribution",
+              "Rūšių pasiskirstymas => Species distribution",
+              "Distribuzione delle specie => Species distribution",
+              "A fajok megoszlása => Species distribution",
+              "Répartition des espèces => Species distribution",
+              "Lajien levinneisyys => Species distribution",
+              "Liikide jaotumine => Species distribution",
+              "Distribución de las especies => Species distribution",
+              "Κατανομή ειδών => Species distribution",
+              "Verteilung der Arten => Species distribution",
+              "Rozložení druhů => Species distribution",
+              "Artsfordeling => Species distribution",
+              "Разпределение на видовете => Species distribution",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/32 => Species distribution",
+              "Zdroje energie => Energy resources",
+              "Energetski viri => Energy resources",
+              "Energiresurser => Energy resources",
+              "Recursos energéticos => Energy resources",
+              "Resurse energetice => Energy resources",
+              "Zasoby energetyczne => Energy resources",
+              "Energiebronnen => Energy resources",
+              "Enerģijas resursi => Energy resources",
+              "Riżorsi ta' enerġija => Energy resources",
+              "Energijos ištekliai => Energy resources",
+              "Risorse energetiche => Energy resources",
+              "Energiaforrások => Energy resources",
+              "Sources d'énergie => Energy resources",
+              "Energiavarat => Energy resources",
+              "Energiaressursid => Energy resources",
+              "Ενεργειακοί πόροι => Energy resources",
+              "Energiequellen => Energy resources",
+              "Energiressourcer => Energy resources",
+              "Energetické zdroje => Energy resources",
+              "Енергийни източници => Energy resources",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/33 => Energy resources",
+              "Mineralni viri => Mineral resources",
+              "Mineralfyndigheter => Mineral resources",
+              "Zdroje nerastných surovín => Mineral resources",
+              "Resurse minerale => Mineral resources",
+              "Recursos minerais => Mineral resources",
+              "Zasoby mineralne => Mineral resources",
+              "Minerale bronnen => Mineral resources",
+              "Riżorsi minerali => Mineral resources",
+              "Derīgo izrakteņu resursi => Mineral resources",
+              "Naudingosios iškasenos => Mineral resources",
+              "Risorse minerarie => Mineral resources",
+              "Ásványi nyersanyagok => Mineral resources",
+              "Ressources minérales => Mineral resources",
+              "Mineraalivarat => Mineral resources",
+              "Maavarad => Mineral resources",
+              "Recursos minerales => Mineral resources",
+              "Ορυκτοί πόροι => Mineral resources",
+              "Mineralische Bodenschätze => Mineral resources",
+              "Mineralressourcer => Mineral resources",
+              "Nerostné suroviny => Mineral resources",
+              "Минерални ресурси => Mineral resources",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/34 => Mineral resources",
+              "Upravne enote => Administrative units",
+              "Administrativa enheter => Administrative units",
+              "Správne jednotky => Administrative units",
+              "Unităţi administrative => Administrative units",
+              "Unități administrative => Administrative units",
+              "Jednostki administracyjne => Administrative units",
+              "Unidades administrativas => Administrative units",
+              "Administratieve eenheden => Administrative units",
+              "Unitajiet amministrattivi => Administrative units",
+              "Administratīvas vienības => Administrative units",
+              "Közigazgatási egységek => Administrative units",
+              "Unità amministrative => Administrative units",
+              "Administraciniai vienetai => Administrative units",
+              "Unités administratives => Administrative units",
+              "Hallinnolliset yksiköt => Administrative units",
+              "Haldusüksused => Administrative units",
+              "Διοικητικές ενότητες => Administrative units",
+              "Verwaltungseinheiten => Administrative units",
+              "Administrative enheder => Administrative units",
+              "Административни единици => Administrative units",
+              "Správní jednotky => Administrative units",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/4 => Administrative units",
+              "Adrese => Addresses",
+              "Adresy => Addresses",
+              "Naslovi => Addresses",
+              "Adresser => Addresses",
+              "Endereços => Addresses",
+              "Indirizzi => Addresses",
+              "Adressen => Addresses",
+              "Adresai => Addresses",
+              "Adreses => Addresses",
+              "Címek => Addresses",
+              "Adresses => Addresses",
+              "Osoitteet => Addresses",
+              "Direcciones => Addresses",
+              "Aadressid => Addresses",
+              "Διευθύνσεις => Addresses",
+              "Адреси => Addresses",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/5 => Addresses",
+              "Fastighetsområden => Cadastral parcels",
+              "Katastrske parcele => Cadastral parcels",
+              "Katastrálne parcely => Cadastral parcels",
+              "Parcele cadastrale => Cadastral parcels",
+              "Pakketti katastali => Cadastral parcels",
+              "Kadastrale percelen => Cadastral parcels",
+              "Działki katastralne => Cadastral parcels",
+              "Parcelas cadastrais => Cadastral parcels",
+              "Kadastrāli zemes gabali => Cadastral parcels",
+              "Kadastro sklypai => Cadastral parcels",
+              "Parcelle catastali => Cadastral parcels",
+              "Parcelles cadastrales => Cadastral parcels",
+              "Kataszteri parcellák => Cadastral parcels",
+              "Γεωτεμάχια κτηματολογίου => Cadastral parcels",
+              "Parcelas catastrales => Cadastral parcels",
+              "Katastriüksused => Cadastral parcels",
+              "Kiinteistöt => Cadastral parcels",
+              "Кадастрални парцели => Cadastral parcels",
+              "Katastrální parcely => Cadastral parcels",
+              "Matrikulære parceller => Cadastral parcels",
+              "Flurstücke/Grundstücke (Katasterparzellen) => Cadastral parcels",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/6 => Cadastral parcels",
+              "Transportnät => Transport networks",
+              "Prometna omrežja => Transport networks",
+              "Dopravné siete => Transport networks",
+              "Reţele de transport => Transport networks",
+              "Rețele de transport => Transport networks",
+              "Redes de transporte => Transport networks",
+              "Sieci transportowe => Transport networks",
+              "Transporta tīkli => Transport networks",
+              "Networks tat-trasport => Transport networks",
+              "Vervoersnetwerken => Transport networks",
+              "Transporto tinklai => Transport networks",
+              "Közlekedési hálózatok => Transport networks",
+              "Reti di trasporto => Transport networks",
+              "Liikenneverkot => Transport networks",
+              "Réseaux de transport => Transport networks",
+              "Transpordivõrgud => Transport networks",
+              "Δίκτυα μεταφορών => Transport networks",
+              "Verkehrsnetze => Transport networks",
+              "Transportnet => Transport networks",
+              "Транспортни мрежи => Transport networks",
+              "Dopravní sítě => Transport networks",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/7 => Transport networks",
+              "Hidrografija => Hydrography",
+              "Hydrografi => Hydrography",
+              "Hydrografia => Hydrography",
+              "Hidrografia => Hydrography",
+              "Hidrografie => Hydrography",
+              "Hydrografie => Hydrography",
+              "Idrografija => Hydrography",
+              "Hidrogrāfija => Hydrography",
+              "Hydrographie => Hydrography",
+              "Idrografia => Hydrography",
+              "Vízrajz => Hydrography",
+              "Hüdrograafia => Hydrography",
+              "Hidrografía => Hydrography",
+              "Υδρογραφία => Hydrography",
+              "Gewässernetz => Hydrography",
+              "Hydrograf => Hydrography",
+              "Vodopis => Hydrography",
+              "Хидрография => Hydrography",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/8 => Hydrography",
+              "Zavarovana območja => Protected sites",
+              "Skyddade områden => Protected sites",
+              "Zone protejate => Protected sites",
+              "Chránené územia => Protected sites",
+              "Obszary chronione => Protected sites",
+              "Sítios protegidos => Protected sites",
+              "Beschermde gebieden => Protected sites",
+              "Siti protetti => Protected sites",
+              "Saugomos teritorijos => Protected sites",
+              "Aizsargājamas teritorijas => Protected sites",
+              "Suojellut alueet => Protected sites",
+              "Sites protégés => Protected sites",
+              "Védett helyek => Protected sites",
+              "Kaitsealused kohad => Protected sites",
+              "Lugares protegidos => Protected sites",
+              "Προστατευόμενες τοποθεσίες => Protected sites",
+              "Beskyttede lokaliteter => Protected sites",
+              "Schutzgebiete => Protected sites",
+              "Chráněná území => Protected sites",
+              "Защитени обекти => Protected sites",
+              "http://rdfdata.eionet.europa.eu/inspirethemes/themes/9 => Protected sites"
+            ]
+          },
+          "synCheckpoint": {
+            "type": "synonym",
+            "tokenizer": "keyword",
+            "ignore_case": true,
+            "synonyms": [
+              "No charge => Free",
+              "Distribution cost charge => Cost charge",
+              "Collection cost charge => Cost charge",
+              "Commercial cost charge => Commercial cost",
+              "Cost charge depends on intented use and category of users => Cost charge",
+              "Cost charge depends on intended use and category of users => Cost charge",
+              "Restricted => Restricted",
+              "Accessible under moratorium => Partially restricted",
+              "Unrestricted => Unrestricted",
+              "&lt;15mn (on-line download) => High response",
+              "Less than 3 hours => Medium response",
+              "Less than 24 hours => Medium response",
+              "Less than 1 week => Medium response",
+              "More than 1 week => Low response",
+              "Not documented => Unknown",
+              "Unknown => Unknown",
+              "Order form/envoice => Manual",
+              "Order form/invoice => Manual",
+              "On-line downloading services => Partial INSPIRE function",
+              "On-line discovery+viewing + downloading services => Full INSPIRE function",
+              "On-line discovery + viewing + downloading services => Full INSPIRE function",
+              "On-line discovery + viewing + downloading + advanced services (High resolution viewing,3D viewing services, Processing/Mapping services...) => Full INSPIRE function"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_default_": {
+      "dynamic_templates": [
+        {
+          "codelist": {
+            "match": "codelist_*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "org": {
+            "match": "*Org*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "contact": {
+            "match": "*contact*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "date": {
+            "match": "*Date*",
+            "mapping": {
+              "type": "date"
+            }
+          }
+        },
+        {
+          "dateMonth": {
+            "match": "*Month*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "dateYear": {
+            "match": "*Year*",
+            "mapping": {
+              "type": "short"
+            }
+          }
+        },
+        {
+          "measure": {
+            "match": "measure_*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "operationAllowed": {
+            "match": "op*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "validationStatus": {
+            "match": "valid*",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        },
+        {
+          "synInspireAnnexesType": {
+            "match": "inspireAnnex*",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "synInspireAnnexes",
+              "search_analyzer": "keyword"
+            }
+          }
+        },
+        {
+          "synInspireThemeType": {
+            "match": "inspireTheme*",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "synInspireThemes",
+              "search_analyzer": "keyword"
+            }
+          }
+        },
+        {
+          "inspireServiceType": {
+            "match": "inspireServiceType",
+            "mapping": {
+              "type":     "string",
+              "fielddata": true,
+              "analyzer": "keepInspireServiceTypes",
+              "search_analyzer": "keyword"
+            }
+          }
+        }
+      ]
+    },
+    "records": {
+      "properties": {
+        "accessConstraints": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "coordinateSystem": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dateStamp": {
+          "type": "date"
+        },
+        "document": {
+          "type": "text"
+        },
+        "documentStandard": {
+          "type": "keyword"
+        },
+        "documentType": {
+          "type": "keyword"
+        },
+        "geom": {
+          "type": "text"
+        },
+        "harvesterId": {
+          "type": "keyword"
+        },
+        "harvesterUuid": {
+          "type": "keyword"
+        },
+        "id": {
+          "type": "keyword"
+        },
+        "hasInspireTheme": {
+          "type": "boolean"
+        },
+        "hasOverview": {
+          "type": "boolean"
+        },
+        "isValid": {
+          "type": "boolean"
+        },
+        "isSchemaValid": {
+          "type": "boolean"
+        },
+        "isAboveThreshold": {
+          "type": "boolean"
+        },
+        "inspireThemeFirst_syn": {
+          "type": "keyword"
+        },
+        "inspireTheme_syn": {
+          "type": "keyword"
+        },
+        "isOpenData": {
+          "type": "keyword"
+        },
+        "lineage": {
+          "type": "text"
+        },
+        "link": {
+          "type": "text"
+        },
+        "linkProtocol": {
+          "type": "keyword"
+        },
+        "linkUrl": {
+          "type": "text"
+        },
+        "mainLanguage": {
+          "type": "keyword"
+        },
+        "metadataIdentifier": {
+          "type": "keyword"
+        },
+        "numberOfInspireTheme": {
+          "type": "short"
+        },
+        "otherConstraints": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "overviewUrl": {
+          "type": "text"
+        },
+        "pointOfTruthURL": {
+          "type": "text"
+        },
+        "recordOperateOn": {
+          "type": "keyword"
+        },
+        "resolutionDistance": {
+          "type": "keyword"
+        },
+        "resolutionScaleDenominator": {
+          "type": "keyword"
+        },
+        "resourceAbstract": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "resourceAltTitle": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "resourceCredit": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "resourceLanguage": {
+          "type": "keyword"
+        },
+        "resourceTitle": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "resourceType": {
+          "type": "keyword"
+        },
+        "serviceType": {
+          "type": "keyword"
+        },
+        "spatialRepresentationType": {
+          "type": "keyword"
+        },
+        "standardName": {
+          "type": "keyword"
+        },
+        "tag": {
+          "type": "keyword"
+        },
+        "territory": {
+          "type": "keyword"
+        },
+        "topic": {
+          "type": "keyword"
+        },
+        "validDate": {
+          "type": "date",
+          "format": "date_hour_minute_second"
+        },
+        "schemaValidDate": {
+          "type": "date",
+          "format": "date_hour_minute_second"
+        },
+        "useLimitation": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "groupPublished": {
+          "type": "keyword"
+        },
+        "changeDate": {
+          "type": "keyword"
+        },
+        "createDate": {
+          "type": "keyword"
+        },
+        "groupOwner": {
+          "type": "keyword"
+        },
+        "hasxlinks": {
+          "type": "boolean"
+        },
+        "isTemplate": {
+          "type": "keyword"
+        },
+        "isHarvested": {
+          "type": "boolean"
+        },
+        "popularity": {
+          "type": "short"
+        },
+        "rating": {
+          "type": "short"
+        },
+        "status": {
+          "type": "short"
+        },
+        "owner": {
+          "type": "keyword"
+        },
+        "xlink": {
+          "type": "keyword"
+        },
+        "root": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}

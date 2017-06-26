@@ -1,4 +1,4 @@
-package org.fao.geonet.harvester.wfsfeatures;
+package org.fao.geonet.es;
 
 import io.searchbox.action.AbstractMultiTypeActionBuilder;
 import io.searchbox.action.GenericResultAbstractAction;

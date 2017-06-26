@@ -444,6 +444,22 @@
                 type: 'danger'});
             });
       };
+      $scope.indexInEs = function() {
+        return $http.put('../api/site/index/es')
+          .success(function(data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              msg: $translate.instant('indexInEsDone'),
+              timeout: 2,
+              type: 'success'});
+          })
+          .error(function(data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('indexInEsDoneError'),
+              error: data,
+              timeout: 0,
+              type: 'danger'});
+          });
+      };
 
       $scope.optimizeIndex = function() {
         return $http.get('admin.index.optimize')

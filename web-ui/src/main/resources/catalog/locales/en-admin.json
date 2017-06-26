@@ -459,6 +459,8 @@
     "indexOptimizationInProgress": "Index optimization in progress ...",
     "indexingRecordsRelatedToTheThesaurus": "Records related to this thesaurus are being indexed ...",
     "information": "Information",
+    "indexInEs": "(beta) Index in remote index",
+    "indexInEsHelp": "Index the catalogue content in a remote Elasticsearch instance.",
     "inspireatom-errors": "Errors:",
     "inspireatom-harvestedfeeds": "Harvested feeds:",
     "inspireatom-loadAtomHarvesterReport": "Atom harvester report",
