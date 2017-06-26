@@ -169,7 +169,7 @@ public class MetadataValidateApi {
                     setNumTests(0).
                     setNumFailures(0);
             this.metadataValidationRepository.save(metadataValidation);
-            dataManager.indexMetadata(("" + metadata.getId()), true);
+            dataManager.indexMetadata(("" + metadata.getId()), true, null);
             return new Reports();
         }
 

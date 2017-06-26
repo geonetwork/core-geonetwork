@@ -231,8 +231,6 @@ public class EsSearchManager implements ISearchManager {
     private void sendDocumentsToIndex() throws IOException {
         synchronized (this) {
             if (listOfDocumentsToIndex.size() > 0) {
-                System.out.println(
-                String.format("Sending %d document to index", listOfDocumentsToIndex.size());
                 client.bulkRequest(index, listOfDocumentsToIndex);
                 listOfDocumentsToIndex.clear();
             }
