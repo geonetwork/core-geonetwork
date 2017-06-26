@@ -4,8 +4,8 @@
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/"
          xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
   <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L11/current/">
-    <skos:prefLabel>SeaDataNet depth measurement reference planes</skos:prefLabel>
-    <dc:title>SeaDataNet depth measurement reference planes</dc:title>
+    <skos:prefLabel>Vertical Datum</skos:prefLabel>
+    <dc:title>Vertical Datum</dc:title>
     <skos:altLabel>SeaDataNet datum origins</skos:altLabel>
     <dc:alternative>SeaDataNet datum origins</dc:alternative>
     <dc:description>Terms used to describe the zero point for vertical co-ordinate reference systems (datums).

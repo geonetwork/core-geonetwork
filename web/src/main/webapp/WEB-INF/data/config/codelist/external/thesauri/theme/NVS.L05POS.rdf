@@ -7,8 +7,8 @@
   <!-- This is a subset of L05 with concept starting with POS
   ie. positioning instruments. -->
   <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/POS">
-    <skos:prefLabel>SeaDataNet device categories</skos:prefLabel>
-    <dc:title>SeaDataNet positioning instrument categories</dc:title>
+    <skos:prefLabel>Measuring devices</skos:prefLabel>
+    <dc:title>Positioning devices</dc:title>
     <skos:altLabel>SDN devices</skos:altLabel>
     <dc:alternative>SDN devices</dc:alternative>
     <dc:description>Terms used to classify groups of sensors, instruments, sources of

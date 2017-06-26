@@ -19,10 +19,11 @@
         <xsl:value-of select="$iso19139strings/emodnetCatalogueType"/>
       </label>
       <div class="col-sm-9 gn-value">
-        <input class="form-control" value="{gco:CharacterString}"
+        <input class="form-control"
+               value="{gco:CharacterString}"
                name="_{gco:CharacterString/gn:element/@ref}"
                data-gn-keyword-picker=""
-               data-thesaurus-key="local.theme.emodnet.catalogue-type"
+               data-thesaurus-key="external.theme.NVS.L23"
                data-gn-field-tooltip="iso19139|gmd:hierarchyLevelName||/gmd:MD_Metadata/gmd:hierarchyLevelName"
                type="text"/>
       </div>

@@ -16,11 +16,10 @@
                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
   </gmd:characterSet>
   <gmd:hierarchyLevelName>
-    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                xlink:href="http://www.seadatanet.org/urnurl/SDN:L231:6:PRODUCT">SDN:L231:6:PRODUCT = Product record</gmx:Anchor>
+    <gco:CharacterString>Composite Product Record</gco:CharacterString>
   </gmd:hierarchyLevelName>
   <gmd:dateStamp>
-    <gco:DateTime>2017-06-19T16:28:08</gco:DateTime>
+    <gco:DateTime>2017-06-26T09:52:37</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
     <gco:CharacterString>ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY</gco:CharacterString>
@@ -84,29 +83,12 @@
       </gmd:pointInPixel>
     </gmd:MD_Georectified>
   </gmd:spatialRepresentationInfo>
-  <gmd:referenceSystemInfo>
-    <gmd:MD_ReferenceSystem>
-      <gmd:referenceSystemIdentifier>
-        <gmd:RS_Identifier>
-          <gmd:code>
-            <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
-          </gmd:code>
-          <gmd:codeSpace>
-            <gco:CharacterString>EPSG</gco:CharacterString>
-          </gmd:codeSpace>
-          <gmd:version>
-            <gco:CharacterString>7.4</gco:CharacterString>
-          </gmd:version>
-        </gmd:RS_Identifier>
-      </gmd:referenceSystemIdentifier>
-    </gmd:MD_ReferenceSystem>
-  </gmd:referenceSystemInfo>
   <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>Template for Emodnet Hydrography DTM metadata</gco:CharacterString>
+            <gco:CharacterString>Template for EMODnet Bathymetry metadata</gco:CharacterString>
           </gmd:title>
           <gmd:alternateTitle gco:nilReason="missing">
             <gco:CharacterString/>
@@ -194,12 +176,12 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet device categories</gco:CharacterString>
+                <gco:CharacterString>Measuring devices</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2017-06-19</gco:Date>
+                    <gco:Date>2017-06-26</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -222,8 +204,7 @@
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword>
-            <gco:CharacterString>Differential Global Positioning System
-              receivers</gco:CharacterString>
+            <gco:CharacterString>Differential Global Positioning System receivers</gco:CharacterString>
           </gmd:keyword>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
@@ -232,12 +213,12 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet positioning instrument categories</gco:CharacterString>
+                <gco:CharacterString>Positioning devices</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2017-06-19</gco:Date>
+                    <gco:Date>2017-06-26</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -380,12 +361,12 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet depth measurement reference planes</gco:CharacterString>
+                <gco:CharacterString>Vertical Datum</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2017-06-19</gco:Date>
+                    <gco:Date>2017-06-26</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -422,7 +403,7 @@
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:Date>2016-09-01</gco:Date>
+                    <gco:Date>2017-06-19</gco:Date>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -435,6 +416,43 @@
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
                                 xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.use-limitation.NVS.L08">geonetwork.thesaurus.external.use-limitation.NVS.L08</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:keyword>
+            <gco:CharacterString>EMODnet HRSM</gco:CharacterString>
+          </gmd:keyword>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Project name</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2015-01-29</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.theme.emodnet-projectname">geonetwork.thesaurus.local.theme.emodnet-projectname</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -468,7 +486,7 @@
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
       <gmd:spatialRepresentationType>
-        <gmd:MD_SpatialRepresentationTypeCode codeListValue="SDN:L021:1:006 = Surface"
+        <gmd:MD_SpatialRepresentationTypeCode codeListValue=""
                                               codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"/>
       </gmd:spatialRepresentationType>
       <gmd:spatialResolution>
@@ -504,7 +522,7 @@
           <gmd:temporalElement>
             <gmd:EX_TemporalExtent>
               <gmd:extent>
-                <gml:TimePeriod gml:id="d30544e498a1050910">
+                <gml:TimePeriod gml:id="d14541e535a1050910">
                   <gml:beginPosition/>
                 </gml:TimePeriod>
               </gmd:extent>
@@ -603,6 +621,75 @@
           </gmd:result>
         </gmd:DQ_NonQuantitativeAttributeAccuracy>
       </gmd:report>
+      <gmd:report>
+        <gmd:DQ_QuantitativeAttributeAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>depth</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:measureIdentification>
+            <gmd:MD_Identifier>
+              <gmd:code>
+                <gco:CharacterString>depth accuracy</gco:CharacterString>
+              </gmd:code>
+            </gmd:MD_Identifier>
+          </gmd:measureIdentification>
+          <gmd:measureDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:measureDescription>
+          <gmd:evaluationMethodDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:evaluationMethodDescription>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="d61e548a1049886">
+                  <gml:identifier codeSpace=""/>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
+              <gmd:value>
+                <gco:Record>not defined</gco:Record>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_QuantitativeAttributeAccuracy>
+      </gmd:report>
+      <gmd:report>
+        <gmd:DQ_GriddedDataPositionalAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>horizontal accuracy</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:measureIdentification>
+            <gmd:MD_Identifier>
+              <gmd:code>
+                <gco:CharacterString>horizontal accuracy of coordinate</gco:CharacterString>
+              </gmd:code>
+            </gmd:MD_Identifier>
+          </gmd:measureIdentification>
+          <gmd:measureDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:measureDescription>
+          <gmd:evaluationMethodDescription gco:nilReason="missing">
+            <gco:CharacterString/>
+          </gmd:evaluationMethodDescription>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:valueType>
+                <gco:RecordType>horizontal accuracy</gco:RecordType>
+              </gmd:valueType>
+              <gmd:valueUnit>
+                <gml:BaseUnit gml:id="d61e521a1049886">
+                  <gml:identifier codeSpace=""/>
+                  <gml:unitsSystem/>
+                </gml:BaseUnit>
+              </gmd:valueUnit>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_GriddedDataPositionalAccuracy>
+      </gmd:report>
     </gmd:DQ_DataQuality>
   </gmd:dataQualityInfo>
   <gmd:dataQualityInfo>
@@ -646,11 +733,6 @@
               </gmd:description>
             </gmd:EX_Extent>
           </gmd:extent>
-          <gmd:levelDescription>
-            <gmd:MD_ScopeDescription>
-              <gmd:attributes uuidref="SDN:P011:294:MBANBLAT = Sea-floor depth (below Lowest Astronomical Tide datum) {bathymetric depth} in the water body"/>
-            </gmd:MD_ScopeDescription>
-          </gmd:levelDescription>
         </gmd:DQ_Scope>
       </gmd:scope>
       <gmd:lineage>

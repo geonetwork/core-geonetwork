@@ -4,8 +4,8 @@
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/"
          xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
   <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/L05/current/">
-    <skos:prefLabel>SeaDataNet device categories</skos:prefLabel>
-    <dc:title>SeaDataNet device categories</dc:title>
+    <skos:prefLabel>Measuring devices</skos:prefLabel>
+    <dc:title>Measuring devices</dc:title>
     <skos:altLabel>SDN devices</skos:altLabel>
     <dc:alternative>SDN devices</dc:alternative>
     <dc:description>Terms used to classify groups of sensors, instruments, sources of algorithmically computed data

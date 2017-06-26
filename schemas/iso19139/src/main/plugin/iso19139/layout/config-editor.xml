@@ -793,11 +793,12 @@
           'EMODNET')">
 
       <thesaurusList>
-        <thesaurus key="local.theme.emodnet.catalogue-type" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L23" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.EMODNET_QI_Horizontal" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.EMODNET_QI_Vertical" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.EMODNET_QI_Purpose" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.parameter.NVS.P02" transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.emodnet-projectname" maxtags="1" transformations="to-iso19139-keyword"/>
       </thesaurusList>
 
 
@@ -806,17 +807,20 @@
            default="true">
         <section>
           <field name="emodnetCatalogueType"
+                 xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+
+          <field name="emodnetCatalogueType"
                  xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName"/>
+          <!-- See layout-cutom-fields-emdonet for thesaurus completion init. -->
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                'emodnet.project-name')]"/>
+                'thesaurus.local.theme.emodnet-projectname')]"/>
 
           <field name="emodnetName"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
 
-          <!-- TODO: Check label -->
           <field name="emodnetShortName"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
 
@@ -828,8 +832,6 @@
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'NVS.P02')]"/>
-
-          <!-- Survey purpose TODO-->
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           ends-with(
@@ -877,6 +879,8 @@
           <field name="emodnetAbs"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:abstract"/>
 
+          <!--
+          Replaced by L05
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
@@ -886,7 +890,7 @@
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'L056')]"/>
-
+-->
           <field name="emodnetDataSourcesTitle"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:lineage/*/
                           gmd:source/*/gmd:description"/>
@@ -910,17 +914,28 @@
         <section name="emodnetQualityTitle">
           <section name="emodnetHorAccuracyTitle">
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
-                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:measureDescription"/>
+                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:measureDescription"/>
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                           gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:value"/>
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
-                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:result/*/gmd:evaluationMethodDescription"/>
+                          gmd:DQ_GriddedDataPositionalAccuracy/gmd:evaluationMethodDescription"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Horizontal')]"/>
           </section>
+
           <section name="emodnetVertAccuracyTitle">
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                             gmd:DQ_QuantitativeAttributeAccuracy/gmd:measureDescription"/>
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                             gmd:DQ_QuantitativeAttributeAccuracy/gmd:evaluationMethodDescription"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Vertical')]"/>
           </section>
 
           <section name="emodnetShoalBias">
@@ -941,24 +956,13 @@
             <field name="emodnetSuitabilityTitle"
                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
-          </section>
 
-
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
-                          contains(
-                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                            'EMODNET_QI_Horizontal')]"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
-                          contains(
-                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                            'EMODNET_QI_Vertical')]"/>
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'EMODNET_QI_Purpose')]"/>
-
+          </section>
         </section>
-
       </tab>
 
       <tab id="emodnetHydrography-where"
