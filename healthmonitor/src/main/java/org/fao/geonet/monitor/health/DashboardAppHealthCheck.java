@@ -24,49 +24,49 @@
 package org.fao.geonet.monitor.health;
 
 import com.yammer.metrics.core.HealthCheck;
-
+import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
-
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.MatchAllDocsQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TopDocs;
+import org.apache.http.client.methods.HttpGet;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.IndexAndTaxonomy;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.springframework.http.client.ClientHttpResponse;
 
 /**
- * Checks to ensure that the database is accessible and readable
- * <p/>
- * User: jeichar Date: 3/26/12 Time: 9:01 AM
+ * Checks to ensure that the Kibana is up and running.
  */
-public class LuceneIndexHealthCheck implements HealthCheckFactory {
+public class DashboardAppHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
         return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                final GeonetHttpRequestFactory httpRequestFactory = context.getBean(GeonetHttpRequestFactory.class);
+                final SettingManager settingManager = context.getBean(SettingManager.class);
 
-                SearchManager searchMan = gc.getBean(SearchManager.class);
-
-
-                IndexAndTaxonomy indexAndTaxonomy = searchMan.getNewIndexReader(null);
-                GeonetworkMultiReader reader = indexAndTaxonomy.indexReader;
+                ClientHttpResponse httpResponse = null;
                 try {
-                    Query query = new MatchAllDocsQuery();
-                    TopDocs hits = new IndexSearcher(reader).search(query, 1);
-                    if (hits.totalHits > 1) {
-                        return Result.healthy();
+                    String url = settingManager.getBaseURL() + "dashboards/api/status";
+                    httpResponse = httpRequestFactory.execute(new HttpGet(url));
+
+                    if (httpResponse.getRawStatusCode() == 200) {
+                        return Result.healthy(String.format(
+                            "Dashboard application is running."
+                        ));
                     } else {
-                        return Result.unhealthy("Lucene search for 1 record returned " + hits.totalHits + " hits.");
+                        return Result.unhealthy(
+                            "Dashboard application is not available currently. " +
+                                "This component is only required if you use dashboards.");
                     }
                 } catch (Throwable e) {
                     return Result.unhealthy(e);
                 } finally {
-                    searchMan.releaseIndexReader(indexAndTaxonomy);
+                    if (httpResponse != null) {
+                        httpResponse.close();
+                    }
                 }
             }
         };
