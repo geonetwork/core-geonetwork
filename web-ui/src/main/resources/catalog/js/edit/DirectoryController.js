@@ -353,8 +353,16 @@
       // ACTIONS
 
       $scope.delEntry = function (e) {
-        // md.delete?uuid=b09b1b16-769f-4dad-b213-fc25cfa9adc7
-        gnMetadataManager.remove(e['geonet:info'].id).then(refreshEntriesInfo);
+        $scope.delEntryId = e['geonet:info'].id;
+        $('#gn-confirm-delete').modal('show');
+      };
+      $scope.confirmDelEntry = function (e) {
+        if (!$scope.delEntryId) {
+          return;
+        }
+        gnMetadataManager.remove($scope.delEntryId).then(
+          refreshEntriesInfo);
+        $scope.delEntryId = null;
       };
 
       $scope.copyEntry = function (e) {

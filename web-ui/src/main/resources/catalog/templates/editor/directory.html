@@ -180,11 +180,11 @@
                           {{'directoryEntryValidate' | translate}}</a>
                         </li>
                         <li><a href ng-click="rejectEntry(e)">
-                          <i class="fa fa-ban fa-fw" />&nbsp;
+                          <i class="fa fa-ban fa-fw text-danger" />&nbsp;
                           {{'directoryEntryReject' | translate}}</a>
                         </li>
                         <li><a href ng-click="delEntry(e)">
-                          <i class="fa fa-times fa-fw text-danger" />&nbsp;
+                          <i class="fa fa-trash fa-fw" />&nbsp;
                           {{'delete' | translate}}</a>
                         </li>
                       </ul>
@@ -234,7 +234,7 @@
                           {{'directoryEntryPermissions' | translate}}</a>
                         </li>
                         <li><a href ng-click="delEntry(e)">
-                          <i class="fa fa-times fa-fw text-danger" />&nbsp;
+                          <i class="fa fa-trash fa-fw" />&nbsp;
                           {{'delete' | translate}}</a>
                         </li>
                       </ul>
@@ -447,6 +447,12 @@
        gn-popup-options="{title:'sharingSettings'}"
        id="gn-share">
     <div gn-share="activeEntry['geonet:info'].id"></div>
+  </div>
+
+  <div gn-modal class="gn-confirm-delete"
+       gn-popup-options="{title:'confirmDialogTitle', confirmCallback: confirmDelEntry}"
+       id="gn-confirm-delete">
+    <p translate>confirmDeleteEntry</p>
   </div>
 
 </div>

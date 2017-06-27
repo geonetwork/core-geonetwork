@@ -1112,5 +1112,6 @@
     "ui-searchMapLayers": "Search Map Layers",
     "ui-searchMapLayers-help": "Optional. Define here layers that will be used in the search map. Type can be: wmts, osm, bing_aerial, stamen, etc.",
     "ui-viewerMapLayers": "Viewer Map Layers",
-    "ui-viewerMapLayers-help": "Optional. Define here background layers to add on top of layers in the default map context."
+    "ui-viewerMapLayers-help": "Optional. Define here background layers to add on top of layers in the default map context.",
+    "confirmDeleteEntry": "Are you sure you want to delete this entry?"
 }
