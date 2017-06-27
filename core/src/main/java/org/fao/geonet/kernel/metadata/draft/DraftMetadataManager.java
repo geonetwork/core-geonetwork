@@ -300,6 +300,8 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     }
     
     mdIndexer.indexMetadata(String.valueOf(finalId), true);
+    
+    mdIndexer.indexMetadata(String.valueOf(templateId), true);
 
     return String.valueOf(finalId);
   }

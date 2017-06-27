@@ -41,7 +41,7 @@ import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.metadata.IMetadataIndexer;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +143,7 @@ public class MetadataWorkflowApi {
         sa.statusChange(String.valueOf(status), metadataIds, changeDate, comment);
 
         //--- reindex metadata
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataIndexer dataManager = appContext.getBean(IMetadataIndexer.class);
         dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
     }
 }

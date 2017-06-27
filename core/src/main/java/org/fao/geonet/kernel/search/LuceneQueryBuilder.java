@@ -1092,7 +1092,7 @@ public class LuceneQueryBuilder {
               groupsQuery.add(viewDraftedQuery, 
                           LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
             }
-        } else if (editable) {
+        } else if (editable && !admin) {
             BooleanQuery viewDraftedQuery = new BooleanQuery();
 
             viewDraftedQuery.add(canEditQuery, 
@@ -1118,7 +1118,6 @@ public class LuceneQueryBuilder {
         
         String owner = luceneQueryInput.getOwner();
         if (owner != null) {
-            groupsQueryEmpty = false;
           
             BooleanQuery ownQuery = new BooleanQuery();
             
@@ -1129,11 +1128,13 @@ public class LuceneQueryBuilder {
             
 
             //Add non-owner to previous query
-            groupsQuery.add(new BooleanClause(ownerQuery,
-                    LuceneUtils.convertRequiredAndProhibitedToOccur(false, true)));
-            BooleanQuery tmp = new BooleanQuery();
-            tmp.add(groupsQuery, LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
-            groupsQuery = tmp;
+            if(!groupsQueryEmpty) {
+                groupsQuery.add(new BooleanClause(ownerQuery,
+                        LuceneUtils.convertRequiredAndProhibitedToOccur(false, true)));
+                BooleanQuery tmp = new BooleanQuery();
+                tmp.add(groupsQuery, LuceneUtils.convertRequiredAndProhibitedToOccur(false, false));
+                groupsQuery = tmp;
+            }
             
             //Add owner query
             if(!noDraft) {
@@ -1146,6 +1147,8 @@ public class LuceneQueryBuilder {
             
             groupsQuery.add(new BooleanClause(ownQuery, 
                     LuceneUtils.convertRequiredAndProhibitedToOccur(false, false)));
+            
+            groupsQueryEmpty = false;
         }
 
         //
