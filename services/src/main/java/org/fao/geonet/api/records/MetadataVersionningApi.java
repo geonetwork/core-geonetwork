@@ -43,6 +43,7 @@ import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.metadata.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -101,7 +102,7 @@ public class MetadataVersionningApi {
         IMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
-        DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataUtils dataManager = appContext.getBean(IMetadataUtils.class);
 
         dataManager.versionMetadata(ApiUtils.createServiceContext(request),
             String.valueOf(metadata.getId()), metadata.getXmlData(false));
