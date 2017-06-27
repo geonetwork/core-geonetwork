@@ -103,6 +103,7 @@
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Add a new record",
     "createSmall": "Create small",
+    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
     "current": "current",
     "datasetFound": "Dataset found and added to map preview",
     "datasetNotFound": "Dataset not found - 404",
@@ -223,7 +224,7 @@
     "onlineFunction": "Function",
     "applicationProfile": "Application profile",
     "fileStoreNoFileMatching": "No file found matching filter ({{filter}}). Upload one if needed.",
-    "other": "Other",
+    "other": "Altro",
     "onlineResourceName": "Resource name",
     "protocol": "Protocol",
     "runServiceError": "Error happens while calling service",
@@ -232,8 +233,8 @@
     "overviews": "Overviews",
     "overwrite": "Overwrite metadata with same UUID",
     "parentMd": "Parent Metadata",
-    "print_layout": "Layout",
-    "print_scale": "Scale",
+    "print_layout": "Composizione",
+    "print_scale": "Scala",
     "process": "Process",
     "publish": "Pubblicare",
     "publishIn": "Publish <strong>{{layer}}</strong> in",
@@ -321,5 +322,6 @@
     "parentConcept": "Parent concept",
     "moreSpecificConcept": "More specific concepts",
     "associatedConcept": "Associated concepts",
-    "xsd": "Schema validation"
+    "xsd": "Schema validation",
+    "linkToXmlTab": "Some kind of errors can be fixed using <a href=\"#/metadata/{{metadataId}}/tab/xml\">XML editor</a>."
 }

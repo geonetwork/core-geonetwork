@@ -6,6 +6,8 @@
   </button>
   <h4 data-ng-hide="!status.title">{{status.title}}</h4>
   <p data-ng-hide="!status.msg">{{status.msg}}</p>
+  <p data-ng-hide="!gnCurrentEdit" data-translate="linkToXmlTab"
+         data-translate-values="{metadataId: gnCurrentEdit.id}"></p>
 
   <div data-ng-hide="!status.error">
     {{status.error['class'] | translate}}

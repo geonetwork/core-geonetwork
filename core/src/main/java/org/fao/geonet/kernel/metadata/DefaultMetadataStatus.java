@@ -156,7 +156,7 @@ public class DefaultMetadataStatus implements IMetadataStatus {
    */
   @Override
   public void activateWorkflowIfConfigured(ServiceContext context, String newId, String groupOwner) throws Exception {
-    if (groupOwner == null) {
+    if (StringUtils.isEmpty(groupOwner)) {
       return;
     }
     String groupMatchingRegex = ApplicationContextHolder.get().getBean(SettingManager.class)

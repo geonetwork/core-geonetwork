@@ -3,13 +3,47 @@
      data-runSearch="true">
   <div data-ng-include="'../../catalog/views/default/templates/searchForm.html'"></div>
 
-  <div class="row"
-       data-ng-show="searchResults.records.length > 0">
-    <div class="col-md-offset-3 col-md-3 relative">
+  <div class="row">
+    <div class="col-md-3 gn-search-facet">
+
+      <div data-ng-show="searchResults.records.length > 0"
+           data-gn-saved-selections-panel="user"></div>
+
+      <!-- Hierachical facet mode -->
+      <div class="panel panel-default"
+           data-ng-show="searchResults.records.length > 0">
+        <div class="panel-heading" data-gn-slide-toggle="">
+          <i class="fa fa-search"/>&nbsp;
+          <span data-translate="">filter</span>
+        </div>
+        <div class="panel-body">
+          <div data-gn-facet-dimension-list="searchResults.dimension"
+               data-params="searchObj.params"
+               data-facet-type="facetsSummaryType"
+               data-facet-list="facetConfig"
+               data-current-facets="currentFacets">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-9"
+         data-gn-facet-dimension-list="searchResults.dimension"
+         data-params="searchObj.params"
+         data-facet-type="facetsSummaryType"
+         data-facet-list="facetConfig"
+         data-current-facets="currentFacets"
+         data-tab-field="facetTabField"></div>
+
+    <div class="col-md-3 relative"
+         data-ng-show="searchResults.records.length > 0">
       <div data-gn-selection-widget=""
            data-results="searchResults"></div>
     </div>
-    <div class="col-md-6">
+
+    <div class="col-md-6"
+         data-ng-show="searchResults.records.length > 0">
       <div class="pull-right"
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"
@@ -21,32 +55,8 @@
            data-params="searchObj.params"
            data-gn-sortby-values="searchObj.sortbyValues"></div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-3 gn-search-facet">
-
-      <!-- Hierachical facet mode -->
-      <div data-ng-show="searchResults.records.length > 0"
-           data-gn-facet-dimension-list="searchResults.dimension"
-           data-params="searchObj.params"
-           data-facet-type="facetsSummaryType"
-           data-current-facets="currentFacets">
-      </div>
-
-      <!-- Flat facet mode (deprecated)
-      <div data-ng-show="searchResults.records.length > 0"
-           data-gn-facet-list="searchResults.facet"
-           data-params="searchObj.params"
-           data-facet-config="facetsSummaryType"
-           data-current-facets="currentFacets">
-      </div>-->
-    </div>
     <div class="col-md-9">
-      <!-- Flat facet mode (deprecated)
-      <div class="gn-results-heading">
-        <div data-gn-facet-breadcrumb="currentFacets"></div>
-      </div>-->
       <span class="loading fa fa-spinner fa-spin"
             data-ng-show="searching"></span>
 
@@ -62,12 +72,6 @@
            data-template-url="resultTemplate"
            data-map="searchObj.searchMap"></div>
 
-    </div>
-  </div>
-
-  <div class="row"
-       data-ng-show="searchResults.records.length > 0">
-    <div class="col-md-offset-3 col-md-9">
       <div class=""
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"

@@ -46,6 +46,7 @@
     function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'popularity',
           from: 1,
@@ -56,10 +57,11 @@
 
 
   module.controller('gnsSearchLatestController', [
-    '$scope',
-    function($scope) {
+    '$scope', 'gnSearchSettings',
+    function($scope, gnSearchSettings) {
       $scope.searchObj = {
         permalink: false,
+        filters: gnSearchSettings.filters,
         params: {
           sortBy: 'changeDate',
           from: 1,
@@ -97,7 +99,6 @@
       var searchMap = gnSearchSettings.searchMap;
 
 
-
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
       $scope.gnWmsQueue = gnWmsQueue;
@@ -105,6 +106,8 @@
       $scope.activeTab = '/home';
       $scope.resultTemplate = gnSearchSettings.resultTemplate;
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType;
+      $scope.facetConfig = gnSearchSettings.facetConfig;
+      $scope.facetTabField = gnSearchSettings.facetTabField;
       $scope.location = gnSearchLocation;
       $scope.toggleMap = function () {
         $(searchMap.getTargetElement()).toggle();
@@ -290,8 +293,19 @@
       });
 
       $scope.resultviewFns = {
+        addMdLayerToMapSimple: function (link, md) {
+          if (gnMap.isLayerInMap(viewerMap,
+              link.name, link.url)) {
+            return;
+          }
+          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).then(function (layer) {
+            if (layer) {
+              gnMap.feedLayerWithRelated(layer, link.group);
+            }
+          });
+        },
+        // Add to basket first and then trigger add to map
         addMdLayerToMap: function (link, md) {
-
           if (gnMap.isLayerInMap(viewerMap,
               link.name, link.url)) {
             return;
@@ -314,8 +328,14 @@
       };
 
       // Manage route at start and on $location change
+      // depending on configuration
       if (!$location.path()) {
-        $location.path('/home');
+        var m = gnGlobalSettings.gnCfg.mods;
+        $location.path(
+          m.home.enabled ? '/home' :
+          m.search.enabled ? '/search' :
+          m.map.enabled ? '/map' : 'home'
+        );
       }
       $scope.activeTab = $location.path().
           match(/^(\/[a-zA-Z0-9]*)($|\/.*)/)[1];
@@ -350,20 +370,25 @@
         advancedMode: false,
         from: 1,
         to: 30,
+        selectionBucket: 's101',
         viewerMap: viewerMap,
         searchMap: searchMap,
         mapfieldOption: {
           relations: ['within']
         },
+        hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        filters: gnSearchSettings.filters,
         defaultParams: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: gnSearchSettings.sortBy || 'relevance'
         },
         params: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
-        }
-      }, gnSearchSettings.sortbyDefault);
-
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          sortBy: gnSearchSettings.sortBy || 'relevance'
+        },
+        sortbyValues: gnSearchSettings.sortbyValues
+      });
     }]);
 })();

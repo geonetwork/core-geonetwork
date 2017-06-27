@@ -45,6 +45,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_BUCKET;
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
+
 //=============================================================================
 
 public class XmlSearch implements Service {
@@ -74,6 +77,9 @@ public class XmlSearch implements Service {
 
         SearchManager searchMan = gc.getBean(SearchManager.class);
 
+        String bucket = Util.getParam(params, SELECTION_BUCKET, SELECTION_METADATA);
+        params.removeChild(SELECTION_BUCKET);
+
         Element elData = SearchDefaults.getDefaultSearch(context, params);
 
         // possibly close old searcher
@@ -90,7 +96,7 @@ public class XmlSearch implements Service {
                 elData.getChild(Geonet.SearchResult.BUILD_SUMMARY).setText("true");
             }
 
-            session.setProperty(Geonet.Session.SEARCH_REQUEST, elData.clone());
+            session.setProperty(Geonet.Session.SEARCH_REQUEST + bucket, elData.clone());
             searcher.search(context, elData, _config);
 
             if (!"0".equals(summaryOnly)) {
@@ -107,7 +113,7 @@ public class XmlSearch implements Service {
                 Element result = searcher.present(context, elData, _config);
 
                 // Update result elements to present
-                SelectionManager.updateMDResult(context.getUserSession(), result);
+                SelectionManager.updateMDResult(context.getUserSession(), result, bucket);
 
                 //Check if the metadata is locked
                 MetadataLockRepository mdLockRepo = gc.getBean(MetadataLockRepository.class);

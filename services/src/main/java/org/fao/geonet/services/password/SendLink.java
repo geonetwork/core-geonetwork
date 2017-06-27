@@ -34,7 +34,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
-import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
@@ -134,7 +133,7 @@ public class SendLink extends MailSendingService {
         String content = elEmail.getChildText("content");
 
         // send change link via email
-        if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
+        if (!MailUtil.sendMail(to, subject, content, null, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");
         }
 

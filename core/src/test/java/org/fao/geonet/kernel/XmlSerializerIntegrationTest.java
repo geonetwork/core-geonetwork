@@ -178,7 +178,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     public void testInternalCompleteHidingHiddenElement() throws Exception {
         configureXmlSerializerAndServiceContext(false, false, false);
 
-        Element loadedMetadata = _xmlSerializer.internalSelect("1", false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("1", false, false);
         List<?> withheld = Xml.selectNodes(loadedMetadata, "*//*[@gco:nilReason = 'withheld']", Arrays.asList(Geonet.Namespaces.GCO));
 
         assertEquals(0, withheld.size());
@@ -245,7 +245,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
             numberAttributes = 2;
         }
 
-        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, false);
         List<?> resolutionElem = Xml.selectNodes(loadedMetadata,
             "*//gmd:MD_Resolution",
             XML_SELECT_NAMESPACE);
@@ -273,7 +273,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     private void assertDownloadElements(boolean isEnabled) throws Exception {
         final int numberDownload = isEnabled ? 1 : 0;
-        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, false);
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
             XPATH_DOWNLOAD,
@@ -283,7 +283,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     private void assertDynamicElements(boolean isEnabled) throws Exception {
         final int numberDownload = isEnabled ? 1 : 0;
-        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false);
+        Element loadedMetadata = _xmlSerializer.internalSelect("" + _mdId, false, false);
         @SuppressWarnings("unchecked")
         List<Element> withheld = (List<Element>) Xml.selectNodes(loadedMetadata,
             XPATH_DYNAMIC,

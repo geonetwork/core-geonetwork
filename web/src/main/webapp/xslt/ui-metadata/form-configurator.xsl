@@ -321,11 +321,16 @@
 
               <xsl:variable name="directive"
                             select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
+
+              <xsl:variable name="labelConfig"
+                            select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
               <xsl:call-template name="render-element-to-add">
                 <xsl:with-param name="label"
                                 select="if ($configName != '')
                           then $strings/*[name() = $configName]
-                          else gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
+                          else $labelConfig/label"/>
+                <xsl:with-param name="btnLabel" select="if ($labelConfig/btnLabel) then $labelConfig/btnLabel else ''"/>
+                <xsl:with-param name="btnClass" select="if ($labelConfig/btnClass) then $labelConfig/btnClass else ''"/>
                 <xsl:with-param name="directive" select="$directive"/>
                 <xsl:with-param name="childEditInfo" select="."/>
                 <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -646,8 +651,8 @@
     <!--<xsl:message>## Add action</xsl:message>
     <xsl:message><xsl:copy-of select="."/></xsl:message>
     <xsl:message>Is displayed: <xsl:copy-of select="$isDisplayed"/> because no if provided or if attribute XPath '<xsl:value-of select="@if"/>' expression found a match.</xsl:message>
-    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>
-    -->
+    <xsl:message> = Display action <xsl:value-of select="$nonExistingChildParent/* and $isDisplayed = 'true'"/></xsl:message>-->
+
     <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
       <xsl:variable name="childName" select="@or"/>
 
@@ -660,12 +665,16 @@
                     select="if ($btnOverrideName)
                             then $strings/*[name() = $btnOverrideName]
                             else ''"/>
+
+      <!-- If multiple elements $elementName contains multiple values. Use the first one in getLabel to avoid failure. -->
+      <xsl:variable name="labelConfig"
+                    select="gn-fn-metadata:getLabel($schema, $elementName[1], $labels)"/>
       <xsl:variable name="name"
                     select="if ($btnName != '')
                             then $btnName
-                            else gn-fn-metadata:getLabel($schema, $elementName, $labels)/label"/>
-      <xsl:variable name="btnLabel" select="@btnLabel"/>
-      <xsl:variable name="btnClass" select="@btnClass"/>
+                            else $labelConfig/label"/>
+      <xsl:variable name="btnLabel" select="if (@btnLabel != '') then @btnLabel else $labelConfig/btnLabel"/>
+      <xsl:variable name="btnClass" select="if (@btnClass != '') then @btnLabel else $labelConfig/btnClass"/>
       <xsl:variable name="btnLabelTranslation" select="$strings/*[name() = $btnLabel]"/>
 
       <xsl:choose>

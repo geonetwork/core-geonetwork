@@ -248,9 +248,9 @@
     <suggest name="uuidref"/>
   </field>
 
-  <field name="gmd:featureCatalogueCitation">
+  <!--<field name="gmd:featureCatalogueCitation">
     <suggest name="uuidref"/>
-  </field>
+  </field>-->
 
   <field name="gml:Polygon">
     <suggest name="srsName"/>

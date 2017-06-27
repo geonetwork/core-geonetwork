@@ -27,7 +27,7 @@
         xmlns:gmd="http://www.isotc211.org/2005/gmd"
         xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
         xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gmx="http://www.isotc211.org/2005/gmx"
-        xsi:noNamespaceSchemaLocation="../../../labels.xsd">
+        xsi:noNamespaceSchemaLocation="../../../../../../../schema-labels.xsd">
 
   <element name="gmd:MD_ScopeCode">
     <label>Scope code</label>
@@ -674,6 +674,8 @@
   </element>
   <element name="gmd:citedResponsibleParty" id="367.0">
     <label>Cited responsible party</label>
+    <btnLabel>Add responsible party</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Name and position information for an individual or organization that is
       responsible for the resource
     </description>
@@ -757,16 +759,22 @@
   <element name="gmd:contact" id="8.0" context="gmd:MD_Metadata">
     <condition>mandatory</condition>
     <label>Contact</label>
+    <btnLabel>Add contact</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Party responsible for the metadata information</description>
   </element>
   <element name="gmd:contact" id="148.1" context="gmd:MD_MaintenanceInformation">
     <label>Contact</label>
+    <btnLabel>Add maintainer</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Identification of, and means of communication with, person(s) and
       organization(s) with responsability for maintaining the metadata
     </description>
   </element>
   <element name="gmd:contact" id="8.0">
     <label>Metadata author</label>
+    <btnLabel>Add author</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Party responsible for the metadata information</description>
     <condition>mandatory</condition>
   </element>
@@ -850,35 +858,42 @@
   </element>
   <element name="gmd:date" id="570.0">
     <label>Date</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Reference date for the cited resource (YYYY-MM-DD)</description>
     <condition>mandatory</condition>
   </element>
   <element name="gmd:date" id="570.0" context="gmd:MD_Revision">
     <label>Date of last update</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date of last update</description>
   </element>
   <element name="gmd:date" id="144.0" context="gmd:MD_MaintenanceInformation">
     <label>Date of next update</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Scheduled revision date for resource</description>
   </element>
   <element name="gmd:date" id="362.0" context="gmd:CI_Citation">
     <condition>mandatory</condition>
     <label>Date</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Reference date for the cited resource</description>
     <_condition>M</_condition>
   </element>
   <element name="gmd:date" id="394.0" context="gmd:CI_Date">
     <condition>mandatory</condition>
     <label>Date</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Reference date for the cited resource</description>
     <_condition>M</_condition>
   </element>
   <element name="gmd:dateOfNextUpdate" id="144.0">
     <label>Date of next update</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Scheduled revision date for resource (YYYY-MM-DD)</description>
   </element>
   <element name="gmd:dateStamp" id="9.0">
     <label>Date stamp</label>
+    <btnClass>fa fa-calendar-plus-o</btnClass>
     <description>Date that the metadata was created (YYYY-MM-DDThh:mm:ss)</description>
     <condition>mandatory</condition>
   </element>
@@ -1055,6 +1070,8 @@
   </element>
   <element name="gmd:distributorContact" id="280.0">
     <label>Distributor contact</label>
+    <btnLabel>Add distributor</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Party from whom the resource may be obtained. This list need not be
       exhaustive
     </description>
@@ -1397,6 +1414,7 @@
   </element>
   <element name="gmd:keyword" id="53.0">
     <label>Keyword</label>
+    <btnClass>fa fa-tag</btnClass>
     <description>Commonly used word(s) or formalised word(s) or phrase(s) used to describe the
       subject
     </description>
@@ -2062,6 +2080,8 @@
   </element>
   <element name="gmd:parentIdentifier" id="5.0">
     <label>Parent identifier</label>
+    <btnLabel>Add parent record</btnLabel>
+    <btnClass>fa fa-sitemap</btnClass>
     <description>File identifier of the metadata to which this metadata is a subset
       (child)
     </description>
@@ -2094,6 +2114,8 @@
   </element>
   <element name="gmd:pointOfContact" id="29.0">
     <label>Point of contact</label>
+    <btnLabel>Add contact</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Identification of, and means of communication with, person(s) and
       organizations(s) associated with the resource(s)
     </description>
@@ -2969,6 +2991,8 @@
   </element>
   <element name="srv:serviceContact">
     <label>Service Contact</label>
+    <btnLabel>Add contact</btnLabel>
+    <btnClass>fa fa-user-plus</btnClass>
     <description>Information for contacting the service provider</description>
   </element>
   <element name="srv:name">

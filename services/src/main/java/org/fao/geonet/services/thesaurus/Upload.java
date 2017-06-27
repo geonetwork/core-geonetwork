@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -52,9 +53,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Upload one thesaurus file using file upload or file URL. <br/> Thesaurus may be in W3C SKOS
- * format with an RDF extension. Optionnaly an XSL transformation could be run to convert the
- * thesaurus to SKOS.
+ * Upload one thesaurus file using file upload or file URL. <br/>
+ * Thesaurus may be in W3C SKOS format with an RDF extension. Optionnaly an XSL
+ * transformation could be run to convert the thesaurus to SKOS.
+ *
  */
 public class Upload implements Service {
     private Path stylePath;
@@ -63,19 +65,25 @@ public class Upload implements Service {
         this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
     }
 
-    /**
-     * Load a thesaurus to GeoNetwork codelist directory.
-     *
-     * @param params <ul> <li>fname: if set, do a file upload</li> <li>url: if set, try to download
-     *               from the Internet</li> <li>type: local or external (default)</li> <li>dir: type
-     *               of thesaurus, usually one of the ISO thesaurus type codelist value. Default is
-     *               theme.</li> <li>stylesheet: XSL to be use to convert the thesaurus before load.
-     *               Default _none_.</li> </ul>
-     */
-    public Element exec(Element params, ServiceContext context)
-        throws Exception {
-        long start = System.currentTimeMillis();
-        Element uploadResult;
+	/**
+	 * Load a thesaurus to GeoNetwork codelist directory.
+	 *
+	 * @param params
+	 *            <ul>
+	 *            <li>fname: if set, do a file upload</li>
+	 *            <li>url: if set, try to download from the Internet</li>
+	 *            <li>type: local or external (default)</li>
+	 *            <li>dir: type of thesaurus, usually one of the ISO thesaurus
+	 *            type codelist value. Default is theme.</li>
+	 *            <li>stylesheet: XSL to be use to convert the thesaurus before
+	 *            load. Default _none_.</li>
+	 *            </ul>
+	 *
+	 */
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		long start = System.currentTimeMillis();
+		Element uploadResult;
 
         uploadResult = upload(params, context);
 
@@ -135,14 +143,13 @@ public class Upload implements Service {
                 if (Log.isDebugEnabled(Geonet.THESAURUS)) {
                     Log.debug(Geonet.THESAURUS, "No URL or file name provided for thesaurus upload.");
                 }
-            }
-        } else {
-            fname = param.getTextTrim();
-            if (fname.contains("..")) {
-                throw new BadParameterEx("Invalid character found in thesaurus name.", fname);
-            }
+			}
+		} else {
+			fname = param.getTextTrim();
 
-            rdfFile = uploadDir.resolve(fname);
+			FilePathChecker.verify(fname);
+
+			rdfFile = uploadDir.resolve(fname);
             fname = fname.replaceAll("\\s+", "");
         }
 

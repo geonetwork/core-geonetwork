@@ -454,8 +454,6 @@ public class DefaultMetadataUtils implements IMetadataUtils {
             // Update the popularity in database
             int iId = Integer.parseInt(id);
             getMetadataRepository().incrementPopularity(iId);
-            _entityManager.flush();
-            _entityManager.clear();
 
             // And register the metadata to be indexed in the near future
             final IndexingList list = srvContext.getBean(IndexingList.class);

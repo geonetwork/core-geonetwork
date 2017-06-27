@@ -131,6 +131,13 @@ public class MetadataVersionningApi {
             value = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false)
         @RequestParam(required = false) String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         HttpServletRequest request,
         @ApiIgnore
             HttpSession session
@@ -138,7 +145,7 @@ public class MetadataVersionningApi {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();

@@ -52,12 +52,15 @@ import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 /**
- * TODO: * If only URL provided and no map as string, download context * Create map preview * Save
- * map and attached document to metadata record
+ * TODO:
+ * * If only URL provided and no map as string, download context
+ * * Create map preview
+ * * Save map and attached document to metadata record
  */
 public class ImportWebMap extends NotInReadOnlyModeService {
 
@@ -79,11 +82,9 @@ public class ImportWebMap extends NotInReadOnlyModeService {
         String mapAbstract = Util.getParam(params, "map_abstract", "");
         String title = Util.getParam(params, "map_title", "");
         String mapFileName = Util.getParam(params, "map_filename", "map-context.ows");
-        if (mapFileName.contains("..")) {
-            throw new BadParameterEx(
-                "Invalid character '..' found in resource name.",
-                mapFileName);
-        }
+
+        FilePathChecker.verify(mapFileName);
+
         String topic = Util.getParam(params, "topic", "");
 
 

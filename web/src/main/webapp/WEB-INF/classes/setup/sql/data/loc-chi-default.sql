@@ -522,3 +522,6 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'chi','Approved');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'chi','Retired');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'chi','Submitted');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'chi','Rejected');
+
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'chi','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'chi','Watch list');

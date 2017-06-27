@@ -40,6 +40,7 @@
         permalink: false,
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
+        selectionBucket: 'b101',
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n',
@@ -190,11 +191,11 @@
 
       function loadEditors() {
         $http.get('../api/users/owners')
-          .success(function(data) {
+            .success(function(data) {
               $scope.editors = data;
             });
         $http.get('../api/users/groups')
-          .success(function(data) {
+            .success(function(data) {
               var uniqueUserGroups = {};
               angular.forEach(data, function(g) {
                 var key = g.groupId + '-' + g.userId;
@@ -208,7 +209,7 @@
       $scope.selectUser = function(id) {
         $scope.editorSelectedId = id;
         $http.get('../api/users/' + id + '/groups')
-          .success(function(data) {
+            .success(function(data) {
               var uniqueGroup = {};
               angular.forEach(data, function(g) {
                 if (!uniqueGroup[g.group.id]) {
@@ -248,8 +249,9 @@
       };
 
       function loadProcessConfig() {
-        $http.get($scope.base + 'config/batch-process-cfg.json')
-          .success(function(data) {
+        $http.get(gnGlobalSettings.gnUrl +
+            '../catalog/config/batch-process-cfg.json')
+            .success(function(data) {
               $scope.batchProcesses = data.config;
 
               $timeout(initProcessByRoute);
@@ -314,6 +316,7 @@
         if (testMode != undefined) {
           formParams += '&isTesting=' + testMode;
         }
+        formParams += '&bucket=b101';
 
         var service = '../api/processes/' +
                       (process != undefined ?
@@ -323,7 +326,7 @@
         $scope.processReport = null;
         $http.post(service + '?' +
                    formParams)
-          .success(function(data) {
+            .success(function(data) {
               $scope.processReport = data;
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('processFinished'),
@@ -338,7 +341,7 @@
               //   checkLastBatchProcessReport();
               // }
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('processError'),
                 error: data,
@@ -435,10 +438,10 @@
 
       $scope.rebuildIndex = function() {
         return $http.get('admin.index.rebuild?reset=yes')
-          .success(function(data) {
+            .success(function(data) {
               checkIsIndexing();
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('rebuildIndexError'),
                 error: data,
@@ -449,14 +452,14 @@
 
       $scope.optimizeIndex = function() {
         return $http.get('admin.index.optimize')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('indexOptimizationInProgress'),
                 timeout: 2,
                 type: 'success'});
               // TODO: Does this is asynch and make the search unavailable?
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('rebuildIndexError'),
                 error: data,
@@ -467,13 +470,13 @@
 
       $scope.reloadLuceneConfig = function() {
         return $http.get('admin.index.config.reload')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('luceneConfigReloaded'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('rebuildIndexError'),
                 error: data,
@@ -484,14 +487,14 @@
 
       $scope.clearXLinkCache = function() {
         return $http.get('admin.index.rebuildxlinks')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('xlinkCacheCleared'),
                 timeout: 2,
                 type: 'success'});
               // TODO: Does this is asynch and make the search unavailable?
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('rebuildIndexError'),
                 error: data,
@@ -502,9 +505,9 @@
 
       $scope.clearJsCache = function() {
         return $http.get('../../static/wroAPI/reloadModel')
-          .success(function(data) {
+            .success(function(data) {
               $http.get('../../static/wroAPI/reloadCache')
-                .success(function(data) {
+              .success(function(data) {
                    $rootScope.$broadcast('StatusUpdated', {
                      msg: $translate.instant('jsCacheCleared'),
                      timeout: 2,
@@ -515,13 +518,13 @@
 
       $scope.clearFormatterCache = function() {
         return $http.delete('../api/formatters/cache')
-          .success(function(data) {
+            .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate.instant('formatterCacheCleared'),
                 timeout: 2,
                 type: 'success'});
             })
-          .error(function(data) {
+            .error(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('formatCacheClearFailure'),
                 error: data,
@@ -601,8 +604,8 @@
             JSON.stringify(
                           $scope.replacer.replacements));
         $($event.target).parent('a')
-          .attr('download', 'config.json')
-          .attr('href', content);
+            .attr('download', 'config.json')
+            .attr('href', content);
         $event.stopPropagation();
       };
 

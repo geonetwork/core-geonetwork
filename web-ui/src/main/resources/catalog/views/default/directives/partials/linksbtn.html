@@ -1,11 +1,17 @@
 <div class="gn-md-links">
-  <!--Edit button-->
+
   <a class="gn-md-edit-btn"
      data-ng-show="user.canEditRecord(md)"
      data-ng-href="catalog.edit#/metadata/{{md['geonet:info'].id}}"
      title="{{'edit' | translate}}">
     <i class="fa fa-pencil"></i>
   </a>
+
+  <div class="btn-group"
+       data-gn-saved-selections-action="MyFrequentlyUsedRecords"
+       data-record="md"
+       data-user="user"
+       data-lang="lang"/>
 
   <div class="btn-group"
        data-ng-class="::links.length > 0 ? '' : 'hidden'">

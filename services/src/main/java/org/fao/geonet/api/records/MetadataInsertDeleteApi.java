@@ -209,6 +209,13 @@ public class MetadataInsertDeleteApi {
         @RequestParam(required = false)
             String[] uuids,
         @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        @ApiParam(
             value = API_PARAM_BACKUP_FIRST,
             required = false)
         @RequestParam(
@@ -226,7 +233,7 @@ public class MetadataInsertDeleteApi {
         AccessManager accessMan = appContext.getBean(AccessManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
-        Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, ApiUtils.getUserSession(session));
+        Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
 
         final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();

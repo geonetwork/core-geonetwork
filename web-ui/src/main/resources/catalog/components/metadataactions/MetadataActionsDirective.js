@@ -296,6 +296,7 @@
         link: function(scope, element, attrs) {
           var ownerId = parseInt(attrs['gnTransferMdOwner']);
           var groupOwner = parseInt(attrs['gnTransferMdGroupOwner']);
+          var bucket = attrs['selectionBucket'];
           var mdUuid = attrs['gnTransferOwnership'];
           scope.selectedUserGroup = null;
 
@@ -303,7 +304,7 @@
             scope.selectedUser = user;
             scope.editorSelectedId = user.id;
             $http.get('../api/users/' + id + '/groups')
-              .success(function(data) {
+                .success(function(data) {
                   var uniqueGroup = {};
                   angular.forEach(data, function(g) {
                     if (!uniqueGroup[g.group.id]) {
@@ -318,7 +319,7 @@
             scope.selectedGroup = group;
           };
           $http.get('../api/users/groups')
-            .success(function(data) {
+              .success(function(data) {
                 var uniqueUserGroups = {};
                 angular.forEach(data, function(g) {
                   var key = g.groupId + '-' + g.userId;
@@ -330,10 +331,15 @@
               });
 
           scope.save = function() {
-            return $http.put('../api/records/' + mdUuid +
-                '/ownership?userIdentifier=' + scope.selectedUserGroup.userId +
+            var url = '../api/records/';
+            if (bucket != 'null') {
+              url += 'ownership?bucket=' + bucket + '&';
+            } else {
+              url += mdUuid + '/ownership?';
+            }
+            return $http.put(url + 'userIdentifier=' + scope.selectedUserGroup.userId +
                 '&groupIdentifier=' + scope.selectedUserGroup.groupId)
-              .then(function(r) {
+                .then(function(r) {
                   $rootScope.$broadcast('StatusUpdated', {
                     msg: $translate.instant('transfertPrivilegesFinished', {
                       metadata: r.data.numberOfRecordsProcessed

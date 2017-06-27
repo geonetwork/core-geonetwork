@@ -45,7 +45,7 @@
   </xsl:template>
 
   <xsl:template name="render-record">
-    <div class="container-fluid gn-metadata-view">
+    <div class="container-fluid gn-metadata-view gn-schema-{$schema}">
 
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>

@@ -52,9 +52,13 @@
 
     <xsl:if test="$isEditing and
       not($isFlatMode)">
+
+      <xsl:variable name="label"
+                    select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
       <xsl:call-template name="render-element-to-add">
-        <xsl:with-param name="label"
-                        select="gn-fn-metadata:getLabel($schema, $name, $labels)/label"/>
+        <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="directive" select="$directive"/>
         <xsl:with-param name="childEditInfo" select="."/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -163,7 +167,7 @@
 
 
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="$labelConfig/label"/>
+      <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="*"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
@@ -211,7 +215,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+                      select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>

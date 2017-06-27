@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.setting;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
@@ -313,7 +314,9 @@ public class SettingManager {
         for (Map.Entry<String, String> entry : values.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            setValue(key, value);
+            if (StringUtils.isNotEmpty(key)) {
+                setValue(key, value);
+            }
         }
         return success;
     }

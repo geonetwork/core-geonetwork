@@ -74,6 +74,7 @@ import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
@@ -153,6 +154,9 @@ public class DefaultMetadataManager implements IMetadataManager {
     protected UserRepository userRepository;
 
     @Autowired
+    protected UserSavedSelectionRepository userSavedSelectionRepository;
+    
+    @Autowired
     private MetadataCategoryRepository mdCatRepository;
 
     @Autowired
@@ -187,6 +191,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         this.mdFileUploadRepository = context
                 .getBean(MetadataFileUploadRepository.class);
         this.userRepository = context.getBean(UserRepository.class);
+        this.userSavedSelectionRepository = context.getBean(UserSavedSelectionRepository.class);
         this.mdCatRepository = context
                 .getBean(MetadataCategoryRepository.class);
         this.mdValidationRepository = context
@@ -588,10 +593,18 @@ public class DefaultMetadataManager implements IMetadataManager {
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
-            metadataXml = updateFixedInfo(schema, Optional.of(intId), null,
-                    metadataXml, parentUuid, (updateDateStamp
-                            ? UpdateDatestamp.YES : UpdateDatestamp.NO),
-                    context);
+            // Notifies the metadata change to metatada notifier service
+            final Metadata metadata = getMetadataRepository().findOne(metadataId);
+            
+            String uuid = null;
+
+            if (getSchemaManager().getSchema(schema).isReadwriteUUID()
+                && metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+                && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+                uuid = extractUUID(schema, metadataXml);
+            }
+            
+            metadataXml = updateFixedInfo(schema, Optional.of(intId), uuid, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
         // --- force namespace prefix for iso19139 metadata
@@ -603,7 +616,8 @@ public class DefaultMetadataManager implements IMetadataManager {
 
         String uuid = null;
         if (schemaManager.getSchema(schema).isReadwriteUUID() && metadata
-                .getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+                .getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+                && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = extractUUID(schema, metadataXml);
         }
 
@@ -649,7 +663,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         boolean doXLinks = srvContext.getBean(XmlSerializer.class)
                 .resolveXLinks();
         Element metadataXml = srvContext.getBean(XmlSerializer.class)
-                .selectNoXLinkResolver(id, false);
+                .selectNoXLinkResolver(id, false, forEditing);
         if (metadataXml == null)
             return null;
 
@@ -1079,7 +1093,7 @@ public class DefaultMetadataManager implements IMetadataManager {
     @Override
     public Element getMetadata(String id) throws Exception {
         Element md = ApplicationContextHolder.get().getBean(XmlSerializer.class)
-                .selectNoXLinkResolver(id, false);
+                .selectNoXLinkResolver(id, false, false);
         if (md == null)
             return null;
         md.detach();
@@ -1154,6 +1168,7 @@ public class DefaultMetadataManager implements IMetadataManager {
         mdRatingByIpRepository.deleteAllById_MetadataId(intId);
         mdValidationRepository.deleteAllById_MetadataId(intId);
         mdStatusRepository.deleteAllById_MetadataId(intId);
+        userSavedSelectionRepository.deleteAllByUuid(metadataUtils.getMetadataUuid(id));
 
         // Logical delete for metadata file uploads
         PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {

@@ -511,7 +511,7 @@
             // This is optional if the WMS provides CORS
             if (viewerSettings.cesiumProxy) {
               source.set('olcs.proxy', function(url) {
-                return '../../proxy?url=' + encodeURIComponent(url);
+                return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               });
             }
 
@@ -661,9 +661,11 @@
                 metadata = getCapLayer.MetadataURL[0].OnlineResource;
               }
 
-              var layer = this.createOlWMS(map, {
-                LAYERS: getCapLayer.Name
-              }, {
+              var layerParam = {LAYERS: getCapLayer.Name};
+              if (getCapLayer.version) {
+                layerParam.VERSION = getCapLayer.version;
+              }
+              var layer = this.createOlWMS(map, layerParam, {
                 url: url || getCapLayer.url,
                 label: getCapLayer.Title,
                 attribution: attribution,
@@ -981,7 +983,7 @@
            * @param {boolean} createOnly or add it to the map
            * @param {!Object} md object
            */
-          addWmsFromScratch: function(map, url, name, createOnly, md) {
+          addWmsFromScratch: function(map, url, name, createOnly, md, version) {
             var defer = $q.defer();
             var $this = this;
 
@@ -989,7 +991,7 @@
               gnWmsQueue.add(url, name);
               gnOwsCapabilities.getWMSCapabilities(url).then(function(capObj) {
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                    name, capObj, md && md.getUuid()),
+                    name, capObj, md && md.getUuid && md.getUuid()),
                     olL;
                 if (!capL) {
                   // If layer not found in the GetCapabilities
@@ -1002,6 +1004,9 @@
                     name: name,
                     msg: 'layerNotInCap'
                   }, errors = [];
+                  if (version) {
+                    o.version = version;
+                  }
                   olL = $this.addWmsToMap(map, o);
 
                   if (!angular.isArray(olL.get('errors'))) {
@@ -1037,7 +1042,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally (finishCreation);
+                    $this.feedLayerMd(olL).finally(finishCreation);
                   }
                 }
 

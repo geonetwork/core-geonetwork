@@ -28,9 +28,6 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.processing.report.MetadataProcessingReport;
-import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
-import org.fao.geonet.api.processing.report.ProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.processing.report.registry.IProcessingReportRegistry;
 import org.fao.geonet.domain.Metadata;
@@ -51,8 +48,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -105,6 +100,13 @@ public class ValidateApi {
             example = "")
         @RequestParam(required = false)
             String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @ApiIgnore
             HttpSession session,
         @ApiIgnore
@@ -120,7 +122,7 @@ public class ValidateApi {
             AccessManager accessMan = applicationContext.getBean(AccessManager.class);
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
-            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, userSession);
+            Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, userSession);
 
             final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
             for (String uuid : records) {

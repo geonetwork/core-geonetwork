@@ -47,7 +47,7 @@
     Render an element with a label and a value
   -->
   <xsl:template name="render-element">
-    <xsl:param name="label" as="xs:string"/>
+    <xsl:param name="label" as="node()?"/>
     <xsl:param name="value"/>
     <xsl:param name="errors" required="no"/>
     <!-- cls may define custom CSS class in order to activate
@@ -108,7 +108,7 @@
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
@@ -127,7 +127,7 @@
           <div class="col-lg-10">
             <xsl:attribute name="data-{$directive}" select="$value"/>
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
-            <xsl:attribute name="data-label" select="$label"/>
+            <xsl:attribute name="data-label" select="$label/label"/>
           </div>
           <div class="col-lg-2 gn-control">
             <xsl:if test="not($isDisabled)">
@@ -148,7 +148,7 @@
           <label
             for="gn-field-{$editInfo/@ref}"
             class="col-sm-2 control-label">
-            <xsl:value-of select="$label"/>
+            <xsl:value-of select="$label/label"/>
           </label>
 
           <div class="col-sm-9 gn-value">
@@ -272,8 +272,9 @@
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, name())"/>
 
       <xsl:call-template name="render-element-to-add">
-        <xsl:with-param name="label"
-                        select="gn-fn-metadata:getLabel($schema, name(.), $labels, name(..), '', '')/label"/>
+        <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="directive" select="$directive"/>
         <xsl:with-param name="childEditInfo" select="$parentEditInfo"/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
@@ -320,7 +321,7 @@
 
     <xsl:variable name="hasXlink" select="@xlink:href"/>
 
-    <fieldset id="{concat('gn-el-', $editInfo/@ref)}"
+    <fieldset id="{concat('gn-el-', if ($editInfo) then $editInfo/@ref else generate-id())}"
               data-gn-field-highlight=""
               class="{if ($hasXlink) then 'gn-has-xlink' else ''} gn-{substring-after(name(), ':')}">
 
@@ -346,11 +347,12 @@
           </xsl:call-template>
         </xsl:if>
 
-
-        <xsl:call-template name="render-form-field-control-move">
-          <xsl:with-param name="elementEditInfo" select="$editInfo"/>
-          <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
-        </xsl:call-template>
+        <xsl:if test="$editInfo">
+          <xsl:call-template name="render-form-field-control-move">
+            <xsl:with-param name="elementEditInfo" select="$editInfo"/>
+            <xsl:with-param name="domeElementToMoveRef" select="$editInfo/@ref"/>
+          </xsl:call-template>
+        </xsl:if>
       </legend>
 
       <xsl:if test="count($attributesSnippet/*) > 0">
@@ -499,6 +501,7 @@
               The directive takes care of setting values. -->
               <xsl:for-each select="$template/values/key">
                 <xsl:variable name="valueLabelKey" select="@label"/>
+                <xsl:variable name="keyRequired" select="@required"/>
                 <xsl:variable name="helper"
                               select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
                 <xsl:variable name="codelist"
@@ -509,6 +512,10 @@
                 <!-- Only display label if more than one key to match -->
                 <xsl:if test="count($template/values/key) > 1">
                   <label for="{$id}_{@label}">
+                    <!-- if key has an attr required="true"-->
+                    <xsl:if test="$keyRequired">
+                      <xsl:attribute name="class" select="'gn-required'"/>
+                    </xsl:if>
                     <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
                   </label>
                 </xsl:if>
@@ -748,6 +755,11 @@
                        class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
                        title="{$label/description}">
                     </i>
+                    <xsl:if test="$btnLabel != ''">&#160;
+                      <span>
+                        <xsl:value-of select="$btnLabel"/>
+                      </span>
+                    </xsl:if>
                   </a>
                 </xsl:for-each>
               </xsl:when>
@@ -1441,6 +1453,9 @@
                 <xsl:if test="@title">
                   <xsl:attribute name="title" select="@title"/>
                 </xsl:if>
+                <xsl:if test="@withLabel">
+                  <xsl:attribute name="class" select="'gn-table-label'"/>
+                </xsl:if>
 
                 <!-- TODO: Add move up/down control? -->
                 <xsl:choose>
@@ -1448,6 +1463,10 @@
                     <xsl:call-template name="render-form-field-control-remove">
                       <xsl:with-param name="editInfo" select="gn:element"/>
                     </xsl:call-template>
+                  </xsl:when>
+                  <!-- Form is inserted directly in the row. -->
+                  <xsl:when test="@type = 'form'">
+                   <xsl:copy-of select="*"/>
                   </xsl:when>
                   <xsl:when test="@readonly">
                     <xsl:value-of select="."/>
@@ -1458,11 +1477,16 @@
                   <xsl:otherwise>
                     <xsl:choose>
                       <xsl:when test="@type">
+                        <xsl:variable name="name"
+                                      select="if (@name != '')
+                                              then @name
+                                              else concat('_', */gn:element/@ref)"/>
+
                         <xsl:choose>
                           <xsl:when test="@type = 'textarea'">
                             <!-- TODO: Multilingual, codelist, date ... -->
                             <textarea class="form-control"
-                                      name="_{*/gn:element/@ref}">
+                                      name="{$name}">
                               <xsl:value-of select="*/text()"/>
                             </textarea>
                           </xsl:when>
@@ -1471,8 +1495,21 @@
                                    type="{if (@type = 'Real' or @type = 'Integer' or @type = 'Percentage')
                                   then 'number'
                                   else 'text'}"
-                                   name="_{*/gn:element/@ref}"
-                                   value="{*/normalize-space()}"/>
+                                   name="{$name}"
+                                   value="{*/normalize-space()}">
+                              <xsl:if test="@min">
+                                <xsl:attribute name="min" select="@min"/>
+                              </xsl:if>
+                              <xsl:if test="@max">
+                                <xsl:attribute name="max" select="@max"/>
+                              </xsl:if>
+                              <xsl:if test="@step">
+                                <xsl:attribute name="step" select="@step"/>
+                              </xsl:if>
+                              <xsl:if test="@pattern">
+                                <xsl:attribute name="pattern" select="@pattern"/>
+                              </xsl:if>
+                            </input>
                           </xsl:otherwise>
                         </xsl:choose>
                       </xsl:when>
@@ -1480,8 +1517,6 @@
                         <!-- Call schema render mode of the field without label and controls.-->
                         <saxon:call-template name="{concat('dispatch-', $schema)}">
                           <xsl:with-param name="base" select="."/>
-                          <xsl:with-param name="overrideLabel"
-                                          select="''"/>
                         </saxon:call-template>
                       </xsl:otherwise>
                     </xsl:choose>

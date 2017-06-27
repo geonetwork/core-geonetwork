@@ -36,6 +36,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.HarvestInfoProvider;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -83,6 +84,9 @@ public class DraftMetadataManager extends DefaultMetadataManager {
 
   @Autowired
   private IMetadataIndexer mdIndexer;
+  
+  @Autowired
+  private AccessManager accessManager;
 
   /**
    * @param context
@@ -92,6 +96,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     super.init(context);
     this.mdDraftRepository = context.getBean(MetadataDraftRepository.class);
     this.mdIndexer = context.getBean(IMetadataIndexer.class);
+    this.accessManager = context.getBean(AccessManager.class);
   }
 
   /**
@@ -583,18 +588,12 @@ public class DraftMetadataManager extends DefaultMetadataManager {
    */
   @Override
   public IMetadata getMetadataObject(Integer id) throws Exception {
-    IMetadata md = super.getMetadataObject(id);
-    if (md == null && mdDraftRepository.exists(id)) {
-      md = mdDraftRepository.findOne(id);
+    IMetadata md = mdDraftRepository.findOne(id);
+
+    //If user can't access draft or doesn't exist draft
+    if (md == null || !accessManager.canEdit(id.toString())) {
+        md = super.getMetadataObject(id);
     }
-    
-    //For debugging purposes
-//    try {
-//      if(md == null)  
-//      throw new Exception("getMetadataObject(" + id + ") -> null" );
-//    } catch(Throwable t) {
-//      t.printStackTrace();
-//    }
     
     return md;
   }
@@ -607,9 +606,11 @@ public class DraftMetadataManager extends DefaultMetadataManager {
    */
   @Override
   public IMetadata getMetadataObject(String uuid) throws Exception {
-    IMetadata md = super.getMetadataObject(uuid);
-    if (md == null) {
-      md = mdDraftRepository.findOneByUuid(uuid);
+    IMetadata md = mdDraftRepository.findOneByUuid(uuid);
+    
+    //If user can't access draft or doesn't exist draft
+    if (md == null || !accessManager.canEdit(Integer.toString(md.getId()))) {
+      md = super.getMetadataObject(uuid);
     }
     return md;
   }

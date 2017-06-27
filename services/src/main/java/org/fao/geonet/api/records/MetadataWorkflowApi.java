@@ -62,6 +62,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RequestMapping(value = {
     "/api/records",
@@ -88,7 +89,7 @@ public class MetadataWorkflowApi {
     )
     @PreAuthorize("hasRole('Editor')")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Status updated."),
+        @ApiResponse(code = 204, message = "Status updated."),
         @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)

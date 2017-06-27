@@ -139,7 +139,7 @@
 
     <!-- Add view and edit template-->
     <xsl:call-template name="render-element">
-      <xsl:with-param name="label" select="$labelConfig/label"/>
+      <xsl:with-param name="label" select="$labelConfig"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <!--<xsl:with-param name="widget"/>
@@ -185,7 +185,13 @@
           <xsl:copy-of select="$dcConfig/gn:choose[@name = $name]"/>
         </gn:child>
       </xsl:variable>
+
+      <xsl:variable name="label"
+                    select="gn-fn-metadata:getLabel($schema, $name, $labels, '', '', '')"/>
       <xsl:call-template name="render-element-to-add">
+        <xsl:with-param name="label" select="$label/label"/>
+        <xsl:with-param name="btnLabel" select="if ($label/btnLabel) then $label/btnLabel else ''"/>
+        <xsl:with-param name="btnClass" select="if ($label/btnClass) then $label/btnClass else ''"/>
         <xsl:with-param name="childEditInfo" select="$newElementConfig/gn:child"/>
         <xsl:with-param name="parentEditInfo" select="$dcConfig/parent::node()/gn:element"/>
         <xsl:with-param name="isFirst" select="false()"/>
@@ -199,7 +205,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-                      select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
+                      select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
       <xsl:with-param name="value" select="."/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="gn-fn-metadata:getXPath(.)"/>

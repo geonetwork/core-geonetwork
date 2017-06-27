@@ -7,6 +7,7 @@ var gnHarvesterogcwxs = {
             "@type" : "ogcwxs",
             "owner" : [],
             "ownerGroup" : [],
+            "ownerUser": [""],
             "site" : {
                 "name" : "",
                 "uuid" : "",
@@ -54,6 +55,7 @@ var gnHarvesterogcwxs = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <ogctype>' + h.site.ogctype + '</ogctype>'

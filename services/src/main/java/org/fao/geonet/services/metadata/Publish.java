@@ -28,31 +28,29 @@ import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasM
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-
+import org.fao.geonet.kernel.metadata.IMetadataIndexer;
+import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.metadata.IMetadataOperations;
-import org.fao.geonet.kernel.metadata.IMetadataUtils;
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -69,6 +67,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -83,6 +82,7 @@ import jeeves.server.dispatchers.ServiceManager;
  *
  * @author Jesse on 1/16/2015.
  */
+@Deprecated
 @Controller("md.publish")
 public class Publish {
 
@@ -142,8 +142,9 @@ public class Publish {
         ConfigurableApplicationContext appContext = ApplicationContextHolder
                 .get();
         DataManager dataManager = appContext.getBean(DataManager.class);
+        IMetadataIndexer mdIndexer = appContext.getBean(IMetadataIndexer.class);
         OperationAllowedRepository operationAllowedRepository = appContext.getBean(OperationAllowedRepository.class);
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        IMetadataManager metadataRepository = appContext.getBean(IMetadataManager.class);
         MetadataValidationRepository metadataValidationRepository = appContext.getBean(MetadataValidationRepository.class);
         SettingManager sm = appContext.getBean(SettingManager.class);
 
@@ -192,11 +193,11 @@ public class Publish {
                             (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
 
                     if (!hasValidation) {
-                        Metadata metadata = metadataRepository.findOne(mdId);
+                        IMetadata metadata = metadataRepository.getMetadataObject(mdId);
 
                         dataManager.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
                                 new Document(metadata.getXmlData(false)), serviceContext.getLanguage());
-                        dataManager.indexMetadata(nextId, true);
+                        mdIndexer.indexMetadata(nextId, true);
                     }
 
                     boolean isInvalid =
@@ -222,51 +223,30 @@ public class Publish {
         return report;
     }
 
-    private Iterator<String> getIds(ConfigurableApplicationContext appContext,
-            UserSession userSession, final String commaSeparatedIds) {
-        final IMetadataUtils dataManager = appContext
-                .getBean(IMetadataUtils.class);
-        
-        final MetadataDraftRepository mdDraftRepository = appContext
-                .getBean(MetadataDraftRepository.class);
+    private Iterator<String> getIds(ConfigurableApplicationContext appContext, UserSession userSession, final String commaSeparatedIds) {
+        final DataManager dataManager = appContext.getBean(DataManager.class);
 
         if (commaSeparatedIds == null) {
             if (userSession != null) {
                 SelectionManager sm = SelectionManager.getManager(userSession);
-                
-                Set<String> unifiedSet = new HashSet<String>();
-                for(String uuid : sm.getSelection(SelectionManager.SELECTION_METADATA)) {
-                    if(uuid != null) {
-                        try{ 
-                            unifiedSet.add(dataManager.getMetadataId(uuid));
-                        } catch (Throwable t) {
-                            //skip
+                final Iterator<String> selectionIter = sm.getSelection(SelectionManager.SELECTION_METADATA).iterator();
+                return Iterators.transform(selectionIter, new Function<String, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(String uuid) {
+                        try {
+                            return dataManager.getMetadataId(uuid);
+                        } catch (Exception e) {
+                            return null;
                         }
                     }
-                }
-
-                for(String uuid : sm.getSelection(SelectionManager.SELECTION_METADATA_DRAFT)) {
-                    if(uuid != null) {
-                        try{ 
-                            unifiedSet.add(Integer.toString(mdDraftRepository.
-                                    findOneByUuid(uuid).getId()));
-
-                            //Add both
-                            unifiedSet.add(dataManager.getMetadataId(uuid));
-                        } catch (Throwable t) {
-                            //skip
-                        }
-                    }
-                }
-                 
-                return unifiedSet.iterator();
+                });
             } else {
                 return Iterators.emptyIterator();
             }
         } else {
             return new Iterator<String>() {
-                final StringTokenizer tokenizer = new StringTokenizer(
-                        commaSeparatedIds, ",", false);
+                final StringTokenizer tokenizer = new StringTokenizer(commaSeparatedIds, ",", false);
 
                 @Override
                 public boolean hasNext() {

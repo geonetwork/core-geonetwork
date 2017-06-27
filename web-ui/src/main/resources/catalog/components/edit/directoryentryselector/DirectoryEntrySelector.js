@@ -32,7 +32,7 @@
 
   var module = angular.module('gn_directory_entry_selector',
       ['gn_metadata_manager_service', 'gn_schema_manager_service',
-        'gn_editor_xml_service']);
+        'gn_editor_xml_service', 'pascalprecht.translate']);
 
   /**
    *
@@ -149,7 +149,16 @@
                         scope.elementRef, scope.elementName,
                         scope.domId, 'before').then(function() {
                       if (scope.templateAddAction) {
-                        gnEditor.save(gnCurrentEdit.id, true);
+                        gnEditor.save(gnCurrentEdit.id, true).then(function() {
+                          // success. Nothing to do.
+                        }, function(rejectedValue) {
+                          $rootScope.$broadcast('StatusUpdated', {
+                            title: $translate.instant('saveMetadataError'),
+                            error: rejectedValue,
+                            timeout: 0,
+                            type: 'danger'
+                          });
+                        });
                       }
                     });
                   };
@@ -180,7 +189,14 @@
                             // Save the metadata and refresh the form
                             gnEditor.save(gnCurrentEdit.id, true).then(
                            function(r) {
-                             defer.resolve();
+                             defer.resolve(r);
+                           }, function(rejectedValue) {
+                             $rootScope.$broadcast('StatusUpdated', {
+                               title: $translate.instant('runServiceError'),
+                               error: rejectedValue,
+                               timeout: 0,
+                               type: 'danger'
+                             });
                            });
                           });
                         }
@@ -219,7 +235,7 @@
                       var urlParams = params.join('&');
                       $http.get(
                           '../api/registries/entries/' + uuid + '?' + urlParams)
-                        .success(function(xml) {
+                     .success(function(xml) {
                        if (usingXlink) {
                          snippets.push(gnEditorXMLService.
                                   buildXMLForXlink(scope.schema,

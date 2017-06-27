@@ -86,12 +86,8 @@
             <label data-translate="">category</label>
             <select name="category"
                     data-ng-model="groupSelected.defaultCategory"
+                    data-ng-options="category.label[lang] for category in categories track by category.id"
                     class="form-control">
-              <option value="{{category.id}}"
-                      data-ng-selected="category.id == groupSelected.defaultCategory"
-                      data-ng-repeat="category in categories track by $index">
-                {{category.label[lang]}}
-              </option>
             </select>
             <p class="help-block" data-translate="">categoryDescriptionHelp</p>
 

@@ -27,11 +27,13 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
@@ -64,12 +66,9 @@ public class Set implements Service {
         String file = Util.getParam(params, Params.FNAME);
         String asFavicon = Util.getParam(params, Params.FAVICON, "0");
 
-        if (file.contains("..")) {
-            throw new BadParameterEx(
-                "Invalid character found in resource name.", file);
-        }
+        FilePathChecker.verify(file);
 
-        if ("".equals(file)) {
+        if (StringUtils.isEmpty(file)) {
             throw new Exception("Logo name is not defined.");
         }
 
