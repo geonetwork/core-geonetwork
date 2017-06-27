@@ -175,6 +175,28 @@
             }
           };
 
+          scope.getClass = function (q) {
+            if(q.fu === null || q.fu === '') {
+              return '';
+            }
+
+            if (q.checkpoint === 'MEDSEA') {
+              if (q.fu > 10) {
+                return 'gn-class-green';
+              } else if (q.fu < -10) {
+                return 'gn-class-red';
+              } else {
+                return 'gn-class-yellow';
+              }
+            } else {
+              if (q.fu >= -10) {
+                return 'gn-class-green';
+              } else {
+                return 'gn-class-red';
+              }
+            }
+          };
+
           function loadValues() {
             scope.isUd = false;
             scope.isTdp = false;
@@ -210,6 +232,7 @@
                       var qe = getQe(cptId, value[2]);
                       var fu = getFu(cptId, value[2]);
                       getDpsOrTdpValues(cptId, value[2], {
+                        checkpoint: value[1].split('_')[0],
                         qmName: value[3] + ' (' + value[2] + ')',
                         qmDefinition: value[7],
                         qmStatement: value[8],

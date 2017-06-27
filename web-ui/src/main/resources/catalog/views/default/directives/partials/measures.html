@@ -23,9 +23,7 @@
           {{q.qe}}
         </td>
         <td title="{{q.fuName}}" data-ng-show="isUd"
-            data-ng-class="{'gn-class-green': q.fu != null && q.fu != '' && q.fu > 10,
-                            'gn-class-red': q.fu != null && q.fu != '' && q.fu < -10,
-                            'gn-class-green': q.fu != null && q.fu != '' && q.fu >= -10 && q.fu <= 10}">
+            class="{{getClass(q)}}">
           {{q.fu}}
         </td>
         <td data-ng-show="(isTdp || isUd) && q.dps">
