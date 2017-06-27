@@ -7,7 +7,7 @@
         <th data-translate="">Measure</th>
         <th data-translate="">Value</th>
         <th data-translate="" data-ng-show="isTdp || isUd">Quality error (%)</th>
-        <th data-translate="" data-ng-show="isUd">Fitness for use (%)</th>
+        <th data-translate="" data-ng-show="isUd">Indicator</th>
         <th data-translate="" data-ng-show="isTdp || isUd">DPS value</th>
         <th data-translate="" data-ng-show="isUd">TDP value</th>
       </tr>
@@ -23,9 +23,9 @@
           {{q.qe}}
         </td>
         <td title="{{q.fuName}}" data-ng-show="isUd"
-            data-ng-class="{'gn-class-green': q.fu > 10,
-                            'gn-class-red': q.fu < -10,
-                            'gn-class-yellow': q.fu != '' && q.fu >= -10 && q.fu <= 10}">
+            data-ng-class="{'gn-class-green': q.fu != null && q.fu != '' && q.fu > 10,
+                            'gn-class-red': q.fu != null && q.fu != '' && q.fu < -10,
+                            'gn-class-green': q.fu != null && q.fu != '' && q.fu >= -10 && q.fu <= 10}">
           {{q.fu}}
         </td>
         <td data-ng-show="(isTdp || isUd) && q.dps">

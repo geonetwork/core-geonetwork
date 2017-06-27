@@ -217,7 +217,7 @@
                         qeName: qe.name,
                         qe: qe.value,
                         fuName: fu.name,
-                        fu: fu.value
+                        fu: fu.value != null ? fu.value.trim() : null
                       }).then(function (values) {
                         scope.components[cptId].measures.push(angular.isArray(values) ? values[0] : values);
                       });
