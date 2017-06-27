@@ -12,9 +12,13 @@
       <div data-gn-pagination="paginationInfo"/>
     </div>
 
-    <div translate ng-show="searchResults.count == 0"
+    <div translate ng-show="searchResults.count == 0 && !searching"
       class="text-muted disabled">
       noRecordFound
+    </div>
+
+    <div ng-show="searching" class="text-center">
+      <i class="fa fa-spinner fa-spin" />
     </div>
 
     <div class="associated-md-list">
