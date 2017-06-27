@@ -203,7 +203,7 @@
                       </button>
                       <ul class="dropdown-menu pull-right" role="menu">
                         <li ng-if="e.openAssociatedMD">
-                          <gn-associated-md entry-id="e['geonet:info'].uuid" />
+                          <gn-directory-associated-md entry-uuid="e['geonet:info'].uuid" />
                         </li>
                       </ul>
                     </div>
@@ -295,7 +295,7 @@
           <div class="entry-editor-controls">
             <button type="button" class="btn btn-primary"
                 ng-click="importEntry(xml)"
-                ng-disabled="xml === ''"
+                ng-disabled="xml == ''"
                 title="{{'importEntry' | translate}}">
               <i class="fa fa-plus"/>&nbsp;
               <span translate>
@@ -360,7 +360,7 @@
                 directoryEntryPermissions</span>
             </button>
 
-            <div class="btn-group">
+            <div class="btn-group" ng-show="activeEntry.isTemplate !== 't'">
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown"
                   ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
@@ -443,7 +443,7 @@
           <span translate>directoryEntryAssociatedMetadata</span>
         </div>
         <div class="panel-body">
-          <gn-associated-md entry-id="activeEntry['geonet:info'].uuid" />
+          <gn-directory-associated-md entry-uuid="activeEntry['geonet:info'].uuid" />
         </div>
       </div>
     </div>

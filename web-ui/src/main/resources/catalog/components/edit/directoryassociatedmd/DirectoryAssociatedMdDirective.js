@@ -22,22 +22,26 @@
  */
 
 (function() {
-  goog.provide('gn_associatedmd_directive');
+  goog.provide('gn_directoryassociatedmd_directive');
 
-  var module = angular.module('gn_associatedmd_directive', [
+
+  goog.require('gn_mdtypewidget');
+
+  var module = angular.module('gn_directoryassociatedmd_directive', [
+    'gn_mdtypewidget'
   ]);
 
-  module.directive('gnAssociatedMd', [
+  module.directive('gnDirectoryAssociatedMd', [
     'gnGlobalSettings',
     function() {
       return {
         restrict: 'E',
         scope: {
-          entryId: '='
+          entryUuid: '='
         },
-        templateUrl: '../../catalog/components/edit/associatedmd/' +
+        templateUrl: '../../catalog/components/edit/directoryassociatedmd/' +
           'partials/associated-results.html',
-        controller: function ($scope, $element, gnGlobalSettings) {
+        controller: ['$scope', 'gnGlobalSettings', function ($scope, gnGlobalSettings) {
           $scope.searchObj = {
             selectionBucket: 'd101',
             params: {
@@ -66,7 +70,7 @@
           };
           $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
-          $scope.$watch('entryId', function (v) {
+          $scope.$watch('entryUuid', function (v) {
             if (v) {
               $scope.searchObj.params._xlink =
                 '*local://srv/api/registries/entries/' + v + '*';
@@ -74,7 +78,7 @@
               $scope.$broadcast('search');
             }
           });
-        }
+        }]
       };
     }
   ]);

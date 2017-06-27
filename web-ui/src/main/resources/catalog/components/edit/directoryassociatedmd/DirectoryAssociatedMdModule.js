@@ -22,16 +22,12 @@
  */
 
 (function() {
-  goog.provide('gn_associatedmd');
+  goog.provide('gn_directoryassociatedmd');
 
 
-  goog.require('gn_associatedmd_directive');
-  goog.require('gn_associatedmd_service');
-  goog.require('gn_mdtypewidget');
-
-  angular.module('gn_associatedmd', [
-    'gn_associatedmd_service',
-    'gn_associatedmd_directive',
-    'gn_mdtypewidget'
+  goog.require('gn_directoryassociatedmd_directive');
+  
+  angular.module('gn_directoryassociatedmd', [
+    'gn_directoryassociatedmd_directive'
   ]);
 })();

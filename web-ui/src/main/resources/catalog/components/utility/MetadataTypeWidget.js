@@ -24,8 +24,7 @@
 (function() {
   goog.provide('gn_mdtypewidget');
 
-  var module = angular.module('gn_mdtypewidget', [
-  ]);
+  var module = angular.module('gn_mdtypewidget', []);
 
   module.directive('gnMdTypeWidget', [
     function() {
