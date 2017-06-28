@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.JeevesJCS;
+import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -220,25 +221,8 @@ public final class Processor {
         try {
             // TODO-API: Support local protocol on /api/registries/
             if (uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-
-                String requestURI = uri.replace("local://srv", "").split("\\?")[0];
-                MockHttpServletRequest request = new MockHttpServletRequest("GET", requestURI);
-
-                RequestMappingHandlerAdapter requestMappingHandlerAdapter = srvContext.getBean(RequestMappingHandlerAdapter.class);
-                HandlerMethodArgumentResolverComposite argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(requestMappingHandlerAdapter.getArgumentResolvers());
-                HandlerMethodReturnValueHandlerComposite returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(requestMappingHandlerAdapter.getReturnValueHandlers());
-
-                RequestMappingHandlerMapping requestMappingHandlerMapping = srvContext.getBean(RequestMappingHandlerMapping.class);
-                HandlerExecutionChain handlerExecutionChain = requestMappingHandlerMapping.getHandler(request);
-                HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
-
-                ServletInvocableHandlerMethod servletInvocableHandlerMethod = new ServletInvocableHandlerMethod(handlerMethod);
-                servletInvocableHandlerMethod.setHandlerMethodArgumentResolvers(argumentResolvers);
-                servletInvocableHandlerMethod.setHandlerMethodReturnValueHandlers(returnValueHandlers);
-
-                remoteFragment = (Element) servletInvocableHandlerMethod.invokeForRequest(new ServletWebRequest(request), null, new Object[0]);
-
-
+                SpringLocalServiceInvoker springLocalServiceInvoker = srvContext.getBean(SpringLocalServiceInvoker.class);
+                remoteFragment = (Element)springLocalServiceInvoker.invoke(uri);
             } else {
                 // Avoid references to filesystem
                 if (uri.toLowerCase().startsWith("file://")) {
