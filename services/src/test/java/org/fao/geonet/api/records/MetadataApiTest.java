@@ -24,6 +24,7 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Params;
@@ -268,8 +269,10 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         MockMvcBuilders.webAppContextSetup(this.wac).build();
         loginAsAdmin();
         SpringLocalServiceInvoker toTest = super._applicationContext.getBean(SpringLocalServiceInvoker.class);
+        super._applicationContext.getBean(NodeInfo.class).setId("theNode");
+        toTest.init();
 
-        Object resp = toTest.invoke("local://srv/api/records/" + uuid + "/formatters/xml");
+        Object resp = toTest.invoke("local://theNode/api/records/" + uuid + "/formatters/xml");
 
         assertEquals("MD_Metadata", ((Element)resp).getName());
     }
