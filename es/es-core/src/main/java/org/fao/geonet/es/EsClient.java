@@ -1,4 +1,27 @@
-package org.fao.geonet.harvester.wfsfeatures.worker;
+/*
+ * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
+package org.fao.geonet.es;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
@@ -7,13 +30,12 @@ import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Bulk;
 import io.searchbox.core.BulkResult;
 import io.searchbox.core.Index;
-import org.fao.geonet.harvester.wfsfeatures.DeleteByQuery;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 /**
@@ -21,13 +43,12 @@ import java.util.logging.Logger;
  */
 public class EsClient implements InitializingBean {
 
-    Logger logger = Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
-
     private static EsClient instance;
 
     private JestClient client;
+
+    @Value("${es.url}")
     private String serverUrl;
-    private String collection;
     private String username;
     private String password;
 
@@ -59,7 +80,8 @@ public class EsClient implements InitializingBean {
                 instance = this;
             }
         } else {
-            throw new Exception(String.format("No ES client URL defined in %s. "
+            throw new Exception(String.format(
+                "No ES client URL defined in %s. "
                 + "Check bean configuration.", this.serverUrl));
         }
     }
@@ -89,14 +111,6 @@ public class EsClient implements InitializingBean {
     public EsClient setPassword(String password) {
         this.password = password;
         return this;
-    }
-
-    public String getCollection() {
-        return collection;
-    }
-
-    public void setCollection(String collection) {
-        this.collection = collection;
     }
 
     public boolean bulkRequest(String index, Map<String, String> docs) throws IOException {
@@ -189,7 +203,9 @@ public class EsClient implements InitializingBean {
         if (result.isSucceeded()) {
             return String.format("Record removed. %s.", result.getJsonString());
         } else {
-            return String.format("Error during removal. Errors is '%s'.", result.getErrorMessage());
+            throw new IOException(String.format(
+                "Error during removal. Errors is '%s'.", result.getErrorMessage()
+            ));
         }
 //
 //        Search search = new Search.TemplateBuilder(searchQuery)

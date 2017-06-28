@@ -49,7 +49,6 @@ import org.jdom.Element;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -172,7 +171,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		}
 
         //--- index metadata
-        dm.indexMetadata(id, true);
+        dm.indexMetadata(id, true, null);
 
         //--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
@@ -199,7 +198,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 
 			dm.doValidate(metadata.getDataInfo().getSchemaId(), mdId + "",
 					new Document(metadata.getXmlData(false)), context.getLanguage());
-			dm.indexMetadata(mdId + "", true);
+			dm.indexMetadata(mdId + "", true, null);
 		}
 
 		boolean isInvalid =

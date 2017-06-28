@@ -49,10 +49,7 @@
   </bean>
 
   <bean id="esClient"
-        class="org.fao.geonet.harvester.wfsfeatures.worker.EsClient">
-    <property name="serverUrl" value="\${es.url}"/>
-    <property name="collection" value="\${es.index.features}"/>
-  </bean>
+        class="org.fao.geonet.es.EsClient"/>
 
 
   <cm:camelContext id="harvest-wfs"
