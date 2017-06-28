@@ -51,7 +51,7 @@ public class SpringLocalServiceInvoker {
         String requestURI = uri.replace("local://srv", "").split("\\?")[0];
         MockHttpServletRequest request = new MockHttpServletRequest("GET", requestURI);
         request.setSession(new MockHttpSession());
-        boolean doesUriContainsParams = uri.indexOf("\\?") > 0;
+        boolean doesUriContainsParams = uri.indexOf("?") > 0;
         if (doesUriContainsParams) {
             String params = uri.split("\\?")[1];
             for (String param : params.split("&")) {
