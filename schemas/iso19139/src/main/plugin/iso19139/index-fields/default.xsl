@@ -38,7 +38,6 @@
 
   <xsl:include href="../convert/functions.xsl"/>
   <xsl:include href="../../../xsl/utils-fn.xsl"/>
-  <xsl:include href="index-subtemplate-fields.xsl"/>
   <xsl:include href="inspire-util.xsl" />
 
   <!-- This file defines what parts of the metadata are indexed by Lucene

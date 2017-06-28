@@ -747,8 +747,15 @@ public class SearchManager {
         }
         Path defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
         Path otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
+        Path subtemplateStyleSheet = schemaDir.resolve("index-fields").resolve("index-subtemplate.xsl");
 
-        Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
+        Element xmlDoc;
+        if(metadataType.equals(MetadataType.SUB_TEMPLATE) || metadataType.equals(MetadataType.TEMPLATE_OF_SUB_TEMPLATE)) {
+            xmlDoc = getIndexFields(metadata, subtemplateStyleSheet);
+        }
+        else {
+            xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
+        }
 
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
@@ -1063,9 +1070,19 @@ public class SearchManager {
     }
 
     /**
-     * TODO javadoc.
+     * Create an XML document for indexing the record.
+     * Main XSL must not contain root <Documents></Documents> element but one
+     * <Document></Document> that will be attached to a <Documents></Documents>
+     * afterwards.
+     * If multilingual, then the multilingual XSL must contain a root element
+     * <Documents></Documents> and a list of <Document></Document>, one per
+     * language. They all will be merged with the default XSL document.
      *
-     * @param otherLocalesStyleSheet @return
+     * @param xml Record to transform
+     * @param defaultLangStyleSheet Main indexing XSL
+     * @param otherLocalesStyleSheet Multilingual XSL (optional)
+     * @return The XML document for indexation
+     * @throws Exception
      */
     Element getIndexFields(Element xml,
                            Path defaultLangStyleSheet,
@@ -1088,18 +1105,52 @@ public class SearchManager {
             }
             documents.addContent(defaultLang);
         } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE,
-                String.format("Indexing stylesheet contains errors: %s %n\t Marking the metadata as _indexingError=1 in index",
-                    e.getMessage()));
-            Element xmlDoc = new Element("Document");
-            SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
-            SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
-            StringBuilder sb = new StringBuilder();
-            allText(xml, sb);
-            SearchManager.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
-            documents.addContent(xmlDoc);
+            documents.addContent(onGetIndexFieldsError(e, xml));
         }
         return documents;
+    }
+
+    /**
+     * Used only for indexing subtemplate, use a single XSL that do the all
+     * thing. Must contain a <Documents></Documents> root element.
+     *
+     * @param xml Record to transform
+     * @param singleStyleSheet Single indexing XSL
+     * @return The XML document for indexation
+     * @throws Exception
+     */
+    Element getIndexFields(Element xml, Path singleStyleSheet) throws Exception {
+
+        Element documents = new Element("Documents");
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        try {
+            documents = Xml.transform(xml, singleStyleSheet, params);
+        } catch (Exception e) {
+            documents.addContent(onGetIndexFieldsError(e, xml));
+        }
+        return documents;
+    }
+
+    /**
+     * Merge the current indexing XML element with exception information.
+     *
+     * @param e Exception thrown
+     * @param xml record to index.
+     * @return XML element that contain exception informations.
+     */
+    private Element onGetIndexFieldsError(Exception e, Element xml) {
+        Log.error(Geonet.INDEX_ENGINE,
+                String.format("Indexing stylesheet contains errors: %s %n\t Marking the metadata as _indexingError=1 in index",
+                        e.getMessage()));
+        Element xmlDoc = new Element("Document");
+        SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
+        SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
+        StringBuilder sb = new StringBuilder();
+        allText(xml, sb);
+        SearchManager.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
+        return xmlDoc;
+
     }
     // utilities
 
