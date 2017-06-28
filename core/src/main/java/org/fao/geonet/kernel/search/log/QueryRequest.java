@@ -340,6 +340,11 @@ public class QueryRequest {
     private EsClient client;
 
     public boolean storeToEs() {
+        if (client == null) {
+            Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
+            return false;
+        }
+
         Map<String, String> listOfDocumentsToIndex = new HashMap<>();
 
         ObjectMapper mapper = new ObjectMapper();
@@ -399,7 +404,7 @@ public class QueryRequest {
                 "Error occured while building JSON for search requests: %s", e.getMessage()
             ));
             return false;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.debug(Geonet.SEARCH_LOGGER, String.format(
                 "Error occured while sending search requests to index: %s", e.getMessage()
             ));
