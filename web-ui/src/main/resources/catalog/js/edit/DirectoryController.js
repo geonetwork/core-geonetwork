@@ -26,9 +26,16 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_facets');
+  goog.require('gn_directoryassociatedmd');
+  goog.require('gn_mdtypewidget');
 
-  var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets', 'pascalprecht.translate']);
+  var module = angular.module('gn_directory_controller', [
+    'gn_catalog_service',
+    'gn_facets',
+    'gn_directoryassociatedmd',
+    'pascalprecht.translate',
+    'gn_mdtypewidget'
+  ]);
 
   /**
    * Controller to create new metadata record.
@@ -65,7 +72,6 @@
           any: '',
           _root: '',
           sortBy: 'title',
-          sortOrder: 'reverse',
           resultType: 'subtemplates'
         },
         sortbyValues: [
@@ -198,7 +204,8 @@
         if (type) {
           $scope.searchObj.params._root = type;
         }
-        $scope.$broadcast('resetSearch', $scope.searchObj.params);
+        $scope.$broadcast('clearResults');
+        $scope.$broadcast('search');
         return false;
       };
 
@@ -346,8 +353,16 @@
       // ACTIONS
 
       $scope.delEntry = function (e) {
-        // md.delete?uuid=b09b1b16-769f-4dad-b213-fc25cfa9adc7
-        gnMetadataManager.remove(e['geonet:info'].id).then(refreshEntriesInfo);
+        $scope.delEntryId = e['geonet:info'].id;
+        $('#gn-confirm-delete').modal('show');
+      };
+      $scope.confirmDelEntry = function (e) {
+        if (!$scope.delEntryId) {
+          return;
+        }
+        gnMetadataManager.remove($scope.delEntryId).then(
+          refreshEntriesInfo);
+        $scope.delEntryId = null;
       };
 
       $scope.copyEntry = function (e) {
@@ -491,6 +506,7 @@
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function (b) {
         $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
+        $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
       }
       $scope.templatesShown = function () {

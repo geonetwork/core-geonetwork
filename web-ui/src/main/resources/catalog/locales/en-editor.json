@@ -350,5 +350,7 @@
     "directoryManagerMode-editTemplate": "Edit Template",
     "notADirectoryEntry": "Only directory entries can be converted to templates",
     "notADirectoryEntryTemplate": "This entry is not a directory entry template.",
-    "saveAsDirectoryEntry": "Save as directory entry"
+    "saveAsDirectoryEntry": "Save as directory entry",
+    "confirmDeleteEntry": "Are you sure you want to delete this entry?",
+    "filterByValidityStatus": "Filter by status"
 }
