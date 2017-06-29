@@ -92,9 +92,15 @@
                 data-ng-show="hasAction(mainType)"
                 data-ng-click="config.doAction(mainType, r, md)">
 
-        <span class="visible-lg-*">
-          {{::(config.getLabel(mainType, type)) | translate}}
-        </span>
+          <span class="visible-lg-*">
+            {{::(config.getLabel(mainType, type)) | translate}}
+          </span>
+          <br/>
+          <span class="visible-lg-*"
+                data-ng-if="mainType == 'MDSIBLING'">
+            ({{::r.initiativeType | translate}}{{::(r.associationType != '' ? ' / ' + (r.associationType | translate) : '')}})
+          </span>
+
         </button>
       </div>
     </div>
