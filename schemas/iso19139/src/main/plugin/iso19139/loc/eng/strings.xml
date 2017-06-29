@@ -238,12 +238,13 @@
   <emodnetAbstractTitle>Abstract</emodnetAbstractTitle>
   <emodnetNbLinesTitle>Number of lines</emodnetNbLinesTitle>
   <emodnetNbColumnsTitle>Number of columns</emodnetNbColumnsTitle>
-  <emodnetQualityTitle>Quality / Accuracy / Calibration</emodnetQualityTitle>
+  <emodnetQualityTitle>Accuracy / Calibration</emodnetQualityTitle>
   <emodnetDataSourcesTitle>Description of processed data sources</emodnetDataSourcesTitle>
   <emodnetDataProcessingTitle>Description of data processing</emodnetDataProcessingTitle>
   <emodnetVertAccuracyTitle>Vert. accuracy</emodnetVertAccuracyTitle>
   <emodnetHorAccuracyTitle>Hor. accuracy</emodnetHorAccuracyTitle>
   <emodnetShoalBias>Shoal bias</emodnetShoalBias>
+  <emodnetShoalBiasDetails>Details</emodnetShoalBiasDetails>
   <emodnetScaleDenominator>Maximum scale of use</emodnetScaleDenominator>
   <emodnetSuitabilityTitle>Suitability, Expected type of users / uses and limitations</emodnetSuitabilityTitle>
   <emodnetIntellectualPropertyTitle>Intellectual property</emodnetIntellectualPropertyTitle>
@@ -259,6 +260,11 @@
   <emodnetShortName>Short name of dataset (SDN Local Product-ID)</emodnetShortName>
   <emodnetName>Dataset name</emodnetName>
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
+
+  <addCrs>Add coordinate system</addCrs>
+  <addCrs4326>WGS 84</addCrs4326>
+  <addCrs4258>ETRS89</addCrs4258>
+  <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
 
   <!-- Sextant -->
   <sextant>Sextant</sextant>

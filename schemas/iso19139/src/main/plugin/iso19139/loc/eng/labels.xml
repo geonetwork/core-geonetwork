@@ -1421,7 +1421,8 @@
 			<option value="Mapinfo TAB">Mapinfo TAB</option>
 			<option value="KML">KML</option>
 			<option value="GML" title="3.2.1">GML</option>
-      <option value="Ascii">Ascii</option>
+      <option value="XYZ Ascii">XYZ Ascii</option>
+      <option value="BAG">BAG</option>
       <option value="NetCDF">NetCDF</option>
 			<option value="GeoTIFF" title="1.0">GeoTIFF</option>
 			<option value="TIFF">TIFF</option>

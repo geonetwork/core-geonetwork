@@ -427,7 +427,7 @@ form.gn-tab-medsea-metadata {
     margin-top: 50px;
     border-top: 2px solid black;
   }
-  
+
   /* Do not display remove control ... */
   a.btn[data-gn-click-and-spin^=remove] {
     display: none !important;
@@ -740,6 +740,23 @@ div.gn-individualName {
   /* Hide remove option in usage view. */
   .col-sm-1.gn-control {
     display: none;
+  }
+}
+
+.gn-tab-emodnetHydrography-when,
+.gn-tab-checkpoint-tdp-characteristics,
+.gn-tab-checkpoint-dps-characteristics {
+  .gn-date-picker {
+    > input[type=date] {
+      width: 100% !important;
+    }
+    > input[type=time] {
+      width: 0% !important;
+      display: none;
+    }
+  }
+  .gn-date-picker.gn-time-with-ind-position > input[type=date] {
+    width: 80% !important;
   }
 }
 
