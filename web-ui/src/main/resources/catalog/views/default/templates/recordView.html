@@ -222,16 +222,18 @@
           <tr data-ng-if="mdView.current.record.legalConstraints">
             <th data-translate="">legalConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index">
-                {{c}}</p>
+              <p data-ng-repeat="c in mdView.current.record.legalConstraints track by $index"
+                 data-ng-bind-html="c | newlines">
+              </p>
             </td>
           </tr>
 
           <tr data-ng-if="mdView.current.record.securityConstraints">
             <th data-translate="">securityConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index">
-                {{c}}</p>
+              <p data-ng-repeat="c in mdView.current.record.securityConstraints track by $index"
+                 data-ng-bind-html="c | newlines">
+              </p>
             </td>
           </tr>
 
@@ -239,8 +241,9 @@
           <tr data-ng-if="mdView.current.record.resourceConstraints">
             <th data-translate="">resourceConstraints</th>
             <td>
-              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index">
-                {{c}}</p>
+              <p data-ng-repeat="c in mdView.current.record.resourceConstraints track by $index"
+                 data-ng-bind-html="c | newlines">
+              </p>
             </td>
           </tr>
 
@@ -339,11 +342,14 @@
               </ul>
             </td>
           </tr>
-          <tr data-ng-if="::mdView.current.record.crs">
+          <tr data-ng-if="::mdView.current.record.crsDetails">
             <th data-translate="">crs</th>
             <td>
               <ul>
-                <li data-ng-repeat="r in ::mdView.current.record.crs">{{r}}</li>
+                <li data-ng-repeat="r in ::mdView.current.record.crsDetails">
+                  <span ng-if="r.name != ''">{{ r.name }} ({{ r.code }})</span>
+                  <span ng-if="r.name == ''">{{ r.code }}</span>
+                </li>
               </ul>
             </td>
           </tr>
@@ -360,7 +366,7 @@
               <p data-ng-bind-html="::mdView.current.record.lineage | newlines"/>
             </td>
           </tr>
-          <tr data-ng-if="hasRelations.sources || hasRelations.hassources">
+          <tr>
             <th></th>
             <td>
               <div data-gn-related="mdView.current.record"

@@ -2736,6 +2736,13 @@
 				value="view">View Service (view)</option> <option value="download">Download
 				Service (download)</option> <option value="transformation">Transformation
 				Service (transformation)</option> <option value="other">Other Services (other)</option> -->
+      <option value="view">Consultazione (INSPIRE)</option>
+      <option value="discovery">Ricerca (INSPIRE)</option>
+      <option value="download">Scaricamento (INSPIRE)</option>
+      <option value="transformation">Conversione (INSPIRE)</option>
+      <option value="invoke">Richiesta (INSPIRE)</option>
+      <option value="other">Altro (INSPIRE)</option>
+
     </helper>
   </element>
   <element name="srv:serviceTypeVersion">

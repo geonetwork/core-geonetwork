@@ -378,10 +378,10 @@ public class DefaultMetadataManager implements IMetadataManager {
         // If there is a default category for the group, use it:
         Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
         if (group.getDefaultCategory() != null) {
-            newMetadata.getCategories().add(group.getDefaultCategory());
+            newMetadata.getMetadataCategories().add(group.getDefaultCategory());
         }
         Collection<MetadataCategory> filteredCategories = Collections2.filter(
-                templateMetadata.getCategories(),
+                templateMetadata.getMetadataCategories(),
                 new Predicate<MetadataCategory>() {
                     @Override
                     public boolean apply(@Nullable MetadataCategory input) {
@@ -389,7 +389,7 @@ public class DefaultMetadataManager implements IMetadataManager {
                     }
                 });
 
-        newMetadata.getCategories().addAll(filteredCategories);
+        newMetadata.getMetadataCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, false, true,
                 true, UpdateDatestamp.YES, fullRightsForGroup, true).getId();
@@ -482,12 +482,12 @@ public class DefaultMetadataManager implements IMetadataManager {
                 throw new IllegalArgumentException(
                         "No category found with name: " + category);
             }
-            newMetadata.getCategories().add(metadataCategory);
+            newMetadata.getMetadataCategories().add(metadataCategory);
         } else if (StringUtils.isNotBlank(groupOwner)) {
             // If the group has a default category, use it
             Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
             if (group.getDefaultCategory() != null) {
-                newMetadata.getCategories().add(group.getDefaultCategory());
+                newMetadata.getMetadataCategories().add(group.getDefaultCategory());
             }
         }
 
@@ -862,7 +862,7 @@ public class DefaultMetadataManager implements IMetadataManager {
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
 
-        for (MetadataCategory category : metadata.getCategories()) {
+        for (MetadataCategory category : metadata.getMetadataCategories()) {
             addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
         }
 
@@ -1463,6 +1463,11 @@ public class DefaultMetadataManager implements IMetadataManager {
         } else {
             return null;
         }
+    }
+    
+    @Override
+    public IMetadata getMetadataObjectNoPriv(Integer id) throws Exception {
+        return getMetadataObject(id); 
     }
     
     /**

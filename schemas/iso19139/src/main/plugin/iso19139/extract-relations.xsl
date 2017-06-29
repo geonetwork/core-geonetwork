@@ -59,14 +59,19 @@
   <!-- Convert an element gco:CharacterString
   to the GN localized string structure -->
   <xsl:template mode="get-iso19139-localized-string" match="*">
+
+    <xsl:variable name="mainLanguage"
+                  select="string(ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/
+                            gmd:language/gco:CharacterString|ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/
+                            gmd:language/gmd:LanguageCode/@codeListValue)"/>
+
     <xsl:for-each select="gco:CharacterString|
                           gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
       <xsl:variable name="localeId"
                     select="substring-after(@locale, '#')"/>
-      <xsl:variable name="mainLanguage"
-                    select="ancestor::gmd:MD_Metadata/gmd:language/*/@codeListValue"/>
+
       <value lang="{if (@locale)
-                  then ancestor::gmd:MD_Metadata/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
+                  then ancestor::metadata/*[@gco:isoType='gmd:MD_Metadata' or name()='gmd:MD_Metadata']/gmd:locale/*[@id = $localeId]/gmd:languageCode/*/@codeListValue
                   else if ($mainLanguage) then $mainLanguage else $lang}">
         <xsl:value-of select="."/>
       </value>
@@ -80,6 +85,11 @@
                 match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]"
                 priority="99">
 
+    <xsl:variable name="mainLanguage"
+                  select="string(
+                            */gmd:language/gco:CharacterString|
+                            */gmd:language/gmd:LanguageCode/@codeListValue)"/>
+
     <xsl:if test="count(*/descendant::*[name(.) = 'gmd:graphicOverview']/*) > 0">
       <thumbnails>
         <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
@@ -88,7 +98,8 @@
               <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
             </id>
             <url>
-              <xsl:value-of select="gmd:fileName/gco:CharacterString"/>
+              <xsl:apply-templates mode="get-iso19139-localized-string"
+                                   select="gmd:fileName"/>
             </url>
             <title>
               <xsl:apply-templates mode="get-iso19139-localized-string"
@@ -116,7 +127,9 @@
                                    select="gmd:name"/>
             </title>
             <url>
-              <xsl:value-of select="$url"/>
+              <value lang="{$mainLanguage}">
+                <xsl:value-of select="$url"/>
+              </value>
             </url>
             <function>
               <xsl:value-of select="gmd:function/*/@codeListValue"/>

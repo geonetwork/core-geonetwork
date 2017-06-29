@@ -359,17 +359,35 @@
         <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
       </dt>
       <dd>
-        <xsl:variable name="linkDescription">
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:description"/>
+        <xsl:variable name="linkUrl"
+                      select="*/gmd:linkage/gmd:URL"/>
+        <xsl:variable name="linkName">
+          <xsl:choose>
+            <xsl:when test="*/gmd:name[* != '']">
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:name"/>
+            </xsl:when>
+            <xsl:when test="*/gmd:description[* != '']">
+              <xsl:apply-templates mode="render-value"
+                                   select="*/gmd:description"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$linkUrl"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:variable>
-        <a href="{*/gmd:linkage/gmd:URL}">
-          <xsl:apply-templates mode="render-value"
-                               select="*/gmd:name"/>&#160;
+
+        <a href="{$linkUrl}" title="{$linkName}">
+          <xsl:value-of select="$linkName"/>
         </a>
-        <p>
-          <xsl:value-of select="normalize-space($linkDescription)"/>
-        </p>
+        &#160;
+
+        <xsl:if test="*/gmd:description[* != '' and * != $linkName]">
+          <p>
+            <xsl:apply-templates mode="render-value"
+                                 select="*/gmd:description"/>
+          </p>
+        </xsl:if>
       </dd>
     </dl>
   </xsl:template>

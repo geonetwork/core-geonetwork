@@ -52,7 +52,7 @@ public class DraftMetadataCategory extends DefaultMetadataCategory {
                     "No metadata found with id: " + mdId);
         }
 
-        return mdD.getCategories();
+        return mdD.getMetadataCategories();
     }
 
     /**
@@ -72,7 +72,7 @@ public class DraftMetadataCategory extends DefaultMetadataCategory {
         }
 
         Set<MetadataCategory> categories = mdDraftRepository.findOne(mdId)
-                .getCategories();
+                .getMetadataCategories();
         for (MetadataCategory category : categories) {
             if (category.getId() == categId) {
                 return true;
@@ -103,9 +103,9 @@ public class DraftMetadataCategory extends DefaultMetadataCategory {
                     new Updater<MetadataDraft>() {
                         @Override
                         public void apply(@Nonnull MetadataDraft entity) {
-                            changed[0] = !entity.getCategories()
+                            changed[0] = !entity.getMetadataCategories()
                                     .contains(newCategory);
-                            entity.getCategories().add(newCategory);
+                            entity.getMetadataCategories().add(newCategory);
                         }
                     });
 
@@ -139,10 +139,10 @@ public class DraftMetadataCategory extends DefaultMetadataCategory {
                 return;
             }
             boolean changed = false;
-            for (MetadataCategory category : metadata.getCategories()) {
+            for (MetadataCategory category : metadata.getMetadataCategories()) {
                 if (category.getId() == categId) {
                     changed = true;
-                    metadata.getCategories().remove(category);
+                    metadata.getMetadataCategories().remove(category);
                     break;
                 }
             }

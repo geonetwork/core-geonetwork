@@ -66,10 +66,33 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
   goog.require('gn_graticule');
+  goog.require('gn_index');
   goog.require('gn_layermanager');
   goog.require('gn_localisation');
   goog.require('gn_measure');
@@ -80,7 +103,6 @@
   goog.require('gn_popup');
   goog.require('gn_print');
   goog.require('gn_searchlayerformap_directive');
-  goog.require('gn_solr');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
@@ -117,7 +139,7 @@
     'gn_searchlayerformap_directive',
     'gn_terrainswitcher_directive',
     'gn_wfsfilter',
-    'gn_solr',
+    'gn_index',
     'gn_wps',
     'gn_featurestable'
   ]);

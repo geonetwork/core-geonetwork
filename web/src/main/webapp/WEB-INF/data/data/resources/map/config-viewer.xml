@@ -17,7 +17,6 @@
     </ows-context:Layer>
     <ows-context:Layer name="{type=bing_aerial}"
                        group="Background layers"
-                       hidden="true"
                        opacity="1">
       <ows:Title>Bing Aerial</ows:Title>
     </ows-context:Layer>

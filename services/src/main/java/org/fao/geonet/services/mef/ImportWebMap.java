@@ -143,7 +143,7 @@ public class ImportWebMap extends NotInReadOnlyModeService {
             // Update the MD
             Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
             onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
-            onlineSrcParams.put("url", sm.getSiteURL(context) + String.format("/resources.get?uuid=%s&fname=%s&access=public", uuid, mapFileName));
+            onlineSrcParams.put("url", sm.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, mapFileName));
             onlineSrcParams.put("name", mapFileName);
             onlineSrcParams.put("desc", title);
             Element mdWithOLRes = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"), onlineSrcParams);

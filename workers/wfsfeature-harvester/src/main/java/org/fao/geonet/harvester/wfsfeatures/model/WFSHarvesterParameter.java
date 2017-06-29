@@ -25,6 +25,7 @@ package org.fao.geonet.harvester.wfsfeatures.model;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ public class WFSHarvesterParameter implements Serializable {
 
     private String typeName;
 
-    private String version = "1.0.0";
+    private String version = "1.1.0";
 
     private int timeOut = 60000;
 
@@ -58,12 +59,13 @@ public class WFSHarvesterParameter implements Serializable {
     }
 
     /**
-     * List of fields to tokenize during
+     * List of fields to tokenizedFields during
      * indexing.
      *
      * The key is the column name, the value is the separator.
      */
-    private Map<String, String> tokenize;
+    private Map<String, String> tokenizedFields;
+    private List<String> treeFields;
 
     @XmlAttribute(required = true)
     public String getUrl() {
@@ -121,12 +123,20 @@ public class WFSHarvesterParameter implements Serializable {
         this.metadataUuid = metadataUuid;
     }
 
-    @XmlElementWrapper(name="tokenize")
-    public Map<String, String> getTokenize() {
-        return tokenize;
+    @XmlElementWrapper(name="tokenizedFields")
+    public Map<String, String> getTokenizedFields() {
+        return tokenizedFields;
     }
-    public void setTokenize(Map<String, String> tokenize) {
-        this.tokenize = tokenize;
+    public void setTokenizedFields(Map<String, String> tokenizedFields) {
+        this.tokenizedFields = tokenizedFields;
+    }
+
+    @XmlElementWrapper(name="treeFields")
+    public List<String> getTreeFields() {
+        return treeFields;
+    }
+    public void setTreeFields(List<String> treeFields) {
+        this.treeFields = treeFields;
     }
 
     @Override
@@ -140,14 +150,18 @@ public class WFSHarvesterParameter implements Serializable {
         sb.append("\nmaxFeatures:").append(maxFeatures);
         sb.append("\ntitleExpression:").append(titleExpression);
         sb.append("\nencoding:").append(encoding);
-        if (tokenize != null) {
-            sb.append("\ntokenize: ");
-            for (Map.Entry<String, String> e : tokenize.entrySet()) {
+        if (tokenizedFields != null) {
+            sb.append("\ntokenizedFields: ");
+            for (Map.Entry<String, String> e : tokenizedFields.entrySet()) {
                 sb.append(" * ")
                         .append(e.getKey())
                         .append(" separated by: ")
                         .append(e.getValue());
             }
+        }
+        if (treeFields != null) {
+            sb.append("\ntreeFields: ");
+            treeFields.forEach(e -> sb.append(" * ").append(e));
         }
         return sb.toString();
     }

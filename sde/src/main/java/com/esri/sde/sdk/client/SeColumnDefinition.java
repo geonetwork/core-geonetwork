@@ -1,25 +1,26 @@
 package com.esri.sde.sdk.client;
 
 public class SeColumnDefinition {
+    public static final int TYPE_SMALLINT = 1;
+    public static final int TYPE_INTEGER = 2;
+    public static final int TYPE_FLOAT = 3;
+    public static final int TYPE_DOUBLE = 4;
+    public static final int TYPE_INT16 = 1;
+    public static final int TYPE_INT32 = 2;
+    public static final int TYPE_FLOAT32 = 3;
+    public static final int TYPE_FLOAT64 = 4;
+    public static final int TYPE_STRING = 5;
+    public static final int TYPE_BLOB = 6;
+    public static final int TYPE_DATE = 7;
+    public static final int TYPE_SHAPE = 8;
+    public static final int TYPE_RASTER = 9;
+    public static final int TYPE_XML = 10;
+    public static final int TYPE_INT64 = 11;
+    public static final int TYPE_UUID = 12;
+    public static final int TYPE_CLOB = 13;
+    public static final int TYPE_NSTRING = 14;
+    public static final int TYPE_NCLOB = 15;
 
-    public static /* GEOT-947 final*/ int TYPE_SMALLINT = 0;
-    public static /* GEOT-947 final*/ int TYPE_INTEGER = 1;
-    public static /* GEOT-947 final*/ int TYPE_FLOAT = 2;
-    public static /* GEOT-947 final*/ int TYPE_DOUBLE = 3;
-    public static /* GEOT-947 final*/ int TYPE_STRING = 4;
-    public static /* GEOT-947 final*/ int TYPE_DATE = 5;
-    public static /* GEOT-947 final*/ int TYPE_SHAPE = 6;
-    public static /* GEOT-947 final*/ int TYPE_INT16 = 7;
-    public static /* GEOT-947 final*/ int TYPE_INT32 = 8;
-    public static /* GEOT-947 final*/ int TYPE_INT64 = 9;
-    public static /* GEOT-947 final*/ int TYPE_FLOAT32 = 10;
-    public static /* GEOT-947 final*/ int TYPE_FLOAT64 = 11;
-    public static /* GEOT-947 final*/ int TYPE_BLOB = 12;
-    public static /* GEOT-947 final*/ int TYPE_RASTER = 13;
-    public static /* GEOT-947 final*/ int TYPE_NSTRING = 14;
-    public static /* GEOT-947 final*/ int TYPE_UUID = 15;
-    public static int TYPE_CLOB = 1;
-    public static int TYPE_NCLOB = 1;
     public SeColumnDefinition(String s, int i, int j, int k, boolean b) throws SeException {
     }
 

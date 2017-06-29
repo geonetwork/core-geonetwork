@@ -146,8 +146,12 @@ public class DraftMetadataIndexer extends DefaultMetadataIndexer {
         // Just in case, do the same for the related drafts
         for (String metadataId : metadataIds) {
             Metadata md = mdRepository.findOne(metadataId);
-            MetadataDraft mdD = mdDraftRepository.findOneByUuid(md.getUuid());
-            indexMetadata(Integer.toString(mdD.getId()), false);
+            if(md != null) {
+                MetadataDraft mdD = mdDraftRepository.findOneByUuid(md.getUuid());
+                if(mdD != null) {
+                    indexMetadata(Integer.toString(mdD.getId()), false);
+                }
+            }
         }
 
         super.indexMetadata(metadataIds);

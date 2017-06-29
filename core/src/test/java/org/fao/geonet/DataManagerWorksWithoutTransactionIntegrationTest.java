@@ -78,7 +78,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                         IMetadata updateMd = _dataManager.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                                 new ISODate().getDateAndTime(), false);
                         assertNotNull(updateMd);
-                        final boolean hasNext = ((Metadata) updateMd).getCategories().iterator().hasNext();
+                        final boolean hasNext = ((Metadata) updateMd).getMetadataCategories().iterator().hasNext();
                         assertTrue(hasNext);
                     }
                 });

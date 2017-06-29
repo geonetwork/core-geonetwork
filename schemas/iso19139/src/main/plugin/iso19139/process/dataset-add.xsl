@@ -26,14 +26,14 @@
 Stylesheet used to update metadata for a service and
 attached it to the metadata for data.
 -->
-<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+<xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
+                xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0"
->
-
-  <!-- ============================================================================= -->
+                exclude-result-prefixes="#all">
 
   <xsl:param name="uuidref"/>
   <xsl:param name="scopedName"/>
@@ -42,28 +42,26 @@ attached it to the metadata for data.
   <xsl:param name="url"/>
   <xsl:param name="desc"/>
 
-  <!-- ============================================================================= -->
-
   <xsl:template match="/gmd:MD_Metadata|*[@gco:isoType='gmd:MD_Metadata']">
 
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:copy-of
         select="gmd:fileIdentifier|
-        gmd:language|
-        gmd:characterSet|
-        gmd:parentIdentifier|
-        gmd:hierarchyLevel|
-        gmd:hierarchyLevelName|
-        gmd:contact|
-        gmd:dateStamp|
-        gmd:metadataStandardName|
-        gmd:metadataStandardVersion|
-        gmd:dataSetURI|
-        gmd:locale|
-        gmd:spatialRepresentationInfo|
-        gmd:referenceSystemInfo|
-        gmd:metadataExtensionInfo"/>
+                gmd:language|
+                gmd:characterSet|
+                gmd:parentIdentifier|
+                gmd:hierarchyLevel|
+                gmd:hierarchyLevelName|
+                gmd:contact|
+                gmd:dateStamp|
+                gmd:metadataStandardName|
+                gmd:metadataStandardVersion|
+                gmd:dataSetURI|
+                gmd:locale|
+                gmd:spatialRepresentationInfo|
+                gmd:referenceSystemInfo|
+                gmd:metadataExtensionInfo"/>
 
       <!-- Check current metadata is a service metadata record
             And add the link to the dataset -->
@@ -74,49 +72,49 @@ attached it to the metadata for data.
           <gmd:identificationInfo>
             <srv:SV_ServiceIdentification>
               <xsl:copy-of
-                select="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:citation|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:abstract|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:purpose|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:purpose|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:credit|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:credit|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:statut|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:statut|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:pointOfContact|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceMaintenance|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceMaintenance|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:graphicOverview|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceFormat|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceFormat|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:descriptiveKeywords|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceSpecificUsage|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceSpecificUsage|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:resourceConstraints|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:aggregationInfo|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/gmd:aggregationInfo|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:serviceType|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceTypeVersion|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:serviceTypeVersion|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:accessProperties|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:accessProperties|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:restrictions|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:restrictions|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:keywords|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:keywords|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:extent"/>
+                select="gmd:identificationInfo/*/gmd:citation|
+                        gmd:identificationInfo/*/gmd:abstract|
+                        gmd:identificationInfo/*/gmd:purpose|
+                        gmd:identificationInfo/*/gmd:credit|
+                        gmd:identificationInfo/*/gmd:statut|
+                        gmd:identificationInfo/*/gmd:pointOfContact|
+                        gmd:identificationInfo/*/gmd:resourceMaintenance|
+                        gmd:identificationInfo/*/gmd:graphicOverview|
+                        gmd:identificationInfo/*/gmd:resourceFormat|
+                        gmd:identificationInfo/*/gmd:descriptiveKeywords|
+                        gmd:identificationInfo/*/gmd:resourceSpecificUsage|
+                        gmd:identificationInfo/*/gmd:resourceConstraints|
+                        gmd:identificationInfo/*/gmd:aggregationInfo|
+                        gmd:identificationInfo/*/srv:serviceType|
+                        gmd:identificationInfo/*/srv:serviceTypeVersion|
+                        gmd:identificationInfo/*/srv:accessProperties|
+                        gmd:identificationInfo/*/srv:restrictions|
+                        gmd:identificationInfo/*/srv:keywords|
+                        gmd:identificationInfo/*/srv:extent"/>
 
 
               <!-- Handle SV_CoupledResource -->
               <xsl:variable name="coupledResource">
-                <xsl:for-each select="tokenize($scopedName, ',')">
+                <xsl:if test="$scopedName != ''">
+                  <xsl:for-each select="tokenize($scopedName, ',')">
+                    <srv:coupledResource>
+                      <srv:SV_CoupledResource>
+                        <srv:operationName>
+                          <gco:CharacterString>GetCapabilities</gco:CharacterString>
+                        </srv:operationName>
+                        <srv:identifier>
+                          <gco:CharacterString>
+                            <xsl:value-of select="$uuidref"/>
+                          </gco:CharacterString>
+                        </srv:identifier>
+                        <gco:ScopedName>
+                          <xsl:value-of select="."/>
+                        </gco:ScopedName>
+                      </srv:SV_CoupledResource>
+                    </srv:coupledResource>
+                  </xsl:for-each>
+                </xsl:if>
+                <xsl:if test="not($scopedName)">
                   <srv:coupledResource>
                     <srv:SV_CoupledResource>
                       <srv:operationName>
@@ -127,21 +125,16 @@ attached it to the metadata for data.
                           <xsl:value-of select="$uuidref"/>
                         </gco:CharacterString>
                       </srv:identifier>
-                      <gco:ScopedName>
-                        <xsl:value-of select="."/>
-                      </gco:ScopedName>
                     </srv:SV_CoupledResource>
                   </srv:coupledResource>
-                </xsl:for-each>
+                </xsl:if>
               </xsl:variable>
 
               <xsl:choose>
                 <xsl:when
-                  test="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource|
-                gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:coupledResource">
+                  test="gmd:identificationInfo/*/srv:coupledResource">
                   <xsl:for-each
-                    select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:coupledResource|
-                  gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:coupledResource">
+                    select="gmd:identificationInfo/*/srv:coupledResource">
                     <!-- Avoid duplicate SV_CoupledResource elements -->
                     <xsl:choose>
                       <xsl:when
@@ -164,22 +157,21 @@ attached it to the metadata for data.
 
 
               <xsl:copy-of
-                select="gmd:identificationInfo/srv:SV_ServiceIdentification/srv:couplingType|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:couplingType|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:containsOperations|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:containsOperations|
-              gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn[@uuidref!=$uuidref]|
-              gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']/srv:operatesOn[@uuidref!=$uuidref]"/>
+                select="gmd:identificationInfo/*/srv:couplingType|
+                        gmd:identificationInfo/*/srv:containsOperations|
+                        gmd:identificationInfo/*/srv:operatesOn[@uuidref!=$uuidref]"/>
 
               <!-- Handle operatesOn
 
-                            // TODO : it looks like the dataset identifier and not the
-                            // metadata UUID should be set in the operatesOn element of
-                            // the service metadata record.
-                            -->
+              // TODO : it looks like the dataset identifier and not the
+              // metadata UUID should be set in the operatesOn element of
+              // the service metadata record.
+              -->
               <srv:operatesOn uuidref="{$uuidref}"
                               xlink:href="{$siteUrl}csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id={$uuidref}"/>
 
+              <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                             namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
             </srv:SV_ServiceIdentification>
           </gmd:identificationInfo>
         </xsl:when>
@@ -195,7 +187,7 @@ attached it to the metadata for data.
       <xsl:choose>
         <xsl:when
           test="gmd:identificationInfo/srv:SV_ServiceIdentification|
-        gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
+                gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
           <xsl:copy-of select="gmd:distributionInfo"/>
         </xsl:when>
         <!-- In a dataset add a link in the distribution section -->
@@ -259,19 +251,31 @@ attached it to the metadata for data.
 
       <xsl:copy-of
         select="gmd:dataQualityInfo|
-      gmd:portrayalCatalogueInfo|
-      gmd:metadataConstraints|
-      gmd:applicationSchemaInfo|
-      gmd:metadataMaintenance|
-      gmd:series|
-      gmd:describes|
-      gmd:propertyType|
-      gmd:featureType|
-      gmd:featureAttribute"/>
+                gmd:portrayalCatalogueInfo|
+                gmd:metadataConstraints|
+                gmd:applicationSchemaInfo|
+                gmd:metadataMaintenance|
+                gmd:series|
+                gmd:describes|
+                gmd:propertyType|
+                gmd:featureType|
+                gmd:featureAttribute"/>
 
+      <xsl:apply-templates select="*[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+                                     namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
 
     </xsl:copy>
   </xsl:template>
 
+
+  <!-- Do a copy of every nodes and attributes -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- Always remove geonet:* elements. -->
+  <xsl:template match="geonet:*" priority="2"/>
 
 </xsl:stylesheet>

@@ -514,7 +514,7 @@
           return runProcess(this,
               setParams('onlinesrc-remove', {
                 id: gnCurrentEdit.id,
-                url: onlinesrc.url,
+                url: onlinesrc.lUrl || onlinesrc.url,
                 name: $filter('gnLocalized')(onlinesrc.title)
               }));
         },

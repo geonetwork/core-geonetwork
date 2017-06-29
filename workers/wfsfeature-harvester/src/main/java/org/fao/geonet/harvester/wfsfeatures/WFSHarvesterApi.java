@@ -26,10 +26,12 @@ package org.fao.geonet.harvester.wfsfeatures;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
+import org.fao.geonet.harvester.wfsfeatures.worker.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
 import org.geonetwork.messaging.JMSMessager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+
+import static org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer.deleteFeatures;
 
 /**
  * Created by fgravin on 10/29/15.
@@ -76,6 +80,36 @@ public class WFSHarvesterApi {
         return result;
     }
 
+    @Autowired
+    EsClient client;
+
+    @ApiOperation(value = "Delete a WFS feature type",
+        nickname = "deleteWfsFeatureType")
+    @RequestMapping(
+//    @RequestMapping(value = "/{serviceUrl:.*}/{typeName:.*}",
+        consumes = MediaType.ALL_VALUE,
+        produces = MediaType.ALL_VALUE,
+        method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public JSONObject deleteWfs(
+        @RequestParam
+        String serviceUrl,
+        @RequestParam
+        String typeName) throws Exception {
+
+
+        deleteFeatures(serviceUrl, typeName, Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME), client);
+
+        // TODO: Check user is authenticated ?
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+//        result.put("indexedFeatures",
+//            sendMessage(config));
+
+        return result;
+    }
+
     private JSONObject sendMessage(WFSHarvesterParameter parameters) {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         WFSHarvesterEvent event = new WFSHarvesterEvent(appContext, parameters);
@@ -88,7 +122,6 @@ public class WFSHarvesterApi {
 
         return j;
     }
-
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)

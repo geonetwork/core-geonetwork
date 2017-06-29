@@ -29,7 +29,7 @@ Insert is made in first transferOptions found.
 <xsl:stylesheet xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="2.0">
+                version="2.0" xmlns:che="http://www.geocat.ch/2008/che">
 
   <!-- Main properties for the link.
   Name and description may be multilingual eg. ENG#English name|FRE#Le français
@@ -137,8 +137,10 @@ Insert is made in first transferOptions found.
   <xsl:template match="gmd:onLine[
                         normalize-space($updateKey) = concat(
                         gmd:CI_OnlineResource/gmd:linkage/gmd:URL,
+                        gmd:CI_OnlineResource/gmd:linkage/che:PT_FreeURL/che:URLGroup/che:LocalisedURL[@locale = '#DE'],
                         gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
-                        gmd:CI_OnlineResource/gmd:name/gco:CharacterString)
+                        gmd:CI_OnlineResource/gmd:name/gco:CharacterString,
+                        gmd:CI_OnlineResource/gmd:name/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = '#DE'])
                         ]">
     <xsl:call-template name="createOnlineSrc"/>
   </xsl:template>

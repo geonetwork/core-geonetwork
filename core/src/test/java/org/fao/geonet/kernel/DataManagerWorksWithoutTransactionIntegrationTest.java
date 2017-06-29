@@ -60,6 +60,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
     @Test
     public void testDataManagerCutpoints() throws Exception {
         TransactionlessTesting.get().run
+
                 (new TestTask() {
                     @Override
                     public void run() throws Exception {
@@ -82,7 +83,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                         Metadata updateMd = (Metadata) dm.updateMetadata(serviceContext, mdId, newMd, false, false, false, "eng",
                                 new ISODate().getDateAndTime(), false);
                         assertNotNull(updateMd);
-                        final boolean hasNext = updateMd.getCategories().iterator().hasNext();
+                        final boolean hasNext = updateMd.getMetadataCategories().iterator().hasNext();
                         assertTrue(hasNext);
                     }
                 });

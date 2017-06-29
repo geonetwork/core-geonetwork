@@ -78,7 +78,7 @@ public class IMetadata extends GeonetEntity {
     private MetadataDataInfo _dataInfo = new MetadataDataInfo();
     private MetadataSourceInfo _sourceInfo = new MetadataSourceInfo();
     private MetadataHarvestInfo _harvestInfo = new MetadataHarvestInfo();
-    protected Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
+    protected Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 
     /**
      * Get the id of the metadata. This is a generated value and as such new instances should not have this set as it will simply be

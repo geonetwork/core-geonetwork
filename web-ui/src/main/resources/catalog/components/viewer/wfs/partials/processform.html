@@ -9,6 +9,7 @@
 
     <div ng-switch-when="loaded">
       <form>
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
         <h5>{{::title}}</h5>
         <div ng-repeat="input in inputs" class="form-group"
              ng-class="{'gn-required': input.required}">

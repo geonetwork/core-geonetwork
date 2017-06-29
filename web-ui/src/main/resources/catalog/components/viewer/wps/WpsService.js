@@ -150,7 +150,7 @@
               };
 
               var setInputData = function(input, data) {
-                if (input.literalData) {
+                if (input.literalData && data) {
                   request.value.dataInputs.input.push({
                     identifier: {
                       value: input.identifier.value
@@ -256,26 +256,30 @@
        * @param {object} response excecuteProcess response object.
        * @param {ol.Map} map
        * @param {ol.layer.Base} parentLayer
+       * @param {object=} opt_options
        */
-      this.extractWmsLayerFromResponse = function(response, map, parentLayer) {
+      this.extractWmsLayerFromResponse =
+          function(response, map, parentLayer, opt_options) {
 
         try {
           var ref = response.processOutputs.output[0].reference;
           if (ref.mimeType == this.WMS_MIMETYPE) {
             gnMap.addWmsAllLayersFromCap(map, ref.href, true).
                 then(function(layers) {
-                  layers.map(function(l) {
+                  layers.forEach(function(l) {
                     l.set('fromWps', true);
                     l.set('wpsParent', parentLayer);
-                    map.addLayer(l);
+                    if (opt_options &&
+                        !opt_options.exclude.test(l.get('label'))) {
+                      map.addLayer(l);
+                    }
                   });
                 });
           }
-        }
-        catch (e) {
-          // no WMS found
+        } catch (e) { // no WMS found }
         }
       };
     }
   ]);
+
 })();

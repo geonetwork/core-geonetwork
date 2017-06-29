@@ -26,13 +26,16 @@
                 xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
   <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="layout/utility-fn.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
 
@@ -40,16 +43,39 @@
   <xsl:variable name="isSDS"
                 select="count(//gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[starts-with(@xlink:href, 'http://inspire.ec.europa.eu/metadata-codelist/Category')]) = 1"/>
 
-  <!-- ================================================================= -->
+
+  <!-- The default language is also added as gmd:locale
+  for multilingual metadata records. -->
+  <xsl:variable name="mainLanguage"
+                select="/root/*/gmd:language/gco:CharacterString/text()|
+                        /root/*/gmd:language/gmd:LanguageCode/@codeListValue"/>
+
+  <xsl:variable name="isMultilingual"
+                select="count(/root/*/gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]) > 0"/>
+
+  <xsl:variable name="mainLanguageId"
+                select="upper-case(java:twoCharLangCode($mainLanguage))"/>
+
+  <xsl:variable name="defaultEncoding"
+                select="'utf8'"/>
+
+  <xsl:variable name="editorConfig"
+                select="document('layout/config-editor.xml')"/>
+
+  <xsl:variable name="nonMultilingualFields"
+                select="$editorConfig/editor/multilingualFields/exclude"/>
+
+
 
   <xsl:template match="/root">
     <xsl:apply-templates select="*:MD_Metadata"/>
   </xsl:template>
 
-  <!-- ================================================================= -->
+
 
   <xsl:template match="gmd:MD_Metadata">
     <xsl:copy>
+      <xsl:namespace name="xsi" select="'http://www.w3.org/2001/XMLSchema-instance'"/>
       <xsl:apply-templates select="@*"/>
 
       <gmd:fileIdentifier>
@@ -70,20 +96,62 @@
           </gmd:parentIdentifier>
         </xsl:when>
         <xsl:when test="gmd:parentIdentifier">
-          <xsl:copy-of select="gmd:parentIdentifier"/>
+          <xsl:apply-templates select="gmd:parentIdentifier"/>
         </xsl:when>
       </xsl:choose>
-      <xsl:apply-templates
-        select="node()[not(self::gmd:language) and not(self::gmd:characterSet)]"/>
+
+      <xsl:apply-templates select="
+        gmd:hierarchyLevel|
+        gmd:hierarchyLevelName|
+        gmd:contact|
+        gmd:dateStamp|
+        gmd:metadataStandardName|
+        gmd:metadataStandardVersion|
+        gmd:dataSetURI"/>
+
+      <!-- Copy existing locales and create an extra one for the default metadata language. -->
+      <xsl:if test="$isMultilingual">
+        <xsl:apply-templates select="gmd:locale[*/gmd:languageCode/*/@codeListValue != $mainLanguage]"/>
+        <gmd:locale>
+          <gmd:PT_Locale id="{$mainLanguageId}">
+            <gmd:languageCode>
+              <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
+                                codeListValue="{$mainLanguage}"/>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+              <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"
+                                       codeListValue="{$defaultEncoding}"/>
+            </gmd:characterEncoding>
+          </gmd:PT_Locale>
+        </gmd:locale>
+      </xsl:if>
+
+      <xsl:apply-templates select="
+        gmd:spatialRepresentationInfo|
+        gmd:referenceSystemInfo|
+        gmd:metadataExtensionInfo|
+        gmd:identificationInfo|
+        gmd:contentInfo|
+        gmd:distributionInfo|
+        gmd:dataQualityInfo|
+        gmd:portrayalCatalogueInfo|
+        gmd:metadataConstraints|
+        gmd:applicationSchemaInfo|
+        gmd:metadataMaintenance|
+        gmd:series|
+        gmd:describes|
+        gmd:propertyType|
+        gmd:featureType|
+        gmd:featureAttribute"/>
+
+      <!-- Handle ISO profiles extensions. -->
+      <xsl:apply-templates select="
+        *[namespace-uri()!='http://www.isotc211.org/2005/gmd' and
+          namespace-uri()!='http://www.isotc211.org/2005/srv']"/>
     </xsl:copy>
   </xsl:template>
 
 
-  <!-- ================================================================= -->
-  <!-- Do not process MD_Metadata header generated by previous template  -->
-
-  <xsl:template match="gmd:MD_Metadata/gmd:fileIdentifier|gmd:MD_Metadata/gmd:parentIdentifier"
-                priority="10"/>
 
   <!-- ================================================================= -->
 
@@ -169,9 +237,11 @@
 
   <!-- ================================================================= -->
 
-  <xsl:template match="*[gco:CharacterString]">
+  <xsl:template match="*[gco:CharacterString|gmd:PT_FreeText]">
     <xsl:copy>
-      <xsl:apply-templates select="@*[not(name()='gco:nilReason')]"/>
+      <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
+
+      <!-- Add nileason if text is empty -->
       <xsl:choose>
         <xsl:when test="normalize-space(gco:CharacterString)=''">
           <xsl:attribute name="gco:nilReason">
@@ -187,7 +257,60 @@
           <xsl:copy-of select="@gco:nilReason"/>
         </xsl:when>
       </xsl:choose>
-      <xsl:apply-templates select="node()"/>
+
+
+      <!-- For multilingual records, for multilingual fields,
+       create a gco:CharacterString containing
+       the same value as the default language PT_FreeText.
+      -->
+      <xsl:variable name="element" select="name()"/>
+
+
+      <xsl:variable name="excluded"
+                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+      <xsl:choose>
+        <xsl:when test="not($isMultilingual) or
+                        $excluded">
+          <!-- Copy what's in here ... probably only a gco:CharacterString -->
+          <xsl:apply-templates select="node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- Add xsi:type for multilingual element. -->
+          <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
+
+          <!-- Is the default language value set in a PT_FreeText ? -->
+          <xsl:variable name="isInPTFreeText"
+                        select="count(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]) = 1"/>
+
+
+          <xsl:choose>
+            <xsl:when test="$isInPTFreeText">
+              <!-- Update gco:CharacterString to contains
+                   the default language value from the PT_FreeText.
+                   PT_FreeText takes priority. -->
+              <gco:CharacterString>
+                <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                            @locale = concat('#', $mainLanguageId)]/text()"/>
+              </gco:CharacterString>
+              <xsl:apply-templates select="gmd:PT_FreeText"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <!-- Populate PT_FreeText for default language if not existing. -->
+              <xsl:apply-templates select="gco:CharacterString"/>
+              <gmd:PT_FreeText>
+                <gmd:textGroup>
+                  <gmd:LocalisedCharacterString locale="#{$mainLanguageId}">
+                    <xsl:value-of select="gco:CharacterString"/>
+                  </gmd:LocalisedCharacterString>
+                </gmd:textGroup>
+
+                <xsl:apply-templates select="gmd:PT_FreeText/gmd:textGroup"/>
+              </gmd:PT_FreeText>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:copy>
   </xsl:template>
 

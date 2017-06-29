@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -89,6 +90,8 @@ public class XslProcessUtils {
             // -----------------------------------------------------------------------
             // --- check processing exist for current schema
             String schema = info.getDataInfo().getSchemaId();
+
+            FilePathChecker.verify(process);
 
             Path xslProcessing = schemaMan.getSchemaDir(schema).resolve("process").resolve(process + ".xsl");
             if (!Files.exists(xslProcessing)) {

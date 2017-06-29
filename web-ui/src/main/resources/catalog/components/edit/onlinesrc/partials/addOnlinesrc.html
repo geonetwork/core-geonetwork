@@ -6,6 +6,7 @@
             class="form-horizontal"
             role="form"
             method="POST">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
         <div class="onlinesrc-container">
 
           <div data-ng-show="config.types.length > 1 && config.display == 'radio'">
@@ -72,11 +73,25 @@
 
           <!-- URL text field -->
           <div class="form-group gn-required"
-               data-ng-class="gnAddLink.url.$valid ? '' : 'has-error'">
+               data-ng-class="{'has-error' : !isFieldMultilingual('url') ? !gnAddLink.url.$valid : false}">
             <label for="onlinesrcUrl"
                    class="col-sm-2 control-label"
                    data-translate="">url</label>
-            <div class="col-sm-10">
+
+            <div class="col-sm-10"
+                 data-ng-if="isFieldMultilingual('url')"
+                 gn-multilingual-field="{{mdOtherLanguages}}"
+                 current-language="ctrl.urlCurLang"
+                 data-main-language="{{mdLang}}"
+                 expanded="false">
+              <input data-ng-repeat="(key, val) in mdLangs"
+                     class="form-control input-sm"
+                     lang="{{val}}"
+                     ng-model-options="{debounce: 500}"
+                     data-ng-model="params.url[val]">
+            </div>
+
+            <div class="col-sm-10" data-ng-if="!isFieldMultilingual('url')">
               <div data-ng-class="{'input-group': OGCProtocol != null}">
                 <input data-ng-model="params.url"
                        data-ng-model-options="{debounce: 500}"
@@ -104,11 +119,11 @@
 
 
           <div class="form-group"
-               data-ng-show="isImage">
+               data-ng-if="isImage">
             <label class="col-sm-2 control-label"
                    data-translate="">overview</label>
             <div class="col-sm-10">
-              <img ng-src="{{params.url}}"
+              <img ng-src="{{isFieldMultilingual('url') ? params.url[ctrl.urlCurLang] : params.url}}"
                    class="img-thumbnail">
             </div>
           </div>
@@ -125,12 +140,12 @@
           <!-- Name text Field -->
           <div class="form-group"
                data-ng-show="params.linkType.fields.name &&
-                             !params.linkType.fields.name.hidden">
+                             !params.linkType.fields.name.hidden && !(OGCProtocol && !isEditing)">
             <label for="onlinesrcName"
                    class="col-sm-2 control-label"
                    data-translate="">onlineResourceName</label>
             <div class="col-sm-10"
-                 data-ng-if="!isMdMultilingual || (isMdMultilingual && OGCProtocol != null)">
+                 data-ng-if="!isFieldMultilingual('name')">
               <input ng-model="params.name"
                      name="name"
                      type="text"
@@ -138,7 +153,7 @@
                      placeholder="Name">
             </div>
             <div class="col-sm-10"
-                 data-ng-if="isMdMultilingual && OGCProtocol == null"
+                 data-ng-if="isFieldMultilingual('name')"
                  data-gn-multilingual-field="{{mdOtherLanguages}}"
                  data-main-language="{{mdLang}}"
                  expanded="false">
@@ -152,12 +167,12 @@
           <!-- Description Text area -->
           <div class="form-group"
                data-ng-show="params.linkType.fields.desc &&
-                             !params.linkType.fields.desc.hidden">
+                             !params.linkType.fields.desc.hidden && !(OGCProtocol && !isEditing)">
             <label for="onlinesrcDescr"
                    class="col-sm-2 control-label"
                    data-translate="">Description</label>
             <div class="col-sm-10"
-                 data-ng-if="!isMdMultilingual || (isMdMultilingual && OGCProtocol != null)">
+                 data-ng-if="!isFieldMultilingual('desc')">
               <textarea rows="3"
                         data-gn-autogrow=""
                         data-ng-model="params.desc"
@@ -167,7 +182,7 @@
                         name="description"/>
             </div>
             <div class="col-sm-10"
-                 data-ng-if="isMdMultilingual && OGCProtocol == null"
+                 data-ng-if="isFieldMultilingual('desc')"
                  gn-multilingual-field="{{mdOtherLanguages}}"
                  data-main-language="{{mdLang}}"
                  expanded="false">
@@ -221,6 +236,7 @@
         <div class="panel-body">
           <form class="form-horizontal" role="form"
                 data-ng-search-form="">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="input-group">
               <span class="input-group-addon">
                 <i class="fa fa-search"/>
@@ -323,9 +339,9 @@
       <span data-translate="">areYouSureToAddALinkWithError</span>
       <a class="btn btn-link"
          target="_blank"
-         data-ng-href="{{params.url}}"
+         data-ng-href="params.url[ctrl.urlCurLang]"
          data-ng-show="gnAddLink.$valid && !isUrlOk">
-        {{params.url}}
+        {{params.url[ctrl.urlCurLang]}}
       </a>
     </div>
   </div>

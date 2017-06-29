@@ -41,6 +41,13 @@
           scope.isWfsAvailable = false;
 
           function init() {
+
+            var source = scope.layer.getSource();
+            if(!source || !(source instanceof ol.source.ImageWMS ||
+              source instanceof ol.source.TileWMS)) {
+              return;
+            }
+
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
             scope.url = attrs['url'] ||
                 scope.layer.get('url').replace(/wms/i, 'wfs');

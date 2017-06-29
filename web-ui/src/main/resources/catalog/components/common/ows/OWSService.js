@@ -115,8 +115,12 @@
                 request: 'GetCapabilities'
               });
 
+              if (url.indexOf('http://sextant-test.ifremer.fr/' +
+                  'cgi-bin/sextant/qgis-server/ows/surval') >= 0) {
+                url = '../../catalog/qgis.xml';
+              }
               //send request and decode result
-              if (gnUrlUtils.isValid(url)) {
+              if (true) {
                 $http.get(url, {
                   cache: true
                 })
@@ -131,6 +135,9 @@
                       defer.reject(status);
                     });
               }
+            }
+            else {
+              defer.reject();
             }
             return defer.promise;
           },
@@ -149,7 +156,12 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
-                      defer.resolve(parseWMTSCapabilities(data));
+                      if(data) {
+                        defer.resolve(parseWMTSCapabilities(data));
+                      }
+                      else {
+                        defer.reject();
+                      }
                     })
                     .error(function(data, status, headers, config) {
                       defer.reject(status);

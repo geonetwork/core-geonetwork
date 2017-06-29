@@ -61,6 +61,7 @@
     "validStatus-0": "Invalide",
     "validStatus--1": "Non validé",
     "fre": "Français",
+    "roh": "Rumantsch",
     "ara": "عربي",
     "kor": "Coréen",
     "by": "par",
@@ -321,5 +322,6 @@
     "directoryManager": "Gestion des annuaires",
     "typeOfRecord": "Type de fiche",
     "load": "Charger",
-    "solrAccessError": "Erreur lors de l'accès à l'index."
+    "indexAccessError": "Error during index access.",
+    "applyFilter": "Filtrer"
 }

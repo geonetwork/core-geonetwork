@@ -301,7 +301,7 @@ public class AccessManager {
       
       //--- retrieve metadata info
       IMetadata info = context.getBean(IMetadataManager.class)
-              .getMetadataObject(Integer.valueOf(id));
+              .getMetadataObjectNoPriv(Integer.valueOf(id));
 
       if (info == null)
           return false;
@@ -324,7 +324,7 @@ public class AccessManager {
 
         //--- retrieve metadata info
         IMetadata info = ApplicationContextHolder.get().getBean(IMetadataManager.class)
-                .getMetadataObject(Integer.valueOf(id));
+                .getMetadataObjectNoPriv(Integer.valueOf(id));
 
         if (info == null)
             return false;
@@ -452,7 +452,7 @@ public class AccessManager {
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
         IMetadata metadata = ApplicationContextHolder.get().getBean(IMetadataManager.class)
-                .getMetadataObject(Integer.valueOf(metadataId));
+                .getMetadataObjectNoPriv(Integer.valueOf(metadataId));
 
         if (metadata == null) {
             return false;

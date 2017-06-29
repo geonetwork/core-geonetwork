@@ -382,9 +382,9 @@ public class MEFLib {
 
 		Set<MetadataCategory> categories = null;
 		if(md instanceof Metadata) {
-		    categories = ((Metadata)md).getCategories();
+		    categories = ((Metadata)md).getMetadataCategories();
 		} else {
-		    categories = ((MetadataDraft)md).getCategories();
+		    categories = ((MetadataDraft)md).getMetadataCategories();
 		}
         for (MetadataCategory category : categories) {
             String name = category.getName();

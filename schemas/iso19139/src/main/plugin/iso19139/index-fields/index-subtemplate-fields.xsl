@@ -32,7 +32,7 @@
   Add the [count(ancestor::node()) =  1] to only match element at the root of the document.
   This is the method to identify a subtemplate.
   -->
-  <xsl:template mode="index" match="gmd:CI_ResponsibleParty[count(ancestor::node()) =  1]">
+  <xsl:template mode="index" match="gmd:CI_ResponsibleParty[count(ancestor::node()) =  1]|*[@gco:isoType='gmd:CI_ResponsibleParty'][count(ancestor::node()) = 1]">
 
     <xsl:variable name="org"
                   select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
@@ -80,6 +80,14 @@
   <xsl:template mode="index" match="gmd:DQ_DomainConsistency[count(ancestor::node()) =  1]">
     <Field name="_title"
            string="{gmd:result/*/gmd:specification/*/gmd:title/gco:CharacterString}"
+           store="true" index="true"/>
+
+    <xsl:call-template name="subtemplate-common-fields"/>
+  </xsl:template>
+
+  <xsl:template mode="index" match="gmd:MD_Format[count(ancestor::node()) =  1]">
+    <Field name="_title"
+           string="{gmd:name/gco:CharacterString}"
            store="true" index="true"/>
 
     <xsl:call-template name="subtemplate-common-fields"/>

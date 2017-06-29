@@ -1,0 +1,54 @@
+.d3_timeseries.axis {
+  font: 10px sans-serif;
+}
+
+
+.d3_timeseries.axis path,
+.d3_timeseries.axis line {
+  fill: none;
+  stroke: #000;
+  stroke-width:1;
+  shape-rendering: crispEdges;
+}
+
+
+.d3_timeseries.brush {
+  fill-opacity : 0.2;
+  fill:#666;
+}
+
+.d3_timeseries.mousevline {
+  fill:none;
+  stroke: #666;
+  stroke-dasharray: 3,6;
+  stroke-width:1;
+}
+
+.d3_timeseries.mousevline-text {
+  font: 10px sans-serif;
+}
+
+.d3_timeseries.tooltip {
+  position: absolute;
+  text-align: left;
+  font: 10px sans-serif;
+
+  padding: 2px;
+  background: white;
+  border: solid #888 1px;
+  border-radius: 4px;
+}
+
+.d3_timeseries.tooltip h4{
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+/*g.tick text,*/
+.d3_timeseries.axis text{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: default;
+}

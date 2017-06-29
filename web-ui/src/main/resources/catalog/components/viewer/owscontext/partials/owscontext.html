@@ -24,6 +24,7 @@
   <fieldset data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()">
     <legend data-translate="">saveMapInCatalog</legend>
     <form>
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
       <div class="form-group">
         <label for="mapTitle"
                data-translate="">mapTitle</label>

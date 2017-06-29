@@ -64,9 +64,29 @@
       if (window.SwaggerTranslator) {
         window.SwaggerTranslator.translate();
       }
+      var csrf = null;
+      var cookiearray = document.cookie.split(';');
+      for(var i =0 ; i < cookiearray.length ; ++i){ 
+          if(cookiearray[i].trim().match('^XSRF-TOKEN=')){ 
+            csrf = cookiearray[i].replace(`XSRF-TOKEN=`,'').trim();
+          }
+      }
+
+      var interceptor = {
+          requestInterceptor: {
+            apply: function (requestObj) {
+              var headers = requestObj.headers || {};
+              headers["X-XSRF-TOKEN"] = csrf;
+              return requestObj;
+            }
+          }
+        };
+
+      
       window.swaggerUi = new SwaggerUi({
         url: url,
         dom_id: "swagger-ui-container",
+        requestInterceptor: interceptor.requestInterceptor,
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function (swaggerApi, swaggerUi) {
           if (typeof initOAuth == "function") {
@@ -79,7 +99,7 @@
                         additionalQueryStringParams: {}
                       });
           }
-
+          
           if (window.SwaggerTranslator) {
             window.SwaggerTranslator.translate();
           }

@@ -204,28 +204,28 @@
                 return;
               }
 
-              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-              $http.get(proxyUrl).then(function(response) {
-                var kmlSource = new ol.source.Vector();
-                kmlSource.addFeatures(
+              $http.get(gnGlobalSettings.proxyUrl + encodeURIComponent(url)).
+                  then(function(response) {
+                    var kmlSource = new ol.source.Vector();
+                    kmlSource.addFeatures(
                     new ol.format.KML().readFeatures(
                     response.data, {
                       featureProjection: $scope.map.getView().getProjection(),
                       dataProjection: 'EPSG:4326'
                     }));
-                var vector = new ol.layer.Vector({
-                  source: kmlSource,
-                  getinfo: true,
-                  label: $translate.instant('kmlFile',
+                    var vector = new ol.layer.Vector({
+                      source: kmlSource,
+                      getinfo: true,
+                      label: $translate.instant('kmlFile',
                       {layer: url.split('/').pop()})
-                });
-                $scope.addToMap(vector, map);
-                $scope.url = '';
-                $scope.validUrl = true;
+                    });
+                    $scope.addToMap(vector, map);
+                    $scope.url = '';
+                    $scope.validUrl = true;
 
-              }, function() {
-                $scope.validUrl = false;
-              });
+                  }, function() {
+                    $scope.validUrl = false;
+                  });
             };
 
             $scope.addToMap = function(layer, map) {

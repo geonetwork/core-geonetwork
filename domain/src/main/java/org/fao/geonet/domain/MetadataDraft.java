@@ -1,6 +1,5 @@
 package org.fao.geonet.domain;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -32,8 +31,6 @@ public class MetadataDraft extends IMetadata {
 
     public MetadataDraft() {
     }
-
-    private Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
     
     /**
      * Get the set of metadata categories this metadata is part of.  This is lazily loaded and all operations are
@@ -48,8 +45,8 @@ public class MetadataDraft extends IMetadata {
             inverseJoinColumns = @JoinColumn(name =
             METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
-    public Set<MetadataCategory> getCategories() {
-        return _metadataCategories;
+    public Set<MetadataCategory> getMetadataCategories() {
+        return metadataCategories;
     }
 
     /**
@@ -57,8 +54,8 @@ public class MetadataDraft extends IMetadata {
      *
      * @param categories
      */
-    protected void setCategories(@Nonnull Set<MetadataCategory> categories) {
-        this._metadataCategories = categories;
+    protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
+        this.metadataCategories = categories;
     }
     
     public static MetadataDraft createFromLuceneIndexDocument(Document doc) {

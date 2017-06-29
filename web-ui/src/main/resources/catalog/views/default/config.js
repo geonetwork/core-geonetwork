@@ -38,13 +38,33 @@
         'gnMap',
         'gnNcWms',
         'gnGlobalSettings',
+        '$location',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnNcWms, gnGlobalSettings) {
+                 gnMap, gnNcWms, gnGlobalSettings, $location) {
 
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
-            viewerSettings.mapConfig.map ||
-            '../../map/config-viewer.xml';
+              (viewerSettings.mapConfig.map || '../../map/config-viewer.xml');
+          viewerSettings.owsContext = $location.search().map;
+
+          // these layers will be added along the default context
+          // (transform settings to be usable by the OwsContextService)
+          var viewerMapLayers = viewerSettings.mapConfig.viewerMapLayers
+          viewerSettings.additionalMapLayers =
+            viewerMapLayers && viewerMapLayers.map ?
+            viewerMapLayers.map(function (layer) {
+              return {
+                name: '{type=' + layer.type + ', name=' + layer.name + '}',
+                title: layer.title,
+                group: 'Background layers',
+                server: [{
+                  service: 'urn:ogc:serviceType:WMS',
+                  onlineResource: [{
+                    href: layer.url
+                  }]
+                }]
+              }
+            }) : [];
 
           // Keep one layer in the background
           // while the context is not yet loaded.
@@ -96,6 +116,8 @@
 
           };
 
+          // Object to store the current Map context
+          viewerSettings.storage = 'sessionStorage';
 
           // Start location. This is usually overriden
           // by context for large map and search records
@@ -112,11 +134,25 @@
 
           var searchMap = new ol.Map({
             controls:[],
-            layers: [new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })],
+            layers: [],
             view: new ol.View(angular.extend({}, mapsConfig))
           });
+
+          // initialize search map layers according to settings
+          // (default is OSM)
+          var searchMapLayers = viewerSettings.mapConfig.searchMapLayers;
+          if (!searchMapLayers || !searchMapLayers.length) {
+            searchMap.addLayer(new ol.layer.Tile({
+              source: new ol.source.OSM()
+            }));
+          } else {
+            searchMapLayers.forEach(function (layerInfo) {
+              gnMap.createLayerForType(layerInfo.type, {
+                name: layerInfo.name,
+                url: layerInfo.url
+              }, layerInfo.title, searchMap);
+            });
+          }
 
           // Set custom config in gnSearchSettings
           angular.extend(searchSettings, {

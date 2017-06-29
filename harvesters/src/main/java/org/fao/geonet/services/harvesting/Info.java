@@ -279,7 +279,7 @@ public class Info implements Service {
             Element elRoot = new Element("stylesheets");
             for (Path sheet : sheets) {
 
-                String id = sheet.toString();
+                String id = sheet.getFileName().toString();
                 if (id != null && id.endsWith(".xsl")) {
                     String name = com.google.common.io.Files.getNameWithoutExtension(sheet.getFileName().toString());
 

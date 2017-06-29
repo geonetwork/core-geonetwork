@@ -82,7 +82,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
 //                        .setProperty("url", xpath("wfs/@url", String.class))
 //                        .setProperty("typeName", xpath("wfs/@typeName", String.class))
                         .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - start (Exchange ${exchangeId}).")
-                        .bean(SolrWFSFeatureIndexer.class, "initialize(*, true)")
+                        .beanRef("WFSFeatureIndexer", "initialize(*, true)")
                         .to("direct:delete-wfs-featuretype-features")
                         .to("direct:index-wfs")
                         .log(LoggingLevel.INFO, LOGGER_NAME, "#${property.CamelSplitIndex}. Harvesting ${property.configuration.url} - end (Exchange ${exchangeId}).")
@@ -100,7 +100,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received.")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "${body}")
                 .setProperty("configuration", simple("${body.parameters}"))
-                .bean(SolrWFSFeatureIndexer.class, "initialize(*, true)")
+                .beanRef("WFSFeatureIndexer", "initialize(*, true)")
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
 
@@ -114,13 +114,13 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
         from("direct:delete-wfs-featuretype-features")
                 .id("harvest-wfs-delete-features")
                 .log(LoggingLevel.INFO, "Removing features from ${property.url}#${property.typeName} ...")
-                .beanRef("solrWFSFeatureIndexer", "deleteFeatures")
+                .beanRef("WFSFeatureIndexer", "deleteFeatures")
                 .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} removed.");
 
         from("direct:index-wfs")
                 .id("harvest-wfs-features")
                 .log(LoggingLevel.INFO, "Indexing features from ${property.url}#${property.typeName} ...")
-                .beanRef("solrWFSFeatureIndexer", "indexFeatures")
+                .beanRef("WFSFeatureIndexer", "indexFeatures")
                 .log(LoggingLevel.INFO, "All features from ${property.url}#${property.typeName} indexed.");
     }
 }

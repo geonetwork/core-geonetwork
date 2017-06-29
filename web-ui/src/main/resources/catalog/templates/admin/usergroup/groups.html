@@ -68,6 +68,7 @@
         <form id="gn-group-edit" name="gnGroupEdit"
               data-ng-keypress="updatingGroup()" method="POST"
               data-file-upload="mdImportUploadOptions" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <fieldset>
             <input type="hidden" name="id" data-ng-model="groupSelected.id"
                    value="{{groupSelected.id}}"/>

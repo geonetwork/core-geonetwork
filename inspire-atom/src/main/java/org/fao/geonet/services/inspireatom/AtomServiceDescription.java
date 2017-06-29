@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2017 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -50,6 +50,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 
 /**
  * INSPIRE OpenSearchDescription atom service.
@@ -110,6 +111,10 @@ public class AtomServiceDescription implements Service {
         List<String> datasetIdentifiers = null;
 
         InspireAtomFeed inspireAtomFeed = service.findByMetadataId(Integer.parseInt(id));
+
+        if (inspireAtomFeed == null) {
+            throw new ResourceNotFoundEx("Atom feed for metadata " + id + " not found.");
+        }
 
         // Check the metadata has an atom document (checks in the lucene index).
         String atomUrl = inspireAtomFeed.getAtomUrl();

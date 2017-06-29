@@ -28,18 +28,19 @@
     <div class="panel-body">
       <!-- Header with projection selection, draw button and area list -->
       <form class="form" data-role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
         <div class="form-group" class="col-sm-12 inline">
           <div class="btn-toolbar">
             <button class="btn btn-lin btn-xs"
-                    data-ng-click="checkNode()"
+                    data-gn-click-and-spin="checkNode()"
                     data-ng-class="{'disabled': (!gsNode)}">
               <i class="fa fa-chain"></i>&nbsp;<span data-translate="">check</span>
             </button>
-            <button class="btn btn-link btn-xs" data-ng-click="publish()"
+            <button class="btn btn-link btn-xs" data-gn-click-and-spin="publish()"
                     data-ng-class="{'disabled': (isPublished || !gsNode)}">
               <i class="fa fa-globe"></i>&nbsp;<span data-translate="">publish</span>
             </button>
-            <button class="btn btn-link btn-xs" data-ng-click="unpublish()"
+            <button class="btn btn-link btn-xs" data-gn-click-and-spin="unpublish()"
                     data-ng-class="{'disabled': (!isPublished || !gsNode)}">
               <i class="fa fa-globe text-danger"></i>&nbsp;<span
               data-translate="">unpublish</span>

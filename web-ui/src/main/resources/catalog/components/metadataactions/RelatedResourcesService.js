@@ -61,12 +61,15 @@
           };
 
           var addWMSToMap = function(link, md) {
-            var layerName = $filter('gnLocalized')(link.title);
+            // Link is localized when using associated resource service
+            // and is not when using search
+            var url = $filter('gnLocalized')(link.url) || link.url;
+            var layerName = $filter('gnLocalized')(link.title) || link.title;
             if (layerName) {
               gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                 link.url, layerName, false, md);
+                 url, layerName, false, md);
             } else {
-              gnMap.addOwsServiceToMap(link.url, 'WMS');
+              gnMap.addOwsServiceToMap(url, 'WMS');
             }
 
             gnSearchLocation.setMap();
@@ -74,23 +77,24 @@
 
 
           var addWFSToMap = function(link, md) {
+            var url = $filter('gnLocalized')(link.url) || link.url;
             var ftName = $filter('gnLocalized')(link.title);
             if (ftName) {
               gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
-                 link.url, ftName, false, md);
+                 url, ftName, false, md);
             } else {
-              gnMap.addOwsServiceToMap(link.url, 'WFS');
+              gnMap.addOwsServiceToMap(url, 'WFS');
             }
             gnSearchLocation.setMap();
           };
 
 
           function addWMTSToMap(link, md) {
-
+            var url = $filter('gnLocalized')(link.url) || link.url;
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
               angular.forEach(link.name, function(name) {
-                gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+                gnOwsCapabilities.getWMTSCapabilities(url).then(
                    function(capObj) {
                      var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                      name, capObj, uuid);
@@ -100,7 +104,7 @@
               });
               gnSearchLocation.setMap();
             } else if (link.name && !angular.isArray(link.name)) {
-              gnOwsCapabilities.getWMTSCapabilities(link.url).then(
+              gnOwsCapabilities.getWMTSCapabilities(url).then(
                   function(capObj) {
                     var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
                    link.name, capObj, uuid);
@@ -109,18 +113,20 @@
                   });
               gnSearchLocation.setMap();
             } else {
-              gnMap.addOwsServiceToMap(link.url, 'WMTS');
+              gnMap.addOwsServiceToMap(url, 'WMTS');
             }
           };
 
           function addKMLToMap(record, md) {
-            gnMap.addKmlToMap(record.name, record.url,
+            var url = $filter('gnLocalized')(record.url) || record.url;
+            gnMap.addKmlToMap(record.name, url,
                gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
           };
 
           function addMapToMap(record, md) {
-            gnOwsContextService.loadContextFromUrl(record.url,
+            var url = $filter('gnLocalized')(record.url) || record.url;
+            gnOwsContextService.loadContextFromUrl(url,
                 gnSearchSettings.viewerMap);
 
             gnSearchLocation.setMap();
@@ -131,9 +137,10 @@
           };
 
           var openLink = function(record, link) {
-            if (record.url.indexOf('http') == 0 ||
-                record.url.indexOf('ftp') == 0) {
-              return window.open(record.url, '_blank');
+            var url = $filter('gnLocalized')(record.url) || record.url;
+            if (url.indexOf('http') == 0 ||
+                url.indexOf('ftp') == 0) {
+              return window.open(url, '_blank');
             } else {
               return window.location.assign(record.title);
             }
@@ -290,13 +297,14 @@
               } else if (protocolOrType.match(/kml/i)) {
                 return 'KML';
               } else if (protocolOrType.match(/download/i)) {
-                if (resource.url.match(/zip/i)) {
+                var url = $filter('gnLocalized')(resource.url) || resource.url;
+                if (url.match(/zip/i)) {
                   return 'LINKDOWNLOAD-ZIP';
-                } else if (resource.url.match(/pdf/i)) {
+                } else if (url.match(/pdf/i)) {
                   return 'LINKDOWNLOAD-PDF';
-                } else if (resource.url.match(/xml/i)) {
+                } else if (url.match(/xml/i)) {
                   return 'LINKDOWNLOAD-XML';
-                } else if (resource.url.match(/rdf/i)) {
+                } else if (url.match(/rdf/i)) {
                   return 'LINKDOWNLOAD-RDF';
                 } else {
                   return 'LINKDOWNLOAD';

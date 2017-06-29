@@ -1,6 +1,6 @@
 <div data-ng-search-form="" data-runSearch="true">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-offset-2 col-md-8">
       <div class="input-group gn-form-any">
         <input type="text" class="form-control"
                placeholder="{{('searchA' + templateType) | translate}}"
@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div data-ng-show="searchResults.records.length > 0"
            data-gn-facet-dimension-list="searchResults.dimension"
            data-params="searchObj.params"
@@ -36,7 +36,7 @@
            data-current-facets="currentFacets">
       </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
 
       <div data-gn-search-form-results
            data-gn-search-form-results-mode="simple"
@@ -51,7 +51,7 @@
       <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
     </div> -->
   </div>
-  <div class="row">
+  <div class="row bottom-bar">
     <div class="col-md-12">
       <div class="btn btn-default"
            data-ng-hide="isContact"
@@ -70,6 +70,8 @@
       <div class="btn-group dropup"
            data-ng-show="isContact && hasDynamicVariable"
            title="{{'addContactAsText-help' | translate}}">
+
+        <!--default role is set, display a button to attach the selected contact with default role-->
         <button type="button"
                 class="btn btn-default"
                 data-gn-click-and-spin="addSelectedEntry(defaultRole.code)"
@@ -78,23 +80,33 @@
           <i class="fa fa-plus"></i>&nbsp;
           <span>{{defaultRole.label}}</span>
         </button>
+
+        <!--Choose a role, when a role is set, enable the button to attach the contact-->
         <button type="button"
                 class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                 data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
-          <span data-translate="" data-ng-if="defaultRole">chooseContactRole</span>&nbsp;
-          <i data-ng-if="!defaultRole" class="fa fa-plus"></i>&nbsp;
+          <span data-translate="">chooseContactRole</span>&nbsp;
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
           <li data-ng-repeat="role in roles | orderBy:'label'"
               data-ng-hide="role['@hideInEditMode']">
             <a href=""
-               data-gn-click-and-spin="addSelectedEntry(role.code)"
+               ng-click="ctrl.role = role"
                title="{{role.description}}">
               {{role.label}}
             </a>
           </li>
         </ul>
+        <button type="button"
+                class="btn btn-success"
+                data-gn-click-and-spin="addSelectedEntry(ctrl.role.code)"
+                data-ng-class="{'disabled': !ctrl.role}">
+          <i class="fa fa-plus"></i>&nbsp;
+          <span>{{ctrl.role.label}}</span>
+        </button>
+
+
       </div>
       <div data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
            title="{{'addContactAsLink-help' | translate}}"

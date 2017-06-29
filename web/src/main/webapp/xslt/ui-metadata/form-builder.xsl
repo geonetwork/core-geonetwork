@@ -108,7 +108,7 @@
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
@@ -478,15 +478,44 @@
                 </div>
               </xsl:when>
               <xsl:otherwise>
-                <button class="btn btn-default"
-                        data-gn-template-field-add-button="{$id}">
-                  <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'}"/>
-                  <xsl:if test="$btnLabel != ''">&#160;
-                    <span>
-                      <xsl:value-of select="$btnLabel"/>
-                    </span>
+
+                <xsl:variable name="hasMultipleChoice"
+                              select="count($template/snippet) gt 1"/>
+
+                <div class="btn-group" data-gn-template-field-add-button="{$id}">
+                  <xsl:if test="$hasMultipleChoice">
+                    <xsl:attribute name="data-has-choice">true</xsl:attribute>
                   </xsl:if>
-                </button>
+
+                  <button class="btn btn-default {if ($hasMultipleChoice) then 'dropdown-toggle' else ''}">
+                    <xsl:if test="$hasMultipleChoice">
+                      <xsl:attribute name="data-toggle">dropdown</xsl:attribute>
+                      <xsl:attribute name="aria-haspopup">true</xsl:attribute>
+                      <xsl:attribute name="aria-expanded">false</xsl:attribute>
+                    </xsl:if>
+                    <i class="{if ($btnClass != '') then $btnClass else 'fa fa-plus'}"/>
+                    <xsl:if test="$btnLabel != ''">&#160;
+                      <span>
+                        <xsl:value-of select="$btnLabel"/>
+                      </span>
+                    </xsl:if>
+
+                    <xsl:if test="$hasMultipleChoice">
+                      <span class="caret"></span>
+                    </xsl:if>
+                  </button>
+                  <xsl:if test="$hasMultipleChoice">
+                    <!-- A combo with the list of snippet available -->
+                    <ul class="dropdown-menu">
+                      <xsl:for-each select="$template/snippet">
+                        <xsl:variable name="label" select="@label"/>
+                        <li><a id="{concat($id, $label)}">
+                          <xsl:value-of select="if ($strings/*[name() = $label] != '') then $strings/*[name() = $label] else $label"/>
+                        </a></li>
+                      </xsl:for-each>
+                    </ul>
+                  </xsl:if>
+                </div>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:if>
@@ -638,6 +667,19 @@
               <xsl:if test="not($isExisting)">
                 <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
               </xsl:if>
+
+              <xsl:variable name="hasMultipleChoice"
+                            select="count($template/snippet) gt 1"/>
+
+              <xsl:if test="$hasMultipleChoice">
+                <xsl:for-each select="$template/snippet">
+                  <textarea id="{concat($id, @label, '-value')}">
+                    <xsl:value-of select="saxon:serialize(*,
+                                        'default-serialize-mode')"/>
+                  </textarea>
+                </xsl:for-each>
+              </xsl:if>
+
               <textarea class="form-control gn-debug"
                         name="{$id}"
                         data-gn-template-field="{$id}"
@@ -647,7 +689,7 @@
                 <xsl:if test="$isMissingLabel != ''">
                   <xsl:attribute name="data-not-set-check" select="$tagId"/>
                 </xsl:if>
-                <xsl:value-of select="saxon:serialize($template/snippet/*,
+                <xsl:value-of select="saxon:serialize($template/snippet[1]/*,
                                       'default-serialize-mode')"/>
               </textarea>
             </div>
@@ -1431,6 +1473,9 @@
           <tr>
             <xsl:for-each select="col">
               <th>
+                <xsl:if test="@class">
+                  <xsl:attribute name="class" select="@class"/>
+                </xsl:if>
                 <div class="th-inner ">
                   <xsl:value-of select="."/>
                 </div>
@@ -1449,6 +1494,9 @@
               <td>
                 <xsl:if test="@colspan">
                   <xsl:attribute name="colspan" select="@colspan"/>
+                </xsl:if>
+                <xsl:if test="@class">
+                  <xsl:attribute name="class" select="@class"/>
                 </xsl:if>
                 <xsl:if test="@title">
                   <xsl:attribute name="title" select="@title"/>

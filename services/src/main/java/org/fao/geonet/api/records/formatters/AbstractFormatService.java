@@ -38,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import jeeves.server.ServiceConfig;
+import org.fao.geonet.utils.FilePathChecker;
 
 import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_GROOVY_FILENAME;
@@ -99,6 +100,7 @@ abstract class AbstractFormatService {
             throw new BadParameterEx(paramName, "missing " + paramName + " param");
         }
 
+        FilePathChecker.verify(xslid);
         checkLegalId(paramName, xslid);
         Path formatDir = null;
         if (schemaDir != null && Files.exists(schemaDir)) {

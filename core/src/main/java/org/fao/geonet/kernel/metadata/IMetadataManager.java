@@ -270,6 +270,18 @@ public interface IMetadataManager {
      * @throws Exception
      */
     public IMetadata getMetadataObject(Integer id) throws Exception;
+
+    /**
+     * Retrieves a metadata given its id. Use this method when you must
+     * retrieve a metadata in the same transaction.
+     * 
+     * Does not check privileges
+     * 
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public IMetadata getMetadataObjectNoPriv(Integer id) throws Exception;
     
     /**
      * Retrieves a metadata given its uuid. Use this method when you must

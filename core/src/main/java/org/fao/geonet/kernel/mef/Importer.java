@@ -79,6 +79,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -315,7 +316,10 @@ public class Importer {
 
 
                 if (!style.equals("_none_")) {
-                    final GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+                    FilePathChecker.verify(style);
+
+                    final GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+
                     Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
                     Path xsltPath = stylePath.resolve(style + ".xsl");
                     if (Files.exists(xsltPath)) {
@@ -366,6 +370,9 @@ public class Importer {
                         // Get the Metadata uuid if it's not a template.
                         uuid = dm.extractUUID(schema, md.get(index));
                     } else if (isTemplate == MetadataType.SUB_TEMPLATE) {
+                        // Get subtemplate uuid if defined in @uuid at root
+                        uuid = md.get(index).getAttributeValue("uuid");
+                    } else if (isTemplate == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
                         // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
                     }
@@ -561,7 +568,7 @@ public class Importer {
                         Log.debug(Geonet.MEF,
                                 " - Setting category : " + catName);
                     }
-                    metadata.getCategories().add(oneByName);
+                    metadata.getMetadataCategories().add(oneByName);
                 }
             }
         }

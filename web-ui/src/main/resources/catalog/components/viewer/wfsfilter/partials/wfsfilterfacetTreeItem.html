@@ -1,0 +1,30 @@
+<div data-ng-if="::!ctrl.isRoot"
+     data-ng-class="::{'gn-leaf': !ctrl.node.nodes}"
+     data-ng-click="ctrl.onCheckboxTreeClick()">
+
+  <span data-ng-if="::ctrl.node.nodes"
+        ng-click="toggleNode($event)"
+        class="fa"
+        data-ng-class="selectedOnInit ? 'fa-minus-square' : 'fa-plus-square'" >
+  </span>
+
+  <span class="fa"
+     data-ng-class="ctrl.isSelected() ? 'fa-check-square' : 'fa-square-o'"></span>
+  <span>{{::ctrl.node.value}}&nbsp;({{::ctrl.node.count | number:0}})</span>
+</div>
+
+<div ng-if="::ctrl.node.nodes && ctrl.isRoot" class="list-group">
+  <div ng-repeat="node in ctrl.node.nodes"
+       gn-wfs-filter-facets-tree-item="::node"
+       gn-wfs-filter-facets-tree-item-notroot
+       class="list-group-item">
+  </div>
+</div>
+<!--Just to force one time binding on nodes except root-->
+<div ng-if="::ctrl.node.nodes && !ctrl.isRoot" class="list-group">
+  <div ng-repeat="node in ::ctrl.node.nodes"
+       gn-wfs-filter-facets-tree-item="::node"
+       gn-wfs-filter-facets-tree-item-notroot
+       class="list-group-item">
+  </div>
+</div>

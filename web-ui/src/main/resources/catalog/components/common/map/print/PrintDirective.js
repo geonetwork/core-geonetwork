@@ -548,7 +548,7 @@
             enc.classes.push({
               name: '',
               icon: $scope.options.legendUrl +
-                  layer.bodId + '_' + $translate.uses() + format
+                  layer.bodId + '_' + $translate.use() + format
             });
             return enc;
           },
@@ -578,7 +578,7 @@
         bodyEl.addClass(waitclass);
         var view = $scope.map.getView();
         var proj = view.getProjection();
-        var lang = $translate.uses();
+        var lang = $translate.use();
         var defaultPage = {};
         defaultPage['lang' + lang] = true;
         var encLayers = [];

@@ -179,7 +179,7 @@
          */
       var filterBySection = function(elements, section) {
         var settings = [];
-        var regexp = new RegExp('^' + section);
+        var regexp = new RegExp('^' + section + '/.*|^' + section + '$');
         for (var i = 0; i < elements.length; i++) {
           var s = elements[i];
           if (regexp.test(s.name)) {

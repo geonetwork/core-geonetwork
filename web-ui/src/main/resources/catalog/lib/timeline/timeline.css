@@ -1,0 +1,30 @@
+.ui-timeline {
+  height: 150px;
+  width: 100%;
+}
+
+.timeline .extent {
+  stroke: #fff;
+  fill-opacity: 0.125;
+  shape-rendering: crispEdges;
+}
+
+#timeline {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.axis path,
+.axis line {
+  fill-opacity: 0.125;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.area {
+  fill: rgb(75, 162, 217);
+}
+
+.areaAll {
+  fill: rgba(104, 142, 35, 0.15);
+}

@@ -74,17 +74,17 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         MetadataCategory category3 = _categoryRepository.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
 
         Metadata metadata1c1 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata1c1.getCategories().add(_categoryRepository.findOne(category1.getId()));
+        metadata1c1.getMetadataCategories().add(_categoryRepository.findOne(category1.getId()));
         setPopularityAndRating(metadata1c1);
         _metadataRepository.save(metadata1c1);
 
         Metadata metadata2c1 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata2c1.getCategories().add(category1);
+        metadata2c1.getMetadataCategories().add(category1);
         setPopularityAndRating(metadata2c1);
         _metadataRepository.save(metadata2c1);
 
         Metadata metadata3c2 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata3c2.getCategories().add(category2);
+        metadata3c2.getMetadataCategories().add(category2);
         setPopularityAndRating(metadata3c2);
         _metadataRepository.save(metadata3c2);
 

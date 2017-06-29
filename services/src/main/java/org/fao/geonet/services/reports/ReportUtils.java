@@ -36,7 +36,7 @@ import org.jdom.Element;
 
 import java.util.*;
 
-
+@Deprecated
 public class ReportUtils {
 
     /**

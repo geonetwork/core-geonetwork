@@ -175,7 +175,7 @@ public final class MetadataDraftSpecs {
         return new Specification<MetadataDraft>() {
             @Override
             public Predicate toPredicate(Root<MetadataDraft> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                final Expression<Set<MetadataCategory>> categoriesPath = root.get(MetadataDraft_.categories);
+                final Expression<Set<MetadataCategory>> categoriesPath = root.get(MetadataDraft_.metadataCategories);
 
                 return cb.isMember(category, categoriesPath);
             }

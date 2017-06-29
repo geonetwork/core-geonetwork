@@ -111,9 +111,9 @@ public class MetadataTagApi {
         IMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
         Set<MetadataCategory> categories = null;
         if(metadata instanceof Metadata) {
-            categories = ((Metadata)metadata).getCategories();
+            categories = ((Metadata)metadata).getMetadataCategories();
         } else if(metadata instanceof MetadataDraft) {
-            categories =  ((MetadataDraft)metadata).getCategories();
+            categories =  ((MetadataDraft)metadata).getMetadataCategories();
         } 
         return categories;
     }
@@ -161,7 +161,7 @@ public class MetadataTagApi {
 
         if (clear) {
             appContext.getBean(MetadataRepository.class).update(
-                metadata.getId(), entity -> entity.getCategories().clear());
+                metadata.getId(), entity -> entity.getMetadataCategories().clear());
         }
 
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -215,7 +215,7 @@ public class MetadataTagApi {
 
         if (id == null || id.length == 0) {
             appContext.getBean(MetadataRepository.class).update(
-                metadata.getId(), entity -> entity.getCategories().clear());
+                metadata.getId(), entity -> entity.getMetadataCategories().clear());
         }
 
         DataManager dataManager = appContext.getBean(DataManager.class);
@@ -301,14 +301,14 @@ public class MetadataTagApi {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
                     if (clear) {
-                        info.getCategories().clear();
+                        info.getMetadataCategories().clear();
                     }
 
                     if (id != null) {
                         for (int c : id) {
                             final MetadataCategory category = categoryRepository.findOne(c);
                             if (category != null) {
-                                info.getCategories().add(category);
+                                info.getMetadataCategories().add(category);
                                 listOfUpdatedRecords.add(String.valueOf(info.getId()));
                             } else {
                                 report.addMetadataInfos(info.getId(), String.format(
@@ -392,7 +392,7 @@ public class MetadataTagApi {
                     ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
                     report.addNotEditableMetadataId(info.getId());
                 } else {
-                    info.getCategories().clear();
+                    info.getMetadataCategories().clear();
                     metadataRepository.save(info);
                     report.incrementProcessedRecords();
                 }

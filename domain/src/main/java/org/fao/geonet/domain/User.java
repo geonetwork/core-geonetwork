@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.entitylistener.UserEntityListenerManager;
+import org.fao.geonet.domain.converter.BooleanToYNConverter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,8 +60,8 @@ public class User extends GeonetEntity implements UserDetails {
     private String _username;
     private String _surname;
     private String _name;
-    private Set<String> _email = new HashSet<String>();
-    private Set<Address> _addresses = new LinkedHashSet<Address>();
+    private Set<String> _email = new HashSet<>();
+    private Set<Address> _addresses = new LinkedHashSet<>();
     private String _organisation;
     private String _kind;
     private Profile _profile = Profile.RegisteredUser;
@@ -403,7 +404,9 @@ public class User extends GeonetEntity implements UserDetails {
         return true;
     }
 
-    @Column
+    @Column(name = "isenabled", nullable = false, length = 1, columnDefinition="CHAR(1) DEFAULT 'y'")
+    @Convert(converter = BooleanToYNConverter.class)
+    @Override
     public boolean isEnabled() {
         if (_isEnabled == null) {
             this._isEnabled = true;

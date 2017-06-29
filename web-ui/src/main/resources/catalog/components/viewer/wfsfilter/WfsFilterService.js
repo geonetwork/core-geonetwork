@@ -29,106 +29,36 @@
 
 
   module.service('wfsFilterService', [
-    'gnSolrRequestManager',
+    'gnIndexRequestManager',
     'gnHttp',
     'gnUrlUtils',
     'gnGlobalSettings',
     '$http',
     '$q',
     '$translate',
-    function(gnSolrRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
+    function(gnIndexRequestManager, gnHttp, gnUrlUtils, gnGlobalSettings,
              $http, $q, $translate) {
 
-      var solrProxyUrl = gnHttp.getService('solrproxy');
+      var indexProxyUrl = gnHttp.getService('indexproxy');
 
-      var solrObject = gnSolrRequestManager.register('WfsFilter', 'facets');
+      var indexObject = gnIndexRequestManager.register('WfsFilter', 'facets');
 
-      var buildSolrUrl = function(params) {
-        return gnUrlUtils.append(solrProxyUrl + '/query',
+      var buildIndexUrl = function(params) {
+        return gnUrlUtils.append(indexProxyUrl + '/query',
             gnUrlUtils.toKeyValue(params));
       };
 
-      var getFacetType = function(solrPropName) {
-        var type = '';
-        if (solrPropName == 'facet_ranges') {
-          type = 'range';
-        }
-        else if (solrPropName == 'facet_intervals') {
-          type = 'interval';
-        }
-        else if (solrPropName == 'facet_fields') {
-          type = 'field';
-        }
-        else if (solrPropName == 'facet_dates') {
-          type = 'date';
-        }
-        else if (solrPropName == 'facet_heatmaps') {
-          type = 'heatmap';
-        }
-        return type;
+      this.registerEsObject = function(url, ftName) {
+        return gnIndexRequestManager.register('WfsFilter', url + '#' + ftName);
+      };
+      this.getEsObject = function(url, ftName) {
+        return gnIndexRequestManager.get('WfsFilter', url + '#' + ftName);
       };
 
-      /**
-       * Parse the solr response to create the facet UI config object.
-       * Solr reponse contains all values for facets fields, and help to build
-       * the facet ui.
-       *
-       * @param {object} solrData response from solr request
-       * @return {Array} All definition for each field
-       */
-      var createFacetConfigFromSolr = function(solrData, docFields) {
-        var fields = [];
-        for (var kind in solrData.facet_counts) {
-          var facetType = getFacetType(kind);
-          for (var fieldProp in solrData.facet_counts[kind]) {
-            var field = solrData.facet_counts[kind][fieldProp];
-            var fNameObj = getIdxNameObj(fieldProp, docFields);
-            var facetField = {
-              name: fieldProp,
-              label: fNameObj.label || fNameObj.label,
-              values: [],
-              type: facetType
-            };
-
-            if (kind == 'facet_ranges') {
-              var counts = field.counts;
-              for (var i = 0; i < counts.length; i += 2) {
-                if (counts[i + 1] > 0) {
-                  var label = '';
-                  if (i >= counts.length - 2) {
-                    label = '> ' + counts[i];
-                  }
-                  else {
-                    label = counts[i] + ',' + counts[i + 2];
-                  }
-                  facetField.values[label] = counts[i + 1];
-                }
-              }
-              fields.push(facetField);
-            }
-            else if (kind == 'facet_fields' && field.length > 0) {
-              for (var i = 0; i < field.length; i += 2) {
-                facetField.values.push({
-                  value: field[i],
-                  count: field[i + 1]
-                });
-              }
-              fields.push(facetField);
-            }
-            else if (kind == 'facet_intervals' &&
-                Object.keys(field).length > 0) {
-              facetField.values = field;
-              fields.push(facetField);
-            }
-          }
-        }
-        return fields;
-
-      };
 
       /**
        * Retrieve the index field object from the array given from feature type
-       * info. The object contains the feature type attribute name, the solr
+       * info. The object contains the feature type attribute name, the index
        * indexed name, and its label from applicationProfile.
        * You can retrieve this object with the ftName or the docName.
        *
@@ -146,28 +76,76 @@
       };
 
       /**
-       * Create a SLD filter for the facet rule. Those filters while be
-       * gathered to create the full SLD filter config to send to the
+       * Create an array of SLD filters for the facet rule. Those filters will
+       * be gathered to create the full SLD filter config to send to the
        * generateSLD service.
        *
        * @param {string} key index key of the field
        * @param {string} type of the facet field (range, field etc..)
+       * @return {Array} an array containing the filters
        */
-      var buildSldFilter = function(key, type, multiValued) {
-        var res;
-        if (type == 'interval' || type == 'range') {
-          res = {
-            filter_type: 'PropertyIsBetween',
-            params: key.match(/\d+(?:[.]\d+)*/g)
-          };
+      var buildSldFilter = function(name, value, type, multiValued) {
+        var filterFields = [];
+
+        // date
+        if (type == 'date' || type == 'rangeDate') {
+
+          // Transforms date format: dd-MM-YYYY > YYYY-MM-dd (ISO)
+          // TODO: externalize this?
+          function transformDate(d) {
+            return d.substr(6) + '-' + d.substr(3, 2) + '-' + d.substr(0, 2);
+          }
+
+          filterFields.push({
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [transformDate(value.from)]
+            }]
+          }, {
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [transformDate(value.to)]
+            }]
+          });
         }
-        else if (type == 'field') {
-          res = {
-            filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
-            params: [multiValued ? '*' + key + '*' : key]
-          };
+
+        // numeric range
+        else if (type == 'range') {
+          filterFields.push({
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsGreaterThanOrEqualTo',
+              params: [value.from]
+            }]
+          }, {
+            field_name: name,
+            filter: [{
+              filter_type: 'PropertyIsLessThanOrEqualTo',
+              params: [value.to]
+            }]
+          });
         }
-        return res;
+
+        // strings
+        else if (type == 'terms') {
+          var filters = [];
+
+          angular.forEach(value, function(v, k) {
+            filters.push({
+              filter_type: multiValued ? 'PropertyIsLike' : 'PropertyIsEqualTo',
+              params: [multiValued ? '*' + k + '*' : k]
+            });
+          });
+
+          filterFields.push({
+            field_name: name,
+            filter: filters
+          });
+        }
+
+        return filterFields;
       };
 
 
@@ -182,18 +160,25 @@
         };
 
         angular.forEach(facetState, function(attrValue, attrName) {
+          // fetch field info from attr name (expects 'ft_xxx_yy')
           var fieldInfo = attrName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
-          var field = {
-            // TODO : remove the field type suffix
-            field_name: fieldInfo[1],
-            filter: []
-          };
-          var multiValued = fieldInfo[3] != undefined;
-          angular.forEach(attrValue.values, function(v, k) {
-            field.filter.push(buildSldFilter(k, attrValue.type, multiValued));
-          });
-          sldConfig.filters.push(field);
+          var fieldName = fieldInfo ? fieldInfo[1] : attrName;
+
+          // multiple values
+          if (attrValue.values && Object.keys(attrValue.values).length) {
+            var multiValued = fieldInfo[3] != undefined;
+
+            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
+                fieldName, attrValue.values, attrValue.type, multiValued));
+          }
+
+          // single value
+          else if (attrValue.value) {
+            Array.prototype.push.apply(sldConfig.filters, buildSldFilter(
+                fieldName, attrValue.value, attrValue.type, false));
+          }
         });
+
         return sldConfig;
       };
 
@@ -215,100 +200,76 @@
       };
 
       /**
-       * Build solr request from config of the applicationProfile.
-       * This config determines what fields to have in facet, and gives
-       * interval and range properties.
+       * Merge the fields with definition from application Profile.
+       * Fields could be replaced or just updated, regarding to
+       * `extendOnly` property.
        *
-       * @param {Object} config the applicationProfile definition
-       * @param {string} ftName featuretype name
-       * @param {string} wfsUrl url of the wfs service
-       * @param {array} idxFields info about doc fields
+       * @param {Array} fields index fields definition
+       * @param {Object} appProfile Config object.
        */
-      this.solrMergeApplicationProfile = function(fields, newFields) {
+      this.indexMergeApplicationProfile = function(fields, appProfile) {
 
-        var toRemoveIdx = [];
+        var toRemoveIdx = [], mergedF = [];
+        var newFields = appProfile.fields;
+        var tokenizedFields = appProfile.tokenizedFields || [];
 
-        fields.forEach(function(field, idx) {
-          var keep;
+        var getNewFieldIdx = function(field) {
           for (var i = 0; i < newFields.length; i++) {
             if (field.label == newFields[i].name) {
-              keep = true;
-              if (newFields[i].label) {
-                field.label = newFields[i].label[gnGlobalSettings.lang];
-              }
-              break;
+              return i;
             }
+          }
+          return -1;
+        };
+
+        // Merge field objects and detect if we need to remove some
+        fields.forEach(function(field, idx) {
+          var keep;
+
+          var newFieldIdx = getNewFieldIdx(field);
+          if (newFieldIdx >= 0) {
+            var newField = newFields[newFieldIdx];
+            keep = true;
+            mergedF.push(field.label);
+            if (newField.label) {
+              field.label = newField.label[gnGlobalSettings.lang];
+            }
+            field.aggs = newField.aggs;
+            field.display = newField.display;
+
+            // add a flag for tokenized fields
+            field.isTokenized = tokenizedFields[field.name] != null;
           }
           if (!keep) {
             toRemoveIdx.unshift(idx);
           }
         });
 
+
         var allFields = angular.copy(fields);
 
-        toRemoveIdx.forEach(function(i) {
-          fields.splice(i, 1);
-        });
-
-        return allFields;
-      };
-
-      /**
-       * Call solr request to get info about facet to build.
-       * Then build the facet ui config from the response.
-       *
-       * @param {string} url of the solr request
-       * @param {array} docFields info of indexed fields.
-       * @return {httpPromise} return facet ui config
-       */
-      this.getFacetsConfigFromSolr____ = function(url, docFields) {
-
-        return $http.get(url).then(function(solrResponse) {
-          return {
-            facetConfig: createFacetConfigFromSolr(solrResponse.data,
-                docFields),
-            heatmaps: solrResponse.data.facet_counts.facet_heatmaps,
-            count: solrResponse.data.response.numFound
-          };
-        });
-      };
-
-      /**
-       * Update solr url depending on the current facet ui selection state.
-       * Each time a facet is selected, we trigger a new search on the index
-       * to build the facet ui again with updated occurencies.
-       *
-       * Will build the solr Q query like:
-       *  +(LABEL_s:"Abyssal" LABEL_s:Infralittoral)
-       *  +featureTypeId:*IFR_AAMP_ZONES_BIO_ATL_P
-       *
-       * @param {string} url of the base solr url
-       * @param {object} facetState strcture representing ui selection
-       * @param {string} filter the any filter from input
-       * @return {string} the updated url
-       */
-      this.updateSolrUrl___ = function(url, facetState, filter) {
-        var fieldsQ = [];
-
-        angular.forEach(facetState, function(field, fieldName) {
-          var valuesQ = [];
-          for (var p in field.values) {
-            valuesQ.push(fieldName + ':"' + p + '"');
-          }
-          if (valuesQ.length) {
-            fieldsQ.push('+(' + valuesQ.join(' ') + ')');
-          }
-        });
-        if (filter) {
-          filter.split(' ').forEach(function(v) {
-            fieldsQ.push('+*' + v + '*');
+        if (!appProfile.extendOnly) {
+          toRemoveIdx.forEach(function(i) {
+            fields.splice(i, 1);
           });
         }
-        if (fieldsQ.length) {
-          url = url.replace('&q=', '&q=' +
-              encodeURIComponent(fieldsQ.join(' ') + ' +'));
+
+        // Add appProfile extra fields
+        newFields.forEach(function(f) {
+          if (mergedF.indexOf(f.name) < 0) {
+            f.label = f.name;
+            fields.push(f);
+          }
+        });
+
+        if (!appProfile.extendOnly) {
+          fields.sort(function(a, b) {
+            return getNewFieldIdx(a) - getNewFieldIdx(b);
+          });
         }
-        return url;
+
+
+        return allFields;
       };
 
       /**
@@ -342,17 +303,124 @@
        * @param {string} featuretype name
        * @return {httpPromise} when indexing is done
        */
-      this.indexWFSFeatures = function(url, type, idxConfig, uuid, version) {
+      this.indexWFSFeatures = function(
+          url, type, idxConfig, treeFields, uuid, version) {
         return $http.put('../api/0.1/workers/data/wfs/actions/start', {
           url: url,
           typeName: type,
-          version: version || '1.0.0',
-          tokenize: idxConfig,
+          version: version || '1.1.0',
+          tokenizedFields: idxConfig,
+          treeFields: treeFields,
           metadataUuid: uuid
         }
         ).then(function(data) {
         }, function(response) {
         });
       };
+
+      this.toCQL = function(esObj) {
+
+        var state = esObj.getState();
+        var where;
+
+        if (!state.any) {
+          where = [];
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var config = esObj.getIdxNameObj_(fName);
+            console.log(config);
+            var clause = [];
+            var values = fObj.values;
+            if (config.isDate) {
+              where.concat([
+                '(' + fName + '>' + values.from + ')',
+                '(' + fName + '<' + values.to + ')'
+              ]);
+              return;
+            }
+            angular.forEach(values, function(v, k) {
+              clause.push(
+                  (config.isTokenized) ?
+                  '(' + fName + " LIKE '%" + k + "%')" :
+                  '(' + fName + '=' + k + ')'
+              );
+            });
+            if (clause.length == 0) return;
+            where.push('(' + clause.join(' OR ') + ')');
+          });
+          return where.join(' AND ');
+        } else {
+          esObj.search_es({
+            size: scope.count || 10000,
+            aggs: {}
+          }).then(function(data) {
+            var where = data.hits.hits.map(function(res) {
+              return res._id;
+            });
+            return where.join(' OR ');
+          });
+        }
+      };
+
+      this.toUrlParams = function(esObj) {
+
+        var state = esObj.getState();
+
+        if (!state.any) {
+          var where = [];
+          angular.forEach(state.qParams, function(fObj, fName) {
+            var clause = [];
+            angular.forEach(fObj.values, function(v, k) {
+              clause.push(fName + '=' + k);
+            });
+            where.push('(' + clause.join(' OR ') + ')');
+          });
+          return (where.join(' AND '));
+        }
+        else {
+          esObj.search_es({
+            size: scope.count || 10000,
+            aggs: {}
+          }).then(function(data) {
+            var where = data.hits.hits.map(function(res) {
+              return res._id;
+            });
+            return (where.join(' OR '));
+          });
+        }
+      };
+
+      /**
+       * takes an ElasticSearch request object as input and ouputs a simplified
+       * object with properties describing names and values of the defined
+       * filters.
+       * note: only qParams are taken into account.
+       *
+       * @param {Object} elasticSearchObject
+       */
+      this.toObjectProperties = function(esObject) {
+        var state = esObject.getState();
+        var result = {};
+
+        if (state) {
+          // add query params (qParams)
+          angular.forEach(state.qParams, function(fObj, fName) {
+            // only the last value found will be kept
+            angular.forEach(fObj.values, function(value, key) {
+              result[fName] = key;
+            });
+          });
+
+          // add geometry
+          if (state.geometry) {
+            result.geometry = state.geometry[0][0] + ',' +
+                state.geometry[1][1] + ',' +
+                state.geometry[1][0] + ',' +
+                state.geometry[0][1];
+          }
+        }
+
+        return result;
+      };
+
     }]);
 })();

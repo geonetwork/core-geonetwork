@@ -274,10 +274,10 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     if (groupOwner != null) {
       Group group = groupRepository.findOne(Integer.valueOf(groupOwner));
       if (group.getDefaultCategory() != null) {
-        newMetadata.getCategories().add(group.getDefaultCategory());
+        newMetadata.getMetadataCategories().add(group.getDefaultCategory());
       }
     }
-    Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getCategories(),
+    Collection<MetadataCategory> filteredCategories = Collections2.filter(templateMetadata.getMetadataCategories(),
         new Predicate<MetadataCategory>() {
           @Override
           public boolean apply(@Nullable MetadataCategory input) {
@@ -285,7 +285,7 @@ public class DraftMetadataManager extends DefaultMetadataManager {
           }
         });
 
-    newMetadata.getCategories().addAll(filteredCategories);
+    newMetadata.getMetadataCategories().addAll(filteredCategories);
 
     Integer finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
         fullRightsForGroup, true).getId();
@@ -518,11 +518,11 @@ public class DraftMetadataManager extends DefaultMetadataManager {
     }
 
     if (metadata instanceof Metadata) {
-      for (MetadataCategory category : ((Metadata) metadata).getCategories()) {
+      for (MetadataCategory category : ((Metadata) metadata).getMetadataCategories()) {
         addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
       }
     } else {
-      for (MetadataCategory category : ((MetadataDraft) metadata).getCategories()) {
+      for (MetadataCategory category : ((MetadataDraft) metadata).getMetadataCategories()) {
         addElement(info, Edit.Info.Elem.CATEGORY, category.getName());
       }
     }
@@ -592,6 +592,24 @@ public class DraftMetadataManager extends DefaultMetadataManager {
 
     //If user can't access draft or doesn't exist draft
     if (md == null || !accessManager.canEdit(id.toString())) {
+        md = super.getMetadataObject(id);
+    }
+    
+    return md;
+  }
+
+  /**
+   * @see org.fao.geonet.kernel.metadata.DefaultMetadataManager#getMetadataObject(java.lang.Integer)
+   * @param id
+   * @return
+   * @throws Exception
+   */
+  @Override
+  public IMetadata getMetadataObjectNoPriv(Integer id) throws Exception {
+    IMetadata md = mdDraftRepository.findOne(id);
+
+    //If doesn't exist draft
+    if (md == null) {
         md = super.getMetadataObject(id);
     }
     

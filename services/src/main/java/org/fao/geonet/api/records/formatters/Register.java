@@ -35,6 +35,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.springframework.http.MediaType;
@@ -92,6 +93,9 @@ public class Register extends AbstractFormatService {
                 xslid = xslid.substring(0, extentionIdx);
             }
         }
+
+        FilePathChecker.verify(xslid);
+        FilePathChecker.verify(file.getOriginalFilename());
 
         checkLegalId(Params.ID, xslid);
         Path userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();

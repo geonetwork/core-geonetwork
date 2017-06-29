@@ -61,8 +61,8 @@ public class DefaultMetadataCategory implements IMetadataCategory {
         mdRepository.update(Integer.valueOf(mdId), new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata entity) {
-                changed[0] = !entity.getCategories().contains(newCategory);
-                entity.getCategories().add(newCategory);
+                changed[0] = !entity.getMetadataCategories().contains(newCategory);
+                entity.getMetadataCategories().add(newCategory);
             }
         });
 
@@ -86,7 +86,7 @@ public class DefaultMetadataCategory implements IMetadataCategory {
     public boolean isCategorySet(final String mdId, final int categId)
             throws Exception {
         Set<MetadataCategory> categories = mdRepository.findOne(mdId)
-                .getCategories();
+                .getMetadataCategories();
         for (MetadataCategory category : categories) {
             if (category.getId() == categId) {
                 return true;
@@ -112,10 +112,10 @@ public class DefaultMetadataCategory implements IMetadataCategory {
             return;
         }
         boolean changed = false;
-        for (MetadataCategory category : metadata.getCategories()) {
+        for (MetadataCategory category : metadata.getMetadataCategories()) {
             if (category.getId() == categId) {
                 changed = true;
-                metadata.getCategories().remove(category);
+                metadata.getMetadataCategories().remove(category);
                 break;
             }
         }
@@ -145,7 +145,7 @@ public class DefaultMetadataCategory implements IMetadataCategory {
                     "No metadata found with id: " + mdId);
         }
 
-        return metadata.getCategories();
+        return metadata.getMetadataCategories();
     }
 
 }

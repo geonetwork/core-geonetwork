@@ -32,6 +32,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
@@ -118,6 +119,8 @@ public class TableExport extends NotInReadOnlyModeService {
         // file to write
         Path tableDumpFile = appPath.resolve("images").resolve("statTmp");
         Files.createDirectories(tableDumpFile);
+
+        FilePathChecker.verify(tableToExport);
 
         String dumpFileName = tableToExport + "_" + context.getUserSession().getUserId() + ".csv";
         tableDumpFile = tableDumpFile.toAbsolutePath().resolve(dumpFileName);

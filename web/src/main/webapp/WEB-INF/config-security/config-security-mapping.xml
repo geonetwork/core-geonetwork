@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2017 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -575,11 +575,8 @@
                            access="hasRole('Editor')"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/keywords!?.*" access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.upload!?.*"
                            access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.download!?.*"
-                           access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.add.from.register!?.*"
                            access="hasRole('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.clear!?.*"
@@ -590,6 +587,14 @@
                            access="hasRole('Administrator')"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.enable!?.*"
                            access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.add!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.update!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.remove!?.*"
+                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.download!?.*"
+                           access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.topconcept!?.*"
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.concept!?.*"
@@ -598,12 +603,7 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.links!?.*"
                            access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.add!?.*"
-                           access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.update!?.*"
-                           access="hasRole('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus.keyword.remove!?.*"
-                           access="hasRole('Administrator')"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus!?.*" access="permitAll"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/subtemplate!?.*"
                            access="permitAll"/>
@@ -890,6 +890,9 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.search!?.*"
                            access="permitAll"/>
+
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.predefined.service!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/atom.predefined.dataset!?.*" access="permitAll"/>
 
         <!-- Metadata identifier templates -->
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadataIdentifierTemplates!?.*"

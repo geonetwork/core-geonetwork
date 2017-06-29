@@ -54,7 +54,6 @@ import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.IMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
@@ -68,7 +67,6 @@ import org.fao.geonet.kernel.metadata.IMetadataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.OperationRepository;
@@ -248,7 +246,7 @@ public class MetadataSharingApi {
             final ApplicationContext appContext = ApplicationContextHolder.get();
             final DataManager dataMan = appContext.getBean(DataManager.class);
             final AccessManager accessMan = appContext.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+            final IMetadataManager metadataRepository = appContext.getBean(IMetadataManager.class);
 
             UserSession us = ApiUtils.getUserSession(session);
             boolean isAdmin = Profile.Administrator == us.getProfile();
@@ -258,7 +256,7 @@ public class MetadataSharingApi {
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                Metadata metadata = metadataRepository.findOneByUuid(uuid);
+                IMetadata metadata = metadataRepository.getMetadataObject(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
                 } else if (!accessMan.canEdit(
@@ -646,7 +644,7 @@ public class MetadataSharingApi {
             final DataManager dataManager = context.getBean(DataManager.class);
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final IMetadataManager metadataRepository = context.getBean(IMetadataManager.class);
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
@@ -722,7 +720,7 @@ public class MetadataSharingApi {
             final ApplicationContext context = ApplicationContextHolder.get();
             final DataManager dataManager = context.getBean(DataManager.class);
             final AccessManager accessMan = context.getBean(AccessManager.class);
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final IMetadataManager metadataRepository = context.getBean(IMetadataManager.class);
 
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
             List<String> listOfUpdatedRecords = new ArrayList<>();
@@ -747,10 +745,10 @@ public class MetadataSharingApi {
                                  MetadataProcessingReport report,
                                  DataManager dataManager,
                                  AccessManager accessMan,
-                                 MetadataRepository metadataRepository,
+                                 IMetadataManager metadataRepository,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid) throws Exception {
-        Metadata metadata = metadataRepository.findOneByUuid(uuid);
+        IMetadata metadata = metadataRepository.getMetadataObject(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
         } else if (!accessMan.canEdit(

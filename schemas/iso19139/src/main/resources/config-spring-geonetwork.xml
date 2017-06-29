@@ -34,7 +34,7 @@
         <bean class="org.fao.geonet.kernel.schema.SavedQuery">
           <property name="id" value="wfs-indexing-config"/>
           <property name="xpath"
-                    value="*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, {{protocol}}) and gmd:name/gco:CharacterString = '{{name}}' and gmd:linkage/gmd:URL = '{{url}}']/gmd:applicationProfile/gco:CharacterString/text()"/>
+                    value="*//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, '{{protocol}}') and gmd:name/gco:CharacterString = '{{name}}' and (gmd:linkage/gmd:URL = '{{url}}' or gmd:linkage/gmd:URL = replace('{{url}}', 'wfs', 'wms'))]/gmd:applicationProfile/gco:CharacterString/text()"/>
         </bean>
       </list>
     </property>

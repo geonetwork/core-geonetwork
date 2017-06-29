@@ -355,7 +355,7 @@ public class Aligner extends BaseAligner {
 
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-                metadata.getCategories().clear();
+                metadata.getMetadataCategories().clear();
                 addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
                 dataMan.flush();

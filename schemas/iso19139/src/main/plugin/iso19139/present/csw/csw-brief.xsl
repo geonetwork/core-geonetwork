@@ -50,9 +50,11 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name="identification" select="gmd:identificationInfo/gmd:MD_DataIdentification|
-      gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
-      gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+    <xsl:variable name="identification"
+                  select="gmd:identificationInfo/gmd:MD_DataIdentification|
+                          gmd:identificationInfo/*[contains(@gco:isoType, 'MD_DataIdentification')]|
+                          gmd:identificationInfo/srv:SV_ServiceIdentification|
+                          gmd:identificationInfo/*[contains(@gco:isoType, 'SV_ServiceIdentification')]"/>
 
 
     <csw:BriefRecord>

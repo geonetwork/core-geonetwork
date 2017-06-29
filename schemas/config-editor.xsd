@@ -366,7 +366,48 @@ relevant to have parent defined to have more control over the list.
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="1" maxOccurs="unbounded" ref="name"/>
+        <xs:element name="name" minOccurs="1" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>
+              <![CDATA[
+        The element name including its namespace prefix (eg.
+        gmd:identificationInfo).
+        ]]>
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="parent" type="xs:string" use="optional">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+          The parent element name including its namespace prefix (eg.
+          gmd:identificationInfo).
+          ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="ancestor" type="xs:string" use="optional">
+              <xs:annotation>
+                <xs:documentation>
+                  <![CDATA[
+          One of the element ancestors name including its namespace prefix (eg.
+          gmd:identificationInfo).
+          ]]>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="child" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:documentation>
+                <![CDATA[
+          The first child name including its namespace prefix (eg.
+          gmd:identificationInfo).
+          ]]>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -593,6 +634,13 @@ The tab key used in URL parameter to activate that tab. The key is also use for 
           <xs:documentation><![CDATA[
 Define if the tab should be displayed in a drop down menu instead of a tab. This is used for advanced
 section which is not used often by the end-user. More than one tab could be grouped in that drop down tab menu.
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="formatter-order" type="xs:int">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+Define the ordering index of this tab in the XSLT formatter (Note used for editor).
             ]]></xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -1044,7 +1092,7 @@ Warning: Template based field does not support multilingual editing for ISO stan
             <xs:documentation>The list of values to match from the template.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element minOccurs="1" maxOccurs="1" ref="snippet"/>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -1181,12 +1229,118 @@ XPath:
           </action>
 
 
+Example of a drowdown button with 3 coordinates system to choose from:
+
+.. code-block:: xml
+
+         <!-- Display CRS description only,
+                 customize label
+                 and drop the refSysInfo element if removed -->
+          <field xpath="/mdb:MD_Metadata/mdb:referenceSystemInfo/*/
+                           mrs:referenceSystemIdentifier/*/mcc:description"
+                 name="referenceSystemInfo"
+                 del="../../../.."/>
+
+          <!-- Add one of the 3 CRS proposed using the dropdown -->
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4326</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs4258">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4258</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3035">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3035</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 / LAEA Europe (EPSG:3035)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
+
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation><![CDATA[
+When type is add, add optional directive attributes.
+
+.. code-block:: xml
+
+          <action type="add"
+                  name="checkpoint-tdp-add-component"
+                  or="dataQualityInfo"
+                  in="/mdb:MD_Metadata"
+                  if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) > 0"
+                  addDirective="data-gn-record-fragment-selector">
+            <directiveAttributes data-source-records="xpath::string-join(
+              //mri:associatedResource/*[mri:initiativeType/*/@codeListValue = 'specification']
+                /mri:metadataReference/@uuidref, ',')"/>
+          </action>
+
+When type is associatedResource, optional options can be added
+to open the panel with additional parameters.
+
+For example, for sibling panel, the association type and initiative type could be set:
+
+.. code-block:: xml
+
+        <action type="associatedResource"
+                name="checkpoint-linkToUpstreamData"
+                if="count(//mri:associatedResource/*/mri:initiativeType/*[@codeListValue = 'specification']) = 1"
+                process="sibling">
+          <options>{"associationType": "crossReference", "initiativeType": "upstreamData"}</options>
+        </action>
+
+
+]]>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
@@ -1551,6 +1705,11 @@ An XML snippet with replacement for each key defined in that field.
       <xs:sequence>
         <xs:any processContents="skip" namespace="##any"/>
       </xs:sequence>
+      <xs:attribute name="label" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Snippet label.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="batchEditing">

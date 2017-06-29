@@ -328,18 +328,6 @@
                 type: 'danger'});
             });
 
-          if (md && success === 'success') {
-            md.publish();
-          }
-          $rootScope.$broadcast('search');
-        };
-        if (angular.isDefined(md)) {
-          return gnHttp.callService(service, {
-            ids: md.getId()
-          }).then(publishNotification);
-        } else {
-          return gnHttp.callService(service, {}).then(publishNotification);
-        }
       };
 
       this.assignGroup = function(metadataId, groupId) {

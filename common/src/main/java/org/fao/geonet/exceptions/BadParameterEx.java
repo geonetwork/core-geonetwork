@@ -38,6 +38,10 @@ public class BadParameterEx extends BadInputEx {
 
         id = "bad-parameter";
     }
+
+    public BadParameterEx(String msg) {
+        super(msg, null);
+    }
 }
 
 //=============================================================================

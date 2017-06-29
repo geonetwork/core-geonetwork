@@ -40,6 +40,7 @@
       <list>
         <sec:filter-chain pattern="/srv/swagger-resources/**" filters=""/>
         <sec:filter-chain pattern="/srv/v2/**" filters=""/>
+        <sec:filter-chain pattern="/index/**" filters=""/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <!-- wroAPI is protected for admin only
         This is causing issue on node-change-warning page.
@@ -89,6 +90,9 @@
     <constructor-arg>
       <list>
         <ref bean="securityContextPersistenceFilter"/>
+        <!-- To disable csrf security (not recommended) comment the following line -->
+        <ref bean="csrfFilter" />
+        <!-- To disable csrf security (not recommended) comment the upper line -->
         <ref bean="logoutFilter"/>
         <!-- A filter that check if an external service already authenticated user
                      (default implementation does nothing but can be overridden) -->
@@ -337,5 +341,17 @@
         id="updateTimestampListener">
   </bean>
 
+
+  <bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter">
+    <constructor-arg>
+      <ref bean="csrfTokenRepository"/>
+    </constructor-arg>
+  </bean>
+  
+  <bean class="org.fao.geonet.security.web.csrf.CookieCsrfTokenRepository"
+        id="csrfTokenRepository">
+    <property name="cookieHttpOnly" value="false"/>
+  </bean>
+      
 
 </beans>

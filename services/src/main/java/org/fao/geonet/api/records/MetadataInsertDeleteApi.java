@@ -79,6 +79,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -174,7 +175,9 @@ public class MetadataInsertDeleteApi {
         DataManager dataManager = appContext.getBean(DataManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
-        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+            metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
+            withBackup) {
             MetadataUtils.backupRecord(metadata, context);
         }
 
@@ -244,7 +247,9 @@ public class MetadataInsertDeleteApi {
             } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
-                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+                    metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
+                    withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
                 }
 
@@ -882,6 +887,7 @@ public class MetadataInsertDeleteApi {
         if (!transformWith.equals("_none_")) {
             GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
             Path folder = dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS);
+            FilePathChecker.verify(transformWith);
             Path xslFile = folder.resolve(transformWith + ".xsl");
             if (Files.exists(xslFile)) {
                 xmlElement = Xml.transform(xmlElement, xslFile);
@@ -917,7 +923,8 @@ public class MetadataInsertDeleteApi {
 
         //--- if the uuid does not exist we generate it for metadata and templates
         String uuid;
-        if (metadataType == MetadataType.SUB_TEMPLATE) {
+        if (metadataType == MetadataType.SUB_TEMPLATE ||
+            metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = UUID.randomUUID().toString();
         } else {
             uuid = dataMan.extractUUID(schema, xmlElement);

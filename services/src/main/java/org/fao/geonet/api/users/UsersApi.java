@@ -684,16 +684,24 @@ public class UsersApi {
 //                user.getAddresses().add(address);
 //            }
 
+            // Updating only the first (as only one supported on client side)
+            // TODO: Support multiple addresses
             Set<Address> userAddresses = user.getAddresses();
-            if (userAddresses.size() == 1) {
-                Address userAddress = (Address) userAddresses.toArray()[0];
-                for (Address address : userDto.getAddresses()) {
-                    userAddress.setAddress(address.getAddress());
-                    userAddress.setCity(address.getCity());
-                    userAddress.setCountry(address.getCountry());
-                    userAddress.setState(address.getState());
-                    userAddress.setZip(address.getZip());
-                }
+            Address userAddress;
+
+            if (userAddresses.isEmpty()) {
+                userAddress = new Address();
+                userAddresses.add(userAddress);
+            } else {
+                userAddress = (Address) userAddresses.toArray()[0];
+            }
+
+            for (Address address : userDto.getAddresses()) {
+                userAddress.setAddress(address.getAddress());
+                userAddress.setCity(address.getCity());
+                userAddress.setCountry(address.getCountry());
+                userAddress.setState(address.getState());
+                userAddress.setZip(address.getZip());
             }
         }
 

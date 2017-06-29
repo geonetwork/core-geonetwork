@@ -99,15 +99,16 @@ public class Handlers {
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
             def minimize = ''
+            def baseUrl = func.f.fparams.url;
             if (env.param("debug").toBool()) {
                 minimize = '?minimize=false'
             }
             String cssLinks = """
-    <link rel="stylesheet" href="../../static/gn_bootstrap.css$minimize"/>
-    <link rel="stylesheet" href="../../static/gn_metadata.css$minimize"/>""";
+    <link rel="stylesheet" href="$baseUrl../../static/gn_bootstrap.css$minimize"/>
+    <link rel="stylesheet" href="$baseUrl../../static/gn_metadata.css$minimize"/>""";
 
             if (func.isPDFOutput()) {
-                cssLinks = """<link rel="stylesheet" href="../../static/gn_metadata_pdf.css$minimize"/>"""
+                cssLinks = """<link rel="stylesheet" href="$baseUrl../../static/gn_metadata_pdf.css$minimize"/>"""
             }
             return """
 <!DOCTYPE html>
@@ -115,8 +116,8 @@ public class Handlers {
 <head lang="en">
     <meta charset="UTF-8"/>
     $cssLinks
-    <script src="../../static/lib.js$minimize"></script>
-    <script src="../../static/gn_formatter_lib.js$minimize"></script>
+    <script src="$baseUrl../../static/lib.js$minimize"></script>
+    <script src="$baseUrl../../static/gn_formatter_lib.js$minimize"></script>
 </head>
 <body>
 """

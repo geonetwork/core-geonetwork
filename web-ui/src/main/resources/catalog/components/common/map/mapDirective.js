@@ -46,6 +46,8 @@
              hrightRef: '@',
              identifierRef: '@',
              identifier: '@',
+             descriptionRef: '@',
+             description: '@',
              dcRef: '@',
              extentXml: '=?',
              lang: '=',
@@ -328,6 +330,9 @@
 
                  if (attrs.identifierRef !== undefined) {
                    scope.identifier = region.id;
+                 }
+                 if (attrs.descriptionRef !== undefined) {
+                   scope.description = region.name;
                  }
 
                  reprojExtent('md', 'map');

@@ -74,8 +74,8 @@ public class Metadata extends IMetadata {
             inverseJoinColumns = @JoinColumn(name =
             METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
-    public Set<MetadataCategory> getCategories() {
-        return _metadataCategories;
+    public Set<MetadataCategory> getMetadataCategories() {
+        return metadataCategories;
     }
 
     /**
@@ -83,7 +83,7 @@ public class Metadata extends IMetadata {
      *
      * @param categories
      */
-    protected void setCategories(@Nonnull Set<MetadataCategory> categories) {
-        this._metadataCategories = categories;
+    protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
+        this.metadataCategories = categories;
     }
 }

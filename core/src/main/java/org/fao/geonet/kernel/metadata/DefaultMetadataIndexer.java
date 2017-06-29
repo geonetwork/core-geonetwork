@@ -459,11 +459,11 @@ public class DefaultMetadataIndexer
     protected void addCategories(IMetadata fullMd, Vector<Element> moreFields) {
         //FIXME not very elegant...
         if(fullMd instanceof Metadata) {
-            for (MetadataCategory category : ((Metadata)fullMd).getCategories()) {
+            for (MetadataCategory category : ((Metadata)fullMd).getMetadataCategories()) {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
             }
         } else if(fullMd instanceof MetadataDraft) {
-            for (MetadataCategory category :((MetadataDraft)fullMd).getCategories()) {
+            for (MetadataCategory category :((MetadataDraft)fullMd).getMetadataCategories()) {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
             }
         }

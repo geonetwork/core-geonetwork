@@ -10,6 +10,12 @@
 .gn-main-viewer {
   position: relative;
 
+  [role=tooltip] {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    right: 0;
+  }
+
   .gn-layertree-filter {
     margin: 0 0 15px 0px;
     position:relative;
@@ -127,7 +133,7 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
-    div[gn-layermanager-item] {
+    li[gn-layermanager-item] {
       .fa-arrows-alt,.gn-layer-ordering {
         opacity: 0;
         transition: opacity @transition-params;
@@ -529,13 +535,10 @@
 [data-gn-wfs-filter-facets], [gn-wfs-filter-facets] {
   font-size:12px;
   .gn-facet {
-    .list-group {
-      border-left: 1px dotted rgba(0, 0, 0, 0.2);
-      margin-left: .5em;
-      padding-left: 1em;
-      margin-bottom: 0;
+    > .list-group {
       overflow: auto;
       max-height: 10em;
+      margin-bottom: 10px;
     }
 
     .list-group-item:hover {
@@ -556,7 +559,15 @@
   .close {
     font-size: 14px;
   }
+}
 
+[gn-wfs-filter-facets-tree] {
+  .list-group .list-group{
+    display: none;
+  }
+  .gn-leaf {
+    margin-left: 16px;
+  }
 }
 
 gn-features-tables {

@@ -61,6 +61,7 @@
     "validStatus-0": "Inválido",
     "validStatus--1": "Nunca ha sido validado",
     "fre": "Francés",
+    "roh": "Rumantsch",
     "ara": "عربي",
     "kor": "Koreano",
     "by": "por",
@@ -321,5 +322,5 @@
     "directoryManager": "Administrar directorio",
     "typeOfRecord": "Tipo de entrada",
     "load": "Cargar",
-    "solrAccessError": "Error durante el acceso a Solr."
+    "indexAccessError": "Error during index access."
 }

@@ -2590,9 +2590,7 @@
       <option value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</option>
       <option value="CHTOPO:specialised-geoportal">Spezialisiertes Geoportal</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML Service (2.0)</option>
-      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei
-        (*.AXL)
-      </option>
+      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei(*.AXL)</option>
       <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
       <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
@@ -2652,9 +2650,21 @@
       WMS, WFS, WCS
     </help>
     <condition/>
-    <description>Bezeichnung eines Anwendungsprofils für die
-      Online-Ressource
-    </description>
+    <description>Bezeichnung eines Anwendungsprofils für die Online-Ressource</description>
+  </element>
+  <element name="gmd:MD_CharacterSetCode" id="4">
+    <label>Zeichensatz</label>
+    <help>Empfehlung: Verwendung von UTF8</help>
+    <condition/>
+    <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
+      wird</description>
+  </element>
+  <element name="gmd:characterSet" id="4">
+    <label>Zeichensatz</label>
+    <help>Empfehlung: Verwendung von UTF8</help>
+    <condition/>
+    <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
+      wird</description>
   </element>
   <element name="gmd:characterSet" context="gmd:MD_Metadata" id="4">
     <label>Zeichensatz</label>
@@ -2828,6 +2838,794 @@
     <label>Parameter direction</label>
   </element>
 
+  <element name="srv:direction">
+    <label>Richtung</label>
+    <description>Angabe ob der beschriebene Parameter ein Input oder Output des Dienstes, oder beides ist</description>
+  </element>
+  <element name="srv:valueType">
+    <label>Value type</label>
+  </element>
+  <element name="gmd:MD_BrowseGraphic" id="48">
+    <label>Grafische Darstellung</label>
+    <help>z.B. Vorschaubild, Übersichtsbild, exemplarische Darstellung</help>
+    <condition/>
+    <description>Grafik, die die Ressource darstellt (möglichst einschliesslich
+      Legende)</description>
+  </element>
+  <element name="gmd:fileName" context="gmd:MD_BrowseGraphic" id="49">
+    <label>Dateiname</label>
+    <help>Empfehlung: Angabe einer URI</help>
+    <condition>Obligatorisch</condition>
+    <description>Dateiname der Grafik</description>
+  </element>
+  <element name="gmd:parentIdentifier" id="5">
+    <label>Identifikator des übergeordneten Metadatensatzes</label>
+    <help>Empfehlung: Verwendung einer UUID Es ist möglich, Metadatensätze hierarchisch zu
+      strukturieren. So kann z.B. ein Metadatensatz die Merkmale einer ganzen Kartenserie
+      dokumentieren, während in den nachgeordneten Metadatensätzen nur noch die Merkmale des
+      jeweiligen Blattes erfasst werden. Bei jedem Einzelblatt ist dann hier der Identifikator des
+      übergeordneten Metadatensatzes anzugeben.</help>
+    <condition>Wird erfasst wenn es eine obere Hierarchiestufe gibt</condition>
+    <description>Eindeutiger Identifikator des übergeordneten Metadatensatzes (Elternobjekt), auf
+      den sich der aktuelle Metadatensatz (Kindobjekt) bezieht</description>
+  </element>
+  <element name="gmd:fileDescription" context="gmd:MD_BrowseGraphic" id="50">
+    <label>Dateibeschreibung</label>
+    <help/>
+    <condition/>
+    <description>Textliche Beschreibung des Inhalts der Grafik</description>
+  </element>
+  <element name="gmd:fileType" context="gmd:MD_BrowseGraphic" id="51">
+    <label>Dateiformat</label>
+    <help/>
+    <condition/>
+    <description>Dateiformat der Grafik, z.B.: CGM, EPS, GIF, JPEG, PBM, PS, TIFF, XWD</description>
+  </element>
+  <element name="gmd:MD_Keywords" id="52">
+    <label>Schlüsselwörter</label>
+    <help/>
+    <condition/>
+    <description>Schlüsselwörter, ihr Typ und die Referenzquelle</description>
+  </element>
+  <element name="gmd:keyword" id="53">
+    <label>Schlüsselwort</label>
+    <help/>
+    <condition>Obligatorisch</condition>
+    <description>Umgangssprachlich verwendete Wörter, Ausdrücke oder formalisierte Fachbegriffe, die
+      den Inhalt beschreiben</description>
+  </element>
+  <element name="gmd:type" context="gmd:MD_Keywords" id="54">
+    <label>Schlüsselworttyp</label>
+    <help/>
+    <condition/>
+    <description>Einteilung von Schlüsselwörtern in inhaltlich verwandte Sachgebiete</description>
+  </element>
+  <element name="gmd:thesaurusName" context="gmd:MD_Keywords" id="55">
+    <label>Thesaurus</label>
+    <help/>
+    <condition/>
+    <description>Name eines formell registrierten Wortschatzes oder einer ähnlich verbindlichen
+      Quelle von Schlüsselwörtern</description>
+  </element>
+  <element name="gmd:MD_RepresentativeFraction" id="56">
+    <label>Representative Fraction</label>
+    <help/>
+    <condition/>
+    <description>Hergeleitet vom ISO 19103; Massstab, wobei MD_RepresentativFraction.denominator = 1
+      / Scale.measure Und Scale.targetUnits = Scale.sourceUnits</description>
+  </element>
+  <element name="gmd:denominator" id="57">
+    <label>Massstabszahl</label>
+    <help>Empfehlung: Falls ein Massstabsbereich angegeben werden soll, ist die Klasse MD_Resolution
+      zweifach zu nutzen und jeweils die obere und untere Massstabszahl einzutragen.</help>
+    <condition>Soll ausgefüllt werden, falls keine Distanz (Bodenauflösung) angegeben wird</condition>
+    <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz</description>
+    <helper>
+      <option value="5000">1:5´000</option>
+      <option value="10000">1:10´000</option>
+      <option value="25000">1:25´000</option>
+      <option value="50000">1:50´000</option>
+      <option value="100000">1:100´000</option>
+      <option value="200000">1:200´000</option>
+      <option value="300000">1:300´000</option>
+      <option value="500000">1:500´000</option>
+      <option value="1000000">1:1´000´000</option>
+    </helper>
+
+  </element>
+  <element name="gmd:intentionally left blank" context="gmd:MD_RepresentativeFraction" id="58">
+    <label/>
+    <help/>
+    <condition/>
+    <description/>
+  </element>
+  <element name="gmd:MD_Resolution" id="59">
+    <label>Auflösung</label>
+    <help/>
+    <condition/>
+    <description>Detailliertheitsgrad, angegeben durch eine Massstabszahl oder eine
+      Bodenauflösung</description>
+  </element>
+  <element name="gmd:hierarchyLevel" id="6">
+    <label>Hierarchieebene</label>
+    <help>Das Element ist verpflichtend, wenn die Hierarchiebene nicht "dataset" ist.</help>
+    <condition>Default: Datenbestand</condition>
+    <description>Bereich, auf den sich die Metadaten beziehen (Weitere Informationen zu
+      Hierarchieebenen sind dem ISO 19115 - Anhang H zu entnehmen)</description>
+  </element>
+  <element name="gmd:equivalentScale" context="gmd:MD_Resolution" id="60">
+    <label>Vergleichsmassstab</label>
+    <help/>
+    <condition>auszufüllen, wenn keine Distanz (Bodenauflösung) angegeben wird</condition>
+    <description>Detailliertheitsgrad, angegeben durch den Massstab einer vergleichbaren gedruckten
+      Karte</description>
+  </element>
+  <element name="gmd:distance" context="gmd:MD_Resolution" id="61">
+    <label>Distanz</label>
+    <help>Abstand der Rastermittelpunkte bzw. Gitterstützpunkte</help>
+    <condition>auszufüllen, wenn kein Vergleichsmassstab angegeben wird</condition>
+    <description>Bodenauflösung</description>
+    <helper>
+      <option value="0.10">10 cm</option>
+      <option value="0.25">25 cm</option>
+      <option value="0.50">50 cm</option>
+      <option value="1">1 m</option>
+      <option value="30">30 m</option>
+      <option value="100">100 m</option>
+    </helper>
+  </element>
+  <element name="gmd:MD_Usage" id="62">
+    <label>Nutzung</label>
+    <help>Mit diesem Element wird die tatsächliche Nutzung der Ressource beschrieben. Im Unterschied
+      zum Element "purpose" (Line 26) wird hier nicht der ursprüngliche Zweck genannt, der zur
+      Erstellung der Ressource geführt hat, sondern der Ver- oder Anwendungszweck der Ressource.
+      (z.B. kann eine Seekarte für Planungszwecke verwendet werden)</help>
+    <condition/>
+    <description>Kurze Beschreibung, auf welche Art und Weise die Ressource zur Zeit verwendet wird
+      oder verwendet wurde</description>
+  </element>
+  <element name="gmd:specificUsage" context="gmd:MD_Usage" id="63">
+    <label>Spezifische Nutzung</label>
+    <help/>
+    <condition/>
+    <description>Kurze Beschreibung zur Verwendung der Ressource</description>
+  </element>
+  <element name="gmd:usageDateTime" context="gmd:MD_Usage" id="64">
+    <label>Zeitpunkt der Erstnutzung</label>
+    <help/>
+    <condition/>
+    <description>Datum und Zeit der erstmaligen Verwendung der Ressource</description>
+  </element>
+  <element name="gmd:userDeterminedLimitations" context="gmd:MD_Usage" id="65">
+    <label>Benutzerdefinierte Einschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Vom Benutzer angegebene Anwendungen, für welche die Ressource nicht geeignet
+      ist</description>
+  </element>
+  <element name="gmd:userContactInfo" context="gmd:MD_Usage" id="66">
+    <label>Nutzerkontakt</label>
+    <help/>
+    <condition/>
+    <description>Kontaktinformation zu Person(en) und Organisation(en), welche die Ressource
+      verwenden</description>
+  </element>
+  <element name="gmd:MD_AggregateInformation" id="66.1">
+    <label>Aggregationsinformation</label>
+    <help/>
+    <condition/>
+    <description>Information zu assoziierten Datenbeständen</description>
+  </element>
+  <element name="gmd:aggregationInfo" id="66.1">
+    <label>Aggregationsinformation</label>
+    <help/>
+    <condition/>
+    <description>Information zu assoziierten Datenbeständen</description>
+  </element>
+  <element name="gmd:aggregateDataSetName" id="66.2">
+    <label>Assoziierter Datenbestand</label>
+    <help/>
+    <condition>Entweder Assoziierter Datenbestand (aggregateDataSetName) oder Identifikator (aggregateDataSetIdentifier) müssen ausgefüllt werden.</condition>
+    <description>Bibliografische Angaben zum assoziierten Datenbestand</description>
+  </element>
+  <element name="gmd:aggregateDataSetIdentifier" id="66.3">
+    <label>Identifikator</label>
+    <help/>
+    <condition>Entweder Assoziierter Datenbestand (aggregateDataSetName) oder Identifikator (aggregateDataSetIdentifier) müssen ausgefüllt werden.</condition>
+    <description>Identifikator des assoziierten Datenbestands</description>
+  </element>
+  <element name="gmd:associationType" id="66.4">
+    <label>Assoziationstyp</label>
+    <help/>
+    <condition/>
+    <description>Art der Verbindung zum assoziierten Datenbestand</description>
+  </element>
+  <element name="gmd:initiativeType" id="66.5">
+    <label>Veranlassung</label>
+    <help/>
+    <condition/>
+    <description>Rahmen, in dem der assoziierte Datenbestand erzeugt wurde</description>
+  </element>
+  <element name="gmd:MD_Constraints" id="67">
+    <label>Einschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Zugriffs- und Nutzungseinschränkungen, denen eine Ressource oder ein Metadatensatz
+      unterliegt</description>
+  </element>
+  <element name="gmd:useLimitation" id="68">
+    <label>Anwendungseinschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Einschränkungen, die die Eignung der Ressource oder Metadaten betreffen Beispiel:
+      "nicht für Navigationszwecke geeignet"</description>
+  </element>
+  <element name="gmd:MD_LegalConstraints" id="69">
+    <label>Rechtliche Einschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Einschränkungen und rechtliche Voraussetzungen für den Zugriff sowie die Verwendung
+      der Ressource oder der Metadaten</description>
+  </element>
+  <element name="gmd:hierarchyLevelName" id="7">
+    <label>Bezeichnung der Hierarchieebene</label>
+    <help>z.B. ein konkreter Name eines Kartenwerks Das Element ist verpflichtend, wenn die
+      Hierarchiebene nicht "dataset" ist.</help>
+    <condition>Default: Datenbestand</condition>
+    <description>Bezeichnung der Hierarchieebene, auf die sich die Metadaten beziehen</description>
+  </element>
+  <element name="gmd:accessConstraints" id="70">
+    <label>Zugriffseinschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Zugriffseinschränkungen zum Schutz der Privatsphäre oder des geistigen Eigentums
+      sowie andere besondere Einschränkungen des Zugriffs auf die Ressource oder die
+      Metadaten</description>
+  </element>
+  <element name="gmd:useConstraints" id="71">
+    <label>Nutzungseinschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Einschränkungen zum Schutz der Privatsphäre oder des geistigen Eigentums sowie
+      andere besondere Einschränkungen oder Warnungen bezüglich der Nutzung der Ressource oder der
+      Metadaten</description>
+  </element>
+  <element name="gmd:otherConstraints" id="72">
+    <label>Andere Einschränkungen</label>
+    <help>Mit diesem Element können sonstige Einschränkungen erfasst werden, denen der Datenzugriff
+      oder die Datennutzung unterliegt. Dieses Element muss nur dann belegt werden, wenn in den
+      Auswahllisten der Elemente "accessConstraints" oder "useConstraints" der Wert
+      "otherRestrictions" gewählt wurde.</help>
+    <condition>Muss ausgefüllt werden, wenn unter Zugriffseinschränkungen oder Nutzungseinschränkungen "Benutzerdefinierte Einschränkungen" ausgewält wurde</condition>
+    <description>Andere Einschränkungen und rechtliche Voraussetzungen für den Zugriff und die
+      Verwendung der Ressource oder der Metadaten</description>
+  </element>
+  <element name="gmd:MD_SecurityConstraints" id="73">
+    <label>Sicherheitseinschränkungen</label>
+    <help/>
+    <condition/>
+    <description>Anwendungseinschränkungen für die Ressource oder für Metadaten zur Wahrung der
+      nationalen Sicherheit oder ähnlicher Sicherheitsbelange</description>
+  </element>
+  <element name="gmd:classification" context="gmd:MD_SecurityConstraints" id="74">
+    <label>Sicherheitseinstufung</label>
+    <help/>
+    <condition/>
+    <description>Sicherheitseinstufung beim Umgang mit der Ressource oder den
+      Metadaten</description>
+  </element>
+  <element name="gmd:userNote" context="gmd:MD_SecurityConstraints" id="75">
+    <label>Erläuterung</label>
+    <help/>
+    <condition/>
+    <description>Erklärung, aus welchem Grund rechtliche oder andere Einschränkungen bestehen sowie
+      rechtliche Voraussetzungen für den Erhalt oder die Verwendung der Ressource bzw.
+      Metadaten</description>
+  </element>
+  <element name="gmd:classificationSystem" context="gmd:MD_SecurityConstraints" id="76">
+    <label>Einstufungssystem</label>
+    <help/>
+    <condition/>
+    <description>Bezeichnung des Einstufungssystems</description>
+  </element>
+  <element name="gmd:handlingDescription" context="gmd:MD_SecurityConstraints" id="77">
+    <label>Verwendungshinweis</label>
+    <help/>
+    <condition/>
+    <description>Zusätzliche Information zu Einschränkungen bei der Verwendung der Ressource oder
+      der Metadaten</description>
+  </element>
+  <element name="gmd:DQ_DataQuality" id="78">
+    <label>Datenqualität</label>
+    <help/>
+    <condition/>
+    <description>Information zur Qualität des Datenbestands</description>
+  </element>
+  <element name="gmd:scope" context="gmd:DQ_DataQuality" id="79">
+    <label>Geltungsbereich</label>
+    <help>Qualitätsangaben können entweder zum Gesamtdatenbestand (z.B. Deutschland) oder zu
+      Teilmengen räumlicher (z.B. Bundesländer) oder inhaltlicher Art (Objekte, Attribute usw.)
+      gemacht werden</help>
+    <condition/>
+    <description>Geltungsbereich der Daten, auf die sich die Qualitätsangaben beziehen</description>
+  </element>
+  <element name="gmd:contact" id="8">
+    <label>Metadatenkontakt</label>
+    <help/>
+    <condition/>
+    <description>Für die Metadaten verantwortliche Stelle</description>
+  </element>
+  <element name="gmd:report" context="gmd:DQ_DataQuality" id="80">
+    <label>Qualitätsbericht</label>
+    <help/>
+    <condition>Für Datenbestand muss entweder &quot;Qualitätsbericht&quot; oder &quot;Herkunft&quot; ausgefüllt werden.</condition>
+    <description>Quantitative Qualitätsinformation über die Daten, bezogen auf den genannten
+      Geltungsbereich</description>
+  </element>
+  <element name="gmd:lineage" context="gmd:DQ_DataQuality" id="81">
+    <label>Herkunft</label>
+    <help/>
+    <condition>Für Datenbestand muss entweder &quot;Qualitätsbericht&quot; oder &quot;Herkunft&quot; ausgefüllt werden.</condition>
+    <description>Nicht-quantitative Qualitätsinformation über die Herkunft der Daten bezogen auf den
+      genannten Geltungsbereich</description>
+  </element>
+  <element name="gmd:LI_Lineage" id="82">
+    <label>Herkunft</label>
+    <help/>
+    <condition/>
+    <description>Information über die Datenerzeugung bzw. die dafür genutzten Datenquellen oder den
+      Kenntnismangel ihrer Herkunft</description>
+  </element>
+  <element name="gmd:statement" context="gmd:LI_Lineage" id="83">
+    <label>Erläuterung</label>
+    <help/>
+    <condition>Inhalt obligatorisch für Datenbestand oder Serie</condition>
+    <description>Allgemeine Aussagen des Datenerzeugers zur Herkunft des Datenbestands</description>
+  </element>
+  <element name="gmd:processStep" context="gmd:LI_Lineage" id="84">
+    <label>Bearbeitungsschritt</label>
+    <help/>
+    <condition>Obligatorisch wenn Erläuterung und Datenquelle nicht ausgefüllt sind.</condition>
+    <description>Information über den Herstellungsprozess des Datenbestands im genannten
+      Geltungsbereich</description>
+  </element>
+  <element name="gmd:source" context="gmd:LI_Lineage" id="85">
+    <label>Datenquelle</label>
+    <help/>
+    <condition>Obligatorisch wenn Erläuterung und Bearbeitungsschritt nicht ausgefüllt sind.</condition>
+    <description>Information über die bei der Datenerzeugung genutzten Datenquellen im genannten
+      Geltungsbereich</description>
+  </element>
+  <element name="gmd:LI_ProcessStep" id="86">
+    <label>Bearbeitungsschritt</label>
+    <help/>
+    <condition/>
+    <description>Information über einen Schritt im Erstellungs- oder Transformationsprozess der
+      Daten einschliesslich der Datenpflege</description>
+  </element>
+  <element name="gmd:description" context="gmd:LI_ProcessStep" id="87">
+    <label>Beschreibung</label>
+    <help/>
+    <condition/>
+    <description>Beschreibung des Bearbeitungsschritts einschliesslich wichtiger Parameter oder
+      Toleranzen</description>
+  </element>
+  <element name="gmd:rationale" context="gmd:LI_ProcessStep" id="88">
+    <label>Veranlassung</label>
+    <help/>
+    <condition/>
+    <description>Notwendigkeit bzw. Zweck des Bearbeitungsschritts</description>
+  </element>
+  <element name="gmd:dateTime" context="gmd:LI_ProcessStep" id="89">
+    <label>Bearbeitungszeitpunkt</label>
+    <help>Hier nur Zeitpunkt, da die Klasse "dateTime" keinen Zeitraum zulässt</help>
+    <condition/>
+    <description>Zeitpunkt des Bearbeitungsschritts</description>
+  </element>
+  <element name="gmd:dateStamp" id="9">
+    <label>Datum</label>
+    <help>Datum der Erstellung oder des aktuellen Bearbeitungsstands der Metadaten Eingabeformat:
+      Zeichenkette im Format yyyy-mm-dd nach ISO19103, z.B. "1998-09-08"</help>
+    <condition/>
+    <description>Datum, zu dem der Metadatensatz erzeugt/geändert wurde</description>
+  </element>
+  <element name="gmd:processor" context="gmd:LI_ProcessStep" id="90">
+    <label>Bearbeiter</label>
+    <help/>
+    <condition/>
+    <description>Kontaktinformation zu Person(en) und Organisation(en), welche mit dem
+      Bearbeitungsschritt in Beziehung stehen</description>
+  </element>
+  <element name="gmd:source" context="gmd:LI_ProcessStep" id="91">
+    <label>Datenquelle</label>
+    <help/>
+    <condition/>
+    <description>Information über die bei der Datenerzeugung genutzten Datenquelle im genannten
+      Geltungsbereich</description>
+  </element>
+  <element name="gmd:LI_Source" id="92">
+    <label>Datenquelle</label>
+    <help/>
+    <condition/>
+    <description>Information über die bei der Datenerzeugung genutzten Datenquelle im genannten
+      Geltungsbereich</description>
+  </element>
+  <element name="gmd:description" context="gmd:LI_Source" id="93">
+    <label>Beschreibung</label>
+    <help/>
+    <condition>Obligatorisch wenn (Quelldaten-)Ausdehnung nicht ausgefüllt</condition>
+    <description>Detaillierte Beschreibung der Ebene der Quelldaten</description>
+  </element>
+  <element name="gmd:scaleDenominator" context="gmd:LI_Source" id="94">
+    <label>Massstabszahl</label>
+    <help/>
+    <condition/>
+    <description>Angabe der Massstabszahl (mz) eines Massstabs 1 : mz der Ausgangskarte</description>
+  </element>
+  <element name="gmd:sourceReferenceSystem" context="gmd:LI_Source" id="95">
+    <label>Bezugssystem</label>
+    <help/>
+    <condition/>
+    <description>Räumliches Bezugssystem der Quelldaten</description>
+  </element>
+  <element name="gmd:sourceCitation" context="gmd:LI_Source" id="96">
+    <label>Quelldatenbestand</label>
+    <help/>
+    <condition/>
+    <description>Bibliografische Angaben zur eindeutigen Identifizierung der Quelle</description>
+  </element>
+  <element name="gmd:sourceExtent" context="gmd:LI_Source" id="97">
+    <label>Ausdehnung</label>
+    <help/>
+    <condition>Obligatorisch wenn (Quelldaten-)Beschreibung nicht ausgefüllt</condition>
+    <description>Ausdehnungsinformation einschl. des Begrenzungsrechtecks (Bounding Box), des
+      Begrenzungspolygons sowie der vertikalen und zeitlichen Ausdehnung der Quelle</description>
+  </element>
+  <element name="gmd:sourceStep" context="gmd:LI_Source" id="98">
+    <label>Bearbeitungsschritt</label>
+    <help/>
+    <condition/>
+    <description>Information über einen Bearbeitungsschritt bei der Erstellung der
+      Quelldaten</description>
+  </element>
+  <element name="gmd:DQ_Element" id="99">
+    <label>Datenqualitätselement</label>
+    <help>Hier werden die quantitativen Methoden zur Qualitätsbewertung und ihre Ergebnisse
+      beschrieben.</help>
+    <condition/>
+    <description>Aspekt der quantitativen Qualitätsinformationen</description>
+  </element>
+  <element name="gmd:dateType">
+    <label>Date type</label>
+  </element>
+  <element name="gmd:MD_TopicCategoryCode">
+    <label>Thematik</label>
+    <description>Thematische Klassifizierungen zur Gruppierung von geografischen Datensätzen und für die Suche nach vorhandenen Datensätzen. Kann auch zur Gruppierung von Schlüsselwörtern verwendet werden. Die aufgelisteten Beispiele erheben keinen Anspruch auf Vollständigkeit. BEMERKUNG: Es existieren Überlappungsbereiche der Themen. Es wird dem Anwender überlassen, die geeignetsten Themen anzugeben.</description>
+    <condition/>
+  </element>
+  <element name="gmd:PT_Locale">
+    <label>Sprachraum</label>
+    <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
+  </element>
+  <element name="id">
+    <label>Identifikator (Sprache)</label>
+    <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
+  </element>
+  <element name="gmd:languageCode">
+    <label>Sprache</label>
+    <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
+  </element>
+  <element name="gmd:LanguageCode">
+    <label>Sprache</label>
+    <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
+  </element>
+  <element name="gmd:characterEncoding">
+    <label>Zeichensatz</label>
+    <description>Das Feld wird automatisch für mehrsprachige Metadaten generiert. Bitte nichts daran ändern.</description>
+  </element>
+  <element name="gmd:describes">
+    <label>Beschreibt</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <element name="gmd:propertyType">
+    <label>Eigenschaftsart</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <element name="gmd:featureType">
+    <label>Objektart</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <element name="gmd:featureAttribute">
+    <label>Objektattribut</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <element name="gmd:DS_Association">
+    <label>Beziehung</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_DataSet">
+    <label>Datenbestand</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_Initiative">
+    <label>Veranlassung</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_OtherAggregate">
+    <label>Andere Assoziation</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_Platform">
+    <label>Plattform</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_ProductionSeries">
+    <label>Produktionsserie</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_Sensor">
+    <label>Sensor</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_Series">
+    <label>Serienangaben</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="gmd:DS_StereoMate">
+    <label>Stereobild</label>
+    <description>ISO19139-Attribut. Bitte nicht verwenden.</description>
+  </element>
+  <element name="gmd:URL">
+    <label>URL</label>
+    <description/>
+  </element>
+  <element name="gts:TM_PeriodDuration">
+    <label>Benutzerdefiniertes Intervall</label>
+    <description>
+      Der Datentyp Dauer (duration) erlaubt es ein Zeitintervall zu spezifizieren.
+
+      Das Intervall muss in der folgenden Form angegeben werden "PnYnMnDTnHnMnS", wobei:
+
+      * P die Periodizität definiert (obligatorisch),
+      * nY die Anzahl (n) Jahre,
+      * nM die Anzahl (n) Monate,
+      * nD die Anzahl (n) Tage,
+      * T den Beginn der Zeitangaben kennzeichnet (obligatorisch wenn Stunden, Minuten und Sekunden spezifiziert werden sollen),
+      * nH die Anzahl (n) Stunden,
+      * nM die Anzahl (n) Minuten und
+      * nS die Anzahl (n) Sekunden bedeutet.
+
+      Z.B. P0Y0M15D ist ein Intervall von 15 Tagen, P0Y0M0DT1H0M0S bedeutet ein stündliches Intervall.
+    </description>
+  </element>
+  <element name="uuidref">
+    <label>UUID-Referenz</label>
+    <description>Eindeutiger Identifikator einer Ressource</description>
+  </element>
+  <element name="uom">
+    <label>Masseinheit</label>
+    <description/>
+    <helper>
+      <option value=""></option>
+      <option value="m">m</option>
+    </helper>
+  </element>
+  <element name="srv:serviceType">
+    <label>Art des Dienstes</label>
+    <description>Die Art des Dienstes kann aus der anghängten Liste ausgewählt werden. Z.B. OGC:WMS wenn es sich um einen WMS-Dienst handelt</description>
+    <condition>Obligatorisch</condition>
+    <helper>
+      <option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
+      <option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
+      <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
+      <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
+      <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
+      <option value="view">Darstellungsdienst (gem. INSPIRE)</option>
+      <option value="discovery">Metadatendienst (gem. INSPIRE)</option>
+      <option value="download">Downloaddienst (gem.INSPIRE)</option>
+      <option value="transformation">Transformationsdienst (gem. INSPIRE)</option>
+      <option value="invoke">Abrufdienst (gem. INSPIRE)</option>
+      <option value="other">Weitere (gem. INSPIRE)</option>
+      <!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
+          type <option value="discovery">Discovery Service (discovery)</option> <option
+          value="view">View Service (view)</option> <option value="download">Download
+          Service (download)</option> <option value="transformation">Transformation
+          Service (transformation)</option> <option value="other">Other Services (other)</option> -->
+    </helper>
+  </element>
+  <element name="srv:serviceTypeVersion">
+    <label>Version des Dienstes</label>
+    <description>Mit der Separierung der Version in ein spezielles Attribut, kann ein User z.B. alle WMS-Dienste finden, unabhängig von der Version. Gleichzeitig kann spezifisch nach z.B. WMS, Version 1.1.1 gesucht werden.</description>
+  </element>
+  <element name="srv:accessProperties">
+    <label>Zugangsbestimmungen</label>
+    <description>Information über die Verfügbarkeit des Dienstes. Z.B. Gebühren, zeitliche Verfügbarkeit, Angaben zur Bestellung etc.</description>
+  </element>
+  <element name="srv:restrictions">
+    <label>Einschränkungen</label>
+    <description>Rechtliche und/oder sicherheitsrelevante Einschränkungen eines Dienstes</description>
+  </element>
+  <element name="srv:containsOperations">
+    <label>Funktionen und Operationen</label>
+    <description>Information bezüglich der vom Dienst unterstützten Operationen, z.B. GetCapabilities, GetMap, GetFeatureInfo für einen WMS-Dienst.</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:operatesOn">
+    <label>Bezieht sich auf</label>
+    <description>Hier werden Datensätze beschrieben/verlinkt, die mit diesem Dienst dargestellt bzw. verarbeitet werden.</description>
+  </element>
+  <element name="srv:operationName">
+    <label>Name der Operation</label>
+    <description>Ein eindeutiger Identifikator für diese Schnittstelle</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:SV_OperationMetadata">
+    <label>Operation</label>
+    <description>Operation Metadata</description>
+  </element>
+  <element name="srv:DCP">
+    <label>DCP (Distributionsplattform)</label>
+    <description>Plattform worauf die Operation implementiert wurde. Auswahl aus Codeliste</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:DCPList">
+    <label>Distributed Computing Platforms list</label>
+  </element>
+  <element name="srv:operationDescription">
+    <label>Beschreibung der Operation</label>
+    <description>Beschreibung der Absicht und der Resultate der Operation</description>
+  </element>
+  <element name="srv:invocationName">
+    <label>Aufruf-Bezeichnung</label>
+    <description>Bezeichnung für den Aufruf der Schnittstelle im Zusammenhang mit dem DCP. Der Name ist für alle DCPs identisch</description>
+  </element>
+  <element name="srv:parameters">
+    <label>Parameter</label>
+    <description>Die für diese Schnittstelle notwendigen Parameter</description>
+  </element>
+  <element name="srv:connectPoint">
+    <label>Verknüpfungspunkt (URL)</label>
+    <description>Angabe, wie auf die Schnittstelle zugegriffen werden kann</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:dependsOn">
+    <label>Hängt ab von</label>
+    <description>Liste von Operationen, die ausgeführt werden müssen unmittelbar bevor die betroffene Operation aufgerufen wird, strukturiert als Liste, um alternative Vorgänger-Pfade abzufangen und Sets, um paralelle Vorgänger-Pfade abzufangen.</description>
+  </element>
+  <element name="srv:providerName">
+    <label>Name des Anbieters</label>
+    <description>Ein eindeutiger Identifikator für die Organisation, die den Dienst anbietet</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:serviceContact">
+    <label>Kontakt zum Dienst</label>
+    <description>Kontaktinformationen zum Anbieter der Dienstes</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:name">
+    <label>Bezeichnung</label>
+    <description>Bezeichnung der Kette oder des Parameters, so wie im Dienst definiert</description>
+  </element>
+  <element name="srv:description">
+    <label>Beschreibung</label>
+    <description>Erklärung der Rolle der Dienste in einer Dienstekette und Beschreibung des Outputs bzw. der Rolle der/des Parameter(s)</description>
+  </element>
+  <element name="srv:optionality">
+    <label>Optionalität</label>
+    <description>Angabe, ob/dass der Parameter obligatorisch ist</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:repeatability">
+    <label>Wiederholbarkeit</label>
+    <description>Angabe, ob mehr als ein Parameter angegeben werden kann (Ja/Nein)</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:coupledResource">
+    <label>Angehängte Ressource</label>
+    <description>Weitere Informationen zur Beschreibung der Layer/Daten (im Falle "eng gekoppelter" Dienste)</description>
+  </element>
+  <element name="srv:SV_CoupledResource">
+    <label>Angehängte Ressource</label>
+    <description>Weitere Informationen zur Beschreibung der Layer/Daten (im Falle "eng gekoppelter" Dienste)</description>
+  </element>
+  <element name="srv:identifier">
+    <label>Identifikator/Bezeichnung</label>
+    <description>Bezeichnung/Identifikator des gegebenen eng gekoppelten Datensatzes (z.B. der Layername in einem WMS)</description>
+  </element>
+  <element name="srv:couplingType">
+    <label>Art der Kopplung</label>
+    <description>Angabe ob die Daten eng, gemischt oder lose an den Dienst gekoppelt sind</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:SV_CouplingType">
+    <label>Art der Kopplung</label>
+    <description>Angabe ob die Daten eng, gemischt oder lose an den Dienst gekoppelt sind</description>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="srv:extent">
+    <label>Ausdehnung</label>
+    <description>Geografische und/oder zeitliche Ausdehnung des Dienstes</description>
+    <condition>Wenn die Art der Kopplung entweder "gemischt" oder "eng" ist, muss eine Angabe zur Ausdehnung gemacht werden</condition>
+  </element>
+  <element name="srv:keywords">
+    <label>Schlüsselwörter</label>
+    <description>Technische Schlüsselwörter, zur Beschreibung des Dienstes</description>
+  </element>
+  <element name="gco:Measure" id="100.0" context="gmd:DQ_Element">
+    <label>Masseinheit</label>
+    <description>Bezeichnung der Masseinheit für das Testverfahren</description>
+  </element>
+  <element name="gco:Measure" id="357.0" context="gmd:EX_VerticalExtent">
+    <label>Masseinheit</label>
+    <description>Masseinheiten zur Beschreibung einer vertikalen Ausdehnung.</description>
+    <help>Z.B. m, ft, mm, hPa</help>
+    <condition>Obligatorisch</condition>
+  </element>
+  <element name="gml:beginPosition">
+    <label>Anfangszeitpunkt</label>
+    <description>Formatiert als 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
+
+  <element name="gml:endPosition">
+    <label>Endzeitpunkt</label>
+    <description>Formatiert als 2007-09-12T15:00:00 (YYYY-MM-DDTHH:mm:ss)</description>
+  </element>
+
+  <element name="gml:relatedTime">
+    <label>Bezugszeit</label>
+    <description>Definiert die Beziehung eines gewissen Zeitabschnitts zum Objekt.</description>
+  </element>
+
+  <element name="gml:coordinates">
+    <label>Koordinaten</label>
+    <description>Zur Speicherung einer Serie von Koordinatenpaaren.</description>
+  </element>
+
+  <element name="gml:Polygon">
+    <label>Polygon</label>
+    <description>Ein gml:Polygon ist eine spezifische Oberfläche definiert durch ein sog. single surface patch. Die Begrenzung dieses Patches ist koplanar und das Polygon nutzt planare Interpolation in seinem Innern.</description>
+    <help>Die Begrenzung ist durch gml:Points definiert</help>
+  </element>
+
+  <element name="gml:Point">
+    <label>Punkt</label>
+    <description>Ein gml:Point ist durch ein einzelnes Koordinatenpaar definiert.</description>
+    <example>74. -37.</example>
+  </element>
+
+  <element name="gml:LineString">
+    <label>Linie</label>
+    <description>Ein gml:LineString ist eine spezifische Kurve die aus einem einzelnen Segment mit linearer Interpolation besteht. Es ist durch mindestens zwei Koordinatenpaare definiert.</description>
+  </element>
+
+  <element name="gml:LinearRing">
+    <label>Linearer Ring</label>
+    <description>Ein gml:LinearRing ist durch vier oder mehr Koordinatenpaare bestimmt und linearer Interpolation dazwischen. Das erste und letze Koordinatenpaar sind identisch.</description>
+  </element>
+
+  <element name="gml:exterior">
+    <label>Äussere Begrenzung</label>
+    <description>Die äussere Begrenzung eines Körpers</description>
+  </element>
+
+  <element name="gml:interior">
+    <label>Innere Begrenzung</label>
+    <description>Die innere Begrenzung eines Körpers</description>
+  </element>
+
+  <element name="gml:id">
+    <label>Identifier</label>
+    <description>Unique identifier</description>
+  </element>
+
   <element name="gml:id" id="191.0" context="gmd:MD_CRS">
     <label>Ellipsoid</label>
     <description>ID des genutzten Ellipsoides</description>
@@ -2958,17 +3756,8 @@
     <label>Field of application</label>
     <description>Field of application</description>
   </element>
-  <element name="gmd:MD_CharacterSetCode">
-    <label>Zeichensatz</label>
-  </element>
-  <element name="gmd:parentIdentifier">
-    <label>Identifikator des übergeordneten Metadatensatzes</label>
-  </element>
   <element name="gmd:MD_TopologyLevelCode">
     <label>Topologie-Ebene</label>
-  </element>
-  <element name="gmd:dateStamp">
-    <label>Zuletzt bearbeitet</label>
   </element>
   <element name="gmd:CI_RoleCode">
     <label>Funktion</label>
@@ -2978,12 +3767,15 @@
   </element>
   <element name="gmd:MD_SpatialRepresentationTypeCode">
     <label>Räumliche Darstellungsart</label>
+    <description>Räumliche Darstellungsart</description>
   </element>
   <element name="gmd:MD_ProgressCode" context="gmd:status">
-    <label>Status Fortschritt</label>
+    <label>Bearbeitungsstatus</label>
+    <description>Bearbeitungsstatus</description>
   </element>
   <element name="gmd:MD_GeometricObjectTypeCode">
-    <label>Geometrische Objekttyp</label>
+    <label>Geometrietyp</label>
+    <description>Geometrietyp</description>
   </element>
   <element name="gmd:MD_RestrictionCode" context="gmd:accessConstraints">
     <label>Zugriffsbeschränkung</label>
@@ -2997,40 +3789,10 @@
   <element name="gmd:DS_InitiativeTypeCode">
     <label>Initiative Typ</label>
   </element>
-  <element name="gmd:otherConstraints">
-    <label>Andere Einschränkungen</label>
-  </element>
   <element name="gmd:MD_LegalConstraints">
     <label>Rechtliche Einschränkungen</label>
-  </element>
-  <element name="gmd:MD_LegalConstraints">
-    <label>Rechtliche Einschränkungen</label>
-  </element>
-  <element name="gmd:aggregateDataSetIdentifier">
-    <label>Identifikator</label>
-  </element>
-  <element name="gmd:MD_AggregateInformation">
-    <label>Aggregationsinformation</label>
-  </element>
-  <element name="gmd:denominator">
-    <label>Räumliche Auflösung</label>
-  </element>
-  <element name="gmd:MD_RepresentativeFraction">
-    <label>Representative Fraction</label>
   </element>
   <element name="gmd:MD_ScopeCode">
     <label>Anwendungsbereich</label>
-  </element>
-  <element name="gmd:Country">
-    <label>Land</label>
-  </element>
-  <element name="gmd:LanguageCode">
-    <label>Sprache</label>
-  </element>
-  <element name="gmd:statement">
-    <label>Erklärung</label>
-  </element>
-  <element name="gmd:LI_Lineage">
-    <label>Abstammung</label>
   </element>
 </labels>

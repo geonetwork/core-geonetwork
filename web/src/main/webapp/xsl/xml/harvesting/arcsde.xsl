@@ -26,6 +26,15 @@
     <database>
       <xsl:value-of select="database/value"/>
     </database>
+    <version>
+      <xsl:value-of select="version/value"/>
+    </version>
+    <connectionType>
+      <xsl:value-of select="connectionType/value"/>
+    </connectionType>
+    <databaseType>
+      <xsl:value-of select="databaseType/value"/>
+    </databaseType>
     <icon>
       <xsl:value-of select="icon/value"/>
     </icon>

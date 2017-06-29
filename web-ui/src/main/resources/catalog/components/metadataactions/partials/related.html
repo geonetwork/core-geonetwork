@@ -31,7 +31,7 @@
                       mainType !== 'LINKDOWNLOAD' &&
                       mainType !== 'LINK' &&
                       r.protocol !== 'OGC:WFS' ">
-          {{::(r.title | gnLocalized: lang) || r.url}}
+          {{::(r.title | gnLocalized: lang) || (r.url | gnLocalized: lang)}}
         </h4>
         <!-- Display description if available -->
         <h4 data-ng-if="(mainType === 'WMS' ||
@@ -49,41 +49,41 @@
         <p class="text-muted"
            data-ng-if="mainType === 'WMS'">
         <span data-translate=""
-              data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              data-translate-values="{url:'{{::r.url | gnLocalized: lang}}', layer:'{{::r.title | gnLocalized: lang}}'}">
           wmsLinkDetails</span>
         </p>
         <p class="text-muted"
            data-ng-if="r.protocol === 'OGC:WFS'">
         <span data-translate=""
-              data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              data-translate-values="{url:'{{::r.url | gnLocalized: lang}}', layer:'{{::r.title | gnLocalized: lang}}'}">
           wfsLinkDetails</span>
         </p>
         <p class="text-muted"
            data-ng-if="mainType === 'WCS'">
         <span data-translate=""
-              data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              data-translate-values="{url:'{{::r.url | gnLocalized: lang}}', layer:'{{::r.title | gnLocalized: lang}}'}">
           wcsLinkDetails</span>
         </p>
 
         <p class="text-muted"
            data-ng-if="mainType === 'DB'">
         <span data-translate=""
-              data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+              data-translate-values="{url:'{{::r.url | gnLocalized: lang}}', layer:'{{::r.title | gnLocalized: lang}}'}">
           databaseLayerDetails</span>
         </p>
         <p class="text-muted"
            data-ng-if="mainType === 'FILE'">
         <span data-translate=""
-              data-translate-values="{url:'{{r.url}}', name:'{{r.title | gnLocalized: lang}}'}">
+              data-translate-values="{url:'{{::r.url | gnLocalized: lang}}', name:'{{::r.title | gnLocalized: lang}}'}">
           fileLayerDetails</span>
           <input class="form-control"
                  type="text"
                  onClick="this.setSelectionRange(0, this.value.length)"
-                 value="{{::r.url}}"/>
+                 value="{{::(r.url| gnLocalized: lang)}}"/>
         </p>
         <p class="text-muted" title="{{::(r.title | gnLocalized: lang) || (r.description | gnLocalized: lang) || r.url}}"
            data-ng-if="mainType === 'LINKDOWNLOAD' || mainType === 'LINK'">
-          {{::((r.title | gnLocalized: lang) || (r.description | gnLocalized: lang) || r.url)}}
+          {{::((r.title | gnLocalized: lang) || (r.description | gnLocalized: lang) || (r.url | gnLocalized: lang))}}
         </p>
       </div>
       <div class="col-xs-4">
