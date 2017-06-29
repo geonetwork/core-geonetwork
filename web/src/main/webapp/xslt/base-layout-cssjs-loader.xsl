@@ -115,17 +115,15 @@
         </xsl:choose>
 
         <script src="{$uiResourcesPath}lib/bootstrap-select/bootstrap-select.min.js"></script>
-        <xsl:if test="$withD3">
-          <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
-          <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
-        </xsl:if>
+        <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
+        <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
 
         <xsl:if test="$angularApp = 'gn_search' or
                       $angularApp = 'gn_editor' or
                       $angularApp = 'gn_admin'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
           <!-- Jsonix resources (OWS Context) -->
-          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
+          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-all.js"></script>
           <script type="text/javascript">
             zip.workerScriptsPath = "../../catalog/lib/zip/";
           </script>

@@ -288,7 +288,7 @@
     width: 300%;
   }
 
-  gn-features-tables {
+  gn-features-tables, .gn-viewer-info-pane {
     bottom           : 2.8em;
     left             : .4em;
     right            : .4em;
@@ -993,6 +993,14 @@
     opacity: 0.6;
     font-style: italic;
     text-transform: none;
+  }
+  gn-geometry-tool .btn-group .btn {
+    flex-grow: 0 !important;
+    flex-basis: initial !important;
+    &:not(.btn-icon) {
+      padding: 0 1em;
+      width: auto;
+    }
   }
 }
 

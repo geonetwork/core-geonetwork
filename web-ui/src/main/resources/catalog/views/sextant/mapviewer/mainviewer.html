@@ -1,15 +1,30 @@
-<div class="wrapper" data-ng-controller="gnViewerController">
+<div class="wrapper" data-ng-controller="gnViewerController as ctrl">
   <div class="sxt-main-tabs">
 
     <sxt-tab-switcher />
   </div>
   <div id="map" ngeo-map="map" class="map"></div>
-  <div gn-gfi="" dismiss=".popover" map="map" ng-class="{'leftBarExpanded': isContainterOpened()}"></div>
-  <gn-features-tables gn-features-tables-map="map" ng-class="{'leftBarExpanded': isContainterOpened()}" gn-active="isContainterOpened()"></gn-features-tables>
+  <div gn-gfi="" dismiss=".popover" map="map" ng-class="{'leftBarExpanded': isContainerOpened()}"
+     ng-show="!ctrl.profileGraph"></div>
+  <gn-features-tables gn-features-tables-map="map" ng-class="{'leftBarExpanded': isContainerOpened()}"
+    gn-active="isContainerOpened()" ng-show="!ctrl.profileGraph"></gn-features-tables>
 
+  <!-- graph showing a WPS response containing a profile -->
+  <div class="profile-graph gn-viewer-info-pane"
+    ng-style="{ visibility: ctrl.profileGraph ? 'visible' : 'hidden' }"
+    ng-class="{'leftBarExpanded': isContainerOpened()}">
+    <div class="panel-heading">
+      <button type="button" class="btn btn-default close" ng-click="ctrl.closeProfileGraph()" title="close">
+        ×
+      </button>
+      <h5><span data-translate="">profileGraph</span></h5>
+    </div>
+    <div class="profile" ngeo-profile="ctrl.profileGraph"
+      ngeo-profile-options="ctrl.profileOptions" />
+  </div>
 
   <!-- Left buttons - Tools-->
-  <div class="tools main-tools" ng-class="{'activeTool': isContainterOpened(), 'sxt-maximize-layer-tools': active.maximized }">
+  <div class="tools main-tools" ng-class="{'activeTool': isContainerOpened(), 'sxt-maximize-layer-tools': active.maximized }">
 
     <div gi-btn-group class="sxt-panel-button">
       <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn="active">
@@ -72,7 +87,7 @@
 
 
     </div>
-    <div class="panel-tools-container" ng-class="{'sxt-tab-open': isContainterOpened() }">
+    <div class="panel-tools-container" ng-class="{'sxt-tab-open': isContainerOpened() }">
 
       <!--Layer tree & background layers-->
       <div class="panel panel-default panel-tools" id="layers" gnv-layermanager-btn ng-show="activeTools.layers">
@@ -303,7 +318,7 @@
   </div>
 
 
-  <footer ng-class="{'leftBarExpanded': isContainterOpened()}">
+  <footer ng-class="{'leftBarExpanded': isContainerOpened()}">
     <div sxt-mouse-position></div>
   </footer>
 

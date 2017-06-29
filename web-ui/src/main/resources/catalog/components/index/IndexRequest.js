@@ -936,6 +936,9 @@
         return;
       }
       for (var p in field.values) {
+        // ignore undefined values
+        if (field.values[p] === undefined) { continue; }
+
         if (field.type == 'histogram' || field.type == 'range') {
           var value;
           if (p.indexOf(FACET_RANGE_DELIMITER) > 0) {

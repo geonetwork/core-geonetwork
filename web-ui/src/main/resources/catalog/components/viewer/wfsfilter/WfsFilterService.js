@@ -374,7 +374,7 @@
 
             // special case: date time, use 'from' property
             if (config.isDateTime) {
-              if (fObj.values.from != '') {
+              if (fObj.values.from) {
                 result[fName] = transformDate(fObj.values.from);
               }
               return;
