@@ -59,7 +59,6 @@ import static org.mockito.Mockito.when;
  *
  * Created by Jesse on 1/30/14.
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:mock-service-manager.xml")
 public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Autowired
