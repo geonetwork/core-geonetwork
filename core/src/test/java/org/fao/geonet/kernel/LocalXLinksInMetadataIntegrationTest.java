@@ -24,13 +24,8 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
-
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.ServiceRequest;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
@@ -40,33 +35,36 @@ import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 import java.util.UUID;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test local:// xlinks.
  *
  * Created by Jesse on 1/30/14.
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:mock-service-manager.xml")
 public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     private SettingManager _settingManager;
     @Autowired
     private DataManager _dataManager;
-    @Autowired
-    private MockServiceManager _serviceManager;
 
     @Test
     public void testResolveLocalXLink() throws Exception {
@@ -100,6 +98,7 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         ServiceContext context = createServiceContext();
         context.setAsThreadLocal();
         loginAsAdmin(context);
+
         _settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
 
         String schema = _dataManager.autodetectSchema(metadata);
@@ -113,60 +112,41 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
             null, createDate, changeDate, false, false);
 
-        final String keyword1 = "World";
-        _serviceManager.setResponse(String.format(responseTemplate, keyword1));
+        SpringLocalServiceInvoker mockInvoker = mock(SpringLocalServiceInvoker.class);
+        _applicationContext.getBeanFactory().registerSingleton(SpringLocalServiceInvoker.class.getCanonicalName(), mockInvoker);
+
+        String keyword1 = "World";
+        Element element1 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword1))).getRootElement();
+        when(mockInvoker.invoke(any(String.class))).thenReturn(element1);
 
         final String xpath = "*//gmd:descriptiveKeywords//gmd:keyword/gco:CharacterString";
         assertNull(Xml.selectElement(metadata, xpath));
-        assertEquals(0, _serviceManager._numberOfCalls);
+        verify(mockInvoker, never()).invoke(any(String.class));
 
         final Element loadedMetadataNoXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, false);
         assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesNotEdit, xpath, GCO, GMD);
-        assertEquals(1, _serviceManager.getNumberOfCalls());
+        verify(mockInvoker, times(1)).invoke(any(String.class));
+
         final Element loadedMetadataKeepXLinkAttributesNotEdit = _dataManager.getMetadata(context, id, false, false, true);
         assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesNotEdit, xpath, GCO, GMD);
-        assertEquals(2, _serviceManager.getNumberOfCalls());
+        verify(mockInvoker, times(2)).invoke(any(String.class));
 
         final Element loadedMetadataNoXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, false);
         assertEqualsText(keyword1, loadedMetadataNoXLinkAttributesEdit, xpath, GCO, GMD);
-        assertEquals(3, _serviceManager.getNumberOfCalls());
+        verify(mockInvoker, times(3)).invoke(any(String.class));
 
         final Element loadedMetadataKeepXLinkAttributesEdit = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword1, loadedMetadataKeepXLinkAttributesEdit, xpath, GCO, GMD);
-        assertEquals(4, _serviceManager.getNumberOfCalls());
+        verify(mockInvoker, times(4)).invoke(any(String.class));
 
         Processor.clearCache();
-        final String keyword2 = "Other Word";
-        _serviceManager.setResponse(String.format(responseTemplate, keyword2));
+
+        String keyword2 = "Other Word";
+        Element element2 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword2))).getRootElement();
+        when(mockInvoker.invoke(any(String.class))).thenReturn(element2);
 
         final Element newLoad = _dataManager.getMetadata(context, id, false, true, true);
         assertEqualsText(keyword2, newLoad, xpath, GCO, GMD);
-        assertEquals(5, _serviceManager.getNumberOfCalls());
-
-
+        verify(mockInvoker, times(5)).invoke(any(String.class));
     }
-
-    public static class MockServiceManager extends ServiceManager {
-        private String _response;
-        private int _numberOfCalls = 0;
-
-        @Override
-        public void dispatch(ServiceRequest req, UserSession session, ServiceContext context) {
-            try {
-                _numberOfCalls++;
-                req.getOutputStream().write(_response.getBytes("UTF-8"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public void setResponse(String _response) {
-            this._response = _response;
-        }
-
-        public int getNumberOfCalls() {
-            return _numberOfCalls;
-        }
-    }
-
 }

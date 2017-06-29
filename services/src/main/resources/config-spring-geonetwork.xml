@@ -118,4 +118,9 @@
     <property name="basename" value="org.fao.geonet.api.Messages" />
     <property name="useCodeAsDefaultMessage" value="true" />
   </bean>
+
+
+  <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
+        init-method="init">
+  </bean>
 </beans>

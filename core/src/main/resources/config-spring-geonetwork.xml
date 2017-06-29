@@ -146,7 +146,4 @@
         class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
 
-  <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
-        init-method="init">
-  </bean>
 </beans>
