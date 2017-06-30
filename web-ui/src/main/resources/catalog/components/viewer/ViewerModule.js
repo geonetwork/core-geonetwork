@@ -104,8 +104,8 @@
   goog.require('gn_print');
   goog.require('gn_searchlayerformap_directive');
   goog.require('gn_terrainswitcher_directive');
-  goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
+  goog.require('gn_viewer_directive');
   goog.require('gn_wfs');
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
@@ -121,8 +121,8 @@
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
-    'gn_viewer_service',
     'gn_viewer_directive',
+    'gn_viewer_service',
     'gn_wmsimport',
     'gn_wfs_directive',
     'gn_owscontext',

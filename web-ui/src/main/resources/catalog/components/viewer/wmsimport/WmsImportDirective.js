@@ -51,7 +51,8 @@
         templateUrl: '../../catalog/components/viewer/wmsimport/' +
             'partials/wmsimport.html',
         scope: {
-          map: '=gnWmsImportMap'
+          map: '=gnWmsImportMap',
+          url: '=gnWmsImportUrl'
         },
         controller: ['$scope', function($scope) {
 
@@ -163,6 +164,13 @@
               });
             }
           };
+
+          // watch url as input
+          scope.$watch('url', function (value) {
+            if (value) {
+              scope.setUrl(value);
+            }
+          });
         }
       };
     }]);

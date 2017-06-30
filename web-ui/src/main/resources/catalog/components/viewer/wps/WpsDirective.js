@@ -590,6 +590,14 @@
             $scope.wpsLink.name = p.identifier.value;
             $scope.wpsLink.url = $scope.url;
           }
+
+          // watch url change from outside
+          $scope.$watch('wpsLink.url', function (value) {
+            if (value) {
+              $scope.url = value;
+              $scope.ctrl.doRequest();
+            }
+          });
         }]
       };
     }]
