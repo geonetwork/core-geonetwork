@@ -141,6 +141,8 @@ input[type=text], input[type=number], select {
   }
 
   .directory-entries-list {
+    margin: 0 1em;
+
     & > li {
       display: flex;
       flex-direction: column;
@@ -778,9 +780,9 @@ gn-md-type-widget {
 
   & > div {
     border-radius: 1000px;
-    width: 2em;
-    height: 2em;
-    line-height: 2.1em;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 2em;
     text-align: center;
     font-size: 0.9em;
     position: relative;
@@ -789,7 +791,7 @@ gn-md-type-widget {
     background-color: @gray-light;
 
     &.valid-status-1 {
-      background-color: @btn-warning-bg;
+      background-color: @gray-light;
     }
     &.valid-status0 {
       background-color: @btn-danger-bg;

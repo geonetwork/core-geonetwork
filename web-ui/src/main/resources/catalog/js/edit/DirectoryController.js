@@ -50,16 +50,18 @@
     'gnCurrentEdit',
     'gnMetadataManager',
     'gnGlobalSettings',
+    'gnConfig',
     function($scope, $routeParams, $http,
         $rootScope, $translate, $compile,
-            gnSearchManagerService,
-            gnUtilityService,
-            gnEditor,
-            gnUrlUtils,
-            gnCurrentEdit,
-            gnMetadataManager,
-            gnGlobalSettings) {
-
+        gnSearchManagerService,
+        gnUtilityService,
+        gnEditor,
+        gnUrlUtils,
+        gnCurrentEdit,
+        gnMetadataManager,
+        gnGlobalSettings,
+        gnConfig) {
+      $scope.gnConfig = gnConfig;
       $scope.hasEntries = false;
       $scope.mdList = null;
       $scope.activeType = null;
@@ -157,8 +159,10 @@
             });
           });
 
+        // fetch all entries + templates
+        var entryType = $scope.userCanEditTemplates ? 's or t' : 's';
         gnSearchManagerService.search('qi?_content_type=json&' +
-          'template=s&fast=index&summaryOnly=true&resultType=subtemplates').
+          'template=' + entryType + '&fast=index&summaryOnly=true&resultType=subtemplates').
           then(function(data) {
             $scope.$broadcast('setPagination', $scope.paginationInfo);
             $scope.mdList = data;
