@@ -423,8 +423,10 @@
 				</br>
 
 				<div data-gn-userfeedback='{{mdView.current.record.getUuid()}}' ></div>
-				<div data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}' ></div>
-				<div data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}' ></div>
+				<div class="gn-md-feedback-buttons clearfix">				
+					<div class="pull-left" data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}' ></div>
+					<div class="pull-left" data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}' ></div>
+				</div>
 
 				<section data-ng-if="mdView.current.record.geoBox.length > 0">
 					<h4>

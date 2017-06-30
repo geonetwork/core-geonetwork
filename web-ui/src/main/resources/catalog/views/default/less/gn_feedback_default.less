@@ -17,6 +17,9 @@
     font-size: 14px;
   }
 }
+.gn-md-feedback-buttons {
+  margin-bottom: 20px;
+}
 .gn-md-feedback-btn {
   margin-right: 5px;
 }
@@ -68,6 +71,15 @@ q, blockquote {
   padding: 10px;
   border: 1px solid #eee;
   border-radius: 3px;
+  h4 {
+    a {
+      cursor: pointer;
+      color: #333;
+      &:hover {
+        color: #000;
+      }
+    }
+  }
   q, blockquote {
     padding-left: 18px;
     display: block;
@@ -86,6 +98,14 @@ q, blockquote {
     position: absolute;
     margin-left: 4px;
     margin-top: -7px;
+  }
+  .gn-userfeedback-pre-title {
+    color: #5d5b5b;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    text-transform: uppercase;
   }
   .gn-userfeedback-score {
     float: left;
