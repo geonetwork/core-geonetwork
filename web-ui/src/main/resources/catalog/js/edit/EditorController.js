@@ -445,13 +445,17 @@
         $scope.layout.hideTopToolBar = false;
         // Close the editor tab
         window.onbeforeunload = null;
+
+        // if there is no history, attempt to close tab
+        if (window.history.length == 1) {
+          window.close();
+          // This last point may trigger
+          // "Scripts may close only the windows that were opened by it."
+          // when the editor was not opened by a script.
+        }
+
         // Go to editor home
         $location.path('');
-        // Tentative to close the browser tab
-        window.close();
-        // This last point may trigger
-        // "Scripts may close only the windows that were opened by it."
-        // when the editor was not opened by a script.
       };
 
       $scope.cancel = function(refreshForm) {
