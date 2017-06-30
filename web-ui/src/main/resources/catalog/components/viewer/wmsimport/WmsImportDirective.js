@@ -123,30 +123,6 @@
             });
           }
 
-          // This event focus on map, display the WMSImport and request
-          // a getCapabilities
-          //TODO : to be improved
-          var type = scope.format.toUpperCase();
-          var event = 'requestCapLoad' + type;
-          scope.$on(event, function(e, url) {
-            var addLayersPanel = $('[id=addLayers]');
-            if (addLayersPanel) {
-              $timeout(function() {
-                addLayersPanel.removeClass('force-hide');
-
-                var layerTypeTab = $('[heading=' + type + ']');
-                if (layerTypeTab && !layerTypeTab.hasClass('active')) {
-                  var layerTypeAction = layerTypeTab.find('a');
-
-                  if (layerTypeAction) {
-                    layerTypeAction.click();
-                  }
-                }
-              });
-            }
-            scope.setUrl(url);
-          });
-
           scope.setUrl = function(srv) {
             scope.url = angular.isObject(srv) ? srv.url : srv;
             type = angular.isObject(srv) && srv.type || type;
@@ -168,7 +144,10 @@
           // watch url as input
           scope.$watch('url', function (value) {
             if (value) {
-              scope.setUrl(value);
+              scope.setUrl({
+                url: value,
+                type: scope.format
+              });
             }
           });
         }

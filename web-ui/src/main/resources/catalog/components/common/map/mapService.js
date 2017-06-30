@@ -61,10 +61,11 @@
       'gnWfsService',
       'gnGlobalSettings',
       'gnViewerSettings',
+      'gnViewerService',
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, viewerSettings) {
+          gnGlobalSettings, viewerSettings, gnViewerService) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -470,7 +471,15 @@
             // move to map
             gnSearchLocation.setMap();
             // open dialog for WMS
-            $rootScope.$broadcast('requestCapLoad' + type.toUpperCase(), url);
+            switch (type.toLowerCase()) {
+              case 'wms':
+                gnViewerService.openWmsTab(url);
+                break;
+
+              case 'wmts':
+                gnViewerService.openWmtsTab(url);
+                break;
+            }
           },
 
           /**
