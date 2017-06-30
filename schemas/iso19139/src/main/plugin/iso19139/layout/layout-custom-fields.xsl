@@ -67,6 +67,7 @@
   <xsl:template mode="mode-iso19139" priority="2000" match="*[gco:*/@uom]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
     <xsl:param name="refToDelete" select="gn:element" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
@@ -95,7 +96,7 @@
          id="gn-el-{*/gn:element/@ref}"
          data-gn-field-highlight="">
       <label class="col-sm-2 control-label">
-        <xsl:value-of select="$labelConfig/label"/>
+        <xsl:value-of select="if ($overrideLabel != '') then $overrideLabel else $labelConfig/label"/>
         <xsl:if test="$labelMeasureType != '' and
                       $labelMeasureType/label != $labelConfig/label">&#10;
           (<xsl:value-of select="$labelMeasureType/label"/>)
