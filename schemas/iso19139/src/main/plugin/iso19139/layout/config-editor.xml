@@ -794,6 +794,8 @@
 
       <thesaurusList>
         <thesaurus key="external.theme.NVS.L23" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L05" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.use-limitation.NVS.L08" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.EMODNET_QI_Horizontal" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.EMODNET_QI_Vertical" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.EMODNET_QI_Purpose" maxtags="1" transformations="to-iso19139-keyword"/>
@@ -805,7 +807,8 @@
       <tab id="emodnetHydrography-what"
            mode="flat"
            default="true">
-        <section>
+
+        <section name="emodnetMetadataInfo">
           <field name="emodnetCatalogueType"
                  xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
 
@@ -818,14 +821,27 @@
                 [contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                 'thesaurus.local.theme.emodnet-projectname')]"/>
 
-          <field name="emodnetName"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
-
-          <field name="emodnetShortName"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
-
           <field name="emodnetDisseminationLevel"
                  xpath="/gmd:MD_Metadata/gmd:metadataConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:language"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+
+          <!--<field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>-->
+          <section name="emodnetIdentificationTitle">
+
+            <field name="emodnetName"
+                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:title"/>
+
+            <field name="emodnetShortName"
+                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code"/>
+
+          </section>
+        </section>
+
+
+        <section>
 
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
@@ -866,6 +882,10 @@
                           gmd:MD_Georectified/gmd:pointInPixel/
                             gmd:MD_PixelOrientationCode"/>
 
+          <field name="emodnetSpatialResolution"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                          gmd:spatialResolution/*/gmd:distance"/>
+
           <field name="emodnetScaleDenominator"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:spatialResolution/gmd:MD_Resolution/
@@ -905,6 +925,7 @@
                           gmd:extent/*/gmd:description"/>
 
         </section>
+
       </tab>
 
 
@@ -920,10 +941,6 @@
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                           gmd:DQ_GriddedDataPositionalAccuracy/gmd:evaluationMethodDescription"/>
 
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
-                          contains(
-                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                            'EMODNET_QI_Horizontal')]"/>
           </section>
 
           <section name="emodnetVertAccuracyTitle">
@@ -932,10 +949,6 @@
             <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report/
                             gmd:DQ_QuantitativeAttributeAccuracy/gmd:evaluationMethodDescription"/>
 
-            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
-                          contains(
-                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                            'EMODNET_QI_Vertical')]"/>
           </section>
 
           <section name="emodnetShoalBias">
@@ -956,6 +969,19 @@
             <field name="emodnetSuitabilityTitle"
                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
+          </section>
+
+          <section name="emodnetQualityIndicator">
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Horizontal')]"/>
+
+            <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
+                          contains(
+                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
+                            'EMODNET_QI_Vertical')]"/>
 
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           contains(
@@ -972,10 +998,6 @@
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:extent/*/gmd:geographicElement/
                             gmd:EX_GeographicBoundingBox"/>
-
-          <field name="emodnetSpatialResolution"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                          gmd:spatialResolution/*/gmd:distance"/>
 
           <field
             name="minDepth"
@@ -1089,9 +1111,47 @@
                   </gmd:MD_ReferenceSystem>
                 </gmd:referenceSystemInfo>
               </snippet>
+              <snippet label="addCrs3395">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG:3395)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:codeSpace>
+                          <gco:CharacterString>EPSG</gco:CharacterString>
+                        </gmd:codeSpace>
+                        <gmd:version>
+                          <gco:CharacterString>8.6</gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3395Custom">
+                <gmd:referenceSystemInfo>
+                  <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                      <gmd:RS_Identifier>
+                        <gmd:code>
+                          <gco:CharacterString>WGS 84 / World Mercator (EPSG:3395)</gco:CharacterString>
+                        </gmd:code>
+                        <gmd:version>
+                          <gco:CharacterString>
+                            Map projection parameters, values and units :
+                            Axes units :
+                          </gco:CharacterString>
+                        </gmd:version>
+                      </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                  </gmd:MD_ReferenceSystem>
+                </gmd:referenceSystemInfo>
+              </snippet>
             </template>
           </action>
-<!--
+
           <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
                   or="referenceSystemInfo" in="/gmd:MD_Metadata">
             <template>
@@ -1109,7 +1169,7 @@
                 </gmd:referenceSystemInfo>
               </snippet>
             </template>
-          </action>-->
+          </action><!---->
 
 
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
@@ -1214,7 +1274,7 @@
 
 
           <field
-            name="timeResolution"
+            name="measureFreq"
             xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
                 gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
         </section>
@@ -1240,10 +1300,12 @@
                      xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
+                <key label="edmoId"
+                     xpath="*/@uuid[1]"/>
               </values>
               <snippet>
                 <gmd:contact>
-                  <gmd:CI_ResponsibleParty>
+                  <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
@@ -1312,10 +1374,12 @@
                      xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
+                <key label="edmoId"
+                     xpath="gmd:CI_ResponsibleParty/@uuid[starts-with(., 'http')]"/>
               </values>
               <snippet>
                 <gmd:contact>
-                  <gmd:CI_ResponsibleParty>
+                  <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
@@ -1348,17 +1412,12 @@
             </template>
           </field>
 
-
-          <!-- TODO: check cardinality
-          if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']) = 0"-->
           <action type="add"
                   name="emodnetDataHoldingCenterTitle"
                   addDirective="data-gn-directory-entry-selector"
                   forceLabel="true"
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
-            <!-- TODO: filter on a group  ?
-            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
             <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
@@ -1384,10 +1443,12 @@
                      xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
+                <key label="edmoId"
+                     xpath="*/@uuid[1]"/>
               </values>
               <snippet>
                 <gmd:contact>
-                  <gmd:CI_ResponsibleParty>
+                  <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
@@ -1420,17 +1481,12 @@
             </template>
           </field>
 
-          <!-- TODO: check cardinality
-          if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'originator']) = 0"
-          -->
           <action type="add"
                   name="emodnetMetadataAuthor"
                   forceLabel="true"
                   addDirective="data-gn-directory-entry-selector"
                   or="contact"
                   in="/gmd:MD_Metadata">
-            <!-- TODO: filter on a group  ?
-            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
             <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
@@ -1450,7 +1506,7 @@
                  templateModeOnly="true"
                  notDisplayedIfMissing="true"
                  xpath="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
-                          gmd:distributorContact[*/gmd:role/*/@codeListValue = 'distributor']"
+                          gmd:distributorContact"
                  del=".">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
@@ -1460,10 +1516,12 @@
                      xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                      use="email"/>
+                <key label="edmoId"
+                     xpath="*/@uuid[1]"/>
               </values>
               <snippet>
                 <gmd:distributorContact>
-                  <gmd:CI_ResponsibleParty>
+                  <gmd:CI_ResponsibleParty uuid="{{edmoId}}">
                     <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
@@ -1496,17 +1554,28 @@
             </template>
           </field>
 
-          <!-- TODO: check cardinality
-          if="count(gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
-                          gmd:distributorContact[*/gmd:role/*/@codeListValue = 'distributor']) = 0"-->
+          <!-- Add first a distributor with no
+          mandatory distributor contact. -->
+          <action type="add"
+                  btnLabel="addADistributor"
+                  or="distributor"
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/*">
+            <template>
+              <snippet>
+                <gmd:distributor>
+                  <gmd:MD_Distributor/>
+                </gmd:distributor>
+              </snippet>
+            </template>
+          </action>
+
+          <!-- Then add a distributor contact based on the directory -->
           <action type="add"
                   name="emodnetDistributor"
+                  forceLabel="true"
                   addDirective="data-gn-directory-entry-selector"
                   or="distributorContact"
-                  in="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*/
-                          gmd:distributorContact">
-            <!-- TODO: filter on a group  ?
-            data-filter='{"_groupPublished": "CONTACTS_EDMERP"}' -->
+                  in="/gmd:MD_Metadata/gmd:distributionInfo/*/gmd:distributor/*">
             <directiveAttributes
               data-template-add-action="false"
               data-search-action="true"
@@ -1590,14 +1659,6 @@
 
         </section>
 
-
-        <section name="emodnetMetadataInfo">
-          <field xpath="/gmd:MD_Metadata/gmd:language"/>
-
-          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
-
-          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
-        </section>
       </tab>
     </view>
     <view name="xml">

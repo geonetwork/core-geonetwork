@@ -907,6 +907,7 @@ eg. The gmd:MD_Identifier may contain a gmd:authority node which needs to be pre
 
 Warning: Template based field does not support multilingual editing for ISO standards (ie. only the main language is edited - therefore, multilingual elements will be preserved).
 
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -916,7 +917,7 @@ Warning: Template based field does not support multilingual editing for ISO stan
             <xs:documentation>The list of values to match from the template.</xs:documentation>
           </xs:annotation>
         </xs:element>
-        <xs:element minOccurs="1" maxOccurs="1" ref="snippet"/>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="snippet"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -1052,6 +1053,76 @@ XPath:
                 /mri:metadataReference/@uuidref, ',')"/>
           </action>
 
+
+
+Example of a drowdown button with 3 coordinates system to choose from:
+
+.. code-block:: xml
+
+         <!-- Display CRS description only,
+                 customize label
+                 and drop the refSysInfo element if removed -->
+          <field xpath="/mdb:MD_Metadata/mdb:referenceSystemInfo/*/
+                           mrs:referenceSystemIdentifier/*/mcc:description"
+                 name="referenceSystemInfo"
+                 del="../../../.."/>
+
+          <!-- Add one of the 3 CRS proposed using the dropdown -->
+          <action type="add"
+                  btnLabel="addCrs"
+                  name="referenceSystemInfo" or="referenceSystemInfo"
+                  in="/mdb:MD_Metadata">
+            <template>
+              <snippet label="addCrs4326">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4326</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>WGS 84 (EPSG:4326)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs4258">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4258</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 (EPSG:4258)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+              <snippet label="addCrs3035">
+                <mdb:referenceSystemInfo>
+                  <mrs:MD_ReferenceSystem>
+                    <mrs:referenceSystemIdentifier>
+                      <mcc:MD_Identifier>
+                        <mcc:code>
+                          <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/3035</gco:CharacterString>
+                        </mcc:code>
+                        <mcc:description>
+                          <gco:CharacterString>ETRS89 / LAEA Europe (EPSG:3035)</gco:CharacterString>
+                        </mcc:description>
+                      </mcc:MD_Identifier>
+                    </mrs:referenceSystemIdentifier>
+                  </mrs:MD_ReferenceSystem>
+                </mdb:referenceSystemInfo>
+              </snippet>
+            </template>
+          </action>
 
         ]]></xs:documentation>
     </xs:annotation>
@@ -1454,6 +1525,11 @@ An XML snippet with replacement for each key defined in that field.
       <xs:sequence>
         <xs:any processContents="skip" namespace="##any"/>
       </xs:sequence>
+      <xs:attribute name="label" type="xs:string" use="optional">
+        <xs:annotation>
+          <xs:documentation>Snippet label.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="batchEditing">

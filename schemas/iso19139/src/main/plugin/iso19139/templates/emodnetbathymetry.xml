@@ -532,6 +532,21 @@
       </gmd:extent>
       <gmd:extent>
         <gmd:EX_Extent>
+          <gmd:verticalElement>
+            <gmd:EX_VerticalExtent>
+              <gmd:minimumValue>
+                <gco:Real/>
+              </gmd:minimumValue>
+              <gmd:maximumValue>
+                <gco:Real/>
+              </gmd:maximumValue>
+              <gmd:verticalCRS/>
+            </gmd:EX_VerticalExtent>
+          </gmd:verticalElement>
+        </gmd:EX_Extent>
+      </gmd:extent>
+      <gmd:extent>
+        <gmd:EX_Extent>
           <gmd:description gco:nilReason="missing">
             <gco:CharacterString/>
           </gmd:description>
@@ -738,12 +753,12 @@
       <gmd:lineage>
         <gmd:LI_Lineage>
           <gmd:statement>
-            <gco:CharacterString>Description of data processing :</gco:CharacterString>
+            <gco:CharacterString></gco:CharacterString>
           </gmd:statement>
           <gmd:source>
             <gmd:LI_Source>
               <gmd:description>
-                <gco:CharacterString>Description of processed data sources :</gco:CharacterString>
+                <gco:CharacterString></gco:CharacterString>
               </gmd:description>
             </gmd:LI_Source>
           </gmd:source>

@@ -176,6 +176,7 @@
   <projectTitle>Program title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
+  <addADistributor>Add distributor</addADistributor>
   <associatedResources>Associated resources</associatedResources>
   <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>
@@ -249,6 +250,7 @@
   <emodnetWhereTitle>Where</emodnetWhereTitle>
   <emodnetWhenTitle>When</emodnetWhenTitle>
   <emodnetWhoTitle>Who</emodnetWhoTitle>
+  <emodnetQualityIndicator>Quality Indicators</emodnetQualityIndicator>
   <emodnetSpatialResolution>Spatial resolution</emodnetSpatialResolution>
   <emodnetOriginatorTitle>Originator</emodnetOriginatorTitle>
   <emodnetDataHoldingCenterTitle>Data Holding Center</emodnetDataHoldingCenterTitle>
@@ -257,9 +259,12 @@
   <emodnetShortName>Short name of dataset (SDN Local Product-ID)</emodnetShortName>
   <emodnetName>Dataset name</emodnetName>
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
+  <measureFreq>Measurement frequency</measureFreq>
 
   <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
+  <addCrs3395>WGS 84 / World Mercator</addCrs3395>
+  <addCrs3395Custom>WGS 84 / World Mercator (custom)</addCrs3395Custom>
   <addCrs4258>ETRS89</addCrs4258>
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
 
