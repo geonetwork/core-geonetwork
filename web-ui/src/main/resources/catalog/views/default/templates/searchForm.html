@@ -11,13 +11,13 @@
                    class="form-control input-lg"
                    id="gn-any-field"
                    data-ng-model="searchObj.params.any"
-                   data-ng-model-options="modelOptionsForm"
                    placeholder="{{'anyPlaceHolder' | translate}}"
                    data-ng-keyup="$event.keyCode == 13 && triggerSearch()"
                    data-typeahead="address for address in getAnySuggestions($viewValue)"
                    data-typeahead-loading="anyLoading" class="form-control"
                    data-typeahead-min-length="1"
-                   data-typeahead-focus-first="false">
+                   data-typeahead-focus-first="false"
+                   data-typeahead-wait-ms="300">
 
             <div class="input-group-btn">
               <button type="button"
