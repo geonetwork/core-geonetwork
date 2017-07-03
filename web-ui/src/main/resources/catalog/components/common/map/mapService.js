@@ -1403,6 +1403,26 @@
               ngeoDecorateLayer(olLayer);
               olLayer.displayInLayerManager = true;
 
+              // add link to metadata
+              if (angular.isArray(layer.MetadataURL)) {
+                var metadata = layer.MetadataURL[0].OnlineResource;
+                olLayer.set('metadataUrl', metadata);
+
+                var params = gnUrlUtils.parseKeyValue(
+                    metadata.split('?')[1]);
+                var uuid = params.uuid || params.id;
+                if (!uuid) {
+                  var res = new RegExp(/\#\/metadata\/(.*)/g).
+                      exec(metadata);
+                  if (angular.isArray(res) && res.length == 2) {
+                    uuid = res[1];
+                  }
+                }
+                if (uuid) {
+                  olLayer.set('metadataUuid', uuid);
+                }
+              }
+
               return olLayer;
             }
           },
