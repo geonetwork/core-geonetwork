@@ -121,9 +121,10 @@
                 function(evt) {
 
                   var url;
+                  var coordinates = evt.feature.getGeometry().getCoordinates();
                   if (activeTool == 'time') {
                     url = scope.layer.getSource().getGetFeatureInfoUrl(
-                        evt.feature.getGeometry().getCoordinates(),
+                        coordinates,
                         map.getView().getResolution(),
                         map.getView().getProjection(), {
                           TIME: gnNcWms.formatTimeSeries(
@@ -134,10 +135,22 @@
                           INFO_FORMAT: 'image/png'
                         });
                   } else {
+
+                    if(isOceanotron) {
+                      var loader = new GnFeaturesGFILoader({
+                        layer: scope.layer,
+                        coordinates: coordinates,
+                        map: scope.map
+                      });
+                      loader.loadAll().then(function(data) {
+                        //TODO: extract feature id
+
+                      });
+                    }
                     url = gnNcWms.getNcwmsServiceUrl(
                         scope.layer,
                         scope.map.getView().getProjection(),
-                        evt.feature.getGeometry().getCoordinates(),
+                        coordinates,
                         activeTool);
                   }
 
