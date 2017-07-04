@@ -128,7 +128,8 @@
 
       this.parseStyles = function(info) {
         var t = {};
-        if (angular.isArray(info.supportedStyles)) {
+        if (angular.isArray(info.supportedStyles) &&
+          info.supportedStyles.length) {
           angular.forEach(info.supportedStyles, function(s) {
             if (s == 'boxfill') {
               if (angular.isArray(info.palettes)) {
@@ -140,6 +141,11 @@
             else if (s == 'contour') {
               t[s] = s ; // TODO ????? + '/' + p;
             }
+          });
+        }
+        else {
+          info.palettes.forEach(function(p) {
+            t[p] = p;
           });
         }
         return t;
@@ -282,6 +288,8 @@
        * @return {string}
        */
       this.updateLengendUrl = function(legendUrl, params) {
+        if(!legendUrl) return;
+
         var parts = legendUrl.split('?');
 
         var p = parts.length > 1 ?

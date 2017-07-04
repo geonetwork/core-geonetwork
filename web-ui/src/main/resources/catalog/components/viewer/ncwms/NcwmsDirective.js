@@ -37,6 +37,9 @@
    * a additional list of tools for this specific layer.
    * The directive `gnNcwmsTransect` provides the form for all NCWMS parameters.
    */
+
+  var DATE_INPUT_FORMAT = 'DD-MM-YYYY';
+
   module.directive('gnNcwmsTransect', [
     'gnHttp',
     'gnNcWms',
@@ -54,6 +57,10 @@
 
           var drawInteraction, featureOverlay;
           var map = scope.map;
+          var isOceanotron = false;
+          var elevationMin = 0;
+          var elevationMax = 1;
+
 
           scope.ctrl = {};
 
@@ -172,13 +179,22 @@
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
 
-            layer.set('cextent', ol.proj.transformExtent([
+            isOceanotron = !!ncInfo.multiFeature;
+            scope.ctrl.isOceanotron = isOceanotron;
+
+            var proj = map.getView().getProjection();
+            var bbox = [
               parseFloat(ncInfo.bbox[0]),
               parseFloat(ncInfo.bbox[1]),
               parseFloat(ncInfo.bbox[2]),
-              parseFloat(ncInfo.bbox[3])],
-            'EPSG:4326',
-            map.getView().getProjection().getCode())
+              parseFloat(ncInfo.bbox[3])
+            ];
+
+            // use bbox only if it is contained in the world extent
+            layer.set('cextent',
+              ol.extent.containsExtent(proj.getWorldExtent(), bbox) ?
+                ol.proj.transformExtent(bbox, 'EPSG:4326', proj.getCode()) :
+                proj.getExtent()
             );
 
             scope.params = layer.getSource().getParams() || {};
@@ -189,12 +205,53 @@
             };
             scope.colorscalerange = [scope.colorRange.min,
               scope.colorRange.max];
-            scope.timeSeries = {};
+            scope.timeSeries = {
+              from: undefined,
+              to: undefined
+            };
             scope.elevations = ncInfo.zaxis ? ncInfo.zaxis.values : [];
             scope.palettes = gnNcWms.parseStyles(ncInfo);
 
             if (angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
+            }
+
+            // Set default STYLES= to WMS
+            if(isOceanotron) {
+              scope.layer.set('oceanotron', true);
+              scope.ctrl.palette = ncInfo.defaultPalette || ncInfo.palettes[0];
+
+              scope.ctrl.elevationMinFn = function(elev) {
+                if(elev) {
+                  scope.params.ELEVATION = elev + '/' + elevationMax;
+                  scope.updateLayerParams();
+                }
+                return angular.isDefined(elev) ?
+                  (elevationMin = elev) : elevationMin;
+              };
+              scope.ctrl.elevationMaxFn = function(elev) {
+                if(elev) {
+                  scope.params.ELEVATION = elevationMin + '/' + elev;
+                  scope.updateLayerParams();
+                }
+                return angular.isDefined(elev) ?
+                  (elevationMax = elev) : elevationMax;
+              };
+              scope.params.ELEVATION = elevationMin + '/' + elevationMax;
+
+              // Init mendatory time range with day and day before
+              var day = new Date();
+              day.setDate(day.getDate() - 5);
+              var to = moment(day).format(DATE_INPUT_FORMAT);
+              day.setDate(day.getDate() - 1);
+              var from = moment(day).format(DATE_INPUT_FORMAT);
+
+              scope.ncTime.value = {
+                from: from,
+                to: to
+              };
+
+              scope.updateStyle();
             }
           };
 
@@ -231,14 +288,26 @@
           };
 
           scope.ncTime = {};
+
           scope.$watch('ncTime.value', function(time) {
             if (time) {
-              scope.params.TIME =
-                  moment(time, 'DD-MM-YYYY').format(
-                  'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
-              scope.updateLayerParams();
+              var timeA = [];
+              if(angular.isString(time)) {
+                timeA.push(time);
+              }
+              else if(time.from && time.to) {
+                timeA.push(time.from, time.to);
+              }
+
+              if(timeA.length) {
+                scope.params.TIME = timeA.map(function(t){
+                  return moment(t, 'DD-MM-YYYY').format(
+                    'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]')
+                }).join('/');
+                scope.updateLayerParams();
+              }
             }
-          });
+          }, true);
 
           scope.hasStyles = function() {
             try {
