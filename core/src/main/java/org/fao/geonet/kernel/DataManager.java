@@ -738,6 +738,10 @@ public class DataManager implements ApplicationEventPublisherAware {
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
                 String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
                 moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate, true, true));
+            } else {
+                // _status
+                // 0 : unknown or workflow not enabled.
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, Params.Status.UNKNOWN, true, true));
             }
 
             // getValidationInfo
