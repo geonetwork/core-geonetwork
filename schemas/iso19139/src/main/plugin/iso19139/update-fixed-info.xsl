@@ -235,6 +235,9 @@
         <xsl:with-param name="fname" select="$fname"/>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="inspireMimeType">
+    	<xsl:choose><xsl:when test="$mimeType='multipart/x-zip'">application/x-gmz</xsl:when><xsl:otherwise><xsl:value-of select="$mimeType"/></xsl:otherwise></xsl:choose>
+    </xsl:variable>
 
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -246,7 +249,7 @@
       <xsl:copy-of select="gmd:protocol"/>
       <xsl:copy-of select="gmd:applicationProfile"/>
       <gmd:name>
-        <gmx:MimeFileType type="{$mimeType}">
+        <gmx:MimeFileType type="{$inspireMimeType}">
           <xsl:value-of select="$fname"/>
         </gmx:MimeFileType>
       </gmd:name>
