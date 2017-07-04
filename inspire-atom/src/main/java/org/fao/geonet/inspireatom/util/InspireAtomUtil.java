@@ -101,12 +101,11 @@ public class InspireAtomUtil {
 	/**
      * Issue an http request to retrieve the local Atom feed document.
      *
-     * @param context Service context.
      * @param url Atom document url.
      * @return Atom document content.
      * @throws Exception Exception.
      */
-    public static String retrieveLocalAtomFeedDocument(final ServiceContext context,
+    public static Element retrieveLocalAtomFeedDocument(final ServiceContext context,
                                                         final String url) throws Exception {
     	XmlRequest remoteRequest = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
 
@@ -114,9 +113,20 @@ public class InspireAtomUtil {
 
         Lib.net.setupProxy(sm, remoteRequest);
 
-        Element atomFeed = remoteRequest.execute();
+        return remoteRequest.execute();
 
-        return Xml.getString(atomFeed);
+    }
+
+	/**
+     * Issue an http request to retrieve the local Atom feed document.
+     *
+     * @param url Atom document url.
+     * @return Atom document content as a String.
+     * @throws Exception Exception.
+     */
+    public static String retrieveLocalAtomFeedDocumentAsString(final ServiceContext context,
+                                                        final String url) throws Exception {
+        return Xml.getString(retrieveLocalAtomFeedDocument(context, url));
     }
 
     /**

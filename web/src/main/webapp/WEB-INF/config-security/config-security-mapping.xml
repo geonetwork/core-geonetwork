@@ -37,6 +37,7 @@
     <property name="accessDecisionManager" ref="accessDecisionManager"></property>
     <property name="securityMetadataSource">
       <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
+        <sec:intercept-url pattern="/dataset/.*" access="permitAll"/>
         <sec:intercept-url pattern="/metadata/.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/metadata/.*" access="permitAll"/>

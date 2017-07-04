@@ -304,6 +304,14 @@
     <to type="forward">/srv/$1/atom.download</to>
   </rule>
 
+  <rule>
+    <note>
+      Download dataset when metadata of dataset contains only one online resource with mime-type download 
+    </note>
+    <from>^/dataset/(.*)$</from>
+    <to type="forward">/srv/eng/atom.download?fileIdentifier=$1</to>
+  </rule>
+
   <!-- Rules for direct links (for RDF at least) -->
   <rule>
     <note>

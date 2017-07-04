@@ -1162,6 +1162,14 @@ public class DataManager implements ApplicationEventPublisherAware {
         return uuid;
     }
 
+    public Element extractDatasetCodeAndCodeSpace(String schema, Element md) throws Exception {
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DATASET_CODE_AND_CODESPACE);
+        Element identifier = Xml.transform(md, styleSheet);
+        //--- needed to detach md from the document
+        md.detach();
+        return identifier;
+    }
+
     /**
      *
      * @param schema

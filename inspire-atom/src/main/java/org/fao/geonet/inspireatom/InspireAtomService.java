@@ -57,7 +57,7 @@ public class InspireAtomService {
         String atomUrl = feed!=null ? feed.getAtomUrl():"";
         boolean bLocalUrl = atomUrl.equals(baseAtomUrl) ? true : false;
         if (bLocalUrl || StringUtils.isEmpty(atomUrl)) {
-        	feedValue = InspireAtomUtil.retrieveLocalAtomFeedDocument(context, (context.getBean(SettingManager.class).getSiteURL(context.getLanguage()) + "atom.local?" + AtomDescribe.SERVICE_IDENTIFIER + "=" + fileIdentifier).replaceAll(":80/","/").replaceAll(":443/","/"));
+        	feedValue = InspireAtomUtil.retrieveLocalAtomFeedDocumentAsString(context, (context.getBean(SettingManager.class).getSiteURL(context.getLanguage()) + "atom.local?" + AtomDescribe.SERVICE_IDENTIFIER + "=" + fileIdentifier).replaceAll(":80/","/").replaceAll(":443/","/"));
 	        if (StringUtils.isEmpty(atomUrl)) {
 	            Element atomDoc = Xml.loadString(feedValue, false);
 	            InspireAtomFeed inspireAtomFeed = InspireAtomFeed.build(atomDoc);
@@ -96,12 +96,12 @@ public class InspireAtomService {
         InspireAtomFeed feed = _repository.findByMetadataId(metadataId);
         String feedValue = null;
         String atomUrl = feed!=null ? feed.getAtomUrl():"";
-        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
+//        NodeInfo nodeInfo = ApplicationContextHolder.get().getBean(NodeInfo.class);
         String baseAtomUrl = InspireAtomUtil.getBaseDatasetAtomUrl(context);
         boolean bLocalUrl = atomUrl.startsWith(baseAtomUrl) ? true : false;
         if (bLocalUrl || StringUtils.isEmpty(atomUrl)) {
         	
-        	feedValue = InspireAtomUtil.retrieveLocalAtomFeedDocument(context, (context.getBean(SettingManager.class).getSiteURL(context.getLanguage()) + "atom.local?" +
+        	feedValue = InspireAtomUtil.retrieveLocalAtomFeedDocumentAsString(context, (context.getBean(SettingManager.class).getSiteURL(context.getLanguage()) + "atom.local?" +
         			AtomDescribe.DATASET_IDENTIFIER_CODE_PARAM + "=" + datasetIdCode + "&" +
         			AtomDescribe.DATASET_IDENTIFIER_NS_PARAM + "=" + datasetIdNs +
         			(StringUtils.isEmpty(crs) ? "" : "&" + AtomDescribe.DATASET_CRS_PARAM + "=" + crs) +

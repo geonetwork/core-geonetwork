@@ -82,6 +82,9 @@
             </Url>
 			
 			<xsl:variable name="url" select="concat(//server/protocol,'://',//server/host,/root/gui/url,'/opensearch/', /root/gui/language, '/download?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
+			<Url type="application/atom+xml" rel="results">
+			    <xsl:attribute name="template"><xsl:value-of select="$url"/></xsl:attribute>
+			</Url>
 			<Url type="application/x-shapefile" rel="results">
 			    <xsl:attribute name="template"><xsl:value-of select="$url"/></xsl:attribute>
 			</Url>

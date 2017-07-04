@@ -603,242 +603,255 @@ public class ServiceManager {
         //--- write result to output page
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
 
-        if (outPage == null) {
-            //--- if there is no output page we output the xml result (if any)
+		String redirect = response.getAttributeValue("redirect");
+		String url = response.getAttributeValue("url");
+		String type = response.getAttributeValue("mime-type");
+		if (!StringUtils.isBlank(redirect) && redirect.equals("true") && !StringUtils.isBlank(url)) {
+            HttpServiceRequest req2 = (HttpServiceRequest) req;
 
-            if (response == null)
-                warning("Response is null and there is no output page for : " + req.getService());
-            else {
-                info("     -> writing xml for : " + req.getService());
-
-                //--- this logging is usefull for xml services that are called by javascript code
-                if (isDebug()) debug("Service xml is :\n" + Xml.getString(response));
-
-                InputMethod in = req.getInputMethod();
-                OutputMethod out = req.getOutputMethod();
-
-                if (in == InputMethod.SOAP || out == OutputMethod.SOAP) {
-
-                    // Did we set up a status code for the response?
-                    if (context.getStatusCode() != null) {
-                        ((ServiceRequest) req).setStatusCode(context
-                            .getStatusCode());
-                    }
-
-                    req.beginStream("application/soap+xml; charset=UTF-8", cache);
-
-                    if (!SOAPUtil.isEnvelope(response)) {
-                        response = SOAPUtil.embed(response);
-                        req.write(response);
-                    }
-                } else {
-
-                    if (req.hasJSONOutput()) {
-                        req.beginStream("application/json; charset=UTF-8", cache);
-                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
-                        req.endStream();
-                    } else {
-                        if (context.getService().equals("atom.describe") || context.getService().equals("atom.local")) {
-                        	req.beginStream("application/atom+xml; charset=UTF-8", cache);
-                        } else {
-                        	req.beginStream("application/xml; charset=UTF-8", cache);                        	
-                        }
-                        req.write(response);
-                    }
-                }
+            req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+            req2.getHttpServletResponse().setHeader("Location", url);
+            if (!StringUtils.isBlank(type)) {
+                req2.getHttpServletResponse().setHeader("Content-Type", type);
             }
-        }
-
-        //--- FILE output
-
-        else {
-            final NodeInfo nodeInfo = context.getApplicationContext().getBean(NodeInfo.class);
-            if (outPage.isFile()) {
-                // PDF Output
-                if (outPage.getContentType().equals("application/pdf") && !outPage.getStyleSheet().equals("")) {
-
-                    //--- build the xml data for the XSL/FO translation
-                    Path styleSheet = IO.toPath(outPage.getStyleSheet());
-                    Element guiElem;
-                    TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class)
-                        .time();
-                    try {
-                        guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
-                    } finally {
-                        guiServicesTimerContext.stop();
-                    }
-
-                    addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo
-                        .getId());
-
-                    Element rootElem = new Element(Jeeves.Elem.ROOT)
-                        .addContent(guiElem)
-                        .addContent(response);
-
-                    Element reqElem = (Element) req.getParams().clone();
-                    reqElem.setName(Jeeves.Elem.REQUEST);
-
-                    rootElem.addContent(reqElem);
-
-                    //--- do an XSL transformation
-
-                    styleSheet = dataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
-
-                    if (!Files.exists(styleSheet))
-                        error(" -> stylesheet not found on disk, aborting : " + styleSheet);
-                    else {
-                        info(" -> transforming with stylesheet : " + styleSheet);
-
-                        try {
-                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class)
-                                .time();
-                            Path file;
-                            try {
-                                //--- first we do the transformation
-                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet.toString());
-                            } finally {
-                                timerContext.stop();
-                            }
-                            response = BinaryFile.encode(200, file, "document.pdf", true).getElement();
-                        } catch (Exception e) {
-                            error(" -> exception during XSL/FO transformation for : " + req.getService());
-                            error(" -> (C) stylesheet : " + styleSheet);
-                            error(" -> (C) message : " + e.getMessage());
-                            error(" -> (C) exception : " + e.getClass().getSimpleName());
-
-                            throw e;
-                        }
-
-                        info(" -> end transformation for : " + req.getService());
-                    }
-
-
-                }
-                final BinaryFile binaryFile = new BinaryFile(response);
-                String contentType = binaryFile.getContentType();
-
-                if (contentType == null)
-                    contentType = "application/octet-stream";
-
-                String contentDisposition = binaryFile.getContentDisposition();
-                String contentLength = binaryFile.getContentLength();
-
-                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
-
-                // Did we set up a status code for the response?
-                if (context.getStatusCode() != null) {
-                    ((ServiceRequest) req).setStatusCode(context.getStatusCode());
-                }
-                req.beginStream(contentType, cl, contentDisposition, cache);
-                binaryFile.write(req.getOutputStream());
-                req.endStream();
-                binaryFile.removeIfTheCase();
-            }
-
-            //--- BLOB output
-
-            else if (outPage.isBLOB()) {
-                String contentType = BLOB.getContentType(response);
-
-                if (contentType == null)
-                    contentType = "application/octet-stream";
-
-                String contentDisposition = BLOB.getContentDisposition(response);
-                String contentLength = BLOB.getContentLength(response);
-
-                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
-
-                req.beginStream(contentType, cl, contentDisposition, cache);
-                BLOB.write(response, req.getOutputStream());
-                req.endStream();
-            }
-
-            //--- HTML/XML output
-
-            else {
-                //--- build the xml data for the XSL translation
-
-                Path styleSheet = IO.toPath(outPage.getStyleSheet());
-                Element guiElem;
-                TimerContext guiServicesTimerContext = getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
-                try {
-                    guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
-                } finally {
-                    guiServicesTimerContext.stop();
-                }
-
-                addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo.getId());
-
-                Element rootElem = new Element(Jeeves.Elem.ROOT)
-                    .addContent(guiElem)
-                    .addContent(response);
-
-                Element reqElem = (Element) req.getParams().clone();
-                reqElem.setName(Jeeves.Elem.REQUEST);
-
-                rootElem.addContent(reqElem);
-
-                //--- do an XSL translation or send xml data to a debug routine
-
-                if (req.hasDebug()) {
-                    req.beginStream("application/xml; charset=UTF-8", cache);
-                    req.write(rootElem);
-                } else {
-                    //--- do an XSL transformation
-
-                    styleSheet = dataDirectory.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
-
-                    if (!Files.exists(styleSheet))
-                        error("     -> stylesheet not found on disk, aborting : " + styleSheet);
-                    else {
-                        info("     -> transforming with stylesheet : " + styleSheet);
-                        try {
-                            //--- then we set the content-type and output the result
-                            // If JSON output requested, run the XSLT transformation and the JSON
-                            if (req.hasJSONOutput()) {
-                                Element xsltResponse = null;
-                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
-                                    .class).time();
-                                try {
-                                    //--- first we do the transformation
-                                    xsltResponse = Xml.transform(rootElem, styleSheet);
-                                } finally {
-                                    timerContext.stop();
-                                }
-                                req.beginStream("application/json; charset=UTF-8", cache);
-                                req.getOutputStream().write(Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING));
-                                req.endStream();
-                            } else {
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
-                                    .class).time();
-                                try {
-                                    //--- first we do the transformation
-                                    Xml.transform(rootElem, styleSheet, baos);
-                                } finally {
-                                    timerContext.stop();
-                                }
-                                req.beginStream(outPage.getContentType(), cache);
-                                req.getOutputStream().write(baos.toByteArray());
-                                req.endStream();
-                            }
-                        } catch (EofException e) {
-                            // ignore this.
-                            // it happens because the stream closes by client.
-                        } catch (Exception e) {
-                            error("   -> exception during transformation for : " + req.getService());
-                            error("   ->  (C) stylesheet : " + styleSheet);
-                            error("   ->  (C) message    : " + e.getMessage());
-                            error("   ->  (C) exception  : " + e.getClass().getSimpleName());
-
-                            throw e;
-                        }
-
-                        info("     -> end transformation for : " + req.getService());
-                    }
-                }
-            }
-        }
+		} else {
+	        if (outPage == null) {
+	            //--- if there is no output page we output the xml result (if any)
+	
+	            if (response == null)
+	                warning("Response is null and there is no output page for : " + req.getService());
+	            else {
+	                info("     -> writing xml for : " + req.getService());
+	
+	                //--- this logging is usefull for xml services that are called by javascript code
+	                if (isDebug()) debug("Service xml is :\n" + Xml.getString(response));
+	
+	                InputMethod in = req.getInputMethod();
+	                OutputMethod out = req.getOutputMethod();
+	
+	                if (in == InputMethod.SOAP || out == OutputMethod.SOAP) {
+	
+	                    // Did we set up a status code for the response?
+	                    if (context.getStatusCode() != null) {
+	                        ((ServiceRequest) req).setStatusCode(context
+	                            .getStatusCode());
+	                    }
+	
+	                    req.beginStream("application/soap+xml; charset=UTF-8", cache);
+	
+	                    if (!SOAPUtil.isEnvelope(response)) {
+	                        response = SOAPUtil.embed(response);
+	                        req.write(response);
+	                    }
+	                } else {
+	
+	                    if (req.hasJSONOutput()) {
+	                        req.beginStream("application/json; charset=UTF-8", cache);
+	                        req.getOutputStream().write(Xml.getJSON(response).getBytes(Constants.ENCODING));
+	                        req.endStream();
+	                    } else {
+	                        if (context.getService().equals("atom.describe") || context.getService().equals("atom.local")) {
+	                        	req.beginStream("application/atom+xml; charset=UTF-8", cache);
+	                        } else {
+	                        	req.beginStream("application/xml; charset=UTF-8", cache);                        	
+	                        }
+	                        req.write(response);
+	                    }
+	                }
+	            }
+	        }
+	
+	        //--- FILE output
+	
+	        else {
+	            final NodeInfo nodeInfo = context.getApplicationContext().getBean(NodeInfo.class);
+	            if (outPage.isFile()) {
+	                // PDF Output
+	                if (outPage.getContentType().equals("application/pdf") && !outPage.getStyleSheet().equals("")) {
+	
+	                    //--- build the xml data for the XSL/FO translation
+	                    Path styleSheet = IO.toPath(outPage.getStyleSheet());
+	                    Element guiElem;
+	                    TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class)
+	                        .time();
+	                    try {
+	                        guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
+	                    } finally {
+	                        guiServicesTimerContext.stop();
+	                    }
+	
+	                    addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo
+	                        .getId());
+	
+	                    Element rootElem = new Element(Jeeves.Elem.ROOT)
+	                        .addContent(guiElem)
+	                        .addContent(response);
+	
+	                    Element reqElem = (Element) req.getParams().clone();
+	                    reqElem.setName(Jeeves.Elem.REQUEST);
+	
+	                    rootElem.addContent(reqElem);
+	
+	                    //--- do an XSL transformation
+	
+	                    styleSheet = dataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
+	
+	                    if (!Files.exists(styleSheet))
+	                        error(" -> stylesheet not found on disk, aborting : " + styleSheet);
+	                    else {
+	                        info(" -> transforming with stylesheet : " + styleSheet);
+	
+	                        try {
+	                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class)
+	                                .time();
+	                            Path file;
+	                            try {
+	                                //--- first we do the transformation
+	                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet.toString());
+	                            } finally {
+	                                timerContext.stop();
+	                            }
+	                            response = BinaryFile.encode(200, file, "document.pdf", true).getElement();
+	                        } catch (Exception e) {
+	                            error(" -> exception during XSL/FO transformation for : " + req.getService());
+	                            error(" -> (C) stylesheet : " + styleSheet);
+	                            error(" -> (C) message : " + e.getMessage());
+	                            error(" -> (C) exception : " + e.getClass().getSimpleName());
+	
+	                            throw e;
+	                        }
+	
+	                        info(" -> end transformation for : " + req.getService());
+	                    }
+	
+	
+	                }
+	                final BinaryFile binaryFile = new BinaryFile(response);
+	                String contentType = binaryFile.getContentType();
+	
+	                if (contentType == null)
+	                    contentType = "application/octet-stream";
+	
+	                String contentDisposition = binaryFile.getContentDisposition();
+	                String contentLength = binaryFile.getContentLength();
+	
+	                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+	
+	                // Did we set up a status code for the response?
+	                if (context.getStatusCode() != null) {
+	                    ((ServiceRequest) req).setStatusCode(context.getStatusCode());
+	                }
+	                req.beginStream(contentType, cl, contentDisposition, cache);
+	                binaryFile.write(req.getOutputStream());
+	                req.endStream();
+	                binaryFile.removeIfTheCase();
+	            }
+	
+	            //--- BLOB output
+	
+	            else if (outPage.isBLOB()) {
+	                String contentType = BLOB.getContentType(response);
+	
+	                if (contentType == null)
+	                    contentType = "application/octet-stream";
+	
+	                String contentDisposition = BLOB.getContentDisposition(response);
+	                String contentLength = BLOB.getContentLength(response);
+	
+	                int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
+	
+	                req.beginStream(contentType, cl, contentDisposition, cache);
+	                BLOB.write(response, req.getOutputStream());
+	                req.endStream();
+	            }
+	
+	            //--- HTML/XML output
+	
+	            else {
+	                //--- build the xml data for the XSL translation
+	
+	                Path styleSheet = IO.toPath(outPage.getStyleSheet());
+	                Element guiElem;
+	                TimerContext guiServicesTimerContext = getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
+	                try {
+	                    guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
+	                } finally {
+	                    guiServicesTimerContext.stop();
+	                }
+	
+	                addPrefixes(guiElem, context.getLanguage(), req.getService(), nodeInfo.getId());
+	
+	                Element rootElem = new Element(Jeeves.Elem.ROOT)
+	                    .addContent(guiElem)
+	                    .addContent(response);
+	
+	                Element reqElem = (Element) req.getParams().clone();
+	                reqElem.setName(Jeeves.Elem.REQUEST);
+	
+	                rootElem.addContent(reqElem);
+	
+	                //--- do an XSL translation or send xml data to a debug routine
+	
+	                if (req.hasDebug()) {
+	                    req.beginStream("application/xml; charset=UTF-8", cache);
+	                    req.write(rootElem);
+	                } else {
+	                    //--- do an XSL transformation
+	
+	                    styleSheet = dataDirectory.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
+	
+	                    if (!Files.exists(styleSheet))
+	                        error("     -> stylesheet not found on disk, aborting : " + styleSheet);
+	                    else {
+	                        info("     -> transforming with stylesheet : " + styleSheet);
+	                        try {
+	                            //--- then we set the content-type and output the result
+	                            // If JSON output requested, run the XSLT transformation and the JSON
+	                            if (req.hasJSONOutput()) {
+	                                Element xsltResponse = null;
+	                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
+	                                    .class).time();
+	                                try {
+	                                    //--- first we do the transformation
+	                                    xsltResponse = Xml.transform(rootElem, styleSheet);
+	                                } finally {
+	                                    timerContext.stop();
+	                                }
+	                                req.beginStream("application/json; charset=UTF-8", cache);
+	                                req.getOutputStream().write(Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING));
+	                                req.endStream();
+	                            } else {
+	                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	                                TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
+	                                    .class).time();
+	                                try {
+	                                    //--- first we do the transformation
+	                                    Xml.transform(rootElem, styleSheet, baos);
+	                                } finally {
+	                                    timerContext.stop();
+	                                }
+	                                req.beginStream(outPage.getContentType(), cache);
+	                                req.getOutputStream().write(baos.toByteArray());
+	                                req.endStream();
+	                            }
+	                        } catch (EofException e) {
+	                            // ignore this.
+	                            // it happens because the stream closes by client.
+	                        } catch (Exception e) {
+	                            error("   -> exception during transformation for : " + req.getService());
+	                            error("   ->  (C) stylesheet : " + styleSheet);
+	                            error("   ->  (C) message    : " + e.getMessage());
+	                            error("   ->  (C) exception  : " + e.getClass().getSimpleName());
+	
+	                            throw e;
+	                        }
+	
+	                        info("     -> end transformation for : " + req.getService());
+	                    }
+	                }
+	            }
+	        }
+		}
 
         //------------------------------------------------------------------------
         //--- end data stream

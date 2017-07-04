@@ -393,7 +393,7 @@ public class InspireAtomHarvester {
                 String atomUrl = InspireAtomUtil.getBaseDatasetAtomUrl(context) + "?" +
 	        			AtomDescribe.DATASET_IDENTIFIER_CODE_PARAM + "=" + atomDatasetId + "&" +
 	        			AtomDescribe.DATASET_IDENTIFIER_NS_PARAM + "=" + atomDatasetNs;
-                String atomFeedDocument = InspireAtomUtil.retrieveLocalAtomFeedDocument(context, context.getBean(SettingManager.class).getSiteURL(context) + "atom.local?" +
+                String atomFeedDocument = InspireAtomUtil.retrieveLocalAtomFeedDocumentAsString(context, context.getBean(SettingManager.class).getSiteURL(context) + "atom.local?" +
             			AtomDescribe.DATASET_IDENTIFIER_CODE_PARAM + "=" + atomDatasetId + "&" +
             			AtomDescribe.DATASET_IDENTIFIER_NS_PARAM + "=" + atomDatasetNs);
 */                

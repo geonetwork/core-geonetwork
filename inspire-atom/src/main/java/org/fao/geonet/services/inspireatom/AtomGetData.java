@@ -22,29 +22,31 @@
 //==============================================================================
 package org.fao.geonet.services.inspireatom;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.inspireatom.InspireAtomService;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
-import org.fao.geonet.domain.InspireAtomFeed;
-import org.fao.geonet.domain.InspireAtomFeedEntry;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.jdom.Namespace;
 
-import java.nio.file.Path;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Service to get a data file related to dataset.
@@ -98,38 +100,71 @@ public class AtomGetData implements Service {
         DataManager dm = gc.getBean(DataManager.class);
         InspireAtomService service = context.getBean(InspireAtomService.class);
 
-        // Get request parameters
-        String datasetIdCode = Util.getParam(params, DATASET_IDENTIFIER_CODE_PARAM);
-        String datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
-        String datasetCrs = Util.getParam(params, DATASET_CRS_PARAM);
-
+        String fileIdentifier = Util.getParam(params, AtomDescribe.SERVICE_IDENTIFIER, "");
+        String datasetUuid = null;
+        String datasetIdCode = null;
+        String datasetIdNs = null;
+		String datasetCrs = null;
 		String searchTerms = null;
-		try {
-			searchTerms = Util.getParam(params,
-					DATASET_Q_PARAM);
-		} catch (Exception e) {
-		}
+		String id = null;
+        if (StringUtils.isEmpty(fileIdentifier)) {
+            // Get request parameters
+            datasetIdCode = Util.getParam(params, DATASET_IDENTIFIER_CODE_PARAM);
+            datasetIdNs = Util.getParam(params, DATASET_IDENTIFIER_NS_PARAM);
+    		datasetCrs = null;
+    		try {
+    			datasetCrs = Util.getParam(params, DATASET_CRS_PARAM);
+    		} catch (Exception e) {
+    		}
 
-		// Get the metadata uuid for the dataset
-        String datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
-        if (StringUtils.isEmpty(datasetUuid)) throw new MetadataNotFoundEx(datasetUuid);
+    		try {
+    			searchTerms = Util.getParam(params,
+    					DATASET_Q_PARAM);
+    		} catch (Exception e) {
+    		}
+    		// Get the metadata uuid for the dataset
+            datasetUuid = service.retrieveDatasetUuidFromIdentifierNs(datasetIdCode, datasetIdNs);
+            if (StringUtils.isEmpty(datasetUuid)) {
+            	datasetUuid = InspireAtomUtil.retrieveDatasetUuidFromIdentifier(context, datasetIdCode, "identifier", null);
+            }
+            if (StringUtils.isEmpty(datasetUuid)) {
+            	throw new MetadataNotFoundEx(datasetUuid);
+            }
 
-        // Retrieve metadata to check existence and permissions.
-        String id = dm.getMetadataId(datasetUuid);
+            // Retrieve metadata to check existence and permissions.
+            id = dm.getMetadataId(datasetUuid);
+        } else {
+        	datasetUuid = fileIdentifier;
+            id = dm.getMetadataId(datasetUuid);
+			Element md = dm.getMetadata(id);
+			String schema = dm.getMetadataSchema(id);
+			Element datasetIdentifier = dm.extractDatasetCodeAndCodeSpace(schema, md); 
+			datasetIdCode = datasetIdentifier.getChildText("code").trim();
+			datasetIdNs = datasetIdentifier.getChildText("codeSpace").trim();
+        }        	
+
         if (StringUtils.isEmpty(id)) throw new MetadataNotFoundEx(datasetUuid);
 
         Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
-        // Retrieve the dataset resources for specified CRS
-        InspireAtomFeed inspireAtomFeed = service.findByMetadataId(Integer.parseInt(id));
-
-        // Check the metadata has an atom document.
-        String atomUrl = inspireAtomFeed.getAtomUrl();
-        if (StringUtils.isEmpty(atomUrl)) throw new Exception("Metadata has no atom feed");
-
-        Pair<Integer, InspireAtomFeedEntry> result = countDatasetsForCrs(inspireAtomFeed, datasetCrs);
-        int downloadCount = result.one();
-        InspireAtomFeedEntry selectedEntry = result.two();
+    	Element datasetAtomFeed = InspireAtomUtil.retrieveLocalAtomFeedDocument(context, (context.getBean(SettingManager.class).getSiteURL(context.getLanguage()) + "atom.local?" +
+    			AtomDescribe.DATASET_IDENTIFIER_CODE_PARAM + "=" + datasetIdCode + "&" +
+    			AtomDescribe.DATASET_IDENTIFIER_NS_PARAM + "=" + datasetIdNs +
+    			(StringUtils.isEmpty(datasetCrs) ? "" : "&" + AtomDescribe.DATASET_CRS_PARAM + "=" + datasetCrs) +
+    			(StringUtils.isEmpty(searchTerms) ? "" : "&" + AtomDescribe.DATASET_Q_PARAM + "=" + searchTerms)).replaceAll(":80/","/").replaceAll(":443/","/"));
+    	
+        Namespace ns = datasetAtomFeed.getNamespace();
+        Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
+        if (datasetCrs!=null) {
+            crsCounts = countDatasetsForCrs(datasetAtomFeed, datasetCrs, ns);        	
+        } else {
+            List<Element> entries = (datasetAtomFeed.getChildren("entry", ns));
+            if (entries.size()==1) {
+                crsCounts.put(1, entries.get(0));
+            }
+        }
+        int downloadCount = crsCounts.size()>0 ? crsCounts.keySet().iterator().next() : 0;
+        Element selectedEntry = crsCounts.get(downloadCount);
 
         // No download  for the CRS specified
         if (downloadCount == 0) {
@@ -138,13 +173,17 @@ public class AtomGetData implements Service {
             // Only one download for the CRS specified
         } else if (downloadCount == 1) {
 
+        	String type = null;
+        	Element link = selectedEntry.getChild("link", ns);
+        	if (link!=null) {
+        		type = link.getAttributeValue("type");
+        	}
             // Jeeves checks for <reponse redirect="true" url="...." mime-type="..." /> to manage about redirecting
             // to the provided file
             return new Element("response")
                 .setAttribute("redirect", "true")
-                .setAttribute("url", selectedEntry.getUrl())
-                .setAttribute("mime-type", selectedEntry.getType());
-
+                .setAttribute("url", selectedEntry.getChildText("id",ns))
+                .setAttribute("mime-type",type);
             // Otherwise, return a feed with the downloads for the specified CRS
         } else {
             // Retrieve the dataset feed
@@ -158,23 +197,23 @@ public class AtomGetData implements Service {
         }
     }
 
-
-    /**
-     * Calculates the downloads for the specified crs.
-     *
-     * @return Pair of number of downloads and selected download for the crs (only used if downloads
-     * for crs = 1)
-     */
-    private Pair<Integer, InspireAtomFeedEntry> countDatasetsForCrs(InspireAtomFeed inspireAtomFeed, String datasetCrs) {
+    private Map<Integer,Element> countDatasetsForCrs(Element datasetAtomFeed, String datasetCrs, Namespace ns) {
         int downloadCount = 0;
-        InspireAtomFeedEntry selectedEntry = null;
-        for (InspireAtomFeedEntry entry : inspireAtomFeed.getEntryList()) {
-            if (datasetCrs.equals(entry.getCrs())) {
-                selectedEntry = entry;
-                downloadCount++;
-            }
+        Map<Integer,Element> entryMap = new HashMap<Integer, Element>();
+        Element selectedEntry = null;
+        Iterator<Element> entries = (datasetAtomFeed.getChildren("entry", ns)).iterator();
+        while(entries.hasNext()) {
+        	Element entry = entries.next();
+        	Element category = entry.getChild("category",ns);
+        	if (category!=null) {
+            	String term = category.getAttributeValue("term");
+	           if (datasetCrs.equals(term)) {
+	                selectedEntry = entry;
+	                downloadCount++;
+	            }
+        	}
         }
-
-        return Pair.write(downloadCount, selectedEntry);
+        entryMap.put(downloadCount, selectedEntry);
+        return entryMap;
     }
 }

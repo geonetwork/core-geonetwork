@@ -37,7 +37,7 @@
                         then '' else /root/request/referer"/>
 
           <xsl:value-of
-            select="replace($i18n/serviceNotAllowed, '\{1\}', concat('&quot;', $referer, '&quot;'))"/>
+            select="replace($i18n/serviceNotAllowed, '\{1\}', concat('&quot; ', $referer, '&quot;'))"/>
           <xsl:copy-of select="$i18n/linkToHome"/>
         </p>
       </div>
