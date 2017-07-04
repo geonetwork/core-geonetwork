@@ -156,6 +156,14 @@
           if (map.getLayers().getLength() > 0) {
             map.getLayers().removeAt(0);
           }
+          var bgLoadingLayer = new ol.layer.Image({
+            loading: true,
+            label: 'loading',
+            url: '',
+            visible: false
+          });
+          map.getLayers().insertAt(0, bgLoadingLayer);
+
           if (!gnViewerSettings.bgLayers) {
             gnViewerSettings.bgLayers = [];
           }
@@ -191,7 +199,7 @@
 
                     if (!layer.hidden && !isFirstBgLayer) {
                       isFirstBgLayer = true;
-                      map.getLayers().insertAt(0, olLayer);
+                      map.getLayers().setAt(0, olLayer);
                     }
                   }
                 }
@@ -214,7 +222,7 @@
                   var layerIndex = bgLayers.push(loadingLayer);
                   var p = self.createLayer(layer, map, i);
 
-                  (function(idx) {
+                  (function(idx, loadingLayer) {
                     p.then(function(layer) {
                       bgLayers[idx-1] = layer;
 
@@ -225,10 +233,10 @@
                       layer.background = true;
 
                       if(loadingLayer.get('bgLayer')) {
-                        map.getLayers().insertAt(0, layer);
+                        map.getLayers().setAt(0, layer);
                       }
                     });
-                  })(layerIndex);
+                  })(layerIndex, loadingLayer);
                 }
               }
               // WMS layer not in background
@@ -269,11 +277,11 @@
                   var layerIndex = map.getLayers().push(loadingLayer);
                   var p = self.createLayer(layer, map, undefined, i);
 
-                  (function(idx) {
+                  (function(idx, loadingLayer) {
                     p.then(function(layer) {
                       map.getLayers().setAt(idx, layer);
                     });
-                  })(layerIndex);
+                  })(layerIndex, loadingLayer);
                 }
               }
             }
