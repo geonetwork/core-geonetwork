@@ -51,7 +51,7 @@
         </li>
 
         <!--WFS Filter-->
-        <li class="list-group-item" ><a href="" data-ng-click="showWFSFilter()">
+        <li class="list-group-item" data-ng-if="wfs || (wfsLink && user.canEditRecord(member.get('md')))"><a href="" data-ng-click="showWFSFilter()">
           <span translate="">filter</span>
         </a></li>
 
