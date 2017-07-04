@@ -28,7 +28,9 @@
             "protocol": "WPS",
             "linkage": "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R",
             "params": "zone_marine_quadrige=aaa éé àà&produit_id=30140&limits=&programme_suivi=&",
-            "identifier": "r:extractionsurval"
+            "identifier": "r:extractionsurval",
+            "outputMimeType": "text/csv",
+            "outputIdentifier": "output_table"
         }]
     }]
 }
