@@ -328,7 +328,7 @@
               $.ajax(blobURL).then(function(response) {
                 var format = new ol.format.KML();
                 var features = format.readFeatures(response, {
-                  featureProjection: 'EPSG:3857'
+                  featureProjection: scope.map.getView().getProjection()
                 });
                 source.addFeatures(features);
               });
