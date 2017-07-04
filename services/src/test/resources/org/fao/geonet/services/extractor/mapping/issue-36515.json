@@ -1,0 +1,37 @@
+{
+   "layers" : [
+      {
+         "input" : {
+            "protocol" : "OGC:WFS",
+            "epsg" : "4326",
+            "linkage" : "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval",
+            "format" : "vector"
+         },
+         "output" : {
+            "format" : "ESRI Shapefile",
+            "xmin" : "-10.546875000000005",
+            "mercator_lat" : "",
+            "ymin" : "41.50857729743939",
+            "epsg" : "4326",
+            "name" : "surval_30140_all_point_12_12_2016_postgis",
+            "ymax" : "51.17934297928923",
+            "xmax" : "9.140624999999993"
+         },
+         "additionalInput" : [
+            {
+               "params" : "zone_marine_quadrige=aaaa&limits=,,,&programme_suivi=aaaa&",
+               "protocol" : "WPS",
+               "linkage" : "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R"
+            }
+         ],
+         "id" : "94c01d83-ca59-4411-bae8-7db3e0b7181b"
+      }
+   ],
+   "user" : {
+      "usage" : "bug",
+      "firstname" : "Pierre",
+      "org" : "Camptocamp",
+      "lastname" : "Mauduit",
+      "mail" : "pierre@camptocamp.com"
+   }
+}

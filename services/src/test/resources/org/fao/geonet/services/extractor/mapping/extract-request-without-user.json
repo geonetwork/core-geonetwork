@@ -1,0 +1,42 @@
+{
+    "layers": [
+        {
+            "id": "1",
+            "input": {
+                "epsg": "4326",
+                "format": "vecteur",
+                "linkage": "http://plifplafplof.ifremer.com",
+                "protocol": "WFS"
+            },
+            "output": {
+                "epsg": "4326",
+                "format": "ESRI Shapefile",
+                "mercator_lat": "",
+                "name": "blah",
+                "xmax": "180.0",
+                "xmin": "-180.0",
+                "ymax": "90.0",
+                "ymin": "-90.0"
+            }
+        },
+        {
+            "id": "2",
+            "input": {
+                "epsg": "4326",
+                "format": "raster",
+                "linkage": "http://plifplafplof.ifremer.com/wms",
+                "protocol": "WMS"
+            },
+            "output": {
+                "epsg": "4326",
+                "format": "GeoTiff",
+                "mercator_lat": "",
+                "name": "blah",
+                "xmax": "180.0",
+                "xmin": "-180.0",
+                "ymax": "90.0",
+                "ymin": "-90.0"
+            }
+        }
+    ]
+}
