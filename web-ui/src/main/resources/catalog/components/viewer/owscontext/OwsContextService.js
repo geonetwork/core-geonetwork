@@ -114,35 +114,31 @@
           map.removeLayer(layersToRemove[i]);
         }
 
-        // set the General.BoundingBox
+        // -- set the Map view (extent/projection)
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
-        if (projection == 'EPSG:4326') {
-          ll.reverse();
-          ur.reverse();
-        }
         var extent = ll.concat(ur);
-        // reproject in case bbox's projection doesn't match map's projection
-        extent = ol.proj.transformExtent(extent,
-            projection, map.getView().getProjection());
-
-        extent = gnMap.secureExtent(extent, map.getView().getProjection());
-
-        // store the extent into view settings so that it can be used later in
-        // case the map is not visible yet
         gnViewerSettings.initialExtent = extent;
+
+        // save this extent for later use (for example if the map
+        // is not currently visible)
+        map.set('lastExtent', extent);
+
+        if(map.getView().getProjection().getCode() != projection) {
+          var view = new ol.View({
+            extent: extent,
+            projection: projection
+          });
+          map.setView(view);
+        }
 
         // $timeout used to avoid map no rendered (eg: null size)
         $timeout(function() {
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
-
-        // save this extent for later use (for example if the map
-        // is not currently visible)
-        map.set('lastExtent', extent);
 
         // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
