@@ -1,0 +1,28 @@
+<div class="layerTree">
+  <form role="form">
+    <div class="form-group">
+      <label> <span data-translate=""
+        data-translate-values="{type: '{{format.toUpperCase()}}'}">orTypeAServiceUrl</span>
+      </label>
+      <div class="dropdown">
+        <input class="form-control input-sm" type="text"
+          data-ng-model="url" data-ng-change="load()"
+          data-ng-model-options="{debounce:500}"
+          placeholder="{{'serviceUrl' | translate}}" />
+      </div>
+    </div>
+  </form>
+  <p class="text-center" data-ng-show="loading">
+    <i class="fa fa-spinner fa-spin"></i>
+  </p>
+
+  <ul class='list-group'>
+    <li data-ng-repeat='service in capability' class='list-group-item'
+      data-ng-click='handle(service, $event)' data-ng-class="leaf"><label>
+        <span class='fa' data-ng-class="fa-plus-square-o"></span>
+        {{service.label || service.name}} [{{service.type}}]
+    </label></li>
+    </gn-cap-tree-elt>
+  </ul>
+
+</div>

@@ -414,6 +414,112 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
+           * @name gnMap#addEsriFToMap
+           *
+           * @description
+           * Add an ESRI REST feature layer to the map from a given source.
+           *
+           * @param {serviceUrl} url of the rest service
+           * @param {string} name of the service
+           * @param {string} id of the layer
+           * @param {string} server classification
+           * @param {ol.Map} map object
+           */
+          addEsriFToMap: function(serviceUrl, name, layer, serverType, map, label) {
+            var esrijsonFormat = new ol.format.EsriJSON();
+            
+            var vectorSource = new ol.source.Vector({
+              loader: function(extent, resolution, projection) {
+                var url = serviceUrl 
+                            + name
+                            + "/"
+                            + serverType
+                            + "/"
+                            + ((layer) ? layer + "/" : "")
+                            + 'query/?f=json&'
+                            + 'returnGeometry=true&spatialRel=esriSpatialRelIntersects'
+                            + '&geometry='
+                            + encodeURIComponent('{"xmin":' + extent[0]
+                                + ',"ymin":' + extent[1] + ',"xmax":'
+                                + extent[2] + ',"ymax":' + extent[3]
+                                + ',"spatialReference":{"wkid":102100}}')
+                            + '&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*'
+                            + '&outSR=102100';
+                $.ajax({url: url, dataType: 'jsonp', success: function(response) {
+                  if (!response.error) {
+                    // dataProjection will be read from document
+                    var features = esrijsonFormat.readFeatures(response, {
+                      featureProjection: projection
+                    });
+                    if (features.length > 0) {
+                      vectorSource.addFeatures(features);
+                    }
+                  }
+                }});
+              },
+              strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+                tileSize: 512
+              }))
+            });
+
+            var vector = new ol.layer.Vector({
+              source: vectorSource,
+              label: label
+            });
+
+            ngeoDecorateLayer(vector);
+            vector.displayInLayerManager = true;
+            map.getLayers().push(vector);
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#addEsriIToMap
+           *
+           * @description
+           * Add an ESRI REST map server layer to the map from a given source.
+           *
+           * @param {serviceUrl} url of the rest service
+           * @param {string} name of the service
+           * @param {string} id of the layer
+           * @param {string} server classification
+           * @param {ol.Map} map object
+           */
+          addEsriIToMap: function(serviceUrl, name, layer, serverType, map, label) {
+            
+            var urlTemplate = serviceUrl + name
+                + "/" + serverType + "/" //  + ((layer)? layer + "/"  : "") 
+                + "tile/{z}/{y}/{x}";
+
+            var tileLayer = new ol.layer.Tile({
+              label: label,
+              source: new ol.source.XYZ({
+                tileUrlFunction: function(tileCoord) {
+                  return urlTemplate.replace('{z}', (tileCoord[0]).toString())
+                                    .replace('{x}', tileCoord[1].toString())
+                                    .replace('{y}', (-tileCoord[2] - 1).toString());
+                },
+                wrapX: true
+              })
+            });
+            
+            tileLayer.displayInLayerManager = true;
+            map.getLayers().push(tileLayer);
+          },
+
+          // Given only the url, it will show a dialog to select
+          // what layers do we want to add to the map
+          addOwsServiceToMap: function(url, type) {
+            // move to map
+            gnSearchLocation.setMap();
+            // open dialog for WMS
+            $rootScope.$broadcast('requestCapLoad' + type.toUpperCase(), url);
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
            * @name gnMap#createOlWMS
            *
            * @description

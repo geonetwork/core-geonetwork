@@ -28,9 +28,10 @@
         'gnSearchLocation',
         'gnOwsContextService',
         'gnWfsService',
+        '$rootScope',
         function(gnMap, gnOwsCapabilities, gnSearchSettings, 
             ngeoDecorateLayer, gnSearchLocation, gnOwsContextService,
-                 gnWfsService) {
+                 gnWfsService, $rootScope) {
 
           this.configure = function(options) {
             angular.extend(this.map, options);
@@ -56,7 +57,6 @@
 
 
           var addWFSToMap = function(link, md) {
-
 
             if (link.name &&
                 (angular.isArray(link.name) && link.name.length > 0)) {
@@ -129,6 +129,57 @@
               return window.location.assign(record.title);
             }
           };
+
+
+
+          var addESRIFToMap = function(link, md) {
+         
+            var serviceUrl = link.url;
+            
+            if(!serviceUrl.endsWith("/")) {
+              serviceUrl = serviceUrl + "/";
+            }
+            
+            if(link.title.startsWith("http")) {
+              //We have no layer name, show layer chooser
+              // move to map
+              gnSearchLocation.setMap();
+              // open dialog 
+              $rootScope.$broadcast('requestCapLoadESRI', serviceUrl);
+              
+            } else {
+              gnMap.addEsriFToMap(serviceUrl, link.title, "",
+                  'Feature Layer', gnSearchSettings.viewerMap, link.title);
+
+              gnSearchLocation.setMap();
+              
+            }
+          };
+
+
+          var addESRIIToMap = function(link, md) {
+
+            var serviceUrl = link.url;
+            
+            if(!serviceUrl.endsWith("/")) {
+              serviceUrl = serviceUrl + "/";
+            }
+            
+            if(link.title.startsWith("http")) {
+              //We have no layer name, show layer chooser
+              // move to map
+              gnSearchLocation.setMap();
+              // open dialog 
+              $rootScope.$broadcast('requestCapLoadESRI', serviceUrl);
+              
+            } else {
+              gnMap.addEsriIToMap(serviceUrl, link.title, "",
+                  'Raster Layer', gnSearchSettings.viewerMap, link.title);
+            }
+
+              gnSearchLocation.setMap();
+          };
+
 
           this.map = {
             'WMS' : {
@@ -206,6 +257,16 @@
               label: 'openPage',
               action: openLink
             },
+            'ESRI-FEATURE' : {
+              iconClass: 'fa-globe',
+              label: 'addToMap',
+              action: addESRIFToMap
+            },
+            'ESRI-IMAGE' : {
+              iconClass: 'fa-globe',
+              label: 'webserviceLink',
+              action: addESRIIToMap
+            },
             'DEFAULT' : {
               iconClass: 'fa-fw',
               label: 'openPage',
@@ -253,6 +314,12 @@
                 return 'KML';
               } else if (protocolOrType.match(/download/i)) {
                 return 'LINKDOWNLOAD';
+              } else if (protocolOrType.match(/^ESRI/i)) {
+                if (protocolOrType.match(/feature/i)) {
+                  return 'ESRI-FEATURE';
+                } else if (protocolOrType.match(/image/i)) {
+                  return 'ESRI-IMAGE';
+                }
               } else if (protocolOrType.match(/link/i)) {
                 return 'LINK';
               }
