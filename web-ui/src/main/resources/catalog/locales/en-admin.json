@@ -1109,5 +1109,7 @@
     "ui-searchMapLayers": "Search Map Layers",
     "ui-searchMapLayers-help": "Optional. Define here layers that will be used in the search map. Type can be: wmts, osm, bing_aerial, stamen, etc.",
     "ui-viewerMapLayers": "Viewer Map Layers",
-    "ui-viewerMapLayers-help": "Optional. Define here background layers to add on top of layers in the default map context."
+    "ui-viewerMapLayers-help": "Optional. Define here background layers to add on top of layers in the default map context.",
+    "ui-disabledTools": "Optional Map Viewer Tools",
+    "ui-disabledTools-help": "You can decide to show or hide these tools in the map viewer. Selected tools will be shown to the users."
 }
