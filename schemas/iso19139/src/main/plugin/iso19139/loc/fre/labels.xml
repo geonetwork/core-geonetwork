@@ -3808,7 +3808,7 @@ l’IGN (WPS)
 
   </element>
   <element name="gmd:transferSize" id="276.0">
-    <label>Taille de transfert</label>
+    <label>Taille de transfert (en MB)</label>
     <description>Taille estimée d'une unité dans le format de transfert spécifié, exprimé en mégabits. La taille de transfert est &gt; 0.0</description>
     <help>Taille approchée d'un fichier (exprimée en mégaoctets) dans le format spécifié. La taille de transfert est &gt; 0.0</help>
     <condition/>

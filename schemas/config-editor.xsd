@@ -1042,6 +1042,7 @@ eg. The gmd:MD_Identifier may contain a gmd:authority node which needs to be pre
 
 Warning: Template based field does not support multilingual editing for ISO standards (ie. only the main language is edited - therefore, multilingual elements will be preserved).
 
+
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>

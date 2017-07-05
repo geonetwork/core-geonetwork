@@ -87,4 +87,6 @@
     <filter xpath="*//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]"
             ifNotOperation="dynamic"/>
   </filters>
+  <!-- Required for EMODnet Bathymetry. -->
+  <readwriteUuid>true</readwriteUuid>
 </schema>

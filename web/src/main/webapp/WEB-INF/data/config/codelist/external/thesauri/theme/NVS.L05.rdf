@@ -27,9 +27,7 @@
         <skos:notation>SDN:L05::364</skos:notation>
         <skos:prefLabel xml:lang="en">1000 Hz top-bandwidth multi-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 1000 Hz (sampling interval ranging from
-          2-0.5 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure by
-          detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 1000 Hz (sampling interval ranging from2-0.5 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure bydetecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -52,9 +50,7 @@
         <skos:notation>SDN:L05::363</skos:notation>
         <skos:prefLabel xml:lang="en">1000 Hz top-bandwidth single-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 1000 Hz (sampling interval ranging from
-          2-0.5 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by
-          detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 1000 Hz (sampling interval ranging from2-0.5 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure bydetecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -77,9 +73,7 @@
         <skos:notation>SDN:L05::365</skos:notation>
         <skos:prefLabel xml:lang="en">2000 Hz top-bandwidth multi-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 2000 Hz (sampling interval ranging from
-          0.5-0.25 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure by
-          detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 2000 Hz (sampling interval ranging from0.5-0.25 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure bydetecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -102,9 +96,7 @@
         <skos:notation>SDN:L05::372</skos:notation>
         <skos:prefLabel xml:lang="en">2000 Hz top-bandwidth single-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 2000 Hz (sampling interval ranging from
-          0.5-0.25 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by
-          detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 2000 Hz (sampling interval ranging from0.5-0.25 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure bydetecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -127,9 +119,7 @@
         <skos:notation>SDN:L05::375</skos:notation>
         <skos:prefLabel xml:lang="en">250 Hz top-bandwidth multi-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 250 Hz (sampling interval ranging from
-          2-8 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure by
-          detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 250 Hz (sampling interval ranging from2-8 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure bydetecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -157,9 +147,7 @@
         <skos:notation>SDN:L05::362</skos:notation>
         <skos:prefLabel xml:lang="en">250 Hz top-bandwidth single-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 250 Hz (sampling interval ranging from
-          2-8 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by detecting
-          waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 250 Hz (sampling interval ranging from2-8 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by detectingwaves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -187,9 +175,7 @@
         <skos:notation>SDN:L05::374</skos:notation>
         <skos:prefLabel xml:lang="en">60 Hz top-bandwidth multi-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 60 Hz (sampling interval higher than 8
-          msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure by detecting
-          waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 60 Hz (sampling interval higher than 8msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure by detectingwaves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -212,9 +198,7 @@
         <skos:notation>SDN:L05::371</skos:notation>
         <skos:prefLabel xml:lang="en">60 Hz top-bandwidth single-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to 60 Hz (sampling interval higher than 8
-          msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by detecting
-          waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to 60 Hz (sampling interval higher than 8msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by detectingwaves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -238,9 +222,7 @@
         <skos:prefLabel xml:lang="en">&gt;2000 Hz top-bandwidth multi-channel seismic reflection systems
         </skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to &gt;2000 Hz (sampling interval lower than
-          0.25 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure by
-          detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to &gt;2000 Hz (sampling interval lower than0.25 msec) plus a multiple strings of towed hydrophones (streamers) that determine geologic structure bydetecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -264,9 +246,7 @@
         <skos:prefLabel xml:lang="en">&gt;2000 Hz top-bandwidth single-channel seismic reflection systems
         </skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source with a frequency up to &gt;2000 Hz (sampling interval lower than
-          0.25 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by detecting
-          waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source with a frequency up to &gt;2000 Hz (sampling interval lower than0.25 msec) plus a single string of towed hydrophones (streamer) that determine geologic structure by detectingwaves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -290,9 +270,7 @@
         <skos:prefLabel xml:lang="en">&gt;2000 Hz top-bandwidth sub-bottom penetrator and mud profiler systems
         </skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that provide information on unconsolidated sediment structure through
-          transmission and reception of an energy source with a frequency corresponding to a sampling interval lower
-          than 0.25 msec.
+        <skos:definition xml:lang="en">Devices that provide information on unconsolidated sediment structure throughtransmission and reception of an energy source with a frequency corresponding to a sampling interval lowerthan 0.25 msec.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2010-11-18 11:16:45.0</dc:date>
@@ -312,9 +290,7 @@
         <skos:notation>SDN:L05::384</skos:notation>
         <skos:prefLabel xml:lang="en">ADVs and turbulence probes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">ADV is the acronym for acoustic doppler velocimeter. The group includes all
-          in-situ instruments that make high frequency measurements of three-dimensional current velocity in order to
-          determine the extent of turbulence within a water body.
+        <skos:definition xml:lang="en">ADV is the acronym for acoustic doppler velocimeter. The group includes allin-situ instruments that make high frequency measurements of three-dimensional current velocity in order todetermine the extent of turbulence within a water body.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-09-15 10:51:26.0</dc:date>
@@ -342,8 +318,7 @@
         <skos:notation>SDN:L05::386</skos:notation>
         <skos:prefLabel xml:lang="en">Aerosol physical characterisers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that determine physical attributes such as size and abundance of
-          atmospheric aerosols.
+        <skos:definition xml:lang="en">Instruments that determine physical attributes such as size and abundance ofatmospheric aerosols.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2010-10-01 10:36:44.0</dc:date>
@@ -374,8 +349,7 @@
         <skos:notation>SDN:L05::387</skos:notation>
         <skos:prefLabel xml:lang="en">Aethalometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that quantify atmospheric particulate carbon ('black carbon')
-          concentrations.
+        <skos:definition xml:lang="en">Instruments that quantify atmospheric particulate carbon ('black carbon')concentrations.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-01 10:29:09.0</dc:date>
@@ -396,8 +370,7 @@
         <skos:notation>SDN:L05::AQPL</skos:notation>
         <skos:prefLabel xml:lang="en">Aquapulse</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic source where a propane-oxygen mixture is exploded inside a steel
-          cylinder.
+        <skos:definition xml:lang="en">A marine seismic source where a propane-oxygen mixture is exploded inside a steelcylinder.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -417,10 +390,7 @@
         <skos:notation>SDN:L05::POS16</skos:notation>
         <skos:prefLabel xml:lang="en">Argos GPS-localised transmitters</skos:prefLabel>
         <skos:altLabel>Argos GPS</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "mode": "GPS localisation",
-          "accuracy": "better than 100m"
-          }
+        <skos:definition xml:lang="en">{"mode": "GPS localisation","accuracy": "better than 100m"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:26:24.0</dc:date>
@@ -441,10 +411,7 @@
         <skos:notation>SDN:L05::POS17</skos:notation>
         <skos:prefLabel xml:lang="en">Argos doppler-localised transmitters</skos:prefLabel>
         <skos:altLabel>Argos Doppler</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "mode": "Doppler-derived Argos localisation",
-          "accuracy": "better than 250m (class 3) to worse than 1500m (class 0)"
-          }
+        <skos:definition xml:lang="en">{"mode": "Doppler-derived Argos localisation","accuracy": "better than 250m (class 3) to worse than 1500m (class 0)"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:26:24.0</dc:date>
@@ -468,8 +435,7 @@
         <skos:notation>SDN:L05::MOD03</skos:notation>
         <skos:prefLabel xml:lang="en">Atmosphere models</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Numerical models the make predictions in the atmosphere assuming that it is a
-          closed system that doesn't interact with the hydrosphere.
+        <skos:definition xml:lang="en">Numerical models the make predictions in the atmosphere assuming that it is aclosed system that doesn't interact with the hydrosphere.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-07-16 14:14:53.0</dc:date>
@@ -489,8 +455,7 @@
         <skos:notation>SDN:L05::314</skos:notation>
         <skos:prefLabel xml:lang="en">Atmospheric chemistry remote sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the intensity and nature of electromagnetic radiation in
-          a manner optimised for the quantification of chemical compounds in the atmosphere.
+        <skos:definition xml:lang="en">Instruments that measure the intensity and nature of electromagnetic radiation ina manner optimised for the quantification of chemical compounds in the atmosphere.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2017-03-09 16:15:08.0</dc:date>
@@ -518,8 +483,7 @@
         <skos:notation>SDN:L05::LAB49</skos:notation>
         <skos:prefLabel xml:lang="en">Atomic fluorescence spectrometers</skos:prefLabel>
         <skos:altLabel>AFS</skos:altLabel>
-        <skos:definition xml:lang="en">Instruments that illuminate the vapour from volatilised samples with light and
-          quantify the intensity of light emitted, which is usually proportional to concentration.
+        <skos:definition xml:lang="en">Instruments that illuminate the vapour from volatilised samples with light andquantify the intensity of light emitted, which is usually proportional to concentration.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-11-29 15:10:58.0</dc:date>
@@ -537,14 +501,7 @@
         <skos:notation>SDN:L05::POS10</skos:notation>
         <skos:prefLabel xml:lang="en">Automatic Ranging Grid Overlay DM 54 receivers</skos:prefLabel>
         <skos:altLabel>Argo DM54</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "1.6-2MHz",
-          "mode": "hyperbolic",
-          "range": "450km",
-          "accuracy": "4-7m down to 20m at maximum range",
-          "operational": "from 1977 (mid-80s in Europe)",
-          "notes": "Survey positioning system."
-          }
+        <skos:definition xml:lang="en">{"frequency": "1.6-2MHz","mode": "hyperbolic","range": "450km","accuracy": "4-7m down to 20m at maximum range","operational": "from 1977 (mid-80s in Europe)","notes": "Survey positioning system."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -564,8 +521,7 @@
         <skos:notation>SDN:L05::MOD08</skos:notation>
         <skos:prefLabel xml:lang="en">Biological and biogeochemical models</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Numerical models that make predictions of biological parameters, including
-          ecosystem models.
+        <skos:definition xml:lang="en">Numerical models that make predictions of biological parameters, includingecosystem models.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-07-16 14:20:04.0</dc:date>
@@ -585,10 +541,7 @@
         <skos:notation>SDN:L05::BOMR</skos:notation>
         <skos:prefLabel xml:lang="en">Boomer</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic energy source in which capacitors are charged to high voltage
-          and then discharged through a transducer in the water. The transducer consists of a flat coil with a
-          spring-loaded aluminium plate. Eddy currents force the plates to separate sharply, producing a low pressure
-          region between the plates into which the water rushes generating a pressure wave by implosion.
+        <skos:definition xml:lang="en">A marine seismic energy source in which capacitors are charged to high voltageand then discharged through a transducer in the water. The transducer consists of a flat coil with aspring-loaded aluminium plate. Eddy currents force the plates to separate sharply, producing a low pressureregion between the plates into which the water rushes generating a pressure wave by implosion.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -608,9 +561,7 @@
         <skos:notation>SDN:L05::130</skos:notation>
         <skos:prefLabel xml:lang="en">CTD</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A package lowered and raised vertically from a surface platform, usually a ship,
-          always carrying pressure, temperature and conductivity sensors. Addional optional sensors include
-          fluorometers, transmissometers and radiometers. The package may also carry water bottles.
+        <skos:definition xml:lang="en">A package lowered and raised vertically from a surface platform, usually a ship,always carrying pressure, temperature and conductivity sensors. Addional optional sensors includefluorometers, transmissometers and radiometers. The package may also carry water bottles.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2010-11-18 14:52:10.0</dc:date>
@@ -679,9 +630,7 @@
         <skos:notation>SDN:L05::131</skos:notation>
         <skos:prefLabel xml:lang="en">CTD undulators</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A package towed at varying depths by a ship, always carrying pressure,
-          temperature and conductivity sensors. Addional optional sensors include fluorometers, transmissometers and
-          radiometers.
+        <skos:definition xml:lang="en">A package towed at varying depths by a ship, always carrying pressure,temperature and conductivity sensors. Addional optional sensors include fluorometers, transmissometers andradiometers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -703,13 +652,7 @@
         <skos:notation>SDN:L05::CHRP</skos:notation>
         <skos:prefLabel xml:lang="en">Chirp</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Chirp systems emit a 'swept-frequency signal', meaning that the transmitted
-          signal is emitted over a period of time and over a set range of frequencies. This repeatable (transmitted)
-          waveform can be varied in terms of pulse length, frequency bandwidth, and phase/amplitude. A matched filter,
-          or correlation process, collapses the swept frequency modulated (FM) received signal into a pulse of short
-          duration, maximizing the signal-to-noise-ratio. The reflected signal is received by a tuned transducer array
-          that generates the outgoing acoustic energy. Chirps operate within a range of 400Hz - 24 kHz and are used for
-          the first 20-30 metres of unconsolidated sediments.
+        <skos:definition xml:lang="en">Chirp systems emit a 'swept-frequency signal', meaning that the transmittedsignal is emitted over a period of time and over a set range of frequencies. This repeatable (transmitted)waveform can be varied in terms of pulse length, frequency bandwidth, and phase/amplitude. A matched filter,or correlation process, collapses the swept frequency modulated (FM) received signal into a pulse of shortduration, maximizing the signal-to-noise-ratio. The reflected signal is received by a tuned transducer arraythat generates the outgoing acoustic energy. Chirps operate within a range of 400Hz - 24 kHz and are used forthe first 20-30 metres of unconsolidated sediments.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -731,8 +674,7 @@
         <skos:notation>SDN:L05::COLCMP</skos:notation>
         <skos:prefLabel xml:lang="en">Colour comparators</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sets of standard materials that provide reference colour charts for the
-          quantification of the colour of an object by visual comparison.
+        <skos:definition xml:lang="en">Sets of standard materials that provide reference colour charts for thequantification of the colour of an object by visual comparison.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2014-09-01 08:01:41.0</dc:date>
@@ -753,8 +695,7 @@
         <skos:notation>SDN:L05::MOD05</skos:notation>
         <skos:prefLabel xml:lang="en">Coupled models</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Numerical models that make predictions in both the atmosphere and the hydrosphere
-          by considering both spheres as a single system.
+        <skos:definition xml:lang="en">Numerical models that make predictions in both the atmosphere and the hydrosphereby considering both spheres as a single system.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-07-16 14:17:11.0</dc:date>
@@ -774,14 +715,7 @@
         <skos:notation>SDN:L05::POS08</skos:notation>
         <skos:prefLabel xml:lang="en">Decca Navigator System HiFix receivers</skos:prefLabel>
         <skos:altLabel>Decca HiFix</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "1.6MHz",
-          "mode": "hyperbolic",
-          "range": "under 100km",
-          "accuracy": "better than 10m: maximum accuracy at 50km range is 1.5m",
-          "operating": "1962 to 2000",
-          "notes": "Not for general navigation. Chains usually set up for specific surveys."
-          }
+        <skos:definition xml:lang="en">{"frequency": "1.6MHz","mode": "hyperbolic","range": "under 100km","accuracy": "better than 10m: maximum accuracy at 50km range is 1.5m","operating": "1962 to 2000","notes": "Not for general navigation. Chains usually set up for specific surveys."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -801,14 +735,7 @@
         <skos:notation>SDN:L05::POS01</skos:notation>
         <skos:prefLabel xml:lang="en">Decca Navigator System main chain receivers</skos:prefLabel>
         <skos:altLabel>Decca main chain</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "70 and 130kHz",
-          "mode": "hyperbolic",
-          "range": "450km (day) to 750km (night)",
-          "accuracy": "50m(day) to 200m (night) in good conditions down to 2km near range limit",
-          "operating": "WWII to 2001-03 (2000-03-31 in UK)",
-          "notes": " Transmitter groups, each with a master and three slaves"
-          }
+        <skos:definition xml:lang="en">{"frequency": "70 and 130kHz","mode": "hyperbolic","range": "450km (day) to 750km (night)","accuracy": "50m(day) to 200m (night) in good conditions down to 2km near range limit","operating": "WWII to 2001-03 (2000-03-31 in UK)","notes": " Transmitter groups, each with a master and three slaves"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -829,11 +756,7 @@
         <skos:notation>SDN:L05::POS04</skos:notation>
         <skos:prefLabel xml:lang="en">Differential Global Positioning System receivers</skos:prefLabel>
         <skos:altLabel>DGPS</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "accuracy": "better than 100m to better than 10m",
-          "notes": "GPS augmented by a network of fixed ground stations that continuously broadcast the difference
-          between their true locations and the location determined from the satellites."
-          }
+        <skos:definition xml:lang="en">{"accuracy": "better than 100m to better than 10m","notes": "GPS augmented by a network of fixed ground stations that continuously broadcast the differencebetween their true locations and the location determined from the satellites."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -885,9 +808,7 @@
         <skos:notation>SDN:L05::FFES</skos:notation>
         <skos:prefLabel xml:lang="en">Fish-finder echosounders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments primarily designed to detect shoals of fish through transmission and
-          reception of acoustic signals. They are often optimised for this purpose through the use of multiple
-          frequencies.
+        <skos:definition xml:lang="en">Instruments primarily designed to detect shoals of fish through transmission andreception of acoustic signals. They are often optimised for this purpose through the use of multiplefrequencies.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-11-26 15:02:06.0</dc:date>
@@ -912,10 +833,7 @@
         <skos:notation>SDN:L05::FLXS</skos:notation>
         <skos:prefLabel xml:lang="en">Flexichoc</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An implosive energy source for marine shooting. Two plates are separated by
-          compressed air until they lock into position. The air between them is then pumped out creating a vacuum. On
-          the signal the plates are unlocked and the water pressure forces them together creating a shock wave in the
-          water.
+        <skos:definition xml:lang="en">An implosive energy source for marine shooting. Two plates are separated bycompressed air until they lock into position. The air between them is then pumped out creating a vacuum. Onthe signal the plates are unlocked and the water pressure forces them together creating a shock wave in thewater.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -935,9 +853,7 @@
         <skos:notation>SDN:L05::FLXT</skos:notation>
         <skos:prefLabel xml:lang="en">Flexotir</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A seismic method for marine shooting whereby small charges are propelled through
-          a rubber hose by water under pressure into a steel cage where they are detonated. Holes in the cage allow the
-          water repelled by the explosion to flow out and in thus dissipating some of the energy in the bubble effect.
+        <skos:definition xml:lang="en">A seismic method for marine shooting whereby small charges are propelled througha rubber hose by water under pressure into a steel cage where they are detonated. Holes in the cage allow thewater repelled by the explosion to flow out and in thus dissipating some of the energy in the bubble effect.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -958,11 +874,7 @@
         <skos:notation>SDN:L05::GIAG</skos:notation>
         <skos:prefLabel xml:lang="en">GI-gun</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic source where a pair of conventional airguns (one, the generator,
-          fires in the conventional manner; the second, known as the injector) fires some milliseconds later to prevent
-          bubble from collapsing. Could be used in true GI mode (volume of injector twice of volume of generator),
-          harmonic mode (same volume of generator and injector) or true airgun (no delay between generator and
-          injector).
+        <skos:definition xml:lang="en">A marine seismic source where a pair of conventional airguns (one, the generator,fires in the conventional manner; the second, known as the injector) fires some milliseconds later to preventbubble from collapsing. Could be used in true GI mode (volume of injector twice of volume of generator),harmonic mode (same volume of generator and injector) or true airgun (no delay between generator andinjector).
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -982,9 +894,7 @@
         <skos:notation>SDN:L05::LAB39</skos:notation>
         <skos:prefLabel xml:lang="en">Geiger counters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the amount of alpha, beta or gamma radiation through
-          quantification of the ionization of a low-pressure gas contained in a tube. Sometimes referred to as
-          Geiger-Müller counters.
+        <skos:definition xml:lang="en">Instruments that measure the amount of alpha, beta or gamma radiation throughquantification of the ionization of a low-pressure gas contained in a tube. Sometimes referred to asGeiger-Müller counters.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-08-30 14:13:49.0</dc:date>
@@ -1004,9 +914,7 @@
         <skos:notation>SDN:L05::POS02</skos:notation>
         <skos:prefLabel xml:lang="en">Global Navigation Satellite System receivers</skos:prefLabel>
         <skos:altLabel>GLONASS</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Based on a network of satellites deployed by the former Soviet Union.
-          The network was initiated in 1976 but fell into disrepair before full global coverage was reached during the
-          political upheaval of the early 90s"}
+        <skos:definition xml:lang="en">{"notes": "Based on a network of satellites deployed by the former Soviet Union.The network was initiated in 1976 but fell into disrepair before full global coverage was reached during thepolitical upheaval of the early 90s"}
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1049,15 +957,7 @@
         <skos:notation>SDN:L05::POS21</skos:notation>
         <skos:prefLabel xml:lang="en">Hyperfix receivers</skos:prefLabel>
         <skos:altLabel>Hyperfix</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "1.6-3.4MHz",
-          "mode": "hyperbolic (usual), circular or combined",
-          "range": "250km (night) to 700km (day)",
-          "accuracy": "up to 0.5-1m",
-          "operating": "until 2000",
-          "notes": "Racal positioning system similar to Decca HiFix based on temporary or permanent transmitter chains
-          comprising a master plus at least two slaves."
-          }
+        <skos:definition xml:lang="en">{"frequency": "1.6-3.4MHz","mode": "hyperbolic (usual), circular or combined","range": "250km (night) to 700km (day)","accuracy": "up to 0.5-1m","operating": "until 2000","notes": "Racal positioning system similar to Decca HiFix based on temporary or permanent transmitter chainscomprising a master plus at least two slaves."}
         </skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1077,14 +977,7 @@
         <skos:notation>SDN:L05::POS25</skos:notation>
         <skos:prefLabel xml:lang="en">Kinematic Global Positioning System receivers</skos:prefLabel>
         <skos:altLabel>KGPS</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "accuracy": "Horizontal Accuracy: Fixed RTK mode: 1-5cm, Float RTK mode: 20cm-1m. Vertical accuracy : twice
-          the horizontal accuracy",
-          "operating": "Since the mid-1990s",
-          "notes": "Real Time Kinematic (RTK) satellite navigation technique based on the use of carrier phase
-          measurements of the GPS signals where a single reference station or a network of reference stations provides
-          the real-time corrections."
-          }
+        <skos:definition xml:lang="en">{"accuracy": "Horizontal Accuracy: Fixed RTK mode: 1-5cm, Float RTK mode: 20cm-1m. Vertical accuracy : twicethe horizontal accuracy","operating": "Since the mid-1990s","notes": "Real Time Kinematic (RTK) satellite navigation technique based on the use of carrier phasemeasurements of the GPS signals where a single reference station or a network of reference stations providesthe real-time corrections."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1106,14 +999,7 @@
         <skos:notation>SDN:L05::POS05</skos:notation>
         <skos:prefLabel xml:lang="en">Long Range Navigation version C receivers</skos:prefLabel>
         <skos:altLabel>LORAN C</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "70-130kHz",
-          "mode": "hyperbolic",
-          "range": "950kmto 1700km (day): 650km to 1250km (day)",
-          "operational": "1947 to 2010. Maintained as GPS backup in the EU.",
-          "notes": "Global navigation based on transmitters in several European countries, Japan, Canada (until 2002-10)
-          and USA (until 2010-02-08)."
-          }
+        <skos:definition xml:lang="en">{"frequency": "70-130kHz","mode": "hyperbolic","range": "950kmto 1700km (day): 650km to 1250km (day)","operational": "1947 to 2010. Maintained as GPS backup in the EU.","notes": "Global navigation based on transmitters in several European countries, Japan, Canada (until 2002-10)and USA (until 2010-02-08)."}
         </skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1133,8 +1019,7 @@
         <skos:notation>SDN:L05::POS06</skos:notation>
         <skos:prefLabel xml:lang="en">Marine chronometers</skos:prefLabel>
         <skos:altLabel>Clock</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Timepieces of sufficient precision to allow their use of portable time
-          standards."}
+        <skos:definition xml:lang="en">{"notes": "Timepieces of sufficient precision to allow their use of portable timestandards."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1154,8 +1039,7 @@
         <skos:notation>SDN:L05::MOD06</skos:notation>
         <skos:prefLabel xml:lang="en">Meteorological models</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Numerical models that make predictions of weather parameters such as air
-          temperature, pressure, humidity and winds.
+        <skos:definition xml:lang="en">Numerical models that make predictions of weather parameters such as airtemperature, pressure, humidity and winds.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-07-16 14:18:04.0</dc:date>
@@ -1180,13 +1064,7 @@
         <skos:notation>SDN:L05::POS20</skos:notation>
         <skos:prefLabel xml:lang="en">Motorola Mini-Ranger receivers</skos:prefLabel>
         <skos:altLabel>Mini-Ranger</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "5410-5890MHz",
-          "range": "up to 75km",
-          "accuracy": "up to 2m",
-          "notes": "A family of short-wave receivers that determine position by determining the line-of-sight distance
-          from 3 or more transmitters set up for the survey."
-          }
+        <skos:definition xml:lang="en">{"frequency": "5410-5890MHz","range": "up to 75km","accuracy": "up to 2m","notes": "A family of short-wave receivers that determine position by determining the line-of-sight distancefrom 3 or more transmitters set up for the survey."}
         </skos:definition>
         <owl:versionInfo>5</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1206,10 +1084,7 @@
         <skos:notation>SDN:L05::POS03</skos:notation>
         <skos:prefLabel xml:lang="en">NAVSTAR Global Positioning System receivers</skos:prefLabel>
         <skos:altLabel>GPS</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "accuracy": "better than 100m",
-          "notes": "Global navigation based on a network of satellites deployed and maintained by the USA."
-          }
+        <skos:definition xml:lang="en">{"accuracy": "better than 100m","notes": "Global navigation based on a network of satellites deployed and maintained by the USA."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1260,10 +1135,7 @@
         <skos:notation>SDN:L05::POS18</skos:notation>
         <skos:prefLabel xml:lang="en">Navy Navigation Satellite System receivers</skos:prefLabel>
         <skos:altLabel>Navsat</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "mode": "Doppler-derived localisation",
-          "accuracy": "better than 10km or 2km if combined with relative water velocity em-log"
-          }
+        <skos:definition xml:lang="en">{"mode": "Doppler-derived localisation","accuracy": "better than 10km or 2km if combined with relative water velocity em-log"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:26:24.0</dc:date>
@@ -1284,8 +1156,7 @@
         <skos:notation>SDN:L05::MOD04</skos:notation>
         <skos:prefLabel xml:lang="en">Ocean models</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Numerical models the make predictions in the hydrosphere assuming that it is a
-          closed system that doesn't interact with the atmosphere.
+        <skos:definition xml:lang="en">Numerical models the make predictions in the hydrosphere assuming that it is aclosed system that doesn't interact with the atmosphere.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-07-16 14:15:37.0</dc:date>
@@ -1305,14 +1176,7 @@
         <skos:notation>SDN:L05::POS15</skos:notation>
         <skos:prefLabel xml:lang="en">Omega receivers</skos:prefLabel>
         <skos:altLabel>Omega</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "10-14kHz",
-          "mode": "hyperbolic",
-          "range": "up to 15000km",
-          "accuracy": "better than 7.4km",
-          "operational": "1968-1997",
-          "notes": "Global long-range but low accuracy navigation system"
-          }
+        <skos:definition xml:lang="en">{"frequency": "10-14kHz","mode": "hyperbolic","range": "up to 15000km","accuracy": "better than 7.4km","operational": "1968-1997","notes": "Global long-range but low accuracy navigation system"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1332,8 +1196,7 @@
         <skos:notation>SDN:L05::PERMON</skos:notation>
         <skos:prefLabel xml:lang="en">Performance monitors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors or instruments that monitor whether a platform or environmental sensors
-          on the platform are functioning.
+        <skos:definition xml:lang="en">Sensors or instruments that monitor whether a platform or environmental sensorson the platform are functioning.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2014-07-22 09:29:48.0</dc:date>
@@ -1353,8 +1216,7 @@
         <skos:notation>SDN:L05::MOD07</skos:notation>
         <skos:prefLabel xml:lang="en">Physical oceanographic models</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Numerical models that make predictions of physical oceanographic parameters such
-          as water body temperature, salinity, currents and waves.
+        <skos:definition xml:lang="en">Numerical models that make predictions of physical oceanographic parameters suchas water body temperature, salinity, currents and waves.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-07-16 14:19:02.0</dc:date>
@@ -1380,13 +1242,7 @@
         <skos:notation>SDN:L05::POS14</skos:notation>
         <skos:prefLabel xml:lang="en">Pulse8 receivers</skos:prefLabel>
         <skos:altLabel>Pulse8</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "100kHz",
-          "mode": "hyperbolic",
-          "range": "250km to 750km",
-          "accuracy": "30m to 500m",
-          "operational": "1970s to late 1990s"
-          }
+        <skos:definition xml:lang="en">{"frequency": "100kHz","mode": "hyperbolic","range": "250km to 750km","accuracy": "30m to 500m","operational": "1970s to late 1990s"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:27:24.0</dc:date>
@@ -1406,10 +1262,7 @@
         <skos:notation>SDN:L05::POS13</skos:notation>
         <skos:prefLabel xml:lang="en">Rana receivers</skos:prefLabel>
         <skos:altLabel>Rana</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "around 300-400kHz",
-          "mode": "hyperbolic"
-          }
+        <skos:definition xml:lang="en">{"frequency": "around 300-400kHz","mode": "hyperbolic"}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:27:02.0</dc:date>
@@ -1460,8 +1313,7 @@
         <skos:notation>SDN:L05::315</skos:notation>
         <skos:prefLabel xml:lang="en">Sea ice remote sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the intensity and nature of electromagnetic radiation in
-          a manner optimised for sea ice detection and quantification.
+        <skos:definition xml:lang="en">Instruments that measure the intensity and nature of electromagnetic radiation ina manner optimised for sea ice detection and quantification.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2017-03-09 16:39:05.0</dc:date>
@@ -1478,8 +1330,7 @@
         <skos:notation>SDN:L05::POS07</skos:notation>
         <skos:prefLabel xml:lang="en">Sextants</skos:prefLabel>
         <skos:altLabel>Sextant</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Optical instruments that accurately measure the angle between pairs of
-          visible celestial bodies such as the sun, moon or stars. "}
+        <skos:definition xml:lang="en">{"notes": "Optical instruments that accurately measure the angle between pairs ofvisible celestial bodies such as the sun, moon or stars. "}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1499,8 +1350,7 @@
         <skos:notation>SDN:L05::SPRK</skos:notation>
         <skos:prefLabel xml:lang="en">Sparker</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A seismic source in which an electrical discharge in water is the energy
-          source.
+        <skos:definition xml:lang="en">A seismic source in which an electrical discharge in water is the energysource.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -1520,14 +1370,7 @@
         <skos:notation>SDN:L05::POS12</skos:notation>
         <skos:prefLabel xml:lang="en">Système leger de measure de distance receivers</skos:prefLabel>
         <skos:altLabel>Syledis</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "420-450MHz",
-          "mode": "hyperbolic or circular",
-          "range": "400km hyperbolic; 75-100km circular",
-          "accuracy": "better than 2m below horizon (10m above horizon)",
-          "operational": "1980s to 1995",
-          "notes": "Navigation and positioning system for the North Sea petroleum industry."
-          }
+        <skos:definition xml:lang="en">{"frequency": "420-450MHz","mode": "hyperbolic or circular","range": "400km hyperbolic; 75-100km circular","accuracy": "better than 2m below horizon (10m above horizon)","operational": "1980s to 1995","notes": "Navigation and positioning system for the North Sea petroleum industry."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1547,13 +1390,7 @@
         <skos:notation>SDN:L05::POS09</skos:notation>
         <skos:prefLabel xml:lang="en">Toran receivers</skos:prefLabel>
         <skos:altLabel>Toran</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "around 2MHz",
-          "mode": "hyperbolic",
-          "range": "150-200km",
-          "accuracy": "better than 20m",
-          "notes": "Mostly used for aircraft."
-          }
+        <skos:definition xml:lang="en">{"frequency": "around 2MHz","mode": "hyperbolic","range": "150-200km","accuracy": "better than 20m","notes": "Mostly used for aircraft."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1573,13 +1410,7 @@
         <skos:notation>SDN:L05::POS11</skos:notation>
         <skos:prefLabel xml:lang="en">Trident receivers</skos:prefLabel>
         <skos:altLabel>Trident</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "frequency": "420-450MHz",
-          "mode": "circular",
-          "range": "150km",
-          "accuracy": "better than 3m",
-          "notes": "Survey positioning system."
-          }
+        <skos:definition xml:lang="en">{"frequency": "420-450MHz","mode": "circular","range": "150km","accuracy": "better than 3m","notes": "Survey positioning system."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1599,12 +1430,7 @@
         <skos:notation>SDN:L05::POS22</skos:notation>
         <skos:prefLabel xml:lang="en">Trisponder navigation systems</skos:prefLabel>
         <skos:altLabel>Trisponder</skos:altLabel>
-        <skos:definition xml:lang="en">{
-          "range": "80km",
-          "accuracy": "1m (resolution 0.1m)",
-          "notes": "Family of microwave short-range positioning systems with vessel equipment and three shore
-          transponders (master and two slaves) set up specifically for surveys."
-          }
+        <skos:definition xml:lang="en">{"range": "80km","accuracy": "1m (resolution 0.1m)","notes": "Family of microwave short-range positioning systems with vessel equipment and three shoretransponders (master and two slaves) set up specifically for surveys."}
         </skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -1624,10 +1450,7 @@
         <skos:notation>SDN:L05::POS26</skos:notation>
         <skos:prefLabel xml:lang="en">Ultra Short Baseline Positioning Systems</skos:prefLabel>
         <skos:altLabel>USBL</skos:altLabel>
-        <skos:definition xml:lang="en">Systems dedicated to the positioning of subsea vehicles such as ROV and AUV. They
-          are based on acoustic transmitted signals between one or several transponders and one acoustic antenna
-          installed on a surface vessel. The transponders are mounted on the underwater vehicle or are fixed on the
-          seafloor. These underwater acoustic positioning systems are coupled with inertial navigation systems.
+        <skos:definition xml:lang="en">Systems dedicated to the positioning of subsea vehicles such as ROV and AUV. Theyare based on acoustic transmitted signals between one or several transponders and one acoustic antennainstalled on a surface vessel. The transponders are mounted on the underwater vehicle or are fixed on theseafloor. These underwater acoustic positioning systems are coupled with inertial navigation systems.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-11-13 13:38:20.0</dc:date>
@@ -1647,8 +1470,7 @@
         <skos:notation>SDN:L05::VSHC</skos:notation>
         <skos:prefLabel xml:lang="en">Vaporchoc</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic energy source in which a quantity of superheated steam under
-          high pressure is iniected into water. Subsequent condensation of the steam attenuates bubble oscillation.
+        <skos:definition xml:lang="en">A marine seismic energy source in which a quantity of superheated steam underhigh pressure is iniected into water. Subsequent condensation of the steam attenuates bubble oscillation.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -1668,9 +1490,7 @@
         <skos:notation>SDN:L05::LAB40</skos:notation>
         <skos:prefLabel xml:lang="en">Volume measures</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Pieces of apparatus that determine the volume of a liquid sample or dispense
-          measured volumes of liquid. Includes devices covering a wide range of sophistication from measuring cylinders,
-          syringes and manual pipettes through to programmable electronic instruments.
+        <skos:definition xml:lang="en">Pieces of apparatus that determine the volume of a liquid sample or dispensemeasured volumes of liquid. Includes devices covering a wide range of sophistication from measuring cylinders,syringes and manual pipettes through to programmable electronic instruments.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-11-29 15:53:17.0</dc:date>
@@ -1690,8 +1510,7 @@
         <skos:notation>SDN:L05::LAB26</skos:notation>
         <skos:prefLabel xml:lang="en">X-ray diffractometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that identify crystalline solids by measuring the characteristic
-          spaces between layers of atoms or molecules in a crystal.
+        <skos:definition xml:lang="en">Instruments that identify crystalline solids by measuring the characteristicspaces between layers of atoms or molecules in a crystal.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -1711,9 +1530,7 @@
         <skos:notation>SDN:L05::LAB25</skos:notation>
         <skos:prefLabel xml:lang="en">X-ray fluorescence analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that identify and quantify the elemental constituents of a sample
-          from the spectrum of electromagnetic radiation emitted by the atoms in the sample when excited by X-ray
-          radiation.
+        <skos:definition xml:lang="en">Instruments that identify and quantify the elemental constituents of a samplefrom the spectrum of electromagnetic radiation emitted by the atoms in the sample when excited by X-rayradiation.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -1734,8 +1551,7 @@
         <skos:notation>SDN:L05::LAB17</skos:notation>
         <skos:prefLabel xml:lang="en">accelerator mass spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments measuring the mass-to-charge ratio of the products of sample molecule
-          disassociation, atom ionisation and ion acceleration in a particle accelerator.
+        <skos:definition xml:lang="en">Instruments measuring the mass-to-charge ratio of the products of sample moleculedisassociation, atom ionisation and ion acceleration in a particle accelerator.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -1756,8 +1572,7 @@
         <skos:notation>SDN:L05::307</skos:notation>
         <skos:prefLabel xml:lang="en">accelerometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure non-gravitational accelerations acting upon a
-          spacecraft.
+        <skos:definition xml:lang="en">Instruments that measure non-gravitational accelerations acting upon aspacecraft.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:21:52.0</dc:date>
@@ -1777,8 +1592,7 @@
         <skos:notation>SDN:L05::183</skos:notation>
         <skos:prefLabel xml:lang="en">acoustic backscatter sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures the amount of sound energy transmitted into the water
-          column returned to the instrument.
+        <skos:definition xml:lang="en">Instrument that measures the amount of sound energy transmitted into the watercolumn returned to the instrument.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -1800,8 +1614,7 @@
         <skos:notation>SDN:L05::357</skos:notation>
         <skos:prefLabel xml:lang="en">acoustic tracking systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A network of acoustic sensors that determine the location of a sound source by
-          triangulation such as acoustically active float tracking systems.
+        <skos:definition xml:lang="en">A network of acoustic sensors that determine the location of a sound source bytriangulation such as acoustically active float tracking systems.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-02-02 12:45:55.0</dc:date>
@@ -1823,8 +1636,7 @@
         <skos:notation>SDN:L05::LAB32</skos:notation>
         <skos:prefLabel xml:lang="en">acoustic velocity systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the speed or velocity of sound, including P-waves, in
-          samples of solids, liquids or gases.
+        <skos:definition xml:lang="en">Instruments that measure the speed or velocity of sound, including P-waves, insamples of solids, liquids or gases.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -1867,8 +1679,7 @@
         <skos:notation>SDN:L05::353</skos:notation>
         <skos:prefLabel xml:lang="en">active fluorometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Fluorometers that measure photosynthetic parameters by taking measurements whilst
-          manipulating the phytoplankton with controlled high-intensity illumination such as pump and probe and FRRF.
+        <skos:definition xml:lang="en">Fluorometers that measure photosynthetic parameters by taking measurements whilstmanipulating the phytoplankton with controlled high-intensity illumination such as pump and probe and FRRF.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -1892,8 +1703,7 @@
         <skos:notation>SDN:L05::13</skos:notation>
         <skos:prefLabel xml:lang="en">aerosol samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects a sample of aerosol (dry particles or liquid droplets)
-          from the atmosphere.
+        <skos:definition xml:lang="en">A device that collects a sample of aerosol (dry particles or liquid droplets)from the atmosphere.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -1917,9 +1727,7 @@
         <skos:notation>SDN:L05::SNAG</skos:notation>
         <skos:prefLabel xml:lang="en">airgun</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic source which injects a bubble of highly compressed air into the
-          water. Oscillations of the bubble as it alternatively expands and contracts generate a sonic wave whose
-          frequency depends on the amount of air in the bubble, its pressure, and the water depth.
+        <skos:definition xml:lang="en">A marine seismic source which injects a bubble of highly compressed air into thewater. Oscillations of the bubble as it alternatively expands and contracts generate a sonic wave whosefrequency depends on the amount of air in the bubble, its pressure, and the water depth.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -1944,8 +1752,7 @@
         <skos:notation>SDN:L05::ARAG</skos:notation>
         <skos:prefLabel xml:lang="en">airgun array</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic source where multiple airguns of different sizes are tuned so
-          that a broader frequency spectrum will be generated.
+        <skos:definition xml:lang="en">A marine seismic source where multiple airguns of different sizes are tuned sothat a broader frequency spectrum will be generated.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -1965,10 +1772,7 @@
         <skos:notation>SDN:L05::379</skos:notation>
         <skos:prefLabel xml:lang="en">altimeters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure their distance above a specified elevation such as the
-          sea surface or the seabed. Classification includes acoustic and pressure-based instruments that are designed
-          to provide platform z co-ordinate spatial coverage in the atmosphere or a water body. It excludes remote
-          sensing instruments such as LIDAR and satellite radar altimeters designed to map surface elevation.
+        <skos:definition xml:lang="en">Instruments that measure their distance above a specified elevation such as thesea surface or the seabed. Classification includes acoustic and pressure-based instruments that are designedto provide platform z co-ordinate spatial coverage in the atmosphere or a water body. It excludes remotesensing instruments such as LIDAR and satellite radar altimeters designed to map surface elevation.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2012-12-18 15:18:17.0</dc:date>
@@ -2046,8 +1850,7 @@
         <skos:notation>SDN:L05::382</skos:notation>
         <skos:prefLabel xml:lang="en">atmospheric gas analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">In-situ instruments that can determine the proportion of one or more gaseous
-          components of the atmosphere.
+        <skos:definition xml:lang="en">In-situ instruments that can determine the proportion of one or more gaseouscomponents of the atmosphere.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-09-15 10:38:47.0</dc:date>
@@ -2078,8 +1881,7 @@
         <skos:notation>SDN:L05::308</skos:notation>
         <skos:prefLabel xml:lang="en">atmospheric radiometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors that measure the intensity an nature of electromagnetic radiation in a
-          manner optimised for the quantification of atmospheric phenomena.
+        <skos:definition xml:lang="en">Sensors that measure the intensity an nature of electromagnetic radiation in amanner optimised for the quantification of atmospheric phenomena.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:22:48.0</dc:date>
@@ -2140,9 +1942,7 @@
         <skos:notation>SDN:L05::ATRANS</skos:notation>
         <skos:prefLabel xml:lang="en">atmospheric transparency quantifiers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that quantify the degree of scattering and absorption of light
-          passing through the atmosphere, including instruments that quantify aerosol and particulate concentrations
-          (e.g. black carbon) and instruments measure meteorological visibility.
+        <skos:definition xml:lang="en">Instruments that quantify the degree of scattering and absorption of lightpassing through the atmosphere, including instruments that quantify aerosol and particulate concentrations(e.g. black carbon) and instruments measure meteorological visibility.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-04-23 12:49:23.0</dc:date>
@@ -2164,9 +1964,7 @@
         <skos:notation>SDN:L05::LAB10</skos:notation>
         <skos:prefLabel xml:lang="en">atomic absorption spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that volatilise the sample, illuminate the resultant vapour with
-          light wavelengths matched to the analyte of interest and quantify the radiation absorbed, which is
-          proportional to concentration.
+        <skos:definition xml:lang="en">Instruments that volatilise the sample, illuminate the resultant vapour withlight wavelengths matched to the analyte of interest and quantify the radiation absorbed, which isproportional to concentration.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -2188,9 +1986,7 @@
         <skos:notation>SDN:L05::LAB04</skos:notation>
         <skos:prefLabel xml:lang="en">autoanalysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that continuously draw samples through plumbing adding reagents
-          whilst controlling the environment to produce a chemical reaction before passing the sample to a detector,
-          e.g. the automated colorimetric determination of nutrients.
+        <skos:definition xml:lang="en">Instruments that continuously draw samples through plumbing adding reagentswhilst controlling the environment to produce a chemical reaction before passing the sample to a detector,e.g. the automated colorimetric determination of nutrients.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -2250,8 +2046,7 @@
         <skos:notation>SDN:L05::312</skos:notation>
         <skos:prefLabel xml:lang="en">bathymetric LiDARs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the depth of a water body by determining the distances
-          from the platform to the surface and the bed by timing reflected pulses of laser light.
+        <skos:definition xml:lang="en">Instruments that measure the depth of a water body by determining the distancesfrom the platform to the surface and the bed by timing reflected pulses of laser light.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2009-10-16 11:58:26.0</dc:date>
@@ -2272,8 +2067,7 @@
         <skos:notation>SDN:L05::132</skos:notation>
         <skos:prefLabel xml:lang="en">bathythermographs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure vertical profiles of sea temperature by either lowering
-          a pressure plus temperature senor package (MBT) or dropping a free falling disposable sensor (XBT).
+        <skos:definition xml:lang="en">Instruments that measure vertical profiles of sea temperature by either loweringa pressure plus temperature senor package (MBT) or dropping a free falling disposable sensor (XBT).
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -2303,8 +2097,7 @@
         <skos:notation>SDN:L05::62</skos:notation>
         <skos:prefLabel xml:lang="en">beam trawls</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Nets towed over the sea floor having the horizontal net opening provided by a
-          wooden or metal beam that disrupts the surface of the bed.
+        <skos:definition xml:lang="en">Nets towed over the sea floor having the horizontal net opening provided by awooden or metal beam that disrupts the surface of the bed.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-07-30 10:19:35.0</dc:date>
@@ -2328,9 +2121,7 @@
         <skos:notation>SDN:L05::LAB23</skos:notation>
         <skos:prefLabel xml:lang="en">bench fluorometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that determinesthe amount of chlorophyll in in-vitro samples by
-          measuring the quantity of red light (around 685nm) emitted following excitation by pulses of blue light
-          (around 460-470nm).
+        <skos:definition xml:lang="en">Instruments that determinesthe amount of chlorophyll in in-vitro samples bymeasuring the quantity of red light (around 685nm) emitted following excitation by pulses of blue light(around 460-470nm).
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -2354,9 +2145,7 @@
         <skos:notation>SDN:L05::151</skos:notation>
         <skos:prefLabel xml:lang="en">benthic incubation chambers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that isolates a portion of seabed plus overlying water from its
-          surroundings. Either returns the entire system to the surface or incorporates sampling devices and/or in-situ
-          sensors.
+        <skos:definition xml:lang="en">A device that isolates a portion of seabed plus overlying water from itssurroundings. Either returns the entire system to the surface or incorporates sampling devices and/or in-situsensors.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 15:47:47.0</dc:date>
@@ -2410,11 +2199,7 @@
         <skos:notation>SDN:L05::BLUMS</skos:notation>
         <skos:prefLabel xml:lang="en">bioluminescence sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Submersible instruments which measure visible emissions from bioluminescent
-          organisms by stimulating intracellular chemiluminescence through mechanical-stressors, such as turbulent
-          water-flow, and sensing by photodetectors, such as photodiodes or photomultiplier tubes. Excludes
-          bioluminescence biosensors which detect the presence of target chemicals or compounds using
-          engineered-bioluminescent bacteria.
+        <skos:definition xml:lang="en">Submersible instruments which measure visible emissions from bioluminescentorganisms by stimulating intracellular chemiluminescence through mechanical-stressors, such as turbulentwater-flow, and sensing by photodetectors, such as photodiodes or photomultiplier tubes. Excludesbioluminescence biosensors which detect the presence of target chemicals or compounds usingengineered-bioluminescent bacteria.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2014-02-04 12:34:21.0</dc:date>
@@ -2434,8 +2219,7 @@
         <skos:notation>SDN:L05::85</skos:notation>
         <skos:prefLabel xml:lang="en">biorectors and chemostats</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices in which controlled conditions are maintained for a chemical process to
-          be carried out by organisms or biochemically active substances derived from such organisms.
+        <skos:definition xml:lang="en">Devices in which controlled conditions are maintained for a chemical process tobe carried out by organisms or biochemically active substances derived from such organisms.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-08-02 14:49:48.0</dc:date>
@@ -2454,8 +2238,7 @@
         <skos:notation>SDN:L05::313</skos:notation>
         <skos:prefLabel xml:lang="en">bird detection radars</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">X-band and S-band radar systems developed for the detection, tracking and
-          counting of birds in flight.
+        <skos:definition xml:lang="en">X-band and S-band radar systems developed for the detection, tracking andcounting of birds in flight.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2475,8 +2258,7 @@
         <skos:notation>SDN:L05::358</skos:notation>
         <skos:prefLabel xml:lang="en">bubble detectors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the concentration and size of air bubbles in the water
-          column.
+        <skos:definition xml:lang="en">Instruments that measure the concentration and size of air bubbles in the watercolumn.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:15:11.0</dc:date>
@@ -2496,8 +2278,7 @@
         <skos:notation>SDN:L05::311</skos:notation>
         <skos:prefLabel xml:lang="en">cameras</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">All types of photographic equipment that may be deployed in aircraft or
-          satellites including stills, video, film and digital systems.
+        <skos:definition xml:lang="en">All types of photographic equipment that may be deployed in aircraft orsatellites including stills, video, film and digital systems.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:32:37.0</dc:date>
@@ -2521,9 +2302,7 @@
         <skos:notation>SDN:L05::LAB38</skos:notation>
         <skos:prefLabel xml:lang="en">cavity enhanced absorption spectrometers</skos:prefLabel>
         <skos:altLabel>CEAS</skos:altLabel>
-        <skos:definition xml:lang="en">Instruments that illuminate a sample inside an optical cavity, typically using
-          laser light, and measure the concentration or amount of a species in gas phase by absorption spectroscopy.
-          Techniques include cavity ring-down spectroscopy (CRDS) and integrated cavity output spectroscopy (ICOS).
+        <skos:definition xml:lang="en">Instruments that illuminate a sample inside an optical cavity, typically usinglaser light, and measure the concentration or amount of a species in gas phase by absorption spectroscopy.Techniques include cavity ring-down spectroscopy (CRDS) and integrated cavity output spectroscopy (ICOS).
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2014-12-16 08:36:22.0</dc:date>
@@ -2545,8 +2324,7 @@
         <skos:notation>SDN:L05::83</skos:notation>
         <skos:prefLabel xml:lang="en">centrifuges</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that separate the liquid and solid phases of a sample through forces
-          exerted by rapid rotation.
+        <skos:definition xml:lang="en">Devices that separate the liquid and solid phases of a sample through forcesexerted by rapid rotation.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2566,8 +2344,7 @@
         <skos:notation>SDN:L05::LAB34</skos:notation>
         <skos:prefLabel xml:lang="en">chemiluminescence analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Laboratory apparatus that detemines the concentration of a chemical species by
-          quantification of the electromagnetic radiation (usually visible light) produced by a chemical reaction.
+        <skos:definition xml:lang="en">Laboratory apparatus that detemines the concentration of a chemical species byquantification of the electromagnetic radiation (usually visible light) produced by a chemical reaction.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-03-22 17:49:10.0</dc:date>
@@ -2589,8 +2366,7 @@
         <skos:notation>SDN:L05::CCOV</skos:notation>
         <skos:prefLabel xml:lang="en">cloud cover quantifiers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the proportion of the sky covered by cloud (cloud
-          amount) and/or the height of the cloud above the ground (cloud base).
+        <skos:definition xml:lang="en">Instruments that measure the proportion of the sky covered by cloud (cloudamount) and/or the height of the cloud above the ground (cloud base).
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-04-23 13:40:00.0</dc:date>
@@ -2612,8 +2388,7 @@
         <skos:notation>SDN:L05::LAB03</skos:notation>
         <skos:prefLabel xml:lang="en">colorimeters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments measuring the amount of light of a given wavelength absorbed by a
-          sample of solution to determine the concentration of a specific coloured solute.
+        <skos:definition xml:lang="en">Instruments measuring the amount of light of a given wavelength absorbed by asample of solution to determine the concentration of a specific coloured solute.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -2648,8 +2423,7 @@
         <skos:notation>SDN:L05::58</skos:notation>
         <skos:prefLabel xml:lang="en">continuous air samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that continuously supplies a flow of air either to an analytical
-          instrument, over a sensor or from which discrete samples may be drawn.
+        <skos:definition xml:lang="en">A device that continuously supplies a flow of air either to an analyticalinstrument, over a sensor or from which discrete samples may be drawn.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2675,8 +2449,7 @@
         <skos:notation>SDN:L05::31</skos:notation>
         <skos:prefLabel xml:lang="en">continuous water samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that continuously supplies a flow of water either to an analytical
-          instrument, over a sensor or from which samples may be drawn.
+        <skos:definition xml:lang="en">A device that continuously supplies a flow of water either to an analyticalinstrument, over a sensor or from which samples may be drawn.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2709,9 +2482,7 @@
         <skos:notation>SDN:L05::CSEM</skos:notation>
         <skos:prefLabel xml:lang="en">controlled-source electromagnetic systems</skos:prefLabel>
         <skos:altLabel>CSEM</skos:altLabel>
-        <skos:definition xml:lang="en">Systems that measure sub-surface resistivity structure through the measurement of
-          the electromegnetic fields resulting from stimulation by a towed source. Includes systems incorporating both
-          transmitter and receiver and systems where the transmitter and receiver are separate.
+        <skos:definition xml:lang="en">Systems that measure sub-surface resistivity structure through the measurement ofthe electromegnetic fields resulting from stimulation by a towed source. Includes systems incorporating bothtransmitter and receiver and systems where the transmitter and receiver are separate.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2016-03-10 06:45:48.0</dc:date>
@@ -2792,8 +2563,7 @@
         <skos:notation>SDN:L05::115</skos:notation>
         <skos:prefLabel xml:lang="en">current profilers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures current speed and direction at multiple predetermined
-          depths simultaneously.
+        <skos:definition xml:lang="en">Instrument that measures current speed and direction at multiple predetermineddepths simultaneously.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2858,9 +2628,7 @@
         <skos:notation>SDN:L05::POS24</skos:notation>
         <skos:prefLabel xml:lang="en">dead reckoning</skos:prefLabel>
         <skos:altLabel>deadReckoning</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "The process of estimating current position based upon a previously
-          determined position, or fix, and advancing that position based upon known or estimated speeds over elapsed
-          time, and course."}
+        <skos:definition xml:lang="en">{"notes": "The process of estimating current position based upon a previouslydetermined position, or fix, and advancing that position based upon known or estimated speeds over elapsedtime, and course."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -2880,8 +2648,7 @@
         <skos:notation>SDN:L05::61</skos:notation>
         <skos:prefLabel xml:lang="en">demersal trawl nets</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Nets towed over the sea floor designed to sample species living on or near the
-          bottom.
+        <skos:definition xml:lang="en">Nets towed over the sea floor designed to sample species living on or near thebottom.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-07-30 10:16:21.0</dc:date>
@@ -2905,8 +2672,7 @@
         <skos:notation>SDN:L05::11</skos:notation>
         <skos:prefLabel xml:lang="en">discrete air samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects a sample of air from the atmosphere and stores it, usually
-          under pressure, for subsequent analysis.
+        <skos:definition xml:lang="en">A device that collects a sample of air from the atmosphere and stores it, usuallyunder pressure, for subsequent analysis.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2929,8 +2695,7 @@
         <skos:notation>SDN:L05::30</skos:notation>
         <skos:prefLabel xml:lang="en">discrete water samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects an in-situ discrete water sample from any depth and
-          returns it to the surface without contamination by the waters through which it passes, such as a water bottle.
+        <skos:definition xml:lang="en">A device that collects an in-situ discrete water sample from any depth andreturns it to the surface without contamination by the waters through which it passes, such as a water bottle.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -2994,8 +2759,7 @@
         <skos:notation>SDN:L05::351</skos:notation>
         <skos:prefLabel xml:lang="en">dissolved gas sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures the concentration of gases, generally oxygen, dissolved
-          in the water column.
+        <skos:definition xml:lang="en">Instrument that measures the concentration of gases, generally oxygen, dissolvedin the water column.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -3052,8 +2816,7 @@
         <skos:notation>SDN:L05::ERTQ</skos:notation>
         <skos:prefLabel xml:lang="en">earthquake</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A sudden release of stress in the Earth's crust that creates energy in the form
-          of seimic waves.
+        <skos:definition xml:lang="en">A sudden release of stress in the Earth's crust that creates energy in the formof seimic waves.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -3074,10 +2837,7 @@
         <skos:notation>SDN:L05::EMSR</skos:notation>
         <skos:prefLabel xml:lang="en">elecromagnetic sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">In-situ sensors that simultaneuously measure electrical and magnetic fields. They
-          are usually moored on the seabed for long periods of time for determination of deep structure through
-          monitoring magnetotelluric currents. However, some may also be configured to be receivers for active
-          electromagnetic surveys such as CSEM.
+        <skos:definition xml:lang="en">In-situ sensors that simultaneuously measure electrical and magnetic fields. Theyare usually moored on the seabed for long periods of time for determination of deep structure throughmonitoring magnetotelluric currents. However, some may also be configured to be receivers for activeelectromagnetic surveys such as CSEM.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-09-16 11:48:04.0</dc:date>
@@ -3097,8 +2857,7 @@
         <skos:notation>SDN:L05::LAB08</skos:notation>
         <skos:prefLabel xml:lang="en">electron microprobes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that chemically analyse a small area of a sample by bombarding it
-          with electrons and spectroscopically assaying the resulting X-Ray emissions.
+        <skos:definition xml:lang="en">Instruments that chemically analyse a small area of a sample by bombarding itwith electrons and spectroscopically assaying the resulting X-Ray emissions.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3118,8 +2877,7 @@
         <skos:notation>SDN:L05::LAB07</skos:notation>
         <skos:prefLabel xml:lang="en">electron microscopes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that generate enlarged images of samples using the phenomena of
-          reflection and absorption of electrons behaving as waves.
+        <skos:definition xml:lang="en">Instruments that generate enlarged images of samples using the phenomena ofreflection and absorption of electrons behaving as waves.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3139,9 +2897,7 @@
         <skos:notation>SDN:L05::LAB01</skos:notation>
         <skos:prefLabel xml:lang="en">elemental analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that quantify carbon, nitrogen and sometimes other elements by
-          combusting the sample at very high temperature and assaying the resulting gaseous oxides. Usually used for
-          samples including organic material.
+        <skos:definition xml:lang="en">Instruments that quantify carbon, nitrogen and sometimes other elements bycombusting the sample at very high temperature and assaying the resulting gaseous oxides. Usually used forsamples including organic material.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3174,9 +2930,7 @@
         <skos:notation>SDN:L05::EQUIL</skos:notation>
         <skos:prefLabel xml:lang="en">equilibrators</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices in which samples and carriers are brought into chemical equilibrium prior
-          to analysis. For example, a shower head or tower full of marbles used to equilibrate water samples with air
-          that is subsequently analysed for carbon dioxide to give pCO2 in the water sample.
+        <skos:definition xml:lang="en">Devices in which samples and carriers are brought into chemical equilibrium priorto analysis. For example, a shower head or tower full of marbles used to equilibrate water samples with airthat is subsequently analysed for carbon dioxide to give pCO2 in the water sample.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-04-23 13:37:39.0</dc:date>
@@ -3196,8 +2950,7 @@
         <skos:notation>SDN:L05::354</skos:notation>
         <skos:prefLabel xml:lang="en">expendable CTDs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure vertical profiles of sea temperature and salinity with a
-          free falling disposable temperature and conductivity sensor package.
+        <skos:definition xml:lang="en">Instruments that measure vertical profiles of sea temperature and salinity with afree falling disposable temperature and conductivity sensor package.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -3223,9 +2976,7 @@
         <skos:notation>SDN:L05::LAB37</skos:notation>
         <skos:prefLabel xml:lang="en">flow cytometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that suspend cells in a stream of fluid past detection sensors whilst
-          illuminating them with laser light. Used for cell counting, sorting, biomarker detection and protein
-          engineering.
+        <skos:definition xml:lang="en">Instruments that suspend cells in a stream of fluid past detection sensors whilstilluminating them with laser light. Used for cell counting, sorting, biomarker detection and proteinengineering.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-08-02 14:45:33.0</dc:date>
@@ -3249,8 +3000,7 @@
         <skos:notation>SDN:L05::LAB36</skos:notation>
         <skos:prefLabel xml:lang="en">flow injection analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that inject a sample into a flowing carrier solution, adding reagents
-          whilst controlling the environment to produce a chemical reaction before passing the sample to a detector.
+        <skos:definition xml:lang="en">Instruments that inject a sample into a flowing carrier solution, adding reagentswhilst controlling the environment to produce a chemical reaction before passing the sample to a detector.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-08-02 14:44:24.0</dc:date>
@@ -3273,8 +3023,7 @@
         <skos:notation>SDN:L05::388</skos:notation>
         <skos:prefLabel xml:lang="en">flow meters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors that quantify the rate at which fluids (e.g. water or air) pass through
-          sensor packages, instruments or sampling devices.
+        <skos:definition xml:lang="en">Sensors that quantify the rate at which fluids (e.g. water or air) pass throughsensor packages, instruments or sampling devices.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-05-20 09:35:53.0</dc:date>
@@ -3348,9 +3097,7 @@
         <skos:notation>SDN:L05::LAB06</skos:notation>
         <skos:prefLabel xml:lang="en">fluorescence microscopes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that generate enlarged images of samples using the phenomena of
-          fluorescence and phosphorescence instead of, or in addition to, reflection and absorption of visible light.
-          Includes conventional and inverted instruments.
+        <skos:definition xml:lang="en">Instruments that generate enlarged images of samples using the phenomena offluorescence and phosphorescence instead of, or in addition to, reflection and absorption of visible light.Includes conventional and inverted instruments.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3373,8 +3120,7 @@
         <skos:notation>SDN:L05::113</skos:notation>
         <skos:prefLabel xml:lang="en">fluorometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures the amount of stimulated electromagnetic radiation
-          produced by pulses of electromagnetic radiation emitted into the water column.
+        <skos:definition xml:lang="en">Instrument that measures the amount of stimulated electromagnetic radiationproduced by pulses of electromagnetic radiation emitted into the water column.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -3430,9 +3176,7 @@
         <skos:notation>SDN:L05::66</skos:notation>
         <skos:prefLabel xml:lang="en">flushing drills</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices primarily designed to drill wells through sediment or rock that flush the
-          drill spoil back to the surface where it is examined to provide lithological data through the process known as
-          mud logging.
+        <skos:definition xml:lang="en">Devices primarily designed to drill wells through sediment or rock that flush thedrill spoil back to the surface where it is examined to provide lithological data through the process known asmud logging.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-08-26 14:59:54.0</dc:date>
@@ -3471,8 +3215,7 @@
         <skos:notation>SDN:L05::LAB22</skos:notation>
         <skos:prefLabel xml:lang="en">gamma-ray spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments measuring the relative levels of electromagnetic radiation of
-          different wavelengths in the gamma-ray waveband.
+        <skos:definition xml:lang="en">Instruments measuring the relative levels of electromagnetic radiation ofdifferent wavelengths in the gamma-ray waveband.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2011-04-15 14:18:31.0</dc:date>
@@ -3493,9 +3236,7 @@
         <skos:notation>SDN:L05::LAB19</skos:notation>
         <skos:prefLabel xml:lang="en">gas chromatograph mass spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments separating gases, volatile substances or substances dissolved in a
-          volatile solvent by transporting an inert gas through a column packed with a sorbent to a detector for assay
-          by a mass spectrometer.
+        <skos:definition xml:lang="en">Instruments separating gases, volatile substances or substances dissolved in avolatile solvent by transporting an inert gas through a column packed with a sorbent to a detector for assayby a mass spectrometer.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3519,8 +3260,7 @@
         <skos:notation>SDN:L05::LAB02</skos:notation>
         <skos:prefLabel xml:lang="en">gas chromatographs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments separating gases, volatile substances or substances dissolved in a
-          volatile solvent by transporting an inert gas through a column packed with a sorbent to a detector for assay.
+        <skos:definition xml:lang="en">Instruments separating gases, volatile substances or substances dissolved in avolatile solvent by transporting an inert gas through a column packed with a sorbent to a detector for assay.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3551,8 +3291,7 @@
         <skos:notation>SDN:L05::LAB24</skos:notation>
         <skos:prefLabel xml:lang="en">gel permeation chromatographs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that separate components in aqueous or organic solution based on
-          molecular size generally for molecular weight determination.
+        <skos:definition xml:lang="en">Instruments that separate components in aqueous or organic solution based onmolecular size generally for molecular weight determination.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3572,8 +3311,7 @@
         <skos:notation>SDN:L05::370</skos:notation>
         <skos:prefLabel xml:lang="en">geothermometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments carrying a sensor that determines the temperature (degree of hotness)
-          within geological units.
+        <skos:definition xml:lang="en">Instruments carrying a sensor that determines the temperature (degree of hotness)within geological units.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2010-11-18 11:35:46.0</dc:date>
@@ -3593,8 +3331,7 @@
         <skos:notation>SDN:L05::65</skos:notation>
         <skos:prefLabel xml:lang="en">gill nets</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Nets drifting in the sea or standing on the sea floor in which fish become
-          entangled, usually through their gill covers.
+        <skos:definition xml:lang="en">Nets drifting in the sea or standing on the sea floor in which fish becomeentangled, usually through their gill covers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-08-26 14:52:51.0</dc:date>
@@ -3660,8 +3397,7 @@
         <skos:notation>SDN:L05::LAB11</skos:notation>
         <skos:prefLabel xml:lang="en">high performance liquid chromatographs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that separate and analyse mixtures of substances by high pressure
-          pumping the sample through a column packed with microspheres coated with the stationary phase.
+        <skos:definition xml:lang="en">Instruments that separate and analyse mixtures of substances by high pressurepumping the sample through a column packed with microspheres coated with the stationary phase.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3705,8 +3441,7 @@
         <skos:notation>SDN:L05::67</skos:notation>
         <skos:prefLabel xml:lang="en">high-speed plankton samplers</skos:prefLabel>
         <skos:altLabel>HSS</skos:altLabel>
-        <skos:definition xml:lang="en">A fine-meshed net or filter towed behind a moving vessel that collects a single
-          sample for a tow. Samples microzooplankton, mesozooplankton and nekton.
+        <skos:definition xml:lang="en">A fine-meshed net or filter towed behind a moving vessel that collects a singlesample for a tow. Samples microzooplankton, mesozooplankton and nekton.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-11-25 11:45:36.0</dc:date>
@@ -3761,8 +3496,7 @@
         <skos:notation>SDN:L05::369</skos:notation>
         <skos:prefLabel xml:lang="en">hydrophones</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices containing transducers that convert underwater sound waves into
-          electrical signals.
+        <skos:definition xml:lang="en">Devices containing transducers that convert underwater sound waves intoelectrical signals.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -3789,9 +3523,7 @@
         <skos:notation>SDN:L05::ICEP</skos:notation>
         <skos:prefLabel xml:lang="en">ice thickness profilers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the freeboard, draught or thickness of ice sheets or sea
-          ice. These are not to be confused with tethered ice profilers that are platforms that sample the water column
-          beneath sea ice.
+        <skos:definition xml:lang="en">Instruments that measure the freeboard, draught or thickness of ice sheets or seaice. These are not to be confused with tethered ice profilers that are platforms that sample the water columnbeneath sea ice.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-04-23 12:40:29.0</dc:date>
@@ -3811,8 +3543,7 @@
         <skos:notation>SDN:L05::82</skos:notation>
         <skos:prefLabel xml:lang="en">in-situ incubators</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A rig that allows water samples to be retained from where they were collected
-          whilst physically separated from their surroundings. Includes small-scale incubation rigs and mesocosms.
+        <skos:definition xml:lang="en">A rig that allows water samples to be retained from where they were collectedwhilst physically separated from their surroundings. Includes small-scale incubation rigs and mesocosms.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 15:47:47.0</dc:date>
@@ -3832,8 +3563,7 @@
         <skos:notation>SDN:L05::182</skos:notation>
         <skos:prefLabel xml:lang="en">inapplicable</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">There is no appropriate value. To be used in cases where metadata elements cannot
-          be set null due to schema constraints.
+        <skos:definition xml:lang="en">There is no appropriate value. To be used in cases where metadata elements cannotbe set null due to schema constraints.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2011-08-26 10:27:29.0</dc:date>
@@ -3854,9 +3584,7 @@
         <skos:notation>SDN:L05::LAB14</skos:notation>
         <skos:prefLabel xml:lang="en">inductively-coupled plasma atomic emission spectroscopes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that pass nebulised samples into an inductively-coupled gas plasma
-          (8-10000 K) where they are atomised and excited. The de-excitation optical emissions at characteristic
-          wavelengths are spectroscopically analysed.
+        <skos:definition xml:lang="en">Instruments that pass nebulised samples into an inductively-coupled gas plasma(8-10000 K) where they are atomised and excited. The de-excitation optical emissions at characteristicwavelengths are spectroscopically analysed.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3879,9 +3607,7 @@
         <skos:notation>SDN:L05::LAB15</skos:notation>
         <skos:prefLabel xml:lang="en">inductively-coupled plasma mass spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that pass nebulised samples into an inductively-coupled gas plasma
-          (8-10000 K) where they are atomised and ionised. Ions of specific mass-to-charge ratios are quantified in a
-          quadrupole mass spectrometer.
+        <skos:definition xml:lang="en">Instruments that pass nebulised samples into an inductively-coupled gas plasma(8-10000 K) where they are atomised and ionised. Ions of specific mass-to-charge ratios are quantified in aquadrupole mass spectrometer.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -3913,9 +3639,7 @@
         <skos:notation>SDN:L05::POS19</skos:notation>
         <skos:prefLabel xml:lang="en">inertial navigation systems</skos:prefLabel>
         <skos:altLabel>INS</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Systems that determine spatial position using high-accuracy inertial
-          measurements plus input from other sensors such as doppler current sensors to determine platform 3-D location
-          by interpolation between satellite network fixes."}
+        <skos:definition xml:lang="en">{"notes": "Systems that determine spatial position using high-accuracy inertialmeasurements plus input from other sensors such as doppler current sensors to determine platform 3-D locationby interpolation between satellite network fixes."}
         </skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -3944,8 +3668,7 @@
         <skos:notation>SDN:L05::86</skos:notation>
         <skos:prefLabel xml:lang="en">inorganic carbon analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments measuring carbonate in sediments and inorganic carbon in the water
-          column.
+        <skos:definition xml:lang="en">Instruments measuring carbonate in sediments and inorganic carbon in the watercolumn.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-10-03 14:55:30.0</dc:date>
@@ -3964,8 +3687,7 @@
         <skos:notation>SDN:L05::112</skos:notation>
         <skos:prefLabel xml:lang="en">inverted echosounders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that locate acoustic reflectors such as fronts in the water column by
-          transmitting pulses of sound from the seabed and determing reflection return times.
+        <skos:definition xml:lang="en">Instruments that locate acoustic reflectors such as fronts in the water column bytransmitting pulses of sound from the seabed and determing reflection return times.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -3988,12 +3710,7 @@
         <skos:notation>SDN:L05::LAB45</skos:notation>
         <skos:prefLabel xml:lang="en">ion chromatography analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that use ion chromatography to separate ions and polar molecules
-          based on their affinity
-          to an ion exchanger resin.
-          Sample solutions pass through a pressurized chromatographic column where ions
-          are absorbed by the resin and subsequently eluted using an ion extraction liquid.
-          The retention time of different species determines the ionic concentrations in the sample.
+        <skos:definition xml:lang="en">Instruments that use ion chromatography to separate ions and polar moleculesbased on their affinityto an ion exchanger resin.Sample solutions pass through a pressurized chromatographic column where ionsare absorbed by the resin and subsequently eluted using an ion extraction liquid.The retention time of different species determines the ionic concentrations in the sample.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-02-01 17:45:05.0</dc:date>
@@ -4012,8 +3729,7 @@
         <skos:notation>SDN:L05::LAB09</skos:notation>
         <skos:prefLabel xml:lang="en">ion microprobes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that isotopically analyse a small area of sample by bombarding it
-          with ions to form a plasma that is analysed in a mass spectrometer.
+        <skos:definition xml:lang="en">Instruments that isotopically analyse a small area of sample by bombarding itwith ions to form a plasma that is analysed in a mass spectrometer.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -4033,9 +3749,7 @@
         <skos:notation>SDN:L05::LAB48</skos:notation>
         <skos:prefLabel xml:lang="en">isotope ratio mass spectrometers</skos:prefLabel>
         <skos:altLabel>IRMS</skos:altLabel>
-        <skos:definition xml:lang="en">Instruments that measure isotopic ratios using an electron ionisation source.
-          Atoms in purified samples are ionised using a beam of electrons under vacuum. Subsequently, ions are focused
-          into a beam by an electromagnet and then separated into individual beams based on their mass/charge ratio.
+        <skos:definition xml:lang="en">Instruments that measure isotopic ratios using an electron ionisation source.Atoms in purified samples are ionised using a beam of electrons under vacuum. Subsequently, ions are focusedinto a beam by an electromagnet and then separated into individual beams based on their mass/charge ratio.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-03-10 06:47:31.0</dc:date>
@@ -4058,8 +3772,7 @@
         <skos:notation>SDN:L05::LBTG</skos:notation>
         <skos:prefLabel xml:lang="en">labelling tags</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Passive devices attached to captured organisms to specifically identify them when
-          recaptured after release.
+        <skos:definition xml:lang="en">Passive devices attached to captured organisms to specifically identify them whenrecaptured after release.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4078,8 +3791,7 @@
         <skos:notation>SDN:L05::LAB33</skos:notation>
         <skos:prefLabel xml:lang="en">laboratory autosamplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Laboratory apparatus that automatically introduces one or more samples with a
-          predetermined volume or mass into an analytical instrument.
+        <skos:definition xml:lang="en">Laboratory apparatus that automatically introduces one or more samples with apredetermined volume or mass into an analytical instrument.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-03-01 16:00:54.0</dc:date>
@@ -4104,8 +3816,7 @@
         <skos:notation>SDN:L05::LAB41</skos:notation>
         <skos:prefLabel xml:lang="en">laboratory cameras</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">All types of photographic equipment that are hand-held or part of laboratory
-          apparatus including stills, video, film and digital systems.
+        <skos:definition xml:lang="en">All types of photographic equipment that are hand-held or part of laboratoryapparatus including stills, video, film and digital systems.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-12-19 09:06:33.0</dc:date>
@@ -4126,8 +3837,7 @@
         <skos:notation>SDN:L05::LAB42</skos:notation>
         <skos:prefLabel xml:lang="en">laboratory optical rangefinders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices used to detect the distance between sensor and sample or presence/absence
-          of an object based a light (often infrared and possibly laser) transmitter and a photoelectric receiver.
+        <skos:definition xml:lang="en">Devices used to detect the distance between sensor and sample or presence/absenceof an object based a light (often infrared and possibly laser) transmitter and a photoelectric receiver.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-12-19 09:08:24.0</dc:date>
@@ -4148,8 +3858,7 @@
         <skos:notation>SDN:L05::310</skos:notation>
         <skos:prefLabel xml:lang="en">laser altimeters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that determine the distance between the platform and the Earth's
-          surface by timing reflected pulses of laser light.
+        <skos:definition xml:lang="en">Instruments that determine the distance between the platform and the Earth'ssurface by timing reflected pulses of laser light.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2012-12-18 15:18:17.0</dc:date>
@@ -4170,8 +3879,7 @@
         <skos:notation>SDN:L05::LAB21</skos:notation>
         <skos:prefLabel xml:lang="en">liquid scintillation counters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments assaying beta radiation by quantitative detection of visible light
-          produced by the passage of rays or particles through a suitable scintillant incorporated into the sample.
+        <skos:definition xml:lang="en">Instruments assaying beta radiation by quantitative detection of visible lightproduced by the passage of rays or particles through a suitable scintillant incorporated into the sample.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -4195,8 +3903,7 @@
         <skos:notation>SDN:L05::116</skos:notation>
         <skos:prefLabel xml:lang="en">lowered current profilers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An acoustic doppler current meter lowered and raised vertically from a surface
-          platform, typically a ship.
+        <skos:definition xml:lang="en">An acoustic doppler current meter lowered and raised vertically from a surfaceplatform, typically a ship.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -4218,8 +3925,7 @@
         <skos:notation>SDN:L05::LAB31</skos:notation>
         <skos:prefLabel xml:lang="en">magnetic susceptibility systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors, probes and meters that measure the degree to which a sample or part
-          thereof is influenced by a magnetic field.
+        <skos:definition xml:lang="en">Sensors, probes and meters that measure the degree to which a sample or partthereof is influenced by a magnetic field.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4267,8 +3973,7 @@
         <skos:notation>SDN:L05::90</skos:notation>
         <skos:prefLabel xml:lang="en">manual biota samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A simple tool like a hammer, saw or even just a hand for the collection of biota
-          samples.
+        <skos:definition xml:lang="en">A simple tool like a hammer, saw or even just a hand for the collection of biotasamples.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4288,8 +3993,7 @@
         <skos:notation>SDN:L05::57</skos:notation>
         <skos:prefLabel xml:lang="en">manual rock samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A simple tool like a hammer, saw or even just a hand for the collection of rock
-          samples.
+        <skos:definition xml:lang="en">A simple tool like a hammer, saw or even just a hand for the collection of rocksamples.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4309,8 +4013,7 @@
         <skos:notation>SDN:L05::MVBR</skos:notation>
         <skos:prefLabel xml:lang="en">marine vibroseis</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic source generating sweeps of controlled varying frequency (from a
-          few Hz to hundreds of Hz) and duration.
+        <skos:definition xml:lang="en">A marine seismic source generating sweeps of controlled varying frequency (from afew Hz to hundreds of Hz) and duration.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -4330,9 +4033,7 @@
         <skos:notation>SDN:L05::LAB16</skos:notation>
         <skos:prefLabel xml:lang="en">mass spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments used to measure the mass-to-charge ratio of ions most generally used
-          to find the composition of a sample by generating a mass spectrum representing the masses of sample
-          components.
+        <skos:definition xml:lang="en">Instruments used to measure the mass-to-charge ratio of ions most generally usedto find the composition of a sample by generating a mass spectrum representing the masses of samplecomponents.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -4370,8 +4071,7 @@
         <skos:notation>SDN:L05::383</skos:notation>
         <skos:prefLabel xml:lang="en">metal analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">In-situ instruments that can determine the total, dissolved or particulate
-          concentration of one or more metallic elements (including trace metalloids like arsenic) in a water body.
+        <skos:definition xml:lang="en">In-situ instruments that can determine the total, dissolved or particulateconcentration of one or more metallic elements (including trace metalloids like arsenic) in a water body.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-09-15 10:41:46.0</dc:date>
@@ -4392,10 +4092,7 @@
         <skos:notation>SDN:L05::92</skos:notation>
         <skos:prefLabel xml:lang="en">meteorological LiDARs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure meteorological phenomena such as wind speed, wind
-          direction and air quality remotely by determining the distances from a platform to a reflective surface in the
-          atmosphere or at ground level, calculated from timed return rates of continuous or pulsed emissions of laser
-          light.
+        <skos:definition xml:lang="en">Instruments that measure meteorological phenomena such as wind speed, winddirection and air quality remotely by determining the distances from a platform to a reflective surface in theatmosphere or at ground level, calculated from timed return rates of continuous or pulsed emissions of laserlight.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-06-06 15:34:38.0</dc:date>
@@ -4416,8 +4113,7 @@
         <skos:notation>SDN:L05::102</skos:notation>
         <skos:prefLabel xml:lang="en">meteorological packages</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that makes routine meteorological measurements on the atmosphere,
-          typically air pressure, temperature and humidity.
+        <skos:definition xml:lang="en">Instrument that makes routine meteorological measurements on the atmosphere,typically air pressure, temperature and humidity.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4497,8 +4193,7 @@
         <skos:notation>SDN:L05::184</skos:notation>
         <skos:prefLabel xml:lang="en">microstructure sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Fast response sensors sampled at high frequency to determine the distribution of
-          water body properties on a millimetric scale.
+        <skos:definition xml:lang="en">Fast response sensors sampled at high frequency to determine the distribution ofwater body properties on a millimetric scale.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2012-02-23 10:11:31.0</dc:date>
@@ -4525,8 +4220,7 @@
         <skos:notation>SDN:L05::157</skos:notation>
         <skos:prefLabel xml:lang="en">multi-beam echosounders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure water depth along several tracks parallel to the
-          platform track by timing pulses of sound reflected on the seafloor.
+        <skos:definition xml:lang="en">Instruments that measure water depth along several tracks parallel to theplatform track by timing pulses of sound reflected on the seafloor.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4568,8 +4262,7 @@
         <skos:notation>SDN:L05::154</skos:notation>
         <skos:prefLabel xml:lang="en">multi-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source of unspecified frequency plus a multiple strings of towed
-          hydrophones (streamers) that determine geologic structure by detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source of unspecified frequency plus a multiple strings of towedhydrophones (streamers) that determine geologic structure by detecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2010-02-19 11:59:29.0</dc:date>
@@ -4602,13 +4295,7 @@
         <skos:notation>SDN:L05::MMIS</skos:notation>
         <skos:prefLabel xml:lang="en">multi-frame imaging sonar</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">High-frequency (&gt;1 MHz), possibly multiple frequency, active sonar systems
-          that provide images approaching the same quality as optical video cameras. They may be deployed in many ways
-          including hand-held by divers, attached to profiling instruments, AUVs and ROVs, towed fish or moorings. They
-          have many scientific, commercial and military applications including observation and identification of fish,
-          seabed characterisation, underwater vessel inspections and mine detection. Examples of this type of system are
-          DIDSON (Dual-frequency IDentification SONar) and LIMIS (Limpet Mine Imaging Sonar). Any instrument that may be
-          considered the underwater acoustic equivalent of an optical video camera belongs in this category.
+        <skos:definition xml:lang="en">High-frequency (&gt;1 MHz), possibly multiple frequency, active sonar systemsthat provide images approaching the same quality as optical video cameras. They may be deployed in many waysincluding hand-held by divers, attached to profiling instruments, AUVs and ROVs, towed fish or moorings. Theyhave many scientific, commercial and military applications including observation and identification of fish,seabed characterisation, underwater vessel inspections and mine detection. Examples of this type of system areDIDSON (Dual-frequency IDentification SONar) and LIMIS (Limpet Mine Imaging Sonar). Any instrument that may beconsidered the underwater acoustic equivalent of an optical video camera belongs in this category.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-02-18 08:17:53.0</dc:date>
@@ -4627,8 +4314,7 @@
         <skos:notation>SDN:L05::68</skos:notation>
         <skos:prefLabel xml:lang="en">multinet</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A system comprising several nets that can be opened and closed sequentially to
-          collect a series of samples during a tow or haul. Samples microzooplankton, mesozooplankton and nekton.
+        <skos:definition xml:lang="en">A system comprising several nets that can be opened and closed sequentially tocollect a series of samples during a tow or haul. Samples microzooplankton, mesozooplankton and nekton.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-11-25 11:47:24.0</dc:date>
@@ -4667,8 +4353,7 @@
         <skos:notation>SDN:L05::NATS</skos:notation>
         <skos:prefLabel xml:lang="en">natural source</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Any kind of natural source of acoustic waves, that can be used in passive
-          seismics.
+        <skos:definition xml:lang="en">Any kind of natural source of acoustic waves, that can be used in passiveseismics.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4689,8 +4374,7 @@
         <skos:notation>SDN:L05::69</skos:notation>
         <skos:prefLabel xml:lang="en">neuston net</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A fine-meshed net designed to collect samples living within a few centimetres of
-          the sea surface. Samples microzooplankton, mesozooplankton and nekton.
+        <skos:definition xml:lang="en">A fine-meshed net designed to collect samples living within a few centimetres ofthe sea surface. Samples microzooplankton, mesozooplankton and nekton.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2011-11-25 11:48:22.0</dc:date>
@@ -4725,8 +4409,7 @@
         <skos:notation>SDN:L05::LAB18</skos:notation>
         <skos:prefLabel xml:lang="en">nuclear magnetic resonance spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that identify and quantify magnetically active chemical entities by
-          subjecting a sample to orthogonal magnetic and electrical fields.
+        <skos:definition xml:lang="en">Instruments that identify and quantify magnetically active chemical entities bysubjecting a sample to orthogonal magnetic and electrical fields.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -4746,8 +4429,7 @@
         <skos:notation>SDN:L05::181</skos:notation>
         <skos:prefLabel xml:lang="en">nutrient analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that makes in-situ measurements of one or more of nitrate, nitrite,
-          ammonium, urea, phosphate or silicate dissolved in the water column.
+        <skos:definition xml:lang="en">Instrument that makes in-situ measurements of one or more of nitrate, nitrite,ammonium, urea, phosphate or silicate dissolved in the water column.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4781,8 +4463,7 @@
         <skos:notation>SDN:L05::91</skos:notation>
         <skos:prefLabel xml:lang="en">observers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Humans who estimate a parameter through observation of a phenomenon such as bird
-          counts, bird song mappings and visual wave observations.
+        <skos:definition xml:lang="en">Humans who estimate a parameter through observation of a phenomenon such as birdcounts, bird song mappings and visual wave observations.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2014-11-18 12:21:30.0</dc:date>
@@ -4804,8 +4485,7 @@
         <skos:notation>SDN:L05::304</skos:notation>
         <skos:prefLabel xml:lang="en">ocean colour radiometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors that measure the intensity and nature of electromagnetic radiation in a
-          manner optimised for the determination of ocean chlorophyll concentration.
+        <skos:definition xml:lang="en">Sensors that measure the intensity and nature of electromagnetic radiation in amanner optimised for the determination of ocean chlorophyll concentration.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2008-01-10 16:19:34.0</dc:date>
@@ -4832,8 +4512,7 @@
         <skos:notation>SDN:L05::123</skos:notation>
         <skos:prefLabel xml:lang="en">optical backscatter sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures the amount of electromagnetic radiation emitted into the
-          water column returned to the instrument.
+        <skos:definition xml:lang="en">Instrument that measures the amount of electromagnetic radiation emitted into thewater column returned to the instrument.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -4877,8 +4556,7 @@
         <skos:notation>SDN:L05::LAB05</skos:notation>
         <skos:prefLabel xml:lang="en">optical microscopes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that generate enlarged images of samples using the phenomena of
-          reflection and absorption of visible light. Includes conventional and inverted instruments.
+        <skos:definition xml:lang="en">Instruments that generate enlarged images of samples using the phenomena ofreflection and absorption of visible light. Includes conventional and inverted instruments.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -4934,8 +4612,7 @@
         <skos:notation>SDN:L05::LAB27</skos:notation>
         <skos:prefLabel xml:lang="en">particle sizers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the size spectrum of particulate material suspended in a
-          water sample.
+        <skos:definition xml:lang="en">Instruments that measure the size spectrum of particulate material suspended in awater sample.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -4955,8 +4632,7 @@
         <skos:notation>SDN:L05::150</skos:notation>
         <skos:prefLabel xml:lang="en">particle sizers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An instrument that measures the size spectrum of particles suspended in the water
-          column.
+        <skos:definition xml:lang="en">An instrument that measures the size spectrum of particles suspended in the watercolumn.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -4981,8 +4657,7 @@
         <skos:notation>SDN:L05::32</skos:notation>
         <skos:prefLabel xml:lang="en">particulates samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A system that collects samples of water column particulates such as in-situ high
-          volume filtration systems liks SAPs.
+        <skos:definition xml:lang="en">A system that collects samples of water column particulates such as in-situ highvolume filtration systems liks SAPs.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -5004,8 +4679,7 @@
         <skos:notation>SDN:L05::63</skos:notation>
         <skos:prefLabel xml:lang="en">passive fishing gear</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Apparatus where capture is based on the movement of the target species towards
-          the gear (e.g. creels and fish traps).
+        <skos:definition xml:lang="en">Apparatus where capture is based on the movement of the target species towardsthe gear (e.g. creels and fish traps).
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-07-30 10:22:48.0</dc:date>
@@ -5026,8 +4700,7 @@
         <skos:notation>SDN:L05::23</skos:notation>
         <skos:prefLabel xml:lang="en">pelagic trawl nets</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A net towed through the water column designed to sample free-swimming nekton or
-          fish.
+        <skos:definition xml:lang="en">A net towed through the water column designed to sample free-swimming nekton orfish.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -5072,9 +4745,7 @@
         <skos:notation>SDN:L05::361</skos:notation>
         <skos:prefLabel xml:lang="en">penetrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Dynamic or passive devices that determine the consistency or hardness of soil or
-          sediment by measuring the depth or rate of penetration of a needle or cone rig into it when a known force is
-          applied.
+        <skos:definition xml:lang="en">Dynamic or passive devices that determine the consistency or hardness of soil orsediment by measuring the depth or rate of penetration of a needle or cone rig into it when a known force isapplied.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -5094,8 +4765,7 @@
         <skos:notation>SDN:L05::360</skos:notation>
         <skos:prefLabel xml:lang="en">piezometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that measure fluid (air, gas, water, or oil) pressure within soil,
-          sediment, rock or concrete providing information such as water table level in an aquifer system.
+        <skos:definition xml:lang="en">Devices that measure fluid (air, gas, water, or oil) pressure within soil,sediment, rock or concrete providing information such as water table level in an aquifer system.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -5136,8 +4806,7 @@
         <skos:notation>SDN:L05::22</skos:notation>
         <skos:prefLabel xml:lang="en">plankton nets</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A fine-meshed net designed for sampling microzooplankton, mesozooplankton or
-          nekton.
+        <skos:definition xml:lang="en">A fine-meshed net designed for sampling microzooplankton, mesozooplankton ornekton.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -5270,8 +4939,7 @@
         <skos:notation>SDN:L05::21</skos:notation>
         <skos:prefLabel xml:lang="en">plankton recorders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that continuously samples a flow of water, separating and fixing
-          plankton for subsequent identification and counting.
+        <skos:definition xml:lang="en">A device that continuously samples a flow of water, separating and fixingplankton for subsequent identification and counting.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -5300,10 +4968,7 @@
         <skos:notation>SDN:L05::LAB43</skos:notation>
         <skos:prefLabel xml:lang="en">plate readers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Laboratory instruments detect biological, chemical or physical events in samples
-          held in multiple (typically 6, 24, 96, 384 or 1536) wells arranged in a matrix in a flat plate. Samples in the
-          plate wells are simultaneously assayed optically using techniques such as spectrophotometry or
-          spectrofluorometry.
+        <skos:definition xml:lang="en">Laboratory instruments detect biological, chemical or physical events in samplesheld in multiple (typically 6, 24, 96, 384 or 1536) wells arranged in a matrix in a flat plate. Samples in theplate wells are simultaneously assayed optically using techniques such as spectrophotometry orspectrofluorometry.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2015-02-03 10:32:36.0</dc:date>
@@ -5322,9 +4987,7 @@
         <skos:notation>SDN:L05::385</skos:notation>
         <skos:prefLabel xml:lang="en">platform attitude sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure platform orientation or rates of platform motion or
-          acceleration in any direction or along any axis. Excludes inertial navigation systems that are designed to
-          determine platform location with respect to an external co-ordinate reference system.
+        <skos:definition xml:lang="en">Instruments that measure platform orientation or rates of platform motion oracceleration in any direction or along any axis. Excludes inertial navigation systems that are designed todetermine platform location with respect to an external co-ordinate reference system.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-09-15 11:00:32.0</dc:date>
@@ -5376,8 +5039,7 @@
         <skos:notation>SDN:L05::359</skos:notation>
         <skos:prefLabel xml:lang="en">plummets</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices comprising a weight attached to the end of a graduated rope used to
-          measure point water depths.
+        <skos:definition xml:lang="en">Devices comprising a weight attached to the end of a graduated rope used tomeasure point water depths.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2010-02-19 12:00:55.0</dc:date>
@@ -5397,8 +5059,7 @@
         <skos:notation>SDN:L05::381</skos:notation>
         <skos:prefLabel xml:lang="en">precipitation gauges</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure either the rate of fall or integrated amount of rain,
-          snow, sleet, hail or graupel.
+        <skos:definition xml:lang="en">Instruments that measure either the rate of fall or integrated amount of rain,snow, sleet, hail or graupel.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-09-15 10:35:20.0</dc:date>
@@ -5424,8 +5085,7 @@
         <skos:notation>SDN:L05::14</skos:notation>
         <skos:prefLabel xml:lang="en">precipitation samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects a sample of precipitation (rain, hail or snow) as it
-          falls.
+        <skos:definition xml:lang="en">A device that collects a sample of precipitation (rain, hail or snow) as itfalls.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -5447,9 +5107,7 @@
         <skos:notation>SDN:L05::LAB46</skos:notation>
         <skos:prefLabel xml:lang="en">proton transfer reaction mass spectrometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that ionise trace gas molecules by proton transfer from protonated
-          water, H3O. Ions of specific mass-to-charge ratios are then quantified in
-          a quadrupole or time-of-flight mass spectrometer.
+        <skos:definition xml:lang="en">Instruments that ionise trace gas molecules by proton transfer from protonatedwater, H3O. Ions of specific mass-to-charge ratios are then quantified ina quadrupole or time-of-flight mass spectrometer.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-02-01 17:47:56.0</dc:date>
@@ -5469,8 +5127,7 @@
         <skos:notation>SDN:L05::186</skos:notation>
         <skos:prefLabel xml:lang="en">radar altimeters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that determine the distance between the platform and the Earth's
-          surface by timing reflected electromagnetic radiation, usually microwaves.
+        <skos:definition xml:lang="en">Instruments that determine the distance between the platform and the Earth'ssurface by timing reflected electromagnetic radiation, usually microwaves.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2011-04-15 14:18:31.0</dc:date>
@@ -5498,8 +5155,7 @@
         <skos:notation>SDN:L05::POS23</skos:notation>
         <skos:prefLabel xml:lang="en">radio tracking systems</skos:prefLabel>
         <skos:altLabel>radioTracking</skos:altLabel>
-        <skos:definition xml:lang="en">{"notes": "Directional radio receivers that determine the location of a mobile
-          radio transmitter (such as a bird or animal tag) by triangulation."}
+        <skos:definition xml:lang="en">{"notes": "Directional radio receivers that determine the location of a mobileradio transmitter (such as a bird or animal tag) by triangulation."}
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-12-09 11:25:50.0</dc:date>
@@ -5519,8 +5175,7 @@
         <skos:notation>SDN:L05::122</skos:notation>
         <skos:prefLabel xml:lang="en">radiometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures the intensity of electromagnetic radiation in either the
-          atmosphere or the water column.
+        <skos:definition xml:lang="en">Instrument that measures the intensity of electromagnetic radiation in either theatmosphere or the water column.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -5599,8 +5254,7 @@
         <skos:notation>SDN:L05::103</skos:notation>
         <skos:prefLabel xml:lang="en">radiosondes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A balloon-borne package equipped with a radio transmitter and meteorological
-          sensors typically measuring temperature, pressure, and humidity.
+        <skos:definition xml:lang="en">A balloon-borne package equipped with a radio transmitter and meteorologicalsensors typically measuring temperature, pressure, and humidity.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -5623,8 +5277,7 @@
         <skos:notation>SDN:L05::356</skos:notation>
         <skos:prefLabel xml:lang="en">redox potential sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the tendency of the water column to either gain or lose
-          electrons when it is subject to change by introduction of a new species.
+        <skos:definition xml:lang="en">Instruments that measure the tendency of the water column to either gain or loseelectrons when it is subject to change by introduction of a new species.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -5706,8 +5359,7 @@
         <skos:notation>SDN:L05::LAB29</skos:notation>
         <skos:prefLabel xml:lang="en">rulers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that allow one or more physical dimensions of a sample or specimen to be
-          determined by visible comparison against marked graduations in units of measurement of dimension length.
+        <skos:definition xml:lang="en">Devices that allow one or more physical dimensions of a sample or specimen to bedetermined by visible comparison against marked graduations in units of measurement of dimension length.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-04-22 15:04:00.0</dc:date>
@@ -5727,8 +5379,7 @@
         <skos:notation>SDN:L05::350</skos:notation>
         <skos:prefLabel xml:lang="en">salinity sensor</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that simultaneously measures electrical conductivity and temperature
-          in the water column to provide temperature and salinity data.
+        <skos:definition xml:lang="en">Instrument that simultaneously measures electrical conductivity and temperaturein the water column to provide temperature and salinity data.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -5848,8 +5499,7 @@
         <skos:notation>SDN:L05::LAB30</skos:notation>
         <skos:prefLabel xml:lang="en">salinometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the salinity of a collected water sample based on its
-          electrical conductivity or optical properties.
+        <skos:definition xml:lang="en">Instruments that measure the salinity of a collected water sample based on itselectrical conductivity or optical properties.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2015-02-11 09:18:46.0</dc:date>
@@ -5875,8 +5525,7 @@
         <skos:notation>SDN:L05::59</skos:notation>
         <skos:prefLabel xml:lang="en">sampling extent markers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that label the region within which sampling is to be confined such as
-          permanent quadrats and location markers.
+        <skos:definition xml:lang="en">Devices that label the region within which sampling is to be confined such aspermanent quadrats and location markers.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2014-06-05 09:44:31.0</dc:date>
@@ -5899,8 +5548,7 @@
         <skos:notation>SDN:L05::301</skos:notation>
         <skos:prefLabel xml:lang="en">satellite positioning systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A network of statellites that generate signals that allow a receiver to determine
-          its position such as GPS.
+        <skos:definition xml:lang="en">A network of statellites that generate signals that allow a receiver to determineits position such as GPS.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:03:34.0</dc:date>
@@ -5926,9 +5574,7 @@
         <skos:notation>SDN:L05::121</skos:notation>
         <skos:prefLabel xml:lang="en">satellite tracking system</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A network of satellites that determines the position of a transponder by
-          triangulation such as Argos. Generally used to track surface buoys for the determination of Lagrangian
-          currents.
+        <skos:definition xml:lang="en">A network of satellites that determines the position of a transponder bytriangulation such as Argos. Generally used to track surface buoys for the determination of Lagrangiancurrents.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2016-03-10 06:50:01.0</dc:date>
@@ -5949,8 +5595,7 @@
         <skos:notation>SDN:L05::305</skos:notation>
         <skos:prefLabel xml:lang="en">scatterometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors that measure the reflection or scattering effect produced while scanning
-          the surface of the earth. Primarily used to measure near surface winds over the oceans.
+        <skos:definition xml:lang="en">Sensors that measure the reflection or scattering effect produced while scanningthe surface of the earth. Primarily used to measure near surface winds over the oceans.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:03:34.0</dc:date>
@@ -5973,8 +5618,7 @@
         <skos:notation>SDN:L05::111</skos:notation>
         <skos:prefLabel xml:lang="en">sea level recorders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that make smoothed measurements of the elevation of the sea surface
-          relative to a fixed vertical datum.
+        <skos:definition xml:lang="en">Instruments that make smoothed measurements of the elevation of the sea surfacerelative to a fixed vertical datum.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2015-11-30 12:50:09.0</dc:date>
@@ -6043,8 +5687,7 @@
         <skos:notation>SDN:L05::60</skos:notation>
         <skos:prefLabel xml:lang="en">sediment dredges</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Bucket-like containers hauled over the sea bed collecting integrated samples of
-          surface sediment along a segment of ship track.
+        <skos:definition xml:lang="en">Bucket-like containers hauled over the sea bed collecting integrated samples ofsurface sediment along a segment of ship track.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-07-20 08:06:54.0</dc:date>
@@ -6065,8 +5708,7 @@
         <skos:notation>SDN:L05::50</skos:notation>
         <skos:prefLabel xml:lang="en">sediment grabs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects a sample of surface sediment including manually deployed
-          equipment like a shovel or bucket.
+        <skos:definition xml:lang="en">A device that collects a sample of surface sediment including manually deployedequipment like a shovel or bucket.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -6093,8 +5735,7 @@
         <skos:notation>SDN:L05::52</skos:notation>
         <skos:prefLabel xml:lang="en">sediment porewater samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects samples of pore water from various horizons below the
-          seabed.
+        <skos:definition xml:lang="en">A device that collects samples of pore water from various horizons below theseabed.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -6114,8 +5755,7 @@
         <skos:notation>SDN:L05::378</skos:notation>
         <skos:prefLabel xml:lang="en">sediment profile imagers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that provide in-situ still or video images of a section including bottom
-          water, the undisturbed sediment-water interface and the upper sediment layers.
+        <skos:definition xml:lang="en">Devices that provide in-situ still or video images of a section including bottomwater, the undisturbed sediment-water interface and the upper sediment layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-04-22 15:18:44.0</dc:date>
@@ -6138,8 +5778,7 @@
         <skos:notation>SDN:L05::55</skos:notation>
         <skos:prefLabel xml:lang="en">sediment settling tubes</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A specialised water bottle that both collects water samples and provides a
-          settling velocity experiment apparatus.
+        <skos:definition xml:lang="en">A specialised water bottle that both collects water samples and provides asettling velocity experiment apparatus.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -6159,9 +5798,7 @@
         <skos:notation>SDN:L05::376</skos:notation>
         <skos:prefLabel xml:lang="en">sediment surface markers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Physical markers that allow changes in the position of the boundary between
-          sediment and air or water by visible comparison against marked graduations in units of measurement of
-          dimension length.
+        <skos:definition xml:lang="en">Physical markers that allow changes in the position of the boundary betweensediment and air or water by visible comparison against marked graduations in units of measurement ofdimension length.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-04-22 15:13:51.0</dc:date>
@@ -6206,8 +5843,7 @@
         <skos:notation>SDN:L05::155</skos:notation>
         <skos:prefLabel xml:lang="en">seismic refraction systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A network of seismometers or geophones plus an energy source that determine
-          geologic structure by detecting waves refracted by subsurface layers.
+        <skos:definition xml:lang="en">A network of seismometers or geophones plus an energy source that determinegeologic structure by detecting waves refracted by subsurface layers.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -6228,8 +5864,7 @@
         <skos:notation>SDN:L05::368</skos:notation>
         <skos:prefLabel xml:lang="en">seismometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices placed on the ground or seabed to measure physical movement of that
-          substrate.
+        <skos:definition xml:lang="en">Devices placed on the ground or seabed to measure physical movement of thatsubstrate.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -6253,8 +5888,7 @@
         <skos:notation>SDN:L05::81</skos:notation>
         <skos:prefLabel xml:lang="en">shipboard incubators</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device mounted on a ship that holds water samples under conditions of
-          controlled temperature or controlled temperature and illumination.
+        <skos:definition xml:lang="en">A device mounted on a ship that holds water samples under conditions ofcontrolled temperature or controlled temperature and illumination.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 15:47:47.0</dc:date>
@@ -6274,9 +5908,7 @@
         <skos:notation>SDN:L05::152</skos:notation>
         <skos:prefLabel xml:lang="en">sidescan sonars</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments with directional acoustic transmitters and receivers fitted to an
-          underwater platform that emit fan-shaped pulses down toward the seafloor across a wide angle perpendicular to
-          the path of the platform through the water.
+        <skos:definition xml:lang="en">Instruments with directional acoustic transmitters and receivers fitted to anunderwater platform that emit fan-shaped pulses down toward the seafloor across a wide angle perpendicular tothe path of the platform through the water.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -6301,8 +5933,7 @@
         <skos:notation>SDN:L05::84</skos:notation>
         <skos:prefLabel xml:lang="en">sieves and filters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices that separate solid particles larger than a particular size from a sample
-          collected by another device that is a suspension of solid particles in a liquid or gas.
+        <skos:definition xml:lang="en">Devices that separate solid particles larger than a particular size from a samplecollected by another device that is a suspension of solid particles in a liquid or gas.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -6329,8 +5960,7 @@
         <skos:notation>SDN:L05::156</skos:notation>
         <skos:prefLabel xml:lang="en">single-beam echosounders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure water depth at a single point below the platform by
-          timing pulses of sound reflected on the seafloor.
+        <skos:definition xml:lang="en">Instruments that measure water depth at a single point below the platform bytiming pulses of sound reflected on the seafloor.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -6367,8 +5997,7 @@
         <skos:notation>SDN:L05::SBAG</skos:notation>
         <skos:prefLabel xml:lang="en">single-bubble airgun</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Array of air gun tuned in order to obtain the necessary energy wile reducing the
-          size of the air guns.
+        <skos:definition xml:lang="en">Array of air gun tuned in order to obtain the necessary energy wile reducing thesize of the air guns.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -6388,8 +6017,7 @@
         <skos:notation>SDN:L05::153</skos:notation>
         <skos:prefLabel xml:lang="en">single-channel seismic reflection systems</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An energy source of unspecified frequency plus a single string of towed
-          hydrophones (streamer) that determine geologic structure by detecting waves reflected by subsurface layers.
+        <skos:definition xml:lang="en">An energy source of unspecified frequency plus a single string of towedhydrophones (streamer) that determine geologic structure by detecting waves reflected by subsurface layers.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2010-02-19 11:58:13.0</dc:date>
@@ -6423,8 +6051,7 @@
         <skos:notation>SDN:L05::56</skos:notation>
         <skos:prefLabel xml:lang="en">snow and ice samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A device that collects a sample of frozen seawater or accumulated frozen
-          precipitation.
+        <skos:definition xml:lang="en">A device that collects a sample of frozen seawater or accumulated frozenprecipitation.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -6471,8 +6098,7 @@
         <skos:notation>SDN:L05::LAB20</skos:notation>
         <skos:prefLabel xml:lang="en">spectrophotometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments measuring the relative absorption of electromagnetic radiation of
-          different wavelengths in the near infra-red, visible and ultraviolet wavebands by samples.
+        <skos:definition xml:lang="en">Instruments measuring the relative absorption of electromagnetic radiation ofdifferent wavelengths in the near infra-red, visible and ultraviolet wavebands by samples.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2011-04-15 14:18:31.0</dc:date>
@@ -6509,9 +6135,7 @@
         <skos:notation>SDN:L05::380</skos:notation>
         <skos:prefLabel xml:lang="en">submarine cables</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Electrical conductors routed beneath the sea and connecting land stations.
-          Oceanographic interest focuses on changes in electrical resistance that may be related to the magnitude of
-          Lagrangian currents.
+        <skos:definition xml:lang="en">Electrical conductors routed beneath the sea and connecting land stations.Oceanographic interest focuses on changes in electrical resistance that may be related to the magnitude ofLagrangian currents.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-09-15 10:32:05.0</dc:date>
@@ -6533,8 +6157,7 @@
         <skos:notation>SDN:L05::303</skos:notation>
         <skos:prefLabel xml:lang="en">surface current radars</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that measure the speed and direction of sea surface travel by timing
-          reflected radio waves.
+        <skos:definition xml:lang="en">Instruments that measure the speed and direction of sea surface travel by timingreflected radio waves.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -6556,8 +6179,7 @@
         <skos:notation>SDN:L05::306</skos:notation>
         <skos:prefLabel xml:lang="en">synthetic aperture radars</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that generate maps of radar reflectivity through the synthesis of
-          multiple pulses from a moving platform.
+        <skos:definition xml:lang="en">Instruments that generate maps of radar reflectivity through the synthesis ofmultiple pulses from a moving platform.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:21:12.0</dc:date>
@@ -6585,8 +6207,7 @@
         <skos:notation>SDN:L05::309</skos:notation>
         <skos:prefLabel xml:lang="en">terrestrial radiometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors that measure the intensity and nature of electromagnetic radiation in a
-          manner optimised for the quantification of terrestrial phenomena.
+        <skos:definition xml:lang="en">Sensors that measure the intensity and nature of electromagnetic radiation in amanner optimised for the quantification of terrestrial phenomena.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:23:53.0</dc:date>
@@ -6623,8 +6244,7 @@
         <skos:notation>SDN:L05::LAB28</skos:notation>
         <skos:prefLabel xml:lang="en">thermal conductivimeters</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Laboratory instruments that determine the thermal conductivity of rock or
-          sediment samples (including unopened cores).
+        <skos:definition xml:lang="en">Laboratory instruments that determine the thermal conductivity of rock orsediment samples (including unopened cores).
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-02-19 11:52:56.0</dc:date>
@@ -6644,10 +6264,7 @@
         <skos:notation>SDN:L05::LAB47</skos:notation>
         <skos:prefLabel xml:lang="en">thermal ionisation mass spectrometers</skos:prefLabel>
         <skos:altLabel>TIMS</skos:altLabel>
-        <skos:definition xml:lang="en">Instruments that measure isotopic ratios using thermal ionisation. Purified
-          samples are heated to cause ionisation of atoms.
-          Subsequently, ions are focused into a beam by an electromagnet and then separated into individual beams based
-          on their mass/charge ratio.
+        <skos:definition xml:lang="en">Instruments that measure isotopic ratios using thermal ionisation. Purifiedsamples are heated to cause ionisation of atoms.Subsequently, ions are focused into a beam by an electromagnet and then separated into individual beams basedon their mass/charge ratio.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2016-03-10 06:44:44.0</dc:date>
@@ -6667,8 +6284,7 @@
         <skos:notation>SDN:L05::135</skos:notation>
         <skos:prefLabel xml:lang="en">thermistor chains</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A group of rigidly-mounted temperature sensors sampled by a common data logger
-          held at various depths in the water column.
+        <skos:definition xml:lang="en">A group of rigidly-mounted temperature sensors sampled by a common data loggerheld at various depths in the water column.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -6693,8 +6309,7 @@
         <skos:notation>SDN:L05::133</skos:notation>
         <skos:prefLabel xml:lang="en">thermosalinographs</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Temperature and conductivity sensors mounted on a sea-surface platform
-          continuously measuring a surface water supply.
+        <skos:definition xml:lang="en">Temperature and conductivity sensors mounted on a sea-surface platformcontinuously measuring a surface water supply.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -6722,9 +6337,7 @@
         <skos:notation>SDN:L05::TFSAMP</skos:notation>
         <skos:prefLabel xml:lang="en">thin film metal samplers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Metal samplers comprising a filter, a diffusive gel layer and a resin layer that
-          scavenge trace metals by diffusion from water bodies or in-situ sediment pore waters. A constant concentration
-          gradient is set up in the gel from which the metal concentration in the sampled medium may be determined.
+        <skos:definition xml:lang="en">Metal samplers comprising a filter, a diffusive gel layer and a resin layer thatscavenge trace metals by diffusion from water bodies or in-situ sediment pore waters. A constant concentrationgradient is set up in the gel from which the metal concentration in the sampled medium may be determined.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2013-04-23 12:55:37.0</dc:date>
@@ -6744,8 +6357,7 @@
         <skos:notation>SDN:L05::LAB12</skos:notation>
         <skos:prefLabel xml:lang="en">titrators</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that incrementally add quantified aliquites of a reagent to a sample
-          until the end-point of a chemical reaction is reached.
+        <skos:definition xml:lang="en">Instruments that incrementally add quantified aliquites of a reagent to a sampleuntil the end-point of a chemical reaction is reached.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2008-01-10 16:10:12.0</dc:date>
@@ -6777,8 +6389,7 @@
         <skos:notation>SDN:L05::TRTG</skos:notation>
         <skos:prefLabel xml:lang="en">tracking tags</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices attached to living organisms with the purpose of determining the location
-          of those organisms as a function of time after tagging and release.
+        <skos:definition xml:lang="en">Devices attached to living organisms with the purpose of determining the locationof those organisms as a function of time after tagging and release.
         </skos:definition>
         <owl:versionInfo>2</owl:versionInfo>
         <dc:date>2015-08-04 12:15:32.0</dc:date>
@@ -6798,8 +6409,7 @@
         <skos:notation>SDN:L05::124</skos:notation>
         <skos:prefLabel xml:lang="en">transmissometers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Systems that measure the attenuation of electromagnetic radiation by the water
-          column. Includes human observer plus Secchi Disk.
+        <skos:definition xml:lang="en">Systems that measure the attenuation of electromagnetic radiation by the watercolumn. Includes human observer plus Secchi Disk.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
@@ -6837,8 +6447,7 @@
         <skos:notation>SDN:L05::51</skos:notation>
         <skos:prefLabel xml:lang="en">unconsolidated sediment corers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Devices designed to collect samples of unconsolidated sediment from between the
-          surface and depths from centimetres to 10s of metres with minimal disturbance of the sediment structure.
+        <skos:definition xml:lang="en">Devices designed to collect samples of unconsolidated sediment from between thesurface and depths from centimetres to 10s of metres with minimal disturbance of the sediment structure.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2014-11-12 11:08:53.0</dc:date>
@@ -6863,8 +6472,7 @@
         <skos:notation>SDN:L05::180</skos:notation>
         <skos:prefLabel xml:lang="en">underwater cameras</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">All types of photographic equipment that may be deployed underwater including
-          stills, video, film and digital systems.
+        <skos:definition xml:lang="en">All types of photographic equipment that may be deployed underwater includingstills, video, film and digital systems.
         </skos:definition>
         <owl:versionInfo>4</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -6888,8 +6496,7 @@
         <skos:notation>SDN:L05::999</skos:notation>
         <skos:prefLabel xml:lang="en">unknown</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">The correct value is not known to and not computable by the creator of this
-          information. However a correct value probably exists.
+        <skos:definition xml:lang="en">The correct value is not known to and not computable by the creator of thisinformation. However a correct value probably exists.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 08:50:03.0</dc:date>
@@ -6910,8 +6517,7 @@
         <skos:notation>SDN:L05::LAB35</skos:notation>
         <skos:prefLabel xml:lang="en">voltammetry analysers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instruments that obtain information about an analyte by applying a potential and
-          measuring the current produced in the analyte.
+        <skos:definition xml:lang="en">Instruments that obtain information about an analyte by applying a potential andmeasuring the current produced in the analyte.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2012-08-02 14:41:42.0</dc:date>
@@ -6932,8 +6538,7 @@
         <skos:notation>SDN:L05::302</skos:notation>
         <skos:prefLabel xml:lang="en">water body temperature sensor</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors that measure the intensity and nature of electromagnetic radiation
-          emitted from the Earth in a manner optimised for the determination of water body surface temperature.
+        <skos:definition xml:lang="en">Sensors that measure the intensity and nature of electromagnetic radiationemitted from the Earth in a manner optimised for the determination of water body surface temperature.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2010-11-19 14:27:24.0</dc:date>
@@ -6967,9 +6572,7 @@
         <skos:notation>SDN:L05::377</skos:notation>
         <skos:prefLabel xml:lang="en">water level markers</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Fixed physical markers that allow changes in the position of the boundary between
-          a water body and the atmosphere by visible comparison against marked graduations in units of measurement of
-          dimension length.
+        <skos:definition xml:lang="en">Fixed physical markers that allow changes in the position of the boundary betweena water body and the atmosphere by visible comparison against marked graduations in units of measurement ofdimension length.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-04-22 15:16:00.0</dc:date>
@@ -6989,9 +6592,7 @@
         <skos:notation>SDN:L05::WPS</skos:notation>
         <skos:prefLabel xml:lang="en">water pressure sensors</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Sensors measuring hydrostatic pressure that are capable of withstanding the
-          physical demands made by in-situ measurements in water bodies. Depending upon the mode of deployment they may
-          measure sea level, waves, mooring performance or the depth of a profiling instrument.
+        <skos:definition xml:lang="en">Sensors measuring hydrostatic pressure that are capable of withstanding thephysical demands made by in-situ measurements in water bodies. Depending upon the mode of deployment they maymeasure sea level, waves, mooring performance or the depth of a profiling instrument.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2015-02-11 09:24:01.0</dc:date>
@@ -7027,8 +6628,7 @@
         <skos:notation>SDN:L05::134</skos:notation>
         <skos:prefLabel xml:lang="en">water temperature sensor</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">An instrument that measures the temperature of the water with which it is in
-          contact.
+        <skos:definition xml:lang="en">An instrument that measures the temperature of the water with which it is incontact.
         </skos:definition>
         <owl:versionInfo>3</owl:versionInfo>
         <dc:date>2013-02-26 17:11:07.0</dc:date>
@@ -7258,10 +6858,7 @@
         <skos:notation>SDN:L05::SNWG</skos:notation>
         <skos:prefLabel xml:lang="en">watergun</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">A marine seismic energy source divided into two chambers, the firing chamber,
-          which contains compressed air, and the other chamber, which is filled with water. When the gun is fired, the
-          compressed air forces the shuttle downward and this expels the water from the lower chamber. The shot of water
-          leaving the gun creates a void behind it and the collapse of water into this void creates an acoustic wave.
+        <skos:definition xml:lang="en">A marine seismic energy source divided into two chambers, the firing chamber,which contains compressed air, and the other chamber, which is filled with water. When the gun is fired, thecompressed air forces the shuttle downward and this expels the water from the lower chamber. The shot of waterleaving the gun creates a void behind it and the collapse of water into this void creates an acoustic wave.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2010-10-18 13:23:56.0</dc:date>
@@ -7281,8 +6878,7 @@
         <skos:notation>SDN:L05::110</skos:notation>
         <skos:prefLabel xml:lang="en">wave recorders</skos:prefLabel>
         <skos:altLabel/>
-        <skos:definition xml:lang="en">Instrument that measures water column surface wave parameters including height,
-          period, direction and energy spectra.
+        <skos:definition xml:lang="en">Instrument that measures water column surface wave parameters including height,period, direction and energy spectra.
         </skos:definition>
         <owl:versionInfo>1</owl:versionInfo>
         <dc:date>2007-11-20 09:34:40.0</dc:date>
