@@ -1378,12 +1378,6 @@
            */
           createLayerForType: function(type, opt) {
             switch (type) {
-              case 'mapquest':
-                return new ol.layer.Tile({
-                  style: 'Road',
-                  source: new ol.source.MapQuest({layer: 'osm'}),
-                  title: 'MapQuest'
-                });
               case 'osm':
                 return new ol.layer.Tile({
                   source: new ol.source.OSM(),
@@ -1393,8 +1387,7 @@
                 return new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: 'Ak-dzM4wZjSqTlzveKz5u0d4I' +
-                        'Q4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+                    key: 'AlYStuHjo5oENzCHRK6sHv88lMcs_HEHS3bEyLKoyMt1cQlaKYFS5sWC9rK51ckk',
                     imagerySet: 'Aerial'
                   }),
                   title: 'Bing Aerial'
