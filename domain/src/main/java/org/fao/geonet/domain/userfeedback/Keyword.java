@@ -31,46 +31,91 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
 
+/**
+ * A Keyword associated with a user feedback, like a tag.
+ */
 @Entity(name = "GUF_Keywords")
 @Table(name = "GUF_Keywords")
+@SequenceGenerator(name = Keyword.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class Keyword extends GeonetEntity implements Serializable {
 
+    /** The Constant ID_SEQ_NAME. */
+    static final String ID_SEQ_NAME = "gufkey_id_seq";
+
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -5828055384917117874L;
 
+    /** The id. */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = Keyword.ID_SEQ_NAME)
     private long id;
 
+    /** The value. */
     @Column
     private String value;
 
+    /** The userfeedbacks. */
     @ManyToMany(mappedBy = "keywords")
     private List<UserFeedback> userfeedbacks;
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * Gets the userfeedbacks.
+     *
+     * @return the userfeedbacks
+     */
     public List<UserFeedback> getUserfeedbacks() {
         return userfeedbacks;
     }
 
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id
+     *            the new id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * Sets the userfeedbacks.
+     *
+     * @param userfeedbacks
+     *            the new userfeedbacks
+     */
     public void setUserfeedbacks(List<UserFeedback> userfeedbacks) {
         this.userfeedbacks = userfeedbacks;
     }
 
+    /**
+     * Sets the value.
+     *
+     * @param value
+     *            the new value
+     */
     public void setValue(String value) {
         this.value = value;
     }

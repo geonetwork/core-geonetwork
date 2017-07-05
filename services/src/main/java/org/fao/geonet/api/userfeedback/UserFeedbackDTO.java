@@ -28,147 +28,454 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * A DTO to represent a user feedback entity 
+ * optimized for GUI and front end use.
+ */
 public class UserFeedbackDTO implements Serializable {
 
-    private static final long serialVersionUID = -5923736997554126836L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -5923736997554126836L;
 
-    private String uuid;
-    private String comment;
-    private Integer ratingAVG;
-    private Integer ratingCOMPLETE;
-    private Integer ratingREADABILITY;
-    private Integer ratingFINDABILITY;
-    private Integer ratingOTHER;
-    private String metadataUUID;
-    private int authorUserId;
-    private String authorName;
-    private String authorOrganization;
-    private String approverName;
+  /** The uuid. */
+  private String uuid;
 
-    @JsonProperty("keywords")
-    private List<String> keywords;
+  /** The comment. */
+  private String comment;
 
-    private Date date;
-    private boolean showApproveButton;
+  /** The rating AVG. */
+  private Integer ratingAVG;
 
-    public String getApproverName() {
-        return approverName;
-    }
+  /** The rating COMPLETE. */
+  private Integer ratingCOMPLETE;
 
-    public String getAuthorName() {
-        return authorName;
-    }
+  /** The rating READABILITY. */
+  private Integer ratingREADABILITY;
 
-    public String getAuthorOrganization() {
-        return authorOrganization;
-    }
+  /** The rating FINDABILITY. */
+  private Integer ratingFINDABILITY;
 
-    public int getAuthorUserId() {
-        return authorUserId;
-    }
+  /** The rating OTHER. */
+  private Integer ratingOTHER;
 
-    public String getComment() {
-        return comment;
-    }
+  /** The metadata UUID. */
+  private String metadataUUID;
 
-    public Date getDate() {
-        return date;
-    }
+  /** The author user id. */
+  private Integer authorUserId;
 
-    public List<String> getKeywords() {
-        return keywords;
-    }
+  /** The author name. */
+  private String authorName;
 
-    public String getMetadataUUID() {
-        return metadataUUID;
-    }
+  /** The author email. */
+  private String authorEmail;
 
-    public Integer getRatingAVG() {
-        return ratingAVG;
-    }
+  /** The author organization. */
+  private String authorOrganization;
 
-    public Integer getRatingCOMPLETE() {
-        return ratingCOMPLETE;
-    }
+  /** The approver name. */
+  private String approverName;
 
-    public Integer getRatingFINDABILITY() {
-        return ratingFINDABILITY;
-    }
+  /** The option privacy. */
+  private boolean optionPrivacy;
 
-    public Integer getRatingOTHER() {
-        return ratingOTHER;
-    }
+  /** The published. */
+  private boolean published;
 
-    public Integer getRatingREADABILITY() {
-        return ratingREADABILITY;
-    }
+  /** The parent uuid. */
+  private String parentUuid;
 
-    public String getUuid() {
-        return uuid;
-    }
+  /** The date. */
+  private Date date;
 
-    public boolean isShowApproveButton() {
-        return showApproveButton;
-    }
+  /** The metadata title. */
+  private String metadataTitle;
 
-    public void setApproverName(String approverName) {
-        this.approverName = approverName;
-    }
+  /** The keywords. */
+  @JsonProperty("keywords")
+  private List<String> keywords;
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
+  /** The show approve button. */
+  private boolean showApproveButton;
 
-    public void setAuthorOrganization(String authorOrganization) {
-        this.authorOrganization = authorOrganization;
-    }
+  /**
+   * Gets the approver name.
+   *
+   * @return the approver name
+   */
+  public String getApproverName() {
+    return approverName;
+  }
 
-    public void setAuthorUserId(int authorUserId) {
-        this.authorUserId = authorUserId;
-    }
+  /**
+   * Gets the author email.
+   *
+   * @return the author email
+   */
+  public String getAuthorEmail() {
+    return authorEmail;
+  }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+  /**
+   * Gets the author name.
+   *
+   * @return the author name
+   */
+  public String getAuthorName() {
+    return authorName;
+  }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+  /**
+   * Gets the author organization.
+   *
+   * @return the author organization
+   */
+  public String getAuthorOrganization() {
+    return authorOrganization;
+  }
 
-    public void setKeywords(List<String> keywords) {
-        this.keywords = keywords;
-    }
+  /**
+   * Gets the author user id.
+   *
+   * @return the author user id
+   */
+  public Integer getAuthorUserId() {
+    return authorUserId;
+  }
 
-    public void setMetadataUUID(String metadataUUID) {
-        this.metadataUUID = metadataUUID;
-    }
+  /**
+   * Gets the comment.
+   *
+   * @return the comment
+   */
+  public String getComment() {
+    return comment;
+  }
 
-    public void setRatingAVG(Integer ratingAVG) {
-        this.ratingAVG = ratingAVG;
-    }
+  /**
+   * Gets the date.
+   *
+   * @return the date
+   */
+  public Date getDate() {
+    return date;
+  }
 
-    public void setRatingCOMPLETE(Integer ratingCOMPLETE) {
-        this.ratingCOMPLETE = ratingCOMPLETE;
-    }
+  /**
+   * Gets the keywords.
+   *
+   * @return the keywords
+   */
+  public List<String> getKeywords() {
+    return keywords;
+  }
 
-    public void setRatingFINDABILITY(Integer ratingFINDABILITY) {
-        this.ratingFINDABILITY = ratingFINDABILITY;
-    }
+  /**
+   * Gets the metadata title.
+   *
+   * @return the metadata title
+   */
+  public String getMetadataTitle() {
+    return metadataTitle;
+  }
 
-    public void setRatingOTHER(Integer ratingOTHER) {
-        this.ratingOTHER = ratingOTHER;
-    }
+  /**
+   * Gets the metadata UUID.
+   *
+   * @return the metadata UUID
+   */
+  public String getMetadataUUID() {
+    return metadataUUID;
+  }
 
-    public void setRatingREADABILITY(Integer ratingREADABILITY) {
-        this.ratingREADABILITY = ratingREADABILITY;
-    }
+  /**
+   * Gets the parent uuid.
+   *
+   * @return the parent uuid
+   */
+  public String getParentUuid() {
+    return parentUuid;
+  }
 
-    public void setShowApproveButton(boolean showApproveButton) {
-        this.showApproveButton = showApproveButton;
-    }
+  /**
+   * Gets the rating AVG.
+   *
+   * @return the rating AVG
+   */
+  public Integer getRatingAVG() {
+    return ratingAVG;
+  }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+  /**
+   * Gets the rating COMPLETE.
+   *
+   * @return the rating COMPLETE
+   */
+  public Integer getRatingCOMPLETE() {
+    return ratingCOMPLETE;
+  }
+
+  /**
+   * Gets the rating FINDABILITY.
+   *
+   * @return the rating FINDABILITY
+   */
+  public Integer getRatingFINDABILITY() {
+    return ratingFINDABILITY;
+  }
+
+  /**
+   * Gets the rating OTHER.
+   *
+   * @return the rating OTHER
+   */
+  public Integer getRatingOTHER() {
+    return ratingOTHER;
+  }
+
+  /**
+   * Gets the rating READABILITY.
+   *
+   * @return the rating READABILITY
+   */
+  public Integer getRatingREADABILITY() {
+    return ratingREADABILITY;
+  }
+
+  /**
+   * Gets the uuid.
+   *
+   * @return the uuid
+   */
+  public String getUuid() {
+    return uuid;
+  }
+
+  /**
+   * Checks if is option privacy.
+   *
+   * @return true, if is option privacy
+   */
+  public boolean isOptionPrivacy() {
+    return optionPrivacy;
+  }
+
+  /**
+   * Checks if is published.
+   *
+   * @return true, if is published
+   */
+  public boolean isPublished() {
+    return published;
+  }
+
+  /**
+   * Checks if is show approve button.
+   *
+   * @return true, if is show approve button
+   */
+  public boolean isShowApproveButton() {
+    return showApproveButton;
+  }
+
+  /**
+   * Sets the approver name.
+   *
+   * @param approverName
+   *          the new approver name
+   */
+  public void setApproverName(String approverName) {
+    this.approverName = approverName;
+  }
+
+  /**
+   * Sets the author email.
+   *
+   * @param authorEmail
+   *          the new author email
+   */
+  public void setAuthorEmail(String authorEmail) {
+    this.authorEmail = authorEmail;
+  }
+
+  /**
+   * Sets the author name.
+   *
+   * @param authorName
+   *          the new author name
+   */
+  public void setAuthorName(String authorName) {
+    this.authorName = authorName;
+  }
+
+  /**
+   * Sets the author organization.
+   *
+   * @param authorOrganization
+   *          the new author organization
+   */
+  public void setAuthorOrganization(String authorOrganization) {
+    this.authorOrganization = authorOrganization;
+  }
+
+  /**
+   * Sets the author user id.
+   *
+   * @param authorUserId
+   *          the new author user id
+   */
+  public void setAuthorUserId(Integer authorUserId) {
+    this.authorUserId = authorUserId;
+  }
+
+  /**
+   * Sets the comment.
+   *
+   * @param comment
+   *          the new comment
+   */
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
+
+  /**
+   * Sets the date.
+   *
+   * @param date
+   *          the new date
+   */
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  /**
+   * Sets the keywords.
+   *
+   * @param keywords
+   *          the new keywords
+   */
+  public void setKeywords(List<String> keywords) {
+    this.keywords = keywords;
+  }
+
+  /**
+   * Sets the metadata title.
+   *
+   * @param metadataTitle
+   *          the new metadata title
+   */
+  public void setMetadataTitle(String metadataTitle) {
+    this.metadataTitle = metadataTitle;
+  }
+
+  /**
+   * Sets the metadata UUID.
+   *
+   * @param metadataUUID
+   *          the new metadata UUID
+   */
+  public void setMetadataUUID(String metadataUUID) {
+    this.metadataUUID = metadataUUID;
+  }
+
+  /**
+   * Sets the option privacy.
+   *
+   * @param optionPrivacy
+   *          the new option privacy
+   */
+  public void setOptionPrivacy(boolean optionPrivacy) {
+    this.optionPrivacy = optionPrivacy;
+  }
+
+  /**
+   * Sets the parent uuid.
+   *
+   * @param parentUuid
+   *          the new parent uuid
+   */
+  public void setParentUuid(String parentUuid) {
+    this.parentUuid = parentUuid;
+  }
+
+  /**
+   * Sets the published.
+   *
+   * @param published
+   *          the new published
+   */
+  public void setPublished(boolean published) {
+    this.published = published;
+  }
+
+  /**
+   * Sets the rating AVG.
+   *
+   * @param ratingAVG
+   *          the new rating AVG
+   */
+  public void setRatingAVG(Integer ratingAVG) {
+    this.ratingAVG = ratingAVG;
+  }
+
+  /**
+   * Sets the rating COMPLETE.
+   *
+   * @param ratingCOMPLETE
+   *          the new rating COMPLETE
+   */
+  public void setRatingCOMPLETE(Integer ratingCOMPLETE) {
+    this.ratingCOMPLETE = ratingCOMPLETE;
+  }
+
+  /**
+   * Sets the rating FINDABILITY.
+   *
+   * @param ratingFINDABILITY
+   *          the new rating FINDABILITY
+   */
+  public void setRatingFINDABILITY(Integer ratingFINDABILITY) {
+    this.ratingFINDABILITY = ratingFINDABILITY;
+  }
+
+  /**
+   * Sets the rating OTHER.
+   *
+   * @param ratingOTHER
+   *          the new rating OTHER
+   */
+  public void setRatingOTHER(Integer ratingOTHER) {
+    this.ratingOTHER = ratingOTHER;
+  }
+
+  /**
+   * Sets the rating READABILITY.
+   *
+   * @param ratingREADABILITY
+   *          the new rating READABILITY
+   */
+  public void setRatingREADABILITY(Integer ratingREADABILITY) {
+    this.ratingREADABILITY = ratingREADABILITY;
+  }
+
+  /**
+   * Sets the show approve button.
+   *
+   * @param showApproveButton
+   *          the new show approve button
+   */
+  public void setShowApproveButton(boolean showApproveButton) {
+    this.showApproveButton = showApproveButton;
+  }
+
+  /**
+   * Sets the uuid.
+   *
+   * @param uuid
+   *          the new uuid
+   */
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
 }

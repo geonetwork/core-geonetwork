@@ -80,6 +80,7 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.events.md.MetadataIndexCompleted;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
@@ -115,6 +116,7 @@ import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -2079,6 +2081,9 @@ public class DataManager implements ApplicationEventPublisherAware {
     private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
         //--- remove operations
         deleteMetadataOper(context, id, false);
+        
+        //--- remove user comments
+        deleteMetadataUserFeedback_byMetadataId(context, id);
 
         int intId = Integer.parseInt(id);
         getApplicationContext().getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
@@ -2159,6 +2164,27 @@ public class DataManager implements ApplicationEventPublisherAware {
             );
         } else {
             operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(metadataId));
+        }
+    }
+    
+    /**
+     * Removes all userfeedbacks associated with metadata.
+     */
+    public void deleteMetadataUserFeedback_byMetadataId(ServiceContext context, String metadataId) throws Exception {
+        
+        UserFeedbackRepository userfeedbackRepository = context.getBean(UserFeedbackRepository.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+
+        Metadata metadata = metadataRepository.findOne(metadataId);
+        
+        List<UserFeedback> list = userfeedbackRepository.findByMetadata_Uuid(metadata.getUuid());
+        
+        if(list.size() > 0) {
+            
+            for (UserFeedback userFeedback : list) {
+                userfeedbackRepository.delete(userFeedback);
+            }
+            
         }
     }
 

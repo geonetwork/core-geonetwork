@@ -35,50 +35,76 @@ import org.fao.geonet.domain.userfeedback.UserFeedback;
  */
 public interface IUserFeedbackService {
 
-    /**
-     * Publishes a user feedback.
-     *
-     * @param feedbackUuid
-     * @param user
-     */
-    void publishUserFeedback(String feedbackUuid, User user);
+  /**
+   * Publishes a user feedback.
+   *
+   * @param feedbackUuid
+   *          the feedback uuid
+   * @param user
+   *          the user
+   */
+  void publishUserFeedback(String feedbackUuid, User user);
 
-    /**
-     * Deletes a user feedback.
-     *
-     * @param feedbackUuid
-     */
-    void removeUserFeedback(String feedbackUuid);
+  /**
+   * Deletes a user feedback.
+   *
+   * @param feedbackUuid
+   *          the feedback uuid
+   */
+  void removeUserFeedback(String feedbackUuid);
 
-    /**
-     * Retrieves the ratings associated to metadata.
-     *
-     * @param feedbackUuid
-     * @return
-     */
-    public List<Rating> retrieveMetadataRatings(String metadataUuid);
+  /**
+   * Retrieves the ratings associated to metadata.
+   *
+   * @param metadataUuid
+   *          the metadata uuid
+   * @param published
+   *          the published
+   * @return the list
+   */
+  public List<Rating> retrieveMetadataRatings(String metadataUuid, boolean published);
 
-    /**
-     * Retrieves a user feedback by identifier.
-     *
-     * @param feedbackUuid
-     * @return
-     */
-    UserFeedback retrieveUserFeedback(String feedbackUuid);
+  /**
+   * Retrieves the list of user feedback for a metadata.
+   *
+   * @param maxSize
+   *          the max size
+   * @param published
+   *          the published
+   * @return the list
+   */
+  List<UserFeedback> retrieveUserFeedback(int maxSize, boolean published);
 
-    /**
-     * Retrieves the list of user feedback for a metadata.
-     *
-     * @param metadataUuid
-     * @return
-     */
-    List<UserFeedback> retrieveUserFeedbackForMetadata(String metadataUuid, int maxSize);
+  /**
+   * Retrieves a user feedback by identifier.
+   *
+   * @param feedbackUuid
+   *          the feedback uuid
+   * @param published
+   *          the published
+   * @return the user feedback
+   */
+  UserFeedback retrieveUserFeedback(String feedbackUuid, boolean published);
 
-    /**
-     * Saves a user feedback.
-     *
-     * @param userFeedback
-     */
-    void saveUserFeedback(UserFeedback userFeedback);
+  /**
+   * Retrieves the list of user feedback for a metadata.
+   *
+   * @param metadataUuid
+   *          the metadata uuid
+   * @param maxSize
+   *          the max size
+   * @param published
+   *          the published
+   * @return the list
+   */
+  List<UserFeedback> retrieveUserFeedbackForMetadata(String metadataUuid, int maxSize, boolean published);
+
+  /**
+   * Saves a user feedback.
+   *
+   * @param userFeedback
+   *          the user feedback
+   */
+  void saveUserFeedback(UserFeedback userFeedback);
 
 }
