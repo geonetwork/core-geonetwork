@@ -168,7 +168,7 @@
       /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnWpsService
-       * @name gnWpsService#printExecuteMessage
+       * @name gnWpsService#execute
        *
        * @description
        * Prints a WPS Execute message as XML to be posted to a WPS service.
