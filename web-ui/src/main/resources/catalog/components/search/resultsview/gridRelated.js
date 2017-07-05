@@ -82,12 +82,12 @@
             if (related) {
               scope.types = gnGridRelatedList.types;
               var hasProp = false;
-              for (var p in related ) {
-                if(related[p]) {
+              for (var p in related) {
+                if (related[p]) {
                   hasProp = true;
                 }
               }
-              if(hasProp) {
+              if (hasProp) {
                 scope.relations = related;
               }
             }

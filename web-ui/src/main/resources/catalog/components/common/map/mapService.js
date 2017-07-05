@@ -743,13 +743,31 @@
                     break;
                   }
                 }
+              } else if (layer.defaultSRS) {
+                var mapProjection = map.getView().
+                    getProjection().getCode();
+                var srs = layer.defaultSRS;
+                if ((srs.indexOf('urn:ogc:def:crs:EPSG::') === 0) ||
+                    (srs.indexOf('urn:x-ogc:def:crs:EPSG::') === 0)) {
+                  srs = 'EPSG:' + srs.split('::')[srs.split('::').length - 1];
+                } else if ((srs.indexOf('urn:ogc:def:crs:EPSG:') === 0) ||
+                           (srs.indexOf('urn:x-ogc:def:crs:EPSG:') === 0)) {
+                  srs = 'EPSG:' + srs.split(':')[srs.split(':').length - 1];
+                }
+                if (srs === mapProjection) {
+                  isLayerAvailableInMapProjection = true;
+                }
               } else if (layer.otherSRS) {
                 var mapProjection = map.getView().
                     getProjection().getCode();
                 for (var i = 0; i < layer.otherSRS.length; i++) {
                   var srs = layer.otherSRS[i];
-                  if (srs.indexOf('urn:ogc:def:crs:EPSG::') === 0) {
-                    srs = 'EPSG:' + srs.split('::')[1];
+                  if ((srs.indexOf('urn:ogc:def:crs:EPSG::') === 0) ||
+                      (srs.indexOf('urn:x-ogc:def:crs:EPSG::') === 0)) {
+                    srs = 'EPSG:' + srs.split('::')[srs.split('::').length - 1];
+                  } else if ((srs.indexOf('urn:ogc:def:crs:EPSG:') === 0) ||
+                             (srs.indexOf('urn:x-ogc:def:crs:EPSG:') === 0)) {
+                    srs = 'EPSG:' + srs.split(':')[srs.split(':').length - 1];
                   }
                   if (srs === mapProjection) {
                     isLayerAvailableInMapProjection = true;
@@ -856,7 +874,8 @@
                       });
                 },
                 strategy: ol.loadingstrategy.bbox,
-                projection: map.getView().getProjection().getCode()
+                projection: map.getView().getProjection().getCode(),
+                url: url
               });
 
               var extent = null;

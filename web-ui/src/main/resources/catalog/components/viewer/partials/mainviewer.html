@@ -116,6 +116,12 @@
              active="addLayerTabs.wmts">
           <div gn-wms-import="wmts" gn-wms-import-map="map"></div>
         </tab>
+        <tab heading="{{'LayerWFS' | translate}}"
+             active="addLayerTabs.wfs">
+          <div gn-wms-import="wfs"
+               gn-wms-import-map="map"
+               services-list-from-catalog="true"></div>
+        </tab>
         <tab heading="{{'LayerKML' | translate}}"
              active="addLayerTabs.kml">
           <div gn-kml-import="" gn-kml-import-map="map"></div>

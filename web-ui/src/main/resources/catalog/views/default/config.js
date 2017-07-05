@@ -154,6 +154,21 @@
             });
           }
 
+          // Map protocols used to load layers/services in the map viewer
+          searchSettings.mapProtocols = {
+            layers: [
+              'OGC:WMS',
+              'OGC:WMS-1.1.1-http-get-map',
+              'OGC:WMS-1.3.0-http-get-map',
+              'OGC:WFS'
+              ],
+            services: [
+              'OGC:WMS-1.3.0-http-get-capabilities',
+              'OGC:WMS-1.1.1-http-get-capabilities',
+              'OGC:WFS-1.0.0-http-get-capabilities'
+              ]
+          };
+
           // Set custom config in gnSearchSettings
           angular.extend(searchSettings, {
             viewerMap: viewerMap,

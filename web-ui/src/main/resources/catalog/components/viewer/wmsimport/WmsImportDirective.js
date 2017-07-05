@@ -69,7 +69,7 @@
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
-              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer);
+              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer, $scope.url);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wmts') {
@@ -128,20 +128,22 @@
           var type = scope.format.toUpperCase();
           var event = 'requestCapLoad' + type;
           scope.$on(event, function(e, url) {
-            var button = $('[data-gn-import-button=' + type + ']');
-            if (button) {
-              var panel = button.parents('.panel-tools'),
-                  toolId = panel && panel.attr('id');
-              if (toolId) {
-                $timeout(function() {
-                  var menu = $('*[rel=#' + toolId + ']');
-                  if (!menu.hasClass('active')) {
-                    menu.click();
+            var addLayersPanel = $('[id=addLayers]');
+            if (addLayersPanel) {
+              $timeout(function() {
+                addLayersPanel.removeClass('force-hide');
+
+                var layerTypeTab = $('[heading=' + type + ']');
+                if (layerTypeTab && !layerTypeTab.hasClass('active')) {
+                  var layerTypeAction = layerTypeTab.find('a');
+
+                  if (layerTypeAction) {
+                    layerTypeAction.click();
                   }
-                });
-              }
+                }
+              });
             }
-            scope.url = url;
+            scope.setUrl(url);
           });
 
           scope.setUrl = function(srv) {
