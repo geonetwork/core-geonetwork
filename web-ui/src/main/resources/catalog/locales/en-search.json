@@ -168,6 +168,7 @@
   "overview": "Overview",
   "chooseAView": "Display mode",
   "metadataContact": "Contact for the metadata",
+  "showRetired": "Show retired metadata",
   "metadataRemoved": "{{title}} removed.",
   "extent": "Spatial extent",
   "aboutThisResource": "About this resource",

@@ -52,6 +52,7 @@
         sortbyValues: gnSearchSettings.sortbyValues,
         hitsperpageValues: gnSearchSettings.hitsperpageValues,
         selectionBucket: 'e101',
+        showRetired: true,
         params: {
           sortBy: 'changeDate',
           _isTemplate: 'y or n or s',
@@ -61,6 +62,8 @@
         }
       };
       angular.extend($scope.searchObj, $scope.defaultSearchObj);
+      // Do not use the _status filter in the editor dashboard
+      delete $scope.searchObj.params._status;
 
       $scope.toggleOnlyMyRecord = function() {
         $scope.onlyMyRecord = !$scope.onlyMyRecord;

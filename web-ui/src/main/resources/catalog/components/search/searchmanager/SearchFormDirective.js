@@ -290,12 +290,13 @@
     /**
      * update $scope.params by merging it with given params
      * @param {!Object} params
+     * @param {boolean} resetAdditionalFields true if others fields must be reseted.
      */
     this.updateSearchParams = function(params) {
       angular.extend($scope.searchObj.params, params);
     };
 
-    this.resetSearch = function(searchParams) {
+    this.resetSearch = function(searchParams, resetAdditionalFields) {
 
       $scope.$broadcast('beforeSearchReset');
 
@@ -312,6 +313,15 @@
 
       self.resetPagination(customPagination);
       $scope.currentFacets = [];
+
+      if (resetAdditionalFields) {
+        $scope.searchObj.showRetired = false;
+        if (angular.isUndefined($scope.searchObj.defaultParams)) {
+          $scope.searchObj.defaultParams = {};
+        }
+        $scope.searchObj.defaultParams._status = "0 or 1 or 2 or 4 or 5";
+      }
+
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
     };
@@ -332,6 +342,20 @@
 
     $scope.triggerSearch = this.triggerSearch;
     $scope.triggerWildSubtemplateSearch = this.triggerWildSubtemplateSearch;
+
+    $scope.$watch("searchObj.showRetired", function(newValue, oldValue) {
+      if (newValue) {
+        delete $scope.searchObj.params._status;
+        delete $scope.searchObj.defaultParams._status;
+      } else {
+        if (angular.isUndefined($scope.searchObj.params._status)) {
+          if (angular.isUndefined($scope.searchObj.defaultParams)) {
+            $scope.searchObj.defaultParams = {};
+          }
+          $scope.searchObj.defaultParams._status = "0 or 1 or 2 or 4 or 5";
+        }
+      }
+    });
   };
 
   searchFormController['$inject'] = [
@@ -352,14 +376,24 @@
         controller: searchFormController,
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
+          if (!attrs.showRetired) {
+            if (angular.isUndefined(scope.searchObj.defaultParams)) {
+              scope.searchObj.defaultParams = {};
+            }
+            scope.searchObj.defaultParams._status = '0 or 1 or 2 or 4 or 5';
+          }
 
-          scope.resetSearch = function(htmlElementOrDefaultSearch) {
+          scope.resetSearch = function(htmlElementOrDefaultSearch, resetAdditionalFields) {
+            var resetOtherFields = true;
+            if (!angular.isUndefined(resetAdditionalFields)) {
+              resetOtherFields = resetAdditionalFields;
+            }
             //TODO: remove geocat ref
             $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
             if (angular.isObject(htmlElementOrDefaultSearch)) {
-              scope.controller.resetSearch(htmlElementOrDefaultSearch);
+              scope.controller.resetSearch(htmlElementOrDefaultSearch, resetOtherFields);
             } else {
-              scope.controller.resetSearch();
+              scope.controller.resetSearch(null, resetOtherFields);
               $(htmlElementOrDefaultSearch).focus();
             }
           };
