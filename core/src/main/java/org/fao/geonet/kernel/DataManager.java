@@ -52,6 +52,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
+
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.datamanager.IMetadataCategory;
@@ -65,6 +66,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.repository.UserGroupRepository;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Document;

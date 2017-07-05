@@ -28,8 +28,18 @@ import org.fao.geonet.domain.userfeedback.Rating;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * The Interface RatingRepository.
+ */
 public interface RatingRepository extends JpaRepository<UserFeedback, Long> {
 
+    /**
+     * Find by metadata uuid.
+     *
+     * @param metadataUuid
+     *            the metadata uuid
+     * @return the list
+     */
     List<Rating> findByMetadata_Uuid(String metadataUuid);
 
 }

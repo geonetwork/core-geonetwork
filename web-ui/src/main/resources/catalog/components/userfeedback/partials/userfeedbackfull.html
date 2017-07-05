@@ -1,7 +1,6 @@
 <div>
 	<button class="btn btn-default btn-sm" data-toggle="modal"
-		data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments">See
-		all feedback</button>
+		data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments" data-translate="">GUFseeAllFeedbacks</button>
 
 
 	<!-- All comments modal -->
@@ -15,67 +14,55 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h4 class="modal-title" id="myModalLabel">Ratings & Comments</h4>
+					<h4 class="modal-title" id="myModalLabel" data-translate="">GUFratingsComments</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
 							<h2>{{rating.metadataTitle}}</h2>
-							<p>
-								{{rating.userfeedbackCount}} comments, last comment on {{rating.lastComment | date:'medium'}}.  
-							</p>
+							<p data-translate="" data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}', date:'{{rating.lastComment | date:'medium'}}'}">GUFcommentsLastCommentOn</p>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-7">
 
 							<div class="gn-userfeedback-title">
-								<h3>{{rating.userfeedbackCount}} Reviews</h3>
+								<h3 data-translate="" data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}'}">countReviews</h3>
 							</div>
 							<ul class="gn-userfeedback-list">
 
 								<li class="gn-userfeedback-item clearfix"
-									data-ng-repeat="row in fullCommentsList" data-ng-show="row.comment">
+									data-ng-repeat="row in fullCommentsList">
 									<div class="pull-left btn btn-warning gn-userfeedback-image">
 										<span class="fa fa-user"></span>
 									</div>
 									<div class="pull-left gn-userfeedback-comment-user">
 										<a>{{row.authorName}}</a>
 										<p>{{row.comment}}</p>
-										<p class="gn-userfeedback-reply">
-											{{row.date | date:'medium'}}
+										<span data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/
+											5 <span class="fa fa-fw fa-star">&nbsp;</span>
+										</span>
+										<p class="gn-userfeedback-reply" data-ng-show="loggedIn">
+											{{row.date | date:'medium'}}&nbsp;-&nbsp; <span
+												data-ng-hide="{{row.published}}"><a
+												data-ng-click="publish(row.uuid)" data-translate="">GUFpublishUserFeedback</a>&nbsp;|&nbsp;</span> <a
+												data-ng-click="deleteC(row.uuid)" data-translate="">GUFdeleteUserFeedback</a>
 										</p>
+										<p class="gn-userfeedback-reply" data-ng-hide="loggedIn">
+											{{row.date | date:'medium'}}</p>
 									</div>
 								</li>
-
-								<!-- li class="gn-userfeedback-item">
-                  <ul class="gn-userfeedback-list">
-                    <li class="gn-userfeedback-item clearfix">
-                      <div class="pull-left btn btn-success gn-userfeedback-image">
-                        <span class="fa fa-rocket"></span>
-                      </div>
-                      <div class="pull-left gn-userfeedback-comment-user">
-                        <a>Ikke</a>
-                        <p>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultrices ligula urna. Ut cursus, mauris sed auctor accumsan, quam ligula gravida lectus, ut condimentum velit sem a risus.
-                        </p>
-                        <p class="gn-userfeedback-reply">
-                          <a>Reply</a> | <a>Share</a>
-                        </p>
-                      </div>
-                    </li  -->
-
 							</ul>
 
 						</div>
 						<div class="col-md-5 hidden">
 							<div class="gn-userfeedback-title">
-								<h3>Add a review</h3>
+								<h3 data-translate="">GUFaddReview</h3>
 							</div>
 							<textarea class="form-control gn-userfeedback-comment-area">
                 
               </textarea>
-							<button type="button" class="btn btn-primary">Add</button>
+							<button type="button" class="btn btn-primary" data-translate="">GUFaddRating</button>
 						</div>
 					</div>
 				</div>
@@ -91,7 +78,7 @@
               <li><a href="">Add rating</a></li>
             </ul>
           </div> -->
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="">GUFclose</button>
 				</div>
 			</div>
 		</div>
