@@ -87,3 +87,4 @@ web/src/main/webapp/WEB-INF/data/node_less_files
 web/src/main/webapp/WEB-INF/data/node_less_files/gn_dynamic_style.json
 schemas/*/doc/*/*.rst
 *.old
+

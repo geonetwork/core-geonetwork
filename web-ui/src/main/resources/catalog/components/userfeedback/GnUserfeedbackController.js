@@ -22,36 +22,42 @@
  */
 
 (function() {
-  goog.provide('gn_userfeedback_controller');
-  
-  var module = angular.module('gn_userfeedback_controller', ['ui.bootstrap.modal', 'ui.bootstrap.tpls']);
+	goog.provide('gn_userfeedback_controller');
 
-  module.controller('gnUserfeedbackController', [
-    '$scope', '$http', 'gnConfig', '$modal', '$document',
-    function($scope, $http, gnConfig, $modal, $document) {
-    	
-    
-    	
-    }  	      
-   
-  ]);
-  
-  
-  module.controller('gnUserfeedbackControllerFull', [
-	    '$scope', '$http', 'gnConfig', '$modal', '$document',
-	    function($scope, $http, gnConfig, $modal, $document) {
+	var module = angular.module('gn_userfeedback_controller', ['ui.bootstrap.modal', 'ui.bootstrap.tpls']);
 
-	    }  		      
-	   
-	  ]);
-  
-  module.controller('gnUserfeedbackControllerNew', [
-	    '$scope', '$http', 'gnConfig', '$modal', '$document',
-	    function($scope, $http, gnConfig, $modal, $document) {
+	module.controller('gnUserfeedbackController', [
+		'$scope', '$http', 'gnConfig', '$modal', '$document',
+		function($scope, $http, gnConfig, $modal, $document) {
 
-	    }  		      
-	   
-	  ]);
-  
+		}  	      
+
+		]);
+
+
+	module.controller('gnUserfeedbackControllerFull', [
+		'$scope', '$http', 'gnConfig', '$modal', '$document',
+		function($scope, $http, gnConfig, $modal, $document) {
+
+		}  		      
+
+		]);
+
+	module.controller('gnUserfeedbackControllerNew', [
+		'$scope', '$http', 'gnConfig', '$modal', '$document',
+		function($scope, $http, gnConfig, $modal, $document) {
+
+		}
+
+		]);
+
+	module.controller('gnUserfeedbackControllerLast', [
+		'$scope', '$http', 'gnConfig', '$modal', '$document',
+		function($scope, $http, gnConfig, $modal, $document) {
+
+		}
+
+		]);
+
 
 })();
