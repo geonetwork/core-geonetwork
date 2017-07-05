@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="row gn-row-topics" data-ng-show="searchInfo.count > 0">
-    <div class="col-sm-8" data-ng-show="browse !== ''">
+    <div class="col-sm-12 col-md-9" data-ng-show="browse !== ''">
       <h4>
         <span data-translate="">browseBy</span>
         <span
@@ -58,7 +58,8 @@
       </h4>
       <div class="row">
         <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['topicCats']"
-              data-ng-show="browse === 'topics'">
+              data-ng-show="browse === 'topics'"
+              class="col-xs-6 col-sm-6 col-md-4">
           <div class="badge-result badge-result-topic clearfix">
             <a class="pull-left clearfix"
                title="{{facet['@label']}}"
@@ -75,7 +76,8 @@
         </span>
         <span id="chips-card"
               data-ng-repeat="(key, facet) in searchInfo.facet['inspireThemesURI'] track by $index"
-              data-ng-show="browse === 'inspire'">
+              data-ng-show="browse === 'inspire'"
+              class="col-xs-6 col-sm-6 col-md-4">
           <div class="badge-result badge-result-inspire clearfix">
             <a class="pull-left clearfix bg-iti-{{facet['@name'].slice(facet['@name'].lastIndexOf('/')+1)}}"
                title="{{facet['@label']}}"
@@ -92,13 +94,14 @@
         </span>
       </div>
     </div>
-    <div class="col-sm-4" data-ng-show="searchInfo.facet['types'].length > 0">
+    <div class="col-sm-12 col-md-3" data-ng-show="searchInfo.facet['types'].length > 0">
       <h4>
         <span data-translate="">browseTypes</span>
       </h4>
       <div class="row">
           <span id="chips-card" data-ng-repeat="(key, facet) in searchInfo.facet['types']"
-                data-ng-show="facet['@label']">
+                data-ng-show="facet['@label']"
+                class="col-xs-6 col-sm-6 col-md-12">
             <div class="badge-result badge-result-type pull-left">
               <a title="{{facet['@label']}}"
                  class="pull-left clearfix"
@@ -117,7 +120,7 @@
     </div>
   </div>
   <div class="row gn-row-info" data-ng-show="searchInfo.count > 0">
-    <div class="col-xs-12">
+    <div class="col-sm-12">
       <tabset id="info-tabset">
         <tab heading="{{'lastRecords' | translate}}"
              active="infoTabs.lastRecords.active">
