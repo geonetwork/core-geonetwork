@@ -1111,5 +1111,7 @@
     "ui-viewerMapLayers": "Viewer Map Layers",
     "ui-viewerMapLayers-help": "Optional. Define here background layers to add on top of layers in the default map context.",
     "ui-disabledTools": "Optional Map Viewer Tools",
-    "ui-disabledTools-help": "You can decide to show or hide these tools in the map viewer. Selected tools will be shown to the users."
+    "ui-disabledTools-help": "You can decide to show or hide these tools in the map viewer. Selected tools will be shown to the users.",
+    "ui-graticuleOgcService": "OGC Service to use as graticule",
+    "ui-graticuleOgcService-help": "Optional. For now, only WMS services are supported."
 }

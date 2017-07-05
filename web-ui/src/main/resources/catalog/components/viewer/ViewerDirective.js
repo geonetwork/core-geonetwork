@@ -234,6 +234,12 @@
                   scope.selectedWps.url = openedTool.url;
                 }
               }, true);
+
+              // ogc graticule
+              var ogcGraticule = gnViewerSettings.mapConfig.graticuleOgcService;
+              if (ogcGraticule && ogcGraticule.layer && ogcGraticule.url) {
+                scope.graticuleOgcService = ogcGraticule;
+              }
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
               //TODO: find another solution to render the map
