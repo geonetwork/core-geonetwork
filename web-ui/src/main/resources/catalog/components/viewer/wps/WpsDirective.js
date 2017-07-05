@@ -56,8 +56,10 @@
     '$timeout',
     'wfsFilterService',
     '$window',
+    'gnGeometryService',
+    'gnViewerService',
     function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
-      $window) {
+      $window, gnGeometryService, gnViewerService) {
 
       var inputTypes = {
         string: 'text',
@@ -145,6 +147,14 @@
                   // Bind input directly in link object
                   scope.processDescription = response.processDescription[0];
 
+                  // check if we need to get into 'profile graph' mode
+                  // FIXME: look for an actual way to determine the output type...
+                  if (scope.processDescription.identifier.value == 'script:computemultirasterprofile') {
+                    scope.outputAsGraph = true;
+                  } else {
+                    scope.outputAsGraph = false;
+                  }
+
                   angular.forEach(scope.processDescription.dataInputs.input,
                     function(input) {
 
@@ -195,13 +205,48 @@
                             .slice(0, 4).join(',');
                         }
                       }
+                      // complex data: a feature will have to be drawn by the user
+                      if (input.complexData != undefined) {
+                        // this will be a {ol.Feature} object once drawn
+                        input.feature = null;
+                        input.value = null;
+
+                        // output format
+                        input.outputFormat = gnGeometryService
+                          .getFormatFromMimeType(
+                            input.complexData._default.format.mimeType
+                          ) || 'gml';
+
+                        // guess geometry type from schema url
+                        var url = input.complexData._default.format.schema;
+                        var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
+                        switch (result && result[1] ?
+                          result[1].toLowerCase() : null) {
+                          case 'line':
+                            input.geometryType = 'LineString'
+                            break;
+
+                          case 'point':
+                            input.geometryType = 'Point'
+                            break;
+
+                          case 'polygon':
+                            input.geometryType = 'Polygon'
+                            break;
+
+                          // TODO: add other types?
+
+                          default:
+                            input.geometryType = null;
+                        }
+                      }
                     }
                   );
 
                   angular.forEach(
                     scope.processDescription.processOutputs.output,
                     function(output, idx) {
-                      output.asReference = true;
+                      output.asReference = scope.outputAsGraph ? false : true;;
 
                       // untested code
                       var outputDefault = defaults &&
@@ -365,6 +410,15 @@
                 }
               }
               scope.executeResponse = response;
+
+              // save raw graph data on view controller & hide it in wps form
+              if (scope.outputAsGraph) {
+                gnViewerService.displayProfileGraph(
+                  response.processOutputs.output[0]
+                    .data.complexData.content
+                );
+                scope.executeResponse = null;
+              }
             };
 
             var processUri = attrs['uri'] || scope.wpsLink.url;
