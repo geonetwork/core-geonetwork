@@ -286,8 +286,12 @@
       <span class="fa fa-minus"></span>
       <span role="tooltip" data-translate="">ZoomOut</span>
     </button>
-    <button gn-graticule-btn="map" class="btn btn-default" type="submit">
+
+    <!-- graticule: hidden if no layer info given -->
+    <button gn-graticule-btn="map" class="btn btn-default" type="submit"
+      ng-if="graticule" graticule-ogc-service="graticule">
     </button>
+
     <button class="btn btn-default" type="submit" sxt-full-screen="map">
       <span class="fa fa-expand"></span>
       <span role="tooltip" data-translate="">fullScreen</span>

@@ -228,6 +228,9 @@
                   return p.name;
                 }
               }
+
+              // graticule OGC layer (optional)
+              scope.graticule = gnViewerSettings.graticule;
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 
