@@ -1046,7 +1046,7 @@
                     finishCreation();
                   }
                   else {
-                    $this.feedLayerMd(olL).finally (finishCreation);
+                    $this.feedLayerMd(olL).finally(finishCreation);
                   }
                 }
 
@@ -1110,46 +1110,64 @@
            * Return a promise with ol.Layer as data is succeed, and url/name
            * if failure.
            * If createOnly, we don't add the layer to the map.
+           * If the md object is given, we add it to the layer, or we try
+           * to retrieve it in the catalog
            *
            * @param {ol.Map} map to add the layer
            * @param {string} url of the service
            * @param {string} name of the layer
            * @param {boolean} createOnly or add it to the map
+           * @param {!Object} md object
            */
-          addWmtsFromScratch: function(map, url, name, createOnly) {
+          addWmtsFromScratch: function(map, url, name, createOnly, md) {
             var defer = $q.defer();
             var $this = this;
 
-            gnWmsQueue.add(url, name);
-            gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
+            if (!isLayerInMap(map, name, url)) {
+              gnWmsQueue.add(url, name);
+              gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
-              var capL = gnOwsCapabilities.getLayerInfoFromCap(name, capObj);
-              if (!capL) {
+                var capL = gnOwsCapabilities.getLayerInfoFromCap(
+                  name, capObj, md && md.getUuid());
+                if (!capL) {
+                  var o = {
+                    url: url,
+                    name: name,
+                    msg: 'layerNotInCap'
+                  };
+                  gnWmsQueue.error(o);
+                  defer.reject(o);
+                }
+                else {
+                  var olL = $this.createOlWMTSFromCap(map, capL, capObj);
+
+                  var finishCreation = function() {
+                    if (!createOnly) {
+                      map.addLayer(olL);
+                    }
+                    gnWmsQueue.removeFromQueue(url, name);
+                    defer.resolve(olL);
+                  };
+
+                  // attach the md object to the layer
+                  if (md) {
+                    olL.set('md', md);
+                    finishCreation();
+                  }
+                  else {
+                    $this.feedLayerMd(olL).finally(finishCreation);
+                  }
+                }
+              }, function() {
                 var o = {
                   url: url,
                   name: name,
-                  msg: 'layerNotInCap'
+                  msg: 'getCapFailure'
                 };
                 gnWmsQueue.error(o);
                 defer.reject(o);
-              }
-              else {
-                var olL = $this.createOlWMTSFromCap(map, capL, capObj);
-                if (!createOnly) {
-                  map.addLayer(olL);
-                }
-                gnWmsQueue.removeFromQueue(url, name);
-                defer.resolve(olL);
-              }
-            }, function() {
-              var o = {
-                url: url,
-                name: name,
-                msg: 'getCapFailure'
-              };
-              gnWmsQueue.error(o);
-              defer.reject(o);
-            });
+              });
+            }
             return defer.promise;
           },
 
@@ -1342,6 +1360,26 @@
               });
               ngeoDecorateLayer(olLayer);
               olLayer.displayInLayerManager = true;
+
+              // add link to metadata
+              if (angular.isArray(layer.MetadataURL)) {
+                var metadata = layer.MetadataURL[0].OnlineResource;
+                olLayer.set('metadataUrl', metadata);
+
+                var params = gnUrlUtils.parseKeyValue(
+                    metadata.split('?')[1]);
+                var uuid = params.uuid || params.id;
+                if (!uuid) {
+                  var res = new RegExp(/\#\/metadata\/(.*)/g).
+                      exec(metadata);
+                  if (angular.isArray(res) && res.length == 2) {
+                    uuid = res[1];
+                  }
+                }
+                if (uuid) {
+                  olLayer.set('metadataUuid', uuid);
+                }
+              }
 
               return olLayer;
             }
