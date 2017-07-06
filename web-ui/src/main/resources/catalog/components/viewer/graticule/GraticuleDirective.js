@@ -150,7 +150,7 @@
             })
           });
           graticule.background = true;  // do not save it in context
-          // graticule.setZIndex(100);    // TODO: uncomment after OL upgrade
+          graticule.setZIndex(1000);    // TODO: uncomment after OL upgrade
           graticule.setVisible(false);  // hidden by default
           map.addLayer(graticule);
 
