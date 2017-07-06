@@ -21,6 +21,7 @@
               name="gnFeedbackForm"
               data-ng-submit="send(gnFeedbackForm, '#gn-contact-md-form')"
               id="gn-contact-md-form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="modal-body">
             <div data-ng-if="!success">
               <div class="">

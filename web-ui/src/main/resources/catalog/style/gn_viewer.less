@@ -10,6 +10,12 @@
 .gn-main-viewer {
   position: relative;
 
+  [role=tooltip] {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    right: 0;
+  }
+
   .gn-layertree-filter {
     margin: 0 0 15px 0px;
     position:relative;
@@ -102,21 +108,25 @@
       width: 2.8em;
       transition: background @transition-params;
       &.active {
-        width: 3.1em;
+        width: 3.0em;
         border-left: medium none;
         border-radius: 0px;
-        margin-left: -0.3em;
+        margin-left: -0.2em;
         background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.7);
         border-color: transparent;
         color: #FFF;
       }
+    }
+
+    .tools-spacer {
+      height: 1.4em;
     }
   }
   .control-tools {
     top: auto;
     bottom: @viewport-padding;
   }
-  .panel {
+  & > .panel {
     background: rgba(255,255,255,.8);
   }
   .panel-tools {
@@ -129,7 +139,7 @@
     max-width: ~"calc(100% - 4em)";
     overflow-y: auto;
     transition: opacity @transition-params;
-    div[gn-layermanager-item] {
+    li[gn-layermanager-item] {
       .fa-arrows-alt,.gn-layer-ordering {
         opacity: 0;
         transition: opacity @transition-params;
@@ -145,7 +155,6 @@
       }
     }
     .list-group-item {
-      background: inherit;
       transition: max-height @transition-params;
       .btn-cog {
          float: right;
@@ -612,13 +621,34 @@ gn-features-tables, .gn-viewer-info-pane {
 gn-wps-process-form {
   .popover-parent {
     position: relative;
-    .dropdown-menu {
-      padding:5px;
-    }
   }
 
   ul {
     list-style: none;
+  }
+
+  .panel {
+    background: none;
+    margin-bottom: 0px;
+    border: none;
+    box-shadow: none;
+
+    .panel-heading {
+      height: 2em;
+      line-height: 1.6em;
+
+      .close {
+        margin-right: -0.2em;
+      }
+    }
+
+    .panel-body {
+      padding: 0px;
+    }
+  }
+
+  .form-group .btn-group.output-selection {
+    display: inline-block;
   }
 }
 

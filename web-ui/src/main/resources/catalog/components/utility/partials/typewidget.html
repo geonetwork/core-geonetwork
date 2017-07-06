@@ -1,0 +1,9 @@
+<div class="valid-status{{metadata.valid}} md-type-{{metadata.isTemplate}}"
+  title="{{('isTemplate' + metadata.isTemplate) | translate}} ({{('validStatus-' + metadata.valid) | translate}})"
+  ng-switch="metadata.isTemplate">
+  <i class="fa fa-fw fa-file" ng-switch-when="y" />
+  <i class="fa fa-fw fa-file-text" ng-switch-when="n" />
+  <i class="fa fa-fw fa-bookmark" ng-switch-when="s" />
+  <i class="fa fa-fw fa-bookmark-o" ng-switch-when="t" />
+  <i class="fa fa-fw fa-question" ng-switch-default />
+</div>

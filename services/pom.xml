@@ -169,6 +169,12 @@
       <artifactId>jackson-xml-databind</artifactId>
       <version>0.6.2</version>
     </dependency>
+
+    <!-- Apache commons csv -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

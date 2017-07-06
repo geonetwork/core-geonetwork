@@ -38,6 +38,7 @@
     var DPI = 72;
     var MM_PER_INCHES = 25.4;
     var UNITS_RATIO = 39.37;
+    var METERS_PER_DEGREE = 222638.98158654716;
 
     /**
      * Get the map coordinates of the center of the given print rectangle.
@@ -69,8 +70,9 @@
       var s = parseFloat(scale.value);
       var size = layout.map; // papersize in dot!
       var view = map.getView();
-      var center = view.getCenter();
-      var resolution = view.getResolution();
+      var ratio = map.getView().getProjection().getCode() == 'EPSG:4326' ?
+        METERS_PER_DEGREE : 1;
+      var resolution = view.getResolution() * ratio;
       var w = size.width / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
       var h = size.height / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
       var mapSize = map.getSize();
@@ -96,7 +98,9 @@
      */
     this.getOptimalScale = function(map, scales, layout) {
       var size = map.getSize();
-      var resolution = map.getView().getResolution();
+      var ratio = map.getView().getProjection().getCode() == 'EPSG:4326' ?
+        METERS_PER_DEGREE : 1;
+      var resolution = map.getView().getResolution() * ratio;
       var width = resolution * (size[0] - (options.widthMargin * 2));
       var height = resolution * (size[1] - (options.heightMargin * 2));
       var layoutSize = layout.map;

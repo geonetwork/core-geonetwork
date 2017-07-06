@@ -24,7 +24,10 @@
 (function() {
   goog.provide('gn_utility_directive');
 
+  goog.require('gn_popover');
+
   var module = angular.module('gn_utility_directive', [
+    'gn_popover'
   ]);
 
   module.directive('gnConfirmClick', [
@@ -603,9 +606,8 @@
         // context menu is not covered;
       }
     };
-
-
   });
+
   /**
    * Make an element able to collapse/expand
    * the next element. An icon is added before
@@ -1163,11 +1165,25 @@
       }}
   ]);
   module.filter('newlines', function() {
-    return function(text) {
-      if (text) {
-        return text.replace(/(\r)?\n/g, '<br/>');
+    return function(value) {
+      if(angular.isArray(value)) {
+        var finalText = '';
+        angular.forEach(value, function(value, key) {
+          if(value) {
+            finalText +=  '<p>' + value + '</p>';
+          } 
+        });
+
+        return finalText;
+
+      } else if(angular.isString(value)) {
+        if (value) {
+          return value.replace(/(\r)?\n/g, '<br/>');
+        } else {
+          return value;
+        }
       } else {
-        return text;
+        return value;
       }
     }
   });

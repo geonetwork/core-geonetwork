@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans
+<beans profile="es"
         xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:amq="http://activemq.apache.org/schema/core"
@@ -14,13 +14,13 @@
 
   <context:annotation-config/>
 
-  <context:property-placeholder location="WEB-INF/config.properties"
+  <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
 
   <amq:broker useJmx="false" persistent="false" useShutdownHook="false">
     <amq:transportConnectors>
-      <amq:transportConnector uri="${jms.url}" />
+      <amq:transportConnector uri="\${jms.url}" />
     </amq:transportConnectors>
   </amq:broker>
   <!--  Embedded ActiveMQ Broker
@@ -57,13 +57,13 @@
         class="org.apache.activemq.camel.component.ActiveMQComponent" destroy-method="shutdown">
     <property name="connectionFactory">
       <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="${jms.url}"/>
+        <property name="brokerURL" value="\${jms.url}"/>
       </bean>
     </property>
   </bean>
 
   <bean id="jmsMessager"
         class="org.geonetwork.messaging.JMSMessager">
-    <property name="jmsUrl" value="${jms.url}"/>
+    <property name="jmsUrl" value="\${jms.url}"/>
   </bean>
 </beans>

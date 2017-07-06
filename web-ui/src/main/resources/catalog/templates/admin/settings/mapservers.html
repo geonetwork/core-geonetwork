@@ -54,6 +54,7 @@
         <form id="gn-mapserver-edit" name="gnMapServerEdit"
               class="form-horizontal"
               data-ng-keypress="updatingMapServer()">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <fieldset>
             <legend data-translate="">mapserverDescription</legend>
             <input type="hidden" name="id"
@@ -208,6 +209,7 @@
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
             <div class="form-group">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <label class="control-label col-sm-3" data-translate="">username</label>
 
               <div class="col-sm-9">

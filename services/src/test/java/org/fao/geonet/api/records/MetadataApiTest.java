@@ -24,6 +24,7 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Params;
@@ -31,6 +32,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
@@ -49,7 +51,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.imageio.ImageIO;
@@ -61,18 +62,34 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 
 /**
@@ -245,6 +262,19 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl(entry.getValue()));
         }
+    }
+
+    @Test
+    public void getRecordThruSpringLocalServiceInvoker() throws Exception {
+        MockMvcBuilders.webAppContextSetup(this.wac).build();
+        loginAsAdmin();
+        SpringLocalServiceInvoker toTest = super._applicationContext.getBean(SpringLocalServiceInvoker.class);
+        super._applicationContext.getBean(NodeInfo.class).setId("theNode");
+        toTest.init();
+
+        Object resp = toTest.invoke("local://theNode/api/records/" + uuid + "/formatters/xml");
+
+        assertEquals("MD_Metadata", ((Element)resp).getName());
     }
 
     @Test

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+				http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+        		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd">
+
+
+	<context:component-scan base-package="org.fao.geonet.repository" />
+	<context:annotation-config />
+
+	<tx:annotation-driven />
+	<jpa:repositories base-package="org.fao.geonet.repository"
+		factory-class="org.fao.geonet.repository.GeonetRepositoryFactoryBean"
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager" />
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="jdbcDataSource" />
+		<property name="packagesToScan" value="org.fao.geonet.domain" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+		<property name="jpaPropertyMap" ref="jpaPropertyMap" />
+	</bean>
+	<bean lazy-init="true" id="jpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="generateDdl" ref="generateDdl" />
+		<property name="showSql" value="false" />
+		<property name="database" value="POSTGRESQL" />
+	</bean>
+
+	<bean id="generateDdl" class="java.lang.String" scope="singleton">
+		<constructor-arg value="true" />
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="packagesToScan">
+			<list>
+				<value>org.fao.geonet.repository.*</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
+				<prop key="hibernate.connection.url">jdbc:postgresql://172.20.0.2/geonetwork</prop>
+				<prop key="hibernate.connection.username">postgres</prop>
+				<prop key="hibernate.connection.password">password</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">none</prop>
+			</props>
+		</property>
+	</bean>
+
+	<util:map id="jpaPropertyMap">
+		<entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
+		<entry key="javax.persistence.lock.timeout" value="30000" />
+		<entry key="org.hibernate.flushMode" value="AUTO" />
+		<entry key="access" value="PROPERTY" />
+		<entry key="hibernate.id.new_generator_mappings" value="true" />
+		<entry key="hibernate.cache.use_second_level_cache" value="true" />
+		<!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/> -->
+		<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+		<entry key="hibernate.jdbc.batch_size" value="3" />
+		<entry key="hibernate.jdbc.batch_versioned_data" value="true" />
+		<entry key="hibernate.enable_lazy_load_no_trans" value="true" />
+	</util:map>
+
+	<bean id="jdbcDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="Url" value="jdbc:postgresql://172.20.0.2/geonetwork" />
+		<property name="username" value="postgres" />
+		<property name="password" value="postgres" />
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+</beans>  

@@ -19,6 +19,7 @@
   <div class="row" data-ng-show="editing">
         <form class="" role="form"
           data-ng-keyup="handleKeyUp($event.keyCode)">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
                 <div class="form-group col-sm-4">
         <select
           class="form-control"

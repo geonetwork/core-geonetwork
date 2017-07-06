@@ -7,5 +7,14 @@
         <span data-translate="">{{options.title}}</span></h4>
     </div>
     <div class="modal-body" data-ng-transclude=""></div>
+    <div class="modal-footer" ng-if="options.confirmCallback">
+      <button data-dismiss="modal" class="btn btn-primary"
+        data-ng-click="options.confirmCallback()">
+        {{'confirm' | translate}}
+      </button>
+      <button data-dismiss="modal" class="btn btn-default">
+        {{'cancel' | translate}}
+      </button>
+    </div>
   </div>
 </div>

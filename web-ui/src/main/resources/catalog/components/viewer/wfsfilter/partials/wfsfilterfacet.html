@@ -1,4 +1,5 @@
 <form name="wfsFilterForm">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <!--WFS not available alert-->
   <div data-ng-show="isWfsAvailable == false" class="alert alert-warning">
@@ -105,6 +106,14 @@
         <span data-translate="">applyFilter</span>
       </button>
       <button  ng-if="::sextant" class="btn btn-default btn-xs"
+    <div class="btn-group dropup">
+      <a class="btn btn-default btn-xs"
+         data-ng-if="!isFeaturesIndexed && (user.canEditRecord(md) || md.isHarvested == 'y')"
+         data-ng-click="indexWFSFeatures('1.0.0')">
+        <i class="fa fa-codiepie"></i>&nbsp;
+        <span data-translate="">indexWFSFeatures</span>
+      </a>
+      <a class="btn btn-default btn-xs"
          title="{{'refresh' | translate}}"
          data-ng-click="initIndexRequest()">
         <i class="fa fa-refresh"></i>

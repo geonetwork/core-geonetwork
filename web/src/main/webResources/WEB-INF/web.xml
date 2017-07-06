@@ -438,4 +438,9 @@
   <session-config>
     <session-timeout>${sessionTimeout}</session-timeout>
   </session-config>
+
+  <context-param>
+    <param-name>spring.profiles.active</param-name>
+    <param-value>${es.spring.profile}</param-value>
+  </context-param>
 </web-app>

@@ -414,7 +414,6 @@
             }
           });
 
-
       loadHarvesterTypes();
 
 

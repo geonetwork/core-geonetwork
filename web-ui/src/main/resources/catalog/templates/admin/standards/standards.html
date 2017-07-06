@@ -37,6 +37,7 @@
       <div class="panel-heading" data-translate="">addOrUpdateStandards</div>
       <div class="panel-body">
         <form id="gn-standard-add" action="admin.standards.add@json">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <div class="form-group">
             <label class="control-label" data-translate="">standardName</label>
             <input type="text" name="schema" class="form-control"/>

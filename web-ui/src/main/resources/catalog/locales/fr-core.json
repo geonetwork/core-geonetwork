@@ -338,5 +338,6 @@
     "link-children": "enfants",
     "link-parent": "parents",
     "link-sources": "Est une source pour",
-    "link-hassources": "Données sources"
+    "link-hassources": "Données sources",
+    "applyFilter": "Filtrer"
 }

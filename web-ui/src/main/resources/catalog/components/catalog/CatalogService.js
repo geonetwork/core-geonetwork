@@ -85,6 +85,23 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnMetadataManager#validateDirectoryEntry
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Validate a directory entry (shared object) from catalog
+         *
+         * @param {string} id Internal id of the directory entry
+         * @param {bool} newState true is validated, false is rejected
+         * @return {HttpPromise} Future object
+         */
+        validateDirectoryEntry: function(id, newState) {
+          var param = '?isvalid=' + (newState ? 'true' : 'false');
+          return $http.put('../api/records/' + id + '/validate' + param);
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#copy
            * @methodOf gnMetadataManager
@@ -97,7 +114,9 @@
            * @param {string} id Internal id of the metadata to be copied.
            * @param {string} groupId Internal id of the group of the metadata
            * @param {boolean} withFullPrivileges privileges to assign.
-           * @param {boolean} isTemplate type of the metadata
+           * @param {boolean|string} isTemplate type of the metadata (bool is
+           *  for TEMPLATE, other values are SUB_TEMPLATE and
+           *  TEMPLATE_OF_SUB_TEMPLATE)
            * @param {boolean} isChild is child of a parent metadata
            * @param {string} metadataUuid , the uuid of the metadata to create
            *                 (when metadata uuid is set to manual)
@@ -105,10 +124,27 @@
            */
         copy: function(id, groupId, withFullPrivileges,
             isTemplate, isChild, metadataUuid) {
+          // new md type determination
+          var mdType;
+          switch (isTemplate) {
+            case 'TEMPLATE_OF_SUB_TEMPLATE':
+              mdType = 'TEMPLATE_OF_SUB_TEMPLATE';
+              break;
+
+            case 'SUB_TEMPLATE':
+              mdType = 'SUB_TEMPLATE';
+              break;
+
+            case 'TEMPLATE':
+            case true:
+              mdType = 'TEMPLATE';
+              break;
+
+            default: mdType = 'METADATA';
+          }
+
           var url = gnUrlUtils.toKeyValue({
-            metadataType: isTemplate ?
-                (isTemplate === 'SUB_TEMPLATE' ? 'SUB_TEMPLATE' : 'TEMPLATE') :
-                'METADATA',
+            metadataType: mdType,
             sourceUuid: id,
             isChildOfSource: isChild ? 'true' : 'false',
             group: groupId,
@@ -188,11 +224,34 @@
          * Get the metadata js object from catalog. Trigger a search and
          * return a promise.
          * @param {string} uuid of the metadata
+         * @param {string} isTemplate optional isTemplate value (s, t...)
          * @return {HttpPromise} of the $http get
          */
         getMdObjByUuid: function(uuid) {
           return $http.get('q?_uuid=' + uuid + '' +
-              '&fast=index&_content_type=json&buildSummary=false').
+              '&fast=index&_content_type=json&buildSummary=false' +
+              (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
+              then(function(resp) {
+                return new Metadata(resp.data.metadata);
+              });
+        },
+
+        /**
+         * @ngdoc method
+         * @name gnMetadataManager#getMdObjById
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Get the metadata js object from catalog. Trigger a search and
+         * return a promise.
+         * @param {string} id of the metadata
+         * @param {string} isTemplate optional isTemplate value (s, t...)
+         * @return {HttpPromise} of the $http get
+         */
+        getMdObjById: function(id, isTemplate) {
+          return $http.get('q?_id=' + id + '' +
+              '&fast=index&_content_type=json&buildSummary=false' +
+              (isTemplate !== undefined ? '&_isTemplate=' + isTemplate : '')).
               then(function(resp) {
                 return new Metadata(resp.data.metadata);
               });
@@ -206,7 +265,7 @@
          * @description
          * Update the metadata object
          *
-         * @param {object } md to reload
+         * @param {object} md to reload
          * @return {HttpPromise} of the $http get
          */
         updateMdObj: function(md) {
@@ -483,8 +542,8 @@
         'securityConstraints', 'resourceConstraints', 'legalConstraints',
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
-        'mdLanguage', 'datasetLang', 'type', 'link'];
-      var listOfJsonFields = ['keywordGroup'];
+        'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails'];
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
@@ -494,7 +553,7 @@
           record[field] = [record[field]];
         }
       });
-      $.each(listOfJsonFields, function(idx) {
+      $.each(listOfJsonFields, function(idx) {    // Note: this step does not seem to be necessary; TODO: remove or refactor
         var field = listOfJsonFields[idx];
         if (angular.isDefined(record[field])) {
           try {

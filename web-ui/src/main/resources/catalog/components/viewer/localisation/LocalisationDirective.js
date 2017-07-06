@@ -88,7 +88,7 @@
                   view.setCenter(center);
                 }
                 moveTo($scope.map, 5, ol.proj.transform(coord,
-                    'EPSG:4326', 'EPSG:3857'));
+                    'EPSG:4326', $scope.map.getView().getProjection()));
                 return;
               }
               var formatter = function(loc) {

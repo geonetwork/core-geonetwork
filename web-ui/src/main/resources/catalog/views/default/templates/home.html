@@ -129,6 +129,7 @@
                 data-ng-search-form=""
                 data-runSearch="true"
                 data-ng-show="searchResults.records.length > 0">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
             <div data-gn-info-list=""></div>
           </form>
@@ -141,6 +142,7 @@
                 data-ng-search-form=""
                 data-runSearch="true"
                 data-ng-show="searchResults.records.length > 0">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div data-gn-info-list=""></div>
           </form>
         </tab>

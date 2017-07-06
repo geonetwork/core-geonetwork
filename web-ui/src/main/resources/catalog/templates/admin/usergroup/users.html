@@ -74,6 +74,7 @@
       <div class="panel-body">
         <form id="gn-user-edit" name="gnUserEdit" data-ng-keypress="updatingUser()"
               class="form-horizontal" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
           <fieldset>
             <input type="hidden" name="id" data-ng-model="userSelected.id"
                    value="{{userSelected.id}}"/>
@@ -350,6 +351,7 @@
         </div>
         <div class="modal-body">
           <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="form-group"
                  data-ng-class="gnPasswordReset.password.$error.required || gnPasswordReset.password.$error.minlength ? 'has-error' : ''">
               <label class="control-label col-sm-3" data-translate="">password</label>

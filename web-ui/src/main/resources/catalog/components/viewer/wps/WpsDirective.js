@@ -57,8 +57,9 @@
     'wfsFilterService',
     'gnGeometryService',
     'gnViewerService',
+    '$window',
     function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
-      gnGeometryService, gnViewerService) {
+      gnGeometryService, gnViewerService, $window) {
 
       var inputTypes = {
         string: 'text',
@@ -85,24 +86,7 @@
         },
 
         link: function(scope, element, attrs) {
-          var processId = attrs['processId'] || scope.wpsLink.name;
-          var uri = attrs['uri'] || scope.wpsLink.url;
-
-          if (scope.wpsLink.layer) {
-            scope.wpsLink.layer.set('wpsfilter-el', element);
-          }
-
-          // parse application profile as JSON
-          var applicationProfile = scope.wpsLink.applicationProfile ?
-              JSON.parse(scope.wpsLink.applicationProfile) : null;
-
-          // getting defaults
-          var defaults = scope.$eval(attrs['defaults']);
-          if (!defaults && applicationProfile) {
-            defaults = applicationProfile.defaults;
-          }
-
-          scope.describeState = 'sended';
+          scope.describeState = 'standby';
           scope.executeState = '';
 
           scope.selectedOutput = {
@@ -112,18 +96,56 @@
 
           scope.hideExecuteButton = attrs.hideExecuteButton;
 
-          gnWpsService.describeProcess(uri, processId)
-              .then(
+          // this will hold pre-loaded process descriptions
+          // keys are: '<processId>@<uri>'
+          scope.loadedDescriptions = {};
+
+          // maximum number of processes id saved in local storage
+          var maxHistoryCount = attrs['maxHistory'] || 6;
+
+          // query a process description when a new wps link is given
+          // note: a deep equality is required, since what we are actually
+          // comparing are process id and url (and not object ref)
+          scope.$watch(function () {
+            var wpsLink = scope.wpsLink || {};
+            return {
+              processId: attrs['processId'] || wpsLink.name,
+              uri: attrs['uri'] || wpsLink.url
+            }
+          }, function(newLink, oldLink) {
+            // the WPS link is incomplete: leave & clear form
+            if (!newLink.uri || !newLink.processId) {
+              scope.processDescription = null;
+              return;
+            }
+
+            if (scope.wpsLink.layer) {
+              scope.wpsLink.layer.set('wpsfilter-el', element);
+            }
+
+            scope.describeState = 'sent';
+
+            // parse application profile as JSON
+            var applicationProfile = scope.wpsLink.applicationProfile ?
+                JSON.parse(scope.wpsLink.applicationProfile) : null;
+
+            // getting defaults
+            var defaults = scope.$eval(attrs['defaults']);
+            if (!defaults && applicationProfile) {
+              defaults = applicationProfile.defaults;
+            }
+
+            // query a description and build up the form
+            gnWpsService.describeProcess(newLink.uri, newLink.processId, {
+              cancelPrevious: true
+            }).then(
               function(response) {
                 scope.describeState = 'succeeded';
                 scope.describeResponse = response;
 
                 if (response.processDescription) {
-
                   // Bind input directly in link object
-                  scope.processDescription = scope.wpsLink.processDescription ||
-                  response.processDescription[0];
-                  scope.wpsLink.processDescription = scope.processDescription;
+                  scope.processDescription = response.processDescription[0];
 
                   // check if we need to get into 'profile graph' mode
                   // FIXME: look for an actual way to determine the output type...
@@ -134,54 +156,53 @@
                   }
 
                   angular.forEach(scope.processDescription.dataInputs.input,
-                      function(input) {
+                    function(input) {
 
-                        if (input.value) return;
-                        var value;
-                        var defaultValue;
+                      if (input.value) return;
+                      var value;
+                      var defaultValue;
 
-                        if (defaults && defaults[input.identifier.value]) {
-                          defaultValue = defaults[input.identifier.value];
+                      if (defaults && defaults[input.identifier.value]) {
+                        defaultValue = defaults[input.identifier.value];
+                      }
+
+                      // use overloaded value if applicable
+                      if (scope.inputOverloads &&
+                        scope.inputOverloads[input.identifier.value]) {
+                        defaultValue =
+                          scope.inputOverloads[input.identifier.value]
+                          .currentValue;
+                      }
+
+                      if (input.literalData != undefined) {
+
+                        // Input type
+                        input.type =
+                          inputTypes[input.literalData.dataType.value];
+
+                        // Default value
+                        if (input.literalData.defaultValue != undefined) {
+                          value = input.literalData.defaultValue;
+                        }
+                        if (defaultValue != undefined) {
+                          value = defaultValue;
                         }
 
-                        // use overloaded value if applicable
-                        if (scope.inputOverloads &&
-                          scope.inputOverloads[input.identifier.value]) {
-                          defaultValue =
-                            scope.inputOverloads[input.identifier.value]
-                            .currentValue;
+                        // Format conversion
+                        switch (input.literalData.dataType.value) {
+                          case 'float':
+                            value = parseFloat(value); break;
+                          case 'string':
+                            value = value || ''; break;
                         }
+                        input.value = value;
+                      }
 
-                        if (input.literalData != undefined) {
-
-                          // Input type
-                          input.type =
-                            inputTypes[input.literalData.dataType.value];
-
-                          // Default value
-                          if (input.literalData.defaultValue != undefined) {
-                            value = input.literalData.defaultValue;
-                          }
-                          if (defaultValue != undefined) {
-                            value = defaultValue;
-                          }
-
-                          // Format conversion
-                          switch (input.literalData.dataType.value) {
-                            case 'float':
-                              value = parseFloat(value); break;
-                            case 'string':
-                              value = value || ''; break;
-                          }
-                          input.value = value;
-                        }
-
-                        if (input.boundingBoxData != undefined) {
-                          input.value = '';
-                          if (defaultValue) {
-                            input.value = defaultValue.split(',')
-                              .slice(0, 4).join(',');
-                          }
+                      if (input.boundingBoxData != undefined) {
+                        input.value = '';
+                        if (defaultValue) {
+                          input.value = defaultValue.split(',')
+                            .slice(0, 4).join(',');
                         }
 
                         // complex data: a feature will have to be drawn by the user
@@ -220,6 +241,7 @@
                           }
                         }
                       }
+                    }
                   );
 
                   angular.forEach(
@@ -240,10 +262,14 @@
                         }
                         scope.selectedOutput.identifier =
                               output.identifier.value;
+                        scope.selectedOutput.mimeType =
+                          output.complexOutput._default.format.mimeType
                       }
                       else if (idx == 0) {
                         scope.selectedOutput.identifier =
                               output.identifier.value;
+                        scope.selectedOutput.mimeType =
+                          output.complexOutput._default.format.mimeType
                       }
                     }
                   );
@@ -260,16 +286,31 @@
                     status: toBool(defaults && defaults.status, false)
                   };
                   scope.optionsVisible = true;
+
+                  // use existing inputs if available
+                  var processKey = newLink.processId + '@' + newLink.uri;
+                  var existingDesc = scope.loadedDescriptions[processKey]
+                  if (existingDesc) {
+                    scope.processDescription = angular.extend(
+                      scope.processDescription,
+                      existingDesc
+                    );
+                  }
+                  scope.loadedDescriptions[processKey] =
+                    angular.extend({}, scope.processDescription);
                 }
               },
               function(response) {
                 scope.describeState = 'failed';
                 scope.describeResponse = response;
               }
-              );
+            );
+          }, true);
 
           scope.close = function() {
-            element.remove();
+            scope.wpsLink.name = '';
+            scope.wpsLink.url = '';
+            scope.describeState = 'standby';
           };
 
           scope.toggleOutputs = function() {
@@ -319,7 +360,7 @@
                       scope.selectedOutput.identifier) {
                     outputs.push({
                       asReference: output.asReference,
-                      mimeType: output.mimeType,
+                      mimeType: scope.selectedOutput.mimeType,
                       identifier: {
                         value: output.identifier.value
                       }
@@ -381,10 +422,13 @@
               }
             };
 
+            var processUri = attrs['uri'] || scope.wpsLink.url;
+            var processId = attrs['processId'] || scope.wpsLink.name;
+
             scope.running = true;
-            scope.executeState = 'sended';
+            scope.executeState = 'sent';
             gnWpsService.execute(
-                uri,
+                processUri,
                 processId,
                 inputs,
                 scope.responseDocument
@@ -400,6 +444,32 @@
                 function() {
                   scope.running = false;
                 });
+
+            // update local storage
+            if ($window.localStorage) {
+              var key = 'gn-wps-processes-history';
+              var processKey = processId + '@' + processUri;
+              var history = JSON.parse(
+                $window.localStorage.getItem(key) || '{}');
+              history.processes = history.processes || [];
+              history.processes.unshift(processKey);
+
+              // remove dupes and apply limit
+              var count = 0;
+              history.processes = history.processes.filter(
+                function (value, index, array) {
+                  if (array.indexOf(value) !== index
+                    || count >= maxHistoryCount) {
+                    return false;
+                  } else {
+                    count++;
+                    return true;
+                  }
+                }
+              );
+
+              $window.localStorage.setItem(key, JSON.stringify(history));
+            }
           };
 
           scope.cancel = function() {
@@ -416,60 +486,34 @@
           };
 
           // Guess the mimeType associated with the selected output.
-          scope.$watch('selectedOutput.identifier', function(v) {
-            if (v) {
-              try {
-                scope.selectedOutput.mimeType = '';
-                var os = scope.describeResponse.
-                    processDescription[0].processOutputs.output;
-
-                for (var i = 0; i < os.length; i++) {
-                  var o = os[i];
-                  if (v == o.identifier.value) {
-                    for (var j = 0;
-                         j < o.complexOutput.supported.format.length;
-                         j++) {
-                      var f = o.complexOutput.supported.format[j];
-                      if (f.mimeType == gnWpsService.WMS_MIMETYPE) {
-                        o.mimeType = f.mimeType;
-                        break;
-                      }
-                    }
-                    if (!o.mimeType) {
-                      o.mimeType = o.complexOutput._default.format.mimeType;
-                    }
-                    break;
-                  }
-                }
-              }
-              catch (e) {
-                // can't auto find mimetype
-              }
-            }
-          });
+          // scope.$watch('selectedOutput.identifier', function(v) {
+          scope.setOutput = function (identifier, mimeType) {
+            scope.selectedOutput.identifier = identifier;
+            scope.selectedOutput.mimeType = mimeType;
+          };
 
           // helpers for accessing input values
           var getInputValue = function(name) {
-            if (!scope.wpsLink.processDescription) { return; }
+            if (!scope.processDescription) { return; }
 
             var result = null;
-            angular.forEach(scope.wpsLink.processDescription.dataInputs.input,
-                function(input) {
-                  if (input.identifier.value == name) {
-                    result = input.value;
-                  }
-                });
+            angular.forEach(scope.processDescription.dataInputs.input,
+              function(input) {
+                if (input.identifier.value == name) {
+                  result = input.value;
+                }
+              });
             return result;
           };
           var setInputValue = function(name, value) {
-            if (!scope.wpsLink.processDescription) { return; }
+            if (!scope.processDescription) { return; }
 
-            angular.forEach(scope.wpsLink.processDescription.dataInputs.input,
-                function(input) {
-                  if (input.identifier.value == name) {
-                    input.value = value;
-                  }
-                });
+            angular.forEach(scope.processDescription.dataInputs.input,
+              function(input) {
+                if (input.identifier.value == name) {
+                  input.value = value;
+                }
+              });
           };
 
           // handle input overload from WFS link
@@ -539,4 +583,130 @@
       };
     }
   ]);
+
+
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnWpsUrlDiscovery
+   * @restrict E
+   *
+   * @description
+   * This directive allows the user to input a URL and receive a list of WPS
+   * processes based on a GetCapabilities call to that URL.
+   * @directiveInfo {Object} wpsLink: selected process description (required)
+   */
+  module.directive('gnWpsUrlDiscovery', [
+    'gnWpsService',
+    'gnUrlUtils',
+    function(gnWpsService, gnUrlUtils) {
+      return {
+        restrict: 'E',
+        templateUrl: '../../catalog/components/viewer/wps/' +
+           'partials/urldiscovery.html',
+        scope: {
+          wpsLink: '='
+        },
+        controllerAs: 'ctrl',
+        controller: ['$scope', function ($scope) {
+          $scope.loading = false;
+          $scope.processes = [];
+          $scope.error = null;
+          $scope.url = '';
+
+          this.doRequest = function () {
+            // do nothing if invalid url
+            if (!gnUrlUtils.isValid($scope.url)) {
+              return;
+            }
+
+            $scope.loading = true;
+            $scope.processes = [];
+            $scope.error = null;
+
+            gnWpsService.getCapabilities($scope.url, {
+              cancelPrevious: true
+            }).then(function (data) {
+              $scope.loading = false;
+
+              if (!data) {
+                $scope.error = "Service not found";
+                return;
+              }
+              $scope.processes = data.processOfferings.process;
+            }, function (error) {
+              $scope.loading = false;
+              $scope.processes = [];
+              $scope.error = error.status + ' ' + error.statusText
+            });
+          }
+
+          this.select = function (p) {
+            if (!$scope.wpsLink) { return; }
+            $scope.wpsLink.name = p.identifier.value;
+            $scope.wpsLink.url = $scope.url;
+          }
+
+          // watch url change from outside
+          $scope.$watch('wpsLink.url', function (value) {
+            if (value) {
+              $scope.url = value;
+              $scope.ctrl.doRequest();
+            }
+          });
+        }]
+      };
+    }]
+  );
+
+  /**
+   * @ngdoc directive
+   * @name gn_viewer.directive:gnWpsRecentList
+   * @restrict E
+   *
+   * @description
+   * This directive outputs a list of recently used WPS processes based on
+   * local storage.
+   */
+  module.directive('gnWpsRecentList', [
+    'gnWpsService',
+    function(gnWpsService) {
+      return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: '../../catalog/components/viewer/wps/' +
+           'partials/recentprocesses.html',
+        scope: {
+          wpsLink: '='
+        },
+        controllerAs: 'ctrl',
+        controller: ['$scope', '$window', function ($scope, $window) {
+          if (!$window.localStorage) {
+            $scope.notSupported = true;
+            return;
+          }
+
+          $scope.processes = [];
+
+          $scope.$watch(function () {
+            return $window.localStorage.getItem('gn-wps-processes-history') || '{}';
+          }, function (value) {
+            $scope.processes = JSON.parse(value).processes.map(function (p) {
+              var values = p.split('@');
+              return {
+                name: values[0],
+                url: values[1]
+              }
+            })
+          });
+
+          this.select = function (p) {
+            if (!$scope.wpsLink) { return; }
+            $scope.wpsLink.name = p.name;
+            $scope.wpsLink.url = p.url;
+          }
+        }]
+      };
+    }]
+  );
+
 })();

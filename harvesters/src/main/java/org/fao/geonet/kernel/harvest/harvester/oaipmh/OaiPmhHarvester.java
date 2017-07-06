@@ -130,6 +130,7 @@ public class OaiPmhHarvester extends AbstractHarvester<HarvestResult> {
 
         settingMan.add("id:" + siteId, "url", params.url);
         settingMan.add("id:" + siteId, "icon", params.icon);
+        settingMan.add("id:" + siteId, "xslfilter", params.xslfilter);
 
         settingMan.add("id:" + optionsId, "validate", params.getValidate());
 

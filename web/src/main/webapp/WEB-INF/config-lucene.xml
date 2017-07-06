@@ -152,6 +152,7 @@
       <field name="denominator" tagName="denominator"/>
       <field name="resolution" tagName="resolution"/>
       <field name="crs" tagName="crs"/>
+      <field name="crsDetails" tagName="crsDetails"/>
       <field name="credit" tagName="credit"/>
       <field name="cl_status" tagName="status"/>
       <field name="cl_status_text" tagName="status_text"/>
@@ -184,7 +185,6 @@
       <field name="standardName" tagName="standardName"/>
       <field name="sextantTheme" tagName="sextantTheme"/>
       <field name="_logo" tagName="logo"/>
-      <field name="crs" tagName="crs"/>
       <field name="standardName" tagName="standardName"/>
       <field name="_groupWebsite" tagName="groupWebsite"/>
       <field name="attributeTable" tagName="attributeTable"/>

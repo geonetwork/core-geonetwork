@@ -191,9 +191,8 @@
               $scope.searchResults.facet = data.facet;
               $scope.searchResults.dimension = data.dimension;
 
-              // compute page number for pagination
-              if ($scope.searchResults.records.length > 0 &&
-                  $scope.hasPagination) {
+            // compute page number for pagination
+            if ($scope.hasPagination) {
 
                 var paging = $scope.paginationInfo;
 

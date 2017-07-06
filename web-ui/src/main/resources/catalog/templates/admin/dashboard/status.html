@@ -75,6 +75,7 @@
             data-ng-search-form=""
             data-runSearch="true"
             data-ng-show="searchResults.records.length > 0">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
         <div class="panel panel-default panel-danger">
           <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
           <div class="panel-body">
@@ -188,6 +189,7 @@
         </h4>
         <div class="btn-toolbar">
           <form class="form-inline pull-right">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <div class="checkbox" data-ng-show="threadStatus.threadContentionMonitoringSupported">
               <label>
                 <input type="checkbox"

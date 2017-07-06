@@ -374,5 +374,9 @@
     "print_legend": "Légende",
     "print_legend_field": "Inclure la légende",
     "landscape": "Paysage",
-    "portrait": "Portrait"
+    "portrait": "Portrait",
+    "processesTool": "Traitement WPS",
+    "wpsGetCapError": "Erreur lors de l'analyse du service WPS : ",
+    "wpsByUrl": "Recherche",
+    "wpsRecent": "Derniers traitements"
 }

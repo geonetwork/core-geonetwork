@@ -797,7 +797,7 @@ public class Aligner extends BaseAligner {
             result.updatedMetadata++;
         }
 
-        metadata.getCategories().clear();
+        metadata.getMetadataCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
         metadata = metadataRepository.findOne(id);
 

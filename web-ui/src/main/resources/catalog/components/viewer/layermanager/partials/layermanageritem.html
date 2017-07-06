@@ -1,4 +1,4 @@
-<div>
+<div ng-if="::!layer.get('loading')">
   <button class="btn btn-cog" data-ng-click="showInfo(layer)" title="{{'legend'|translate}}">
     <span class="fa fa-paint-brush"></span>
   </button>
@@ -59,7 +59,7 @@
       </li>
 
       <!--WFS Filter-->
-      <li class="list-group-item" data-ng-if="wfs"><a href="" data-ng-click="showWFSFilter()">
+      <li class="list-group-item" data-ng-if="::wfs"><a href="" data-ng-click="showWFSFilter()">
         <span translate="">filter</span>
       </a></li>
 
@@ -96,4 +96,8 @@
 
     <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
   </div>
+</div>
+<div ng-if="::layer.get('loading')">
+  {{::layer.get('label')}}
+  <span class="pull-right fa fa-spin fa-spinner"></span>
 </div>
