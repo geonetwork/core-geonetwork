@@ -298,9 +298,6 @@
           } else if (src instanceof ol.source.OSM) {
             encLayer = gnPrint.encoders.layers['OSM'].call(this,
                 layer, layerConfig);
-          } else if (src instanceof ol.source.MapQuest) {
-            encLayer = gnPrint.encoders.layers['MapQuest'].call(this,
-                layer, layerConfig);
           } else if (src instanceof ol.source.BingMaps) {
             encLayer = gnPrint.encoders.layers['Bing'].call(this,
                 layer, layerConfig);
