@@ -224,8 +224,10 @@
           }
         }, config).mods.header.languages;
 
-        this.gnUrl = gnUrl || '../';
-        this.proxyUrl = this.gnUrl + '../proxy?url=';
+        if (gnUrl) {
+          this.gnUrl = gnUrl + this.iso3lang + '/';
+        }
+        this.proxyUrl = this.gnUrl + '../../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
