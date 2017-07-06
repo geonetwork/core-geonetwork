@@ -587,6 +587,27 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="graticuleOgcService">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <div class="input-group">
+          <span class="input-group-addon">Type </span>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key].type"/>
+          <span class="input-group-addon">Layer </span>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key].layer"/>
+          <span class="input-group-addon">Url </span>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key].url"/>
+        </div>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
       <div data-ng-switch-default>
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <input type="text"

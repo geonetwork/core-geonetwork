@@ -169,9 +169,12 @@
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }],
+          'searchMapLayers': [],
+          'viewerMapLayers': [],
           'disabledTools': {
             'processes': true
-          }
+          },
+          'graticuleOgcService': {}
         },
         'editor': {
           'enabled': true,
