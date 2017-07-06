@@ -212,7 +212,10 @@
       var layers = $scope.map.getLayers();
       pdfLegendsToDownload = [];
 
-      angular.forEach(layers.getArray(), function(layer) {
+      var sortedZindexLayers = layers.getArray().sort(function(a, b) {
+        return a.getZIndex() > b.getZIndex();
+      });
+      angular.forEach(sortedZindexLayers, function(layer) {
         if (layer.getVisible()) {
           var attribution = layer.get('attribution');
           if (attribution !== undefined &&

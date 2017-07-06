@@ -727,7 +727,9 @@
           $scope.$watch(function () {
             return $window.localStorage.getItem('gn-wps-processes-history') || '{}';
           }, function (value) {
-            $scope.processes = JSON.parse(value).processes.map(function (p) {
+            var wpsHistory = JSON.parse(value);
+            $scope.processes = wpsHistory.processes &&
+              wpsHistory.processes.map(function (p) {
               var values = p.split('@');
               return {
                 name: values[0],
