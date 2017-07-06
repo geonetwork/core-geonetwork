@@ -230,8 +230,11 @@
                 }
               }
 
-              // graticule OGC layer (optional)
-              scope.graticule = gnViewerSettings.graticule;
+              // ogc graticule
+              var ogcGraticule = gnViewerSettings.mapConfig.graticuleOgcService;
+              if (ogcGraticule && ogcGraticule.layer && ogcGraticule.url) {
+                scope.graticuleOgcService = ogcGraticule;
+              }
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 

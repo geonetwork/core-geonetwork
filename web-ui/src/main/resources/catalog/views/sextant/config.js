@@ -408,7 +408,7 @@
           viewerSettings.processes = sxtSettings.processes;
         }
         if(sxtSettings.graticule)  {
-          viewerSettings.graticule = sxtSettings.graticule;
+          viewerSettings.mapConfig.graticuleOgcService = sxtSettings.graticule;
         }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;
