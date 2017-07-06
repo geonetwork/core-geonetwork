@@ -268,14 +268,17 @@
 
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
-                    label: 'loading',
+                    label: layer.name || 'loading',
                     url: '',
-                    visible: false
+                    visible: false,
+                    group: layer.group
                   });
+
                   loadingLayer.displayInLayerManager = true;
 
                   var layerIndex = map.getLayers().push(loadingLayer);
                   var p = self.createLayer(layer, map, undefined, i);
+                  loadingLayer.set('index', layerIndex);
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
