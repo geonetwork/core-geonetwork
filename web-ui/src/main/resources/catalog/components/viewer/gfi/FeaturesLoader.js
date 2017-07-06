@@ -129,6 +129,7 @@
 
         }.bind(this));
 
+    return this.promise;
   };
 
   geonetwork.GnFeaturesGFILoader.prototype.getBsTableConfig = function() {
