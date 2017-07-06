@@ -407,6 +407,9 @@
         if(sxtSettings.processes)  {
           viewerSettings.processes = sxtSettings.processes;
         }
+        if(sxtSettings.graticule)  {
+          viewerSettings.graticule = sxtSettings.graticule;
+        }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;
         }
