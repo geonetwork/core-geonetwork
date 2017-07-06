@@ -599,9 +599,8 @@ var WPS_1_0_0_Module_Factory = function() {
         t: 'aa'
       }, {
         n: 'content',
-        col: true,
-        typed: false,
-        t: 'ae'
+        t: 'value',
+        asCDATA: true
       }, {
         n: 'mimeType',
         an: {

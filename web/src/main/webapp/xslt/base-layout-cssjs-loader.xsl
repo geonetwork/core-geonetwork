@@ -126,7 +126,7 @@
                       $angularApp = 'gn_admin'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
           <!-- Jsonix resources (OWS Context) -->
-          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
+          <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-all.js"></script>
           <script type="text/javascript">
             zip.workerScriptsPath = "../../catalog/lib/zip/";
           </script>
