@@ -58,8 +58,10 @@
     'gnGeometryService',
     'gnViewerService',
     '$window',
+    'gnGeometryService',
+    'gnViewerService',
     function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
-      gnGeometryService, gnViewerService, $window) {
+      $window, gnGeometryService, gnViewerService) {
 
       var inputTypes = {
         string: 'text',
@@ -241,13 +243,48 @@
                           }
                         }
                       }
+                      // complex data: a feature will have to be drawn by the user
+                      if (input.complexData != undefined) {
+                        // this will be a {ol.Feature} object once drawn
+                        input.feature = null;
+                        input.value = null;
+
+                        // output format
+                        input.outputFormat = gnGeometryService
+                          .getFormatFromMimeType(
+                            input.complexData._default.format.mimeType
+                          ) || 'gml';
+
+                        // guess geometry type from schema url
+                        var url = input.complexData._default.format.schema;
+                        var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
+                        switch (result && result[1] ?
+                          result[1].toLowerCase() : null) {
+                          case 'line':
+                            input.geometryType = 'LineString'
+                            break;
+
+                          case 'point':
+                            input.geometryType = 'Point'
+                            break;
+
+                          case 'polygon':
+                            input.geometryType = 'Polygon'
+                            break;
+
+                          // TODO: add other types?
+
+                          default:
+                            input.geometryType = null;
+                        }
+                      }
                     }
                   );
 
                   angular.forEach(
                     scope.processDescription.processOutputs.output,
                     function(output, idx) {
-                      output.asReference = scope.outputAsGraph ? false : true;
+                      output.asReference = scope.outputAsGraph ? false : true;;
 
                       // untested code
                       var outputDefault = defaults &&
@@ -416,7 +453,7 @@
               if (scope.outputAsGraph) {
                 gnViewerService.displayProfileGraph(
                   response.processOutputs.output[0]
-                    .data.complexData.content[0]
+                    .data.complexData.content
                 );
                 scope.executeResponse = null;
               }

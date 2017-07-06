@@ -303,9 +303,6 @@
           } else if (src instanceof ol.source.OSM) {
             encLayer = gnPrint.encoders.layers['OSM'].call(this,
                 layer, layerConfig);
-          } else if (src instanceof ol.source.MapQuest) {
-            encLayer = gnPrint.encoders.layers['MapQuest'].call(this,
-                layer, layerConfig);
           } else if (src instanceof ol.source.BingMaps) {
             encLayer = gnPrint.encoders.layers['Bing'].call(this,
                 layer, layerConfig);
@@ -368,13 +365,15 @@
 
             scope.defaultLayout = attrs.layout;
             scope.auto = true;
+            scope.activatedOnce = false;
 
             // Deactivate only if it has been activated once first
             scope.$watch('printActive', function(isActive, old) {
               if (angular.isDefined(isActive) &&
-                  (angular.isDefined(old) || isActive)) {
+                  (scope.activatedOnce || isActive)) {
                 if (isActive) {
                   ctrl.activate();
+                  scope.activatedOnce = true;
                 } else {
                   ctrl.deactivate();
                 }

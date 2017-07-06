@@ -380,8 +380,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.MapQuest) {
-            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {

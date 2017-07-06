@@ -1618,7 +1618,7 @@ Jsonix.XML.Output = Jsonix.Class({
 		return node;
 
 	},
-	writeCDATA : function(text) {
+	writeCdata : function(text) {
 		var node;
 		if (Jsonix.Util.Type.isFunction(this.document.createCDATASection))	{
 			node = this.document.createCDATASection(text);
@@ -1881,9 +1881,7 @@ Jsonix.Binding.Marshalls.Element = Jsonix.Class({
 		}
 		var typeInfo = actualTypeInfo || declaredTypeInfo;
 
-		if (typeInfo === Jsonix.Schema.XSD.CDATA.INSTANCE) {
-			typeInfo.marshal(elementValue.value, context, output, scope);
-		} else if (typeInfo) {
+		if (typeInfo) {
 			output.writeStartElement(elementValue.name);
 			if (actualTypeInfo && declaredTypeInfo !== actualTypeInfo) {
 				var xsiTypeName = actualTypeInfo.typeName;
@@ -2162,22 +2160,22 @@ Jsonix.Model.ClassInfo = Jsonix
 				var n = mapping.name||mapping.n||undefined;
 				Jsonix.Util.Ensure.ensureString(n);
 				this.name = n;
-				
+
 				var ln = mapping.localName||mapping.ln||null;
 				this.localName = ln;
 
 				var dens = mapping.defaultElementNamespaceURI||mapping.dens||mapping.targetNamespace||mapping.tns||'';
 				this.defaultElementNamespaceURI = dens;
-				
+
 				var tns =  mapping.targetNamespace||mapping.tns||mapping.defaultElementNamespaceURI||mapping.dens||this.defaultElementNamespaceURI;
 				this.targetNamespace = tns;
 
 				var dans = mapping.defaultAttributeNamespaceURI||mapping.dans||'';
 				this.defaultAttributeNamespaceURI = dans;
-				
+
 				var bti = mapping.baseTypeInfo||mapping.bti||null;
 				this.baseTypeInfo = bti;
-				
+
 				var inF = mapping.instanceFactory||mapping.inF||undefined;
 				if (Jsonix.Util.Type.exists(inF)) {
 					// TODO: should we support instanceFactory as functions?
@@ -2185,9 +2183,9 @@ Jsonix.Model.ClassInfo = Jsonix
 					Jsonix.Util.Ensure.ensureFunction(inF);
 					this.instanceFactory = inF;
 				}
-				
+
 				var tn = mapping.typeName||mapping.tn||undefined;
-				
+
 				if (Jsonix.Util.Type.exists(tn))
 				{
 					if (Jsonix.Util.Type.isString(tn))
@@ -2202,14 +2200,14 @@ Jsonix.Model.ClassInfo = Jsonix
 				{
 					this.typeName = new Jsonix.XML.QName(tns, ln);
 				}
-				
+
 				this.properties = [];
 				this.propertiesMap = {};
 				var ps = mapping.propertyInfos||mapping.ps||[];
 				Jsonix.Util.Ensure.ensureArray(ps);
 				for ( var index = 0; index < ps.length; index++) {
 					this.p(ps[index]);
-				}				
+				}
 			},
 			getPropertyInfoByName : function(name) {
 				return this.propertiesMap[name];
@@ -2254,15 +2252,15 @@ Jsonix.Model.ClassInfo = Jsonix
 			unmarshal : function(context, input) {
 				this.build(context);
 				var result;
-				
+
 				if (this.instanceFactory) {
 					result = new this.instanceFactory();
 				}
 				else
 				{
-					result = { TYPE_NAME : this.name }; 
+					result = { TYPE_NAME : this.name };
 				}
-				
+
 				if (input.eventType !== 1) {
 					throw new Error("Parser must be on START_ELEMENT to read a class info.");
 				}
@@ -2543,6 +2541,7 @@ Jsonix.Model.ClassInfo.prototype.propertyInfoCreators = {
 	"v" : Jsonix.Model.ClassInfo.prototype.v,
 	"value" : Jsonix.Model.ClassInfo.prototype.v
 };
+
 Jsonix.Model.EnumLeafInfo = Jsonix.Class(Jsonix.Model.TypeInfo, {
 	name : null,
 	baseTypeInfo : 'String',
@@ -2965,6 +2964,9 @@ Jsonix.Model.ValuePropertyInfo = Jsonix.Class(Jsonix.Model.SingleTypePropertyInf
 	initialize : function(mapping) {
 		Jsonix.Util.Ensure.ensureObject(mapping);
 		Jsonix.Model.SingleTypePropertyInfo.prototype.initialize.apply(this, [ mapping ]);
+
+		var c = mapping.asCDATA || mapping.c || false;
+		this.asCDATA = c;
 	},
 	unmarshal : function(context, input, scope) {
 		var text = input.getElementText();
@@ -2974,7 +2976,12 @@ Jsonix.Model.ValuePropertyInfo = Jsonix.Class(Jsonix.Model.SingleTypePropertyInf
 		if (!Jsonix.Util.Type.exists(value)) {
 			return;
 		}
-		output.writeCharacters(this.print(value, context, output, scope));
+
+		if (this.asCDATA) {
+			output.writeCdata(this.print(value, context, output, scope));
+		} else {
+			output.writeCharacters(this.print(value, context, output, scope));
+		}
 	},
 	buildStructure : function(context, structure) {
 		Jsonix.Util.Ensure.ensureObject(structure);
@@ -5798,25 +5805,6 @@ Jsonix.Schema.XSD.IDREFS = Jsonix.Class(Jsonix.Schema.XSD.List, {
 	CLASS_NAME : 'Jsonix.Schema.XSD.IDREFS'
 });
 Jsonix.Schema.XSD.IDREFS.INSTANCE = new Jsonix.Schema.XSD.IDREFS();
-Jsonix.Schema.XSD.CDATA = Jsonix.Class(Jsonix.Schema.XSD.String, {
-	name : 'CDATA',
-	typeName : Jsonix.Schema.XSD.qname('CDATA'),
-	parse : function(text, context, input, scope) {
-		Jsonix.Util.Ensure.ensureString(text);
-		var match = text.match(/<!\[CDATA\[(.*)\]\]>/);
-		return match ? match[1] : '';
-	},
-	marshal : function(value, context, output, scope) {
-		if (Jsonix.Util.Type.exists(value)) {
-			output.writeCDATA(this.print(value, context, output, scope));
-		}
-	},
-	CLASS_NAME : 'Jsonix.Schema.XSD.CDATA'
-});
-Jsonix.Schema.XSD.CDATA.INSTANCE = new Jsonix.Schema.XSD.CDATA();
-Jsonix.Schema.XSD.CDATA.INSTANCE.LIST = new Jsonix.Schema.XSD.List(
-		Jsonix.Schema.XSD.CDATA.INSTANCE);
-
 Jsonix.Schema.XSI = {};
 Jsonix.Schema.XSI.NAMESPACE_URI = 'http://www.w3.org/2001/XMLSchema-instance';
 Jsonix.Schema.XSI.PREFIX = 'xsi';
@@ -6090,7 +6078,6 @@ Jsonix.Context = Jsonix
 					Jsonix.Schema.XSD.Boolean.INSTANCE,
 					Jsonix.Schema.XSD.Byte.INSTANCE,
 					Jsonix.Schema.XSD.Calendar.INSTANCE,
-					Jsonix.Schema.XSD.CDATA.INSTANCE,
 					Jsonix.Schema.XSD.DateAsDate.INSTANCE,
 					Jsonix.Schema.XSD.Date.INSTANCE,
 					Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE,
