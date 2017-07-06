@@ -282,7 +282,12 @@
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      map.getLayers().setAt(idx, layer);
+                      if(layer) {
+                        map.getLayers().setAt(idx, layer);
+                      }
+                      else {
+                        loadingLayer.set('errors', ['load failed']);
+                      }
                     });
                   })(layerIndex, loadingLayer);
                 }
