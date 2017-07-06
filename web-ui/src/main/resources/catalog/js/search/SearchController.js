@@ -49,11 +49,11 @@
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
+        params: {},
         permalink: true,
         sortbyValues: gnSearchSettings.sortbyValues,
         sortbyDefault: gnSearchSettings.sortbyDefault,
-        hitsperpageValues: gnSearchSettings.hitsperpageValues,
-        showRetired: false
+        hitsperpageValues: gnSearchSettings.hitsperpageValues
       };
 
       /** Facets configuration */
