@@ -294,7 +294,7 @@
 
         // Retrieve main search information
         var searchInfo = userLogin.then(function(value) {
-          var url = 'qi?_content_type=json&summaryOnly=true&_status=0 or 1 or 2 or 4 or 5';
+          var url = 'qi?_content_type=json&summaryOnly=true&_retired=false';
           return gnSearchManagerService.search(url).
               then(function(data) {
                 $scope.searchInfo = data;

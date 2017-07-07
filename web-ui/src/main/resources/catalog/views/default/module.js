@@ -51,7 +51,7 @@
           sortBy: 'popularity',
           from: 1,
           to: 9,
-          _status: '0 or 1 or 2 or 4 or 5'
+          _retired: 'false'
         }
       };
     }]);
@@ -66,7 +66,7 @@
           sortBy: 'changeDate',
           from: 1,
           to: 9,
-          _status: '0 or 1 or 2 or 4 or 5'
+          _retired: 'false'
         }
       };
     }]);
@@ -158,11 +158,7 @@
 
 
       $scope.goToSearch = function (any) {
-        $location.path('/search').search(
-          {
-            'any': any,
-            '_status': '0 or 1 or 2 or 4 or 5'
-          });
+        $location.path('/search').search({'any': any});
       };
       $scope.canEdit = function(record) {
         // TODO: take catalog config for harvested records
@@ -316,12 +312,12 @@
         },
         defaultParams: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details'
+          resultType: gnSearchSettings.facetsSummaryType || 'details',
+          _retired: 'false'
         },
         params: {
           'facet.q': '',
-          resultType: gnSearchSettings.facetsSummaryType || 'details',
-          '_status': '0 or 1 or 2 or 4 or 5'
+          resultType: gnSearchSettings.facetsSummaryType || 'details'
         }
       }, gnSearchSettings.sortbyDefault);
 
