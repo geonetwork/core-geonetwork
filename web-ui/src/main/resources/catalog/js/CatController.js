@@ -156,11 +156,6 @@
           },
           'useOSM': true,
           'context': '',
-          'layer': {
-            'url': 'http://www2.demis.nl/mapserver/wms.asp?',
-            'layers': 'Countries',
-            'version': '1.1.1'
-          },
           'projection': 'EPSG:3857',
           'projectionList': [{
             'code': 'EPSG:4326',
@@ -231,9 +226,8 @@
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
         gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
-        gnViewerSettings.owsContext = this.gnCfg.mods.map.context;
-        gnViewerSettings.wmsUrl = this.gnCfg.mods.map.layer.url;
-        gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
+        gnViewerSettings.owsContext = gnViewerSettings.owsContext ||
+          this.gnCfg.mods.map.context;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
