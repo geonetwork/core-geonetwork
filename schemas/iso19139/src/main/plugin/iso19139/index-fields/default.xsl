@@ -1036,11 +1036,7 @@
 
   <!-- ========================================================================================= -->
 
-  <!-- inspireThemes is a nodeset consisting of skos:Concept elements -->
-  <!-- each containing a skos:definition and skos:prefLabel for each language -->
-  <!-- This template finds the provided keyword in the skos:prefLabel elements and
-  returns the English one from the same skos:Concept -->
-
+  <!--Sextant specific-->
   <xsl:template name="translateInspireThemeToFrench">
     <xsl:param name="keyword"/>
     <xsl:param name="inspireThemes"/>
@@ -1058,6 +1054,7 @@
         <xsl:value-of select="../@rdf:about"/>
       </xsl:if>
     </xsl:for-each>
+  </xsl:template>
 
   <!-- xlinks -->
   <xsl:template mode="index" match="@xlink:href">
