@@ -346,19 +346,26 @@
             var needles = [];
             var layers = capObj.layers || capObj.Layer;
 
-			//non namespaced lowercase name
-			nameNoNamespace = name.split(':')[name.split(':').length - 1].toLowerCase();
+            //non namespaced lowercase name
+            nameNoNamespace = name.split(':')[
+              name.split(':').length - 1].toLowerCase();
 
-            for (var i = 0, len = layers.length; i < len; i++) {
+            for (var i = 0; i < layers.length; i++) {
               //Add Info for Requests:
               if (capObj.Request) {
                 layers[i].capRequest = capObj.Request;
               }
 
               //check layername
-              capName = layers[i].Name || layers[i].Identifier || '';
+              var lId = layers[i].Identifier;
+              var capName = layers[i].Name ||
+                (lId && angular.isArray(lId) ? lId[0] : lId) || '',
+                capNameNoNamespace;
               //non namespaced lowercase capabilities name
-              capNameNoNamespace = capName.split(':')[capName.split(':').length - 1].toLowerCase();
+              if(capName) {
+                capNameNoNamespace = capName.split(':')[
+                  capName.split(':').length - 1].toLowerCase();
+              }
 
               //either names match or non namespaced names
               if (name == capName || nameNoNamespace == capNameNoNamespace) {
