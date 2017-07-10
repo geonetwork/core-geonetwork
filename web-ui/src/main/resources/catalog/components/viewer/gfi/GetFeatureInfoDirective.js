@@ -65,7 +65,7 @@
                  if (layer && layer.get('featureTooltip')) {
                    return feature;
                  }
-               }, undefined, function(layer){
+               }, undefined, function(layer) {
                 return layer instanceof ol.layer.Vector;
 
               });

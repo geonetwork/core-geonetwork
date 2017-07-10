@@ -127,7 +127,7 @@
         // is not currently visible)
         map.set('lastExtent', extent);
 
-        if(map.getView().getProjection().getCode() != projection) {
+        if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
             extent: extent,
             projection: projection
@@ -224,15 +224,15 @@
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      bgLayers[idx-1] = layer;
+                      bgLayers[idx - 1] = layer;
 
-                      if(!layer) {
+                      if (!layer) {
                         return;
                       }
                       layer.displayInLayerManager = false;
                       layer.background = true;
 
-                      if(loadingLayer.get('bgLayer')) {
+                      if (loadingLayer.get('bgLayer')) {
                         map.getLayers().setAt(0, layer);
                       }
                     });
@@ -282,7 +282,7 @@
 
                   (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      if(layer) {
+                      if (layer) {
                         map.getLayers().setAt(idx, layer);
                       }
                       else {
@@ -398,7 +398,7 @@
               service: 'urn:ogc:serviceType:WMS'
             }];
           } else if (source instanceof ol.source.ImageWMS ||
-            source instanceof ol.source.TileWMS) {
+              source instanceof ol.source.TileWMS) {
             name = '{type=wms,name=' + layer.get('name') + '}';
             params.server = [{
               onlineResource: [{
@@ -572,7 +572,8 @@
             promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
           }
 
-          // if it's not WMTS, let's assume it is wms (so as to be sure to return something)
+          // if it's not WMTS, let's assume it is wms
+          // (so as to be sure to return something)
           else {
             promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
           }

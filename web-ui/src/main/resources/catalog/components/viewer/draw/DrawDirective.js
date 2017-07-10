@@ -484,13 +484,13 @@
 
           Object.defineProperty(vector, 'active', {
             get: function() {
-              return map.getLayers().getArray().indexOf(vector) >= 0
-                && scope.active;
+              return map.getLayers().getArray().indexOf(vector) >= 0 &&
+                  scope.active;
             },
             set: function(val) {
               if (val) {
-                // this is simply used to indicate that the draw directive is active
-                // (ie panel is opened in the UI)
+                // this is simply used to indicate that the draw
+                // directive is active (ie panel is opened in the UI)
                 scope.active = true;
 
                 // only add layer if it is not already here

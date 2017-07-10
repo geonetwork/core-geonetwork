@@ -109,12 +109,14 @@
 
 
                   var insertModes = iAttrs.insertModes;
-                  if(insertModes) {
+                  if (insertModes) {
                     insertModes = insertModes.split(',');
                   }
 
-                  scope.insertAsXlink = !insertModes || insertModes.indexOf('xlink') >= 0;
-                  scope.insertAsText = !insertModes || insertModes.indexOf('text') >= 0;
+                  scope.insertAsXlink = !insertModes ||
+                 insertModes.indexOf('xlink') >= 0;
+                  scope.insertAsText = !insertModes ||
+                 insertModes.indexOf('text') >= 0;
 
                   // Separator between each contact XML
                   // snippet
@@ -122,7 +124,7 @@
 
                   // Only local mode (faster)
                   var url = 'local://' + gnGlobalSettings.nodeId +
-                    '/api/registries/entries/';
+                 '/api/registries/entries/';
 
                   scope.gnConfig = gnConfig;
                   // If true, display button to add the element

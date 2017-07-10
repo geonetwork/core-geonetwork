@@ -138,7 +138,7 @@
         if (graticuleOgcService) {
           if (!graticuleOgcService.layer || !graticuleOgcService.url) {
             console.error('Missing property for graticule layer ' +
-              '(required: \'url\', \'layer\'):\n', graticuleOgcService);
+                '(required: \'url\', \'layer\'):\n', graticuleOgcService);
             return;
           }
 

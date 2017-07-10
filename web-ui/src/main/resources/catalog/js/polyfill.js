@@ -60,7 +60,8 @@
           // a. Let elementK be the result of ? Get(O, ! ToString(k)).
           // b. If SameValueZero(searchElement, elementK) is true, return true.
           // c. Increase k by 1.
-          // NOTE: === provides the correct "SameValueZero" comparison needed here.
+          // NOTE: === provides the correct "SameValueZero"
+          // comparison needed here.
           if (o[k] === searchElement) {
             return true;
           }
@@ -76,7 +77,9 @@
   if (!String.prototype.endsWith) {
     String.prototype.endsWith = function(searchString, position) {
       var subjectString = this.toString();
-      if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+      if (typeof position !== 'number' || !isFinite(position) ||
+          Math.floor(position) !== position ||
+          position > subjectString.length) {
         position = subjectString.length;
       }
       position -= searchString.length;

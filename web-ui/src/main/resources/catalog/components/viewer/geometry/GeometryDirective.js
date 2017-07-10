@@ -64,7 +64,7 @@
             var layer = new ol.layer.Vector({
               source: source,
               style: [
-                new ol.style.Style({          // this is the default editing style
+                new ol.style.Style({  // this is the default editing style
                   fill: new ol.style.Fill({
                     color: 'rgba(255, 255, 255, 0.5)'
                   }),
@@ -111,14 +111,14 @@
             // cleanup when scope is destroyed
             // FIXME: this event is not triggered!
             // (when switching form, the DOM is simply cleared with jQuery)
-            $scope.$on('$destroy', function () {
+            $scope.$on('$destroy', function() {
               $scope.map.removeLayer(layer);
               $scope.map.removeInteraction($scope.drawInteraction);
               $scope.map.removeInteraction($scope.modifyInteraction);
             });
 
             // modifies the output value
-            var updateOutput = function (feature) {
+            var updateOutput = function(feature) {
               if (!feature) {
                 $scope.output = null;
                 return;
@@ -157,28 +157,32 @@
                     // srsName: $scope.map.getView().getProjection().getCode()
                   });
 
-                  // TODO: refactor this: first clone geom & transform, then if necessary create a new feature with this geom
+                  // TODO: refactor this: first clone geom & transform,
+                  // then if necessary create a new feature with this geom
                   var feature2 = new ol.Feature({
                     id: 'geometry-tool-output',
                     geometry: feature.getGeometry().clone()
-                  })
-                  feature2.getGeometry().transform($scope.map.getView().getProjection(), 'EPSG:4326');
+                  });
+                  feature2.getGeometry().transform(
+                      $scope.map.getView().getProjection(), 'EPSG:4326');
 
                   if ($scope.outputAsFeatures) {
-                    outputValue = '<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs">' +
-                      format.writeFeatures([feature2]) +
-                      '</wfs:FeatureCollection>';
+                    outputValue = '<wfs:FeatureCollection ' +
+                        'xmlns:wfs="http://www.opengis.net/wfs">' +
+                        format.writeFeatures([feature2]) +
+                        '</wfs:FeatureCollection>';
                   } else {
-                    outputValue = format.writeGeometryNode(feature2.getGeometry())
-                      .innerHTML;
+                    outputValue = format.writeGeometryNode(
+                        feature2.getGeometry())
+                        .innerHTML;
                   }
                   break;
 
                 // no valid format specified: output as object + give warning
                 default:
-                  console.warn('No valid output format specified for '+
-                    'gn-geometry-tool (value=' + $scope.outputFormat + '); ' +
-                    'outputting geometry as object');
+                  console.warn('No valid output format specified for ' +
+                      'gn-geometry-tool (value=' + $scope.outputFormat + '); ' +
+                      'outputting geometry as object');
 
                 case 'object':
                   if ($scope.outputAsFeatures) {
@@ -190,25 +194,25 @@
               }
 
               $scope.output = outputValue;
-            }
+            };
 
             // clear existing features on draw end
-            $scope.drawInteraction.on('drawend', function (event) {
+            $scope.drawInteraction.on('drawend', function(event) {
               source.clear();
               updateOutput(event.feature);
               $scope.drawInteraction.setActive(false);
             });
 
             // update output on modify end
-            $scope.modifyInteraction.on('modifyend', function (event) {
+            $scope.modifyInteraction.on('modifyend', function(event) {
               updateOutput(event.feature);
-            })
+            });
 
             // reset drawing
-            $scope.reset = function () {
+            $scope.reset = function() {
               source.clear();
               updateOutput();
-            }
+            };
           }
         ]
       };

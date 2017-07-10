@@ -88,6 +88,29 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
@@ -105,8 +128,8 @@
   goog.require('gn_print');
   goog.require('gn_searchlayerformap_directive');
   goog.require('gn_terrainswitcher_directive');
-  goog.require('gn_viewer_service');
   goog.require('gn_viewer_directive');
+  goog.require('gn_viewer_service');
   goog.require('gn_wfs');
   goog.require('gn_wfsfilter');
   goog.require('gn_wmsimport');
@@ -224,17 +247,17 @@
       // watch service data: when a profile graph is available, render it
       var me = this;
       $scope.$watch(
-        function () {
-          return gnViewerService.getProfileGraphData();
-        },
-        function (newData, oldData) {
-          me.profileGraph = newData && JSON.parse(newData).profile;
-        }
+          function() {
+            return gnViewerService.getProfileGraphData();
+          },
+          function(newData, oldData) {
+            me.profileGraph = newData && JSON.parse(newData).profile;
+          }
       );
       this.profileOptions = {
         elevationExtractor: {
-          dist: function (data) { return data.dist },
-          z: function (data) { return data.values.z }
+          dist: function(data) { return data.dist },
+          z: function(data) { return data.values.z }
         },
         linesConfiguration: { }
 
@@ -242,9 +265,9 @@
         // hoverCallback,
         // outCallback
       };
-      this.closeProfileGraph = function () {
+      this.closeProfileGraph = function() {
         gnViewerService.clearProfileGraph();
-      }
+      };
     }]);
 
 })();

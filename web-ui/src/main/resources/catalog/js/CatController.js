@@ -227,7 +227,7 @@
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
         gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
         gnViewerSettings.owsContext = gnViewerSettings.owsContext ||
-          this.gnCfg.mods.map.context;
+            this.gnCfg.mods.map.context;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
@@ -322,12 +322,14 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService', 'gnConfig',
-    'gnGlobalSettings', '$location', 'gnUtilityService', 'gnSessionService',
-    'gnLangs', 'gnAdminMenu', 'gnViewerSettings', 'gnSearchSettings', '$cookies',
+    'gnGlobalSettings', '$location', 'gnUtilityService',
+    'gnSessionService', 'gnLangs', 'gnAdminMenu',
+    'gnViewerSettings', 'gnSearchSettings', '$cookies',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService, gnConfig,
-            gnGlobalSettings, $location, gnUtilityService, gnSessionService,
-            gnLangs, gnAdminMenu, gnViewerSettings, gnSearchSettings, $cookies) {
+             gnSearchManagerService, gnConfigService, gnConfig,
+             gnGlobalSettings, $location, gnUtilityService,
+             gnSessionService, gnLangs, gnAdminMenu,
+             gnViewerSettings, gnSearchSettings, $cookies) {
       $scope.version = '0.0.1';
 
 
@@ -393,7 +395,10 @@
       //Comment the following lines if you want to remove csrf support
       $http.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
       $http.defaults.xsrfCookieName = 'XSRF-TOKEN';
-      $scope.$watch(function() { return $cookies.get('XSRF-TOKEN'); }, function(value) {
+      $scope.$watch(function() {
+        return $cookies.get('XSRF-TOKEN');
+      },
+      function(value) {
         $rootScope.csrf = value;
       });
       //Comment the upper lines if you want to remove csrf support

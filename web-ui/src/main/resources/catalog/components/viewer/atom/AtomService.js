@@ -21,25 +21,26 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-(function () {
+(function() {
   goog.provide('gn_atom_service');
   goog.require('gn_urlutils_service');
 
   var module = angular.module('gn_atom_service', ['gn_urlutils_service']);
 
   module.service('gnAtomService', ['$http', '$q', 'gnUrlUtils', '$cacheFactory',
-    function ($http, $q, gnUrlUtils, $cacheFactory) {
+    function($http, $q, gnUrlUtils, $cacheFactory) {
       var feedsCache = $cacheFactory('gnAtomService');
-      var isPromiseLike = function (obj) {
+      var isPromiseLike = function(obj) {
         return obj && (typeof obj.then === 'function');
       };
 
       /**
        * Do a getCapabilities request to the URL given in parameter.
        * @param {string} url WMS service URL.
-       * @return {Promise} a promise that resolves into the parsed capabilities document.
+       * @return {Promise} a promise that resolves into the parsed
+       * capabilities document.
        */
-      this.parseFeed = function (url) {
+      this.parseFeed = function(url) {
 
         var defer = $q.defer();
         var cachedFeed = feedsCache.get(url);
@@ -60,25 +61,28 @@
             var feedPromise = $http.get(url, {
               cache: true
             });
-            feedsCache.put(url, {data: defer.promise, status: "pending", deferred: defer});
-            feedPromise.success(function (responseData, status, headers, config) {
-              var currentDefer = feedsCache.get(url).deferred;
-              try {
-                var xmlDoc = $.parseXML(responseData);
-                feedsCache.put(url, {data: $(xmlDoc), status: "success"});
-                currentDefer.resolve($(xmlDoc));
-              } catch (e) {
-                feedsCache.put(url, {data: e, status: "fail"});
-                currentDefer.reject(e);
-              }
-            })
-              .error(function (data, status, headers, config) {
-                var currentDefer = feedsCache.get(url).deferred;
-                feedsCache.put(url, {data: 'url_unavailable', status: "fail"});
-                currentDefer.reject('url_unavailable');
-              });
+            feedsCache.put(url, {data: defer.promise,
+              status: 'pending', deferred: defer});
+            feedPromise.success(function(responseData, status,
+                                         headers, config) {
+                  var currentDefer = feedsCache.get(url).deferred;
+                  try {
+                    var xmlDoc = $.parseXML(responseData);
+                    feedsCache.put(url, {data: $(xmlDoc), status: 'success'});
+                    currentDefer.resolve($(xmlDoc));
+                  } catch (e) {
+                    feedsCache.put(url, {data: e, status: 'fail'});
+                    currentDefer.reject(e);
+                  }
+                })
+                .error(function(data, status, headers, config) {
+                  var currentDefer = feedsCache.get(url).deferred;
+                  feedsCache.put(url, {data: 'url_unavailable',
+                    status: 'fail'});
+                  currentDefer.reject('url_unavailable');
+                });
           } else {
-            feedsCache.put(url, {data: 'invalid_url', status: "fail"});
+            feedsCache.put(url, {data: 'invalid_url', status: 'fail'});
             defer.reject('invalid_url');
 
           }

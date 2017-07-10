@@ -244,7 +244,7 @@
             try {
               return Object.keys(scope.palettes).length > 1;
             }
-            catch(e) {
+            catch (e) {
               return false;
             }
           };

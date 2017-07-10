@@ -33,8 +33,8 @@
         scope: {
           metadata: '='
         },
-        templateUrl: '../../catalog/components/utility/'+
-          'partials/typewidget.html'
+        templateUrl: '../../catalog/components/utility/' +
+            'partials/typewidget.html'
       };
     }
   ]);

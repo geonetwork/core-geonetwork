@@ -679,12 +679,12 @@
               }
 
               var projCode = map.getView().getProjection().getCode();
-              if(getCapLayer.CRS) {
-                if(!getCapLayer.CRS.includes(projCode)) {
-                  if(projCode == 'EPSG:3857' &&
-                    getCapLayer.CRS.includes('EPSG:900913')) {
+              if (getCapLayer.CRS) {
+                if (!getCapLayer.CRS.includes(projCode)) {
+                  if (projCode == 'EPSG:3857' &&
+                      getCapLayer.CRS.includes('EPSG:900913')) {
                   }
-                  else if(getCapLayer.CRS.includes('EPSG:4326')) {
+                  else if (getCapLayer.CRS.includes('EPSG:4326')) {
                     projCode = 'EPSG:4326';
                   }
                 }
@@ -1169,7 +1169,7 @@
               gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
-                  name, capObj, md && md.getUuid());
+                    name, capObj, md && md.getUuid());
                 if (!capL) {
                   var o = {
                     url: url,
@@ -1368,15 +1368,15 @@
 
               // sort tile resolutions if number
               var tileMatrices;
-              if(matrixSet.TileMatrix.length &&
-                Number.isInteger(matrixSet.TileMatrix[0].Identifier)) {
+              if (matrixSet.TileMatrix.length &&
+                  Number.isInteger(matrixSet.TileMatrix[0].Identifier)) {
                 tileMatrices = matrixSet.TileMatrix.splice(0)
-                  .sort(function (a, b) {
-                    var id1 = parseInt(a.Identifier);
-                    var id2 = parseInt(b.Identifier);
-                    return id1 > id2 ? 1 :
+                    .sort(function(a, b) {
+                      var id1 = parseInt(a.Identifier);
+                      var id2 = parseInt(b.Identifier);
+                      return id1 > id2 ? 1 :
                       (id1 < id2 ? -1 : 0);
-                  });
+                    });
               }
               else {
                 tileMatrices = matrixSet.TileMatrix;
@@ -1549,28 +1549,11 @@
               case 'wmts':
                 if (!opt.name || !opt.url) {
                   $log.warn('One of the required parameters (name, url) ' +
-                    'is missing in the specified WMTS layer:',
-                    opt);
+                      'is missing in the specified WMTS layer:',
+                      opt);
                   break;
                 }
                 this.addWmtsFromScratch(map, opt.url, opt.name)
-                  .then(function(layer) {
-                    if (title) {
-                      layer.set('title', title);
-                      layer.set('label', title);
-                    }
-                    return layer;
-                  });
-                break;
-
-                case 'wms':
-                  if (!opt.name || !opt.url) {
-                    $log.warn('One of the required parameters (name, url) ' +
-                      'is missing in the specified WMS layer:',
-                      opt);
-                    break;
-                  }
-                  this.addWmsFromScratch(map, opt.url, opt.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);
@@ -1578,7 +1561,24 @@
                       }
                       return layer;
                     });
+                break;
+
+              case 'wms':
+                if (!opt.name || !opt.url) {
+                  $log.warn('One of the required parameters (name, url) ' +
+                      'is missing in the specified WMS layer:',
+                      opt);
                   break;
+                }
+                this.addWmsFromScratch(map, opt.url, opt.name)
+                    .then(function(layer) {
+                      if (title) {
+                        layer.set('title', title);
+                        layer.set('label', title);
+                      }
+                      return layer;
+                    });
+                break;
             }
           },
 
@@ -1700,7 +1700,7 @@
          */
         selected: function(layer) {
           return layer.displayInLayerManager && !layer.get('fromWps') &&
-            (!layer.get('errors') || !layer.get('errors').length);
+              (!layer.get('errors') || !layer.get('errors').length);
         },
         visible: function(layer) {
           return layer.displayInLayerManager && layer.visible;

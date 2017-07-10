@@ -27,12 +27,18 @@
 
 
 
-  goog.require('OWS_1_1_0');
-  goog.require('WPS_1_0_0');
-  goog.require('XLink_1_0');
+
+
+
+
+
+
   goog.require('GML_3_1_1');
+  goog.require('OWS_1_1_0');
   goog.require('SMIL_2_0');
   goog.require('SMIL_2_0_Language');
+  goog.require('WPS_1_0_0');
+  goog.require('XLink_1_0');
 
   var module = angular.module('gn_wps_service', []);
 
@@ -182,97 +188,97 @@
        * @return {defer} promise
        */
       this.printExecuteMessage = function(uri, processId, inputs,
-        responseDocument) {
+          responseDocument) {
         var me = this;
 
         return this.describeProcess(uri, processId).then(
-          function(data) {
-            var description = data.processDescription[0];
+            function(data) {
+              var description = data.processDescription[0];
 
-            var url = uri;
-            var request = {
-              name: {
-                localPart: 'Execute',
-                namespaceURI: 'http://www.opengis.net/wps/1.0.0'
-              },
-              value: {
-                service: 'WPS',
-                version: '1.0.0',
-                identifier: {
-                  value: description.identifier.value
+              var url = uri;
+              var request = {
+                name: {
+                  localPart: 'Execute',
+                  namespaceURI: 'http://www.opengis.net/wps/1.0.0'
                 },
-                dataInputs: {
-                  input: []
+                value: {
+                  service: 'WPS',
+                  version: '1.0.0',
+                  identifier: {
+                    value: description.identifier.value
+                  },
+                  dataInputs: {
+                    input: []
+                  }
+                }
+              };
+
+              var setInputData = function(input, data) {
+                if (input.literalData && data) {
+                  request.value.dataInputs.input.push({
+                    identifier: {
+                      value: input.identifier.value
+                    },
+                    data: {
+                      literalData: {
+                        value: data.toString()
+                      }
+                    }
+                  });
+                }
+                if (input.complexData && data) {
+                  var mimeType = input.complexData._default.format.mimeType;
+                  request.value.dataInputs.input.push({
+                    identifier: {
+                      value: input.identifier.value
+                    },
+                    data: {
+                      complexData: {
+                        mimeType: mimeType,
+                        content: data
+                      }
+                    }
+                  });
+                }
+                if (input.boundingBoxData) {
+                  var bbox = data.split(',');
+                  request.value.dataInputs.input.push({
+                    identifier: {
+                      value: input.identifier.value
+                    },
+                    data: {
+                      boundingBoxData: {
+                        dimensions: 2,
+                        lowerCorner: [bbox[0], bbox[1]],
+                        upperCorner: [bbox[2], bbox[3]]
+                      }
+                    }
+                  });
+                }
+              };
+
+              for (var i = 0; i < description.dataInputs.input.length; ++i) {
+                var input = description.dataInputs.input[i];
+                if (inputs[input.identifier.value] !== undefined) {
+                  setInputData(input, inputs[input.identifier.value]);
                 }
               }
-            };
 
-            var setInputData = function(input, data) {
-              if (input.literalData && data) {
-                request.value.dataInputs.input.push({
-                  identifier: {
-                    value: input.identifier.value
-                  },
-                  data: {
-                    literalData: {
-                      value: data.toString()
-                    }
-                  }
-                });
-              }
-              if (input.complexData && data) {
-                var mimeType = input.complexData._default.format.mimeType;
-                request.value.dataInputs.input.push({
-                  identifier: {
-                    value: input.identifier.value
-                  },
-                  data: {
-                    complexData: {
-                      mimeType: mimeType,
-                      content: data
-                    }
-                  }
-                });
-              }
-              if (input.boundingBoxData) {
-                var bbox = data.split(',');
-                request.value.dataInputs.input.push({
-                  identifier: {
-                    value: input.identifier.value
-                  },
-                  data: {
-                    boundingBoxData: {
-                      dimensions: 2,
-                      lowerCorner: [bbox[0], bbox[1]],
-                      upperCorner: [bbox[2], bbox[3]]
-                    }
-                  }
-                });
-              }
-            };
+              request.value.responseForm = {
+                responseDocument: $.extend(true, {
+                  lineage: false,
+                  storeExecuteResponse: true,
+                  status: false
+                }, responseDocument)
+              };
 
-            for (var i = 0; i < description.dataInputs.input.length; ++i) {
-              var input = description.dataInputs.input[i];
-              if (inputs[input.identifier.value] !== undefined) {
-                setInputData(input, inputs[input.identifier.value]);
-              }
+              var body = marshaller.marshalString(request);
+
+              return body;
+            },
+            function(data) {
+              return data;
             }
-
-            request.value.responseForm = {
-              responseDocument: $.extend(true, {
-                lineage: false,
-                storeExecuteResponse: true,
-                status: false
-              }, responseDocument)
-            };
-
-            var body = marshaller.marshalString(request);
-
-            return body;
-          },
-          function(data) {
-            return data;
-          }
         );
       };
 
@@ -296,19 +302,19 @@
         var defer = $q.defer();
 
         this.printExecuteMessage(uri, processId, inputs,
-          responseDocument)
-          .then(function (body) {
-            return $http.post(url, body, {
-              headers: {'Content-Type': 'application/xml'}
+            responseDocument)
+            .then(function(body) {
+              return $http.post(url, body, {
+                headers: {'Content-Type': 'application/xml'}
+              });
+            })
+            .then(function(data) {
+              var response =
+              unmarshaller.unmarshalString(data.data).value;
+              defer.resolve(response);
+            }, function(data) {
+              defer.reject(data);
             });
-          })
-          .then(function(data) {
-            var response =
-                unmarshaller.unmarshalString(data.data).value;
-            defer.resolve(response);
-          }, function(data) {
-            defer.reject(data);
-          });
 
         return defer.promise;
       };

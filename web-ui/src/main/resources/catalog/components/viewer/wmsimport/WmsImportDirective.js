@@ -70,7 +70,8 @@
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
-              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer, $scope.url);
+              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer,
+                  $scope.url);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wmts') {
@@ -142,7 +143,7 @@
           };
 
           // watch url as input
-          scope.$watch('url', function (value) {
+          scope.$watch('url', function(value) {
             if (value) {
               scope.setUrl({
                 url: value,

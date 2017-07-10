@@ -68,16 +68,19 @@
             var url = $filter('gnLocalized')(link.url) || link.url;
 
             var isServiceLink =
-             gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
+               gnSearchSettings.mapProtocols.services.
+               indexOf(link.protocol) > -1;
 
             if (isServiceLink) {
               gnMap.addOwsServiceToMap(link.url, 'WMS');
             } else {
-              //if this operation is called from search-from-map, the link does not contain title, but contains name directly
-              var layerName = link.name ? link.name : $filter('gnLocalized')(link.title) || link.title;
+              //if this operation is called from search-from-map,
+              // the link does not contain title, but contains name directly
+              var layerName = link.name ? link.name :
+                 $filter('gnLocalized')(link.title) || link.title;
               if (layerName) {
                 gnMap.addWmsFromScratch(gnSearchSettings.viewerMap,
-                  url, layerName, false, md);
+                   url, layerName, false, md);
               } else {
                 gnMap.addOwsServiceToMap(url, 'WMS');
               }
@@ -91,9 +94,11 @@
             var url = $filter('gnLocalized')(link.url) || link.url;
 
             var isServiceLink =
-               gnSearchSettings.mapProtocols.services.indexOf(link.protocol) > -1;
+               gnSearchSettings.mapProtocols.services.
+               indexOf(link.protocol) > -1;
 
-            var isGetFeatureLink = (url.toLowerCase().indexOf('request=getfeature') > -1);
+            var isGetFeatureLink =
+               (url.toLowerCase().indexOf('request=getfeature') > -1);
 
             if (isServiceLink && !isGetFeatureLink) {
               gnMap.addOwsServiceToMap(url, 'WFS');
@@ -114,7 +119,7 @@
 
               if (ftName) {
                 gnMap.addWfsFromScratch(gnSearchSettings.viewerMap,
-                  url, ftName, false, md);
+                   url, ftName, false, md);
               } else {
                 gnMap.addOwsServiceToMap(url, 'WFS');
               }
@@ -140,7 +145,8 @@
                    });
               });
               gnSearchLocation.setMap();
-            } else if (link.name && !angular.isArray(link.name) && link.name != '') {
+            } else if (link.name && !angular.isArray(link.name) &&
+               link.name != '') {
               gnOwsCapabilities.getWMTSCapabilities(url).then(
                  function(capObj) {
                    var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(
@@ -201,8 +207,8 @@
           var openLink = function(record, link) {
             var url = $filter('gnLocalized')(record.url) || record.url;
             if (url && (record.url.indexOf('\\') == 0 ||
-              url.indexOf('http') == 0 ||
-              url.indexOf('ftp') == 0)) {
+               url.indexOf('http') == 0 ||
+               url.indexOf('ftp') == 0)) {
               return window.open(url, '_blank');
             } else if (url && url.indexOf('www.') == 0) {
               return window.open('http://' + url, '_blank');

@@ -153,7 +153,7 @@
 
             return xfsCap;
 
-           /* if (xfsCap.exception != undefined) {
+            /* if (xfsCap.exception != undefined) {
               //defer.reject({msg: 'wfsGetCapabilitiesFailed',
               //  owsExceptionReport: xfsCap});
               return xfsCap;
@@ -164,7 +164,8 @@
             }*/
           } catch (e) {
             //alert('WFS version not supported.');
-            //defer.reject({msg: 'wfsGetCapabilitiesFailed', owsExceptionReport: e.message});
+            //defer.reject({msg: 'wfsGetCapabilitiesFailed',
+            // owsExceptionReport: e.message});
             //return e.message;
           }
 
@@ -173,7 +174,7 @@
           //return result.Contents;
         };
 
-	    var mergeParams = function(url, Params) {
+        var mergeParams = function(url, Params) {
           //merge URL parameters with indeicated ones
           var parts = url.split('?');
           var urlParams = angular.isDefined(parts[1]) ?
@@ -255,7 +256,7 @@
                   cache: true
                 })
                     .success(function(data, status, headers, config) {
-                      if(data) {
+                      if (data) {
                         defer.resolve(parseWMTSCapabilities(data));
                       }
                       else {
@@ -285,20 +286,20 @@
                 $http.get(url, {
                   cache: true
                 })
-                .success(function(data, status, headers, config) {
-                  var xfsCap = parseWFSCapabilities(data);
+                    .success(function(data, status, headers, config) {
+                      var xfsCap = parseWFSCapabilities(data);
 
-                  if (!xfsCap || xfsCap.exception != undefined) {
-                    defer.reject({msg: 'wfsGetCapabilitiesFailed',
-                      owsExceptionReport: xfsCap});
-                  } else {
-                     defer.resolve(xfsCap);
-                  }
+                      if (!xfsCap || xfsCap.exception != undefined) {
+                        defer.reject({msg: 'wfsGetCapabilitiesFailed',
+                          owsExceptionReport: xfsCap});
+                      } else {
+                        defer.resolve(xfsCap);
+                      }
 
-                })
-                .error(function(data, status, headers, config) {
-                  defer.reject(status);
-                });
+                    })
+                    .error(function(data, status, headers, config) {
+                      defer.reject(status);
+                    });
               }
             }
             return defer.promise;
@@ -355,7 +356,7 @@
 
             //non namespaced lowercase name
             nameNoNamespace = name.split(':')[
-              name.split(':').length - 1].toLowerCase();
+                name.split(':').length - 1].toLowerCase();
 
             for (var i = 0; i < layers.length; i++) {
               //Add Info for Requests:
@@ -366,12 +367,12 @@
               //check layername
               var lId = layers[i].Identifier;
               var capName = layers[i].Name ||
-                (lId && angular.isArray(lId) ? lId[0] : lId) || '',
-                capNameNoNamespace;
+                  (lId && angular.isArray(lId) ? lId[0] : lId) || '',
+                  capNameNoNamespace;
               //non namespaced lowercase capabilities name
-              if(capName) {
+              if (capName) {
                 capNameNoNamespace = capName.split(':')[
-                  capName.split(':').length - 1].toLowerCase();
+                    capName.split(':').length - 1].toLowerCase();
               }
 
               //either names match or non namespaced names

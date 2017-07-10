@@ -30,9 +30,11 @@
     'gn_wms_service'
   ]);
 
-  module.directive('gnWmsDownload', ['gnWmsService', 'gnGlobalSettings', 'gnSearchSettings', '$rootScope', '$translate',
+  module.directive('gnWmsDownload', ['gnWmsService', 'gnGlobalSettings',
+    'gnSearchSettings', '$rootScope', '$translate',
     'gnSearchLocation',
-    function(gnWmsService, gnGlobalSettings, gnSearchSettings, $rootScope, $translate, gnSearchLocation) {
+    function(gnWmsService, gnGlobalSettings, gnSearchSettings,
+             $rootScope, $translate, gnSearchLocation) {
       return {
         restrict: 'A',
         scope: {
@@ -58,12 +60,15 @@
               scope.projections = [];
               scope.checkWmsUrl().then(
                   function() {
-				  if (scope.capabilities.layers && scope.capabilities.layers.length != 0) {
+                    if (scope.capabilities.layers &&
+                    scope.capabilities.layers.length != 0) {
                       scope.isWmsAvailable = true;
                       //here check wms/wmts
 
-                      scope.isLayerInCapabilities = gnWmsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
-				  }
+                      scope.isLayerInCapabilities =
+                      gnWmsService.isLayerInCapabilities(scope.capabilities,
+                      scope.layerName);
+                    }
                   }, function() {
                   }
 
@@ -87,7 +92,8 @@
             if (!layerSelected) {
               return;
             }
-            gnWmsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap);
+            gnWmsService.addLayerToMap(layerSelected,
+                gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
 
           };
@@ -97,7 +103,8 @@
           };
 
           scope.addWmsLayer = function() {
-            gnWmsService.addWMSToMap(scope.layerName, scope.url, scope.md, gnSearchSettings.viewerMap);
+            gnWmsService.addWMSToMap(scope.layerName, scope.url,
+                scope.md, gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
 
           };

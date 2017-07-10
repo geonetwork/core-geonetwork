@@ -43,16 +43,18 @@
           function init() {
 
             var source = scope.layer.getSource();
-            if(!source || !(source instanceof ol.source.ImageWMS ||
-              source instanceof ol.source.TileWMS)) {
+            if (!source || !(source instanceof ol.source.ImageWMS ||
+                source instanceof ol.source.TileWMS)) {
               return;
             }
 
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
             try {
-              scope.url = attrs['url'] || scope.layer.get('url').replace(/wms/i, 'wfs');
+              scope.url = attrs['url'] ||
+                  scope.layer.get('url').replace(/wms/i, 'wfs');
               scope.typename = attrs['typename'] ||
-                  (scope.layer.getSource().getParams && scope.layer.getSource().getParams().LAYERS);
+                  (scope.layer.getSource().getParams &&
+                  scope.layer.getSource().getParams().LAYERS);
               scope.formats = [];
               scope.checkWFSUrl();
             } catch (e) {
@@ -64,7 +66,9 @@
           // TODO: Choose a projection ?
           scope.download = function(format, mapExtentOnly) {
             if (mapExtentOnly) {
-              var extent = map ? scope.map.getView().calculateExtent(scope.map.getSize()) : [-90, -180, 90, 180];
+              var extent = map ?
+                  scope.map.getView().calculateExtent(scope.map.getSize()) :
+                  [-90, -180, 90, 180];
               // Use layer default SRS
               var p = scope.featureType.defaultSRS;
               var e = map ? ol.proj.transformExtent(extent,
@@ -89,11 +93,12 @@
             if (scope.url && scope.url != '') {
               return gnWfsService.getCapabilities(scope.url)
                   .then(function(capabilities) {
-					  scope.isWfsAvailable = true;
+                    scope.isWfsAvailable = true;
                     scope.featureType =
                     gnWfsService.getTypeName(capabilities, scope.typename);
                     if (scope.featureType) {
-                      scope.formats = gnWfsService.getOutputFormat(capabilities);
+                      scope.formats =
+                      gnWfsService.getOutputFormat(capabilities);
                     }
                   });
             }
@@ -126,12 +131,16 @@
 
           // TODO: Choose a projection ?
           scope.download = function(format, mapExtentOnly) {
-            scope.downloadFeatureType(format, scope.featureType, scope.typename, mapExtentOnly);
+            scope.downloadFeatureType(format, scope.featureType,
+                scope.typename, mapExtentOnly);
           };
 
-          scope.downloadFeatureType = function(format, featureType, featureTypeName, mapExtentOnly) {
+          scope.downloadFeatureType = function(format, featureType,
+                                               featureTypeName, mapExtentOnly) {
             if (mapExtentOnly) {
-              var extent = map ? scope.map.getView().calculateExtent(scope.map.getSize()) : [-90, -180, 90, 180];
+              var extent = map ?
+                  scope.map.getView().calculateExtent(scope.map.getSize()) :
+                  [-90, -180, 90, 180];
               // Use layer default SRS
               var p = featureType.defaultSRS;
               var e = map ? ol.proj.transformExtent(extent,
@@ -151,7 +160,7 @@
           scope.checkWFSUrl = function() {
             return gnWfsService.getCapabilities(scope.url)
                 .then(function(capabilities) {
-				   scope.isWfsAvailable = true;
+                  scope.isWfsAvailable = true;
                   scope.capabilities = capabilities;
                   scope.featureType =
                       gnWfsService.getTypeName(capabilities, scope.typename);
