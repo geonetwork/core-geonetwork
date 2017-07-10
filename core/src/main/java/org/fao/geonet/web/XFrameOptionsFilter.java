@@ -22,6 +22,10 @@
  */
 package org.fao.geonet.web;
 
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -30,31 +34,76 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Filter to avoid clickjaking attacks.
  *
  * See https://www.owasp.org/index.php/Clickjacking_Defense_Cheat_Sheet.
  *
+ * Modes supported:
+ *  - DENY: prevents any domain from framing the content.
+ *  - SAMEORIGIN, which only allows the current site to frame the content.
+ *  - ALLOW-FROM uri, which permits the specified 'uri' to frame this page.
+ *      Not all browsers support this mode.
+ *
+ * Any other value will default to DENY.
+ *
+ * Sets X-Frame-Options and Content-Security-Policy (for frame-ancestors) headers.
+ *
  * @author Jose García
  */
 public class XFrameOptionsFilter implements Filter {
+    private static String MODE_DENY = "DENY";
+    private static String MODE_SAMEORIGIN = "SAMEORIGIN";
+    private static String MODE_ALLOWFROM = "ALLOW-FROM";
+
     private String mode;
+    private String url;
+    private String domain;
 
     public void init(FilterConfig filterConfig) throws ServletException {
         mode = filterConfig.getInitParameter("mode");
+        url = filterConfig.getInitParameter("url");
 
-        // Mode: DENY, SAMEORIGIN. Any other value will default to SAMEORIGIN
-        if (!mode.equals("DENY") && !mode.equals("SAMEORIGIN")) {
-            mode = "DENY";
+        // Mode: DENY, SAMEORIGIN, ALLOW-FROM. Any other value will default to SAMEORIGIN
+        if (!mode.equals(MODE_DENY) && !mode.equals(MODE_SAMEORIGIN) && !mode.equals(MODE_ALLOWFROM)) {
+            mode = MODE_DENY;
         }
+
+        if (mode.equals(MODE_ALLOWFROM) && (StringUtils.isEmpty(url))) {
+            Log.info(Geonet.GEONETWORK,
+                "XFrameOptions filter url parameter is missing for mode ALLOW-FROM. Setting mode to DENY.");
+            mode = MODE_DENY;
+        } else {
+            try {
+                URL urlValue = new URL(url);
+                domain = urlValue.getHost() +
+                    ((urlValue.getPort() == -1)? "" : ":" + urlValue.getPort());
+
+            } catch (MalformedURLException ex) {
+                Log.info(Geonet.GEONETWORK, String.format(
+                    "XFrameOptions filter url parameter (%s) is not valid for mode ALLOW-FROM. Setting mode to DENY.", url));
+                mode = MODE_DENY;
+            }
+
+        }
+
+        if (Log.isDebugEnabled(Geonet.GEONETWORK)) {
+            Log.debug(Geonet.GEONETWORK, String.format(
+                "XFrameOptions filter initialized. Using mode %s.", getXFrameOptionsValue()));
+        }
+
     }
+
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                          FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.addHeader("X-Frame-Options", this.mode);
+        response.addHeader("X-Frame-Options", getXFrameOptionsValue());
+        response.addHeader("Content-Security-Policy", getContentSecurityPolicyFramAncestorsValue());
 
         filterChain.doFilter(servletRequest, response);
     }
@@ -62,4 +111,35 @@ public class XFrameOptionsFilter implements Filter {
 
     public void destroy() {
     }
+
+
+    /**
+     * Calculates the X-Frame-Options header value.
+     *
+     * @return X-Frame-Options header value.
+     */
+    private String getXFrameOptionsValue() {
+        if (mode.equals(MODE_ALLOWFROM)) {
+            return mode + " " + url;
+        } else {
+            return mode;
+        }
+    }
+
+
+    /**
+     * Calculates the Content-Security-Policy header frame-ancestors value.
+     *
+     * @return Content-Security-Policy header frame-ancestors value.
+     */
+    private String getContentSecurityPolicyFramAncestorsValue() {
+        if (mode.equals(MODE_SAMEORIGIN)) {
+            return "frame-ancestors 'self'";
+        } else if (mode.equals(MODE_ALLOWFROM)) {
+            return "frame-ancestors " + domain;
+        } else {
+            return "frame-ancestors 'none'";
+        }
+    }
+
 }
