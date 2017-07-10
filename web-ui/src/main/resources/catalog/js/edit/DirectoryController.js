@@ -26,9 +26,16 @@
 
   goog.require('gn_catalog_service');
   goog.require('gn_facets');
+  goog.require('gn_directoryassociatedmd');
+  goog.require('gn_mdtypewidget');
 
-  var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service', 'gn_facets', 'pascalprecht.translate']);
+  var module = angular.module('gn_directory_controller', [
+    'gn_catalog_service',
+    'gn_facets',
+    'gn_directoryassociatedmd',
+    'pascalprecht.translate',
+    'gn_mdtypewidget'
+  ]);
 
   /**
    * Controller to create new metadata record.
@@ -43,16 +50,18 @@
     'gnCurrentEdit',
     'gnMetadataManager',
     'gnGlobalSettings',
+    'gnConfig',
     function($scope, $routeParams, $http,
         $rootScope, $translate, $compile,
-            gnSearchManagerService,
-            gnUtilityService,
-            gnEditor,
-            gnUrlUtils,
-            gnCurrentEdit,
-            gnMetadataManager,
-            gnGlobalSettings) {
-
+        gnSearchManagerService,
+        gnUtilityService,
+        gnEditor,
+        gnUrlUtils,
+        gnCurrentEdit,
+        gnMetadataManager,
+        gnGlobalSettings,
+        gnConfig) {
+      $scope.gnConfig = gnConfig;
       $scope.hasEntries = false;
       $scope.mdList = null;
       $scope.activeType = null;
@@ -65,7 +74,6 @@
           any: '',
           _root: '',
           sortBy: 'title',
-          sortOrder: 'reverse',
           resultType: 'subtemplates'
         },
         sortbyValues: [
@@ -151,8 +159,10 @@
             });
           });
 
+        // fetch all entries + templates
+        var entryType = $scope.userCanEditTemplates ? 's or t' : 's';
         gnSearchManagerService.search('qi?_content_type=json&' +
-          'template=s&fast=index&summaryOnly=true&resultType=subtemplates').
+          'template=' + entryType + '&fast=index&summaryOnly=true&resultType=subtemplates').
           then(function(data) {
             $scope.$broadcast('setPagination', $scope.paginationInfo);
             $scope.mdList = data;
@@ -198,7 +208,8 @@
         if (type) {
           $scope.searchObj.params._root = type;
         }
-        $scope.$broadcast('resetSearch', $scope.searchObj.params);
+        $scope.$broadcast('clearResults');
+        $scope.$broadcast('search');
         return false;
       };
 
@@ -346,8 +357,16 @@
       // ACTIONS
 
       $scope.delEntry = function (e) {
-        // md.delete?uuid=b09b1b16-769f-4dad-b213-fc25cfa9adc7
-        gnMetadataManager.remove(e['geonet:info'].id).then(refreshEntriesInfo);
+        $scope.delEntryId = e['geonet:info'].id;
+        $('#gn-confirm-delete').modal('show');
+      };
+      $scope.confirmDelEntry = function (e) {
+        if (!$scope.delEntryId) {
+          return;
+        }
+        gnMetadataManager.remove($scope.delEntryId).then(
+          refreshEntriesInfo);
+        $scope.delEntryId = null;
       };
 
       $scope.copyEntry = function (e) {
@@ -491,6 +510,7 @@
       // switch to templates (b === true) or entries (b === false)
       $scope.showTemplates = function (b) {
         $scope.searchObj.params._isTemplate = b === true ? 't' : 's';   // temp
+        $scope.$broadcast('clearResults');
         $scope.$broadcast('search');
       }
       $scope.templatesShown = function () {

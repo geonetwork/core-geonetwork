@@ -221,7 +221,7 @@
          * @param {string} isTemplate optional isTemplate value (s, t...)
          * @return {HttpPromise} of the $http get
          */
-        getMdObjByUuid: function(uuid) {
+        getMdObjByUuid: function(uuid, isTemplate) {
           return $http.get('q?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false' +
               (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).

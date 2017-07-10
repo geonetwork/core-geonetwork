@@ -26,9 +26,13 @@ package org.fao.geonet.api.records.attachments;
 import com.google.common.collect.Lists;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.MetadataResourceDatabaseMigration;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,8 +41,16 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MetadataResourceDatabaseMigrationTest {
+public class MetadataResourceDatabaseMigrationTest extends AbstractServiceIntegrationTest {
+    @Autowired
+    SettingManager settingManager;
+
     public static final String XPATH = "*//*[contains(text(), '/resources.get?')]";
+    private static final String XPATH_THUMBNAIL =
+        "*//gmd:MD_BrowseGraphic" +
+            "[gmd:fileDescription/gco:CharacterString = 'thumbnail' or " +
+            "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
+            "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
     public static final String XPATH_AFTER_UPDATE = "*//*[contains(text(), 'api/records')]";
     private static String resources =
         AbstractCoreIntegrationTest.getClassFile(
@@ -55,23 +67,41 @@ public class MetadataResourceDatabaseMigrationTest {
         List<Element> links =
             Lists.newArrayList((Iterable<? extends Element>)
                 Xml.selectNodes(metadata, XPATH));
-        assertEquals("One link to old resource", links.size(), NUMBER_OF_LINKS_TO_UPDATE);
+        assertEquals("2 link to old resources",
+            NUMBER_OF_LINKS_TO_UPDATE, links.size());
+
+        List<Element> linksThumbnail =
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH_THUMBNAIL));
+        assertEquals("One old style thumbnail link using only filename",
+            1, linksThumbnail.size());
+
+
 
         boolean changed = MetadataResourceDatabaseMigration.updateMetadataResourcesLink(
-            metadata, null
+            metadata, null, settingManager
         );
         assertTrue("Metadata was updated", changed);
         links =
             Lists.newArrayList((Iterable<? extends Element>)
                 Xml.selectNodes(metadata, XPATH));
-        assertEquals("Old links removed", links.size(), 0);
+        assertEquals("Old links are now removed", links.size(), 0);
+        linksThumbnail =
+            Lists.newArrayList((Iterable<? extends Element>)
+                Xml.selectNodes(metadata, XPATH_THUMBNAIL));
+        assertEquals("Old thumbnails are now removed", links.size(), 0);
+
 
         links =
             Lists.newArrayList((Iterable<? extends Element>)
                 Xml.selectNodes(metadata, XPATH_AFTER_UPDATE));
+
+
 //        for (Element n : links) {
 //            System.out.println(n.getText());
 //        }
-        assertEquals("New links with correct URL", links.size(), NUMBER_OF_LINKS_TO_UPDATE);
+        // 3 links and a thumbnail
+        assertEquals("New links with correct URL",
+            NUMBER_OF_LINKS_TO_UPDATE + 1, links.size());
     }
 }

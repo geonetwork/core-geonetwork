@@ -1112,5 +1112,7 @@
     "ui-searchMapLayers": "Couches de la carte de recherche",
     "ui-searchMapLayers-help": "Optionnel. Définir ici les couches à utiliser pour la carte de recherche. Le type peut être : wmts, osm, bing_aerial, stamen, etc.",
     "ui-viewerMapLayers": "Couches de la carte de visualisation",
-    "ui-viewerMapLayers-help": "Optionnel. Définir ici les couches à utiliser pour la carte de visualisation. Ces couches seront ajoutées à la carte par défaut."
+    "ui-viewerMapLayers-help": "Optionnel. Définir ici les couches à utiliser pour la carte de visualisation. Ces couches seront ajoutées à la carte par défaut.",
+    "ui-disabledTools": "Personnalisation des outils de la carte de visualisation",
+    "ui-disabledTools-help": "Les outils ci-dessus peuvent être affichés ou non sur la carte de visualisation. Sélectionner un outil pour le rendre accessible aux utilisateurs."
 }

@@ -44,6 +44,7 @@ import javax.annotation.Nonnull;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.MetadataResourceDatabaseMigration;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -130,6 +131,7 @@ public class Importer {
                                         final Path mefFile) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final IMetadataManager dm = applicationContext.getBean(IMetadataManager.class);
+        final SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         // Load preferred schema and set to iso19139 by default
         String preferredSchema = applicationContext.getBean(ServiceConfig.class).getValue("preferredSchema", "iso19139");
@@ -192,6 +194,7 @@ public class Importer {
 
                 Element metadataValidForImport;
 
+
                 Map<String, Pair<String, Element>> mdFiles = new HashMap<String, Pair<String, Element>>();
                 for (Path file : metadataXmlFiles) {
                     if (file != null
@@ -205,11 +208,10 @@ public class Importer {
                             if (metadataSchema == null) {
                                 continue;
                             }
+                            
+                            String currFile = "Found metadata file " + file.getParent().getParent().relativize(file);
 
-                            String currFile = "Found metadata file " + file
-                                    .getParent().getParent().relativize(file);
-                            mdFiles.put(metadataSchema,
-                                    Pair.read(currFile, metadata));
+                            mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                         } catch (NoSchemaMatchesException e) {
                             // Important folder name to identify metadata should
@@ -411,6 +413,15 @@ public class Importer {
                     }
                     rating = general.getChildText("rating");
                     popularity = general.getChildText("popularity");
+                }
+
+                if (schema.startsWith("iso19139")) {
+                    // In GeoNetwork 3.x, links to resources changed:
+                    // * thumbnails contains full URL instead of file name only
+                    // * API mode change old URL structure.
+                    MetadataResourceDatabaseMigration.updateMetadataResourcesLink(
+                        metadata, null, sm
+                    );
                 }
 
                 if (validate) {

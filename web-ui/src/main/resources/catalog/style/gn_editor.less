@@ -141,7 +141,9 @@ input[type=text], input[type=number], select {
   }
 
   .directory-entries-list {
-    li {
+    margin: 0 1em;
+
+    & > li {
       display: flex;
       flex-direction: column;
       @padding: 6px;
@@ -214,7 +216,7 @@ input[type=text], input[type=number], select {
     right: 1em;
   }
 
-  .gn-share {
+  [gn-modal] {
     max-width: none;
     max-height: none;
 
@@ -228,12 +230,7 @@ input[type=text], input[type=number], select {
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    padding: 2px;
-
-    :nth-of-type(1) {
-      font-size: 120%;
-      padding-top: 8px;
-    }
+    padding: 6px;
 
     .gn-record-details {
       padding-left: 38px;
@@ -730,5 +727,90 @@ form.gn-tab-xml {
 [data-gn-directory-entry-selector] {
   .gn-autocomplete-list {
     top:0 !important;
+    width: 100%;
+  }
+}
+
+gn-directory-associated-md {
+  // add margin if we're in a dropdown menu
+  ul.dropdown-menu & {
+    margin: 8px 12px;
+    width: 30em;
+    display: block;
+  }
+
+  // general purpose flex spacer
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .form-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    & > * {
+      flex-shrink: 0;
+    }
+    input.filter-text {
+      flex-shrink: 1;
+      margin-right: 12px;
+    }
+  }
+
+  .associated-md {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+    padding-top: 6px;
+    &:not(:last-child) {
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 6px;
+    }
+  }
+}
+
+// md type widget (used only in editor for now)
+gn-md-type-widget {
+  display: inline-block;
+
+  & > div {
+    border-radius: 1000px;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 2em;
+    text-align: center;
+    font-size: 0.9em;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    background-color: @gray-light;
+
+    &.valid-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+
+    &::after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
   }
 }

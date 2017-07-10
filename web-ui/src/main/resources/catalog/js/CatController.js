@@ -156,11 +156,6 @@
           },
           'useOSM': true,
           'context': '',
-          'layer': {
-            'url': 'http://www2.demis.nl/mapserver/wms.asp?',
-            'layers': 'Countries',
-            'version': '1.1.1'
-          },
           'projection': 'EPSG:3857',
           'projectionList': [{
             'code': 'EPSG:4326',
@@ -168,7 +163,13 @@
           }, {
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
-          }]
+          }],
+          'searchMapLayers': [],
+          'viewerMapLayers': [],
+          'disabledTools': {
+            'processes': true
+          },
+          'graticuleOgcService': {}
         },
         'editor': {
           'enabled': true,
@@ -206,17 +207,27 @@
       },
       current: null,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
-        // Remap some old settings with new one
-        angular.extend(this.gnCfg, config, {});
+        // start from the default config to make sure every field is present
+        // and override with config arg if required
+        angular.merge(this.gnCfg, config, {});
+
+        // secial case: languages (replace with object from config if available)
+        this.gnCfg.mods.header.languages = angular.extend({
+          mods: {
+            header: {
+              languages: {}
+            }
+          }
+        }, config).mods.header.languages;
+
         this.gnUrl = gnUrl || '../';
         this.proxyUrl = this.gnUrl + '../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
         angular.extend(gnSearchSettings, this.gnCfg.mods.search);
         this.isMapViewerEnabled = this.gnCfg.mods.map.enabled;
         gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
-        gnViewerSettings.owsContext = this.gnCfg.mods.map.context;
-        gnViewerSettings.wmsUrl = this.gnCfg.mods.map.layer.url;
-        gnViewerSettings.layerName = this.gnCfg.mods.map.layer.name;
+        gnViewerSettings.owsContext = gnViewerSettings.owsContext ||
+          this.gnCfg.mods.map.context;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
@@ -382,9 +393,9 @@
       //Comment the following lines if you want to remove csrf support
       $http.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
       $http.defaults.xsrfCookieName = 'XSRF-TOKEN';
-      $scope.$watch(function() { return $cookies.get('XSRF-TOKEN'); }, function(value){
-        $rootScope.csrf=value;
-      }) ;
+      $scope.$watch(function() { return $cookies.get('XSRF-TOKEN'); }, function(value) {
+        $rootScope.csrf = value;
+      });
       //Comment the upper lines if you want to remove csrf support
 
       /**

@@ -23,13 +23,13 @@
  * ==============================================================================
  */
 
-package org.fao.geonet.api.records.attachments;
+package org.fao.geonet;
 
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -51,7 +51,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Replace old metadata link to uploaded file by new API
+ * Replace old metadata link to uploaded file by new API.
+ * Only applies to ISO19139 graphic overview and online resources.
  *
  * http://localhost:8080/geonetwork/srv/en/resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&fname=basins.zip&access=private
  *
@@ -68,12 +69,21 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
         Lists.newArrayList(
             ISO19139Namespaces.GMD,
             ISO19139Namespaces.GCO);
-    private static final String XPATH = "*//*[contains(text(), '/resources.get?')]";
+
+    private static final String XPATH_RESOURCES =
+        "*//*[contains(text(), '/resources.get?')]";
+    private static final String XPATH_THUMBNAIL =
+        "*//gmd:MD_BrowseGraphic" +
+            "[gmd:fileDescription/gco:CharacterString = 'thumbnail' or " +
+            "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
+            "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
+
     private static final Pattern pattern = Pattern.compile(
-        "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/resources.get?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
+        "(.*)\\/([a-zA-Z0-9_\\-]+)\\/([a-z]{2,3})\\/{1,2}resources.get\\?.*fname=([\\p{L}\\w\\s\\.\\-]+)(&.*|$)");
 
     public static boolean updateMetadataResourcesLink(@Nonnull Element xml,
-                                                      @Nullable String uuid) throws JDOMException {
+                                                      @Nullable String uuid,
+                                                      SettingManager settingManager) throws JDOMException {
         boolean changed = false;
 
         if (uuid == null) {
@@ -88,14 +98,28 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
         if (StringUtils.isNotEmpty(uuid)) {
             @SuppressWarnings("unchecked") final List<Element> links =
                 Lists.newArrayList((Iterable<? extends Element>)
-                    Xml.selectNodes(xml, XPATH));
+                    Xml.selectNodes(xml, XPATH_RESOURCES));
 
             for (Element element : links) {
                 final String url = element.getText();
                 Matcher regexMatcher = pattern.matcher(url);
                 element.setText(
                     regexMatcher.replaceAll(
-                        "$1/$2/api/records/" + uuid + "/attachments/$4"));
+                        settingManager.getNodeURL() +
+                                    "api/records/" + uuid + "/attachments/$4"));
+                changed = true;
+            }
+
+            @SuppressWarnings("unchecked") final List<Element> linksThumbnails =
+                Lists.newArrayList((Iterable<? extends Element>)
+                    Xml.selectNodes(xml, XPATH_THUMBNAIL, NAMESPACES));
+
+            for (Element element : linksThumbnails) {
+                final String filename = element.getText();
+                element.setText(
+                    String.format(
+                        "%sapi/records/" + uuid + "/attachments/%s",
+                        settingManager.getNodeURL(), filename));
                 changed = true;
             }
         } else {
@@ -116,11 +140,13 @@ public class MetadataResourceDatabaseMigration implements DatabaseMigrationTask 
                      "SELECT data,id,uuid FROM metadata WHERE isharvested = 'n'")
             ) {
                 int numInBatch = 0;
+                final SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
                 while (resultSet.next()) {
                     final Element xml = Xml.loadString(resultSet.getString(1), false);
                     final int id = resultSet.getInt(2);
                     final String uuid = resultSet.getString(3);
-                    boolean changed = updateMetadataResourcesLink(xml, uuid);
+                    boolean changed = updateMetadataResourcesLink(xml, uuid, settingManager);
                     if (changed) {
                         String updatedData = Xml.getString(xml);
                         update.setString(1, updatedData);
