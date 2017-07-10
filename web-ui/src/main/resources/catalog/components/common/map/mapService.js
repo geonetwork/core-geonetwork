@@ -509,12 +509,14 @@
                 ratio: getImageSourceRatio(map, 2048),
                 imageLoadFunction: function(image, src) {
                   image.getImage().src = src.replace(/STYLES&/, 'STYLES=&');
-                }
+                },
+                projection: layerOptions.projection
               });
             } else {
               source = new ol.source.TileWMS({
                 params: layerParams,
                 url: options.url,
+                projection: layerOptions.projection,
                 gutter: 15
               });
             }
@@ -680,11 +682,25 @@
               if (getCapLayer.version) {
                 layerParam.VERSION = getCapLayer.version;
               }
+
+              var projCode = map.getView().getProjection().getCode();
+              if(getCapLayer.CRS) {
+                if(!getCapLayer.CRS.includes(projCode)) {
+                  if(projCode == 'EPSG:3857' &&
+                    getCapLayer.CRS.includes('EPSG:900913')) {
+                  }
+                  else if(getCapLayer.CRS.includes('EPSG:4326')) {
+                    projCode = 'EPSG:4326';
+                  }
+                }
+              }
+
               var layer = this.createOlWMS(map, layerParam, {
                 url: url || getCapLayer.url,
                 label: getCapLayer.Title,
                 attribution: attribution,
                 attributionUrl: attributionUrl,
+                projection: projCode,
                 legend: legend,
                 group: getCapLayer.group,
                 metadata: metadata,
