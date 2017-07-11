@@ -31,24 +31,30 @@
   goog.require('gn_ows_service');
   goog.require('gn_urlutils_service');
 
-  var module = angular.module('gn_wmts_service', ['gn_map_service', 'gn_ows_service', 'gn_urlutils_service']);
+  var module = angular.module('gn_wmts_service', ['gn_map_service',
+    'gn_ows_service', 'gn_urlutils_service']);
 
-  module.service('gnWmtsService', ['gnOwsCapabilities', '$q', 'gnUrlUtils', 'gnMap',
+  module.service('gnWmtsService', ['gnOwsCapabilities', '$q',
+    'gnUrlUtils', 'gnMap',
     function(gnOwsCapabilities, $q, gnUrlUtils, gnMap) {
+
       /**
-     * Do a getCapabilities request to the URL given in parameter.
-     * @param {string} url WMS service URL.
-     * @return {Promise} a promise that resolves into the parsed capabilities document.
-     */
+       * Do a getCapabilities request to the URL given in parameter.
+       *
+       * @param {string} url WMS service URL.
+       * @return {Promise} a promise that resolves into the parsed
+       *                   capabilities document.
+       */
       this.getCapabilities = function(url) {
         var defer = $q.defer();
         if (gnUrlUtils.isValid(url)) {
 
-          gnOwsCapabilities.getWMTSCapabilities(url).then(function(capabilities) {
-            defer.resolve(capabilities);
-          }, function(rejectedData) {
-            defer.reject(rejectedData);
-          });
+          gnOwsCapabilities.getWMTSCapabilities(url).then(
+              function(capabilities) {
+                defer.resolve(capabilities);
+              }, function(rejectedData) {
+                defer.reject(rejectedData);
+              });
         } else {
           defer.reject('invalid_url');
         }
@@ -56,11 +62,13 @@
       };
 
       /**
-     * Check if a layer name is present in the capabilities document.
-     * @param {Object} capabilities the parsed capabilities document (as returned by getCapabilities method)
-     * @param {string} layers layers to check. It can include multiple layer names separated by commas.
-     * @return {boolean} true if all layers are present in the capabilities.
-     */
+       * Check if a layer name is present in the capabilities document.
+       * @param {Object} capabilities the parsed capabilities document
+       *                 (as returned by getCapabilities method)
+       * @param {string} layers layers to check. It can include multiple
+       *                 layer names separated by commas.
+       * @return {boolean} true if all layers are present in the capabilities.
+       */
       this.isLayerInCapabilities = function(capabilities, layers) {
         if (!capabilities || !layers) {
           return false;
@@ -80,10 +88,11 @@
       };
 
       /**
-     * Add a layer to the map.
-     * @param {Object} layer a layer description from the capabilities document.
-     * @param {gnMap} map a GeoNetwork map where the layer will be added.
-     */
+       * Add a layer to the map.
+       * @param {Object} layer a layer description from the
+       *                 capabilities document.
+       * @param {gnMap} map a GeoNetwork map where the layer will be added.
+       */
       this.addLayerToMap = function(layer, map, capabilities) {
         gnMap.addWmtsToMapFromCap(map, layer, capabilities);
       };

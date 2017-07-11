@@ -40,45 +40,46 @@
           entryUuid: '='
         },
         templateUrl: '../../catalog/components/edit/directoryassociatedmd/' +
-          'partials/associated-results.html',
-        controller: ['$scope', 'gnGlobalSettings', function ($scope, gnGlobalSettings) {
-          $scope.searchObj = {
-            selectionBucket: 'd101',
-            params: {
-              _isTemplate: 'y or n',
-              any: '',
-              sortBy: 'title',
-              _xlink: '*'
-            },
-            sortbyValues: [
-              {
-                sortBy: 'title'
+            'partials/associated-results.html',
+        controller: ['$scope', 'gnGlobalSettings',
+          function($scope, gnGlobalSettings) {
+            $scope.searchObj = {
+              selectionBucket: 'd101',
+              params: {
+                _isTemplate: 'y or n',
+                any: '',
+                sortBy: 'title',
+                _xlink: '*'
               },
-              {
-                sortBy: 'owner'
-              },
-              {
-                sortBy: 'changeDate',
-                sortOrder: 'reverse'
-              }
-            ]
-          };
-          $scope.paginationInfo = {
-            pages: -1,
-            currentPage: 1,
-            hitsPerPage: 8
-          };
-          $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+              sortbyValues: [
+                {
+                  sortBy: 'title'
+                },
+                {
+                  sortBy: 'owner'
+                },
+                {
+                  sortBy: 'changeDate',
+                  sortOrder: 'reverse'
+                }
+              ]
+            };
+            $scope.paginationInfo = {
+              pages: -1,
+              currentPage: 1,
+              hitsPerPage: 8
+            };
+            $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
-          $scope.$watch('entryUuid', function (v) {
-            if (v) {
-              $scope.searchObj.params._xlink =
-                '*local://srv/api/registries/entries/' + v + '*';
-              $scope.$broadcast('clearResults');
-              $scope.$broadcast('search');
-            }
-          });
-        }]
+            $scope.$watch('entryUuid', function(v) {
+              if (v) {
+                $scope.searchObj.params._xlink =
+                    '*local://srv/api/registries/entries/' + v + '*';
+                $scope.$broadcast('clearResults');
+                $scope.$broadcast('search');
+              }
+            });
+          }]
       };
     }
   ]);

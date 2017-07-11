@@ -26,7 +26,7 @@
 
 
   goog.require('gn_directoryassociatedmd_directive');
-  
+
   angular.module('gn_directoryassociatedmd', [
     'gn_directoryassociatedmd_directive'
   ]);

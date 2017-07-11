@@ -65,7 +65,7 @@
               scope.addLayerUrl = {
                 wms: '',
                 wmts: ''
-              }
+              };
 
               /** Define object to receive measure info */
               scope.measureObj = {};
@@ -94,7 +94,7 @@
               scope.wpsTabs = {
                 byUrl: true,
                 recent: false
-              }
+              };
               scope.selectedWps = {};
 
               scope.zoom = function(map, delta) {
@@ -194,9 +194,9 @@
               // watch open tool specified by the service; this will allow code
               // from anywhere to interact with the viewer tabs
               // note: this uses a deep equality to check the tool properties
-              scope.$watch(function () {
+              scope.$watch(function() {
                 return gnViewerService.getOpenedTool();
-              }, function (openedTool) {
+              }, function(openedTool) {
                 // open the correct tool using gi-btn magic
                 switch (openedTool.name.toLowerCase()) {
                   case 'addlayers':
@@ -219,7 +219,7 @@
 
                 // handle addlayers tab & url
                 if (scope.activeTools.addLayers) {
-                  switch(openedTool.tab) {
+                  switch (openedTool.tab) {
                     case 'wms':
                     case 'wmts':
                       scope.addLayerTabs[openedTool.tab] = true;

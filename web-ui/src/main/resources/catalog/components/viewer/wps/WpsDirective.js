@@ -61,7 +61,7 @@
     'gnGeometryService',
     'gnViewerService',
     function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
-      $window, gnGeometryService, gnViewerService) {
+        $window, gnGeometryService, gnViewerService) {
 
       var inputTypes = {
         string: 'text',
@@ -108,12 +108,12 @@
           // query a process description when a new wps link is given
           // note: a deep equality is required, since what we are actually
           // comparing are process id and url (and not object ref)
-          scope.$watch(function () {
+          scope.$watch(function() {
             var wpsLink = scope.wpsLink || {};
             return {
               processId: attrs['processId'] || wpsLink.name,
               uri: attrs['uri'] || wpsLink.url
-            }
+            };
           }, function(newLink, oldLink) {
             // the WPS link is incomplete: leave & clear form
             if (!newLink.uri || !newLink.processId) {
@@ -141,23 +141,25 @@
             gnWpsService.describeProcess(newLink.uri, newLink.processId, {
               cancelPrevious: true
             }).then(
-              function(response) {
-                scope.describeState = 'succeeded';
-                scope.describeResponse = response;
+                function(response) {
+                  scope.describeState = 'succeeded';
+                  scope.describeResponse = response;
 
-                if (response.processDescription) {
-                  // Bind input directly in link object
-                  scope.processDescription = response.processDescription[0];
+                  if (response.processDescription) {
+                    // Bind input directly in link object
+                    scope.processDescription = response.processDescription[0];
 
-                  // check if we need to get into 'profile graph' mode
-                  // FIXME: look for an actual way to determine the output type...
-                  if (scope.processDescription.identifier.value == 'script:computemultirasterprofile') {
-                    scope.outputAsGraph = true;
-                  } else {
-                    scope.outputAsGraph = false;
-                  }
+                    // check if we need to get into 'profile graph' mode
+                    // FIXME: look for an actual way to determine
+                    // the output type...
+                    if (scope.processDescription.identifier.value ==
+                    'script:computemultirasterprofile') {
+                      scope.outputAsGraph = true;
+                    } else {
+                      scope.outputAsGraph = false;
+                    }
 
-                  angular.forEach(scope.processDescription.dataInputs.input,
+                    angular.forEach(scope.processDescription.dataInputs.input,
                     function(input) {
 
                       if (input.value) return;
@@ -170,17 +172,17 @@
 
                       // use overloaded value if applicable
                       if (scope.inputOverloads &&
-                        scope.inputOverloads[input.identifier.value]) {
+                      scope.inputOverloads[input.identifier.value]) {
                         defaultValue =
-                          scope.inputOverloads[input.identifier.value]
-                          .currentValue;
+                        scope.inputOverloads[input.identifier.value]
+                        .currentValue;
                       }
 
                       if (input.literalData != undefined) {
 
                         // Input type
                         input.type =
-                          inputTypes[input.literalData.dataType.value];
+                        inputTypes[input.literalData.dataType.value];
 
                         // Default value
                         if (input.literalData.defaultValue != undefined) {
@@ -204,7 +206,7 @@
                         input.value = '';
                         if (defaultValue) {
                           input.value = defaultValue.split(',')
-                            .slice(0, 4).join(',');
+                          .slice(0, 4).join(',');
                         }
 
                         // complex data: a feature will have to be drawn by the user
@@ -243,7 +245,8 @@
                           }
                         }
                       }
-                      // complex data: a feature will have to be drawn by the user
+                      // complex data: a feature will have to be drawn
+                      // by the user
                       if (input.complexData != undefined) {
                         // this will be a {ol.Feature} object once drawn
                         input.feature = null;
@@ -251,25 +254,25 @@
 
                         // output format
                         input.outputFormat = gnGeometryService
-                          .getFormatFromMimeType(
+                        .getFormatFromMimeType(
                             input.complexData._default.format.mimeType
-                          ) || 'gml';
+                        ) || 'gml';
 
                         // guess geometry type from schema url
                         var url = input.complexData._default.format.schema;
                         var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
                         switch (result && result[1] ?
-                          result[1].toLowerCase() : null) {
+                        result[1].toLowerCase() : null) {
                           case 'line':
-                            input.geometryType = 'LineString'
+                            input.geometryType = 'LineString';
                             break;
 
                           case 'point':
-                            input.geometryType = 'Point'
+                            input.geometryType = 'Point';
                             break;
 
                           case 'polygon':
-                            input.geometryType = 'Polygon'
+                            input.geometryType = 'Polygon';
                             break;
 
                           // TODO: add other types?
@@ -279,12 +282,12 @@
                         }
                       }
                     }
-                  );
+                    );
 
-                  angular.forEach(
+                    angular.forEach(
                     scope.processDescription.processOutputs.output,
                     function(output, idx) {
-                      output.asReference = scope.outputAsGraph ? false : true;;
+                      output.asReference = scope.outputAsGraph ? false : true;
 
                       // untested code
                       var outputDefault = defaults &&
@@ -298,49 +301,49 @@
                           output.asReference = toBool(defaultAsReference);
                         }
                         scope.selectedOutput.identifier =
-                              output.identifier.value;
+                        output.identifier.value;
                         scope.selectedOutput.mimeType =
-                          output.complexOutput._default.format.mimeType
+                        output.complexOutput._default.format.mimeType;
                       }
                       else if (idx == 0) {
                         scope.selectedOutput.identifier =
-                              output.identifier.value;
+                        output.identifier.value;
                         scope.selectedOutput.mimeType =
-                          output.complexOutput._default.format.mimeType
+                        output.complexOutput._default.format.mimeType;
                       }
                     }
-                  );
-                  var output = scope.processDescription.processOutputs.output;
-                  if (output.length == 1) {
-                    output[0].value = true;
-                  }
-                  scope.outputsVisible = true;
+                    );
+                    var output = scope.processDescription.processOutputs.output;
+                    if (output.length == 1) {
+                      output[0].value = true;
+                    }
+                    scope.outputsVisible = true;
 
-                  scope.responseDocument = {
-                    lineage: toBool(defaults && defaults.lineage, false),
-                    storeExecuteResponse: toBool(defaults &&
-                        defaults.storeexecuteresponse, false),
-                    status: toBool(defaults && defaults.status, false)
-                  };
-                  scope.optionsVisible = true;
+                    scope.responseDocument = {
+                      lineage: toBool(defaults && defaults.lineage, false),
+                      storeExecuteResponse: toBool(defaults &&
+                      defaults.storeexecuteresponse, false),
+                      status: toBool(defaults && defaults.status, false)
+                    };
+                    scope.optionsVisible = true;
 
-                  // use existing inputs if available
-                  var processKey = newLink.processId + '@' + newLink.uri;
-                  var existingDesc = scope.loadedDescriptions[processKey]
-                  if (existingDesc) {
-                    scope.processDescription = angular.extend(
+                    // use existing inputs if available
+                    var processKey = newLink.processId + '@' + newLink.uri;
+                    var existingDesc = scope.loadedDescriptions[processKey];
+                    if (existingDesc) {
+                      scope.processDescription = angular.extend(
                       scope.processDescription,
                       existingDesc
-                    );
-                  }
-                  scope.loadedDescriptions[processKey] =
+                      );
+                    }
+                    scope.loadedDescriptions[processKey] =
                     angular.extend({}, scope.processDescription);
+                  }
+                },
+                function(response) {
+                  scope.describeState = 'failed';
+                  scope.describeResponse = response;
                 }
-              },
-              function(response) {
-                scope.describeState = 'failed';
-                scope.describeResponse = response;
-              }
             );
           }, true);
 
@@ -452,7 +455,7 @@
               // save raw graph data on view controller & hide it in wps form
               if (scope.outputAsGraph) {
                 gnViewerService.displayProfileGraph(
-                  response.processOutputs.output[0]
+                    response.processOutputs.output[0]
                     .data.complexData.content
                 );
                 scope.executeResponse = null;
@@ -487,23 +490,23 @@
               var key = 'gn-wps-processes-history';
               var processKey = processId + '@' + processUri;
               var history = JSON.parse(
-                $window.localStorage.getItem(key) || '{}');
+                  $window.localStorage.getItem(key) || '{}');
               history.processes = history.processes || [];
               history.processes.unshift(processKey);
 
               // remove dupes and apply limit
               var count = 0;
               history.processes = history.processes.filter(
-                function (value, index, array) {
-                  if (array.indexOf(value) !== index
-                    || count >= maxHistoryCount) {
-                    return false;
-                  } else {
-                    count++;
-                    return true;
+                  function(value, index, array) {
+                    if (array.indexOf(value) !== index ||
+                    count >= maxHistoryCount) {
+                      return false;
+                    } else {
+                      count++;
+                      return true;
+                    }
                   }
-                }
-              );
+                  );
 
               $window.localStorage.setItem(key, JSON.stringify(history));
             }
@@ -524,7 +527,7 @@
 
           // Guess the mimeType associated with the selected output.
           // scope.$watch('selectedOutput.identifier', function(v) {
-          scope.setOutput = function (identifier, mimeType) {
+          scope.setOutput = function(identifier, mimeType) {
             scope.selectedOutput.identifier = identifier;
             scope.selectedOutput.mimeType = mimeType;
           };
@@ -535,22 +538,22 @@
 
             var result = null;
             angular.forEach(scope.processDescription.dataInputs.input,
-              function(input) {
-                if (input.identifier.value == name) {
-                  result = input.value;
-                }
-              });
+                function(input) {
+                  if (input.identifier.value == name) {
+                    result = input.value;
+                  }
+                });
             return result;
           };
           var setInputValue = function(name, value) {
             if (!scope.processDescription) { return; }
 
             angular.forEach(scope.processDescription.dataInputs.input,
-              function(input) {
-                if (input.identifier.value == name) {
-                  input.value = value;
-                }
-              });
+                function(input) {
+                  if (input.identifier.value == name) {
+                    input.value = value;
+                  }
+                });
           };
 
           // handle input overload from WFS link
@@ -639,18 +642,18 @@
       return {
         restrict: 'E',
         templateUrl: '../../catalog/components/viewer/wps/' +
-           'partials/urldiscovery.html',
+            'partials/urldiscovery.html',
         scope: {
           wpsLink: '='
         },
         controllerAs: 'ctrl',
-        controller: ['$scope', function ($scope) {
+        controller: ['$scope', function($scope) {
           $scope.loading = false;
           $scope.processes = [];
           $scope.error = null;
           $scope.url = '';
 
-          this.doRequest = function () {
+          this.doRequest = function() {
             // do nothing if invalid url
             if (!gnUrlUtils.isValid($scope.url)) {
               return;
@@ -662,29 +665,29 @@
 
             gnWpsService.getCapabilities($scope.url, {
               cancelPrevious: true
-            }).then(function (data) {
+            }).then(function(data) {
               $scope.loading = false;
 
               if (!data) {
-                $scope.error = "Service not found";
+                $scope.error = 'Service not found';
                 return;
               }
               $scope.processes = data.processOfferings.process;
-            }, function (error) {
+            }, function(error) {
               $scope.loading = false;
               $scope.processes = [];
-              $scope.error = error.status + ' ' + error.statusText
+              $scope.error = error.status + ' ' + error.statusText;
             });
-          }
+          };
 
-          this.select = function (p) {
+          this.select = function(p) {
             if (!$scope.wpsLink) { return; }
             $scope.wpsLink.name = p.identifier.value;
             $scope.wpsLink.url = $scope.url;
-          }
+          };
 
           // watch url change from outside
-          $scope.$watch('wpsLink.url', function (value) {
+          $scope.$watch('wpsLink.url', function(value) {
             if (value) {
               $scope.url = value;
               $scope.ctrl.doRequest();
@@ -711,12 +714,12 @@
         restrict: 'E',
         replace: true,
         templateUrl: '../../catalog/components/viewer/wps/' +
-           'partials/recentprocesses.html',
+            'partials/recentprocesses.html',
         scope: {
           wpsLink: '='
         },
         controllerAs: 'ctrl',
-        controller: ['$scope', '$window', function ($scope, $window) {
+        controller: ['$scope', '$window', function($scope, $window) {
           if (!$window.localStorage) {
             $scope.notSupported = true;
             return;
@@ -724,25 +727,26 @@
 
           $scope.processes = [];
 
-          $scope.$watch(function () {
-            return $window.localStorage.getItem('gn-wps-processes-history') || '{}';
-          }, function (value) {
+          $scope.$watch(function() {
+            return $window.localStorage.getItem('gn-wps-processes-history') ||
+                '{}';
+          }, function(value) {
             var wpsHistory = JSON.parse(value);
             $scope.processes = wpsHistory.processes &&
-              wpsHistory.processes.map(function (p) {
-              var values = p.split('@');
-              return {
-                name: values[0],
-                url: values[1]
-              }
-            })
+                wpsHistory.processes.map(function(p) {
+                  var values = p.split('@');
+                  return {
+                    name: values[0],
+                    url: values[1]
+                  };
+                });
           });
 
-          this.select = function (p) {
+          this.select = function(p) {
             if (!$scope.wpsLink) { return; }
             $scope.wpsLink.name = p.name;
             $scope.wpsLink.url = p.url;
-          }
+          };
         }]
       };
     }]

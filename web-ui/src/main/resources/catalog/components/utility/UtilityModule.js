@@ -70,36 +70,36 @@
       })
       .filter('striptags', function() {
         return function(value, allowed) {
-          
+
           if (angular.isArray(value)) {
-            
+
             allowed = (((allowed || '') + '').toLowerCase().
                 match(/<[a-z][a-z0-9]*>/g) || []).join('');
             var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
                 commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-            
+
             var finalText = '';
-            
+
             angular.forEach(value, function(content, key) {
-              if(content) {
-                finalText +=  content.replace(commentsAndPhpTags, '').
-                replace(tags, function($0, $1) {
-                  return allowed.indexOf(
+              if (content) {
+                finalText += content.replace(commentsAndPhpTags, '').
+                    replace(tags, function($0, $1) {
+                      return allowed.indexOf(
                           '<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-                });
-              } 
+                    });
+              }
             });
-            
+
             return finalText;
           }
-          
-          
+
+
           if (!value) {
             return value;
-          } 
-          
-          if(angular.isString(value)) {
-          
+          }
+
+          if (angular.isString(value)) {
+
             allowed = (((allowed || '') + '').toLowerCase().
                 match(/<[a-z][a-z0-9]*>/g) || []).join('');
             var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
@@ -109,9 +109,9 @@
                   return allowed.indexOf(
                           '<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
                 });
-          } 
-          
-          
+          }
+
+
         };
       })
 

@@ -139,7 +139,7 @@
               }
             }
             else if (s == 'contour') {
-              t[s] = s ; // TODO ????? + '/' + p;
+              t[s] = s; // TODO ????? + '/' + p;
             }
           });
         }

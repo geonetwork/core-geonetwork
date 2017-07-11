@@ -71,7 +71,7 @@
       var size = layout.map; // papersize in dot!
       var view = map.getView();
       var ratio = map.getView().getProjection().getCode() == 'EPSG:4326' ?
-        METERS_PER_DEGREE : 1;
+          METERS_PER_DEGREE : 1;
       var resolution = view.getResolution() * ratio;
       var w = size.width / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
       var h = size.height / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
@@ -99,7 +99,7 @@
     this.getOptimalScale = function(map, scales, layout) {
       var size = map.getSize();
       var ratio = map.getView().getProjection().getCode() == 'EPSG:4326' ?
-        METERS_PER_DEGREE : 1;
+          METERS_PER_DEGREE : 1;
       var resolution = map.getView().getResolution() * ratio;
       var width = resolution * (size[0] - (options.widthMargin * 2));
       var height = resolution * (size[1] - (options.heightMargin * 2));

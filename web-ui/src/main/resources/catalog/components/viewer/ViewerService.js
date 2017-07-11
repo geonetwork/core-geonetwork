@@ -40,7 +40,7 @@
     '$http',
     function($http) {
       // Profile graph handling
-      this._profileGraph = undefined;    // this will be watched by the directive
+      this._profileGraph = undefined; // this will be watched by the directive
 
       /**
        * Renders JSON data as a graph in the viewer. The expected format is:
@@ -59,17 +59,17 @@
        *
        * @param  {type} rawData raw graph data
        */
-      this.displayProfileGraph = function (rawData) {
+      this.displayProfileGraph = function(rawData) {
         // TODO: check validity
         this._profileGraph = rawData;
-      }
+      };
 
-      this.getProfileGraphData = function () {
+      this.getProfileGraphData = function() {
         return this._profileGraph;
-      }
-      this.clearProfileGraph = function () {
+      };
+      this.clearProfileGraph = function() {
         return this._profileGraph = undefined;
-      }
+      };
 
       this.activeTool = {
         name: '',
@@ -99,7 +99,7 @@
        * @return {object} return an object with properties name, url, tab
        *  (for the tabs that support it)
        */
-      this.getOpenedTool = function () {
+      this.getOpenedTool = function() {
         // fetch correct url according to the opened tool
         return this.activeTool;
       };
@@ -108,7 +108,7 @@
        * Opens the "Add Layer" tab, switch to WMS and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openWmsTab = function (serviceUrl) {
+      this.openWmsTab = function(serviceUrl) {
         this.openTool('addLayers', 'wms', serviceUrl);
       };
 
@@ -116,7 +116,7 @@
        * Opens the "Add Layer" tab, switch to WMTS and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openWmtsTab = function (serviceUrl) {
+      this.openWmtsTab = function(serviceUrl) {
         this.openTool('addLayers', 'wmts', serviceUrl);
       };
 
@@ -124,7 +124,7 @@
        * Opens the "WPS Processes" tab, and specify URL (optional)
        * @param {string} serviceUrl optional, do GetCap on specified URL
        */
-      this.openProcessesTool = function (serviceUrl) {
+      this.openProcessesTool = function(serviceUrl) {
         this.openTool('processes', '', serviceUrl);
       };
 

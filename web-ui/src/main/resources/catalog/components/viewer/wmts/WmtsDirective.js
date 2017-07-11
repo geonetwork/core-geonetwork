@@ -30,9 +30,10 @@
     'gn_wmts_service'
   ]);
 
-  module.directive('gnWmtsDownload', ['gnWmtsService', 'gnGlobalSettings', 'gnSearchSettings', '$rootScope', '$translate',
-    'gnSearchLocation',
-    function(gnWmtsService, gnGlobalSettings, gnSearchSettings, $rootScope, $translate, gnSearchLocation) {
+  module.directive('gnWmtsDownload', ['gnWmtsService', 'gnGlobalSettings',
+    'gnSearchSettings', '$rootScope', '$translate', 'gnSearchLocation',
+    function(gnWmtsService, gnGlobalSettings, gnSearchSettings,
+             $rootScope, $translate, gnSearchLocation) {
       return {
         restrict: 'A',
         scope: {
@@ -58,10 +59,13 @@
               scope.projections = [];
               scope.checkWmtsUrl().then(
                   function() {
-				  if (scope.capabilities.Layer && scope.capabilities.Layer.length != 0) {
+                    if (scope.capabilities.Layer &&
+                    scope.capabilities.Layer.length != 0) {
                       scope.isWmtsAvailable = true;
-                      scope.isLayerInCapabilities = gnWmtsService.isLayerInCapabilities(scope.capabilities, scope.layerName);
-				  }
+                      scope.isLayerInCapabilities =
+                      gnWmtsService.isLayerInCapabilities(
+                          scope.capabilities, scope.layerName);
+                    }
                   }, function() {
                   }
 
@@ -85,7 +89,8 @@
             if (!layerSelected) {
               return;
             }
-            gnWmtsService.addLayerToMap(layerSelected, gnSearchSettings.viewerMap, scope.capabilities);
+            gnWmtsService.addLayerToMap(layerSelected,
+                gnSearchSettings.viewerMap, scope.capabilities);
             gnSearchLocation.setMap();
 
           };
@@ -95,7 +100,8 @@
           };
 
           scope.addWmtsLayer = function() {
-            gnWmtsService.addWMTSToMap(scope.layerName, scope.url, scope.md, gnSearchSettings.viewerMap);
+            gnWmtsService.addWMTSToMap(scope.layerName, scope.url,
+                scope.md, gnSearchSettings.viewerMap);
             gnSearchLocation.setMap();
 
           };

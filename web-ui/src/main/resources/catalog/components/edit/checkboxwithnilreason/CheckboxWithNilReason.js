@@ -70,8 +70,12 @@
                }
 
                scope.xmlSnippet = '<' + scope.tagName +
-               ' xmlns:' + elementNs + '="' + gnSchemaManagerService.findNamespaceUri(elementNs, gnCurrentEdit.schema) + '"' +
-               ' xmlns:' + booleanElementNs + '="' + gnSchemaManagerService.findNamespaceUri(booleanElementNs, gnCurrentEdit.schema) + '"' +
+               ' xmlns:' + elementNs + '="' +
+               gnSchemaManagerService.findNamespaceUri(elementNs,
+                   gnCurrentEdit.schema) + '"' +
+               ' xmlns:' + booleanElementNs + '="' +
+               gnSchemaManagerService.findNamespaceUri(booleanElementNs,
+                   gnCurrentEdit.schema) + '"' +
                attribute + '><' + booleanElement + '>' +
                (isNil ? '' : scope.status) +
                '</' + booleanElement + '></' + scope.tagName + '>';

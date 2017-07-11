@@ -104,10 +104,12 @@
 
                 if (config.url.indexOf('http', 0) === 0) {
                   if (gnUrlUtils.urlIsSameOrigin(config.url)) {
-                    // if the target URL is in the GN host, don't use proxy and reject the promise.
+                    // if the target URL is in the GN host,
+                    // don't use proxy and reject the promise.
                     return $q.reject(response);
                   } else {
-                    // if the target URL is in other site/protocol that GN, use the proxy to make the request.
+                    // if the target URL is in other site/protocol that GN,
+                    // use the proxy to make the request.
                     var url = config.url.split('/');
                     url = url[0] + '/' + url[1] + '/' + url[2] + '/';
 
@@ -115,16 +117,16 @@
                       gnGlobalSettings.requireProxy.push(url);
                     }
 
-                    $injector.invoke(['$http', function ($http) {
+                    $injector.invoke(['$http', function($http) {
                       // This modification prevents interception (infinite
                       // loop):
 
                       config.nointercept = true;
 
                       // retry again
-                      $http(config).then(function (resp) {
+                      $http(config).then(function(resp) {
                         defer.resolve(resp);
-                      }, function (resp) {
+                      }, function(resp) {
                         defer.reject(resp);
                       });
                     }]);
