@@ -138,7 +138,8 @@ class SxtSummaryFactory {
     }
 
     if (!statementsString.isEmpty() && statementsString.get(0)) {
-      summary.formats = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString()
+      def statements = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString().replaceAll("\n", "<br>");
+      summary.formats = isoHandlers.commonHandlers.func.urlToHtml(statements)
     }
   }
 
