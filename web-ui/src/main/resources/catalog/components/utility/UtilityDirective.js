@@ -1075,6 +1075,9 @@
             modalElt.modal();
             modalElt.on('shown.bs.modal', function() {
               $('.g').append(modalElt.data('bs.modal').$backdrop);
+              // in one API site, the modal is still display none, we must
+              // force the show
+              modalElt.show();
             });
             modalElt.on('hidden.bs.modal', function() {
               modalElt.remove();
