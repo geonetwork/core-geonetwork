@@ -56,7 +56,7 @@
             'partials/wmsimport.html',
         scope: {
           map: '=gnWmsImportMap',
-          url: '=gnWmsImportUrl'
+          url: '=?gnWmsImportUrl'
         },
         controller: ['$scope', function($scope) {
 
@@ -91,6 +91,7 @@
           scope.serviceDesc = null;
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
+          var type = scope.format.toUpperCase();
 
           function addLinks(md, type) {
             angular.forEach(md.getLinksByType(type), function(link) {
