@@ -558,6 +558,14 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!--Detect urls in String and transform to html format-->
+    <dependency>
+      <groupId>org.nibor.autolink</groupId>
+      <artifactId>autolink</artifactId>
+      <version>0.6.0</version>
+    </dependency>
+
+
 
   </dependencies>
 

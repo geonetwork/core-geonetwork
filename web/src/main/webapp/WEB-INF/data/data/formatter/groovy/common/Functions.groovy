@@ -2,6 +2,7 @@ package common
 
 import org.fao.geonet.api.records.formatters.FormatType
 import org.fao.geonet.api.records.formatters.groovy.Environment
+import org.nibor.autolink.*;
 
 public class Functions {
     org.fao.geonet.api.records.formatters.groovy.Handlers handlers;
@@ -45,6 +46,24 @@ public class Functions {
 
     def textColEl(content, cols) {
         return '<div class="col-md-' + cols + '">' + content + '</div>'
+    }
+
+    def urlToHtml(content) {
+        LinkExtractor linkExtractor = LinkExtractor.builder()
+                .linkTypes(EnumSet.of(LinkType.URL)) // limit to URLs
+                .build();
+
+        Iterable<LinkSpan> links = linkExtractor.extractLinks(content);
+        String result = Autolink.renderLinks(content, links, new LinkRenderer()  {
+            void render(LinkSpan link, CharSequence text, StringBuilder sb) {
+                sb.append("<a target=\"_blank\" href=\"");
+                sb.append(text, link.getBeginIndex(), link.getEndIndex());
+                sb.append("\">");
+                sb.append(text, link.getBeginIndex(), link.getEndIndex());
+                sb.append("</a>");
+            }
+        });
+        return result
     }
 
 }
