@@ -887,7 +887,7 @@
                   picker.pickers[0].setDate(scope.date.from);
                   picker.pickers[1].setDate(scope.date.to);
                 } else {
-                  picker.pickers[0].setDate(scope.date);
+                  picker.setDate(scope.date);
                 }
               });
             }
