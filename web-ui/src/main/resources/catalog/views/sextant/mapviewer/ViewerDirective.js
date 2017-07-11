@@ -32,6 +32,12 @@
             pre: function preLink(scope, iElement, iAttrs, controller) {
               scope.map = scope.$eval(iAttrs['map']);
 
+              /** these URL can be set by the viewer service **/
+              scope.addLayerUrl = {
+                wms: '',
+                wmts: ''
+              }
+
               /** Define object to receive measure info */
               scope.measureObj = {};
 
