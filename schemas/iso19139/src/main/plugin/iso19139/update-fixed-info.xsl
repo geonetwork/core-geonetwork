@@ -30,7 +30,8 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
                 xmlns:geonet="http://www.fao.org/geonetwork"
-                xmlns:java="java:org.fao.geonet.util.XslUtil" exclude-result-prefixes="#all">
+                xmlns:java="java:org.fao.geonet.util.XslUtil" exclude-result-prefixes="#all"
+                version="1.0">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
   <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
