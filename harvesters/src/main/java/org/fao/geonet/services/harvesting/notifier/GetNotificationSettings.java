@@ -24,6 +24,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.nio.file.Path;
@@ -79,7 +80,7 @@ public class GetNotificationSettings implements Service {
                 res.addContent(tmp);
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.error(Geonet.HARVESTER, t.getMessage(), t);
         }
     }
 

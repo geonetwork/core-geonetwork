@@ -32,6 +32,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.util.*;
@@ -96,8 +97,7 @@ public class ReportUtils {
 
             if (value == null) value = "";
         } catch (Exception ex) {
-            // TODO: log exception
-            ex.printStackTrace();
+            Log.error(Geonet.GEONETWORK, ex.getMessage(), ex);
         }
 
         return value;

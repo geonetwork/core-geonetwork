@@ -47,10 +47,10 @@ public class AddElemValue {
                 finalNodeVal = Xml.loadString(stringValue, false);
                 finalStringVal = null;
             } catch (JDOMException e) {
-                Log.debug(Geonet.EDITORADDELEMENT, "Invalid XML fragment to insert " + stringValue + ". Error is: " + e.getMessage());
+                Log.debug(Geonet.EDITORADDELEMENT, "Invalid XML fragment to insert " + stringValue + ". Error is: " + e.getMessage(), e);
                 throw e;
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.error(Geonet.EDITORADDELEMENT, "Error with XML fragment to insert " + stringValue + ". Error is: " + e.getMessage(), e);
                 throw e;
             }
         }

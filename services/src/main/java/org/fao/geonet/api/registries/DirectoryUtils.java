@@ -90,7 +90,7 @@ public class DirectoryUtils {
                         uuid, subtemplate.getId());
                     // TODO: Set categories ? privileges
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, e.getMessage(), e);
                 }
             } else {
                 try {
@@ -102,7 +102,7 @@ public class DirectoryUtils {
                     collectResults.getEntryIdentifiers().put(
                         uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, e.getMessage(), e);
                 }
             }
         }
@@ -113,7 +113,7 @@ public class DirectoryUtils {
                     validate, ufo, index, context.getLanguage(),
                     new ISODate().toString(), true);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, e.getMessage(), e);
             }
         }
     }
@@ -426,7 +426,7 @@ public class DirectoryUtils {
                 return record.getChild("info", Geonet.Namespaces.GEONET).getChildText("id");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(LOGGER, e.getMessage(), e);
         }
         return null;
     }

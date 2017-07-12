@@ -763,7 +763,7 @@ public class MetadataEditingApi {
                     }
                 } catch (Exception e) {
                     context.error("Failed to load localization file for schema " + schema + ": " + e.getMessage());
-                    e.printStackTrace();
+                    context.error(e);
                 }
             }
         }

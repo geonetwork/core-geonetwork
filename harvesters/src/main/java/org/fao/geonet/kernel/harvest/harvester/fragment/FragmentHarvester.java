@@ -215,7 +215,7 @@ public class FragmentHarvester extends BaseAligner {
 
         } catch (Exception e) {
             log.error("Thrown Exception " + e + " opening template with id: " + params.templateId);
-            e.printStackTrace();
+            log.error(e);
         }
     }
 

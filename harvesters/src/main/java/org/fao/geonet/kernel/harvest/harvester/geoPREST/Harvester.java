@@ -119,12 +119,12 @@ class Harvester implements IHarvester<HarvestResult> {
             } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t, log));
             } catch (Throwable t) {
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t, log));
             }
         }
@@ -136,12 +136,12 @@ class Harvester implements IHarvester<HarvestResult> {
             } catch (Exception t) {
                 log.error("Unknown error trying to harvest");
                 log.error(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t, log));
             } catch(Throwable t) {
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t, log));
             }
         }

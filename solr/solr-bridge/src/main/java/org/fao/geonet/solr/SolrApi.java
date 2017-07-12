@@ -27,6 +27,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.solr.client.solrj.SolrClient;
 import org.fao.geonet.api.API;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -106,7 +107,8 @@ public class SolrApi {
             Exception.class
     })
     public Object unauthorizedHandler(final Exception exception) {
-        exception.printStackTrace();
+        Log.error(API.LOG_MODULE_NAME, exception.getMessage(), exception);
+
         return new LinkedHashMap<String, String>() {{
             put("code", "index-is-down");
             put("message", exception.getClass().getSimpleName());

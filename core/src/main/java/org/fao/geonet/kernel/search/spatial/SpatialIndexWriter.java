@@ -161,8 +161,7 @@ public class SpatialIndexWriter implements FeatureListener {
                 }
             } catch (Exception e) {
                 errorMessage.put("PARSE", gml + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE, "Failed to convert gml to jts object: " + gml + "\n\t" + e.getMessage(), e);
                 // continue
             }
         }
@@ -178,8 +177,7 @@ public class SpatialIndexWriter implements FeatureListener {
 
             } catch (Exception e) {
                 errorMessage.put("BUILD", allPolygons + ". Error is:" + e.getMessage());
-                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons);
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE, "Failed to create a MultiPolygon from: " + allPolygons, e);
                 // continue
                 return null;
             }
@@ -291,7 +289,7 @@ public class SpatialIndexWriter implements FeatureListener {
             _featureStore.setTransaction(Transaction.AUTO_COMMIT);
             // Done by JCSServletContextListener: SpatialFilter.getJCSCache().clear();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter close error: " + e.getMessage(), e);
         } finally {
             _lock.unlock();
         }
@@ -315,7 +313,7 @@ public class SpatialIndexWriter implements FeatureListener {
             try {
                 SpatialFilter.getJCSCache().clear();
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache clear error: " + e.getMessage(), e);
             }
             _writes++;
         } finally {
@@ -342,7 +340,7 @@ public class SpatialIndexWriter implements FeatureListener {
             try {
                 SpatialFilter.getJCSCache().clear();
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache clear error: " + e.getMessage(), e);
             }
             _writes++;
         } finally {
@@ -361,7 +359,7 @@ public class SpatialIndexWriter implements FeatureListener {
                 SpatialFilter.getJCSCache().clear();
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter commit error: " + e.getMessage(), e);
         } finally {
             _lock.unlock();
         }
@@ -400,7 +398,7 @@ public class SpatialIndexWriter implements FeatureListener {
         try {
             SpatialFilter.getJCSCache().clear();
         } catch (CacheException e) {
-            e.printStackTrace();
+            Log.error(Geonet.INDEX_ENGINE,"SpatialIndexWriter JCSCache clear error: " + e.getMessage(), e);
         }
         _index = new STRtree();
         FeatureIterator<SimpleFeature> features = null;

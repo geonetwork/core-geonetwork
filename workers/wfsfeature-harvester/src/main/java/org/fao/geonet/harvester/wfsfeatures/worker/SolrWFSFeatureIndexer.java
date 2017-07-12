@@ -203,15 +203,15 @@ public class SolrWFSFeatureIndexer {
                     response.getElapsedTime()));
             solr.commit();
         } catch (SolrServerException e) {
-            e.printStackTrace();
             logger.error(String.format(
                     "Error connecting to Solr server at '%s'. Error is %s.",
                     solrCollectionUrl, e.getMessage()));
+            logger.error(e);
         } catch (IOException e) {
-            e.printStackTrace();
             logger.error(String.format(
                     "Error connecting to Solr server at '%s'. Error is %s.",
                     solrCollectionUrl, e.getMessage()));
+            logger.error(e);
         }
     }
 
@@ -232,9 +232,9 @@ public class SolrWFSFeatureIndexer {
                     response.getElapsedTime()));
             solr.commit();
         } catch (SolrServerException e) {
-            e.printStackTrace();
+            logger.error(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

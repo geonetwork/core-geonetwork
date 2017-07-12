@@ -31,6 +31,7 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 
 import java.io.IOException;
@@ -99,12 +100,12 @@ public class SiteInformation {
         try {
             loadDatabaseInfo(context);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, e.getMessage(), e);
         }
         try {
             loadIndexInfo(context);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, e.getMessage(), e);
         }
         loadSystemInfo();
     }

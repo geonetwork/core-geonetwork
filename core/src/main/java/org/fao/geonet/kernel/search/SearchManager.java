@@ -357,23 +357,20 @@ public class SearchManager {
                         Constructor<? extends Analyzer> c = analyzerClass.getConstructor(clTypesArray);
                         analyzer = c.newInstance(inParamsArray);
                     } catch (Exception x) {
-                        Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer with parameter: " + x.getMessage());
-                        x.printStackTrace();
+                        Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create analyzer with parameter: " + x.getMessage(), x);
                         // Try using a default constructor without parameter
                         Log.warning(Geonet.SEARCH_ENGINE, "   Now trying without parameter");
                         analyzer = analyzerClass.newInstance();
                     }
                 } catch (Exception y) {
                     Log.warning(Geonet.SEARCH_ENGINE, "Failed to create analyzer as specified in lucene config, default analyzer will " +
-                        "be used for field " + field + ". Exception message is: " + y.getMessage());
-                    y.printStackTrace();
+                        "be used for field " + field + ". Exception message is: " + y.getMessage(), y);
                     // abandon and continue with next field defined in lucene config
                 }
             }
         } catch (Exception z) {
             Log.warning(Geonet.SEARCH_ENGINE, " Error on analyzer initialization: " + z.getMessage() + ". Check your Lucene " +
-                "configuration. Hardcoded default analyzer will be used for field " + field);
-            z.printStackTrace();
+                "configuration. Hardcoded default analyzer will be used for field " + field, z);
         } finally {
             // creation of analyzer has failed, default to GeoNetworkAnalyzer
             if (analyzer == null) {
@@ -584,14 +581,13 @@ public class SearchManager {
                     Constructor<? extends DocumentBoosting> c = clazz.getConstructor(clTypesArray);
                     _documentBoostClass = c.newInstance(inParamsArray);
                 } catch (Exception x) {
-                    Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create document boost object with parameter: " + x.getMessage());
-                    x.printStackTrace();
+                    Log.warning(Geonet.SEARCH_ENGINE, "   Failed to create document boost object with parameter: " + x.getMessage(), x);
                     // Try using a default constructor without parameter
                     Log.warning(Geonet.SEARCH_ENGINE, "   Now trying without parameter");
                     _documentBoostClass = clazz.newInstance();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.SEARCH_ENGINE, "   Failed to create document boost object without parameter: " + e.getMessage(), e);
             }
         }
     }
@@ -1585,7 +1581,7 @@ public class SearchManager {
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(BeyondFilter.class));
                 // types.put(Geonet.SearchResult.Relation.CONTAINS, constructor(DWithinFilter.class));
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(Geonet.INDEX_ENGINE, "Unable to create types mapping, error is: " + e.getMessage(), e);
                 throw new RuntimeException("Unable to create types mapping", e);
             }
             _types = Collections.unmodifiableMap(types);
@@ -1642,8 +1638,7 @@ public class SearchManager {
                 try {
                     _writer.reset();
                 } catch (Exception e1) {
-                    Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer: " + e1.getMessage());
-                    e1.printStackTrace();
+                    Log.error(Geonet.SPATIAL, "Unable to call reset on Spatial writer: " + e1.getMessage(), e1);
                 }
                 rebuildIndex = true;
             }
@@ -1658,8 +1653,7 @@ public class SearchManager {
             try {
                 _writer.close();
             } catch (IOException e) {
-                Log.error(Geonet.SPATIAL, "error closing spatial index: " + e.getMessage());
-                e.printStackTrace();
+                Log.error(Geonet.SPATIAL, "error closing spatial index: " + e.getMessage(), e);
             } finally {
                 _lock.unlock();
             }

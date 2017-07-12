@@ -679,7 +679,7 @@ class Harvester implements IHarvester<HarvestResult> {
             return new RecordInfo(identif, modified);
         } catch (Exception e) {
             log.warning("Skipped record not in supported format : " + name);
-            e.printStackTrace();
+            log.error(e);
         }
 
         // we get here if we didn't recognize the schema and/or couldn't get the

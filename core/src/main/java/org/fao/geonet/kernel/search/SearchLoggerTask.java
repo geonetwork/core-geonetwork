@@ -27,7 +27,9 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -70,7 +72,7 @@ public class SearchLoggerTask implements Runnable {
             SearcherLogger searchLogger = new SearcherLogger(srvContext, logSpatialObject, luceneTermsToExclude);
             searchLogger.logSearch(query, numHits, sort, geomWKT, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.SEARCH_LOGGER, "SearchLogger task error:" + e.getMessage(), e);
         }
     }
 }

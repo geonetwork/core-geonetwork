@@ -141,7 +141,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
                 throw new IllegalArgumentException("There are no default contexts defined");
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.error(Log.JEEVES, "JeevesContextLoaderListener: " + e.getMessage(), e);
             JeevesEngine.handleStartupError(e);
         }
     }

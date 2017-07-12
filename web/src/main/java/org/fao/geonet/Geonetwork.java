@@ -223,8 +223,7 @@ public class Geonetwork implements ApplicationHandler {
 
 
         } catch (Exception e) {
-          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + e.getMessage());
-          e.printStackTrace();
+          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
 
         //------------------------------------------------------------------------
@@ -278,7 +277,6 @@ public class Geonetwork implements ApplicationHandler {
         } catch (NumberFormatException nfe) {
             logger.error("Invalid config parameter: maximum number of writes to spatial index in a transaction (maxWritesInTransaction)"
                 + ", Using " + maxWritesInTransaction + " instead.");
-            nfe.printStackTrace();
         }
 
         SettingInfo settingInfo = context.getBean(SettingInfo.class);
@@ -535,8 +533,7 @@ public class Geonetwork implements ApplicationHandler {
                     }
                 } catch (Throwable x) {
                     // any uncaught exception would cause the scheduled execution to silently stop
-                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored.");
-                    x.printStackTrace();
+                    logger.error("DBHeartBeat error: " + x.getMessage() + " This error is ignored. Error details: " + Util.getStackTrace(x));
                 }
             }
 
