@@ -121,7 +121,6 @@
   goog.require('gn_localisation');
   goog.require('gn_measure');
   goog.require('gn_module');
-  goog.require('gn_ncwms');
   goog.require('gn_ows');
   goog.require('gn_owscontext');
   goog.require('gn_popup');
@@ -144,7 +143,6 @@
    */
 
   var module = angular.module('gn_viewer', [
-    'gn_ncwms',
     'gn_viewer_directive',
     'gn_viewer_service',
     'gn_wmsimport',

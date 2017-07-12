@@ -36,12 +36,6 @@
                ng-model="layer.opacity"/><br/>
       </li>
 
-      <!--NCWMS-->
-      <li class="list-group-item" data-ng-if="layer.get('advanced')"><a href=""
-                                                                        data-ng-click="setNCWMS(layer)">
-        <span translate="">ncwms</span>
-      </a></li>
-
       <!--WPS-->
       <li class="list-group-item" data-ng-if="process && process.length == 1"><a href=""
                                                                                  data-ng-click="showWPS(process[0])">
@@ -93,8 +87,6 @@
     </p>
     <h6 ng-if="layer.get('attribution')" data-translate="">Attribution</h6>
     <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
-
-    <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
   </div>
 </div>
 <div ng-if="::layer.get('loading')">
