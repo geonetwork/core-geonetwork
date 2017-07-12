@@ -36,11 +36,10 @@
         'gnViewerSettings',
         'gnOwsContextService',
         'gnMap',
-        'gnNcWms',
         'gnGlobalSettings',
         '$location',
         function(searchSettings, viewerSettings, gnOwsContextService,
-                 gnMap, gnNcWms, gnGlobalSettings, $location) {
+                 gnMap, gnGlobalSettings, $location) {
 
           // Load the context defined in the configuration
           viewerSettings.defaultContext =
@@ -173,13 +172,6 @@
           angular.extend(searchSettings, {
             viewerMap: viewerMap,
             searchMap: searchMap
-          });
-
-          viewerMap.getLayers().on('add', function(e) {
-            var layer = e.element;
-            if (layer.get('advanced')) {
-              gnNcWms.feedOlLayer(layer);
-            }
           });
 
         }]);

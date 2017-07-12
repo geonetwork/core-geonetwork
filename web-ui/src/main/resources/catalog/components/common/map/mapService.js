@@ -832,15 +832,6 @@
               if (angular.isArray(layer.MetadataURL)) {
                 metadata = layer.MetadataURL[0].OnlineResource;
               }
-              var isNcwms = false;
-              if (angular.isArray(layer.Dimension)) {
-                for (var i = 0; i < layer.Dimension.length; i++) {
-                  if (layer.Dimension[i].name == 'elevation') {
-                    isNcwms = true;
-                    break;
-                  }
-                }
-              }
 
               var vectorFormat = new ol.format.WFS();
 

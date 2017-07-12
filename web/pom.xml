@@ -575,6 +575,13 @@
       <artifactId>smiley-http-proxy-servlet</artifactId>
       <version>1.8</version>
     </dependency>
+
+    <!--Detect urls in String and transform to html format-->
+    <dependency>
+      <groupId>org.nibor.autolink</groupId>
+      <artifactId>autolink</artifactId>
+      <version>0.6.0</version>
+    </dependency>
   </dependencies>
 
 
