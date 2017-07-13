@@ -33,7 +33,8 @@
         restrict: 'A',
         scope: {
           layer: '=gnWfsDownload',
-          map: '='
+          map: '=',
+          isWfsAvailable: '=?hasDownload'
         },
         templateUrl: '../../catalog/components/' +
             'viewer/wfs/partials/download.html',
