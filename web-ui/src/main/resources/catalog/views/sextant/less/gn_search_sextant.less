@@ -184,11 +184,16 @@ div.gn, div.g, * {
   -webkit-font-smoothing: antialiased;
 }
 
+
 .btn-default {
   &, &.dropdown-toggle, .open &.dropdown-toggle {
     background: @sxt-button-color;
     color: white;
     border: none;
+    &:focus {
+      background: @sxt-button-color-light;
+      color: white;
+    }
   }
   border-radius: 2px;
   &.active, &:hover, &:focus {
