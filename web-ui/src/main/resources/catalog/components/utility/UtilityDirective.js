@@ -1321,27 +1321,36 @@
           content.css('display', 'none').appendTo(element);
         });
 
+        var hidePopover = function() {
+          button.popover('hide');
+          button.data('bs.popover').inState.click = false;
+        };
+
         // can’t use dismiss boostrap option: incompatible with opacity slider
-        $('body').on('mousedown click', function(e) {
+        var onMousedown = function(e) {
           if ((button.data('bs.popover') && button.data('bs.popover').$tip) &&
-              (button[0] != e.target) &&
-              (!$.contains(button[0], e.target)) &&
-              (
-              $(e.target).parents('.popover')[0] !=
-              button.data('bs.popover').$tip[0])
+            (button[0] != e.target) &&
+            (!$.contains(button[0], e.target)) &&
+            (
+            $(e.target).parents('.popover')[0] !=
+            button.data('bs.popover').$tip[0])
           ) {
-            $timeout(function() {
-              button.popover('hide');
-            }, 30);
+            $timeout(hidePopover, 30, false);
           }
-        });
+        };
+
+        $('body').on('mousedown click', onMousedown);
 
         if (attrs['gnPopoverDismiss']) {
-          $(attrs['gnPopoverDismiss']).on('scroll', function() {
-            button.popover('hide');
-          });
+          $(attrs['gnPopoverDismiss']).on('scroll', hidePopover);
         }
 
+        element.on('$destroy', function() {
+          $('body').off('mousedown click', onMousedown);
+          if (attrs['gnPopoverDismiss']) {
+            $(attrs['gnPopoverDismiss']).off('scroll', hidePopover);
+          }
+        });
       }
     };
   }]);
