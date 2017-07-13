@@ -26,9 +26,9 @@
     </div>
 
 
-    <div ng-if="describeState == 'succeeded'">
+    <div class="panel-body"  ng-if="describeState == 'succeeded'">
 
-      <div class="panel-body" ng-if="describeResponse.exception">
+      <div ng-if="describeResponse.exception">
         <h4><span translate>wpsDescribeProcessFailed</span></h4>
         <div ng-repeat="exception in describeResponse.exception">
           <div ng-repeat="(key, value) in exception">

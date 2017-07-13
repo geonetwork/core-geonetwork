@@ -126,8 +126,14 @@
             scope.describeState = 'sent';
 
             // parse application profile as JSON
-            var applicationProfile = scope.wpsLink.applicationProfile ?
+            var applicationProfile;
+            try {
+              applicationProfile = scope.wpsLink.applicationProfile ?
                 JSON.parse(scope.wpsLink.applicationProfile) : null;
+            }
+            catch(e) {
+              console.warn('Error while loading application profile.');
+            }
 
             // getting defaults
             var defaults = scope.$eval(attrs['defaults']);
