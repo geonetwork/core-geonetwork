@@ -584,9 +584,6 @@
       </gmd:distributionFormat>
       <gmd:transferOptions>
         <gmd:MD_DigitalTransferOptions>
-          <gmd:unitsOfDistribution gco:nilReason="missing">
-            <gco:CharacterString/>
-          </gmd:unitsOfDistribution>
           <gmd:transferSize>
             <gco:Real/>
           </gmd:transferSize>
