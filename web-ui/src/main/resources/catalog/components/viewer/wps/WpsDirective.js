@@ -37,26 +37,23 @@
    * @description
    * The `gnWpsProcessForm` build up a HTML form from the describe process
    * response object (after call the describe process request).
-   * User inputs will be saved on the wpsLink object as 'inputs' with the following structure:
+   * User inputs will be saved on the wpsLink object as 'inputs' with the
+   * following structure:
    *  [{
    *    name: 'input_name',
    *    value: 'value entered by the user'
    *  },
    *  ...]
-   * Existing inputs will be displayed in the form
+   * Existing inputs will be displayed in the form.
    * The directive keeps a cache of process descriptions & inputs.
    *
    * @directiveInfo {Object} map
-   * @directiveInfo {Object} wpsLink
+   * @directiveInfo {Object} wpsLink this object holds information on the WPS
+   *  service to use, namely name and url properties
    * @directiveInfo {Object} wfsLink the WFS link object
    *  will be used to overload inputs based on active WFS feature filters
    * @directiveInfo {boolean} hideExecuteButton if true,
    *  the 'execute' button is hidden
-   *
-   * TODO: Add batch mode using md.privileges.batch
-   * and md.privileges.batch.update services.
-   *
-   * TODO: User group only privilege
    */
   module.directive('gnWpsProcessForm', [
     'gnWpsService',
@@ -87,7 +84,6 @@
           return attrs.template ||
               '../../catalog/components/viewer/wps/partials/processform.html';
         },
-
         link: function(scope, element, attrs) {
           scope.describeState = 'standby';
           scope.executeState = '';
@@ -347,8 +343,8 @@
               function(input) {
                 // count the number of non empty values
                 var valueCount = scope.getInputsByName(input.identifier.value)
-                  .filter(function (value) {
-                    return value;
+                  .filter(function (input) {
+                    return input.value;
                   }).length;
 
                 // this will be used to show errors on the form
@@ -426,7 +422,7 @@
               scope.executeResponse = response;
 
               // save raw graph data on view controller & hide it in wps form
-              if (scope.outputAsGraph) {
+              if (scope.outputAsGraph && response.processOutputs) {
                 gnViewerService.displayProfileGraph(
                     response.processOutputs.output[0]
                     .data.complexData.content
