@@ -41,10 +41,14 @@
         <div>
           <form novalidate>
 
-            <!-- Inputs -->
-            <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
+            <!-- Inputs: loop on process description to display all inputs -->
+            <div ng-repeat="input in processDescription.dataInputs.input"
+              class="form-group">
+
+              <!-- Input label & info -->
               <label for="{{::input.identifier.value}}">{{::input.title.value}}
-                <span class="fa fa-info-circle" data-ng-if="::input._abstract.value" title="{{::input._abstract.value}}"></span>
+                <span class="fa fa-info-circle" data-ng-if="::input._abstract.value"
+                  title="{{::input._abstract.value}}"></span>
 
                 <!-- This input is overloaded by a WFS filter -->
                 <span class="overload-warning" ng-if="inputOverloads[input.identifier.value]">
@@ -52,40 +56,42 @@
                 </span>
               </label>
 
+              <!-- Basic form field -->
               <div ng-if="::input.literalData">
                 <div ng-if="::input.literalData.allowedValues">
-                  <select id="{{::input.identifier.value}}" class="form-control input-sm"
-                    ng-required="input.minOccurs" ng-model="input.value"
+                  <select class="form-control input-sm"
+                    ng-repeat="field in getInputsByName(input.identifier.value)"
+                    ng-model="field.value"
+                    ng-required="$index <= input.minOccurs"
                     ng-disabled="inputOverloads[input.identifier.value]">
-                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange" value="{{::value.value}}">{{::value.value}}</option>
+                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
+                      value="{{::value.value}}">{{::value.value}}</option>
                   </select>
                 </div>
                 <div ng-if="::input.literalData.allowedValues == undefined">
-                  <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm"
-                    data-ng-required="input.minOccurs" ng-model="input.value"
+                  <input type="{{getInputType(input.literalData.dataType.value)}}"
+                    ng-repeat="field in getInputsByName(input.identifier.value)"
+                    class="form-control input-sm"
+                    ng-model="field.value"
+                    ng-required="$index <= input.minOccurs"
                     ng-disabled="inputOverloads[input.identifier.value]"></input>
                 </div>
               </div>
+
+              <!-- Bounding box -->
               <div ng-if="::input.boundingBoxData">
-                <gn-bbox-input ng-if="input.minOccurs" id="{{::input.identifier.value}}"
-                  data-crs="input._default.crs"
-                  data-value="input.value"
-                  data-map="map"
+                <gn-bbox-input
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  crs="input._default.crs" value="field.value" map="map"
                   ng-disabled="inputOverloads[input.identifier.value]"
-                  data-required="true">
-                </gn-bbox-input>
-                <gn-bbox-input ng-if="!input.minOccurs" id="{{::input.identifier.value}}"
-                    data-crs="input._default.crs"
-                    data-value="input.value"
-                    data-map="map"
-                    ng-disabled="inputOverloads[input.identifier.value]"
-                    data-required="false">
-                </gn-bbox-input>
+                  ng-required="$index <= input.minOccurs"/>
               </div>
 
-              <!-- complex input (geometry on map) -->
+              <!-- Complex input (geometry on map) -->
               <div ng-if="::input.complexData">
-                <gn-geometry-tool allow-reset allow-modify output="input.value"
+                <gn-geometry-tool
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  allow-reset allow-modify output="field.value"
                   output-format="input.outputFormat" geometry-type="input.geometryType"
                   output-as-features="true" map="map"/>
               </div>
@@ -118,8 +124,10 @@
                     <a href class="dropdown-item"
                       ng-repeat="format in ::output.complexOutput.supported.format"
                         ng-click="setOutput(output.identifier.value, format.mimeType)">
-                      <i class="fa fa-dot-circle-o fa-fw" ng-show="selectedOutput.identifier == output.identifier.value && selectedOutput.mimeType == format.mimeType"/>
-                      <i class="fa fa-circle-o fa-fw" ng-show="selectedOutput.identifier != output.identifier.value || selectedOutput.mimeType != format.mimeType"/>&nbsp;
+                      <i class="fa fa-dot-circle-o fa-fw"
+                        ng-show="selectedOutput.identifier == output.identifier.value && selectedOutput.mimeType == format.mimeType"/>
+                      <i class="fa fa-circle-o fa-fw"
+                        ng-show="selectedOutput.identifier != output.identifier.value || selectedOutput.mimeType != format.mimeType"/>
                       {{::format.mimeType}}
                     </a>
                     <li role="separator" class="divider"
