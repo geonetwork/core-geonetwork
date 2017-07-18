@@ -338,5 +338,6 @@
     "inputValueRequired": "required",
     "inputValueRequiredError": "A value is required for this field",
     "inputIsOverloaded": "This value is set in a WFS filter",
-    "insertNewInputValue": "Add a value for this input"
+    "insertNewInputValue": "Add a value for this input",
+    "profileGraph": "Profile Graph"
 }

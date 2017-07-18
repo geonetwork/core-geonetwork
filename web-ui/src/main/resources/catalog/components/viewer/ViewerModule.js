@@ -245,24 +245,41 @@
       // watch service data: when a profile graph is available, render it
       var me = this;
       $scope.$watch(
-          function() {
-            return gnViewerService.getProfileGraphData();
-          },
-          function(newData, oldData) {
-            me.profileGraph = newData && JSON.parse(newData).profile;
-          }
+        function() {
+          return gnViewerService.getProfileGraphData();
+        },
+        function(newData, oldData) {
+          me.profileGraph = newData && JSON.parse(newData).profile;
+        }
       );
+
+      // this is used to render hovered point on the profile
+      this.hoveredProfilePoint = new ol.Feature();
+      var profileVectorLayer = new ol.layer.Vector({
+        source: new ol.source.Vector()
+      });
+      profileVectorLayer.setZIndex(1000);
+      map.getLayers().push(profileVectorLayer);
+      profileVectorLayer.getSource().addFeature(this.hoveredProfilePoint);
+
+      // ngeo profile graph options
       this.profileOptions = {
         elevationExtractor: {
           dist: function(data) { return data.dist },
           z: function(data) { return data.values.z }
         },
-        linesConfiguration: { }
-
-        // TODO: callbacks for interaction with the map
-        // hoverCallback,
-        // outCallback
+        linesConfiguration: { },
+        hoverCallback: function (point) {
+          var geom = new ol.geom.Point([point.lon, point.lat]);
+          geom.transform('EPSG:4326', map.getView().getProjection());
+          me.hoveredProfilePoint.setGeometry(geom);
+        },
+        outCallback: function (point) {
+          me.hoveredProfilePoint.setGeometry(null);
+        }
       };
+
+      // closes the profile graph
       this.closeProfileGraph = function() {
         gnViewerService.clearProfileGraph();
       };
