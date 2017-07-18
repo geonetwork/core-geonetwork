@@ -46,35 +46,48 @@
               class="form-group">
 
               <!-- Input label & info -->
-              <label for="{{::input.identifier.value}}">{{::input.title.value}}
-                <span class="fa fa-info-circle" data-ng-if="::input._abstract.value"
+              <span>
+                <label>{{::input.title.value}}</label>
+                <span class="fa fa-info-circle" ng-if="::input._abstract.value"
                   title="{{::input._abstract.value}}"></span>
+                <small class="text-danger" ng-if="::input.minOccurs">
+                  ({{::'inputValueRequired' | translate}})</small>
 
                 <!-- This input is overloaded by a WFS filter -->
-                <span class="overload-warning" ng-if="inputOverloads[input.identifier.value]">
-                  {{ 'inputIsOverloaded' | translate }}
-                </span>
-              </label>
+                <small class="text-muted"
+                  ng-if="inputOverloads[input.identifier.value]">
+                  {{::'inputIsOverloaded' | translate}}</small>
+              </span>
 
-              <!-- Basic form field -->
+              <!-- Basic form field (combo box or text field) -->
               <div ng-if="::input.literalData">
-                <div ng-if="::input.literalData.allowedValues">
+                <div class="input-group"
+                  ng-repeat="field in getInputsByName(input.identifier.value)">
                   <select class="form-control input-sm"
-                    ng-repeat="field in getInputsByName(input.identifier.value)"
+                    ng-if="::input.literalData.allowedValues"
                     ng-model="field.value"
-                    ng-required="$index <= input.minOccurs"
+                    ng-required="$index < input.minOccurs"
                     ng-disabled="inputOverloads[input.identifier.value]">
                     <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
                       value="{{::value.value}}">{{::value.value}}</option>
                   </select>
-                </div>
-                <div ng-if="::input.literalData.allowedValues == undefined">
-                  <input type="{{getInputType(input.literalData.dataType.value)}}"
-                    ng-repeat="field in getInputsByName(input.identifier.value)"
-                    class="form-control input-sm"
+                  <input class="form-control input-sm"
+                    ng-if="::!input.literalData.allowedValues"
+                    type="{{::getInputType(input.literalData.dataType.value)}}"
                     ng-model="field.value"
-                    ng-required="$index <= input.minOccurs"
+                    ng-required="$index < input.minOccurs"
                     ng-disabled="inputOverloads[input.identifier.value]"></input>
+
+                  <!-- delete button (disabled for mandatory values) -->
+                  <a class="input-group-addon btn btn-default btn-icon"
+                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs"
+                    ng-click="removeInputValueByName(input.identifier.value, $index)">
+                    <span class="fa fa-trash-o"></span>
+                  </a>
+                  <a class="input-group-addon btn btn-default btn-icon" disabled
+                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs">
+                    <span class="fa fa-trash-o"></span>
+                  </a>
                 </div>
               </div>
 
@@ -84,7 +97,7 @@
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   crs="input._default.crs" value="field.value" map="map"
                   ng-disabled="inputOverloads[input.identifier.value]"
-                  ng-required="$index <= input.minOccurs"/>
+                  ng-required="$index < input.minOccurs"/>
               </div>
 
               <!-- Complex input (geometry on map) -->
@@ -96,8 +109,17 @@
                   output-as-features="true" map="map"/>
               </div>
 
-              <div ng-if="input.invalid">
-                <p class="text-danger">{{input.invalid}}</p>
+              <!-- add a new value -->
+              <a ng-if="input.maxOccurs > getInputsByName(input.identifier.value).length"
+                href ng-click="addInputValueByName(input.identifier.value)">
+                <i class="fa fa-plus"/>
+                {{::'insertNewInputValue'|translate}}
+              </a>
+
+              <!-- show error if not enough occurs of this input -->
+              <div ng-if="input.missingOccursCount > 0">
+                <p class="text-danger" translate>
+                  inputValueRequiredError</p>
               </div>
             </div>
 
@@ -110,7 +132,7 @@
                 &nbsp;<span translate>wpsExecute</span>
               </button>
 
-              <div class="btn-group output-selection dropup">
+              <div class="output-selection dropup">
                 <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
                   &nbsp;<span translate>wpsSelectOutput</span>

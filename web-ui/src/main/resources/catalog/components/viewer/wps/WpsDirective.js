@@ -341,34 +341,31 @@
             scope.validation_messages = [];
             scope.exception = undefined;
 
-            // Validate inputs
+            // Check that inputs have the required values
             var invalid = false;
             angular.forEach(scope.processDescription.dataInputs.input,
               function(input) {
-                input.invalid = undefined;
-                if (input.minOccurs > 0 && (input.value === null ||
-                    input.value === '')) {
-                  input.invalid = input.title.value + ' is mandatory';
+                // count the number of non empty values
+                var valueCount = scope.getInputsByName(input.identifier.value)
+                  .filter(function (value) {
+                    return value;
+                  }).length;
+
+                // this will be used to show errors on the form
+                input.missingOccursCount = Math.max(0,
+                  input.minOccurs - valueCount);
+
+                if (input.missingOccursCount > 0) {
                   invalid = true;
                 }
               });
+
+            // there are errors with inputs: leave
             if (invalid) { return; }
 
-            var inputs = scope.processDescription.dataInputs.input.reduce(
-              function(o, v, i) {
-                if (v.identifier.value == 'limits' &&
-                (v.value == '' || v.value == ',,,')) {
-                  if (v.minOccurs > 0) {
-                    o['limits'] = 'NaN,NaN,NaN,NaN';
-                  }
-                } else {
-                  if (v.minOccurs > 0 || v.value) {
-                    o[v.identifier.value] = v.value;
-                  }
-                }
-                return o;
-              }, {});
+            var inputs = scope.wpsLink.inputs;
 
+            // output selection based on form control
             var outputs = [];
             angular.forEach(scope.processDescription.processOutputs.output,
               function(output) {
@@ -535,7 +532,7 @@
             scope.wpsLink.inputs.forEach(function (input, index) {
               var innerIndex = scope.getInputsByName(name).indexOf(input);
               if (innerIndex === indexToRemove) {
-                realIndex = innerIndex;
+                realIndex = index;
               }
             });
             if (realIndex > -1) {
