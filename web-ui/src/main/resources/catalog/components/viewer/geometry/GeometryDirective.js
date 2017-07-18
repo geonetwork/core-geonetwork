@@ -205,7 +205,7 @@
 
             // update output on modify end
             $scope.modifyInteraction.on('modifyend', function(event) {
-              updateOutput(event.feature);
+              updateOutput(event.features.item(0));
             });
 
             // reset drawing
