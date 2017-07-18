@@ -55,8 +55,6 @@
     'gnUrlUtils',
     '$timeout',
     'wfsFilterService',
-    'gnGeometryService',
-    'gnViewerService',
     '$window',
     'gnGeometryService',
     'gnViewerService',
@@ -213,42 +211,6 @@
                         if (defaultValue) {
                           input.value = defaultValue.split(',')
                           .slice(0, 4).join(',');
-                        }
-
-                        // complex data: a feature will have to be drawn by the user
-                        if (input.complexData != undefined) {
-                          // this will be a {ol.Feature} object once drawn
-                          input.feature = null;
-                          input.value = null;
-
-                          // output format
-                          input.outputFormat = gnGeometryService
-                            .getFormatFromMimeType(
-                              input.complexData._default.format.mimeType
-                            ) || 'gml';
-
-                          // guess geometry type from schema url
-                          var url = input.complexData._default.format.schema;
-                          var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
-                          switch (result && result[1] ?
-                            result[1].toLowerCase() : null) {
-                            case 'line':
-                              input.geometryType = 'LineString'
-                              break;
-
-                            case 'point':
-                              input.geometryType = 'Point'
-                              break;
-
-                            case 'polygon':
-                              input.geometryType = 'Polygon'
-                              break;
-
-                            // TODO: add other types?
-
-                            default:
-                              input.geometryType = null;
-                          }
                         }
                       }
                       // complex data: a feature will have to be drawn
