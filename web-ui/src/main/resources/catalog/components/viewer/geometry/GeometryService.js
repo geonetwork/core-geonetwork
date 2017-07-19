@@ -39,6 +39,8 @@
   module.service('gnGeometryService', [
     function() {
 
+      this._layer = null;
+
       /**
        * @ngdoc method
        * @methodOf gn_geometry.service:gnGeometryService
@@ -73,6 +75,65 @@
         }
       };
 
+      /**
+       * @ngdoc method
+       * @methodOf gn_geometry.service:gnGeometryService
+       * @name gnGeometryService#getCommonLayer
+       *
+       * @description
+       * This fetches a OL vector layer that is common to all Geometry Tools
+       * If non existent, the layer will be created
+       *
+       * @param {ol.Map} map open layers map
+       * @return {ol.layer.Vector} vector layer
+       */
+      this.getCommonLayer = function(map) {
+        if (this._layer) {
+          return this._layer;
+        }
+
+        // layer & source
+        var source = new ol.source.Vector({
+          useSpatialIndex: true,
+          features: new ol.Collection()
+        });
+        this._layer = new ol.layer.Vector({
+          source: source,
+          name: 'geometry-tool-layer',
+          style: [
+            new ol.style.Style({  // this is the default editing style
+              fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.5)'
+              }),
+              stroke: new ol.style.Stroke({
+                color: 'white',
+                width: 5
+              })
+            }),
+            new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                color: 'rgba(0, 153, 255, 1)',
+                width: 3
+              }),
+              image: new ol.style.Circle({
+                radius: 6,
+                fill: new ol.style.Fill({
+                  color: 'rgba(0, 153, 255, 1)'
+                }),
+                stroke: new ol.style.Stroke({
+                  color: 'white',
+                  width: 1.5
+                })
+              })
+            })
+          ]
+        });
+
+        // add our layer to the map
+        map.addLayer(this._layer);
+
+        return this._layer;
+      };
     }
   ]);
 })();

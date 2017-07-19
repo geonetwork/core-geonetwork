@@ -22,7 +22,8 @@
       <h5><span data-translate="">profileGraph</span></h5>
     </div>
     <div class="profile" ngeo-profile="ctrl.profileGraph"
-      ngeo-profile-options="ctrl.profileOptions" />
+      ngeo-profile-options="ctrl.profileOptions"
+      ngeo-profile-highlight="ctrl.profileHighlight"/>
   </div>
 
   <!--Top right buttons - Tools-->
@@ -292,7 +293,8 @@
           <gn-wps-recent-list wps-link="selectedWps"/>
         </tab>
       </tabset>
-      <gn-wps-process-form map="map" wps-link="selectedWps"/>
+      <gn-wps-process-form map="map" wps-link="selectedWps"
+        ng-if="activeTools.processes"/>
     </div>
   </div>
 </div>
