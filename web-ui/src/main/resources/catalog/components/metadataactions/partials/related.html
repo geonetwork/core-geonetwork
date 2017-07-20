@@ -47,12 +47,12 @@
             <p class="text-muted">
               <span data-ng-show="isLayerProtocol(r.protocol)"
                     data-translate=""
-                    data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                    data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                 wmsLinkDetails</span>
 
                     <span data-ng-show="!isLayerProtocol(r.protocol)"
                           data-translate=""
-                          data-translate-values="{url:'{{r.url}}'}">
+                          data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
                 wmsServiceLinkDetails</span>
             </p>
           </div>
@@ -61,25 +61,25 @@
             <p class="text-muted"
                data-ng-if="isLayerProtocol(r.protocol)">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                   wfsLinkDetails</span>
             </p>
             <div data-ng-if="isLayerProtocol(r.protocol)"
                  data-gn-no-map-wfs-download=""
                  data-typename="{{r.title | gnLocalized: lang}}"
-                 data-url="{{r.url}}">
+                 data-url="{{r.url | gnLocalized: lang}}">
             </div>
 
             <p class="text-muted"
                data-ng-if="!isLayerProtocol(r.protocol)">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}'}">
           wfsServiceLinkDetails</span>
             </p>
             <div data-ng-if="!isLayerProtocol(r.protocol)"
                  data-gn-no-map-wfs-download=""
                  data-typename=""
-                 data-url="{{r.url}}">
+                 data-url="{{r.url | gnLocalized: lang}}">
             </div>
           </div>
 
@@ -87,34 +87,34 @@
             <div
               data-gn-wmts-download="r.title"
               data-layer-name="{{r.title | gnLocalized: lang}}"
-              data-url="{{r.url}}"
+              data-url="{{r.url | gnLocalized: lang}}"
               data-md="md">
             </div>
           </div>
 
           <div data-ng-switch-when="SOS">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                   sosLinkDetails</span>
           </div>
 
           <div data-ng-switch-when="WCS">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                   wcsLinkDetails</span>
             </p>
           </div>
 
           <div data-ng-switch-when="ATOM">
             <p class="text-muted" data-translate=""
-                  data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
                   atomLinkDetails
             </p>
             <div
               data-gn-atom-download="r.title"
               data-layer-name="{{r.title | gnLocalized: lang}}"
-              data-url="{{r.url}}"
+              data-url="{{r.url | gnLocalized: lang}}"
               data-md="md">
             </div>
           </div>
@@ -122,7 +122,7 @@
           <div data-ng-switch-when="DB">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url}}', layer:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', layer:'{{r.title | gnLocalized: lang}}'}">
           databaseLayerDetails</span>
             </p>
           </div>
@@ -130,12 +130,12 @@
           <div data-ng-switch-when="FILE">
             <p class="text-muted">
             <span data-translate=""
-                  data-translate-values="{url:'{{r.url}}', name:'{{r.title | gnLocalized: lang}}'}">
+                  data-translate-values="{url:'{{r.url | gnLocalized: lang}}', name:'{{r.title | gnLocalized: lang}}'}">
           fileLayerDetails</span>
               <input class="form-control"
                      type="text"
                      onClick="this.setSelectionRange(0, this.value.length)"
-                     value="{{::r.url}}"/>
+                     value="{{::r.url | gnLocalized: lang}}"/>
             </p>
           </div>
 
@@ -151,8 +151,8 @@
             <p class="text-muted"
                data-ng-if="mainType.indexOf('MD') == -1">
               <span data-translate="">otherLinkDetails</span><br/>
-              <a href="{{r.url}}" target="_blank">
-                {{r.url}} </a>
+              <a href="{{r.url | gnLocalized: lang}}" target="_blank">
+                {{r.url | gnLocalized: lang}} </a>
             </p>
           </div>
         </div>
