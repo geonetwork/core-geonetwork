@@ -371,7 +371,9 @@
 
         var hidePopover = function() {
           button.popover('hide');
-          button.data('bs.popover').inState.click = false;
+          if (button.data('bs.popover').inState) {
+            button.data('bs.popover').inState.click = false;
+          }
         };
 
         // can’t use dismiss boostrap option: incompatible with opacity slider
