@@ -394,8 +394,8 @@
                       featureTypeName: wfsLink.name
                     }) + '"',
                     wt: 'json'
-                  }}).success(function(data) {
-                  if(data.response.numFound > 0) {
+                  }}).then(function(data) {
+                  if(data.response && data.response.numFound > 0) {
                     scope.wfs = wfsLink;
                   }
                 });
