@@ -249,7 +249,12 @@
           dist: function(data) { return data.dist },
           z: function(data) { return data.values.z }
         },
-        linesConfiguration: { }
+        distanceExtractor: function (data) { return data.dist; },
+        linesConfiguration: {
+          'lineZ1': {
+            zExtractor: function (item) { return item.values.z }
+          }
+        }
 
         // TODO: callbacks for interaction with the map
         // hoverCallback,
