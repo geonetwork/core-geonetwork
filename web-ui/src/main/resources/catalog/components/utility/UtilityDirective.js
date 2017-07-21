@@ -876,7 +876,7 @@
 
             // set initial dates (use $timeout to avoid messing with ng digest)
             if (scope.date) {
-              $timeout(function () {
+              $timeout(function() {
                 var picker = $(element).data('datepicker');
                 if (isRange) {
                   picker.pickers[0].setDate(scope.date.from);
@@ -1301,11 +1301,11 @@
         // can’t use dismiss boostrap option: incompatible with opacity slider
         var onMousedown = function(e) {
           if ((button.data('bs.popover') && button.data('bs.popover').$tip) &&
-            (button[0] != e.target) &&
-            (!$.contains(button[0], e.target)) &&
-            (
-            $(e.target).parents('.popover')[0] !=
-            button.data('bs.popover').$tip[0])
+              (button[0] != e.target) &&
+              (!$.contains(button[0], e.target)) &&
+              (
+              $(e.target).parents('.popover')[0] !=
+              button.data('bs.popover').$tip[0])
           ) {
             $timeout(hidePopover, 30, false);
           }

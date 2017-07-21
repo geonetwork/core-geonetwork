@@ -129,9 +129,9 @@
             var applicationProfile;
             try {
               applicationProfile = scope.wpsLink.applicationProfile ?
-                JSON.parse(scope.wpsLink.applicationProfile) : null;
+                  JSON.parse(scope.wpsLink.applicationProfile) : null;
             }
-            catch(e) {
+            catch (e) {
               console.warn('Error while loading application profile.');
             }
 
