@@ -42,6 +42,10 @@
 
           function init() {
 
+            if (!scope.layer) {
+              return;
+            }
+
             var source = scope.layer.getSource();
             if(!source || !(source instanceof ol.source.ImageWMS ||
               source instanceof ol.source.TileWMS)) {
