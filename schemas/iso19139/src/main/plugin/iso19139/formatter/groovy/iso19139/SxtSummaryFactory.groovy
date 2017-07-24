@@ -134,11 +134,11 @@ class SxtSummaryFactory {
     def statementsElts = metadata."**".findAll{it.name() == 'gmd:statement'}
     def statementsString = []
     statementsElts.collectNested {metadata.'**'.findAll{it.name() == 'gmd:statement'}}.flatten().each { k ->
-      statementsString.add(this.isoHandlers.isofunc.isoText(k))
+      statementsString.add(isoHandlers.commonHandlers.func.htmlNewLine(this.isoHandlers.isofunc.isoText(k)))
     }
 
     if (!statementsString.isEmpty() && statementsString.get(0)) {
-      def statements = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString().replaceAll("\n", "<br>");
+      def statements = this.isoHandlers.dataQualityInfoElSxt(statementsString).toString();
       summary.formats = isoHandlers.commonHandlers.func.urlToHtml(statements)
     }
   }
