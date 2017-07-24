@@ -28,25 +28,23 @@
       <span class="tt-suggestions">
         <div class="tt-suggestion"
              data-ng-repeat="r in searchResults.records">
+
             <!-- Add action for simple subtemplates -->
-            <div class="btn btn-default pull-right"
-                 data-ng-hide="isContact"
-                 data-ng-click="addEntry(r)">
-              <i class="fa fa-plus"></i>
-                <!-- TODO: Add with XLink mode -->
+            <div class="btn btn-default btn-sm pull-right"
+                 data-ng-if="insertAsXlink && !hasDynamicVariable"
+                 data-ng-click="addEntry(r, undefined, true)">
+              <i class="fa fa-link"></i>
             </div>
-
-            <!-- Add action for contact with predefined contact role -->
-            <div class="btn btn-default pull-right"
-                 data-ng-show="isContact && !hasDynamicVariable"
+            <div class="btn btn-default btn-sm pull-right"
+                 data-ng-if="insertAsText && !hasDynamicVariable"
                  data-ng-click="addEntry(r)">
               <i class="fa fa-plus"></i>
             </div>
 
-          <!--Add contact as Xlink-->
+          <!--Add contact as Xlink with dynamic variable -->
             <div ngeo-popover class="pull-right"
                  ngeo-popover-dismiss=".content"
-                 data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink"
+                 data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
                  title="{{'addContactAsLink-help' | translate}}">
                <button ngeo-popover-anchor type="button" class="btn btn-default btn-sm">
                 <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
@@ -62,7 +60,7 @@
               </div>
             </div>
 
-          <!-- Add contact as text block -->
+          <!-- Add contact as text block with dynamic variable -->
             <div ngeo-popover class="pull-right"
                  ngeo-popover-dismiss=".content"
                  data-ng-if="isContact && hasDynamicVariable && insertAsText"

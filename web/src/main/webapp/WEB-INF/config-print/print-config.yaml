@@ -26,11 +26,11 @@ scales:
   - 25000000
   - 50000000
   - 100000000
+  - 200000000
 
 formats:
   - pdf
   - png
-  - jpeg
 
 #===========================================================================
 # the list of allowed hosts
@@ -44,76 +44,156 @@ hosts:
     # Allow to all hosts
     mask: 0.0.0.0
 
+outputFilename:'sextant_${yyyy-MM-dd}.pdf'
+
 layouts:
   #===========================================================================
-  A4 portrait:
+  portrait:
     mainPage:
       rotation: true
       pageSize: A4
-      backgroundPdf: '${configDir}/template.pdf'
+      # backgroundPdf: '${configDir}/template.pdf'
       header:
         height: 1
       items:
         - !columns
           absoluteX: 10
-          absoluteY: 832
+          absoluteY: 828
           width: 575
           items:
             - !text
+              align: center
               font: Helvetica
               fontSize: 24
               text: '${title}'
+        - !columns
+          condition: hasTitle
+          backgroundColor: #000000
+          width: 547
+          height: 517
+          absoluteX: 24
+          absoluteY: 782
+          items:
+            - !text
+                backgroundColor: #000000
+                font: Helvetica
+                fontSize: 704
+                text: ' '
+        - !columns
+          condition: hasTitle
+          backgroundColor: #ffffff
+          width: 544
+          height: 700
+          absoluteX: 25
+          absoluteY: 780
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 700
+                text: ' '
         - !map
+          condition: hasTitle
           spacingAfter: 10
-          width: 575
-          height: 680
-          absoluteX:10
-          absoluteY:790
+          width: 545
+          height: 700
+          absoluteX:25
+          absoluteY:780
         - !columns
-          absoluteX: 15
-          absoluteY: 130
-          width: 160
+          condition: hasNoTitle
+          backgroundColor: #000000
+          width: 547
+          height: 517
+          absoluteX: 24
+          absoluteY: 817
           items:
-            - !scalebar
-              align: left
-              maxSize: 160
-              type: 'bar sub'
-              intervals: 5
+            - !text
+                backgroundColor: #000000
+                font: Helvetica
+                fontSize: 748
+                text: ' '
         - !columns
-          absoluteX: 565
-          absoluteY: 145
-          width: 30
+          condition: hasNoTitle
+          backgroundColor: #ffffff
+          width: 544
+          height: 745
+          absoluteX: 25
+          absoluteY: 816
           items:
-            - !image
-              maxWidth: 30
-              maxHeight: 30
-              url: 'file://${configDir}/Arrow_North_CFCF.svg'
-              rotation: '${rotation}'
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 745
+                text: ' '
+        - !map
+          condition: hasNoTitle
+          spacingAfter: 10
+          width: 545
+          height: 746
+          absoluteX:25
+          absoluteY:816
         - !columns
-          absoluteX: 10
-          absoluteY: 90
-          width: 575
+          condition: hasAttribution
+          absoluteX: 170
+          absoluteY: 55
+          width: 100
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 14
+                text: 'Source(s): '
+        - !columns
+          condition: hasAttribution
+          absoluteX: 245
+          absoluteY: 52
+          width: 250
           items:
             - !text
                 font: Helvetica
                 fontSize: 11
-                text: '${comment}'
+                text: '${dataOwner}'
         - !columns
-          absoluteX: 10
-          absoluteY: 19
-          width: 575
+          absoluteX: 25
+          absoluteY: 45
+          width: 180
           items:
-            - !text
-              text: '- ${now yyyy/MM/dd HH:mm} -'
-              align: right
-              fontEncoding: Cp1252
-              fontSize: 8
+            - !scalebar
+              align: left
+              maxSize: 180
+              type: 'bar sub'
+              intervals: 5
+        - !columns
+          absoluteX: 540
+          absoluteY: 55
+          width: 35
+          items:
+            - !image
+              maxWidth: 35
+              maxHeight: 35
+              url: 'file://${configDir}/Arrow_North_CFCF.svg'
+              rotation: '${rotation}'
     lastPage:
       items:
          - !columns
           condition: enableLegends
           absoluteX: 51
           absoluteY: 808
+          width: 511
+          items:
+            - !text
+                condition: isFr
+                font: Helvetica
+                fontSize: 14
+                text: 'Légende: '
+            - !text
+                condition: '!isFr'
+                font: Helvetica
+                fontSize: 14
+                text: 'Legend: '
+         - !columns
+          condition: enableLegends
+          absoluteX: 51
+          absoluteY: 768
           width: 511
           items:
             - !legends
@@ -130,31 +210,112 @@ layouts:
               backgroundColor: white
               layerFontSize: 9
   #===========================================================================
-  A4 landscape:
+  landscape:
     mainPage:
       rotation: false
       pageSize: LEGAL
       landscape: true
       backgroundPdf: '${configDir}/template-landscape.pdf'
       items:
-        - !map
-          spacingAfter: 0
-          width: 1008
-          height: 612
-          absoluteX: 0
-          absoluteY: 612
         - !columns
-          absoluteX: 10
-          absoluteY: 600
-          width: 575
+          condition: hasNoTitle
+          backgroundColor: #000000
+          spacingAfter: 10
+          width: 962
+          height: 518
+          absoluteX: 23
+          absoluteY: 589
+          items:
+            - !text
+                backgroundColor: #000000
+                font: Helvetica
+                fontSize: 519
+                text: ' '
+        - !columns
+          condition: hasNoTitle
+          backgroundColor: #ffffff
+          width: 958
+          height: 516
+          absoluteX: 25
+          absoluteY: 588
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 516
+                text: ' '
+        - !columns
+          condition: hasTitle
+          width: 962
+          height: 518
+          absoluteX: 23
+          absoluteY: 553
+          items:
+            - !text
+                backgroundColor: #000000
+                font: Helvetica
+                fontSize: 483
+                text: ' '
+        - !columns
+          condition: hasTitle
+          backgroundColor: #ffffff
+          width: 958
+          height: 481
+          absoluteX: 25
+          absoluteY: 552
+          items:
+            - !text
+                backgroundColor: #ffffff
+                font: Helvetica
+                fontSize: 480
+                text: ' '
+        - !map
+          condition: hasTitle
+          spacingAfter: 10
+          width: 958
+          height: 480
+          absoluteX: 25
+          absoluteY: 552
+        - !map
+          condition: hasNoTitle
+          spacingAfter: 10
+          width: 958
+          height: 516
+          absoluteX: 25
+          absoluteY: 588
+        - !columns
+          absoluteX: 25
+          absoluteY: 593
+          width: 958
           items:
             - !text
               font: Helvetica
+              align: center
               fontSize: 24
               text: '${title}'
         - !columns
-          absoluteX: 15
-          absoluteY: 30
+          condition: hasAttribution
+          absoluteX: 200
+          absoluteY: 55
+          width: 100
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 14
+                text: 'Source(s): '
+        - !columns
+          condition: hasAttribution
+          absoluteX: 280
+          absoluteY: 53
+          width: 600
+          items:
+            - !text
+                font: Helvetica
+                fontSize: 11
+                text: '${dataOwner}'
+        - !columns
+          absoluteX: 25
+          absoluteY: 45
           width: 160
           items:
             - !scalebar
@@ -163,13 +324,13 @@ layouts:
               type: 'bar sub'
               intervals: 5
         - !columns
-          absoluteX: 965
-          absoluteY: 45
-          width: 30
+          absoluteX: 960
+          absoluteY: 48
+          width: 35
           items:
             - !image
-              maxWidth: 30
-              maxHeight: 30
+              maxWidth: 35
+              maxHeight: 35
               url: 'file://${configDir}/Arrow_North_CFCF.svg'
               rotation: '${rotation}'
     lastPage:
@@ -178,7 +339,23 @@ layouts:
          - !columns
           condition: enableLegends
           absoluteX: 21
-          absoluteY: 588
+          absoluteY: 570
+          width: 511
+          items:
+            - !text
+                condition: isFr
+                font: Helvetica
+                fontSize: 14
+                text: 'Légende: '
+            - !text
+                condition: '!isFr'
+                font: Helvetica
+                fontSize: 14
+                text: 'Legend: '
+         - !columns
+          condition: enableLegends
+          absoluteX: 21
+          absoluteY: 548
           width: 801
           items:
             - !legends
@@ -194,16 +371,3 @@ layouts:
               classSpace: 5
               backgroundColor: white
               layerFontSize: 9
-  #===========================================================================
-  Thumbnail:
-    mainPage:
-      rotation: false
-      pageSize: 612 612
-      backgroundPdf: '${configDir}/template-thumbnail.pdf'
-      items:
-        - !map
-          spacingAfter: 0
-          width: 612
-          height: 612
-          absoluteX: 0
-          absoluteY: 612

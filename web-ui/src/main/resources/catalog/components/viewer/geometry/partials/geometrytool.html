@@ -1,0 +1,22 @@
+<div gi-btn-group class="btn-group">
+
+  <button class="btn btn-default draw-button"
+    gi-btn="active" ng-model="drawInteraction.active">
+    <span class="fa fa-pencil"></span>
+    <span ng-translate>drawGeometry</span>
+  </button>
+
+  <button class="btn btn-default modify-button"
+    ng-if="allowModify !== undefined"
+    gi-btn="active" ng-model="modifyInteraction.active">
+    <span class="fa fa-pencil"></span>
+    <span ng-translate>modifyGeometry</span>
+  </button>
+
+  <button class="btn btn-default btn-icon reset-button"
+    ng-if="allowReset !== undefined"
+    ng-click="reset()">
+    <span class="fa fa-trash-o"></span>
+  </button>
+
+</div>

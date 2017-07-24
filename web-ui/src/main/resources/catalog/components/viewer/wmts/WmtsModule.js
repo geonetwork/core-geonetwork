@@ -22,15 +22,14 @@
  */
 
 (function() {
-  goog.provide('gn_ncwms');
+  goog.provide('gn_wmts');
 
+  goog.require('gn_wmts_directive');
+  goog.require('gn_wmts_service');
 
-  goog.require('gn_ncwms_directive');
-  goog.require('gn_ncwms_service');
-
-  var module = angular.module('gn_ncwms', [
-    'gn_ncwms_service',
-    'gn_ncwms_directive',
-    'ui.slider'
+  var module = angular.module('gn_wmts', [
+    'gn_wmts_service',
+    'gn_wmts_directive'
   ]);
+
 })();

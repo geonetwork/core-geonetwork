@@ -8,7 +8,7 @@
   <div class="tab-content" data-ng-show="currentLayer">
     <div role="tabpanel" class="tab-pane active" id="home">
 
-      <div data-gn-wfs-download="currentLayer" data-map="map"></div>
+      <div data-gn-wfs-download="currentLayer" data-ng-if="currentLayer" data-map="map"></div>
 
       <div data-gn-wfs-filter-facets="" data-layer="currentLayer" data-boot-mode="index"> </div>
 

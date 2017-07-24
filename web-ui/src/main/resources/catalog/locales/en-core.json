@@ -328,5 +328,9 @@
     "typeOfRecord": "Type of record",
     "load": "Load",
     "indexAccessError": "Error during index access.",
-    "applyFilter": "Apply Filter"
+    "applyFilter": "Apply Filter",
+    "confirm": "Ok",
+    "confirmDialogTitle": "Confirm Action",
+    "close": "Close",
+    "wpsSelectOutput": "Select output..."
 }

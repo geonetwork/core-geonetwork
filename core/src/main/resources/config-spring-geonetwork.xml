@@ -147,4 +147,5 @@
   <bean id="MetadataNotifierClient"
         class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
+
 </beans>

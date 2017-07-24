@@ -1,0 +1,14 @@
+<div>
+  <div class="alert alert-danger" role="alert" ng-show="notSupported">
+    <span translate>localStorageNotSupported</span>
+  </div>
+
+  <ul class="list-group processes-list">
+    <a href class="list-group-item list-group-item-action"
+       data-ng-repeat="p in processes" ng-click="ctrl.select(p)"
+       ng-class="{active: p.name == wpsLink.name && p.url == wpsLink.url}"
+       title="{{ p.url }}">
+      <i class="fa fa-clock-o"/>&nbsp;{{ p.name }}
+    </a>
+  </ul>
+</div>

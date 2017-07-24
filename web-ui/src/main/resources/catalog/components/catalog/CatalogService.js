@@ -221,7 +221,7 @@
          * @param {string} isTemplate optional isTemplate value (s, t...)
          * @return {HttpPromise} of the $http get
          */
-        getMdObjByUuid: function(uuid) {
+        getMdObjByUuid: function(uuid, isTemplate) {
           return $http.get('q?_uuid=' + uuid + '' +
               '&fast=index&_content_type=json&buildSummary=false' +
               (isTemplate !== undefined ? '&isTemplate=' + isTemplate : '')).
@@ -528,7 +528,8 @@
         'denominator', 'resolution', 'geoDesc', 'geoBox', 'inspirethemewithac',
         'status', 'status_text', 'crs', 'identifier', 'responsibleParty',
         'mdLanguage', 'datasetLang', 'type', 'link', 'crsDetails'];
-      var listOfJsonFields = ['keywordGroup', 'crsDetails'];    // See below; probably not necessary
+      // See below; probably not necessary
+      var listOfJsonFields = ['keywordGroup', 'crsDetails'];
       var record = this;
       this.linksCache = [];
       $.each(listOfArrayFields, function(idx) {
@@ -538,7 +539,8 @@
           record[field] = [record[field]];
         }
       });
-      $.each(listOfJsonFields, function(idx) {    // Note: this step does not seem to be necessary; TODO: remove or refactor
+      // Note: this step does not seem to be necessary; TODO: remove or refactor
+      $.each(listOfJsonFields, function(idx) {
         var field = listOfJsonFields[idx];
         if (angular.isDefined(record[field])) {
           try {

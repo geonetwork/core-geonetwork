@@ -478,7 +478,7 @@ var OWS_1_1_0_Module_Factory = function() {
         col: true,
         mx: false,
         dom: false,
-        typed: false,
+        typed: true,
         etis: [{
                 en: 'Get',
                 ti: '.RequestMethodType'
