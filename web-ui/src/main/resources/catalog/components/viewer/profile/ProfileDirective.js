@@ -130,7 +130,8 @@
                   // update hover point & display info on graph
                   this.profileHighlight = closestPoint[2];
                   $scope.$apply();
-                  this.hoveredProfilePoint.setGeometry(new ol.geom.Point(closestPoint));
+                  this.hoveredProfilePoint.setGeometry(
+                    new ol.geom.Point(closestPoint));
                 }
               }.bind(this));
 
@@ -161,6 +162,7 @@
             // ngeo profile graph options
             // note: all callbacks use the current graph options
             this.profileOptions = {
+              // for older versions of ngeo
               elevationExtractor: {
                 dist: function (data) {
                   return data[this.graphOptions.distanceProperty];
@@ -169,9 +171,19 @@
                   return data[this.graphOptions.valuesProperty].z;
                 }.bind(this)
               },
+
+              // for newer versions of ngeo
               linesConfiguration: {
-                // empty for now
+                'line': {
+                  zExtractor: function (data) {
+                    return data[this.graphOptions.valuesProperty].z
+                  }.bind(this)
+                }
               },
+              distanceExtractor: function (data) {
+                return data[this.graphOptions.distanceProperty];
+              }.bind(this),
+
               hoverCallback: function (point) {
                 if (!this.hoveredProfilePoint) { return; }
                 var geom = new ol.geom.Point([
