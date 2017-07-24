@@ -312,6 +312,6 @@
     "gnbbox": "Geographical area",
     "link-children": "children",
     "link-parent": "parent",
-    "link-sources": "Is source dataset of",
-    "link-hassources": "Source datasets"
+    "link-sources": "Source datasets",
+    "link-hassources": "Is source dataset of"
 }
