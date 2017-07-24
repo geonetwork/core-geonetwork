@@ -1,67 +1,108 @@
 <div class="context">
+  <fieldset>
+    <legend data-gn-slide-toggle="" data-translate="">loadAMap</legend>
+    <div>
+      <form class="form-horizontal"
+            role="nav"
+            data-ng-controller="gnsMapSearchController"
+            data-ng-search-form=""
+            data-runSearch="true"
+            data-ng-show="searchResults.records.length > 0">
+        <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
-  <a class="btn btn-default btn-block"
-     data-ng-click="reset($event)"
-     title="{{'resetContext'|translate}}">
-    <i class="fa fa-eraser"></i>&nbsp;
-    <span data-translate="">resetContext</span>
-  </a>
+        <ul class="list-group gn-resultview gn-resultview-sumup">
+          <li class="list-group-item gn-grid">
+            <div data-ng-click="reset($event)">
+              <div class="gn-md-thumbnail">
+                <br/>
+                <i class="fa fa-map fa-5x"></i>
+                <br/>
+                <span class="gn-img-thumbnail-caption"
+                      data-translate="">resetContext</span>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item gn-grid import">
+            <div>
+              <div class="gn-md-thumbnail">
+                <br/>
+                <i class="fa fa-upload fa-5x"></i>
+                <br/>
+                <span class="gn-img-thumbnail-caption"
+                      data-translate="">uploadContext</span>
+              </div>
+            </div>
+          </li>
+        </ul>
 
-  <button type="button"
-          class="btn btn-default btn-block import"
-          title="{{'uploadContext'|translate}}">
-    <i class="fa fa-upload"></i>&nbsp;
-    <span data-translate="">uploadContext</span>
-  </button>
 
-  <a class="btn btn-default btn-block"
-     data-ng-click="save($event)"
-     title="{{'downloadContext'|translate}}"
-     download="{{mapFileName}}.xml">
-    <i class="fa fa-save"></i>&nbsp;
-    <span data-translate="">downloadContext</span>
-  </a>
-  <fieldset data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()">
-    <legend data-translate="">saveMapInCatalog</legend>
-    <form>
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-      <div class="form-group">
-        <label for="mapTitle"
-               data-translate="">mapTitle</label>
-        <input type="text"
-               class="form-control"
-               name="mapTitle"
-               data-ng-model="mapProps.map_title"
-               data-ng-required=""
-               id="mapTitle">
-      </div>
-      <div class="form-group">
-        <label for="mapAbstract"
-               data-translate="">mapAbstract</label>
-        <textarea class="form-control"
-                  name="mapAbstract"
-                  data-ng-model="mapProps.map_abstract"
-                  id="mapAbstract"></textarea>
-      </div>
-      <a class="btn btn-default btn-block"
-         data-gn-click-and-spin="saveInCatalog($event)"
-         title="{{'saveInCatalog'|translate}}">
-        <i class="fa fa-save"></i>&nbsp;
-        <span data-translate="">saveMapInCatalogAction</span>
-      </a>
-    </form>
+        <div data-ng-show="searchResults.records.length > 0"
+             data-gn-results-container=""
+             data-search-results="searchResults"
+             data-template-url="resultTemplate"></div>
 
-    <p data-ng-if="mapUuid != null"
-       data-translate=""
-       data-translate-values="{uuid: '{{mapUuid}}'}">mapSavedInCatalog</p>
+        <div class="pull-right"
+             data-gn-pagination="paginationInfo"
+             data-hits-values="searchObj.hitsperpageValues"></div>
+      </form>
+    </div>
   </fieldset>
 
-  <!--
-  TODO: KML Export ?
-  <a class="btn btn-default">
-    <i class="fa fa-save"></i>&nbsp;
-    <span data-translate="">kmlContext</span>
-  </a>-->
+  <fieldset>
+    <legend data-gn-slide-toggle="" data-translate="">saveMap</legend>
+    <div>
+      <h4 data-translate="">downloadContext</h4>
+      <div class="btn-group" role="group">
+        <a class="btn btn-default"
+           data-ng-click="save($event)"
+           title="{{'downloadContext'|translate}}"
+           download="{{mapFileName}}.xml">
+          <i class="fa fa-file-code-o"></i>&nbsp;
+          <span data-translate="">saveMapAsContext</span>
+        </a>
+        <a class="btn btn-default"
+           data-ng-click="saveMapAsImage($event)"
+           download="{{mapFileName}}.png">
+          <i class="fa fa-file-image-o"></i>&nbsp;
+          <span data-translate="">saveMapAsImage</span>
+        </a>
+      </div>
+
+      <form data-ng-if="isSaveMapInCatalogAllowed && user.isEditorOrMore()">
+        <h4 data-translate="">saveMapInCatalog</h4>
+
+        <input type="hidden" name="_csrf" value="{{csrf}}"/>
+        <div class="form-group">
+          <label for="mapTitle"
+                 data-translate="">mapTitle</label>
+          <input type="text"
+                 class="form-control"
+                 name="mapTitle"
+                 data-ng-model="mapProps.title"
+                 data-ng-required=""
+                 id="mapTitle">
+        </div>
+        <div class="form-group">
+          <label for="mapAbstract"
+                 data-translate="">mapAbstract</label>
+          <textarea class="form-control"
+                    name="mapAbstract"
+                    data-ng-model="mapProps.recordAbstract"
+                    id="mapAbstract"></textarea>
+        </div>
+        <a class="btn btn-default btn-block"
+           data-gn-click-and-spin="saveInCatalog($event)"
+           title="{{'saveInCatalog'|translate}}">
+          <i class="fa fa-save"></i>&nbsp;
+          <span data-translate="">saveMapInCatalogAction</span>
+        </a>
+
+        <p data-ng-if="mapUuid != null"
+           data-translate=""
+           data-translate-values="{uuid: '{{mapUuid}}'}">mapSavedInCatalog</p>
+      </form>
+    </div>
+  </fieldset>
 </div>
 
 <input class="hidden" type="file"

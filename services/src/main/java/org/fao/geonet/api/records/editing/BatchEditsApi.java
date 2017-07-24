@@ -108,6 +108,13 @@ public class BatchEditsApi implements ApplicationContextAware {
             required = false,
             example = "iso19139")
         @RequestParam(required = false) String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
         @RequestBody BatchEditParameter[] edits,
         HttpServletRequest request)
         throws Exception {
@@ -125,9 +132,8 @@ public class BatchEditsApi implements ApplicationContextAware {
                 SelectionManager.getManager(serviceContext.getUserSession());
 
             synchronized (
-                selectionManager.getSelection(
-                    SelectionManager.SELECTION_METADATA)) {
-                final Set<String> selection = selectionManager.getSelection(SelectionManager.SELECTION_METADATA);
+                selectionManager.getSelection(bucket)) {
+                final Set<String> selection = selectionManager.getSelection(bucket);
                 setOfUuidsToEdit = Sets.newHashSet(selection);
             }
         } else {
