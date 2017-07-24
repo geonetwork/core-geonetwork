@@ -125,6 +125,7 @@
   goog.require('gn_owscontext');
   goog.require('gn_popup');
   goog.require('gn_print');
+  goog.require('gn_profile');
   goog.require('gn_searchlayerformap_directive');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
@@ -164,7 +165,8 @@
     'gn_index',
     'gn_wps',
     'gn_featurestable',
-    'gn_geometry'
+    'gn_geometry',
+    'gn_profile'
   ]);
 
   module.controller('gnViewerController', [
@@ -172,15 +174,11 @@
     '$timeout',
     'gnViewerSettings',
     'gnMap',
-    'gnViewerService',
-    'gnGeometryService',
     function(
       $scope,
       $timeout,
       gnViewerSettings,
-      gnMap,
-      gnViewerService,
-      gnGeometryService) {
+      gnMap) {
 
       var map = $scope.searchObj.viewerMap;
 
@@ -248,111 +246,6 @@
       $(div).on('mouseleave', function() {
         hovering = false;
       });
-
-      // watch service data: when a profile graph is available, render it
-      var me = this;
-      $scope.$watch(
-        function() {
-          return gnViewerService.getProfileGraphData();
-        },
-        function(newData, oldData) {
-          me.profileGraph = newData && JSON.parse(newData).profile;
-        }
-      );
-
-      // this is used to render hovered point on the profile
-      this.hoveredProfilePoint = new ol.Feature();
-      var source = new ol.source.Vector();
-      var hoveredPointLayer = new ol.layer.Vector({
-        source: source
-      });
-      source.addFeature(this.hoveredProfilePoint);
-      hoveredPointLayer.setZIndex(1000);
-      map.addLayer(hoveredPointLayer);
-
-      // let's get the geometry tool layer (where profiles are drawn)
-      var profileVectorLayer = gnGeometryService.getCommonLayer(map);
-
-      // show height on graph when hovering the feature
-      this.profileHighlight = -1;
-      map.on('pointermove', function (evt) {
-        if (evt.dragging || !me.profileGraph) {
-          return;
-        }
-
-        // hide profile info by default
-        me.profileHighlight = -1;
-        me.hoveredProfilePoint.setGeometry(null);
-
-        var coordinate = map.getEventCoordinate(evt.originalEvent);
-
-        // let's first look for the closest feature & make sure it is a linestring
-        var source = profileVectorLayer.getSource();
-        var feature = source.getClosestFeatureToCoordinate(coordinate,
-          function (feature) {
-            return feature.getGeometry().getType() === 'LineString';
-          });
-
-        // no linestring found: exit
-        if (!feature) {
-          return;
-        }
-
-        var closestPoint = feature.getGeometry().getClosestPoint(coordinate);
-        var dx = Math.abs(closestPoint[0] - coordinate[0]);
-        var dy = Math.abs(closestPoint[1] - coordinate[1]);
-        var pixelDist = Math.max(dx, dy) / map.getView().getResolution();
-
-        // if close enough to the feature: show profile info
-        if (pixelDist < 8) {
-          // compute distance from start
-          // this was taken from camptocamp/ngeo/gmf profile.js code
-          // FIXME: find a cleaner way to handle this, contrib to OL?
-          var segment = new ol.geom.LineString();
-          var distOnLine = 0;
-          var fakeExtent = [
-            closestPoint[0] - 0.00000001, closestPoint[1] - 0.00000001,
-            closestPoint[0] + 0.00000001, closestPoint[1] + 0.00000001
-          ];
-          feature.getGeometry().forEachSegment(function (point1, point2) {
-            segment.setCoordinates([point1, closestPoint]);
-            // segment that hold the point
-            if (segment.intersectsExtent(fakeExtent)) {
-              return distOnLine += segment.getLength(); // exit loop
-            } else {
-              segment.setCoordinates([point1, point2]);
-              distOnLine += segment.getLength();
-            }
-          });
-
-          // update hover point & display info on graph
-          me.profileHighlight = distOnLine;
-          $scope.$apply();
-          me.hoveredProfilePoint.setGeometry(new ol.geom.Point(closestPoint));
-        }
-      });
-
-      // ngeo profile graph options
-      this.profileOptions = {
-        elevationExtractor: {
-          dist: function(data) { return data.dist },
-          z: function(data) { return data.values.z }
-        },
-        linesConfiguration: { },
-        hoverCallback: function (point) {
-          var geom = new ol.geom.Point([point.lon, point.lat]);
-          geom.transform('EPSG:4326', map.getView().getProjection());
-          me.hoveredProfilePoint.setGeometry(geom);
-        },
-        outCallback: function (point) {
-          me.hoveredProfilePoint.setGeometry(null);
-        }
-      };
-
-      // closes the profile graph
-      this.closeProfileGraph = function() {
-        gnViewerService.clearProfileGraph();
-      };
     }]);
 
 })();

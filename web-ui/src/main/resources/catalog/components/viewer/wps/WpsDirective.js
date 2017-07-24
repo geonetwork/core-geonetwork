@@ -62,9 +62,9 @@
     'wfsFilterService',
     '$window',
     'gnGeometryService',
-    'gnViewerService',
+    'gnProfileService',
     function(gnWpsService, gnUrlUtils, $timeout, wfsFilterService,
-        $window, gnGeometryService, gnViewerService) {
+        $window, gnGeometryService, gnProfileService) {
 
       var toBool = function(str, defaultVal) {
         if (str === undefined) {
@@ -423,10 +423,25 @@
 
               // save raw graph data on view controller & hide it in wps form
               if (scope.outputAsGraph && response.processOutputs) {
-                gnViewerService.displayProfileGraph(
-                    response.processOutputs.output[0]
-                    .data.complexData.content
-                );
+                try {
+                  var jsonData = JSON.parse(response.processOutputs.output[0]
+                    .data.complexData.content);
+
+                  // TODO: use applicationProfile for this
+                  gnProfileService.displayProfileGraph(
+                    jsonData.profile,
+                    {
+                      valuesProperty: 'values',
+                      xProperty: 'lon',
+                      yProperty: 'lat',
+                      distanceProperty: 'dist',
+                      crs: 'EPSG:4326'
+                    }
+                  );
+                } catch (e) {
+                  console.error('Error parsing WPS graph data:',
+                    response.processOutputs);
+                }
                 scope.executeResponse = null;
               }
             };

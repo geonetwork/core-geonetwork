@@ -39,38 +39,6 @@
   module.service('gnViewerService', [
     '$http',
     function($http) {
-      // Profile graph handling
-      this._profileGraph = undefined; // this will be watched by the directive
-
-      /**
-       * Renders JSON data as a graph in the viewer. The expected format is:
-       * {
-       *   "profile": [{
-       *       "lat": 48.38589820151259,
-       *       "dist": 0.0,
-       *       "lon": -4.4995880126953125,
-       *       "values": {
-       *           "z": 23.0
-       *       }
-       *   }, {
-       *      ...
-       *   }]
-       * }
-       *
-       * @param  {type} rawData raw graph data
-       */
-      this.displayProfileGraph = function(rawData) {
-        // TODO: check validity
-        this._profileGraph = rawData;
-      };
-
-      this.getProfileGraphData = function() {
-        return this._profileGraph;
-      };
-      this.clearProfileGraph = function() {
-        return this._profileGraph = undefined;
-      };
-
       this.activeTool = {
         name: '',
         tab: '',
