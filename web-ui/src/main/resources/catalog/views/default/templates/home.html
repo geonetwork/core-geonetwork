@@ -27,6 +27,25 @@
 
     </div>
   </div>
+
+  <form class="form-horizontal"
+        role="nav"
+        data-ng-controller="gnsSearchTopEntriesController"
+        data-ng-search-form=""
+        data-runSearch="true"
+        data-ng-show="searchResults.records.length > 0">
+    <div class="row gn-top-records">
+      <h4 data-translate="">topMaps</h4>
+
+        <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+        <div data-ng-show="searchResults.records.length > 0"
+             data-gn-results-container=""
+             data-search-results="searchResults"
+             data-template-url="resultTemplate"></div>
+    </div>
+  </form>
+
   <div class="row" data-ng-show="searchInfo.count == 0">
     <div data-ng-show="searchInfo.count == 0"
          class="col-md-offset-4 col-md-4 alert alert-warning">
@@ -34,6 +53,8 @@
       <div data-gn-need-help="user-guide/quick-start/index.html"></div>
     </div>
   </div>
+
+
   <div class="row" data-ng-show="searchInfo.count > 0">
     <div class="col-sm-8" data-ng-show="browse !== ''">
       <span data-translate="">browseBy</span>

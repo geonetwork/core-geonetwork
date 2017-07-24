@@ -68,6 +68,23 @@
               $scope.collapsed = true;
             };
 
+            $scope.zoomToYou = function(map) {
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                  var position = new ol.geom.Point([
+                    pos.coords.longitude,
+                    pos.coords.latitude]);
+                  map.getView().setCenter(
+                      position.transform(
+                      'EPSG:4326',
+                      map.getView().getProjection()).getFirstCoordinate()
+                  );
+                });
+              } else {
+
+              }
+            };
+
             /**
              * Request geonames search. Trigger when user changes
              * the search input.

@@ -33,7 +33,8 @@
           <legend>{{section2.name | translate}}</legend>
           <!-- According to data type -->
           <div data-ng-repeat="s in section2.children | hideLanguages | orderObjectBy:'position'"
-               data-ng-switch="s.dataType">
+               data-ng-switch="s.dataType"
+               data-ng-if="s.name != ''">
             <div data-ng-switch-when="BOOLEAN">
               <label class="col-sm-4 control-label" for="{{s['name']}}"> {{s['name'] |
                 translate}} </label>

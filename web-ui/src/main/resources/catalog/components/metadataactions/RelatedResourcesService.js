@@ -253,7 +253,7 @@
               action: null
             },
             'MAP' : {
-              iconClass: 'fa-globe',
+              iconClass: 'fa-map',
               label: 'mapLink',
               action: addMapToMap
             },
