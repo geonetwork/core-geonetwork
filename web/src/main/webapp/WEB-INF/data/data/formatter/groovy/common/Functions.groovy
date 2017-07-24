@@ -48,6 +48,14 @@ public class Functions {
         return '<div class="col-md-' + cols + '">' + content + '</div>'
     }
 
+    def htmlNewLine(content){
+        def text = content.replaceAll("\n", "<br>");
+        if(text.trim().startsWith("<br>")) {
+            text = text.replaceFirst("<br>", "");
+        }
+        return text
+    }
+
     def urlToHtml(content) {
         LinkExtractor linkExtractor = LinkExtractor.builder()
                 .linkTypes(EnumSet.of(LinkType.URL)) // limit to URLs
