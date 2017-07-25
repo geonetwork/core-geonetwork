@@ -9,7 +9,10 @@
 
   <span data-ng-show="!invalidKeywordMatch" ng-switch="mode">
     <div class="row" data-ng-switch-when="tagsinput">
-      <div class="col-sm-9 col-sm-offset-2"
+      <label class="col-sm-2 control-label">
+        {{thesaurusTitle}}
+      </label>
+      <div class="col-sm-9"
            data-ng-class="maxTags && selected.length == maxTags ? 'gn-maxtags' : ''"
            title="{{selected.length}}/{{maxTagsLabel}} {{'tagsAllowed' | translate}}">
         <input type="text" id="tagsinput_{{elementRef}}"
