@@ -77,9 +77,11 @@
               // If not using the directive in an editor context, set
               // the schema id to properly retrieve the codelists.
               schema: '@',
-              selectEntryCb: '='
+              selectEntryCb: '=',
               // Can restrict how to insert the entry (xlink, text ..)
               // insertModes: '@'
+              // If true, will only show entries with a valid status of 1
+              showValidOnly: '@'
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -98,7 +100,8 @@
                       _root: 'gmd:CI_ResponsibleParty',
                       sortBy: 'title',
                       sortOrder: 'reverse',
-                      resultType: 'subtemplates'
+                      resultType: 'subtemplates',
+                      _valid: scope.showValidOnly ? 1 : undefined
                     }
                   };
 
