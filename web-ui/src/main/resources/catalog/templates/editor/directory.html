@@ -118,8 +118,8 @@
               <button type="button"
                 class="btn btn-default dropdown-toggle btn-sm"
                 data-toggle="dropdown"
-                title="{{'filterGroup' | translate}}">
-                <span translate class="hidden-xs">filterGroup</span>
+                title="{{'filterBy' | translate}}">
+                <span translate class="hidden-xs">filterBy</span>
                 &nbsp;<i class="caret" />
               </button>
               <ul class="dropdown-menu gn-facet-dropdown pull-right">
@@ -128,6 +128,11 @@
                       data-no-collapse="true"
                       data-facet="groupOwners"
                       data-index-key="_groupOwner"></div>
+                <div data-gn-facet="searchResults.facet" ng-if="!templatesShown()"
+                      data-current-facets="currentFacets"
+                      data-no-collapse="true"
+                      data-facet="isValid"
+                      data-index-key="_valid"></div>
                 <div data-gn-facet-breadcrumb=""></div>
               </ul>
             </div>

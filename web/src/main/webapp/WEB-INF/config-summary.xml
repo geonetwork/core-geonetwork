@@ -203,6 +203,7 @@
       <item facet="subTemplateType"/>
       <item facet="groupOwner" max="99" sortBy="value"
             translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+      <item facet="isValid" max="3" sortBy="value" translator="apploc:validStatus-"/>
     </summaryType>
     <summaryType name="contact" format="DIMENSION">
       <item facet="orgNameTree" max="99"/>
