@@ -691,7 +691,8 @@ Customizing thesaurus
 ~~~~~~~~~~~~~~~~~~~~~
 
 To configure the type of transformations
-or the number of keyword allowed for e
+or the number of keyword allowed or if the widget
+has to be displayed in a fieldset or as simple field for e
 thesaurus define a specific configuration:
 
 eg. only 2 INSPIRE themes.
@@ -702,6 +703,7 @@ eg. only 2 INSPIRE themes.
       <thesaurusList>
         <thesaurus key="external.theme.inspire-theme"
                    maxtags="2"
+                   fieldset="false"
                    transformations=""/>
       </thesaurusList>
 
@@ -714,6 +716,7 @@ eg. only 2 INSPIRE themes.
           <xs:complexType>
             <xs:attribute name="key" type="xs:string" use="required"/>
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
+            <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
         </xs:element>

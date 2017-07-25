@@ -2036,6 +2036,7 @@
       <thesaurusList>
         <thesaurus key="external.theme.inspire-theme"
                    maxtags="2"
+                   fieldset="false"
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
