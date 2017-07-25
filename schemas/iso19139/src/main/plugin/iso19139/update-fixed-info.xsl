@@ -76,9 +76,9 @@
                   <!-- We use to create UUID for some EMODnet product based
                   on hierarchylevelname. For bathymetry only CPRD is used.
                   So this is now hardcoded. -->
-                  <xsl:value-of select="concat('SDN:CPRD:',
+                  <xsl:value-of select="concat('SDN_CPRD_',
                     $custodian,
-                    ':',
+                    '_',
                     gmd:identificationInfo/*/gmd:citation/*/
                       gmd:identifier/*/gmd:code/gco:CharacterString)"/>
                 </xsl:if>

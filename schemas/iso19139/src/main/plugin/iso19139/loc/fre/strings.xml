@@ -226,7 +226,7 @@
   <emodnetHydrography-when>When</emodnetHydrography-when>
   <emodnetHydrography-who>Who</emodnetHydrography-who>
   <emodnetHydrography-access>Access</emodnetHydrography-access>
-  <emodnetHydrography>Emodnet</emodnetHydrography>
+  <emodnetHydrography>EMODNet Bathymetry</emodnetHydrography>
   <emodnetMetadataInfoTitle>Metadata information</emodnetMetadataInfoTitle>
   <emodnetCatalogueType>Catalogue type</emodnetCatalogueType>
   <emodnetMetadataInfo>Metadata details</emodnetMetadataInfo>
@@ -251,7 +251,7 @@
   <emodnetWhenTitle>When</emodnetWhenTitle>
   <emodnetWhoTitle>Who</emodnetWhoTitle>
   <emodnetQualityIndicator>Quality Indicators</emodnetQualityIndicator>
-  <emodnetSpatialResolution>Spatial resolution</emodnetSpatialResolution>
+  <emodnetSpatialResolution>Pixel size</emodnetSpatialResolution>
   <emodnetOriginatorTitle>Originator</emodnetOriginatorTitle>
   <emodnetDataHoldingCenterTitle>Data Holding Center</emodnetDataHoldingCenterTitle>
   <emodnetDistributor>Distributor</emodnetDistributor>
@@ -260,7 +260,7 @@
   <emodnetName>Dataset name</emodnetName>
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
   <measureFreq>Measurement frequency</measureFreq>
-
+  <emodnetCRSversion>Version or custom projection details</emodnetCRSversion>
   <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs3395>WGS 84 / World Mercator</addCrs3395>
