@@ -591,6 +591,14 @@ gn-features-tables, .gn-viewer-info-pane {
   .profile {
     width: 100%;
     min-height: 20em;
+    height: 200px;
+    overflow-x: scroll;
+    svg {
+      width: auto;
+    }
+    .overlay {
+      width: 100%;
+    }
   }
 }
 
@@ -619,8 +627,18 @@ gn-wps-process-form {
     }
   }
 
-  .form-group .btn-group.output-selection {
+  .form-group .output-selection {
     display: inline-block;
+  }
+  .form-group .input-group {
+    margin-bottom: 6px;
+  }
+}
+
+gn-geometry-tool .btn-group .btn {
+  flex-basis: initial !important;
+  &.btn-icon {
+    flex-grow: 0 !important;
   }
 }
 

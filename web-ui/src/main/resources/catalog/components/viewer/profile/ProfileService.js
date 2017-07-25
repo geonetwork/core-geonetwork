@@ -22,72 +22,46 @@
  */
 
 (function() {
-  goog.provide('gn_geometry_service');
+  goog.provide('gn_profile_service');
 
-  var module = angular.module('gn_geometry_service', []);
+
+
+
+
+
+  var module = angular.module('gn_profile_service', []);
 
   /**
    * @ngdoc service
    * @kind function
-   * @name gn_geometry.service:gnGeometryService
+   * @name gn_viewer.service:gnProfileService
    * @requires gnMap
+   * @requires gnOwsCapabilities
+   * @requires gnEditor
+   * @requires gnViewerSettings
    *
    * @description
-   * The `gnGeometryService` service provides utility related to handling
-   * geometry and mime types
+   * The `gnProfileService` service provides utility to display profile graphs
+   * in the viewer. It can be used to pass data to render from anywhere in
+   * the app.
    */
-  module.service('gnGeometryService', [
-    function() {
+  module.service('gnProfileService', [
+    function () {
 
       this._layer = null;
 
       /**
        * @ngdoc method
-       * @methodOf gn_geometry.service:gnGeometryService
-       * @name gnGeometryService#getFormatFromMimeType
+       * @methodOf gn_viewer.service:gnProfileService
+       * @name gnProfileService#getOverlayLayer
        *
        * @description
-       * Guess the output format to use in a gn-geometry-tool directive based
-       * on a mime type received from a DescribeProcess call.
-       *
-       * @param {string} mimeType mime type from the process description
-       * @return {string} format to be used by a gn-geometry-tool directive
-       */
-      this.getFormatFromMimeType = function(mimeType) {
-        var parts = mimeType.split(';');
-        parts.forEach(function(p) {
-          p = p.trim().toLowerCase();
-        });
-
-        switch (parts[0]) {
-          case 'application/json':
-            return 'geojson';
-
-          case 'application/wkt':
-            return 'wkt';
-
-          case 'application/gml+xml':
-          case 'text/xml':
-            return 'gml';
-
-          default:
-            return 'object';
-        }
-      };
-
-      /**
-       * @ngdoc method
-       * @methodOf gn_geometry.service:gnGeometryService
-       * @name gnGeometryService#getCommonLayer
-       *
-       * @description
-       * This fetches a OL vector layer that is common to all Geometry Tools
-       * If non existent, the layer will be created
+       * This fetches a OL vector layer that is used for profile overlay
        *
        * @param {ol.Map} map open layers map
        * @return {ol.layer.Vector} vector layer
        */
-      this.getCommonLayer = function(map) {
+      this.getOverlayLayer = function(map) {
         if (this._layer) {
           return this._layer;
         }
@@ -99,7 +73,7 @@
         });
         this._layer = new ol.layer.Vector({
           source: source,
-          name: 'geometry-tool-layer',
+          name: 'profile-overlay-layer',
           style: [
             new ol.style.Style({  // this is the default editing style
               fill: new ol.style.Fill({
@@ -112,13 +86,13 @@
             }),
             new ol.style.Style({
               stroke: new ol.style.Stroke({
-                color: 'rgba(0, 153, 255, 1)',
+                color: 'rgba(0, 255, 80, 1)',
                 width: 3
               }),
               image: new ol.style.Circle({
                 radius: 6,
                 fill: new ol.style.Fill({
-                  color: 'rgba(0, 153, 255, 1)'
+                  color: 'rgba(0, 255, 80, 1)'
                 }),
                 stroke: new ol.style.Stroke({
                   color: 'white',
@@ -130,9 +104,33 @@
         });
 
         // add our layer to the map
-        map.addLayer(this._layer);
+        this._layer.setMap(map);
 
         return this._layer;
+      };
+
+      this._profileGraph = undefined; // this will be watched by the directive
+      this._profileGraphOptions = undefined;
+
+      /**
+       * Renders JSON data as a graph in the viewer. This will be passed to
+       * a gnProfile directive if there is one in the application.
+       *
+       * @param {Object} jsonData raw JSON graph data
+       * @param {Object} graphOptions options used for rendering the graph
+       */
+      this.displayProfileGraph = function(jsonData, graphOptions) {
+        // TODO: check validity
+        this._profileGraph = jsonData;
+        this._profileGraphOptions = graphOptions;
+      };
+
+      // getters; these will be watched by the gnProfile directive
+      this.getProfileGraphData = function() {
+        return this._profileGraph;
+      };
+      this.getProfileGraphOptions = function() {
+        return this._profileGraphOptions;
       };
     }
   ]);

@@ -55,52 +55,27 @@
         },
         templateUrl: '../../catalog/components/viewer/geometry/' +
             'partials/geometrytool.html',
-        controller: ['$scope', 'ngeoDecorateInteraction',
-          function GeometryToolController($scope, ngeoDecorateInteraction) {
-            // internal vars
-            var source = new ol.source.Vector({
-              useSpatialIndex: false
-            });
-            var layer = new ol.layer.Vector({
-              source: source,
-              style: [
-                new ol.style.Style({  // this is the default editing style
-                  fill: new ol.style.Fill({
-                    color: 'rgba(255, 255, 255, 0.5)'
-                  }),
-                  stroke: new ol.style.Stroke({
-                    color: 'white',
-                    width: 5
-                  })
-                }),
-                new ol.style.Style({
-                  stroke: new ol.style.Stroke({
-                    color: 'rgba(0, 153, 255, 1)',
-                    width: 3
-                  }),
-                  image: new ol.style.Circle({
-                    radius: 6,
-                    fill: new ol.style.Fill({
-                      color: 'rgba(0, 153, 255, 1)'
-                    }),
-                    stroke: new ol.style.Stroke({
-                      color: 'white',
-                      width: 1.5
-                    })
-                  })
-                })
-              ]
-            });
+        controller: [
+          '$scope',
+          'ngeoDecorateInteraction',
+          'gnGeometryService',
+          function GeometryToolController(
+            $scope,
+            ngeoDecorateInteraction,
+            gnGeometryService) {
+            var layer = gnGeometryService.getCommonLayer($scope.map);
+            var source = layer.getSource();
+            var myFeatures = new ol.Collection();
+
             $scope.drawInteraction = new ol.interaction.Draw({
               type: $scope.geometryType,
               source: source
             });
             $scope.modifyInteraction = new ol.interaction.Modify({
-              features: source.getFeaturesCollection()
+              features: myFeatures
             });
 
             // add our layer&interactions to the map
-            $scope.map.addLayer(layer);
             $scope.map.addInteraction($scope.drawInteraction);
             $scope.map.addInteraction($scope.modifyInteraction);
             $scope.drawInteraction.setActive(false);
@@ -109,16 +84,22 @@
             ngeoDecorateInteraction($scope.modifyInteraction);
 
             // cleanup when scope is destroyed
-            // FIXME: this event is not triggered!
-            // (when switching form, the DOM is simply cleared with jQuery)
             $scope.$on('$destroy', function() {
-              $scope.map.removeLayer(layer);
+              removeMyFeatures();
               $scope.map.removeInteraction($scope.drawInteraction);
               $scope.map.removeInteraction($scope.modifyInteraction);
             });
 
+            // remove all my features from the map
+            var removeMyFeatures = function () {
+              myFeatures.forEach(function (feature) {
+                source.removeFeature(feature);
+              });
+              myFeatures.clear();
+            };
+
             // modifies the output value
-            var updateOutput = function(feature) {
+            var updateOutput = function (feature) {
               if (!feature) {
                 $scope.output = null;
                 return;
@@ -196,21 +177,22 @@
               $scope.output = outputValue;
             };
 
-            // clear existing features on draw end
+            // clear existing features on draw end & save feature
             $scope.drawInteraction.on('drawend', function(event) {
-              source.clear();
+              removeMyFeatures();
               updateOutput(event.feature);
               $scope.drawInteraction.setActive(false);
+              myFeatures.push(event.feature);
             });
 
             // update output on modify end
             $scope.modifyInteraction.on('modifyend', function(event) {
-              updateOutput(event.feature);
+              updateOutput(event.features.item(0));
             });
 
             // reset drawing
             $scope.reset = function() {
-              source.clear();
+              removeMyFeatures();
               updateOutput();
             };
           }

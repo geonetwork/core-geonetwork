@@ -11,19 +11,8 @@
 
   <div gn-localisation-input map="map"></div>
 
-  <!-- graph showing a WPS response containing a profile -->
-  <div class="profile-graph gn-viewer-info-pane"
-    ng-style="{ visibility: ctrl.profileGraph ? 'visible' : 'hidden' }"
-    ng-class="{'leftBarExpanded': isContainerOpened()}">
-    <div class="panel-heading">
-      <button type="button" class="btn btn-default close" ng-click="ctrl.closeProfileGraph()" title="close">
-        ×
-      </button>
-      <h5><span data-translate="">profileGraph</span></h5>
-    </div>
-    <div class="profile" ngeo-profile="ctrl.profileGraph"
-      ngeo-profile-options="ctrl.profileOptions" />
-  </div>
+  <!-- profile graph (data will come through the service) -->
+  <gn-profile map="map"></gn-profile>
 
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group>
@@ -292,7 +281,8 @@
           <gn-wps-recent-list wps-link="selectedWps"/>
         </tab>
       </tabset>
-      <gn-wps-process-form map="map" wps-link="selectedWps"/>
+      <gn-wps-process-form map="map" wps-link="selectedWps"
+        ng-if="activeTools.processes"/>
     </div>
   </div>
 </div>

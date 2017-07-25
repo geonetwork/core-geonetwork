@@ -125,6 +125,7 @@
   goog.require('gn_owscontext');
   goog.require('gn_popup');
   goog.require('gn_print');
+  goog.require('gn_profile');
   goog.require('gn_searchlayerformap_directive');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
@@ -164,7 +165,8 @@
     'gn_index',
     'gn_wps',
     'gn_featurestable',
-    'gn_geometry'
+    'gn_geometry',
+    'gn_profile'
   ]);
 
   module.controller('gnViewerController', [
@@ -172,8 +174,11 @@
     '$timeout',
     'gnViewerSettings',
     'gnMap',
-    'gnViewerService',
-    function($scope, $timeout, gnViewerSettings, gnMap, gnViewerService) {
+    function(
+      $scope,
+      $timeout,
+      gnViewerSettings,
+      gnMap) {
 
       var map = $scope.searchObj.viewerMap;
 
@@ -241,31 +246,6 @@
       $(div).on('mouseleave', function() {
         hovering = false;
       });
-
-      // watch service data: when a profile graph is available, render it
-      var me = this;
-      $scope.$watch(
-          function() {
-            return gnViewerService.getProfileGraphData();
-          },
-          function(newData, oldData) {
-            me.profileGraph = newData && JSON.parse(newData).profile;
-          }
-      );
-      this.profileOptions = {
-        elevationExtractor: {
-          dist: function(data) { return data.dist },
-          z: function(data) { return data.values.z }
-        },
-        linesConfiguration: { }
-
-        // TODO: callbacks for interaction with the map
-        // hoverCallback,
-        // outCallback
-      };
-      this.closeProfileGraph = function() {
-        gnViewerService.clearProfileGraph();
-      };
     }]);
 
 })();
