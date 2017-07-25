@@ -1,0 +1,39 @@
+<!-- full width map -->
+<div class="row">
+  <div class="col-md-12" ngeo-map="ctrl.map"></div>
+</div>
+
+<div class="spacer" />
+
+<!-- draw tool & select boxes -->
+<div class="row">
+  <div class="col-md-12 text-center form-inline">
+    <gn-geometry-tool map="ctrl.map"
+      geometry-type="Polygon" allow-modify allow-reset
+      output="ctrl.outputGeometry" output-format="gml" output-crs="EPSG:4326"
+      input="ctrl.inputGeometry" keep-input-in-sync
+      input-format="{{ctrl.currentFormat || 'gml'}}"
+      input-crs="{{ctrl.currentProjection.code || 'EPSG:4326'}}">
+    </gn-geometry-tool>
+    &nbsp;
+    <select class="form-control" ng-model="ctrl.currentFormat"
+      ng-options="format for format in ctrl.formats">
+    </select>
+    <select class="form-control" ng-model="ctrl.currentProjection"
+      ng-options="proj.code as proj.label for proj in ctrl.projections">
+    </select>
+  </div>
+</div>
+
+<div class="spacer" />
+
+<!-- draw tool & select boxes -->
+<div class="row">
+  {{ ctrl.outputGeometry }}
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <textarea class="form-control" rows="3" ng-model="ctrl.inputGeometry"
+      placeholder="{{'outputGeometry' | translate}}"/>
+  </div>
+</div>

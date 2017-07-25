@@ -749,7 +749,10 @@ input.ng-invalid {
 // general purpose layout helpers
 .pos-relative { position: relative; }
 .pos-absolute { position: absolute; }
-.spacer, .flex-spacer { flex-grow: 0; flex-shrink: 0; min-width: 0.7em; }
+.spacer, .flex-spacer {
+  flex-grow: 0; flex-shrink: 0;
+  min-width: 0.7em; min-height: 0.7em;
+}
 .flex-grow { flex-grow: 1; }
 .flex-no-grow { flex-grow: 0; }
 .flex-shrink { flex-shrink: 1; }
