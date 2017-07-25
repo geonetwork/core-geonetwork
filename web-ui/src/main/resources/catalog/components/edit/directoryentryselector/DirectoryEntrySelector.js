@@ -101,7 +101,7 @@
                       sortBy: 'title',
                       sortOrder: 'reverse',
                       resultType: 'subtemplates',
-                      _valid: scope.showValidOnly ? 1 : undefined
+                      _valid: scope.$eval(scope.showValidOnly) ? 1 : undefined
                     }
                   };
 
@@ -280,7 +280,10 @@
                     openModal({
                       title: $translate.instant('chooseEntry'),
                       content:
-                     '<div gn-directory-entry-list-selector=""></div>',
+                        '<div gn-directory-entry-list-selector="" '+
+                        (scope.$eval(scope.showValidOnly) ?
+                          ' show-valid-only="true"' : '') +
+                        '></div>',
                       class: 'gn-modal-lg'
                     }, scope, 'EntrySelected');
                   };
@@ -299,62 +302,64 @@
 
   module.directive('gnDirectoryEntryListSelector',
       ['gnGlobalSettings',
-       function(gnGlobalSettings) {
-         return {
-           restrict: 'A',
-           templateUrl: '../../catalog/components/edit/' +
-           'directoryentryselector/partials/' +
-           'directoryentrylistselector.html',
+    function(gnGlobalSettings) {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/edit/' +
+        'directoryentryselector/partials/' +
+        'directoryentrylistselector.html',
 
-           compile: function compile(tElement, tAttrs, transclude) {
-             return {
-               pre: function preLink(scope) {
-                 scope.searchObj = {
-                   defaultParams: {
-                     _isTemplate: 's',
-                     any: '',
-                     from: 1,
-                     to: 10,
-                     _root: 'gmd:CI_ResponsibleParty',
-                     sortBy: 'title',
-                     sortOrder: 'reverse',
-                     resultType: 'contact'
-                   }
-                 };
-                 scope.searchObj.params = angular.extend({},
-                 scope.searchObj.defaultParams);
-                 scope.stateObj = {
-                   selectRecords: []
-                 };
-                 if (scope.filter) {
-                   var filter = angular.fromJson(scope.filter);
-                   angular.extend(scope.searchObj.params, filter);
-                   angular.extend(scope.searchObj.defaultParams, filter);
-                 }
-                 scope.modelOptions = angular.copy(
-                 gnGlobalSettings.modelOptions);
-               },
-               post: function postLink(scope, iElement, iAttrs) {
-                 scope.ctrl = {};
+        compile: function compile(tElement, tAttrs, transclude) {
+          return {
+            pre: function preLink(scope) {
+              scope.searchObj = {
+                defaultParams: {
+                  _isTemplate: 's',
+                  any: '',
+                  from: 1,
+                  to: 10,
+                  _root: 'gmd:CI_ResponsibleParty',
+                  sortBy: 'title',
+                  sortOrder: 'reverse',
+                  resultType: 'contact',
+                  _valid: scope.$eval(tAttrs['showValidOnly']) ? 1 : undefined
+                }
+              };
+              scope.searchObj.params = angular.extend({},
+                scope.searchObj.params,
+                scope.searchObj.defaultParams);
+              scope.stateObj = {
+                selectRecords: []
+              };
+              if (scope.filter) {
+                var filter = angular.fromJson(scope.filter);
+                angular.extend(scope.searchObj.params, filter);
+                angular.extend(scope.searchObj.defaultParams, filter);
+              }
+              scope.modelOptions = angular.copy(
+              gnGlobalSettings.modelOptions);
+            },
+            post: function postLink(scope, iElement, iAttrs) {
+              scope.ctrl = {};
 
-                 scope.defaultRoleCode = iAttrs['defaultRole'] || null;
-                 scope.defaultRole = null;
-                 angular.forEach(scope.roles, function(r) {
-                   if (r.code == scope.defaultRoleCode) {
-                     scope.defaultRole = r;
-                   }
-                 });
-                 scope.addSelectedEntry = function(role, usingXlink) {
-                   scope.addEntry(
-                   scope.stateObj.selectRecords[0],
-                   role,
-                   usingXlink).then(function(r) {
-                     scope.closeModal();
-                   });
-                 };
-               }
-             };
-           }
-         };
-       }]);
+              scope.defaultRoleCode = iAttrs['defaultRole'] || null;
+              scope.defaultRole = null;
+              angular.forEach(scope.roles, function(r) {
+                if (r.code == scope.defaultRoleCode) {
+                  scope.defaultRole = r;
+                }
+              });
+              scope.addSelectedEntry = function(role, usingXlink) {
+                scope.addEntry(
+                scope.stateObj.selectRecords[0],
+                role,
+                usingXlink).then(function(r) {
+                  scope.closeModal();
+                });
+              };
+            }
+          };
+        }
+      };
+    }]);
 })();

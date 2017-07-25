@@ -93,8 +93,7 @@
         data-popup-action="true"
         data-template-type="contact"
         data-insert-modes=""
-        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"
-        data-show-valid-only="true"/>
+        data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
