@@ -793,14 +793,13 @@
           'EMODNET')">
 
       <thesaurusList>
-        <thesaurus key="external.theme.NVS.L23" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.NVS.L05" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.use-limitation.NVS.L08" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.EMODNET_QI_Horizontal" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.EMODNET_QI_Vertical" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.EMODNET_QI_Purpose" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.parameter.NVS.P02" transformations="to-iso19139-keyword"/>
-        <thesaurus key="local.theme.emodnet-projectname" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L23" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L05" fieldset="false" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.EMODNET_QI_Horizontal" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.EMODNET_QI_Vertical" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.EMODNET_QI_Purpose" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.parameter.NVS.P02" fieldset="false" transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.emodnet-bathymetry.projectname" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
       </thesaurusList>
 
 
@@ -819,7 +818,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                'thesaurus.local.theme.emodnet-projectname')]"/>
+                'thesaurus.local.theme.emodnet-bathymetry.projectname')]"/>
 
           <field name="emodnetDisseminationLevel"
                  xpath="/gmd:MD_Metadata/gmd:metadataConstraints/gmd:MD_LegalConstraints/gmd:useLimitation"/>
@@ -1033,6 +1032,8 @@
                 <key label="code"
                      xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
                      tooltip="gmd:MD_ReferenceSystem"/>
+                <key label="emodnetCRSversion"
+                     xpath="gmd:RS_Identifier/gmd:version/gco:CharacterString"/>
               </values>
               <snippet>
                 <gmd:referenceSystemIdentifier>
@@ -1042,7 +1043,9 @@
                       <gco:CharacterString>{{code}}</gco:CharacterString>
                     </gmd:code>
                     <gn:copy select="gmd:codeSpace"/>
-                    <gn:copy select="gmd:version"/>
+                    <gmd:version>
+                      <gco:CharacterString>{{version}}</gco:CharacterString>
+                    </gmd:version>
                   </gmd:RS_Identifier>
                 </gmd:referenceSystemIdentifier>
               </snippet>
@@ -1650,12 +1653,6 @@
           <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                           gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
 
-
-
-          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
-                          ends-with(
-                            gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
-                            'NVS.L08')]"/>
 
         </section>
 
