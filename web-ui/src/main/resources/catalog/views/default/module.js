@@ -75,7 +75,6 @@
   module.controller('gnsSearchTopEntriesController', [
     '$scope', 'gnGlobalSettings',
     function($scope, gnGlobalSettings) {
-      var cfg = gnGlobalSettings.gnCfg.mods.home.topEntries[0];
       $scope.resultTemplate = '../../catalog/components/' +
         'search/resultsview/partials/viewtemplates/grid4maps.html';
       $scope.searchObj = {
