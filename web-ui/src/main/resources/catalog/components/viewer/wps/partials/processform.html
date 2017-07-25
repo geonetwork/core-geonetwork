@@ -105,7 +105,8 @@
                 <gn-geometry-tool
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   allow-reset allow-modify output="field.value"
-                  output-format="input.outputFormat" geometry-type="input.geometryType"
+                  output-format="{{ input.outputFormat }}"
+                  geometry-type="{{ input.geometryType }}"
                   output-as-features="true" map="map"/>
               </div>
 

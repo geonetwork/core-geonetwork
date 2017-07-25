@@ -46,21 +46,28 @@
         restrict: 'E',
         scope: {
           map: '<',
-          geometryType: '<',
+          geometryType: '@',
           output: '=',
-          outputFormat: '<',
+          outputFormat: '@',
+          outputCrs: '@',
           allowReset: '@',
           allowModify: '@',
-          outputAsFeatures: '@'
+          outputAsFeatures: '@',
+          input: '=',
+          inputFormat: '@',
+          inputCrs: '@',
+          keepInputInSync: '@'
         },
         templateUrl: '../../catalog/components/viewer/geometry/' +
             'partials/geometrytool.html',
         controller: [
           '$scope',
+          '$attrs',
           'ngeoDecorateInteraction',
           'gnGeometryService',
           function GeometryToolController(
             $scope,
+            $attrs,
             ngeoDecorateInteraction,
             gnGeometryService) {
             var layer = gnGeometryService.getCommonLayer($scope.map);
@@ -100,81 +107,38 @@
 
             // modifies the output value
             var updateOutput = function (feature) {
+              // if true, input will be modified as well
+              var modifyInput = $scope.keepInputInSync !== undefined;
+
+              // no feature: clear output
               if (!feature) {
                 $scope.output = null;
+                if (modifyInput) {
+                  $scope.input = null;
+                }
                 return;
               }
 
-              // set id on feature
-              feature.setId('geometry-tool-output');
+              $scope.output = gnGeometryService.printGeometryOutput(
+                $scope.map,
+                feature,
+                {
+                  crs: $scope.outputCrs,
+                  format: $scope.outputFormat,
+                  outputAsFeatures: $scope.outputAsFeatures
+                }
+              );
 
-              var formatLabel = ($scope.outputFormat || '').toLowerCase();
-              var format;
-              var outputValue;
-              switch (formatLabel) {
-                case 'json':
-                case 'geojson':
-                  format = new ol.format.GeoJSON();
-                  if ($scope.outputAsFeatures) {
-                    outputValue = format.writeFeatures([feature]);
-                  } else {
-                    outputValue = format.writeGeometry(feature.getGeometry());
+              if (modifyInput) {
+                $scope.input = gnGeometryService.printGeometryOutput(
+                  $scope.map,
+                  feature,
+                  {
+                    crs: $scope.inputCrs,
+                    format: $scope.inputFormat
                   }
-                  break;
-
-                case 'wkt':
-                  format = new ol.format.WKT();
-                  if ($scope.outputAsFeatures) {
-                    outputValue = format.writeFeatures([feature]);
-                  } else {
-                    outputValue = format.writeGeometry(feature.getGeometry());
-                  }
-                  break;
-
-                case 'gml':
-                  format = new ol.format.GML({
-                    featureNS: 'http://mapserver.gis.umn.edu/mapserver',
-                    featureType: 'features'
-                    // srsName: $scope.map.getView().getProjection().getCode()
-                  });
-
-                  // TODO: refactor this: first clone geom & transform,
-                  // then if necessary create a new feature with this geom
-                  var feature2 = new ol.Feature({
-                    id: 'geometry-tool-output',
-                    geometry: feature.getGeometry().clone()
-                  });
-                  feature2.getGeometry().transform(
-                      $scope.map.getView().getProjection(), 'EPSG:4326');
-
-                  if ($scope.outputAsFeatures) {
-                    outputValue = '<wfs:FeatureCollection ' +
-                        'xmlns:wfs="http://www.opengis.net/wfs">' +
-                        format.writeFeatures([feature2]) +
-                        '</wfs:FeatureCollection>';
-                  } else {
-                    outputValue = format.writeGeometryNode(
-                        feature2.getGeometry())
-                        .innerHTML;
-                  }
-                  break;
-
-                // no valid format specified: output as object + give warning
-                default:
-                  console.warn('No valid output format specified for ' +
-                      'gn-geometry-tool (value=' + $scope.outputFormat + '); ' +
-                      'outputting geometry as object');
-
-                case 'object':
-                  if ($scope.outputAsFeatures) {
-                    outputValue = [feature];
-                  } else {
-                    outputValue = feature.getGeometry().clone();
-                  }
-                  break;
+                );
               }
-
-              $scope.output = outputValue;
             };
 
             // clear existing features on draw end & save feature
