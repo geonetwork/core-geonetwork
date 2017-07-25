@@ -35,8 +35,7 @@
         require: '^ngSearchForm',
         scope: {
           config: '=gnPagination',
-          values: '=hitsValues',
-          mode: '@'
+          values: '=hitsValues'
         },
         templateUrl: '../../catalog/components/search/pagination/partials/' +
             'pagination.html',
