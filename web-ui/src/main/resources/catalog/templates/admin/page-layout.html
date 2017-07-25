@@ -1,7 +1,7 @@
 <div data-ng-controller="GnAdminController">
   <ul class="nav nav-pills">
     <li data-ng-repeat="t in pageMenu.tabs"
-        data-ng-class="type === t.type && 'active'">
+        data-ng-class="href === t.href && 'active'">
       <a href="{{t.href}}">
         <i class="fa {{t.icon || 'fa-fw'}}"/>
         <span data-translate="">{{t.label}}</span>

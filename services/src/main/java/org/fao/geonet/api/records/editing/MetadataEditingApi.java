@@ -44,7 +44,6 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
@@ -343,7 +342,7 @@ public class MetadataEditingApi {
             }
 
             if (reindex) {
-                dataMan.indexMetadata(id, true);
+                dataMan.indexMetadata(id, true, null);
             }
 
             ajaxEditUtils.removeMetadataEmbedded(session, id);

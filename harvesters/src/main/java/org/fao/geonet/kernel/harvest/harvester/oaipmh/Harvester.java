@@ -389,7 +389,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
     }
 
@@ -522,7 +522,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             addCategories(metadata, params.getCategories(), localCateg, context, log, null, true);
 
             dataMan.flush();
-            dataMan.indexMetadata(id, Math.random() < 0.01);
+            dataMan.indexMetadata(id, Math.random() < 0.01, null);
             result.updatedMetadata++;
         }
     }

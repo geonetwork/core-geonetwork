@@ -36,7 +36,7 @@ public class FieldCacheSanityHealthCheck implements HealthCheckFactory {
 
     @Override
     public HealthCheck create(ServiceContext context) {
-        return new HealthCheck("Default Field Cache Sanity") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 StringBuilder b = new StringBuilder();

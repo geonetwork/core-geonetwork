@@ -22,17 +22,13 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import com.google.common.base.Function;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -373,7 +369,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, true, null);
     }
 
     /**
@@ -417,7 +413,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, true, null);
 
         return id;
     }
