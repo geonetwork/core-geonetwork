@@ -698,6 +698,19 @@ input.ng-invalid {
   border-color: #a94442;
 }
 
+.gn-input-clear {
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  opacity: 0.4;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 /* Highlight updated checkboxes in sharing form */
 .gn-sharing-batch {
   input.ng-dirty:after {
@@ -732,3 +745,11 @@ input.ng-invalid {
     }
   }
 }
+
+// general purpose layout helpers
+.pos-relative { position: relative; }
+.pos-absolute { position: absolute; }
+.spacer, .flex-grow { flex-grow: 1; }
+.flex-no-grow { flex-grow: 0; }
+.flex-shrink { flex-shrink: 1; }
+.flex-no-shrink { flex-shrink: 0; }

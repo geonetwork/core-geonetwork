@@ -78,17 +78,24 @@
           any: '',
           _root: '',
           sortBy: 'title',
+          sortOrder: 'reverse',
           resultType: 'subtemplates'
         },
         sortbyValues: [
           {
-            sortBy: 'title'
+            sortBy: 'title',
+            sortOrder: 'reverse'
           },
           {
-            sortBy: 'owner'
+            sortBy: 'owner',
+            sortOrder: 'reverse'
           },
           {
             sortBy: 'changeDate',
+            sortOrder: 'reverse'
+          },
+          {
+            sortBy: '_valid',
             sortOrder: 'reverse'
           }
         ]
