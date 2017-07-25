@@ -108,11 +108,6 @@ input[type=text], input[type=number], select {
 
 
 #gn-directory-container {
-  // note: this could be useful in other places in gn.less
-  .flex-spacer {
-    flex-grow: 1;
-  }
-
   .gn-facet-dropdown {
     min-width: 300px;
     padding: 0px 10px;
@@ -225,6 +220,11 @@ input[type=text], input[type=number], select {
         width: 650px;
       }
     }
+  }
+
+  .dropdown-menu {
+    max-width: 40em;
+    width: 100%;
   }
 }
 
