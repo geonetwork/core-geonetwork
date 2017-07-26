@@ -376,18 +376,12 @@ public final class Processor {
             if (Log.isDebugEnabled(Log.XLINK_PROCESSOR))
                 Log.debug(Log.XLINK_PROCESSOR, "will resolve href '" + hrefUri + "'");
             String idSearch = null;
-            int hash = hrefUri.indexOf('#');
-            if (hash > 0 && hash != hrefUri.length() - 1) {
-                idSearch = hrefUri.substring(hash + 1);
-                hrefUri = hrefUri.substring(0, hash);
+
+            String error = doXLink(hrefUri, idSearch, xlink, action, srvContext);
+            if (error != null) {
+                errors.add(error);
             }
 
-            if (hash != 0) { // skip local xlinks eg. xlink:href="#details"
-                String error = doXLink(hrefUri, idSearch, xlink, action, srvContext);
-                if (error != null) {
-                    errors.add(error);
-                }
-            }
         }
 
         return errors;
