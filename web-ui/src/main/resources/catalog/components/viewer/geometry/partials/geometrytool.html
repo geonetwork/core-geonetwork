@@ -8,7 +8,7 @@
 
   <button class="btn btn-default modify-button"
     ng-if="ctrl.allowModify !== undefined"
-    ng-disabled="ctrl.output == null"
+    ng-disabled="!ctrl.features.getLength()"
     gi-btn="active" ng-model="ctrl.modifyInteraction.active">
     <span class="fa fa-pencil"></span>
     <span translate>modifyGeometry</span>
@@ -16,7 +16,7 @@
 
   <button class="btn btn-danger btn-icon reset-button"
     ng-if="ctrl.allowReset !== undefined"
-    ng-disabled="ctrl.output == null"
+    ng-disabled="!ctrl.features.getLength()"
     ng-click="ctrl.reset()">
     <span class="fa fa-trash-o"></span>
   </button>

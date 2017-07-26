@@ -42,6 +42,7 @@
       return {
         restrict: 'E',
         scope: {
+          readOnly: '<'
         },
         templateUrl: '../../catalog/components/edit/bounding/' +
           'partials/boundingpolygon.html',
@@ -75,7 +76,7 @@
             this.currentProjection = this.projections[0].code;
 
             // available input formats
-            this.formats = [ 'GML', 'WKT', 'GeoJSON' ];
+            this.formats = [ 'WKT', 'GML', 'GeoJSON' ];
             this.currentFormat = this.formats[0];
 
             // this will receive errors from the geometry tool input parsing
