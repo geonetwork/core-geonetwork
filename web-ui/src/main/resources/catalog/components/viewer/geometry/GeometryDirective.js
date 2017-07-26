@@ -101,7 +101,8 @@
             });
 
             // remove all my features from the map
-            function removeMyFeatures () {
+            function removeMyFeatures() {
+              var func = function (f) { return f.ol_uid; };
               ctrl.features.forEach(function (feature) {
                 source.removeFeature(feature);
               });
@@ -109,7 +110,7 @@
             }
 
             // modifies the output value
-            function updateOutput (feature) {
+            function updateOutput(feature) {
               // no feature: clear output
               if (!feature) {
                 ctrl.output = null;
@@ -133,6 +134,7 @@
               updateOutput(event.feature);
               ctrl.drawInteraction.setActive(false);
               ctrl.features.push(event.feature);
+              source.addFeature(event.feature);
             });
 
             // update output on modify end
@@ -163,13 +165,17 @@
                   }
                 );
 
+                // fit view
+                ctrl.map.getView().fit(geometry, ctrl.map.getSize());
+
                 // clear features & add a new one
                 removeMyFeatures();
                 var feature = new ol.Feature({
                   geometry: geometry
                 });
-                ctrl.features.push(feature);
+                feature.setId('geometry-tool-output');
                 source.addFeature(feature);
+                ctrl.features.push(feature);
               } catch (e) {
                 // send back error
                 if (ctrl.inputErrorHandler) {
@@ -177,9 +183,9 @@
                 }
               }
             }
-            $scope.$watch('ctrl.input', handleInputUpdate);
-            $scope.$watch('ctrl.inputCrs', handleInputUpdate);
-            $scope.$watch('ctrl.inputFormat', handleInputUpdate);
+            $scope.$watch(function () {
+              return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
+            }, handleInputUpdate);
           }
         ]
       };

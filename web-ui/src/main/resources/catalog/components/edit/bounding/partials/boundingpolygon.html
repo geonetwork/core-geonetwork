@@ -7,7 +7,7 @@
 
 <!-- draw tool & select boxes -->
 <div class="row">
-  <div class="col-xs-6 col-md-8 form-inline">
+  <div class="col-xs-6 col-md-7 form-inline">
     <label class="text-muted control-label" translate>
       selectFormatAndProjection</label>
     <br />
@@ -22,11 +22,11 @@
       ng-readonly="ctrl.readOnly">
     </select>
   </div>
-  <div class="col-xs-6 col-md-4">
+  <div class="col-xs-6 col-md-5" ng-if="!ctrl.readOnly">
     <label class="text-muted control-label" translate>drawOnMap</label>
-    <gn-geometry-tool ng-if="!ctrl.readOnly" map="ctrl.map"
+    <gn-geometry-tool map="ctrl.map"
       geometry-type="Polygon" allow-modify allow-reset
-      output="ctrl.outputGeometry" output-format="gml" output-crs="EPSG:4326"
+      output="ctrl.outputGeometry" output-format="object" output-crs="EPSG:4326"
       input="ctrl.inputGeometry"
       input-format="{{ctrl.currentFormat || 'gml'}}"
       input-crs="{{ctrl.currentProjection || 'EPSG:4326'}}"
@@ -40,10 +40,10 @@
 <!-- input geometry field -->
 <div class="row">
   <div class="col-md-12">
-    <div class="form-group has-feedback"
+    <div class="has-feedback"
       ng-class="{ 'has-success': ctrl.inputGeometry && !ctrl.parseError, 'has-error': ctrl.parseError }">
       <label class="text-muted control-label" translate>inputGeometryText</label>
-      <textarea class="form-control" rows="3" ng-model="ctrl.inputGeometry"
+      <textarea class="form-control" rows="4" ng-model="ctrl.inputGeometry"
         ng-model-options="{ debounce: 300 }"
         placeholder="{{'inputGeometryText' | translate}}"
         ng-change="ctrl.parseError = null"
@@ -62,4 +62,5 @@
 </div>
 
 <!-- final output in GML -->
-<input name="output-geometry" type="hidden" value="{{ ctrl.outputGeometry }}"/>
+<input name="{{ctrl.identifier}}"
+  type="hidden" value="{{ctrl.outputPolygonXml}}"/>
