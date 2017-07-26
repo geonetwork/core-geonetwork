@@ -230,6 +230,76 @@
 
         return outputValue;
       };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_geometry.service:gnGeometryService
+       * @name gnGeometryService#printGeometryOutput
+       *
+       * @description
+       * This parses a text to create an Open Layers geometry object.
+       *
+       * @param {ol.Map} map open layers map
+       * @param {string} input as text
+       * @param {Object} options
+       * @param {string} options.crs default is EPSG:4326
+       * @param {string} options.format default is GML
+       * @return {ol.geom.Geometry}
+       */
+      this.parseGeometryInput = function(map, input, options) {
+        var options = angular.extend({
+          crs: 'EPSG:4326',
+          format: 'gml'
+        }, options);
+
+        var formatLabel = options.format.toLowerCase();
+        var format;
+        var outputProjection = map.getView().getProjection();
+        var outputValue = null;
+        switch (formatLabel) {
+          case 'json':
+          case 'geojson':
+            format = new ol.format.GeoJSON();
+            outputValue = format.readGeometry(input, {
+              dataProjection: options.crs,
+              featureProjection: outputProjection
+            });
+            break;
+
+          case 'wkt':
+            format = new ol.format.WKT();
+            outputValue = format.readGeometry(input, {
+              dataProjection: options.crs,
+              featureProjection: outputProjection
+            });
+            break;
+
+          case 'gml':
+            format = new ol.format.GML({
+              featureNS: 'http://mapserver.gis.umn.edu/mapserver',
+              featureType: 'features'
+            });
+            outputValue = format.readFeatures(input, {
+              dataProjection: options.crs,
+              featureProjection: outputProjection
+            });
+            break;
+
+          // no valid format specified: handle as object
+          default:
+          case 'object':
+            if (!input instanceof ol.geom.Geometry) {
+              console.error('gn-geometry-tool input was supposed to be a ' +
+                'ol.geom.Geometry object but was something else, ' +
+                'skipping parse.', input);
+              return outputValue;
+            }
+            outputValue = input.clone.transform(options.crs, outputProjection);
+            break;
+        }
+
+        return outputValue;
+      };
     }
   ]);
 })();

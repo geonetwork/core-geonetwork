@@ -56,10 +56,12 @@
           input: '=',
           inputFormat: '@',
           inputCrs: '@',
-          keepInputInSync: '@'
+          inputErrorHandler: '='
         },
         templateUrl: '../../catalog/components/viewer/geometry/' +
             'partials/geometrytool.html',
+        controllerAs: 'ctrl',
+        bindToController: true,
         controller: [
           '$scope',
           '$attrs',
@@ -70,95 +72,114 @@
             $attrs,
             ngeoDecorateInteraction,
             gnGeometryService) {
-            var layer = gnGeometryService.getCommonLayer($scope.map);
+            var ctrl = this;
+            var layer = gnGeometryService.getCommonLayer(ctrl.map);
             var source = layer.getSource();
             var myFeatures = new ol.Collection();
 
-            $scope.drawInteraction = new ol.interaction.Draw({
-              type: $scope.geometryType,
+            ctrl.drawInteraction = new ol.interaction.Draw({
+              type: ctrl.geometryType,
               source: source
             });
-            $scope.modifyInteraction = new ol.interaction.Modify({
+            ctrl.modifyInteraction = new ol.interaction.Modify({
               features: myFeatures
             });
 
             // add our layer&interactions to the map
-            $scope.map.addInteraction($scope.drawInteraction);
-            $scope.map.addInteraction($scope.modifyInteraction);
-            $scope.drawInteraction.setActive(false);
-            $scope.modifyInteraction.setActive(false);
-            ngeoDecorateInteraction($scope.drawInteraction);
-            ngeoDecorateInteraction($scope.modifyInteraction);
+            ctrl.map.addInteraction(ctrl.drawInteraction);
+            ctrl.map.addInteraction(ctrl.modifyInteraction);
+            ctrl.drawInteraction.setActive(false);
+            ctrl.modifyInteraction.setActive(false);
+            ngeoDecorateInteraction(ctrl.drawInteraction);
+            ngeoDecorateInteraction(ctrl.modifyInteraction);
 
             // cleanup when scope is destroyed
             $scope.$on('$destroy', function() {
               removeMyFeatures();
-              $scope.map.removeInteraction($scope.drawInteraction);
-              $scope.map.removeInteraction($scope.modifyInteraction);
+              ctrl.map.removeInteraction(ctrl.drawInteraction);
+              ctrl.map.removeInteraction(ctrl.modifyInteraction);
             });
 
             // remove all my features from the map
-            var removeMyFeatures = function () {
+            function removeMyFeatures () {
               myFeatures.forEach(function (feature) {
                 source.removeFeature(feature);
               });
               myFeatures.clear();
-            };
+            }
 
             // modifies the output value
-            var updateOutput = function (feature) {
-              // if true, input will be modified as well
-              var modifyInput = $scope.keepInputInSync !== undefined;
-
+            function updateOutput (feature) {
               // no feature: clear output
               if (!feature) {
-                $scope.output = null;
-                if (modifyInput) {
-                  $scope.input = null;
-                }
+                ctrl.output = null;
                 return;
               }
 
-              $scope.output = gnGeometryService.printGeometryOutput(
-                $scope.map,
+              ctrl.output = gnGeometryService.printGeometryOutput(
+                ctrl.map,
                 feature,
                 {
-                  crs: $scope.outputCrs,
-                  format: $scope.outputFormat,
-                  outputAsFeatures: $scope.outputAsFeatures
+                  crs: ctrl.outputCrs,
+                  format: ctrl.outputFormat,
+                  outputAsFeatures: ctrl.outputAsFeatures
                 }
               );
-
-              if (modifyInput) {
-                $scope.input = gnGeometryService.printGeometryOutput(
-                  $scope.map,
-                  feature,
-                  {
-                    crs: $scope.inputCrs,
-                    format: $scope.inputFormat
-                  }
-                );
-              }
             };
 
             // clear existing features on draw end & save feature
-            $scope.drawInteraction.on('drawend', function(event) {
+            ctrl.drawInteraction.on('drawend', function(event) {
               removeMyFeatures();
               updateOutput(event.feature);
-              $scope.drawInteraction.setActive(false);
+              ctrl.drawInteraction.setActive(false);
               myFeatures.push(event.feature);
             });
 
             // update output on modify end
-            $scope.modifyInteraction.on('modifyend', function(event) {
+            ctrl.modifyInteraction.on('modifyend', function(event) {
               updateOutput(event.features.item(0));
             });
 
             // reset drawing
-            $scope.reset = function() {
+            ctrl.reset = function() {
               removeMyFeatures();
               updateOutput();
             };
+
+            // watch parameter changes
+            function handleInputUpdate() {
+              if (!ctrl.input) {
+                return;
+              }
+
+              // parse geometry from text
+              try {
+                var geometry = gnGeometryService.parseGeometryInput(
+                  ctrl.map,
+                  ctrl.input,
+                  {
+                    crs: ctrl.inputCrs,
+                    format: ctrl.inputFormat
+                  }
+                );
+
+                // clear features & add a new one
+                removeMyFeatures();
+                var feature = new ol.Feature({
+                  geometry: geometry
+                });
+                myFeatures.push(feature);
+                source.addFeature(feature);
+              } catch (e) {
+                // send back error
+                if (ctrl.inputErrorHandler) {
+                  ctrl.inputErrorHandler(e.message);
+                }
+              }
+            }
+            $scope.$watch('ctrl.input', handleInputUpdate);
+            $scope.$watch('ctrl.inputCrs', handleInputUpdate);
+            $scope.$watch('ctrl.inputFormat', handleInputUpdate);
           }
         ]
       };
