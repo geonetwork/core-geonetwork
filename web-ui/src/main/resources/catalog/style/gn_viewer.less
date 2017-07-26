@@ -640,10 +640,14 @@ gn-wps-process-form {
   }
 }
 
-gn-geometry-tool .btn-group .btn {
-  flex-basis: initial !important;
-  &.btn-icon {
-    flex-grow: 0 !important;
+gn-geometry-tool .btn-group {
+  display: flex;
+  .btn {
+    flex-basis: initial !important;
+    flex-grow: 1;
+    &.btn-icon {
+      flex-grow: 0 !important;
+    }
   }
 }
 

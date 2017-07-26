@@ -352,5 +352,10 @@
     "notADirectoryEntryTemplate": "This entry is not a directory entry template.",
     "saveAsDirectoryEntry": "Save as directory entry",
     "confirmDeleteEntry": "Are you sure you want to delete this entry?",
-    "filterBy": "Filter by..."
+    "filterBy": "Filter by...",
+    "selectFormatAndProjection": "Select a format and projection system",
+    "inputGeometryText": "Geometry Text Input",
+    "inputGeometryIsValid": "The input geometry is valid and is now visible on the map.",
+    "inputGeometryIsInvalid": "An error was found in the input geometry:",
+    "inputGeometryHint": "Paste here a geometry in the selected format and projection system."
 }

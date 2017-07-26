@@ -7,24 +7,31 @@
 
 <!-- draw tool & select boxes -->
 <div class="row">
-  <div class="col-md-12 text-center form-inline">
-    <gn-geometry-tool map="ctrl.map"
+  <div class="col-xs-6 col-md-8 form-inline">
+    <label class="text-muted control-label" translate>
+      selectFormatAndProjection</label>
+    <br />
+    <select class="form-control" ng-model="ctrl.currentFormat"
+      ng-options="format for format in ctrl.formats"
+      ng-change="ctrl.parseError = null"
+      ng-readonly="ctrl.readOnly">
+    </select>
+    <select class="form-control" ng-model="ctrl.currentProjection"
+      ng-options="proj.code as proj.label for proj in ctrl.projections"
+      ng-change="ctrl.parseError = null"
+      ng-readonly="ctrl.readOnly">
+    </select>
+  </div>
+  <div class="col-xs-6 col-md-4">
+    <label class="text-muted control-label" translate>drawOnMap</label>
+    <gn-geometry-tool ng-if="!ctrl.readOnly" map="ctrl.map"
       geometry-type="Polygon" allow-modify allow-reset
       output="ctrl.outputGeometry" output-format="gml" output-crs="EPSG:4326"
       input="ctrl.inputGeometry"
       input-format="{{ctrl.currentFormat || 'gml'}}"
-      input-crs="{{ctrl.currentProjection.code || 'EPSG:4326'}}"
+      input-crs="{{ctrl.currentProjection || 'EPSG:4326'}}"
       input-error-handler="ctrl.parseErrorHandler">
     </gn-geometry-tool>
-    &nbsp;
-    <select class="form-control" ng-model="ctrl.currentFormat"
-      ng-options="format for format in ctrl.formats"
-      ng-change="ctrl.parseError = null">
-    </select>
-    <select class="form-control" ng-model="ctrl.currentProjection"
-      ng-options="proj.code as proj.label for proj in ctrl.projections"
-      ng-change="ctrl.parseError = null">
-    </select>
   </div>
 </div>
 
@@ -33,11 +40,24 @@
 <!-- input geometry field -->
 <div class="row">
   <div class="col-md-12">
-    <textarea class="form-control" rows="3" ng-model="ctrl.inputGeometry"
-      ng-model-options="{ debounce: 300 }"
-      placeholder="{{'outputGeometry' | translate}}"
-      ng-change="ctrl.parseError = null"/>
-      {{ ctrl.parseError }}
+    <div class="form-group has-feedback"
+      ng-class="{ 'has-success': ctrl.inputGeometry && !ctrl.parseError, 'has-error': ctrl.parseError }">
+      <label class="text-muted control-label" translate>inputGeometryText</label>
+      <textarea class="form-control" rows="3" ng-model="ctrl.inputGeometry"
+        ng-model-options="{ debounce: 300 }"
+        placeholder="{{'inputGeometryText' | translate}}"
+        ng-change="ctrl.parseError = null"
+        ng-readonly="ctrl.readOnly"/>
+      <small class="text-danger"
+        ng-show="ctrl.inputGeometry && ctrl.parseError">
+        {{ 'inputGeometryIsInvalid' | translate}} {{ctrl.parseError}}</small>
+      <small class="text-success"
+        ng-show="ctrl.inputGeometry && !ctrl.parseError" translate>
+        inputGeometryIsValid</small>
+      <small class="text-muted"
+        ng-show="!ctrl.inputGeometry" translate>
+        inputGeometryHint</small>
+    </div>
   </div>
 </div>
 

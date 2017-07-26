@@ -75,14 +75,14 @@
             var ctrl = this;
             var layer = gnGeometryService.getCommonLayer(ctrl.map);
             var source = layer.getSource();
-            var myFeatures = new ol.Collection();
+            ctrl.features = new ol.Collection();
 
             ctrl.drawInteraction = new ol.interaction.Draw({
               type: ctrl.geometryType,
               source: source
             });
             ctrl.modifyInteraction = new ol.interaction.Modify({
-              features: myFeatures
+              features: ctrl.features
             });
 
             // add our layer&interactions to the map
@@ -102,10 +102,10 @@
 
             // remove all my features from the map
             function removeMyFeatures () {
-              myFeatures.forEach(function (feature) {
+              ctrl.features.forEach(function (feature) {
                 source.removeFeature(feature);
               });
-              myFeatures.clear();
+              ctrl.features.clear();
             }
 
             // modifies the output value
@@ -132,7 +132,7 @@
               removeMyFeatures();
               updateOutput(event.feature);
               ctrl.drawInteraction.setActive(false);
-              myFeatures.push(event.feature);
+              ctrl.features.push(event.feature);
             });
 
             // update output on modify end
@@ -168,7 +168,7 @@
                 var feature = new ol.Feature({
                   geometry: geometry
                 });
-                myFeatures.push(feature);
+                ctrl.features.push(feature);
                 source.addFeature(feature);
               } catch (e) {
                 // send back error
