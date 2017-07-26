@@ -262,6 +262,33 @@
     </xsl:call-template>
   </xsl:template>
 
+  <xsl:template mode="mode-iso19139" match="gmd:EX_BoundingPolygon" priority="2000">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:call-template name="render-boxed-element">
+      <xsl:with-param name="label"
+                      select="$labelConfig/label"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="subTreeSnippet">
+
+        <xsl:variable name="polygon" select="."/>
+        <xsl:variable name="identifier"
+                      select="$polygon/gn:element/@ref"/>
+        <br />
+        <gn-bounding-polygon polygon-xml="{saxon:serialize($polygon, 'default-serialize-mode')}"
+                             identifier="_{$identifier}"
+                             read-only="false">
+        </gn-bounding-polygon>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
   <!-- In flat mode do not display geographic identifier and description
   because it is part of the map widget - see previous template. -->
   <xsl:template mode="mode-iso19139"
