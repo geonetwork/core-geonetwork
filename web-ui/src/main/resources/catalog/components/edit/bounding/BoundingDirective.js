@@ -77,6 +77,12 @@
             // available input formats
             this.formats = [ 'GML', 'WKT', 'GeoJSON' ];
             this.currentFormat = this.formats[0];
+
+            // this will receive errors from the geometry tool input parsing
+            this.parseError = null;
+            this.parseErrorHandler = function (error) {
+              this.parseError = error;
+            }.bind(this);
           }
         ]
       };

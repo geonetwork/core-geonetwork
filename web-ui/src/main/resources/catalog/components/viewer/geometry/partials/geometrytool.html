@@ -1,23 +1,23 @@
 <div gi-btn-group class="btn-group">
 
   <button class="btn btn-default draw-button"
-    gi-btn="active" ng-model="drawInteraction.active">
+    gi-btn="active" ng-model="ctrl.drawInteraction.active">
     <span class="fa fa-pencil"></span>
     <span translate>drawGeometry</span>
   </button>
 
   <button class="btn btn-default modify-button"
-    ng-if="allowModify !== undefined"
-    ng-disabled="output == null"
-    gi-btn="active" ng-model="modifyInteraction.active">
+    ng-if="ctrl.allowModify !== undefined"
+    ng-disabled="ctrl.output == null"
+    gi-btn="active" ng-model="ctrl.modifyInteraction.active">
     <span class="fa fa-pencil"></span>
     <span translate>modifyGeometry</span>
   </button>
 
   <button class="btn btn-danger btn-icon reset-button"
-    ng-if="allowReset !== undefined"
-    ng-disabled="output == null"
-    ng-click="reset()">
+    ng-if="ctrl.allowReset !== undefined"
+    ng-disabled="ctrl.output == null"
+    ng-click="ctrl.reset()">
     <span class="fa fa-trash-o"></span>
   </button>
 
