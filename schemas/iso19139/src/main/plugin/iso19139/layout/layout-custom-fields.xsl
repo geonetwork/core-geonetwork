@@ -277,11 +277,11 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
 
-        <xsl:variable name="polygon" select="."/>
+        <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:MultiCurve"/>
         <xsl:variable name="identifier"
-                      select="$polygon/gn:element/@ref"/>
+                      select="$geometry/gn:element/@ref"/>
         <br />
-        <gn-bounding-polygon polygon-xml="{saxon:serialize($polygon, 'default-serialize-mode')}"
+        <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
                              identifier="_{$identifier}"
                              read-only="false">
         </gn-bounding-polygon>
