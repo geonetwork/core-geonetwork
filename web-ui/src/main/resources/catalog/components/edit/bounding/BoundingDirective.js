@@ -66,18 +66,24 @@
           'gnMap',
           'gnOwsContextService',
           'gnViewerSettings',
+          'ngeoDecorateInteraction',
+          'gnGeometryService',
           function BoundingPolygonController(
             $scope,
             $attrs,
             $http,
             gnMap,
             gnOwsContextService,
-            gnViewerSettings) {
+            gnViewerSettings,
+            ngeoDecorateInteraction,
+            gnGeometryService) {
+            var ctrl = this;
+
             // set read only
-            this.readOnly = $scope.$eval($attrs['readOnly']);
+            ctrl.readOnly = $scope.$eval($attrs['readOnly']);
 
             // init map
-            this.map = new ol.Map({
+            ctrl.map = new ol.Map({
               layers: [
                 gnMap.getLayersFromConfig()
               ],
@@ -88,65 +94,129 @@
               })
             });
 
-            // output for editor (equals input by default)
-            this.outputPolygonXml = this.polygonXml;
-            this.outputFormat = new ol.format.GML({
-              featureNS: 'http://www.isotc211.org/2005/gmd',
-              featureType: 'EX_BoundingPolygon',
-              srsName: 'EPSG:4326',
-              multiSurface: true
+            // interactions with map
+            var layer = gnGeometryService.getCommonLayer(ctrl.map);
+            var source = layer.getSource();
+
+            ctrl.drawInteraction = new ol.interaction.Draw({
+              type: 'MultiPolygon',  // TODO: handle linestrings
+              source: source,
+              geometryName: 'polygon'
+            });
+            ctrl.modifyInteraction = new ol.interaction.Modify({
+              features: source.getFeaturesCollection()
             });
 
+            // add our layer&interactions to the map
+            ctrl.map.addInteraction(ctrl.drawInteraction);
+            ctrl.map.addInteraction(ctrl.modifyInteraction);
+            ctrl.drawInteraction.setActive(false);
+            ctrl.modifyInteraction.setActive(false);
+            ngeoDecorateInteraction(ctrl.drawInteraction);
+            ngeoDecorateInteraction(ctrl.modifyInteraction);
+
+            // clear existing features on draw end & save feature
+            ctrl.drawInteraction.on('drawend', function(event) {
+              source.clear(event.feature);
+              ctrl.updateOutput(event.feature);
+              ctrl.drawInteraction.setActive(false);
+            });
+
+            // update output on modify end
+            ctrl.modifyInteraction.on('modifyend', function(event) {
+              ctrl.updateOutput(event.features.item(0));
+            });
+
+            // output for editor (equals input by default)
+            ctrl.outputPolygonXml = ctrl.polygonXml;
+
             // projection list
-            this.projections = gnMap.getMapConfig().projectionList;
-            this.currentProjection = this.projections[0].code;
+            ctrl.projections = gnMap.getMapConfig().projectionList;
+            ctrl.currentProjection = ctrl.projections[0].code;
 
             // available input formats
             // GML is not available as it cannot be parsed without namespace info
-            this.formats = [ 'WKT', 'GeoJSON' ];
-            this.currentFormat = this.formats[0];
+            ctrl.formats = [ 'WKT', 'GeoJSON' ];
+            ctrl.currentFormat = ctrl.formats[0];
 
             // parse initial input coordinates to display shape (first in WKT)
-            this.initValue = function () {
-              if (this.polygonXml) {
-                this.currentFormat = 'WKT';
-                this.currentProjection = 'EPSG:4326';
-                var formatWkt = new ol.format.WKT();
+            ctrl.initValue = function () {
+              console.log('received xml: ' + ctrl.polygonXml);
 
+              if (ctrl.polygonXml) {
                 // parse first feature from source XML & set geometry name
                 var correctedXml = '<gml:featureMembers>' +
-                  this.polygonXml
+                  ctrl.polygonXml
                     .replace('<gml:LinearRingTypeCHOICE_ELEMENT0>', '')
                     .replace('</gml:LinearRingTypeCHOICE_ELEMENT0>', '')
                   + '</gml:featureMembers>';
-                var feature = this.outputFormat.readFeatures(correctedXml)[0];
+                var feature = gnGeometryService.parseGeometryInput(
+                  ctrl.map,
+                  correctedXml,
+                  {
+                    crs: 'EPSG:4326',
+                    format: 'gml',
+                    gmlFeatureNS: 'http://www.isotc211.org/2005/gmd',
+                    gmlFeatureElement: 'EX_BoundingPolygon',
+                  }
+                )[0];
                 feature.setGeometryName('polygon');
 
-                // write feature geometry
-                this.inputGeometry = formatWkt.writeGeometry(
-                  feature.getGeometry(),
-                  {
-                    featureProjection: 'EPSG:4326'
-                  }
-                );
+                // fit view
+                ctrl.map.getView().fit(feature.getGeometry(),
+                  ctrl.map.getSize());
+
+                // add to map
+                source.clear();
+                source.addFeature(feature);
               }
-            }.bind(this);
+            };
+
+            // update output with gml
+            ctrl.updateOutput = function (feature) {
+              // fit view
+              ctrl.map.getView().fit(feature.getGeometry(),
+                ctrl.map.getSize());
+
+              // print output
+              ctrl.outputPolygonXml = gnGeometryService.printGeometryOutput(
+                ctrl.map,
+                feature,
+                {
+                  crs:'EPSG:4326',
+                  format: 'gml',
+                  gmlFeatureNS: 'http://www.isotc211.org/2005/gmd',
+                  gmlFeatureElement: 'EX_BoundingPolygon'
+                }
+              );
+              console.log('xml output: ' + ctrl.outputPolygonXml);
+            };
 
             // this will receive errors from the geometry tool input parsing
-            this.parseError = null;
-            this.parseErrorHandler = function (error) {
-              this.parseError = error;
-            }.bind(this);
+            ctrl.parseError = null;
 
-            // outputs gm for the editor
-            $scope.$watch('ctrl.outputGeometry', function (geometry) {
-              if (!geometry) {
+            // watches input change & outputs gml for the editor
+            $scope.$watch(
+              function () {
+                return ctrl.inputGeometry + ctrl.currentFormat +
+                  ctrl.currentProjection;
+              }, function () {
+              if (!ctrl.inputGeometry) {
                 return;
               }
-              if (!geometry instanceof ol.geom.Polygon) {
-                console.error('Error in gn-bounding-polygon: Geometry should ' +
-                  'be a Polygon; aborting.');
-                return;
+
+              // parse geometry
+              try {
+                var geometry = gnGeometryService.parseGeometryInput(
+                  ctrl.map,
+                  ctrl.inputGeometry,
+                  {
+                    crs: ctrl.currentProjection,
+                    format: ctrl.currentFormat,
+                  }
+                );
+              } catch (e) {
+                ctrl.parseError = e.message;
               }
 
               // create a new feature & print the GML
@@ -154,9 +224,10 @@
                 'polygon': geometry
               });
               feature.setGeometryName('polygon');
-              this.outputPolygonXml = this.outputFormat.writeFeaturesNode(
-                [feature]).innerHTML;
-            }.bind(this));
+              source.clear();
+              source.addFeature(feature);
+              ctrl.updateOutput(feature);
+            });
           }
         ]
       };

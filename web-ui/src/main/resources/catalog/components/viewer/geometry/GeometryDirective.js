@@ -123,7 +123,7 @@
                 {
                   crs: ctrl.outputCrs,
                   format: ctrl.outputFormat,
-                  outputAsFeatures: ctrl.outputAsFeatures
+                  outputAsWFSFeaturesCollection: ctrl.outputAsFeatures  // TODO: make sure this works everytime?
                 }
               );
             };
@@ -134,7 +134,6 @@
               updateOutput(event.feature);
               ctrl.drawInteraction.setActive(false);
               ctrl.features.push(event.feature);
-              source.addFeature(event.feature);
             });
 
             // update output on modify end
@@ -164,9 +163,6 @@
                     format: ctrl.inputFormat
                   }
                 );
-
-                // fit view
-                ctrl.map.getView().fit(geometry, ctrl.map.getSize());
 
                 // clear features & add a new one
                 removeMyFeatures();

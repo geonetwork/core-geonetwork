@@ -24,14 +24,19 @@
   </div>
   <div class="col-xs-6 col-md-5" ng-if="!ctrl.readOnly">
     <label class="text-muted control-label" translate>drawOnMap</label>
-    <gn-geometry-tool map="ctrl.map"
-      geometry-type="Polygon" allow-modify allow-reset
-      output="ctrl.outputGeometry" output-format="object" output-crs="EPSG:4326"
-      input="ctrl.inputGeometry"
-      input-format="{{ctrl.currentFormat || 'gml'}}"
-      input-crs="{{ctrl.currentProjection || 'EPSG:4326'}}"
-      input-error-handler="ctrl.parseErrorHandler">
-    </gn-geometry-tool>
+    <br />
+    <div gi-btn-group class="btn-group">
+      <button class="btn btn-default btn-warning"
+        gi-btn="active" ng-model="ctrl.drawInteraction.active">
+        <span class="fa fa-pencil"></span>
+        <span translate>drawGeometry</span>
+      </button>
+      <button class="btn btn-default btn-warning"
+        gi-btn="active" ng-model="ctrl.modifyInteraction.active">
+        <span class="fa fa-pencil"></span>
+        <span translate>modifyGeometry</span>
+      </button>
+    </div>
   </div>
 </div>
 
