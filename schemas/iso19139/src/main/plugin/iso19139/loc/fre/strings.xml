@@ -261,6 +261,9 @@
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
   <measureFreq>Measurement frequency</measureFreq>
   <emodnetCRSversion>Version or custom projection details</emodnetCRSversion>
+  <EMODNET_QI_Horizontal>Hor. Accuracy</EMODNET_QI_Horizontal>
+  <EMODNET_QI_Purpose>Suitability Accuracy</EMODNET_QI_Purpose>
+  <EMODNET_QI_Vertical>Vert. Accuracy</EMODNET_QI_Vertical>
   <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs3395>WGS 84 / World Mercator</addCrs3395>

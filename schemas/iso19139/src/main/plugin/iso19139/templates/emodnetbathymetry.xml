@@ -665,6 +665,48 @@
           </gmd:result>
         </gmd:DQ_GriddedDataPositionalAccuracy>
       </gmd:report>
+      <gmd:report>
+        <gmd:DQ_AbsoluteExternalPositionalAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>EMODNET_QI_Horizontal</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_AbsoluteExternalPositionalAccuracy>
+      </gmd:report>
+      <gmd:report>
+        <gmd:DQ_AbsoluteExternalPositionalAccuracy>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>EMODNET_QI_Horizontal</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_AbsoluteExternalPositionalAccuracy>
+      </gmd:report>
+      <gmd:report>
+        <gmd:DQ_DomainConsistency>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>EMODNET_QI_Purpose</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_DomainConsistency>
+      </gmd:report>
     </gmd:DQ_DataQuality>
   </gmd:dataQualityInfo>
   <gmd:dataQualityInfo>

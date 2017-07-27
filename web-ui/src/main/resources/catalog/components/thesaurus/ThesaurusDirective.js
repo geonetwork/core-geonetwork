@@ -507,6 +507,7 @@
     function(gnThesaurusService, $compile, $translate) {
       return {
         restrict: 'A',
+        scope: {},
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey ||  '';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;

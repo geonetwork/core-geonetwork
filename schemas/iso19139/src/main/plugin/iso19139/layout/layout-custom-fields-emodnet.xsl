@@ -14,8 +14,8 @@
                           'EMODNET - HYDROGRAPHY')]">
 
     <div class="form-group gn-field"
-         id="gn-el-11">
-      <label for="gn-field-11" class="col-sm-2 control-label">
+         id="gn-el-hierarchyLevelName">
+      <label for="gn-field-hierarchyLevelName" class="col-sm-2 control-label">
         <xsl:value-of select="$iso19139strings/emodnetCatalogueType"/>
       </label>
       <div class="col-sm-9 gn-value">
@@ -25,6 +25,35 @@
                data-gn-keyword-picker=""
                data-thesaurus-key="external.theme.NVS.L23"
                data-gn-field-tooltip="iso19139|gmd:hierarchyLevelName||/gmd:MD_Metadata/gmd:hierarchyLevelName"
+               type="text"/>
+      </div>
+    </div>
+  </xsl:template>
+
+
+
+  <xsl:template mode="mode-iso19139" priority="2000"
+                match="gmd:dataQualityInfo/*/gmd:report[
+                          contains(
+                            */gmd:nameOfMeasure/*/text(),
+                            'EMODNET_QI_') and contains(
+                          $metadata/gmd:metadataStandardName/gco:CharacterString,
+                          'EMODNET - HYDROGRAPHY')]">
+
+    <xsl:variable name="id" select="generate-id()"/>
+    <xsl:variable name="name" select="*/gmd:nameOfMeasure/*/text()"/>
+
+    <div class="form-group gn-field"
+         id="gn-el-{$id}">
+      <label for="gn-field-{$id}" class="col-sm-2 control-label">
+        <xsl:value-of select="$iso19139strings/*[name() = $name]"/>
+      </label>
+      <div class="col-sm-9 gn-value">
+        <input class="form-control"
+               value="{*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record}"
+               name="_{*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/gn:element/@ref}"
+               data-gn-keyword-picker=""
+               data-thesaurus-key="external.theme.{$name}"
                type="text"/>
       </div>
     </div>

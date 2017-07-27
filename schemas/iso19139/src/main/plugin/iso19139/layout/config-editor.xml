@@ -974,6 +974,7 @@
 
           <section name="emodnetQualityIndicator">
 
+            <!-- Previously stored in simple keyword
             <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:descriptiveKeywords[
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
@@ -988,6 +989,28 @@
                           contains(
                             gmd:MD_Keywords/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*/text(),
                             'EMODNET_QI_Purpose')]"/>
+-->
+            <!--
+            Then in quality reports
+            <gmd:report>
+              <gmd:DQ_AbsoluteExternalPositionalAccuracy>
+                <gmd:nameOfMeasure>
+                  <gco:CharacterString>EMODNET_QI_Horizontal</gco:CharacterString>
+                </gmd:nameOfMeasure>
+                <gmd:result>
+                  <gmd:DQ_QuantitativeResult>
+                    <gmd:value>
+                      <gco:Record/>
+                    </gmd:value>
+                  </gmd:DQ_QuantitativeResult>
+                </gmd:result>
+              </gmd:DQ_AbsoluteExternalPositionalAccuracy>
+            </gmd:report>
+            -->
+            <field xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/*/gmd:report[
+                          contains(
+                            */gmd:nameOfMeasure/*/text(),
+                            'EMODNET_QI_')]"/>
           </section>
         </section>
       </tab>
