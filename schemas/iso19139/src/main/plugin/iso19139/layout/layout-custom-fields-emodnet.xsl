@@ -11,7 +11,7 @@
   <xsl:template mode="mode-iso19139" priority="2000"
                 match="gmd:hierarchyLevelName[contains(
                           $metadata/gmd:metadataStandardName/gco:CharacterString,
-                          'EMODNET - HYDROGRAPHY')]">
+                          'EMODNET -')]">
 
     <div class="form-group gn-field"
          id="gn-el-hierarchyLevelName">
