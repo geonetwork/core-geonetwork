@@ -1069,7 +1069,7 @@
                     </gmd:code>
                     <gn:copy select="gmd:codeSpace"/>
                     <gmd:version>
-                      <gco:CharacterString>{{version}}</gco:CharacterString>
+                      <gco:CharacterString>{{emodnetCRSversion}}</gco:CharacterString>
                     </gmd:version>
                   </gmd:RS_Identifier>
                 </gmd:referenceSystemIdentifier>
