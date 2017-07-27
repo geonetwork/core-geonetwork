@@ -89,6 +89,7 @@
        */
       this.getCommonLayer = function(map) {
         if (this._layer) {
+          this._layer.setMap(map);
           return this._layer;
         }
 
@@ -130,7 +131,7 @@
         });
 
         // add our layer to the map
-        map.addLayer(this._layer);
+        this._layer.setMap(map);
 
         return this._layer;
       };
@@ -148,7 +149,12 @@
        * @param {Object} options
        * @param {string} options.crs default is EPSG:4326
        * @param {string} options.format default is GML
+       * @param {bool} options.outputAsWFSFeaturesCollection default is false
        * @param {bool} options.outputAsFeatures default is false
+       * @param {string} options.gmlFeatureElement
+       * @param {string} options.gmlFeatureNS
+       * @param {string} options.gmlFeatureCollectionElement
+       * @param {string} options.gmlFeatureCollectionNS
        * @return {string | Object} output as string or object
        */
       this.printGeometryOutput = function(map, feature, options) {
@@ -162,13 +168,6 @@
           map.getView().getProjection(),
           options.outputCrs || 'EPSG:4326'
         );
-        var outputFeature = null;
-        if (options.outputAsFeatures) {
-          outputFeature = new ol.Feature({
-            id: 'geometry-tool-output',
-            geometry: outputGeom
-          });
-        }
 
         // set id on feature
         feature.setId('geometry-tool-output');
@@ -181,7 +180,7 @@
           case 'geojson':
             format = new ol.format.GeoJSON();
             if (options.outputAsFeatures) {
-              outputValue = format.writeFeatures([outputFeature]);
+              outputValue = format.writeFeatures([feature]);
             } else {
               outputValue = format.writeGeometry(outputGeom);
             }
@@ -190,7 +189,7 @@
           case 'wkt':
             format = new ol.format.WKT();
             if (options.outputAsFeatures) {
-              outputValue = format.writeFeatures([outputFeature]);
+              outputValue = format.writeFeatures([feature]);
             } else {
               outputValue = format.writeGeometry(outputGeom);
             }
@@ -198,18 +197,20 @@
 
           case 'gml':
             format = new ol.format.GML({
-              featureNS: 'http://mapserver.gis.umn.edu/mapserver',
-              featureType: 'features'
+              featureNS: options.gmlFeatureNS ||
+                'http://mapserver.gis.umn.edu/mapserver',
+              featureType: options.gmlFeatureElement || 'features'
             });
 
-            if (options.outputAsFeatures) {
-              outputValue = '<wfs:FeatureCollection ' +
-                'xmlns:wfs="http://www.opengis.net/wfs">' +
-                format.writeFeatures([outputFeature]) +
-                '</wfs:FeatureCollection>';
+            if (options.outputAsWFSFeaturesCollection) {
+              outputValue = 
+                '<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs">' +
+                format.writeFeatures([feature]) +
+                '</FeatureCollection>';
+            } else if (options.outputAsFeatures) {
+              outputValue = format.writeFeatures([feature]);
             } else {
-              outputValue = format.writeGeometryNode(
-                outputGeom).innerHTML;
+              outputValue = format.writeFeaturesNode([feature]).innerHTML;
             }
             break;
 
@@ -221,7 +222,7 @@
 
           case 'object':
             if (options.outputAsFeatures) {
-              outputValue = [outputFeature];
+              outputValue = [feature];
             } else {
               outputValue = outputGeom;
             }
@@ -244,6 +245,10 @@
        * @param {Object} options
        * @param {string} options.crs default is EPSG:4326
        * @param {string} options.format default is GML
+       * @param {string} options.gmlFeatureElement
+       * @param {string} options.gmlFeatureNS
+       * @param {string} options.gmlFeatureCollectionElement
+       * @param {string} options.gmlFeatureCollectionNS
        * @return {ol.geom.Geometry}
        */
       this.parseGeometryInput = function(map, input, options) {
@@ -276,8 +281,9 @@
 
           case 'gml':
             format = new ol.format.GML({
-              featureNS: 'http://mapserver.gis.umn.edu/mapserver',
-              featureType: 'features'
+              featureNS: options.gmlFeatureNS ||
+                'http://mapserver.gis.umn.edu/mapserver',
+              featureType: options.gmlFeatureElement || 'features'
             });
             outputValue = format.readFeatures(input, {
               dataProjection: options.crs,
