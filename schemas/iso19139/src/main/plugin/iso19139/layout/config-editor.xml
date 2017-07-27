@@ -797,9 +797,9 @@
         <thesaurus key="external.theme.NVS.L23" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.NVS.L05" fieldset="false" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.theme.NVS.L05POS" fieldset="false" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.EMODNET_QI_Horizontal" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.EMODNET_QI_Vertical" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.EMODNET_QI_Purpose" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.EMODNET_QI_Horizontal" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.EMODNET_QI_Vertical" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.EMODNET_QI_Purpose" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
         <thesaurus key="external.parameter.NVS.P02" fieldset="false" transformations="to-iso19139-keyword"/>
         <thesaurus key="local.theme.emodnet-bathymetry.projectname" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
       </thesaurusList>
