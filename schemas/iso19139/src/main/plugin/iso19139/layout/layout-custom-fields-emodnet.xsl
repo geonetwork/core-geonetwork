@@ -36,9 +36,9 @@
                 match="gmd:dataQualityInfo/*/gmd:report[
                           contains(
                             */gmd:nameOfMeasure/*/text(),
-                            'EMODNET_QI_') and contains(
+                            'emodnet-bathymetry.QI.') and contains(
                           $metadata/gmd:metadataStandardName/gco:CharacterString,
-                          'EMODNET - HYDROGRAPHY')]">
+                          'EMODNET -')]">
 
     <xsl:variable name="id" select="generate-id()"/>
     <xsl:variable name="name" select="*/gmd:nameOfMeasure/*/text()"/>
@@ -53,7 +53,7 @@
                value="{*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record}"
                name="_{*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/gn:element/@ref}"
                data-gn-keyword-picker=""
-               data-thesaurus-key="external.theme.{$name}"
+               data-thesaurus-key="local.theme.{$name}"
                type="text"/>
       </div>
     </div>

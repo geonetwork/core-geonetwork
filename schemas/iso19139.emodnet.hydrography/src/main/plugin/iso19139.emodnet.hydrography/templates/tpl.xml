@@ -37,7 +37,7 @@
     <gco:DateTime xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv">2012-01-19T15:11:52</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString>ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY</gco:CharacterString>
+    <gco:CharacterString>ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY - DISABLED</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
     <gco:CharacterString>1.0</gco:CharacterString>
@@ -411,7 +411,7 @@
       <gmd:extent>
         <gmd:EX_Extent>
           <gmd:description>
-            <gco:CharacterString>Map projection parameters, values and units :  
+            <gco:CharacterString>Map projection parameters, values and units :
 Axes units :</gco:CharacterString>
           </gmd:description>
           <gmd:geographicElement>

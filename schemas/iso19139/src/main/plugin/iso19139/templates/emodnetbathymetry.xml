@@ -557,7 +557,7 @@
       <gmd:report>
         <gmd:DQ_AbsoluteExternalPositionalAccuracy>
           <gmd:nameOfMeasure>
-            <gco:CharacterString>EMODNET_QI_Horizontal</gco:CharacterString>
+            <gco:CharacterString>emodnet-bathymetry.QI.Horizontal</gco:CharacterString>
           </gmd:nameOfMeasure>
           <gmd:result>
             <gmd:DQ_QuantitativeResult>
@@ -571,7 +571,7 @@
       <gmd:report>
         <gmd:DQ_AbsoluteExternalPositionalAccuracy>
           <gmd:nameOfMeasure>
-            <gco:CharacterString>EMODNET_QI_Horizontal</gco:CharacterString>
+            <gco:CharacterString>emodnet-bathymetry.QI.Vertical</gco:CharacterString>
           </gmd:nameOfMeasure>
           <gmd:result>
             <gmd:DQ_QuantitativeResult>
@@ -585,7 +585,7 @@
       <gmd:report>
         <gmd:DQ_DomainConsistency>
           <gmd:nameOfMeasure>
-            <gco:CharacterString>EMODNET_QI_Purpose</gco:CharacterString>
+            <gco:CharacterString>emodnet-bathymetry.QI.Purpose</gco:CharacterString>
           </gmd:nameOfMeasure>
           <gmd:result>
             <gmd:DQ_QuantitativeResult>
