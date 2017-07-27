@@ -99,9 +99,12 @@
             var source = layer.getSource();
 
             ctrl.drawInteraction = new ol.interaction.Draw({
-              type: 'MultiPolygon',  // TODO: handle linestrings
-              source: source,
-              geometryName: 'polygon'
+              type: 'MultiPolygon',
+              source: source
+            });
+            ctrl.drawLineInteraction = new ol.interaction.Draw({
+              type: 'MultiLineString',
+              source: source
             });
             ctrl.modifyInteraction = new ol.interaction.Modify({
               features: source.getFeaturesCollection()
@@ -109,22 +112,32 @@
 
             // add our layer&interactions to the map
             ctrl.map.addInteraction(ctrl.drawInteraction);
+            ctrl.map.addInteraction(ctrl.drawLineInteraction);
             ctrl.map.addInteraction(ctrl.modifyInteraction);
             ctrl.drawInteraction.setActive(false);
+            ctrl.drawLineInteraction.setActive(false);
             ctrl.modifyInteraction.setActive(false);
             ngeoDecorateInteraction(ctrl.drawInteraction);
+            ngeoDecorateInteraction(ctrl.drawLineInteraction);
             ngeoDecorateInteraction(ctrl.modifyInteraction);
 
             // clear existing features on draw end & save feature
-            ctrl.drawInteraction.on('drawend', function(event) {
+            function handleDrawEnd(event) {
+              ctrl.fromTextInput = false;
               source.clear(event.feature);
               ctrl.updateOutput(event.feature);
               ctrl.drawInteraction.setActive(false);
-            });
+              ctrl.drawLineInteraction.setActive(false);
+              $scope.$digest();
+            }
+            ctrl.drawInteraction.on('drawend', handleDrawEnd);
+            ctrl.drawLineInteraction.on('drawend', handleDrawEnd);
 
             // update output on modify end
             ctrl.modifyInteraction.on('modifyend', function(event) {
+              ctrl.fromTextInput = false;
               ctrl.updateOutput(event.features.item(0));
+              $scope.$digest();
             });
 
             // output for editor (equals input by default)
@@ -136,7 +149,7 @@
 
             // available input formats
             // GML is not available as it cannot be parsed without namespace info
-            ctrl.formats = [ 'WKT', 'GeoJSON' ];
+            ctrl.formats = [ 'WKT', 'GeoJSON', 'GML' ];
             ctrl.currentFormat = ctrl.formats[0];
 
             // parse initial input coordinates to display shape (first in WKT)
@@ -145,30 +158,32 @@
 
               if (ctrl.polygonXml) {
                 // parse first feature from source XML & set geometry name
-                var correctedXml = '<gml:featureMembers>' +
-                  ctrl.polygonXml
+                var correctedXml = ctrl.polygonXml
                     .replace('<gml:LinearRingTypeCHOICE_ELEMENT0>', '')
-                    .replace('</gml:LinearRingTypeCHOICE_ELEMENT0>', '')
-                  + '</gml:featureMembers>';
-                var feature = gnGeometryService.parseGeometryInput(
+                    .replace('</gml:LinearRingTypeCHOICE_ELEMENT0>', '');
+                var geometry = gnGeometryService.parseGeometryInput(
                   ctrl.map,
                   correctedXml,
                   {
                     crs: 'EPSG:4326',
-                    format: 'gml',
-                    gmlFeatureNS: 'http://www.isotc211.org/2005/gmd',
-                    gmlFeatureElement: 'EX_BoundingPolygon',
+                    format: 'gml'
                   }
-                )[0];
-                feature.setGeometryName('polygon');
+                );
 
-                // fit view
-                ctrl.map.getView().fit(feature.getGeometry(),
-                  ctrl.map.getSize());
+                if (!geometry) {
+                  console.warn('Could not parse geometry from extent polygon');
+                  return;
+                }
+
+                var feature = new ol.Feature({
+                  geometry: geometry
+                });
 
                 // add to map
                 source.clear();
                 source.addFeature(feature);
+
+                ctrl.updateOutput(feature);
               }
             };
 
@@ -183,27 +198,29 @@
                 ctrl.map,
                 feature,
                 {
-                  crs:'EPSG:4326',
-                  format: 'gml',
-                  gmlFeatureNS: 'http://www.isotc211.org/2005/gmd',
-                  gmlFeatureElement: 'EX_BoundingPolygon'
+                  crs: 'EPSG:4326',
+                  format: 'gml'
                 }
               );
               console.log('xml output: ' + ctrl.outputPolygonXml);
+
+              // update text field (unless geometry was entered manually)
+              if (!ctrl.fromTextInput) {
+                ctrl.updateInputTextFromGeometry(feature);
+              }
             };
 
             // this will receive errors from the geometry tool input parsing
             ctrl.parseError = null;
+            ctrl.fromTextInput = false;
 
-            // watches input change & outputs gml for the editor
-            $scope.$watch(
-              function () {
-                return ctrl.inputGeometry + ctrl.currentFormat +
-                  ctrl.currentProjection;
-              }, function () {
+            // handle input change & outputs gml for the editor
+            ctrl.handleInputChange = function () {
               if (!ctrl.inputGeometry) {
                 return;
               }
+              ctrl.parseError = null;
+              ctrl.fromTextInput = true;
 
               // parse geometry
               try {
@@ -221,13 +238,39 @@
 
               // create a new feature & print the GML
               var feature = new ol.Feature({
-                'polygon': geometry
+                geometry: geometry
               });
-              feature.setGeometryName('polygon');
               source.clear();
               source.addFeature(feature);
               ctrl.updateOutput(feature);
-            });
+            };
+
+            // options (proj, format) change: either update text or try a new parse
+            ctrl.handleInputOptionsChange = function () {
+              if (ctrl.fromTextInput) {
+                ctrl.handleInputChange();
+              } else {
+                ctrl.updateInputTextFromGeometry();
+              }
+            };
+
+            // update text in input according to displayed feature
+            ctrl.updateInputTextFromGeometry = function (feature) {
+              var feature = feature || source.getFeatures()[0];
+              if (!feature) {
+                ctrl.inputGeometry = '';
+                return;
+              }
+
+              ctrl.inputGeometry = gnGeometryService.printGeometryOutput(
+                ctrl.map,
+                feature,
+                {
+                  crs: ctrl.currentProjection,
+                  format: ctrl.currentFormat,
+                }
+              );
+            };
           }
         ]
       };
