@@ -110,15 +110,15 @@
                         select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
-                                then  concat('local://', /root/gui/language)
+                                then 'local://srv/api'
                                 else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
-                         select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
-                              '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
-                              '&amp;amp;multiple=', $multiple,
-                              if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
-                              if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
+                         select="concat($prefixUrl, '/keyword?thesaurus=', thesaurus/key,
+                              '&amp;id=', /root/request/id,
+                              '&amp;multiple=', $multiple,
+                              if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
+                              if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
           <xsl:attribute name="xlink:show">replace</xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
