@@ -707,7 +707,7 @@
         } else {
           return this.standardName.indexOf('Emodnet Checkpoint') >= 0 ||
               (this['geonet:info'].schema === 'iso19139' &&
-              (this.standardName.indexOf('EMODNET - HYDRO') >= 0 ||
+              (this.standardName.indexOf('EMODNET -') >= 0 ||
               this.standardName.
               indexOf('ISO 19115:2003/19139 - SEXTANT') >= 0));
         }
