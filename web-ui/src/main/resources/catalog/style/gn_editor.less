@@ -108,11 +108,6 @@ input[type=text], input[type=number], select {
 
 
 #gn-directory-container {
-  // note: this could be useful in other places in gn.less
-  .flex-spacer {
-    flex-grow: 1;
-  }
-
   .gn-facet-dropdown {
     min-width: 300px;
     padding: 0px 10px;
@@ -225,6 +220,11 @@ input[type=text], input[type=number], select {
         width: 650px;
       }
     }
+  }
+
+  .dropdown-menu {
+    max-width: 40em;
+    width: 100%;
   }
 }
 
@@ -709,9 +709,6 @@ form.gn-tab-xml {
     strong {
       font-weight: normal;
     }
-    .fa {
-      display: none;
-    }
   }
 
   ng-pluralize {
@@ -737,11 +734,6 @@ gn-directory-associated-md {
     margin: 8px 12px;
     width: 30em;
     display: block;
-  }
-
-  // general purpose flex spacer
-  .spacer {
-    flex-grow: 1;
   }
 
   .form-controls {
@@ -788,7 +780,9 @@ gn-md-type-widget {
     position: relative;
     color: white;
     margin-top: -0.2em;
+    margin-bottom: -0.4em;
     background-color: @gray-light;
+    overflow: hidden;
 
     &.valid-status-1 {
       background-color: @gray-light;

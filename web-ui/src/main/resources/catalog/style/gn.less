@@ -698,6 +698,19 @@ input.ng-invalid {
   border-color: #a94442;
 }
 
+.gn-input-clear {
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  opacity: 0.4;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 /* Highlight updated checkboxes in sharing form */
 .gn-sharing-batch {
   input.ng-dirty:after {
@@ -732,3 +745,28 @@ input.ng-invalid {
     }
   }
 }
+
+// general purpose layout helpers
+.pos-relative { position: relative; }
+.pos-absolute { position: absolute; }
+.spacer, .flex-spacer { flex-grow: 0; flex-shrink: 0; min-width: 0.7em; }
+.flex-grow { flex-grow: 1; }
+.flex-no-grow { flex-grow: 0; }
+.flex-shrink { flex-shrink: 1; }
+.flex-no-shrink, .fa { flex-shrink: 0; }
+.flex-row, .flex-col, .flex-row-r, .flex-col-r {
+  display: flex !important;
+  align-items: baseline;
+}
+.flex-col { flex-direction: column; }
+.flex-col-r { flex-direction: column-reverse; }
+.flex-row { flex-direction: row; }
+.flex-row-r { flex-direction: row-reverse; }
+.flex-start { justify-content: flex-start; }
+.flex-end { justify-content: flex-end; }
+.flex-center { justify-content: center; }
+.flex-align-center { align-items: center; }
+.flex-align-end { align-items: flex-end; }
+.flex-align-start { align-items: flex-start; }
+.text-wrap { white-space: normal; }
+.text-nowrap, .text-no-wrap { white-space: nowrap; }

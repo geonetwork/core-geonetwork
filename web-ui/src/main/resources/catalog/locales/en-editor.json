@@ -352,5 +352,5 @@
     "notADirectoryEntryTemplate": "This entry is not a directory entry template.",
     "saveAsDirectoryEntry": "Save as directory entry",
     "confirmDeleteEntry": "Are you sure you want to delete this entry?",
-    "filterByValidityStatus": "Filter by status"
+    "filterBy": "Filter by..."
 }

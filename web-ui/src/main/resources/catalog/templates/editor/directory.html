@@ -12,33 +12,36 @@
   </div>
 
   <div class="row" ng-show="currentEditorAction == ''">
-    <div class="col-md-12 text-right">
-      <h5 class="btn-group">
-        <button type="button" class="btn btn-success"
-            ng-click="startImporting(false)">
+    <div class="col-md-12 flex-row flex-end">
+      <h5 class="btn-group flex-grow">
+        <button type="button" class="btn btn-success dropdown-toggle pull-right"
+          data-toggle="dropdown">
           <i class="fa fa-plus"/>&nbsp;
           <span translate>addNewDirectoryEntry</span>
-        </button>
-        <button type="button" class="btn btn-success dropdown-toggle"
-          data-toggle="dropdown">
-          <i class="caret"/>
+          &nbsp;<i class="caret"/>
         </button>
         <ul class="dropdown-menu pull-right text-left" role="menu">
           <li class="dropdown-header" translate
             ng-repeat-start="(typeName, templates) in templates | groupBy: 'root'">
             {{typeName}}</li>
           <li ng-repeat="t in templates" ng-repeat-end>
-            <a href ng-click="createFromTemplate(t)">
-              <i class="fa fa-fw fa-bookmark-o"/>&nbsp;
-              {{t.title || t.defaultTitle}}
+            <a href ng-click="createFromTemplate(t)" class="flex-row flex-start">
+              <div class="flex-spacer" />
+              <i class="fa fa-fw fa-bookmark-o"/>
+              <div class="text-wrap">{{::t.title || t.defaultTitle}}</div>
             </a>
           </li>
           <li class="divider"/>
-          <li><a href translate ng-click="startImporting(false)">
-            directoryEntryFromScratch</a></li>
+          <li>
+            <a href ng-click="startImporting(false)" class="flex-row flex-start">
+              <div class="flex-spacer" />
+              <i class="fa fa-fw fa-plus"/>
+              <div class="text-wrap">{{'directoryEntryFromScratch' | translate}}</div>
+            </a>
+          </li>
         </ul>
       </h5>
-
+      <div class="flex-spacer" />
       <h5 class="btn-group">
         <button type="button" class="btn btn-success"
             ng-click="startImporting(true)"
@@ -80,193 +83,206 @@
       <form data-ng-search-form>
         <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
-          <div class="panel panel-default dynamic-list">
-            <div class="panel-heading">
-              <i class="fa fa-list-ul fa-fw"/>&nbsp;
-              <span translate ng-if="!userCanEditTemplates">
-                directoryEntries</span>
+        <div class="panel panel-default dynamic-list">
+          <div class="panel-heading">
+            <i class="fa fa-list-ul fa-fw"/>&nbsp;
+            <span translate ng-if="!userCanEditTemplates">
+              directoryEntries</span>
 
-              <ul class="nav nav-pills" ng-if="userCanEditTemplates">
-                <li ng-class="{active : !templatesShown()}">
-                  <a href ng-click="showTemplates(false)" translate>
-                    directoryEntries</a>
-                </li>
-                <li ng-class="{active : templatesShown()}">
-                  <a href ng-click="showTemplates(true)" translate>
-                    directoryTemplates</a>
-                </li>
-              </ul>
+            <ul class="nav nav-pills" ng-if="userCanEditTemplates">
+              <li ng-class="{active : !templatesShown()}">
+                <a href ng-click="showTemplates(false)" translate>
+                  directoryEntries</a>
+              </li>
+              <li ng-class="{active : templatesShown()}">
+                <a href ng-click="showTemplates(true)" translate>
+                  directoryTemplates</a>
+              </li>
+            </ul>
 
-              <div class="flex-spacer"></div>
+            <div class="flex-spacer flex-grow"></div>
 
+            <div class="pos-relative">
               <input class="form-control filter-text" type="search"
-                     data-ng-change="triggerSearch()"
-                     data-ng-model-options="modelOptions"
-                     placeholder="{{'filter' | translate}}" autofocus=""
-                     data-ng-model="searchObj.params.any"/>&nbsp;
-
-              <div class="btn-group">
-                <button type="button"
-                  class="btn btn-default dropdown-toggle btn-sm"
-                  data-toggle="dropdown"
-                  title="{{'filterGroup' | translate}}">
-                  <span translate class="hidden-xs">filterGroup</span>
-                  &nbsp;<i class="caret" />
-                </button>
-                <ul class="dropdown-menu gn-facet-dropdown pull-right">
-                  <div data-gn-facet="searchResults.facet"
-                       data-current-facets="currentFacets"
-                       data-no-collapse="true"
-                       data-facet="groupOwners"
-                       data-index-key="_groupOwner"></div>
-                  <div data-gn-facet-breadcrumb=""></div>
-                </ul>
-              </div>
+                ng-change="triggerSearch()"
+                ng-model="searchObj.params.any"
+                ng-model-options="modelOptions"
+                placeholder="{{'filter' | translate}}" autofocus=""/>
+              <span class="fa fa-times gn-input-clear"
+                ng-click="searchObj.params.any = ''"
+                ng-show="searchObj.params.any"></span>
             </div>
-            <div class="panel-body">
-
-              <div ng-show="searching" class="text-center">
-                <i class="fa fa-spinner fa-spin" />
-              </div>
-
-              <div translate ng-show="searchResults.count == 0 && !searching"
-                class="text-muted disabled">
-                noRecordFound
-              </div>
-
-              <div class="search-options-header" ng-show="searchResults.count > 0 && !searching">
-                <div data-gn-pagination="paginationInfo"
-                     data-hits-values="[20, 50, 100]"></div>
-
-                <div class="flex-spacer"></div>
-
-                <div data-sortby-combo=""
-                     data-params="searchObj.params"
-                     data-gn-sortby-values="searchObj.sortbyValues"></div>
-              </div>
-
-              <div class="list-group directory-entries-list">
-                <li class="list-group-item clearfix"
-                    data-ng-repeat="e in searchResults.records">
-
-                  <div class="entry-title" ng-if="!templatesShown()">
-                    <gn-md-type-widget metadata="e"></gn-md-type-widget>
-                    <a href ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
-                      {{e.title || e.defaultTitle}}</a>
-                  </div>
-
-                  <div class="entry-info" ng-if="!templatesShown()">
-                    <small class="text-muted" translate
-                      translate-values="{ownerName: getOwnerName(e), updateDate: getChangeDate(e)}">
-                      directoryEntryInfo
-                    </small>
-
-                    <div class="flex-spacer"></div>
-
-                    <div class="btn-group">
-                      <button class="btn btn-default btn-sm dropdown-toggle"
-                        data-toggle="dropdown">
-                        {{'actions' |  translate}}
-                        &nbsp;<i class="caret"/>
-                      </button>
-                      <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a href ng-click="startEditing(e)">
-                          <i class="fa fa-pencil fa-fw" />&nbsp;
-                          {{'edit' | translate}}</a>
-                        </li>
-                        <li><a href ng-click="copyEntry(e)">
-                          <i class="fa fa-copy fa-fw" />&nbsp;
-                          {{'duplicate' | translate}}</a>
-                        </li>
-                        <li><a href ng-click="startPermissionsEdit(e)">
-                          <i class="fa fa-key fa-fw" />&nbsp;
-                          {{'directoryEntryPermissions' | translate}}</a>
-                        </li>
-                        <!-- <li><a href ng-click="convertToTemplate(e)">
-                          <i class="fa fa-mail-forward fa-fw text-info" />&nbsp;
-                          {{'directoryEntryToTemplate' | translate}}</a>
-                        </li> -->
-                        <li><a href ng-click="validateEntry(e)">
-                          <i class="fa fa-check fa-fw text-success" />&nbsp;
-                          {{'directoryEntryValidate' | translate}}</a>
-                        </li>
-                        <li><a href ng-click="rejectEntry(e)">
-                          <i class="fa fa-ban fa-fw text-danger" />&nbsp;
-                          {{'directoryEntryReject' | translate}}</a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div class="btn-group"
-                      ng-if="::gnConfig[gnConfig.key.isXLinkEnabled]">
-                      <button class="btn btn-default btn-sm dropdown-toggle"
-                        ng-click="e.openAssociatedMD = true"
-                        data-toggle="dropdown">
-                        {{'directoryEntryAssociatedMetadata' |  translate}}
-                        &nbsp;<i class="caret"/>
-                      </button>
-                      <ul class="dropdown-menu pull-right" role="menu">
-                        <li ng-if="e.openAssociatedMD">
-                          <gn-directory-associated-md entry-uuid="e['geonet:info'].uuid" />
-                        </li>
-                      </ul>
-                    </div>
-
-                    <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
-                      title="{{'delete' | translate}}">
-                      <i class="fa fa-times text-danger" />
-                    </button>
-                  </div>
-
-                  <div class="entry-title entry-is-template"
-                    ng-if="templatesShown()">
-                    <gn-md-type-widget metadata="e"></gn-md-type-widget>
-
-                    <a href ng-click="startEditing(e)" title="{{e.title}}">
-                      {{e.title || e.defaultTitle}}</a>
-
-                    <div class="flex-spacer"></div>
-
-                    <div class="btn-group">
-                      <button class="btn btn-default btn-sm dropdown-toggle"
-                        data-toggle="dropdown">
-                        {{'actions' |  translate}}
-                        &nbsp;<i class="caret"/>
-                      </button>
-                      <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a href ng-click="startEditing(e)">
-                          <i class="fa fa-pencil fa-fw" />&nbsp;
-                          {{'edit' | translate}}</a>
-                        </li>
-                        <li><a href ng-click="copyEntry(e)">
-                          <i class="fa fa-copy fa-fw" />&nbsp;
-                          {{'duplicate' | translate}}</a>
-                        </li>
-                        <li><a href ng-click="startPermissionsEdit(e)">
-                          <i class="fa fa-key fa-fw" />&nbsp;
-                          {{'directoryEntryPermissions' | translate}}</a>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
-                      title="{{'delete' | translate}}">
-                      <i class="fa fa-times text-danger" />
-                    </button>
-                  </div>
-                </li>
-              </div>
-
-              <div class="search-options-header" ng-show="searchResults.count > 0 && !searching">
-                <div data-gn-pagination="paginationInfo"
-                     data-hits-values="[20, 50, 100]"></div>
-
-                <div class="flex-spacer"></div>
-              </div>
+            &nbsp;
+            
+            <div class="btn-group">
+              <button type="button"
+                class="btn btn-default dropdown-toggle btn-sm"
+                data-toggle="dropdown"
+                title="{{'filterBy' | translate}}">
+                <span translate class="hidden-xs">filterBy</span>
+                &nbsp;<i class="caret" />
+              </button>
+              <ul class="dropdown-menu gn-facet-dropdown pull-right">
+                <div data-gn-facet="searchResults.facet"
+                      data-current-facets="currentFacets"
+                      data-no-collapse="true"
+                      data-facet="groupOwners"
+                      data-index-key="_groupOwner"></div>
+                <div data-gn-facet="searchResults.facet" ng-if="!templatesShown()"
+                      data-current-facets="currentFacets"
+                      data-no-collapse="true"
+                      data-facet="isValid"
+                      data-index-key="_valid"></div>
+                <div data-gn-facet-breadcrumb=""></div>
+              </ul>
             </div>
           </div>
+          <div class="panel-body">
 
-        </form>
+            <div ng-show="searching" class="text-center">
+              <br /><br />
+              <i class="fa fa-spinner fa-spin" />
+              <br /><br /><br />
+            </div>
+
+            <div translate ng-show="searchResults.count == 0 && !searching"
+              class="text-muted disabled">
+              noRecordFound
+            </div>
+
+            <div class="search-options-header" ng-show="searchResults.count > 0 && !searching">
+              <div data-gn-pagination="paginationInfo"
+                    data-hits-values="[20, 50, 100]"></div>
+
+              <div class="flex-spacer flex-grow"></div>
+
+              <div data-sortby-combo=""
+                    data-params="searchObj.params"
+                    data-gn-sortby-values="searchObj.sortbyValues"></div>
+            </div>
+
+            <div class="list-group directory-entries-list" ng-show="!searching">
+              <li class="list-group-item clearfix"
+                  data-ng-repeat="e in searchResults.records">
+
+                <div class="entry-title" ng-if="!templatesShown()">
+                  <gn-md-type-widget metadata="e"></gn-md-type-widget>
+                  <a href ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
+                    {{e.title || e.defaultTitle}}</a>
+                </div>
+
+                <div class="entry-info" ng-if="!templatesShown()">
+                  <small class="text-muted" translate
+                    translate-values="{ownerName: getOwnerName(e), updateDate: getChangeDate(e)}">
+                    directoryEntryInfo
+                  </small>
+
+                  <div class="flex-spacer flex-grow"></div>
+
+                  <div class="btn-group">
+                    <button class="btn btn-default btn-sm dropdown-toggle"
+                      data-toggle="dropdown">
+                      {{'actions' |  translate}}
+                      &nbsp;<i class="caret"/>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                      <li><a href ng-click="startEditing(e)">
+                        <i class="fa fa-pencil fa-fw" />&nbsp;
+                        {{'edit' | translate}}</a>
+                      </li>
+                      <li><a href ng-click="copyEntry(e)">
+                        <i class="fa fa-copy fa-fw" />&nbsp;
+                        {{'duplicate' | translate}}</a>
+                      </li>
+                      <li><a href ng-click="startPermissionsEdit(e)">
+                        <i class="fa fa-key fa-fw" />&nbsp;
+                        {{'directoryEntryPermissions' | translate}}</a>
+                      </li>
+                      <!-- <li><a href ng-click="convertToTemplate(e)">
+                        <i class="fa fa-mail-forward fa-fw text-info" />&nbsp;
+                        {{'directoryEntryToTemplate' | translate}}</a>
+                      </li> -->
+                      <li><a href ng-click="validateEntry(e)">
+                        <i class="fa fa-check fa-fw text-success" />&nbsp;
+                        {{'directoryEntryValidate' | translate}}</a>
+                      </li>
+                      <li><a href ng-click="rejectEntry(e)">
+                        <i class="fa fa-ban fa-fw text-danger" />&nbsp;
+                        {{'directoryEntryReject' | translate}}</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="btn-group"
+                    ng-if="::gnConfig[gnConfig.key.isXLinkEnabled]">
+                    <button class="btn btn-default btn-sm dropdown-toggle"
+                      ng-click="e.openAssociatedMD = true"
+                      data-toggle="dropdown">
+                      {{'directoryEntryAssociatedMetadata' |  translate}}
+                      &nbsp;<i class="caret"/>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                      <li ng-if="e.openAssociatedMD">
+                        <gn-directory-associated-md entry-uuid="e['geonet:info'].uuid" />
+                      </li>
+                    </ul>
+                  </div>
+
+                  <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
+                    title="{{'delete' | translate}}">
+                    <i class="fa fa-times text-danger" />
+                  </button>
+                </div>
+
+                <div class="entry-title entry-is-template"
+                  ng-if="templatesShown()">
+                  <gn-md-type-widget metadata="e"></gn-md-type-widget>
+
+                  <a href ng-click="startEditing(e)" title="{{e.title}}">
+                    {{e.title || e.defaultTitle}}</a>
+
+                  <div class="flex-spacer flex-grow"></div>
+
+                  <div class="btn-group">
+                    <button class="btn btn-default btn-sm dropdown-toggle"
+                      data-toggle="dropdown">
+                      {{'actions' |  translate}}
+                      &nbsp;<i class="caret"/>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                      <li><a href ng-click="startEditing(e)">
+                        <i class="fa fa-pencil fa-fw" />&nbsp;
+                        {{'edit' | translate}}</a>
+                      </li>
+                      <li><a href ng-click="copyEntry(e)">
+                        <i class="fa fa-copy fa-fw" />&nbsp;
+                        {{'duplicate' | translate}}</a>
+                      </li>
+                      <li><a href ng-click="startPermissionsEdit(e)">
+                        <i class="fa fa-key fa-fw" />&nbsp;
+                        {{'directoryEntryPermissions' | translate}}</a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
+                    title="{{'delete' | translate}}">
+                    <i class="fa fa-times text-danger" />
+                  </button>
+                </div>
+              </li>
+            </div>
+
+            <div class="search-options-header" ng-show="searchResults.count > 0 && !searching">
+              <div data-gn-pagination="paginationInfo"
+                    data-hits-values="[20, 50, 100]"></div>
+
+              <div class="flex-spacer flex-grow"></div>
+            </div>
+          </div>
+        </div>
+
+      </form>
     </div>
   </div>
 
@@ -302,7 +318,7 @@
           <span translate class="entry-editor-title">
             directoryEntryEditor</span>
 
-          <div class="flex-spacer"></div>
+          <div class="flex-spacer flex-grow"></div>
 
           <div class="entry-editor-controls">
             <button type="button" class="btn btn-primary"
@@ -356,7 +372,7 @@
           <span translate class="entry-editor-title">
             directoryEntryEditor</span>
 
-          <div class="flex-spacer"></div>
+          <div class="flex-spacer flex-grow"></div>
 
           <div class="entry-editor-controls">
             <div gn-metadata-group-updater="activeEntry.groupOwner"
