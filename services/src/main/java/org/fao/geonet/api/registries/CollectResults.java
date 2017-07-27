@@ -40,8 +40,8 @@ public class CollectResults {
     private Metadata record;
     private Element updatedRecord;
     /**
-     * Table composed of the entry identifier (extracted from the Element), the UUID and the XML
-     * Element.
+     * Table composed of the entry identifier (extracted from the Element),
+     * the UUID and the XML element.
      */
     private Table<String, String, Element> entries =
         HashBasedTable.create();
@@ -49,6 +49,10 @@ public class CollectResults {
      * Map of UUID and db identifiers if the entry is saved in the database
      */
     private Map<String, Integer> entryIdentifiers = new HashMap<>();
+
+    public CollectResults() {
+        this.record = record;
+    }
 
     public CollectResults(Metadata record) {
         this.record = record;

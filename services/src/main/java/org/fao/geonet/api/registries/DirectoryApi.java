@@ -23,6 +23,11 @@
 
 package org.fao.geonet.api.registries;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -30,28 +35,68 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+
+
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.BatchOpsMetadataReindexer;
+import org.fao.geonet.utils.Xml;
+import org.geotools.GML;
+import org.geotools.data.DataStore;
+import org.geotools.data.DataStoreFinder;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.collection.ListFeatureCollection;
+import org.geotools.feature.FeatureCollection;
+import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.geometry.jts.JTS;
+import org.geotools.referencing.CRS;
 import org.jdom.Element;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.filter.Filter;
+import org.opengis.geometry.BoundingBox;
+import org.opengis.geometry.Envelope;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,8 +104,12 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
+import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAP_RECORD_GROUP;
 
 @EnableWebMvc
 @Service
@@ -464,5 +513,253 @@ public class DirectoryApi {
             report.close();
             return new ResponseEntity<>((Object) response, HttpStatus.OK);
         }
+    }
+
+
+
+    @ApiOperation(value = "Import spatial directory entries",
+        nickname = "importSpatialEntries",
+        notes = "Directory entry (AKA subtemplates) are XML fragments that can be " +
+            "inserted in metadata records. Use this service to import geographic extent entries " +
+            "from an ESRI Shapefile format.")
+    @RequestMapping(
+        value = "/import/spatial",
+        method = RequestMethod.POST,
+        consumes = {
+            MediaType.MULTIPART_FORM_DATA_VALUE
+        },
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Directory entries imported."),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+    })
+    @PreAuthorize("hasRole('Reviewer')")
+    @ResponseBody
+    public SimpleMetadataProcessingReport importSpatialEntries(
+        @ApiParam(
+            value = "The ZIP file to upload containing the Shapefile.",
+            required = true
+        )
+        @RequestParam("file")
+            MultipartFile file,
+        @ApiParam(
+            value = "Attribute to use for UUID. If none, random UUID are generated.",
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String uuidAttribute,
+        @ApiParam(
+            value = "Attribute to use for extent description. " +
+                "If none, no extent description defined. TODO: Add per language desc ?",
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String descriptionAttribute,
+        @ApiParam(
+            value = "Create only bounding box for each spatial objects.",
+            required = false)
+        @RequestParam(
+            required = false,
+            defaultValue = "true")
+            boolean onlyBoundingBox,
+        @ApiParam(
+            value = "Process",
+            defaultValue = "build-extent-subtemplate",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String process,
+        @ApiParam(
+            value = "Schema identifier",
+            defaultValue = "iso19139",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String schema,
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID_PROCESSING,
+            required = false,
+            defaultValue = "NOTHING"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "NOTHING"
+        )
+        final MEFLib.UuidAction uuidProcessing,
+        @ApiParam(
+            value = API_PARAP_RECORD_GROUP,
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+        final Integer group,
+        @ApiIgnore
+            MultipartHttpServletRequest request)
+        throws Exception {
+
+        final ApplicationContext applicationContext = ApplicationContextHolder.get();
+        final ServiceContext context = ApiUtils.createServiceContext(request);
+        final int user = context.getUserSession().getUserIdAsInt();
+        final String siteId = context.getBean(SettingManager.class).getSiteId();
+        final DataManager dm = applicationContext.getBean(DataManager.class);
+
+        Set<Integer> listOfRecordInternalId = new HashSet<>();
+        CollectResults collectResults = new CollectResults();
+
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        // Extract ZIP file content
+        File zipFile = new File(file.getOriginalFilename());
+        file.transferTo(zipFile);
+        Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
+        ZipUtil.extract(zipFile.toPath(), toDirectory);
+
+
+        // Search shapefiles
+        File [] shapefiles = toDirectory.toFile().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".shp");
+            }
+        });
+
+        GML gml = new GML(org.geotools.GML.Version.GML3);
+
+        for (File shapefile : shapefiles) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("url", shapefile.toURI().toURL());
+
+            DataStore dataStore = DataStoreFinder.getDataStore(map);
+            String typeName = dataStore.getTypeNames()[0];
+
+            FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore
+                .getFeatureSource(typeName);
+            Filter filter = Filter.INCLUDE;
+
+            FeatureCollection<SimpleFeatureType, SimpleFeature> collection =
+                source.getFeatures(filter);
+
+            int counter = 0;
+
+            try (FeatureIterator<SimpleFeature> features = collection.features()) {
+
+                MetadataSchema metadataSchema = dm.getSchema(schema);
+                Path xslProcessing = metadataSchema.getSchemaDir()
+                                        .resolve("process").resolve(process + ".xsl");
+
+                boolean validate = false, ufo = false, index = false;
+                report.setTotalRecords(collection.size());
+
+                CoordinateReferenceSystem wgs84 = CRS.getAuthorityFactory(true)
+                    .createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
+                while (features.hasNext()) {
+                    SimpleFeature feature = features.next();
+
+                    // Collect feature info and add them to a map for the XSL conversion
+                    Map<String, Object> parameters = new HashMap<>();
+                    String featureUuidValue = null;
+                    String featureDescriptionValue = "";
+                    if (StringUtils.isNotEmpty(uuidAttribute)) {
+                        final Object attribute = feature.getAttribute(uuidAttribute);
+                        if (attribute != null) {
+                            featureUuidValue = attribute.toString();
+                        }
+                    }
+                    if (StringUtils.isNotEmpty(descriptionAttribute)) {
+                        final Object attribute = feature.getAttribute(descriptionAttribute);
+                        if (attribute != null) {
+                            featureDescriptionValue = attribute.toString();
+                        }
+                    }
+                    String uuid = StringUtils.isNotEmpty(featureUuidValue) ?
+                        featureUuidValue : UUID.randomUUID().toString();
+                    parameters.put("uuid", uuid);
+                    parameters.put("description",
+                        StringUtils.isNotEmpty(featureDescriptionValue) ?
+                            featureDescriptionValue : "");
+
+                    // TODO: set the geometry as GML
+//                    ByteArrayOutputStream xml = new ByteArrayOutputStream();
+//                    List<SimpleFeature> gmlCollection = new LinkedList<SimpleFeature>();
+//                    gmlCollection.add(feature);
+//                    gml.encode(xml,new ListFeatureCollection(
+//                        collection.getSchema(), gmlCollection));
+//                    xml.close();
+//                    String gmlString = xml.toString();
+//                    System.out.println(gmlString);
+                    // parameters.put("geometry", (String)feature.getDefaultGeometryProperty().getValue());
+
+                    BoundingBox bounds = feature.getBounds();
+                    com.vividsolutions.jts.geom.Envelope wgsEnvelope = JTS.toGeographic(
+                        new com.vividsolutions.jts.geom.Envelope(bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY()),
+                        feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem());
+                    parameters.put("east", wgsEnvelope.getMaxX());
+                    parameters.put("north", wgsEnvelope.getMaxY());
+                    parameters.put("west", wgsEnvelope.getMinX());
+                    parameters.put("south", wgsEnvelope.getMinY());
+                    parameters.put("onlyBoundingBox", onlyBoundingBox);
+
+                    // A dummy XML to transform with to build the output
+                    // subtemplate
+                    Element subtemplate = new Element("root");
+
+
+                    // XSL transformation building the subtemplate snippet
+                    Element snippet = Xml.transform(subtemplate, xslProcessing, parameters);
+
+                    collectResults.getEntries().put(uuid, uuid, snippet);
+                    counter ++;
+                }
+            }
+
+            report.addInfos(String.format(
+                "%d entries extracted from shapefile '%s'.",
+                counter,
+                shapefile.getName()
+            ));
+        }
+
+        // Save the snippets and index
+        if (collectResults.getEntries().size() > 0) {
+            // Create an empty record providing schema information
+            // about collected subtemplates
+            Metadata record = new Metadata();
+            record.getDataInfo().setSchemaId(schema);
+            collectResults.setRecord(record);
+
+            DirectoryUtils.saveEntries(
+                context,
+                collectResults,
+                siteId, user,
+                group,
+                false);
+
+            dm.flush();
+
+            listOfRecordInternalId.addAll(
+                collectResults.getEntryIdentifiers().values()
+            );
+
+            BatchOpsMetadataReindexer r =
+                new BatchOpsMetadataReindexer(dm, listOfRecordInternalId);
+            r.process();
+
+            report.close();
+        } else {
+            report.addInfos(String.format("No entry found in ZIP file '%s'",
+                file.getOriginalFilename()));
+            report.close();
+        }
+        return report;
     }
 }
