@@ -68,7 +68,7 @@ public class DirectoryEntriesApi {
         nickname = "getEntry",
         notes = "Directory entry (AKA subtemplates) are XML fragments that can be " +
             "inserted in metadata records using XLinks. XLinks can be remote or " +
-            "local (TODO: support local XLink in API).")
+            "local.")
     @RequestMapping(
         value = "/{uuid}",
         method = RequestMethod.GET,
