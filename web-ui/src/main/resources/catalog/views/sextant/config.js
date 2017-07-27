@@ -218,6 +218,8 @@
           var url;
           if(md.getSchema() == 'iso19139.sdn-product') {
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+          } else if(md.getSchema() == 'iso19139.emodnet.hydrography') {
+            url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
             var view =
               md.standardName ===
