@@ -218,6 +218,8 @@
           var url;
           if(md.getSchema() == 'iso19139.sdn-product') {
             url = 'md.format.xml?xsl=sdn-emodnet&uuid=' + md.getUuid();
+          } else if(md.getSchema() == 'iso19139.emodnet.hydrography') {
+            url = 'md.format.xml?xsl=emodnet&uuid=' + md.getUuid();
           } else if(md.getSchema() == 'iso19115-3') {
             var view =
               md.standardName ===
@@ -230,7 +232,12 @@
             url = 'md.format.xml?root=div&xsl=xsl-view&view=' + view +
                     '&uuid=' + md.getUuid();
           } else {
-            url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+            if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
+                md.standardName === 'ISO 19115:2003/19139 - EMODNET - HYDROGRAPHY') {
+              url = 'md.format.xml?root=div&xsl=xsl-view&view=emodnetHydrography&uuid=' + md.getUuid();
+            } else {
+              url = 'md.format.xml?xsl=sxt_view&uuid=' + md.getUuid();
+            }
           }
           return url;
         },
@@ -406,6 +413,9 @@
         }
         if(sxtSettings.processes)  {
           viewerSettings.processes = sxtSettings.processes;
+        }
+        if(sxtSettings.graticule)  {
+          viewerSettings.graticule = sxtSettings.graticule;
         }
         if(angular.isUndefined(searchSettings.tabOverflow.search)) {
           delete searchSettings.mainTabs.search;

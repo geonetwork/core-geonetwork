@@ -150,14 +150,15 @@
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
-  <minDepth>Min. depth (>0 below Sea Level)</minDepth>
-  <maxDepth>Max. depth (>0 below Sea Level)</maxDepth>
+  <minDepth>Min. depth in meters (>0 below Sea Level)</minDepth>
+  <maxDepth>Max. depth in meters (>0 below Sea Level)</maxDepth>
   <emodnetGeomTitle>Geometry</emodnetGeomTitle>
   <emodnetPixelOrigin>Pixel origin position</emodnetPixelOrigin>
   <emodnetAbs>Dataset description abstract</emodnetAbs>
   <verticalResolution>Vertical resolution (meters)</verticalResolution>
   <listOfObservationLevel>Vertical observation levels (meters > 0 above sea level)</listOfObservationLevel>
   <timeResolution>Time resolution</timeResolution>
+  <measureFreq>Measurement frequency</measureFreq>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
   <dataPolicy>Data policy*</dataPolicy>
   <policyVisibility>Policy visibility</policyVisibility>
@@ -179,6 +180,7 @@
   <projectTitle>Program title</projectTitle>
   <edmerpId>EDMERP id</edmerpId>
   <edmoId>EDMO id</edmoId>
+  <addADistributor>Add distributor</addADistributor>
   <associatedResources>Associated resources</associatedResources>
   <additionalInfo>Additional information</additionalInfo>
   <edmerp-help>
@@ -228,7 +230,7 @@
   <emodnetHydrography-when>When</emodnetHydrography-when>
   <emodnetHydrography-who>Who</emodnetHydrography-who>
   <emodnetHydrography-access>Access</emodnetHydrography-access>
-  <emodnetHydrography>Emodnet</emodnetHydrography>
+  <emodnetHydrography>EMODNet Bathymetry</emodnetHydrography>
   <emodnetMetadataInfoTitle>Metadata information</emodnetMetadataInfoTitle>
   <emodnetCatalogueType>Catalogue type</emodnetCatalogueType>
   <emodnetMetadataInfo>Metadata details</emodnetMetadataInfo>
@@ -252,7 +254,8 @@
   <emodnetWhenTitle>When</emodnetWhenTitle>
   <emodnetWhoTitle>Who</emodnetWhoTitle>
   <emodnetSuitabilty>Suitability</emodnetSuitabilty>
-  <emodnetSpatialResolution>Spatial resolution</emodnetSpatialResolution>
+  <emodnetQualityIndicator>Quality Indicators</emodnetQualityIndicator>
+  <emodnetSpatialResolution>Pixel size</emodnetSpatialResolution>
   <emodnetOriginatorTitle>Originator</emodnetOriginatorTitle>
   <emodnetDataHoldingCenterTitle>Data Holding Center</emodnetDataHoldingCenterTitle>
   <emodnetDistributor>Distributor</emodnetDistributor>
@@ -260,9 +263,14 @@
   <emodnetShortName>Short name of dataset (SDN Local Product-ID)</emodnetShortName>
   <emodnetName>Dataset name</emodnetName>
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
-
+  <emodnetCRSversion>Version or custom projection details</emodnetCRSversion>
+  <emodnet-bathymetry.QI.Horizontal>Horizontal Quality Indicator</emodnet-bathymetry.QI.Horizontal>
+  <emodnet-bathymetry.QI.Purpose>Purpose Quality Indicator</emodnet-bathymetry.QI.Purpose>
+  <emodnet-bathymetry.QI.Vertical>Vertical Quality Indicator</emodnet-bathymetry.QI.Vertical>
   <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
+  <addCrs3395>WGS 84 / World Mercator</addCrs3395>
+  <addCrs3395Custom>WGS 84 / World Mercator (custom)</addCrs3395Custom>
   <addCrs4258>ETRS89</addCrs4258>
   <addCrs3035>ETRS89 / LAEA Europe</addCrs3035>
 

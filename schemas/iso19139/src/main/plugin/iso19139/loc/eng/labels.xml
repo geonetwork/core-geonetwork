@@ -2218,7 +2218,7 @@
             obtained from the distributor</description>
 	</element>
 	<element name="gmd:transferSize" id="276.0">
-		<label>Transfer size</label>
+		<label>Transfer size (in MB)</label>
 		<description>Estimated size of a unit in the specified transfer format, expressed in
             megabytes. The transfer size is &gt; 0.0</description>
 	</element>

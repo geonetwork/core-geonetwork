@@ -229,7 +229,7 @@
                       md.standardName.match(/emodnet checkpoint/i)) {
                     return 'characteristics';
                   } else if (md.standardName &&
-                      md.standardName.match(/emodnet - hydrography/i)) {
+                      md.standardName.match(/emodnet -/i)) {
                     return 'emodnetHydrography-what';
                   } else if (md.standardName &&
                       md.standardName.

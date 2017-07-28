@@ -1304,7 +1304,76 @@
       <description></description>
     </entry>
 	</codelist>
-	<!-- ==================================================== -->
+
+
+  <codelist name="gmd:MD_RestrictionCode"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'EMODNET')]">
+    <entry>
+      <code>SeaDataNet licence</code>
+      <label>SeaDataNet licence</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>academic</code>
+      <label>academic</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>by negotiation</code>
+      <label>by negotiation</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>collection cost charge</code>
+      <label>collection cost charge</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>commercial charge</code>
+      <label>commercial charge</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>distribution cost charge</code>
+      <label>distribution cost charge</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>licence</code>
+      <label>licence</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>moratorium</code>
+      <label>moratorium</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>no access</code>
+      <label>no access</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>organisation</code>
+      <label>organisation</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>unknown</code>
+      <label>unknown</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>unrestricted</code>
+      <label>unrestricted</label>
+      <description></description>
+    </entry>
+  </codelist>
+
+
+  <!-- ==================================================== -->
 	<codelist name="gmd:MD_RestrictionCode">
 		<entry>
 			<code>copyright</code>
@@ -1496,8 +1565,8 @@
 			<label>Publication</label>
 			<description>Ce sont des produits finis tels que les ouvrages, brochures, articles, rapports, matériel audiovisuel...</description>
 		</entry>-->
-		
-		
+
+
 		<!-- Used for facet translation only and not displayed in editor -->
 		<entry>
 			<code>map</code>
@@ -1954,7 +2023,7 @@
 					<label>Libre</label>
 			</entry>
 	</codelist>
-	    
+
     <codelist name="srv:SV_ParameterDirection">
         <entry>
             <code>in</code>
@@ -1969,7 +2038,7 @@
             <label>Entrée/Sortie</label>
         </entry>
     </codelist>
-	
+
 	<codelist name="gco:nilReason">
 		<entry>
 			<code>missing</code>
@@ -1992,7 +2061,7 @@
 			<label>Avec autorisation</label>
 		</entry>
 	</codelist>
-	
+
 	<codelist name="indeterminatePosition">
 		<entry>
 			<code>after</code>

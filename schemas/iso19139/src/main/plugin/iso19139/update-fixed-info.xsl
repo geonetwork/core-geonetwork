@@ -31,6 +31,7 @@
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
   <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="update-fixed-info-emodnet.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
 
@@ -51,7 +52,46 @@
 
       <gmd:fileIdentifier>
         <gco:CharacterString>
-          <xsl:value-of select="/root/env/uuid"/>
+          <xsl:choose>
+            <xsl:when test="$isEmodnet">
+
+              <xsl:variable name="custodian"
+                            select="substring-after((
+                              gmd:identificationInfo/*/gmd:pointOfContact/*[
+                                gmd:role/gmd:CI_RoleCode/@codeListValue = 'custodian']/
+                                @uuid)[1], 'n_code=')"/>
+              <!--<xsl:message>Emodnet uuid</xsl:message>
+              <xsl:message>HierarchyLevel: <xsl:value-of select="gmd:hierarchyLevelName/gco:CharacterString"/></xsl:message>
+              <xsl:message>Id: <xsl:value-of select="normalize-space(gmd:identificationInfo/*/gmd:citation/
+                  */gmd:identifier/*/gmd:code/gco:CharacterString)"/></xsl:message>
+              <xsl:message>Custodian: <xsl:value-of select="$custodian"/> </xsl:message>
+              -->
+              <xsl:variable name="finalEmodnetUuid">
+                <xsl:if test="
+                  gmd:hierarchyLevelName/gco:CharacterString and
+                  normalize-space(gmd:identificationInfo/*/gmd:citation/
+                  */gmd:identifier/*/gmd:code/gco:CharacterString) != '' and
+                  $custodian != ''">
+
+                  <!-- We use to create UUID for some EMODnet product based
+                  on hierarchylevelname. For bathymetry only CPRD is used.
+                  So this is now hardcoded. -->
+                  <xsl:value-of select="concat('SDN_CPRD_',
+                    $custodian,
+                    '_',
+                    gmd:identificationInfo/*/gmd:citation/*/
+                      gmd:identifier/*/gmd:code/gco:CharacterString)"/>
+                </xsl:if>
+              </xsl:variable>
+
+              <xsl:value-of select="if (normalize-space($finalEmodnetUuid) != '')
+                          then $finalEmodnetUuid else /root/env/uuid"/>
+
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="/root/env/uuid"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </gco:CharacterString>
       </gmd:fileIdentifier>
 
@@ -539,45 +579,6 @@
 
 
   <!-- MedSea specific templates -->
-  <!--<xsl:template
-          match="gmd:MD_Metadata[
-                    contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]/
-                  gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/
-                  gmd:code/gco:CharacterString"
-          priority="200">
-
-    <xsl:variable name="prefix" select="'MEDSEA_'"/>
-    <xsl:variable name="currentIdentifier" select="."/>
-    <xsl:variable name="hasLinkage"
-                  select="count(ancestor-or-self::gmd:MD_Metadata/
-                          gmd:distributionInfo/gmd:MD_Distribution/
-                          gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
-                          gmd:onLine[2]/gmd:CI_OnlineResource[gmd:name != '']/gmd:linkage) > 0"/>
-    &lt;!&ndash; Compute resource identifier based on the following rules:
-    if online resource available, concatenate the MEDSEA_<Online resource name>
-    if not the identifier starts with MEDSEA_<whatever>
-    &ndash;&gt;
-    <xsl:copy>
-      <xsl:choose>
-        <xsl:when test="$hasLinkage">
-          <xsl:variable name="linkageName"
-                        select="ancestor-or-self::gmd:MD_Metadata/
-                            gmd:distributionInfo/gmd:MD_Distribution/
-                            gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
-                            gmd:onLine[2]/gmd:CI_OnlineResource/gmd:name"/>
-
-          <xsl:value-of select="concat($prefix, $linkageName)"/>
-        </xsl:when>
-        <xsl:when test="starts-with($currentIdentifier, $prefix)">
-          <xsl:value-of select="$currentIdentifier"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="concat($prefix, $currentIdentifier)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:copy>
-  </xsl:template>-->
 
 
 

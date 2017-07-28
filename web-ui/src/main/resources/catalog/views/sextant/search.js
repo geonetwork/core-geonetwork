@@ -283,40 +283,52 @@
             return;
           }
 
-          var loadLayerPromise = gnMap.addWmsFromScratch($scope.searchObj.viewerMap,
-              link.url, link.name, undefined, md).then(function(layer) {
-                if(layer) {
-                  var group, theme = md.sextantTheme;
-                  var themes = sxtGlobals.keywords.sextantTheme;
-                  if(angular.isArray(themes)) {
-                    for (var i = 0; i < themes.length; i++) {
-                      var t = themes[i];
-                      if (t.props.uri == theme) {
-                        group = t.label;
-                        break;
-                      }
-                    }
-                  }
-                  layer.set('group', group);
-                  gnMap.feedLayerWithRelated(layer, link.group);
-                  if(link.extra && link.extra.downloads) {
-                    layer.set('downloads', link.extra.downloads);
-                  }
-                  if(waitingLayers) waitingLayers.push(layer);
-                  if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+          var loadLayerPromise;
 
-                  if(gnSearchLocation.isMdView()) {
-                    angular.element($('[gn-metadata-display]')).scope().dismiss();
-                    $location.path('/map');
+          // handle WMTS layer info
+          if (link.protocol.indexOf('WMTS') > -1) {
+            loadLayerPromise = gnMap.addWmtsFromScratch(
+              $scope.searchObj.viewerMap,
+              link.url, link.name, undefined, md);
+          } else {
+            loadLayerPromise = gnMap.addWmsFromScratch(
+              $scope.searchObj.viewerMap,
+              link.url, link.name, undefined, md);
+          }
+
+          loadLayerPromise.then(function(layer) {
+            if(layer) {
+              var group, theme = md.sextantTheme;
+              var themes = sxtGlobals.keywords.sextantTheme;
+              if(angular.isArray(themes)) {
+                for (var i = 0; i < themes.length; i++) {
+                  var t = themes[i];
+                  if (t.props.uri == theme) {
+                    group = t.label;
+                    break;
                   }
-                  var el;
-                  if ($event) {
-                    el = $($event.currentTarget).parents('.gn-grid-item');
-                  }
-                  $scope.addLayerPopover('map', el);
-                  $scope.mainTabs.map.titleInfo += 1;
                 }
-              });
+              }
+              layer.set('group', group);
+              gnMap.feedLayerWithRelated(layer, link.group);
+              if(link.extra && link.extra.downloads) {
+                layer.set('downloads', link.extra.downloads);
+              }
+              if(waitingLayers) waitingLayers.push(layer);
+              if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+
+              if(gnSearchLocation.isMdView()) {
+                angular.element($('[gn-metadata-display]')).scope().dismiss();
+                $location.path('/map');
+              }
+              var el;
+              if ($event) {
+                el = $($event.currentTarget).parents('.gn-grid-item');
+              }
+              $scope.addLayerPopover('map', el);
+              $scope.mainTabs.map.titleInfo += 1;
+            }
+          });
 
 
         },

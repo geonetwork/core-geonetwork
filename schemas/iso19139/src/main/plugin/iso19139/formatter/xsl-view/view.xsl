@@ -95,6 +95,15 @@
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
+
+
+    <link rel="stylesheet" type="text/css"
+          href="{$baseUrl}../../apps/sextant/css/schema/default.css"></link>
+
+    <link rel="stylesheet" type="text/css"
+          href="{$baseUrl}../../apps/sextant/css/metadata-view.css"></link>
+
+
   </xsl:template>
 
 

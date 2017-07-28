@@ -580,13 +580,19 @@ div.help ul li {
     font-size: 230%;
 }
 
+.gn-schema-iso19139 article h3 {
+  padding-left: 0px;
+}
+.gn-schema-iso19139 article {
+  padding-left: .65em;
+}
+
 .gn-schema-iso19115-3 .gn-related-resources h2 {
   font-weight: bold;
   font-size: 17.6px;
   color: #1b75bc;
   text-transform: uppercase;
   font-style: normal;
-  padding-left: .65em;
 }
 
 .gn-schema-iso19115-3 #gn-tab-checkpoint-ud-qm {
