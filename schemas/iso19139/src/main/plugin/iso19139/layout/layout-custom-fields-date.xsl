@@ -88,7 +88,7 @@
     <xsl:variable name="dateTypeElementRef"
                   select="../gn:element/@ref"/>
 
-    <div class="form-group gn-field gn-title gn-required"
+    <div class="form-group gn-field gn-date gn-required"
          id="gn-el-{$dateTypeElementRef}"
          data-gn-field-highlight="">
       <label class="col-sm-2 control-label">
@@ -168,7 +168,7 @@
 
     <xsl:variable name="isRequired" select="gn:element/@min = 1 and gn:element/@max = 1"/>
 
-    <div class="form-group gn-field gn-title {if ($isRequired) then 'gn-required' else ''}"
+    <div class="form-group gn-field gn-date {if ($isRequired) then 'gn-required' else ''}"
          id="gn-el-{$dateTypeElementRef}"
          data-gn-field-highlight="">
       <label class="col-sm-2 control-label">
