@@ -264,9 +264,9 @@
   <emodnetName>Dataset name</emodnetName>
   <emodnetMetadataAuthor>Collating Centre = Metadata author</emodnetMetadataAuthor>
   <emodnetCRSversion>Version or custom projection details</emodnetCRSversion>
-  <emodnet-bathymetry.QI.Horizontal>Hor. Accuracy</emodnet-bathymetry.QI.Horizontal>
-  <emodnet-bathymetry.QI.Purpose>Suitability Accuracy</emodnet-bathymetry.QI.Purpose>
-  <emodnet-bathymetry.QI.Vertical>Vert. Accuracy</emodnet-bathymetry.QI.Vertical>
+  <emodnet-bathymetry.QI.Horizontal>QI Horizontal</emodnet-bathymetry.QI.Horizontal>
+  <emodnet-bathymetry.QI.Purpose>QI Purpose</emodnet-bathymetry.QI.Purpose>
+  <emodnet-bathymetry.QI.Vertical>QI Vertical</emodnet-bathymetry.QI.Vertical>
   <addCrs>Add coordinate system</addCrs>
   <addCrs4326>WGS 84</addCrs4326>
   <addCrs3395>WGS 84 / World Mercator</addCrs3395>
