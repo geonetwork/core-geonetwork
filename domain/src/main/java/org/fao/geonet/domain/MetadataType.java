@@ -44,7 +44,12 @@ public enum MetadataType {
      * sub-template is a metadata fragment that can be inserted into another metadata.  It can also
      * be shared as an xlink in multiple metadata to reduce duplication.
      */
-    SUB_TEMPLATE('s');
+    SUB_TEMPLATE('s'),
+
+    /**
+     * Indicates the associated {@link Metadata} entity is a template of sub template.
+     */
+    TEMPLATE_OF_SUB_TEMPLATE('t');
 
     /**
      * The code (for backwards compatibility) of the metadatatype.

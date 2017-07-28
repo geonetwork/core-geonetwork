@@ -194,6 +194,8 @@
                     if (layer == scope.heatmapLayer) {
                       return feature;
                     }
+                  }, undefined, function(layer) {
+                    return layer instanceof ol.layer.Vector;
                   });
               if (feature) {
                 var mapTop = scope.map.getTarget().getBoundingClientRect().top;
@@ -224,6 +226,12 @@
            * all different feature types.
            */
           function init() {
+
+            var source = scope.layer.getSource();
+            if (!source || !(source instanceof ol.source.ImageWMS ||
+                source instanceof ol.source.TileWMS)) {
+              return;
+            }
 
             angular.extend(scope, {
               fields: [],
@@ -572,6 +580,7 @@
                 }
               });
 
+              scope.$broadcast('FiltersChanged');
               refreshHeatmap();
             });
           };
@@ -734,6 +743,7 @@
             }
           });
 
+
           scope.showTable = function() {
             gnFeaturesTableManager.clear();
             gnFeaturesTableManager.addTable({
@@ -750,7 +760,6 @@
             scope.$destroy();
             resetHeatMap();
           });
-
 
           scope.toSqlOgr = function() {
             indexObject.pushState();
@@ -780,21 +789,23 @@
             }
           };
 
-
-          // triggered when the filter state is changed (compares with previous state)
-          scope.$on('FiltersChanged', function (event, args) {
+          // triggered when the filter state is changed
+          // (compares with previous state)
+          scope.$on('FiltersChanged', function(event, args) {
             // this handles the cases where bbox string value is undefined
             // or equal to ',,,' or '', which all amount to the same thing
             function normalize(s) { return (s || '').replace(',,,', ''); }
 
-            var inputChanged = scope.searchInput != scope.previousFilterState.any;
+            var inputChanged = scope.searchInput !=
+                scope.previousFilterState.any;
             var geomChanged = normalize(scope.ctrl.searchGeometry) !==
-              normalize(scope.previousFilterState.geometry);
+                normalize(scope.previousFilterState.geometry);
 
             // only compare params object if necessary
             var paramsChanged = false;
             if (!inputChanged && !geomChanged) {
-              paramsChanged = !angular.equals(scope.previousFilterState.params, scope.output);
+              paramsChanged = !angular.equals(
+                  scope.previousFilterState.params, scope.output);
             }
 
             scope.filtersChanged = inputChanged || paramsChanged || geomChanged;

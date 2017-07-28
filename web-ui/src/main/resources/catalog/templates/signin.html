@@ -2,6 +2,7 @@
   <div class="col-lg-6">
     <form class="form-horizontal" name="gnSigninForm" action="{{formAction}}"
           method="post" role="form" data-ng-if="::user">
+      <input type="hidden" name="_csrf" value="{{csrf}}"/>
       <div class="form-group">
         <label class="col-sm-3 control-label"
                for="inputUsername" data-translate="">username</label>
@@ -72,7 +73,8 @@
         </div>
         <div data-ng-show="sendPassword === true">
           <div>
-            <form class="form-horizontal" id="userinfo" name="gnUserinfo">
+            <form class="form-horizontal" id="userinfo" name="gnUserinfo">user">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <div class="form-group">
                 <label class="control-label col-lg-3" data-translate="">username</label>
                 <div class="col-lg-8">

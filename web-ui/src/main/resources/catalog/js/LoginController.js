@@ -57,6 +57,11 @@
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
           $scope.gnConfig = gnConfig;
 
+          //If no csrf, ask for one:
+          if (!$rootScope.csrf) {
+            $http.post('info?type=me');
+          }
+
           function initForm() {
            if ($window.location.pathname.indexOf('new.password') !== -1) {
              // Retrieve username from URL parameter

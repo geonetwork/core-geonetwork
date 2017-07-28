@@ -27,12 +27,18 @@
 
 
 
-  goog.require('OWS_1_1_0');
-  goog.require('WPS_1_0_0');
-  goog.require('XLink_1_0');
+
+
+
+
+
+
   goog.require('GML_3_1_1');
+  goog.require('OWS_1_1_0');
   goog.require('SMIL_2_0');
   goog.require('SMIL_2_0_Language');
+  goog.require('WPS_1_0_0');
+  goog.require('XLink_1_0');
 
   var module = angular.module('gn_wps_service', []);
 
@@ -89,19 +95,32 @@
        *
        * @param {string} uri of the wps service
        * @param {string} processId of the process
+       * @param {Object} options object
+       * @param {boolean} options.cancelPrevious if true, previous ongoing
+       *  requests are cancelled
        */
-      this.describeProcess = function(uri, processId) {
+      this.describeProcess = function(uri, processId, options) {
         url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: 'WPS',
           version: '1.0.0',
           request: 'DescribeProcess',
           identifier: processId
         });
+        options = options || {};
+
+        // cancel ongoing request
+        if (options.cancelPrevious && this.descProcCanceller) {
+          this.descProcCanceller.resolve();
+        }
+
+        // create a promise (will be used to cancel request)
+        this.descProcCanceller = $q.defer();
 
         //send request and decode result
         if (gnUrlUtils.isValid(url)) {
           return $http.get(url, {
-            cache: true
+            cache: true,
+            timeout: this.descProcCanceller.promise
           }).then(
               function(response) {
                 return unmarshaller.unmarshalString(response.data).value;
@@ -113,25 +132,66 @@
       /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#getCapabilities
+       *
+       * @description
+       * Get a list of processes available on the URL through a GetCap call.
+       *
+       * @param {string} url of the wps service
+       * @param {Object} options object
+       * @param {boolean} options.cancelPrevious if true, previous ongoing
+       *  requests are cancelled
+       */
+      this.getCapabilities = function(url, options) {
+        url = gnOwsCapabilities.mergeDefaultParams(url, {
+          service: 'WPS',
+          version: '1.0.0',
+          request: 'GetCapabilities'
+        });
+        options = options || {};
+
+        // cancel ongoing request
+        if (options.cancelPrevious && this.getCapCanceller) {
+          this.getCapCanceller.resolve();
+        }
+
+        // create a promise (will be used to cancel request)
+        this.getCapCanceller = $q.defer();
+
+        // send request and decode result
+        return $http.get(url, {
+          cache: true,
+          timeout: this.getCapCanceller.promise
+        }).then(function(response) {
+          this.getCapCanceller = null;
+          if (!response.data) {
+            return;
+          }
+          return unmarshaller.unmarshalString(response.data).value;
+        });
+      };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
        * @name gnWpsService#execute
        *
        * @description
-       * Call a WPS execute request and manage response. The request is called
-       * by POST with an OGX XML content built from parameters.
+       * Prints a WPS Execute message as XML to be posted to a WPS service.
+       * Does a DescribeProcess call first
        *
        * @param {string} uri of the wps service
        * @param {string} processId of the process
        * @param {Object} inputs of the process
-       * @param {Object} output of the process
        * @param {Object} options such as storeExecuteResponse,
        * lineage and status
+       * @return {defer} promise
        */
-      this.execute = function(uri, processId, inputs, responseDocument) {
-        var defer = $q.defer();
-
+      this.printExecuteMessage = function(uri, processId, inputs,
+          responseDocument) {
         var me = this;
 
-        this.describeProcess(uri, processId).then(
+        return this.describeProcess(uri, processId).then(
             function(data) {
               var description = data.processDescription[0];
 
@@ -175,7 +235,7 @@
                     data: {
                       complexData: {
                         mimeType: mimeType,
-                        cdata: data
+                        content: data
                       }
                     }
                   });
@@ -214,24 +274,47 @@
 
               var body = marshaller.marshalString(request);
 
-              $http.post(url, body, {
-                headers: {'Content-Type': 'application/xml'}
-              }).then(
-                  function(data) {
-                    var response =
-                        unmarshaller.unmarshalString(data.data).value;
-                    defer.resolve(response);
-                  },
-                  function(data) {
-                    defer.reject(data);
-                  }
-              );
-
+              return body;
             },
             function(data) {
-              defer.reject(data);
+              return data;
             }
         );
+      };
+
+      /**
+       * @ngdoc method
+       * @methodOf gn_viewer.service:gnWpsService
+       * @name gnWpsService#execute
+       *
+       * @description
+       * Call a WPS execute request and manage response. The request is called
+       * by POST with an OGX XML content built from parameters.
+       *
+       * @param {string} uri of the wps service
+       * @param {string} processId of the process
+       * @param {Object} inputs of the process
+       * @param {Object} output of the process
+       * @param {Object} options such as storeExecuteResponse,
+       * lineage and status
+       */
+      this.execute = function(uri, processId, inputs, responseDocument) {
+        var defer = $q.defer();
+
+        this.printExecuteMessage(uri, processId, inputs,
+            responseDocument)
+            .then(function(body) {
+              return $http.post(url, body, {
+                headers: {'Content-Type': 'application/xml'}
+              });
+            })
+            .then(function(data) {
+              var response =
+              unmarshaller.unmarshalString(data.data).value;
+              defer.resolve(response);
+            }, function(data) {
+              defer.reject(data);
+            });
 
         return defer.promise;
       };

@@ -599,9 +599,8 @@ var WPS_1_0_0_Module_Factory = function() {
         t: 'aa'
       }, {
         n: 'content',
-        col: true,
-        typed: false,
-        t: 'ae'
+        t: 'value',
+        asCDATA: true
       }, {
         n: 'mimeType',
         an: {
@@ -620,10 +619,6 @@ var WPS_1_0_0_Module_Factory = function() {
           lp: 'schema'
         },
         t: 'a'
-      }, {
-        n: 'cdata',
-        ti: 'CDATA',
-        t: 'e'
       }]
     }, {
       ln: 'Languages.Default',

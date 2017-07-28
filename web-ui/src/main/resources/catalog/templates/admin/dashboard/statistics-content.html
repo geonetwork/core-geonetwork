@@ -26,6 +26,7 @@
           <h2 data-translate="">mostPopular</h2>
           <form class="form-horizontal" role="form"
                 data-ng-search-form="" runSearch="true">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <table class="table table-striped">
               <tr data-ng-repeat="md in searchResults.records">
                 <td>{{md.title || md.defaultTitle}}</td>
@@ -44,6 +45,7 @@
           <h2 data-translate="">bestRated</h2>
           <form class="form-horizontal" role="form"
                 data-ng-search-form="" runSearch="true">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
             <table class="table table-striped">
               <tr data-ng-repeat="md in searchResults.records">
                 <td>{{md.title || md.defaultTitle}}</td>

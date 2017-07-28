@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -73,11 +76,13 @@ class Search {
         ISODate fromDate = null;
         ISODate untilDate = null;
 
-        try {
-            if (!from.equals("")) {
-                fromDate = new ISODate(from);
-                from = fromDate.getDateAsString();
-            }
+		try {
+		    if (StringUtils.isNotEmpty(from) && !from.equalsIgnoreCase("Invalid Date")) {
+				fromDate = new ISODate(from);
+				from     = fromDate.getDateAsString();
+			} else {
+			    from = "";
+			}
 
         } catch (Exception e) {
             throw new BadParameterEx("from", from);
@@ -85,14 +90,16 @@ class Search {
 
         //--- check until parameter
 
-        try {
-            if (!until.equals("")) {
-                untilDate = new ISODate(until);
-                until = untilDate.getDateAsString();
+		try {
+		    if (StringUtils.isNotEmpty(until) && !until.equalsIgnoreCase("Invalid Date")) {
+				untilDate = new ISODate(until);
+				until     = untilDate.getDateAsString();
+			} else {
+			    until = "";
             }
-        } catch (Exception e) {
-            throw new BadParameterEx("until", until);
-        }
+		} catch(Exception e) {
+			throw new BadParameterEx("until", until);
+		}
 
         //--- check from <= until
 

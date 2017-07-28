@@ -112,7 +112,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
                     //--- remove old operations
                     if (!"replace".equals(mode)) {
-                        info.getCategories().clear();
+                        info.getMetadataCategories().clear();
                     }
 
                     //--- set new ones
@@ -126,7 +126,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
                         if (name.startsWith("_") && !name.equals(Params.CONTENT_TYPE)) {
                             final MetadataCategory category = categoryRepository.findOne(Integer.valueOf(name.substring(1)));
                             if (category != null) {
-                                info.getCategories().add(category);
+                                info.getMetadataCategories().add(category);
                             } else {
                                 context.warning("Unable to find category with name: " + name.substring(1));
                             }

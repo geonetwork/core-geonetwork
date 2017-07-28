@@ -74,17 +74,17 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         MetadataCategory category3 = _categoryRepository.save(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
 
         Metadata metadata1c1 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata1c1.getCategories().add(_categoryRepository.findOne(category1.getId()));
+        metadata1c1.getMetadataCategories().add(_categoryRepository.findOne(category1.getId()));
         setPopularityAndRating(metadata1c1);
         _metadataRepository.save(metadata1c1);
 
         Metadata metadata2c1 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata2c1.getCategories().add(category1);
+        metadata2c1.getMetadataCategories().add(category1);
         setPopularityAndRating(metadata2c1);
         _metadataRepository.save(metadata2c1);
 
         Metadata metadata3c2 = MetadataRepositoryTest.newMetadata(_inc);
-        metadata3c2.getCategories().add(category2);
+        metadata3c2.getMetadataCategories().add(category2);
         setPopularityAndRating(metadata3c2);
         _metadataRepository.save(metadata3c2);
 
@@ -317,21 +317,21 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
         Map<MetadataType, Integer> typeToStatMap = _metadataRepository.getMetadataStatistics()
             .getMetadataTypeToStatMap(metadataCount());
-        assertEquals(3, typeToStatMap.size());
+        assertEquals(4, typeToStatMap.size());
         assertEquals(2, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(1, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         typeToStatMap = _metadataRepository.getMetadataStatistics()
             .getMetadataTypeToStatMap(popularitySum());
-        assertEquals(3, typeToStatMap.size());
+        assertEquals(4, typeToStatMap.size());
         assertEquals(2 * POPULARITY, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(POPULARITY, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
 
         typeToStatMap = _metadataRepository.getMetadataStatistics()
             .getMetadataTypeToStatMap(ratingSum());
-        assertEquals(3, typeToStatMap.size());
+        assertEquals(4, typeToStatMap.size());
         assertEquals(2 * RATING, typeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(RATING, typeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, typeToStatMap.get(MetadataType.TEMPLATE).intValue());
@@ -671,7 +671,7 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
         final Map<MetadataType, Integer> metadataTypeToStatMap = metadataStatistics.getMetadataTypeToStatMap(metadataCount());
         metadataStatistics.getMetadataTypeToStatMap(ratingSum());
         metadataStatistics.getMetadataTypeToStatMap(popularitySum());
-        assertEquals(3, metadataTypeToStatMap.size());
+        assertEquals(4, metadataTypeToStatMap.size());
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.SUB_TEMPLATE).intValue());
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.METADATA).intValue());
         assertEquals(0, metadataTypeToStatMap.get(MetadataType.TEMPLATE).intValue());

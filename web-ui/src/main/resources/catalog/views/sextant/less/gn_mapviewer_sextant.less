@@ -942,22 +942,22 @@
   .panel-heading {
     height: 2em;
     line-height: 2em;
+    background-color: transparent;
     border-bottom: 1px solid @sxt-base-color;
     padding: 0 15px;
     > button {
       display: none;
     }
   }
+  h4.panel-heading {
+    font-size: 12px;
+  }
+
   .panel-body {
     font-size: @sxt-fontsize;
   }
-  .gn-outputs {
+  .gn-outputs, .gn-single-output {
     position: relative;
-  }
-  .gn-single-output {
-    position: absolute;
-    right: 0;
-    top: -4em;
   }
   label {
     font-weight: normal;
@@ -1003,6 +1003,15 @@
     &:not(.btn-icon) {
       padding: 0 1em;
       width: auto;
+    }
+  }
+  .output-selection {
+    button {
+      width: auto;
+      padding: 0 1em;
+    }
+    .dropdown-menu li:hover {
+      background-color: transparent;
     }
   }
 }
@@ -1060,6 +1069,27 @@
   &.small-dropdown {
     max-height: 158px;
     overflow-y: auto;
+  }
+}
+
+.panel-ncwms {
+  .btn-sm {
+  }
+  input[type=date] {
+    width: 7.2em;
+    display: inline-block;
+  }
+  .ui-slider {
+    margin-left: .5em;
+  }
+  .fa.pull-right {
+    margin-left: 0;
+  }
+  .fa-spinner .fa-magic {
+    display: none;
+  }
+  label {
+    padding-top: .3em;
   }
 }
 

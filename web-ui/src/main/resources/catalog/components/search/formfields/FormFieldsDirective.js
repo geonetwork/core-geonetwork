@@ -572,7 +572,7 @@
               var addBlankValueAndSetDefault = function() {
                 var blank = {label: '', code: ''};
                 if (scope.infos != null && scope.infos.length &&
-                  scope.allowBlank !== undefined) {
+                    scope.allowBlank !== undefined) {
                   scope.infos.unshift(blank);
                 }
                 // Search default value
@@ -665,7 +665,9 @@
             scope.recordTypes = [
               {key: 'METADATA', value: 'METADATA'},
               {key: 'TEMPLATE', value: 'TEMPLATE'},
-              {key: 'SUB_TEMPLATE', value: 'SUB_TEMPLATE'}
+              {key: 'SUB_TEMPLATE', value: 'SUB_TEMPLATE'},
+              {key: 'TEMPLATE_OF_SUB_TEMPLATE',
+                value: 'TEMPLATE_OF_SUB_TEMPLATE'}
             ];
           }
         };

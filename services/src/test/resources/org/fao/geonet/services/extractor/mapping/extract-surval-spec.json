@@ -1,0 +1,36 @@
+{
+    "user": {
+        "lastname": "admin",
+        "firstname": "admin",
+        "mail": "admin@test.com",
+        "org": "camptocamp"
+    },
+    "layers": [{
+        "id": "94c01d83-ca59-4411-bae8-7db3e0b7181b",
+        "input": {
+            "format": "vector",
+            "epsg": "4326",
+            "protocol": "OGC:WFS",
+            "linkage": "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval",
+            "filter": "((ft_date_min_dt=2016-05-04) OR (ft_date_min_dt=2017-05-05)) AND ((ft_date_max_dt=2016-05-04) OR (ft_date_max_dt=2016-05-08)) AND ((ft_param_group_liste_s LIKE '%Contaminants chimiques - Mesures physiques sur le support et autres paramètres normalisateurs%')) AND ((ft_matrix_liste_s=Support : Sédiment - Fraction totale - Niveau de prélèvement : 1er cm superficiel))"
+        },
+        "output": {
+            "format": "ESRI Shapefile",
+            "epsg": "4326",
+            "name": "surval_30140_all_point_12_12_2016_postgis",
+            "xmin": "-10.546875000000005",
+            "ymin": "41.50857729743939",
+            "xmax": "9.140624999999993",
+            "ymax": "51.17934297928923",
+            "mercator_lat": ""
+        },
+        "additionalInput": [{
+            "protocol": "WPS",
+            "linkage": "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R",
+            "params": "zone_marine_quadrige=aaa éé àà&produit_id=30140&limits=&programme_suivi=&",
+            "identifier": "r:extractionsurval",
+            "outputMimeType": "text/csv",
+            "outputIdentifier": "output_table"
+        }]
+    }]
+}

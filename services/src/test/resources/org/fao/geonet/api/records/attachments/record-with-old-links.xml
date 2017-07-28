@@ -142,7 +142,7 @@
         <gmd:MD_BrowseGraphic>
           <gmd:fileName>
             <gco:CharacterString>
-              http://apps.titellus.net/geonetwork/srv/eng/resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&amp;fname=thumbnail_s.gif
+              thumbnail_s.gif
             </gco:CharacterString>
           </gmd:fileName>
           <gmd:fileDescription>
@@ -162,7 +162,7 @@
             </gco:CharacterString>
           </gmd:fileName>
           <gmd:fileDescription>
-            <gco:CharacterString>thumbnail</gco:CharacterString>
+            <gco:CharacterString>large_thumbnail</gco:CharacterString>
           </gmd:fileDescription>
           <gmd:fileType>
             <gco:CharacterString>gif</gco:CharacterString>
@@ -180,6 +180,24 @@
               <gmd:linkage>
                 <gmd:URL>
                   http://localhost:8080/geonetwork/srv/en/resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&amp;fname=basins.zip&amp;access=private
+                </gmd:URL>
+              </gmd:linkage>
+              <gmd:protocol>
+                <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download</gco:CharacterString>
+              </gmd:protocol>
+              <gmd:name>
+                <gco:CharacterString>basins.zip</gco:CharacterString>
+              </gmd:name>
+              <gmd:description>
+                <gco:CharacterString>Hydrological basins in Africa (Shapefile Format)
+                </gco:CharacterString>
+              </gmd:description>
+            </gmd:CI_OnlineResource>
+          </gmd:onLine> <gmd:onLine>
+            <gmd:CI_OnlineResource>
+              <gmd:linkage>
+                <gmd:URL>
+                  https://tc-geocat.int.bgdi.ch:443/geonetwork/srv/eng//resources.get?uuid=a8f15104-30aa-4c8d-805d-994243154410&amp;fname=canalisations_gaz.jpg
                 </gmd:URL>
               </gmd:linkage>
               <gmd:protocol>

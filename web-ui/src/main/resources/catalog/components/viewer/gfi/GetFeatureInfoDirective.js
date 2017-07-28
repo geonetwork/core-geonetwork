@@ -65,7 +65,10 @@
                  if (layer && layer.get('featureTooltip')) {
                    return feature;
                  }
-               });
+               }, undefined, function(layer) {
+                return layer instanceof ol.layer.Vector;
+
+              });
               if (feature) {
                 var props = feature.getProperties();
                 var tooltipContent = '<ul>';

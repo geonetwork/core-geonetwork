@@ -88,6 +88,29 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
@@ -122,8 +145,8 @@
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
-    'gn_viewer_service',
     'gn_viewer_directive',
+    'gn_viewer_service',
     'gn_wmsimport',
     'gn_wfs_directive',
     'gn_owscontext',
@@ -214,34 +237,32 @@
       // watch service data: when a profile graph is available, render it
       var me = this;
       $scope.$watch(
-        function () {
-          return gnViewerService.getProfileGraphData();
-        },
-        function (newData, oldData) {
-          me.profileGraph = newData && JSON.parse(newData).profile;
-        }
+          function() {
+            return gnViewerService.getProfileGraphData();
+          },
+          function(newData, oldData) {
+            me.profileGraph = newData && JSON.parse(newData).profile;
+          }
       );
       this.profileOptions = {
         elevationExtractor: {
-          dist: function (data) { return data.dist },
-          z: function (data) { return data.values.z }
+          dist: function(data) { return data.dist },
+          z: function(data) { return data.values.z }
         },
-        linesConfiguration: { }
+        distanceExtractor: function (data) { return data.dist; },
+        linesConfiguration: {
+          'lineZ1': {
+            zExtractor: function (item) { return item.values.z }
+          }
+        }
 
         // TODO: callbacks for interaction with the map
         // hoverCallback,
         // outCallback
       };
-      this.closeProfileGraph = function () {
+      this.closeProfileGraph = function() {
         gnViewerService.clearProfileGraph();
-      }
+      };
     }]);
 
-  module.controller('toolsController',
-      ['$scope', 'gnMeasure',
-        function($scope, gnMeasure) {
-          $scope.mInteraction = gnMeasure.create($scope.map,
-              $scope.measureObj, $scope);
-        }
-      ]);
 })();

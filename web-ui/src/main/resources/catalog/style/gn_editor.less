@@ -108,36 +108,133 @@ input[type=text], input[type=number], select {
 
 
 #gn-directory-container {
+  // note: this could be useful in other places in gn.less
+  .flex-spacer {
+    flex-grow: 1;
+  }
+
   .gn-facet-dropdown {
     min-width: 300px;
+    padding: 0px 10px;
+    .badge {
+      background-color: #777777;
+    }
+  }
+
+  .panel-heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    & > .nav.nav-pills {
+      a {
+        padding: 6px;
+        line-height: 1em;
+      }
+    }
+
+    input.filter-text {
+      width: 20%;
+      min-width: 16em;
+      height: 2em;
+    }
+  }
+
+  .directory-entries-list {
+    margin: 0 1em;
+
+    & > li {
+      display: flex;
+      flex-direction: column;
+      @padding: 6px;
+
+      & > *:not(:last-child) {
+        margin-bottom: @padding;
+      }
+
+      & > * > *:not(:last-child) {
+        margin-right: @padding;
+      }
+
+      .entry-title {
+        display: flex;
+        flex-direction: row;
+
+        a {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          min-width: 0px;
+        }
+
+        .badge {
+          flex-shrink: 0;
+          border-radius: 3px;
+        }
+      }
+
+      .entry-info {
+        display: flex;
+        flex-direction: row;
+        small {
+          max-height: 2.5em;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  .search-options-header {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .entry-editor {
+    .panel-heading {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .entry-editor-controls {
+        flex-shrink: 0;
+        margin: -7px -12px -7px 6px;
+      }
+      .entry-editor-title {
+        min-width: 0px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+    .panel-body {
+      position: relative;
+    }
+  }
+
+  div[data-gn-toggle] {
+    top: 1em;
+    right: 1em;
+  }
+
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
   }
 }
 
 .gn-editor-board {
   .table.gn-results-editor td {
-    padding: 2px;
-
-    :nth-of-type(1) {
-      font-size: 120%;
-      padding-top: 8px;
-    }
+    padding: 6px;
 
     .gn-record-details {
       padding-left: 38px;
     }
-  }
-}
-
-.gn-autocomplete-list {
-  position: absolute;
-  margin-top: 35px;
-  width: inherit;
-  z-index: 999;
-
-  /**/
-  .tt-suggestion:hover {
-    color: #fff;
-    background-color: #0097cf;
   }
 }
 
@@ -216,21 +313,6 @@ form.gn-editor {
     font-family: courier;
     font-size: 12px;
     min-height: 700px;
-  }
-
-  .gn-autocomplete-list {
-    position: absolute;
-    margin-top: 35px;
-    width: inherit;
-    z-index: 999;
-    max-height: 80vh;
-    overflow: auto;
-
-    /**/
-    .tt-suggestion:hover {
-      color: #fff;
-      background-color: #0097cf;
-    }
   }
 
   .gn-debug {
@@ -402,6 +484,21 @@ form.gn-editor {
       margin-right: 0px;
   }
 
+}
+
+.gn-autocomplete-list {
+  position: absolute;
+  margin-top: 35px;
+  width: inherit;
+  z-index: 999;
+  max-height: 25em;
+  overflow: auto;
+
+  .tt-suggestion {
+    &:hover {
+      background-color: lightgrey;
+    }
+  }
 }
 
 form.gn-tab-inspire {
@@ -593,15 +690,20 @@ form.gn-tab-accessibility {
     overflow: auto;
   }
   .list-group.fixed {
+    padding: 5px;
     min-height: 100px;
     /* Avoid the content of the div
     to be higher than view port
     as the modal does not have overflow. */
     max-height: 50vh;
-    li.active {
-        background-color: #428bca;
+  }
+
+  .gn-record {
+    &.active {
+      background-color: #428bca;
     }
   }
+
 }
 
 #gn-directory-container {
@@ -634,9 +736,6 @@ table.gn-data-store {
   .gn-record-type > a.list-group-item {
     text-align: center;
   }
-}
-
-.gn-popover {
 }
 
 .gn-schematron-title {
@@ -803,7 +902,8 @@ div.gn-individualName {
   min-height: 800px;
 }
 #gn-directory-container #xmleditor {
-  top: 124px;
+  top: 0px;
+  position: relative;
 }
 
 .tt-dropdown-menu {
@@ -828,5 +928,131 @@ div.gn-individualName {
   #gn-el-hierarchyLevelName, .gn-useLimitation,
   .gn-language, .gn-date {
     display: none
+  }
+}
+
+[gn-directory-entry-list-selector] {
+  .gn-form-any {
+    margin-bottom:30px;
+  }
+
+  .gn-record {
+    border-radius: 0;
+    border: none;
+    margin: 8px;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.4);
+    &.active {
+      background-color: #5384e6;
+    }
+    &:hover {
+      cursor: pointer;
+      box-shadow: 0px 2px 3px rgba(66, 139, 202, 0.4);
+    }
+    strong {
+      font-weight: normal;
+    }
+    .fa {
+      display: none;
+    }
+  }
+
+  ng-pluralize {
+    color: #aaa;
+  }
+
+  .bottom-bar {
+    bottom: 20px;
+    position: absolute;
+  }
+}
+
+[data-gn-directory-entry-selector] {
+  .gn-autocomplete-list {
+    top:0 !important;
+    width: 100%;
+  }
+}
+
+gn-directory-associated-md {
+  // add margin if we're in a dropdown menu
+  ul.dropdown-menu & {
+    margin: 8px 12px;
+    width: 30em;
+    display: block;
+  }
+
+  // general purpose flex spacer
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .form-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    & > * {
+      flex-shrink: 0;
+    }
+    input.filter-text {
+      flex-shrink: 1;
+      margin-right: 12px;
+    }
+  }
+
+  .associated-md {
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > *:not(:last-child) {
+      margin-right: 8px;
+    }
+    padding-top: 6px;
+    &:not(:last-child) {
+      border-bottom: 1px solid @list-group-border;
+      padding-bottom: 6px;
+    }
+  }
+}
+
+// md type widget (used only in editor for now)
+gn-md-type-widget {
+  display: inline-block;
+
+  & > div {
+    border-radius: 1000px;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 2em;
+    text-align: center;
+    font-size: 0.9em;
+    position: relative;
+    color: white;
+    margin-top: -0.2em;
+    background-color: @gray-light;
+
+    &.valid-status-1 {
+      background-color: @gray-light;
+    }
+    &.valid-status0 {
+      background-color: @btn-danger-bg;
+    }
+    &.valid-status1 {
+      background-color: @btn-success-bg;
+    }
+    &.md-type-t {
+      background-color: @btn-primary-bg;
+    }
+
+    &::after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.25);
+      position: absolute;
+      top: 0px;
+      height: 50%;
+      left: 0px;
+      right: 0px;
+    }
   }
 }

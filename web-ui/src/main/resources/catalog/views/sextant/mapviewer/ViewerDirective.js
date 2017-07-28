@@ -32,6 +32,12 @@
             pre: function preLink(scope, iElement, iAttrs, controller) {
               scope.map = scope.$eval(iAttrs['map']);
 
+              /** these URL can be set by the viewer service **/
+              scope.addLayerUrl = {
+                wms: '',
+                wmts: ''
+              }
+
               /** Define object to receive measure info */
               scope.measureObj = {};
 
@@ -230,8 +236,11 @@
                 }
               }
 
-              // graticule OGC layer (optional)
-              scope.graticule = gnViewerSettings.graticule;
+              // ogc graticule
+              var ogcGraticule = gnViewerSettings.mapConfig.graticuleOgcService;
+              if (ogcGraticule && ogcGraticule.layer && ogcGraticule.url) {
+                scope.graticuleOgcService = ogcGraticule;
+              }
             },
             post: function postLink(scope, iElement, iAttrs, controller) {
 
@@ -319,48 +328,55 @@
     return {
       restrict: 'A',
       link: function (scope, element, attrs) {
-          var content = element.find('ul').css('display', 'none');
-          var button = element.find('.dropdown-toggle');
-          if (attrs['container']) {
-            var grid = element.parents(attrs['container']).first();
+        var content = element.find('ul').css('display', 'none');
+        var button = element.find('.dropdown-toggle');
+        if (attrs['container']) {
+          var grid = element.parents(attrs['container']).first();
+        }
+
+        $timeout(function() {
+          var className = (attrs['fixedHeight'] != 'false')  ?
+            'popover-dropdown popover-dropdown-'+content.find('li').length : '' ;
+          if (attrs['classname']) {
+            className += ' ' + attrs['classname'];
           }
+          button.popover({
+            animation: false,
+            container: (grid) ? grid[0] : '[sxt-main-viewer]',
+            placement: attrs['placement'] || 'right',
+            content: ' ',
+            template: '<div class="bottom popover ' + className + '">' +
+            '<div class="arrow"></div><div class="popover-content"></div></div>'
+          });
+        }, 1, false);
 
-          $timeout(function() {
-            var className = (attrs['fixedHeight'] != 'false')  ?
-                'popover-dropdown popover-dropdown-'+content.find('li').length : '' ;
-            if (attrs['classname']) {
-              className += ' ' + attrs['classname'];
-            }
-            button.popover({
-              animation: false,
-              container: (grid) ? grid[0] : '[sxt-main-viewer]',
-              placement: attrs['placement'] || 'right',
-              content: ' ',
-              template: '<div class="bottom popover ' + className + '">' +
-                '<div class="arrow"></div><div class="popover-content"></div></div>'
+        button.on('shown.bs.popover', function() {
+          var $tip = button.data('bs.popover').$tip;
+          content.css('display', 'inline').appendTo(
+            $tip.find('.popover-content')
+          );
+          if (grid && grid.length > 0) {
+            $tip.find('.arrow').css({
+              left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
             });
-          }, 1, false);
+            $tip.css({
+              right: '0',
+              left: '0'
+            });
+          }
+        });
+        button.on('hidden.bs.popover', function() {
+          content.css('display', 'none').appendTo(element);
+        });
 
-          button.on('shown.bs.popover', function() {
-            var $tip = button.data('bs.popover').$tip;
-            content.css('display', 'inline').appendTo(
-              $tip.find('.popover-content')
-            );
-            if (grid && grid.length > 0) {
-              $tip.find('.arrow').css({
-                left: $(button).offset().left - grid.offset().left + $(button).parent().width()/2
-              });
-              $tip.css({
-                right: '0',
-                left: '0'
-              });
-            }
-          });
-          button.on('hidden.bs.popover', function() {
-            content.css('display', 'none').appendTo(element);
-          });
+        var hidePopover = function() {
+          button.popover('hide');
+          if (button.data('bs.popover').inState) {
+            button.data('bs.popover').inState.click = false;
+          }
+        };
 
-          // can’t use dismiss boostrap option: incompatible with opacity slider
+        // can’t use dismiss boostrap option: incompatible with opacity slider
         var onMousedown = function(e) {
           if (
             (button.data('bs.popover') && button.data('bs.popover').$tip)
@@ -371,24 +387,19 @@
           ) {
             var timeout = (grid && ($(e.target).parents('.popover')[0] ==
             button.data('bs.popover').$tip[0])) ? 200 : 30;
-            $timeout(function(){
-              button.popover('hide');
-            }, timeout, false);
+            $timeout(hidePopover, timeout, false);
           }
-        };
-        var onScroll = function() {
-          button.popover('hide');
         };
         $('body').on('mousedown click', onMousedown);
 
         if (attrs['sxtPopoverDismiss']) {
-          $(attrs['sxtPopoverDismiss']).off('scroll', onScroll);
+          $(attrs['sxtPopoverDismiss']).on('scroll', hidePopover);
         }
 
-        element.off('$destroy', function() {
-          $('body').un('mousedown click', onMousedown);
+        element.on('$destroy', function() {
+          $('body').off('mousedown click', onMousedown);
           if (attrs['sxtPopoverDismiss']) {
-            $(attrs['sxtPopoverDismiss']).un('scroll', onScroll);
+            $(attrs['sxtPopoverDismiss']).off('scroll', hidePopover);
           }
 
         });

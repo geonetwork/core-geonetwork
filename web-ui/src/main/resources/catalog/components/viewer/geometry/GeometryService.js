@@ -51,9 +51,9 @@
        * @param {string} mimeType mime type from the process description
        * @return {string} format to be used by a gn-geometry-tool directive
        */
-      this.getFormatFromMimeType = function (mimeType) {
+      this.getFormatFromMimeType = function(mimeType) {
         var parts = mimeType.split(';');
-        parts.forEach(function (p) {
+        parts.forEach(function(p) {
           p = p.trim().toLowerCase();
         });
 
@@ -71,7 +71,7 @@
           default:
             return 'object';
         }
-      }
+      };
 
     }
   ]);

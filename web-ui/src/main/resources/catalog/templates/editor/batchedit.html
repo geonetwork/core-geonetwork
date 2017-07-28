@@ -33,6 +33,7 @@
           <div class="col-sm-12">
             <form class="form-horizontal"
                   role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <div class="row gn-top-search">
                 <div class="col-md-12">
                   <div class="input-group gn-form-any">
@@ -151,6 +152,7 @@
         <div class="row">
           <div class="col-md-12">
             <form class="form-horizontal" id="gn-batch-changes">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
               <fieldset data-ng-repeat="(key, standard) in fieldConfig"
                         data-ng-if="standard.section && hasRecordsInStandard(key)">
                 <legend data-gn-slide-toggle="">{{key | translate}}</legend>
@@ -263,6 +265,7 @@
                 <form class="form-horizontal"
                       name="xpathConfigForm"
                       novalidate="">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
                   <div class="well">
                     <p class="help-block">

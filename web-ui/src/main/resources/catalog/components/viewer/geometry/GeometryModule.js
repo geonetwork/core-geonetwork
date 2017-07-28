@@ -25,8 +25,9 @@
   goog.provide('gn_geometry');
 
 
-  goog.require('gn_geometry_service');
+
   goog.require('gn_geometry_directive');
+  goog.require('gn_geometry_service');
 
   var module = angular.module('gn_geometry', [
     'gn_geometry_service',

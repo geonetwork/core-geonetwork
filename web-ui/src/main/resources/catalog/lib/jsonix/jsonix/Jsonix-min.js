@@ -650,7 +650,7 @@ if(Jsonix.Util.Type.isFunction(this.document.createTextNode)){d=this.document.cr
 }else{throw new Error("Could not create a text node.")
 }}this.peek().appendChild(d);
 return d
-},writeCDATA:function(c){var d;
+},writeCdata:function(c){var d;
 if(Jsonix.Util.Type.isFunction(this.document.createCDATASection)){d=this.document.createCDATASection(c)
 }else{if(this.xmldom){d=this.xmldom.createCDATASection(c)
 }else{throw new Error("Could not create a CDATA section node.")
@@ -752,15 +752,14 @@ var v=undefined;
 if(u.supportXsiType&&Jsonix.Util.Type.exists(q.value)){var r=u.getTypeInfoByValue(q.value);
 if(r&&r.typeName){v=r
 }}var m=v||p;
-if(m===Jsonix.Schema.XSD.CDATA.INSTANCE){m.marshal(q.value,u,t,l)
-}else{if(m){t.writeStartElement(q.name);
+if(m){t.writeStartElement(q.name);
 if(v&&p!==v){var n=v.typeName;
 var s=Jsonix.Schema.XSD.QName.INSTANCE.print(n,u,t,l);
 t.writeAttribute(Jsonix.Schema.XSI.TYPE_QNAME,s)
 }if(Jsonix.Util.Type.exists(q.value)){m.marshal(q.value,u,t,l)
 }t.writeEndElement()
 }else{throw new Error("Element ["+q.name.key+"] is not known in this context, could not determine its type.")
-}}},getTypeInfoByElementName:function(f,e,g){var h=e.getElementInfo(f,g);
+}},getTypeInfoByElementName:function(f,e,g){var h=e.getElementInfo(f,g);
 if(Jsonix.Util.Type.exists(h)){return h.typeInfo
 }else{return undefined
 }}});
@@ -1156,13 +1155,16 @@ Jsonix.Util.Ensure.ensureObject(e.attributes);
 var d=this.attributeName.key;
 e.attributes[d]=this
 },CLASS_NAME:"Jsonix.Model.AttributePropertyInfo"});
-Jsonix.Model.ValuePropertyInfo=Jsonix.Class(Jsonix.Model.SingleTypePropertyInfo,{initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
-Jsonix.Model.SingleTypePropertyInfo.prototype.initialize.apply(this,[b])
+Jsonix.Model.ValuePropertyInfo=Jsonix.Class(Jsonix.Model.SingleTypePropertyInfo,{initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
+Jsonix.Model.SingleTypePropertyInfo.prototype.initialize.apply(this,[d]);
+var c=d.asCDATA||d.c||false;
+this.asCDATA=c
 },unmarshal:function(e,f,h){var g=f.getElementText();
 return this.unmarshalValue(g,e,f,h)
 },marshal:function(g,e,f,h){if(!Jsonix.Util.Type.exists(g)){return
-}f.writeCharacters(this.print(g,e,f,h))
-},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
+}if(this.asCDATA){f.writeCdata(this.print(g,e,f,h))
+}else{f.writeCharacters(this.print(g,e,f,h))
+}},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
 if(Jsonix.Util.Type.exists(d.elements)){throw new Error("The structure already defines element mappings, it cannot define a value property.")
 }else{d.value=this
 }},CLASS_NAME:"Jsonix.Model.ValuePropertyInfo"});
@@ -2343,13 +2345,6 @@ Jsonix.Schema.XSD.IDREF.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.X
 Jsonix.Schema.XSD.IDREFS=Jsonix.Class(Jsonix.Schema.XSD.List,{name:"IDREFS",initialize:function(){Jsonix.Schema.XSD.List.prototype.initialize.apply(this,[Jsonix.Schema.XSD.IDREF.INSTANCE,Jsonix.Schema.XSD.qname("IDREFS")," "])
 },CLASS_NAME:"Jsonix.Schema.XSD.IDREFS"});
 Jsonix.Schema.XSD.IDREFS.INSTANCE=new Jsonix.Schema.XSD.IDREFS();
-Jsonix.Schema.XSD.CDATA=Jsonix.Class(Jsonix.Schema.XSD.String,{name:"CDATA",typeName:Jsonix.Schema.XSD.qname("CDATA"),parse:function(h,j,g,i){Jsonix.Util.Ensure.ensureString(h);
-var f=h.match(/<!\[CDATA\[(.*)\]\]>/);
-return f?f[1]:""
-},marshal:function(g,e,f,h){if(Jsonix.Util.Type.exists(g)){f.writeCDATA(this.print(g,e,f,h))
-}},CLASS_NAME:"Jsonix.Schema.XSD.CDATA"});
-Jsonix.Schema.XSD.CDATA.INSTANCE=new Jsonix.Schema.XSD.CDATA();
-Jsonix.Schema.XSD.CDATA.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.CDATA.INSTANCE);
 Jsonix.Schema.XSI={};
 Jsonix.Schema.XSI.NAMESPACE_URI="http://www.w3.org/2001/XMLSchema-instance";
 Jsonix.Schema.XSI.PREFIX="xsi";
@@ -2468,7 +2463,7 @@ return this.prefixNamespaces[b]
 var f=this.namespacePrefixes[e];
 if(Jsonix.Util.Type.isString(f)){return f
 }else{return d
-}},builtinTypeInfos:[Jsonix.Schema.XSD.AnyType.INSTANCE,Jsonix.Schema.XSD.AnySimpleType.INSTANCE,Jsonix.Schema.XSD.AnyURI.INSTANCE,Jsonix.Schema.XSD.Base64Binary.INSTANCE,Jsonix.Schema.XSD.Boolean.INSTANCE,Jsonix.Schema.XSD.Byte.INSTANCE,Jsonix.Schema.XSD.Calendar.INSTANCE,Jsonix.Schema.XSD.CDATA.INSTANCE,Jsonix.Schema.XSD.DateAsDate.INSTANCE,Jsonix.Schema.XSD.Date.INSTANCE,Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE,Jsonix.Schema.XSD.DateTime.INSTANCE,Jsonix.Schema.XSD.Decimal.INSTANCE,Jsonix.Schema.XSD.Double.INSTANCE,Jsonix.Schema.XSD.Duration.INSTANCE,Jsonix.Schema.XSD.Float.INSTANCE,Jsonix.Schema.XSD.GDay.INSTANCE,Jsonix.Schema.XSD.GMonth.INSTANCE,Jsonix.Schema.XSD.GMonthDay.INSTANCE,Jsonix.Schema.XSD.GYear.INSTANCE,Jsonix.Schema.XSD.GYearMonth.INSTANCE,Jsonix.Schema.XSD.HexBinary.INSTANCE,Jsonix.Schema.XSD.ID.INSTANCE,Jsonix.Schema.XSD.IDREF.INSTANCE,Jsonix.Schema.XSD.IDREFS.INSTANCE,Jsonix.Schema.XSD.Int.INSTANCE,Jsonix.Schema.XSD.Integer.INSTANCE,Jsonix.Schema.XSD.Language.INSTANCE,Jsonix.Schema.XSD.Long.INSTANCE,Jsonix.Schema.XSD.Name.INSTANCE,Jsonix.Schema.XSD.NCName.INSTANCE,Jsonix.Schema.XSD.NegativeInteger.INSTANCE,Jsonix.Schema.XSD.NMToken.INSTANCE,Jsonix.Schema.XSD.NMTokens.INSTANCE,Jsonix.Schema.XSD.NonNegativeInteger.INSTANCE,Jsonix.Schema.XSD.NonPositiveInteger.INSTANCE,Jsonix.Schema.XSD.NormalizedString.INSTANCE,Jsonix.Schema.XSD.Number.INSTANCE,Jsonix.Schema.XSD.PositiveInteger.INSTANCE,Jsonix.Schema.XSD.QName.INSTANCE,Jsonix.Schema.XSD.Short.INSTANCE,Jsonix.Schema.XSD.String.INSTANCE,Jsonix.Schema.XSD.Strings.INSTANCE,Jsonix.Schema.XSD.TimeAsDate.INSTANCE,Jsonix.Schema.XSD.Time.INSTANCE,Jsonix.Schema.XSD.Token.INSTANCE,Jsonix.Schema.XSD.UnsignedByte.INSTANCE,Jsonix.Schema.XSD.UnsignedInt.INSTANCE,Jsonix.Schema.XSD.UnsignedLong.INSTANCE,Jsonix.Schema.XSD.UnsignedShort.INSTANCE],CLASS_NAME:"Jsonix.Context"});
+}},builtinTypeInfos:[Jsonix.Schema.XSD.AnyType.INSTANCE,Jsonix.Schema.XSD.AnySimpleType.INSTANCE,Jsonix.Schema.XSD.AnyURI.INSTANCE,Jsonix.Schema.XSD.Base64Binary.INSTANCE,Jsonix.Schema.XSD.Boolean.INSTANCE,Jsonix.Schema.XSD.Byte.INSTANCE,Jsonix.Schema.XSD.Calendar.INSTANCE,Jsonix.Schema.XSD.DateAsDate.INSTANCE,Jsonix.Schema.XSD.Date.INSTANCE,Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE,Jsonix.Schema.XSD.DateTime.INSTANCE,Jsonix.Schema.XSD.Decimal.INSTANCE,Jsonix.Schema.XSD.Double.INSTANCE,Jsonix.Schema.XSD.Duration.INSTANCE,Jsonix.Schema.XSD.Float.INSTANCE,Jsonix.Schema.XSD.GDay.INSTANCE,Jsonix.Schema.XSD.GMonth.INSTANCE,Jsonix.Schema.XSD.GMonthDay.INSTANCE,Jsonix.Schema.XSD.GYear.INSTANCE,Jsonix.Schema.XSD.GYearMonth.INSTANCE,Jsonix.Schema.XSD.HexBinary.INSTANCE,Jsonix.Schema.XSD.ID.INSTANCE,Jsonix.Schema.XSD.IDREF.INSTANCE,Jsonix.Schema.XSD.IDREFS.INSTANCE,Jsonix.Schema.XSD.Int.INSTANCE,Jsonix.Schema.XSD.Integer.INSTANCE,Jsonix.Schema.XSD.Language.INSTANCE,Jsonix.Schema.XSD.Long.INSTANCE,Jsonix.Schema.XSD.Name.INSTANCE,Jsonix.Schema.XSD.NCName.INSTANCE,Jsonix.Schema.XSD.NegativeInteger.INSTANCE,Jsonix.Schema.XSD.NMToken.INSTANCE,Jsonix.Schema.XSD.NMTokens.INSTANCE,Jsonix.Schema.XSD.NonNegativeInteger.INSTANCE,Jsonix.Schema.XSD.NonPositiveInteger.INSTANCE,Jsonix.Schema.XSD.NormalizedString.INSTANCE,Jsonix.Schema.XSD.Number.INSTANCE,Jsonix.Schema.XSD.PositiveInteger.INSTANCE,Jsonix.Schema.XSD.QName.INSTANCE,Jsonix.Schema.XSD.Short.INSTANCE,Jsonix.Schema.XSD.String.INSTANCE,Jsonix.Schema.XSD.Strings.INSTANCE,Jsonix.Schema.XSD.TimeAsDate.INSTANCE,Jsonix.Schema.XSD.Time.INSTANCE,Jsonix.Schema.XSD.Token.INSTANCE,Jsonix.Schema.XSD.UnsignedByte.INSTANCE,Jsonix.Schema.XSD.UnsignedInt.INSTANCE,Jsonix.Schema.XSD.UnsignedLong.INSTANCE,Jsonix.Schema.XSD.UnsignedShort.INSTANCE],CLASS_NAME:"Jsonix.Context"});
 	// Complete Jsonix script is included above
 	return { Jsonix: Jsonix };
 };

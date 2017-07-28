@@ -84,7 +84,7 @@ public class Metadata extends GeonetEntity {
     private MetadataDataInfo _dataInfo = new MetadataDataInfo();
     private MetadataSourceInfo _sourceInfo = new MetadataSourceInfo();
     private MetadataHarvestInfo _harvestInfo = new MetadataHarvestInfo();
-    private Set<MetadataCategory> _metadataCategories = new HashSet<MetadataCategory>();
+    private Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 
     // private List<MetadataStatus> _metadataStatus;
     // private Set<Operation> operations = new HashSet<Operation>();
@@ -381,14 +381,14 @@ public class Metadata extends GeonetEntity {
         inverseJoinColumns = @JoinColumn(name =
             METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
-    public Set<MetadataCategory> getCategories() {
-        return _metadataCategories;
+    public Set<MetadataCategory> getMetadataCategories() {
+        return metadataCategories;
     }
 
     /**
      * Set the metadata category
      */
-    protected void setCategories(@Nonnull Set<MetadataCategory> categories) {
-        this._metadataCategories = categories;
+    protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
+        this.metadataCategories = categories;
     }
 }

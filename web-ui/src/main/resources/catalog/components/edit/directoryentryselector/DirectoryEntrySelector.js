@@ -78,6 +78,8 @@
               // the schema id to properly retrieve the codelists.
               schema: '@',
               selectEntryCb: '='
+              // Can restrict how to insert the entry (xlink, text ..)
+              // insertModes: '@'
             },
             templateUrl: '../../catalog/components/edit/' +
                 'directoryentryselector/partials/' +
@@ -104,16 +106,26 @@
                  gnGlobalSettings.modelOptions);
                 },
                 post: function postLink(scope, iElement, iAttrs) {
+
+
+                  var insertModes = iAttrs.insertModes;
+                  if (insertModes) {
+                    insertModes = insertModes.split(',');
+                  }
+
+                  scope.insertAsXlink = !insertModes ||
+                 insertModes.indexOf('xlink') >= 0;
+                  scope.insertAsText = !insertModes ||
+                 insertModes.indexOf('text') >= 0;
+
                   // Separator between each contact XML
                   // snippet
                   var separator = '&&&';
 
-                  // Define type of XLinks: local:// or http:// based on
-                  // catalog configuration.
-                  var url =
-                 (gnConfig[gnConfig.key.isXLinkLocal] === true ?
-                      'local://' : gnConfigService.getServiceURL()) +
-                 'api/registries/entries/';
+                  // Only local mode (faster)
+                  var url = 'local://' + gnGlobalSettings.nodeId +
+                 '/api/registries/entries/';
+
                   scope.gnConfig = gnConfig;
                   // If true, display button to add the element
                   // without using the subtemplate selector.
@@ -320,6 +332,8 @@
                  gnGlobalSettings.modelOptions);
                },
                post: function postLink(scope, iElement, iAttrs) {
+                 scope.ctrl = {};
+
                  scope.defaultRoleCode = iAttrs['defaultRole'] || null;
                  scope.defaultRole = null;
                  angular.forEach(scope.roles, function(r) {

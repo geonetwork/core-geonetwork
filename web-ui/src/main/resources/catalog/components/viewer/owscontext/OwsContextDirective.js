@@ -117,11 +117,14 @@
                 }
             );
           };
+
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
+
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,
-                scope.map);
+                scope.map,
+                gnViewerSettings.additionalMapLayers);
           };
 
           var fileInput = element.find('input[type="file"]')[0];
@@ -154,7 +157,8 @@
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,
-                scope.map);
+                scope.map,
+                gnViewerSettings.additionalMapLayers);
           }
 
           // store the current context in local storage to reload it

@@ -235,7 +235,18 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).then(function (layer) {
+          var loadLayerPromise;
+
+          // handle WMTS layer info
+          if (link.protocol.indexOf('WMTS') > -1) {
+            loadLayerPromise = gnMap.addWmtsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          } else {
+            loadLayerPromise = gnMap.addWmsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          }
+
+          loadLayerPromise.then(function (layer) {
             if (layer) {
               gnMap.feedLayerWithRelated(layer, link.group);
             }
@@ -247,8 +258,18 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).
-          then(function(layer) {
+          var loadLayerPromise;
+
+          // handle WMTS layer info
+          if (link.protocol.indexOf('WMTS') > -1) {
+            loadLayerPromise = gnMap.addWmtsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          } else {
+            loadLayerPromise = gnMap.addWmsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          }
+
+          loadLayerPromise.then(function(layer) {
             if(layer) {
               gnMap.feedLayerWithRelated(layer, link.group);
             }

@@ -1,5 +1,6 @@
 <div class="panel-body panel-ncwms">
-  <form class="form-horizontal" role="form">
+  <form class="form-horizontal" role="form" name="ncswmsForm">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
     <!--Scales-->
     <div class="form-group">
@@ -32,8 +33,9 @@
       </div>
     </div>
 
-    <!--Times inputs-->
-    <div class="form-group" ng-if="layer.get('time')">
+    <!---------- Times inputs --------- -->
+    <!--Ncwms optional single date (feed from getMetadata)-->
+    <div class="form-group" ng-if="::layer.get('time') && !ctrl.isOceanotron">
       <label class="col-sm-4" translate>time</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
@@ -44,18 +46,44 @@
       </div>
     </div>
 
+    <!--Oceanotron required time range-->
+    <div class="form-group gn-required" ng-if="::ctrl.isOceanotron" ng-class="{'has-error': !ncTime.value.from || !ncTime.value.to}">
+      <label class="col-sm-4" translate>time</label>
+      <div class="col-sm-8">
+        <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+             gn-bootstrap-datepicker="ncTime.value.from" date-available="layer.ncInfo.datesWithData">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input class="form-control input-sm" type="text">
+        </div>
+        <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+             gn-bootstrap-datepicker="ncTime.value.to" date-available="layer.ncInfo.datesWithData">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <input class="form-control input-sm" type="text">
+        </div>
+      </div>
+    </div>
+
     <!--Elevations combo-->
-    <div class="form-group" ng-if="elevations.length > 0">
-      <label class="col-sm-4" for="ncwmselevation">Elévation</label>
+    <div class="form-group" ng-if="::!ctrl.isOceanotron && params.ELEVATION">
+      <label class="col-sm-4" for="ncwmselevation"><span translate="">elevation</span></label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
           <option value="{{el}}" data-ng-repeat="el in elevations">{{el | number: 1}}</option>
         </select>
       </div>
     </div>
+    <div class="form-group gn-required" ng-if="::ctrl.isOceanotron">
+      <label class="col-sm-4" for="ncwmselevation"><span translate="">elevation</span></label>
+      <div class="col-sm-4">
+        Min: <input class="form-control input-sm" name="elevMin" ng-model-options="{ getterSetter: true, debounce: 400 }" ng-model="ctrl.elevationMinFn" type="number" required/>
+      </div>
+      <div class="col-sm-4">
+        Max: <input class="form-control input-sm" ng-model-options="{ getterSetter: true, debounce: 400 }" ng-model="ctrl.elevationMaxFn" type="number"/>
+      </div>
+    </div>
 
     <!--Styles combo-->
-    <div class="form-group" data-ng-if="hasStyles()">
+    <div class="form-group" data-ng-if="::hasStyles()">
       <label class="col-sm-4" for="ncwmsstyles">Styles</label>
       <div class="col-sm-8">
         <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="ctrl.palette" data-ng-change="updateStyle()">

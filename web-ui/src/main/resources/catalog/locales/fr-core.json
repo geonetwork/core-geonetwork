@@ -337,6 +337,7 @@
     "indexAccessError": "Erreur lors de l'accès à l'index.",
     "link-children": "enfants",
     "link-parent": "parents",
-    "link-sources": "Données sources",
-    "link-hassources": "Est une source pour"
+    "link-sources": "Est une source pour",
+    "link-hassources": "Données sources",
+    "applyFilter": "Filtrer"
 }

@@ -24,15 +24,13 @@
 package jeeves.xlink;
 
 import com.google.common.collect.Sets;
-
 import jeeves.server.context.ServiceContext;
 import jeeves.server.local.LocalServiceRequest;
-import jeeves.server.sources.ServiceRequest.InputMethod;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.JeevesJCS;
+import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -41,6 +39,16 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.support.HandlerMethodArgumentResolverComposite;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -213,14 +221,14 @@ public final class Processor {
         try {
             // TODO-API: Support local protocol on /api/registries/
             if (uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-                LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
-                request.setDebug(false);
-                if (request.getLanguage() == null) {
-                    request.setLanguage(srvContext.getLanguage());
-                }
-                request.setInputMethod(InputMethod.GET);
-                remoteFragment = srvContext.execute(request);
+                SpringLocalServiceInvoker springLocalServiceInvoker = srvContext.getBean(SpringLocalServiceInvoker.class);
+                remoteFragment = (Element)springLocalServiceInvoker.invoke(uri);
             } else {
+                // Avoid references to filesystem
+                if (uri.toLowerCase().startsWith("file://")) {
+                    return null;
+                }
+
                 uri = uri.replaceAll("&+", "&");
                 String mappedURI = mapURI(uri);
 

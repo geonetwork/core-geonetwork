@@ -73,7 +73,8 @@
 }
 .gn-search-page {
   clear: both;
-  padding-bottom: 50px;
+  flex-grow: 1;
+  position: relative;
   .gn-md-view {
     padding: 0 20px;
   }
@@ -456,10 +457,22 @@ ul.gn-resultview {
 }
 
 [gn-main-viewer] {
-  margin-top: -18px;
+  position: absolute;
+  top: -14px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+
   .panel-tools {
     .panel-heading {
       background-color: transparent;
+    }
+
+    .processes-list .list-group-item {
+      &.active {
+        background-color: @btn-primary-bg;
+        * { color: @btn-primary-color; }
+      }
     }
   }
 
@@ -469,19 +482,30 @@ ul.gn-resultview {
     }
   }
 
+  .nav {
+    > li {
+      > a {
+        padding: 10px 10px;
+      }
+    }
+  }
+
   [gn-kml-import] {
     input {
       margin-top: 15px;
     }
+  }
+
+  [ngeo-map] {
+    height: 100%;
   }
 }
 /*
     Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
 */
 .gn-bottom-bar {
-  bottom:0;
   height:50px;
-  position:absolute;
+  position:relative;
   overflow:hidden;
   width:100%;
   margin-bottom:0px;
@@ -496,6 +520,8 @@ ul.gn-resultview {
 .gn-full {
   min-height: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 html, body {
@@ -597,4 +623,10 @@ html, body {
   padding: 2px;
   margin-top: -4px;
   left: -5px;
+}
+
+gn-wps-process-form {
+  .panel-body {
+    padding: 0px;
+  }
 }

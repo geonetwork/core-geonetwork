@@ -321,11 +321,14 @@
               </ul>
             </td>
           </tr>
-          <tr data-ng-if="::mdView.current.record.crs">
+          <tr data-ng-if="::mdView.current.record.crsDetails">
             <th data-translate="">crs</th>
             <td>
               <ul>
-                <li data-ng-repeat="r in ::mdView.current.record.crs">{{r}}</li>
+                <li data-ng-repeat="r in ::mdView.current.record.crsDetails">
+                  <span ng-if="r.name != ''">{{ r.name }} ({{ r.code }})</span>
+                  <span ng-if="r.name == ''">{{ r.code }}</span>
+                </li>
               </ul>
             </td>
           </tr>

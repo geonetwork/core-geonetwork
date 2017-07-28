@@ -43,6 +43,8 @@
 // overrides bootstrap colors to fit our theme
 @brand-primary: @sxt-base-color;
 @badge-bg: @sxt-base-color;
+@btn-default-color: white;
+@btn-default-bg: @sxt-button-color;
 
 @media (min-width: @screen-md-min) {
   body {
@@ -184,11 +186,16 @@ div.gn, div.g, * {
   -webkit-font-smoothing: antialiased;
 }
 
+
 .btn-default {
   &, &.dropdown-toggle, .open &.dropdown-toggle {
     background: @sxt-button-color;
     color: white;
     border: none;
+    &:focus {
+      background: @sxt-button-color-light;
+      color: white;
+    }
   }
   border-radius: 2px;
   &.active, &:hover, &:focus {

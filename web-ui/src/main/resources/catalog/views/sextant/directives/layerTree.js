@@ -110,6 +110,31 @@
             });
           };
 
+          /**
+           * Look for the loading layer in the tree and swap it with the loaded
+           * one.
+           *
+           * @param {Object} node to inspect, resursive.
+           * @param {ol.Layer.image} loadingLayer Layer to switch
+           * @param {ol.layer.BaseLayer} layer Final layer to put in the tree.
+           * @returns {*}
+           */
+          var switchLoadingLayer = function(node, loadingLayer, layer) {
+            if (node && node.nodes) {
+              for (var i = 0; i < node.nodes.length; i++) {
+                n = node.nodes[i];
+                if (n == loadingLayer) {
+                  node.nodes[i] = layer;
+                  return true;
+                }
+                var found = switchLoadingLayer(n, loadingLayer, layer);
+                if(found) {
+                  return true;
+                }
+              }
+            }
+          };
+
           var createNode = function(layer, node, g, index) {
             var group = g[index];
             if (group) {
@@ -194,6 +219,17 @@
           };
 
           scope.map.getLayers().on('change:length', buildTree);
+
+          // Swap the loaded layer with the loading layer after tree is created
+          scope.map.getLayers().on('remove', function(event) {
+            var loadingLayer = event.element;
+            var idx = loadingLayer.get('index');
+            var col = event.target;
+            if(loadingLayer.get('loading') && angular.isDefined(idx)) {
+              var layer = col.item(idx);
+              switchLoadingLayer(scope.layerTree, loadingLayer, layer);
+            }
+          });
 
            scope.$on('owsContextReseted', function() {
              gnWmsQueue.errors.length = 0;
@@ -358,8 +394,8 @@
                       featureTypeName: wfsLink.name
                     }) + '"',
                     wt: 'json'
-                  }}).success(function(data) {
-                  if(data.response.numFound > 0) {
+                  }}).then(function(data) {
+                  if(data.response && data.response.numFound > 0) {
                     scope.wfs = wfsLink;
                   }
                 });

@@ -4,13 +4,7 @@
       <input data-gn-selection-md type="checkbox"
              data-ng-model="md['geonet:info'].selected"
              data-ng-change="change()"/>
-      <span
-        data-ng-class="md.valid == 1 ? 'text-success' : (md.valid == 0 ? 'text-danger' : 'text-muted')">
-        <i class="fa"
-           data-ng-class="'gn-recordtype-' + md.isTemplate"
-           data-ng-show="user.isReviewerOrMore()"
-           title="{{('isTemplate' + md.isTemplate) | translate}} ({{('validStatus-' + md.valid) | translate}})"></i>
-      </span>
+      <gn-md-type-widget metadata="md"></gn-md-type-widget>
       <a href=""
          data-ng-show="md.isTemplate != 's'"
          data-ng-href="catalog.search#/metadata/{{md.getUuid()}}"

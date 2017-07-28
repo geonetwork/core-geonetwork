@@ -138,7 +138,7 @@
         if (graticuleOgcService) {
           if (!graticuleOgcService.layer || !graticuleOgcService.url) {
             console.error('Missing property for graticule layer ' +
-              '(required: \'url\', \'layer\'):\n', graticuleOgcService);
+                '(required: \'url\', \'layer\'):\n', graticuleOgcService);
             return;
           }
 
@@ -150,7 +150,7 @@
             })
           });
           graticule.background = true;  // do not save it in context
-          // graticule.setZIndex(100);    // TODO: uncomment after OL upgrade
+          graticule.setZIndex(1000);    // TODO: uncomment after OL upgrade
           graticule.setVisible(false);  // hidden by default
           map.addLayer(graticule);
 
@@ -234,7 +234,7 @@
             transform(intersectionPoint, lonLat);
             textStyle = getTextStyle(lonLat[0], 0, 10, 'EW');
             vectorContext.setTextStyle(textStyle);
-            vectorContext.drawPointGeometry(point);
+            vectorContext.drawGeometry(point);
             vectorContext.setTextStyle(null);
 
           }
@@ -260,7 +260,7 @@
             transform(intersectionPoint, lonLat);
             textStyle = getTextStyle(lonLat[1], -30, 0, 'NS');
             vectorContext.setTextStyle(textStyle);
-            vectorContext.drawPointGeometry(point, null);
+            vectorContext.drawGeometry(point, null);
             vectorContext.setTextStyle(null);
 
           }
