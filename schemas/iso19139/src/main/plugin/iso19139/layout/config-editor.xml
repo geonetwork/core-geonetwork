@@ -810,8 +810,7 @@
            default="true">
 
         <section name="emodnetMetadataInfo">
-          <field name="emodnetCatalogueType"
-                 xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
 
           <field name="emodnetCatalogueType"
                  xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName"/>
