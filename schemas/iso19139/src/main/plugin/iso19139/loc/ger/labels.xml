@@ -3789,9 +3789,6 @@
   <element name="gmd:DS_InitiativeTypeCode">
     <label>Initiative Typ</label>
   </element>
-  <element name="gmd:MD_LegalConstraints">
-    <label>Rechtliche Einschränkungen</label>
-  </element>
   <element name="gmd:MD_ScopeCode">
     <label>Anwendungsbereich</label>
   </element>
