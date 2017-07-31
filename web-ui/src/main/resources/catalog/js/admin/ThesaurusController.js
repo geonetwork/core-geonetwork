@@ -56,7 +56,7 @@
       /**
        * The list of thesaurus
        */
-      $scope.thesaurus = {};
+      $scope.thesaurus = [];
       /**
        * The currently selected thesaurus
        */
@@ -275,11 +275,20 @@
       };
 
       /**
-       * Remove a thesaurus from the catalog thesaurus repository
+       * Ask for confirmation to delete the thesaurus
        */
-      $scope.deleteThesaurus = function() {
+      $scope.deleteThesaurus = function(e) {
+        $scope.delEntryId = $scope.thesaurusSelected.key;
+        $('#gn-confirm-delete').modal('show');
+      };
+
+      /**
+       * Remove a thesaurus from the catalog thesaurus repository
+       * (this is done after a confirm dialog)
+       */
+      $scope.confirmDeleteThesaurus = function() {
         $http.get('thesaurus.remove?ref=' +
-                  $scope.thesaurusSelected.key)
+                  $scope.delEntryId)
             .success(function(data) {
               $scope.thesaurusSelected = null;
               loadThesaurus();
