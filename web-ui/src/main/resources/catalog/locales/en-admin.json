@@ -7,7 +7,7 @@
     "activity_months": "Number of months of activity",
     "add-resource-id": "Compute resource identifiers",
     "addAFormatter": "Add a formatter",
-    "addKeyword": "Add",
+    "addKeyword": "Add keyword",
     "addNewLogo": "Add new logo",
     "addOrUpdateStandards": "Add or update standards",
     "addStandard": "Add",
@@ -473,7 +473,7 @@
     "keywordDefinition": "Definition",
     "keywordIdentifier": "Identifier",
     "keywordLabel": "Label",
-    "keywordNotAvailableInThisLanguage": "- not available in current language -",
+    "keywordNotAvailableInThisLanguage": "Keyword not available in current language",
     "keywordRelation": "Relation",
     "keywords-mapper": "Keyword mapper",
     "language": "Language",
@@ -1122,5 +1122,8 @@
     "ui-disabledTools-help": "You can decide to show or hide these tools in the map viewer. Selected tools will be shown to the users.",
     "ui-graticuleOgcService": "OGC Service to use as graticule",
     "ui-graticuleOgcService-help": "Optional. For now, only WMS services are supported.",
-    "confirmDeleteThesaurus": "Are you sure you want to delete this thesaurus?"
+    "confirmDeleteThesaurus": "Are you sure you want to delete this thesaurus?",
+    "switchLangTo": "Switch language...",
+    "showResultsCount": "Show {{count}} results",
+    "keywordMissingValue": "missing value"
 }

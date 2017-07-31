@@ -42,12 +42,26 @@
    *
    */
   module.controller('GnThesaurusController', [
-    '$scope', '$http', '$rootScope', '$translate',
-    'gnConfig', 'gnSearchManagerService', 'gnUtilityService',
-    function($scope, $http, $rootScope, $translate,
-             gnConfig, gnSearchManagerService, gnUtilityService) {
+    '$scope',
+    '$http',
+    '$rootScope',
+    '$translate',
+    'gnConfig',
+    'gnSearchManagerService',
+    'gnUtilityService',
+    'gnGlobalSettings',
+    function($scope,
+      $http,
+      $rootScope,
+      $translate,
+      gnConfig,
+      gnSearchManagerService,
+      gnUtilityService,
+      gnGlobalSettings) {
 
       $scope.gnConfig = gnConfig;
+      $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+
       /**
        * Type of relations in SKOS thesaurus
        */
@@ -99,8 +113,22 @@
       $scope.keywordFilter = '';
 
       $scope.maxNumberOfKeywords = 50;
+      $scope.availableResultCounts = [50, 100, 200, 500, 1000];
+      $scope.setResultsCount = function (count) {
+        $scope.maxNumberOfKeywords = count;
+      };
 
       $scope.recordsRelatedToThesaurus = 0;
+
+      /**
+       * Language switch for keyword list 
+       */
+      $scope.currentLangShown = $scope.lang;
+      $scope.availableLangs = gnConfig['ui.config'].mods.header.languages;
+      $scope.switchLang = function (lang3) {
+        $scope.currentLangShown = lang3;
+      };
+
       /**
        * The type of thesaurus import. Could be new, file or url.
        */
@@ -110,6 +138,8 @@
           creatingThesaurus = false, // Keyword creation in progress ?
           creatingKeyword = false, // Thesaurus creation in progress ?
           selectedKeywordOldId = null; // Keyword id before starting editing
+
+      $scope.searching = false;
 
       /**
        * Select a thesaurus and search its keywords.
@@ -128,6 +158,7 @@
        * Search thesaurus keyword based on filter and max number
        */
       searchThesaurusKeyword = function() {
+        $scope.searching = true;
         if ($scope.thesaurusSelected) {
           $scope.recordsRelatedToThesaurus = 0;
           $http.get('../api/registries/vocabularies/search?type=CONTAINS' +
@@ -138,7 +169,7 @@
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
                       '&q=' + (encodeURI($scope.keywordFilter) || '*') +
-              '&lang=' + $scope.lang
+              '&lang=' + $scope.currentLangShown
           ).success(function(data) {
             $scope.keywords = data;
             gnSearchManagerService.gnSearch({
@@ -147,6 +178,8 @@
                 then(function(results) {
                   $scope.recordsRelatedToThesaurus = parseInt(results.count);
                 });
+          }).finally(function () {
+            $scope.searching = false;
           });
         }
       };
@@ -291,9 +324,11 @@
                   $scope.delEntryId)
             .success(function(data) {
               $scope.thesaurusSelected = null;
+              $scope.delEntryId = null;
               loadThesaurus();
             })
             .error(function(data) {
+              $scope.delEntryId = null;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate.instant('thesaurusDeleteError'),
                 error: data,
@@ -353,8 +388,7 @@
                       '&id=' + encodeURIComponent(k.uri))
               .success(function(data) {
                 $scope.keywordSelectedRelation[value] = data.descKeys;
-              })
-              .error();
+              });
         });
       };
 
@@ -554,17 +588,13 @@
       };
 
       /**
-       * When updating number of keywords, refresh keyword list
+       * When updating keyword search params: refresh list
        */
-      $scope.$watch('maxNumberOfKeywords', function() {
-        searchThesaurusKeyword();
-      });
-
-
-      /**
-       * When updating the keyword filter, refresh keyword list
-       */
-      $scope.$watch('keywordFilter', function() {
+      $scope.$watch(function () {
+        return $scope.maxNumberOfKeywords + '##' +
+          $scope.keywordFilter + '##' +
+          $scope.currentLangShown;
+      }, function() {
         searchThesaurusKeyword();
       });
 
