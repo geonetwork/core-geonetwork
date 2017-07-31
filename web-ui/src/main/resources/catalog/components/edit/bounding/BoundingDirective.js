@@ -235,7 +235,7 @@
                   ctrl.inputGeometry,
                   {
                     crs: ctrl.currentProjection,
-                    format: ctrl.currentFormat,
+                    format: ctrl.currentFormat
                   }
                 );
               } catch (e) {
@@ -273,7 +273,7 @@
                 feature,
                 {
                   crs: ctrl.currentProjection,
-                  format: ctrl.currentFormat,
+                  format: ctrl.currentFormat
                 }
               );
             };
