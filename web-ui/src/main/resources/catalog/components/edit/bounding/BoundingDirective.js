@@ -103,7 +103,7 @@
               source: source
             });
             ctrl.drawLineInteraction = new ol.interaction.Draw({
-              type: 'MultiLineString',
+              type: 'LineString',
               source: source
             });
             ctrl.modifyInteraction = new ol.interaction.Modify({
@@ -154,13 +154,13 @@
 
             // parse initial input coordinates to display shape (first in WKT)
             ctrl.initValue = function () {
-              console.log('received xml: ' + ctrl.polygonXml);
-
               if (ctrl.polygonXml) {
                 // parse first feature from source XML & set geometry name
                 var correctedXml = ctrl.polygonXml
                     .replace('<gml:LinearRingTypeCHOICE_ELEMENT0>', '')
-                    .replace('</gml:LinearRingTypeCHOICE_ELEMENT0>', '');
+                    .replace('</gml:LinearRingTypeCHOICE_ELEMENT0>', '')
+                    .replace('<gml:LineStringTypeCHOICE_ELEMENT1>', '')
+                    .replace('</gml:LineStringTypeCHOICE_ELEMENT1>', '');
                 var geometry = gnGeometryService.parseGeometryInput(
                   ctrl.map,
                   correctedXml,
@@ -188,21 +188,27 @@
             };
 
             // update output with gml
-            ctrl.updateOutput = function (feature) {
-              // fit view
-              ctrl.map.getView().fit(feature.getGeometry(),
-                ctrl.map.getSize());
+            ctrl.updateOutput = function (feature) {          
+              // fit view if geom is valid & not empty
+              if (feature.getGeometry() &&
+                !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
+                ctrl.map.getView().fit(feature.getGeometry(),
+                  ctrl.map.getSize());
+              }
 
-              // print output
-              ctrl.outputPolygonXml = gnGeometryService.printGeometryOutput(
-                ctrl.map,
-                feature,
-                {
-                  crs: 'EPSG:4326',
-                  format: 'gml'
-                }
-              );
-              console.log('xml output: ' + ctrl.outputPolygonXml);
+              // print output (skip if readonly)
+              if (!ctrl.readOnly) {
+                ctrl.outputPolygonXml = '<polygon xmlns="http://www.isotc211.org/2005/gmd">' +
+                  gnGeometryService.printGeometryOutput(
+                    ctrl.map,
+                    feature,
+                    {
+                      crs: 'EPSG:4326',
+                      format: 'gml'
+                    }
+                  ) +
+                  '</polygon>';
+              }
 
               // update text field (unless geometry was entered manually)
               if (!ctrl.fromTextInput) {

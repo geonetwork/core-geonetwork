@@ -13,13 +13,11 @@
     <br />
     <select class="form-control" ng-model="ctrl.currentFormat"
       ng-options="format for format in ctrl.formats"
-      ng-change="ctrl.handleInputOptionsChange()"
-      ng-readonly="ctrl.readOnly">
+      ng-change="ctrl.handleInputOptionsChange()">
     </select>
     <select class="form-control" ng-model="ctrl.currentProjection"
       ng-options="proj.code as proj.label for proj in ctrl.projections"
-      ng-change="ctrl.handleInputOptionsChange()"
-      ng-readonly="ctrl.readOnly">
+      ng-change="ctrl.handleInputOptionsChange()">
     </select>
   </div>
   <div class="col-xs-6 col-md-6" ng-if="!ctrl.readOnly">
@@ -69,8 +67,11 @@
         ng-show="ctrl.fromTextInput && !ctrl.parseError" translate>
         inputGeometryIsValid</small>
       <small class="text-muted"
-        ng-show="!ctrl.fromTextInput" translate>
+        ng-show="!ctrl.fromTextInput && !ctrl.readOnly" translate>
         inputGeometryHint</small>
+      <small class="text-muted"
+        ng-show="ctrl.readOnly" translate>
+        inputGeometryRedOnlyHint</small>
     </div>
   </div>
 </div>
