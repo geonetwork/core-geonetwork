@@ -63,12 +63,22 @@
     <br />
   </div>
 
-  <div class="col-lg-8" data-ng-show="thesaurusSelected.key">
+  <div class="col-md-8 col-xl-9" data-ng-show="thesaurusSelected.key">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</strong>
-        <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
-        <div class="btn-toolbar pull-right">
+
+      <div class="panel-heading flex-col">
+        <div class="flex-row">
+          <i class="fa fa-book" />
+          <div class="flex-spacer"></div>
+          <strong class="text-ellipsis">{{thesaurusSelected.title}}</strong>
+        </div>
+        <div class="flex-spacer"></div>
+        <div class="flex-row width-100">
+          <a href="{{thesaurusSelected.url}}" class="btn btn-default">
+            <i class="fa fa-download"></i>&nbsp;
+            <span translate>download</span>
+          </a>
+          <div class="flex-spacer"></div>
           <button type="button" class="btn btn-default"
                   data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled] && !isExternal() && recordsRelatedToThesaurus > 0"
                   data-ng-click="reindexRecords()"
@@ -77,12 +87,12 @@
             <span data-translate=""
                   data-translate-values="{records: '{{recordsRelatedToThesaurus}}'}">reindexRecords</span>
           </button>
+          <div class="flex-spacer flex-grow"></div>
           <button type="button" class="btn btn-danger"
                   data-ng-click="deleteThesaurus()">
             <i class="fa fa-times"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
           </button>
         </div>
-
       </div>
 
       <div class="panel-body">
@@ -394,5 +404,9 @@
     </div>
   </div>
 
-
+  <div gn-modal class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteThesaurus}"
+    id="gn-confirm-delete">
+    <p translate>confirmDeleteThesaurus</p>
+  </div>
 </div>

@@ -1121,5 +1121,6 @@
     "ui-disabledTools": "Optional Map Viewer Tools",
     "ui-disabledTools-help": "You can decide to show or hide these tools in the map viewer. Selected tools will be shown to the users.",
     "ui-graticuleOgcService": "OGC Service to use as graticule",
-    "ui-graticuleOgcService-help": "Optional. For now, only WMS services are supported."
+    "ui-graticuleOgcService-help": "Optional. For now, only WMS services are supported.",
+    "confirmDeleteThesaurus": "Are you sure you want to delete this thesaurus?"
 }
