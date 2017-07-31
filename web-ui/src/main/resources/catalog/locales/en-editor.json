@@ -357,5 +357,6 @@
     "inputGeometryText": "Geometry Text Input",
     "inputGeometryIsValid": "The input geometry is valid and is now visible on the map.",
     "inputGeometryIsInvalid": "An error was found in the input geometry:",
-    "inputGeometryHint": "Paste here a geometry in the selected format and projection system."
+    "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
+    "inputGeometryReadOnlyHint": "This geometry is read-only."
 }

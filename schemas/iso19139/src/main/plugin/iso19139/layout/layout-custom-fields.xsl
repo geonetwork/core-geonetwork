@@ -32,6 +32,7 @@
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -277,13 +278,15 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
 
-        <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:MultiCurve"/>
+        <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"/>
         <xsl:variable name="identifier"
-                      select="$geometry/gn:element/@ref"/>
+                      select="concat('_X', gmd:polygon/gn:element/@ref, '_replace')"/>
+        <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
+
         <br />
         <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
-                             identifier="_{$identifier}"
-                             read-only="false">
+                             identifier="{$identifier}"
+                             read-only="{$readonly}">
         </gn-bounding-polygon>
       </xsl:with-param>
     </xsl:call-template>
