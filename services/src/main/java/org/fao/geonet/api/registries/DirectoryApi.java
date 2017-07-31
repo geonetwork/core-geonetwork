@@ -559,6 +559,14 @@ public class DirectoryApi {
         )
             String uuidAttribute,
         @ApiParam(
+            value = "Pattern to build UUID from. Default is '{{uuid}}'.",
+            required = false)
+        @RequestParam(
+            defaultValue = "{{uuid}}",
+            required = false
+        )
+            String uuidPattern,
+        @ApiParam(
             value = "Attribute to use for extent description. " +
                 "If none, no extent description defined. TODO: Add per language desc ?",
             required = false)
@@ -721,6 +729,7 @@ public class DirectoryApi {
                     }
                     String uuid = StringUtils.isNotEmpty(featureUuidValue) ?
                         featureUuidValue : UUID.randomUUID().toString();
+                    uuid = uuidPattern.replace("{{uuid}}", uuid);
                     parameters.put("uuid", uuid);
                     parameters.put("description",
                         StringUtils.isNotEmpty(featureDescriptionValue) ?
