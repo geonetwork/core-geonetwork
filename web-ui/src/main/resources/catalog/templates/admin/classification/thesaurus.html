@@ -1,4 +1,5 @@
-<div class="row" data-ng-controller="GnThesaurusController">
+<div class="row" data-ng-controller="GnThesaurusController"
+  id="gn-thesaurus-container">
   <div class="col-md-4 col-xl-3">
     <div class="panel panel-default dynamic-list">
       <div class="panel-heading" data-translate="">thesaurus</div>
@@ -99,30 +100,24 @@
         <!--<ul>
         <li data-ng-repeat="(key, value) in thesaurusSelected">{{key}}: {{value}}</li>
       </ul>-->
-        <form id="gn-edit-thesaurus" name="gn-edit-thesaurus">
-          <fieldset>
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div>
-              <label class="control-label" data-translate="">thesaurusTitle</label>
-              <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
-                    data-ng-model="thesaurusSelected.title"/>
+        <form id="gn-edit-thesaurus" name="gn-edit-thesaurus"
+          class="form-horizontal">
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <div class="form-group">
+            <label class="control-label col-sm-2" translate>thesaurusTitle</label>
+            <div class="col-sm-10">
+              <input type="text" name="title" class="form-control"
+                ng-disabled="!isNew()" ng-model="thesaurusSelected.title"/>
             </div>
-
-            <div>
-              <label class="control-label" data-translate="">thesaurusIdentifier</label>
-              <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
-                    data-ng-model="thesaurusSelected.filename"/>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2" translate>thesaurusIdentifier</label>
+            <div class="col-sm-4">
+              <input type="text" name="filename" class="form-control"
+                ng-disabled="!isNew()" ng-model="thesaurusSelected.filename"/>
             </div>
-
-            <div>
-              <label class="control-label" data-translate="">thesaurusNamespace</label>
-              <input type="text" name="defaultNamespace" class="form-control"
-                    data-ng-disabled="!isNew()"
-                    data-ng-model="thesaurusSelected.defaultNamespace"/>
-            </div>
-
-            <div>
-              <label class="control-label" data-translate="">thesaurusClass</label>
+            <label class="control-label col-sm-3" translate>thesaurusClass</label>
+            <div class="col-sm-3">
               <div data-ng-disabled="!isNew()"
                   data-schema-info-combo="codelist"
                   data-selected-info="thesaurusSelected.dname"
@@ -130,30 +125,36 @@
                   data-init-on-load="true"
                   lang="lang"></div>
             </div>
-
-            <label>
-              <input type="checkbox"
-                    data-ng-model="thesaurusSelectedActivated"
-                    data-ng-click="enableThesaurus()"/>
-              <span data-translate="">enable</span>
-            </label>
-            <p class="help-block" data-translate="">enableThesaurusHelp</p>
-
-          </fieldset>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2" translate>thesaurusNamespace</label>
+            <div class="col-sm-10">
+              <input type="text" name="defaultNamespace" class="form-control"
+                ng-disabled="!isNew()" ng-model="thesaurusSelected.defaultNamespace"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+              <label>
+                <input type="checkbox"
+                      data-ng-model="thesaurusSelectedActivated"
+                      data-ng-click="enableThesaurus()"/>
+                {{ 'enable' | translate }}
+              </label><br />
+              <span class="text-muted" translate>enableThesaurusHelp</span>
+            </div>
+          </div>
         </form>
 
+        <div class="alert alert-warning" data-ng-show="isExternal()" translate>
+          thesaurusExternalHelp</div>
 
-        <div class="alert alert-info" data-ng-show="isExternal()" data-translate=""
-        >thesaurusExternalHelp
-        </div>
-
-        <div class="alert alert-info" data-ng-show="isPlaceType()" data-translate=""
-        >thesaurusPlaceHelp
-        </div>
+        <div class="alert alert-info" data-ng-show="isPlaceType()" translate>
+          thesaurusPlaceHelp</div>
       </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default thesaurus-header">
       <div class="panel-heading" data-translate="">keywords</div>
 
       <div class="panel-body">
