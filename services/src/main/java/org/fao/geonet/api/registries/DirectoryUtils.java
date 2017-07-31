@@ -16,6 +16,7 @@ import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -24,16 +25,16 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
+
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
 
 /**
  * Created by francois on 11/03/16.
@@ -430,4 +431,22 @@ public class DirectoryUtils {
         }
         return null;
     }
+
+    public static Element removeUnsedLangsEntry(Element entry, final String[] langs) throws JDOMException {
+        List<Element> multilangElement = (List<Element>)Xml.selectNodes(entry, "*//node()[@locale]");
+
+        List<String> twoCharLangs = new ArrayList<String>();
+        for(String l : langs) {
+            twoCharLangs.add("#" + XslUtil.twoCharLangCode(l).toUpperCase());
+        }
+
+        for(Element el : multilangElement) {
+            if(!twoCharLangs.contains(el.getAttribute("locale").getValue())) {
+                Element parent = (Element)el.getParent();
+                parent.detach();
+            }
+        }
+        return entry;
+    }
+
 }

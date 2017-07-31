@@ -43,12 +43,12 @@
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
         'gnCurrentEdit', 'gnConfigService', 'gnPopup',
-        'gnGlobalSettings',
+        'gnGlobalSettings', 'gnUrlUtils',
         function($rootScope, $timeout, $q, $http, $translate,
                  gnEditor, gnSchemaManagerService,
                  gnEditorXMLService, gnHttp, gnConfig,
                  gnCurrentEdit, gnConfigService, gnPopup,
-                 gnGlobalSettings) {
+                 gnGlobalSettings,gnUrlUtils) {
 
           return {
             restrict: 'A',
@@ -221,7 +221,7 @@
                     angular.forEach(entry, function(c) {
                       var id = c['geonet:info'].id,
                           uuid = c['geonet:info'].uuid;
-                      var params = [];
+                      var params = {};
 
                       // For the time being only contact role
                       // could be substitute in directory entry
@@ -233,36 +233,51 @@
                       // TODO: this could be applicable not only to contact role
                       // No use case identified for now.
                       if (scope.hasDynamicVariable && role) {
-                        params.push('process=' +
-                            scope.variables.replace('{role}', role));
+                        params.process = scope.variables.replace('{role}', role);
                       } else if (scope.variables) {
-                        params.push('process=' + scope.variables);
+                        params.process = scope.variables;
                       }
 
                       if (angular.isString(scope.transformation) &&
                           scope.transformation !== '') {
-                        params.push('transformation=' + scope.transformation);
+                        params.transformation = scope.transformation;
                       }
 
-                      var urlParams = params.join('&');
-                      $http.get(
-                          '../api/registries/entries/' + uuid + '?' + urlParams)
-                     .success(function(xml) {
-                       if (usingXlink) {
-                         snippets.push(gnEditorXMLService.
-                                  buildXMLForXlink(scope.schema,
-                         scope.elementName,
-                                      url + uuid +
-                                      '?' + urlParams));
-                       } else {
-                         snippets.push(gnEditorXMLService.
-                                  buildXML(scope.schema,
-                         scope.elementName, xml));
-                       }
-                       checkState(c);
-                     });
-                    });
+                      var langsParam = [];
+                      for (var p in
+                        JSON.parse(gnCurrentEdit.mdOtherLanguages)) {
+                        langsParam.push(p);
+                      }
+                      if(langsParam.length > 1) {
+                        params.lang = langsParam;
+                      }
+                      else {
+                        params.lang = gnCurrentEdit.mdLanguage;
+                      }
+                      params.schema = gnCurrentEdit.schema;
 
+                      var urlParams =
+                        decodeURIComponent(gnUrlUtils.toKeyValue(params));
+
+                      $http.get(
+                        '../api/registries/entries/' + uuid, {
+                          params: params
+                        })
+                        .success(function(xml) {
+                          if (usingXlink) {
+                            snippets.push(gnEditorXMLService.
+                            buildXMLForXlink(scope.schema,
+                              scope.elementName,
+                              url + uuid +
+                              '?' + urlParams));
+                          } else {
+                            snippets.push(gnEditorXMLService.
+                            buildXML(scope.schema,
+                              scope.elementName, xml));
+                          }
+                          checkState(c);
+                        });
+                    });
                     return defer.promise;
                   };
 
