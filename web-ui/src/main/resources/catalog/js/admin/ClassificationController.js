@@ -46,14 +46,9 @@
            [{
              type: 'thesaurus',
              label: 'manageThesaurus',
-             icon: 'fa-archive',
+             icon: 'fa-book',
              href: '#/classification/thesaurus'
            },{
-              type: 'directory',
-              label: 'manageDirectory',
-              icon: 'fa-list-ul',
-              href: 'catalog.edit#/directory'
-            },{
              type: 'categories',
              label: 'manageCategory',
              icon: 'fa-tags',
