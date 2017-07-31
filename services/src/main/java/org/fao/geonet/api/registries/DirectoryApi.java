@@ -53,6 +53,7 @@ import org.fao.geonet.utils.Xml;
 import org.geotools.GML;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
+import org.geotools.data.DataUtilities;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.collection.ListFeatureCollection;
 import org.geotools.feature.FeatureCollection;
@@ -91,6 +92,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -697,6 +699,11 @@ public class DirectoryApi {
 
             int counter = 0;
 
+            GML encode = new GML(GML.Version.WFS1_1);
+            encode.setNamespace("gn", "http://geonetwork-opensource.org");
+            encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
+            encode.setEncoding(Charset.forName("UTF-8"));
+
             try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
                 MetadataSchema metadataSchema = dm.getSchema(schema);
@@ -754,11 +761,20 @@ public class DirectoryApi {
                             dataCrs, geomProjection, lenient);
                         featureGeometry = JTS.transform(featureGeometry, transform);
                     }
-                    WKTReader wktR = new WKTReader();
-                    Geometry geom = wktR.read(featureGeometry.toString());
-                    GMLWriter gmlW = new GMLWriter(true);
-                    String gmlGeom = gmlW.write(geom);
-                    parameters.put("geometry", gmlGeom);
+
+                    List<SimpleFeature> c = new LinkedList<SimpleFeature>();
+                    SimpleFeatureType TYPE = DataUtilities.createType(
+                        "the_geom",
+                        "geom:Geometry");
+                    TYPE.getUserData().put("prefix", "gn");
+                    c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {
+                        feature.getDefaultGeometry() }, null));
+//                    c.add(feature);
+                    ByteArrayOutputStream outXml = new ByteArrayOutputStream();
+                    encode.encode(outXml,
+                        new ListFeatureCollection(collection.getSchema(), c));
+                    outXml.close();
+                    parameters.put("geometry", outXml.toString());
 
                     // A dummy XML to transform with to build the output
                     // subtemplate

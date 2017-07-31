@@ -42,7 +42,9 @@
 
 
   <xsl:template match="/">
-    <gmd:EX_Extent>
+    <gmd:EX_Extent xmlns:gco="http://www.isotc211.org/2005/gco"
+                   xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                   xmlns:gml="http://www.opengis.net/gml">
       <xsl:if test="$description">
         <gmd:description>
           <gco:CharacterString>
@@ -68,10 +70,11 @@
       </gmd:geographicElement>
 
       <xsl:if test="$geometry and $onlyBoundingBox != true()">
+        <xsl:variable name="theGeom" select="saxon:parse($geometry)"/>
         <gmd:geographicElement>
           <gmd:EX_BoundingPolygon>
             <gmd:polygon>
-              <xsl:value-of select="saxon:parse($geometry)"/>
+              <xsl:copy-of select="$theGeom//*:the_geom/*"/>
             </gmd:polygon>
           </gmd:EX_BoundingPolygon>
         </gmd:geographicElement>
