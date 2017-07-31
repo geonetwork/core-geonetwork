@@ -164,6 +164,12 @@
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.nibor.autolink</groupId>
+      <artifactId>autolink</artifactId>
+      <version>0.6.0</version>
+      <scope>test</scope>
+    </dependency>
 
     <!-- Apache commons csv -->
     <dependency>
