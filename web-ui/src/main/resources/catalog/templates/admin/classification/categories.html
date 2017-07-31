@@ -3,16 +3,26 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate=""> categories</div>
 
-      <div class="panel-body">
+      <div class="panel-body flex-col">
 
-        <input class="form-control"
-               data-ng-model="categorySearch.$"
-               data-ng-show="categories.length > 1"
-               autofocus=""
-               placeholder="{{'filter' | translate}}"/>
+        <!-- filter field  -->
+        <div class="pos-relative width-100">
+          <input class="form-control" type="search"
+                data-ng-model="categorySearch.$"
+                data-ng-show="categories.length > 1"
+                autofocus=""
+                placeholder="{{'filter' | translate}}"/>
+          <span class="fa fa-times gn-input-clear"
+            ng-click="categorySearch.$ = ''"
+            ng-show="categorySearch.$"></span>
+        </div>
         <input type="hidden" data-ng-model="categorySelected.id"/>
-        <div class="list-group">
+        <div class="flex-spacer"></div>
+
+        <!-- categories list  -->
+        <div class="list-group width-100">
           <a href="" class="list-group-item" data-ng-repeat="c in pageItems()"
+            ng-class="{ 'active': c === categorySelected }"
              data-ng-click="selectCategory(c)">
             <span class="fa gn-icon-{{c.name}}"></span>
             {{c.label[lang]}}</a>
@@ -20,15 +30,21 @@
                 data-items="categories | filter:categorySearch"
                 data-cache="categories"/>
         </div>
-        <button type="button" class="btn btn-primary btn-block" data-ng-click="addCategory()">
+
+        <!-- Add new button  -->
+        <button type="button" class="btn btn-success btn-block"
+          data-ng-click="addCategory()">
           <i class="fa fa-plus"/>
           <span data-translate="">newCategory</span>
         </button>
-
-        <div
-          data-gn-need-help="administrator-guide/managing-classification-systems/managing-categories.html"></div>
       </div>
     </div>
+
+    <!-- get help  -->
+    <div gn-need-help="administrator-guide/managing-classification-systems/managing-categories.html">
+    </div>
+    <br />
+    <br />
   </div>
 
   <div class="col-lg-7" data-ng-hide="categorySelected.id==null">
