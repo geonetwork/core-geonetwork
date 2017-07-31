@@ -33,11 +33,15 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -62,6 +66,10 @@ import java.util.Set;
     tags = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class DirectoryEntriesApi {
+
+    @Autowired
+    SchemaManager schemaManager;
+
     private static final char SEPARATOR = '~';
 
     @ApiOperation(value = "Get a directory entry",
@@ -102,7 +110,23 @@ public class DirectoryEntriesApi {
         @RequestParam(
             required = false
         )
-            String transformation)
+            String transformation,
+        @ApiParam(
+            value = "lang",
+            required = false
+        )
+        @RequestParam(
+            name = "lang"
+        )
+            String [] langs,
+        @ApiParam(
+            value = "schema",
+            required = false
+        )
+        @RequestParam(
+            required = false, defaultValue = "iso19139"
+        )
+            String schema)
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
@@ -156,6 +180,16 @@ public class DirectoryEntriesApi {
                     ((Attribute) o).setValue(value);
                 }
             }
+        }
+        // Remove all locazedString from the subtemplate for langs that are not in the metadata
+        if(langs.length > 1) {
+            DirectoryUtils.removeUnsedLangsEntry(tpl, langs);
+        }
+        // Monolingual metadata: remove all localized strings and extract main characterString
+        else {
+            MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
+            plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
+
         }
         if (transformation != null) {
             Element root = new Element("root");

@@ -25,19 +25,19 @@ package org.fao.geonet.schema.iso19139;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-
 import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 /**
  * Created by francois on 6/15/14.
@@ -219,6 +219,32 @@ public class ISO19139SchemaPlugin
             element.addContent(freeTextElement);
         }
         freeTextElement.addContent(textGroupElement);
+    }
+
+    /**
+     * Remove all multingual aspect of an element. Keep the md language localized strings
+     * as default gco:CharacterString for the element.
+     *
+     * @param element
+     * @param mdLang Metadata lang encoded as #EN
+     * @return
+     * @throws JDOMException
+     */
+    @Override
+    public Element removeTranslationFromElement(Element element, String mdLang) throws JDOMException {
+
+        List<Element> multilangElement = (List<Element>)Xml.selectNodes(element, "*//gmd:PT_FreeText", Arrays.asList(GMD));
+
+        for(Element el : multilangElement) {
+            String filterAttribute = "*//node()[@locale='" + mdLang + "']";
+            List<Element> localizedElement = (List<Element>)Xml.selectNodes(el, filterAttribute, Arrays.asList(GMD));
+            if(localizedElement.size() == 1) {
+                String mainLangStraing = localizedElement.get(0).getText();
+                ((Element)el.getParent()).getChild("CharacterString", GCO).setText(mainLangStraing);
+            }
+            el.detach();
+        }
+        return element;
     }
 
     @Override
