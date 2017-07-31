@@ -55,27 +55,26 @@
     <input data-ng-model="dcExtent" name="{{dcRef}}"/>
   </div>
 
+  <!--Projection selector-->
+  <div class="btn-group">
+    <button type="button" class="btn btn-link dropdown-toggle"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            title="{{'chooseAProj' | translate}}">
+      {{projs.formLabel}} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li data-ng-repeat="proj in projs.list">
+        <a href="" data-ng-click="projs.form = proj.code; projs.formLabel = proj.label">
+          {{proj.label}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
   <!--Map and coordinates inputs-->
   <table class="text-center">
     <tr align="center" valign="middle">
       <td align="left">
-
-        <!--Projection selector-->
-        <div class="btn-group">
-          <button type="button" class="btn btn-link dropdown-toggle"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                  title="{{'chooseAProj' | translate}}">
-            {{projs.formLabel}} <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li data-ng-repeat="proj in projs.list">
-              <a href="" data-ng-click="projs.form = proj.code; formLabel = proj.label">
-                {{proj.label}}
-              </a>
-            </li>
-          </ul>
-        </div>
-
       </td>
       <td>
         <div class="form-group">
