@@ -23,6 +23,9 @@
 
 package org.fao.geonet.api.registries;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.io.gml2.GMLWriter;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +34,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -62,7 +66,9 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.BoundingBox;
 import org.opengis.geometry.Envelope;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -561,6 +567,24 @@ public class DirectoryApi {
         )
             String descriptionAttribute,
         @ApiParam(
+            value = "geomProjectionTo",
+            defaultValue = "",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            String geomProjectionTo,
+        @ApiParam(
+            value = "lenient",
+            defaultValue = "false",
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+            boolean lenient,
+        @ApiParam(
             value = "Create only bounding box for each spatial objects.",
             required = false)
         @RequestParam(
@@ -635,6 +659,20 @@ public class DirectoryApi {
 
         GML gml = new GML(org.geotools.GML.Version.GML3);
 
+
+        CoordinateReferenceSystem geomProjection = null;
+        if (StringUtils.isNotEmpty(geomProjectionTo)) {
+            try {
+                geomProjection = CRS.getAuthorityFactory(true)
+                    .createCoordinateReferenceSystem(geomProjectionTo);
+
+            } catch (NoSuchAuthorityCodeException ex) {
+                throw new ResourceNotFoundException(String.format(
+                    "Projection '%s' to convert geometry to not foundin EPSG database",
+                    geomProjectionTo));
+            }
+        }
+
         for (File shapefile : shapefiles) {
             Map<String, Object> map = new HashMap<>();
             map.put("url", shapefile.toURI().toURL());
@@ -688,26 +726,30 @@ public class DirectoryApi {
                         StringUtils.isNotEmpty(featureDescriptionValue) ?
                             featureDescriptionValue : "");
 
-                    // TODO: set the geometry as GML
-//                    ByteArrayOutputStream xml = new ByteArrayOutputStream();
-//                    List<SimpleFeature> gmlCollection = new LinkedList<SimpleFeature>();
-//                    gmlCollection.add(feature);
-//                    gml.encode(xml,new ListFeatureCollection(
-//                        collection.getSchema(), gmlCollection));
-//                    xml.close();
-//                    String gmlString = xml.toString();
-//                    System.out.println(gmlString);
-                    // parameters.put("geometry", (String)feature.getDefaultGeometryProperty().getValue());
+                    CoordinateReferenceSystem dataCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
 
                     BoundingBox bounds = feature.getBounds();
                     com.vividsolutions.jts.geom.Envelope wgsEnvelope = JTS.toGeographic(
                         new com.vividsolutions.jts.geom.Envelope(bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY()),
-                        feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem());
+                        dataCrs);
                     parameters.put("east", wgsEnvelope.getMaxX());
                     parameters.put("north", wgsEnvelope.getMaxY());
                     parameters.put("west", wgsEnvelope.getMinX());
                     parameters.put("south", wgsEnvelope.getMinY());
                     parameters.put("onlyBoundingBox", onlyBoundingBox);
+
+                    // Reproject geometry if needed and get GML encoding
+                    Geometry featureGeometry = (Geometry) feature.getDefaultGeometry();
+                    if (geomProjection != null) {
+                        MathTransform transform = CRS.findMathTransform(
+                            dataCrs, geomProjection, lenient);
+                        featureGeometry = JTS.transform(featureGeometry, transform);
+                    }
+                    WKTReader wktR = new WKTReader();
+                    Geometry geom = wktR.read(featureGeometry.toString());
+                    GMLWriter gmlW = new GMLWriter(true);
+                    String gmlGeom = gmlW.write(geom);
+                    parameters.put("geometry", gmlGeom);
 
                     // A dummy XML to transform with to build the output
                     // subtemplate

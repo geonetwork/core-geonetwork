@@ -26,7 +26,10 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                version="2.0" exclude-result-prefixes="#all">
+                xmlns:saxon="http://saxon.sf.net/"
+                version="2.0"
+                extension-element-prefixes="saxon"
+                exclude-result-prefixes="#all">
 
   <xsl:param name="uuid" as="xs:string"/>
   <xsl:param name="description" as="xs:string?"/>
@@ -68,7 +71,7 @@
         <gmd:geographicElement>
           <gmd:EX_BoundingPolygon>
             <gmd:polygon>
-              <xsl:value-of select="$geometry"/>
+              <xsl:value-of select="saxon:parse($geometry)"/>
             </gmd:polygon>
           </gmd:EX_BoundingPolygon>
         </gmd:geographicElement>
