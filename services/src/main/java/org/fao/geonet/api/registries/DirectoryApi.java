@@ -23,11 +23,16 @@
 
 package org.fao.geonet.api.registries;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.io.gml2.GMLWriter;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.ZipUtil;
@@ -39,8 +44,6 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
-
-
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -54,29 +57,31 @@ import org.geotools.GML;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
-import org.geotools.data.FeatureSource;
 import org.geotools.data.collection.ListFeatureCollection;
-import org.geotools.feature.FeatureCollection;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.feature.FeatureIterator;
+import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTS;
+import org.geotools.gml.producer.GeometryTransformer;
 import org.geotools.referencing.CRS;
 import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.geometry.BoundingBox;
-import org.opengis.geometry.Envelope;
+import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,19 +90,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.TransformerException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.URI;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -105,16 +111,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Authorization;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAM_RECORD_UUID_PROCESSING;
 import static org.fao.geonet.api.records.MetadataInsertDeleteApi.API_PARAP_RECORD_GROUP;
@@ -642,62 +638,26 @@ public class DirectoryApi {
         throws Exception {
 
         final ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final ServiceContext context = ApiUtils.createServiceContext(request);
-        final int user = context.getUserSession().getUserIdAsInt();
-        final String siteId = context.getBean(SettingManager.class).getSiteId();
         final DataManager dm = applicationContext.getBean(DataManager.class);
+
+        MetadataSchema metadataSchema = dm.getSchema(schema);
+        Path xslProcessing = metadataSchema.getSchemaDir().resolve("process").resolve(process + ".xsl");
+
+        File[] shapeFiles = unzipAndFilterShp(file);
 
         Set<Integer> listOfRecordInternalId = new HashSet<>();
         CollectResults collectResults = new CollectResults();
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-        // Extract ZIP file content
-        File zipFile = new File(file.getOriginalFilename());
-        file.transferTo(zipFile);
-        Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
-        ZipUtil.extract(zipFile.toPath(), toDirectory);
 
 
-        // Search shapefiles
-        File [] shapefiles = toDirectory.toFile().listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".shp");
-            }
-        });
 
-        GML gml = new GML(org.geotools.GML.Version.GML3);
-
-
-        CoordinateReferenceSystem geomProjection = null;
-        if (StringUtils.isNotEmpty(geomProjectionTo)) {
-            try {
-                geomProjection = CRS.getAuthorityFactory(true)
-                    .createCoordinateReferenceSystem(geomProjectionTo);
-
-            } catch (NoSuchAuthorityCodeException ex) {
-                throw new ResourceNotFoundException(String.format(
-                    "Projection '%s' to convert geometry to not foundin EPSG database",
-                    geomProjectionTo));
-            }
-        }
-
-        for (File shapefile : shapefiles) {
+        for (File shapeFile : shapeFiles) {
             Map<String, Object> map = new HashMap<>();
-            map.put("url", shapefile.toURI().toURL());
+            map.put("url", shapeFile.toURI().toURL());
 
-            DataStore dataStore = DataStoreFinder.getDataStore(map);
-            String typeName = dataStore.getTypeNames()[0];
-
-            FeatureSource<SimpleFeatureType, SimpleFeature> source = dataStore
-                .getFeatureSource(typeName);
-            Filter filter = Filter.INCLUDE;
-
-            FeatureCollection<SimpleFeatureType, SimpleFeature> collection =
-                source.getFeatures(filter);
-
-            int counter = 0;
+            SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile);
 
             GML encode = new GML(GML.Version.WFS1_1);
             encode.setNamespace("gn", "http://geonetwork-opensource.org");
@@ -706,75 +666,30 @@ public class DirectoryApi {
 
             try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
-                MetadataSchema metadataSchema = dm.getSchema(schema);
-                Path xslProcessing = metadataSchema.getSchemaDir()
-                                        .resolve("process").resolve(process + ".xsl");
-
-                boolean validate = false, ufo = false, index = false;
                 report.setTotalRecords(collection.size());
 
-                CoordinateReferenceSystem wgs84 = CRS.getAuthorityFactory(true)
-                    .createCoordinateReferenceSystem("urn:x-ogc:def:crs:EPSG::4326");
                 while (features.hasNext()) {
                     SimpleFeature feature = features.next();
 
-                    // Collect feature info and add them to a map for the XSL conversion
+                    String uuid = computeUuid(uuidAttribute, feature);
+                    String description = computeDescription(descriptionAttribute, feature);
+                    String geometry = computeGeometry(feature, geomProjectionTo, lenient, collection.getSchema());
+                    Envelope wgsEnvelope = computeEnvelope(feature);
+
                     Map<String, Object> parameters = new HashMap<>();
-                    String featureUuidValue = null;
-                    String featureDescriptionValue = "";
-                    if (StringUtils.isNotEmpty(uuidAttribute)) {
-                        final Object attribute = feature.getAttribute(uuidAttribute);
-                        if (attribute != null) {
-                            featureUuidValue = attribute.toString();
-                        }
-                    }
-                    if (StringUtils.isNotEmpty(descriptionAttribute)) {
-                        final Object attribute = feature.getAttribute(descriptionAttribute);
-                        if (attribute != null) {
-                            featureDescriptionValue = attribute.toString();
-                        }
-                    }
-                    String uuid = StringUtils.isNotEmpty(featureUuidValue) ?
-                        featureUuidValue : UUID.randomUUID().toString();
-                    uuid = uuidPattern.replace("{{uuid}}", uuid);
+
+
+
                     parameters.put("uuid", uuid);
-                    parameters.put("description",
-                        StringUtils.isNotEmpty(featureDescriptionValue) ?
-                            featureDescriptionValue : "");
-
-                    CoordinateReferenceSystem dataCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
-
-                    BoundingBox bounds = feature.getBounds();
-                    com.vividsolutions.jts.geom.Envelope wgsEnvelope = JTS.toGeographic(
-                        new com.vividsolutions.jts.geom.Envelope(bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY()),
-                        dataCrs);
+                    parameters.put("description", description);
                     parameters.put("east", wgsEnvelope.getMaxX());
                     parameters.put("north", wgsEnvelope.getMaxY());
                     parameters.put("west", wgsEnvelope.getMinX());
                     parameters.put("south", wgsEnvelope.getMinY());
                     parameters.put("onlyBoundingBox", onlyBoundingBox);
+                    parameters.put("geometry", geometry);
 
                     // Reproject geometry if needed and get GML encoding
-                    Geometry featureGeometry = (Geometry) feature.getDefaultGeometry();
-                    if (geomProjection != null) {
-                        MathTransform transform = CRS.findMathTransform(
-                            dataCrs, geomProjection, lenient);
-                        featureGeometry = JTS.transform(featureGeometry, transform);
-                    }
-
-                    List<SimpleFeature> c = new LinkedList<SimpleFeature>();
-                    SimpleFeatureType TYPE = DataUtilities.createType(
-                        "the_geom",
-                        "geom:Geometry");
-                    TYPE.getUserData().put("prefix", "gn");
-                    c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {
-                        feature.getDefaultGeometry() }, null));
-//                    c.add(feature);
-                    ByteArrayOutputStream outXml = new ByteArrayOutputStream();
-                    encode.encode(outXml,
-                        new ListFeatureCollection(collection.getSchema(), c));
-                    outXml.close();
-                    parameters.put("geometry", outXml.toString());
 
                     // A dummy XML to transform with to build the output
                     // subtemplate
@@ -785,19 +700,22 @@ public class DirectoryApi {
                     Element snippet = Xml.transform(subtemplate, xslProcessing, parameters);
 
                     collectResults.getEntries().put(uuid, uuid, snippet);
-                    counter ++;
                 }
             }
 
             report.addInfos(String.format(
-                "%d entries extracted from shapefile '%s'.",
-                counter,
-                shapefile.getName()
+                    "%d entries extracted from shapefile '%s'.",
+                collectResults.getEntries().size(),
+                shapeFile.getName()
             ));
         }
 
         // Save the snippets and index
         if (collectResults.getEntries().size() > 0) {
+            final ServiceContext context = ApiUtils.createServiceContext(request);
+            int user = context.getUserSession().getUserIdAsInt();
+            String siteId = context.getBean(SettingManager.class).getSiteId();
+
             // Create an empty record providing schema information
             // about collected subtemplates
             Metadata record = new Metadata();
@@ -828,5 +746,118 @@ public class DirectoryApi {
             report.close();
         }
         return report;
+    }
+
+    private String computeGeometry(SimpleFeature feature, String geomProjectionTo, boolean lenient, SimpleFeatureType simpleFeatureType)
+            throws TransformerException, IOException, FactoryException, ResourceNotFoundException, TransformException, SchemaException {
+
+//         ===================
+//        SimpleFeatureType collectionSchema = collection.getSchema();
+//        String srsName = CRS.toSRS(collectionSchema.getCoordinateReferenceSystem());
+//        new GeometryTransformer.GeometryTranslator(new MyHandler()).encode(feature.getDefaultGeometry(), srsName);
+//
+//         ===================
+//        GeometryTransformer geometryTransformer = new GeometryTransformer();
+//        geometryTransformer.setOmitXMLDeclaration(true);
+//        geometryTransformer.setNamespaceDeclarationEnabled(false);
+//        geometryTransformer.setNumDecimals(5);
+//        geometryTransformer.setEncoding(Charset.defaultCharset());
+//        return geometryTransformer.transform(feature.getDefaultGeometry());
+
+        CoordinateReferenceSystem dataCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
+
+        GML encode = new GML(GML.Version.WFS1_1);
+        encode.setNamespace("gn", "http://geonetwork-opensource.org");
+        encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
+        encode.setEncoding(Charset.forName("UTF-8"));
+        GML gml = new GML(org.geotools.GML.Version.GML3);
+
+        CoordinateReferenceSystem geomProjection = null;
+        if (StringUtils.isNotEmpty(geomProjectionTo)) {
+            try {
+                geomProjection = CRS.getAuthorityFactory(true)
+                        .createCoordinateReferenceSystem(geomProjectionTo);
+
+            } catch (NoSuchAuthorityCodeException ex) {
+                throw new ResourceNotFoundException(String.format(
+                        "Projection '%s' to convert geometry to not foundin EPSG database",
+                        geomProjectionTo));
+            }
+        }
+
+        Geometry featureGeometry = (Geometry) feature.getDefaultGeometry();
+        if (geomProjection != null) {
+            MathTransform transform = CRS.findMathTransform(
+                    dataCrs, geomProjection, lenient);
+            // ----> of no use ?
+            featureGeometry = JTS.transform(featureGeometry, transform);
+        }
+
+        List<SimpleFeature> c = new LinkedList<SimpleFeature>();
+        SimpleFeatureType TYPE = DataUtilities.createType(
+                "gn.the_geom",
+                "geom:Geometry");
+        TYPE.getUserData().put("prefix", "gn");
+        c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {
+                feature.getDefaultGeometry() }, null));
+//        c.add(feature);
+        ByteArrayOutputStream outXml = new ByteArrayOutputStream();
+
+        encode.encode(outXml,
+                new ListFeatureCollection(simpleFeatureType, c));
+        outXml.close();
+        return outXml.toString();
+    }
+
+    private Envelope computeEnvelope(SimpleFeature feature) throws TransformException {
+        BoundingBox bounds = feature.getBounds();
+        return JTS.toGeographic(
+            new Envelope(bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY()),
+            feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem());
+    }
+
+    private String computeUuid(String uuidAttribute, SimpleFeature feature) {
+        String featureUuidValue = null;
+        if (StringUtils.isNotEmpty(uuidAttribute)) {
+            Object attribute = feature.getAttribute(uuidAttribute);
+            if (attribute != null) {
+                featureUuidValue = attribute.toString();
+            }
+        }
+        return StringUtils.isNotEmpty(featureUuidValue) ? featureUuidValue : UUID.randomUUID().toString();
+    }
+
+    private String computeDescription(String descriptionAttribute, SimpleFeature feature) {
+        String featureDescriptionValue = "";
+        if (StringUtils.isNotEmpty(descriptionAttribute)) {
+            Object attribute = feature.getAttribute(descriptionAttribute);
+            if (attribute != null) {
+                featureDescriptionValue = attribute.toString();
+            }
+        }
+        return StringUtils.isNotEmpty(featureDescriptionValue) ? featureDescriptionValue : "";
+    }
+
+    private SimpleFeatureCollection shapeFileToFeatureCollection(File shapefile) throws IOException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("url", shapefile.toURI().toURL());
+        DataStore dataStore = DataStoreFinder.getDataStore(map);
+        String typeName = dataStore.getTypeNames()[0];
+        SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
+        return source.getFeatures(Filter.INCLUDE);
+    }
+
+    private File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
+        File zipFile = new File(file.getOriginalFilename());
+        file.transferTo(zipFile);
+        Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
+        ZipUtil.extract(zipFile.toPath(), toDirectory);
+        File [] shapefiles = toDirectory.toFile().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".shp");
+            }
+        });
+        return shapefiles;
     }
 }
