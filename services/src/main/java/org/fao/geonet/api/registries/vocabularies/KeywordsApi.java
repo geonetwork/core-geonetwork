@@ -110,7 +110,6 @@ public class KeywordsApi {
             required = false
         )
         @RequestParam(
-            value = "Number of rows",
             required = false,
             defaultValue = "1000"
         )
