@@ -1125,5 +1125,6 @@
     "confirmDeleteThesaurus": "Are you sure you want to delete this thesaurus?",
     "switchLangTo": "Switch language...",
     "showResultsCount": "Show {{count}} results",
-    "keywordMissingValue": "missing value"
+    "keywordMissingValue": "missing value",
+    "editKeyword": "Edit keyword"
 }
