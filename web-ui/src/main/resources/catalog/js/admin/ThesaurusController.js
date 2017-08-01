@@ -549,19 +549,26 @@
      * Remove a keyword
      */
       $scope.deleteKeyword = function(k) {
-        $scope.keywordSelected = k;
-        $http.get('thesaurus.keyword.remove?pThesaurus=' + k.thesaurus.key +
-            '&id=' + encodeURIComponent(k.uri))
-            .success(function(data) {
-              searchThesaurusKeyword();
-            })
-            .error(function(data) {
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('keywordDeleteError'),
-                error: data,
-                timeout: 0,
-                type: 'danger'});
-            });
+        $scope.keywordToDelete = k;
+        $('#gn-confirm-delete-keyword').modal('show');
+      };
+      $scope.confirmDeleteKeyword = function() {
+        var k = $scope.keywordToDelete;
+        $http.get('thesaurus.keyword.remove?pThesaurus=' + k.thesaurusKey +
+          '&id=' + encodeURIComponent(k.uri))
+          .success(function(data) {
+            searchThesaurusKeyword();
+          })
+          .error(function(data) {
+            $rootScope.$broadcast('StatusUpdated', {
+              title: $translate.instant('keywordDeleteError'),
+              error: data,
+              timeout: 0,
+              type: 'danger'});
+          })
+          .finally(function () {
+            $scope.keywordToDelete = null;
+          });
       };
 
       /**
