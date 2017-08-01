@@ -123,11 +123,15 @@ public class KeywordsApi {
             required = false
         )
             int start,
-//        @RequestParam(
-//            value = XmlParams.pLang,
-//            defaultValue = ""
-//        )
-//            List<String> targetLangs,
+        @ApiParam(
+                value = "Target langs",
+                required = false
+        )
+        @RequestParam(
+            value = XmlParams.pLang,
+                required = false
+        )
+            List<String> targetLangs,
         @ApiParam(
             value = "Thesaurus identifier",
             required = false
@@ -192,7 +196,6 @@ public class KeywordsApi {
         searcher = new KeywordsSearcher(context, thesaurusMan);
 
         IsoLanguagesMapper languagesMapper = applicationContext.getBean(IsoLanguagesMapper.class);
-        List<String> targetLangs = new ArrayList<>();
         String thesauriDomainName = null;
 
         KeywordSearchParamsBuilder builder = parseBuilder(
@@ -258,10 +261,12 @@ public class KeywordsApi {
         }
 
         boolean addedLang = false;
-        for (String targetLang : targetLangs) {
-            if (!targetLang.trim().isEmpty()) {
-                parsedParams.addLang(targetLang.trim());
-                addedLang = true;
+        if(targetLangs != null) {
+            for (String targetLang : targetLangs) {
+                if (!targetLang.trim().isEmpty()) {
+                    parsedParams.addLang(targetLang.trim());
+                    addedLang = true;
+                }
             }
         }
         if (!addedLang) {
