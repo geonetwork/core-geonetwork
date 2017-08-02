@@ -101,6 +101,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -808,9 +809,9 @@ public class DirectoryApi {
     }
 
     private File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
-        File zipFile = new File(file.getOriginalFilename());
+        Path toDirectory = Files.createTempDirectory("gn-imported-entries-");         
+        File zipFile = new File(Paths.get(toDirectory.toString(), file.getOriginalFilename()).toString());;
         file.transferTo(zipFile);
-        Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
         ZipUtil.extract(zipFile.toPath(), toDirectory);
         File [] shapefiles = toDirectory.toFile().listFiles(new FilenameFilter() {
             @Override
