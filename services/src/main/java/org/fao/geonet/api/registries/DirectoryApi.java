@@ -661,7 +661,7 @@ public class DirectoryApi {
                     String uuid = computeUuid(uuidAttribute, feature);
                     String description = computeDescription(descriptionAttribute, feature);
                     Envelope wgsEnvelope = computeEnvelope(feature);
-                    Geometry featureGeometry = featureGeometry = reprojGeom(geomProjectionTo, lenient, feature);
+                    Geometry featureGeometry = reprojGeom(geomProjectionTo, lenient, feature);
                     String xmlGeometry = geometryToXml(featureGeometry, collection.getSchema());
 
                     Map<String, Object> parameters = new HashMap<>();
@@ -747,7 +747,6 @@ public class DirectoryApi {
         } else {
             return (Geometry) feature.getDefaultGeometry();
         }
-
     }
 
     private String geometryToXml(Object geometry, SimpleFeatureType simpleFeatureType)

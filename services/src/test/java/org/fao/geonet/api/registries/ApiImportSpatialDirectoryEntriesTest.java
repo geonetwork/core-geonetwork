@@ -1,5 +1,6 @@
 package org.fao.geonet.api.registries;
 
+import org.apache.http.HttpRequest;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
@@ -32,12 +33,57 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
     @Autowired
     private SpringLocalServiceInvoker invoker;
 
-
     @Test
     public void nominal() throws Exception {
+        processLayersZip("layers_111_feature.xml",
+                new RequestCustomizer() {
+                    @Override
+                    public void customizeRequest(MockMultipartHttpServletRequest request) {
+                        request.setParameter("schema", "iso19139");
+                        request.setParameter("process", "build-extent-subtemplate");
+                        request.setParameter("descriptionAttribute", "desc");
+                        request.setParameter("onlyBoundingBox", "false");
+                    }
+                });
+    }
+
+    @Test
+    public void nominalWithReprojTo4326_IESame() throws Exception {
+        processLayersZip("layers_111_feature.xml",
+                new RequestCustomizer() {
+                    @Override
+                    public void customizeRequest(MockMultipartHttpServletRequest request) {
+                        request.setParameter("schema", "iso19139");
+                        request.setParameter("process", "build-extent-subtemplate");
+                        request.setParameter("descriptionAttribute", "desc");
+                        request.setParameter("onlyBoundingBox", "false");
+                        request.setParameter("geomProjectionTo", "EPSG:4326");
+                    }
+                });
+    }
+
+    @Test
+    public void nominalWithReprojTo3857() throws Exception {
+        processLayersZip("layers_111_feature_EPSG_3857.xml",
+                new RequestCustomizer() {
+                    @Override
+                    public void customizeRequest(MockMultipartHttpServletRequest request) {
+                        request.setParameter("schema", "iso19139");
+                        request.setParameter("process", "build-extent-subtemplate");
+                        request.setParameter("descriptionAttribute", "desc");
+                        request.setParameter("onlyBoundingBox", "false");
+                        request.setParameter("geomProjectionTo", "EPSG:3857");
+                    }
+                });
+    }
+
+    static interface RequestCustomizer {
+        void customizeRequest(MockMultipartHttpServletRequest request);
+    }
+
+    private void processLayersZip(String expectedFileName, RequestCustomizer rc) throws Exception {
         createServiceContext();
         User user = new User().setId(USER_ID);
-
         HttpSession session = loginAs(user);
 
         MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
@@ -49,11 +95,8 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
                 getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/layers.zip"));
         request.addFile(file);
         request.setSession(session);
-        request.setParameter("schema", "iso19139");
-        request.setParameter("process", "build-extent-subtemplate");
+        rc.customizeRequest(request);
         request.setParameter("uuidAttribute", "id");
-        request.setParameter("descriptionAttribute", "desc");
-        request.setParameter("onlyBoundingBox", "false");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         SimpleMetadataProcessingReport report = (SimpleMetadataProcessingReport) invoker.invoke(request, response);
@@ -64,7 +107,7 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
         assertEquals(3, datas.size());
 
         Metadata data = metadataRepo.findOneByUuid("111");
-        BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/layers_111_feature.xml")));
+        BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/" + expectedFileName)));
         BufferedReader BRForFirst = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data.getData().getBytes())));
 
         String line;
