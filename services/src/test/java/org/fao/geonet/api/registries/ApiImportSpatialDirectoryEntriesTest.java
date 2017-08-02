@@ -1,4 +1,4 @@
-package org.fao.geonet.api.directory;
+package org.fao.geonet.api.registries;
 
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.Metadata;
@@ -46,7 +46,7 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
                 "file",
                 "layers.zip",
                 null,
-                getClass().getClassLoader().getResourceAsStream("layers.zip"));
+                getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/layers.zip"));
         request.addFile(file);
         request.setSession(session);
         request.setParameter("schema", "iso19139");
@@ -64,7 +64,7 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
         assertEquals(3, datas.size());
 
         Metadata data = metadataRepo.findOneByUuid("111");
-        BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("layers_111_feature.xml")));
+        BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/layers_111_feature.xml")));
         BufferedReader BRForFirst = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data.getData().getBytes())));
 
         String line;
