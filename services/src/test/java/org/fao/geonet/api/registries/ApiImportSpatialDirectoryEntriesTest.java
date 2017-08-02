@@ -48,7 +48,7 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
     }
 
     @Test
-    public void nominalWithReprojTo4326_IESame() throws Exception {
+    public void withReprojTo4326_IESame() throws Exception {
         processLayersZip("layers_111_feature.xml",
                 new RequestCustomizer() {
                     @Override
@@ -63,7 +63,7 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
     }
 
     @Test
-    public void nominalWithReprojTo3857() throws Exception {
+    public void withReprojTo3857() throws Exception {
         processLayersZip("layers_111_feature_EPSG_3857.xml",
                 new RequestCustomizer() {
                     @Override

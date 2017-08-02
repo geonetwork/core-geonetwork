@@ -26,6 +26,7 @@
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:gn="http://geonetwork-opensource.org"
                 xmlns:saxon="http://saxon.sf.net/"
                 version="2.0"
                 extension-element-prefixes="saxon"
@@ -74,7 +75,7 @@
         <gmd:geographicElement>
           <gmd:EX_BoundingPolygon>
             <gmd:polygon>
-              <xsl:copy-of select="$theGeom//*:the_geom/*"/>
+              <xsl:copy-of select="$theGeom//*/gn:geom/*"/>
             </gmd:polygon>
           </gmd:EX_BoundingPolygon>
         </gmd:geographicElement>
