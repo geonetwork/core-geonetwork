@@ -221,7 +221,7 @@
           <div ng-show="!searching" class="flex-col">
             <div class="flex-row">
               <button type="button" class="btn btn-success"
-                ng-click="addKeyword()">
+                ng-click="addKeyword()" ng-disabled="isExternal()">
                 <i class="fa fa-plus" />
                 <span translate>addKeyword</span>
               </button>
@@ -239,14 +239,11 @@
                 ng-repeat="k in keywords">
 
                 <div class="flex-spacer"></div>
-                <i class="fa fa-lock text-muted"
-                  title="{{ 'thesaurusExternalHelp' | translate }}"
-                  ng-show="isExternal()" />
                 <i class="fa fa-warning text-muted"
                   title="{{ 'keywordNotAvailableInThisLanguage' | translate }}"
                   ng-show="!k.values[currentLangShown]" />
                 <div class="flex-spacer"
-                  ng-show="isExternal() || !k.values[currentLangShown]"></div>
+                  ng-show="!k.values[currentLangShown]"></div>
 
                 <div class="text-ellipsis">
                   <a href ng-click="editKeyword(k)">

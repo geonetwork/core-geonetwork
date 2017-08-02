@@ -169,6 +169,15 @@
       searchThesaurusKeyword = function() {
         $scope.searching = true;
         if ($scope.thesaurusSelected) {
+          // list of ui languages; we want the keyword info in all these
+          // put the current lang first to be used for sorting
+          var langsList = [$scope.currentLangShown];
+          Object.keys($scope.availableLangs).forEach(function (lang3) {
+            if (langsList.indexOf(lang3) === -1) {
+              langsList.push(lang3);
+            }
+          });
+
           $scope.recordsRelatedToThesaurus = 0;
           $http.get('../api/registries/vocabularies/search?type=CONTAINS' +
               '&thesaurus=' + $scope.thesaurusSelected.key +
@@ -178,7 +187,7 @@
               ($scope.maxNumberOfKeywords ||
                       defaultMaxNumberOfKeywords) +
               '&q=' + (encodeURI($scope.keywordFilter) || '*') +
-              '&lang=' + $scope.currentLangShown
+              '&pLang=' + langsList.join(',')
           ).success(function(data) {
             $scope.keywords = data;
             gnSearchManagerService.gnSearch({
