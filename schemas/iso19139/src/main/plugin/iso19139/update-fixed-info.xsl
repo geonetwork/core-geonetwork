@@ -57,6 +57,9 @@
   <xsl:variable name="mainLanguageId"
                 select="upper-case(java:twoCharLangCode($mainLanguage))"/>
 
+  <xsl:variable name="locales"
+                select="/root/*/gmd:locale/gmd:PT_Locale"/>
+
   <xsl:variable name="defaultEncoding"
                 select="'utf8'"/>
 
@@ -443,7 +446,7 @@
 
 
   <!-- ================================================================= -->
-  <!-- Set local identifier to the first 3 letters of iso code. Locale ids
+  <!-- Set local identifier to the first 2 letters of iso code. Locale ids
         are used for multilingual charcterString using #iso2code for referencing.
     -->
   <xsl:template match="gmd:PT_Locale">
@@ -461,28 +464,38 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
-  <xsl:variable name="language" select="//gmd:PT_Locale"/> <!-- Need list of all locale -->
-  <xsl:template match="gmd:LocalisedCharacterString">
-    <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="currentLocale"
-                    select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
-      <xsl:variable name="ptLocale"
-                    select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-      <xsl:variable name="id"
-                    select="if($currentLocale != '' and $ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue != '') then
-                        upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue)) else ''"/>
-      <xsl:if test="$id != '' and @locale!=concat('#', $id) ">
-        <xsl:attribute name="locale">
-          <xsl:value-of select="concat('#',$id)"/>
-        </xsl:attribute>
-      </xsl:if>
 
-      <xsl:if test="$id != ''">
-        <xsl:apply-templates select="@*"/>
-        <xsl:apply-templates select="node()"/>
-      </xsl:if>
-    </xsl:element>
+  <!-- For multilingual elements. Check that the local
+  is defined in record. If not, remove the element. -->
+  <xsl:template match="gmd:textGroup">
+    <xsl:variable name="elementLocalId"
+                  select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+   <xsl:choose>
+      <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString>
+            <xsl:variable name="currentLocale"
+                          select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+            <xsl:variable name="ptLocale"
+                          select="$locales[@id = string($currentLocale)]"/>
+            <xsl:variable name="id"
+                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="$id != ''">
+              <xsl:attribute name="locale">
+                <xsl:value-of select="concat('#',$id)"/>
+              </xsl:attribute>
+            </xsl:if>
+
+            <xsl:apply-templates select="gmd:LocalisedCharacterString/text()"/>
+          </gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      </xsl:when>
+      <xsl:otherwise>
+        <!--<xsl:message>Removing <xsl:copy-of select="."/>.
+          This element was removed because not declared in record locales.</xsl:message>-->
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
