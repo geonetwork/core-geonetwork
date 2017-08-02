@@ -637,8 +637,8 @@ public class DirectoryApi {
             MultipartHttpServletRequest request)
         throws Exception {
 
-        final ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final DataManager dm = applicationContext.getBean(DataManager.class);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        DataManager dm = applicationContext.getBean(DataManager.class);
 
         MetadataSchema metadataSchema = dm.getSchema(schema);
         Path xslProcessing = metadataSchema.getSchemaDir().resolve("process").resolve(process + ".xsl");
@@ -650,19 +650,9 @@ public class DirectoryApi {
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
-
-
-
         for (File shapeFile : shapeFiles) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("url", shapeFile.toURI().toURL());
 
             SimpleFeatureCollection collection = shapeFileToFeatureCollection(shapeFile);
-
-            GML encode = new GML(GML.Version.WFS1_1);
-            encode.setNamespace("gn", "http://geonetwork-opensource.org");
-            encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
-            encode.setEncoding(Charset.forName("UTF-8"));
 
             try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
@@ -678,8 +668,6 @@ public class DirectoryApi {
 
                     Map<String, Object> parameters = new HashMap<>();
 
-
-
                     parameters.put("uuid", uuid);
                     parameters.put("description", description);
                     parameters.put("east", wgsEnvelope.getMaxX());
@@ -689,14 +677,7 @@ public class DirectoryApi {
                     parameters.put("onlyBoundingBox", onlyBoundingBox);
                     parameters.put("geometry", geometry);
 
-                    // Reproject geometry if needed and get GML encoding
-
-                    // A dummy XML to transform with to build the output
-                    // subtemplate
                     Element subtemplate = new Element("root");
-
-
-                    // XSL transformation building the subtemplate snippet
                     Element snippet = Xml.transform(subtemplate, xslProcessing, parameters);
 
                     collectResults.getEntries().put(uuid, uuid, snippet);
@@ -712,7 +693,7 @@ public class DirectoryApi {
 
         // Save the snippets and index
         if (collectResults.getEntries().size() > 0) {
-            final ServiceContext context = ApiUtils.createServiceContext(request);
+            ServiceContext context = ApiUtils.createServiceContext(request);
             int user = context.getUserSession().getUserIdAsInt();
             String siteId = context.getBean(SettingManager.class).getSiteId();
 
