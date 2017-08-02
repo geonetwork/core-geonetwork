@@ -35,7 +35,8 @@
   <!-- Default template to use (ISO19139 keyword by default). -->
   <xsl:variable name="defaultTpl" select="'to-iso19139-keyword'"/>
 
-  <xsl:variable name="serviceUrl" select="$fullURLForService"/>
+  <xsl:variable name="serviceUrl" select="/root/nodeUrl"/>
+  <xsl:variable name="node" select="/root/nodeId"/>
 
   <xsl:template match="/">
     <xsl:variable name="tpl"

@@ -26,6 +26,8 @@ package org.fao.geonet.api.registries.vocabularies;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -36,13 +38,16 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -56,6 +61,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.nio.file.Path;
 import java.util.*;
 
 @EnableWebMvc
@@ -221,6 +227,133 @@ public class KeywordsApi {
         // get the results
         return searcher.getResults();
     }
+
+
+
+    @Autowired
+    IsoLanguagesMapper mapper;
+
+    @Autowired
+    ThesaurusManager thesaurusManager;
+
+    @ApiOperation(
+        value = "Get keyword by id",
+        nickname = "getKeywordById",
+        notes = "Retrieve XML representation of keyword(s) from same thesaurus" +
+            "using different transformations. " +
+            "'to-iso19139-keyword' is the default and return an ISO19139 snippet." +
+            "'to-iso19139-keyword-as-xlink' return an XLinked element. Custom transformation " +
+            "can be create on a per schema basis."
+    )
+    @RequestMapping(
+        path = "/keyword",
+        method = RequestMethod.GET,
+        produces = {
+            MediaType.APPLICATION_XML_VALUE
+        })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "XML snippet with requested keywords."),
+    })
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Element getKeywordById(
+        @ApiParam(
+            value = "Keyword identifier or list of keyword identifiers comma separated.",
+            required = true)
+        @RequestParam (name = "id")
+            String uri,
+        @ApiParam(
+            value = "Thesaurus to look info for the keyword(s).",
+            required = true)
+        @RequestParam (name = "thesaurus")
+            String sThesaurusName,
+        @ApiParam(
+            value = "Languages.",
+            required = true)
+        @RequestParam (name = "lang")
+            String [] langs,
+        @ApiParam(
+            value = "Only print the keyword, no thesaurus information.",
+            required = false)
+        @RequestParam (required = false, defaultValue = "false")
+            boolean keywordOnly,
+        @ApiParam(
+            value = "XSL template to use (ISO19139 keyword by default, see convert.xsl).",
+            required = false)
+        @RequestParam (required = false)
+            String transformation,
+        @ApiIgnore
+        @RequestParam
+            Map<String,String> allRequestParams,
+        HttpServletRequest request
+
+    ) throws Exception {
+        final String SEPARATOR = ",";
+        ServiceContext context = ApiUtils.createServiceContext(request);
+
+        for (int i = 0; i < langs.length; i++) {
+            langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
+        }
+
+        Element descKeys;
+
+        if (uri == null) {
+            descKeys = new Element("descKeys");
+        } else {
+            KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusManager);
+
+            KeywordBean kb;
+            if (!uri.contains(SEPARATOR)) {
+                kb = searcher.searchById(uri, sThesaurusName, langs);
+                if (kb == null) {
+                    descKeys = new Element("descKeys");
+                } else {
+                    descKeys = KeywordsSearcher.toRawElement(new Element("descKeys"), kb);
+                }
+            } else {
+                String[] url = uri.split(SEPARATOR);
+                List<KeywordBean> kbList = new ArrayList<>();
+                for (String currentUri : url) {
+                    kb = searcher.searchById(currentUri, sThesaurusName, langs);
+                    if (kb != null) {
+                        kbList.add(kb);
+                    }
+                }
+                descKeys = new Element("descKeys");
+                for (KeywordBean keywordBean : kbList) {
+                    KeywordsSearcher.toRawElement(descKeys, keywordBean);
+                }
+            }
+        }
+
+        GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        Path convertXsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/convert.xsl");
+
+        Element gui = new Element("gui");
+        Element nodeUrl = new Element("nodeUrl").setText(settingManager.getNodeURL());
+        Element nodeId = new Element("nodeId").setText(context.getNodeId());
+        Element thesaurusEl = new Element("thesaurus");
+        final Element root = new Element("root");
+
+        gui.addContent(thesaurusEl);
+        thesaurusEl.addContent(thesaurusManager.buildResultfromThTable(context));
+
+        Element requestParams = new Element ("request");
+        for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
+            requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
+        }
+        root.addContent(requestParams);
+        root.addContent(descKeys);
+        root.addContent(gui);
+        root.addContent(nodeUrl);
+        root.addContent(nodeId);
+        final Element transform = Xml.transform(root, convertXsl);
+
+        return transform;
+    }
+
+
 
 
     private KeywordSearchParamsBuilder parseBuilder(String uiLang, String q, int maxResults, int offset,
