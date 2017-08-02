@@ -170,24 +170,25 @@
 
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
-
-                  <xsl:call-template name="render-form-field">
-                    <xsl:with-param name="name" select="@ref"/>
-                    <xsl:with-param name="lang" select="@lang"/>
-                    <xsl:with-param name="value" select="."/>
-                    <xsl:with-param name="type" select="$type"/>
-                    <xsl:with-param name="tooltip" select="$tooltip"/>
-                    <xsl:with-param name="isRequired" select="$isRequired"/>
-                    <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
-                    <xsl:with-param name="isDisabled" select="$isDisabled"/>
-                    <xsl:with-param name="editInfo" select="$editInfo"/>
-                    <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-                    <!--  Helpers can't be provided for all languages
-                    <xsl:with-param name="listOfValues" select="$listOfValues"/>
-                    -->
-                    <xsl:with-param name="checkDirective"
-                                    select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
-                  </xsl:call-template>
+                  <xsl:if test="@lang != ''">
+                    <xsl:call-template name="render-form-field">
+                      <xsl:with-param name="name" select="@ref"/>
+                      <xsl:with-param name="lang" select="@lang"/>
+                      <xsl:with-param name="value" select="."/>
+                      <xsl:with-param name="type" select="$type"/>
+                      <xsl:with-param name="tooltip" select="$tooltip"/>
+                      <xsl:with-param name="isRequired" select="$isRequired"/>
+                      <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
+                      <xsl:with-param name="isDisabled" select="$isDisabled"/>
+                      <xsl:with-param name="editInfo" select="$editInfo"/>
+                      <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                      <!--  Helpers can't be provided for all languages
+                      <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                      -->
+                      <xsl:with-param name="checkDirective"
+                                      select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
+                    </xsl:call-template>
+                  </xsl:if>
                 </xsl:for-each>
 
                 <!-- Display the helper for a multilingual field below the field.

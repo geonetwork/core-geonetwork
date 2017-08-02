@@ -469,16 +469,21 @@
       <xsl:variable name="ptLocale"
                     select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
-      <xsl:apply-templates select="@*"/>
-      <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
+                    select="if($currentLocale != '' and $ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue != '') then
+                        upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue)) else ''"/>
+      <xsl:if test="$id != '' and @locale!=concat('#', $id) ">
         <xsl:attribute name="locale">
           <xsl:value-of select="concat('#',$id)"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:apply-templates select="node()"/>
+
+      <xsl:if test="$id != ''">
+        <xsl:apply-templates select="@*"/>
+        <xsl:apply-templates select="node()"/>
+      </xsl:if>
     </xsl:element>
   </xsl:template>
+
 
   <!-- Remove attribute indeterminatePosition having empty
   value which is not a valid facet for it. -->
