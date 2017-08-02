@@ -87,7 +87,28 @@
         data-template-type="extent"
         data-filter='{"_root": "gmd:EX_Extent"}'
         data-insert-modes=""/>
-    </for>-->
+    </for>
+
+    for formats:
+    <for name="gmd:resourceFormat" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="true"
+              data-popup-action="true"
+              data-template-type="format"
+              data-filter='{"_root": "gmd:MD_Format"}'
+              data-insert-modes="xlink"/>
+    </for>
+    <for name="gmd:distributionFormat" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="false"
+              data-search-action="true"
+              data-popup-action="true"
+              data-template-type="format"
+              data-filter='{"_root": "gmd:MD_Format"}'
+              data-insert-modes="xlink"/>
+    </for>
+    -->
 
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
