@@ -92,7 +92,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.TransformerException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -661,8 +660,9 @@ public class DirectoryApi {
 
                     String uuid = computeUuid(uuidAttribute, feature);
                     String description = computeDescription(descriptionAttribute, feature);
-                    String geometry = computeGeometry(feature, geomProjectionTo, lenient, collection.getSchema());
                     Envelope wgsEnvelope = computeEnvelope(feature);
+                    Geometry featureGeometry = featureGeometry = reprojGeom(geomProjectionTo, lenient, feature);
+                    String xmlGeometry = geometryToXml(featureGeometry, collection.getSchema());
 
                     Map<String, Object> parameters = new HashMap<>();
 
@@ -673,7 +673,7 @@ public class DirectoryApi {
                     parameters.put("west", wgsEnvelope.getMinX());
                     parameters.put("south", wgsEnvelope.getMinY());
                     parameters.put("onlyBoundingBox", onlyBoundingBox);
-                    parameters.put("geometry", geometry);
+                    parameters.put("geometry", xmlGeometry);
 
                     Element subtemplate = new Element("root");
                     Element snippet = Xml.transform(subtemplate, xslProcessing, parameters);
@@ -727,49 +727,35 @@ public class DirectoryApi {
         return report;
     }
 
-    private String computeGeometry(SimpleFeature feature, String geomProjectionTo, boolean lenient, SimpleFeatureType simpleFeatureType)
-            throws TransformerException, IOException, FactoryException, ResourceNotFoundException, TransformException, SchemaException {
-
-//         ===================
-//        SimpleFeatureType collectionSchema = collection.getSchema();
-//        String srsName = CRS.toSRS(collectionSchema.getCoordinateReferenceSystem());
-//        new GeometryTransformer.GeometryTranslator(new MyHandler()).encode(feature.getDefaultGeometry(), srsName);
-//
-//         ===================
-//        GeometryTransformer geometryTransformer = new GeometryTransformer();
-//        geometryTransformer.setOmitXMLDeclaration(true);
-//        geometryTransformer.setNamespaceDeclarationEnabled(false);
-//        geometryTransformer.setNumDecimals(5);
-//        geometryTransformer.setEncoding(Charset.defaultCharset());
-//        return geometryTransformer.transform(feature.getDefaultGeometry());
-
+    private Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)
+            throws FactoryException, ResourceNotFoundException, TransformException {
         CoordinateReferenceSystem dataCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
-
-        GML encode = new GML(GML.Version.WFS1_1);
-        encode.setNamespace("gn", "http://geonetwork-opensource.org");
-        encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
-        encode.setEncoding(Charset.forName("UTF-8"));
-
         CoordinateReferenceSystem geomProjection = null;
         if (StringUtils.isNotEmpty(geomProjectionTo)) {
             try {
-                geomProjection = CRS.getAuthorityFactory(true)
-                        .createCoordinateReferenceSystem(geomProjectionTo);
+                geomProjection = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem(geomProjectionTo);
 
             } catch (NoSuchAuthorityCodeException ex) {
-                throw new ResourceNotFoundException(String.format(
-                        "Projection '%s' to convert geometry to not foundin EPSG database",
+                throw new ResourceNotFoundException(String.format("Projection '%s' to convert geometry to not foundin EPSG database",
                         geomProjectionTo));
             }
         }
 
-        Geometry featureGeometry = (Geometry) feature.getDefaultGeometry();
         if (geomProjection != null) {
-            MathTransform transform = CRS.findMathTransform(
-                    dataCrs, geomProjection, lenient);
-            // ----> of no use ?
-            featureGeometry = JTS.transform(featureGeometry, transform);
+            MathTransform transform = CRS.findMathTransform(dataCrs, geomProjection, lenient);
+            return JTS.transform((Geometry) feature.getDefaultGeometry(), transform);
+        } else {
+            return (Geometry) feature.getDefaultGeometry();
         }
+
+    }
+
+    private String geometryToXml(Object geometry, SimpleFeatureType simpleFeatureType)
+            throws IOException, SchemaException {
+        GML encode = new GML(GML.Version.WFS1_1);
+        encode.setNamespace("gn", "http://geonetwork-opensource.org");
+        encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
+        encode.setEncoding(Charset.forName("UTF-8"));
 
         List<SimpleFeature> c = new LinkedList<SimpleFeature>();
         SimpleFeatureType TYPE = DataUtilities.createType(
@@ -777,9 +763,7 @@ public class DirectoryApi {
                 "the_geom",
                 "geom:Geometry");
         TYPE.getUserData().put("prefix", "gn");
-        c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {
-                feature.getDefaultGeometry() }, null));
-//        c.add(feature);
+        c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {geometry }, null));
         ByteArrayOutputStream outXml = new ByteArrayOutputStream();
 
         encode.encode(outXml,
