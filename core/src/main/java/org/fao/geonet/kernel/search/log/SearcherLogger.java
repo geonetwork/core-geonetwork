@@ -146,7 +146,7 @@ public class SearcherLogger {
                     result.add(s);
                 }
             } else {
-                Log.warning(Geonet.SEARCH_LOGGER, "unknown queryInfo type: " + query.getClass().getName());
+                Log.debug(Geonet.SEARCH_LOGGER, "unknown queryInfo type: " + query.getClass().getName());
             }
         }
 

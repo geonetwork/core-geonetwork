@@ -32,6 +32,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.es.EsClient;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
@@ -160,6 +161,12 @@ public class QueryRequest {
         this.formattedDate = new SimpleDateFormat(QueryRequest.DATE_FORMAT).format(this.date);
         //all queries default to ALL mdType, except if overloaded by a queryInfo object
         this.mdType = LuceneQueryParamType.MATCH_ALL_DOCS;
+        try {
+            this.client = ApplicationContextHolder.get().getBean(EsClient.class);
+        } catch(NoSuchBeanDefinitionException e) {
+            Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch client defined. " +
+                "If using maven use '-Des.spring.profile=es' option.");
+        }
     }
 
     /**
@@ -341,11 +348,8 @@ public class QueryRequest {
 
     public boolean storeToEs() {
         if (client == null) {
-          client = ApplicationContextHolder.get().getBean(EsClient.class);
-          if (client == null) {
-              Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
-              return false;
-          }
+          Log.debug(Geonet.SEARCH_LOGGER, "No Elasticsearch instance to log search in.");
+          return false;
         }
 
         Map<String, String> listOfDocumentsToIndex = new HashMap<>();
