@@ -117,8 +117,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class MetadataInsertDeleteApi {
 
     public static final String API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS = "Report about imported records.";
-    private final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
-    private final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
+    public static final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
+    public static final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
     private final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
     private final String API_PARAM_RECORD_VALIDATE = "Validate the record first and reject it if not valid.";
     private final String API_PARAM_RECORD_XSL = "XSL transformation to apply to the record.";
