@@ -751,7 +751,6 @@ public class DirectoryApi {
         encode.setNamespace("gn", "http://geonetwork-opensource.org");
         encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
         encode.setEncoding(Charset.forName("UTF-8"));
-        GML gml = new GML(org.geotools.GML.Version.GML3);
 
         CoordinateReferenceSystem geomProjection = null;
         if (StringUtils.isNotEmpty(geomProjectionTo)) {
@@ -776,7 +775,8 @@ public class DirectoryApi {
 
         List<SimpleFeature> c = new LinkedList<SimpleFeature>();
         SimpleFeatureType TYPE = DataUtilities.createType(
-                "gn.the_geom",
+                "http://geonetwork-opensource.org",
+                "the_geom",
                 "geom:Geometry");
         TYPE.getUserData().put("prefix", "gn");
         c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {

@@ -21,13 +21,13 @@
     <gmd:geographicElement>
         <gmd:EX_BoundingPolygon>
             <gmd:polygon>
-                <gml:boundedBy xmlns:null="gn" xmlns:gn="http://geonetwork-opensource.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gml:boundedBy xmlns:gn="http://geonetwork-opensource.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <gml:Envelope>
                         <gml:lowerCorner>-121.022869 -37.373231</gml:lowerCorner>
                         <gml:upperCorner>-35.756757 40.427185</gml:upperCorner>
                     </gml:Envelope>
                 </gml:boundedBy>
-                <geom xmlns="gn" xmlns:null="gn" xmlns:gn="http://geonetwork-opensource.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <gn:geom xmlns:gn="http://geonetwork-opensource.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wfs="http://www.opengis.net/wfs" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <gml:MultiSurface srsDimension="2">
                         <gml:surfaceMember>
                             <gml:Polygon>
@@ -39,7 +39,7 @@
                             </gml:Polygon>
                         </gml:surfaceMember>
                     </gml:MultiSurface>
-                </geom>
+                </gn:geom>
             </gmd:polygon>
         </gmd:EX_BoundingPolygon>
     </gmd:geographicElement>
