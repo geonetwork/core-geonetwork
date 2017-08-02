@@ -38,6 +38,7 @@
   <xsl:include href="layout/utility-fn.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
+  <xsl:variable name="node" select="/root/env/node"/>
 
   <!-- We use the category check to find out if this is an SDS metadata. Please replace with anything better -->
   <xsl:variable name="isSDS"
