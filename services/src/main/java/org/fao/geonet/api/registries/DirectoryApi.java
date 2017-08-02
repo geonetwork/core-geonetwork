@@ -659,7 +659,7 @@ public class DirectoryApi {
                 while (features.hasNext()) {
                     SimpleFeature feature = features.next();
 
-                    String uuid = computeUuid(uuidAttribute, feature);
+                    String uuid = computeUuid(uuidAttribute, uuidPattern, feature);
                     String description = computeDescription(descriptionAttribute, feature);
                     Envelope wgsEnvelope = computeEnvelope(feature);
                     Geometry featureGeometry = reprojGeom(geomProjectionTo, lenient, feature);
@@ -777,7 +777,7 @@ public class DirectoryApi {
             feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem());
     }
 
-    private String computeUuid(String uuidAttribute, SimpleFeature feature) {
+    private String computeUuid(String uuidAttribute, String uuidPattern, SimpleFeature feature) {
         String featureUuidValue = null;
         if (StringUtils.isNotEmpty(uuidAttribute)) {
             Object attribute = feature.getAttribute(uuidAttribute);
@@ -785,7 +785,8 @@ public class DirectoryApi {
                 featureUuidValue = attribute.toString();
             }
         }
-        return StringUtils.isNotEmpty(featureUuidValue) ? featureUuidValue : UUID.randomUUID().toString();
+        String uuid = StringUtils.isNotEmpty(featureUuidValue) ? featureUuidValue : UUID.randomUUID().toString();
+        return uuidPattern.replace("{{uuid}}", uuid);
     }
 
     private String computeDescription(String descriptionAttribute, SimpleFeature feature) {

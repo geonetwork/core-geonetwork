@@ -77,6 +77,18 @@
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
 
+    <!--
+    Enable the following to use subtemplates for extent type.
+    <for name="gmd:extent" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+        data-template-add-action="true"
+        data-search-action="true"
+        data-popup-action="true"
+        data-template-type="extent"
+        data-filter='{"_root": "gmd:EX_Extent"}'
+        data-insert-modes=""/>
+    </for>-->
+
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
         data-template-add-action="true"
