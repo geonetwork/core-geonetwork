@@ -634,15 +634,16 @@ public class DirectoryApi {
             MultipartHttpServletRequest request)
         throws Exception {
 
+        ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dm = applicationContext.getBean(DataManager.class);
+        SettingManager settingManager = applicationContext.getBean(SettingManager.class);
 
         MetadataSchema metadataSchema = dm.getSchema(schema);
         Path xslProcessing = metadataSchema.getSchemaDir().resolve("process").resolve(process + ".xsl");
 
         File[] shapeFiles = unzipAndFilterShp(file);
 
-        Set<Integer> listOfRecordInternalId = new HashSet<>();
         CollectResults collectResults = new CollectResults();
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -653,7 +654,6 @@ public class DirectoryApi {
 
             try (FeatureIterator<SimpleFeature> features = collection.features()) {
 
-                report.setTotalRecords(collection.size());
 
                 while (features.hasNext()) {
                     SimpleFeature feature = features.next();
@@ -684,22 +684,23 @@ public class DirectoryApi {
 
             report.addInfos(String.format(
                     "%d entries extracted from shapefile '%s'.",
-                collectResults.getEntries().size(),
+                collection.size(),
                 shapeFile.getName()
             ));
         }
 
+        report.setTotalRecords(collectResults.getEntries().size());
+
         // Save the snippets and index
         if (collectResults.getEntries().size() > 0) {
-            ServiceContext context = ApiUtils.createServiceContext(request);
-            int user = context.getUserSession().getUserIdAsInt();
-            String siteId = context.getBean(SettingManager.class).getSiteId();
-
             // Create an empty record providing schema information
             // about collected subtemplates
             Metadata record = new Metadata();
             record.getDataInfo().setSchemaId(schema);
             collectResults.setRecord(record);
+
+            int user = context.getUserSession().getUserIdAsInt();
+            String siteId = settingManager.getSiteId();
 
             DirectoryUtils.saveEntries(
                 context,
@@ -710,12 +711,11 @@ public class DirectoryApi {
 
             dm.flush();
 
+            Set<Integer> listOfRecordInternalId = new HashSet<>();
             listOfRecordInternalId.addAll(
                 collectResults.getEntryIdentifiers().values()
             );
-
-            BatchOpsMetadataReindexer r =
-                new BatchOpsMetadataReindexer(dm, listOfRecordInternalId);
+            BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, listOfRecordInternalId);
             r.process();
 
             report.close();
@@ -729,11 +729,11 @@ public class DirectoryApi {
 
     private Geometry reprojGeom(String geomProjectionTo, boolean lenient, SimpleFeature feature)
             throws FactoryException, ResourceNotFoundException, TransformException {
-        CoordinateReferenceSystem dataCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
-        CoordinateReferenceSystem geomProjection = null;
+        CoordinateReferenceSystem fromCrs = feature.getDefaultGeometryProperty().getDescriptor().getCoordinateReferenceSystem();
+        CoordinateReferenceSystem toCrs = null;
         if (StringUtils.isNotEmpty(geomProjectionTo)) {
             try {
-                geomProjection = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem(geomProjectionTo);
+                toCrs = CRS.getAuthorityFactory(true).createCoordinateReferenceSystem(geomProjectionTo);
 
             } catch (NoSuchAuthorityCodeException ex) {
                 throw new ResourceNotFoundException(String.format("Projection '%s' to convert geometry to not foundin EPSG database",
@@ -741,8 +741,8 @@ public class DirectoryApi {
             }
         }
 
-        if (geomProjection != null) {
-            MathTransform transform = CRS.findMathTransform(dataCrs, geomProjection, lenient);
+        if (toCrs != null) {
+            MathTransform transform = CRS.findMathTransform(fromCrs, toCrs, lenient);
             return JTS.transform((Geometry) feature.getDefaultGeometry(), transform);
         } else {
             return (Geometry) feature.getDefaultGeometry();
@@ -751,10 +751,10 @@ public class DirectoryApi {
 
     private String geometryToXml(Object geometry, SimpleFeatureType simpleFeatureType)
             throws IOException, SchemaException {
-        GML encode = new GML(GML.Version.WFS1_1);
-        encode.setNamespace("gn", "http://geonetwork-opensource.org");
-        encode.setBaseURL(new URL("http://geonetwork-opensource.org"));
-        encode.setEncoding(Charset.forName("UTF-8"));
+        GML gmlEncoder = new GML(GML.Version.WFS1_1);
+        gmlEncoder.setNamespace("gn", "http://geonetwork-opensource.org");
+        gmlEncoder.setBaseURL(new URL("http://geonetwork-opensource.org"));
+        gmlEncoder.setEncoding(Charset.forName("UTF-8"));
 
         List<SimpleFeature> c = new LinkedList<SimpleFeature>();
         SimpleFeatureType TYPE = DataUtilities.createType(
@@ -764,9 +764,7 @@ public class DirectoryApi {
         TYPE.getUserData().put("prefix", "gn");
         c.add(SimpleFeatureBuilder.build(TYPE, new Object[] {geometry }, null));
         ByteArrayOutputStream outXml = new ByteArrayOutputStream();
-
-        encode.encode(outXml,
-                new ListFeatureCollection(simpleFeatureType, c));
+        gmlEncoder.encode(outXml, new ListFeatureCollection(simpleFeatureType, c));
         outXml.close();
         return outXml.toString();
     }
