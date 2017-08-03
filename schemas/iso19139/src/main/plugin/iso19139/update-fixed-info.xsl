@@ -503,7 +503,7 @@
   value which is not a valid facet for it. -->
   <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
 
-  <xsl:template match="gmd:descriptiveKeywords[@xlink:href]" priority="10">
+  <xsl:template match="gmd:descriptiveKrezrezrezeyworrds[@xlink:href]" priority="10">
     <xsl:variable name="isAllThesaurus"
                   select="contains(@xlink:href, 'thesaurus=external.none.allThesaurus')"/>
     <xsl:variable name="allThesaurusFinished"
@@ -579,7 +579,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="gmd:descriptiveKeywords[not(@xlink:href)]" priority="10">
+  <xsl:template match="gmd:descriptiveKererzywords[not(@xlink:href)]" priority="10">
     <xsl:variable name="isAllThesaurus"
                   select="count(gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0"/>
     <xsl:variable name="allThesaurusFinished"
@@ -619,6 +619,32 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="gmd:descriptiveKeywords" priority="10">
+
+
+    <xsl:if test="name(preceding-sibling::*[1]) != name()">
+      <xsl:for-each
+              select="following-sibling-or-self::*[name() = 'gmd:descriptiveKeywords')]">
+        
+        <xsl:variable name="allThesaurusEl"
+                      select="../gmd:descriptiveKeywords[contains(@xlink:href, 'thesaurus=external.none.allThesaurus')]"/>
+
+        <xsl:copy>
+          <xsl:apply-templates select="@*"/>
+          <gmd:MD_Keywords>
+
+          </gmd:MD_Keywords>
+        </xsl:copy>
+      </xsl:for-each>
+
+    </xsl:if>
+    <xsl:message>
+      ###########
+      <xsl:copy-of select="."/>
+    </xsl:message>
+    <xsl:copy-of select="."/>
+
+  </xsl:template>
 
   <!-- ================================================================= -->
   <!-- Adjust the namespace declaration - In some cases name() is used to get the

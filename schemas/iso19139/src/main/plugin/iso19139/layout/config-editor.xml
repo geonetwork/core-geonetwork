@@ -2073,6 +2073,14 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
+
+      <thesaurusList>
+        <thesaurus key="external.none.allThesaurus"
+                   maxtags="2"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword-as-xlink"/>
+      </thesaurusList>
+
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">
