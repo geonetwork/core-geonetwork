@@ -110,9 +110,12 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
         BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/" + expectedFileName)));
         BufferedReader BRForFirst = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data.getData().getBytes())));
 
-        String line;
-        while ((line = expectedBRForFirst.readLine()) != null) {
-            assertEquals("The files differ!", line.replaceAll("^\\s+|\\s+$", ""), BRForFirst.readLine().replaceAll("^\\s+|\\s+$", ""));
+        String expectedLine;
+        while ((expectedLine = expectedBRForFirst.readLine()) != null) {
+            String line = BRForFirst.readLine();
+            if (expectedLine.indexOf("do_no_compare") < 0) {
+                assertEquals("The files differ!", expectedLine.replaceAll("^\\s+|\\s+$", ""), line.replaceAll("^\\s+|\\s+$", ""));
+            }
         }
     }
 }

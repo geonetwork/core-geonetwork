@@ -810,6 +810,7 @@ public class DirectoryApi {
 
     private File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
         Path toDirectory = Files.createTempDirectory("gn-imported-entries-");
+        toDirectory.toFile().deleteOnExit();
         File zipFile = new File(Paths.get(toDirectory.toString(), file.getOriginalFilename()).toString());;
         file.transferTo(zipFile);
         ZipUtil.extract(zipFile.toPath(), toDirectory);
