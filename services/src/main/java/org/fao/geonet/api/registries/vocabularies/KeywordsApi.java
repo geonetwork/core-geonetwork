@@ -269,8 +269,8 @@ public class KeywordsApi {
             String sThesaurusName,
         @ApiParam(
             value = "Languages.",
-            required = true)
-        @RequestParam (name = "lang")
+            required = false)
+        @RequestParam (name = "lang", required = false)
             String [] langs,
         @ApiParam(
             value = "Only print the keyword, no thesaurus information.",
@@ -291,6 +291,9 @@ public class KeywordsApi {
         final String SEPARATOR = ",";
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        if(langs == null) {
+            langs = context.getLanguage().split(",");
+        }
         for (int i = 0; i < langs.length; i++) {
             langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
         }
