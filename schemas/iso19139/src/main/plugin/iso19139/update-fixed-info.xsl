@@ -275,8 +275,8 @@
       <xsl:choose>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
-          <!-- Copy what's in here ... probably only a gco:CharacterString -->
-          <xsl:apply-templates select="node()"/>
+          <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
+          <xsl:apply-templates select="gco:CharacterString"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Add xsi:type for multilingual element. -->
