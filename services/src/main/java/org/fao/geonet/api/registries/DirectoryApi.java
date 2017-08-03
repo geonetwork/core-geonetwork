@@ -57,9 +57,11 @@ import org.geotools.GML;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.data.DataUtilities;
+import org.geotools.data.Query;
 import org.geotools.data.collection.ListFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.factory.Hints;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -806,7 +808,9 @@ public class DirectoryApi {
         DataStore dataStore = DataStoreFinder.getDataStore(map);
         String typeName = dataStore.getTypeNames()[0];
         SimpleFeatureSource source = dataStore.getFeatureSource(typeName);
-        return source.getFeatures(Filter.INCLUDE);
+        Query query = new Query(typeName, Filter.INCLUDE);
+        query.setHints( new Hints(Hints.FEATURE_2D, true));
+        return source.getFeatures(query);
     }
 
     private File[] unzipAndFilterShp(MultipartFile file) throws IOException, URISyntaxException {
