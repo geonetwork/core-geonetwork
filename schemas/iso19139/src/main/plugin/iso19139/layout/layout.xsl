@@ -67,6 +67,13 @@
                   select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
 
 
+    <xsl:if test="$name = 'gmd:descriptiveKeywords' and count(../gmd:descriptiveKeywords) = 0">
+      <xsl:call-template name="addAllThesaurus">
+        <xsl:with-param name="ref" select="../gn:element/@ref"/>
+      </xsl:call-template>
+    </xsl:if>
+
+
     <!-- TODO: this should be common to all schemas -->
     <xsl:if test="$isEditing and
       (not($isFlatMode) or $flatModeException)">
@@ -85,9 +92,9 @@
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
         <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
       </xsl:call-template>
+
     </xsl:if>
   </xsl:template>
-
 
   <!-- Visit all XML tree recursively -->
   <xsl:template mode="mode-iso19139" match="gmd:*|gmx:*|gml:*|srv:*|gts:*">
