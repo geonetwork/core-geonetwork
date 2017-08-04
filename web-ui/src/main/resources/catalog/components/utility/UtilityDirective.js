@@ -727,8 +727,8 @@
   /**
    * Use to initialize bootstrap datepicker
    */
-  module.directive('gnBootstrapDatepicker', [
-    function() {
+  module.directive('gnBootstrapDatepicker', ['$timeout', 'gnLangs',
+    function($timeout, gnLangs) {
 
       // to MM-dd-yyyy
       var formatDate = function(day, month, year) {
@@ -859,7 +859,8 @@
               autoclose: true,
               keepEmptyValues: true,
               clearBtn: true,
-              todayHighlight: false
+              todayHighlight: false,
+              language: gnLangs.getIso2Lang(gnLangs.getCurrent())
             } : {}).on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
