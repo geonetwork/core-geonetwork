@@ -76,6 +76,7 @@
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/zip/zip.js"/>
@@ -139,6 +140,7 @@
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="/catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap-table/dist/bootstrap-table.min.js"
               minimize="false"/>
     <jsSource webappPath="/catalog/lib/FileSaver/FileSaver.min.js" minimize="false"/>
