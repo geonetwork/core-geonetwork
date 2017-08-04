@@ -374,6 +374,11 @@
         // add the background layers
         // todo: grab this from config
         angular.forEach(gnViewerSettings.bgLayers, function(layer) {
+          // skip if no valid layer (ie: layer still loading)
+          if (!layer) {
+            return;
+          }
+
           var source = layer.getSource();
           var name;
           var params = {
