@@ -506,16 +506,15 @@
               source = new ol.source.ImageWMS({
                 params: layerParams,
                 url: options.url,
-                ratio: getImageSourceRatio(map, 2048),
-                imageLoadFunction: function(image, src) {
-                  image.getImage().src = src.replace(/STYLES&/, 'STYLES=&');
-                },
-                projection: layerOptions.projection
+                crossOrigin: 'anonymous',
+                projection: layerOptions.projection,
+                ratio: getImageSourceRatio(map, 2048)
               });
             } else {
               source = new ol.source.TileWMS({
                 params: layerParams,
                 url: options.url,
+                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 gutter: 15
               });

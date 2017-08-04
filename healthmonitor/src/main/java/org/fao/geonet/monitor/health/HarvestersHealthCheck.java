@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class HarvestersHealthCheck implements HealthCheckFactory {
     public HealthCheck create(final ServiceContext context) {
-        return new HealthCheck("Harvesting Errors") {
+        return new HealthCheck(this.getClass().getSimpleName()) {
             @Override
             protected Result check() throws Exception {
                 final HarvesterSettingRepository repository = context.getBean(HarvesterSettingRepository.class);

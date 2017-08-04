@@ -396,6 +396,24 @@
     <url-pattern>/index/*</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>HttpDashboardProxy</servlet-name>
+    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+    <init-param>
+      <param-name>targetUri</param-name>
+      <param-value>${kb.url}</param-value>
+    </init-param>
+    <init-param>
+      <param-name>log</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HttpDashboardProxy</servlet-name>
+    <url-pattern>/dashboards/*</url-pattern>
+  </servlet-mapping>
+
+
   <!-- Spring dispatcher servlet -->
   <servlet>
     <servlet-name>spring</servlet-name>

@@ -1,56 +1,85 @@
-<div class="row" data-ng-controller="GnThesaurusController">
-  <div class="col-lg-4">
-    <div class="panel panel-default">
+<div class="row" data-ng-controller="GnThesaurusController"
+  id="gn-thesaurus-container">
+  <div class="col-md-4 col-xl-3">
+    <div class="panel panel-default dynamic-list">
       <div class="panel-heading" data-translate="">thesaurus</div>
+      <div class="panel-body flex-col">
 
-      <div class="panel-body">
-        <input class="form-control" autofocus=""
-               data-ng-show="thesaurus.length > 1"
-               data-ng-model="thesaurusSearch.$"
-               placeholder="{{'filter' | translate}}"/>
-        <input type="hidden" data-ng-model="thesaurusSelected.id"/>
-        <div class="list-group">
-          <a href="" class="list-group-item"
-             data-ng-repeat="t in pageItems()"
-             data-ng-click="selectThesaurus(t)"> {{t.title}} ({{t.dname}}) </a>
-          <span data-gn-pagination-list=""
-                data-items="thesaurus | filter:thesaurusSearch | orderBy:'title'"
-                data-cache="thesaurus"/>
+        <!-- filter field  -->
+        <div class="pos-relative width-100">
+          <input class="form-control filter-text" autofocus="" type="search"
+                data-ng-show="thesaurus.length > 1"
+                data-ng-model="thesaurusSearch.$"
+                placeholder="{{'filter' | translate}}"/>
+          <span class="fa fa-times gn-input-clear"
+            ng-click="thesaurusSearch.$ = ''"
+            ng-show="thesaurusSearch.$"></span>
         </div>
+        <div class="flex-spacer"></div>
+        <input type="hidden" data-ng-model="thesaurusSelected.id"/>
 
+        <!-- Thesauri list  -->
+        <div class="list-group width-100">
+          <a href class="list-group-item list-group-item-action clearfix"
+              ng-class="{ 'active': t === thesaurusSelected }"
+              ng-repeat="t in pageItems()"
+              ng-click="selectThesaurus(t)">
+            <strong>{{t.title}}</strong> ({{t.dname}})
+          </a>
+        </div>
+        <span data-gn-pagination-list=""
+              data-items="thesaurus | filter:thesaurusSearch | orderBy:'title'"
+              data-cache="thesaurus"/>
+              
+        <!-- Add new thesauri button  -->
         <div class="btn-group btn-block">
-          <button type="button" class="btn btn-primary btn-block dropdown-toggle"
+          <button type="button" class="btn btn-success btn-block dropdown-toggle"
                   data-toggle="dropdown">
             <i class="fa fa-plus"/>
             <span data-translate="">addThesaurus</span>
             <span class="caret"/>
           </button>
-          <ul class="dropdown-menu" role="menu">
+          <ul class="dropdown-menu width-100" role="menu">
             <li>
-              <a href="" data-ng-click="addThesaurus('new')" data-translate="">newEmptyThesaurus</a>
+              <a href ng-click="addThesaurus('new')" translate>
+                newEmptyThesaurus</a>
             </li>
             <li>
-              <a href="" data-ng-click="addThesaurus('file')" data-translate="">fromLocalFile</a>
+              <a href ng-click="addThesaurus('file')" translate>
+                fromLocalFile</a>
             </li>
             <li>
-              <a href="" data-ng-click="addThesaurus('url')" data-translate="">fromURL</a>
+              <a href ng-click="addThesaurus('url')" translate>
+                fromURL</a>
             </li>
           </ul>
         </div>
-
-
-        <div
-          data-gn-need-help="administrator-guide/managing-classification-systems/managing-thesaurus.html"></div>
       </div>
     </div>
+
+    <!-- get help  -->
+    <div gn-need-help="administrator-guide/managing-classification-systems/managing-thesaurus.html">
+    </div>
+    <br />
+    <br />
   </div>
 
-  <div class="col-lg-8" data-ng-show="thesaurusSelected.key">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</strong>
-        <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
-        <div class="btn-toolbar pull-right">
+  <div class="col-md-8 col-xl-9" data-ng-show="thesaurusSelected.key">
+    <div class="panel panel-default thesaurus-header">
+
+      <div class="panel-heading flex-col">
+        <div class="flex-row">
+          <i class="fa fa-book" />
+          <div class="flex-spacer"></div>
+          <strong class="text-ellipsis">{{thesaurusSelected.title}}</strong>
+        </div>
+        <div class="flex-spacer"></div>
+        <div class="flex-row width-100">
+          <a href="{{thesaurusSelected.url}}" class="btn btn-default">
+            <i class="fa fa-download"></i>&nbsp;
+            <span translate>download</span>
+          </a>
+          <div class="flex-spacer"></div>
           <button type="button" class="btn btn-default"
                   data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled] && !isExternal() && recordsRelatedToThesaurus > 0"
                   data-ng-click="reindexRecords()"
@@ -59,124 +88,202 @@
             <span data-translate=""
                   data-translate-values="{records: '{{recordsRelatedToThesaurus}}'}">reindexRecords</span>
           </button>
+          <div class="flex-spacer flex-grow"></div>
           <button type="button" class="btn btn-danger"
                   data-ng-click="deleteThesaurus()">
             <i class="fa fa-times"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
           </button>
         </div>
-
       </div>
 
       <div class="panel-body">
         <!--<ul>
         <li data-ng-repeat="(key, value) in thesaurusSelected">{{key}}: {{value}}</li>
       </ul>-->
-        <form id="gn-edit-thesaurus" name="gn-edit-thesaurus">
-          <fieldset>
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div>
-              <label class="control-label" data-translate="">thesaurusTitle</label>
-              <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
-                     data-ng-model="thesaurusSelected.title"/>
+        <form id="gn-edit-thesaurus" name="gn-edit-thesaurus"
+          class="form-horizontal">
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
+          <div class="form-group">
+            <label class="control-label col-sm-2" translate>thesaurusTitle</label>
+            <div class="col-sm-10">
+              <input type="text" name="title" class="form-control"
+                ng-disabled="!isNew()" ng-model="thesaurusSelected.title"/>
             </div>
-
-            <div>
-              <label class="control-label" data-translate="">thesaurusIdentifier</label>
-              <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
-                     data-ng-model="thesaurusSelected.filename"/>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2" translate>thesaurusIdentifier</label>
+            <div class="col-sm-4">
+              <input type="text" name="filename" class="form-control"
+                ng-disabled="!isNew()" ng-model="thesaurusSelected.filename"/>
             </div>
-
-            <div>
-              <label class="control-label" data-translate="">thesaurusNamespace</label>
-              <input type="text" name="defaultNamespace" class="form-control"
-                     data-ng-disabled="!isNew()"
-                     data-ng-model="thesaurusSelected.defaultNamespace"/>
-            </div>
-
-            <div>
-              <label class="control-label" data-translate="">thesaurusClass</label>
+            <label class="control-label col-sm-3" translate>thesaurusClass</label>
+            <div class="col-sm-3">
               <div data-ng-disabled="!isNew()"
-                   data-schema-info-combo="codelist"
-                   data-selected-info="thesaurusSelected.dname"
-                   data-gn-schema-info="gmd:MD_KeywordTypeCode"
-                   data-init-on-load="true"
-                   lang="lang"></div>
-            </div>
-
-            <label>
-              <input type="checkbox"
-                     data-ng-model="thesaurusSelectedActivated"
-                     data-ng-click="enableThesaurus()"/>
-              <span data-translate="">enable</span>
-            </label>
-            <p class="help-block" data-translate="">enableThesaurusHelp</p>
-
-          </fieldset>
-        </form>
-
-
-        <div class="alert alert-info" data-ng-show="isExternal()" data-translate=""
-        >thesaurusExternalHelp
-        </div>
-
-        <div class="alert alert-info" data-ng-show="isPlaceType()" data-translate=""
-        >thesaurusPlaceHelp
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading" data-translate="">keywords</div>
-
-      <div class="panel-body">
-        <form class="form-horizontal" role="form">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-          <div class="form-group">
-            <label for="keywordFilter" class="col-lg-4 control-label" data-translate=""
-            >keywordFilter</label>
-            <div class="col-lg-8">
-              <input id="keywordFilter" class="form-control" autofocus=""
-                     data-ng-model="keywordFilter" placeholder="{{'keywordFilter' | translate}}"/>
+                  data-schema-info-combo="codelist"
+                  data-selected-info="thesaurusSelected.dname"
+                  data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                  data-init-on-load="true"
+                  lang="lang"></div>
             </div>
           </div>
           <div class="form-group">
-            <label for="maxNumberOfKeywords" class="col-lg-4 control-label" data-translate=""
-            >maxNumberOfKeywords</label>
-            <div class="col-lg-8">
-              <input id="maxNumberOfKeywords" class="form-control"
-                     data-ng-model="maxNumberOfKeywords"
-                     placeholder="{{'maxNumberOfKeywords' | translate}}"/>
+            <label class="control-label col-sm-2" translate>thesaurusNamespace</label>
+            <div class="col-sm-10">
+              <input type="text" name="defaultNamespace" class="form-control"
+                ng-disabled="!isNew()" ng-model="thesaurusSelected.defaultNamespace"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+              <label>
+                <input type="checkbox"
+                      data-ng-model="thesaurusSelectedActivated"
+                      data-ng-click="enableThesaurus()"/>
+                {{ 'enable' | translate }}
+              </label><br />
+              <span class="text-muted" translate>enableThesaurusHelp</span>
             </div>
           </div>
         </form>
-        <ul>
-          <li data-ng-repeat="k in keywords">
-            <a href="" data-ng-click="editKeyword(k)"
-               data-ng-class="k.value ? '' : 'text-warning'">
-              {{k.value[lang] || k.value || ('keywordNotAvailableInThisLanguage' | translate)}}
-              <i class="fa fa-edit pull-right"
-                 data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
-            </a>
-            <a href=""
-               class="fa fa-times text-danger pull-right" data-ng-hide="isExternal()"
-               data-ng-click="deleteKeyword(k)"/>
-          </li>
-        </ul>
 
-        <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right"
-                  data-ng-click="addKeyword()"><span class="fa fa-plus"></span>
-            {{"addKeyword"|translate}}
-          </button>
+        <div class="alert alert-warning" data-ng-show="isExternal()" translate>
+          thesaurusExternalHelp</div>
+
+        <div class="alert alert-info" data-ng-show="isPlaceType()" translate>
+          thesaurusPlaceHelp</div>
+      </div>
+    </div>
+
+    <form class="gn-search-page">
+      <input type="hidden" name="_csrf" value="{{csrf}}"/>
+      <div class="panel panel-default">
+
+        <div class="panel-heading flex-row flex-align-center">
+          <span translate>keywords</span>
+          <div class="flex-spacer flex-grow"></div>
+          <div class="pos-relative">
+            <input class="form-control filter-text" type="search"
+              ng-model="keywordFilter"
+              ng-model-options="modelOptions"
+              placeholder="{{'keywordFilter' | translate}}" autofocus=""/>
+            <span class="fa fa-times gn-input-clear"
+              ng-click="keywordFilter = ''"
+              ng-show="keywordFilter"></span>
+          </div>
+          <div class="flex-spacer"></div>
+          <div class="btn-group">
+            <button type="button"
+              class="btn btn-default dropdown-toggle btn-sm"
+              data-toggle="dropdown"
+              title="{{'switchLangTo' | translate}}">
+              <span translate>switchLangTo</span>
+              &nbsp;<i class="caret" />
+            </button>
+            <ul class="dropdown-menu gn-facet-dropdown pull-right">
+              <li ng-repeat="(lang3, lang2) in availableLangs"
+                ng-class="{ active: lang3 === currentLangShown }">
+                <a href ng-click="switchLang(lang3)">
+                  {{ lang3 | translate }}</a>
+              </li>
+            </ul>
+          </div>
+          <div class="flex-spacer"></div>
+          <div class="btn-group">
+            <button type="button"
+              class="btn btn-default dropdown-toggle btn-sm"
+              data-toggle="dropdown"
+              title="{{'switchLangTo' | translate}}">
+              <span translate class="hidden-xs"
+                translate-values="{ count: maxNumberOfKeywords }">
+                showResultsCount</span>
+              <span translate class="visible-xs-inline">
+                {{ maxNumberOfKeywords }}</span>
+              &nbsp;<i class="caret" />
+            </button>
+            <ul class="dropdown-menu gn-facet-dropdown pull-right">
+              <li ng-repeat="count in availableResultCounts"
+                ng-class="{ active: count === maxNumberOfKeywords }">
+                <a href ng-click="setResultsCount(count)">
+                  {{ count }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel-body">
+
+          <div ng-show="searching" class="text-center">
+            <br />
+            <i class="fa fa-spinner fa-spin" />
+            <br /><br />
+          </div>
+
+          <div ng-show="!searching" class="flex-col">
+            <div class="flex-row">
+              <button type="button" class="btn btn-success"
+                ng-click="addKeyword()" ng-disabled="isExternal()">
+                <i class="fa fa-plus" />
+                <span translate>addKeyword</span>
+              </button>
+            </div>
+            <div class="flex-spacer"></div>
+
+            <div ng-show="!keywords.length"
+              class="text-muted disabled">
+              {{ 'noRecordFound' | translate }}
+              <br />
+            </div>
+
+            <div ng-show="keywords.length" class="width-100">
+              <li class="list-group-item keyword-item clearfix flex-row flex-align-center"
+                ng-repeat="k in keywords">
+
+                <div class="flex-spacer"></div>
+                <i class="fa fa-warning text-muted"
+                  title="{{ 'keywordNotAvailableInThisLanguage' | translate }}"
+                  ng-show="!k.values[currentLangShown]" />
+                <div class="flex-spacer"
+                  ng-show="!k.values[currentLangShown]"></div>
+
+                <div class="text-ellipsis">
+                  <a href ng-click="editKeyword(k)">
+                    <span ng-show="k.values[currentLangShown]">
+                      {{k.values[currentLangShown]}}</span>
+                    <span ng-show="!k.values[currentLangShown] && k.value">
+                      {{k.value}}</span>
+                    <span ng-show="!k.values[currentLangShown] && !k.value">
+                      ({{'keywordMissingValue' | translate}})</span>
+                  </a><br />
+                  <small class="text-muted">URI: {{ k.uri }}</small>
+                </div>
+                <div class="flex-spacer flex-grow"></div>
+
+                <button class="btn btn-default btn-sm" ng-click="editKeyword(k)"
+                  ng-show="isExternal()" title="{{'view' | translate}}">
+                  <i class="fa fa-info-circle text-primary" />
+                </button>
+                <button class="btn btn-default btn-sm" ng-click="editKeyword(k)"
+                  ng-show="!isExternal()" title="{{'editKeyword' | translate}}">
+                  <i class="fa fa-pencil text-primary" />
+                </button>
+
+                <div class="flex-spacer" ng-show="!isExternal()"></div>
+                <button class="btn btn-default btn-sm" ng-click="deleteKeyword(k)"
+                  ng-show="!isExternal()" title="{{'delete' | translate}}">
+                  <i class="fa fa-times text-danger" />
+                </button>
+              </li>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 
 
   <!-- New thesaurus popup -->
   <div class="modal fade" id="thesaurusModal" tabindex="-1" role="dialog"
-       aria-labelledby="{{'newThesaurus' | translate}}" aria-hidden="true">
+      aria-labelledby="{{'newThesaurus' | translate}}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -185,7 +292,6 @@
           <h4 class="modal-title" data-translate="">createThesaurusTitle</h4>
         </div>
         <div class="modal-body">
-
 
           <!-- File import form -->
           <form id="gn-upload-thesaurus" name="gn-upload-thesaurus"
@@ -199,7 +305,7 @@
               <i class="fa fa-plus fa-white"/>
               <span data-translate="">chooseThesaurus</span>
               <input type="file" id="gn-thesaurus-file" name="fname" multiple="true"
-                     ng-disabled="disabled"/>
+                    ng-disabled="disabled"/>
             </span>
 
             <!-- TODO : Add thesaurus combo from repository.
@@ -207,7 +313,7 @@
             <div data-ng-show="importAs == 'url'">
               <label class="control-label" data-translate="">thesaurusUrl</label>
               <input type="url" name="url" data-ng-model="thesaurusUrl" id="gn-thesaurus-url"
-                     class="form-control" placeholder="http://"/>
+                    class="form-control" placeholder="http://"/>
             </div>
             <br/>
             <div
@@ -225,7 +331,7 @@
             <div class="col-lg-5 fade" data-ng-class="{in: active()}">
               <!-- The global progress bar -->
               <div class="progress progress-striped active" data-file-upload-progress="progress()"
-                   data-file-upload-done="loadThesaurus()">
+                  data-file-upload-done="loadThesaurus()">
                 <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
               </div>
               <div class="progress-extended">&nbsp;</div>
@@ -237,20 +343,20 @@
           <!-- User entry form -->
           <form id="gn-create-thesaurus" name="gn-create-thesaurus"
                 data-ng-show="importAs == 'new'">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div>
+            <input type="hidden" name="_csrf" value="{{csrf}}"/>
+            <div class="form-group">
               <label class="control-label" data-translate="">thesaurusTitle</label>
               <input type="text" name="title" class="form-control" data-ng-disabled="!isNew()"
-                     id="gn-thesaurus-title" data-ng-model="thesaurusSelected.title"/>
+                    id="gn-thesaurus-title" data-ng-model="thesaurusSelected.title"/>
             </div>
 
-            <div>
+            <div class="form-group">
               <label class="control-label" data-translate="">thesaurusIdentifier</label>
               <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
-                     data-ng-keyup="computeThesaurusNs()"
-                     data-ng-model="thesaurusSelected.filename"/>
+                    data-ng-keyup="computeThesaurusNs()"
+                    data-ng-model="thesaurusSelected.filename"/>
             </div>
-            <div>
+            <div class="form-group">
               <label class="control-label" data-translate="">thesaurusClass</label>
               <div
                 data-schema-info-combo="codelist"
@@ -259,13 +365,13 @@
                 lang="lang"></div>
             </div>
 
-            <div>
+            <div class="form-group">
               <label class="control-label" data-translate="">thesaurusNamespace</label>
               <input type="text" name="defaultNamespace" class="form-control"
-                     data-ng-disabled="!isNew()"
-                     data-ng-model="thesaurusSelected.defaultNamespace"/>
+                    data-ng-disabled="!isNew()"
+                    data-ng-model="thesaurusSelected.defaultNamespace"/>
               <p class="help-block" data-ng-show="isNew() && thesaurusSuggestedNs != ''"
-                 data-ng-click="useSuggestedNs()">
+                data-ng-click="useSuggestedNs()">
                 {{"use"|translate}} {{thesaurusSuggestedNs}} {{"asThesaurusIdentifier"|translate}}
                 <i class="fa fa-double-angle-up"/>
               </p>
@@ -293,37 +399,62 @@
 
   <!-- Keyword popup -->
   <div class="modal fade" id="keywordModal" tabindex="-1" role="dialog"
-       aria-labelledby="{{'keywordEditing' | translate}}" aria-hidden="true">
+      aria-labelledby="{{'keywordEditorTitle' | translate}}" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
           >&times;</button>
-          <h4 class="modal-title">{{keywordSelected.value['#text']}}</h4>
+          <h4 class="modal-title" translate ng-hide="isNewKeyword()">
+            editKeyword</h4>
+          <h4 class="modal-title" translate ng-show="isNewKeyword()">
+            addKeyword</h4>
         </div>
         <div class="modal-body">
           <form id="gn-edit-keyword" name="gn-edit-keyword">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
-            <div>
-              <label class="control-label" data-translate="">keywordLabel</label>
-              <input type="text" name="name" class="form-control" data-ng-disabled="isExternal()"
-                     data-ng-keyup="computeKeywordId()"
-                     data-ng-model="keywordSelected.value['#text']"/>
+            <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+            <div class="form-group">
+              <label class="control-label" translate>keywordLabel</label>
+              <input type="text" name="name" class="form-control"
+                ng-disabled="isExternal()"
+                ng-keyup="computeKeywordId()"
+                ng-model="keywordSelected.values[currentKeywordEditorLang]"/>
+              <ul class="lang-selector nav nav-pills">
+                <li ng-repeat="(lang3, lang2) in availableLangs"
+                  ng-class="{ active: lang3 === currentKeywordEditorLang }">
+                  <a href ng-click="switchKeywordEditorLang(lang3)"
+                    ng-class="{ 'text-muted': !keywordSelected.values[lang3] }">
+                    <span ng-if="lang3 !== lang" translate>{{ lang3 }}</span>
+                    <strong ng-if="lang3 === lang" translate>{{ lang3 }}</strong>
+                  </a>
+                </li>
+              </ul>
             </div>
 
-            <div>
-              <label class="control-label" data-translate="">keywordDefinition</label>
-              <input type="text" name="definition" class="form-control"
-                     data-ng-disabled="isExternal()"
-                     data-ng-model="keywordSelected.definition['#text']"
-              />
+            <div class="form-group">
+              <label class="control-label" translate>keywordDefinition</label>
+              <input type="text" name="name" class="form-control"
+                ng-disabled="isExternal()"
+                ng-model="keywordSelected.definitions[currentKeywordEditorLang]"/>
+              <ul class="lang-selector nav nav-pills">
+                <li ng-repeat="(lang3, lang2) in availableLangs"
+                  ng-class="{ active: lang3 === currentKeywordEditorLang }">
+                  <a href ng-click="switchKeywordEditorLang(lang3)"
+                    ng-class="{ 'text-muted': !keywordSelected.definitions[lang3] }">
+                    <span ng-if="lang3 !== lang" translate>{{ lang3 }}</span>
+                    <strong ng-if="lang3 === lang" translate>{{ lang3 }}</strong>
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div>
+
+            <div class="form-group">
               <label class="control-label" data-translate="">keywordIdentifier</label>
               <input type="text" name="identifier" class="form-control"
-                     data-ng-disabled="isExternal()" data-ng-model="keywordSelected.uri"/>
+                    data-ng-disabled="isExternal()" data-ng-model="keywordSelected.uri"/>
               <p class="help-block" data-ng-show="isNewKeyword() && keywordSuggestedUri != ''"
-                 data-ng-click="useSuggestedUri()">
+                data-ng-click="useSuggestedUri()">
                 {{"use"|translate}} {{keywordSuggestedUri}} {{"asKeywordIdentifier"|translate}}
                 <i class="fa fa-double-angle-up"/>
               </p>
@@ -338,7 +469,7 @@
                 <!-- TODO: use type="number" min="-180" max="180" but there is
                         some issue in Angular - maybe https://github.com/angular/angular.js/issues/2144-->
                 <input name="{{key}}" class="form-control" type="text"
-                       data-ng-disabled="isExternal()" data-ng-model="keywordSelected.geo[key]"/>
+                      data-ng-disabled="isExternal()" data-ng-model="keywordSelected.geo[key]"/>
               </div>
             </fieldset>
 
@@ -376,5 +507,15 @@
     </div>
   </div>
 
+  <div gn-modal class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteThesaurus}"
+    id="gn-confirm-delete">
+    <p translate>confirmDeleteThesaurus</p>
+  </div>
 
+  <div gn-modal class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteKeyword}"
+    id="gn-confirm-delete-keyword">
+    <p translate>confirmDeleteKeyword</p>
+  </div>
 </div>

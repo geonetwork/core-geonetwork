@@ -111,7 +111,7 @@ final class IndexMetadataTask implements Runnable {
                 }
 
                 try {
-                    dataManager.indexMetadata(metadataId.toString(), false);
+                    dataManager.indexMetadata(metadataId.toString(), false, null);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
                         + "\n" + Util.getStackTrace(e));

@@ -11,19 +11,8 @@
 
   <div gn-localisation-input map="map"></div>
 
-  <!-- graph showing a WPS response containing a profile -->
-  <div class="profile-graph gn-viewer-info-pane"
-    ng-style="{ visibility: ctrl.profileGraph ? 'visible' : 'hidden' }"
-    ng-class="{'leftBarExpanded': isContainerOpened()}">
-    <div class="panel-heading">
-      <button type="button" class="btn btn-default close" ng-click="ctrl.closeProfileGraph()" title="close">
-        ×
-      </button>
-      <h5><span data-translate="">profileGraph</span></h5>
-    </div>
-    <div class="profile" ngeo-profile="ctrl.profileGraph"
-      ngeo-profile-options="ctrl.profileOptions" />
-  </div>
+  <!-- profile graph (data will come through the service) -->
+  <gn-profile map="map"></gn-profile>
 
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group>
@@ -51,7 +40,7 @@
 
     <button class="btn btn-default" ng-model="activeTools.contexts"
             type="submit" gi-btn="active">
-      <span class="fa fa-book"></span>
+      <span class="fa fa-map"></span>
       <span role="tooltip" translate="">Contexts</span>
     </button>
     <button class="btn btn-default" ng-model="activeTools.print"
@@ -92,10 +81,6 @@
       <span class="fa fa-arrows-alt"></span>
       <span role="tooltip" data-translate="">ZoomToMapMaxExtent</span>
     </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToYou(map)">
-      <span class="fa fa-map-marker"></span>
-      <span role="tooltip" data-translate="">ZoomToYourLocation</span>
-    </button>
     <button class="btn btn-default" type="submit"
             data-ng-if="is3DModeAllowed"
             data-ng-click="switch2D3D(map)">
@@ -120,31 +105,37 @@
     </div>
     <div class="panel-body">
       <tabset id="info-tabset">
+
+        <tab heading="{{'addLayerFromMaps' | translate}}"
+             active="addLayerTabs.maps">
+          <br/>
+          <div data-gn-search-layer-for-map="map" data-mode="map"></div>
+        </tab>
+
         <tab heading="{{'SearchLayer' | translate}}"
              active="addLayerTabs.search">
           <br/>
           <div data-gn-search-layer-for-map="map"></div>
         </tab>
-        <tab heading="{{'LayerWMS' | translate}}"
-             active="addLayerTabs.wms">
+
+        <tab heading="{{'addLayerFromServices' | translate}}"
+             active="addLayerTabs.services">
           <div gn-wms-import="wms"
                gn-wms-import-map="map"
                gn-wms-import-url="addLayerUrl.wms"
                services-list-from-catalog="true"></div>
-        </tab>
-        <tab heading="{{'LayerWMTS' | translate}}"
-             active="addLayerTabs.wmts">
-          <div gn-wms-import="wmts" gn-wms-import-map="map"
-            gn-wms-import-url="addLayerUrl.wmts"></div>
-        </tab>
-        <tab heading="{{'LayerWFS' | translate}}"
-             active="addLayerTabs.wfs">
+
+          <div gn-wms-import="wmts"
+               gn-wms-import-map="map"
+               gn-wms-import-url="addLayerUrl.wmts"></div>
+
           <div gn-wms-import="wfs"
                gn-wms-import-map="map"
                services-list-from-catalog="true"></div>
         </tab>
-        <tab heading="{{'LayerKML' | translate}}"
+        <tab heading="{{'addLayerFromFiles' | translate}}"
              active="addLayerTabs.kml">
+          <span>{{'LayerKML' | translate}}</span>
           <div gn-kml-import="" gn-kml-import-map="map"></div>
         </tab>
       </tabset>
@@ -292,7 +283,8 @@
           <gn-wps-recent-list wps-link="selectedWps"/>
         </tab>
       </tabset>
-      <gn-wps-process-form map="map" wps-link="selectedWps"/>
+      <gn-wps-process-form map="map" wps-link="selectedWps"
+        ng-if="activeTools.processes"/>
     </div>
   </div>
 </div>

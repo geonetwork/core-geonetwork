@@ -32,6 +32,7 @@
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
@@ -259,6 +260,35 @@
                            select="concat('_', $description/gn:element/@ref)"/>
           </xsl:if>
         </div>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template mode="mode-iso19139" match="gmd:EX_BoundingPolygon" priority="2000">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:call-template name="render-boxed-element">
+      <xsl:with-param name="label"
+                      select="$labelConfig/label"/>
+      <xsl:with-param name="editInfo" select="../gn:element"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="subTreeSnippet">
+
+        <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"/>
+        <xsl:variable name="identifier"
+                      select="concat('_X', gmd:polygon/gn:element/@ref, '_replace')"/>
+        <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
+
+        <br />
+        <gn-bounding-polygon polygon-xml="{saxon:serialize($geometry, 'default-serialize-mode')}"
+                             identifier="{$identifier}"
+                             read-only="{$readonly}">
+        </gn-bounding-polygon>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

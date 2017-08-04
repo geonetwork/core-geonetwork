@@ -169,6 +169,12 @@
       <artifactId>jackson-xml-databind</artifactId>
       <version>0.6.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.nibor.autolink</groupId>
+      <artifactId>autolink</artifactId>
+      <version>0.6.0</version>
+      <scope>test</scope>
+    </dependency>
 
     <!-- Apache commons csv -->
     <dependency>

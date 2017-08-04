@@ -25,6 +25,13 @@
   goog.provide('gn_map_directive');
   goog.require('gn_owscontext_service');
 
+  var METRIC_DECIMALS = 4;
+  var DEGREE_DECIMALS = 8;
+
+  var getDigitNumber = function(proj) {
+    return proj == 'EPSG:4326' ? DEGREE_DECIMALS : METRIC_DECIMALS;
+  };
+
   angular.module('gn_map_directive',
       ['gn_owscontext_service'])
 
@@ -160,8 +167,9 @@
                    scope.projs[from], scope.projs[to]
                );
                if (extent && extent.map) {
+                 var decimals = getDigitNumber(scope.projs.form);
                  scope.extent[to] = extent.map(function(coord) {
-                   return Math.round(coord * 10000) / 10000;
+                   return coord.toFixed(decimals)/1;
                  });
                }
              };
@@ -176,8 +184,10 @@
                    scope.extent.form, oldValue, newValue
                );
                if (extent && extent.map) {
+                 var decimals = getDigitNumber(scope.projs.form);
+
                  scope.extent.form = extent.map(function(coord) {
-                   return Math.round(coord * 10000) / 10000;
+                   return coord.toFixed(decimals)/1;
                  });
                }
              });

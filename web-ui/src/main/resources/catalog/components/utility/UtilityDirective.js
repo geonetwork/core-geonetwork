@@ -24,10 +24,7 @@
 (function() {
   goog.provide('gn_utility_directive');
 
-  goog.require('gn_popover');
-
   var module = angular.module('gn_utility_directive', [
-    'gn_popover'
   ]);
 
   module.directive('gnConfirmClick', [
@@ -881,7 +878,7 @@
 
             // set initial dates (use $timeout to avoid messing with ng digest)
             if (scope.date) {
-              $timeout(function () {
+              $timeout(function() {
                 var picker = $(element).data('datepicker');
                 if (isRange) {
                   picker.pickers[0].setDate(scope.date.from);

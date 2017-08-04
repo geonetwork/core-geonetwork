@@ -42,6 +42,14 @@
             <p ng-if="::md.abstract" class="small">{{md.abstract | characters:200}}</p>
           </div>
         </div>
+        <div data-ng-if="options.mode == 'directory'">
+          <div class="flex-row flex-align-center">
+            <gn-md-type-widget metadata="md"></gn-md-type-widget>
+            <div class="flex-spacer" />
+            <strong>{{md.title || md.defaultTitle}}</strong>
+          </div>
+          <p ng-if="::md.abstract" class="small">{{md.abstract | characters:200}}</p>
+        </div>
       </li>
     </div>
   </div>

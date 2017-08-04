@@ -34,6 +34,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -44,6 +45,8 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -51,7 +54,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
@@ -59,9 +62,9 @@ import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +84,7 @@ import java.util.*;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
+import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
 
 /**
  *
@@ -482,6 +486,104 @@ public class SiteApi {
     ) throws Exception {
         ApiUtils.createServiceContext(request);
         return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+    }
+
+    @ApiOperation(
+        value = "Index",
+        notes = "",
+        nickname = "index")
+    @RequestMapping(
+        path = "/index",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseBody
+    public HttpEntity index(
+        @ApiParam(value = "Drop and recreate index",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+        boolean reset,
+        @ApiParam(value = "Records having only XLinks",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean havingXlinkOnly,
+//        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+//            required = false,
+//            example = "")
+//        @RequestParam(required = false)
+//        String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+        String bucket,
+        HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        SearchManager searchMan = ApplicationContextHolder.get().getBean(SearchManager.class);
+
+        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
+
+        return new HttpEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation(
+        value = "Index in Elastic",
+        notes = "",
+        nickname = "indexes")
+    @RequestMapping(
+        path = "/index/es",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseBody
+    public HttpEntity indexEs(
+        @ApiParam(value = "Drop and recreate index",
+            required = false)
+        @RequestParam(required = false, defaultValue = "true")
+            boolean reset,
+        @ApiParam(value = "Records having only XLinks",
+            required = false)
+        @RequestParam(required = false, defaultValue = "false")
+            boolean havingXlinkOnly,
+//        @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+//            required = false,
+//            example = "")
+//        @RequestParam(required = false)
+//        String[] uuids,
+        @ApiParam(
+            value = ApiParams.API_PARAM_BUCKET_NAME,
+            required = false)
+        @RequestParam(
+            required = false
+        )
+            String bucket,
+        HttpServletRequest request
+    ) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+
+        searchMan.rebuildIndex(context, havingXlinkOnly, reset, bucket);
+
+        return new HttpEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation(
+        value = "Delete index in Elastic",
+        notes = "",
+        nickname = "deleteIndexes")
+    @RequestMapping(
+        path = "/index/es",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseBody
+    public HttpEntity deleteIndexEs() throws Exception {
+        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
+        searchMan.clearIndex();
+        return new HttpEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(

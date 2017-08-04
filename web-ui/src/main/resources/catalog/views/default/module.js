@@ -70,6 +70,27 @@
         }
       };
     }]);
+
+
+  module.controller('gnsSearchTopEntriesController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.resultTemplate = '../../catalog/components/' +
+        'search/resultsview/partials/viewtemplates/grid4maps.html';
+      $scope.searchObj = {
+        permalink: false,
+        filters: {
+          'type': 'interactiveMap'
+        },
+        params: {
+          sortBy: 'changeDate',
+          from: 1,
+          to: 30
+        }
+      };
+    }]);
+
+
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -314,12 +335,6 @@
                 searchMap.get('lastExtent'),
                 searchMap.getSize(), { nearest: true });
             }
-
-            // TODO: load custom context to the search map
-            //gnOwsContextService.loadContextFromUrl(
-            //  gnViewerSettings.defaultContext,
-            //  searchMap);
-
           }, 0);
         }
 
@@ -334,6 +349,11 @@
               viewerMap.getView().fit(
                 viewerMap.get('lastExtent'),
                 viewerMap.getSize(), { nearest: true });
+            }
+
+            var map = $location.search().map;
+            if (angular.isDefined(map)) {
+              $scope.resultviewFns.loadMap({url: map});
             }
           }, 0);
         }

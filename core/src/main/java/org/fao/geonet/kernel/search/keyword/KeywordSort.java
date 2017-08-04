@@ -46,7 +46,11 @@ public final class KeywordSort {
     public static Comparator<KeywordBean> defaultLabelSorter(final SortDirection direction) {
         return new Comparator<KeywordBean>() {
             public int compare(final KeywordBean kw1, final KeywordBean kw2) {
-                return direction.multiplier * normalizeDesc(kw1.getDefaultValue()).compareTo(normalizeDesc(kw2.getDefaultValue()));
+                int comp = normalizeDesc(kw1.getDefaultValue()).compareTo(normalizeDesc(kw2.getDefaultValue()));
+                if(comp == 0) {
+                    comp = kw1.getUriCode().compareTo(kw2.getUriCode());
+                }
+                return direction.multiplier * comp;
             }
 
             @Override

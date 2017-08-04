@@ -1,0 +1,31 @@
+<ul class="list-group gn-resultview gn-resultview-sumup">
+  <li class="list-group-item gn-grid"
+      data-ng-repeat="md in searchResults.records"
+      data-gn-fix-mdlinks="">
+
+    <a class=""
+       data-ng-href="#map?map={{maps[0].url}}"
+       title="{{'loadMap' | translate}}">
+      <div title="{{(md.abstract || md.defaultAbstract) | striptags}}"
+           data-ng-click="loadMap(maps[0], md)">
+        <div class="gn-md-thumbnail">
+          <img class="gn-img-thumbnail"
+               data-ng-src="{{md.getThumbnails().list[0].url}}"
+               data-ng-if="md.getThumbnails().list[0].url"/>
+        </div>
+        <div style="clear: both;"></div>
+
+        <span class="gn-img-thumbnail-caption">
+        {{(md.title || md.defaultTitle) | characters:80}}
+        </span>
+
+        <a class=""
+           data-ng-href="#/metadata/{{md.getUuid()}}"
+           title="{{'openRecord' | translate}}">
+          <i class="fa fa-fw fa-info-circle"/>
+        </a>
+      </div>
+    </a>
+    <div style="clear: both;"></div>
+  </li>
+</ul>

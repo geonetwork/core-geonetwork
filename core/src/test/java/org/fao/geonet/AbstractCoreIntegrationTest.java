@@ -77,7 +77,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpSession;
 
 import jeeves.constants.ConfigFile;
 import jeeves.server.UserSession;
@@ -320,7 +319,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             id, createDate, createDate,
             "" + groupId, metadataType);
 
-        dataManager.indexMetadata(id.get(0), true);
+        dataManager.indexMetadata(id.get(0), true, null);
         return Integer.parseInt(id.get(0));
     }
 

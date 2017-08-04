@@ -131,6 +131,8 @@
     "cit:CI_Responsibility": "Organizations & contacts (ISO19115-3)",
     "mrd:MD_Format": "Formats",
     "gmd:MD_Format": "Formats",
+    "gmd:EX_Extent": "Extents",
+    "gex:EX_Extent": "Extents",
     "mcc:MD_BrowseGraphic": "Logos",
     "gmd:MD_Distribution": "Online resources",
     "hasFeatureCatalog": "Using this feature catalog",
@@ -263,6 +265,7 @@
     "searchACRS": " or search for a coordinate system ...",
     "searchAreport": "Search a quality report ...",
     "searchAlogo": "Search a logo ...",
+    "searchAextent": "Search an extent ...",
     "searchAresourceConstraints": "Search a constraint statement ...",
     "searchAconstraint": "Search for a constraint ...",
     "searchAcontact": "Search for a contact ...",
@@ -364,5 +367,12 @@
     "notADirectoryEntryTemplate": "This entry is not a directory entry template.",
     "saveAsDirectoryEntry": "Save as directory entry",
     "confirmDeleteEntry": "Are you sure you want to delete this entry?",
-    "filterByValidityStatus": "Filter by status"
+    "filterBy": "Filter by...",
+    "selectFormatAndProjection": "Select a format and projection system",
+    "inputGeometryText": "Geometry Text Input",
+    "inputGeometryIsValid": "The input geometry is valid and is now visible on the map.",
+    "inputGeometryIsInvalid": "An error was found in the input geometry:",
+    "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
+    "inputGeometryReadOnlyHint": "This geometry is read-only.",
+    "selectKeyword": "Select a keyword from Thesauri"
 }

@@ -63,8 +63,8 @@
       var icons = {
         featureCatalog: 'fa-table',
         service: 'fa-cog',
-        map: 'fa-globe',
-        staticMap: 'fa-globe',
+        map: 'fa-map',
+        staticMap: 'fa-map',
         dataset: 'fa-file'
       };
 

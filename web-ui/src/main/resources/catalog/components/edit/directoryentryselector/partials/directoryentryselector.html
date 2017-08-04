@@ -26,63 +26,66 @@
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
          data-ng-show="searchResults.records.length > 0">
       <span class="tt-suggestions">
-        <div class="tt-suggestion"
-             data-ng-repeat="r in searchResults.records">
+        <div class="tt-suggestion flex-row"
+          data-ng-repeat="r in searchResults.records">
 
-            <!-- Add action for simple subtemplates -->
-            <div class="btn btn-default btn-sm pull-right"
-                 data-ng-if="insertAsXlink && !hasDynamicVariable"
-                 data-ng-click="addEntry(r, undefined, true)">
-              <i class="fa fa-link"></i>
-            </div>
-            <div class="btn btn-default btn-sm pull-right"
-                 data-ng-if="insertAsText && !hasDynamicVariable"
-                 data-ng-click="addEntry(r)">
-              <i class="fa fa-plus"></i>
-            </div>
+          <!-- Add action for simple subtemplates -->
+          <gn-md-type-widget metadata="r"></gn-md-type-widget>
+          <div class="btn btn-default btn-sm pull-right"
+                data-ng-if="insertAsXlink && !hasDynamicVariable"
+                data-ng-click="addEntry(r, undefined, true)">
+            <i class="fa fa-link"></i>
+          </div>
+          <div class="btn btn-default btn-sm pull-right"
+                data-ng-if="insertAsText && !hasDynamicVariable"
+                data-ng-click="addEntry(r)">
+            <i class="fa fa-plus"></i>
+          </div>
+
+          <div class="flex-spacer" />
+
+          <div class="text flex-grow"> {{r.title}}</div>
 
           <!--Add contact as Xlink with dynamic variable -->
-            <div ngeo-popover class="pull-right"
-                 ngeo-popover-dismiss=".content"
-                 data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
-                 title="{{'addContactAsLink-help' | translate}}">
-               <button ngeo-popover-anchor type="button" class="btn btn-default btn-sm">
-                <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
-              </button>
-              <div ngeo-popover-content>
-                <ul>
-                  <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                    <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
-                      {{role.label}}
-                    </a>
-                  </li>
-                </ul>
-              </div>
+          <div ngeo-popover class="pull-right"
+                ngeo-popover-dismiss=".content"
+                data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
+                title="{{'addContactAsLink-help' | translate}}">
+              <button ngeo-popover-anchor type="button" class="btn btn-default btn-sm">
+              <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
+            </button>
+            <div ngeo-popover-content>
+              <ul>
+                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
+                  <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
+                    {{role.label}}
+                  </a>
+                </li>
+              </ul>
             </div>
+          </div>
 
           <!-- Add contact as text block with dynamic variable -->
-            <div ngeo-popover class="pull-right"
-                 ngeo-popover-dismiss=".content"
-                 data-ng-if="isContact && hasDynamicVariable && insertAsText"
-                 title="{{'addContactAsText-help' | translate}}">
-               <button ngeo-popover-anchor type="button"
-                       class="btn btn-default btn-sm">
-                <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
-              </button>
-              <div ngeo-popover-content>
-                <ul>
-                  <li data-ng-repeat="role in roles"
-                      data-ng-hide="role['@hideInEditMode']">
-                    <a href="" data-ng-click="addEntry(r, role.code)"
-                       title="{{role.description}}">
-                      {{role.label}}
-                    </a>
-                  </li>
-                </ul>
-              </div>
+          <div ngeo-popover class="pull-right"
+                ngeo-popover-dismiss=".content"
+                data-ng-if="isContact && hasDynamicVariable && insertAsText"
+                title="{{'addContactAsText-help' | translate}}">
+              <button ngeo-popover-anchor type="button"
+                      class="btn btn-default btn-sm">
+              <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
+            </button>
+            <div ngeo-popover-content>
+              <ul>
+                <li data-ng-repeat="role in roles"
+                    data-ng-hide="role['@hideInEditMode']">
+                  <a href="" data-ng-click="addEntry(r, role.code)"
+                      title="{{role.description}}">
+                    {{role.label}}
+                  </a>
+                </li>
+              </ul>
             </div>
-
-          <div class="text"> {{r.title}}</div>
+          </div>
         </div>
       </span>
     </div>

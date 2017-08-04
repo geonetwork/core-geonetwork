@@ -33,7 +33,8 @@
         restrict: 'A',
         scope: {
           layer: '=gnWfsDownload',
-          map: '='
+          map: '=',
+          isWfsAvailable: '=?hasDownload'
         },
         templateUrl: '../../catalog/components/' +
             'viewer/wfs/partials/download.html',
@@ -41,6 +42,10 @@
           scope.isWfsAvailable = false;
 
           function init() {
+
+            if (!scope.layer) {
+              return;
+            }
 
             var source = scope.layer.getSource();
             if (!source || !(source instanceof ol.source.ImageWMS ||

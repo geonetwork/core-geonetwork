@@ -385,7 +385,7 @@
 
         // TODO: Apply changes to a mix of records is maybe not the best
         // XPath will be applied whatever the standard is.
-        return $http.put('../api/records/batchediting',
+        return $http.put('../api/records/batchediting?bucket=be101',
             params
         ).success(function(data) {
           $scope.processReport = data;

@@ -38,7 +38,8 @@
   <xsl:include href="update-fixed-info-emodnet.xsl"/>
   <xsl:include href="layout/utility-fn.xsl"/>
 
-  <xsl:variable name="serviceUrl" select="/root/env/siteURL" />
+  <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
+  <xsl:variable name="node" select="/root/env/node"/>
 
   <!-- We use the category check to find out if this is an SDS metadata. Please replace with anything better -->
   <xsl:variable name="isSDS" select="count(//gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title/gmx:Anchor[starts-with(@xlink:href, 'http://inspire.ec.europa.eu/metadata-codelist/Category')]) = 1" />
@@ -55,6 +56,9 @@
 
   <xsl:variable name="mainLanguageId"
                 select="upper-case(java:twoCharLangCode($mainLanguage))"/>
+
+  <xsl:variable name="locales"
+                select="/root/*/gmd:locale/gmd:PT_Locale"/>
 
   <xsl:variable name="defaultEncoding"
                 select="'utf8'"/>
@@ -336,8 +340,8 @@
       <xsl:choose>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
-          <!-- Copy what's in here ... probably only a gco:CharacterString -->
-          <xsl:apply-templates select="node()"/>
+          <!-- Copy gco:CharacterString only. PT_FreeText are removed if not multilingual. -->
+          <xsl:apply-templates select="gco:CharacterString"/>
         </xsl:when>
         <xsl:otherwise>
           <!-- Add xsi:type for multilingual element. -->
@@ -503,7 +507,7 @@
 
 
   <!-- ================================================================= -->
-  <!-- Set local identifier to the first 3 letters of iso code. Locale ids
+  <!-- Set local identifier to the first 2 letters of iso code. Locale ids
         are used for multilingual charcterString using #iso2code for referencing.
     -->
   <xsl:template match="gmd:PT_Locale">
@@ -522,22 +526,40 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- Apply same changes as above to the gmd:LocalisedCharacterString -->
-  <xsl:variable name="language" select="//gmd:PT_Locale" /> <!-- Need list of all locale -->
-  <xsl:template  match="gmd:LocalisedCharacterString">
-    <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="currentLocale" select="upper-case(replace(normalize-space(@locale), '^#', ''))"/>
-      <xsl:variable name="ptLocale" select="$language[upper-case(replace(normalize-space(@id), '^#', ''))=string($currentLocale)]"/>
-      <xsl:variable name="id" select="upper-case(substring($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
-      <xsl:apply-templates select="@*"/>
-      <xsl:if test="$id != '' and ($currentLocale='' or @locale!=concat('#', $id)) ">
-        <xsl:attribute name="locale">
-          <xsl:value-of select="concat('#',$id)"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:apply-templates select="node()"/>
-    </xsl:element>
+
+  <!-- For multilingual elements. Check that the local
+  is defined in record. If not, remove the element. -->
+  <xsl:template match="gmd:textGroup">
+    <xsl:variable name="elementLocalId"
+                  select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+   <xsl:choose>
+      <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
+        <gmd:textGroup>
+          <gmd:LocalisedCharacterString>
+            <xsl:variable name="currentLocale"
+                          select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
+            <xsl:variable name="ptLocale"
+                          select="$locales[@id = string($currentLocale)]"/>
+            <xsl:variable name="id"
+                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:if test="$id != ''">
+              <xsl:attribute name="locale">
+                <xsl:value-of select="concat('#',$id)"/>
+              </xsl:attribute>
+            </xsl:if>
+
+            <xsl:apply-templates select="gmd:LocalisedCharacterString/text()"/>
+          </gmd:LocalisedCharacterString>
+        </gmd:textGroup>
+      </xsl:when>
+      <xsl:otherwise>
+        <!--<xsl:message>Removing <xsl:copy-of select="."/>.
+          This element was removed because not declared in record locales.</xsl:message>-->
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
+
 
   <!-- Remove attribute indeterminatePosition having empty
   value which is not a valid facet for it. -->

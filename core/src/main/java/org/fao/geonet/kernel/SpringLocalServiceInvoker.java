@@ -37,6 +37,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public class SpringLocalServiceInvoker {
 
     @Autowired
@@ -63,6 +66,10 @@ public class SpringLocalServiceInvoker {
     public Object invoke(String uri) throws Exception {
         MockHttpServletRequest request = prepareMockRequestFromUri(uri);
         MockHttpServletResponse response = new MockHttpServletResponse();
+        return invoke(request, response);
+    }
+
+    public Object invoke(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         HandlerExecutionChain handlerExecutionChain = requestMappingHandlerMapping.getHandler(request);
         HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
