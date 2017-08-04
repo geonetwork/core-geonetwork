@@ -125,10 +125,11 @@ goog.require('gn_share');
        * for sortBy and sortOrder to process the print. If it is a string
        * (uuid), we print only one metadata.
        * @param {Object|string} params
+       * @param {string} bucket
        * @param {string} prefix
        */
-      this.metadataPrint = function(params, bucket) {
-        var url = '';
+      this.metadataPrint = function(params, bucket, prefix) {
+        var url = prefix ? prefix : '';
         if (angular.isObject(params) && params.sortBy) {
           url += gnHttp.getService('mdGetPDFSelection');
           url += '?sortBy=' + params.sortBy;
