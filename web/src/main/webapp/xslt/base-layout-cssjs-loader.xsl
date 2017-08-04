@@ -149,6 +149,8 @@
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <script
           src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
+        <script
+          src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.fr.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap-table/dist/bootstrap-table.js"></script>
         <script src="{$uiResourcesPath}lib/FileSaver/FileSaver.min.js"></script>
         <script src="{$uiResourcesPath}lib/tableExport/tableExport.min.js"></script>
