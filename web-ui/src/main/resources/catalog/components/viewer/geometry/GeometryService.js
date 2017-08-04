@@ -205,11 +205,11 @@
             });
 
             if (options.outputAsWFSFeaturesCollection) {
-              outputValue =
+              outputValue = 
                   '<wfs:FeatureCollection ' +
                   'xmlns:wfs="http://www.opengis.net/wfs">' +
                   format.writeFeatures([outputFeature]) +
-                  '</FeatureCollection>';
+                  '</wfs:FeatureCollection>';
             } else if (options.outputAsFeatures) {
               outputValue = format.writeFeatures([outputFeature]);
             } else {
