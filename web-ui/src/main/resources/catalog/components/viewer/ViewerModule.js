@@ -238,36 +238,6 @@
       $(div).on('mouseleave', function() {
         hovering = false;
       });
-
-      // watch service data: when a profile graph is available, render it
-      var me = this;
-      $scope.$watch(
-          function() {
-            return gnViewerService.getProfileGraphData();
-          },
-          function(newData, oldData) {
-            me.profileGraph = newData && JSON.parse(newData).profile;
-          }
-      );
-      this.profileOptions = {
-        elevationExtractor: {
-          dist: function(data) { return data.dist },
-          z: function(data) { return data.values.z }
-        },
-        distanceExtractor: function (data) { return data.dist; },
-        linesConfiguration: {
-          'lineZ1': {
-            zExtractor: function (item) { return item.values.z }
-          }
-        }
-
-        // TODO: callbacks for interaction with the map
-        // hoverCallback,
-        // outCallback
-      };
-      this.closeProfileGraph = function() {
-        gnViewerService.clearProfileGraph();
-      };
     }]);
 
 })();
