@@ -76,7 +76,7 @@ public class EsWFSFeatureIndexer {
     public static final String TREE_FIELD_SUFFIX = "_tree";
     public static final String FEATURE_FIELD_PREFIX = "ft_";
 
-    @Value("es.index.features")
+    @Value("${es.index.features}")
     private String index = "features";
 
     @Autowired
