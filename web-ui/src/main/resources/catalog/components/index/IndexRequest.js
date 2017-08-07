@@ -134,6 +134,8 @@
      */
     this.states_ = [];
 
+    this.initialParams = {};
+
     // Initialize all events
     angular.forEach(indexRequestEvents, function(k) {
       this.eventsListener[k] = [];
@@ -225,7 +227,8 @@
   geonetwork.gnIndexRequest.prototype.searchWithFacets =
       function(qParams, aggs) {
 
-    if (Object.keys(this.initialParams.stats).length > 0) {
+    if (this.initialParams.stats &&
+      Object.keys(this.initialParams.stats).length > 0) {
       angular.forEach(this.initialParams.stats, function(value, key) {
         if (key == 'undefined') {
           delete this.initialParams.stats[key];
