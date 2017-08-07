@@ -552,7 +552,6 @@
       }
       // date types
       else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
-
         if (facetField.type == 'rangeDate') {
           var rangebuckets = [];
           for (var p in respAgg.buckets) {
@@ -565,26 +564,32 @@
         else {
           facetField.type = 'date';
         }
-        facetField.display = facetField.display || 'form';
-        var bucketDates = respAgg.buckets.sort(function(a, b) {
-          return a.key - b.key;
-        });
 
-        if (!fNameObj.allDates) {
-          fNameObj.allDates = bucketDates.map(function(b) {
-            return b.key;
+        // no date in bucket: skip field
+        if (!respAgg.buckets.length) {
+          facetField = null;
+        } else {
+          facetField.display = facetField.display || 'form';
+          var bucketDates = respAgg.buckets.sort(function(a, b) {
+            return a.key - b.key;
           });
-        }
-        facetField.dates = fNameObj.allDates;
 
-        if (facetField.display == 'graph' && bucketDates.length > 0) {
-          facetField.datesCount = [];
-          for (var i = 0; i < bucketDates.length; i++) {
-            facetField.datesCount.push({
-              value: bucketDates[i].key,
-              values: bucketDates[i].key,
-              count: bucketDates[i].doc_count
+          if (!fNameObj.allDates) {
+            fNameObj.allDates = bucketDates.map(function(b) {
+              return b.key;
             });
+          }
+          facetField.dates = fNameObj.allDates;
+
+          if (facetField.display == 'graph' && bucketDates.length > 0) {
+            facetField.datesCount = [];
+            for (var i = 0; i < bucketDates.length; i++) {
+              facetField.datesCount.push({
+                value: bucketDates[i].key,
+                values: bucketDates[i].key,
+                count: bucketDates[i].doc_count
+              });
+            }
           }
         }
       }
@@ -603,7 +608,7 @@
         }
       }
 
-    // terms
+      // terms
       else if (reqAgg.hasOwnProperty('terms')) {
         facetField.type = 'terms';
         facetField.size = reqAgg.terms.size;
@@ -614,7 +619,11 @@
           });
         }
       }
-      fields.push(facetField);
+
+      // do not add if undefined (this allows skipping field)
+      if (facetField) {
+        fields.push(facetField);
+      }
     }
 
     // Sort facets depending on application profile order if any
