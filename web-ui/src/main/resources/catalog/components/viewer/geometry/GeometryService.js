@@ -89,7 +89,10 @@
        */
       this.getCommonLayer = function(map) {
         if (this._layer) {
-          this._layer.setMap(map);
+          // add layer to map if not already there
+          if (!map.getLayers().getArray().indexOf(this._layer) === -1) {
+            map.addLayer(this._layer);
+          }
           return this._layer;
         }
 
@@ -131,7 +134,7 @@
         });
 
         // add our layer to the map
-        this._layer.setMap(map);
+        map.addLayer(this._layer);
 
         return this._layer;
       };
