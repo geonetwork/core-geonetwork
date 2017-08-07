@@ -295,10 +295,6 @@
     box-shadow       : 0 1px 3px rgba(0,0,0,.4);
     border-radius    : 0;
     z-index          : 1;
-    &.leftBarExpanded {
-      left             : 29em;
-    }
-
     .gn-features-table {
       padding: 0;
     }
@@ -553,6 +549,12 @@
     }
     .layers-tools-expanded button[sxt-layer-tools-toggle] {
       visibility: visible;
+    }
+  }
+  
+  &.leftBarExpanded {
+    gn-features-tables, .gn-viewer-info-pane {
+      left             : 29em;
     }
   }
 
@@ -1005,10 +1007,15 @@
       width: auto;
     }
   }
+  .form-group.gn-execute {
+    display: flex;
+    flex-direction: row;
+  }
   .output-selection {
     button {
-      width: auto;
-      padding: 0 1em;
+      padding-left: 0.6em;
+      padding-right: 0.2em;
+      span:not(.caret) { display: none; }
     }
     .dropdown-menu li:hover {
       background-color: transparent;
