@@ -52,7 +52,7 @@
       <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
         <div class="list-group">
           <div class="list-group-item"
-               data-ng-repeat="facet in field.values | filter:searchInput"
+               data-ng-repeat="facet in field.values"
                data-ng-click="onCheckboxClick(field, facet)"
                data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
             <i class="fa"

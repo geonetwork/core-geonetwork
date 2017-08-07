@@ -290,7 +290,7 @@
       any: this.requestParams.any,
       params: this.requestParams.qParams,
       geometry: this.requestParams.geometry
-    }, aggs, true);
+    }, aggs);
   };
 
   geonetwork.gnIndexRequest.prototype.searchQuiet =
