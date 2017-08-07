@@ -752,6 +752,7 @@
               dragboxInteraction.active = false;
 
               scope.clear = function() {
+                scope.valueInternalChange = true;
                 scope.value = '';
                 scope.extent = extentFromValue(scope.value);
                 scope.updateMap();
@@ -780,14 +781,14 @@
                 scope.extent = extent.map(function(coord) {
                   return Math.round(coord * 10000) / 10000;
                 });
-                scope.value = valueFromExtent(scope.extent);
-                scope.updateMap();
+                scope.onBboxChange();
 
                 scope.$apply();
               });
               scope.dragboxInteraction = dragboxInteraction;
 
               scope.onBboxChange = function() {
+                scope.valueInternalChange = true;
                 scope.value = valueFromExtent(scope.extent);
                 scope.updateMap();
               };
@@ -796,6 +797,18 @@
                 clearMap();
                 scope.map.removeLayer(layer);
               });
+
+              // watch external change of value
+              if (scope.$eval(attrs['watchValueChange'])) {
+                scope.$watch('value', function (newValue) {
+                  if (scope.valueInternalChange) {
+                    scope.valueInternalChange = false;
+                  } else {
+                    scope.extent = extentFromValue(newValue);
+                    scope.updateMap();
+                  }
+                });
+              }
             }
           };
         }
