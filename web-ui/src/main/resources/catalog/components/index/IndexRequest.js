@@ -596,15 +596,25 @@
       // filters - response bucket is object instead of array
       else if (reqAgg.hasOwnProperty('filters')) {
         facetField.type = 'filters';
+        var empty = true;
         for (var p in respAgg.buckets) {
-          var o = {
-            value: p,
-            count: respAgg.buckets[p].doc_count
-          };
-          if (reqAgg.filters.filters[p].query_string) {
-            o.query = reqAgg.filters.filters[p].query_string.query;
+          // results are found for this query: add a value to the facet
+          if (respAgg.buckets[p].doc_count > 0) {
+            var o = {
+              value: p,
+              count: respAgg.buckets[p].doc_count
+            };
+            empty = false;
+            if (reqAgg.filters.filters[p].query_string) {
+              o.query = reqAgg.filters.filters[p].query_string.query;
+            }
+            facetField.values.push(o);
           }
-          facetField.values.push(o);
+        }
+
+        // no value was found: skip this field
+        if (empty) {
+          facetField = null;
         }
       }
 
