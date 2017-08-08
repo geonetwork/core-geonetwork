@@ -55,7 +55,7 @@
 
                 <!-- This input is overloaded by a WFS filter -->
                 <small class="text-muted"
-                  ng-if="inputOverloads[input.identifier.value]">
+                  ng-if="inputWfsOverride[input.identifier.value]">
                   {{::'inputIsOverloaded' | translate}}</small>
               </span>
 
@@ -67,7 +67,7 @@
                     ng-if="::input.literalData.allowedValues"
                     ng-model="field.value"
                     ng-required="$index < input.minOccurs"
-                    ng-disabled="inputOverloads[input.identifier.value]">
+                    ng-disabled="inputWfsOverride[input.identifier.value]">
                     <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
                       value="{{::value.value}}">{{::value.value}}</option>
                   </select>
@@ -76,7 +76,7 @@
                     type="{{::getInputType(input.literalData.dataType.value)}}"
                     ng-model="field.value"
                     ng-required="$index < input.minOccurs"
-                    ng-disabled="inputOverloads[input.identifier.value]"></input>
+                    ng-disabled="inputWfsOverride[input.identifier.value]"></input>
 
                   <!-- delete button (disabled for mandatory values) -->
                   <a class="input-group-addon btn btn-default btn-icon"
@@ -96,8 +96,9 @@
                 <gn-bbox-input
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   crs="input._default.crs" value="field.value" map="map"
-                  ng-disabled="inputOverloads[input.identifier.value]"
-                  ng-required="$index < input.minOccurs"/>
+                  ng-disabled="inputWfsOverride[input.identifier.value]"
+                  ng-required="$index < input.minOccurs"
+                  watch-value-change="true"/>
               </div>
 
               <!-- Complex input (geometry on map) -->
@@ -139,7 +140,7 @@
                   &nbsp;<span translate>wpsSelectOutput</span>
                 </button>
                 <ul class="dropdown-menu pull-rightp">
-                  <li ng-repeat-start="output in ::processDescription.processOutputs.output"
+                  <li ng-repeat-start="output in processDescription.processOutputs.output"
                     class="dropdown-header">
                     {{::output.title.value}}
                   </li>
