@@ -129,16 +129,18 @@
             defaultParams);
 
         // Add hidden filters which may
-        // restrict search
+        // restrict search (do not add an existing filter)
         if ($scope.searchObj.filters) {
           angular.forEach($scope.searchObj.filters,
               function(value, key) {
                 var p = $scope.searchObj.params[key];
                 if (p) {
-                  if (!angular.isArray(p)) {
-                    $scope.searchObj.params[key] = [p];
+                  if (p !== value && (!p.indexOf || p.indexOf(value) === -1)) {
+                    if (!angular.isArray(p)) {
+                      $scope.searchObj.params[key] = [p];
+                    }
+                    $scope.searchObj.params[key].push(value);
                   }
-                  $scope.searchObj.params[key].push(value);
                 } else {
                   $scope.searchObj.params[key] = value;
                 }

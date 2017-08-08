@@ -134,6 +134,8 @@
      */
     this.states_ = [];
 
+    this.initialParams = {};
+
     // Initialize all events
     angular.forEach(indexRequestEvents, function(k) {
       this.eventsListener[k] = [];
@@ -225,7 +227,8 @@
   geonetwork.gnIndexRequest.prototype.searchWithFacets =
       function(qParams, aggs) {
 
-    if (Object.keys(this.initialParams.stats).length > 0) {
+    if (this.initialParams.stats &&
+      Object.keys(this.initialParams.stats).length > 0) {
       angular.forEach(this.initialParams.stats, function(value, key) {
         if (key == 'undefined') {
           delete this.initialParams.stats[key];
@@ -290,7 +293,7 @@
       any: this.requestParams.any,
       params: this.requestParams.qParams,
       geometry: this.requestParams.geometry
-    }, aggs, true);
+    }, aggs);
   };
 
   geonetwork.gnIndexRequest.prototype.searchQuiet =
@@ -552,7 +555,6 @@
       }
       // date types
       else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
-
         if (facetField.type == 'rangeDate') {
           var rangebuckets = [];
           for (var p in respAgg.buckets) {
@@ -565,45 +567,61 @@
         else {
           facetField.type = 'date';
         }
-        facetField.display = facetField.display || 'form';
-        var bucketDates = respAgg.buckets.sort(function(a, b) {
-          return a.key - b.key;
-        });
 
-        if (!fNameObj.allDates) {
-          fNameObj.allDates = bucketDates.map(function(b) {
-            return b.key;
+        // no date in bucket: skip field
+        if (!respAgg.buckets.length) {
+          facetField = null;
+        } else {
+          facetField.display = facetField.display || 'form';
+          var bucketDates = respAgg.buckets.sort(function(a, b) {
+            return a.key - b.key;
           });
-        }
-        facetField.dates = fNameObj.allDates;
 
-        if (facetField.display == 'graph' && bucketDates.length > 0) {
-          facetField.datesCount = [];
-          for (var i = 0; i < bucketDates.length; i++) {
-            facetField.datesCount.push({
-              value: bucketDates[i].key,
-              values: bucketDates[i].key,
-              count: bucketDates[i].doc_count
+          if (!fNameObj.allDates) {
+            fNameObj.allDates = bucketDates.map(function(b) {
+              return b.key;
             });
+          }
+          facetField.dates = fNameObj.allDates;
+
+          if (facetField.display == 'graph' && bucketDates.length > 0) {
+            facetField.datesCount = [];
+            for (var i = 0; i < bucketDates.length; i++) {
+              facetField.datesCount.push({
+                value: bucketDates[i].key,
+                values: bucketDates[i].key,
+                count: bucketDates[i].doc_count
+              });
+            }
           }
         }
       }
       // filters - response bucket is object instead of array
       else if (reqAgg.hasOwnProperty('filters')) {
         facetField.type = 'filters';
+        var empty = true;
         for (var p in respAgg.buckets) {
-          var o = {
-            value: p,
-            count: respAgg.buckets[p].doc_count
-          };
-          if (reqAgg.filters.filters[p].query_string) {
-            o.query = reqAgg.filters.filters[p].query_string.query;
+          // results are found for this query: add a value to the facet
+          if (respAgg.buckets[p].doc_count > 0) {
+            var o = {
+              value: p,
+              count: respAgg.buckets[p].doc_count
+            };
+            empty = false;
+            if (reqAgg.filters.filters[p].query_string) {
+              o.query = reqAgg.filters.filters[p].query_string.query;
+            }
+            facetField.values.push(o);
           }
-          facetField.values.push(o);
+        }
+
+        // no value was found: skip this field
+        if (empty) {
+          facetField = null;
         }
       }
 
-    // terms
+      // terms
       else if (reqAgg.hasOwnProperty('terms')) {
         facetField.type = 'terms';
         facetField.size = reqAgg.terms.size;
@@ -614,7 +632,11 @@
           });
         }
       }
-      fields.push(facetField);
+
+      // do not add if undefined (this allows skipping field)
+      if (facetField) {
+        fields.push(facetField);
+      }
     }
 
     // Sort facets depending on application profile order if any
