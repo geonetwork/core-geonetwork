@@ -82,7 +82,7 @@
     function($http, gnOwsCapabilities, gnUrlUtils, gnGlobalSettings,
              gnMap, $q) {
 
-      this.WMS_MIMETYPE = 'application/x-ogc-wms';
+      this.WMS_MIMETYPE_REGEX = /.*ogc-wms/;
 
       /**
        * @ngdoc method
@@ -348,6 +348,17 @@
       };
 
       /**
+       * Returns true if the mime type matches a WMS service
+       *
+       * @param {object} response excecuteProcess response object.
+       * @return {bool} true if WMS service
+       */
+      this.responseHasWmsService = function(response) {
+        var mimeType = response.processOutputs.output[0].reference.mimeType;
+        return this.WMS_MIMETYPE_REGEX.test(mimeType);
+      };
+
+      /**
        * Try to see if the execute response is a reference with a WMS mimetype.
        * If yes, the href is a WMS getCapabilities, we load it and add all
        * the layers on the map.
@@ -356,7 +367,7 @@
        *
        * @param {object} response excecuteProcess response object.
        * @param {ol.Map} map
-       * @param {ol.layer.Base} parentLayer
+       * @param {ol.layer.Base} parentLayer optional
        * @param {object=} opt_options
        */
       this.extractWmsLayerFromResponse =
@@ -364,20 +375,19 @@
 
         try {
           var ref = response.processOutputs.output[0].reference;
-          if (ref.mimeType == this.WMS_MIMETYPE) {
             gnMap.addWmsAllLayersFromCap(map, ref.href, true).
-                then(function(layers) {
-                  layers.forEach(function(l) {
-                    l.set('fromWps', true);
-                    l.set('wpsParent', parentLayer);
-                    if (opt_options &&
-                        !opt_options.exclude.test(l.get('label'))) {
-                      map.addLayer(l);
-                    }
-                  });
+              then(function(layers) {
+                layers.forEach(function(l) {
+                  l.set('fromWps', true);
+                  l.set('wpsParent', parentLayer);
+                  if (opt_options &&
+                      !opt_options.exclude.test(l.get('label'))) {
+                    map.addLayer(l);
+                  }
                 });
-          }
-        } catch (e) { // no WMS found }
+              });
+        } catch (e) {
+          console.warn('Error extracting WMS layers from response: ', e);
         }
       };
     }
