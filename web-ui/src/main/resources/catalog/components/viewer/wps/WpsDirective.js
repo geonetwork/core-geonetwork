@@ -409,7 +409,7 @@
                     scope.executeState = 'finished';
 
                     if (response.status.processSucceeded &&
-                        scope.wpsLink.layer) {
+                        gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
                         response, scope.map, scope.wpsLink.layer, {
                           exclude: /^OUTPUT_/
