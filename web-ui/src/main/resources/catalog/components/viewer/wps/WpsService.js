@@ -354,8 +354,12 @@
        * @return {bool} true if WMS service
        */
       this.responseHasWmsService = function(response) {
-        var mimeType = response.processOutputs.output[0].reference.mimeType;
-        return this.WMS_MIMETYPE_REGEX.test(mimeType);
+        try {
+          var mimeType = response.processOutputs.output[0].reference.mimeType;
+          return this.WMS_MIMETYPE_REGEX.test(mimeType);
+        } catch (e) {
+          return false;
+        }
       };
 
       /**
