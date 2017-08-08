@@ -27,9 +27,8 @@
             $scope.loadTool('wps', layer);
 
             wpsLink.layer = layer;
-            var el = $('.sxt-wps-panel');
-            el.empty();
-            sxtOgcLinksService.wpsForm($scope.$new(), el, wpsLink, wfsLink)
+            $scope.wpsLink = wpsLink;
+            $scope.wfsLink = wfsLink;
           };
 
           /**

@@ -176,7 +176,10 @@
                 <span translate>process</span>
               </tab-heading>
               <div class="wps-container">
-                <div class="sxt-wps-panel"></div>
+                <div class="sxt-wps-panel">
+                  <gn-wps-process-form ng-if="layerTabs.wps.active" map="map"
+                    wps-link="wpsLink" wfs-link="wfsLink"/>
+                </div>
               </div>
             </tab>
 
@@ -256,8 +259,11 @@
       </div>
 
       <!--process panel-->
-      <div class="panel panel-default panel-tools" id="process-panel" ng-show="activeTools.processes"
-        sxt-processes-panel show-process="selectedProcess">
+      <div class="panel panel-default panel-tools" id="process-panel" ng-show="activeTools.processes">
+        <div class="panel-body">
+          <gn-wps-process-form ng-if="activeTools.processes" map="map"
+            wps-link="selectedProcess"/>
+        </div>
       </div>
 
     <div class="panel panel-default panel-tools" id="print" ng-show="activeTools.print">

@@ -144,9 +144,6 @@
                   scope.layerTabs[tab].active = true;
                   activeTab = tab;
                 } else if (tab == activeTab) {
-                  if (tab == 'wps') {
-                    iElement.find('.panel-wps').remove();
-                  }
                   scope.active.layersTools = false;
                   scope.active.maximized = false;
                   scope.layerTabs[tab].active = false;
@@ -220,7 +217,7 @@
                 // show panel & hide others
                   scope.activeTools.processes = true;
 
-                // select process (this is watched by sxtProcessesPanel directive)
+                // select process (used by gnWpsProcessForm directive)
                 scope.selectedProcess = p;
               };
 

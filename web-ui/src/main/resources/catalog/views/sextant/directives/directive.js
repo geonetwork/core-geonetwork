@@ -9,7 +9,6 @@
   goog.require('sxt_social');
   goog.require('sxt_linksbtn');
   goog.require('sxt_mdactionmenu');
-  goog.require('sxt_processespanel');
 
   var module = angular.module('sxt_directives', [
       'sxt_categorytree',
@@ -19,7 +18,6 @@
       'sxt_social',
       'sxt_linksbtn',
       'sxt_mdactionmenu',
-      'sxt_tabswitcher',
-      'sxt_processespanel'
+      'sxt_tabswitcher'
   ]);
 })();
