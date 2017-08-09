@@ -396,7 +396,11 @@
 
       // Manage routing
       if (!$location.path()) {
-        gnSearchLocation.setSearch();
+        if (!$scope.tabOverflow.search && $scope.tabOverflow.map) {
+          gnSearchLocation.setMap();
+        } else {
+          gnSearchLocation.setSearch();
+        }
       }
 
       gnMdView.initFormatter(gnSearchSettings.formatterTarget || '.gn');
