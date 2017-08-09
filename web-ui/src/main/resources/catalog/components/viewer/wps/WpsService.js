@@ -236,7 +236,7 @@
               }
             });
           }
-          if (input.boundingBoxData) {
+          if (input.boundingBoxData && data) {
             var bbox = data.split(',');
             request.value.dataInputs.input.push({
               identifier: {
