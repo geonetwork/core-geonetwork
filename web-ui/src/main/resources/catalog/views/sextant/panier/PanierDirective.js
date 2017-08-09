@@ -116,10 +116,13 @@
     'gnMap',
     'gnSearchSettings',
     'gnPanierSettings',
-    'sxtOgcLinksService',
     'gnPopup',
-    function(gnMap, gnSearchSettings, gnPanierSettings, sxtOgcLinksService,
-      gnPopup) {
+    'gnWpsService',
+    function(gnMap,
+      gnSearchSettings,
+      gnPanierSettings,
+      gnPopup,
+      gnWpsService) {
       return {
         restrict: 'A',
         require: '^sxtPanier',
@@ -302,9 +305,13 @@
                   // open modal
                   var popup = gnPopup.create({
                     title: 'editWpsForm',
-                    content: '<div class="sxt-processes-form"/>' +
+                    content:
+                      '<gn-wps-process-form wps-link="currentWPS" '+
+                        'wfs-link="wfsLink" map="map" ' +
+                        'hide-execute-button="true">' +
+                      '</gn-wps-process-form>' +
                       '<button type="button" class="btn btn-default" ' +
-                        'ng-click="$parent.close()">' +
+                        'ng-click="saveWPSMessage(); $parent.close()">' +
                         '{{ "wpsSaveForm" | translate }}' +
                       '</button>',
                     className: 'wps-form-modal',
@@ -313,16 +320,28 @@
                     }
                   }, scope);
 
-                  var wpsFormRoot = $('.wps-form-modal .sxt-processes-form');
-                  wpsFormRoot.empty();
-                  sxtOgcLinksService.wpsForm(scope, wpsFormRoot, process,
-                    scope.element.link.protocol == 'OGC:WFS' ?  // send WFS link
-                      scope.element.link : null,
-                    { hideExecuteButton: true });
                   scope.currentWPS = process;
+
+                  // use WFS link
+                  scope.wfsLink = scope.element.link.protocol == 'OGC:WFS' ?
+                      scope.element.link : null;
                 }
               };
-              scope.closeWPSForm = function() {
+              scope.saveWPSMessage = function() {
+                var process = scope.currentWPS;
+
+                // do a describe process on the WPS & save execute message
+                gnWpsService.describeProcess(process.url, process.name).then(
+                  function (data) {
+                    // generate the XML message from the description
+                    var description = data.processDescription[0];
+                    var message = gnWpsService.printExecuteMessage(description,
+                      process.inputs, {});
+
+                    process.executeMessage = message;
+                });
+
+                // clear ref to process
                 scope.currentWPS = null;
               };
             }
