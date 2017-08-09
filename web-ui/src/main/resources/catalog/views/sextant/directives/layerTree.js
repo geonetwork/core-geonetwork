@@ -12,9 +12,7 @@
     'gnWmsQueue',
     '$timeout',
     'gnViewerSettings',
-    'sxtOgcLinksService',
-    function (gnLayerFilters, $filter, gnWmsQueue, $timeout, gnViewerSettings,
-              sxtOgcLinksService) {
+    function (gnLayerFilters, $filter, gnWmsQueue, $timeout, gnViewerSettings) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/views/sextant/directives/' +

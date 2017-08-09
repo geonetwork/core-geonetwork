@@ -32,29 +32,18 @@
           if (l._element && l._element.processes) {
             l._element.processes.forEach(function (process, index) {
               if (process && process.included) {
-                // params object with existing WPS inputs
-                var params = {};
-                if (process.processDescription) {
-                  var inputs = process.processDescription.dataInputs.input;
-                  for (var i = 0; i < inputs.length; i++) {
-                    var input = inputs[i];
-                    params[input.identifier.value] = input.value;
-                  }
+                if (!process.executeMessage) {
+                  console.warn('WPS process was not initialized, skipping: ',
+                    process);
+                } else {
+                  // add new additionalInput object
+                  panierLayer.additionalInput.push({
+                    protocol: 'WPS',
+                    identifier: process.name,
+                    linkage: process.url,
+                    params: btoa(process.executeMessage)
+                  });
                 }
-
-                // serializing params
-                var paramString = '';
-                var keys = Object.keys(params);
-                for (var i = 0; i < keys.length; i++) {
-                  paramString += keys[i] + '=' + params[keys[i]] + '&';
-                }
-
-                // final additionalInput object
-                panierLayer.additionalInput.push({
-                  protocol: 'WPS',
-                  linkage: process.url,
-                  params: paramString
-                });
               }
             });
           }
