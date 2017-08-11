@@ -29,6 +29,7 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:java="java:org.fao.geonet.util.XslUtil"
+                xmlns:util="java:java.util.UUID"
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
@@ -558,6 +559,27 @@
 	  <xsl:if test="not(contains($url, $fileIdentifier))">
 		<xsl:apply-templates select="*"/>
 	  </xsl:if>
+	</xsl:copy>
+  </xsl:template>
+
+  <!-- ================================================================= -->
+  <!-- Initialize dataset RS_Identifier if created from template -->
+  <!-- ================================================================= -->
+  <xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier|gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier">
+  	<xsl:copy>
+		<xsl:copy-of select="@*" />
+		<xsl:variable name="fileIdentifier" select="/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString"/>
+		<xsl:if test="/root/env/uuid!=$fileIdentifier">
+			<gmd:code>
+				<gco:CharacterString><xsl:value-of select="util:toString(util:randomUUID())" /></gco:CharacterString>
+			</gmd:code>
+			<gmd:codeSpace gco:nilReason="missing">
+				<gco:CharacterString/>
+			</gmd:codeSpace>
+		</xsl:if>
+		<xsl:if test="/root/env/uuid=$fileIdentifier">
+			<xsl:apply-templates select="*"/>
+		</xsl:if>
 	</xsl:copy>
   </xsl:template>
 
