@@ -337,6 +337,7 @@
           if (attrs['classname']) {
             className += ' ' + attrs['classname'];
           }
+          var title = button[0].title;
           button.popover({
             animation: false,
             container: (grid) ? grid[0] : '[sxt-main-viewer]',
@@ -345,6 +346,9 @@
             template: '<div class="bottom popover ' + className + '">' +
             '<div class="arrow"></div><div class="popover-content"></div></div>'
           });
+
+          // required because bootstrap popover clears the title attribute...
+          button[0].title = title;
         }, 1, false);
 
         button.on('shown.bs.popover', function() {
