@@ -32,8 +32,10 @@
           return {
             restrict: 'A',
             scope: true,
-            templateUrl: '../../catalog/components/search/map/' +
-                'partials/mapfield.html',
+            templateUrl: function (elem, attrs) {
+              return attrs.template || '../../catalog/components/search/map/' +
+                'partials/mapfield.html';
+            },
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
