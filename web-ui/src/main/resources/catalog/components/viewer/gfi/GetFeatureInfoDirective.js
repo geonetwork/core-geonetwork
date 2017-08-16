@@ -145,7 +145,7 @@
           return (layer.getSource() instanceof ol.source.ImageWMS ||
               layer.getSource() instanceof ol.source.TileWMS) &&
               layer.getVisible();
-        });
+        }).reverse();
 
         coordinates = e.coordinate;
         this.registerTables(layers, e.coordinate);
