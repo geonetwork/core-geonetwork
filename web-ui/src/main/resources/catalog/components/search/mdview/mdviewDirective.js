@@ -59,9 +59,12 @@
   module.directive('gnMetadataDisplay', [
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-            'mdpanel.html',
         scope: true,
+        templateUrl: function (elem, attrs) {
+          return attrs.template ||
+            '../../catalog/components/search/mdview/partials/' +
+            'mdpanel.html';
+        },
         link: function(scope, element, attrs, controller) {
 
           var unRegister;
