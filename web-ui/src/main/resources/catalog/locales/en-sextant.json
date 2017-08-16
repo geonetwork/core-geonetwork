@@ -66,5 +66,6 @@
   "wpsIncludedProcesses": "Processes",
   "wpsSaveForm": "Save and Close",
   "inputIsOverloaded": "This value is set in a WFS filter",
-  "fullTextSearch": "Full Text Search"
+  "fullTextSearch": "Full Text Search",
+  "sxtBack": "Back"
 }

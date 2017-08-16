@@ -1,81 +1,10 @@
 <div class="panel panel-default metadata">
   <div class="panel-heading">
-    <div class="pull-right gn-links" style="margin-right: 34px;">
-
-      <!--admin button-->
-      <div class="btn-group md-actions" ng-if="::user.canEditRecord(md)">
-        <button type="button" class="btn btn-default dropdown-toggle"
-                data-toggle="dropdown"
-                title="{{::'toAdmin' | translate}}">
-          <i class="fa fa-gear"></i>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <!-- Open Ext or Angular editor based on standard name -->
-          <li data-ng-if="::md.isUsingAngularEditor()">
-            <a ng-href="{{::gnUrl}}catalog.edit#/metadata/{{::md['geonet:info'].id}}" target="_blank">
-              <i
-                class="fa fa-pencil"></i><span translate>edit</span></a>
-          </li>
-          <li data-ng-if="::!md.isUsingAngularEditor()"><a
-            ng-href="{{::gnUrl}}../../apps/sextant/?edit={{::md['geonet:info'].id}}&hl={{lang}}" target="_blank"><i
-            class="fa fa-pencil"></i><span translate>edit</span></a>
-          </li>
-
-          <li data-ng-if="::(user.profile != 'Editor')"><a ng-click="mdService.deleteMd(md)">
-            <i class="fa fa-trash-o"></i><span
-            translate>delete</span></a>
-          </li>
-          <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a href="">
-            <i class="fa fa-trash-o"></i><span
-            translate>delete</span></a>
-          </li>
-
-          <li><a ng-href="" data-ng-click="mdService.duplicate(md)">
-            <i class="fa fa-copy"></i><span
-            translate>duplicate</span></a>
-          </li>
-          <li><a ng-href="" data-ng-click="mdService.createChild(md)">
-            <i class="fa fa-sitemap"></i><span translate>createChild</span></a>
-          </li>
-
-          <li data-ng-if="::(user.profile != 'Editor')">
-            <a ng-href=""
-               data-ng-click="mdService.openPrivilegesPanel(md, getCatScope())"><i
-              class="fa fa-key"></i><span translate>privileges</span></a></li>
-          <li data-ng-if="::(user.profile == 'Editor')" class="disabled"><a ng-href="">
-            <i class="fa fa-key"></i><span
-            translate>privileges</span></a></li>
-
-          <li data-ng-if="::(md.isWorkflowEnabled() && !cantStatus)">
-            <a href=""
-               data-ng-click="mdService.openUpdateStatusPanel(getScope())"><i
-              class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
-          </li>
-          <li data-ng-if="::(md.isWorkflowEnabled() && cantStatus)" class="disabled">
-            <a href="" data-ng-click=""><i
-              class="fa fa-bell"></i>&nbsp;<span data-translate="">updateStatus</span></a>
-          </li>
-
-          <li><a href="" data-ng-if="::!md.isWorkflowEnabled()"
-                 data-ng-click="mdService.startWorkflow(md, getCatScope())">
-            <i class="fa fa-bell"></i>&nbsp;<span
-            data-translate="">enableWorkflow</span></a></li>
-        </ul>
-      </div>
-
-      <div sxt-md-actions-menu="md"></div>
-
-      <button class="btn btn-default" ng-click="dismiss()" translate>
-        <i class="fa fa-share fa-flip-horizontal"></i>
-      </button>&nbsp;
-
+    <div gc-md-actions-menu="md" class="pull-right">
     </div>
-    <span class="gn-title">
-      <i class="pull-left fa" data-ng-class="md.icon.cls"
-         title="{{md.icon.title | translate}}"></i>
-      {{md.title || md.defaultTitle}}
-    </span>
+    <button class="btn btn-default" ng-click="dismiss()" translate>backToList</button>
+    {{md.title}}
   </div>
-  <div class="panel-body"></div>
+  <div class="panel-body">
+  </div>
 </div>
