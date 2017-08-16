@@ -1,5 +1,10 @@
 <li class="" data-ng-class="{'active': member.showInfo, 'sxt-outofrange': !((member.getMaxResolution() >= map.getView().getResolution()) && (member.getMinResolution() <= map.getView().getResolution()))}">
-  <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="sxt-layer-visibility fa fa-minus-square"></i>&nbsp;<span>{{member.name || member.get('label') }}</span></div>
+  <div ng-if="isParentNode()">
+    <i ng-click="toggleNode($event)" class="sxt-layer-visibility fa"
+      ng-class="{'fa-minus-square': !isFolded(), 'fa-plus-square': isFolded()}">
+    </i>&nbsp;
+    <span>{{member.name || member.get('label') }}</span>
+  </div>
   <div ng-if="!isParentNode()" data-ng-class="{sublayer: member.get('fromWps')}">
 
     <div ng-if="!member.get('loading')">
