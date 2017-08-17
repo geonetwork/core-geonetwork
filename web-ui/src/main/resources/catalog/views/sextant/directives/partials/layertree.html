@@ -10,14 +10,19 @@
 </sxt-layertree-col>
 
 <span data-gnv-layer-indicator=""/>
+
 <!--Errors list-->
-<ul>
-  <li data-ng-repeat="l in failedLayers">
-    <span class="pull-right gn-close-btn" ng-click="removeFailed(l)">
-      x
-    </span>
-    <i class="fa fa-warning text-warning" title="{{l.msg | translate}}"></i>
+<div data-ng-repeat="l in failedLayers" title="{{::l.msg | translate}}"
+  class="flex-col text-danger">
+  <div class="flex-row width-100">
+    <div class="flex-spacer"></div>
+    <i class="fa fa-warning"></i>
     &nbsp;
-    {{l.name}}
-  </li>
-</ul>
+    <span>{{::l.name}}</span>
+    <div class="flex-spacer flex-grow"></div>
+    <a href class="text-danger" ng-click="removeFailed(l)">
+      <i class="fa fa-times"></i>
+    </a>
+  </div>
+  <div class="flex-spacer"></div>
+</div>
