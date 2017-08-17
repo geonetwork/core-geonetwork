@@ -147,10 +147,12 @@
                   state = scope.groupStates[groupPath];
                 }
 
-                // save the state on the new node
+                // save the state & path on the new node
+                // (path is used to track nodes uniquely)
                 newNode = {
                   name: group,
-                  state: state
+                  state: state,
+                  path: groupPath
                 };
                 if (!node.nodes) node.nodes = [];
                 node.nodes.push(newNode);
@@ -310,10 +312,11 @@
           map: '=map'
         },
         template:
-          "<ul class='sxt-layertree-node'>" +
-          "<sxt-layertree-elt " +
-            "ng-repeat='member in collection' " +
-            "member='member' map='map'></sxt-layertree-elt></ul>"
+          '<ul class="sxt-layertree-node">' +
+            '<sxt-layertree-elt ' +
+              'ng-repeat="member in collection track by (member.path || (collection.state.path + member.get(\'label\')) || $index)" ' +
+              'member="member" map="map"></sxt-layertree-elt>' +
+          '</ul>'
       };
     }]);
 
@@ -332,13 +335,6 @@
             'partials/layertreeitem.html',
         link: function(scope, element, attrs, controller) {
           var el = element;
-          if (angular.isArray(scope.member.nodes)) {
-            element.append(
-              "<sxt-layertree-col class='list-group' " +
-              "collection='member.nodes' map='map' " +
-              "ng-show='!isFolded()'></sxt-layertree-col>");
-            $compile(element.contents())(scope);
-          }
           scope.toggleNode = function(evt) {
             scope.member.state.folded = !scope.member.state.folded;
             evt && evt.stopPropagation();
@@ -361,12 +357,6 @@
               }).error(function(response) {
               console.log(response);
             });
-            //$http.get('wfs.harvest/' + md['geonet:info'].uuid)
-            // .success(function(data) {
-            //  console.log(data);
-            //}).error(function(response) {
-            //  console.log(response);
-            //});
           };
           scope.mapService = gnMap;
 
@@ -395,7 +385,7 @@
              * @param {string} groupcombo Group id.
              * @param {ol.layer.Base} layer Node layer.
              */
-            scope.setLayerVisibility = function(groupcombo, layer) {
+            scope.setComboLayerVisibility = function(groupcombo, layer) {
               if(scope.comboGroups[groupcombo] == layer) {
                 layer.visible = !layer.visible;
               }
@@ -466,7 +456,16 @@
           scope.showWFSFilter = function() {
             controller.setWFSFilter(scope.member, wfsLink);
           };
-       }
+          scope.isOutOfRange = function () {
+            if (scope.isParentNode() ||
+              !scope.member instanceof ol.layer.Base) {
+              return false;
+            }
+            var mapRes = scope.map.getView().getResolution();
+            return scope.member.getMaxResolution() < mapRes ||
+              scope.member.getMinResolution() > mapRes;
+          }
+        }
       };
     }]);
 
