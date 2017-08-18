@@ -8,6 +8,7 @@ DELETE FROM Settings WHERE  name = 'map/proj4js';
 DELETE FROM Settings WHERE  name = 'map/isSaveMapInCatalogAllowed';
 DELETE FROM Settings WHERE  name = 'map/bingKey';
 
+DELETE FROM Settings WHERE name like 'system/shib%';
 
 
 INSERT INTO Selections (id, name, isWatchable) VALUES (0, 'PreferredList', 'n');
