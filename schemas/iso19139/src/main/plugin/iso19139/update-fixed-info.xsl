@@ -579,72 +579,123 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="gmd:descriptiveKererzywords[not(@xlink:href)]" priority="10">
-    <xsl:variable name="isAllThesaurus"
-                  select="count(gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0"/>
-    <xsl:variable name="allThesaurusFinished"
-                  select="count(preceding-sibling::gmd:descriptiveKeywords[not(@xlink:href)]/gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0"/>
-    <xsl:choose>
-      <xsl:when test="$isAllThesaurus and not($allThesaurusFinished)">
-        <xsl:variable name="thesaurusNames"
-                      select="distinct-values(../gmd:descriptiveKeywords[not(@xlink:href)]/gmd:MD_Keywords/gmd:keyword/@gco:nilReason[starts-with(.,'thesaurus::')])"/>
-        <xsl:variable name="context" select="."/>
-        <xsl:variable name="root" select="/"/>
-        <xsl:for-each select="$thesaurusNames">
-          <xsl:variable name="thesaurusName" select="."/>
-          <xsl:variable name="keywords"
-                        select="$context/../gmd:descriptiveKeywords[not(@xlink:href)]/gmd:MD_Keywords/gmd:keyword[@gco:nilReason = $thesaurusName]"/>
 
-          <gmd:descriptiveKeywords>
+
+
+
+
+  <!--
+   Merges the keywords in the metadata document by thesaurus
+   so that all keywords from the same thesaurus are in the same
+   keyword block.
+
+   Inspired by https://github.com/geoadmin/geocat/blob/geocat_develop/core/src/main/java/org/fao/geonet/util/GeocatXslUtil.java#L848
+  -->
+  <xsl:template match="gmd:descriptiveKeywords|srv:keywords" priority="10">
+    <xsl:variable name="name" select="name()"/>
+    <xsl:variable name="root" select="/"/>
+    <xsl:variable name="node" select="."/>
+
+    <!-- On first matching keyword, loop on all and
+         dispatch keywords coming from the all thesaurus
+         in existing block or in new ones. -->
+    <xsl:if test="name(preceding-sibling::*[1]) != $name">
+
+      <!-- Collect the all thesaurus keywords -->
+      <xsl:variable name="allThesaurusEl"
+                    select="../(gmd:descriptiveKeywords|srv:keywords)[
+                                contains(@xlink:href, 'thesaurus=external.none.allThesaurus') or
+                                contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
+                                  'external.none.allThesaurus')
+                                ]"/>
+
+      <!-- Collect all keywords. -->
+      <xsl:variable name="keywords"
+                    select=".|following-sibling::*[name() = $name]"/>
+
+
+
+      <!-- Inject all new keywords from the all thesaurus
+           in existing blocks. -->
+      <xsl:for-each
+              select="$keywords">
+
+        <!-- Skip the all thesaurus and copy existing blocks -->
+        <xsl:variable name="isNotAllThesaurus"
+                      select="not(contains(@xlink:href, 'thesaurus=external.none.allThesaurus')) and
+                              not(contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
+                                  'external.none.allThesaurus'))"/>
+
+        <xsl:if test="$isNotAllThesaurus">
+          <xsl:copy>
+            <xsl:apply-templates select="@*"/>
             <gmd:MD_Keywords>
-              <xsl:for-each select="$keywords">
+              <xsl:apply-templates select="*/gmd:keyword"/>
+
+
+              <!-- Append all keywords added by all thesaurus. -->
+              <xsl:variable name="thesaurusKey"
+                            select="substring-after(
+                                      normalize-space(
+                                        */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*),
+                                      'geonetwork.thesaurus.')"/>
+              <xsl:for-each select="$allThesaurusEl//gmd:keyword[
+                                      @gco:nilReason = concat('thesaurus::', $thesaurusKey)]">
                 <gmd:keyword>
-                  <xsl:copy-of select="./node()"/>
+                  <xsl:copy-of select="*"/>
                 </gmd:keyword>
               </xsl:for-each>
 
-              <xsl:copy-of
-                select="geonet:add-thesaurus-info(substring-after(., 'thesaurus::'), true(), $root/root/env/thesauri, true())"/>
 
+              <xsl:apply-templates select="*/gmd:type|*/gmd:thesaurusName"/>
             </gmd:MD_Keywords>
-          </gmd:descriptiveKeywords>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$isAllThesaurus and $allThesaurusFinished">
-        <!--Do nothing-->
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="."/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template match="gmd:descriptiveKeywords" priority="10">
-
-
-    <xsl:if test="name(preceding-sibling::*[1]) != name()">
-      <xsl:for-each
-              select="following-sibling-or-self::*[name() = 'gmd:descriptiveKeywords')]">
-        
-        <xsl:variable name="allThesaurusEl"
-                      select="../gmd:descriptiveKeywords[contains(@xlink:href, 'thesaurus=external.none.allThesaurus')]"/>
-
-        <xsl:copy>
-          <xsl:apply-templates select="@*"/>
-          <gmd:MD_Keywords>
-
-          </gmd:MD_Keywords>
-        </xsl:copy>
+          </xsl:copy>
+        </xsl:if>
       </xsl:for-each>
 
-    </xsl:if>
-    <xsl:message>
-      ###########
-      <xsl:copy-of select="."/>
-    </xsl:message>
-    <xsl:copy-of select="."/>
 
+
+      <!-- Create new descriptive keywords block
+           for keyword in all thesaurus
+           which are not in current record. -->
+      <xsl:for-each-group select="$allThesaurusEl//gmd:keyword"
+                          group-by="@gco:nilReason">
+        <xsl:variable name="thesaurusKey"
+                      select="substring-after(current-grouping-key(), '::')"/>
+        <xsl:variable name="isThesaurusBlockExisting"
+                      select="count($node/../*
+                                [name() = $name]
+                                [contains(@xlink:href,
+                                          concat('thesaurus=', $thesaurusKey)) or
+                                contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
+                                  $thesaurusKey)]) > 0"/>
+
+        <xsl:if test="$thesaurusKey != '' and not($isThesaurusBlockExisting)">
+          <xsl:element name="{$name}">
+            <!-- TODO: Add xlink mode -->
+            <gmd:MD_Keywords>
+              <xsl:for-each select="current-group()">
+                <gmd:keyword>
+                  <xsl:copy-of select="*"/>
+                </gmd:keyword>
+              </xsl:for-each>
+
+              <xsl:copy-of select="geonet:add-thesaurus-info(
+                                              $thesaurusKey,
+                                              true(),
+                                              $root/root/env/thesauri,
+                                              true())"/>
+            </gmd:MD_Keywords>
+          </xsl:element>
+        </xsl:if>
+      </xsl:for-each-group>
+    </xsl:if>
   </xsl:template>
+
+
+
+
+
 
   <!-- ================================================================= -->
   <!-- Adjust the namespace declaration - In some cases name() is used to get the
