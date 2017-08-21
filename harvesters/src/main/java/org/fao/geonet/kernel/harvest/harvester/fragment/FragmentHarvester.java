@@ -432,7 +432,7 @@ public class FragmentHarvester extends BaseAligner {
         // Note: we use fragmentAllPrivs here because subtemplates need to be 
         // visible/accessible to all
         addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context, log);
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, true, null);
 
         dataMan.flush();
 
