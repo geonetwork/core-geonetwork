@@ -26,6 +26,8 @@
  */
 package org.fao.geonet.repository;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import org.fao.geonet.domain.UserSavedSelection;
 import org.fao.geonet.domain.UserSavedSelectionId_;
 import org.fao.geonet.domain.UserSavedSelection_;
@@ -124,6 +126,7 @@ public class UserSavedSelectionRepositoryImpl
     }
 
     @Override
+    @Transactional
     public int deleteAllBySelection(Integer selectionId) {
         final String selectionIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.selectionId);
@@ -137,6 +140,7 @@ public class UserSavedSelectionRepositoryImpl
     }
 
     @Override
+    @Transactional
     public int deleteAllByUser(Integer userId) {
         final String userIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.userId);
@@ -150,6 +154,7 @@ public class UserSavedSelectionRepositoryImpl
     }
 
     @Override
+    @Transactional
     public int deleteAllByUuid(String metadataUuid) {
         final String metadataUuidPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.metadataUuid);
@@ -163,6 +168,7 @@ public class UserSavedSelectionRepositoryImpl
     }
 
     @Override
+    @Transactional
     public int deleteAllBySelectionAndUser(Integer selection, Integer userId) {
         final String selectionIdPath =
             SortUtils.createPath(UserSavedSelection_.id, UserSavedSelectionId_.selectionId);
