@@ -1307,6 +1307,27 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
+     * Set metadata type to subtemplate and set the title. Only subtemplates 
+     * need to persist the title as it is used to give a meaningful title for
+     * use when offering the subtemplate to users in the editor.
+     *
+     * @param id Metadata id to set to type subtemplate
+     * @param title Title of metadata of subtemplate/fragment
+     */
+    public void setSubtemplateTypeAndTitleExt(final int id, String title) throws Exception {
+        getMetadataRepository().update(id, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata metadata) {
+                final MetadataDataInfo dataInfo = metadata.getDataInfo();
+                dataInfo.setType(MetadataType.SUB_TEMPLATE);
+                if (title != null) {
+                  dataInfo.setTitle(title);
+                }
+            }
+        });
+    }
+
+    /**
      * TODO javadoc.
      */
     public void setHarvested(int id, String harvestUuid) throws Exception {
@@ -2845,6 +2866,22 @@ public class DataManager implements ApplicationEventPublisherAware {
                 String metadataIdString = String.valueOf(metadataId.get());
                 final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
+            }
+
+						// add user information to env if user is authenticated (should be)
+            Element elUser = new Element("user");
+            UserSession usrSess = context.getUserSession();
+            if (usrSess.isAuthenticated()) {
+              String myUserId  = usrSess.getUserId();
+              User user = getApplicationContext().getBean(UserRepository.class).findOne(myUserId);
+        			if (user != null) {
+								Element elUserDetails = new Element("details");
+            		elUserDetails.addContent(new Element("surname").setText(user.getSurname()));
+            		elUserDetails.addContent(new Element("firstname").setText(user.getName()));
+            		elUserDetails.addContent(new Element("organisation").setText(user.getOrganisation()));
+								elUser.addContent(elUserDetails);
+            		env.addContent(elUser);
+        			}
             }
 
             // add original metadata to result

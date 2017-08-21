@@ -174,7 +174,7 @@ class Harvester implements IHarvester<HarvestResult> {
         schemaMan = gc.getBean(SchemaManager.class);
         SettingInfo si = context.getBean(SettingInfo.class);
         String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-        metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+        metadataGetService = "local://"+context.getNodeId()+"/api/records/";
         ssParams.put("siteUrl", siteUrl);
     }
 
@@ -343,7 +343,7 @@ class Harvester implements IHarvester<HarvestResult> {
             try {
                 String isTemplate = localUuids.getTemplate(uuid);
                 if (isTemplate.equals("s")) {
-                    Processor.uncacheXLinkUri(metadataGetService + "?uuid=" + uuid);
+                    Processor.uncacheXLinkUri(metadataGetService + uuid);
                 }
 
                 if (!updatedMetadata.contains(uuid)) {
