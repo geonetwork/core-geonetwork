@@ -45,8 +45,8 @@
   -->
 
 
-  <xsl:template mode="mode-iso19139" priority="2000" match="
-    gmd:descriptiveKeywords">
+  <xsl:template mode="mode-iso19139" priority="2000"
+                match="gmd:descriptiveKeywords">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -243,7 +243,8 @@
              data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
              data-thesaurus-title="{if ($thesaurusConfig/@fieldset = 'false') then $thesaurusTitle else ''}"
              data-thesaurus-key="{$thesaurusKey}"
-             data-keywords="{$keywords}" data-transformations="{$transformations}"
+             data-keywords="{$keywords}"
+             data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
              data-lang="{$metadataOtherLanguagesAsJson}"

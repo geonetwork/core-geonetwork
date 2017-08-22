@@ -34,7 +34,7 @@
                 version="2.0" exclude-result-prefixes="#all">
 
   <xsl:include href="../iso19139/convert/functions.xsl"/>
-  <xsl:include href="../iso19139/convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="update-fixed-info-keywords.xsl"/>
   <xsl:include href="layout/utility-fn.xsl"/>
 
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
@@ -499,125 +499,12 @@
   </xsl:template>
 
 
+
   <!-- Remove attribute indeterminatePosition having empty
-  value which is not a valid facet for it. -->
+       value which is not a valid facet for it. -->
   <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
 
-  <xsl:template match="gmd:descriptiveKeywords[@xlink:href]" priority="10">
-    <xsl:variable name="isAllThesaurus"
-                  select="contains(@xlink:href, 'thesaurus=external.none.allThesaurus')"/>
-    <xsl:variable name="allThesaurusFinished"
-                  select="count(preceding-sibling::gmd:descriptiveKeywords[contains(@xlink:href, 'thesaurus=external.none.allThesaurus')]) > 0"/>
 
-    <xsl:choose>
-      <xsl:when test="$isAllThesaurus and not($allThesaurusFinished)">
-        <xsl:variable name="allThesaurusEl"
-                      select="../gmd:descriptiveKeywords[contains(@xlink:href, 'thesaurus=external.none.allThesaurus')]"/>
-        <xsl:variable name="ids">
-          <xsl:for-each
-            select="$allThesaurusEl/tokenize(replace(@xlink:href, '.+id=([^&amp;]+).*', '$1'), ',')">
-            <keyword>
-              <thes>
-                <xsl:value-of
-                  select="replace(., 'http://org.fao.geonet.thesaurus.all/(.+)@@@.+', '$1')"/>
-              </thes>
-              <id>
-                <xsl:value-of
-                  select="replace(., 'http://org.fao.geonet.thesaurus.all/.+@@@(.+)', '$1')"/>
-              </id>
-            </keyword>
-          </xsl:for-each>
-        </xsl:variable>
-
-        <xsl:variable name="hrefPrefix" select="replace(@xlink:href, '(.+\?).*', '$1')"/>
-        <xsl:variable name="hrefQuery" select="replace(@xlink:href, '.+\?(.*)', '$1')"/>
-        <xsl:variable name="params">
-          <xsl:for-each select="$allThesaurusEl/tokenize($hrefQuery, '\?|&amp;')">
-            <param>
-              <key>
-                <xsl:value-of select="tokenize(., '=')[1]"/>
-              </key>
-              <val>
-                <xsl:value-of select="tokenize(., '=')[2]"/>
-              </val>
-            </param>
-          </xsl:for-each>
-        </xsl:variable>
-
-        <xsl:variable name="uniqueParams"
-                      select="distinct-values($params//key[. != 'id' and . != 'thesaurus' and . != 'multiple']/text())"/>
-        <xsl:variable name="queryString">
-          <xsl:for-each select="$uniqueParams">
-            <xsl:variable name="p" select="."/>
-            <xsl:value-of select="concat('&amp;', ., '=', $params/param[key/text() = $p]/val)"/>
-          </xsl:for-each>
-        </xsl:variable>
-
-
-        <xsl:variable name="thesaurusNames" select="distinct-values($ids//thes)"/>
-        <xsl:variable name="context" select="."/>
-        <xsl:variable name="root" select="/"/>
-        <xsl:for-each select="$thesaurusNames">
-          <xsl:variable name="thesaurusName" select="."/>
-
-          <xsl:variable name="finalIds">
-            <xsl:value-of separator="," select="$ids/keyword[thes/text() = $thesaurusName]/id"/>
-          </xsl:variable>
-
-          <gmd:descriptiveKeywords
-            xlink:href="{concat($hrefPrefix, 'thesaurus=', $thesaurusName, '&amp;id=', $finalIds, '&amp;multiple=true',$queryString)}"
-            xlink:show="{$context/@xlink:show}">
-          </gmd:descriptiveKeywords>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$isAllThesaurus and $allThesaurusFinished">
-        <!--Do nothing-->
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="."/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template match="gmd:descriptiveKeywords[not(@xlink:href)]" priority="10">
-    <xsl:variable name="isAllThesaurus"
-                  select="count(gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0"/>
-    <xsl:variable name="allThesaurusFinished"
-                  select="count(preceding-sibling::gmd:descriptiveKeywords[not(@xlink:href)]/gmd:MD_Keywords/gmd:keyword[starts-with(@gco:nilReason,'thesaurus::')]) > 0"/>
-    <xsl:choose>
-      <xsl:when test="$isAllThesaurus and not($allThesaurusFinished)">
-        <xsl:variable name="thesaurusNames"
-                      select="distinct-values(../gmd:descriptiveKeywords[not(@xlink:href)]/gmd:MD_Keywords/gmd:keyword/@gco:nilReason[starts-with(.,'thesaurus::')])"/>
-        <xsl:variable name="context" select="."/>
-        <xsl:variable name="root" select="/"/>
-        <xsl:for-each select="$thesaurusNames">
-          <xsl:variable name="thesaurusName" select="."/>
-          <xsl:variable name="keywords"
-                        select="$context/../gmd:descriptiveKeywords[not(@xlink:href)]/gmd:MD_Keywords/gmd:keyword[@gco:nilReason = $thesaurusName]"/>
-
-          <gmd:descriptiveKeywords>
-            <gmd:MD_Keywords>
-              <xsl:for-each select="$keywords">
-                <gmd:keyword>
-                  <xsl:copy-of select="./node()"/>
-                </gmd:keyword>
-              </xsl:for-each>
-
-              <xsl:copy-of
-                select="geonet:add-thesaurus-info(substring-after(., 'thesaurus::'), true(), $root/root/env/thesauri, true())"/>
-
-            </gmd:MD_Keywords>
-          </gmd:descriptiveKeywords>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$isAllThesaurus and $allThesaurusFinished">
-        <!--Do nothing-->
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="."/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
 
   <!-- ================================================================= -->

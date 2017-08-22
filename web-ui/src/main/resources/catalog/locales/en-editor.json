@@ -362,5 +362,5 @@
     "inputGeometryIsInvalid": "An error was found in the input geometry:",
     "inputGeometryHint": "Paste here a geometry in the selected format and projection system.",
     "inputGeometryReadOnlyHint": "This geometry is read-only.",
-    "selectKeyword": "Select a keyword from Thesauri"
+    "selectKeyword": "Add keywords"
 }
