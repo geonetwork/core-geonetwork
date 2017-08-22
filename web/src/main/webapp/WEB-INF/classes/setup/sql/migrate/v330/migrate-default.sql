@@ -47,6 +47,7 @@ INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'vie','Preferred reco
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'vie','Watch list');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/import/restrict', '', 0, 11000, 'y');
 
 
 
