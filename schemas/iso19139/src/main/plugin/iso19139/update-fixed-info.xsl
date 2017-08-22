@@ -499,23 +499,68 @@
   </xsl:template>
 
 
-  <!-- Remove attribute indeterminatePosition having empty
-  value which is not a valid facet for it. -->
-  <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
 
-  <xsl:template match="gmd:descriptiveKrezrezrezeyworrds[@xlink:href]" priority="10">
-    <xsl:variable name="isAllThesaurus"
-                  select="contains(@xlink:href, 'thesaurus=external.none.allThesaurus')"/>
-    <xsl:variable name="allThesaurusFinished"
-                  select="count(preceding-sibling::gmd:descriptiveKeywords[contains(@xlink:href, 'thesaurus=external.none.allThesaurus')]) > 0"/>
 
-    <xsl:choose>
-      <xsl:when test="$isAllThesaurus and not($allThesaurusFinished)">
-        <xsl:variable name="allThesaurusEl"
-                      select="../gmd:descriptiveKeywords[contains(@xlink:href, 'thesaurus=external.none.allThesaurus')]"/>
-        <xsl:variable name="ids">
-          <xsl:for-each
-            select="$allThesaurusEl/tokenize(replace(@xlink:href, '.+id=([^&amp;]+).*', '$1'), ',')">
+
+  <!--
+   Merges the keywords in the metadata document by thesaurus
+   so that all keywords from the same thesaurus are in the same
+   keyword block.
+  -->
+  <xsl:template match="gmd:descriptiveKeywords|srv:keywords" priority="10">
+    <xsl:variable name="name" select="name()"/>
+    <xsl:variable name="root" select="/"/>
+    <xsl:variable name="node" select="."/>
+
+    <!-- On first matching keyword, loop on all and
+         dispatch keywords coming from the all thesaurus
+         in existing block or in new ones if needed. -->
+    <xsl:if test="name(preceding-sibling::*[1]) != $name">
+
+      <!-- Collect the all thesaurus keywords which contains
+           the new keyword added by users. -->
+      <xsl:variable name="allThesaurusEl"
+                    select="../(gmd:descriptiveKeywords|srv:keywords)[
+                                contains(@xlink:href, 'thesaurus=external.none.allThesaurus') or
+                                contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
+                                  'external.none.allThesaurus')
+                                ]"/>
+
+      <!-- Check if we are in xlink mode or not.
+           WARNING: We don't support a mix of keyword in xlink mode
+           and others not using xlinks.
+      -->
+      <xsl:variable name="isAllThesaurusXlinked"
+                    select="count($allThesaurusEl/@xlink:href) > 0"/>
+
+
+
+      <!-- Collect all XLink parameters from the all thesaurus -->
+      <xsl:variable name="hrefPrefix"
+                    select="replace($allThesaurusEl/@xlink:href, '(.+\?).*', '$1')"/>
+      <xsl:variable name="hrefQuery"
+                    select="replace($allThesaurusEl/@xlink:href, '.+\?(.*)', '$1')"/>
+      <xsl:variable name="params" as="node()*">
+        <xsl:for-each select="tokenize(
+                                  $hrefQuery,
+                                  '\?|&amp;')">
+          <param>
+            <key>
+              <xsl:value-of select="tokenize(., '=')[1]"/>
+            </key>
+            <val>
+              <xsl:value-of select="tokenize(., '=')[2]"/>
+            </val>
+          </param>
+        </xsl:for-each>
+      </xsl:variable>
+
+      <!-- Collect all keyword identifiers from the XLink URL in the all thesaurus -->
+      <xsl:variable name="keywordIdentifiers" as="node()*">
+        <xsl:if test="$params[key = 'id']/val != ''">
+          <xsl:for-each select="tokenize(
+                                      $params[key = 'id']/val,
+                                      ',')">
             <keyword>
               <thes>
                 <xsl:value-of
@@ -527,89 +572,15 @@
               </id>
             </keyword>
           </xsl:for-each>
-        </xsl:variable>
-
-        <xsl:variable name="hrefPrefix" select="replace(@xlink:href, '(.+\?).*', '$1')"/>
-        <xsl:variable name="hrefQuery" select="replace(@xlink:href, '.+\?(.*)', '$1')"/>
-        <xsl:variable name="params">
-          <xsl:for-each select="$allThesaurusEl/tokenize($hrefQuery, '\?|&amp;')">
-            <param>
-              <key>
-                <xsl:value-of select="tokenize(., '=')[1]"/>
-              </key>
-              <val>
-                <xsl:value-of select="tokenize(., '=')[2]"/>
-              </val>
-            </param>
-          </xsl:for-each>
-        </xsl:variable>
-
-        <xsl:variable name="uniqueParams"
-                      select="distinct-values($params//key[. != 'id' and . != 'thesaurus' and . != 'multiple']/text())"/>
-        <xsl:variable name="queryString">
-          <xsl:for-each select="$uniqueParams">
-            <xsl:variable name="p" select="."/>
-            <xsl:value-of select="concat('&amp;', ., '=', $params/param[key/text() = $p]/val)"/>
-          </xsl:for-each>
-        </xsl:variable>
+        </xsl:if>
+      </xsl:variable>
 
 
-        <xsl:variable name="thesaurusNames" select="distinct-values($ids//thes)"/>
-        <xsl:variable name="context" select="."/>
-        <xsl:variable name="root" select="/"/>
-        <xsl:for-each select="$thesaurusNames">
-          <xsl:variable name="thesaurusName" select="."/>
+<xsl:message>+++<xsl:copy-of select="$params"/></xsl:message>
+<xsl:message>+++<xsl:copy-of select="$params[key = 'id']/val"/></xsl:message>
+<xsl:message>+++<xsl:copy-of select="$keywordIdentifiers"/></xsl:message>
 
-          <xsl:variable name="finalIds">
-            <xsl:value-of separator="," select="$ids/keyword[thes/text() = $thesaurusName]/id"/>
-          </xsl:variable>
-
-          <gmd:descriptiveKeywords
-            xlink:href="{concat($hrefPrefix, 'thesaurus=', $thesaurusName, '&amp;id=', $finalIds, '&amp;multiple=true',$queryString)}"
-            xlink:show="{$context/@xlink:show}">
-          </gmd:descriptiveKeywords>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$isAllThesaurus and $allThesaurusFinished">
-        <!--Do nothing-->
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="."/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-
-
-
-
-  <!--
-   Merges the keywords in the metadata document by thesaurus
-   so that all keywords from the same thesaurus are in the same
-   keyword block.
-
-   Inspired by https://github.com/geoadmin/geocat/blob/geocat_develop/core/src/main/java/org/fao/geonet/util/GeocatXslUtil.java#L848
-  -->
-  <xsl:template match="gmd:descriptiveKeywords|srv:keywords" priority="10">
-    <xsl:variable name="name" select="name()"/>
-    <xsl:variable name="root" select="/"/>
-    <xsl:variable name="node" select="."/>
-
-    <!-- On first matching keyword, loop on all and
-         dispatch keywords coming from the all thesaurus
-         in existing block or in new ones. -->
-    <xsl:if test="name(preceding-sibling::*[1]) != $name">
-
-      <!-- Collect the all thesaurus keywords -->
-      <xsl:variable name="allThesaurusEl"
-                    select="../(gmd:descriptiveKeywords|srv:keywords)[
-                                contains(@xlink:href, 'thesaurus=external.none.allThesaurus') or
-                                contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
-                                  'external.none.allThesaurus')
-                                ]"/>
-
-      <!-- Collect all keywords. -->
+      <!-- Collect all keyword blocks. -->
       <xsl:variable name="keywords"
                     select=".|following-sibling::*[name() = $name]"/>
 
@@ -620,43 +591,77 @@
       <xsl:for-each
               select="$keywords">
 
-        <!-- Skip the all thesaurus and copy existing blocks -->
+        <!-- Skip the all thesaurus which some kind of virtual block
+             only used to collect keywords from multiple sources in the editor. -->
         <xsl:variable name="isNotAllThesaurus"
                       select="not(contains(@xlink:href, 'thesaurus=external.none.allThesaurus')) and
                               not(contains(*/gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*,
                                   'external.none.allThesaurus'))"/>
 
         <xsl:if test="$isNotAllThesaurus">
-          <xsl:copy>
-            <xsl:apply-templates select="@*"/>
-            <gmd:MD_Keywords>
-              <xsl:apply-templates select="*/gmd:keyword"/>
+          <xsl:choose>
+            <xsl:when test="@xlink:href != ''">
+              <!-- Insert identifiers from the all thesaurus in the existing XLink.
+              -->
+              <xsl:variable name="currentThesaurus"
+                            select="replace(@xlink:href, '.*thesaurus=([^&amp;]+).*', '$1')"/>
+
+              <xsl:variable name="currentIdentifiers"
+                            select="replace(@xlink:href, '.*id=([^&amp;]+).*', '$1')"/>
+
+              <xsl:variable name="newIdentifiers"
+                            select="string-join(
+                                      $keywordIdentifiers[thes = $currentThesaurus]/id,
+                                      ',')"/>
+
+              <xsl:variable name="newUrl"
+                            select="replace(@xlink:href,
+                                      '(.*)id=([^&amp;]+)(.*)',
+                                      concat('$1id=$2', ',', $newIdentifiers, '$3'))"/>
+
+              <!--<xsl:message>Appending all thesaurus ids to existing block:
+                Thesaurus: <xsl:value-of select="$currentThesaurus"/>
+                Current identifiers: <xsl:value-of select="$currentIdentifiers"/>
+                Identifiers to append: <xsl:value-of select="$newIdentifiers"/>
+                New URL: <xsl:value-of select="$newUrl"/>
+              </xsl:message>-->
+
+              <gmd:descriptiveKeywords xlink:href="{$newUrl}"
+                                       xlink:show="replace"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:copy>
+                <xsl:apply-templates select="@*"/>
+                <gmd:MD_Keywords>
+                  <xsl:apply-templates select="*/gmd:keyword"/>
 
 
-              <!-- Append all keywords added by all thesaurus. -->
-              <xsl:variable name="thesaurusKey"
-                            select="substring-after(
+                  <!-- Append all keywords added by all thesaurus. -->
+                  <xsl:variable name="thesaurusKey"
+                                select="substring-after(
                                       normalize-space(
                                         */gmd:thesaurusName/*/gmd:identifier/*/gmd:code/*),
                                       'geonetwork.thesaurus.')"/>
-              <xsl:for-each select="$allThesaurusEl//gmd:keyword[
+                  <xsl:for-each select="$allThesaurusEl//gmd:keyword[
                                       @gco:nilReason = concat('thesaurus::', $thesaurusKey)]">
-                <gmd:keyword>
-                  <xsl:copy-of select="*"/>
-                </gmd:keyword>
-              </xsl:for-each>
+                    <gmd:keyword>
+                      <xsl:copy-of select="*"/>
+                    </gmd:keyword>
+                  </xsl:for-each>
 
 
-              <xsl:apply-templates select="*/gmd:type|*/gmd:thesaurusName"/>
-            </gmd:MD_Keywords>
-          </xsl:copy>
+                  <xsl:apply-templates select="*/gmd:type|*/gmd:thesaurusName"/>
+                </gmd:MD_Keywords>
+              </xsl:copy>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:if>
       </xsl:for-each>
 
 
 
       <!-- Create new descriptive keywords block
-           for keyword in all thesaurus
+           for keyword in the all thesaurus
            which are not in current record. -->
       <xsl:for-each-group select="$allThesaurusEl//gmd:keyword"
                           group-by="@gco:nilReason">
@@ -672,7 +677,6 @@
 
         <xsl:if test="$thesaurusKey != '' and not($isThesaurusBlockExisting)">
           <xsl:element name="{$name}">
-            <!-- TODO: Add xlink mode -->
             <gmd:MD_Keywords>
               <xsl:for-each select="current-group()">
                 <gmd:keyword>
@@ -689,6 +693,59 @@
           </xsl:element>
         </xsl:if>
       </xsl:for-each-group>
+
+
+
+      <!-- Create new descriptive keywords block
+           for keywords in the all thesaurus xlink
+           which are not in current record.
+
+           <gmd:descriptiveKeywords xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                         xmlns:xlink="http://www.w3.org/1999/xlink"
+                         xlink:href="local://srv/api/registries/vocabularies/keyword?
+                           thesaurus=external.none.allThesaurus&amp;
+                           id=http://org.fao.geonet.thesaurus.all/external.place.regions@@@
+                              http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country%2FDependency%2FASM&amp;
+                              lang=eng"
+                         xlink:show="replace"/>
+           -->
+      <xsl:if test="$isAllThesaurusXlinked and count($keywordIdentifiers/*) > 0">
+
+        <!-- Build XLink URL common parameters (eg. lang) -->
+        <xsl:variable name="uniqueParams"
+                      select="distinct-values(
+                                  $params/param/key[. != 'id' and . != 'thesaurus']/text())"/>
+        <xsl:variable name="queryString">
+          <xsl:for-each select="$uniqueParams">
+            <xsl:variable name="p" select="."/>
+            <xsl:value-of select="concat('&amp;', $p, '=', $params/param[key/text() = $p]/val)"/>
+          </xsl:for-each>
+        </xsl:variable>
+
+
+
+        <xsl:for-each-group select="$keywordIdentifiers"
+                            group-by="thes">
+
+          <!--<xsl:message>Adding new xlink block
+               Thesaurus: <xsl:copy-of select="current-grouping-key()"/>
+               Keywords: <xsl:copy-of select="string-join(current-group()/id, ',')"/>
+          </xsl:message>-->
+
+          <xsl:variable name="isThesaurusBlockExisting"
+                        select="count($node/../*[contains(@xlink:href,
+                                        concat('thesaurus=', current-grouping-key()))]) > 0"/>
+          <xsl:if test="not($isThesaurusBlockExisting)">
+            <gmd:descriptiveKeywords
+                        xlink:href="{concat(
+                                      $hrefPrefix,
+                                      'thesaurus=', current-grouping-key(),
+                                      '&amp;id=', string-join(current-group()/id, ','),
+                                      $queryString)}"
+                        xlink:show="replace"/>
+          </xsl:if>
+        </xsl:for-each-group>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 

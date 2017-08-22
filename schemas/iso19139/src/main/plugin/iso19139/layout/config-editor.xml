@@ -2076,9 +2076,7 @@
 
       <thesaurusList>
         <thesaurus key="external.none.allThesaurus"
-                   maxtags="2"
-                   fieldset="false"
-                   transformations="to-iso19139-keyword-as-xlink"/>
+                   fieldset="false"/>
       </thesaurusList>
 
     </view>

@@ -45,8 +45,8 @@
   -->
 
 
-  <xsl:template mode="mode-iso19139" priority="2000" match="
-    gmd:descriptiveKeywords">
+  <xsl:template mode="mode-iso19139" priority="2000"
+                match="gmd:descriptiveKeywords">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
