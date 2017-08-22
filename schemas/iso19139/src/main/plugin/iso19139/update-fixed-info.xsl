@@ -500,6 +500,10 @@
 
 
 
+  <!-- Remove attribute indeterminatePosition having empty
+       value which is not a valid facet for it. -->
+  <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
+
 
 
   <!--
@@ -575,10 +579,6 @@
         </xsl:if>
       </xsl:variable>
 
-
-<xsl:message>+++<xsl:copy-of select="$params"/></xsl:message>
-<xsl:message>+++<xsl:copy-of select="$params[key = 'id']/val"/></xsl:message>
-<xsl:message>+++<xsl:copy-of select="$keywordIdentifiers"/></xsl:message>
 
       <!-- Collect all keyword blocks. -->
       <xsl:variable name="keywords"
