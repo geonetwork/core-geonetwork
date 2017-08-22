@@ -113,7 +113,7 @@
                 ng-show="searchObj.params.any"></span>
             </div>
             &nbsp;
-            
+
             <div class="btn-group">
               <button type="button"
                 class="btn btn-default dropdown-toggle btn-sm"
@@ -167,8 +167,11 @@
 
                 <div class="entry-title" ng-if="!templatesShown()">
                   <gn-md-type-widget metadata="e"></gn-md-type-widget>
-                  <a href ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
+                  <a href
+                     data-ng-if="user.canEditRecord(e)"
+                     ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
                     {{e.title || e.defaultTitle}}</a>
+                  <span data-ng-if="!user.canEditRecord(e)">{{e.title || e.defaultTitle}}</span>
                 </div>
 
                 <div class="entry-info" ng-if="!templatesShown()">
@@ -186,7 +189,9 @@
                       &nbsp;<i class="caret"/>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
-                      <li><a href ng-click="startEditing(e)">
+                      <li><a href
+                             data-ng-if="user.canEditRecord(e)"
+                             ng-click="startEditing(e)">
                         <i class="fa fa-pencil fa-fw" />&nbsp;
                         {{'edit' | translate}}</a>
                       </li>
@@ -194,7 +199,9 @@
                         <i class="fa fa-copy fa-fw" />&nbsp;
                         {{'duplicate' | translate}}</a>
                       </li>
-                      <li><a href ng-click="startPermissionsEdit(e)">
+                      <li><a href
+                             data-ng-if="user.canEditRecord(e)"
+                             ng-click="startPermissionsEdit(e)">
                         <i class="fa fa-key fa-fw" />&nbsp;
                         {{'directoryEntryPermissions' | translate}}</a>
                       </li>
@@ -202,11 +209,15 @@
                         <i class="fa fa-mail-forward fa-fw text-info" />&nbsp;
                         {{'directoryEntryToTemplate' | translate}}</a>
                       </li> -->
-                      <li><a href ng-click="validateEntry(e)">
+                      <li><a href
+                             data-ng-if="user.canEditRecord(e)"
+                             ng-click="validateEntry(e)">
                         <i class="fa fa-check fa-fw text-success" />&nbsp;
                         {{'directoryEntryValidate' | translate}}</a>
                       </li>
-                      <li><a href ng-click="rejectEntry(e)">
+                      <li><a href
+                             data-ng-if="user.canEditRecord(e)"
+                             ng-click="rejectEntry(e)">
                         <i class="fa fa-ban fa-fw text-danger" />&nbsp;
                         {{'directoryEntryReject' | translate}}</a>
                       </li>
