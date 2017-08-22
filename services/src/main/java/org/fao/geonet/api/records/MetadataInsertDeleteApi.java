@@ -62,6 +62,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.IllegalAddException;
 import org.jdom.input.JDOMParseException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -1188,11 +1189,9 @@ public class MetadataInsertDeleteApi {
                 sourceTranslations, context, id, date, date, group, metadataType);
 
         } catch (DataIntegrityViolationException ex) {
-            throw new DataIntegrityViolationException(
-                "Record can't be imported due to database constraint error.", ex);
-        }catch (Exception ex) {
-            throw new Exception(
-                "Record can't be imported due to the following error.", ex);
+            throw ex;
+        } catch (Exception ex) {
+            throw ex;
         }
         int iId = Integer.parseInt(id.get(0));
 
