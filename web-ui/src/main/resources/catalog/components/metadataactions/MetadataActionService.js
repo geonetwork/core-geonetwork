@@ -383,7 +383,7 @@
        * @param {String} bucket
        */
       this.indexSelection = function(bucket) {
-        return $http.get('../api/records/sdselection/index', {
+        return $http.get('../api/records/selection/index', {
           params: {
             bucket: bucket
           }

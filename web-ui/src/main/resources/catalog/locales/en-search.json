@@ -408,6 +408,6 @@
   "wpsGetCapError": "Error while parsing WPS capabilities: ",
   "wpsByUrl": "Search processes",
   "wpsRecent": "Recent Processes",
-  "selection.indexing.count": "{{count}} record(s) have been indexed.",
+  "selection.indexing.count": "Indexing started for the {{count}} record(s) selected.",
   "selection.indexing.error": "Error during selection indexing."
 }

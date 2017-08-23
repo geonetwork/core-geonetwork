@@ -25,6 +25,7 @@ package org.fao.geonet.api.records;
 
 import com.google.common.collect.Sets;
 import io.swagger.annotations.*;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import net.sf.json.JSONObject;
@@ -56,8 +57,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.xml.transform.TransformerConfigurationException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -96,11 +99,16 @@ public class MetadataIndexApi {
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Record indexed."),
-        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public
     @ResponseBody
     JSONObject index(
+            @ApiParam(value = API_PARAM_RECORD_UUIDS_OR_SELECTION,
+                    required = false,
+                    example = "")
+            @RequestParam(required = false)
+                    String[] uuids,
             @ApiParam(
                     value = ApiParams.API_PARAM_BUCKET_NAME,
                     required = false)
@@ -108,42 +116,39 @@ public class MetadataIndexApi {
                     required = false
             )
                     String bucket,
-            HttpServletRequest request
+            @ApiIgnore
+                    HttpSession httpSession,
+            @ApiIgnore
+                    HttpServletRequest request
     )
         throws Exception {
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        UserSession session = ApiUtils.getUserSession(httpSession);
+
         SelectionManager selectionManager =
                 SelectionManager.getManager(serviceContext.getUserSession());
 
-        Set<String> selection = selectionManager.getSelection(bucket);
+        Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
+        Set<Integer> ids = Sets.newHashSet();
         int index = 0;
 
-        if (selection != null) {
-            synchronized (selection) {
-                selection = Sets.newHashSet(selection);
-            }
-            if (!selection.isEmpty()) {
-                Set<Integer> ids = Sets.newHashSet();
-
-                for (String uuid : selection) {
-                    try {
-                        final String metadataId = dataManager.getMetadataId(uuid);
-                        if (metadataId != null) {
-                            ids.add(Integer.valueOf(metadataId));
-                        }
-                    } catch (Exception e) {
-                        try {
-                            ids.add(Integer.valueOf(uuid));
-                        } catch (NumberFormatException nfe) {
-                            // skip
-                        }
-                    }
+        for (String uuid : records) {
+            try {
+                final String metadataId = dataManager.getMetadataId(uuid);
+                if (metadataId != null) {
+                    ids.add(Integer.valueOf(metadataId));
                 }
-                index = ids.size();
-                new BatchOpsMetadataReindexer(dataManager, ids).process();
+            } catch (Exception e) {
+                try {
+                    ids.add(Integer.valueOf(uuid));
+                } catch (NumberFormatException nfe) {
+                    // skip
+                }
             }
         }
+        index = ids.size();
+        new BatchOpsMetadataReindexer(dataManager, ids).process();
 
         JSONObject res = new JSONObject();
         res.put("success", true);
