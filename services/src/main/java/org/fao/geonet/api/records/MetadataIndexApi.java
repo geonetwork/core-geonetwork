@@ -87,11 +87,11 @@ public class MetadataIndexApi {
     DataManager dataManager;
 
     @ApiOperation(
-        value = "Index selection",
-        notes = "Index selected metadata",
+        value = "Index a set of records",
+        notes = "Index a set of records provided either by a bucket or a list of uuids",
         nickname = "indexSelection")
     @RequestMapping(
-        value = "/selection/index",
+        value = "/index",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
