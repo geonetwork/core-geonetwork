@@ -147,7 +147,11 @@
               <xsl:variable name="newUrl"
                             select="replace(@xlink:href,
                                       '(.*)id=([^&amp;]+)(.*)',
-                                      concat('$1id=$2', ',', $newIdentifiers, '$3'))"/>
+                                      concat(
+                                        '$1id=$2',
+                                        if ($newIdentifiers != '') then ',' else '',
+                                        $newIdentifiers,
+                                        '$3'))"/>
 
               <!--<xsl:message>Appending all thesaurus ids to existing block:
                 Thesaurus: <xsl:value-of select="$currentThesaurus"/>
@@ -270,7 +274,7 @@
                         xlink:href="{concat(
                                       $hrefPrefix,
                                       'thesaurus=', current-grouping-key(),
-                                      '&amp;id=', string-join(current-group()/id, ','),
+                                      '&amp;id=', string-join(current-group()/id[. != ''], ','),
                                       $queryString)}"
                         xlink:show="replace"/>
           </xsl:if>
