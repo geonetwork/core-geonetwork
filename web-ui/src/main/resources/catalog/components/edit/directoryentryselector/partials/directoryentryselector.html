@@ -31,20 +31,21 @@
 
           <!-- Add action for simple subtemplates -->
           <gn-md-type-widget metadata="r"></gn-md-type-widget>
-          <div class="btn btn-default btn-sm pull-right"
-                data-ng-if="insertAsXlink && !hasDynamicVariable"
-                data-ng-click="addEntry(r, undefined, true)">
-            <i class="fa fa-link"></i>
-          </div>
-          <div class="btn btn-default btn-sm pull-right"
-                data-ng-if="insertAsText && !hasDynamicVariable"
-                data-ng-click="addEntry(r)">
-            <i class="fa fa-plus"></i>
-          </div>
 
           <div class="flex-spacer" />
 
           <div class="text flex-grow"> {{r.title}}</div>
+
+                    <div class="btn btn-default btn-sm pull-right"
+                         data-ng-if="insertAsXlink && !hasDynamicVariable"
+                         data-ng-click="addEntry(r, undefined, true)">
+            <i class="fa fa-link"></i>
+          </div>
+          <div class="btn btn-default btn-sm pull-right"
+               data-ng-if="insertAsText && !hasDynamicVariable"
+               data-ng-click="addEntry(r)">
+            <i class="fa fa-plus"></i>
+          </div>
 
           <!--Add contact as Xlink with dynamic variable -->
           <div ngeo-popover class="pull-right"
