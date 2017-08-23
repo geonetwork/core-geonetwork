@@ -333,7 +333,8 @@
           if ((angular.isUndefined($routeParams.dashboard) &&
               value.type === $routeParams.tab) || (
               angular.isDefined($routeParams.dashboard) &&
-                value.href.indexOf(encodeURIComponent($routeParams.dashboard)) !== -1)
+              value.href.indexOf(
+              encodeURIComponent($routeParams.dashboard)) !== -1)
           ) {
             $scope.type = $routeParams.tab;
             $scope.href = value.href;

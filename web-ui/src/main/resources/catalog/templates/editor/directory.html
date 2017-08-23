@@ -239,8 +239,10 @@
                     </ul>
                   </div>
 
-                  <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
-                    title="{{'delete' | translate}}">
+                  <button class="btn btn-default btn-sm"
+                          data-ng-if="user.canEditRecord(e)"
+                          ng-click="delEntry(e)"
+                          title="{{'delete' | translate}}">
                     <i class="fa fa-times text-danger" />
                   </button>
                 </div>

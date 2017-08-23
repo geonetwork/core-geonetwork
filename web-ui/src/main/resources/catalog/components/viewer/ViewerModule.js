@@ -175,10 +175,10 @@
     'gnViewerSettings',
     'gnMap',
     function(
-      $scope,
-      $timeout,
-      gnViewerSettings,
-      gnMap) {
+        $scope,
+        $timeout,
+        gnViewerSettings,
+        gnMap) {
 
       var map = $scope.searchObj.viewerMap;
 

@@ -67,7 +67,7 @@
         },
         templateUrl: function(elem, attrs) {
           return attrs.template ||
-            '../../catalog/components/viewer/profile/partials/profile.html';
+              '../../catalog/components/viewer/profile/partials/profile.html';
         },
         controllerAs: 'ctrl',
         bindToController: true,
@@ -77,14 +77,14 @@
           function ProfileDirectiveController($scope, gnProfileService) {
             // watch service data: when a profile graph is available, render it
             $scope.$watch(
-              function() {
-                return gnProfileService.getProfileGraphData();
-              },
-              function(newData, oldData) {
-                if (!newData) { return; }
-                this.graphData = newData;
-                this.graphOptions = gnProfileService.getProfileGraphOptions();
-              }.bind(this)
+                function() {
+                  return gnProfileService.getProfileGraphData();
+                },
+                function(newData, oldData) {
+                  if (!newData) { return; }
+                  this.graphData = newData;
+                  this.graphOptions = gnProfileService.getProfileGraphOptions();
+                }.bind(this)
             );
 
             // this is used to render hovered point on the profile
@@ -105,9 +105,9 @@
 
               // show height on graph when hovering the feature
               this.profileHighlight = -1;
-              this.map.on('pointermove', function (evt) {
+              this.map.on('pointermove', function(evt) {
                 if (evt.dragging || !this.graphData ||
-                  !profileFeature.getGeometry()) {
+                    !profileFeature.getGeometry()) {
                   return;
                 }
 
@@ -119,11 +119,11 @@
 
                 // line feature built with graph data
                 var closestPoint =
-                  profileFeature.getGeometry().getClosestPoint(coordinate);
+                    profileFeature.getGeometry().getClosestPoint(coordinate);
                 var dx = Math.abs(closestPoint[0] - coordinate[0]);
                 var dy = Math.abs(closestPoint[1] - coordinate[1]);
                 var pixelDist = Math.max(dx, dy) /
-                  this.map.getView().getResolution();
+                    this.map.getView().getResolution();
 
                 // if close enough to the feature: show profile info
                 if (pixelDist < 8) {
@@ -131,12 +131,12 @@
                   this.profileHighlight = closestPoint[2];
                   $scope.$apply();
                   this.hoveredProfilePoint.setGeometry(
-                    new ol.geom.Point(closestPoint));
+                      new ol.geom.Point(closestPoint));
                 }
               }.bind(this));
 
               // watch graph data change & display the line on the graph
-              $scope.$watch('ctrl.graphData', function (newValue, oldValue) {
+              $scope.$watch('ctrl.graphData', function(newValue, oldValue) {
                 if (!newValue) {
                   profileFeature.setGeometry(null);
                   return;
@@ -144,18 +144,18 @@
 
                 // create geom from points
                 var geom = new ol.geom.LineString(
-                  newValue.map(function (point) {
-                    return [
-                      point[this.graphOptions.xProperty],
-                      point[this.graphOptions.yProperty],
-                      point[this.graphOptions.distanceProperty]
-                    ];
-                  }.bind(this)),
-                  'XYM'
-                );
+                    newValue.map(function(point) {
+                      return [
+                        point[this.graphOptions.xProperty],
+                        point[this.graphOptions.yProperty],
+                        point[this.graphOptions.distanceProperty]
+                      ];
+                    }.bind(this)),
+                    'XYM'
+                    );
                 profileFeature.setGeometry(geom.transform(
-                  this.graphOptions.crs, this.map.getView().getProjection()
-                ))
+                    this.graphOptions.crs, this.map.getView().getProjection()
+                    ));
               }.bind(this));
             }
 
@@ -164,10 +164,10 @@
             this.profileOptions = {
               // for older versions of ngeo
               elevationExtractor: {
-                dist: function (data) {
+                dist: function(data) {
                   return data[this.graphOptions.distanceProperty];
                 }.bind(this),
-                z: function (data) {
+                z: function(data) {
                   return data[this.graphOptions.valuesProperty].z;
                 }.bind(this)
               },
@@ -175,28 +175,28 @@
               // for newer versions of ngeo
               linesConfiguration: {
                 'line': {
-                  zExtractor: function (data) {
-                    return data[this.graphOptions.valuesProperty].z
+                  zExtractor: function(data) {
+                    return data[this.graphOptions.valuesProperty].z;
                   }.bind(this)
                 }
               },
-              distanceExtractor: function (data) {
+              distanceExtractor: function(data) {
                 return data[this.graphOptions.distanceProperty];
               }.bind(this),
 
-              hoverCallback: function (point) {
+              hoverCallback: function(point) {
                 if (!this.hoveredProfilePoint) { return; }
                 var geom = new ol.geom.Point([
                   point[this.graphOptions.xProperty],
                   point[this.graphOptions.yProperty]
                 ]);
                 geom.transform(
-                  this.graphOptions.crs,
-                  this.map.getView().getProjection()
+                    this.graphOptions.crs,
+                    this.map.getView().getProjection()
                 );
                 this.hoveredProfilePoint.setGeometry(geom);
               }.bind(this),
-              outCallback: function (point) {
+              outCallback: function(point) {
                 if (!this.hoveredProfilePoint) { return; }
                 this.hoveredProfilePoint.setGeometry(null);
               }.bind(this)

@@ -71,7 +71,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_batch_process_button');
+  goog.require('gn_bounding');
   goog.require('gn_checkbox_with_nilreason');
   goog.require('gn_crs_selector');
   goog.require('gn_date_picker_directive');
@@ -84,7 +99,6 @@
   goog.require('gn_organisation_entry_selector');
   goog.require('gn_record_fragment_selector');
   goog.require('gn_template_field_directive');
-  goog.require('gn_bounding');
 
 
 
