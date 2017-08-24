@@ -182,8 +182,7 @@
             $scope.searchResults.dimension = data.dimension;
 
             // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 &&
-                $scope.hasPagination) {
+            if ($scope.hasPagination) {
 
               var paging = $scope.paginationInfo;
 

@@ -31,7 +31,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
     ">
 
-  <context:property-placeholder location="classpath*:WEB-INF/config.properties"
+  <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
 
@@ -58,6 +58,7 @@
   <bean id="translatorFactory" class="org.fao.geonet.kernel.search.TranslatorFactory"/>
 
   <bean id="SearchManager" class="org.fao.geonet.kernel.search.SearchManager" lazy-init="true"/>
+  <bean id="EsSearchManager" class="org.fao.geonet.kernel.search.EsSearchManager" lazy-init="true"/>
   <bean id="LuceneIndexLanguageTracker"
         class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
   <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager"
@@ -78,6 +79,7 @@
   <!-- List of records to index in a moment ...-->
   <bean id="indexingList"
         class="org.fao.geonet.kernel.search.index.IndexingList"/>
+
 
   <!-- Task indexing indexingList content -->
   <bean name="indexingTaskJob"
@@ -145,4 +147,5 @@
   <bean id="MetadataNotifierClient"
         class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
+
 </beans>

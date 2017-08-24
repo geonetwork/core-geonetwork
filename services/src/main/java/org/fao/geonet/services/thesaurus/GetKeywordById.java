@@ -45,6 +45,7 @@ import java.util.List;
  *
  * @author mcoudert
  */
+@Deprecated
 public class GetKeywordById implements Service {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }

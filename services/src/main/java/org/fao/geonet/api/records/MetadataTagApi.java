@@ -168,7 +168,7 @@ public class MetadataTagApi {
             }
         }
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
     @ApiOperation(
@@ -216,7 +216,7 @@ public class MetadataTagApi {
             }
         }
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), true, null);
     }
 
 

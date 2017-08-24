@@ -198,7 +198,8 @@
 
              // Max number of tags allowed. Use 1 to restrict to only
              // on keyword.
-             maxTags: '@'
+             maxTags: '@',
+             thesaurusTitle: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/keywordselector.html',
@@ -514,6 +515,7 @@
     function(gnThesaurusService, $compile, $translate) {
       return {
         restrict: 'A',
+        scope: {},
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;

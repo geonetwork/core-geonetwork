@@ -51,6 +51,7 @@ import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.util.xml.NamespaceUtils;
 import org.fao.geonet.utils.Log;
@@ -65,6 +66,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.nio.file.Path;
 import java.util.*;
+
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_CSW_ENABLEWHENINDEXING;
 
 /**
  * See OGC 07-006 and OGC 07-045.
@@ -130,7 +133,9 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         // Return exception is indexing.
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataManager = gc.getBean(DataManager.class);
-        if (dataManager.isIndexing()) {
+        SettingManager settingsManager = gc.getBean(SettingManager.class);
+        if (!settingsManager.getValueAsBool(SYSTEM_CSW_ENABLEWHENINDEXING) &&
+            dataManager.isIndexing()) {
             throw new RuntimeException("Catalog is indexing records, retry later.");
         }
 

@@ -26,7 +26,6 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
-import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;

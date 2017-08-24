@@ -384,14 +384,6 @@ img.thumb-small {
   width: inherit;
 }
 
-/* Do not show scrollbar as this dropdown contains
-   dropdown button (eg. for choosing contact role)
-   whose content will not be displayed properly
-   with a scrollbar. */
-*[data-gn-directory-entry-selector] .tt-dropdown-menu {
-  overflow: visible;
-}
-
 .tt-suggestion {
   padding: 3px 20px;
   font-size: 1em;
@@ -521,8 +513,9 @@ input[type=file] {
 }
 
 .gn-recordtype-n:before { content: @fa-var-file-text }
-.gn-recordtype-s:before { content: @fa-var-bookmark-o }
+.gn-recordtype-s:before { content: @fa-var-bookmark }
 .gn-recordtype-y:before { content: @fa-var-file-o }
+.gn-recordtype-t:before { content: @fa-var-bookmark-o }
 
 [data-gn-slide-toggle] {
   padding-left: 20px;
@@ -656,17 +649,17 @@ button, .btn, .btn:active, a {
   height: auto;
   border-radius: 2px;
   font-size: 12px;
-  &.popover-dropdown .popover-content {
+  .popover-content {
     display: table-cell;
     vertical-align: middle;
-    height: 19em;
     ul {
       margin: 0;
-      font-size: 1em;
+      list-style: none;
+      padding: 0;
     }
     li {
       font-size: 12px;
-      padding: 8px 10px;
+      padding: 2px 5px;
       border-left: none;
       border-right: none;
       border-radius: 0;
@@ -675,7 +668,6 @@ button, .btn, .btn:active, a {
       input[type="range"] {
         display: block;
         width: 100px;
-        margin-left: 10px
       }
     }
   }
@@ -704,6 +696,19 @@ button, .btn, .btn:active, a {
 
 input.ng-invalid {
   border-color: #a94442;
+}
+
+.gn-input-clear {
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  opacity: 0.4;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 /* Highlight updated checkboxes in sharing form */
@@ -740,3 +745,34 @@ input.ng-invalid {
     }
   }
 }
+
+// general purpose layout helpers
+.pos-relative { position: relative; }
+.pos-absolute { position: absolute; }
+.spacer, .flex-spacer {
+  flex-grow: 0; flex-shrink: 0;
+  min-width: 0.7em; min-height: 0.7em;
+}
+.flex-grow { flex-grow: 1; }
+.flex-no-grow { flex-grow: 0; }
+.flex-shrink { flex-shrink: 1; }
+.flex-no-shrink, .fa { flex-shrink: 0; }
+.flex-row, .flex-col, .flex-row-r, .flex-col-r {
+  display: flex !important;
+  align-items: baseline;
+}
+.flex-col { flex-direction: column; }
+.flex-col-r { flex-direction: column-reverse; }
+.flex-row { flex-direction: row; }
+.flex-row-r { flex-direction: row-reverse; }
+.flex-start { justify-content: flex-start; }
+.flex-end { justify-content: flex-end; }
+.flex-center { justify-content: center; }
+.flex-align-center { align-items: center; }
+.flex-align-end { align-items: flex-end; }
+.flex-align-start { align-items: flex-start; }
+.text-wrap { white-space: normal; }
+.text-nowrap, .text-no-wrap { white-space: nowrap; }
+.text-ellipsis { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.width-100 { width: 100%; } .width-75 { width: 75%; } .width-50 { width: 50%; }
+.width-25 { width: 25%; } .width-33 { width: 33%; } .width-66 { width: 66%; }

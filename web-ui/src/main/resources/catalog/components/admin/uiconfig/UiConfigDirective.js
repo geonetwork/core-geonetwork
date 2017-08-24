@@ -39,6 +39,7 @@
             'uiconfig.html',
         link: function(scope, element, attrs) {
           var testAppUrl = '../../catalog/views/api/?config=';
+
           scope.jsonConfig = angular.fromJson(scope.config);
 
           scope.sortOrderChoices = ['', 'reverse'];

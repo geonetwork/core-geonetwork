@@ -26,25 +26,33 @@ package org.fao.geonet.api.registries;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.*;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -62,13 +70,17 @@ import java.util.Set;
     tags = ApiParams.API_CLASS_REGISTRIES_TAG,
     description = ApiParams.API_CLASS_REGISTRIES_OPS)
 public class DirectoryEntriesApi {
+
+    @Autowired
+    SchemaManager schemaManager;
+
     private static final char SEPARATOR = '~';
 
     @ApiOperation(value = "Get a directory entry",
         nickname = "getEntry",
         notes = "Directory entry (AKA subtemplates) are XML fragments that can be " +
             "inserted in metadata records using XLinks. XLinks can be remote or " +
-            "local (TODO: support local XLink in API).")
+            "local.")
     @RequestMapping(
         value = "/{uuid}",
         method = RequestMethod.GET,
@@ -102,7 +114,27 @@ public class DirectoryEntriesApi {
         @RequestParam(
             required = false
         )
-            String transformation)
+            String transformation,
+        @ApiParam(
+            value = "lang",
+            required = false
+        )
+        @RequestParam(
+            name = "lang",
+            required = false
+        )
+            String [] langs,
+        @ApiParam(
+            value = "schema",
+            required = false
+        )
+        @RequestParam(
+            required = false, defaultValue = "iso19139"
+        )
+            String schema,
+        @ApiIgnore
+                HttpServletRequest request
+        )
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
@@ -118,6 +150,11 @@ public class DirectoryEntriesApi {
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             throw new IllegalArgumentException(String.format(
                 "The record found with UUID '%s' is not a subtemplate", uuid));
+        }
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        if(langs == null) {
+            langs = context.getLanguage().split(",");
         }
 
         Element tpl = metadata.getXmlData(false);
@@ -157,11 +194,21 @@ public class DirectoryEntriesApi {
                 }
             }
         }
+        // Remove all locazedString from the subtemplate for langs that are not in the metadata
+        if(langs.length > 1) {
+            DirectoryUtils.removeUnsedLangsEntry(tpl, langs);
+        }
+        // Monolingual metadata: remove all localized strings and extract main characterString
+        else {
+            MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
+            plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
+
+        }
         if (transformation != null) {
             Element root = new Element("root");
-            Element request = new Element("request");
-            request.addContent(new Element("transformation").setText(transformation));
-            root.addContent(request);
+            Element requestElt = new Element("request");
+            requestElt.addContent(new Element("transformation").setText(transformation));
+            root.addContent(requestElt);
             root.addContent(tpl);
 
             GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);

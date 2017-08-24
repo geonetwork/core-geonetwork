@@ -86,7 +86,7 @@
     It could be relevant to investigate if this check should be done on
     only element potentially using XLink and not all of them.
     This may have performance inpact? -->
-    <xsl:param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
+    <xsl:param name="isDisabled" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
 
     <!-- Define if the language fields should be displayed
     with the selector or below each other. -->
@@ -170,24 +170,25 @@
 
                 <xsl:for-each select="$value/values/value">
                   <xsl:sort select="@lang"/>
-
-                  <xsl:call-template name="render-form-field">
-                    <xsl:with-param name="name" select="@ref"/>
-                    <xsl:with-param name="lang" select="@lang"/>
-                    <xsl:with-param name="value" select="."/>
-                    <xsl:with-param name="type" select="$type"/>
-                    <xsl:with-param name="tooltip" select="$tooltip"/>
-                    <xsl:with-param name="isRequired" select="$isRequired"/>
-                    <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
-                    <xsl:with-param name="isDisabled" select="$isDisabled"/>
-                    <xsl:with-param name="editInfo" select="$editInfo"/>
-                    <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-                    <!--  Helpers can't be provided for all languages
-                    <xsl:with-param name="listOfValues" select="$listOfValues"/>
-                    -->
-                    <xsl:with-param name="checkDirective"
-                                    select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
-                  </xsl:call-template>
+                  <xsl:if test="@lang != ''">
+                    <xsl:call-template name="render-form-field">
+                      <xsl:with-param name="name" select="@ref"/>
+                      <xsl:with-param name="lang" select="@lang"/>
+                      <xsl:with-param name="value" select="."/>
+                      <xsl:with-param name="type" select="$type"/>
+                      <xsl:with-param name="tooltip" select="$tooltip"/>
+                      <xsl:with-param name="isRequired" select="$isRequired"/>
+                      <xsl:with-param name="isReadOnly" select="$isReadOnly"/>
+                      <xsl:with-param name="isDisabled" select="$isDisabled"/>
+                      <xsl:with-param name="editInfo" select="$editInfo"/>
+                      <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
+                      <!--  Helpers can't be provided for all languages
+                      <xsl:with-param name="listOfValues" select="$listOfValues"/>
+                      -->
+                      <xsl:with-param name="checkDirective"
+                                      select="upper-case(@lang) = $mainLangCode or normalize-space(@lang) = ''"/>
+                    </xsl:call-template>
+                  </xsl:if>
                 </xsl:for-each>
 
                 <!-- Display the helper for a multilingual field below the field.
@@ -957,7 +958,7 @@
           <xsl:if test="$lang">
             <xsl:attribute name="lang" select="$lang"/>
           </xsl:if>
-          <xsl:if test="$hidden or $hasHelper">
+          <xsl:if test="$hidden or ($hasHelper and not($isDisabled))">
             <xsl:attribute name="class" select="'hidden'"/>
           </xsl:if>
           <xsl:value-of select="$valueToEdit"/>
@@ -1091,7 +1092,7 @@
             <xsl:if test="$lang">
               <xsl:attribute name="lang" select="$lang"/>
             </xsl:if>
-            <xsl:if test="$hidden or $hasHelper">
+            <xsl:if test="$hidden or ($hasHelper and not($isDisabled))">
               <!-- hide the form field if helper is available, the
               value is set by the directive which provide customized
               forms -->
@@ -1120,7 +1121,8 @@
         Create an helper list for the current input element.
         Current input could be an element or an attribute (eg. uom).
         -->
-    <xsl:if test="$hasHelper">
+    <xsl:if test="$hasHelper and not($isDisabled)">
+
       <xsl:call-template name="render-form-field-helper">
         <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
         <!-- The @rel attribute in the helper may define a related field

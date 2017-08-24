@@ -57,7 +57,7 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     private EntityManager _entityManager;
 
     public static User newUser(AtomicInteger inc) {
-        int val = inc.incrementAndGet();
+        String val = String.format("%04d", inc.incrementAndGet());
         User user = new User().setName("name" + val).setUsername("username" + val);
         user.getSecurity().setPassword("1234567");
         return user;

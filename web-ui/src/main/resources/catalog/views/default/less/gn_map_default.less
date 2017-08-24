@@ -13,10 +13,22 @@
 
 // map viewer
 [gn-main-viewer] {
-  margin-top: -18px;
+  position: absolute;
+  top: -14px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+
   .panel-tools {
     .panel-heading {
       background-color: transparent;
+    }
+
+    .processes-list .list-group-item {
+      &.active {
+        background-color: @btn-primary-bg;
+        * { color: @btn-primary-color; }
+      }
     }
   }
 
@@ -26,14 +38,36 @@
     }
   }
 
+  .nav {
+    > li {
+      > a {
+        padding: 10px 10px;
+      }
+    }
+  }
+
   [gn-kml-import] {
     input {
       margin-top: 15px;
     }
   }
+
+  [ngeo-map] {
+    height: 100%;
+  }
 }
 
 // minimap on search results
+.gn-toggle {
+  background-color: @brand-primary;
+  color: white !important;
+  -webkit-border-radius: 25px;
+  border-width: 0px;
+  &:hover {
+    background-color: darken(@link-color, 15%);
+    color: white !important;
+  }
+}
 .gn-minimap-toggle {
   position: fixed;
   bottom: 10px;
@@ -53,14 +87,4 @@
   color: @brand-primary;
   right:0;
   text-transform: uppercase;
-}
-.gn-toggle {
-  background-color: @brand-primary;
-  color: white !important;
-  -webkit-border-radius: 25px;
-  border-width: 0px;
-  &:hover {
-    background-color: darken(@link-color, 15%);
-    color: white !important;
-  }
 }

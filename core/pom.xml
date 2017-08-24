@@ -325,17 +325,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-    </dependency>
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>domain</artifactId>
       <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>events</artifactId>
@@ -498,6 +493,16 @@
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-hibernate4</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>es-core</artifactId>
+      <version>3.3.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -511,6 +516,33 @@
             <goals>
               <goal>test-jar</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy-filter-resource</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <escapeString>\</escapeString>
+              <includeEmptyDirs>false</includeEmptyDirs>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/resources</directory>
+                  <filtering>true</filtering>
+                  <targetPath>${project.build.directory}/classes</targetPath>
+                </resource>
+              </resources>
+              <overwrite>true</overwrite>
+            </configuration>
           </execution>
         </executions>
       </plugin>

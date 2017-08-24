@@ -948,7 +948,7 @@
       <dependency>
         <groupId>io.springfox</groupId>
         <artifactId>springfox-swagger2</artifactId>
-        <version>2.4.0</version>
+        <version>2.3.1</version>
       </dependency>
       <!-- Persistence dependencies -->
       <dependency>
@@ -1225,6 +1225,12 @@
   </distributionManagement>
 
   <properties>
+    <db.properties>WEB-INF/config-db/jdbc.properties</db.properties>
+    <!--<db.properties>file:/${geonetwork.dir}/jdbc.properties</db.properties>-->
+
+    <app.properties>WEB-INF/config.properties</app.properties>
+    <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
+
     <!-- Configure database config file to use. Could be
      h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi-postgres-postgis
      -->
@@ -1255,19 +1261,30 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>5.4.0</es.version>
-    <es.version.md5>3f28a77368118aec107be24ec9fb6498</es.version.md5>
+    <es.version>5.5.0</es.version>
+    <es.version.md5>01b2f91ed7a572139f4a06cb2505b679</es.version.md5>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>
     <es.index.features>features</es.index.features>
+    <es.index.records>records</es.index.records>
+    <!-- to load spring configurations related to es and camel,
+    you should use maven "es" profile (defined in web).
+    Devs may note that normally (not in this case), many spring profiles can
+    be defined at the same time: "active.profiles.spring" is overriden
+    in web.xml. -->
+    <es.spring.profile></es.spring.profile>
+    <es.index.searchlogs>searchlogs</es.index.searchlogs>
     <es.username></es.username>
     <es.password></es.password>
 
+    <kb.version.md5>1eabb59278f3fbe2115a8cb30b993070</kb.version.md5>
+    <kb.port>5601</kb.port>
+    <kb.url>http://localhost:${kb.port}</kb.url>
 
     <jms.url>tcp://localhost:61616</jms.url>
     <activemq.version>5.6.0</activemq.version>
-
+    <!-- End es and camel stuffs -->
 
     <!-- List of comma separated values of hosts for which
     CORS headers are added (eg. www.geonetwork-opensource.org,osgeo.org).

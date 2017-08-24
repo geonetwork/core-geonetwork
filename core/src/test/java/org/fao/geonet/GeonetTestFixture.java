@@ -138,7 +138,7 @@ public class GeonetTestFixture {
                     templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
 
                     _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
-                    _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
+                    _applicationContext.getBean(SearchManager.class).init(100);
                     Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
                 }
             }
@@ -169,7 +169,7 @@ public class GeonetTestFixture {
         serviceContext.setAsThreadLocal();
 
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
-        _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
+        _applicationContext.getBean(SearchManager.class).initNonStaticData(100);
         _applicationContext.getBean(DataManager.class).init(serviceContext, false);
         _applicationContext.getBean(ThesaurusManager.class).init(true, serviceContext, "WEB-INF/data/config/codelist");
 

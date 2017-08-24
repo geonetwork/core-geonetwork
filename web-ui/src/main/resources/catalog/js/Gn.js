@@ -27,7 +27,9 @@ var geonetwork = {};
 (function() {
   goog.provide('gn');
 
+
   goog.require('gn_locale');
+  goog.require('gn_polyfills');
 
   /**
    * Main gn module.

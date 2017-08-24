@@ -520,6 +520,13 @@
       <artifactId>smiley-http-proxy-servlet</artifactId>
       <version>1.8</version>
     </dependency>
+
+    <!--Detect urls in String and transform to html format-->
+    <dependency>
+      <groupId>org.nibor.autolink</groupId>
+      <artifactId>autolink</artifactId>
+      <version>0.6.0</version>
+    </dependency>
   </dependencies>
 
 
@@ -558,6 +565,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
+              <escapeString>\</escapeString>
               <includeEmptyDirs>false</includeEmptyDirs>
               <outputDirectory>${build.webapp.resources}</outputDirectory>
               <resources>
@@ -704,7 +712,7 @@
           <systemProperties>
             <systemProperty>
               <name>org.eclipse.jetty.server.Request.maxFormContentSize</name>
-              <value>500000</value>
+              <value>5000000</value>
             </systemProperty>
           </systemProperties>
           <stopKey>JETTY_TOP</stopKey>
@@ -779,6 +787,12 @@
       </activation>
       <properties>
         <env>inspire</env>
+      </properties>
+    </profile>
+    <profile>
+      <id>es</id>
+      <properties>
+        <es.spring.profile>es</es.spring.profile>
       </properties>
     </profile>
   </profiles>

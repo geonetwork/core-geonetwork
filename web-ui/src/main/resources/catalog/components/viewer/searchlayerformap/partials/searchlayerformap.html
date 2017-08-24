@@ -1,6 +1,6 @@
 <div>
   <form role="form" data-ng-search-form="">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <input type="hidden" name="_csrf" value="{{csrf}}"/>
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon"><i
@@ -31,11 +31,6 @@
       <div class="pull-right"
            data-gn-pagination="paginationInfo"
            data-hits-values="searchObj.hitsperpageValues"></div>
-      <!--
-            <div class="pull-right"
-                 data-sortby-combo=""
-                 data-params="searchObj.params"
-                 data-gn-sortby-values="searchObj.sortbyValues"></div>-->
     </div>
     <br/>
     <br/>
@@ -45,27 +40,39 @@
       <li class="list-group-item gn-searchlayer"
           data-ng-repeat="m in searchResults.records"
           data-ng-init="md = getMetadata(m)">
-        <div data-ng-repeat="link in md.relevantLinks">
-          <label
-            title="{{md.title || md.defaultTitle}}">
-            {{link.desc || link.name}}
-          </label>
-          <button class="btn btn-cog"
-                  data-ng-click="zoomToLayer(md)"
-                  title="{{'layerExtentZoom' | translate}}">
-            <i class="fa fa-fw fa-arrows-alt"/>
-          </button>
-          <button class="btn btn-cog"
-                  data-ng-click="addToMap(link)"
-                  title="{{'addToMap' | translate}}">
-            <i class="fa fa-fw fa-plus"/>
-          </button>
-          <a class="btn btn-cog"
-             data-ng-href="#/metadata/{{md.getUuid()}}"
-             title="{{'openRecord' | translate}}">
-            <i class="fa fa-fw fa-info-circle"/>
-          </a>
-        </div>
+
+        <table>
+          <tr>
+            <th colspan="2">
+              {{md.title || md.defaultTitle}}
+              <a class="btn btn-cog"
+                 data-ng-href="#/metadata/{{md.getUuid()}}"
+                 title="{{'openRecord' | translate}}">
+                <i class="fa fa-fw fa-info-circle"/>
+              </a>
+            </th>
+          </tr>
+          <tr>
+            <td>
+              <div class="gn-md-thumbnail">
+                <img class="gn-img-thumbnail"
+                     data-ng-src="{{md.getThumbnails().list[0].url}}"
+                     data-ng-if="md.getThumbnails().list[0].url"/>
+              </div>
+            </td>
+            <td>
+              <ul>
+                <li data-ng-repeat="link in md.relevantLinks">
+                  <a data-ng-click="addToMap(link)"
+                     title="{{'addToMap' | translate}}">
+                    {{link.desc || link.name}}&nbsp;
+                    <i class="fa fa-fw fa-plus"/>
+                  </a>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
       </li>
     </ul>
   </form>

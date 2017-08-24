@@ -2590,9 +2590,7 @@
       <option value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</option>
       <option value="CHTOPO:specialised-geoportal">Spezialisiertes Geoportal</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML Service (2.0)</option>
-      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei
-        (*.AXL)
-      </option>
+      <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei(*.AXL)</option>
       <option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service</option>
       <option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
@@ -3790,9 +3788,6 @@
   </element>
   <element name="gmd:DS_InitiativeTypeCode">
     <label>Initiative Typ</label>
-  </element>
-  <element name="gmd:MD_LegalConstraints">
-    <label>Rechtliche Einschränkungen</label>
   </element>
   <element name="gmd:MD_ScopeCode">
     <label>Anwendungsbereich</label>

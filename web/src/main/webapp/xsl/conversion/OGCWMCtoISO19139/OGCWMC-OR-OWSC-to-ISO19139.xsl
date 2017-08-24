@@ -171,6 +171,16 @@
 
       <gmd:distributionInfo>
         <gmd:MD_Distribution>
+          <gmd:distributionFormat>
+            <gmd:MD_Format>
+              <gmd:name>
+                <gco:CharacterString>OGC:OWS-C</gco:CharacterString>
+              </gmd:name>
+              <gmd:version gco:nilReason="missing">
+                <gco:CharacterString/>
+              </gmd:version>
+            </gmd:MD_Format>
+          </gmd:distributionFormat>
           <gmd:transferOptions>
             <gmd:MD_DigitalTransferOptions>
 

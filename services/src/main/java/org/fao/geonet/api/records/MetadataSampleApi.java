@@ -214,8 +214,9 @@ public class MetadataSampleApi {
                 ));
                 continue;
             }
-            final String prefix = "sub-";
-            final int prefixLength = prefix.length();
+            final String subTemplatePrefix = "sub-";
+            final String templateOfSubTemplatePrefix = "sub-tpl-";
+            final int prefixLength = subTemplatePrefix.length();
             int schemaCount = 0;
             try (DirectoryStream<Path> newDirectoryStream =
                      Files.newDirectoryStream(templatesDir, "*.xml")) {
@@ -238,10 +239,9 @@ public class MetadataSampleApi {
                         String isTemplate = "y";
                         String title = null;
 
-                        if (templateName.startsWith(prefix)) {
-                            isTemplate = "s";
-                            title = templateName.substring(prefixLength,
-                                templateName.length() - prefixLength);
+                        if (templateName.startsWith(subTemplatePrefix)) {
+                            isTemplate = templateName.startsWith(templateOfSubTemplatePrefix) ?
+                                "t" : "s";
                         }
                         //
                         // insert metadata

@@ -24,23 +24,33 @@
 package org.fao.geonet.api.records;
 
 import com.google.common.collect.Lists;
-
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.api.records.model.validation.Reports;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SchematronRepository;
-import org.fao.geonet.api.records.editing.AjaxEditUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
@@ -51,11 +61,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,13 +81,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.services.ReadWriteController;
-import springfox.documentation.annotations.ApiIgnore;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -93,6 +103,8 @@ public class MetadataValidateApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    @Autowired
+    MetadataValidationRepository metadataValidationRepository;
 
     @ApiOperation(
         value = "Validate a record",
@@ -120,6 +132,11 @@ public class MetadataValidateApi {
             required = true)
         @PathVariable
             String metadataUuid,
+        @ApiParam(
+            value = "Validation status. Should be provided only in case of SUBTEMPLATE validation. If provided for another type, throw a BadParameter Exception",
+            required = false)
+        @RequestParam (required = false)
+            Boolean isvalid,
         HttpServletRequest request,
         @ApiParam(hidden = true)
         @ApiIgnore
@@ -135,6 +152,26 @@ public class MetadataValidateApi {
         String schemaName = dataManager.getMetadataSchema(id);
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        boolean isSubtemplate = metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE;
+        boolean validSet = (isvalid != null);
+        if (!isSubtemplate && validSet) {
+            throw new BadParameterEx("Parameter isvalid can't be set if it is not a Subtemplate. You cannot force validation of a metadata or a template.");
+        }
+        if (isSubtemplate && !validSet) {
+            throw new BadParameterEx("Parameter isvalid MUST be set for subtemplate.");
+        }
+        if (isSubtemplate) {
+            MetadataValidation metadataValidation = new MetadataValidation().
+                    setId(new MetadataValidationId(metadata.getId(), "subtemplate")).
+                    setStatus(isvalid ? MetadataValidationStatus.VALID : MetadataValidationStatus.INVALID).
+                    setRequired(true).
+                    setNumTests(0).
+                    setNumFailures(0);
+            this.metadataValidationRepository.save(metadataValidation);
+            dataManager.indexMetadata(("" + metadata.getId()), true, null);
+            return new Reports();
+        }
 
         //--- validate metadata from session
         Element errorReport;

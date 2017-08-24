@@ -27,9 +27,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import io.swagger.annotations.*;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -43,6 +46,7 @@ import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -58,6 +62,7 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.IllegalAddException;
 import org.jdom.input.JDOMParseException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -69,6 +74,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
@@ -77,6 +83,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -111,8 +118,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class MetadataInsertDeleteApi {
 
     public static final String API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS = "Report about imported records.";
-    private final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
-    private final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
+    public static final String API_PARAP_RECORD_GROUP = "The group the record is attached to.";
+    public static final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
     private final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
     private final String API_PARAM_RECORD_VALIDATE = "Validate the record first and reject it if not valid.";
     private final String API_PARAM_RECORD_XSL = "XSL transformation to apply to the record.";
@@ -158,7 +165,9 @@ public class MetadataInsertDeleteApi {
         DataManager dataManager = appContext.getBean(DataManager.class);
         SearchManager searchManager = appContext.getBean(SearchManager.class);
 
-        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+            metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
+            withBackup) {
             MetadataUtils.backupRecord(metadata, context);
         }
 
@@ -228,7 +237,9 @@ public class MetadataInsertDeleteApi {
             } else if (!accessMan.canEdit(context, String.valueOf(metadata.getId()))) {
                 report.addNotEditableMetadataId(metadata.getId());
             } else {
-                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && withBackup) {
+                if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE &&
+                    metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE &&
+                    withBackup) {
                     MetadataUtils.backupRecord(metadata, context);
                 }
 
@@ -848,6 +859,240 @@ public class MetadataInsertDeleteApi {
     }
 
 
+    @ApiOperation(
+        value = "Add a map metadata record from OGC OWS context",
+        notes = "Add record in the catalog by uploading a map context.",
+        nickname = "insertOgcMapContextFile")
+    @RequestMapping(
+        value = "/importfrommap",
+        method = {
+            RequestMethod.POST,
+        },
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        }
+    )
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = API_PARAM_REPORT_ABOUT_IMPORTED_RECORDS),
+        @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
+    })
+    @PreAuthorize("hasRole('Editor')")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public SimpleMetadataProcessingReport insertOgcMapContextFile(
+        @ApiParam(
+            value = "A map title",
+            required = true
+        )
+        @RequestParam(
+            value = "title",
+            required = true
+        )
+        final String title,
+        @ApiParam(
+            value = "A map abstract",
+            required = false
+        )
+        @RequestParam(
+            value = "recordAbstract",
+            required = false
+        )
+        final String recordAbstract,
+        @ApiParam(
+            value = "OGC OWS context as string",
+            required = false
+        )
+        @RequestParam(
+            value = "xml",
+            required = false
+        )
+            final String xml,
+        @ApiParam(
+            value = "OGC OWS context file name",
+            required = false
+        )
+        @RequestParam(
+            value = "filename",
+            required = false
+        )
+        final String filename,
+        @ApiParam(
+            value = "OGC OWS context URL",
+            required = false
+        )
+        @RequestParam(
+            value = "url",
+            required = false
+        )
+        final String url,
+        @ApiParam(
+            value = "A map viewer URL to visualize the map",
+            required = false
+        )
+        @RequestParam(
+            value = "viewerUrl",
+            required = false
+        )
+        final String viewerUrl,
+        @ApiParam(
+            value = "Map overview as PNG (base64 encoded)",
+            required = false
+        )
+        @RequestParam(
+            value = "overview",
+            required = false
+        )
+        final String overview,
+        @ApiParam(
+            value = "Map overview filename",
+            required = false
+        )
+        @RequestParam(
+            value = "overviewFilename",
+            required = false
+        )
+        final String overviewFilename,
+        @ApiParam(
+            value = "Topic category",
+            required = false
+        )
+        @RequestParam(
+            value = "topic",
+            required = false
+        )
+        final String topic,
+        @ApiParam(
+            value = API_PARAM_RECORD_UUID_PROCESSING,
+            required = false,
+            defaultValue = "NOTHING"
+        )
+        @RequestParam(
+            required = false,
+            defaultValue = "NOTHING"
+        )
+        final MEFLib.UuidAction uuidProcessing,
+        @ApiParam(
+            value = API_PARAP_RECORD_GROUP,
+            required = false
+        )
+        @RequestParam(
+            required = false
+        )
+        final String group,
+        HttpServletRequest request
+    )
+        throws Exception {
+        if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(url)) {
+            throw new IllegalArgumentException(String.format(
+                "A context as XML or a remote URL MUST be provided."));
+        }
+        if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(filename)) {
+            throw new IllegalArgumentException(String.format(
+                "A context as XML will be saved as a record attachement. " +
+                    "You MUST provide a filename in this case."));
+        }
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        ApplicationContext applicationContext = ApplicationContextHolder.get();
+        GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+        String styleSheetWmc = dataDirectory.getWebappDir() + File.separator +
+                                Geonet.Path.IMPORT_STYLESHEETS + File.separator +
+                                "OGCWMC-OR-OWSC-to-ISO19139.xsl";
+
+        FilePathChecker.verify(filename);
+
+
+        // Convert the context in an ISO19139 records
+        Map<String, Object> xslParams = new HashMap<String, Object>();
+        xslParams.put("viewer_url", viewerUrl);
+        xslParams.put("map_url", url);
+        xslParams.put("topic", topic);
+        xslParams.put("title", title);
+        xslParams.put("abstract", recordAbstract);
+        xslParams.put("lang", context.getLanguage());
+
+
+        // Assign current user to the record
+        UserSession us = context.getUserSession();
+
+        if (us != null) {
+            xslParams.put("currentuser_name", us.getName() + " " + us.getSurname());
+            // phone number is georchestra-specific
+            //xslParams.put("currentuser_phone", us.getPrincipal().getPhone());
+            xslParams.put("currentuser_mail", us.getEmailAddr());
+            xslParams.put("currentuser_org", us.getOrganisation());
+        }
+
+        // 1. JDOMize the string
+        Element wmcDoc = Xml.loadString(xml, false);
+        // 2. Apply XSL (styleSheetWmc)
+        Element transformedMd = Xml.transform(wmcDoc, new File(styleSheetWmc).toPath(), xslParams);
+
+        // 4. Inserts the metadata (does basically the same as the metadata.insert.paste service (see Insert.java)
+        String uuid = UUID.randomUUID().toString();
+        SettingManager sm = applicationContext.getBean(SettingManager.class);
+        DataManager dm = applicationContext.getBean(DataManager.class);
+        SchemaManager schemaMan = applicationContext.getBean(SchemaManager.class);
+
+
+        String date = new ISODate().toString();
+        SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        final List<String> id = new ArrayList<String>();
+        final List<Element> md = new ArrayList<Element>();
+
+        md.add(transformedMd);
+
+        // Import record
+        Importer.importRecord(uuid, uuidProcessing, md,
+            "iso19139", 0, sm.getSiteId(),
+            sm.getSiteName(), null,
+            context, id, date, date, group,
+            MetadataType.METADATA);
+
+        // Save the context if no context-url provided
+        if (StringUtils.isEmpty(url)) {
+            Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
+            Files.createDirectories(dataDir);
+            Path outFile = dataDir.resolve(filename);
+            Files.deleteIfExists(outFile);
+            FileUtils.writeStringToFile(outFile.toFile(), Xml.getString(wmcDoc));
+
+            // Update the MD
+            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+            onlineSrcParams.put("protocol", "WWW:DOWNLOAD-OGC:OWS-C");
+            onlineSrcParams.put("url", sm.getNodeURL() + String.format("api/records/%s/attachments/%s", uuid, filename));
+            onlineSrcParams.put("name", filename);
+            onlineSrcParams.put("desc", title);
+            transformedMd = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("onlinesrc-add.xsl"), onlineSrcParams);
+            dm.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
+        }
+
+        if (StringUtils.isNotEmpty(overview) && StringUtils.isNotEmpty(overviewFilename)) {
+            Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id.get(0));
+            Files.createDirectories(dataDir);
+            Path outFile = dataDir.resolve(overviewFilename);
+            Files.deleteIfExists(outFile);
+            byte[] data = Base64.decodeBase64(overview);
+            FileUtils.writeByteArrayToFile(outFile.toFile(), data);
+
+            // Update the MD
+            Map<String, Object> onlineSrcParams = new HashMap<String, Object>();
+            onlineSrcParams.put("thumbnail_url",
+                sm.getNodeURL() +
+                    String.format("api/records/%s/attachments/%s", uuid, overviewFilename));
+            transformedMd = Xml.transform(transformedMd, schemaMan.getSchemaDir("iso19139").resolve("process").resolve("thumbnail-add.xsl"), onlineSrcParams);
+            dm.updateMetadata(context, id.get(0), transformedMd, false, true, false, context.getLanguage(), null, true);
+        }
+
+        dm.indexMetadata(id);
+        report.addMetadataInfos(Integer.parseInt(id.get(0)), uuid);
+        report.incrementProcessedRecords();
+        report.close();
+        return report;
+    }
+
+
     private Pair<Integer, String> loadRecord(
         MetadataType metadataType,
         Element xmlElement,
@@ -902,7 +1147,8 @@ public class MetadataInsertDeleteApi {
 
         //--- if the uuid does not exist we generate it for metadata and templates
         String uuid;
-        if (metadataType == MetadataType.SUB_TEMPLATE) {
+        if (metadataType == MetadataType.SUB_TEMPLATE ||
+            metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             uuid = UUID.randomUUID().toString();
         } else {
             uuid = dataMan.extractUUID(schema, xmlElement);
@@ -943,11 +1189,9 @@ public class MetadataInsertDeleteApi {
                 sourceTranslations, context, id, date, date, group, metadataType);
 
         } catch (DataIntegrityViolationException ex) {
-            throw new DataIntegrityViolationException(
-                "Record can't be imported due to database constraint error.", ex);
-        }catch (Exception ex) {
-            throw new Exception(
-                "Record can't be imported due to the following error.", ex);
+            throw ex;
+        } catch (Exception ex) {
+            throw ex;
         }
         int iId = Integer.parseInt(id.get(0));
 
@@ -974,7 +1218,7 @@ public class MetadataInsertDeleteApi {
             });
         }
 
-        dataMan.indexMetadata(id.get(0), true);
+        dataMan.indexMetadata(id.get(0), true, null);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 }

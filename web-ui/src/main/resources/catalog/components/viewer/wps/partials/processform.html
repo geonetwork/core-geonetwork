@@ -1,14 +1,13 @@
-<div class="panel">
+<div>
+  <div class="panel panel-default">
+    <h4 class="panel-heading" ng-if="describeState == 'succeeded'">
+      {{processDescription.title.value}}
+      <button type="button" class="btn btn-default close" data-ng-click="close()">
+        &times;
+      </button>
+    </h4>
 
-  <div class="panel-heading">
-    {{::processDescription.title.value}}
-    <button type="button" class="btn btn-default close" data-ng-click="close()">×</button>
-  </div>
-
-  <div class="panel-body panel-wps">
-
-
-    <div ng-if="describeState == 'sended'">
+    <div ng-if="describeState == 'sent'">
       <h5>
         <i class="fa fa-spinner fa-spin fa-fw margin-bottom"></i>
         <span translate>wpsLoadingProcessDescription</span>
@@ -16,16 +15,18 @@
     </div>
 
     <div ng-if="describeState == 'failed'">
-      <h4><span translate>wpsDescribeProcessFailed</span></h4>
-      <div>
-        <span translate>wpsErrorCodeReturned</span>
-        {{describeResponse.status}} - {{describeResponse.statusText}}
+      <div class="alert alert-danger" role="alert" ng-show="error !== null">
+        <strong translate>wpsDescribeProcessFailed</strong><br />
+        <div>
+          <span translate>wpsErrorCodeReturned</span>
+          {{describeResponse.status}} - {{describeResponse.statusText}}
+        </div>
+        <div>{{describeResponse.data}}</div>
       </div>
-      <div>{{describeResponse.data}}</div>
     </div>
 
 
-    <div ng-if="describeState == 'succeeded'">
+    <div class="panel-body"  ng-if="describeState == 'succeeded'">
 
       <div ng-if="describeResponse.exception">
         <h4><span translate>wpsDescribeProcessFailed</span></h4>
@@ -40,78 +41,122 @@
         <div>
           <form novalidate>
 
-            <!-- Inputs -->
-            <div ng-repeat="input in processDescription.dataInputs.input" class="form-group" ng-class="{'gn-required': input.minOccurs}">
-              <label for="{{::input.identifier.value}}">{{::input.title.value}}
-                <span class="fa fa-info-circle" data-ng-if="::input._abstract.value" title="{{::input._abstract.value}}"></span>
+            <!-- Inputs: loop on process description to display all inputs -->
+            <div ng-repeat="input in processDescription.dataInputs.input"
+              class="form-group">
+
+              <!-- Input label & info -->
+              <span>
+                <label>{{::input.title.value}}</label>
+                <span class="fa fa-info-circle" ng-if="::input._abstract.value"
+                  title="{{::input._abstract.value}}"></span>
+                <small class="text-danger" ng-if="::input.minOccurs">
+                  ({{::'inputValueRequired' | translate}})</small>
 
                 <!-- This input is overloaded by a WFS filter -->
-                <span class="overload-warning" ng-if="inputOverloads[input.identifier.value]">
-                  {{ 'inputIsOverloaded' | translate }}
-                </span>
-              </label>
+                <small class="text-muted"
+                  ng-if="inputOverloads[input.identifier.value]">
+                  {{::'inputIsOverloaded' | translate}}</small>
+              </span>
 
+              <!-- Basic form field (combo box or text field) -->
               <div ng-if="::input.literalData">
-                <div ng-if="::input.literalData.allowedValues">
-                  <select id="{{::input.identifier.value}}" class="form-control input-sm"
-                    ng-required="input.minOccurs" ng-model="input.value"
+                <div class="input-group"
+                  ng-repeat="field in getInputsByName(input.identifier.value)">
+                  <select class="form-control input-sm"
+                    ng-if="::input.literalData.allowedValues"
+                    ng-model="field.value"
+                    ng-required="$index < input.minOccurs"
                     ng-disabled="inputOverloads[input.identifier.value]">
-                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange" value="{{::value.value}}">{{::value.value}}</option>
+                    <option ng-repeat="value in input.literalData.allowedValues.valueOrRange"
+                      value="{{::value.value}}">{{::value.value}}</option>
                   </select>
-                </div>
-                <div ng-if="::input.literalData.allowedValues == undefined">
-                  <input type="{{::input.type}}" id="{{::input.identifier.value}}" class="form-control input-sm"
-                    data-ng-required="input.minOccurs" ng-model="input.value"
+                  <input class="form-control input-sm"
+                    ng-if="::!input.literalData.allowedValues"
+                    type="{{::getInputType(input.literalData.dataType.value)}}"
+                    ng-model="field.value"
+                    ng-required="$index < input.minOccurs"
                     ng-disabled="inputOverloads[input.identifier.value]"></input>
+
+                  <!-- delete button (disabled for mandatory values) -->
+                  <a class="input-group-addon btn btn-default btn-icon"
+                    ng-if="getInputsByName(input.identifier.value).length > input.minOccurs"
+                    ng-click="removeInputValueByName(input.identifier.value, $index)">
+                    <span class="fa fa-trash-o"></span>
+                  </a>
+                  <a class="input-group-addon btn btn-default btn-icon" disabled
+                    ng-if="getInputsByName(input.identifier.value).length <= input.minOccurs">
+                    <span class="fa fa-trash-o"></span>
+                  </a>
                 </div>
               </div>
+
+              <!-- Bounding box -->
               <div ng-if="::input.boundingBoxData">
-                <gn-bbox-input ng-if="input.minOccurs" id="{{::input.identifier.value}}"
-                  data-crs="input._default.crs"
-                  data-value="input.value"
-                  data-map="map"
+                <gn-bbox-input
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  crs="input._default.crs" value="field.value" map="map"
                   ng-disabled="inputOverloads[input.identifier.value]"
-                  data-required="true">
-                </gn-bbox-input>
-                <gn-bbox-input ng-if="!input.minOccurs" id="{{::input.identifier.value}}"
-                    data-crs="input._default.crs"
-                    data-value="input.value"
-                    data-map="map"
-                    ng-disabled="inputOverloads[input.identifier.value]"
-                    data-required="false">
-                </gn-bbox-input>
+                  ng-required="$index < input.minOccurs"/>
               </div>
-              <div ng-if="input.invalid">
-                <p class="text-danger">{{input.invalid}}</p>
+
+              <!-- Complex input (geometry on map) -->
+              <div ng-if="::input.complexData">
+                <gn-geometry-tool
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  allow-reset allow-modify output="field.value"
+                  output-format="{{ input.outputFormat }}"
+                  geometry-type="{{ input.geometryType }}"
+                  output-as-features="true" map="map"/>
+              </div>
+
+              <!-- add a new value -->
+              <a ng-if="input.maxOccurs > getInputsByName(input.identifier.value).length"
+                href ng-click="addInputValueByName(input.identifier.value)">
+                <i class="fa fa-plus"/>
+                {{::'insertNewInputValue'|translate}}
+              </a>
+
+              <!-- show error if not enough occurs of this input -->
+              <div ng-if="input.missingOccursCount > 0">
+                <p class="text-danger" translate>
+                  inputValueRequiredError</p>
               </div>
             </div>
 
             <!-- ResponseDocument -->
-            <div class="form-group popover-parent dropup gn-execute">
-              <button type="submit" class="btn btn-default" data-ng-click="submit()" ng-show="!hideExecuteButton">
-                <span class="fa fa-gear" data-ng-class="{'fa-spin' : running}"></span>
+            <div class="form-group gn-execute">
+              <button type="submit" class="btn btn-primary" ng-click="submit()"
+                ng-class="{disabled: running}" ng-show="!hideExecuteButton">
+                <i ng-if="!running" class="fa fa-play"></i>
+                <i ng-if="running" class="fa fa-spinner fa-spin"></i>
                 &nbsp;<span translate>wpsExecute</span>
               </button>
-              <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-              </button>
-              <div class="form-group output-opts dropdown-menu dropu" >
 
-                <div class="form-group" ng-repeat="output in ::processDescription.processOutputs.output">
-                  <label ng-if="processDescription.processOutputs.output.length > 1">
-                    <input type="radio" value="{{::output.identifier.value}}" ng-model="selectedOutput.identifier">
+              <div class="output-selection dropup">
+                <button class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  &nbsp;<span translate>wpsSelectOutput</span>
+                </button>
+                <ul class="dropdown-menu pull-rightp">
+                  <li ng-repeat-start="output in ::processDescription.processOutputs.output"
+                    class="dropdown-header">
                     {{::output.title.value}}
-                  </label>
-
-                  <ul ng-if="output.identifier.value == selectedOutput.identifier">
-                    <li data-ng-repeat="format in ::output.complexOutput.supported.format">
-                      <label>
-                        <input type="radio" value="{{::format.mimeType}}" ng-model="output.mimeType">
-                        {{::format.mimeType}}
-                      </label>
-                    </li>
-                  </ul>
-                </div>
+                  </li>
+                  <li ng-repeat-end>
+                    <a href class="dropdown-item"
+                      ng-repeat="format in ::output.complexOutput.supported.format"
+                        ng-click="setOutput(output.identifier.value, format.mimeType)">
+                      <i class="fa fa-dot-circle-o fa-fw"
+                        ng-show="selectedOutput.identifier == output.identifier.value && selectedOutput.mimeType == format.mimeType"/>
+                      <i class="fa fa-circle-o fa-fw"
+                        ng-show="selectedOutput.identifier != output.identifier.value || selectedOutput.mimeType != format.mimeType"/>
+                      {{::format.mimeType}}
+                    </a>
+                    <li role="separator" class="divider"
+                      ng-if="$index > 0"></li>
+                  </li>
+                </ul>
               </div>
             </div>
 

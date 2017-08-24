@@ -24,7 +24,6 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.GeonetEntity;
-import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

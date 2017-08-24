@@ -51,7 +51,8 @@
         templateUrl: '../../catalog/components/viewer/wmsimport/' +
             'partials/wmsimport.html',
         scope: {
-          map: '=gnWmsImportMap'
+          map: '=gnWmsImportMap',
+          url: '=?gnWmsImportUrl'
         },
         controller: ['$scope', function($scope) {
 
@@ -69,7 +70,8 @@
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wfs') {
-              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer);
+              var layer = gnMap.addWfsToMapFromCap($scope.map, getCapLayer,
+                  $scope.url);
               gnMap.feedLayerMd(layer);
               return layer;
             } else if ($scope.format == 'wmts') {
@@ -85,6 +87,7 @@
           scope.serviceDesc = null;
           scope.servicesList = gnViewerSettings.servicesUrl[scope.format];
           scope.catServicesList = [];
+          var type = scope.format.toUpperCase();
 
           function addLinks(md, type) {
             angular.forEach(md.getLinksByType(type), function(link) {
@@ -122,28 +125,6 @@
             });
           }
 
-          // This event focus on map, display the WMSImport and request
-          // a getCapabilities
-          //TODO : to be improved
-          var type = scope.format.toUpperCase();
-          var event = 'requestCapLoad' + type;
-          scope.$on(event, function(e, url) {
-            var button = $('[data-gn-import-button=' + type + ']');
-            if (button) {
-              var panel = button.parents('.panel-tools'),
-                  toolId = panel && panel.attr('id');
-              if (toolId) {
-                $timeout(function() {
-                  var menu = $('*[rel=#' + toolId + ']');
-                  if (!menu.hasClass('active')) {
-                    menu.click();
-                  }
-                });
-              }
-            }
-            scope.url = url;
-          });
-
           scope.setUrl = function(srv) {
             scope.url = angular.isObject(srv) ? srv.url : srv;
             type = angular.isObject(srv) && srv.type || type;
@@ -161,6 +142,16 @@
               });
             }
           };
+
+          // watch url as input
+          scope.$watch('url', function(value) {
+            if (value) {
+              scope.setUrl({
+                url: value,
+                type: scope.format
+              });
+            }
+          });
         }
       };
     }]);
@@ -328,7 +319,7 @@
               $.ajax(blobURL).then(function(response) {
                 var format = new ol.format.KML();
                 var features = format.readFeatures(response, {
-                  featureProjection: 'EPSG:3857'
+                  featureProjection: scope.map.getView().getProjection()
                 });
                 source.addFeatures(features);
               });

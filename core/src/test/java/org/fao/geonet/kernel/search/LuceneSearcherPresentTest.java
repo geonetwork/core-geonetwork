@@ -43,7 +43,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -87,7 +86,7 @@ public class LuceneSearcherPresentTest extends AbstractCoreIntegrationTest {
 
         final String mdId = importMetadata.getMetadataIds().get(0);
         dataManager.unsetOperation(serviceContext, mdId, "" + ReservedGroup.all.getId(), ReservedOperation.editing);
-        dataManager.indexMetadata(mdId, true);
+        dataManager.indexMetadata(mdId, true, null);
 
         indexAndTaxonomy = searchManager.getNewIndexReader("eng");
         try {

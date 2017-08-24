@@ -122,3 +122,45 @@ ul.error-message {
 #admin-console-link {
   cursor: pointer;
 }
+
+// remove bottom margin from pager
+// (this breaks layout because the component may or may not be there)
+ul.pager {
+  margin-bottom: 0px;
+}
+
+#gn-thesaurus-container {
+  // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
+  }
+
+  .thesaurus-header .panel-body {
+    padding-bottom: 0px;
+  }
+
+  .panel-heading input.filter-text {
+    width: 20%;
+    min-width: 13em;
+    height: 2em;
+  }
+
+  .list-group-item.keyword-item {
+    padding: 8px;
+    line-height: 1em;
+  }
+
+  .lang-selector li > a {
+    padding: 2px 5px;
+    font-size: 0.85em;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+  }
+}

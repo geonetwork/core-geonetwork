@@ -88,20 +88,44 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_baselayerswitcher');
   goog.require('gn_draw');
   goog.require('gn_featurestable');
+  goog.require('gn_geometry');
   goog.require('gn_graticule');
   goog.require('gn_index');
   goog.require('gn_layermanager');
   goog.require('gn_localisation');
   goog.require('gn_measure');
   goog.require('gn_module');
-  goog.require('gn_ncwms');
   goog.require('gn_ows');
   goog.require('gn_owscontext');
   goog.require('gn_popup');
   goog.require('gn_print');
+  goog.require('gn_profile');
   goog.require('gn_searchlayerformap_directive');
   goog.require('gn_terrainswitcher_directive');
   goog.require('gn_viewer_directive');
@@ -120,9 +144,8 @@
    */
 
   var module = angular.module('gn_viewer', [
-    'gn_ncwms',
-    'gn_viewer_service',
     'gn_viewer_directive',
+    'gn_viewer_service',
     'gn_wmsimport',
     'gn_wfs_directive',
     'gn_owscontext',
@@ -141,7 +164,9 @@
     'gn_wfsfilter',
     'gn_index',
     'gn_wps',
-    'gn_featurestable'
+    'gn_featurestable',
+    'gn_geometry',
+    'gn_profile'
   ]);
 
   module.controller('gnViewerController', [
@@ -149,7 +174,11 @@
     '$timeout',
     'gnViewerSettings',
     'gnMap',
-    function($scope, $timeout, gnViewerSettings, gnMap) {
+    function(
+        $scope,
+        $timeout,
+        gnViewerSettings,
+        gnMap) {
 
       var map = $scope.searchObj.viewerMap;
 
@@ -218,13 +247,5 @@
         hovering = false;
       });
     }]);
-
-  module.controller('toolsController',
-      ['$scope', 'gnMeasure',
-        function($scope, gnMeasure) {
-          $scope.mInteraction = gnMeasure.create($scope.map,
-              $scope.measureObj, $scope);
-        }
-      ]);
 
 })();

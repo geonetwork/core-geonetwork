@@ -70,6 +70,27 @@
         }
       };
     }]);
+
+
+  module.controller('gnsSearchTopEntriesController', [
+    '$scope', 'gnGlobalSettings',
+    function($scope, gnGlobalSettings) {
+      $scope.resultTemplate = '../../catalog/components/' +
+        'search/resultsview/partials/viewtemplates/grid4maps.html';
+      $scope.searchObj = {
+        permalink: false,
+        filters: {
+          'type': 'interactiveMap'
+        },
+        params: {
+          sortBy: 'changeDate',
+          from: 1,
+          to: 30
+        }
+      };
+    }]);
+
+
   module.controller('gnsDefault', [
     '$scope',
     '$location',
@@ -235,7 +256,18 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).then(function (layer) {
+          var loadLayerPromise;
+
+          // handle WMTS layer info
+          if (link.protocol.indexOf('WMTS') > -1) {
+            loadLayerPromise = gnMap.addWmtsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          } else {
+            loadLayerPromise = gnMap.addWmsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          }
+
+          loadLayerPromise.then(function (layer) {
             if (layer) {
               gnMap.feedLayerWithRelated(layer, link.group);
             }
@@ -247,8 +279,18 @@
               link.name, link.url)) {
             return;
           }
-          gnMap.addWmsFromScratch(viewerMap, link.url, link.name, false, md).
-          then(function(layer) {
+          var loadLayerPromise;
+
+          // handle WMTS layer info
+          if (link.protocol.indexOf('WMTS') > -1) {
+            loadLayerPromise = gnMap.addWmtsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          } else {
+            loadLayerPromise = gnMap.addWmsFromScratch(
+              viewerMap, link.url, link.name, undefined, md);
+          }
+
+          loadLayerPromise.then(function(layer) {
             if(layer) {
               gnMap.feedLayerWithRelated(layer, link.group);
             }
@@ -293,12 +335,6 @@
                 searchMap.get('lastExtent'),
                 searchMap.getSize(), { nearest: true });
             }
-
-            // TODO: load custom context to the search map
-            //gnOwsContextService.loadContextFromUrl(
-            //  gnViewerSettings.defaultContext,
-            //  searchMap);
-
           }, 0);
         }
 
@@ -313,6 +349,11 @@
               viewerMap.getView().fit(
                 viewerMap.get('lastExtent'),
                 viewerMap.getSize(), { nearest: true });
+            }
+
+            var map = $location.search().map;
+            if (angular.isDefined(map)) {
+              $scope.resultviewFns.loadMap({url: map});
             }
           }, 0);
         }

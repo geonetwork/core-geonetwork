@@ -29,9 +29,10 @@ import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
+import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.event.WFSHarvesterEvent;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
-import org.fao.geonet.harvester.wfsfeatures.worker.EsClient;
+import org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
 import org.geonetwork.messaging.JMSMessager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
-import static org.fao.geonet.harvester.wfsfeatures.worker.EsWFSFeatureIndexer.deleteFeatures;
 
 /**
  * Created by fgravin on 10/29/15.
@@ -98,8 +98,10 @@ public class WFSHarvesterApi {
         @RequestParam
         String typeName) throws Exception {
 
-
-        deleteFeatures(serviceUrl, typeName, Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME), client);
+        EsWFSFeatureIndexer indexer = ApplicationContextHolder.get().getBean(EsWFSFeatureIndexer.class);
+        indexer.deleteFeatures(serviceUrl, typeName,
+            Logger.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME),
+            client);
 
         // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();

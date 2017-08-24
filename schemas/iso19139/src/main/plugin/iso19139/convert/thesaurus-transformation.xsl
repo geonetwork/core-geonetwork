@@ -104,21 +104,21 @@
     <gmd:descriptiveKeywords>
       <xsl:choose>
         <xsl:when test="$withXlink">
-          <xsl:variable name="multiple"
-                        select="if (contains(/root/request/id, ',')) then 'true' else 'false'"/>
           <xsl:variable name="isLocalXlink"
                         select="util:getSettingValue('system/xlinkResolver/localXlinkEnable')"/>
           <xsl:variable name="prefixUrl"
                         select="if ($isLocalXlink = 'true')
-                                then  concat('local://', /root/gui/language)
+                                then concat('local://', $node, '/')
                                 else $serviceUrl"/>
 
           <xsl:attribute name="xlink:href"
-                         select="concat($prefixUrl, '/xml.keyword.get?thesaurus=', thesaurus/key,
-                              '&amp;amp;id=', replace(/root/request/id, '#', '%23'),
-                              '&amp;amp;multiple=', $multiple,
-                              if (/root/request/lang) then concat('&amp;amp;lang=', /root/request/lang) else '',
-                              if ($textgroupOnly) then '&amp;amp;textgroupOnly' else '')"/>
+                         select="concat(
+                                  $prefixUrl,
+                                  'api/registries/vocabularies/keyword?thesaurus=',
+                                   if (thesaurus/key) then thesaurus/key else /root/request/thesaurus,
+                                  '&amp;id=', /root/request/id,
+                                  if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
+                                  if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
           <xsl:attribute name="xlink:show">replace</xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
@@ -204,7 +204,7 @@
                 <xsl:when test="$withAnchor">
                   <!-- TODO multilingual Anchor ? -->
                   <gmx:Anchor
-                    xlink:href="{$serviceUrl}/xml.keyword.get?thesaurus={thesaurus/key}&amp;id={uri}">
+                    xlink:href="{$serviceUrl}api/registries/vocabularies/keyword?thesaurus={thesaurus/key}&amp;id={uri}">
                     <xsl:value-of select="value"/>
                   </gmx:Anchor>
                 </xsl:when>

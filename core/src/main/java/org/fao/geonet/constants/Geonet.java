@@ -562,9 +562,6 @@ public final class Geonet {
         public static final String LUCENE_CONFIG = "luceneConfig";
         public static final String GUI_CONFIG = "guiConfig";
         public static final String PREFERRED_SCHEMA = "preferredSchema";
-        public static final String STAT_LOG_SPATIAL_OBJECTS = "statLogSpatialObjects";
-        public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
-        public static final String STAT_LOG_ASYNCH = "statLogAsynch";
         public static final String MAX_WRITES_IN_TRANSACTION = "maxWritesInTransaction";
         public static final String SUBVERSION_PATH = "subversionPath";
         public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";

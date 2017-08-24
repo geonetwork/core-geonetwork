@@ -181,7 +181,7 @@ public class KeywordsSearcher {
 
         try {
             result = thesaurus.getKeyword(id, languages);
-        } catch (TermNotFoundException e) {
+        } catch (Exception e) {
         }
 
         return result;

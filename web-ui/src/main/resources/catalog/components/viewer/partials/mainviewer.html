@@ -1,4 +1,4 @@
-<div class="wrapper" data-ng-controller="gnViewerController">
+<div class="wrapper" data-ng-controller="gnViewerController as ctrl">
 
   <div id="map"
        ngeo-map="map"
@@ -11,53 +11,60 @@
 
   <div gn-localisation-input map="map"></div>
 
+  <!-- profile graph (data will come through the service) -->
+  <gn-profile map="map"></gn-profile>
+
   <!--Top right buttons - Tools-->
-  <div class="tools" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
-    <button class="btn btn-default" ng-model="activeTools.addLayers" type="submit"
-            rel="#addLayers" gi-btn gnv-tools-btn>
+  <div class="tools" gi-btn-group>
+    <button class="btn btn-default" ng-model="activeTools.addLayers"
+            type="submit" gi-btn="active">
       <span class="fa fa-plus"></span>
-      <span role="tooltip" data-translate="">addLayers</span>
+      <span role="tooltip" translate="">addLayers</span>
     </button>
-    <button class="btn btn-default" ng-model="activeTools.layers" type="submit"
-            rel="#layers" gi-btn gnv-tools-btn>
+    <button class="btn btn-default" ng-model="activeTools.layers"
+            type="submit" gi-btn="active">
       <span class="fa fa-tasks"></span>
-      <span role="tooltip" data-translate="">Layers</span>
+      <span role="tooltip" translate="">Layers</span>
     </button>
-    <button gi-btn class="btn btn-default" type="submit"
-            rel="#filterData" ng-model="activeTools.filter" gnv-tools-btn>
+    <button class="btn btn-default" ng-model="activeTools.filter"
+            type="submit" gi-btn="active">
       <span class="fa fa-filter"></span>
-      <span role="tooltip" data-translate="">filterData</span>
+      <span role="tooltip" translate="">filterData</span>
     </button>
-    <button class="btn btn-default" ng-model="activeTools.contexts" type="submit"
-            rel="#contexts" gi-btn gnv-tools-btn>
-      <span class="fa fa-book"></span>
-      <span role="tooltip" data-translate="">Contexts</span>
+
+    <button class="btn btn-default" ng-model="activeTools.processes"
+            type="submit" gi-btn="active" ng-hide="disabledTools.processes">
+      <span class="fa fa-cogs"></span>
+      <span role="tooltip" translate="">processesTool</span>
     </button>
-    <button class="btn btn-default" ng-model="activeTools.print" type="submit"
-            data-ng-hide="is3dEnabled"
-            rel="#print" gi-btn gnv-tools-btn>
+
+    <button class="btn btn-default" ng-model="activeTools.contexts"
+            type="submit" gi-btn="active">
+      <span class="fa fa-map"></span>
+      <span role="tooltip" translate="">Contexts</span>
+    </button>
+    <button class="btn btn-default" ng-model="activeTools.print"
+            type="submit" gi-btn="active" ng-hide="is3dEnabled">
       <span class="fa fa-print"></span>
-      <span role="tooltip" data-translate="">Print</span>
+      <span role="tooltip" translate="">Print</span>
     </button>
 
-    <button class="btn btn-default" type="submit"
-            data-ng-click="syncMod()">
-      <span class="fa fa-sync"
-            data-ng-class="synAllLayers ? 'fa-lock' : 'fa-unlock'"/>
-      <span role="tooltip" data-translate="">syncAllLayers</span>
-    </button>
-
-    <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active"
-            data-ng-hide="is3dEnabled"
-            rel="#measures" gnv-tools-btn>
+    <button class="btn btn-default" ng-model="mInteraction.active"
+            type="submit" gi-btn="active" ng-hide="is3dEnabled">
       <span class="fa fa-expand"></span>
-      <span role="tooltip" data-translate="">Measure</span>
+      <span role="tooltip" translate="">Measure</span>
     </button>
-    <button gi-btn class="btn btn-default" type="submit"
-            data-ng-hide="is3dEnabled"
-            rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
+    <button class="btn btn-default" ng-model="drawVector.active"
+            type="submit" gi-btn="active" ng-hide="is3dEnabled">
       <span class="fa fa-pencil"></span>
-      <span role="tooltip" data-translate="">Annotations</span>
+      <span role="tooltip" translate="">Annotations</span>
+    </button>
+
+    <div class="tools-spacer"></div>
+
+    <button class="btn btn-default" type="submit" ng-click="syncMod()">
+      <span class="fa fa-sync" ng-class="synAllLayers ? 'fa-lock' : 'fa-unlock'"/>
+      <span role="tooltip" translate="">syncAllLayers</span>
     </button>
   </div>
   <!--Bottom right buttons - Navigation-->
@@ -74,10 +81,6 @@
       <span class="fa fa-arrows-alt"></span>
       <span role="tooltip" data-translate="">ZoomToMapMaxExtent</span>
     </button>
-    <button class="btn btn-default" type="submit" data-ng-click="zoomToYou(map)">
-      <span class="fa fa-map-marker"></span>
-      <span role="tooltip" data-translate="">ZoomToYourLocation</span>
-    </button>
     <button class="btn btn-default" type="submit"
             data-ng-if="is3DModeAllowed"
             data-ng-click="switch2D3D(map)">
@@ -85,39 +88,54 @@
             data-ng-class="is3dEnabled ? 'fa-cube' : 'fa-square-o'"/>
       <span role="tooltip" data-translate="">switchFrom2DTo3D</span>
     </button>
-    <button gn-graticule-btn="map" class="btn btn-default" type="submit">
+    <button gn-graticule-btn="map" class="btn btn-default" type="submit"
+      graticule-ogc-service="graticuleOgcService"></button>
   </div>
 
 
-  <div class="panel panel-default force-hide panel-tools"
-       id="addLayers"
-       gnv-layermanager-btn="false">
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.addLayers">
     <div class="panel-heading">
       <h3>{{'AddALayer' | translate}}
-        <button type="button" class="btn btn-default close">
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.addLayers" gi-btn>
           &times;
         </button>
       </h3>
     </div>
     <div class="panel-body">
       <tabset id="info-tabset">
+
+        <tab heading="{{'addLayerFromMaps' | translate}}"
+             active="addLayerTabs.maps">
+          <br/>
+          <div data-gn-search-layer-for-map="map" data-mode="map"></div>
+        </tab>
+
         <tab heading="{{'SearchLayer' | translate}}"
              active="addLayerTabs.search">
           <br/>
           <div data-gn-search-layer-for-map="map"></div>
         </tab>
-        <tab heading="{{'LayerWMS' | translate}}"
-             active="addLayerTabs.wms">
+
+        <tab heading="{{'addLayerFromServices' | translate}}"
+             active="addLayerTabs.services">
           <div gn-wms-import="wms"
+               gn-wms-import-map="map"
+               gn-wms-import-url="addLayerUrl.wms"
+               services-list-from-catalog="true"></div>
+
+          <div gn-wms-import="wmts"
+               gn-wms-import-map="map"
+               gn-wms-import-url="addLayerUrl.wmts"></div>
+
+          <div gn-wms-import="wfs"
                gn-wms-import-map="map"
                services-list-from-catalog="true"></div>
         </tab>
-        <tab heading="{{'LayerWMTS' | translate}}"
-             active="addLayerTabs.wmts">
-          <div gn-wms-import="wmts" gn-wms-import-map="map"></div>
-        </tab>
-        <tab heading="{{'LayerKML' | translate}}"
+        <tab heading="{{'addLayerFromFiles' | translate}}"
              active="addLayerTabs.kml">
+          <span>{{'LayerKML' | translate}}</span>
           <div gn-kml-import="" gn-kml-import-map="map"></div>
         </tab>
       </tabset>
@@ -125,12 +143,12 @@
   </div>
 
 
-  <div class="panel panel-default force-hide panel-tools"
-       id="layers"
-       gnv-layermanager-btn="false">
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.layers">
     <div class="panel-heading">
       <h3>{{'ManageLayers' | translate}}
-        <button type="button" class="btn btn-default close">
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.layers" gi-btn>
           &times;
         </button>
       </h3>
@@ -151,18 +169,28 @@
   </div>
 
 
-  <div class="panel panel-default force-hide panel-tools gn-data-filter-view"
-       id="filterData">
+  <div class="panel panel-default panel-tools gn-data-filter-view"
+       ng-show="activeTools.filter">
+    <div class="panel-heading">
+      <h3>{{'filterData' | translate}}
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.filter" gi-btn>
+          &times;
+        </button>
+      </h3>
+    </div>
     <div class="panel-body">
       <div data-gn-data-filter-view="map"/>
     </div>
   </div>
 
 
-  <div class="panel panel-default force-hide panel-tools" id="contexts">
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.contexts">
     <div class="panel-heading">
       <h3>{{'MapContexts' | translate}}
-        <button type="button" class="btn btn-default close">
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.contexts" gi-btn>
           &times;
         </button>
       </h3>
@@ -174,10 +202,12 @@
 
 
   <!--Measure Info Panel-->
-  <div class="panel panel-default force-hide panel-tools" id="measures">
+  <div class="panel panel-default panel-tools"
+       ng-show="mInteraction.active">
     <div class="panel-heading">
       <h3>{{'Measures' | translate}}
-        <button type="button" class="btn btn-default close">
+        <button type="button" class="btn btn-default close"
+                ng-model="mInteraction.active" gi-btn>
           &times;
         </button>
       </h3>
@@ -197,10 +227,12 @@
 
 
   <!--Draw Panel-->
-  <div class="panel panel-default force-hide panel-tools" id="draw">
+  <div class="panel panel-default panel-tools"
+       ng-show="drawVector.active">
     <div class="panel-heading">
       <h3>{{'Annotations' | translate}}
-        <button type="button" class="btn btn-default close">
+        <button type="button" class="btn btn-default close"
+                ng-model="drawVector.active" gi-btn>
           &times;
         </button>
       </h3>
@@ -212,16 +244,47 @@
   </div>
 
 
-  <div class="panel panel-default force-hide panel-tools" id="print">
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.print">
     <div class="panel-heading">
       <h3>{{'PrintTheMap' | translate}}
-        <button type="button" class="btn btn-default close">
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.print" gi-btn>
           &times;
         </button>
       </h3>
     </div>
     <div class="panel-body">
       <div gn-mapprint="" print-active="activeTools.print" map="map"></div>
+    </div>
+  </div>
+
+  <!-- WPS processes panel -->
+  <div class="panel panel-default panel-tools"
+       ng-show="activeTools.processes">
+    <div class="panel-heading">
+      <h3>{{'processesTool' | translate}}
+        <button type="button" class="btn btn-default close"
+                ng-model="activeTools.processes" gi-btn>
+          &times;
+        </button>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <tabset id="info-tabset">
+        <tab heading="{{'wpsByUrl' | translate}}"
+             active="wpsTabs.byUrl">
+          <br/>
+          <gn-wps-url-discovery wps-link="selectedWps"/>
+        </tab>
+        <tab heading="{{'wpsRecent' | translate}}"
+             active="wpsTabs.recent">
+          <br/>
+          <gn-wps-recent-list wps-link="selectedWps"/>
+        </tab>
+      </tabset>
+      <gn-wps-process-form map="map" wps-link="selectedWps"
+        ng-if="activeTools.processes"/>
     </div>
   </div>
 </div>

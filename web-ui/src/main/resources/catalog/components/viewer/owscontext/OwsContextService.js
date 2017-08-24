@@ -94,9 +94,12 @@
        * @description
        * Loads a context, ie. creates layers and centers the map
        *
-       * @param {Object} context object
+       * @param {string} text OWS context content
+       * @param {ol.map} map map
+       * @param {owsContextLayer} additionalLayers these layers will be added
+       *  after the context layers (used to add layers from the map settings)
        */
-      this.loadContext = function(text, map) {
+      this.loadContext = function(text, map, additionalLayers) {
         var context = unmarshaller.unmarshalString(text).value;
         // first remove any existing layer
         var layersToRemove = [];
@@ -111,38 +114,38 @@
           map.removeLayer(layersToRemove[i]);
         }
 
-        // set the General.BoundingBox
+        // -- set the Map view (extent/projection)
         var bbox = context.general.boundingBox.value;
         var ll = bbox.lowerCorner;
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
-        if (projection == 'EPSG:4326') {
-          ll.reverse();
-          ur.reverse();
-        }
         var extent = ll.concat(ur);
-        // reproject in case bbox's projection doesn't match map's projection
-        extent = ol.proj.transformExtent(extent,
-            projection, map.getView().getProjection());
-
-        extent = gnMap.secureExtent(extent, map.getView().getProjection());
-
-        // store the extent into view settings so that it can be used later in
-        // case the map is not visible yet
         gnViewerSettings.initialExtent = extent;
+
+        // save this extent for later use (for example if the map
+        // is not currently visible)
+        map.set('lastExtent', extent);
+
+        if (map.getView().getProjection().getCode() != projection) {
+          var view = new ol.View({
+            extent: extent,
+            projection: projection
+          });
+          map.setView(view);
+        }
 
         // $timeout used to avoid map no rendered (eg: null size)
         $timeout(function() {
           map.getView().fit(extent, map.getSize(), { nearest: true });
         }, 0, false);
 
-        // save this extent for later use (for example if the map
-        // is not currently visible)
-        map.set('lastExtent', extent);
-
-        // load the resources
+        // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
+        if (additionalLayers) {
+          layers = layers.concat(additionalLayers);
+        }
+
         var i, j, olLayer;
         var self = this;
         var promises = [];
@@ -153,6 +156,14 @@
           if (map.getLayers().getLength() > 0) {
             map.getLayers().removeAt(0);
           }
+          var bgLoadingLayer = new ol.layer.Image({
+            loading: true,
+            label: 'loading',
+            url: '',
+            visible: false
+          });
+          map.getLayers().insertAt(0, bgLoadingLayer);
+
           if (!gnViewerSettings.bgLayers) {
             gnViewerSettings.bgLayers = [];
           }
@@ -168,13 +179,14 @@
 
                 // {type=bing_aerial} (mapquest, osm ...)
                 var re = this.getREForPar('type');
-                if (layer.name.match(re) &&
-                    (type = re.exec(layer.name)[1]) != 'wmts') {
-                  re = this.getREForPar('name');
+                type = layer.name.match(re) ? re.exec(layer.name)[1] : null;
+                if (type && type != 'wmts' && type != 'wms') {
                   var opt;
+                  re = this.getREForPar('name');
                   if (layer.name.match(re)) {
-                    var lyr = re.exec(layer.name)[1];
-                    opt = {name: lyr};
+                    opt = {
+                      name: re.exec(layer.name)[1]
+                    };
                   }
                   var olLayer =
                       gnMap.createLayerForType(type, opt, layer.title);
@@ -187,7 +199,7 @@
 
                     if (!layer.hidden && !isFirstBgLayer) {
                       isFirstBgLayer = true;
-                      map.getLayers().insertAt(0, olLayer);
+                      map.getLayers().setAt(0, olLayer);
                     }
                   }
                 }
@@ -210,21 +222,21 @@
                   var layerIndex = bgLayers.push(loadingLayer);
                   var p = self.createLayer(layer, map, i);
 
-                  (function(idx) {
+                  (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      bgLayers[idx-1] = layer;
+                      bgLayers[idx - 1] = layer;
 
-                      if(!layer) {
+                      if (!layer) {
                         return;
                       }
                       layer.displayInLayerManager = false;
                       layer.background = true;
 
-                      if(loadingLayer.get('bgLayer')) {
-                        map.getLayers().insertAt(0, layer);
+                      if (loadingLayer.get('bgLayer')) {
+                        map.getLayers().setAt(0, layer);
                       }
                     });
-                  })(layerIndex);
+                  })(layerIndex, loadingLayer);
                 }
               }
               // WMS layer not in background
@@ -256,20 +268,28 @@
 
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
-                    label: 'loading',
+                    label: layer.name || 'loading',
                     url: '',
-                    visible: false
+                    visible: false,
+                    group: layer.group
                   });
+
                   loadingLayer.displayInLayerManager = true;
 
                   var layerIndex = map.getLayers().push(loadingLayer);
                   var p = self.createLayer(layer, map, undefined, i);
+                  loadingLayer.set('index', layerIndex);
 
-                  (function(idx) {
+                  (function(idx, loadingLayer) {
                     p.then(function(layer) {
-                      map.getLayers().setAt(idx-1, layer);
+                      if (layer) {
+                        map.getLayers().setAt(idx, layer);
+                      }
+                      else {
+                        loadingLayer.set('errors', ['load failed']);
+                      }
                     });
-                  })(layerIndex);
+                  })(layerIndex, loadingLayer);
                 }
               }
             }
@@ -287,8 +307,10 @@
        * Loads a context from an URL.
        * @param {string} url URL to context
        * @param {ol.map} map map
+       * @param {owsContextLayer} additionalLayers these layers will be added
+       *  after the context layers (used to add layers from the map settings)
        */
-      this.loadContextFromUrl = function(url, map) {
+      this.loadContextFromUrl = function(url, map, additionalLayers) {
         var self = this;
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
@@ -305,7 +327,7 @@
                   type: 'danger'});
               }
 
-              self.loadContext(r.data, map);
+              self.loadContext(r.data, map, additionalLayers);
             }, function(r) {
               var msg = $translate.instant('mapLoadError', {
                 url: url
@@ -363,8 +385,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.MapQuest) {
-            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
@@ -377,12 +397,12 @@
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
-          } else if (source instanceof ol.source.ImageWMS) {
-            var s = layer.getSource();
-            name = s.getParams().LAYERS;
+          } else if (source instanceof ol.source.ImageWMS ||
+              source instanceof ol.source.TileWMS) {
+            name = '{type=wms,name=' + layer.get('name') + '}';
             params.server = [{
               onlineResource: [{
-                href: s.getUrl()
+                href: layer.get('url')
               }],
               service: 'urn:ogc:serviceType:WMS'
             }];
@@ -546,26 +566,34 @@
         if (layer.name.match(reT)) {
           var type = reT.exec(layer.name)[1];
           var name = reL.exec(layer.name)[1];
+          var promise;
 
           if (type == 'wmts') {
-            return gnMap.addWmtsFromScratch(map, res.href, name, createOnly).
-                then(function(olL) {
-                  olL.set('group', layer.group);
-                  olL.set('groupcombo', layer.groupcombo);
-                  olL.setOpacity(layer.opacity);
-                  olL.setVisible(!layer.hidden);
-                  if (layer.title) {
-                    olL.set('title', layer.title);
-                    olL.set('label', layer.title);
-                  }
-                  if (bgIdx) {
-                    olL.set('bgIdx', bgIdx);
-                  } else if (index) {
-                    olL.set('tree_index', index);
-                  }
-                  return olL;
-                }).catch(function() {});
+            promise = gnMap.addWmtsFromScratch(map, res.href, name, createOnly);
           }
+
+          // if it's not WMTS, let's assume it is wms
+          // (so as to be sure to return something)
+          else {
+            promise = gnMap.addWmsFromScratch(map, res.href, name, createOnly);
+          }
+
+          return promise.then(function(olL) {
+            olL.set('group', layer.group);
+            olL.set('groupcombo', layer.groupcombo);
+            olL.setOpacity(layer.opacity);
+            olL.setVisible(!layer.hidden);
+            if (layer.title) {
+              olL.set('title', layer.title);
+              olL.set('label', layer.title);
+            }
+            if (bgIdx) {
+              olL.set('bgIdx', bgIdx);
+            } else if (index) {
+              olL.set('tree_index', index);
+            }
+            return olL;
+          }).catch(function() {});
         }
         else { // we suppose it's WMS
           // TODO: Would be good to attach the MD

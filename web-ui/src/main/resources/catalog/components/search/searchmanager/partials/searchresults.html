@@ -31,16 +31,24 @@
           data-ng-class="isSelected(md) ? 'active' : ''"
           data-ng-click="onClick(md)">
         <div data-ng-if="options.mode == 'title'">
-          <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>&nbsp;
+          <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
           {{md.title || md.defaultTitle}}
         </div>
         <div class="row" data-ng-if="options.mode == 'simple'">
           <div class="col-lg-12"
                title="{{md.abstract}}">
-            <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>&nbsp;
+            <i class="fa gn-icon-{{md.type[0]}}" title="{{md.type[0] | translate}}"/>
             <strong>{{md.title || md.defaultTitle}}</strong>
-            <p class="small">{{md.abstract | characters:200}}</p>
+            <p ng-if="::md.abstract" class="small">{{md.abstract | characters:200}}</p>
           </div>
+        </div>
+        <div data-ng-if="options.mode == 'directory'">
+          <div class="flex-row flex-align-center">
+            <gn-md-type-widget metadata="md"></gn-md-type-widget>
+            <div class="flex-spacer" />
+            <strong>{{md.title || md.defaultTitle}}</strong>
+          </div>
+          <p ng-if="::md.abstract" class="small">{{md.abstract | characters:200}}</p>
         </div>
       </li>
     </div>

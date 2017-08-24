@@ -102,13 +102,13 @@
                       // lUrl means localize Url
                       angular.forEach(data.onlines, function(src) {
                         src.lUrl = src.url[scope.lang] ||
-                          src.url[gnCurrentEdit.mdLanguage] ||
-                          src.url[Object.keys(src.url)[0]];
+                         src.url[gnCurrentEdit.mdLanguage] ||
+                         src.url[Object.keys(src.url)[0]];
                       });
                       angular.forEach(data.thumbnails, function(img) {
                         img.lUrl = img.url[scope.lang] ||
-                          img.url[gnCurrentEdit.mdLanguage] ||
-                          img.url[Object.keys(img.url)[0]];
+                         img.url[gnCurrentEdit.mdLanguage] ||
+                         img.url[Object.keys(img.url)[0]];
                       });
                       scope.relations = data;
                     });
@@ -950,8 +950,8 @@
                   }
 
                   var typeConfig = linkToEdit ?
-                    getTypeConfig(linkToEdit) :
-                    scope.config.types[0];
+                      getTypeConfig(linkToEdit) :
+                      scope.config.types[0];
                   scope.config.multilingualFields = [];
                   angular.forEach(typeConfig.fields, function(f, k) {
                     if (f.isMultilingual !== false) {
@@ -1003,18 +1003,18 @@
                       url: 'url'
                     };
 
-                    angular.forEach(fields, function(value, field){
-                      if(scope.isFieldMultilingual(field)) {
+                    angular.forEach(fields, function(value, field) {
+                      if (scope.isFieldMultilingual(field)) {
                         var e = {};
                         $.each(scope.mdLangs, function(key, v) {
                           e[v] =
-                            (linkToEdit[fields[field]] &&
-                            linkToEdit[fields[field]][key]) || '';
+                              (linkToEdit[fields[field]] &&
+                              linkToEdit[fields[field]][key]) || '';
                         });
                         fields[field] = e;
                       }
                       else {
-                        fields[field] = $filter('gnLocalized')
+                        fields[field] = $filter('gnLocalized');
                         (linkToEdit[fields[field]]);
                       }
                     });
@@ -1028,16 +1028,16 @@
                       applicationProfile: linkToEdit.applicationProfile,
                       function: linkToEdit.function,
                       selectedLayers: []
+                      };
+                      } else{
+                      scope.editingKey= null;
+                      scope.params.linkType= scope.config.types[0];
+                      scope.params.protocol= null;
+                      scope.params.name= '';
+                      scope.params.desc= '';
+                      initMultilingualFields();
                     };
-                  } else {
-                    scope.editingKey= null;
-                    scope.params.linkType= scope.config.types[0];
-                    scope.params.protocol= null;
-                    scope.params.name = '';
-                    scope.params.desc = '';
-                    initMultilingualFields();
-                  };
-                });
+                  });
 
                 // mode can be 'url' or 'thumbnailMaker' to init thumbnail panel
                 scope.mode = 'url';
@@ -1089,8 +1089,8 @@
                  * param (name, desc, url).
                  * Struct like {'ger':'', 'eng': ''}
                  *
-                 * @param param
-                 * @returns {*}
+                 * @param {String} param
+                 * @return {*}
                  */
                 function buildObjectParameter(param) {
                   if (angular.isObject(param)) {
@@ -1174,7 +1174,7 @@
 
                   // If multilingual or not
                   var url = scope.params.url;
-                  if(angular.isObject(url)) {
+                  if (angular.isObject(url)) {
                     url = url[scope.ctrl.urlCurLang];
                   }
 
@@ -1232,7 +1232,7 @@
 
                 function checkIsOgc(protocol) {
 
-                  if(/OGC:WMS-[0-9].[0-9].[0-9]-http-get-map/.exec(protocol)) {
+                  if (/OGC:WMS-[0-9].[0-9].[0-9]-http-get-map/.exec(protocol)) {
                     return 'WMS';
                   }
                   else if (protocol && protocol.indexOf('OGC:WFS') >= 0) {
@@ -1270,9 +1270,9 @@
                   scope.isImage = false;
                   var urls = scope.params.url;
                   var curUrl = angular.isObject(urls) ?
-                    urls[scope.ctrl.urlCurLang] : urls;
+                      urls[scope.ctrl.urlCurLang] : urls;
 
-                  if(curUrl) {
+                  if (curUrl) {
                     scope.loadCurrentLink();
                     scope.isImage = curUrl.match(/.*.(png|jpg|gif)$/i);
                   }
@@ -1300,7 +1300,7 @@
                           descs.push(layer.Title || layer.title);
                         });
 
-                    if(scope.isMdMultilingual) {
+                    if (scope.isMdMultilingual) {
                       var langCode = scope.mdLangs[scope.mdLang];
                       scope.params.name[langCode] = names.join(',');
                       scope.params.desc[langCode] = descs.join(',');
@@ -1373,7 +1373,7 @@
                     };
                     ['url', 'name'].forEach(function(pName) {
                       var value = o[pName];
-                      if(scope.isFieldMultilingual(pName)) {
+                      if (scope.isFieldMultilingual(pName)) {
                         scope.params[pName][scope.ctrl.urlCurLang] = value;
                       }
                       else {
@@ -1403,9 +1403,9 @@
 
                 scope.isFieldMultilingual = function(field) {
                   return scope.isMdMultilingual &&
-                    scope.config.multilingualFields &&
-                    scope.config.multilingualFields.indexOf(field) >= 0
-                }
+                      scope.config.multilingualFields &&
+                      scope.config.multilingualFields.indexOf(field) >= 0;
+                };
               }
             }
           };

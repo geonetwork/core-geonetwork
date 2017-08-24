@@ -482,13 +482,21 @@
             }
           });
 
-          Object.defineProperty(vector, 'inmap', {
+          Object.defineProperty(vector, 'active', {
             get: function() {
-              return map.getLayers().getArray().indexOf(vector) >= 0;
+              return map.getLayers().getArray().indexOf(vector) >= 0 &&
+                  scope.active;
             },
             set: function(val) {
               if (val) {
-                map.addLayer(vector);
+                // this is simply used to indicate that the draw
+                // directive is active (ie panel is opened in the UI)
+                scope.active = true;
+
+                // only add layer if it is not already here
+                if (map.getLayers().getArray().indexOf(vector) < 0) {
+                  map.addLayer(vector);
+                }
               } else {
                 drawPolygon.active = false;
                 drawPoint.active = false;
@@ -496,6 +504,7 @@
                 drawText.active = false;
                 deleteF = false;
                 scope.modifying = false;
+                scope.active = false;
               }
             }
           });

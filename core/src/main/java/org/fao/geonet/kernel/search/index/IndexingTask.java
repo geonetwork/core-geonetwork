@@ -25,8 +25,6 @@ package org.fao.geonet.kernel.search.index;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
@@ -75,7 +73,7 @@ public class IndexingTask extends QuartzJobBean {
 
             for (Integer metadataIdentifier : metadataIdentifiers) {
                 try {
-                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false);
+                    _dataManager.indexMetadata(String.valueOf(metadataIdentifier), false, null);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Indexing task / An error happens indexing the metadata "
                         + metadataIdentifier + ". Error: " + e.getMessage(), e);

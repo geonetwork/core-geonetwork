@@ -10,6 +10,16 @@
 .gn-main-viewer {
   position: relative;
 
+  [role=tooltip] {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    right: 0;
+  }
+
+  fieldset legend {
+    margin-bottom: 2px;
+  }
+
   .gn-layertree-filter {
     margin: 0 0 15px 0px;
     position:relative;
@@ -78,8 +88,9 @@
     .clear {
       position: absolute;
       top: .75em;
-      right: .75em;
+      right: 3.5em;
       color: #666;
+      z-index: 99;
       &:hover {
         cursor: pointer;
         color: #222;
@@ -100,21 +111,25 @@
       width: 2.8em;
       transition: background @transition-params;
       &.active {
-        width: 3.1em;
+        width: 3.0em;
         border-left: medium none;
         border-radius: 0px;
-        margin-left: -0.3em;
+        margin-left: -0.2em;
         background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.7);
         border-color: transparent;
         color: #FFF;
       }
+    }
+
+    .tools-spacer {
+      height: 1.4em;
     }
   }
   .control-tools {
     top: auto;
     bottom: @viewport-padding;
   }
-  .panel {
+  & > .panel {
     background: rgba(255,255,255,.8);
   }
   .panel-tools {
@@ -143,7 +158,6 @@
       }
     }
     .list-group-item {
-      background: inherit;
       transition: max-height @transition-params;
       .btn-cog {
          float: right;
@@ -258,27 +272,6 @@
     }
   }
 
-  .panel-ncwms {
-    .btn-sm {
-    }
-    input[type=date] {
-      width: 7.2em;
-      display: inline-block;
-    }
-    .ui-slider {
-      margin-left: .5em;
-    }
-    .fa.pull-right {
-      margin-left: 0;
-    }
-    .fa-spinner .fa-magic {
-      display: none;
-    }
-    label {
-      padding-top: .3em;
-    }
-  }
-
   @import "../components/viewer/wmsimport/style/layertree.less";
 
   .fu {
@@ -292,14 +285,14 @@
     }
   }
 
-  .collapsed {
-    max-height: 0;
-    min-height: 0;
-    overflow-y: hidden;
-    border: 0;
-    margin: 0;
-    padding: 0;
-  }
+  //.collapsed {
+  //  max-height: 0;
+  //  min-height: 0;
+  //  overflow-y: hidden;
+  //  border: 0;
+  //  margin: 0;
+  //  padding: 0;
+  //}
   .force-hide {
     opacity: 0;
     pointer-events: none;
@@ -564,7 +557,7 @@
   }
 }
 
-gn-features-tables {
+gn-features-tables, .gn-viewer-info-pane {
   display          : block;
   position         : absolute;
   bottom           : 1em;
@@ -599,18 +592,62 @@ gn-features-tables {
     font-size : 24px;
     margin    : .25em .4em 0 0;
   }
+
+  .profile {
+    width: 100%;
+    min-height: 20em;
+    height: 200px;
+    overflow-x: scroll;
+    svg {
+      width: auto;
+    }
+    .overlay {
+      width: 100%;
+    }
+  }
 }
 
 gn-wps-process-form {
   .popover-parent {
     position: relative;
-    .dropdown-menu {
-      padding:5px;
-    }
   }
 
   ul {
     list-style: none;
+  }
+
+  .panel {
+    background: none;
+    margin-bottom: 0px;
+    border: none;
+    box-shadow: none;
+
+    .panel-heading {
+      height: 2em;
+      line-height: 1.6em;
+
+      .close {
+        margin-right: -0.2em;
+      }
+    }
+  }
+
+  .form-group .output-selection {
+    display: inline-block;
+  }
+  .form-group .input-group {
+    margin-bottom: 6px;
+  }
+}
+
+gn-geometry-tool .btn-group {
+  display: flex;
+  .btn {
+    flex-basis: initial !important;
+    flex-grow: 1;
+    &.btn-icon {
+      flex-grow: 0 !important;
+    }
   }
 }
 
@@ -618,3 +655,31 @@ gn-wps-process-form {
    background-color: rgba(255,255,255,0.4);
    border: solid 2px red;
  }
+
+.layermanager-item-menu {
+}
+
+[gn-ows-context] {
+  ul.gn-resultview li.gn-grid {
+    width: 150px;
+    min-width: 150px;
+    max-height: 170px;
+    padding: 2px;
+    margin: 2px;
+    font-size: 80%;
+    text-align: center;
+  }
+  .gn-md-thumbnail {
+    float:left;
+    width: 110px;
+    height: 110px;
+    margin: 2px !important;
+  }
+}
+[data-gn-search-layer-for-map] {
+  .gn-md-thumbnail .gn-img-thumbnail {
+    width: 40px;
+    height: 40px;
+    margin: 2px !important;
+  }
+}

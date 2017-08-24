@@ -37,6 +37,7 @@ import io.searchbox.core.Index;
 import org.apache.camel.Exchange;
 import org.apache.jcs.access.exception.InvalidArgumentException;
 import org.apache.log4j.Logger;
+import org.fao.geonet.es.EsClient;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.geotools.data.FeatureSource;
 import org.geotools.data.Query;
@@ -56,6 +57,7 @@ import org.opengis.metadata.extent.GeographicBoundingBox;
 import org.opengis.metadata.extent.GeographicExtent;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -64,7 +66,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 //import org.elasticsearch.common.xcontent.XContentBuilder;
 
@@ -74,6 +75,9 @@ public class EsWFSFeatureIndexer {
     public static final String MULTIVALUED_SUFFIX = "s";
     public static final String TREE_FIELD_SUFFIX = "_tree";
     public static final String FEATURE_FIELD_PREFIX = "ft_";
+
+    @Value("${es.index.features}")
+    private String index = "features";
 
     @Autowired
     private EsClient client;
@@ -172,16 +176,16 @@ public class EsWFSFeatureIndexer {
         deleteFeatures(url, typeName, logger, client);
     }
 
-    public static void deleteFeatures(String url, String typeName, Logger logger,
+    public void deleteFeatures(String url, String typeName, Logger logger,
                                       EsClient client) {
         logger.info(String.format(
                 "Deleting features previously index from service '%s' and feature type '%s' in '%s'",
-                url, typeName, client.getCollection()));
+                url, typeName, index));
 
         try {
             ZonedDateTime startTime = ZonedDateTime.now();
             String msg = client.deleteByQuery(
-                client.getCollection(),
+                index,
                 String.format(
                     "+featureTypeId:\\\"%s#%s\\\"", url, typeName)
             );
@@ -191,7 +195,7 @@ public class EsWFSFeatureIndexer {
 
             startTime = ZonedDateTime.now();
             msg = client.deleteByQuery(
-                client.getCollection(),
+                index,
                 String.format(
                     "+id:\\\"%s#%s\\\"", url, typeName)
             );
@@ -202,18 +206,18 @@ public class EsWFSFeatureIndexer {
             e.printStackTrace();
             logger.error(String.format(
                     "Error connecting to ES at '%s'. Error is %s.",
-                    client.getCollection(), e.getMessage()));
+                    index, e.getMessage()));
         }
     }
 
     private void saveHarvesterReport(WFSHarvesterExchangeState state) {
         Map<String, Object> report = state.getHarvesterReport();
-        Index index = new Index.Builder(report)
-            .index(client.getCollection())
-            .type(client.getCollection())
+        Index search = new Index.Builder(report)
+            .index(index)
+            .type(index)
             .id(report.get("id").toString()).build();
         try {
-            DocumentResult response = client.getClient().execute(index);
+            DocumentResult response = client.getClient().execute(search);
             logger.info(String.format(
                     "Report saved for %s. Error is '%s'.",
                     state.getParameters().getTypeName(),
@@ -445,7 +449,7 @@ public class EsWFSFeatureIndexer {
                                 typeName, nbOfFeatures));
                     }
                     try {
-                        client.bulkRequest(client.getCollection(),
+                        client.bulkRequest(index,
                             docCollection);
                     } catch (Exception ex) {
                         state.getHarvesterReport().put("error_ss", String.format(
@@ -472,7 +476,7 @@ public class EsWFSFeatureIndexer {
                         typeName, nbOfFeatures));
                 }
                 try {
-                    client.bulkRequest(client.getCollection(),
+                    client.bulkRequest(index,
                         docCollection);
                 } catch (Exception ex) {
                     state.getHarvesterReport().put("error_ss", String.format(
@@ -506,5 +510,9 @@ public class EsWFSFeatureIndexer {
         } finally {
             saveHarvesterReport(state);
         }
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 }

@@ -78,6 +78,7 @@ public class Settings {
     public static final String SYSTEM_Z3950_PORT = "system/z3950/port";
     public static final String SYSTEM_SELECTIONMANAGER_MAXRECORDS = "system/selectionmanager/maxrecords";
     public static final String SYSTEM_CSW_ENABLE = "system/csw/enable";
+    public static final String SYSTEM_CSW_ENABLEWHENINDEXING = "system/csw/enabledWhenIndexing";
     public static final String SYSTEM_CSW_CONTACT_ID = "system/csw/contactId";
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
@@ -112,6 +113,7 @@ public class Settings {
     public static final String REGION_GETMAP_WIDTH = "region/getmap/width";
     public static final String REGION_GETMAP_SUMMARY_WIDTH = "region/getmap/summaryWidth";
     public static final String METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP = "metadata/workflow/draftWhenInGroup";
+    public static final String METADATA_IMPORT_RESTRICT = "metadata/import/restrict";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";
 
     public static class GNSetting {

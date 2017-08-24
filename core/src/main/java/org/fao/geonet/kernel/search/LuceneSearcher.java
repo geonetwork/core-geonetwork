@@ -133,6 +133,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     private String _styleSheetName;
 
     private Query _query;
+    private Query _loggerQuery;
+
     private Filter _filter;
     private Sort _sort;
     private Element _elSummary;
@@ -175,29 +177,17 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                                  SearchManager sm) {
         SettingInfo si = srvContext.getBean(SettingInfo.class);
         if (si.isSearchStatsEnabled()) {
-            if (sm.getLogAsynch()) {
-                // Run asynch
-                if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE, "Log search in asynch mode - start.");
-                GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
-                SearchLoggerTask logTask = srvContext.getBean(SearchLoggerTask.class);
-                logTask.configure(srvContext, sm.getLogSpatialObject(), sm.getLuceneTermsToExclude(), query, numHits, sort, geomWKT,
-                    config.getValue(Jeeves.Text.GUI_SERVICE, "n"));
+            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "Log search in asynch mode - start.");
+            GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+            SearchLoggerTask logTask = srvContext.getBean(SearchLoggerTask.class);
+            logTask.configure(srvContext, query, numHits, sort, geomWKT,
+                config.getValue(Jeeves.Text.GUI_SERVICE, "n"));
 
-                gc.getThreadPool().runTask(logTask);
-                if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE, "Log search in asynch mode - end.");
-            } else {
-                // Run synch - alter search performance
-                if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE, "Log search in synch mode - start.");
-                SearcherLogger searchLogger = new SearcherLogger(srvContext, sm.getLogSpatialObject(),
-                    sm.getLuceneTermsToExclude());
-                searchLogger.logSearch(query, numHits, sort, geomWKT,
-                    config.getValue(Jeeves.Text.GUI_SERVICE, "n"));
-                if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
-                    Log.debug(Geonet.SEARCH_ENGINE, "Log search in synch mode - end.");
-            }
+            gc.getThreadPool().runTask(logTask);
+            if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
+                Log.debug(Geonet.SEARCH_ENGINE, "Log search in asynch mode - end.");
+
         }
     }
 
@@ -1150,7 +1140,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         updateSearchRange(request);
 
         if (_logSearch) {
-            logSearch(srvContext, config, _query, _numHits, _sort, _geomWKT, _sm);
+            logSearch(srvContext, config, _loggerQuery, _numHits, _sort, _geomWKT, _sm);
         }
     }
 
@@ -1529,13 +1519,14 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 luceneQueryInput.setRequestedLanguageOnly(requestedLanguageOnly);
 
                 _query = new LuceneQueryBuilder(_luceneConfig, _tokenizedFieldSet, SearchManager.getAnalyzer(_language.analyzerLanguage, true), _language.presentationLanguage).build(luceneQueryInput);
+
                 if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
                     Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + _query);
 
                 try {
-                    // only for debugging -- might cause NPE is query was wrongly constructed
-                    //Query rw = _query.rewrite(_indexAndTaxonomy.indexReader);
-                    //if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _query);
+                    // Rewrite the drilldown query to a query that can be used by the search logger
+                    _loggerQuery = _query.rewrite(_sm.getIndexReader(_language.presentationLanguage, _versionToken).indexReader);
+                    //if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) Log.debug(Geonet.SEARCH_ENGINE,"Rewritten Lucene query: " + _loggerQuery);
                     //System.out.println("** rewritten:\n"+ rw);
                 } catch (Throwable x) {
                     Log.warning(Geonet.SEARCH_ENGINE, "Error rewriting Lucene query: " + _query);
@@ -1588,13 +1579,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         Collection<Geometry> geometry = getGeometry(srvContext, request);
         SpatialFilter spatialfilter = null;
         if (geometry != null) {
-            if (_sm.getLogSpatialObject()) {
-                StringBuilder wkt = new StringBuilder();
-                for (Geometry geom : geometry) {
-                    wkt.append("geom:").append(geom.toText()).append("\n");
-                }
-                _geomWKT = wkt.toString();
+            StringBuilder wkt = new StringBuilder();
+            for (Geometry geom : geometry) {
+                wkt.append("geom:").append(geom.toText()).append("\n");
             }
+            _geomWKT = wkt.toString();
             spatialfilter = _sm.getSpatial().filter(_query, Integer.MAX_VALUE, geometry, request);
         }
 

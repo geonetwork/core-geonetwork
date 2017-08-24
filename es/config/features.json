@@ -81,6 +81,15 @@
               "search_analyzer": "keyword"
             }
           }
+        },
+        {
+          "operationType": {
+            "match": "_op*",
+            "mapping": {
+              "type": "keyword",
+              "fielddata": true
+            }
+          }
         }
       ],
       "properties": {

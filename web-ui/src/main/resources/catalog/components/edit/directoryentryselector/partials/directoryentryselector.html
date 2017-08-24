@@ -1,5 +1,5 @@
 <span data-ng-search-form="">
-  <div class="input-group">
+  <div class="input-group width-100">
     <div class="input-group-btn">
       <span data-ng-show="templateAddAction"
             data-ng-transclude=""></span>
@@ -18,63 +18,75 @@
            placeholder="{{('searchA' + templateType) | translate}}"
            data-ng-show="searchAction"
            data-ng-model="searchObj.params.any"
-           data-ng-model-options="modelOptions"
+           data-ng-model-options="{debounce: 200}"
+           ng-focus="triggerSearch()"
            data-ng-change="triggerSearch()"/>
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
          data-ng-show="searchResults.records.length > 0">
       <span class="tt-suggestions">
-        <div class="tt-suggestion"
-             data-ng-repeat="r in searchResults.records"> {{r.title}}
-          <span class="pull-right">
-            <!-- Add action for simple subtemplates -->
-            <div class="btn btn-default"
-                 data-ng-hide="isContact"
-                 data-ng-click="addEntry(r)">
-              <i class="fa fa-plus"></i>
-              <!-- TODO: Add with XLink mode -->
-            </div>
+        <div class="tt-suggestion flex-row"
+          data-ng-repeat="r in searchResults.records">
 
-            <!-- Add action for contact with predefined contact role -->
-            <div class="btn btn-default"
-                 data-ng-show="isContact && !hasDynamicVariable"
-                 data-ng-click="addEntry(r)">
-              <i class="fa fa-plus"></i>
-            </div>
+          <!-- Add action for simple subtemplates -->
+          <gn-md-type-widget metadata="r"></gn-md-type-widget>
 
-            <!-- Add action for contact which allows to select contact role -->
-            <div class="btn-group"
-                 data-ng-show="isContact && hasDynamicVariable"
-                 title="{{'addContactAsText-help' | translate}}">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
+          <div class="flex-spacer" />
+
+          <div class="text flex-grow"> {{r.title}}</div>
+
+                    <div class="btn btn-default btn-sm pull-right"
+                         data-ng-if="insertAsXlink && !hasDynamicVariable"
+                         data-ng-click="addEntry(r, undefined, true)">
+            <i class="fa fa-link"></i>
+          </div>
+          <div class="btn btn-default btn-sm pull-right"
+               data-ng-if="insertAsText && !hasDynamicVariable"
+               data-ng-click="addEntry(r)">
+            <i class="fa fa-plus"></i>
+          </div>
+
+          <!--Add contact as Xlink with dynamic variable -->
+          <div ngeo-popover class="pull-right"
+                ngeo-popover-dismiss=".content"
+                data-ng-if="::gnConfig[gnConfig.key.isXLinkEnabled] && insertAsXlink  && hasDynamicVariable"
+                title="{{'addContactAsLink-help' | translate}}">
+              <button ngeo-popover-anchor type="button" class="btn btn-default btn-sm">
+              <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
+            </button>
+            <div ngeo-popover-content>
+              <ul>
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code)" title="{{role.description}}">
+                  <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
                     {{role.label}}
                   </a>
                 </li>
               </ul>
             </div>
-            <div data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
-                 title="{{'addContactAsLink-help' | translate}}"
-                 class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-link"></i>&nbsp;<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addEntry(r, role.code, true)"
-                     title="{{role.description}}">
+          </div>
+
+          <!-- Add contact as text block with dynamic variable -->
+          <div ngeo-popover class="pull-right"
+                ngeo-popover-dismiss=".content"
+                data-ng-if="isContact && hasDynamicVariable && insertAsText"
+                title="{{'addContactAsText-help' | translate}}">
+              <button ngeo-popover-anchor type="button"
+                      class="btn btn-default btn-sm">
+              <i class="fa fa-plus"></i>&nbsp;<span class="caret"></span>
+            </button>
+            <div ngeo-popover-content>
+              <ul>
+                <li data-ng-repeat="role in roles"
+                    data-ng-hide="role['@hideInEditMode']">
+                  <a href="" data-ng-click="addEntry(r, role.code)"
+                      title="{{role.description}}">
                     {{role.label}}
                   </a>
                 </li>
               </ul>
             </div>
-          </span>
-          <div class="clearfix"></div>
+          </div>
         </div>
       </span>
     </div>
@@ -88,7 +100,7 @@
       </button>
     </div>
 
-    <!-- The contact to insert once received -->
+      <!-- The contact to insert once received -->
     <div data-ng-if="snippet">
       <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
     </div>

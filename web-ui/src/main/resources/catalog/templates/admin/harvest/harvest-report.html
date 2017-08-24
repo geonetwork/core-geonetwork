@@ -1,37 +1,41 @@
-<div class="panel panel-default" data-ng-controller="GnHarvestReportController">
-  <div class="panel-heading">
-    <span data-translate="">reportHarvester</span>
-    <i data-ng-show="isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default" data-ng-controller="GnHarvestReportController">
+      <div class="panel-heading">
+        <span data-translate="">reportHarvester</span>
+        <i data-ng-show="isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
 
-    <div class="btn-toolbar" data-ng-hide="$parent.isLoadingHarvester"></div>
-  </div>
+        <div class="btn-toolbar" data-ng-hide="$parent.isLoadingHarvester"></div>
+      </div>
 
-  <div class="panel-body">
-    <button type="button" class="btn btn-small"
-            data-ng-click="csvReport($event)" data-translate=""
-    >csvExport
-    </button>
+      <div class="panel-body">
+        <button type="button" class="btn btn-small"
+                data-ng-click="csvReport($event)" data-translate=""
+        >csvExport
+        </button>
 
-    <table id="harvestReport" class="table table-striped">
-      <tr>
-        <th data-translate="">harvesterName</th>
-        <th data-translate="">serviceUrl</th>
-        <th data-translate="">harvesterType</th>
-        <th data-translate="">lastRun</th>
-        <th data-translate="">totalNonTemplateMetadata</th>
-      </tr>
-      <tr
-        data-ng-repeat="h in $parent.harvesters">
-        <td>{{h.site.name | translate}}</td>
-        <td class="gn-break">{{h.site.url || h.site.baseUrl || h.site.capabilitiesUrl ||
-          h.site.host}}
-        </td>
-        <td class="text-center">{{('harvester-' + h['@type']) | translate}}</td>
-        <td class="text-center">{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun |
-          date:'medium')}}
-        </td>
-        <td class="text-right">{{h.info.result.total}}</td>
-      </tr>
-    </table>
+        <table id="harvestReport" class="table table-striped">
+          <tr>
+            <th data-translate="">harvesterName</th>
+            <th data-translate="">serviceUrl</th>
+            <th data-translate="">harvesterType</th>
+            <th data-translate="">lastRun</th>
+            <th data-translate="">totalNonTemplateMetadata</th>
+          </tr>
+          <tr
+            data-ng-repeat="h in $parent.harvesters">
+            <td>{{h.site.name | translate}}</td>
+            <td class="gn-break">{{h.site.url || h.site.baseUrl || h.site.capabilitiesUrl ||
+              h.site.host}}
+            </td>
+            <td class="text-center">{{('harvester-' + h['@type']) | translate}}</td>
+            <td class="text-center">{{h.info.lastRun.length === 0 ? '' : (h.info.lastRun |
+              date:'medium')}}
+            </td>
+            <td class="text-right">{{h.info.result.total}}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

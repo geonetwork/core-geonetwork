@@ -26,6 +26,30 @@
 
   var module = angular.module('gn_owscontext_directive', []);
 
+  module.controller('gnsMapSearchController', [
+    '$scope', 'gnRelatedResources',
+    function($scope, gnRelatedResources) {
+      $scope.resultTemplate = '../../catalog/components/' +
+          'search/resultsview/partials/viewtemplates/grid4maps.html';
+
+      $scope.loadMap = function(map, md) {
+        gnRelatedResources.getAction('MAP')(map, md);
+      };
+
+      $scope.searchObj = {
+        permalink: false,
+        filters: {
+          type: 'interactiveMap'
+        },
+        hitsperpageValues: 2,
+        params: {
+          sortBy: 'title',
+          from: 1,
+          to: 2
+        }
+      };
+    }]);
+
   function readAsText(f, callback) {
     try {
       var reader = new FileReader();
@@ -59,8 +83,9 @@
     '$translate',
     '$rootScope',
     '$http',
+    '$q',
     function(gnViewerSettings, gnOwsContextService, gnGlobalSettings,
-        $translate, $rootScope, $http) {
+        $translate, $rootScope, $http, $q) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/owscontext/' +
@@ -71,57 +96,111 @@
         },
         link: function(scope, element, attrs) {
           scope.mapFileName = $translate.instant('mapFileName');
-          scope.save = function($event) {
-            scope.mapFileName = $translate.instant('mapFileName') +
+
+          function getMapFileName() {
+            return $translate.instant('mapFileName') +
                 '-z' + scope.map.getView().getZoom() +
                 '-c' + scope.map.getView().getCenter().join('-');
+          };
 
-            var xml = gnOwsContextService.writeContext(scope.map);
-            var str = new XMLSerializer().serializeToString(xml);
-            var base64 = base64EncArr(strToUTF8Arr(str));
+          function getMapAsImage($event) {
+            var defer = $q.defer();
+            scope.mapFileName = getMapFileName();
 
+            scope.map.once('postcompose', function(event) {
+              var canvas = event.context.canvas;
+              var data = canvas.toDataURL('image/png');
+              defer.resolve(data);
+            });
+            scope.map.renderSync();
+            return defer.promise;
+          };
+
+          function openContent($event, data) {
             var el = $($event.target);
             if (!el.is('a')) {
               el = el.parent();
             }
             if (el.is('a')) {
-              el.attr('href', 'data:text/xml;base64,' + base64);
+              el.attr('href', data);
 
             }
           };
 
+          scope.save = function($event) {
+            scope.mapFileName = getMapFileName();
+
+            var xml = gnOwsContextService.writeContext(scope.map);
+            var str = new XMLSerializer().serializeToString(xml);
+            var base64 = base64EncArr(strToUTF8Arr(str));
+
+            openContent($event, 'data:text/xml;base64,' + base64);
+          };
+
+          scope.saveMapAsImage = function($event) {
+            getMapAsImage($event).then(function(data) {
+              openContent($event, data);
+            });
+          };
+
+
           scope.isSaveMapInCatalogAllowed =
               gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed || true;
+
           scope.mapUuid = null;
-          scope.mapProps = {
-            map_title: '',
-            map_abstract: ''
+
+          var defaultMapProps = {
+            title: '',
+            recordAbstract: ''
           };
+
+          scope.mapProps = angular.extend({}, defaultMapProps);
+
           scope.saveInCatalog = function($event) {
-            scope.mapUuid = null;
-            var xml = gnOwsContextService.writeContext(scope.map);
-            scope.mapProps.map_string =
-                new XMLSerializer().serializeToString(xml);
-            scope.mapProps.map_filename = $translate.instant('mapFileName') +
-                '-z' + scope.map.getView().getZoom() +
-                '-c' + scope.map.getView().getCenter().join('-') + '.ows';
-            return $http.post('map.import?_content_type=json',
-                $.param(scope.mapProps), {
-                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                }).then(
-                function(response) {
-                  scope.mapUuid = response.data[0];
-                },
-                function(data) {
-                  console.warn(data);
-                }
-            );
+            var defer = $q.defer();
+
+            getMapAsImage($event).then(function(data) {
+              scope.mapUuid = null;
+
+              // Map as OWS context
+              var xml = gnOwsContextService.writeContext(scope.map);
+              scope.mapProps.xml =
+                  new XMLSerializer().serializeToString(xml);
+              scope.mapProps.filename = getMapFileName() + '.ows';
+
+              // Map as image
+              scope.mapProps.overviewFilename = getMapFileName() + '.png';
+              scope.mapProps.overview =
+                  data.replace('data:image/png;base64,', '');
+
+              return $http.post('../api/records/importfrommap',
+                  $.param(scope.mapProps), {
+                    headers: {'Content-Type':
+                      'application/x-www-form-urlencoded'}
+                  }).then(
+                  function(response) {
+                    var report = response.data.metadataInfos;
+                    scope.mapUuid = report[Object.keys(report)[0]][0].message;
+                    scope.mapProps = angular.extend({}, defaultMapProps);
+                    defer.resolve(response);
+                  },
+                  function(data) {
+                    console.warn(data);
+                    defer.reject(response);
+                  }
+              );
+            });
+
+            return defer.promise;
           };
+
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');
+
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,
-                scope.map);
+                scope.map,
+                gnViewerSettings.additionalMapLayers);
           };
 
           var fileInput = element.find('input[type="file"]')[0];
@@ -154,7 +233,8 @@
           } else if (gnViewerSettings.defaultContext) {
             gnOwsContextService.loadContextFromUrl(
                 gnViewerSettings.defaultContext,
-                scope.map);
+                scope.map,
+                gnViewerSettings.additionalMapLayers);
           }
 
           // store the current context in local storage to reload it

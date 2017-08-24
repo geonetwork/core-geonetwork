@@ -38,7 +38,9 @@
     '$scope', '$http', '$rootScope', '$translate', 'gnUtilityService',
     function($scope, $http, $rootScope, $translate, gnUtilityService) {
       var cswSettings = ['system/csw/contactId'];
-      var cswBooleanSettings = ['system/csw/enable',
+      var cswBooleanSettings = [
+        'system/csw/enable',
+        'system/csw/enabledWhenIndexing',
         'system/csw/metadataPublic',
         'system/csw/transactionUpdateCreateXPath'];
 
@@ -143,12 +145,12 @@
         $http({
           method: 'POST',
           url: 'admin.config.csw.customelementset.save',
-          data:  '_content_type=json&' + $(formId).serialize(),
+          data: '_content_type=json&' + $(formId).serialize(),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
-          .success(function(data) {
-            loadCSWElementSetName();
-          });
+            .success(function(data) {
+              loadCSWElementSetName();
+            });
       };
 
       /**
@@ -170,7 +172,7 @@
         $http({
           method: 'POST',
           url: service,
-          data:   gnUtilityService.serialize(formId),
+          data: gnUtilityService.serialize(formId),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
             .success(function(data) {

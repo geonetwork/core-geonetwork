@@ -57,6 +57,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
+              <escapeString>\</escapeString>
               <includeEmptyDirs>false</includeEmptyDirs>
               <outputDirectory>${project.build.directory}</outputDirectory>
               <resources>
@@ -90,6 +91,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.geonetwork-opensource</groupId>
+      <artifactId>es-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>messaging</artifactId>
       <version>${project.version}</version>
@@ -106,22 +113,9 @@
       <artifactId>spring-web</artifactId>
     </dependency>
 
-
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-geojson</artifactId>
-    </dependency>
-    <!--<dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-    </dependency>-->
-    <!--Require Lucene 5 <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>transport</artifactId>
-    </dependency>-->
-    <dependency>
-      <groupId>io.searchbox</groupId>
-      <artifactId>jest</artifactId>
     </dependency>
   </dependencies>
 </project>

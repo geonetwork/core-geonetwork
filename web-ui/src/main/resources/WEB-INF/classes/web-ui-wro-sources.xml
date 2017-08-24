@@ -53,8 +53,9 @@
     <jsSource webappPath="/catalog/lib/angular.ext/rating.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/tabs.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/typeahead.js"/>
-    <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.min.js"
-              minimize="false"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/date.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>
@@ -67,6 +68,7 @@
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
+    <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/jquery.ext/jquery-ui-slider.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
     <jsSource webappPath="/catalog/lib/bootstrap.ext/typeahead.js/handlebars-v2.0.0.js"/>
@@ -92,6 +94,8 @@
     <jsSource webappPath="/catalog/lib/angular/angular-sanitize.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-gettext.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular/angular-cookies.min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/angular-floatThead.js"/>
+    <jsSource webappPath="/catalog/lib/angular.ext/date.js"/>
     <jsSource webappPath="/catalog/lib/angular-translate.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular-md5.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/angular.ext/hotkeys/hotkeys.min.js" minimize="false"/>
@@ -105,6 +109,7 @@
     <jsSource webappPath="/catalog/lib/angular.ext/typeahead.js"/>
     <jsSource webappPath="/catalog/lib/angular.ext/colorpicker/angularjs-color-picker.min.js"
               minimize="false"/>
+    <jsSource webappPath="/catalog/lib/jquery.ext/jquery.floatThead-slim.min.js"/>
     <jsSource webappPath="/catalog/lib/tinycolor.js"/>
     <jsSource webappPath="/catalog/lib/style/bootstrap/dist/js/bootstrap.min.js" minimize="false"/>
     <jsSource webappPath="/catalog/lib/proj4js-compressed.js" minimize="false"/>

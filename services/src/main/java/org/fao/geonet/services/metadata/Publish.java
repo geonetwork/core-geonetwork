@@ -175,7 +175,7 @@ public class Publish {
 
                         dataManager.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
                                 new Document(metadata.getXmlData(false)), serviceContext.getLanguage());
-                        dataManager.indexMetadata(nextId, true);
+                        dataManager.indexMetadata(nextId, true, null);
                     }
 
                     boolean isInvalid =

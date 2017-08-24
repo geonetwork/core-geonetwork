@@ -22,7 +22,8 @@
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans profile="es"
+        xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cm="http://camel.apache.org/schema/spring"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -34,7 +35,7 @@
         http://camel.apache.org/schema/spring
         http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <context:property-placeholder location="WEB-INF/config.properties"
+  <context:property-placeholder location="${app.properties}"
                                 file-encoding="UTF-8"
                                 ignore-unresolvable="true" />
 
@@ -48,10 +49,7 @@
   </bean>
 
   <bean id="esClient"
-        class="org.fao.geonet.harvester.wfsfeatures.worker.EsClient">
-    <property name="serverUrl" value="${es.url}"/>
-    <property name="collection" value="${es.index.features}"/>
-  </bean>
+        class="org.fao.geonet.es.EsClient"/>
 
 
   <cm:camelContext id="harvest-wfs"

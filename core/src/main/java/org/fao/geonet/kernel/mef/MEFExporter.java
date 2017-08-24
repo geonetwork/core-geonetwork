@@ -65,7 +65,8 @@ class MEFExporter {
         Metadata record = recordAndMetadata.one();
         String xmlDocumentAsString = recordAndMetadata.two();
 
-        if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+        if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ||
+            record.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             throw new Exception("Cannot export sub template");
         }
 

@@ -3,12 +3,12 @@ var _jsonix_factory = function(_jsonix_xmldom, _jsonix_xmlhttprequest, _jsonix_f
 	// Complete Jsonix script is included below 
 var Jsonix={singleFile:true};
 Jsonix.Util={};
-Jsonix.Util.extend=function(g,h){g=g||{};
-if(h){for(var i in h){var j=h[i];
-if(j!==undefined){g[i]=j
-}}var f=typeof window!=="undefined"&&window!==null&&typeof window.Event=="function"&&h instanceof window.Event;
-if(!f&&h.hasOwnProperty&&h.hasOwnProperty("toString")){g.toString=h.toString
-}}return g
+Jsonix.Util.extend=function(f,g){f=f||{};
+if(g){for(var h in g){var e=g[h];
+if(e!==undefined){f[h]=e
+}}sourceIsEvt=typeof window!=="undefined"&&window!==null&&typeof window.Event==="function"&&g instanceof window.Event;
+if(!sourceIsEvt&&g.hasOwnProperty&&g.hasOwnProperty("toString")){f.toString=g.toString
+}}return f
 };
 Jsonix.Class=function(){var n=function(){this.initialize.apply(this,arguments)
 };
@@ -30,7 +30,10 @@ if(i===undefined){delete o.prototype.initialize
 return n
 };
 Jsonix.XML={XMLNS_NS:"http://www.w3.org/2000/xmlns/",XMLNS_P:"xmlns"};
-Jsonix.DOM={createDocument:function(){if(typeof _jsonix_xmldom!=="undefined"){return new (_jsonix_xmldom.DOMImplementation)().createDocument()
+Jsonix.DOM={isDomImplementationAvailable:function(){if(typeof _jsonix_xmldom!=="undefined"){return true
+}else{if(typeof document!=="undefined"&&Jsonix.Util.Type.exists(document.implementation)&&Jsonix.Util.Type.isFunction(document.implementation.createDocument)){return true
+}else{return false
+}}},createDocument:function(){if(typeof _jsonix_xmldom!=="undefined"){return new (_jsonix_xmldom.DOMImplementation)().createDocument()
 }else{if(typeof document!=="undefined"&&Jsonix.Util.Type.exists(document.implementation)&&Jsonix.Util.Type.isFunction(document.implementation.createDocument)){return document.implementation.createDocument("","",null)
 }else{if(typeof ActiveXObject!=="undefined"){return new ActiveXObject("MSXML2.DOMDocument")
 }else{throw new Error("Error created the DOM document.")
@@ -104,7 +107,6 @@ window.setTimeout(function(){w.send(t)
 },0)
 }else{w.onreadystatechange=function(){r.handleTransport(w,q,x)
 };
-console.log("Sending.");
 w.send(t)
 }}return w
 },handleTransport:function(f,d,e){if(f.readyState==4){if(!f.status||(f.status>=200&&f.status<300)){d(f)
@@ -120,6 +122,7 @@ Jsonix.Request.PROXY=null;
 Jsonix.Schema={};
 Jsonix.Model={};
 Jsonix.Util.Type={exists:function(b){return(typeof b!=="undefined"&&b!==null)
+},isUndefined:function(b){return typeof b==="undefined"
 },isString:function(b){return typeof b==="string"
 },isBoolean:function(b){return typeof b==="boolean"
 },isObject:function(b){return typeof b==="object"
@@ -130,64 +133,81 @@ Jsonix.Util.Type={exists:function(b){return(typeof b!=="undefined"&&b!==null)
 },isArray:function(b){return !!(b&&b.concat&&b.unshift&&!b.callee)
 },isDate:function(b){return !!(b&&b.getTimezoneOffset&&b.setUTCFullYear)
 },isRegExp:function(b){return !!(b&&b.test&&b.exec&&(b.ignoreCase||b.ignoreCase===false))
-},isEqual:function(r,t,w){var a=Jsonix.Util.Type.isFunction(w);
-var v=function(g,i,d){var k=slice.call(arguments);
-var j=k.length<=1;
-var f=j?0:k[0];
-var h=j?k[0]:k[1];
-var l=k[2]||1;
-var m=Math.max(Math.ceil((h-f)/l),0);
-var e=0;
-var c=new Array(m);
-while(e<m){c[e++]=f;
-f+=l
-}return c
+},isNode:function(b){return(typeof Node==="object"||typeof Node==="function")?(b instanceof Node):(b&&(typeof b==="object")&&(typeof b.nodeType==="number")&&(typeof b.nodeName==="string"))
+},isEqual:function(u,w,A){var a=Jsonix.Util.Type.isFunction(A);
+var y=function(g,e,m){var i=slice.call(arguments);
+var h=i.length<=1;
+var f=h?0:i[0];
+var d=h?i[0]:i[1];
+var j=i[2]||1;
+var k=Math.max(Math.ceil((d-f)/j),0);
+var c=0;
+var l=new Array(k);
+while(c<k){l[c++]=f;
+f+=j
+}return l
 };
-var u=Object.keys||function(e){if(Jsonix.Util.Type.isArray(e)){return v(0,e.length)
+var x=Object.keys||function(e){if(Jsonix.Util.Type.isArray(e)){return y(0,e.length)
 }var c=[];
 for(var d in e){if(e.hasOwnProperty(d)){c[c.length]=d
 }}return c
 };
-if(r===t){return true
-}if(Jsonix.Util.Type.isNaN(r)&&Jsonix.Util.Type.isNaN(t)){return true
-}var y=typeof r;
-var A=typeof t;
-if(y!=A){if(a){w("Types differ ["+y+"], ["+A+"].")
+if(u===w){return true
+}if(Jsonix.Util.Type.isNaN(u)&&Jsonix.Util.Type.isNaN(w)){return true
+}var C=typeof u;
+var E=typeof w;
+if(C!=E){if(a){A("Types differ ["+C+"], ["+E+"].")
 }return false
-}if(r==t){return true
-}if((!r&&t)||(r&&!t)){if(a){w("One is falsy, the other is truthy.")
+}if(u==w){return true
+}if((!u&&w)||(u&&!w)){if(a){A("One is falsy, the other is truthy.")
 }return false
-}if(Jsonix.Util.Type.isDate(r)&&Jsonix.Util.Type.isDate(t)){return r.getTime()===t.getTime()
-}if(Jsonix.Util.Type.isNaN(r)&&Jsonix.Util.Type.isNaN(t)){return false
-}if(Jsonix.Util.Type.isRegExp(r)&&Jsonix.Util.Type.isRegExp(t)){return r.source===t.source&&r.global===t.global&&r.ignoreCase===t.ignoreCase&&r.multiline===t.multiline
-}if(y!=="object"){return false
-}if(r.length&&(r.length!==t.length)){if(a){w("Lengths differ.");
-w("A.length="+r.length);
-w("B.length="+t.length)
+}if(Jsonix.Util.Type.isDate(u)&&Jsonix.Util.Type.isDate(w)){return u.getTime()===w.getTime()
+}if(Jsonix.Util.Type.isNaN(u)&&Jsonix.Util.Type.isNaN(w)){return false
+}if(Jsonix.Util.Type.isRegExp(u)&&Jsonix.Util.Type.isRegExp(w)){return u.source===w.source&&u.global===w.global&&u.ignoreCase===w.ignoreCase&&u.multiline===w.multiline
+}if(Jsonix.Util.Type.isNode(u)&&Jsonix.Util.Type.isNode(w)){var b=Jsonix.DOM.serialize(u);
+var z=Jsonix.DOM.serialize(w);
+if(b!==z){if(a){A("Nodes differ.");
+A("A="+b);
+A("B="+z)
 }return false
-}var b=u(r);
-var s=u(t);
-if(b.length!=s.length){if(a){w("Different number of properties ["+b.length+"], ["+s.length+"].")
-}for(var z=0;
-z<b.length;
-z++){if(a){w("A ["+b[z]+"]="+r[b[z]])
-}}for(var B=0;
-B<s.length;
-B++){if(a){w("B ["+s[B]+"]="+t[s[B]])
+}else{return true
+}}if(C!=="object"){return false
+}if(Jsonix.Util.Type.isArray(u)&&(u.length!==w.length)){if(a){A("Lengths differ.");
+A("A.length="+u.length);
+A("B.length="+w.length)
+}return false
+}var s=x(u);
+var v=x(w);
+if(s.length!==v.length){if(a){A("Different number of properties ["+s.length+"], ["+v.length+"].")
+}for(var D=0;
+D<s.length;
+D++){if(a){A("A ["+s[D]+"]="+u[s[D]])
+}}for(var F=0;
+F<v.length;
+F++){if(a){A("B ["+v[F]+"]="+w[v[F]])
 }}return false
-}for(var x=0;
-x<b.length;
-x++){var q=b[x];
-if(!(q in t)||!Jsonix.Util.Type.isEqual(r[q],t[q],w)){if(a){w("One of the properties differ.");
-w("Key: ["+q+"].");
-w("Left: ["+r[q]+"].");
-w("Right: ["+t[q]+"].")
+}for(var B=0;
+B<s.length;
+B++){var t=s[B];
+if(!(t in w)||!Jsonix.Util.Type.isEqual(u[t],w[t],A)){if(a){A("One of the properties differ.");
+A("Key: ["+t+"].");
+A("Left: ["+u[t]+"].");
+A("Right: ["+w[t]+"].")
 }return false
 }}return true
 },cloneObject:function(e,f){f=f||{};
 for(var d in e){if(e.hasOwnProperty(d)){f[d]=e[d]
 }}return f
-}};
+},defaultValue:function(){var i=arguments;
+if(i.length===0){return undefined
+}else{var g=i[i.length-1];
+var f=typeof g;
+for(var j=0;
+j<i.length-1;
+j++){var h=i[j];
+if(typeof h===f){return h
+}}return g
+}}};
 Jsonix.Util.NumberUtils={isInteger:function(b){return Jsonix.Util.Type.isNumber(b)&&((b%1)===0)
 }};
 Jsonix.Util.StringUtils={trim:(!!String.prototype.trim)?function(b){Jsonix.Util.Ensure.ensureString(b);
@@ -274,26 +294,31 @@ this.prefix=m;
 this.key=(q!==""?("{"+q+"}"):"")+o;
 this.string=(q!==""?("{"+q+"}"):"")+(m!==""?(m+":"):"")+o
 },toString:function(){return this.string
+},toCanonicalString:function(c){var d=c?c.getPrefix(this.namespaceURI,this.prefix):this.prefix;
+return this.prefix+(this.prefix===""?"":":")+this.localPart
 },clone:function(){return new Jsonix.XML.QName(this.namespaceURI,this.localPart,this.prefix)
 },equals:function(b){if(!b){return false
 }else{return(this.namespaceURI==b.namespaceURI)&&(this.localPart==b.localPart)
 }},CLASS_NAME:"Jsonix.XML.QName"});
-Jsonix.XML.QName.fromString=function(k){var m=k.indexOf("{");
-var o=k.lastIndexOf("}");
+Jsonix.XML.QName.fromString=function(n,r,m){var t=n.indexOf("{");
+var l=n.lastIndexOf("}");
+var s;
+var k;
+if((t===0)&&(l>0)&&(l<n.length)){s=n.substring(1,l);
+k=n.substring(l+1)
+}else{s=null;
+k=n
+}var q=k.indexOf(":");
+var o;
 var p;
-var n;
-if((m===0)&&(o>0)&&(o<k.length)){p=k.substring(1,o);
-n=k.substring(o+1)
-}else{p="";
-n=k
-}var i=n.indexOf(":");
-var l;
-var j;
-if(i>0&&i<n.length){l=n.substring(0,i);
-j=n.substring(i+1)
-}else{l="";
-j=n
-}return new Jsonix.XML.QName(p,j,l)
+if(q>0&&q<k.length){o=k.substring(0,q);
+p=k.substring(q+1)
+}else{o="";
+p=k
+}if(s===null){if(o===""&&Jsonix.Util.Type.isString(m)){s=m
+}else{if(r){s=r.getNamespaceURI(o)
+}}}if(!Jsonix.Util.Type.isString(s)){s=m||""
+}return new Jsonix.XML.QName(s,p,o)
 };
 Jsonix.XML.QName.fromObject=function(h){Jsonix.Util.Ensure.ensureObject(h);
 if(h instanceof Jsonix.XML.QName||(Jsonix.Util.Type.isString(h.CLASS_NAME)&&h.CLASS_NAME==="Jsonix.XML.QName")){return h
@@ -303,6 +328,9 @@ var e=h.namespaceURI||h.ns||"";
 var g=h.prefix||h.p||"";
 return new Jsonix.XML.QName(e,f,g)
 };
+Jsonix.XML.QName.fromObjectOrString=function(f,d,e){if(Jsonix.Util.Type.isString(f)){return Jsonix.XML.QName.fromString(f,d,e)
+}else{return Jsonix.XML.QName.fromObject(f)
+}};
 Jsonix.XML.QName.key=function(f,e){Jsonix.Util.Ensure.ensureString(e);
 if(f){var d=e.indexOf(":");
 if(d>0&&d<e.length){localName=e.substring(d+1)
@@ -310,45 +338,83 @@ if(d>0&&d<e.length){localName=e.substring(d+1)
 }return"{"+f+"}"+localName
 }else{return e
 }};
-Jsonix.XML.Calendar=Jsonix.Class({year:NaN,month:NaN,day:NaN,hour:NaN,minute:NaN,second:NaN,fractionalSecond:NaN,timezone:NaN,initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
-if(Jsonix.Util.Type.exists(b.year)){Jsonix.Util.Ensure.ensureInteger(b.year);
-if(b.year>=-9999&&b.year<=9999){this.year=b.year
-}else{throw new Error("Invalid year ["+b.year+"].")
-}}else{this.year=NaN
-}if(Jsonix.Util.Type.exists(b.month)){Jsonix.Util.Ensure.ensureInteger(b.month);
-if(b.month>=1&&b.month<=12){this.month=b.month
-}else{throw new Error("Invalid month ["+b.month+"].")
-}}else{this.month=NaN
-}if(Jsonix.Util.Type.exists(b.day)){Jsonix.Util.Ensure.ensureInteger(b.day);
-if(b.day>=1&&b.day<=31){this.day=b.day
-}else{throw new Error("Invalid day ["+b.day+"].")
-}}else{this.day=NaN
-}if(Jsonix.Util.Type.exists(b.hour)){Jsonix.Util.Ensure.ensureInteger(b.hour);
-if(b.hour>=0&&b.hour<=23){this.hour=b.hour
-}else{throw new Error("Invalid hour ["+b.hour+"].")
-}}else{this.hour=NaN
-}if(Jsonix.Util.Type.exists(b.minute)){Jsonix.Util.Ensure.ensureInteger(b.minute);
-if(b.minute>=0&&b.minute<=59){this.minute=b.minute
-}else{throw new Error("Invalid minute ["+b.minute+"].")
-}}else{this.minute=NaN
-}if(Jsonix.Util.Type.exists(b.second)){Jsonix.Util.Ensure.ensureInteger(b.second);
-if(b.second>=0&&b.second<=59){this.second=b.second
-}else{throw new Error("Invalid second ["+b.second+"].")
-}}else{this.second=NaN
-}if(Jsonix.Util.Type.exists(b.fractionalSecond)){Jsonix.Util.Ensure.ensureNumber(b.fractionalSecond);
-if(b.fractionalSecond>=0&&b.fractionalSecond<1){this.fractionalSecond=b.fractionalSecond
-}else{throw new Error("Invalid fractional second ["+b.fractionalSecond+"].")
-}}else{this.fractionalSecond=NaN
-}if(Jsonix.Util.Type.exists(b.timezone)){if(Jsonix.Util.Type.isNaN(b.timezone)){this.timezone=NaN
-}else{Jsonix.Util.Ensure.ensureInteger(b.timezone);
-if(b.timezone>=-1440&&b.timezone<1440){this.timezone=b.timezone
-}else{throw new Error("Invalid timezone ["+b.timezone+"].")
-}}}else{this.timezone=NaN
-}},CLASS_NAME:"Jsonix.XML.Calendar"});
+Jsonix.XML.Calendar=Jsonix.Class({year:NaN,month:NaN,day:NaN,hour:NaN,minute:NaN,second:NaN,fractionalSecond:NaN,timezone:NaN,date:null,initialize:function(f){Jsonix.Util.Ensure.ensureObject(f);
+if(Jsonix.Util.Type.exists(f.year)){Jsonix.Util.Ensure.ensureInteger(f.year);
+Jsonix.XML.Calendar.validateYear(f.year);
+this.year=f.year
+}else{this.year=NaN
+}if(Jsonix.Util.Type.exists(f.month)){Jsonix.Util.Ensure.ensureInteger(f.month);
+Jsonix.XML.Calendar.validateMonth(f.month);
+this.month=f.month
+}else{this.month=NaN
+}if(Jsonix.Util.Type.exists(f.day)){Jsonix.Util.Ensure.ensureInteger(f.day);
+if(Jsonix.Util.NumberUtils.isInteger(f.year)&&Jsonix.Util.NumberUtils.isInteger(f.month)){Jsonix.XML.Calendar.validateYearMonthDay(f.year,f.month,f.day)
+}else{if(Jsonix.Util.NumberUtils.isInteger(f.month)){Jsonix.XML.Calendar.validateMonthDay(f.month,f.day)
+}else{Jsonix.XML.Calendar.validateDay(f.day)
+}}this.day=f.day
+}else{this.day=NaN
+}if(Jsonix.Util.Type.exists(f.hour)){Jsonix.Util.Ensure.ensureInteger(f.hour);
+Jsonix.XML.Calendar.validateHour(f.hour);
+this.hour=f.hour
+}else{this.hour=NaN
+}if(Jsonix.Util.Type.exists(f.minute)){Jsonix.Util.Ensure.ensureInteger(f.minute);
+Jsonix.XML.Calendar.validateMinute(f.minute);
+this.minute=f.minute
+}else{this.minute=NaN
+}if(Jsonix.Util.Type.exists(f.second)){Jsonix.Util.Ensure.ensureInteger(f.second);
+Jsonix.XML.Calendar.validateSecond(f.second);
+this.second=f.second
+}else{this.second=NaN
+}if(Jsonix.Util.Type.exists(f.fractionalSecond)){Jsonix.Util.Ensure.ensureNumber(f.fractionalSecond);
+Jsonix.XML.Calendar.validateFractionalSecond(f.fractionalSecond);
+this.fractionalSecond=f.fractionalSecond
+}else{this.fractionalSecond=NaN
+}if(Jsonix.Util.Type.exists(f.timezone)){if(Jsonix.Util.Type.isNaN(f.timezone)){this.timezone=NaN
+}else{Jsonix.Util.Ensure.ensureInteger(f.timezone);
+Jsonix.XML.Calendar.validateTimezone(f.timezone);
+this.timezone=f.timezone
+}}else{this.timezone=NaN
+}var d=new Date(0);
+d.setUTCFullYear(this.year||1970);
+d.setUTCMonth(this.month-1||0);
+d.setUTCDate(this.day||1);
+d.setUTCHours(this.hour||0);
+d.setUTCMinutes(this.minute||0);
+d.setUTCSeconds(this.second||0);
+d.setUTCMilliseconds((this.fractionalSecond||0)*1000);
+var e=-60000*(this.timezone||0);
+this.date=new Date(d.getTime()+e)
+},CLASS_NAME:"Jsonix.XML.Calendar"});
+Jsonix.XML.Calendar.MIN_TIMEZONE=-14*60;
+Jsonix.XML.Calendar.MAX_TIMEZONE=14*60;
+Jsonix.XML.Calendar.DAYS_IN_MONTH=[31,29,31,30,31,30,31,31,30,31,30,31];
 Jsonix.XML.Calendar.fromObject=function(b){Jsonix.Util.Ensure.ensureObject(b);
 if(Jsonix.Util.Type.isString(b.CLASS_NAME)&&b.CLASS_NAME==="Jsonix.XML.Calendar"){return b
 }return new Jsonix.XML.Calendar(b)
 };
+Jsonix.XML.Calendar.validateYear=function(b){if(b===0){throw new Error("Invalid year ["+b+"]. Year must not be [0].")
+}};
+Jsonix.XML.Calendar.validateMonth=function(b){if(b<1||b>12){throw new Error("Invalid month ["+b+"]. Month must be in range [1, 12].")
+}};
+Jsonix.XML.Calendar.validateDay=function(b){if(b<1||b>31){throw new Error("Invalid day ["+b+"]. Day must be in range [1, 31].")
+}};
+Jsonix.XML.Calendar.validateMonthDay=function(f,d){Jsonix.XML.Calendar.validateMonth(f);
+var e=Jsonix.XML.Calendar.DAYS_IN_MONTH[f-1];
+if(d<1||d>Jsonix.XML.Calendar.DAYS_IN_MONTH[f-1]){throw new Error("Invalid day ["+d+"]. Day must be in range [1, "+e+"].")
+}};
+Jsonix.XML.Calendar.validateYearMonthDay=function(d,f,e){Jsonix.XML.Calendar.validateYear(d);
+Jsonix.XML.Calendar.validateMonthDay(f,e)
+};
+Jsonix.XML.Calendar.validateHour=function(b){if(b<0||b>23){throw new Error("Invalid hour ["+b+"]. Hour must be in range [0, 23].")
+}};
+Jsonix.XML.Calendar.validateMinute=function(b){if(b<0||b>59){throw new Error("Invalid minute ["+b+"]. Minute must be in range [0, 59].")
+}};
+Jsonix.XML.Calendar.validateSecond=function(b){if(b<0||b>59){throw new Error("Invalid second ["+b+"]. Second must be in range [0, 59].")
+}};
+Jsonix.XML.Calendar.validateFractionalSecond=function(b){if(b<0||b>59){throw new Error("Invalid fractional second ["+b+"]. Fractional second must be in range [0, 1).")
+}};
+Jsonix.XML.Calendar.validateTimezone=function(b){if(b<Jsonix.XML.Calendar.MIN_TIMEZONE||b>Jsonix.XML.Calendar.MAX_TIMEZONE){throw new Error("Invalid timezone ["+b+"]. Timezone must not be in range ["+Jsonix.XML.Calendar.MIN_TIMEZONE+", "+Jsonix.XML.Calendar.MAX_TIMEZONE+"].")
+}};
 Jsonix.XML.Input=Jsonix.Class({root:null,node:null,attributes:null,eventType:null,pns:null,initialize:function(c){Jsonix.Util.Ensure.ensureExists(c);
 this.root=c;
 var d={"":""};
@@ -432,6 +498,13 @@ if(Jsonix.Util.Type.isString(b.nodeName)){return Jsonix.XML.QName.key(b.namespac
 while(b===7||b===4||b===12||b===6||b===3||b===5){b=this.next()
 }if(b!==1&&b!==2){throw new Error("Expected start or end tag.")
 }return b
+},skipElement:function(){if(this.eventType!==Jsonix.XML.Input.START_ELEMENT){throw new Error("Parser must be on START_ELEMENT to skip element.")
+}var d=1;
+var c;
+do{c=this.nextTag();
+d+=(c===Jsonix.XML.Input.START_ELEMENT)?1:-1
+}while(d>0);
+return c
 },getElementText:function(){if(this.eventType!=1){throw new Error("Parser must be on START_ELEMENT to read next text.")
 }var c=this.next();
 var d="";
@@ -441,45 +514,51 @@ while(c!==2){if(c===4||c===12||c===6||c===9){d=d+this.getText()
 }else{throw new Error("Unexpected event type ["+c+"].")
 }}}}c=this.next()
 }return d
-},getAttributeCount:function(){var b;
+},retrieveElement:function(){var b;
+if(this.eventType===1){b=this.node
+}else{if(this.eventType===10){b=this.node.parentNode
+}else{throw new Error("Element can only be retrieved for START_ELEMENT or ATTRIBUTE nodes.")
+}}return b
+},retrieveAttributes:function(){var b;
 if(this.attributes){b=this.attributes
 }else{if(this.eventType===1){b=this.node.attributes;
 this.attributes=b
 }else{if(this.eventType===10){b=this.node.parentNode.attributes;
 this.attributes=b
-}else{throw new Error("Number of attributes can only be retrieved for START_ELEMENT or ATTRIBUTE.")
-}}}return b.length
-},getAttributeName:function(d){var e;
-if(this.attributes){e=this.attributes
-}else{if(this.eventType===1){e=this.node.attributes;
-this.attributes=e
-}else{if(this.eventType===10){e=this.node.parentNode.attributes;
-this.attributes=e
-}else{throw new Error("Attribute name can only be retrieved for START_ELEMENT or ATTRIBUTE.")
-}}}if(d<0||d>=e.length){throw new Error("Invalid attribute index ["+d+"].")
+}else{throw new Error("Attributes can only be retrieved for START_ELEMENT or ATTRIBUTE nodes.")
+}}}return b
+},getAttributeCount:function(){var b=this.retrieveAttributes();
+return b.length
+},getAttributeName:function(d){var e=this.retrieveAttributes();
+if(d<0||d>=e.length){throw new Error("Invalid attribute index ["+d+"].")
 }var f=e[d];
 if(Jsonix.Util.Type.isString(f.namespaceURI)){return new Jsonix.XML.QName(f.namespaceURI,f.nodeName)
 }else{return new Jsonix.XML.QName(f.nodeName)
-}},getAttributeNameKey:function(d){var e;
-if(this.attributes){e=this.attributes
-}else{if(this.eventType===1){e=this.node.attributes;
-this.attributes=e
-}else{if(this.eventType===10){e=this.node.parentNode.attributes;
-this.attributes=e
-}else{throw new Error("Attribute name key can only be retrieved for START_ELEMENT or ATTRIBUTE.")
-}}}if(d<0||d>=e.length){throw new Error("Invalid attribute index ["+d+"].")
+}},getAttributeNameKey:function(d){var e=this.retrieveAttributes();
+if(d<0||d>=e.length){throw new Error("Invalid attribute index ["+d+"].")
 }var f=e[d];
 return Jsonix.XML.QName.key(f.namespaceURI,f.nodeName)
-},getAttributeValue:function(d){var e;
-if(this.attributes){e=this.attributes
-}else{if(this.eventType===1){e=this.node.attributes;
-this.attributes=e
-}else{if(this.eventType===10){e=this.node.parentNode.attributes;
-this.attributes=e
-}else{throw new Error("Attribute value can only be retrieved for START_ELEMENT or ATTRIBUTE.")
-}}}if(d<0||d>=e.length){throw new Error("Invalid attribute index ["+d+"].")
+},getAttributeValue:function(d){var e=this.retrieveAttributes();
+if(d<0||d>=e.length){throw new Error("Invalid attribute index ["+d+"].")
 }var f=e[d];
 return f.value
+},getAttributeValueNS:null,getAttributeValueNSViaElement:function(d,e){var f=this.retrieveElement();
+return f.getAttributeNS(d,e)
+},getAttributeValueNSViaAttribute:function(d,e){var f=this.getAttributeNodeNS(d,e);
+if(Jsonix.Util.Type.exists(f)){return f.nodeValue
+}else{return null
+}},getAttributeNodeNS:null,getAttributeNodeNSViaElement:function(d,e){var f=this.retrieveElement();
+return f.getAttributeNodeNS(d,e)
+},getAttributeNodeNSViaAttributes:function(o,p){var l=null;
+var i=this.retrieveAttributes();
+var m,k;
+for(var n=0,j=i.length;
+n<j;
+++n){m=i[n];
+if(m.namespaceURI===o){k=(m.prefix)?(m.prefix+":"+p):p;
+if(k===m.nodeName){l=m;
+break
+}}}return l
 },getElement:function(){if(this.eventType===1||this.eventType===2){this.eventType=2;
 return this.node
 }else{throw new Error("Parser must be on START_ELEMENT or END_ELEMENT to return current element.")
@@ -514,6 +593,8 @@ var f=this.pns[e];
 f=Jsonix.Util.Type.isObject(f)?f:this.pns[f];
 return f[d]
 },CLASS_NAME:"Jsonix.XML.Input"});
+Jsonix.XML.Input.prototype.getAttributeValueNS=(Jsonix.DOM.isDomImplementationAvailable())?Jsonix.XML.Input.prototype.getAttributeValueNSViaElement:Jsonix.XML.Input.prototype.getAttributeValueNSViaAttribute;
+Jsonix.XML.Input.prototype.getAttributeNodeNS=(Jsonix.DOM.isDomImplementationAvailable())?Jsonix.XML.Input.prototype.getAttributeNodeNSViaElement:Jsonix.XML.Input.prototype.getAttributeNodeNSViaAttributes;
 Jsonix.XML.Input.START_ELEMENT=1;
 Jsonix.XML.Input.END_ELEMENT=2;
 Jsonix.XML.Input.PROCESSING_INSTRUCTION=3;
@@ -529,7 +610,7 @@ Jsonix.XML.Input.CDATA=12;
 Jsonix.XML.Input.NAMESPACE=13;
 Jsonix.XML.Input.NOTATION_DECLARATION=14;
 Jsonix.XML.Input.ENTITY_DECLARATION=15;
-Jsonix.XML.Output=Jsonix.Class({document:null,node:null,nodes:null,nsp:null,pns:null,namespacePrefixIndex:0,xmldom:null,initialize:function(e){if(typeof ActiveXObject!=="undefined"){this.xmldom=new ActiveXObject("Microsoft.XMLDOM")
+Jsonix.XML.Output=Jsonix.Class({document:null,documentElement:null,node:null,nodes:null,nsp:null,pns:null,namespacePrefixIndex:0,xmldom:null,initialize:function(e){if(typeof ActiveXObject!=="undefined"){this.xmldom=new ActiveXObject("Microsoft.XMLDOM")
 }else{this.xmldom=null
 }this.nodes=[];
 var f={"":""};
@@ -559,12 +640,20 @@ if(Jsonix.Util.Type.isFunction(this.document.createElementNS)){o=this.document.c
 }}this.peek().appendChild(o);
 this.push(o);
 this.declareNamespace(i,m);
-return o
+if(this.documentElement===null){this.documentElement=o;
+this.declareNamespaces()
+}return o
 },writeEndElement:function(){return this.pop()
 },writeCharacters:function(c){var d;
 if(Jsonix.Util.Type.isFunction(this.document.createTextNode)){d=this.document.createTextNode(c)
 }else{if(this.xmldom){d=this.xmldom.createTextNode(c)
 }else{throw new Error("Could not create a text node.")
+}}this.peek().appendChild(d);
+return d
+},writeCdata:function(c){var d;
+if(Jsonix.Util.Type.isFunction(this.document.createCDATASection)){d=this.document.createCDATASection(c)
+}else{if(this.xmldom){d=this.xmldom.createCDATASection(c)
+}else{throw new Error("Could not create a CDATA section node.")
 }}this.peek().appendChild(d);
 return d
 },writeAttribute:function(t,k){Jsonix.Util.Ensure.ensureString(k);
@@ -607,13 +696,19 @@ this.nsp.push(l);
 this.pns.push(i)
 },popNS:function(){this.nsp.pop();
 this.pns.pop()
-},declareNamespace:function(j,i){var f=this.pns.length-1;
+},declareNamespaces:function(){var f=this.nsp.length-1;
+var h=this.nsp[f];
+h=Jsonix.Util.Type.isNumber(h)?this.nsp[h]:h;
+var e,g;
+for(e in h){if(h.hasOwnProperty(e)){g=h[e];
+this.declareNamespace(e,g)
+}}},declareNamespace:function(j,i){var f=this.pns.length-1;
 var h=this.pns[f];
 var g;
 if(Jsonix.Util.Type.isNumber(h)){g=true;
 h=this.pns[h]
 }else{g=false
-}if(h[i]!==j){if(i===""){this.writeAttribute({ns:Jsonix.XML.XMLNS_NS,lp:Jsonix.XML.XMLNS_P},j)
+}if(h[i]!==j){if(i===""){this.writeAttribute({lp:Jsonix.XML.XMLNS_P},j)
 }else{this.writeAttribute({ns:Jsonix.XML.XMLNS_NS,lp:i,p:Jsonix.XML.XMLNS_P},j)
 }if(g){h=Jsonix.Util.Type.cloneObject(h,{});
 this.pns[f]=h
@@ -634,44 +729,178 @@ if(h){k=Jsonix.Util.Type.cloneObject(k,{});
 this.nsp[g]=k
 }k[j]=i
 }}return i
+},getNamespaceURI:function(d){var e=this.pns.length-1;
+var f=this.pns[e];
+f=Jsonix.Util.Type.isObject(f)?f:this.pns[f];
+return f[d]
 },CLASS_NAME:"Jsonix.XML.Output"});
-Jsonix.Model.TypeInfo=Jsonix.Class({name:null,initialize:function(){},CLASS_NAME:"Jsonix.Model.TypeInfo"});
-Jsonix.Model.Adapter=Jsonix.Class({initialize:function(){},unmarshal:function(g,e,f,h){return g.unmarshal(e,f,h)
-},marshal:function(h,i,f,g,j){h.marshal(i,f,g,j)
-},CLASS_NAME:"Jsonix.Model.Adapter"});
-Jsonix.Model.Adapter.INSTANCE=new Jsonix.Model.Adapter();
-Jsonix.Model.Adapter.getAdapter=function(b){Jsonix.Util.Ensure.ensureObject(b);
-return Jsonix.Util.Type.exists(b.adapter)?b.adapter:Jsonix.Model.Adapter.INSTANCE
+Jsonix.Mapping={};
+Jsonix.Mapping.Style=Jsonix.Class({marshaller:null,unmarshaller:null,module:null,elementInfo:null,classInfo:null,enumLeafInfo:null,anyAttributePropertyInfo:null,anyElementPropertyInfo:null,attributePropertyInfo:null,elementMapPropertyInfo:null,elementPropertyInfo:null,elementsPropertyInfo:null,elementRefPropertyInfo:null,elementRefsPropertyInfo:null,valuePropertyInfo:null,initialize:function(){},CLASS_NAME:"Jsonix.Mapping.Style"});
+Jsonix.Mapping.Style.STYLES={};
+Jsonix.Mapping.Styled=Jsonix.Class({mappingStyle:null,initialize:function(d){if(Jsonix.Util.Type.exists(d)){Jsonix.Util.Ensure.ensureObject(d);
+if(Jsonix.Util.Type.isString(d.mappingStyle)){var c=Jsonix.Mapping.Style.STYLES[d.mappingStyle];
+if(!c){throw new Error("Mapping style ["+d.mappingStyle+"] is not known.")
+}this.mappingStyle=c
+}else{if(Jsonix.Util.Type.isObject(d.mappingStyle)){this.mappingStyle=d.mappingStyle
+}}}if(!this.mappingStyle){this.mappingStyle=Jsonix.Mapping.Style.STYLES.standard
+}},CLASS_NAME:"Jsonix.Mapping.Styled"});
+Jsonix.Binding={};
+Jsonix.Binding.Marshalls={};
+Jsonix.Binding.Marshalls.Element=Jsonix.Class({marshalElement:function(o,u,t,l){var q=this.convertToTypedNamedValue(o,u,t,l);
+var p=q.typeInfo;
+var v=undefined;
+if(u.supportXsiType&&Jsonix.Util.Type.exists(q.value)){var r=u.getTypeInfoByValue(q.value);
+if(r&&r.typeName){v=r
+}}var m=v||p;
+if(m){t.writeStartElement(q.name);
+if(v&&p!==v){var n=v.typeName;
+var s=Jsonix.Schema.XSD.QName.INSTANCE.print(n,u,t,l);
+t.writeAttribute(Jsonix.Schema.XSI.TYPE_QNAME,s)
+}if(Jsonix.Util.Type.exists(q.value)){m.marshal(q.value,u,t,l)
+}t.writeEndElement()
+}else{throw new Error("Element ["+q.name.key+"] is not known in this context, could not determine its type.")
+}},getTypeInfoByElementName:function(f,e,g){var h=e.getElementInfo(f,g);
+if(Jsonix.Util.Type.exists(h)){return h.typeInfo
+}else{return undefined
+}}});
+Jsonix.Binding.Marshalls.Element.AsElementRef=Jsonix.Class({convertToTypedNamedValue:function(i,f,g,j){Jsonix.Util.Ensure.ensureObject(i);
+var h=this.convertToNamedValue(i,f,g,j);
+return{name:h.name,value:h.value,typeInfo:this.getTypeInfoByElementName(h.name,f,j)}
+},convertToNamedValue:function(j,m,h,l){var n;
+var k;
+if(Jsonix.Util.Type.exists(j.name)&&!Jsonix.Util.Type.isUndefined(j.value)){n=Jsonix.XML.QName.fromObjectOrString(j.name,m);
+k=Jsonix.Util.Type.exists(j.value)?j.value:null;
+return{name:n,value:k}
+}else{for(var i in j){if(j.hasOwnProperty(i)){n=Jsonix.XML.QName.fromObjectOrString(i,m);
+k=j[i];
+return{name:n,value:k}
+}}}throw new Error("Invalid element value ["+j+"]. Element values must either have {name:'myElementName', value: elementValue} or {myElementName:elementValue} structure.")
+}});
+Jsonix.Binding.Unmarshalls={};
+Jsonix.Binding.Unmarshalls.WrapperElement=Jsonix.Class({mixed:false,unmarshalWrapperElement:function(f,g,j,h){var i=g.next();
+while(i!==Jsonix.XML.Input.END_ELEMENT){if(i===Jsonix.XML.Input.START_ELEMENT){this.unmarshalElement(f,g,j,h)
+}else{if(this.mixed&&(i===Jsonix.XML.Input.CHARACTERS||i===Jsonix.XML.Input.CDATA||i===Jsonix.XML.Input.ENTITY_REFERENCE)){h(g.getText())
+}else{if(i===Jsonix.XML.Input.SPACE||i===Jsonix.XML.Input.COMMENT||i===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+i+"].")
+}}}i=g.next()
+}}});
+Jsonix.Binding.Unmarshalls.Element=Jsonix.Class({allowTypedObject:true,allowDom:false,unmarshalElement:function(q,o,j,l){if(o.eventType!=1){throw new Error("Parser must be on START_ELEMENT to read next element.")
+}var k=this.getTypeInfoByInputElement(q,o,j);
+var r=o.getName();
+var p;
+if(this.allowTypedObject){if(Jsonix.Util.Type.exists(k)){var n=k.unmarshal(q,o,j);
+var m={name:r,value:n,typeInfo:k};
+p=this.convertFromTypedNamedValue(m,q,o,j)
+}else{if(this.allowDom){p=o.getElement()
+}else{throw new Error("Element ["+r.toString()+"] could not be unmarshalled as is not known in this context and the property does not allow DOM content.")
+}}}else{if(this.allowDom){p=o.getElement()
+}else{throw new Error("Element ["+r.toString()+"] could not be unmarshalled as the property neither allows typed objects nor DOM as content. This is a sign of invalid mappings, do not use [allowTypedObject : false] and [allowDom : false] at the same time.")
+}}l(p)
+},getTypeInfoByInputElement:function(n,p,m){var i=null;
+if(n.supportXsiType){var j=p.getAttributeValueNS(Jsonix.Schema.XSI.NAMESPACE_URI,Jsonix.Schema.XSI.TYPE);
+if(Jsonix.Util.StringUtils.isNotBlank(j)){var k=Jsonix.Schema.XSD.QName.INSTANCE.parse(j,n,p,m);
+i=n.getTypeInfoByTypeNameKey(k.key)
+}}var o=p.getName();
+var l=i?i:this.getTypeInfoByElementName(o,n,m);
+return l
+},getTypeInfoByElementName:function(f,e,g){var h=e.getElementInfo(f,g);
+if(Jsonix.Util.Type.exists(h)){return h.typeInfo
+}else{return undefined
+}}});
+Jsonix.Binding.Unmarshalls.Element.AsElementRef=Jsonix.Class({convertFromTypedNamedValue:function(g,e,f,h){return{name:g.name,value:g.value}
+}});
+Jsonix.Binding.Unmarshalls.Element.AsSimplifiedElementRef=Jsonix.Class({convertFromTypedNamedValue:function(i,l,g,k){var h=i.name.toCanonicalString(l);
+var j={};
+j[h]=i.value;
+return j
+}});
+Jsonix.Binding.Marshaller=Jsonix.Class(Jsonix.Binding.Marshalls.Element,Jsonix.Binding.Marshalls.Element.AsElementRef,{context:null,initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
+this.context=b
+},marshalString:function(e){var d=this.marshalDocument(e);
+var f=Jsonix.DOM.serialize(d);
+return f
+},marshalDocument:function(d){var e=new Jsonix.XML.Output({namespacePrefixes:this.context.namespacePrefixes});
+var f=e.writeStartDocument();
+this.marshalElement(d,this.context,e,undefined);
+e.writeEndDocument();
+return f
+},CLASS_NAME:"Jsonix.Binding.Marshaller"});
+Jsonix.Binding.Marshaller.Simplified=Jsonix.Class(Jsonix.Binding.Marshaller,{CLASS_NAME:"Jsonix.Binding.Marshaller.Simplified"});
+Jsonix.Binding.Unmarshaller=Jsonix.Class(Jsonix.Binding.Unmarshalls.Element,Jsonix.Binding.Unmarshalls.Element.AsElementRef,{context:null,allowTypedObject:true,allowDom:false,initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
+this.context=b
+},unmarshalString:function(c){Jsonix.Util.Ensure.ensureString(c);
+var d=Jsonix.DOM.parse(c);
+return this.unmarshalDocument(d)
+},unmarshalURL:function(d,f,e){Jsonix.Util.Ensure.ensureString(d);
+Jsonix.Util.Ensure.ensureFunction(f);
+if(Jsonix.Util.Type.exists(e)){Jsonix.Util.Ensure.ensureObject(e)
+}that=this;
+Jsonix.DOM.load(d,function(a){f(that.unmarshalDocument(a))
+},e)
+},unmarshalFile:function(g,h,e){if(typeof _jsonix_fs==="undefined"){throw new Error("File unmarshalling is only available in environments which support file systems.")
+}Jsonix.Util.Ensure.ensureString(g);
+Jsonix.Util.Ensure.ensureFunction(h);
+if(Jsonix.Util.Type.exists(e)){Jsonix.Util.Ensure.ensureObject(e)
+}that=this;
+var f=_jsonix_fs;
+f.readFile(g,e,function(d,c){if(d){throw d
+}else{var a=c.toString();
+var b=Jsonix.DOM.parse(a);
+h(that.unmarshalDocument(b))
+}})
+},unmarshalDocument:function(i,j){var f=new Jsonix.XML.Input(i);
+var g=null;
+var h=function(a){g=a
 };
-Jsonix.Model.ClassInfo=Jsonix.Class(Jsonix.Model.TypeInfo,{name:null,baseTypeInfo:null,instanceFactory:null,properties:null,structure:null,defaultElementNamespaceURI:"",defaultAttributeNamespaceURI:"",built:false,initialize:function(i){Jsonix.Model.TypeInfo.prototype.initialize.apply(this,[]);
-Jsonix.Util.Ensure.ensureObject(i);
-var k=i.name||i.n||undefined;
-Jsonix.Util.Ensure.ensureString(k);
-this.name=k;
-var o=i.defaultElementNamespaceURI||i.dens||"";
-this.defaultElementNamespaceURI=o;
-var l=i.defaultAttributeNamespaceURI||i.dans||"";
-this.defaultAttributeNamespaceURI=l;
-var m=i.baseTypeInfo||i.bti||null;
-this.baseTypeInfo=m;
-var p=i.instanceFactory||i.inF||undefined;
-if(Jsonix.Util.Type.exists(p)){Jsonix.Util.Ensure.ensureFunction(p);
-this.instanceFactory=p
-}this.properties=[];
-var n=i.propertyInfos||i.ps||[];
-Jsonix.Util.Ensure.ensureArray(n);
-for(var j=0;
-j<n.length;
-j++){this.p(n[j])
-}},destroy:function(){},build:function(i,j){if(!this.built){this.baseTypeInfo=i.resolveTypeInfo(this.baseTypeInfo,j);
-if(Jsonix.Util.Type.exists(this.baseTypeInfo)){this.baseTypeInfo.build(i,j)
-}for(var f=0;
-f<this.properties.length;
-f++){var h=this.properties[f];
-h.build(i,j)
-}var g={elements:null,attributes:{},anyAttribute:null,value:null,any:null};
-this.buildStructure(i,g);
-this.structure=g
+f.nextTag();
+this.unmarshalElement(this.context,f,j,h);
+return g
+},CLASS_NAME:"Jsonix.Binding.Unmarshaller"});
+Jsonix.Binding.Unmarshaller.Simplified=Jsonix.Class(Jsonix.Binding.Unmarshaller,Jsonix.Binding.Unmarshalls.Element.AsSimplifiedElementRef,{CLASS_NAME:"Jsonix.Binding.Unmarshaller.Simplified"});
+Jsonix.Model.TypeInfo=Jsonix.Class({module:null,name:null,baseTypeInfo:null,initialize:function(){},isBasedOn:function(c){var d=this;
+while(d){if(c===d){return true
+}d=d.baseTypeInfo
+}return false
+},CLASS_NAME:"Jsonix.Model.TypeInfo"});
+Jsonix.Model.ClassInfo=Jsonix.Class(Jsonix.Model.TypeInfo,Jsonix.Mapping.Styled,{name:null,localName:null,typeName:null,instanceFactory:null,properties:null,propertiesMap:null,structure:null,targetNamespace:"",defaultElementNamespaceURI:"",defaultAttributeNamespaceURI:"",built:false,initialize:function(w,m){Jsonix.Model.TypeInfo.prototype.initialize.apply(this,[]);
+Jsonix.Mapping.Styled.prototype.initialize.apply(this,[m]);
+Jsonix.Util.Ensure.ensureObject(w);
+var v=w.name||w.n||undefined;
+Jsonix.Util.Ensure.ensureString(v);
+this.name=v;
+var q=w.localName||w.ln||null;
+this.localName=q;
+var r=w.defaultElementNamespaceURI||w.dens||w.targetNamespace||w.tns||"";
+this.defaultElementNamespaceURI=r;
+var n=w.targetNamespace||w.tns||w.defaultElementNamespaceURI||w.dens||this.defaultElementNamespaceURI;
+this.targetNamespace=n;
+var p=w.defaultAttributeNamespaceURI||w.dans||"";
+this.defaultAttributeNamespaceURI=p;
+var u=w.baseTypeInfo||w.bti||null;
+this.baseTypeInfo=u;
+var t=w.instanceFactory||w.inF||undefined;
+if(Jsonix.Util.Type.exists(t)){Jsonix.Util.Ensure.ensureFunction(t);
+this.instanceFactory=t
+}var o=w.typeName||w.tn||undefined;
+if(Jsonix.Util.Type.exists(o)){if(Jsonix.Util.Type.isString(o)){this.typeName=new Jsonix.XML.QName(this.targetNamespace,o)
+}else{this.typeName=Jsonix.XML.QName.fromObject(o)
+}}else{if(Jsonix.Util.Type.exists(q)){this.typeName=new Jsonix.XML.QName(n,q)
+}}this.properties=[];
+this.propertiesMap={};
+var x=w.propertyInfos||w.ps||[];
+Jsonix.Util.Ensure.ensureArray(x);
+for(var s=0;
+s<x.length;
+s++){this.p(x[s])
+}},getPropertyInfoByName:function(b){return this.propertiesMap[b]
+},destroy:function(){},build:function(h){if(!this.built){this.baseTypeInfo=h.resolveTypeInfo(this.baseTypeInfo,this.module);
+if(Jsonix.Util.Type.exists(this.baseTypeInfo)){this.baseTypeInfo.build(h)
+}for(var e=0;
+e<this.properties.length;
+e++){var g=this.properties[e];
+g.build(h,this.module)
+}var f={elements:null,attributes:{},anyAttribute:null,value:null,any:null};
+this.buildStructure(h,f);
+this.structure=f
 }},buildStructure:function(h,f){if(Jsonix.Util.Type.exists(this.baseTypeInfo)){this.baseTypeInfo.buildStructure(h,f)
 }for(var e=0;
 e<this.properties.length;
@@ -697,10 +926,10 @@ if(Jsonix.Util.Type.exists(this.structure.elements[q])){var r=this.structure.ele
 this.unmarshalProperty(B,w,r,p)
 }else{if(Jsonix.Util.Type.exists(this.structure.any)){var s=this.structure.any;
 this.unmarshalProperty(B,w,s,p)
-}else{throw new Error("Unexpected element ["+q+"].")
-}}}else{if((v===Jsonix.XML.Input.CHARACTERS||v===Jsonix.XML.Input.CDATA||v===Jsonix.XML.Input.ENTITY_REFERENCE)&&Jsonix.Util.Type.exists(this.structure.mixed)){var x=this.structure.mixed;
+}else{v=w.skipElement()
+}}}else{if((v===Jsonix.XML.Input.CHARACTERS||v===Jsonix.XML.Input.CDATA||v===Jsonix.XML.Input.ENTITY_REFERENCE)){if(Jsonix.Util.Type.exists(this.structure.mixed)){var x=this.structure.mixed;
 this.unmarshalProperty(B,w,x,p)
-}else{if(v===Jsonix.XML.Input.SPACE||v===Jsonix.XML.Input.COMMENT||v===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+v+"].")
+}}else{if(v===Jsonix.XML.Input.SPACE||v===Jsonix.XML.Input.COMMENT||v===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+v+"].")
 }}}v=w.next()
 }}else{if(Jsonix.Util.Type.exists(this.structure.value)){var t=this.structure.value;
 this.unmarshalProperty(B,w,t,p)
@@ -711,45 +940,53 @@ this.unmarshalProperty(B,w,t,p)
 h.setProperty(g,f)
 },unmarshalPropertyValue:function(k,l,i,h,j){var g=i.unmarshalValue(j,k,l,this);
 i.setProperty(h,g)
-},marshal:function(i,k,g){if(Jsonix.Util.Type.exists(this.baseTypeInfo)){this.baseTypeInfo.marshal(i,k,g)
-}for(var l=0;
-l<this.properties.length;
-l++){var j=this.properties[l];
-var h=i[j.name];
-if(Jsonix.Util.Type.exists(h)){j.marshal(h,k,g,this)
-}}},isInstance:function(f,e,d){if(this.instanceFactory){return f instanceof this.instanceFactory
+},marshal:function(l,q,p,k){if(this.isMarshallable(l,q,k)){if(Jsonix.Util.Type.exists(this.baseTypeInfo)){this.baseTypeInfo.marshal(l,q,p)
+}for(var n=0;
+n<this.properties.length;
+n++){var m=this.properties[n];
+var o=l[m.name];
+if(Jsonix.Util.Type.exists(o)){m.marshal(o,q,p,this)
+}}}else{if(this.structure.value){var j=this.structure.value;
+j.marshal(l,q,p,this)
+}else{if(this.properties.length===1){var r=this.properties[0];
+r.marshal(l,q,p,this)
+}else{throw new Error("The passed value ["+l+"] is not an object and there is no single suitable property to marshal it.")
+}}}},isMarshallable:function(f,e,d){return this.isInstance(f,e,d)||(Jsonix.Util.Type.isObject(f)&&!Jsonix.Util.Type.isArray(f))
+},isInstance:function(f,e,d){if(this.instanceFactory){return f instanceof this.instanceFactory
 }else{return Jsonix.Util.Type.isObject(f)&&Jsonix.Util.Type.isString(f.TYPE_NAME)&&f.TYPE_NAME===this.name
 }},b:function(b){Jsonix.Util.Ensure.ensureObject(b);
 this.baseTypeInfo=b;
 return this
 },ps:function(){return this
-},p:function(f){Jsonix.Util.Ensure.ensureObject(f);
-if(f instanceof Jsonix.Model.PropertyInfo){this.addProperty(f)
-}else{var d=f.type||f.t||"element";
-if(Jsonix.Util.Type.isFunction(this.propertyInfoCreators[d])){var e=this.propertyInfoCreators[d];
-e.call(this,f)
-}else{throw new Error("Unknown property info type ["+d+"].")
+},p:function(e){Jsonix.Util.Ensure.ensureObject(e);
+if(e instanceof Jsonix.Model.PropertyInfo){this.addProperty(e)
+}else{e=Jsonix.Util.Type.cloneObject(e);
+var f=e.type||e.t||"element";
+if(Jsonix.Util.Type.isFunction(this.propertyInfoCreators[f])){var d=this.propertyInfoCreators[f];
+d.call(this,e)
+}else{throw new Error("Unknown property info type ["+f+"].")
 }}},aa:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.AnyAttributePropertyInfo(b))
+return this.addProperty(new this.mappingStyle.anyAttributePropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },ae:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.AnyElementPropertyInfo(b))
+return this.addProperty(new this.mappingStyle.anyElementPropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },a:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.AttributePropertyInfo(b))
+return this.addProperty(new this.mappingStyle.attributePropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },em:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.ElementMapPropertyInfo(b))
+return this.addProperty(new this.mappingStyle.elementMapPropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },e:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.ElementPropertyInfo(b))
+return this.addProperty(new this.mappingStyle.elementPropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },es:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.ElementsPropertyInfo(b))
+return this.addProperty(new this.mappingStyle.elementsPropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },er:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.ElementRefPropertyInfo(b))
+return this.addProperty(new this.mappingStyle.elementRefPropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },ers:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.ElementRefsPropertyInfo(b))
+return this.addProperty(new this.mappingStyle.elementRefsPropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },v:function(b){this.addDefaultNamespaces(b);
-return this.addProperty(new Jsonix.Model.ValuePropertyInfo(b))
+return this.addProperty(new this.mappingStyle.valuePropertyInfo(b,{mappingStyle:this.mappingStyle}))
 },addDefaultNamespaces:function(b){if(Jsonix.Util.Type.isObject(b)){if(!Jsonix.Util.Type.isString(b.defaultElementNamespaceURI)){b.defaultElementNamespaceURI=this.defaultElementNamespaceURI
 }if(!Jsonix.Util.Type.isString(b.defaultAttributeNamespaceURI)){b.defaultAttributeNamespaceURI=this.defaultAttributeNamespaceURI
 }}},addProperty:function(b){this.properties.push(b);
+this.propertiesMap[b.name]=b;
 return this
 },CLASS_NAME:"Jsonix.Model.ClassInfo"});
 Jsonix.Model.ClassInfo.prototype.propertyInfoCreators={aa:Jsonix.Model.ClassInfo.prototype.aa,anyAttribute:Jsonix.Model.ClassInfo.prototype.aa,ae:Jsonix.Model.ClassInfo.prototype.ae,anyElement:Jsonix.Model.ClassInfo.prototype.ae,a:Jsonix.Model.ClassInfo.prototype.a,attribute:Jsonix.Model.ClassInfo.prototype.a,em:Jsonix.Model.ClassInfo.prototype.em,elementMap:Jsonix.Model.ClassInfo.prototype.em,e:Jsonix.Model.ClassInfo.prototype.e,element:Jsonix.Model.ClassInfo.prototype.e,es:Jsonix.Model.ClassInfo.prototype.es,elements:Jsonix.Model.ClassInfo.prototype.es,er:Jsonix.Model.ClassInfo.prototype.er,elementRef:Jsonix.Model.ClassInfo.prototype.er,ers:Jsonix.Model.ClassInfo.prototype.ers,elementRefs:Jsonix.Model.ClassInfo.prototype.ers,v:Jsonix.Model.ClassInfo.prototype.v,value:Jsonix.Model.ClassInfo.prototype.v};
@@ -764,44 +1001,43 @@ var h=f.values||f.vs||undefined;
 Jsonix.Util.Ensure.ensureExists(h);
 if(!(Jsonix.Util.Type.isObject(h)||Jsonix.Util.Type.isArray(h))){throw new Error("Enum values must be either an array or an object.")
 }else{this.entries=h
-}},build:function(r,q){if(!this.built){this.baseTypeInfo=r.resolveTypeInfo(this.baseTypeInfo,q);
-this.baseTypeInfo.build(r,q);
-var n=this.entries;
-var p={};
-var j=[];
-var k=[];
+}},build:function(m){if(!this.built){this.baseTypeInfo=m.resolveTypeInfo(this.baseTypeInfo,this.module);
+this.baseTypeInfo.build(m);
+var p=this.entries;
+var j={};
+var l=[];
+var i=[];
 var o=0;
-var l;
-var m;
-if(Jsonix.Util.Type.isArray(n)){for(o=0;
-o<n.length;
-o++){m=n[o];
-if(Jsonix.Util.Type.isString(m)){l=m;
+var n;
+var k;
+if(Jsonix.Util.Type.isArray(p)){for(o=0;
+o<p.length;
+o++){k=p[o];
+if(Jsonix.Util.Type.isString(k)){n=k;
 if(!(Jsonix.Util.Type.isFunction(this.baseTypeInfo.parse))){throw new Error("Enum value is provided as string but the base type ["+this.baseTypeInfo.name+"] of the enum info ["+this.name+"] does not implement the parse method.")
-}m=this.baseTypeInfo.parse(m,r,null,this)
-}else{if(this.baseTypeInfo.isInstance(m,r,this)){if(!(Jsonix.Util.Type.isFunction(this.baseTypeInfo.print))){throw new Error("The base type ["+this.baseTypeInfo.name+"] of the enum info ["+this.name+"] does not implement the print method, unable to produce the enum key as string.")
-}l=this.baseTypeInfo.print(m,r,null,this)
-}else{throw new Error("Enum value ["+m+"] is not an instance of the enum base type ["+this.baseTypeInfo.name+"].")
-}}p[l]=m;
-j[o]=l;
-k[o]=m
-}}else{if(Jsonix.Util.Type.isObject(n)){for(l in n){if(n.hasOwnProperty(l)){m=n[l];
-if(Jsonix.Util.Type.isString(m)){if(!(Jsonix.Util.Type.isFunction(this.baseTypeInfo.parse))){throw new Error("Enum value is provided as string but the base type ["+this.baseTypeInfo.name+"] of the enum info ["+this.name+"] does not implement the parse method.")
-}m=this.baseTypeInfo.parse(m,r,null,this)
-}else{if(!this.baseTypeInfo.isInstance(m,r,this)){throw new Error("Enum value ["+m+"] is not an instance of the enum base type ["+this.baseTypeInfo.name+"].")
-}}p[l]=m;
-j[o]=l;
-k[o]=m;
+}k=this.baseTypeInfo.parse(k,m,null,this)
+}else{if(this.baseTypeInfo.isInstance(k,m,this)){if(!(Jsonix.Util.Type.isFunction(this.baseTypeInfo.print))){throw new Error("The base type ["+this.baseTypeInfo.name+"] of the enum info ["+this.name+"] does not implement the print method, unable to produce the enum key as string.")
+}n=this.baseTypeInfo.print(k,m,null,this)
+}else{throw new Error("Enum value ["+k+"] is not an instance of the enum base type ["+this.baseTypeInfo.name+"].")
+}}j[n]=k;
+l[o]=n;
+i[o]=k
+}}else{if(Jsonix.Util.Type.isObject(p)){for(n in p){if(p.hasOwnProperty(n)){k=p[n];
+if(Jsonix.Util.Type.isString(k)){if(!(Jsonix.Util.Type.isFunction(this.baseTypeInfo.parse))){throw new Error("Enum value is provided as string but the base type ["+this.baseTypeInfo.name+"] of the enum info ["+this.name+"] does not implement the parse method.")
+}k=this.baseTypeInfo.parse(k,m,null,this)
+}else{if(!this.baseTypeInfo.isInstance(k,m,this)){throw new Error("Enum value ["+k+"] is not an instance of the enum base type ["+this.baseTypeInfo.name+"].")
+}}j[n]=k;
+l[o]=n;
+i[o]=k;
 o++
 }}}else{throw new Error("Enum values must be either an array or an object.")
-}}this.entries=p;
-this.keys=j;
-this.values=k;
+}}this.entries=j;
+this.keys=l;
+this.values=i;
 this.built=true
 }},unmarshal:function(e,f,h){var g=f.getElementText();
-if(Jsonix.Util.StringUtils.isNotBlank(g)){return this.parse(g,e,f,h)
-}else{return null
-}},marshal:function(g,e,f,h){if(Jsonix.Util.Type.exists(g)){f.writeCharacters(this.reprint(g,e,f,h))
+return this.parse(g,e,f,h)
+},marshal:function(g,e,f,h){if(Jsonix.Util.Type.exists(g)){f.writeCharacters(this.reprint(g,e,f,h))
 }},reprint:function(g,e,f,h){if(Jsonix.Util.Type.isString(g)&&!this.isInstance(g,e,h)){return this.print(this.parse(g,e,null,h),e,f,h)
 }else{return this.print(g,e,f,h)
 }},print:function(h,j,g,i){for(var f=0;
@@ -816,7 +1052,7 @@ f<this.values.length;
 f++){if(this.values[f]===g){return true
 }}return false
 },CLASS_NAME:"Jsonix.Model.EnumLeafInfo"});
-Jsonix.Model.ElementInfo=Jsonix.Class({elementName:null,typeInfo:null,substitutionHead:null,scope:null,built:false,initialize:function(g){Jsonix.Util.Ensure.ensureObject(g);
+Jsonix.Model.ElementInfo=Jsonix.Class({module:null,elementName:null,typeInfo:null,substitutionHead:null,scope:null,built:false,initialize:function(g){Jsonix.Util.Ensure.ensureObject(g);
 var j=g.defaultElementNamespaceURI||g.dens||"";
 this.defaultElementNamespaceURI=j;
 var h=g.elementName||g.en||undefined;
@@ -829,21 +1065,35 @@ var l=g.substitutionHead||g.sh||null;
 this.substitutionHead=l;
 var i=g.scope||g.sc||null;
 this.scope=i
-},build:function(c,d){if(!this.built){this.typeInfo=c.resolveTypeInfo(this.typeInfo,d);
-this.scope=c.resolveTypeInfo(this.scope,d);
+},build:function(b){if(!this.built){this.typeInfo=b.resolveTypeInfo(this.typeInfo,this.module);
+this.scope=b.resolveTypeInfo(this.scope,this.module);
 this.built=true
 }},CLASS_NAME:"Jsonix.Model.ElementInfo"});
-Jsonix.Model.PropertyInfo=Jsonix.Class({name:null,collection:false,defaultElementNamespaceURI:"",defaultAttributeNamespaceURI:"",built:false,initialize:function(f){Jsonix.Util.Ensure.ensureObject(f);
-var h=f.name||f.n||undefined;
-Jsonix.Util.Ensure.ensureString(h);
-this.name=h;
-var j=f.defaultElementNamespaceURI||f.dens||"";
-this.defaultElementNamespaceURI=j;
-var i=f.defaultAttributeNamespaceURI||f.dans||"";
-this.defaultAttributeNamespaceURI=i;
-var g=f.collection||f.col||false;
-this.collection=g
-},build:function(c,d){if(!this.built){this.doBuild(c,d);
+Jsonix.Model.PropertyInfo=Jsonix.Class({name:null,collection:false,targetNamespace:"",defaultElementNamespaceURI:"",defaultAttributeNamespaceURI:"",built:false,initialize:function(r){Jsonix.Util.Ensure.ensureObject(r);
+var p=r.name||r.n||undefined;
+Jsonix.Util.Ensure.ensureString(p);
+this.name=p;
+var m=r.defaultElementNamespaceURI||r.dens||r.targetNamespace||r.tns||"";
+this.defaultElementNamespaceURI=m;
+var j=r.targetNamespace||r.tns||r.defaultElementNamespaceURI||r.dens||this.defaultElementNamespaceURI;
+this.targetNamespace=j;
+var k=r.defaultAttributeNamespaceURI||r.dans||"";
+this.defaultAttributeNamespaceURI=k;
+var o=r.collection||r.col||false;
+this.collection=o;
+var n=r.required||r.rq||false;
+this.required=n;
+if(this.collection){var l;
+if(Jsonix.Util.Type.isNumber(r.minOccurs)){l=r.minOccurs
+}else{if(Jsonix.Util.Type.isNumber(r.mno)){l=r.mno
+}else{l=1
+}}this.minOccurs=l;
+var q;
+if(Jsonix.Util.Type.isNumber(r.maxOccurs)){q=r.maxOccurs
+}else{if(Jsonix.Util.Type.isNumber(r.mxo)){q=r.mxo
+}else{q=null
+}}this.maxOccurs=q
+}},build:function(c,d){if(!this.built){this.doBuild(c,d);
 this.built=true
 }},doBuild:function(c,d){throw new Error("Abstract method [doBuild].")
 },buildStructure:function(c,d){throw new Error("Abstract method [buildStructure].")
@@ -856,21 +1106,26 @@ e++){d[this.name].push(f[e])
 }}},CLASS_NAME:"Jsonix.Model.PropertyInfo"});
 Jsonix.Model.AnyAttributePropertyInfo=Jsonix.Class(Jsonix.Model.PropertyInfo,{initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
 Jsonix.Model.PropertyInfo.prototype.initialize.apply(this,[b])
-},unmarshal:function(m,p,k){var n=p.getAttributeCount();
+},unmarshal:function(m,p,l){var n=p.getAttributeCount();
 if(n===0){return null
 }else{var j={};
 for(var o=0;
 o<n;
-o++){var i=p.getAttributeNameKey(o);
-var l=p.getAttributeValue(o);
-if(Jsonix.Util.Type.isString(l)){j[i]=l
+o++){var k=p.getAttributeValue(o);
+if(Jsonix.Util.Type.isString(k)){var i=this.convertFromAttributeName(p.getAttributeName(o),m,p,l);
+j[i]=k
 }}return j
-}},marshal:function(i,l,h,j){if(!Jsonix.Util.Type.isObject(i)){return
-}for(var g in i){if(i.hasOwnProperty(g)){var k=i[g];
-if(Jsonix.Util.Type.isString(k)){h.writeAttribute(Jsonix.XML.QName.fromString(g),k)
-}}}},doBuild:function(c,d){},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
+}},marshal:function(j,l,n,k){if(!Jsonix.Util.Type.isObject(j)){return
+}for(var h in j){if(j.hasOwnProperty(h)){var i=j[h];
+if(Jsonix.Util.Type.isString(i)){var m=this.convertToAttributeName(h,l,n,k);
+n.writeAttribute(m,i)
+}}}},convertFromAttributeName:function(e,h,f,g){return e.key
+},convertToAttributeName:function(e,h,f,g){return Jsonix.XML.QName.fromObjectOrString(e,h)
+},doBuild:function(c,d){},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
 d.anyAttribute=this
 },CLASS_NAME:"Jsonix.Model.AnyAttributePropertyInfo"});
+Jsonix.Model.AnyAttributePropertyInfo.Simplified=Jsonix.Class(Jsonix.Model.AnyAttributePropertyInfo,{convertFromAttributeName:function(e,h,f,g){return e.toCanonicalString(h)
+}});
 Jsonix.Model.SingleTypePropertyInfo=Jsonix.Class(Jsonix.Model.PropertyInfo,{typeInfo:"String",initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
 Jsonix.Model.PropertyInfo.prototype.initialize.apply(this,[d]);
 var c=d.typeInfo||d.ti||"String";
@@ -900,18 +1155,20 @@ Jsonix.Util.Ensure.ensureObject(e.attributes);
 var d=this.attributeName.key;
 e.attributes[d]=this
 },CLASS_NAME:"Jsonix.Model.AttributePropertyInfo"});
-Jsonix.Model.ValuePropertyInfo=Jsonix.Class(Jsonix.Model.SingleTypePropertyInfo,{initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
-Jsonix.Model.SingleTypePropertyInfo.prototype.initialize.apply(this,[b])
+Jsonix.Model.ValuePropertyInfo=Jsonix.Class(Jsonix.Model.SingleTypePropertyInfo,{initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
+Jsonix.Model.SingleTypePropertyInfo.prototype.initialize.apply(this,[d]);
+var c=d.asCDATA||d.c||false;
+this.asCDATA=c
 },unmarshal:function(e,f,h){var g=f.getElementText();
-if(Jsonix.Util.StringUtils.isNotBlank(g)){return this.unmarshalValue(g,e,f,h)
-}else{return null
-}},marshal:function(g,e,f,h){if(!Jsonix.Util.Type.exists(g)){return
-}f.writeCharacters(this.print(g,e,f,h))
-},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
+return this.unmarshalValue(g,e,f,h)
+},marshal:function(g,e,f,h){if(!Jsonix.Util.Type.exists(g)){return
+}if(this.asCDATA){f.writeCdata(this.print(g,e,f,h))
+}else{f.writeCharacters(this.print(g,e,f,h))
+}},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
 if(Jsonix.Util.Type.exists(d.elements)){throw new Error("The structure already defines element mappings, it cannot define a value property.")
 }else{d.value=this
 }},CLASS_NAME:"Jsonix.Model.ValuePropertyInfo"});
-Jsonix.Model.AbstractElementsPropertyInfo=Jsonix.Class(Jsonix.Model.PropertyInfo,{wrapperElementName:null,initialize:function(c){Jsonix.Util.Ensure.ensureObject(c);
+Jsonix.Model.AbstractElementsPropertyInfo=Jsonix.Class(Jsonix.Binding.Unmarshalls.Element,Jsonix.Binding.Unmarshalls.WrapperElement,Jsonix.Model.PropertyInfo,{wrapperElementName:null,allowDom:false,allowTypedObject:true,mixed:false,initialize:function(c){Jsonix.Util.Ensure.ensureObject(c);
 Jsonix.Model.PropertyInfo.prototype.initialize.apply(this,[c]);
 var d=c.wrapperElementName||c.wen||undefined;
 if(Jsonix.Util.Type.isObject(d)){this.wrapperElementName=Jsonix.XML.QName.fromObject(d)
@@ -927,11 +1184,6 @@ var i=function(a){if(j.collection){if(h===null){h=[]
 if(Jsonix.Util.Type.exists(this.wrapperElementName)){this.unmarshalWrapperElement(l,g,k,i)
 }else{this.unmarshalElement(l,g,k,i)
 }return h
-},unmarshalWrapperElement:function(f,g,j,h){var i=g.next();
-while(i!==Jsonix.XML.Input.END_ELEMENT){if(i===Jsonix.XML.Input.START_ELEMENT){this.unmarshalElement(f,g,j,h)
-}else{if(i===Jsonix.XML.Input.SPACE||i===Jsonix.XML.Input.COMMENT||i===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+i+"].")
-}}i=g.next()
-}},unmarshalElement:function(e,f,h,g){throw new Error("Abstract method [unmarshalElement].")
 },marshal:function(i,l,h,k){if(!Jsonix.Util.Type.exists(i)){return
 }if(Jsonix.Util.Type.exists(this.wrapperElementName)){h.writeStartElement(this.wrapperElementName)
 }if(!this.collection){this.marshalElement(i,l,h,k)
@@ -941,10 +1193,7 @@ g<i.length;
 g++){var j=i[g];
 this.marshalElement(j,l,h,k)
 }}if(Jsonix.Util.Type.exists(this.wrapperElementName)){h.writeEndElement()
-}},marshalElement:function(g,e,f,h){throw new Error("Abstract method [marshalElement].")
-},marshalElementTypeInfo:function(h,i,j,l,g,k){g.writeStartElement(h);
-i.marshal(j,l,g,k);
-g.writeEndElement()
+}},convertFromTypedNamedValue:function(g,e,f,h){return g.value
 },buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
 if(Jsonix.Util.Type.exists(d.value)){throw new Error("The structure already defines a value property.")
 }else{if(!Jsonix.Util.Type.exists(d.elements)){d.elements={}
@@ -952,7 +1201,7 @@ if(Jsonix.Util.Type.exists(d.value)){throw new Error("The structure already defi
 }else{this.buildStructureElements(c,d)
 }},buildStructureElements:function(c,d){throw new Error("Abstract method [buildStructureElements].")
 },CLASS_NAME:"Jsonix.Model.AbstractElementsPropertyInfo"});
-Jsonix.Model.ElementPropertyInfo=Jsonix.Class(Jsonix.Model.AbstractElementsPropertyInfo,{typeInfo:"String",elementName:null,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
+Jsonix.Model.ElementPropertyInfo=Jsonix.Class(Jsonix.Model.AbstractElementsPropertyInfo,Jsonix.Binding.Marshalls.Element,{typeInfo:"String",elementName:null,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
 Jsonix.Model.AbstractElementsPropertyInfo.prototype.initialize.apply(this,[d]);
 var f=d.typeInfo||d.ti||"String";
 if(Jsonix.Util.Type.isObject(f)){this.typeInfo=f
@@ -962,28 +1211,34 @@ this.typeInfo=f
 if(Jsonix.Util.Type.isObject(e)){this.elementName=Jsonix.XML.QName.fromObject(e)
 }else{if(Jsonix.Util.Type.isString(e)){this.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,e)
 }else{this.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,this.name)
-}}},unmarshalElement:function(e,f,h,g){return g(this.typeInfo.unmarshal(e,f,h))
-},marshalElement:function(g,e,f,h){this.marshalElementTypeInfo(this.elementName,this.typeInfo,g,e,f,h)
+}}},getTypeInfoByElementName:function(e,d,f){return this.typeInfo
+},convertToTypedNamedValue:function(g,e,f,h){return{name:this.elementName,value:g,typeInfo:this.typeInfo}
 },doBuild:function(c,d){this.typeInfo=c.resolveTypeInfo(this.typeInfo,d)
 },buildStructureElements:function(c,d){d.elements[this.elementName.key]=this
 },CLASS_NAME:"Jsonix.Model.ElementPropertyInfo"});
-Jsonix.Model.ElementsPropertyInfo=Jsonix.Class(Jsonix.Model.AbstractElementsPropertyInfo,{elementTypeInfos:null,elementTypeInfosMap:null,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
+Jsonix.Model.ElementsPropertyInfo=Jsonix.Class(Jsonix.Model.AbstractElementsPropertyInfo,Jsonix.Binding.Marshalls.Element,{elementTypeInfos:null,elementTypeInfosMap:null,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
 Jsonix.Model.AbstractElementsPropertyInfo.prototype.initialize.apply(this,[d]);
-var c=d.elementTypeInfos||d.etis||[];
-Jsonix.Util.Ensure.ensureArray(c);
-this.elementTypeInfos=c
-},unmarshalElement:function(g,h,l,i){var k=h.getNameKey();
-var j=this.elementTypeInfosMap[k];
-if(Jsonix.Util.Type.exists(j)){return i(j.unmarshal(g,h,l))
-}throw new Error("Element ["+k+"] is not known in this context")
-},marshalElement:function(k,n,p,m){for(var o=0;
-o<this.elementTypeInfos.length;
-o++){var i=this.elementTypeInfos[o];
-var l=i.typeInfo;
-if(l.isInstance(k,n,m)){var j=i.elementName;
-this.marshalElementTypeInfo(j,l,k,n,p,m);
-return
-}}throw new Error("Could not find an element with type info supporting the value ["+k+"].")
+var f=d.elementTypeInfos||d.etis||[];
+Jsonix.Util.Ensure.ensureArray(f);
+this.elementTypeInfos=[];
+for(var e=0;
+e<f.length;
+e++){this.elementTypeInfos[e]=Jsonix.Util.Type.cloneObject(f[e])
+}},getTypeInfoByElementName:function(e,d,f){return this.elementTypeInfosMap[e.key]
+},convertToTypedNamedValue:function(q,v,u,o){for(var s=0;
+s<this.elementTypeInfos.length;
+s++){var r=this.elementTypeInfos[s];
+var p=r.typeInfo;
+if(p.isInstance(q,v,o)){var n=r.elementName;
+return{name:n,value:q,typeInfo:p}
+}}if(v.supportXsiType){var w=v.getTypeInfoByValue(q);
+if(w&&w.typeName){for(var t=0;
+t<this.elementTypeInfos.length;
+t++){var z=this.elementTypeInfos[t];
+var x=z.typeInfo;
+if(w.isBasedOn(x)){var y=z.elementName;
+return{name:y,value:q,typeInfo:x}
+}}}}throw new Error("Could not find an element with type info supporting the value ["+q+"].")
 },doBuild:function(k,l){this.elementTypeInfosMap={};
 var i,j;
 for(var g=0;
@@ -993,10 +1248,8 @@ Jsonix.Util.Ensure.ensureObject(h);
 i=h.typeInfo||h.ti||"String";
 h.typeInfo=k.resolveTypeInfo(i,l);
 j=h.elementName||h.en||undefined;
-if(Jsonix.Util.Type.isObject(j)){h.elementName=Jsonix.XML.QName.fromObject(j)
-}else{Jsonix.Util.Ensure.ensureString(j);
-h.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,j)
-}this.elementTypeInfosMap[h.elementName.key]=h.typeInfo
+h.elementName=Jsonix.XML.QName.fromObjectOrString(j,k,this.defaultElementNamespaceURI);
+this.elementTypeInfosMap[h.elementName.key]=h.typeInfo
 }},buildStructureElements:function(g,f){for(var h=0;
 h<this.elementTypeInfos.length;
 h++){var e=this.elementTypeInfos[h];
@@ -1013,7 +1266,6 @@ if(Jsonix.Util.Type.isObject(h)){this.elementName=Jsonix.XML.QName.fromObject(h)
 }else{if(Jsonix.Util.Type.isString(h)){this.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,h)
 }else{this.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,this.name)
 }}this.entryTypeInfo=new Jsonix.Model.ClassInfo({name:"Map<"+e.name+","+f.name+">",propertyInfos:[e,f]})
-},unmarshalWrapperElement:function(h,e,g){var f=Jsonix.Model.AbstractElementsPropertyInfo.prototype.unmarshalWrapperElement.apply(this,arguments)
 },unmarshal:function(l,g,k){var h=null;
 var j=this;
 var i=function(a){if(Jsonix.Util.Type.exists(a)){Jsonix.Util.Ensure.ensureObject(a,"Map property requires an object.");
@@ -1027,10 +1279,11 @@ if(j.collection){if(!Jsonix.Util.Type.exists(h[c])){h[c]=[]
 if(Jsonix.Util.Type.exists(this.wrapperElementName)){this.unmarshalWrapperElement(l,g,k,i)
 }else{this.unmarshalElement(l,g,k,i)
 }return h
-},unmarshalElement:function(l,g,k,i){var j=this.entryTypeInfo.unmarshal(l,g,k);
+},getTypeInfoByInputElement:function(d,e,f){return this.entryTypeInfo
+},convertFromTypedNamedValue:function(i,l,g,k){var j=i.value;
 var h={};
-if(!!j[this.key.name]){h[j[this.key.name]]=j[this.value.name]
-}return i(h)
+if(Jsonix.Util.Type.isString(j[this.key.name])){h[j[this.key.name]]=j[this.value.name]
+}return h
 },marshal:function(g,e,f,h){if(!Jsonix.Util.Type.exists(g)){return
 }if(Jsonix.Util.Type.exists(this.wrapperElementName)){f.writeStartElement(this.wrapperElementName)
 }this.marshalElement(g,e,f,h);
@@ -1064,44 +1317,32 @@ h<k.length;
 h++){i[g].push(k[h])
 }}else{i[g]=k
 }}}}},CLASS_NAME:"Jsonix.Model.ElementMapPropertyInfo"});
-Jsonix.Model.AbstractElementRefsPropertyInfo=Jsonix.Class(Jsonix.Model.PropertyInfo,{wrapperElementName:null,mixed:true,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d,"Mapping must be an object.");
-Jsonix.Model.PropertyInfo.prototype.initialize.apply(this,[d]);
-var e=d.wrapperElementName||d.wen||undefined;
-var f=d.mixed||d.mx||true;
-if(Jsonix.Util.Type.isObject(e)){this.wrapperElementName=Jsonix.XML.QName.fromObject(e)
-}else{if(Jsonix.Util.Type.isString(e)){this.wrapperElementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,e)
+Jsonix.Model.AbstractElementRefsPropertyInfo=Jsonix.Class(Jsonix.Binding.Marshalls.Element,Jsonix.Binding.Marshalls.Element.AsElementRef,Jsonix.Binding.Unmarshalls.Element,Jsonix.Binding.Unmarshalls.WrapperElement,Jsonix.Binding.Unmarshalls.Element.AsElementRef,Jsonix.Model.PropertyInfo,{wrapperElementName:null,allowDom:true,allowTypedObject:true,mixed:true,initialize:function(f){Jsonix.Util.Ensure.ensureObject(f,"Mapping must be an object.");
+Jsonix.Model.PropertyInfo.prototype.initialize.apply(this,[f]);
+var g=f.wrapperElementName||f.wen||undefined;
+if(Jsonix.Util.Type.isObject(g)){this.wrapperElementName=Jsonix.XML.QName.fromObject(g)
+}else{if(Jsonix.Util.Type.isString(g)){this.wrapperElementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,g)
 }else{this.wrapperElementName=null
-}}this.mixed=f
-},unmarshal:function(f,g,j){var h=g.eventType;
-if(h===Jsonix.XML.Input.START_ELEMENT){if(Jsonix.Util.Type.exists(this.wrapperElementName)){return this.unmarshalWrapperElement(f,g,j)
-}else{return this.unmarshalElement(f,g,j)
-}}else{if(this.mixed&&(h===Jsonix.XML.Input.CHARACTERS||h===Jsonix.XML.Input.CDATA||h===Jsonix.XML.Input.ENTITY_REFERENCE)){var i=g.getText();
-if(this.collection){return[i]
-}else{return i
-}}else{if(h===Jsonix.XML.Input.SPACE||h===Jsonix.XML.Input.COMMENT||h===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+h+"].")
-}}}},unmarshalWrapperElement:function(o,i,n){var j=null;
-var l=i.next();
-while(l!==Jsonix.XML.Input.END_ELEMENT){if(l===Jsonix.XML.Input.START_ELEMENT){var m=this.unmarshalElement(o,i,n);
-if(this.collection){if(j===null){j=[]
-}for(var p=0;
-p<m.length;
-p++){j.push(m[p])
-}}else{if(j===null){j=m
+}}var h=Jsonix.Util.Type.defaultValue(f.allowDom,f.dom,true);
+var j=Jsonix.Util.Type.defaultValue(f.allowTypedObject,f.typed,true);
+var i=Jsonix.Util.Type.defaultValue(f.mixed,f.mx,true);
+this.allowDom=h;
+this.allowTypedObject=j;
+this.mixed=i
+},unmarshal:function(n,h,m){var i=null;
+var l=this;
+var j=function(a){if(l.collection){if(i===null){i=[]
+}i.push(a)
+}else{if(i===null){i=a
 }else{throw new Error("Value already set.")
-}}}else{if(this.mixed&&(l===Jsonix.XML.Input.CHARACTERS||l===Jsonix.XML.Input.CDATA||l===Jsonix.XML.Input.ENTITY_REFERENCE)){var k=i.getText();
-if(this.collection){if(j===null){j=[]
-}j.push(k)
-}else{if(j===null){j=k
-}else{throw new Error("Value already set.")
-}}}else{if(l===Jsonix.XML.Input.SPACE||l===Jsonix.XML.Input.COMMENT||l===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+l+"].")
-}}}l=i.next()
-}return j
-},unmarshalElement:function(l,h,k){var g=h.getName();
-var i=this.getElementTypeInfo(l,g,k);
-var j={name:g,value:i.unmarshal(l,h,k)};
-if(this.collection){return[j]
-}else{return j
-}},marshal:function(i,l,h,k){if(Jsonix.Util.Type.exists(i)){if(Jsonix.Util.Type.exists(this.wrapperElementName)){h.writeStartElement(this.wrapperElementName)
+}}};
+var k=h.eventType;
+if(k===Jsonix.XML.Input.START_ELEMENT){if(Jsonix.Util.Type.exists(this.wrapperElementName)){this.unmarshalWrapperElement(n,h,m,j)
+}else{this.unmarshalElement(n,h,m,j)
+}}else{if(this.mixed&&(k===Jsonix.XML.Input.CHARACTERS||k===Jsonix.XML.Input.CDATA||k===Jsonix.XML.Input.ENTITY_REFERENCE)){j(h.getText())
+}else{if(k===Jsonix.XML.Input.SPACE||k===Jsonix.XML.Input.COMMENT||k===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+k+"].")
+}}}return i
+},marshal:function(i,l,h,k){if(Jsonix.Util.Type.exists(i)){if(Jsonix.Util.Type.exists(this.wrapperElementName)){h.writeStartElement(this.wrapperElementName)
 }if(!this.collection){this.marshalItem(i,l,h,k)
 }else{Jsonix.Util.Ensure.ensureArray(i,"Collection property requires an array value.");
 for(var g=0;
@@ -1111,26 +1352,22 @@ this.marshalItem(j,l,h,k)
 }}if(Jsonix.Util.Type.exists(this.wrapperElementName)){h.writeEndElement()
 }}},marshalItem:function(g,e,f,h){if(Jsonix.Util.Type.isString(g)){if(!this.mixed){throw new Error("Property is not mixed, can't handle string values.")
 }else{f.writeCharacters(g)
-}}else{if(Jsonix.Util.Type.isObject(g)){this.marshalElement(g,e,f,h)
+}}else{if(this.allowDom&&Jsonix.Util.Type.exists(g.nodeType)){f.writeNode(g)
+}else{if(Jsonix.Util.Type.isObject(g)){this.marshalElement(g,e,f,h)
 }else{if(this.mixed){throw new Error("Unsupported content type, either objects or strings are supported.")
 }else{throw new Error("Unsupported content type, only objects are supported.")
-}}}},marshalElement:function(i,l,g,k){var h=Jsonix.XML.QName.fromObject(i.name);
-var j=this.getElementTypeInfo(l,h,k);
-return this.marshalElementTypeInfo(h,j,i,l,g,k)
-},marshalElementTypeInfo:function(h,i,j,l,g,k){g.writeStartElement(h);
-if(Jsonix.Util.Type.exists(j.value)){i.marshal(j.value,l,g,k)
-}g.writeEndElement()
-},getElementTypeInfo:function(f,g,i){var j=this.getPropertyElementTypeInfo(g);
+}}}}},getTypeInfoByElementName:function(g,f,i){var j=this.getPropertyElementTypeInfo(g,f);
 if(Jsonix.Util.Type.exists(j)){return j.typeInfo
 }else{var h=f.getElementInfo(g,i);
 if(Jsonix.Util.Type.exists(h)){return h.typeInfo
-}else{throw new Error("Element ["+g.key+"] is not known in this context.")
-}}},getPropertyElementTypeInfo:function(b){throw new Error("Abstract method [getPropertyElementTypeInfo].")
+}else{return undefined
+}}},getPropertyElementTypeInfo:function(d,c){throw new Error("Abstract method [getPropertyElementTypeInfo].")
 },buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
 if(Jsonix.Util.Type.exists(d.value)){throw new Error("The structure already defines a value property.")
 }else{if(!Jsonix.Util.Type.exists(d.elements)){d.elements={}
 }}if(Jsonix.Util.Type.exists(this.wrapperElementName)){d.elements[this.wrapperElementName.key]=this
 }else{this.buildStructureElements(c,d)
+}if((this.allowDom||this.allowTypedObject)){d.any=this
 }if(this.mixed&&!Jsonix.Util.Type.exists(this.wrapperElementName)){d.mixed=this
 }},buildStructureElements:function(c,d){throw new Error("Abstract method [buildStructureElements].")
 },buildStructureElementTypeInfos:function(k,h,g){h.elements[g.elementName.key]=this;
@@ -1139,7 +1376,7 @@ if(Jsonix.Util.Type.isArray(l)){for(var i=0;
 i<l.length;
 i++){var j=l[i];
 this.buildStructureElementTypeInfos(k,h,j)
-}}},CLASS_NAME:"Jsonix.Model.ElementRefPropertyInfo"});
+}}},CLASS_NAME:"Jsonix.Model.AbstractElementRefsPropertyInfo"});
 Jsonix.Model.ElementRefPropertyInfo=Jsonix.Class(Jsonix.Model.AbstractElementRefsPropertyInfo,{typeInfo:"String",elementName:null,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
 Jsonix.Model.AbstractElementRefsPropertyInfo.prototype.initialize.apply(this,[d]);
 var f=d.typeInfo||d.ti||"String";
@@ -1150,22 +1387,24 @@ this.typeInfo=f
 if(Jsonix.Util.Type.isObject(e)){this.elementName=Jsonix.XML.QName.fromObject(e)
 }else{if(Jsonix.Util.Type.isString(e)){this.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,e)
 }else{this.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,this.name)
-}}},getPropertyElementTypeInfo:function(d){Jsonix.Util.Ensure.ensureObject(d);
-var c=Jsonix.XML.QName.fromObject(d);
-if(c.key===this.elementName.key){return this
+}}},getPropertyElementTypeInfo:function(e,f){var d=Jsonix.XML.QName.fromObjectOrString(e,f);
+if(d.key===this.elementName.key){return this
 }else{return null
 }},doBuild:function(c,d){this.typeInfo=c.resolveTypeInfo(this.typeInfo,d)
 },buildStructureElements:function(c,d){this.buildStructureElementTypeInfos(c,d,this)
 },CLASS_NAME:"Jsonix.Model.ElementRefPropertyInfo"});
+Jsonix.Model.ElementRefPropertyInfo.Simplified=Jsonix.Class(Jsonix.Model.ElementRefPropertyInfo,Jsonix.Binding.Unmarshalls.Element.AsSimplifiedElementRef,{CLASS_NAME:"Jsonix.Model.ElementRefPropertyInfo.Simplified"});
 Jsonix.Model.ElementRefsPropertyInfo=Jsonix.Class(Jsonix.Model.AbstractElementRefsPropertyInfo,{elementTypeInfos:null,elementTypeInfosMap:null,initialize:function(d){Jsonix.Util.Ensure.ensureObject(d);
 Jsonix.Model.AbstractElementRefsPropertyInfo.prototype.initialize.apply(this,[d]);
-var c=d.elementTypeInfos||d.etis||[];
-Jsonix.Util.Ensure.ensureArray(c);
-this.elementTypeInfos=c
-},getPropertyElementTypeInfo:function(e){Jsonix.Util.Ensure.ensureObject(e);
-var d=Jsonix.XML.QName.fromObject(e);
-var f=this.elementTypeInfosMap[d.key];
-if(Jsonix.Util.Type.exists(f)){return{elementName:d,typeInfo:f}
+var f=d.elementTypeInfos||d.etis||[];
+Jsonix.Util.Ensure.ensureArray(f);
+this.elementTypeInfos=[];
+for(var e=0;
+e<f.length;
+e++){this.elementTypeInfos[e]=Jsonix.Util.Type.cloneObject(f[e])
+}},getPropertyElementTypeInfo:function(f,h){var e=Jsonix.XML.QName.fromObjectOrString(f,h);
+var g=this.elementTypeInfosMap[e.key];
+if(Jsonix.Util.Type.exists(g)){return{elementName:e,typeInfo:g}
 }else{return null
 }},doBuild:function(k,l){this.elementTypeInfosMap={};
 var i,j;
@@ -1176,77 +1415,67 @@ Jsonix.Util.Ensure.ensureObject(h);
 i=h.typeInfo||h.ti||"String";
 h.typeInfo=k.resolveTypeInfo(i,l);
 j=h.elementName||h.en||undefined;
-if(Jsonix.Util.Type.isObject(j)){h.elementName=Jsonix.XML.QName.fromObject(j)
-}else{Jsonix.Util.Ensure.ensureString(j);
-h.elementName=new Jsonix.XML.QName(this.defaultElementNamespaceURI,j)
-}this.elementTypeInfosMap[h.elementName.key]=h.typeInfo
+h.elementName=Jsonix.XML.QName.fromObjectOrString(j,k,this.defaultElementNamespaceURI);
+this.elementTypeInfosMap[h.elementName.key]=h.typeInfo
 }},buildStructureElements:function(g,f){for(var h=0;
 h<this.elementTypeInfos.length;
 h++){var e=this.elementTypeInfos[h];
 this.buildStructureElementTypeInfos(g,f,e)
 }},CLASS_NAME:"Jsonix.Model.ElementRefsPropertyInfo"});
-Jsonix.Model.AnyElementPropertyInfo=Jsonix.Class(Jsonix.Model.PropertyInfo,{allowDom:true,allowTypedObject:true,mixed:true,initialize:function(f){Jsonix.Util.Ensure.ensureObject(f);
+Jsonix.Model.ElementRefsPropertyInfo.Simplified=Jsonix.Class(Jsonix.Model.ElementRefsPropertyInfo,Jsonix.Binding.Unmarshalls.Element.AsSimplifiedElementRef,{CLASS_NAME:"Jsonix.Model.ElementRefsPropertyInfo.Simplified"});
+Jsonix.Model.AnyElementPropertyInfo=Jsonix.Class(Jsonix.Binding.Marshalls.Element,Jsonix.Binding.Marshalls.Element.AsElementRef,Jsonix.Binding.Unmarshalls.Element,Jsonix.Binding.Unmarshalls.Element.AsElementRef,Jsonix.Model.PropertyInfo,{allowDom:true,allowTypedObject:true,mixed:true,initialize:function(f){Jsonix.Util.Ensure.ensureObject(f);
 Jsonix.Model.PropertyInfo.prototype.initialize.apply(this,[f]);
-var g=f.allowDom||f.dom||true;
-var e=f.allowTypedObject||f.typed||true;
-var h=f.mixed||f.mx||true;
+var g=Jsonix.Util.Type.defaultValue(f.allowDom,f.dom,true);
+var e=Jsonix.Util.Type.defaultValue(f.allowTypedObject,f.typed,true);
+var h=Jsonix.Util.Type.defaultValue(f.mixed,f.mx,true);
 this.allowDom=g;
 this.allowTypedObject=e;
 this.mixed=h
-},unmarshal:function(f,g,j){var h=g.eventType;
-if(h===Jsonix.XML.Input.START_ELEMENT){return this.unmarshalElement(f,g,j)
-}else{if(this.mixed&&(h===Jsonix.XML.Input.CHARACTERS||h===Jsonix.XML.Input.CDATA||h===Jsonix.XML.Input.ENTITY_REFERENCE)){var i=g.getText();
-if(this.collection){return[i]
-}else{return i
-}}else{if(this.mixed&&(h===Jsonix.XML.Input.SPACE)){return null
-}else{if(h===Jsonix.XML.Input.COMMENT||h===Jsonix.XML.Input.PROCESSING_INSTRUCTION){return null
-}else{throw new Error("Illegal state: unexpected event type ["+h+"].")
-}}}}},unmarshalElement:function(n,p,m){var o=p.getName();
-var k;
-if(this.allowTypedObject&&Jsonix.Util.Type.exists(n.getElementInfo(o,m))){var i=n.getElementInfo(o,m);
-var l=i.typeInfo;
-var j=Jsonix.Model.Adapter.getAdapter(i);
-k={name:o,value:j.unmarshal(l,n,p,m)}
-}else{if(this.allowDom){k=p.getElement()
-}else{throw new Error("Element ["+o.toString()+"] is not known in this context and property does not allow DOM.")
-}}if(this.collection){return[k]
-}else{return k
-}},marshal:function(h,j,g,i){if(!Jsonix.Util.Type.exists(h)){return
+},unmarshal:function(n,h,m){var i=null;
+var l=this;
+var j=function(a){if(l.collection){if(i===null){i=[]
+}i.push(a)
+}else{if(i===null){i=a
+}else{throw new Error("Value already set.")
+}}};
+var k=h.eventType;
+if(k===Jsonix.XML.Input.START_ELEMENT){this.unmarshalElement(n,h,m,j)
+}else{if(this.mixed&&(k===Jsonix.XML.Input.CHARACTERS||k===Jsonix.XML.Input.CDATA||k===Jsonix.XML.Input.ENTITY_REFERENCE)){j(h.getText())
+}else{if(this.mixed&&(k===Jsonix.XML.Input.SPACE)){}else{if(k===Jsonix.XML.Input.COMMENT||k===Jsonix.XML.Input.PROCESSING_INSTRUCTION){}else{throw new Error("Illegal state: unexpected event type ["+k+"].")
+}}}}return i
+},marshal:function(h,j,g,i){if(!Jsonix.Util.Type.exists(h)){return
 }if(!this.collection){this.marshalItem(h,j,g,i)
 }else{Jsonix.Util.Ensure.ensureArray(h);
 for(var f=0;
 f<h.length;
 f++){this.marshalItem(h[f],j,g,i)
-}}},marshalItem:function(k,n,p,m){if(this.mixed&&Jsonix.Util.Type.isString(k)){p.writeCharacters(k)
-}else{if(this.allowDom&&Jsonix.Util.Type.exists(k.nodeType)){p.writeNode(k)
-}else{var o=Jsonix.XML.QName.fromObject(k.name);
-if(this.allowTypedObject&&Jsonix.Util.Type.exists(n.getElementInfo(o,m))){var i=n.getElementInfo(o,m);
-var l=i.typeInfo;
-var j=Jsonix.Model.Adapter.getAdapter(i);
-p.writeStartElement(o);
-j.marshal(l,k.value,n,p,m);
-p.writeEndElement()
-}else{throw new Error("Element ["+o.toString()+"] is not known in this context")
+}}},marshalItem:function(g,e,f,h){if(this.mixed&&Jsonix.Util.Type.isString(g)){f.writeCharacters(g)
+}else{if(this.allowDom&&Jsonix.Util.Type.exists(g.nodeType)){f.writeNode(g)
+}else{if(this.allowTypedObject){this.marshalElement(g,e,f,h)
 }}}},doBuild:function(c,d){},buildStructure:function(c,d){Jsonix.Util.Ensure.ensureObject(d);
 if(Jsonix.Util.Type.exists(d.value)){throw new Error("The structure already defines a value property.")
 }else{if(!Jsonix.Util.Type.exists(d.elements)){d.elements={}
 }}if((this.allowDom||this.allowTypedObject)){d.any=this
 }if(this.mixed){d.mixed=this
 }},CLASS_NAME:"Jsonix.Model.AnyElementPropertyInfo"});
-Jsonix.Model.Module=Jsonix.Class({name:null,typeInfos:null,elementInfos:null,defaultElementNamespaceURI:"",defaultAttributeNamespaceURI:"",initialize:function(h){this.typeInfos=[];
+Jsonix.Model.AnyElementPropertyInfo.Simplified=Jsonix.Class(Jsonix.Model.AnyElementPropertyInfo,Jsonix.Binding.Unmarshalls.Element.AsSimplifiedElementRef,{CLASS_NAME:"Jsonix.Model.AnyElementPropertyInfo.Simplified"});
+Jsonix.Model.Module=Jsonix.Class(Jsonix.Mapping.Styled,{name:null,typeInfos:null,elementInfos:null,targetNamespace:"",defaultElementNamespaceURI:"",defaultAttributeNamespaceURI:"",initialize:function(r,j){Jsonix.Mapping.Styled.prototype.initialize.apply(this,[j]);
+this.typeInfos=[];
 this.elementInfos=[];
-if(typeof h!=="undefined"){Jsonix.Util.Ensure.ensureObject(h);
-var j=h.name||h.n||null;
-this.name=j;
-var m=h.defaultElementNamespaceURI||h.dens||"";
-this.defaultElementNamespaceURI=m;
-var k=h.defaultAttributeNamespaceURI||h.dans||"";
-this.defaultAttributeNamespaceURI=k;
-var n=h.typeInfos||h.tis||[];
-this.initializeTypeInfos(n);
-for(var i in h){if(h.hasOwnProperty(i)){if(h[i] instanceof Jsonix.Model.ClassInfo){this.typeInfos.push(h[i])
-}}}var l=h.elementInfos||h.eis||[];
-this.initializeElementInfos(l)
+if(typeof r!=="undefined"){Jsonix.Util.Ensure.ensureObject(r);
+var q=r.name||r.n||null;
+this.name=q;
+var n=r.defaultElementNamespaceURI||r.dens||r.targetNamespace||r.tns||"";
+this.defaultElementNamespaceURI=n;
+var k=r.targetNamespace||r.tns||r.defaultElementNamespaceURI||r.dens||this.defaultElementNamespaceURI;
+this.targetNamespace=k;
+var l=r.defaultAttributeNamespaceURI||r.dans||"";
+this.defaultAttributeNamespaceURI=l;
+var m=r.typeInfos||r.tis||[];
+this.initializeTypeInfos(m);
+for(var p in r){if(r.hasOwnProperty(p)){if(r[p] instanceof this.mappingStyle.classInfo){this.typeInfos.push(r[p])
+}}}var o=r.elementInfos||r.eis||[];
+this.initializeElementInfos(o)
 }},initializeTypeInfos:function(f){Jsonix.Util.Ensure.ensureArray(f);
 var h,e,g;
 for(h=0;
@@ -1264,7 +1493,8 @@ this.elementInfos.push(g)
 }},createTypeInfo:function(f){Jsonix.Util.Ensure.ensureObject(f);
 var g;
 if(f instanceof Jsonix.Model.TypeInfo){g=f
-}else{var e=f.type||f.t||"classInfo";
+}else{f=Jsonix.Util.Type.cloneObject(f);
+var e=f.type||f.t||"classInfo";
 if(Jsonix.Util.Type.isFunction(this.typeInfoCreators[e])){var h=this.typeInfoCreators[e];
 g=h.call(this,f)
 }else{throw new Error("Unknown type info type ["+e+"].")
@@ -1274,28 +1504,37 @@ e.localName=d;
 var f=e.name||e.n||null;
 e.name=f;
 if(Jsonix.Util.Type.isString(e.name)){if(e.name.length>0&&e.name.charAt(0)==="."&&Jsonix.Util.Type.isString(this.name)){e.name=this.name+e.name
-}}else{if(Jsonix.Util.Type.isString(e.localName)){if(Jsonix.Util.Type.isString(this.name)){e.name=this.name+"."+e.localName
-}else{e.name=e.localName
+}}else{if(Jsonix.Util.Type.isString(d)){if(Jsonix.Util.Type.isString(this.name)){e.name=this.name+"."+d
+}else{e.name=d
 }}else{throw new Error("Neither [name/n] nor [localName/ln] was provided for the class info.")
 }}},createClassInfo:function(f){Jsonix.Util.Ensure.ensureObject(f);
-var e=f.defaultElementNamespaceURI||f.dens||this.defaultElementNamespaceURI;
-f.defaultElementNamespaceURI=e;
-var g=f.defaultAttributeNamespaceURI||f.dans||this.defaultAttributeNamespaceURI;
-f.defaultAttributeNamespaceURI=g;
+var j=f.defaultElementNamespaceURI||f.dens||this.defaultElementNamespaceURI;
+f.defaultElementNamespaceURI=j;
+var g=f.targetNamespace||f.tns||this.targetNamespace;
+f.targetNamespace=g;
+var h=f.defaultAttributeNamespaceURI||f.dans||this.defaultAttributeNamespaceURI;
+f.defaultAttributeNamespaceURI=h;
 this.initializeNames(f);
-var h=new Jsonix.Model.ClassInfo(f);
-return h
+var i=new this.mappingStyle.classInfo(f,{mappingStyle:this.mappingStyle});
+i.module=this;
+return i
 },createEnumLeafInfo:function(d){Jsonix.Util.Ensure.ensureObject(d);
 this.initializeNames(d);
-var c=new Jsonix.Model.EnumLeafInfo(d);
+var c=new this.mappingStyle.enumLeafInfo(d,{mappingStyle:this.mappingStyle});
+c.module=this;
 return c
-},createList:function(e){Jsonix.Util.Ensure.ensureObject(e);
-var g=e.baseTypeInfo||e.typeInfo||e.bti||e.ti||"String";
-var f=e.typeName||e.tn||null;
-var h=e.separator||e.sep||" ";
-Jsonix.Util.Ensure.ensureExists(g);
-return new Jsonix.Schema.XSD.List(g,f,h)
+},createList:function(f){Jsonix.Util.Ensure.ensureObject(f);
+var h=f.baseTypeInfo||f.typeInfo||f.bti||f.ti||"String";
+var g=f.typeName||f.tn||null;
+if(Jsonix.Util.Type.exists(g)){if(Jsonix.Util.Type.isString(g)){g=new Jsonix.XML.QName(this.targetNamespace,g)
+}else{g=Jsonix.XML.QName.fromObject(g)
+}}var i=f.separator||f.sep||" ";
+Jsonix.Util.Ensure.ensureExists(h);
+var j=new Jsonix.Schema.XSD.List(h,g,i);
+j.module=this;
+return j
 },createElementInfo:function(g){Jsonix.Util.Ensure.ensureObject(g);
+g=Jsonix.Util.Type.cloneObject(g);
 var i=g.defaultElementNamespaceURI||g.dens||this.defaultElementNamespaceURI;
 g.defaultElementNamespaceURI=i;
 var h=g.elementName||g.en||undefined;
@@ -1310,7 +1549,8 @@ if(Jsonix.Util.Type.isObject(h)){g.elementName=Jsonix.XML.QName.fromObject(h)
 if(Jsonix.Util.Type.exists(l)){if(Jsonix.Util.Type.isObject(l)){g.substitutionHead=Jsonix.XML.QName.fromObject(l)
 }else{Jsonix.Util.Ensure.ensureString(l);
 g.substitutionHead=new Jsonix.XML.QName(this.defaultElementNamespaceURI,l)
-}}var k=new Jsonix.Model.ElementInfo(g);
+}}var k=new this.mappingStyle.elementInfo(g,{mappingStyle:this.mappingStyle});
+k.module=this;
 return k
 },registerTypeInfos:function(d){for(var e=0;
 e<this.typeInfos.length;
@@ -1332,6 +1572,12 @@ f.build(d,this)
 },es:function(){return this
 },CLASS_NAME:"Jsonix.Model.Module"});
 Jsonix.Model.Module.prototype.typeInfoCreators={classInfo:Jsonix.Model.Module.prototype.createClassInfo,c:Jsonix.Model.Module.prototype.createClassInfo,enumInfo:Jsonix.Model.Module.prototype.createEnumLeafInfo,"enum":Jsonix.Model.Module.prototype.createEnumLeafInfo,list:Jsonix.Model.Module.prototype.createList,l:Jsonix.Model.Module.prototype.createList};
+Jsonix.Mapping.Style.Standard=Jsonix.Class(Jsonix.Mapping.Style,{marshaller:Jsonix.Binding.Marshaller,unmarshaller:Jsonix.Binding.Unmarshaller,module:Jsonix.Model.Module,elementInfo:Jsonix.Model.ElementInfo,classInfo:Jsonix.Model.ClassInfo,enumLeafInfo:Jsonix.Model.EnumLeafInfo,anyAttributePropertyInfo:Jsonix.Model.AnyAttributePropertyInfo,anyElementPropertyInfo:Jsonix.Model.AnyElementPropertyInfo,attributePropertyInfo:Jsonix.Model.AttributePropertyInfo,elementMapPropertyInfo:Jsonix.Model.ElementMapPropertyInfo,elementPropertyInfo:Jsonix.Model.ElementPropertyInfo,elementsPropertyInfo:Jsonix.Model.ElementsPropertyInfo,elementRefPropertyInfo:Jsonix.Model.ElementRefPropertyInfo,elementRefsPropertyInfo:Jsonix.Model.ElementRefsPropertyInfo,valuePropertyInfo:Jsonix.Model.ValuePropertyInfo,initialize:function(){Jsonix.Mapping.Style.prototype.initialize.apply(this)
+},CLASS_NAME:"Jsonix.Mapping.Style.Standard"});
+Jsonix.Mapping.Style.STYLES.standard=new Jsonix.Mapping.Style.Standard();
+Jsonix.Mapping.Style.Simplified=Jsonix.Class(Jsonix.Mapping.Style,{marshaller:Jsonix.Binding.Marshaller.Simplified,unmarshaller:Jsonix.Binding.Unmarshaller.Simplified,module:Jsonix.Model.Module,elementInfo:Jsonix.Model.ElementInfo,classInfo:Jsonix.Model.ClassInfo,enumLeafInfo:Jsonix.Model.EnumLeafInfo,anyAttributePropertyInfo:Jsonix.Model.AnyAttributePropertyInfo.Simplified,anyElementPropertyInfo:Jsonix.Model.AnyElementPropertyInfo.Simplified,attributePropertyInfo:Jsonix.Model.AttributePropertyInfo,elementMapPropertyInfo:Jsonix.Model.ElementMapPropertyInfo,elementPropertyInfo:Jsonix.Model.ElementPropertyInfo,elementsPropertyInfo:Jsonix.Model.ElementsPropertyInfo,elementRefPropertyInfo:Jsonix.Model.ElementRefPropertyInfo.Simplified,elementRefsPropertyInfo:Jsonix.Model.ElementRefsPropertyInfo.Simplified,valuePropertyInfo:Jsonix.Model.ValuePropertyInfo,initialize:function(){Jsonix.Mapping.Style.prototype.initialize.apply(this)
+},CLASS_NAME:"Jsonix.Mapping.Style.Simplified"});
+Jsonix.Mapping.Style.STYLES.simplified=new Jsonix.Mapping.Style.Simplified();
 Jsonix.Schema.XSD={};
 Jsonix.Schema.XSD.NAMESPACE_URI="http://www.w3.org/2001/XMLSchema";
 Jsonix.Schema.XSD.PREFIX="xsd";
@@ -1342,8 +1588,9 @@ Jsonix.Schema.XSD.AnyType=Jsonix.Class(Jsonix.Model.ClassInfo,{typeName:Jsonix.S
 },CLASS_NAME:"Jsonix.Schema.XSD.AnyType"});
 Jsonix.Schema.XSD.AnyType.INSTANCE=new Jsonix.Schema.XSD.AnyType();
 Jsonix.Schema.XSD.AnySimpleType=Jsonix.Class(Jsonix.Model.TypeInfo,{name:"AnySimpleType",typeName:Jsonix.Schema.XSD.qname("anySimpleType"),initialize:function(){Jsonix.Model.TypeInfo.prototype.initialize.apply(this,[])
-},print:function(g,e,f,h){throw new Error("Abstract method [print].")
-},parse:function(g,e,f,h){throw new Error("Abstract method [parse].")
+},print:function(g,e,f,h){return g
+},parse:function(g,e,f,h){return g
+},isInstance:function(f,e,d){return true
 },reprint:function(g,e,f,h){if(Jsonix.Util.Type.isString(g)&&!this.isInstance(g,e,h)){return this.print(this.parse(g,e,null,h),e,f,h)
 }else{return this.print(g,e,f,h)
 }},unmarshal:function(e,f,h){var g=f.getElementText();
@@ -1351,6 +1598,7 @@ if(Jsonix.Util.StringUtils.isNotBlank(g)){return this.parse(g,e,f,h)
 }else{return null
 }},marshal:function(g,e,f,h){if(Jsonix.Util.Type.exists(g)){f.writeCharacters(this.reprint(g,e,f,h))
 }},build:function(c,d){},CLASS_NAME:"Jsonix.Schema.XSD.AnySimpleType"});
+Jsonix.Schema.XSD.AnySimpleType.INSTANCE=new Jsonix.Schema.XSD.AnySimpleType();
 Jsonix.Schema.XSD.List=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:null,typeName:null,typeInfo:null,separator:" ",trimmedSeparator:Jsonix.Util.StringUtils.whitespaceCharacters,simpleType:true,built:false,initialize:function(e,f,h){Jsonix.Util.Ensure.ensureExists(e);
 this.typeInfo=e;
 if(!Jsonix.Util.Type.exists(this.name)){this.name=e.name+"*"
@@ -1360,7 +1608,7 @@ if(!Jsonix.Util.Type.exists(this.name)){this.name=e.name+"*"
 }var g=Jsonix.Util.StringUtils.trim(this.separator);
 if(g.length===0){this.trimmedSeparator=Jsonix.Util.StringUtils.whitespaceCharacters
 }else{this.trimmedSeparator=g
-}},build:function(c,d){if(!this.built){this.typeInfo=c.resolveTypeInfo(this.typeInfo,d);
+}},build:function(b){if(!this.built){this.typeInfo=b.resolveTypeInfo(this.typeInfo,this.module);
 this.built=true
 }},print:function(i,k,g,j){if(!Jsonix.Util.Type.exists(i)){return null
 }Jsonix.Util.Ensure.ensureArray(i);
@@ -1378,7 +1626,9 @@ m<h.length;
 m++){i.push(this.typeInfo.parse(Jsonix.Util.StringUtils.trim(h[m]),l,n,k))
 }return i
 },CLASS_NAME:"Jsonix.Schema.XSD.List"});
-Jsonix.Schema.XSD.String=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"String",typeName:Jsonix.Schema.XSD.qname("string"),print:function(g,e,f,h){Jsonix.Util.Ensure.ensureString(g);
+Jsonix.Schema.XSD.String=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"String",typeName:Jsonix.Schema.XSD.qname("string"),unmarshal:function(e,f,h){var g=f.getElementText();
+return this.parse(g,e,f,h)
+},print:function(g,e,f,h){Jsonix.Util.Ensure.ensureString(g);
 return g
 },parse:function(g,e,f,h){Jsonix.Util.Ensure.ensureString(g);
 return g
@@ -1639,140 +1889,82 @@ if(Jsonix.Util.Type.isString(q)){return new Jsonix.XML.QName(q,n,m)
 },CLASS_NAME:"Jsonix.Schema.XSD.QName"});
 Jsonix.Schema.XSD.QName.INSTANCE=new Jsonix.Schema.XSD.QName();
 Jsonix.Schema.XSD.QName.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.QName.INSTANCE);
-Jsonix.Schema.XSD.Calendar=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"Calendar",typeName:Jsonix.Schema.XSD.qname("calendar"),parse:function(k,n,p,m){Jsonix.Util.Ensure.ensureString(k);
-var o=(k.charAt(0)==="-");
-var i=o?-1:1;
-var l=o?k.substring(1):k;
-var j;
-if(l.length>=19&&l.charAt(4)==="-"&&l.charAt(7)==="-"&&l.charAt(10)==="T"&&l.charAt(13)===":"&&l.charAt(16)===":"){return this.parseDateTime(k)
-}else{if(l.length>=10&&l.charAt(4)==="-"&&l.charAt(7)==="-"){return this.parseDate(k)
-}else{if(l.length>=8&&l.charAt(2)===":"&&l.charAt(5)===":"){return this.parseTime(k)
-}else{throw new Error("Value ["+k+"] does not match dateTime, date or time patterns.")
-}}}},parseDateTime:function(p){Jsonix.Util.Ensure.ensureString(p);
-var w=(p.charAt(0)==="-");
-var B=w?-1:1;
-var v=w?p.substring(1):p;
-if(v.length<19||v.charAt(4)!=="-"||v.charAt(7)!=="-"||v.charAt(10)!=="T"||v.charAt(13)!==":"||v.charAt(16)!==":"){throw new Error("Date time string ["+v+"] must be a string in format ['-'? yyyy '-' mm '-' dd 'T' hh ':' mm ':' ss ('.' s+)? (zzzzzz)?].")
-}var x;
-var A=v.indexOf("+",19);
-if(A>=0){x=A
-}else{var u=v.indexOf("-",19);
-if(u>=0){x=u
-}else{var s=v.indexOf("Z",19);
-if(s>=0){x=s
-}else{x=v.length
-}}}var C=x>0&&x<v.length;
-var r=v.substring(0,10);
-var D=C?v.substring(11,x):v.substring(11);
-var q=C?v.substring(x):"";
-var y=this.parseDateString(r);
-var z=this.parseTimeString(D);
-var t=this.parseTimeZoneString(q);
-return Jsonix.XML.Calendar.fromObject({year:B*y.year,month:y.month,day:y.day,hour:z.hour,minute:z.minute,second:z.second,fractionalSecond:z.fractionalSecond,timezone:t})
-},parseDate:function(n){Jsonix.Util.Ensure.ensureString(n);
-var u=(n.charAt(0)==="-");
-var y=u?-1:1;
-var r=u?n.substring(1):n;
-var v;
-var x=r.indexOf("+",10);
-if(x>=0){v=x
-}else{var t=r.indexOf("-",10);
-if(t>=0){v=t
-}else{var q=r.indexOf("Z",10);
-if(q>=0){v=q
-}else{v=r.length
-}}}var z=v>0&&v<r.length;
-var p=z?r.substring(0,v):r;
-var w=this.parseDateString(p);
-var o=z?n.substring(v):"";
-var s=this.parseTimeZoneString(o);
-return Jsonix.XML.Calendar.fromObject({year:y*w.year,month:w.month,day:w.day,timezone:s})
-},parseTime:function(k){Jsonix.Util.Ensure.ensureString(k);
-var p;
-var r=k.indexOf("+",7);
-if(r>=0){p=r
-}else{var o=k.indexOf("-",7);
-if(o>=0){p=o
-}else{var m=k.indexOf("Z",7);
-if(m>=0){p=m
-}else{p=k.length
-}}}var s=p>0&&p<k.length;
-var t=s?k.substring(0,p):k;
-var q=this.parseTimeString(t);
-var l=s?k.substring(p):"";
-var n=this.parseTimeZoneString(l);
-return Jsonix.XML.Calendar.fromObject({hour:q.hour,minute:q.minute,second:q.second,fractionalSecond:q.fractionalSecond,timezone:n})
-},parseDateString:function(g){Jsonix.Util.Ensure.ensureString(g);
-if(g.length!==10){throw new Error("Date string ["+g+"] must be 10 characters long.")
-}if(g.charAt(4)!=="-"||g.charAt(7)!=="-"){throw new Error("Date string ["+g+"] must be a string in format [yyyy '-' mm '-' ss ].")
-}var e=this.parseYear(g.substring(0,4));
-var h=this.parseMonth(g.substring(5,7));
-var f=this.parseDay(g.substring(8,10));
-return{year:e,month:h,day:f}
-},parseTimeString:function(r){Jsonix.Util.Ensure.ensureString(r);
-if(r.length<8||r.charAt(2)!==":"||r.charAt(5)!==":"){throw new Error("Time string ["+r+"] must be a string in format [hh ':' mm ':' ss ('.' s+)?].")
-}var n=r.substring(0,2);
-var k=r.substring(3,5);
-var p=r.substring(6,8);
-var j=r.length>=9?r.substring(8):"";
-var m=this.parseHour(n);
-var o=this.parseHour(k);
-var q=this.parseSecond(p);
-var l=this.parseFractionalSecond(j);
-return{hour:m,minute:o,second:q,fractionalSecond:l}
-},parseTimeZoneString:function(i){Jsonix.Util.Ensure.ensureString(i);
-if(i===""){return NaN
+Jsonix.Schema.XSD.Calendar=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"Calendar",typeName:Jsonix.Schema.XSD.qname("calendar"),parse:function(g,e,f,h){Jsonix.Util.Ensure.ensureString(g);
+if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.DATETIME_PATTERN+"$"))){return this.parseDateTime(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.DATE_PATTERN+"$"))){return this.parseDate(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.TIME_PATTERN+"$"))){return this.parseTime(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.GYEAR_MONTH_PATTERN+"$"))){return this.parseGYearMonth(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.GYEAR_PATTERN+"$"))){return this.parseGYear(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.GMONTH_DAY_PATTERN+"$"))){return this.parseGMonthDay(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.GMONTH_PATTERN+"$"))){return this.parseGMonth(g,e,f,h)
+}else{if(g.match(new RegExp("^"+Jsonix.Schema.XSD.Calendar.GDAY_PATTERN+"$"))){return this.parseGDay(g,e,f,h)
+}else{throw new Error("Value ["+g+"] does not match xs:dateTime, xs:date, xs:time, xs:gYearMonth, xs:gYear, xs:gMonthDay, xs:gMonth or xs:gDay patterns.")
+}}}}}}}}},parseGYearMonth:function(j,n,i,m){var l=new RegExp("^"+Jsonix.Schema.XSD.Calendar.GYEAR_MONTH_PATTERN+"$");
+var h=j.match(l);
+if(h!==null){var k={year:parseInt(h[1],10),month:parseInt(h[5],10),timezone:this.parseTimezoneString(h[7])};
+return new Jsonix.XML.Calendar(k)
+}throw new Error("Value ["+j+"] does not match the xs:gYearMonth pattern.")
+},parseGYear:function(j,n,i,m){var l=new RegExp("^"+Jsonix.Schema.XSD.Calendar.GYEAR_PATTERN+"$");
+var h=j.match(l);
+if(h!==null){var k={year:parseInt(h[1],10),timezone:this.parseTimezoneString(h[5])};
+return new Jsonix.XML.Calendar(k)
+}throw new Error("Value ["+j+"] does not match the xs:gYear pattern.")
+},parseGMonthDay:function(j,n,i,m){var k=new RegExp("^"+Jsonix.Schema.XSD.Calendar.GMONTH_DAY_PATTERN+"$");
+var h=j.match(k);
+if(h!==null){var l={month:parseInt(h[2],10),day:parseInt(h[3],10),timezone:this.parseTimezoneString(h[5])};
+return new Jsonix.XML.Calendar(l)
+}throw new Error("Value ["+j+"] does not match the xs:gMonthDay pattern.")
+},parseGMonth:function(k,n,i,m){var j=new RegExp("^"+Jsonix.Schema.XSD.Calendar.GMONTH_PATTERN+"$");
+var h=k.match(j);
+if(h!==null){var l={month:parseInt(h[2],10),timezone:this.parseTimezoneString(h[3])};
+return new Jsonix.XML.Calendar(l)
+}throw new Error("Value ["+k+"] does not match the xs:gMonth pattern.")
+},parseGDay:function(j,n,i,m){var l=new RegExp("^"+Jsonix.Schema.XSD.Calendar.GDAY_PATTERN+"$");
+var h=j.match(l);
+if(h!==null){var k={day:parseInt(h[2],10),timezone:this.parseTimezoneString(h[3])};
+return new Jsonix.XML.Calendar(k)
+}throw new Error("Value ["+j+"] does not match the xs:gDay pattern.")
+},parseDateTime:function(j,n,i,m){Jsonix.Util.Ensure.ensureString(j);
+var k=new RegExp("^"+Jsonix.Schema.XSD.Calendar.DATETIME_PATTERN+"$");
+var h=j.match(k);
+if(h!==null){var l={year:parseInt(h[1],10),month:parseInt(h[5],10),day:parseInt(h[7],10),hour:parseInt(h[9],10),minute:parseInt(h[10],10),second:parseInt(h[11],10),fractionalSecond:(h[12]?parseFloat(h[12]):0),timezone:this.parseTimezoneString(h[14])};
+return new Jsonix.XML.Calendar(l)
+}throw new Error("Value ["+value+"] does not match the xs:date pattern.")
+},parseDate:function(j,n,i,m){Jsonix.Util.Ensure.ensureString(j);
+var k=new RegExp("^"+Jsonix.Schema.XSD.Calendar.DATE_PATTERN+"$");
+var h=j.match(k);
+if(h!==null){var l={year:parseInt(h[1],10),month:parseInt(h[5],10),day:parseInt(h[7],10),timezone:this.parseTimezoneString(h[9])};
+return new Jsonix.XML.Calendar(l)
+}throw new Error("Value ["+value+"] does not match the xs:date pattern.")
+},parseTime:function(j,n,i,m){Jsonix.Util.Ensure.ensureString(j);
+var k=new RegExp("^"+Jsonix.Schema.XSD.Calendar.TIME_PATTERN+"$");
+var h=j.match(k);
+if(h!==null){var l={hour:parseInt(h[1],10),minute:parseInt(h[2],10),second:parseInt(h[3],10),fractionalSecond:(h[4]?parseFloat(h[4]):0),timezone:this.parseTimezoneString(h[6])};
+return new Jsonix.XML.Calendar(l)
+}throw new Error("Value ["+value+"] does not match the xs:time pattern.")
+},parseTimezoneString:function(i){if(!Jsonix.Util.Type.isString(i)){return NaN
+}else{if(i===""){return NaN
 }else{if(i==="Z"){return 0
-}else{if(i.length!==6){throw new Error("Time zone must be an empty string, 'Z' or a string in format [('+' | '-') hh ':' mm].")
-}var h=i.charAt(0);
-var f;
-if(h==="+"){f=1
-}else{if(h==="-"){f=-1
-}else{throw new Error("First character of the time zone ["+i+"] must be '+' or '-'.")
-}}var g=this.parseHour(i.substring(1,3));
-var j=this.parseMinute(i.substring(4,6));
-return -1*f*(g*60+j)
-}}},parseYear:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c.length!==4){throw new Error("Year ["+c+"] must be a four-digit number.")
-}var d=Number(c);
-Jsonix.Util.Ensure.ensureInteger(d);
-return d
-},parseMonth:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c.length!==2){throw new Error("Month ["+c+"] must be a two-digit number.")
-}var d=Number(c);
-Jsonix.Util.Ensure.ensureInteger(d);
-return d
-},parseDay:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c.length!==2){throw new Error("Day ["+c+"] must be a two-digit number.")
-}var d=Number(c);
-Jsonix.Util.Ensure.ensureInteger(d);
-return d
-},parseHour:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c.length!==2){throw new Error("Hour ["+c+"] must be a two-digit number.")
-}var d=Number(c);
-Jsonix.Util.Ensure.ensureInteger(d);
-return d
-},parseMinute:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c.length!==2){throw new Error("Minute ["+c+"] must be a two-digit number.")
-}var d=Number(c);
-Jsonix.Util.Ensure.ensureInteger(d);
-return d
-},parseSecond:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c.length!==2){throw new Error("Second ["+c+"] must be a two-digit number.")
-}var d=Number(c);
-Jsonix.Util.Ensure.ensureNumber(d);
-return d
-},parseFractionalSecond:function(c){Jsonix.Util.Ensure.ensureString(c);
-if(c===""){return 0
-}else{var d=Number(c);
-Jsonix.Util.Ensure.ensureNumber(d);
-return d
-}},print:function(g,e,f,h){Jsonix.Util.Ensure.ensureObject(g);
+}else{if(i==="+14:00"){return 14*60
+}else{if(i==="-14:00"){return -14*60
+}else{var j=new RegExp("^"+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+"$");
+var l=i.match(j);
+if(l!==null){var g=l[1]==="+"?1:-1;
+var h=parseInt(l[4],10);
+var k=parseInt(l[5],10);
+return g*(h*60+k)
+}throw new Error("Value ["+value+"] does not match the timezone pattern.")
+}}}}}},print:function(g,e,f,h){Jsonix.Util.Ensure.ensureObject(g);
 if(Jsonix.Util.NumberUtils.isInteger(g.year)&&Jsonix.Util.NumberUtils.isInteger(g.month)&&Jsonix.Util.NumberUtils.isInteger(g.day)&&Jsonix.Util.NumberUtils.isInteger(g.hour)&&Jsonix.Util.NumberUtils.isInteger(g.minute)&&Jsonix.Util.NumberUtils.isInteger(g.second)){return this.printDateTime(g)
 }else{if(Jsonix.Util.NumberUtils.isInteger(g.year)&&Jsonix.Util.NumberUtils.isInteger(g.month)&&Jsonix.Util.NumberUtils.isInteger(g.day)){return this.printDate(g)
 }else{if(Jsonix.Util.NumberUtils.isInteger(g.hour)&&Jsonix.Util.NumberUtils.isInteger(g.minute)&&Jsonix.Util.NumberUtils.isInteger(g.second)){return this.printTime(g)
+}else{if(Jsonix.Util.NumberUtils.isInteger(g.year)&&Jsonix.Util.NumberUtils.isInteger(g.month)){return this.printGYearMonth(g)
+}else{if(Jsonix.Util.NumberUtils.isInteger(g.month)&&Jsonix.Util.NumberUtils.isInteger(g.day)){return this.printGMonthDay(g)
+}else{if(Jsonix.Util.NumberUtils.isInteger(g.year)){return this.printGYear(g)
+}else{if(Jsonix.Util.NumberUtils.isInteger(g.month)){return this.printGMonth(g)
+}else{if(Jsonix.Util.NumberUtils.isInteger(g.day)){return this.printGDay(g)
 }else{throw new Error("Value ["+g+"] is not recognized as dateTime, date or time.")
-}}}},printDateTime:function(c){Jsonix.Util.Ensure.ensureObject(c);
+}}}}}}}}},printDateTime:function(c){Jsonix.Util.Ensure.ensureObject(c);
 Jsonix.Util.Ensure.ensureInteger(c.year);
 Jsonix.Util.Ensure.ensureInteger(c.month);
 Jsonix.Util.Ensure.ensureInteger(c.day);
@@ -1784,7 +1976,7 @@ if(Jsonix.Util.Type.exists(c.fractionalString)){Jsonix.Util.Ensure.ensureNumber(
 }var d=this.printDateString(c);
 d=d+"T";
 d=d+this.printTimeString(c);
-if(Jsonix.Util.Type.exists(c.timezone)){d=d+this.printTimeZoneString(c.timezone)
+if(Jsonix.Util.Type.exists(c.timezone)){d=d+this.printTimezoneString(c.timezone)
 }return d
 },printDate:function(c){Jsonix.Util.Ensure.ensureObject(c);
 Jsonix.Util.Ensure.ensureNumber(c.year);
@@ -1792,7 +1984,7 @@ Jsonix.Util.Ensure.ensureNumber(c.month);
 Jsonix.Util.Ensure.ensureNumber(c.day);
 if(Jsonix.Util.Type.exists(c.timezone)&&!Jsonix.Util.Type.isNaN(c.timezone)){Jsonix.Util.Ensure.ensureInteger(c.timezone)
 }var d=this.printDateString(c);
-if(Jsonix.Util.Type.exists(c.timezone)){d=d+this.printTimeZoneString(c.timezone)
+if(Jsonix.Util.Type.exists(c.timezone)){d=d+this.printTimezoneString(c.timezone)
 }return d
 },printTime:function(c){Jsonix.Util.Ensure.ensureObject(c);
 Jsonix.Util.Ensure.ensureNumber(c.hour);
@@ -1801,7 +1993,7 @@ Jsonix.Util.Ensure.ensureNumber(c.second);
 if(Jsonix.Util.Type.exists(c.fractionalString)){Jsonix.Util.Ensure.ensureNumber(c.fractionalString)
 }if(Jsonix.Util.Type.exists(c.timezone)&&!Jsonix.Util.Type.isNaN(c.timezone)){Jsonix.Util.Ensure.ensureInteger(c.timezone)
 }var d=this.printTimeString(c);
-if(Jsonix.Util.Type.exists(c.timezone)){d=d+this.printTimeZoneString(c.timezone)
+if(Jsonix.Util.Type.exists(c.timezone)){d=d+this.printTimezoneString(c.timezone)
 }return d
 },printDateString:function(b){Jsonix.Util.Ensure.ensureObject(b);
 Jsonix.Util.Ensure.ensureInteger(b.year);
@@ -1820,7 +2012,7 @@ d=d+":";
 d=d+this.printSecond(c.second);
 if(Jsonix.Util.Type.exists(c.fractionalSecond)){d=d+this.printFractionalSecond(c.fractionalSecond)
 }return d
-},printTimeZoneString:function(j){if(!Jsonix.Util.Type.exists(j)||Jsonix.Util.Type.isNaN(j)){return""
+},printTimezoneString:function(j){if(!Jsonix.Util.Type.exists(j)||Jsonix.Util.Type.isNaN(j)){return""
 }else{Jsonix.Util.Ensure.ensureInteger(j);
 var l=j<0?-1:(j>0?1:0);
 var k=j*l;
@@ -1828,13 +2020,72 @@ var i=k%60;
 var g=Math.floor(k/60);
 var h;
 if(l===0){return"Z"
-}else{if(l>0){h="-"
-}else{if(l<0){h="+"
+}else{if(l>0){h="+"
+}else{if(l<0){h="-"
 }}h=h+this.printHour(g);
 h=h+":";
 h=h+this.printMinute(i);
 return h
-}}},printYear:function(b){return this.printInteger(b,4)
+}}},printGDay:function(i,l,g,k){Jsonix.Util.Ensure.ensureObject(i);
+var h=undefined;
+var j=undefined;
+if(i instanceof Date){h=i.getDate()
+}else{Jsonix.Util.Ensure.ensureInteger(i.day);
+h=i.day;
+j=i.timezone
+}Jsonix.XML.Calendar.validateDay(h);
+Jsonix.XML.Calendar.validateTimezone(j);
+return"---"+this.printDay(h)+this.printTimezoneString(j)
+},printGMonth:function(j,g,h,l){Jsonix.Util.Ensure.ensureObject(j);
+var i=undefined;
+var k=undefined;
+if(j instanceof Date){i=j.getMonth()+1
+}else{Jsonix.Util.Ensure.ensureInteger(j.month);
+i=j.month;
+k=j.timezone
+}Jsonix.XML.Calendar.validateMonth(i);
+Jsonix.XML.Calendar.validateTimezone(k);
+return"--"+this.printMonth(i)+this.printTimezoneString(k)
+},printGMonthDay:function(k,n,h,m){Jsonix.Util.Ensure.ensureObject(k);
+var j=undefined;
+var i=undefined;
+var l=undefined;
+if(k instanceof Date){j=k.getMonth()+1;
+i=k.getDate()
+}else{Jsonix.Util.Ensure.ensureInteger(k.month);
+Jsonix.Util.Ensure.ensureInteger(k.day);
+j=k.month;
+i=k.day;
+l=k.timezone
+}Jsonix.XML.Calendar.validateMonthDay(j,i);
+Jsonix.XML.Calendar.validateTimezone(l);
+return"--"+this.printMonth(j)+"-"+this.printDay(i)+this.printTimezoneString(l)
+},printGYear:function(i,g,h,k){Jsonix.Util.Ensure.ensureObject(i);
+var l=undefined;
+var j=undefined;
+if(i instanceof Date){l=i.getFullYear()
+}else{Jsonix.Util.Ensure.ensureInteger(i.year);
+l=i.year;
+j=i.timezone
+}Jsonix.XML.Calendar.validateYear(l);
+Jsonix.XML.Calendar.validateTimezone(j);
+return this.printSignedYear(l)+this.printTimezoneString(j)
+},printGYearMonth:function(k,h,i,m){Jsonix.Util.Ensure.ensureObject(k);
+var n=undefined;
+var j=undefined;
+var l=undefined;
+if(k instanceof Date){n=k.getFullYear();
+j=k.getMonth()+1
+}else{Jsonix.Util.Ensure.ensureInteger(k.year);
+n=k.year;
+j=k.month;
+l=k.timezone
+}Jsonix.XML.Calendar.validateYear(n);
+Jsonix.XML.Calendar.validateMonth(j);
+Jsonix.XML.Calendar.validateTimezone(l);
+return this.printSignedYear(n)+"-"+this.printMonth(j)+this.printTimezoneString(l)
+},printSignedYear:function(b){return b<0?("-"+this.printYear(b*-1)):(this.printYear(b))
+},printYear:function(b){return this.printInteger(b,4)
 },printMonth:function(b){return this.printInteger(b,2)
 },printDay:function(b){return this.printInteger(b,2)
 },printHour:function(b){return this.printInteger(b,2)
@@ -1851,7 +2102,6 @@ if(d<0){return""
 Jsonix.Util.Ensure.ensureInteger(h);
 if(h<=0){throw new Error("Length ["+g+"] must be positive.")
 }if(g<0){throw new Error("Value ["+g+"] must not be negative.")
-}if(g>=Math.pow(10,h)){throw new Error("Value ["+g+"] must be less than ["+Math.pow(10,h)+"].")
 }var f=String(g);
 for(var e=f.length;
 e<h;
@@ -1859,12 +2109,84 @@ e++){f="0"+f
 }return f
 },isInstance:function(f,e,d){return Jsonix.Util.Type.isObject(f)&&((Jsonix.Util.NumberUtils.isInteger(f.year)&&Jsonix.Util.NumberUtils.isInteger(f.month)&&Jsonix.Util.NumberUtils.isInteger(f.day))||(Jsonix.Util.NumberUtils.isInteger(f.hour)&&Jsonix.Util.NumberUtils.isInteger(f.minute)&&Jsonix.Util.NumberUtils.isInteger(f.second)))
 },CLASS_NAME:"Jsonix.Schema.XSD.Calendar"});
+Jsonix.Schema.XSD.Calendar.YEAR_PATTERN="-?([1-9][0-9]*)?((?!(0000))[0-9]{4})";
+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN="Z|([\\-\\+])(((0[0-9]|1[0-3]):([0-5][0-9]))|(14:00))";
+Jsonix.Schema.XSD.Calendar.MONTH_PATTERN="(0[1-9]|1[0-2])";
+Jsonix.Schema.XSD.Calendar.SINGLE_MONTH_PATTERN="\\-\\-"+Jsonix.Schema.XSD.Calendar.MONTH_PATTERN;
+Jsonix.Schema.XSD.Calendar.DAY_PATTERN="(0[1-9]|[12][0-9]|3[01])";
+Jsonix.Schema.XSD.Calendar.SINGLE_DAY_PATTERN="\\-\\-\\-"+Jsonix.Schema.XSD.Calendar.DAY_PATTERN;
+Jsonix.Schema.XSD.Calendar.GYEAR_PATTERN="("+Jsonix.Schema.XSD.Calendar.YEAR_PATTERN+")("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.GMONTH_PATTERN="("+Jsonix.Schema.XSD.Calendar.SINGLE_MONTH_PATTERN+")("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.GDAY_PATTERN="("+Jsonix.Schema.XSD.Calendar.SINGLE_DAY_PATTERN+")("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.GYEAR_MONTH_PATTERN="("+Jsonix.Schema.XSD.Calendar.YEAR_PATTERN+")-("+Jsonix.Schema.XSD.Calendar.DAY_PATTERN+")("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.GMONTH_DAY_PATTERN="("+Jsonix.Schema.XSD.Calendar.SINGLE_MONTH_PATTERN+")-("+Jsonix.Schema.XSD.Calendar.DAY_PATTERN+")("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.DATE_PART_PATTERN="("+Jsonix.Schema.XSD.Calendar.YEAR_PATTERN+")-("+Jsonix.Schema.XSD.Calendar.MONTH_PATTERN+")-("+Jsonix.Schema.XSD.Calendar.DAY_PATTERN+")";
+Jsonix.Schema.XSD.Calendar.TIME_PART_PATTERN="([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(\\.([0-9]+))?";
+Jsonix.Schema.XSD.Calendar.TIME_PATTERN=Jsonix.Schema.XSD.Calendar.TIME_PART_PATTERN+"("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.DATE_PATTERN=Jsonix.Schema.XSD.Calendar.DATE_PART_PATTERN+"("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
+Jsonix.Schema.XSD.Calendar.DATETIME_PATTERN=Jsonix.Schema.XSD.Calendar.DATE_PART_PATTERN+"T"+Jsonix.Schema.XSD.Calendar.TIME_PART_PATTERN+"("+Jsonix.Schema.XSD.Calendar.TIMEZONE_PATTERN+")?";
 Jsonix.Schema.XSD.Calendar.INSTANCE=new Jsonix.Schema.XSD.Calendar();
 Jsonix.Schema.XSD.Calendar.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.Calendar.INSTANCE);
-Jsonix.Schema.XSD.Duration=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"Duration",typeName:Jsonix.Schema.XSD.qname("duration"),CLASS_NAME:"Jsonix.Schema.XSD.Duration"});
+Jsonix.Schema.XSD.Duration=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"Duration",typeName:Jsonix.Schema.XSD.qname("duration"),isInstance:function(f,e,d){return Jsonix.Util.Type.isObject(f)&&((Jsonix.Util.Type.exists(f.sign)?(f.sign===-1||f.sign===1):true)(Jsonix.Util.NumberUtils.isInteger(f.years)&&f.years>=0)||(Jsonix.Util.NumberUtils.isInteger(f.months)&&f.months>=0)||(Jsonix.Util.NumberUtils.isInteger(f.days)&&f.days>=0)||(Jsonix.Util.NumberUtils.isInteger(f.hours)&&f.hours>=0)||(Jsonix.Util.NumberUtils.isInteger(f.minutes)&&f.minutes>=0)||(Jsonix.Util.Type.isNumber(f.seconds)&&f.seconds>=0))
+},validate:function(h){Jsonix.Util.Ensure.ensureObject(h);
+if(Jsonix.Util.Type.exists(h.sign)){if(!(h.sign===1||h.sign===-1)){throw new Error("Sign of the duration ["+h.sign+"] must be either [1] or [-1].")
+}}var e=true;
+var g=function(b,a){if(Jsonix.Util.Type.exists(b)){if(!(Jsonix.Util.NumberUtils.isInteger(b)&&b>=0)){throw new Error(a.replace("{0}",b))
+}else{return true
+}}else{return false
+}};
+var f=function(b,a){if(Jsonix.Util.Type.exists(b)){if(!(Jsonix.Util.Type.isNumber(b)&&b>=0)){throw new Error(a.replace("{0}",b))
+}else{return true
+}}else{return false
+}};
+e=e&&!g(h.years,"Number of years [{0}] must be an unsigned integer.");
+e=e&&!g(h.months,"Number of months [{0}] must be an unsigned integer.");
+e=e&&!g(h.days,"Number of days [{0}] must be an unsigned integer.");
+e=e&&!g(h.hours,"Number of hours [{0}] must be an unsigned integer.");
+e=e&&!g(h.minutes,"Number of minutes [{0}] must be an unsigned integer.");
+e=e&&!f(h.seconds,"Number of seconds [{0}] must be an unsigned number.");
+if(e){throw new Error("At least one of the components (years, months, days, hours, minutes, seconds) must be set.")
+}},print:function(h,j,f,i){this.validate(h);
+var g="";
+if(h.sign===-1){g+="-"
+}g+="P";
+if(Jsonix.Util.Type.exists(h.years)){g+=(h.years+"Y")
+}if(Jsonix.Util.Type.exists(h.months)){g+=(h.months+"M")
+}if(Jsonix.Util.Type.exists(h.days)){g+=(h.days+"D")
+}if(Jsonix.Util.Type.exists(h.hours)||Jsonix.Util.Type.exists(h.minutes)||Jsonix.Util.Type.exists(h.seconds)){g+="T";
+if(Jsonix.Util.Type.exists(h.hours)){g+=(h.hours+"H")
+}if(Jsonix.Util.Type.exists(h.minutes)){g+=(h.minutes+"M")
+}if(Jsonix.Util.Type.exists(h.seconds)){g+=(h.seconds+"S")
+}}return g
+},parse:function(m,p,j,o){var k=new RegExp("^"+Jsonix.Schema.XSD.Duration.PATTERN+"$");
+var i=m.match(k);
+if(i!==null){var n=true;
+var l={};
+if(i[1]){l.sign=-1
+}if(i[3]){l.years=parseInt(i[3],10);
+n=false
+}if(i[5]){l.months=parseInt(i[5],10);
+n=false
+}if(i[7]){l.days=parseInt(i[7],10);
+n=false
+}if(i[10]){l.hours=parseInt(i[10],10);
+n=false
+}if(i[12]){l.minutes=parseInt(i[12],10);
+n=false
+}if(i[14]){l.seconds=Number(i[14]);
+n=false
+}return l
+}else{throw new Error("Value ["+m+"] does not match the duration pattern.")
+}},CLASS_NAME:"Jsonix.Schema.XSD.Duration"});
+Jsonix.Schema.XSD.Duration.PATTERN="(-)?P(([0-9]+)Y)?(([0-9]+)M)?(([0-9]+)D)?(T(([0-9]+)H)?(([0-9]+)M)?(([0-9]+(\\.[0-9]+)?)S)?)?";
 Jsonix.Schema.XSD.Duration.INSTANCE=new Jsonix.Schema.XSD.Duration();
 Jsonix.Schema.XSD.Duration.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.Duration.INSTANCE);
-Jsonix.Schema.XSD.DateTime=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"DateTime",typeName:Jsonix.Schema.XSD.qname("dateTime"),parse:function(o,t,p,l){var q=this.parseDateTime(o);
+Jsonix.Schema.XSD.DateTime=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"DateTime",typeName:Jsonix.Schema.XSD.qname("dateTime"),parse:function(g,e,f,h){return this.parseDateTime(g)
+},print:function(g,e,f,h){return this.printDateTime(g)
+},CLASS_NAME:"Jsonix.Schema.XSD.DateTime"});
+Jsonix.Schema.XSD.DateTime.INSTANCE=new Jsonix.Schema.XSD.DateTime();
+Jsonix.Schema.XSD.DateTime.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.DateTime.INSTANCE);
+Jsonix.Schema.XSD.DateTimeAsDate=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"DateTimeAsDate",typeName:Jsonix.Schema.XSD.qname("dateTime"),parse:function(n,t,o,l){var q=this.parseDateTime(n);
 var s=new Date();
 s.setFullYear(q.year);
 s.setMonth(q.month-1);
@@ -1873,32 +2195,38 @@ s.setHours(q.hour);
 s.setMinutes(q.minute);
 s.setSeconds(q.second);
 if(Jsonix.Util.Type.isNumber(q.fractionalSecond)){s.setMilliseconds(Math.floor(1000*q.fractionalSecond))
-}var n;
+}var p;
 var r;
-var m=s.getTimezoneOffset();
-if(Jsonix.Util.NumberUtils.isInteger(q.timezone)){n=q.timezone;
+var m=-s.getTimezoneOffset();
+if(Jsonix.Util.NumberUtils.isInteger(q.timezone)){p=q.timezone;
 r=false
-}else{n=m;
+}else{p=m;
 r=true
-}var k=new Date(s.getTime()+(60000*(n-m)));
-if(r){k.originalTimezoneOffset=null
-}else{k.originalTimezoneOffset=n
+}var k=new Date(s.getTime()+(60000*(-p+m)));
+if(r){k.originalTimezone=null
+}else{k.originalTimezone=q.timezone
 }return k
-},print:function(k,n,i,m){Jsonix.Util.Ensure.ensureDate(k);
-var l;
-var j=k.getTimezoneOffset();
-var h;
-if(k.originalTimezoneOffset===null){return this.printDateTime(new Jsonix.XML.Calendar({year:k.getFullYear(),month:k.getMonth()+1,day:k.getDate(),hour:k.getHours(),minute:k.getMinutes(),second:k.getSeconds(),fractionalSecond:(k.getMilliseconds()/1000)}))
-}else{if(Jsonix.Util.NumberUtils.isInteger(k.originalTimezoneOffset)){l=k.originalTimezoneOffset;
-h=new Date(k.getTime()-(60000*(l-j)))
-}else{l=j;
-h=k
-}return this.printDateTime(new Jsonix.XML.Calendar({year:h.getFullYear(),month:h.getMonth()+1,day:h.getDate(),hour:h.getHours(),minute:h.getMinutes(),second:h.getSeconds(),fractionalSecond:(h.getMilliseconds()/1000),timezone:l}))
+},print:function(k,o,i,n){Jsonix.Util.Ensure.ensureDate(k);
+var m;
+var l=-k.getTimezoneOffset();
+var p;
+if(k.originalTimezone===null){return this.printDateTime(new Jsonix.XML.Calendar({year:k.getFullYear(),month:k.getMonth()+1,day:k.getDate(),hour:k.getHours(),minute:k.getMinutes(),second:k.getSeconds(),fractionalSecond:(k.getMilliseconds()/1000)}))
+}else{if(Jsonix.Util.NumberUtils.isInteger(k.originalTimezone)){m=k.originalTimezone;
+p=new Date(k.getTime()-(60000*(-m+l)))
+}else{m=l;
+p=k
+}var j=this.printDateTime(new Jsonix.XML.Calendar({year:p.getFullYear(),month:p.getMonth()+1,day:p.getDate(),hour:p.getHours(),minute:p.getMinutes(),second:p.getSeconds(),fractionalSecond:(p.getMilliseconds()/1000),timezone:m}));
+return j
 }},isInstance:function(f,e,d){return Jsonix.Util.Type.isDate(f)
-},CLASS_NAME:"Jsonix.Schema.XSD.DateTime"});
-Jsonix.Schema.XSD.DateTime.INSTANCE=new Jsonix.Schema.XSD.DateTime();
-Jsonix.Schema.XSD.DateTime.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.DateTime.INSTANCE);
-Jsonix.Schema.XSD.Time=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"Time",typeName:Jsonix.Schema.XSD.qname("time"),parse:function(o,t,p,l){var q=this.parseTime(o);
+},CLASS_NAME:"Jsonix.Schema.XSD.DateTimeAsDate"});
+Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE=new Jsonix.Schema.XSD.DateTimeAsDate();
+Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE);
+Jsonix.Schema.XSD.Time=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"Time",typeName:Jsonix.Schema.XSD.qname("time"),parse:function(g,e,f,h){return this.parseTime(g)
+},print:function(g,e,f,h){return this.printTime(g)
+},CLASS_NAME:"Jsonix.Schema.XSD.Time"});
+Jsonix.Schema.XSD.Time.INSTANCE=new Jsonix.Schema.XSD.Time();
+Jsonix.Schema.XSD.Time.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.Time.INSTANCE);
+Jsonix.Schema.XSD.TimeAsDate=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"TimeAsDate",typeName:Jsonix.Schema.XSD.qname("time"),parse:function(n,t,o,l){var q=this.parseTime(n);
 var s=new Date();
 s.setFullYear(1970);
 s.setMonth(0);
@@ -1907,37 +2235,43 @@ s.setHours(q.hour);
 s.setMinutes(q.minute);
 s.setSeconds(q.second);
 if(Jsonix.Util.Type.isNumber(q.fractionalSecond)){s.setMilliseconds(Math.floor(1000*q.fractionalSecond))
-}var n;
+}var p;
 var r;
-var m=s.getTimezoneOffset();
-if(Jsonix.Util.NumberUtils.isInteger(q.timezone)){n=q.timezone;
+var m=-s.getTimezoneOffset();
+if(Jsonix.Util.NumberUtils.isInteger(q.timezone)){p=q.timezone;
 r=false
-}else{n=m;
+}else{p=m;
 r=true
-}var k=new Date(s.getTime()+(60000*(n-m)));
-if(r){k.originalTimezoneOffset=null
-}else{k.originalTimezoneOffset=n
+}var k=new Date(s.getTime()+(60000*(-p+m)));
+if(r){k.originalTimezone=null
+}else{k.originalTimezone=p
 }return k
-},print:function(n,t,r,k){Jsonix.Util.Ensure.ensureDate(n);
-var q=n.getTime();
-if(q<=-86400000&&q>=86400000){throw new Error("Invalid time ["+n+"].")
-}if(n.originalTimezoneOffset===null){return this.printTime(new Jsonix.XML.Calendar({hour:n.getHours(),minute:n.getMinutes(),second:n.getSeconds(),fractionalSecond:(n.getMilliseconds()/1000)}))
-}else{var s;
-var m;
-var l=n.getTimezoneOffset();
-if(Jsonix.Util.NumberUtils.isInteger(n.originalTimezoneOffset)){m=n.originalTimezoneOffset;
-s=new Date(n.getTime()-(60000*(m-l)))
-}else{m=l;
-s=n
-}var o=s.getTime();
-if(o>=0){return this.printTime(new Jsonix.XML.Calendar({hour:s.getHours(),minute:s.getMinutes(),second:s.getSeconds(),fractionalSecond:(s.getMilliseconds()/1000),timezone:m}))
-}else{var p=Math.ceil(-o/3600000);
-return this.printTime(new Jsonix.XML.Calendar({hour:(s.getHours()+p+m/60)%24,minute:s.getMinutes(),second:s.getSeconds(),fractionalSecond:(s.getMilliseconds()/1000),timezone:-p*60}))
+},print:function(n,u,s,l){Jsonix.Util.Ensure.ensureDate(n);
+var r=n.getTime();
+if(r<=-86400000&&r>=86400000){throw new Error("Invalid time ["+n+"].")
+}if(n.originalTimezone===null){return this.printTime(new Jsonix.XML.Calendar({hour:n.getHours(),minute:n.getMinutes(),second:n.getSeconds(),fractionalSecond:(n.getMilliseconds()/1000)}))
+}else{var t;
+var p;
+var m=-n.getTimezoneOffset();
+if(Jsonix.Util.NumberUtils.isInteger(n.originalTimezone)){p=n.originalTimezone;
+t=new Date(n.getTime()-(60000*(-p+m)))
+}else{p=m;
+t=n
+}var o=t.getTime();
+if(o>=(-m*60000)){return this.printTime(new Jsonix.XML.Calendar({hour:t.getHours(),minute:t.getMinutes(),second:t.getSeconds(),fractionalSecond:(t.getMilliseconds()/1000),timezone:p}))
+}else{var q=Math.ceil(-o/3600000);
+var v=t.getSeconds()+t.getMinutes()*60+t.getHours()*3600+q*3600-p*60;
+return this.printTime(new Jsonix.XML.Calendar({hour:v%86400,minute:v%3600,second:v%60,fractionalSecond:(t.getMilliseconds()/1000),timezone:q*60}))
 }}},isInstance:function(f,e,d){return Jsonix.Util.Type.isDate(f)&&f.getTime()>-86400000&&f.getTime()<86400000
-},CLASS_NAME:"Jsonix.Schema.XSD.Time"});
-Jsonix.Schema.XSD.Time.INSTANCE=new Jsonix.Schema.XSD.Time();
-Jsonix.Schema.XSD.Time.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.Time.INSTANCE);
-Jsonix.Schema.XSD.Date=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"Date",typeName:Jsonix.Schema.XSD.qname("date"),parse:function(o,t,p,l){var q=this.parseDate(o);
+},CLASS_NAME:"Jsonix.Schema.XSD.TimeAsDate"});
+Jsonix.Schema.XSD.TimeAsDate.INSTANCE=new Jsonix.Schema.XSD.TimeAsDate();
+Jsonix.Schema.XSD.TimeAsDate.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.TimeAsDate.INSTANCE);
+Jsonix.Schema.XSD.Date=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"Date",typeName:Jsonix.Schema.XSD.qname("date"),parse:function(g,e,f,h){return this.parseDate(g)
+},print:function(g,e,f,h){return this.printDate(g)
+},CLASS_NAME:"Jsonix.Schema.XSD.Date"});
+Jsonix.Schema.XSD.Date.INSTANCE=new Jsonix.Schema.XSD.Date();
+Jsonix.Schema.XSD.Date.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.Date.INSTANCE);
+Jsonix.Schema.XSD.DateAsDate=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"DateAsDate",typeName:Jsonix.Schema.XSD.qname("date"),parse:function(n,t,o,l){var q=this.parseDate(n);
 var s=new Date();
 s.setFullYear(q.year);
 s.setMonth(q.month-1);
@@ -1947,49 +2281,59 @@ s.setMinutes(0);
 s.setSeconds(0);
 s.setMilliseconds(0);
 if(Jsonix.Util.Type.isNumber(q.fractionalSecond)){s.setMilliseconds(Math.floor(1000*q.fractionalSecond))
-}var n;
+}var p;
 var r;
-var m=s.getTimezoneOffset();
-if(Jsonix.Util.NumberUtils.isInteger(q.timezone)){n=q.timezone;
+var m=-s.getTimezoneOffset();
+if(Jsonix.Util.NumberUtils.isInteger(q.timezone)){p=q.timezone;
 r=false
-}else{n=m;
+}else{p=m;
 r=true
-}var k=new Date(s.getTime()+(60000*(n-m)));
-if(r){k.originalTimezoneOffset=null
-}else{k.originalTimezoneOffset=n
+}var k=new Date(s.getTime()+(60000*(-p+m)));
+if(r){k.originalTimezone=null
+}else{k.originalTimezone=p
 }return k
-},print:function(m,r,p,j){Jsonix.Util.Ensure.ensureDate(m);
-var o=new Date(m.getTime());
+},print:function(l,r,p,j){Jsonix.Util.Ensure.ensureDate(l);
+var o=new Date(l.getTime());
 o.setHours(0);
 o.setMinutes(0);
 o.setSeconds(0);
 o.setMilliseconds(0);
-if(m.originalTimezoneOffset===null){return this.printDate(new Jsonix.XML.Calendar({year:m.getFullYear(),month:m.getMonth()+1,day:m.getDate()}))
-}else{if(Jsonix.Util.NumberUtils.isInteger(m.originalTimezoneOffset)){var q=new Date(m.getTime()-(60000*(m.originalTimezoneOffset-m.getTimezoneOffset())));
-return this.printDate(new Jsonix.XML.Calendar({year:q.getFullYear(),month:q.getMonth()+1,day:q.getDate(),timezone:m.originalTimezoneOffset}))
-}else{var k=m.getTime()-o.getTime();
-if(k===0){return this.printDate(new Jsonix.XML.Calendar({year:m.getFullYear(),month:m.getMonth()+1,day:m.getDate()}))
-}else{var l=k+(60000*m.getTimezoneOffset());
-if(l<=43200000){return this.printDate(new Jsonix.XML.Calendar({year:m.getFullYear(),month:m.getMonth()+1,day:m.getDate(),timezone:Math.floor(l/60000)}))
-}else{var n=new Date(m.getTime()+86400000);
-return this.printDate(new Jsonix.XML.Calendar({year:n.getFullYear(),month:n.getMonth()+1,day:n.getDate(),timezone:(Math.floor(l/60000)-1440)}))
+if(l.originalTimezone===null){return this.printDate(new Jsonix.XML.Calendar({year:l.getFullYear(),month:l.getMonth()+1,day:l.getDate()}))
+}else{if(Jsonix.Util.NumberUtils.isInteger(l.originalTimezone)){var q=new Date(l.getTime()-(60000*(-l.originalTimezone-l.getTimezoneOffset())));
+return this.printDate(new Jsonix.XML.Calendar({year:q.getFullYear(),month:q.getMonth()+1,day:q.getDate(),timezone:l.originalTimezone}))
+}else{var k=-l.getTime()+o.getTime();
+if(k===0){return this.printDate(new Jsonix.XML.Calendar({year:l.getFullYear(),month:l.getMonth()+1,day:l.getDate()}))
+}else{var n=k-(60000*l.getTimezoneOffset());
+if(n>=-43200000){return this.printDate(new Jsonix.XML.Calendar({year:l.getFullYear(),month:l.getMonth()+1,day:l.getDate(),timezone:Math.floor(n/60000)}))
+}else{var m=new Date(l.getTime()+86400000);
+return this.printDate(new Jsonix.XML.Calendar({year:m.getFullYear(),month:m.getMonth()+1,day:m.getDate(),timezone:(Math.floor(n/60000)+1440)}))
 }}}}},isInstance:function(f,e,d){return Jsonix.Util.Type.isDate(f)
-},CLASS_NAME:"Jsonix.Schema.XSD.Date"});
-Jsonix.Schema.XSD.Date.INSTANCE=new Jsonix.Schema.XSD.Date();
-Jsonix.Schema.XSD.Date.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.Date.INSTANCE);
-Jsonix.Schema.XSD.GYearMonth=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"GYearMonth",typeName:Jsonix.Schema.XSD.qname("gYearMonth"),CLASS_NAME:"Jsonix.Schema.XSD.GYearMonth"});
+},CLASS_NAME:"Jsonix.Schema.XSD.DateAsDate"});
+Jsonix.Schema.XSD.DateAsDate.INSTANCE=new Jsonix.Schema.XSD.DateAsDate();
+Jsonix.Schema.XSD.DateAsDate.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.DateAsDate.INSTANCE);
+Jsonix.Schema.XSD.GYearMonth=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"GYearMonth",typeName:Jsonix.Schema.XSD.qname("gYearMonth"),CLASS_NAME:"Jsonix.Schema.XSD.GYearMonth",parse:function(g,e,f,h){return this.parseGYearMonth(g,e,f,h)
+},print:function(g,e,f,h){return this.printGYearMonth(g,e,f,h)
+}});
 Jsonix.Schema.XSD.GYearMonth.INSTANCE=new Jsonix.Schema.XSD.GYearMonth();
 Jsonix.Schema.XSD.GYearMonth.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.GYearMonth.INSTANCE);
-Jsonix.Schema.XSD.GYear=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"GYear",typeName:Jsonix.Schema.XSD.qname("gYear"),CLASS_NAME:"Jsonix.Schema.XSD.GYear"});
+Jsonix.Schema.XSD.GYear=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"GYear",typeName:Jsonix.Schema.XSD.qname("gYear"),CLASS_NAME:"Jsonix.Schema.XSD.GYear",parse:function(g,e,f,h){return this.parseGYear(g,e,f,h)
+},print:function(g,e,f,h){return this.printGYear(g,e,f,h)
+}});
 Jsonix.Schema.XSD.GYear.INSTANCE=new Jsonix.Schema.XSD.GYear();
 Jsonix.Schema.XSD.GYear.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.GYear.INSTANCE);
-Jsonix.Schema.XSD.GMonthDay=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"GMonthDay",typeName:Jsonix.Schema.XSD.qname("gMonthDay"),CLASS_NAME:"Jsonix.Schema.XSD.GMonthDay"});
+Jsonix.Schema.XSD.GMonthDay=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"GMonthDay",typeName:Jsonix.Schema.XSD.qname("gMonthDay"),CLASS_NAME:"Jsonix.Schema.XSD.GMonthDay",parse:function(g,e,f,h){return this.parseGMonthDay(g,e,f,h)
+},print:function(g,e,f,h){return this.printGMonthDay(g,e,f,h)
+}});
 Jsonix.Schema.XSD.GMonthDay.INSTANCE=new Jsonix.Schema.XSD.GMonthDay();
 Jsonix.Schema.XSD.GMonthDay.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.GMonthDay.INSTANCE);
-Jsonix.Schema.XSD.GDay=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"GDay",typeName:Jsonix.Schema.XSD.qname("gDay"),CLASS_NAME:"Jsonix.Schema.XSD.GDay"});
+Jsonix.Schema.XSD.GDay=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"GDay",typeName:Jsonix.Schema.XSD.qname("gDay"),CLASS_NAME:"Jsonix.Schema.XSD.GDay",parse:function(g,e,f,h){return this.parseGDay(g,e,f,h)
+},print:function(g,e,f,h){return this.printGDay(g,e,f,h)
+}});
 Jsonix.Schema.XSD.GDay.INSTANCE=new Jsonix.Schema.XSD.GDay();
 Jsonix.Schema.XSD.GDay.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.GDay.INSTANCE);
-Jsonix.Schema.XSD.GMonth=Jsonix.Class(Jsonix.Schema.XSD.AnySimpleType,{name:"GMonth",typeName:Jsonix.Schema.XSD.qname("gMonth"),CLASS_NAME:"Jsonix.Schema.XSD.GMonth"});
+Jsonix.Schema.XSD.GMonth=Jsonix.Class(Jsonix.Schema.XSD.Calendar,{name:"GMonth",typeName:Jsonix.Schema.XSD.qname("gMonth"),CLASS_NAME:"Jsonix.Schema.XSD.GMonth",parse:function(g,e,f,h){return this.parseGMonth(g,e,f,h)
+},print:function(g,e,f,h){return this.printGMonth(g,e,f,h)
+}});
 Jsonix.Schema.XSD.GMonth.INSTANCE=new Jsonix.Schema.XSD.GMonth();
 Jsonix.Schema.XSD.GMonth.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.XSD.GMonth.INSTANCE);
 Jsonix.Schema.XSD.ID=Jsonix.Class(Jsonix.Schema.XSD.String,{name:"ID",typeName:Jsonix.Schema.XSD.qname("ID"),CLASS_NAME:"Jsonix.Schema.XSD.ID"});
@@ -2001,26 +2345,42 @@ Jsonix.Schema.XSD.IDREF.INSTANCE.LIST=new Jsonix.Schema.XSD.List(Jsonix.Schema.X
 Jsonix.Schema.XSD.IDREFS=Jsonix.Class(Jsonix.Schema.XSD.List,{name:"IDREFS",initialize:function(){Jsonix.Schema.XSD.List.prototype.initialize.apply(this,[Jsonix.Schema.XSD.IDREF.INSTANCE,Jsonix.Schema.XSD.qname("IDREFS")," "])
 },CLASS_NAME:"Jsonix.Schema.XSD.IDREFS"});
 Jsonix.Schema.XSD.IDREFS.INSTANCE=new Jsonix.Schema.XSD.IDREFS();
-Jsonix.Context=Jsonix.Class({modules:[],typeInfos:null,elementInfos:null,properties:null,substitutionMembersMap:null,scopedElementInfosMap:null,initialize:function(h,i){this.modules=[];
+Jsonix.Schema.XSI={};
+Jsonix.Schema.XSI.NAMESPACE_URI="http://www.w3.org/2001/XMLSchema-instance";
+Jsonix.Schema.XSI.PREFIX="xsi";
+Jsonix.Schema.XSI.TYPE="type";
+Jsonix.Schema.XSI.NIL="nil";
+Jsonix.Schema.XSI.qname=function(b){Jsonix.Util.Ensure.ensureString(b);
+return new Jsonix.XML.QName(Jsonix.Schema.XSI.NAMESPACE_URI,b,Jsonix.Schema.XSI.PREFIX)
+};
+Jsonix.Schema.XSI.TYPE_QNAME=Jsonix.Schema.XSI.qname(Jsonix.Schema.XSI.TYPE);
+Jsonix.Context=Jsonix.Class(Jsonix.Mapping.Styled,{modules:[],typeInfos:null,typeNameKeyToTypeInfo:null,elementInfos:null,options:null,substitutionMembersMap:null,scopedElementInfosMap:null,supportXsiType:true,initialize:function(i,l){Jsonix.Mapping.Styled.prototype.initialize.apply(this,[l]);
+this.modules=[];
 this.elementInfos=[];
 this.typeInfos={};
+this.typeNameKeyToTypeInfo={};
 this.registerBuiltinTypeInfos();
-this.properties={namespacePrefixes:{}};
+this.namespacePrefixes={};
+this.prefixNamespaces={};
 this.substitutionMembersMap={};
 this.scopedElementInfosMap={};
-if(Jsonix.Util.Type.exists(i)){Jsonix.Util.Ensure.ensureObject(i);
-if(Jsonix.Util.Type.isObject(i.namespacePrefixes)){this.properties.namespacePrefixes=Jsonix.Util.Type.cloneObject(i.namespacePrefixes,{})
-}}if(Jsonix.Util.Type.exists(h)){Jsonix.Util.Ensure.ensureArray(h);
-var f,g,j;
-for(f=0;
-f<h.length;
-f++){g=h[f];
-j=this.createModule(g);
-this.modules[f]=j
+if(Jsonix.Util.Type.exists(l)){Jsonix.Util.Ensure.ensureObject(l);
+if(Jsonix.Util.Type.isObject(l.namespacePrefixes)){this.namespacePrefixes=Jsonix.Util.Type.cloneObject(l.namespacePrefixes,{})
+}if(Jsonix.Util.Type.isBoolean(l.supportXsiType)){this.supportXsiType=l.supportXsiType
+}}for(var j in this.namespacePrefixes){if(this.namespacePrefixes.hasOwnProperty(j)){p=this.namespacePrefixes[j];
+this.prefixNamespaces[p]=j
+}}if(Jsonix.Util.Type.exists(i)){Jsonix.Util.Ensure.ensureArray(i);
+var g,h,k;
+for(g=0;
+g<i.length;
+g++){h=i[g];
+k=this.createModule(h);
+this.modules[g]=k
 }}this.processModules()
 },createModule:function(d){var c;
-if(d instanceof Jsonix.Model.Module){c=d
-}else{c=new Jsonix.Model.Module(d)
+if(d instanceof this.mappingStyle.module){c=d
+}else{d=Jsonix.Util.Type.cloneObject(d);
+c=new this.mappingStyle.module(d,{mappingStyle:this.mappingStyle})
 }return c
 },registerBuiltinTypeInfos:function(){for(var b=0;
 b<this.builtinTypeInfos.length;
@@ -2033,11 +2393,11 @@ c.registerTypeInfos(this)
 }for(d=0;
 d<this.modules.length;
 d++){c=this.modules[d];
-c.buildTypeInfos(this)
+c.registerElementInfos(this)
 }for(d=0;
 d<this.modules.length;
 d++){c=this.modules[d];
-c.registerElementInfos(this)
+c.buildTypeInfos(this)
 }for(d=0;
 d<this.modules.length;
 d++){c=this.modules[d];
@@ -2045,8 +2405,9 @@ c.buildElementInfos(this)
 }},registerTypeInfo:function(d){Jsonix.Util.Ensure.ensureObject(d);
 var c=d.name||d.n||null;
 Jsonix.Util.Ensure.ensureString(c);
-this.typeInfos[c]=d
-},resolveTypeInfo:function(f,j){if(!Jsonix.Util.Type.exists(f)){return null
+this.typeInfos[c]=d;
+if(d.typeName&&d.typeName.key){this.typeNameKeyToTypeInfo[d.typeName.key]=d
+}},resolveTypeInfo:function(f,j){if(!Jsonix.Util.Type.exists(f)){return null
 }else{if(f instanceof Jsonix.Model.TypeInfo){return f
 }else{if(Jsonix.Util.Type.isString(f)){var g;
 if(f.length>0&&f.charAt(0)==="."){var h=j.name||j.n||undefined;
@@ -2075,83 +2436,34 @@ if(Jsonix.Util.Type.exists(k.scope)){i=this.resolveTypeInfo(k.scope,m).name
 if(!Jsonix.Util.Type.isObject(j)){j={};
 this.scopedElementInfosMap[i]=j
 }j[k.elementName.key]=k
+},getTypeInfoByValue:function(f){if(!Jsonix.Util.Type.exists(f)){return undefined
+}if(Jsonix.Util.Type.isObject(f)){var d=f.TYPE_NAME;
+if(Jsonix.Util.Type.isString(d)){var e=this.getTypeInfoByName(d);
+if(e){return e
+}}}return undefined
+},getTypeInfoByName:function(b){return this.typeInfos[b]
+},getTypeInfoByTypeName:function(c){var d=Jsonix.XML.QName.fromObjectOrString(c,this);
+return this.typeNameKeyToTypeInfo[d.key]
+},getTypeInfoByTypeNameKey:function(b){return this.typeNameKeyToTypeInfo[b]
 },getElementInfo:function(o,m){if(Jsonix.Util.Type.exists(m)){var j=m.name;
 var k=this.scopedElementInfosMap[j];
 if(Jsonix.Util.Type.exists(k)){var n=k[o.key];
 if(Jsonix.Util.Type.exists(n)){return n
 }}}var l="##global";
-var p=this.scopedElementInfosMap[l];
-if(Jsonix.Util.Type.exists(p)){var i=p[o.key];
+var q=this.scopedElementInfosMap[l];
+if(Jsonix.Util.Type.exists(q)){var i=q[o.key];
 if(Jsonix.Util.Type.exists(i)){return i
 }}return null
 },getSubstitutionMembers:function(b){return this.substitutionMembersMap[Jsonix.XML.QName.fromObject(b).key]
-},createMarshaller:function(){return new Jsonix.Context.Marshaller(this)
-},createUnmarshaller:function(){return new Jsonix.Context.Unmarshaller(this)
+},createMarshaller:function(){return new this.mappingStyle.marshaller(this)
+},createUnmarshaller:function(){return new this.mappingStyle.unmarshaller(this)
 },getNamespaceURI:function(b){Jsonix.Util.Ensure.ensureString(b);
-return this.properties.namespacePrefixes[b]
-},builtinTypeInfos:[Jsonix.Schema.XSD.AnyType.INSTANCE,Jsonix.Schema.XSD.AnyURI.INSTANCE,Jsonix.Schema.XSD.Base64Binary.INSTANCE,Jsonix.Schema.XSD.Boolean.INSTANCE,Jsonix.Schema.XSD.Byte.INSTANCE,Jsonix.Schema.XSD.Calendar.INSTANCE,Jsonix.Schema.XSD.Date.INSTANCE,Jsonix.Schema.XSD.DateTime.INSTANCE,Jsonix.Schema.XSD.Decimal.INSTANCE,Jsonix.Schema.XSD.Double.INSTANCE,Jsonix.Schema.XSD.Duration.INSTANCE,Jsonix.Schema.XSD.Float.INSTANCE,Jsonix.Schema.XSD.GDay.INSTANCE,Jsonix.Schema.XSD.GMonth.INSTANCE,Jsonix.Schema.XSD.GMonthDay.INSTANCE,Jsonix.Schema.XSD.GYear.INSTANCE,Jsonix.Schema.XSD.GYearMonth.INSTANCE,Jsonix.Schema.XSD.HexBinary.INSTANCE,Jsonix.Schema.XSD.ID.INSTANCE,Jsonix.Schema.XSD.IDREF.INSTANCE,Jsonix.Schema.XSD.IDREFS.INSTANCE,Jsonix.Schema.XSD.Int.INSTANCE,Jsonix.Schema.XSD.Integer.INSTANCE,Jsonix.Schema.XSD.Language.INSTANCE,Jsonix.Schema.XSD.Long.INSTANCE,Jsonix.Schema.XSD.Name.INSTANCE,Jsonix.Schema.XSD.NCName.INSTANCE,Jsonix.Schema.XSD.NegativeInteger.INSTANCE,Jsonix.Schema.XSD.NMToken.INSTANCE,Jsonix.Schema.XSD.NMTokens.INSTANCE,Jsonix.Schema.XSD.NonNegativeInteger.INSTANCE,Jsonix.Schema.XSD.NonPositiveInteger.INSTANCE,Jsonix.Schema.XSD.NormalizedString.INSTANCE,Jsonix.Schema.XSD.Number.INSTANCE,Jsonix.Schema.XSD.PositiveInteger.INSTANCE,Jsonix.Schema.XSD.QName.INSTANCE,Jsonix.Schema.XSD.Short.INSTANCE,Jsonix.Schema.XSD.String.INSTANCE,Jsonix.Schema.XSD.Strings.INSTANCE,Jsonix.Schema.XSD.Time.INSTANCE,Jsonix.Schema.XSD.Token.INSTANCE,Jsonix.Schema.XSD.UnsignedByte.INSTANCE,Jsonix.Schema.XSD.UnsignedInt.INSTANCE,Jsonix.Schema.XSD.UnsignedLong.INSTANCE,Jsonix.Schema.XSD.UnsignedShort.INSTANCE],CLASS_NAME:"Jsonix.Context"});
-Jsonix.Context.Marshaller=Jsonix.Class({context:null,initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
-this.context=b
-},marshalString:function(e){var d=this.marshalDocument(e);
-var f=Jsonix.DOM.serialize(d);
-return f
-},marshalDocument:function(d){var e=new Jsonix.XML.Output({namespacePrefixes:this.context.properties.namespacePrefixes});
-var f=e.writeStartDocument();
-this.marshalElementNode(d,e);
-e.writeEndDocument();
-return f
-},marshalElementNode:function(k,p,m){Jsonix.Util.Ensure.ensureObject(k);
-Jsonix.Util.Ensure.ensureObject(k.name);
-Jsonix.Util.Ensure.ensureExists(k.value);
-var o=Jsonix.XML.QName.fromObject(k.name);
-var i=this.context.getElementInfo(o,m);
-if(!Jsonix.Util.Type.exists(i)){throw new Error("Could not find element declaration for the element ["+o.key+"].")
-}Jsonix.Util.Ensure.ensureObject(i.typeInfo);
-var l=i.typeInfo;
-var n=p.writeStartElement(k.name);
-var j=Jsonix.Model.Adapter.getAdapter(i);
-j.marshal(l,k.value,this.context,p,m);
-p.writeEndElement();
-return n
-},CLASS_NAME:"Jsonix.Context.Marshaller"});
-Jsonix.Context.Unmarshaller=Jsonix.Class({context:null,initialize:function(b){Jsonix.Util.Ensure.ensureObject(b);
-this.context=b
-},unmarshalString:function(c){Jsonix.Util.Ensure.ensureString(c);
-var d=Jsonix.DOM.parse(c);
-return this.unmarshalDocument(d)
-},unmarshalURL:function(d,f,e){Jsonix.Util.Ensure.ensureString(d);
-Jsonix.Util.Ensure.ensureFunction(f);
-if(Jsonix.Util.Type.exists(e)){Jsonix.Util.Ensure.ensureObject(e)
-}that=this;
-Jsonix.DOM.load(d,function(a){f(that.unmarshalDocument(a))
-},e)
-},unmarshalFile:function(g,h,e){if(typeof _jsonix_fs==="undefined"){throw new Error("File unmarshalling is only available in environments which support file systems.")
-}Jsonix.Util.Ensure.ensureString(g);
-Jsonix.Util.Ensure.ensureFunction(h);
-if(Jsonix.Util.Type.exists(e)){Jsonix.Util.Ensure.ensureObject(e)
-}that=this;
-var f=_jsonix_fs;
-f.readFile(g,e,function(d,c){if(d){throw d
-}else{var a=c.toString();
-var b=Jsonix.DOM.parse(a);
-h(that.unmarshalDocument(b))
-}})
-},unmarshalDocument:function(f){var d=new Jsonix.XML.Input(f);
-var e=null;
-d.nextTag();
-return this.unmarshalElementNode(d)
-},unmarshalElementNode:function(o,m){if(o.eventType!=1){throw new Error("Parser must be on START_ELEMENT to read next text.")
-}var j=null;
-var n=Jsonix.XML.QName.fromObject(o.getName());
-var p=this.context.getElementInfo(n,m);
-if(!Jsonix.Util.Type.exists(p)){throw new Error("Could not find element declaration for the element ["+n.key+"].")
-}Jsonix.Util.Ensure.ensureObject(p.typeInfo);
-var k=p.typeInfo;
-var i=Jsonix.Model.Adapter.getAdapter(p);
-var l=i.unmarshal(k,this.context,o,m);
-j={name:n,value:l};
-return j
-},CLASS_NAME:"Jsonix.Context.Unmarshaller"});
+return this.prefixNamespaces[b]
+},getPrefix:function(e,d){Jsonix.Util.Ensure.ensureString(e);
+var f=this.namespacePrefixes[e];
+if(Jsonix.Util.Type.isString(f)){return f
+}else{return d
+}},builtinTypeInfos:[Jsonix.Schema.XSD.AnyType.INSTANCE,Jsonix.Schema.XSD.AnySimpleType.INSTANCE,Jsonix.Schema.XSD.AnyURI.INSTANCE,Jsonix.Schema.XSD.Base64Binary.INSTANCE,Jsonix.Schema.XSD.Boolean.INSTANCE,Jsonix.Schema.XSD.Byte.INSTANCE,Jsonix.Schema.XSD.Calendar.INSTANCE,Jsonix.Schema.XSD.DateAsDate.INSTANCE,Jsonix.Schema.XSD.Date.INSTANCE,Jsonix.Schema.XSD.DateTimeAsDate.INSTANCE,Jsonix.Schema.XSD.DateTime.INSTANCE,Jsonix.Schema.XSD.Decimal.INSTANCE,Jsonix.Schema.XSD.Double.INSTANCE,Jsonix.Schema.XSD.Duration.INSTANCE,Jsonix.Schema.XSD.Float.INSTANCE,Jsonix.Schema.XSD.GDay.INSTANCE,Jsonix.Schema.XSD.GMonth.INSTANCE,Jsonix.Schema.XSD.GMonthDay.INSTANCE,Jsonix.Schema.XSD.GYear.INSTANCE,Jsonix.Schema.XSD.GYearMonth.INSTANCE,Jsonix.Schema.XSD.HexBinary.INSTANCE,Jsonix.Schema.XSD.ID.INSTANCE,Jsonix.Schema.XSD.IDREF.INSTANCE,Jsonix.Schema.XSD.IDREFS.INSTANCE,Jsonix.Schema.XSD.Int.INSTANCE,Jsonix.Schema.XSD.Integer.INSTANCE,Jsonix.Schema.XSD.Language.INSTANCE,Jsonix.Schema.XSD.Long.INSTANCE,Jsonix.Schema.XSD.Name.INSTANCE,Jsonix.Schema.XSD.NCName.INSTANCE,Jsonix.Schema.XSD.NegativeInteger.INSTANCE,Jsonix.Schema.XSD.NMToken.INSTANCE,Jsonix.Schema.XSD.NMTokens.INSTANCE,Jsonix.Schema.XSD.NonNegativeInteger.INSTANCE,Jsonix.Schema.XSD.NonPositiveInteger.INSTANCE,Jsonix.Schema.XSD.NormalizedString.INSTANCE,Jsonix.Schema.XSD.Number.INSTANCE,Jsonix.Schema.XSD.PositiveInteger.INSTANCE,Jsonix.Schema.XSD.QName.INSTANCE,Jsonix.Schema.XSD.Short.INSTANCE,Jsonix.Schema.XSD.String.INSTANCE,Jsonix.Schema.XSD.Strings.INSTANCE,Jsonix.Schema.XSD.TimeAsDate.INSTANCE,Jsonix.Schema.XSD.Time.INSTANCE,Jsonix.Schema.XSD.Token.INSTANCE,Jsonix.Schema.XSD.UnsignedByte.INSTANCE,Jsonix.Schema.XSD.UnsignedInt.INSTANCE,Jsonix.Schema.XSD.UnsignedLong.INSTANCE,Jsonix.Schema.XSD.UnsignedShort.INSTANCE],CLASS_NAME:"Jsonix.Context"});
 	// Complete Jsonix script is included above
 	return { Jsonix: Jsonix };
 };

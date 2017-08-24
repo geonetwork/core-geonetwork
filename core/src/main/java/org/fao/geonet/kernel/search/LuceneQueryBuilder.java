@@ -646,7 +646,7 @@ public class LuceneQueryBuilder {
                 if (fieldValue.contains(OR_SEPARATOR)) {
                     templateQ = new BooleanQuery();
                     addSeparatedTextField(fieldValue, OR_SEPARATOR, LuceneIndexField.IS_TEMPLATE, (BooleanQuery) templateQ);
-                } else if (fieldValue.equals("y") || fieldValue.equals("s")) {
+                } else if (fieldValue.equals("y") || fieldValue.equals("s") || fieldValue.equals("t")) {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, fieldValue));
                 } else {
                     templateQ = new TermQuery(new Term(LuceneIndexField.IS_TEMPLATE, "n"));

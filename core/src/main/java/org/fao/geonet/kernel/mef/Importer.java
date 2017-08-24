@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.MetadataResourceDatabaseMigration;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -122,6 +123,7 @@ public class Importer {
                                         final Path mefFile) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final DataManager dm = applicationContext.getBean(DataManager.class);
+        final SettingManager sm = applicationContext.getBean(SettingManager.class);
 
         // Load preferred schema and set to iso19139 by default
         String preferredSchema = applicationContext.getBean(ServiceConfig.class).getValue("preferredSchema", "iso19139");
@@ -182,6 +184,7 @@ public class Importer {
 
                 Element metadataValidForImport;
 
+
                 Map<String, Pair<String, Element>> mdFiles = new HashMap<String, Pair<String, Element>>();
                 for (Path file : metadataXmlFiles) {
                     if (file != null && java.nio.file.Files.isRegularFile(file)) {
@@ -195,6 +198,7 @@ public class Importer {
                             }
 
                             String currFile = "Found metadata file " + file.getParent().getParent().relativize(file);
+
                             mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                         } catch (NoSchemaMatchesException e) {
@@ -347,6 +351,9 @@ public class Importer {
                     } else if (isTemplate == MetadataType.SUB_TEMPLATE) {
                         // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
+                    } else if (isTemplate == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+                        // Get subtemplate uuid if defined in @uuid at root
+                        uuid = md.get(index).getAttributeValue("uuid");
                     }
 
                 } else {
@@ -379,6 +386,15 @@ public class Importer {
                     }
                     rating = general.getChildText("rating");
                     popularity = general.getChildText("popularity");
+                }
+
+                if (schema.startsWith("iso19139")) {
+                    // In GeoNetwork 3.x, links to resources changed:
+                    // * thumbnails contains full URL instead of file name only
+                    // * API mode change old URL structure.
+                    MetadataResourceDatabaseMigration.updateMetadataResourcesLink(
+                        metadata, null, sm
+                    );
                 }
 
                 if (validate) {
@@ -474,7 +490,7 @@ public class Importer {
                 Files.createDirectories(priDir);
 
 
-                dm.indexMetadata(metadataIdMap.get(index), true);
+                dm.indexMetadata(metadataIdMap.get(index), true, null);
             }
 
             // --------------------------------------------------------------------

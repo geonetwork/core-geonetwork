@@ -52,6 +52,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PreDestroy;
 
+import jeeves.server.ServiceConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -140,7 +141,7 @@ import jeeves.server.context.ServiceContext;
 /**
  * Indexes metadata using Lucene.
  */
-public class SearchManager {
+public class SearchManager implements ISearchManager {
     public static final String INDEXING_ERROR_FIELD = "_indexingError";
     private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
     private static final String SEARCH_STYLESHEETS_DIR_PATH = "xml/search";
@@ -167,12 +168,8 @@ public class SearchManager {
     private static DocumentBoosting _documentBoostClass;
     private static PerFieldAnalyzerWrapper _defaultAnalyzer;
     private Path _stylesheetsDir;
-    private String _luceneTermsToExclude;
-    private boolean _logSpatialObject;
     private Path _htmlCacheDir;
     private Spatial _spatial;
-
-    private boolean _logAsynch;
     private LuceneOptimizerManager _luceneOptimizerManager;
 
     /**
@@ -515,8 +512,7 @@ public class SearchManager {
     /**
      * TODO javadoc.
      */
-    public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
-                     int maxWritesInTransaction) throws Exception {
+    public void init(int maxWritesInTransaction) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory geonetworkDataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
 
@@ -525,12 +521,11 @@ public class SearchManager {
         createAnalyzer();
         createDocumentBoost();
 
-        initNonStaticData(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
+        initNonStaticData(maxWritesInTransaction);
     }
 
     @VisibleForTesting
-    public void initNonStaticData(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
-                                  int maxWritesInTransaction) throws Exception {
+    public void initNonStaticData(int maxWritesInTransaction) throws Exception {
         ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         GeonetworkDataDirectory geonetworkDataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
@@ -547,13 +542,14 @@ public class SearchManager {
 
         _spatial = new Spatial(applicationContext.getBean(DataStore.class), maxWritesInTransaction);
 
-        _logAsynch = logAsynch;
-        _logSpatialObject = logSpatialObject;
-        _luceneTermsToExclude = luceneTermsToExclude;
-
         initLucene();
 
         _luceneOptimizerManager = new LuceneOptimizerManager(this, settingInfo);
+    }
+
+    @Override
+    public void init(ServiceConfig handlerConfig) throws Exception {
+
     }
 
     @PreDestroy
@@ -562,6 +558,11 @@ public class SearchManager {
 
         _spatial.end();
         _luceneOptimizerManager.shutdown();
+    }
+
+    @Override
+    public MetaSearcher newSearcher(String stylesheetName) throws Exception {
+        return null;
     }
 
     /**
@@ -615,7 +616,8 @@ public class SearchManager {
     /**
      * TODO javadoc.
      */
-    public synchronized void rescheduleOptimizer(Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
+    public synchronized void rescheduleOptimizer(
+        Calendar optimizerBeginAt, int optimizerInterval) throws Exception {
         _luceneOptimizerManager.reschedule(optimizerBeginAt, optimizerInterval);
     }
 
@@ -648,19 +650,6 @@ public class SearchManager {
         return _htmlCacheDir;
     }
 
-    // indexing methods
-
-    public boolean getLogAsynch() {
-        return _logAsynch;
-    }
-
-    public boolean getLogSpatialObject() {
-        return _logSpatialObject;
-    }
-
-    public String getLuceneTermsToExclude() {
-        return _luceneTermsToExclude;
-    }
 
     /**
      * Force the index to wait until all changes are processed and the next reader obtained will get
@@ -747,8 +736,15 @@ public class SearchManager {
         }
         Path defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
         Path otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
+        Path subtemplateStyleSheet = schemaDir.resolve("index-fields").resolve("index-subtemplate.xsl");
 
-        Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
+        Element xmlDoc;
+        if(metadataType.equals(MetadataType.SUB_TEMPLATE) || metadataType.equals(MetadataType.TEMPLATE_OF_SUB_TEMPLATE)) {
+            xmlDoc = getIndexFields(metadata, subtemplateStyleSheet, id);
+        }
+        else {
+            xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
+        }
 
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
@@ -919,6 +915,16 @@ public class SearchManager {
         }
     }
 
+    @Override
+    public void delete(String txt) throws Exception {
+        delete("_id", txt);
+    }
+
+    @Override
+    public void delete(List<String> txts) throws Exception {
+        delete("_id", txts);
+    }
+
     public ISODate getDocChangeDate(String mdId) throws Exception {
         Query query = new TermQuery(new Term(LuceneIndexField.ID, mdId));
         try (final IndexAndTaxonomy indexReader = getIndexReader(Geonet.DEFAULT_LANGUAGE, -1)) {
@@ -1063,9 +1069,19 @@ public class SearchManager {
     }
 
     /**
-     * TODO javadoc.
+     * Create an XML document for indexing the record.
+     * Main XSL must not contain root <Documents></Documents> element but one
+     * <Document></Document> that will be attached to a <Documents></Documents>
+     * afterwards.
+     * If multilingual, then the multilingual XSL must contain a root element
+     * <Documents></Documents> and a list of <Document></Document>, one per
+     * language. They all will be merged with the default XSL document.
      *
-     * @param otherLocalesStyleSheet @return
+     * @param xml Record to transform
+     * @param defaultLangStyleSheet Main indexing XSL
+     * @param otherLocalesStyleSheet Multilingual XSL (optional)
+     * @return The XML document for indexation
+     * @throws Exception
      */
     Element getIndexFields(Element xml,
                            Path defaultLangStyleSheet,
@@ -1088,18 +1104,56 @@ public class SearchManager {
             }
             documents.addContent(defaultLang);
         } catch (Exception e) {
-            Log.error(Geonet.INDEX_ENGINE,
-                String.format("Indexing stylesheet contains errors: %s %n\t Marking the metadata as _indexingError=1 in index",
-                    e.getMessage()));
-            Element xmlDoc = new Element("Document");
-            SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
-            SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
-            StringBuilder sb = new StringBuilder();
-            allText(xml, sb);
-            SearchManager.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
-            documents.addContent(xmlDoc);
+            documents.addContent(onGetIndexFieldsError(e, xml));
         }
         return documents;
+    }
+
+    /**
+     * Used only for indexing subtemplate, use a single XSL that do the all
+     * thing. Must contain a <Documents></Documents> root element.
+     *
+     * @param xml Record to transform
+     * @param singleStyleSheet Single indexing XSL
+     * @return The XML document for indexation
+     * @throws Exception
+     */
+    Element getIndexFields(Element xml, Path singleStyleSheet, String id) throws Exception {
+
+        Element documents = new Element("Documents");
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("id", id);
+        params.put("uuid",
+        ApplicationContextHolder.get().getBean(DataManager.class)
+            .getMetadataUuid(id));
+
+        try {
+            documents = Xml.transform(xml, singleStyleSheet, params);
+        } catch (Exception e) {
+            documents.addContent(onGetIndexFieldsError(e, xml));
+        }
+        return documents;
+    }
+
+    /**
+     * Merge the current indexing XML element with exception information.
+     *
+     * @param e Exception thrown
+     * @param xml record to index.
+     * @return XML element that contain exception informations.
+     */
+    private Element onGetIndexFieldsError(Exception e, Element xml) {
+        Log.error(Geonet.INDEX_ENGINE,
+                String.format("Indexing stylesheet contains errors: %s %n\t Marking the metadata as _indexingError=1 in index",
+                        e.getMessage()));
+        Element xmlDoc = new Element("Document");
+        SearchManager.addField(xmlDoc, INDEXING_ERROR_FIELD, "1", true, true);
+        SearchManager.addField(xmlDoc, INDEXING_ERROR_MSG, "GNIDX-XSL||" + e.getMessage(), true, false);
+        StringBuilder sb = new StringBuilder();
+        allText(xml, sb);
+        SearchManager.addField(xmlDoc, Geonet.IndexFieldNames.ANY, sb.toString(), false, true);
+        return xmlDoc;
+
     }
     // utilities
 
@@ -1232,12 +1286,12 @@ public class SearchManager {
      *
      * @param xlinks        Search all docs with XLinks, clear the XLinks cache and index all
      *                      records found.
-     * @param fromSelection Reindex all records from selection.
+     * @param bucket Reindex all records from selection bucket.
      */
     public boolean rebuildIndex(ServiceContext context,
                                 boolean xlinks,
                                 boolean reset,
-                                boolean fromSelection) throws Exception {
+                                String bucket) throws Exception {
         DataManager dataMan = context.getBean(DataManager.class);
         LuceneIndexLanguageTracker _tracker = context.getBean(LuceneIndexLanguageTracker.class);
         try {
@@ -1246,8 +1300,8 @@ public class SearchManager {
                     setupIndex(false);
                 }
             }
-            if (fromSelection) {
-                dataMan.rebuildIndexForSelection(context, xlinks);
+            if (StringUtils.isNotBlank(bucket)) {
+                dataMan.rebuildIndexForSelection(context, bucket, xlinks);
             } else if (xlinks) {
                 dataMan.rebuildIndexXLinkedMetadata(context);
             } else {
