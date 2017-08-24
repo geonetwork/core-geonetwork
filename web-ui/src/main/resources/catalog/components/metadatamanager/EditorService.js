@@ -172,7 +172,7 @@
                for (var i = 0; i < params.length; i++) {
                  // Combine all XML snippet in the same parameters
                  formParams[params[i].name] =
-                   (formParams[params[i].name] &&
+                 (formParams[params[i].name] &&
                      params[i].name.indexOf('_X') === 0) ?
                      formParams[params[i].name] + '&&&' + params[i].value :
                      params[i].value;
@@ -181,8 +181,8 @@
                for (var key in formParams) {
                  if (formParams.hasOwnProperty(key)) {
                    serializedParams +=
-                     encodeURIComponent(key) + '=' +
-                     encodeURIComponent(formParams[key]) + '&';
+                   encodeURIComponent(key) + '=' +
+                   encodeURIComponent(formParams[key]) + '&';
                  }
                }
                return serializedParams;
@@ -190,10 +190,10 @@
 
              gnCurrentEdit.working = true;
              $http.post(
-               '../api/records/' + gnCurrentEdit.id + '/editor?' +
-               (refreshForm ? '' : '&commit=true') +
-               (terminate ? '&terminate=true' : ''),
-               getFormParameters(),
+             '../api/records/' + gnCurrentEdit.id + '/editor?' +
+             (refreshForm ? '' : '&commit=true') +
+             (terminate ? '&terminate=true' : ''),
+             getFormParameters(),
              {
                headers: {'Content-Type':
                  'application/x-www-form-urlencoded'}

@@ -261,7 +261,7 @@
                       }
                       params.schema = gnCurrentEdit.schema;
 
-                      if(!params.lang) {
+                      if (!params.lang) {
                         console.warn('No lang has been set for the xlink');
                       }
                       var urlParams =
