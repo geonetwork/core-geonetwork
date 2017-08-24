@@ -28,6 +28,8 @@
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
 >
+    <xsl:param name="id"/>
+    <xsl:param name="uuid"/>
 
 
     <xsl:variable name="isMultilingual" select="count(distinct-values(*//gmd:LocalisedCharacterString/@locale)) > 0"/>
