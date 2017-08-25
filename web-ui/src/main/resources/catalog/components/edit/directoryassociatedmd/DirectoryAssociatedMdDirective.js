@@ -44,7 +44,6 @@
         controller: ['$scope', 'gnGlobalSettings',
           function($scope, gnGlobalSettings) {
             $scope.searchObj = {
-              selectionBucket: 'd101',
               params: {
                 _isTemplate: 'y or n',
                 any: '',
