@@ -168,7 +168,7 @@ public class RegisterApi {
             sm.getNodeURL(),
             sm.getSiteName()
         );
-        if (!MailUtil.sendMail(catalogAdminEmail, subject, message, sm)) {
+        if (!MailUtil.sendMail(user.getEmail(), subject, message, sm)) {
             return new ResponseEntity<>(String.format(
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
