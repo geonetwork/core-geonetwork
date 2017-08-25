@@ -929,6 +929,24 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
+     * Extract the title field from the Metadata Repository. This is only valid for subtemplates as the title
+     * can be stored with the subtemplate (since subtemplates don't have a title) - metadata records don't store the 
+     * title here as this is part of the metadata.
+     *
+     * @param id metadata id to retrieve
+     */
+    public String getMetadataTitle(String id) throws Exception {
+        Metadata md = getMetadataRepository().findOne(id);
+
+        if (md == null) {
+            throw new IllegalArgumentException("Metadata not found for id : " + id);
+        } else {
+            // get metadata title
+            return md.getDataInfo().getTitle();
+        }
+    }
+
+    /**
      *
      * @param context
      * @param id
@@ -2879,6 +2897,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             		elUserDetails.addContent(new Element("surname").setText(user.getSurname()));
             		elUserDetails.addContent(new Element("firstname").setText(user.getName()));
             		elUserDetails.addContent(new Element("organisation").setText(user.getOrganisation()));
+                elUserDetails.addContent(new Element("username").setText(user.getUsername()));
 								elUser.addContent(elUserDetails);
             		env.addContent(elUser);
         			}
