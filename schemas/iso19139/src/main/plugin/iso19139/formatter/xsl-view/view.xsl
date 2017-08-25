@@ -117,18 +117,19 @@
        gco:Date|gco:DateTime|*/@codeListValue]"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
-
-    <dl>
-      <dt>
-        <xsl:value-of select="if ($fieldName)
-                                then $fieldName
-                                else tr:node-label(tr:create($schema), name(), null)"/>
-      </dt>
-      <dd>
-        <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
-        <xsl:apply-templates mode="render-value" select="@*"/>
-      </dd>
-    </dl>
+    <xsl:if test="normalize-space(*|*/@codeListValue) != ''">
+      <dl>
+        <dt>
+          <xsl:value-of select="if ($fieldName)
+                                  then $fieldName
+                                  else tr:node-label(tr:create($schema), name(), null)"/>
+        </dt>
+        <dd>
+          <xsl:apply-templates mode="render-value" select="*|*/@codeListValue"/>
+          <xsl:apply-templates mode="render-value" select="@*"/>
+        </dd>
+      </dl>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template mode="render-field"
