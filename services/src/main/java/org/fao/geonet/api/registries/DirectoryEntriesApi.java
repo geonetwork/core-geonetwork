@@ -275,8 +275,10 @@ public class DirectoryEntriesApi {
         @RequestParam(
             required = false, defaultValue = "iso19139"
         )
-            String schema)
+            String schema,
+        @ApiIgnore
+            HttpServletRequest request)
         throws Exception {
-        return getEntry(uuid, process, transformation, langs, schema);
+        return getEntry(uuid, process, transformation, langs, schema, request);
     }
 }
