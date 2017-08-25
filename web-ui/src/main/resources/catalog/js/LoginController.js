@@ -100,7 +100,7 @@
          };
          $scope.register = function() {
            $scope.userInfo.emailAddresses[0] = $scope.userInfo.username;
-           $http.put('../api/0.1/user/actions/register', $scope.userInfo)
+           return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {
                title: data
