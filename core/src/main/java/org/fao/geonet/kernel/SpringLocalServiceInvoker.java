@@ -85,7 +85,21 @@ public class SpringLocalServiceInvoker {
         if (o instanceof String) {
           String checkForward = (String)o;
           if (checkForward.startsWith("forward:")) {
-            return invoke(StringUtils.substringAfter(checkForward,"forward:"));
+            //
+            // if the original url ends with the first component of the fwd url, then concatenate them, otherwise
+            // just invoke it and hope for the best...
+            // eg. local://srv/api/records/urn:marlin.csiro.au:org:1_organisation_name
+            // returns forward:urn:marlin.csiro.au:org:1_organisation_name/formatters/xml
+            // so we join the original url and the forwarded url as:
+            // /api/records/urn:marlin.csiro.au:org:1_organisation_name/formatters/xml and invoke it.
+            //
+            String fwdUrl = StringUtils.substringAfter(checkForward,"forward:");
+						String lastComponent = StringUtils.substringAfterLast(request.getRequestURI(),"/");
+            if (lastComponent.length() > 0 && StringUtils.startsWith(fwdUrl, lastComponent)) {
+							return invoke(request.getRequestURI()+StringUtils.substringAfter(fwdUrl,lastComponent));
+						} else {
+							return invoke(fwdUrl);	
+           	} 
           }
         }
         return o;
