@@ -945,7 +945,137 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_MaintenanceFrequencyCode">
+  <codelist name="gmd:MD_MaintenanceFrequencyCode"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'SEXTANT')]">
+  <entry>
+			<code>continual</code>
+			<label>Continue</label>
+			<description>Mise à jour continue</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>daily</code>
+			<label>Journalière</label>
+			<description>Mise à jour quotidienne</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>weekly</code>
+			<label>Hebdomadaire</label>
+			<description>Mise à jour hebdomadaire</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>fortnightly</code>
+			<label>Bi-mensuelle</label>
+			<description>Mise à jour 2 fois par mois</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>monthly</code>
+			<label>Mensuelle</label>
+			<description>Mise à jour mensuelle</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>quarterly</code>
+			<label>Trimestrielle</label>
+			<description>Mise à jour trimestrielle</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>biannually</code>
+			<label>Bi-annuelle</label>
+			<description>Mise à jour bi-annuelle</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>annually</code>
+			<label>Annuelle</label>
+			<description>Mise à jour annuelle</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>asNeeded</code>
+			<label>Lorsque nécessaire</label>
+			<description>Mise à jour lorsque cela est jugé nécessaire</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>irregular</code>
+			<label>Irrégulière</label>
+			<description>Mise à jour irrégulière</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>notPlanned</code>
+			<label>Non planifiée</label>
+			<description>Mise à jour non planifiée</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<code>unknown</code>
+			<label>Inconnue</label>
+			<description>Mise à jour inconnue</description>
+		</entry>
+
+
+    <!-- Added in Sextant -->
+    <entry>
+      <code>lessThan6Hours</code>
+      <label>Less than 6 hours</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan12Hours</code>
+      <label>Less than 12 hours</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan24Hours</code>
+      <label>Less than 24 hours</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan48Hours</code>
+      <label>Less than 48 hours</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan1month</code>
+      <label>Less than 1 month</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan3days</code>
+      <label>Less than 3 days</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan4months</code>
+      <label>Less than 4 months</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>every12hours</code>
+      <label>~ 12 hours</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>historical</code>
+      <label>Historical</label>
+      <description></description>
+    </entry>
+		<!-- ISO PROFIL CHE ONLY
+		<entry>
+			<code>userDefined</code>
+			<label>Fréquence personnalisée</label>
+			<description>Dans ce cas l'attribut définissant une fréquence personnalisée doit être utilisée</description>
+		</entry>-->
+	</codelist>
+  <codelist name="gmd:MD_MaintenanceFrequencyCode">
 		<entry>
 			<code>continual</code>
 			<label>Continue</label>
