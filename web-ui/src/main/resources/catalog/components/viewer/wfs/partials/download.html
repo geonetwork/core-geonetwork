@@ -1,5 +1,10 @@
-<p data-ng-show="formats.length > 0 && featureType" data-translate="">wfsDownloadDataInstruction</p>
-<div data-ng-hide="isWfsAvailable"><i class="fa fa-warning fa-2x fa-fw pull-left" /> {{'Unable_to_connect_to_service'|translate}}</div>
+<p data-ng-show="formats.length > 0 && featureType" data-translate=""
+   wfsDownloadDataInstruction
+</p>
+<div data-ng-hide="isWfsAvailable">
+  <i class="fa fa-warning fa-2x fa-fw pull-left" />
+  {{'Unable_to_connect_to_service'|translate}}
+</div>
 <div class="btn-group "
      data-ng-show="formats.length > 0 && featureType && isWfsAvailable">
 

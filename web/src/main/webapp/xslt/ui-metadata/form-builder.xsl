@@ -99,7 +99,7 @@
     It could be relevant to investigate if this check should be done on
     only element potentially using XLink and not all of them.
     This may have performance inpact? -->
-    <xsl:param name="isDisabled" select="ancestor-or-self::node()[@xlink:href]"/>
+    <xsl:param name="isDisabled" select="count(ancestor-or-self::node()[@xlink:href]) > 0"/>
 
     <!-- Define if the language fields should be displayed
     with the selector or below each other. -->
@@ -974,7 +974,7 @@
           <xsl:if test="$lang">
             <xsl:attribute name="lang" select="$lang"/>
           </xsl:if>
-          <xsl:if test="$hidden or $hasHelper">
+          <xsl:if test="$hidden or ($hasHelper and not($isDisabled))">
             <xsl:attribute name="class" select="'hidden'"/>
           </xsl:if>
           <xsl:value-of select="$valueToEdit"/>
@@ -1108,7 +1108,7 @@
             <xsl:if test="$lang">
               <xsl:attribute name="lang" select="$lang"/>
             </xsl:if>
-            <xsl:if test="$hidden or $hasHelper">
+            <xsl:if test="$hidden or ($hasHelper and not($isDisabled))">
               <!-- hide the form field if helper is available, the
               value is set by the directive which provide customized
               forms -->
@@ -1137,7 +1137,8 @@
         Create an helper list for the current input element.
         Current input could be an element or an attribute (eg. uom).
         -->
-    <xsl:if test="$hasHelper">
+    <xsl:if test="$hasHelper and not($isDisabled)">
+
       <xsl:call-template name="render-form-field-helper">
         <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
         <!-- The @rel attribute in the helper may define a related field

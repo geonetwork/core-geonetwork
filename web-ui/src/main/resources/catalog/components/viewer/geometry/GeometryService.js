@@ -156,7 +156,8 @@
        * @param {bool} options.outputAsFeatures default is false
        * @param {string} options.gmlFeatureElement feature element name
        * @param {string} options.gmlFeatureNS feature element namespace
-       * @returns {string | ol.geom.Geometry | Array.<ol.Feature>} output as string or object
+       * @return {string | ol.geom.Geometry | Array.<ol.Feature>} output
+       *  as string or object
        */
       this.printGeometryOutput = function(map, feature, options) {
         var options = angular.extend({
@@ -166,9 +167,9 @@
 
         // clone & transform geom
         var outputGeom = feature.getGeometry().clone().transform(
-          map.getView().getProjection(),
-          options.crs || 'EPSG:4326'
-        );
+            map.getView().getProjection(),
+            options.crs || 'EPSG:4326'
+            );
         var outputFeature = new ol.Feature({
           geometry: outputGeom
         });
@@ -202,22 +203,23 @@
           case 'gml':
             format = new ol.format.GML({
               featureNS: options.gmlFeatureNS ||
-                'http://mapserver.gis.umn.edu/mapserver',
+                  'http://mapserver.gis.umn.edu/mapserver',
               featureType: options.gmlFeatureElement || 'features'
             });
 
             if (options.outputAsWFSFeaturesCollection) {
-              outputValue = 
-                '<wfs:FeatureCollection xmlns:wfs="http://www.opengis.net/wfs">' +
-                format.writeFeatures([outputFeature]) +
-                '</wfs:FeatureCollection>';
+              outputValue =
+                  '<wfs:FeatureCollection ' +
+                  'xmlns:wfs="http://www.opengis.net/wfs">' +
+                  format.writeFeatures([outputFeature]) +
+                  '</FeatureCollection>';
             } else if (options.outputAsFeatures) {
               outputValue = format.writeFeatures([outputFeature]);
             } else {
               var nodes = format.writeFeaturesNode([outputFeature])
-                .firstChild.childNodes;
+                  .firstChild.childNodes;
               var geom = null;
-              nodes.forEach(function (node) {
+              nodes.forEach(function(node) {
                 if (node.localName === outputFeature.getGeometryName()) {
                   geom = node;
                 }
@@ -233,8 +235,8 @@
           // no valid format specified: output as object + give warning
           default:
             console.warn('No valid output format specified for ' +
-              'gn-geometry-tool (value=' + options.format + '); ' +
-              'outputting geometry as object');
+                'gn-geometry-tool (value=' + options.format + '); ' +
+                'outputting geometry as object');
 
           case 'object':
             if (options.outputAsFeatures) {
@@ -263,7 +265,7 @@
        * @param {string} options.format default is GML
        * @param {string} options.gmlFeatureElement feature element name
        * @param {string} options.gmlFeatureNS feature element ns
-       * @returns {ol.geom.Geometry} geometry object
+       * @return {ol.geom.Geometry} geometry object
        */
       this.parseGeometryInput = function(map, input, options) {
         var options = angular.extend({
@@ -298,8 +300,10 @@
               featureNS: 'http://www.opengis.net/gml',
               featureType: 'feature'
             });
-            var fullXml = '<featureMembers><gml:feature xmlns:gml="http://www.opengis.net/gml"><geometry>' +
-              input + '</geometry></gml:feature></featureMembers>';
+            var fullXml = '<featureMembers>' +
+                '<gml:feature xmlns:gml="http://www.opengis.net/gml">' +
+                '<geometry>' +
+                input + '</geometry></gml:feature></featureMembers>';
             var feature = format.readFeatures(fullXml, {
               dataProjection: options.crs,
               featureProjection: outputProjection
@@ -312,8 +316,8 @@
           case 'object':
             if (!input instanceof ol.geom.Geometry) {
               console.error('gn-geometry-tool input was supposed to be a ' +
-                'ol.geom.Geometry object but was something else, ' +
-                'skipping parse.', input);
+                  'ol.geom.Geometry object but was something else, ' +
+                  'skipping parse.', input);
               return outputValue;
             }
             outputValue = input.clone.transform(options.crs, outputProjection);

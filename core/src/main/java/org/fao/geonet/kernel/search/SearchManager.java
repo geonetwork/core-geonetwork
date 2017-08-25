@@ -740,7 +740,7 @@ public class SearchManager implements ISearchManager {
 
         Element xmlDoc;
         if(metadataType.equals(MetadataType.SUB_TEMPLATE) || metadataType.equals(MetadataType.TEMPLATE_OF_SUB_TEMPLATE)) {
-            xmlDoc = getIndexFields(metadata, subtemplateStyleSheet);
+            xmlDoc = getIndexFields(metadata, subtemplateStyleSheet, id);
         }
         else {
             xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
@@ -1118,10 +1118,14 @@ public class SearchManager implements ISearchManager {
      * @return The XML document for indexation
      * @throws Exception
      */
-    Element getIndexFields(Element xml, Path singleStyleSheet) throws Exception {
+    Element getIndexFields(Element xml, Path singleStyleSheet, String id) throws Exception {
 
         Element documents = new Element("Documents");
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("id", id);
+        params.put("uuid",
+        ApplicationContextHolder.get().getBean(DataManager.class)
+            .getMetadataUuid(id));
 
         try {
             documents = Xml.transform(xml, singleStyleSheet, params);

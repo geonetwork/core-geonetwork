@@ -28,6 +28,8 @@
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 version="2.0"
 >
+    <xsl:param name="id"/>
+    <xsl:param name="uuid"/>
 
 
     <xsl:variable name="isMultilingual" select="count(distinct-values(*//gmd:LocalisedCharacterString/@locale)) > 0"/>
@@ -79,9 +81,13 @@
                               select="normalize-space(gmd:organisationName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale])"/>
                 <xsl:variable name="name"
                               select="normalize-space(gmd:individualName/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale])"/>
+                <xsl:variable name="mail"
+                              select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
                 <Field name="_title"
-                       string="{if ($name != '') then concat($org, ' (', $name, ')') else $org}"
+                       string="{if ($name != '') then concat($org, ' (', $name, ')')
+                                else if ($mail != '') then concat($org, ' (', $mail, ')')
+                                else $org}"
                        store="true" index="true"/>
                 <Field name="orgName" string="{$org}" store="true" index="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
@@ -96,8 +102,13 @@
                               select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
                 <xsl:variable name="name"
                               select="normalize-space(gmd:individualName/gco:CharacterString)"/>
-                <Field name="_title"
-                       string="{if ($name != '') then concat($org, ' (', $name, ')') else $org}"
+               <xsl:variable name="mail"
+                              select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
+
+              <Field name="_title"
+                       string="{if ($name != '') then concat($org, ' (', $name, ')')
+                                else if ($mail != '') then concat($org, ' (', $mail, ')')
+                                else $org}"
                        store="true" index="true"/>
                 <Field name="orgName" string="{$org}" store="true" index="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
@@ -133,22 +144,38 @@
         <xsl:call-template name="subtemplate-common-fields"/>
     </xsl:template>
 
+
+
     <xsl:template mode="index" match="gmd:EX_Extent[count(ancestor::node()) =  1]">
-        <xsl:param name="locale"/>
-        <xsl:choose>
+      <xsl:param name="locale"/>
+      <xsl:choose>
+        <xsl:when test="normalize-space(gmd:description) != ''">
+          <xsl:choose>
             <xsl:when test="$isMultilingual">
-                <Field name="_title"
-                       string="{gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}"
-                       store="true" index="true"/>
+              <Field name="_title"
+                     string="{gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}"
+                     store="true" index="true"/>
             </xsl:when>
             <xsl:otherwise>
-                <Field name="_title"
-                       string="{gmd:description/gco:CharacterString}"
-                       store="true" index="true"/>
+              <Field name="_title"
+                     string="{gmd:description/gco:CharacterString}"
+                     store="true" index="true"/>
             </xsl:otherwise>
-        </xsl:choose>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <Field name="_title"
+                 string="{if (normalize-space(gmd:description/gco:CharacterString) != '')
+                          then gmd:description/gco:CharacterString
+                          else string-join(.//gco:Decimal, ', ')}"
+                 store="true" index="true"/>
+        </xsl:otherwise>
+      </xsl:choose>
+
         <xsl:call-template name="subtemplate-common-fields"/>
     </xsl:template>
+
+
 
     <xsl:template mode="index" match="gmd:DQ_DomainConsistency[count(ancestor::node()) =  1]">
         <Field name="_title"
@@ -170,21 +197,7 @@
 
 
 
-
-  <xsl:template mode="index" match="gmd:EX_Extent[count(ancestor::node()) =  1]">
-    <Field name="_title"
-           string="{if (normalize-space(gmd:description/gco:CharacterString) != '')
-                    then gmd:description/gco:CharacterString
-                    else string-join(.//gco:Decimal, ', ')}"
-           store="true" index="true"/>
-
-    <xsl:call-template name="subtemplate-common-fields"/>
-  </xsl:template>
-
-
-
-
-  <xsl:template name="subtemplate-common-fields">
+    <xsl:template name="subtemplate-common-fields">
         <Field name="any" string="{normalize-space(string(.))}" store="false" index="true"/>
         <Field name="_root" string="{name(.)}" store="true" index="true"/>
     </xsl:template>

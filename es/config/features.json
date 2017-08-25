@@ -83,7 +83,7 @@
           }
         },
         {
-          "stringOptionType": {
+          "operationType": {
             "match": "_op*",
             "mapping": {
               "type": "keyword",

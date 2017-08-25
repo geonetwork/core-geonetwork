@@ -159,19 +159,26 @@
             gnWpsService.describeProcess(newLink.uri, newLink.processId, {
               cancelPrevious: true
             }).then(
-              function(response) {
-                scope.describeState = 'succeeded';
-                scope.describeResponse = response;
+                function(response) {
+                  scope.describeState = 'succeeded';
+                  scope.describeResponse = response;
 
-                if (response.processDescription) {
-                  // Bind input directly in link object
-                  scope.processDescription = response.processDescription[0];
+                  if (response.processDescription) {
+                    // Bind input directly in link object
+                    scope.processDescription = response.processDescription[0];
 
-                  // by default, do not use profile graph output
-                  scope.outputAsGraph = false;
+                    // check if we need to get into 'profile graph' mode
+                    // FIXME: look for an actual way to determine
+                    // the output type...
+                    if (scope.processDescription.identifier.value ==
+                    'script:computemultirasterprofile') {
+                      scope.outputAsGraph = true;
+                    } else {
+                      scope.outputAsGraph = false;
+                    }
 
-                  // loop on process expected inputs to prepare the form
-                  angular.forEach(scope.processDescription.dataInputs.input,
+                    // loop on process expected inputs to prepare the form
+                    angular.forEach(scope.processDescription.dataInputs.input,
                     function(input) {
                       var inputName = input.identifier.value;
                       var value;
@@ -194,15 +201,19 @@
                         });
                       }
 
-                      // display field as overriden
-                      scope.inputWfsOverride[inputName] =
-                        wfsFilterValue !== undefined;
+                      // use overloaded value if applicable
+                      if (scope.inputOverloads &&
+                      scope.inputOverloads[inputName]) {
+                        defaultValue =
+                        scope.inputOverloads[inputName]
+                        .currentValue;
+                      }
 
                       // literal data (basic form input)
                       if (input.literalData != undefined) {
                         // Default value (if not already there)
                         if (input.literalData.defaultValue != undefined &&
-                          defaultValue === undefined) {
+                        defaultValue === undefined) {
                           defaultValue = input.literalData.defaultValue;
 
                           // convert value if necessary
@@ -217,7 +228,7 @@
                         // format default value for the bbox directive
                         if (defaultValue) {
                           defaultValue = defaultValue.split(',')
-                            .slice(0, 4).join(',');
+                          .slice(0, 4).join(',');
                         }
                       }
 
@@ -228,15 +239,15 @@
 
                         // output format
                         input.outputFormat = gnGeometryService
-                          .getFormatFromMimeType(
-                              input.complexData._default.format.mimeType
-                          ) || 'gml';
+                        .getFormatFromMimeType(
+                        input.complexData._default.format.mimeType
+                        ) || 'gml';
 
                         // guess geometry type from schema url
                         var url = input.complexData._default.format.schema;
                         var result = /\?.*GEOMETRYNAME=([^&\b]*)/gi.exec(url);
                         switch (result && result[1] ?
-                          result[1].toLowerCase() : null) {
+                        result[1].toLowerCase() : null) {
                           case 'line':
                             input.geometryType = 'LineString';
                             break;
@@ -272,78 +283,69 @@
                         scope.setInputValueByName(inputName, 0, wfsFilterValue);
                       }
                     }
-                  );
+                    );
 
-                  var defaultOutput;
-                  var defaultMimeType;
 
-                  angular.forEach(
+                    angular.forEach(
                     scope.processDescription.processOutputs.output,
-                    function(output) {
-                      output.asReference = true;
-                      var outputName = output.identifier.value;
+                    function(output, idx) {
+                      output.asReference = scope.outputAsGraph ? false : true;
 
-                      // output already selected yet: leave
-                      if (defaultOutput) {
-                        return;
-                      }
-
-                      // no output selected yet: take this one
-                      defaultOutput = outputName;
-                      defaultMimeType =
+                      // untested code
+                      var outputDefault = defaults &&
+                      defaults.responsedocument &&
+                      defaults.responsedocument[output.identifier.value];
+                      if (outputDefault) {
+                        output.value = true;
+                        var defaultAsReference =
+                        outputDefault.attributes['asreference'];
+                        if (defaultAsReference !== undefined) {
+                          output.asReference = toBool(defaultAsReference);
+                        }
+                        scope.selectedOutput.identifier =
+                        output.identifier.value;
+                        scope.selectedOutput.mimeType =
                         output.complexOutput._default.format.mimeType;
-
-                      // look for output info in app profile
-                      if (applicationProfile && applicationProfile.outputs) {
-                        applicationProfile.outputs.forEach(function (output) {
-                          if (output.identifier == outputName) {
-                            // assign mime type if available
-                            defaultMimeType = output.defaultMimeType ||
-                              defaultMimeType;
-
-                            // check if we need to get into 'profile graph' mode
-                            // (display graph options are defined)
-                            // TODO: actually parse these options
-                            if (output.displayGraphOptions) {
-                              scope.outputAsGraph = output.displayGraphOptions ?
-                                true : false;
-                            }
-                          }
-                        });
+                      }
+                      else if (idx == 0) {
+                        scope.selectedOutput.identifier =
+                        output.identifier.value;
+                        scope.selectedOutput.mimeType =
+                        output.complexOutput._default.format.mimeType;
                       }
                     }
-                  );
+                    );
+                    var output = scope.processDescription.processOutputs.output;
+                    if (output.length == 1) {
+                      output[0].value = true;
+                    }
+                    scope.outputsVisible = true;
 
-                  // assign default output & mimeType
-                  scope.selectedOutput.identifier = defaultOutput;
-                  scope.selectedOutput.mimeType = defaultMimeType;
+                    scope.responseDocument = {
+                      lineage: toBool(defaults && defaults.lineage, false),
+                      storeExecuteResponse: toBool(defaults &&
+                      defaults.storeexecuteresponse, false),
+                      status: toBool(defaults && defaults.status, false)
+                    };
+                    scope.optionsVisible = true;
 
-                  scope.outputsVisible = true;
-
-                  scope.responseDocument = {
-                    lineage: false,
-                    storeExecuteResponse: false,
-                    status: false
-                  };
-                  scope.optionsVisible = true;
-
-                  // use existing process desc if available
-                  var processKey = newLink.processId + '@' + newLink.uri;
-                  var existingDesc = scope.loadedDescriptions[processKey];
-                  if (existingDesc) {
-                    scope.processDescription = angular.extend(
+                    // use existing inputs if available
+                    var processKey = newLink.processId + '@' + newLink.uri;
+                    var existingDesc = scope.loadedDescriptions[processKey];
+                    if (existingDesc) {
+                      scope.processDescription = angular.extend(
                       scope.processDescription,
                       existingDesc
-                    );
-                  }
-                  scope.loadedDescriptions[processKey] =
+                      );
+                    }
+                    scope.loadedDescriptions[processKey] =
                     angular.extend({}, scope.processDescription);
+                  }
+                },
+                function(response) {
+                  scope.describeState = 'failed';
+                  scope.describeResponse = response;
                 }
-              },
-              function(response) {
-                scope.describeState = 'failed';
-                scope.describeResponse = response;
-              }
             );
           }, true);
 
@@ -369,21 +371,21 @@
             // Check that inputs have the required values
             var invalid = false;
             angular.forEach(scope.processDescription.dataInputs.input,
-              function(input) {
-                // count the number of non empty values
-                var valueCount = scope.getInputsByName(input.identifier.value)
-                  .filter(function (input) {
+                function(input) {
+                  // count the number of non empty values
+                  var valueCount = scope.getInputsByName(input.identifier.value)
+                  .filter(function(input) {
                     return input.value;
                   }).length;
 
-                // this will be used to show errors on the form
-                input.missingOccursCount = Math.max(0,
+                  // this will be used to show errors on the form
+                  input.missingOccursCount = Math.max(0,
                   input.minOccurs - valueCount);
 
-                if (input.missingOccursCount > 0) {
-                  invalid = true;
-                }
-              });
+                  if (input.missingOccursCount > 0) {
+                    invalid = true;
+                  }
+                });
 
             // there are errors with inputs: leave
             if (invalid) { return; }
@@ -393,30 +395,29 @@
             // output selection based on form control
             var outputs = [];
             angular.forEach(scope.processDescription.processOutputs.output,
-              function(output) {
-                if (output.identifier.value ==
-                    scope.selectedOutput.identifier) {
-                  outputs.push({
-                    asReference: scope.outputAsGraph ?
-                      false : output.asReference,
-                    mimeType: scope.selectedOutput.mimeType,
-                    identifier: {
-                      value: output.identifier.value
-                    }
-                  });
-                }
-              }, {});
+                function(output) {
+                  if (output.identifier.value ==
+                  scope.selectedOutput.identifier) {
+                    outputs.push({
+                      asReference: output.asReference,
+                      mimeType: scope.selectedOutput.mimeType,
+                      identifier: {
+                        value: output.identifier.value
+                      }
+                    });
+                  }
+                }, {});
             scope.responseDocument.output = outputs;
 
             updateStatus = function(statusLocation) {
               gnWpsService.getStatus(statusLocation).then(
-                function(response) {
-                  processResponse(response);
-                },
-                function(response) {
-                  scope.executeState = 'failed';
-                  scope.executeResponse = response;
-                }
+                  function(response) {
+                    processResponse(response);
+                  },
+                  function(response) {
+                    scope.executeState = 'failed';
+                    scope.executeResponse = response;
+                  }
               );
             };
 
@@ -441,9 +442,9 @@
                     if (response.status.processSucceeded &&
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
-                        response, scope.map, scope.wpsLink.layer, {
-                          exclude: /^OUTPUT_/
-                        }
+                          response, scope.map, scope.wpsLink.layer, {
+                            exclude: /^OUTPUT_/
+                          }
                       );
                     }
                   }
@@ -455,22 +456,22 @@
               if (scope.outputAsGraph && response.processOutputs) {
                 try {
                   var jsonData = JSON.parse(response.processOutputs.output[0]
-                    .data.complexData.content);
+                      .data.complexData.content);
 
                   // TODO: use applicationProfile.displayGraphOptions here
                   gnProfileService.displayProfileGraph(
-                    jsonData.profile,
-                    {
-                      valuesProperty: 'values',
-                      xProperty: 'lon',
-                      yProperty: 'lat',
-                      distanceProperty: 'dist',
-                      crs: 'EPSG:4326'
-                    }
+                      jsonData.profile,
+                      {
+                        valuesProperty: 'values',
+                        xProperty: 'lon',
+                        yProperty: 'lat',
+                        distanceProperty: 'dist',
+                        crs: 'EPSG:4326'
+                      }
                   );
                 } catch (e) {
                   console.error('Error parsing WPS graph data:',
-                    response.processOutputs);
+                      response.processOutputs);
                 }
                 scope.executeResponse = null;
               }
@@ -482,45 +483,45 @@
             scope.running = true;
             scope.executeState = 'sent';
             gnWpsService.execute(
-              processUri,
-              processId,
-              inputs,
-              scope.responseDocument
+                processUri,
+                processId,
+                inputs,
+                scope.responseDocument
             ).then(
-              function(response) {
-                processResponse(response);
-              },
-              function(response) {
-                scope.executeState = 'failed';
-                scope.executeResponse = response;
-              }
+                function(response) {
+                  processResponse(response);
+                },
+                function(response) {
+                  scope.executeState = 'failed';
+                  scope.executeResponse = response;
+                }
             ).finally(
-              function() {
-                scope.running = false;
-              });
+                function() {
+                  scope.running = false;
+                });
 
             // update local storage
             if ($window.localStorage) {
               var key = 'gn-wps-processes-history';
               var processKey = processId + '@' + processUri;
               var history = JSON.parse(
-                $window.localStorage.getItem(key) || '{}');
+                  $window.localStorage.getItem(key) || '{}');
               history.processes = history.processes || [];
               history.processes.unshift(processKey);
 
               // remove dupes and apply limit
               var count = 0;
               history.processes = history.processes.filter(
-                function(value, index, array) {
-                  if (array.indexOf(value) !== index ||
-                  count >= maxHistoryCount) {
-                    return false;
-                  } else {
-                    count++;
-                    return true;
+                  function(value, index, array) {
+                    if (array.indexOf(value) !== index ||
+                    count >= maxHistoryCount) {
+                      return false;
+                    } else {
+                      count++;
+                      return true;
+                    }
                   }
-                }
-              );
+                  );
 
               $window.localStorage.setItem(key, JSON.stringify(history));
             }
@@ -547,16 +548,16 @@
           };
 
           // returns a valid input type (for literal data)
-          scope.getInputType = function (literalDataType) {
+          scope.getInputType = function(literalDataType) {
             switch (literalDataType) {
               case 'float': return 'number';
               default: return 'text';
             }
           };
 
-          // get/set input values
-          scope.getInputsByName = function (name) {
-            return scope.wpsLink.inputs.filter(function (input) {
+          // get all input values
+          scope.getInputsByName = function(name) {
+            return scope.wpsLink.inputs.filter(function(input) {
               return input.name == name;
             });
           };
@@ -573,15 +574,15 @@
           };
 
           // add or remove an input value
-          scope.addInputValueByName = function (name) {
+          scope.addInputValueByName = function(name) {
             scope.wpsLink.inputs.push({
               name: name,
               value: undefined
             });
           };
-          scope.removeInputValueByName = function (name, indexToRemove) {
+          scope.removeInputValueByName = function(name, indexToRemove) {
             var realIndex = -1;
-            scope.wpsLink.inputs.forEach(function (input, index) {
+            scope.wpsLink.inputs.forEach(function(input, index) {
               var innerIndex = scope.getInputsByName(name).indexOf(input);
               if (innerIndex === indexToRemove) {
                 realIndex = index;
@@ -591,6 +592,94 @@
               scope.wpsLink.inputs.splice(realIndex, 1);
             }
           };
+
+          // helpers for accessing input values
+          var getInputValue = function(name) {
+            if (!scope.processDescription) { return; }
+
+            var result = null;
+            angular.forEach(scope.processDescription.dataInputs.input,
+                function(input) {
+                  if (input.identifier.value == name) {
+                    result = input.value;
+                  }
+                });
+            return result;
+          };
+          var setInputValue = function(name, value) {
+            if (!scope.processDescription) { return; }
+
+            angular.forEach(scope.processDescription.dataInputs.input,
+                function(input) {
+                  if (input.identifier.value == name) {
+                    input.value = value;
+                  }
+                });
+          };
+
+          // handle input overload from WFS link
+          if (scope.wfsLink) {
+            // this is the object holding current filter values
+            var esObject = wfsFilterService.getEsObject(scope.wfsLink.url,
+                scope.wfsLink.name);
+
+            // this will hold input overload info
+            // keys are overloaded inputs names, values are objects like so:
+            //  { currentValue: any, oldValue: any }
+            scope.inputOverloads = {};
+
+            // use filter values in ElasticSearch object state to overload input
+            if (esObject) {
+              var wfsFilterLinks = applicationProfile &&
+                  applicationProfile.wfsFilterLinks ?
+                  applicationProfile.wfsFilterLinks : {};
+
+              // get list of filters
+              var filterValues = wfsFilterService.toObjectProperties(esObject);
+
+              // transform according to app profile
+              var inputValues = {};
+              Object.keys(wfsFilterLinks).forEach(function(key) {
+
+                // prefix & suffix are added to the raw filter key
+                var filterKey = wfsFilterLinks[key];
+                var stringFilterKey = 'ft_' + wfsFilterLinks[key] + '_s';
+                var dateFilterKey = 'ft_' + wfsFilterLinks[key] + '_dt';
+
+                // testing each case
+                if (filterValues[filterKey]) {
+                  inputValues[key] = filterValues[filterKey];
+                }
+                else if (filterValues[stringFilterKey]) {
+                  inputValues[key] = filterValues[stringFilterKey];
+                }
+                else if (filterValues[dateFilterKey]) {
+                  inputValues[key] = filterValues[dateFilterKey];
+                }
+              });
+
+              // loop on these
+              Object.keys(inputValues).forEach(function(name) {
+                // new overload
+                if (!scope.inputOverloads[name]) {
+                  scope.inputOverloads[name] = {
+                    oldValue: getInputValue(name)
+                  };
+                }
+                scope.inputOverloads[name].currentValue = inputValues[name];
+                setInputValue(name, inputValues[name]);
+              });
+
+              // clear non existing overloads
+              Object.keys(scope.inputOverloads).forEach(function(name) {
+                // new overload
+                if (!inputValues[name]) {
+                  setInputValue(name, scope.inputOverloads[name].oldValue);
+                  delete scope.inputOverloads[name];
+                }
+              });
+            }
+          }
         }
       };
     }

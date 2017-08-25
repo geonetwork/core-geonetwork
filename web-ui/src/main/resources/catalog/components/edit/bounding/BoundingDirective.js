@@ -33,12 +33,14 @@
    *
    * @description
    * This directive gives the user the possibility to define a bounding polygon,
-   * either by drawing it manually on a map or copy-pasting data in the desired 
+   * either by drawing it manually on a map or copy-pasting data in the desired
    * format. The user can also select an input projection.
    * The directive has a hidden output in GML & EPSG:4326.
-   * 
-   * @attribute {string} coordinates list of coordinates separated with spaces
-   * @attribute {string} identifier id of the hidden input that will hold
+   *
+   * @attribute {string} coordinates list of coordinates
+   * separated with spaces
+   * @attribute {string} identifier id of the hidden input
+   * that will hold
    *  the value entered by the user
    */
   module.directive('gnBoundingPolygon', [
@@ -50,9 +52,9 @@
           identifier: '@'
         },
         templateUrl: '../../catalog/components/edit/bounding/' +
-          'partials/boundingpolygon.html',
+            'partials/boundingpolygon.html',
         link: {
-          post: function (scope, element) {
+          post: function(scope, element) {
             scope.ctrl.map.renderSync();
             scope.ctrl.initValue();
           }
@@ -69,14 +71,14 @@
           'ngeoDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
-            $scope,
-            $attrs,
-            $http,
-            gnMap,
-            gnOwsContextService,
-            gnViewerSettings,
-            ngeoDecorateInteraction,
-            gnGeometryService) {
+              $scope,
+              $attrs,
+              $http,
+              gnMap,
+              gnOwsContextService,
+              gnViewerSettings,
+              ngeoDecorateInteraction,
+              gnGeometryService) {
             var ctrl = this;
 
             // set read only
@@ -148,12 +150,13 @@
             ctrl.currentProjection = ctrl.projections[0].code;
 
             // available input formats
-            // GML is not available as it cannot be parsed without namespace info
-            ctrl.formats = [ 'WKT', 'GeoJSON', 'GML' ];
+            // GML is not available as it cannot be parsed
+            // without namespace info
+            ctrl.formats = ['WKT', 'GeoJSON', 'GML'];
             ctrl.currentFormat = ctrl.formats[0];
 
             // parse initial input coordinates to display shape (first in WKT)
-            ctrl.initValue = function () {
+            ctrl.initValue = function() {
               if (ctrl.polygonXml) {
                 // parse first feature from source XML & set geometry name
                 var correctedXml = ctrl.polygonXml
@@ -162,13 +165,13 @@
                     .replace('<gml:LineStringTypeCHOICE_ELEMENT1>', '')
                     .replace('</gml:LineStringTypeCHOICE_ELEMENT1>', '');
                 var geometry = gnGeometryService.parseGeometryInput(
-                  ctrl.map,
-                  correctedXml,
-                  {
-                    crs: 'EPSG:4326',
-                    format: 'gml'
-                  }
-                );
+                    ctrl.map,
+                    correctedXml,
+                    {
+                      crs: 'EPSG:4326',
+                      format: 'gml'
+                    }
+                    );
 
                 if (!geometry) {
                   console.warn('Could not parse geometry from extent polygon');
@@ -188,26 +191,27 @@
             };
 
             // update output with gml
-            ctrl.updateOutput = function (feature) {          
+            ctrl.updateOutput = function(feature) {
               // fit view if geom is valid & not empty
               if (feature.getGeometry() &&
-                !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
+                  !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
                 ctrl.map.getView().fit(feature.getGeometry(),
-                  ctrl.map.getSize());
+                    ctrl.map.getSize());
               }
 
               // print output (skip if readonly)
               if (!ctrl.readOnly) {
-                ctrl.outputPolygonXml = '<polygon xmlns="http://www.isotc211.org/2005/gmd">' +
-                  gnGeometryService.printGeometryOutput(
+                ctrl.outputPolygonXml =
+                    '<polygon xmlns="http://www.isotc211.org/2005/gmd">' +
+                    gnGeometryService.printGeometryOutput(
                     ctrl.map,
                     feature,
                     {
                       crs: 'EPSG:4326',
                       format: 'gml'
                     }
-                  ) +
-                  '</polygon>';
+                    ) +
+                    '</polygon>';
               }
 
               // update text field (unless geometry was entered manually)
@@ -221,7 +225,7 @@
             ctrl.fromTextInput = false;
 
             // handle input change & outputs gml for the editor
-            ctrl.handleInputChange = function () {
+            ctrl.handleInputChange = function() {
               if (!ctrl.inputGeometry) {
                 return;
               }
@@ -231,13 +235,13 @@
               // parse geometry
               try {
                 var geometry = gnGeometryService.parseGeometryInput(
-                  ctrl.map,
-                  ctrl.inputGeometry,
-                  {
-                    crs: ctrl.currentProjection,
-                    format: ctrl.currentFormat
-                  }
-                );
+                    ctrl.map,
+                    ctrl.inputGeometry,
+                    {
+                      crs: ctrl.currentProjection,
+                      format: ctrl.currentFormat
+                    }
+                    );
               } catch (e) {
                 ctrl.parseError = e.message;
               }
@@ -251,8 +255,9 @@
               ctrl.updateOutput(feature);
             };
 
-            // options (proj, format) change: either update text or try a new parse
-            ctrl.handleInputOptionsChange = function () {
+            // options (proj, format) change:
+            // either update text or try a new parse
+            ctrl.handleInputOptionsChange = function() {
               if (ctrl.fromTextInput) {
                 ctrl.handleInputChange();
               } else {
@@ -261,7 +266,7 @@
             };
 
             // update text in input according to displayed feature
-            ctrl.updateInputTextFromGeometry = function (feature) {
+            ctrl.updateInputTextFromGeometry = function(feature) {
               var feature = feature || source.getFeatures()[0];
               if (!feature) {
                 ctrl.inputGeometry = '';
@@ -269,13 +274,13 @@
               }
 
               ctrl.inputGeometry = gnGeometryService.printGeometryOutput(
-                ctrl.map,
-                feature,
-                {
-                  crs: ctrl.currentProjection,
-                  format: ctrl.currentFormat
-                }
-              );
+                  ctrl.map,
+                  feature,
+                  {
+                    crs: ctrl.currentProjection,
+                    format: ctrl.currentFormat
+                  }
+                  );
             };
           }
         ]

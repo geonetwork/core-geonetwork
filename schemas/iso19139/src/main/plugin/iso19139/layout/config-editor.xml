@@ -854,6 +854,12 @@
                    transformations="to-iso19139-keyword-with-anchor"/>
       </thesaurusList>
       -->
+
+      <thesaurusList>
+        <thesaurus key="external.none.allThesaurus"
+                   fieldset="false"/>
+      </thesaurusList>
+
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">

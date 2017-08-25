@@ -258,9 +258,9 @@
           var inputName = input.identifier.value;
 
           // for each value for this input, add to message
-          inputs.filter(function (inputValue) {
+          inputs.filter(function(inputValue) {
             return inputValue.name === inputName;
-          }).forEach(function (inputValue) {
+          }).forEach(function(inputValue) {
             setInputData(input, inputValue.value);
           });
         }
@@ -298,23 +298,23 @@
         var me = this;
 
         this.describeProcess(uri, processId).then(
-          function (data) {
-            // generate the XML message from the description
-            var description = data.processDescription[0];
-            var message = me.printExecuteMessage(description, inputs,
+            function(data) {
+              // generate the XML message from the description
+              var description = data.processDescription[0];
+              var message = me.printExecuteMessage(description, inputs,
               responseDocument);
 
-            // do the post request
-            $http.post(uri, message, {
-              headers: {'Content-Type': 'application/xml'}
-            }).then(function (data) {
-              var response =
+              // do the post request
+              $http.post(uri, message, {
+                headers: {'Content-Type': 'application/xml'}
+              }).then(function(data) {
+                var response =
                 unmarshaller.unmarshalString(data.data).value;
-              defer.resolve(response);
-            }, function(data) {
-              defer.reject(data);
+                defer.resolve(response);
+              }, function(data) {
+                defer.reject(data);
+              });
             });
-        });
 
         return defer.promise;
       };
