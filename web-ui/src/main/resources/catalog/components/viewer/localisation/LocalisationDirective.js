@@ -75,8 +75,6 @@
              * @param {string} query string value of the search input
              */
             this.search = function(query) {
-              if (query.length < 3) return;
-
               var coord = gnGetCoordinate(
                   $scope.map.getView().getProjection().getWorldExtent(), query);
 
