@@ -150,19 +150,19 @@ public class MetadataApi implements ApplicationContextAware {
         if (accept.contains(MediaType.TEXT_HTML_VALUE)
             || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
             || accept.contains("application/pdf")) {
-            return "forward:/api/records/" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)
                 || accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return "forward:/api/records/" + (metadataUuid + "/formatters/xml");
+            return "forward:" + (metadataUuid + "/formatters/xml");
         } else if (accept.contains("application/zip")
                 || accept.contains(MEF_V1_ACCEPT_TYPE)
                 || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return "forward:/api/records/" + (metadataUuid + "/formatters/zip");
+            return "forward:" + (metadataUuid + "/formatters/zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
             //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-            return "forward:/api/records/" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
         }
     }
 
