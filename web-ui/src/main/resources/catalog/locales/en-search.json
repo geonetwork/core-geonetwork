@@ -407,5 +407,7 @@
   "processesTool": "Use a WPS process",
   "wpsGetCapError": "Error while parsing WPS capabilities: ",
   "wpsByUrl": "Search processes",
-  "wpsRecent": "Recent Processes"
+  "wpsRecent": "Recent Processes",
+  "selection.indexing.count": "Indexing started for the {{count}} record(s) selected.",
+  "selection.indexing.error": "Error during selection indexing."
 }

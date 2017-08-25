@@ -61,6 +61,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -299,6 +300,8 @@ public class KeywordsApi {
         }
 
         Element descKeys;
+
+        uri = URLDecoder.decode(uri, "UTF-8");
 
         if (uri == null) {
             descKeys = new Element("descKeys");

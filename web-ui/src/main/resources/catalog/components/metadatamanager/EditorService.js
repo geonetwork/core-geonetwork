@@ -166,11 +166,34 @@
 
              $('.popover').remove();
 
+             function getFormParameters() {
+               var params = $(gnCurrentEdit.formId).serializeArray();
+               var formParams = {};
+               for (var i = 0; i < params.length; i++) {
+                 // Combine all XML snippet in the same parameters
+                 formParams[params[i].name] =
+                 (formParams[params[i].name] &&
+                     params[i].name.indexOf('_X') === 0) ?
+                     formParams[params[i].name] + '&&&' + params[i].value :
+                     params[i].value;
+               }
+               var serializedParams = '';
+               for (var key in formParams) {
+                 if (formParams.hasOwnProperty(key)) {
+                   serializedParams +=
+                   encodeURIComponent(key) + '=' +
+                   encodeURIComponent(formParams[key]) + '&';
+                 }
+               }
+               return serializedParams;
+             };
+
              gnCurrentEdit.working = true;
-             $http.post('../api/records/' + gnCurrentEdit.id + '/editor?' +
+             $http.post(
+             '../api/records/' + gnCurrentEdit.id + '/editor?' +
              (refreshForm ? '' : '&commit=true') +
              (terminate ? '&terminate=true' : ''),
-             $(gnCurrentEdit.formId).serialize(),
+             getFormParameters(),
              {
                headers: {'Content-Type':
                  'application/x-www-form-urlencoded'}

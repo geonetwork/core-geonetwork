@@ -54,7 +54,7 @@
         selectionBucket: 'e101',
         params: {
           sortBy: 'changeDate',
-          _isTemplate: 'y or n or s or t',
+          _isTemplate: 'y or n',
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20

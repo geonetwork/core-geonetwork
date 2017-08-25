@@ -122,8 +122,7 @@ public class SpringLocalServiceInvoker {
             for (String param : params.split("&")) {
                 String[] parts = param.split("=");
                 String name = parts[0];
-                String value = parts[1];
-                request.addParameter(name, value);
+                request.addParameter(name, parts.length == 2 ? parts[1] : "");
             }
         }
         return request;

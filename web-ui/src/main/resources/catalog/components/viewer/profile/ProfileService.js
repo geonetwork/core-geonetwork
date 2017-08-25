@@ -46,7 +46,7 @@
    * the app.
    */
   module.service('gnProfileService', [
-    function () {
+    function() {
 
       this._layer = null;
 

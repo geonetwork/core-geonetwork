@@ -377,5 +377,28 @@
             md.getUuid();
         gnUtilityService.getPermalink(md.title || md.defaultTitle, url);
       };
+
+      /**
+       * Index the current selection of metadata records.
+       * @param {String} bucket
+       */
+      this.indexSelection = function(bucket) {
+        return $http.get('../api/records/index', {
+          params: {
+            bucket: bucket
+          }
+        }).then(function(response) {
+          var res = response.data;
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.count', res),
+            type: res.success ? 'success' : 'danger'
+          });
+        }, function(response) {
+          gnAlertService.addAlert({
+            msg: $translate.instant('selection.indexing.error'),
+            type: 'danger'
+          });
+        });
+      };
     }]);
 })();

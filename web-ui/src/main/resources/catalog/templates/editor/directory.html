@@ -44,8 +44,7 @@
       <div class="flex-spacer" />
       <h5 class="btn-group">
         <button type="button" class="btn btn-success"
-            ng-click="startImporting(true)"
-            ng-show="userCanEditTemplates">
+            ng-click="startImporting(true)">
           <i class="fa fa-plus"/>&nbsp;
           <span translate>addNewDirectoryTemplate</span>
         </button>
@@ -86,10 +85,9 @@
         <div class="panel panel-default dynamic-list">
           <div class="panel-heading">
             <i class="fa fa-list-ul fa-fw"/>&nbsp;
-            <span translate ng-if="!userCanEditTemplates">
-              directoryEntries</span>
+            <span translate>directoryEntries</span>
 
-            <ul class="nav nav-pills" ng-if="userCanEditTemplates">
+            <ul class="nav nav-pills">
               <li ng-class="{active : !templatesShown()}">
                 <a href ng-click="showTemplates(false)" translate>
                   directoryEntries</a>
@@ -113,7 +111,7 @@
                 ng-show="searchObj.params.any"></span>
             </div>
             &nbsp;
-            
+
             <div class="btn-group">
               <button type="button"
                 class="btn btn-default dropdown-toggle btn-sm"
@@ -167,8 +165,11 @@
 
                 <div class="entry-title" ng-if="!templatesShown()">
                   <gn-md-type-widget metadata="e"></gn-md-type-widget>
-                  <a href ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
+                  <a href
+                     data-ng-if="user.canEditRecord(e)"
+                     ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
                     {{e.title || e.defaultTitle}}</a>
+                  <span data-ng-if="!user.canEditRecord(e)">{{e.title || e.defaultTitle}}</span>
                 </div>
 
                 <div class="entry-info" ng-if="!templatesShown()">
@@ -186,7 +187,9 @@
                       &nbsp;<i class="caret"/>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
-                      <li><a href ng-click="startEditing(e)">
+                      <li><a href
+                             data-ng-if="user.canEditRecord(e)"
+                             ng-click="startEditing(e)">
                         <i class="fa fa-pencil fa-fw" />&nbsp;
                         {{'edit' | translate}}</a>
                       </li>
@@ -194,19 +197,25 @@
                         <i class="fa fa-copy fa-fw" />&nbsp;
                         {{'duplicate' | translate}}</a>
                       </li>
-                      <li><a href ng-click="startPermissionsEdit(e)">
+                      <li><a href
+                             data-ng-if="user.canEditRecord(e)"
+                             ng-click="startPermissionsEdit(e)">
                         <i class="fa fa-key fa-fw" />&nbsp;
                         {{'directoryEntryPermissions' | translate}}</a>
                       </li>
-                      <!-- <li><a href ng-click="convertToTemplate(e)">
-                        <i class="fa fa-mail-forward fa-fw text-info" />&nbsp;
-                        {{'directoryEntryToTemplate' | translate}}</a>
-                      </li> -->
-                      <li><a href ng-click="validateEntry(e)">
+                      <li data-ng-class="{'disabled': e.valid == '1'}">
+                        <a href
+                           data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(e)) ||
+                                       (restrictValidationToAdmin && user.isAdministrator())"
+                           ng-click="validateEntry(e)">
                         <i class="fa fa-check fa-fw text-success" />&nbsp;
                         {{'directoryEntryValidate' | translate}}</a>
                       </li>
-                      <li><a href ng-click="rejectEntry(e)">
+                      <li data-ng-class="{'disabled': e.valid == '0'}">
+                        <a href
+                           data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(e)) ||
+                                       (restrictValidationToAdmin && user.isAdministrator())"
+                           ng-click="rejectEntry(e)">
                         <i class="fa fa-ban fa-fw text-danger" />&nbsp;
                         {{'directoryEntryReject' | translate}}</a>
                       </li>
@@ -228,8 +237,10 @@
                     </ul>
                   </div>
 
-                  <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
-                    title="{{'delete' | translate}}">
+                  <button class="btn btn-default btn-sm"
+                          data-ng-if="user.canEditRecord(e)"
+                          ng-click="delEntry(e)"
+                          title="{{'delete' | translate}}">
                     <i class="fa fa-times text-danger" />
                   </button>
                 </div>
@@ -391,7 +402,8 @@
             <div class="btn-group" ng-show="activeEntry.isTemplate !== 't'">
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown"
-                  ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+                  data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(activeEntry)) ||
+                              (restrictValidationToAdmin && user.isAdministrator())"
                   ng-class="{'btn-success': activeEntry.valid == 1, 'btn-danger': activeEntry.valid == 0}"
                   title="{{'isValid' | translate}}">
                 <i class="fa fa-check" ng-show="activeEntry.valid != 0"/>
@@ -415,17 +427,7 @@
               </ul>
             </div>
 
-            <button type="button" class="btn btn-primary"
-                gn-click-and-spin="save(true)"
-                ng-if="!userCanEditTemplates"
-                ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
-                title="{{'save' | translate}}">
-              <i class="fa fa-save"/>&nbsp;
-              <span translate class="hidden-xs">
-                save</span>
-            </button>
-
-            <div class="btn-group" ng-if="userCanEditTemplates">
+            <div class="btn-group">
               <button type="button"
                       gn-click-and-spin="save(true)"
                       class="btn btn-primary">

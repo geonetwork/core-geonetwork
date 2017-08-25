@@ -58,10 +58,10 @@
   <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
       <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                               xlink:href="local://eng/xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&amp;multiple=false&amp;lang=ger,fre,eng,ita&amp;textgroupOnly"
+                               xlink:href="local://api/registries/vocabularies/keyword?thesaurus=external.theme.inspire-theme&amp;id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&amp;multiple=false&amp;lang=ger,fre,eng,ita&amp;textgroupOnly"
                                xlink:show="replace"/>
       <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                               xlink:href="local://eng/xml.keyword.get?thesaurus=external.none.allThesaurus&amp;id=http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%231,http://org.fao.geonet.thesaurus.all/external.theme.inspire-service-taxonomy@@@urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService,http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%2320&amp;multiple=true&amp;lang=ger,fre,eng,ita&amp;textgroupOnly"
+                               xlink:href="local://api/registries/vocabularies/keyword?thesaurus=external.none.allThesaurus&amp;id=http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%231,http://org.fao.geonet.thesaurus.all/external.theme.inspire-service-taxonomy@@@urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService,http://org.fao.geonet.thesaurus.all/local._none_.geocat.ch@@@http%3A%2F%2Fgeocat.ch%2Fconcept%2320&amp;multiple=true&amp;lang=ger,fre,eng,ita&amp;textgroupOnly"
                                xlink:show="replace"/>
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>

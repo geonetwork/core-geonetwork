@@ -57,6 +57,7 @@
   </gmd:dataSetURI>
   <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
+      <!-- Remains unchanged -->
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword>
@@ -94,7 +95,7 @@
                 <gmd:MD_Identifier>
                   <gmd:code>
                     <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xlink:href="http://localhost:8080/geonetwork/srv/eng//thesaurus.download?ref=external.place.regions">
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions">
                       geonetwork.thesaurus.external.place.regions
                     </gmx:Anchor>
                   </gmd:code>
@@ -104,6 +105,57 @@
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
+
+      <!-- 2 keywords should be added here. -->
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          <gmd:keyword>
+            <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">noise
+            </gco:CharacterString>
+            <gmd:PT_FreeText>
+              <gmd:textGroup>
+                <gmd:LocalisedCharacterString locale="#FR">bruit</gmd:LocalisedCharacterString>
+              </gmd:textGroup>
+            </gmd:PT_FreeText>
+          </gmd:keyword>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode
+              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+              codeListValue="place"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>GEMET</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2006-09-22</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode
+                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                      codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.place.regions">
+                      geonetwork.thesaurus.external.theme.gemet-theme
+                    </gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+
+      <!-- This block will be removed -->
       <gmd:descriptiveKeywords xmlns:gmd="http://www.isotc211.org/2005/gmd">
         <gmd:MD_Keywords>
           <gmd:keyword xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -168,59 +220,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink"
-                               xlink:href="local://xml.keywords.get?thesarus=987&amp;id=789"/>
-      <gmd:descriptiveKeywords xmlns:gmd="http://www.isotc211.org/2005/gmd">
-        <gmd:MD_Keywords>
-          <gmd:keyword xmlns:xlink="http://www.w3.org/1999/xlink"
-                       gco:nilReason="thesaurus::external.theme.gemet-theme">
-            <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">abc
-            </gco:CharacterString>
-            <gmd:PT_FreeText>
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FR">abcfr</gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-            </gmd:PT_FreeText>
-          </gmd:keyword>
-          <gmd:keyword gco:nilReason="thesaurus::local._none_.geocat.ch">
-            <gmd:PT_FreeText>
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#EN">zxcen</gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#IT">zxcit</gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#DE">zxcde</gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-              <gmd:textGroup>
-                <gmd:LocalisedCharacterString locale="#FR">zxcfr</gmd:LocalisedCharacterString>
-              </gmd:textGroup>
-            </gmd:PT_FreeText>
-          </gmd:keyword>
-          <gmd:type>
-            <gmd:MD_KeywordTypeCode
-              codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode"
-              codeListValue=""/>
-          </gmd:type>
-          <gmd:thesaurusName>
-            <gmd:CI_Citation>
-              <gmd:title>
-                <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco"/>
-              </gmd:title>
-              <gmd:identifier>
-                <gmd:MD_Identifier>
-                  <gmd:code>
-                    <gmx:Anchor xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="">
-                      geonetwork.thesaurus.external.none.allThesaurus
-                    </gmx:Anchor>
-                  </gmd:code>
-                </gmd:MD_Identifier>
-              </gmd:identifier>
-            </gmd:CI_Citation>
-          </gmd:thesaurusName>
-        </gmd:MD_Keywords>
-      </gmd:descriptiveKeywords>
+                               xlink:href="local://api/registries/vocabularies/keyword?thesarus=987&amp;id=789"/>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
 </gmd:MD_Metadata>

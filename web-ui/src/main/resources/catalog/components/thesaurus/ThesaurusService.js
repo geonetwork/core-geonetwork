@@ -220,7 +220,8 @@
                 if (textgroupOnly) {
                   params.textgroupOnly = textgroupOnly;
                 }
-                var url = gnUrlUtils.append('../api/registries/vocabularies/keyword',
+                var url = gnUrlUtils.append(
+                '../api/registries/vocabularies/keyword',
                     gnUrlUtils.toKeyValue(params)
                     );
                 $http.get(url, { cache: true }).

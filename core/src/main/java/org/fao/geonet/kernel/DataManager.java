@@ -1621,9 +1621,17 @@ public class DataManager implements ApplicationEventPublisherAware {
                                    boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
+        // Check if the schema is allowed by settings
+        String mdImportSetting = getSettingManager().getValue(Settings.METADATA_IMPORT_RESTRICT);
+        if(mdImportSetting != null && !mdImportSetting.equals("")) {
+            if(!Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
+                throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  " +
+                        "Apply a import stylesheet to convert file to iso19139.che");
+            }
+        }
+
         //--- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadataXml);
-
 
         if (updateFixedInfo && newMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             String parentUuid = null;

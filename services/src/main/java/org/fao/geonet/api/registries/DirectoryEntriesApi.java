@@ -26,9 +26,11 @@ package org.fao.geonet.api.registries;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.*;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -48,7 +50,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -116,7 +120,8 @@ public class DirectoryEntriesApi {
             required = false
         )
         @RequestParam(
-            name = "lang"
+            name = "lang",
+            required = false
         )
             String [] langs,
         @ApiParam(
@@ -126,7 +131,10 @@ public class DirectoryEntriesApi {
         @RequestParam(
             required = false, defaultValue = "iso19139"
         )
-            String schema)
+            String schema,
+        @ApiIgnore
+                HttpServletRequest request
+        )
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
@@ -142,6 +150,11 @@ public class DirectoryEntriesApi {
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
             throw new IllegalArgumentException(String.format(
                 "The record found with UUID '%s' is not a subtemplate", uuid));
+        }
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        if(langs == null) {
+            langs = context.getLanguage().split(",");
         }
 
         Element tpl = metadata.getXmlData(false);
@@ -195,9 +208,9 @@ public class DirectoryEntriesApi {
         }
         if (transformation != null) {
             Element root = new Element("root");
-            Element request = new Element("request");
-            request.addContent(new Element("transformation").setText(transformation));
-            root.addContent(request);
+            Element requestElt = new Element("request");
+            requestElt.addContent(new Element("transformation").setText(transformation));
+            root.addContent(requestElt);
             root.addContent(tpl);
 
             GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);

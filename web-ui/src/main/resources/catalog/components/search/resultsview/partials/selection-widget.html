@@ -54,6 +54,9 @@
       <li ng-if="user.isUserAdminOrMore()">
         <a href="" data-ng-click="mdService.openTransferOwnership(undefined, searchResults.selectionBucket, getCatScope())">
           <i class="fa fa-user"></i>&nbsp;<span translate>transferOwnership</span></a></li>
+      <li ng-if="user.isUserAdminOrMore()">
+        <a href="" data-ng-click="mdService.indexSelection(searchResults.selectionBucket)">
+          <i class="fa fa-cogs"></i>&nbsp;<span translate>index</span></a></li>
       <li class="divider" data-ng-if="user.isConnected()"></li>
       <li ng-if="user.isEditorOrMore()">
         <a href="" ng-click="mdService.openCategoriesBatchPanel(searchResults.selectionBucket, getCatScope())">

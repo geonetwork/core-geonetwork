@@ -53,6 +53,7 @@
     'gnUrlUtils',
     'gnCurrentEdit',
     'gnMetadataManager',
+    'gnMetadataActions',
     'gnGlobalSettings',
     'gnConfig',
     function($scope, $routeParams, $http,
@@ -63,8 +64,24 @@
         gnUrlUtils,
         gnCurrentEdit,
         gnMetadataManager,
+        gnMetadataActions,
         gnGlobalSettings,
         gnConfig) {
+
+      // option to allow only administrators
+      // to validate a subtemplate
+      // once validated, only administrators can
+      // Edit/Delete/Set privileges/Validate/Reject
+      // If false, user who can edit, can validate/reject
+      $scope.restrictValidationToAdmin = false;
+
+
+      // when subtemplate is validated,
+      // it is also published to internet group (ie. = public)
+      $scope.publishToAllWhenValidated = true;
+
+
+
       $scope.gnConfig = gnConfig;
       $scope.hasEntries = false;
       $scope.mdList = null;
@@ -106,8 +123,6 @@
         hitsPerPage: 20
       };
 
-      // TODO: actually check permission
-      $scope.userCanEditTemplates = true;
       // can be: newEntry, newTemplate, editEntry, editTemplate
       $scope.currentEditorAction = '';
 
@@ -140,11 +155,12 @@
       };
 
       var init = function() {
-        $http.get('../api/users', {cache: true}).
+        $http.get('../api/groups?profile=Editor', {cache: true}).
             success(function(data) {
               $scope.groups = data;
-
-              // Select by default the first group.
+              // Select first user group with editor privileges.
+              // TODO: User should be able to select the group to put
+              // the entry in.
               if ($scope.ownerGroup === null && data) {
                 $scope.ownerGroup = data[0]['id'];
               }
@@ -172,7 +188,7 @@
             });
 
         // fetch all entries + templates
-        var entryType = $scope.userCanEditTemplates ? 's or t' : 's';
+        var entryType = 's or t';
         gnSearchManagerService.search('qi?_content_type=json&' +
             'template=' + entryType +
             '&fast=index&summaryOnly=true&resultType=subtemplates').
@@ -434,6 +450,9 @@
       $scope.validateEntry = function(e) {
         gnMetadataManager.validateDirectoryEntry(e['geonet:info'].id, true)
             .then(function() {
+              if ($scope.publishToAllWhenValidated) {
+                gnMetadataActions.publish(e, undefined, undefined, $scope);
+              }
               refreshEntriesInfo();
               return gnMetadataManager.getMdObjById(e['geonet:info'].id,
               's or t');

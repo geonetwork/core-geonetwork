@@ -68,10 +68,10 @@
           'ngeoDecorateInteraction',
           'gnGeometryService',
           function GeometryToolController(
-            $scope,
-            $attrs,
-            ngeoDecorateInteraction,
-            gnGeometryService) {
+              $scope,
+              $attrs,
+              ngeoDecorateInteraction,
+              gnGeometryService) {
             var ctrl = this;
             var layer = gnGeometryService.getCommonLayer(ctrl.map);
             var source = layer.getSource();
@@ -102,8 +102,8 @@
 
             // remove all my features from the map
             function removeMyFeatures() {
-              var func = function (f) { return f.ol_uid; };
-              ctrl.features.forEach(function (feature) {
+              var func = function(f) { return f.ol_uid; };
+              ctrl.features.forEach(function(feature) {
                 source.removeFeature(feature);
               });
               ctrl.features.clear();
@@ -118,14 +118,16 @@
               }
 
               ctrl.output = gnGeometryService.printGeometryOutput(
-                ctrl.map,
-                feature,
-                {
-                  crs: ctrl.outputCrs,
-                  format: ctrl.outputFormat,
-                  outputAsWFSFeaturesCollection: ctrl.outputAsFeatures  // TODO: make sure this works everytime?
-                }
-              );
+                  ctrl.map,
+                  feature,
+                  {
+                    crs: ctrl.outputCrs,
+                    format: ctrl.outputFormat,
+                    outputAsWFSFeaturesCollection:
+                    ctrl.outputAsFeatures
+                    // TODO: make sure this works everytime?
+                  }
+                  );
             };
 
             // clear existing features on draw end & save feature
@@ -156,13 +158,13 @@
               // parse geometry from text
               try {
                 var geometry = gnGeometryService.parseGeometryInput(
-                  ctrl.map,
-                  ctrl.input,
-                  {
-                    crs: ctrl.inputCrs,
-                    format: ctrl.inputFormat
-                  }
-                );
+                    ctrl.map,
+                    ctrl.input,
+                    {
+                      crs: ctrl.inputCrs,
+                      format: ctrl.inputFormat
+                    }
+                    );
 
                 // clear features & add a new one
                 removeMyFeatures();
@@ -179,7 +181,7 @@
                 }
               }
             }
-            $scope.$watch(function () {
+            $scope.$watch(function() {
               return ctrl.input + ctrl.inputCrs + ctrl.inputFormat;
             }, handleInputUpdate);
           }
