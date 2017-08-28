@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -14,6 +15,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.IndexingTask;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SourceRepository;
@@ -22,6 +24,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
+import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
@@ -64,6 +67,19 @@ public class LocalXLinksUpdateHaveToTriggerIndexationTest extends AbstractCoreIn
         this.context = createServiceContext();
     }
 
+    class MyQuartzJob extends IndexingTask {
+
+        public MyQuartzJob() {
+            this._dataManager = dataManager;
+            this.serviceManager = context.getBean(ServiceManager.class);
+            this.applicationContext = context.getApplicationContext();
+        }
+
+        public void execute() throws JobExecutionException {
+            super.executeInternal(null);
+        }
+    }
+
     @Test
     public void nominal() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
@@ -102,9 +118,8 @@ public class LocalXLinksUpdateHaveToTriggerIndexationTest extends AbstractCoreIn
                 null,
                 false);
 
-        // purpose of MGEO_SB-38 should be to avoid the following line, indexing has to be triggered when updateMetadata,
-        // thru metadata to index queue
-        dataManager.indexMetadata("" + vicinityMapMetadata.getId(), true, null);
+        MyQuartzJob indexingTask = new MyQuartzJob();
+        indexingTask.execute();
 
         searchManager.forceIndexChanges();
         query = new BooleanQuery();
