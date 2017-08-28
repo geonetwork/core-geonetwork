@@ -113,7 +113,7 @@
     <ul data-ng-if="gnCfg.mods.signin.enabled"
         class="nav navbar-nav navbar-right">
       <li data-ng-show="authenticated">
-        <a href="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
+        <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
            title="{{'userDetails' | translate}}"
            class="hidden-xs btn btn-link">
           <img class="img-circle"

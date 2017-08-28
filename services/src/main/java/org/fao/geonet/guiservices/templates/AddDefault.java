@@ -117,8 +117,18 @@ public class AddDefault implements Service {
 
                         if (templateName.startsWith(prefix)) {
                             isTemplate = "s";
-                            title = templateName.substring(prefixLength,
+                            // subtemplates loaded here can have a title or uuid attribute
+                            String tryUuid = xml.getAttributeValue("uuid");
+                            if (tryUuid != null && tryUuid.length() > 0) uuid = tryUuid;
+                            title = xml.getAttributeValue("title");
+                            if (title == null || title.length() == 0) {
+                              title = templateName.substring(prefixLength,
                                 templateName.length() - prefixLength);
+                            }
+                            // throw away the uuid and title attributes if present as they
+                            // cause problems for validation
+                            xml.removeAttribute("uuid");
+                            xml.removeAttribute("title");
                         }
                         //
                         // insert metadata
@@ -127,7 +137,8 @@ public class AddDefault implements Service {
                         metadata.getDataInfo().
                             setSchemaId(schemaName).
                             setRoot(xml.getQualifiedName()).
-                            setType(MetadataType.lookup(isTemplate));
+                            setType(MetadataType.lookup(isTemplate)).
+                            setTitle(title);
                         metadata.getSourceInfo().
                             setSourceId(siteId).
                             setOwner(owner).

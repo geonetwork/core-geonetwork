@@ -929,6 +929,24 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
+     * Extract the title field from the Metadata Repository. This is only valid for subtemplates as the title
+     * can be stored with the subtemplate (since subtemplates don't have a title) - metadata records don't store the 
+     * title here as this is part of the metadata.
+     *
+     * @param id metadata id to retrieve
+     */
+    public String getMetadataTitle(String id) throws Exception {
+        Metadata md = getMetadataRepository().findOne(id);
+
+        if (md == null) {
+            throw new IllegalArgumentException("Metadata not found for id : " + id);
+        } else {
+            // get metadata title
+            return md.getDataInfo().getTitle();
+        }
+    }
+
+    /**
      *
      * @param context
      * @param id
@@ -1302,6 +1320,27 @@ public class DataManager implements ApplicationEventPublisherAware {
             public void apply(@Nonnull Metadata metadata) {
                 final MetadataDataInfo dataInfo = metadata.getDataInfo();
                 dataInfo.setType(metadataType);
+            }
+        });
+    }
+
+    /**
+     * Set metadata type to subtemplate and set the title. Only subtemplates 
+     * need to persist the title as it is used to give a meaningful title for
+     * use when offering the subtemplate to users in the editor.
+     *
+     * @param id Metadata id to set to type subtemplate
+     * @param title Title of metadata of subtemplate/fragment
+     */
+    public void setSubtemplateTypeAndTitleExt(final int id, String title) throws Exception {
+        getMetadataRepository().update(id, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata metadata) {
+                final MetadataDataInfo dataInfo = metadata.getDataInfo();
+                dataInfo.setType(MetadataType.SUB_TEMPLATE);
+                if (title != null) {
+                  dataInfo.setTitle(title);
+                }
             }
         });
     }
@@ -2848,6 +2887,23 @@ public class DataManager implements ApplicationEventPublisherAware {
                 String metadataIdString = String.valueOf(metadataId.get());
                 final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
+            }
+
+						// add user information to env if user is authenticated (should be)
+            Element elUser = new Element("user");
+            UserSession usrSess = context.getUserSession();
+            if (usrSess.isAuthenticated()) {
+              String myUserId  = usrSess.getUserId();
+              User user = getApplicationContext().getBean(UserRepository.class).findOne(myUserId);
+        			if (user != null) {
+								Element elUserDetails = new Element("details");
+            		elUserDetails.addContent(new Element("surname").setText(user.getSurname()));
+            		elUserDetails.addContent(new Element("firstname").setText(user.getName()));
+            		elUserDetails.addContent(new Element("organisation").setText(user.getOrganisation()));
+                elUserDetails.addContent(new Element("username").setText(user.getUsername()));
+								elUser.addContent(elUserDetails);
+            		env.addContent(elUser);
+        			}
             }
 
             // add original metadata to result

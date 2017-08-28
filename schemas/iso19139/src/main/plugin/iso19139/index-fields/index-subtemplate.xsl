@@ -30,6 +30,7 @@
 >
     <xsl:param name="id"/>
     <xsl:param name="uuid"/>
+    <xsl:param name="title"/>
 
 
     <xsl:variable name="isMultilingual" select="count(distinct-values(*//gmd:LocalisedCharacterString/@locale)) > 0"/>
@@ -85,7 +86,8 @@
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
                 <Field name="_title"
-                       string="{if ($name != '') then concat($org, ' (', $name, ')')
+                       string="{if ($title != '') then $title 
+                                else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
@@ -106,7 +108,8 @@
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
               <Field name="_title"
-                       string="{if ($name != '') then concat($org, ' (', $name, ')')
+                       string="{if ($title != '') then $title 
+                                else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
@@ -127,7 +130,8 @@
     <!--Distribution information-->
     <xsl:template mode="index" match="gmd:MD_Distribution[count(ancestor::node()) =  1]">
         <Field name="_title"
-               string="{string-join(gmd:transferOptions/gmd:MD_DigitalTransferOptions/
+               string="{if ($title != '') then $title 
+        else string-join(gmd:transferOptions/gmd:MD_DigitalTransferOptions/
         gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL, ', ')}"
                store="true" index="true"/>
 
@@ -138,7 +142,7 @@
     <!--Online resources-->
     <xsl:template mode="index" match="gmd:CI_OnlineResource[count(ancestor::node()) =  1]">
         <Field name="_title"
-               string="{gmd:linkage/gmd:URL}"
+               string="{if ($title != '') then $title else gmd:linkage/gmd:URL}"
                store="true" index="true"/>
 
         <xsl:call-template name="subtemplate-common-fields"/>
@@ -153,19 +157,21 @@
           <xsl:choose>
             <xsl:when test="$isMultilingual">
               <Field name="_title"
-                     string="{gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}"
+                     string="{if ($title != '') then $title else 
+                       gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}"
                      store="true" index="true"/>
             </xsl:when>
             <xsl:otherwise>
               <Field name="_title"
-                     string="{gmd:description/gco:CharacterString}"
+                     string="{if ($title != '') then $title else gmd:description/gco:CharacterString}"
                      store="true" index="true"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
           <Field name="_title"
-                 string="{if (normalize-space(gmd:description/gco:CharacterString) != '')
+                 string="{if ($title != '') then $title 
+                          else if (normalize-space(gmd:description/gco:CharacterString) != '')
                           then gmd:description/gco:CharacterString
                           else string-join(.//gco:Decimal, ', ')}"
                  store="true" index="true"/>
@@ -179,7 +185,8 @@
 
     <xsl:template mode="index" match="gmd:DQ_DomainConsistency[count(ancestor::node()) =  1]">
         <Field name="_title"
-               string="{gmd:result/*/gmd:specification/*/gmd:title/gco:CharacterString}"
+               string="{if ($title != '') then $title 
+                        else gmd:result/*/gmd:specification/*/gmd:title/gco:CharacterString}"
                store="true" index="true"/>
 
         <xsl:call-template name="subtemplate-common-fields"/>
@@ -189,7 +196,7 @@
 
     <xsl:template mode="index" match="gmd:MD_Format[count(ancestor::node()) =  1]">
         <Field name="_title"
-               string="{gmd:name/gco:CharacterString}"
+               string="{if ($title != '') then $title else gmd:name/gco:CharacterString}"
                store="true" index="true"/>
 
         <xsl:call-template name="subtemplate-common-fields"/>

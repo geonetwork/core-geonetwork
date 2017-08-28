@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.fragment;
 import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -114,6 +115,10 @@ public class FragmentHarvester extends BaseAligner {
     //---------------------------------------------------------------------------
     private HarvestSummary harvestSummary;
 
+    //---------------------------------------------------------------------------
+    private List<Privileges> fragmentAllPrivs = new ArrayList<Privileges>();
+
+
     /**
      * Constructor
      *
@@ -131,11 +136,17 @@ public class FragmentHarvester extends BaseAligner {
 
         SettingInfo si = context.getBean(SettingInfo.class);
         String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-        metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+        metadataGetService = "local://"+context.getNodeId()+"/api/records/";
 
         if (params.templateId != null && !params.templateId.equals("") && !params.templateId.equals("0")) {
             loadTemplate();
         }
+
+        // create privileges for fragments - visible to all (group 1)
+        Privileges fragmentPrivs = new Privileges("1"); // group 1 = All
+        fragmentPrivs.add(0);  // operation 0 = view
+        fragmentAllPrivs.add(fragmentPrivs);
+
     }
 
     //---------------------------------------------------------------------------
@@ -351,19 +362,25 @@ public class FragmentHarvester extends BaseAligner {
 
         String schema = fragment.getAttributeValue("schema");
 
+        String title = fragment.getAttributeValue("title");
+
         if (schema == null) {
             return;  //skip fragments with unknown schema
         }
 
         Element md = (Element) fragment.getChildren().get(0);
 
+        String reference = metadataGetService+uuid;
         String id = dataMan.getMetadataId(uuid);
         if (id == null) {
-            createSubtemplate(schema, md, uuid);
+            createSubtemplate(schema, md, uuid, title);
         } else {
-            updateSubtemplate(id, uuid, md);
+            updateSubtemplate(id, uuid, md, title);
+            Processor.uncacheXLinkUri(reference);
         }
 
+        // Now shove the subtemplate into the xlink cache so it is ready for use
+        Processor.addXLinkToCache(reference, md);
     }
 
     /**
@@ -372,9 +389,10 @@ public class FragmentHarvester extends BaseAligner {
      * @param id   id of subtemplate to update
      * @param uuid uuid of subtemplate being updated
      * @param md   Subtemplate
+     * @param title     Subtemplate title
      */
-    private void updateSubtemplate(String id, String uuid, Element md) throws Exception {
-        update(id, md, true);
+    private void updateSubtemplate(String id, String uuid, Element md, String title) throws Exception {
+        update(id, md, title, true);
         harvestSummary.updatedMetadata.add(uuid);
         harvestSummary.fragmentsUpdated++;
     }
@@ -387,7 +405,7 @@ public class FragmentHarvester extends BaseAligner {
      * @param md     Subtemplate
      * @param uuid   Uuid of subtemplate
      */
-    private void createSubtemplate(String schema, Element md, String uuid) throws Exception {
+    private void createSubtemplate(String schema, Element md, String uuid, String title) throws Exception {
         //
         // insert metadata
         //
@@ -395,7 +413,8 @@ public class FragmentHarvester extends BaseAligner {
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
-            setType(MetadataType.SUB_TEMPLATE);
+            setType(MetadataType.SUB_TEMPLATE).
+            setTitle(title);
         metadata.getSourceInfo().
             setSourceId(params.uuid).
             setOwner(Integer.parseInt(params.owner));
@@ -410,8 +429,9 @@ public class FragmentHarvester extends BaseAligner {
 
         String id = String.valueOf(metadata.getId());
 
-        addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
-
+        // Note: we use fragmentAllPrivs here because subtemplates need to be 
+        // visible/accessible to all
+        addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context, log);
         dataMan.indexMetadata(id, true, null);
 
         dataMan.flush();
@@ -521,7 +541,7 @@ public class FragmentHarvester extends BaseAligner {
 
             // Add an xlink to the subtemplate created for this fragment to the referencing element
             reference.setAttribute("uuidref", uuid);
-            reference.setAttribute("href", metadataGetService + "?uuid=" + uuid, xlink);
+            reference.setAttribute("href", metadataGetService + uuid, xlink);
             reference.setAttribute("show", "replace", xlink);
             if (title != null) reference.setAttribute("title", title, xlink);
         } else {
@@ -550,15 +570,21 @@ public class FragmentHarvester extends BaseAligner {
             log.debug("	- Attempting to update metadata record " + id + " with links");
         }
         template = dataMan.setUUID(params.outputSchema, recUuid, template);
-        update(id, template, false);
+        update(id, template, null, false);
         harvestSummary.recordsUpdated++;
         harvestSummary.updatedMetadata.add(recUuid);
     }
 
     /**
-     * TODO Javadoc.
+     * Update an existing metadata record or subtemplate.
+     *
+     * @param id Metadata id of record being updated
+     * @param template a metadata record or metadata fragment/subtemplate
+     * @param title title of fragment/subtemplate: optional, null for records
+     * @param isSubtemplate Are we updating a subtemplate?
+     *
      */
-    private void update(String id, Element template, boolean doExt) throws Exception {
+    private void update(String id, Element template, String title, boolean isSubtemplate) throws Exception {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = new Date();
         //
@@ -576,15 +602,22 @@ public class FragmentHarvester extends BaseAligner {
         Metadata metadata = metadataRepository.findOne(iId);
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
-        addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
+
+        if (isSubtemplate) {
+          // Note: we use fragmentAllPrivs here because subtemplates need to be 
+          // visible/accessible to all
+          addPrivileges(id, fragmentAllPrivs, localGroups, dataMan, context, log);
+        } else {
+          addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
+        }
 
         metadata.getMetadataCategories().clear();
         addCategories(metadata, params.categories, localCateg, context, log, null, true);
 
-        if (doExt) {
-            dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
-            dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
+        if (isSubtemplate) { 
+            dataMan.setSubtemplateTypeAndTitleExt(iId, title);
         }
+        dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
 
         dataMan.indexMetadata(id, true, null);
 

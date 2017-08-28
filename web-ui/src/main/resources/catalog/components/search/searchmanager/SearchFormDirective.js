@@ -124,27 +124,27 @@
       function searchFn() {
         $scope.searching++;
         $scope.searchObj.params = angular.extend({},
-            $scope.searchObj.defaultParams || defaultParams,
-            $scope.searchObj.params,
-            defaultParams);
+          $scope.searchObj.defaultParams || defaultParams,
+          $scope.searchObj.params,
+          defaultParams);
 
         // Add hidden filters which may
         // restrict search (do not add an existing filter)
         if ($scope.searchObj.filters) {
           angular.forEach($scope.searchObj.filters,
-              function(value, key) {
-                var p = $scope.searchObj.params[key];
-                if (p) {
-                  if (p !== value && (!p.indexOf || p.indexOf(value) === -1)) {
-                    if (!angular.isArray(p)) {
-                      $scope.searchObj.params[key] = [p];
-                    }
-                    $scope.searchObj.params[key].push(value);
+            function(value, key) {
+              var p = $scope.searchObj.params[key];
+              if (p) {
+                if (p !== value && (!p.indexOf || p.indexOf(value) === -1)) {
+                  if (!angular.isArray(p)) {
+                    $scope.searchObj.params[key] = [p];
                   }
-                } else {
-                  $scope.searchObj.params[key] = value;
+                  $scope.searchObj.params[key].push(value);
                 }
-              });
+              } else {
+                $scope.searchObj.params[key] = value;
+              }
+            });
         }
 
         // Set default pagination if not set

@@ -201,7 +201,9 @@ public class DirectoryEntriesApi {
         // Monolingual metadata: remove all localized strings and extract main characterString
         else {
             MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
-            plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
+            if (plugin != null) {
+							plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
+						}
 
         }
         if (transformation != null) {

@@ -765,6 +765,7 @@
     <xsl:param name="btnLabel" required="no" as="xs:string?" select="''"/>
     <xsl:param name="btnClass" required="no" as="xs:string?" select="''"/>
 
+
     <xsl:if test="not($isDisabled) and $parentEditInfo/@ref != ''">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName"
@@ -788,6 +789,8 @@
         </label>
         <div class="col-sm-9">
 
+          <xsl:variable name="addDirective" select="$directive/@addDirective != ''"/>
+
           <xsl:variable name="addActionDom">
             <xsl:choose>
               <!-- When element have different types, provide
@@ -799,7 +802,7 @@
 
                     If only one choice, make a simple button
               -->
-              <xsl:when test="count($childEditInfo/gn:choose) = 1">
+              <xsl:when test="count($childEditInfo/gn:choose) = 1 and not($addDirective)">
                 <xsl:for-each select="$childEditInfo/gn:choose">
                   <xsl:variable name="label"
                                 select="gn-fn-metadata:getLabel($schema, @name, $labels, $parentName, '', '')"/>
@@ -821,7 +824,7 @@
               </xsl:when>
               <!--
                     If many choices, make a dropdown button -->
-              <xsl:when test="count($childEditInfo/gn:choose) > 1">
+              <xsl:when test="count($childEditInfo/gn:choose) > 1 and not($addDirective)">
                 <div class="btn-group">
                   <button type="button"
                           class="btn btn-default dropdown-toggle {if ($btnClass != '') then $btnClass else 'fa fa-plus'} gn-add"
@@ -873,7 +876,7 @@
           </xsl:variable>
 
           <xsl:choose>
-            <xsl:when test="$directive/@addDirective != ''">
+            <xsl:when test="$addDirective">
               <div>
                 <xsl:attribute name="{$directive/@addDirective}"/>
                 <xsl:attribute name="data-dom-id" select="$id"/>
