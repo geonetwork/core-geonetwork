@@ -70,7 +70,7 @@
               } else if (gnGlobalSettings.gnUrl &&
                   config.url.indexOf('http://') < 0 &&
                   config.url.indexOf('https://') < 0 &&
-                  !config.url.match(/(partials\/).*(.html)$/)) {
+                  !config.url.match(/(partials\/)[^\/]*(.html)$/)) {
                 // Relative URL in API mode
                 // are prefixed with catalog URL
                 // console.log(config.url);
