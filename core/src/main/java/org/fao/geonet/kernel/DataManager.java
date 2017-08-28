@@ -1644,7 +1644,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         if(mdImportSetting != null && !mdImportSetting.equals("")) {
             if(!Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
                 throw new IllegalArgumentException(schema+" is not permitted in the database as a non-harvested metadata.  " +
-                        "Apply a import stylesheet to convert file to iso19139.che");
+                        "Apply a import stylesheet to convert file to allowed schemas");
             }
         }
 
