@@ -38,8 +38,8 @@
 									</div>
 									<div class="pull-left gn-userfeedback-comment-user">
 										<a>{{row.authorName}}</a>
-										<p>{{row.comment}}</p>
-										<span data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/
+										<p><q>{{row.comment}}</q></p>
+										<span class="gn-userfeedback-score-{{row.ratingAVG}}" data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/
 											5 <span class="fa fa-fw fa-star">&nbsp;</span>
 										</span>
 										<p class="gn-userfeedback-reply" data-ng-show="loggedIn">

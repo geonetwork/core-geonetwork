@@ -70,6 +70,7 @@
 								url : "../api/userfeedback?target="+scope.metatdataUUID+"&maxnumber=3",
 								isArray: true
 							}).then(function mySuccess(response) {
+								scope.fewCommentsList = [];   
 								scope.fewCommentsList = scope.fewCommentsList.concat(response.data);
 								scope.showButtonAllComments = true;
 								scope.showModal = false;
@@ -82,6 +83,7 @@
 								url : "../api/metadata/" + scope.metatdataUUID + "/userfeedbackrating",
 								isArray: false
 							}).then(function mySuccess(response) {
+								scope.rating = null;
 								scope.rating = response.data;        	 
 							}, function myError(response) {
 								console.log(response.statusText);
@@ -129,6 +131,7 @@
 								url : "../api/userfeedback?full=true&target="+scope.metatdataUUID,
 								isArray: true
 							}).then(function mySuccess(response) {
+								scope.fullCommentsList = [];   
 								scope.fullCommentsList = scope.fullCommentsList.concat(response.data);
 								scope.showButtonAllComments = true;
 								scope.showModal = false;
@@ -325,6 +328,7 @@
 								url : "../api/userfeedback?maxnumber=6",
 								isArray: true
 							}).then(function mySuccess(response) {
+								scope.lastCommentsList = [];  
 								scope.lastCommentsList = scope.lastCommentsList.concat(response.data);
 							}, function myError(response) {
 								console.log(response.statusText);
