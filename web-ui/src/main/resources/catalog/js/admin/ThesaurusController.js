@@ -24,8 +24,11 @@
 (function() {
   goog.provide('gn_thesaurus_controller');
 
-  var module = angular.module('gn_thesaurus_controller',
-      ['blueimp.fileupload']);
+  goog.require('gn_multilingual_field_directive');
+
+  var module = angular.module('gn_thesaurus_controller', [
+      'blueimp.fileupload',
+      'gn_multilingual_field_directive']);
 
 
   /**
@@ -127,16 +130,15 @@
       $scope.availableLangs = gnConfig['ui.config'].mods.header.languages;
       $scope.switchLang = function(lang3) {
         $scope.currentLangShown = lang3;
-        $scope.currentKeywordEditor = lang3;
       };
 
       /**
-       * Language switch for keyword editor
+       * Language list for gn-multilingual-directive
        */
-      $scope.currentKeywordEditorLang = $scope.lang;
-      $scope.switchKeywordEditorLang = function(lang3) {
-        $scope.currentKeywordEditorLang = lang3;
-      };
+      $scope.langList = angular.copy($scope.availableLangs);
+      angular.forEach($scope.langList, function (lang2, lang3) {
+        $scope.langList[lang3] = '#' + lang2;
+      });
 
       /**
        * The type of thesaurus import. Could be new, file or url.
@@ -414,9 +416,6 @@
        * Edit an existing keyword, open the modal, search relations
        */
       $scope.editKeyword = function(k) {
-        // reset keyword editor lang to list lanugage
-        $scope.currentKeywordEditorLang = $scope.currentLangShown;
-
         $scope.keywordSelected = angular.copy(k);
         $scope.keywordSelected.oldId = $scope.keywordSelected.uri;
         creatingKeyword = false;
@@ -428,9 +427,6 @@
        * Edit a new keyword and open the modal
        */
       $scope.addKeyword = function() {
-        // reset keyword editor lang to list lanugage
-        $scope.currentKeywordEditorLang = $scope.currentLangShown;
-
         creatingKeyword = true;
         $scope.keywordSuggestedUri = '';
         $scope.keywordSelected = {
@@ -652,6 +648,11 @@
       }
 
       loadThesaurus();
+
+      // clear selected keyword on modal close
+      $('#keywordModal').on('hide.bs.modal', function() {
+        $scope.keywordSelected = null;
+      });
 
     }]);
 
