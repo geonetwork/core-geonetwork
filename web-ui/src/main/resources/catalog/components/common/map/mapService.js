@@ -1517,6 +1517,14 @@
                   source: new ol.source.OSM(),
                   title: title ||  'OpenStreetMap'
                 });
+              //ALEJO: tms support
+              case 'tms':
+                return   new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        url: opt.url
+                    }),
+                    title: title ||  'TMS Layer'
+                });
               case 'bing_aerial':
                 return new ol.layer.Tile({
                   preload: Infinity,
