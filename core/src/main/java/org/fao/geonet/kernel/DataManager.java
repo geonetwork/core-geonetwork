@@ -930,7 +930,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     /**
      * Extract the title field from the Metadata Repository. This is only valid for subtemplates as the title
-     * can be stored with the subtemplate (since subtemplates don't have a title) - metadata records don't store the 
+     * can be stored with the subtemplate (since subtemplates don't have a title) - metadata records don't store the
      * title here as this is part of the metadata.
      *
      * @param id metadata id to retrieve
@@ -1325,7 +1325,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
-     * Set metadata type to subtemplate and set the title. Only subtemplates 
+     * Set metadata type to subtemplate and set the title. Only subtemplates
      * need to persist the title as it is used to give a meaningful title for
      * use when offering the subtemplate to users in the editor.
      *
@@ -1860,7 +1860,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadataXml);
 
-        // Notifies the metadata change to metatada notifier service
         final Metadata metadata = getMetadataRepository().findOne(metadataId);
 
         String uuid = null;
@@ -1872,10 +1871,8 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         //--- write metadata to dbms
         getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
-        if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
-            // Notifies the metadata change to metatada notifier service
-            notifyMetadataChange(metadataXml, metadataId);
-        }
+        // Notifies the metadata change to metadata notifier service
+        notifyMetadataChange(metadataXml, metadataId);
 
         try {
             //--- do the validation last - it throws exceptions
