@@ -45,6 +45,7 @@
           scope.customActions = gnSearchSettings.customSelectActions;
           var watchers = [];
           scope.checkAll = true;
+          scope.excludePattern = new RegExp(attrs.excludeActionsPattern || '^$');
           scope.withoutActionMenu =
               angular.isDefined(attrs.withoutActionMenu) ? true : false;
 
