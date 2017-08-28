@@ -20,6 +20,9 @@
 .gn-md-feedback-buttons {
   margin-bottom: 20px;
 }
+.gn-md-feedback-buttons button:first-child {
+  margin-right: 5px;
+}
 .gn-md-feedback-btn {
   margin-right: 5px;
 }
@@ -55,6 +58,16 @@ q, blockquote {
   font-size: 36px;
   margin-bottom: 40px;
 }
+// colors for scores
+.gn-userfeedback-score-1 {
+  color: @brand-danger;
+}
+.gn-userfeedback-score-2, .gn-userfeedback-score-3 {
+  color: @brand-warning;
+}
+.gn-userfeedback-score-4, .gn-userfeedback-score-5 {
+  color: @brand-success;
+}
 
 // buttonbar for reply links and buttons
 .gn-userfeedback-reply {
@@ -72,6 +85,7 @@ q, blockquote {
   border: 1px solid #eee;
   border-radius: 3px;
   h4 {
+    font-size: 15px;
     a {
       cursor: pointer;
       color: #333;
@@ -85,6 +99,7 @@ q, blockquote {
     display: block;
     margin-bottom: 20px;
     margin-top: 15px;
+    font-size: 20px;
   }
   q:before, blockquote:before {
     font-size: 30px;
@@ -114,8 +129,17 @@ q, blockquote {
     line-height: 36px;
     color: #5d5b5b;
   }
-  .gn-userfeedback-badge {
+  // colors for scores
+  .gn-userfeedback-score-1 {
+    background-color: @brand-danger;
+  }
+  .gn-userfeedback-score-2, .gn-userfeedback-score-3 {
+    background-color: @brand-warning;
+  }
+  .gn-userfeedback-score-4, .gn-userfeedback-score-5 {
     background-color: @brand-success;
+  }
+  .gn-userfeedback-badge {
     color: #fff;
     margin-right: 5px;
     padding: 1px 16px;
@@ -156,6 +180,11 @@ q, blockquote {
       border: 1px solid #ccc;
       background-color: #efefef;
       padding: 10px;
+      q {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
     }
     .gn-userfeedback-user {
       margin-top: 25px;
@@ -221,6 +250,15 @@ q, blockquote {
   .gn-userfeedback-list {
     max-height: 450px;
     overflow: auto;
+    .gn-userfeedback-item {
+      .gn-userfeedback-comment-user {
+        a {
+          display: block;
+          padding: 4px 0;
+          font-weight: 500;
+        }
+      }
+    }
   }
   // panels
   .panel {

@@ -17,8 +17,8 @@
 			<li class="gn-userfeedback-item"
 				data-ng-repeat="row in fewCommentsList">
 				<div class="gn-userfeedback-comment gn-arrow-bottom">
-					<p data-ng-show="row.comment">{{row.comment}}</p>
-					<span data-ng-show="row.ratingAVG"> {{row.ratingAVG}} / 5 <span
+					<q data-ng-show="row.comment">{{row.comment}}</q>
+					<span class="gn-userfeedback-score-{{row.ratingAVG}}" data-ng-show="row.ratingAVG"> {{row.ratingAVG}} / 5 <span
 						class="fa fa-fw fa-star">&nbsp;</span>
 					</span> on {{row.date | date:'medium'}} <span
 						data-ng-hide="{{row.published}}"> - <strong data-translate="">GUFwaitingForApproval</strong></span>
