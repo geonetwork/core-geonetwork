@@ -25,6 +25,8 @@ package org.fao.geonet.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import jeeves.component.ProfileManager;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -71,6 +73,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -701,5 +706,27 @@ public final class XslUtil {
             }
         }
         return max;
+    }
+
+    private static final Cache<String, Boolean> URL_VALIDATION_CACHE;
+
+    static {
+        URL_VALIDATION_CACHE = CacheBuilder.<String, Boolean>newBuilder().
+                maximumSize(100000).
+                expireAfterAccess(25, TimeUnit.HOURS).
+                build();
+    }
+
+    public static boolean validateURL(final String urlString) throws ExecutionException {
+        return URL_VALIDATION_CACHE.get(urlString, new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                try {
+                    return (Integer.parseInt(getUrlStatus(urlString)) / 100 == 2);
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+        });
     }
 }
