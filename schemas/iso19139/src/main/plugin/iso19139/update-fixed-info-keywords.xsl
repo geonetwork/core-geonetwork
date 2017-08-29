@@ -137,7 +137,7 @@
                             select="replace(@xlink:href, '.*thesaurus=([^&amp;]+).*', '$1')"/>
 
               <xsl:variable name="currentIdentifiers"
-                            select="replace(@xlink:href, '.*id=([^&amp;]+).*', '$1')"/>
+                            select="replace(@xlink:href, '.*id=([^&amp;]*).*', '$1')"/>
 
               <xsl:variable name="newIdentifiers"
                             select="string-join(
@@ -146,10 +146,10 @@
 
               <xsl:variable name="newUrl"
                             select="replace(@xlink:href,
-                                      '(.*)id=([^&amp;]+)(.*)',
+                                      '(.*)id=([^&amp;]*)(.*)',
                                       concat(
                                         '$1id=$2',
-                                        if ($newIdentifiers != '') then ',' else '',
+                                        if ($newIdentifiers != '' and $currentIdentifiers != '') then ',' else '',
                                         $newIdentifiers,
                                         '$3'))"/>
 
