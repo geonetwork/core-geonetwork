@@ -248,11 +248,11 @@
         <!-- Build XLink URL common parameters (eg. lang) -->
         <xsl:variable name="uniqueParams"
                       select="distinct-values(
-                                  $params/param/key[. != 'id' and . != 'thesaurus']/text())"/>
+                                  $params/key[. != 'id' and . != 'thesaurus']/text())"/>
         <xsl:variable name="queryString">
           <xsl:for-each select="$uniqueParams">
             <xsl:variable name="p" select="."/>
-            <xsl:value-of select="concat('&amp;', $p, '=', $params/param[key/text() = $p]/val)"/>
+            <xsl:value-of select="concat('&amp;', $p, '=', $params[key/text() = $p]/val)"/>
           </xsl:for-each>
         </xsl:variable>
 
