@@ -58,6 +58,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -377,6 +378,16 @@ public class EditLib {
     public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception, IOException,
         JDOMException {
         // Loop over each XML fragments to insert or replace
+        HashMap<String, Element> nodeRefToElem = new HashMap<>();
+        for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
+            String nodeRef = entry.getKey();
+            String[] nodeConfig = nodeRef.split("_");
+            nodeRef = nodeConfig[0];
+
+            Element el = findElement(md, nodeRef);
+            nodeRefToElem.put(nodeRef, el);
+        }
+
         for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
             String nodeRef = entry.getKey();
             String xmlSnippetAsString = entry.getValue();
@@ -407,7 +418,7 @@ public class EditLib {
 
 
             // Get element to fill
-            Element el = findElement(md, nodeRef);
+            Element el = nodeRefToElem.get(nodeRef);
             if (el == null) {
                 Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + nodeRef);
                 continue;
