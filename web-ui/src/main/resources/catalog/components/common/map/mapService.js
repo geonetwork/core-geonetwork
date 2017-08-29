@@ -506,7 +506,6 @@
               source = new ol.source.ImageWMS({
                 params: layerParams,
                 url: options.url,
-                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 ratio: getImageSourceRatio(map, 2048)
               });
@@ -514,7 +513,6 @@
               source = new ol.source.TileWMS({
                 params: layerParams,
                 url: options.url,
-                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 gutter: 15
               });
