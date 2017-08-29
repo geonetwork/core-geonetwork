@@ -155,15 +155,15 @@
             ctrl.formats = ['WKT', 'GeoJSON', 'GML'];
             ctrl.currentFormat = ctrl.formats[0];
 
-            // parse initial input coordinates to display shape (first in WKT)
+            // parse initial input coordinates to display shape
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
                 // parse first feature from source XML & set geometry name
                 var correctedXml = ctrl.polygonXml
-                    .replace('<gml:LinearRingTypeCHOICE_ELEMENT0>', '')
-                    .replace('</gml:LinearRingTypeCHOICE_ELEMENT0>', '')
-                    .replace('<gml:LineStringTypeCHOICE_ELEMENT1>', '')
-                    .replace('</gml:LineStringTypeCHOICE_ELEMENT1>', '');
+                    .replace(/<gml:LinearRingTypeCHOICE_ELEMENT0>/g, '')
+                    .replace(/<\/gml:LinearRingTypeCHOICE_ELEMENT0>/g, '')
+                    .replace(/<gml:LineStringTypeCHOICE_ELEMENT1>/g, '')
+                    .replace(/<\/gml:LineStringTypeCHOICE_ELEMENT1>/g, '');
                 var geometry = gnGeometryService.parseGeometryInput(
                     ctrl.map,
                     correctedXml,
