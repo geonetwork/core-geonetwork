@@ -239,8 +239,15 @@ public class ISO19139SchemaPlugin
             String filterAttribute = "*//node()[@locale='" + mdLang + "']";
             List<Element> localizedElement = (List<Element>)Xml.selectNodes(el, filterAttribute, Arrays.asList(GMD));
             if(localizedElement.size() == 1) {
-                String mainLangStraing = localizedElement.get(0).getText();
-                ((Element)el.getParent()).getChild("CharacterString", GCO).setText(mainLangStraing);
+                String mainLangString = localizedElement.get(0).getText();
+                Element mainCharacterString = ((Element)el.getParent()).getChild("CharacterString", GCO);
+                if (mainCharacterString != null) {
+                    mainCharacterString.setText(mainLangString);
+                } else {
+                    ((Element) el.getParent()).addContent(
+                        new Element("CharacterString", GCO).setText(mainLangString)
+                    );
+                }
             }
             el.detach();
         }
