@@ -38,10 +38,9 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LocalXLinksUpdateHaveToTriggerIndexationTest extends AbstractCoreIntegrationTest {
+public class LocalXLinksUpdateHaveToTriggerIndexationTest extends AbstractIntegrationTestWithMockedSingletons {
 
     private static final int TEST_OWNER = 42;
 
@@ -88,8 +87,7 @@ public class LocalXLinksUpdateHaveToTriggerIndexationTest extends AbstractCoreIn
         Element contactElement = Xml.loadStream(contactResource.openStream());
         Metadata contactMetadata = insertTemplateResourceInDb(contactElement, SUB_TEMPLATE);
 
-        SpringLocalServiceInvoker mockInvoker = mock(SpringLocalServiceInvoker.class);
-        _applicationContext.getBeanFactory().registerSingleton(SpringLocalServiceInvoker.class.getCanonicalName(), mockInvoker);
+        SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
         when(mockInvoker.invoke(any(String.class))).thenReturn(contactElement);
 
         URL vicinityMapResource = AbstractCoreIntegrationTest.class.getResource("kernel/vicinityMap.xml");

@@ -26,7 +26,6 @@ package org.fao.geonet.kernel;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
@@ -38,7 +37,6 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.io.StringReader;
 import java.util.List;
@@ -48,7 +46,6 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,7 +56,7 @@ import static org.mockito.Mockito.when;
  *
  * Created by Jesse on 1/30/14.
  */
-public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegrationTest {
+public class LocalXLinksInMetadataIntegrationTest extends AbstractIntegrationTestWithMockedSingletons {
 
     @Autowired
     private SettingManager _settingManager;
@@ -112,8 +109,7 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source, metadataType, null,
             null, createDate, changeDate, false, false);
 
-        SpringLocalServiceInvoker mockInvoker = mock(SpringLocalServiceInvoker.class);
-        _applicationContext.getBeanFactory().registerSingleton(SpringLocalServiceInvoker.class.getCanonicalName(), mockInvoker);
+        SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
 
         String keyword1 = "World";
         Element element1 = new SAXBuilder().build(new StringReader(String.format(responseTemplate, keyword1))).getRootElement();
