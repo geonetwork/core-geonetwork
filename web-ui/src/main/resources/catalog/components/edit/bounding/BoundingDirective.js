@@ -44,7 +44,9 @@
    *  the value entered by the user
    */
   module.directive('gnBoundingPolygon', [
-    function() {
+    'gnViewerSettings',
+    'gnMap',
+    function(gnViewerSettings, gnMap) {
       return {
         restrict: 'E',
         scope: {
@@ -56,6 +58,15 @@
         link: {
           post: function(scope, element) {
             scope.ctrl.map.renderSync();
+
+            // apply extent from settings
+            var mapExtent = gnViewerSettings.mapConfig.mapExtent;
+            if (mapExtent && ol.extent.getWidth(mapExtent) &&
+              ol.extent.getHeight(mapExtent)) {
+                scope.ctrl.map.getView().fit(mapExtent,
+                  scope.ctrl.map.getSize());
+            }
+
             scope.ctrl.initValue();
           }
         },

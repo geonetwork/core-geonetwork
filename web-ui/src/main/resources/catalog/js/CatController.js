@@ -171,7 +171,8 @@
           'disabledTools': {
             'processes': true
           },
-          'graticuleOgcService': {}
+          'graticuleOgcService': {},
+          'mapExtent': [0, 0, 0, 0]
         },
         'editor': {
           'enabled': true,
@@ -233,6 +234,14 @@
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);
+      },
+      // this returns a copy of the default config without the languages object
+      // this way, the object can be used as reference for a complete ui
+      // settings page
+      getMergeableDefaultConfig: function() {
+        var copy = angular.copy(defaultConfig);
+        copy.mods.header.languages = {};
+        return copy;
       }
     };
   }());
