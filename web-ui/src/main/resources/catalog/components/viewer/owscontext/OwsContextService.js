@@ -184,9 +184,14 @@
                   var opt;
                   re = this.getREForPar('name');
                   if (layer.name.match(re)) {
-                    opt = {
-                      name: re.exec(layer.name)[1]
-                    };
+                    var lyr = re.exec(layer.name)[1];
+
+                    if(layer.server) {
+                        var server = layer.server[0];
+                        var res = server.onlineResource[0].href;
+                    }
+                    opt = {name: lyr,
+                            url: res};
                   }
                   var olLayer =
                       gnMap.createLayerForType(type, opt, layer.title);
@@ -374,6 +379,11 @@
         // add the background layers
         // todo: grab this from config
         angular.forEach(gnViewerSettings.bgLayers, function(layer) {
+          // skip if no valid layer (ie: layer still loading)
+          if (!layer) {
+            return;
+          }
+
           var source = layer.getSource();
           var name;
           var params = {
@@ -385,6 +395,8 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
+          } else if (source instanceof ol.source.MapQuest) {
+            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {

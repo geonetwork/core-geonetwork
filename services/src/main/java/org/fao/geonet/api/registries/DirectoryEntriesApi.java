@@ -82,7 +82,7 @@ public class DirectoryEntriesApi {
             "inserted in metadata records using XLinks. XLinks can be remote or " +
             "local.")
     @RequestMapping(
-        value = "/{uuid}",
+        value = "/{uuid:.+}",
         method = RequestMethod.GET,
         produces = {
             MediaType.APPLICATION_XML_VALUE
@@ -201,7 +201,9 @@ public class DirectoryEntriesApi {
         // Monolingual metadata: remove all localized strings and extract main characterString
         else {
             MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
-            plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
+            if (plugin != null) {
+                plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
+            }
 
         }
         if (transformation != null) {

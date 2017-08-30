@@ -59,9 +59,12 @@
   module.directive('gnMetadataDisplay', [
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {
-        templateUrl: '../../catalog/components/search/mdview/partials/' +
-            'mdpanel.html',
         scope: true,
+        templateUrl: function (elem, attrs) {
+          return attrs.template ||
+            '../../catalog/components/search/mdview/partials/' +
+            'mdpanel.html';
+        },
         link: function(scope, element, attrs, controller) {
 
           var unRegister;
@@ -112,6 +115,130 @@
               scope.rate = data;
             });
           };
+        }
+      };
+    }]
+  );
+
+  /**
+   * Directive to provide 3 visualization modes for metadata contacts
+   * in metadata detail page:
+   *
+   * - 'default': plain list of contacts.
+   *
+   * - 'role': grouped by role, then by organisation. Example rendering:
+   *
+   *      Resource provider
+   *       Organisation 1
+   *       List of users with role
+   *       Address organisation 1
+   *
+   *       Organisation 2
+   *       List of users with role
+   *       Address organisation 1
+   *
+   *      Custodian,Distributor
+   *       Organisation 1
+   *       List of users with role
+   *       Address organisation 1
+   *
+   * - 'org-role': grouped by organisation, then by role. Example rendering:
+   *
+   *      Organisation 1
+   *      Address organisation 1
+   *      Resource provider : user1@mail.com
+   *      Custodian, Distributor :  user2@mail.com
+   *
+   *      Organisation 2
+   *      Address organisation 2
+   *      Resource provider : user3@mail.com
+   */
+  module.directive('gnMetadataContacts', [
+    '$http',
+    function($http) {
+      return {
+        templateUrl: '../../catalog/components/search/mdview/partials/' +
+            'contact.html',
+        restrict: 'A',
+        scope: {
+          mdContacts: '=gnMetadataContacts',
+          mode: '@gnMode'
+        },
+        link: function(scope, element, attrs, controller) {
+
+          if (['default', 'role', 'org-role'].indexOf(scope.mode) == -1) {
+            scope.mode = 'default';
+          }
+
+          if (scope.mode != 'default') {
+            var groupByOrgAndMailOrName = function(resources) {
+              return _.groupBy(resources,
+                  function(contact) {
+                    if (contact.email) {
+                      return contact.org + '#' + contact.email;
+                    } else {
+                      return contact.org + '#' + contact.name;
+                    }
+                  });
+            };
+
+            var aggregateRoles = function(resources) {
+              return _.map(resources,
+                  function(contact) {
+                    var copy = angular.copy(contact[0]);
+                    angular.extend(copy, {
+                      roles: _.pluck(contact, 'role')
+                    });
+
+                    return copy;
+                  });
+            };
+
+            if (scope.mode == 'role') {
+              var contactsByOrgAndMailOrName =
+                  groupByOrgAndMailOrName(scope.mdContacts);
+
+              var contactsWithAggregatedRoles =
+                  aggregateRoles(contactsByOrgAndMailOrName);
+
+              /**
+               * Contacts format:
+               *
+               * {
+               *    {[roles]: [{contact1}, {contact2}, ... },
+               *    {[roles]: [{contact3}, {contact4}, ... },
+               * }
+               *
+               */
+              scope.mdContactsByRole =
+                  _.groupBy(contactsWithAggregatedRoles, function(c) {
+                    return c.roles;
+                  });
+            } else if (scope.mode == 'org-role') {
+              /**
+               * Contacts format:
+               *
+               * {
+               *    {organisation1: [{contact1}, {contact2}, ... },
+               *    {organisation2: [{contact3}, {contact4}, ... },
+               * }
+               *
+               */
+              scope.mdContactsByOrgRole = _.groupBy(scope.mdContacts,
+                  function(contact) {
+                    return contact.org;
+                  });
+
+              for (var key in scope.mdContactsByOrgRole) {
+                var value = scope.mdContactsByOrgRole[key];
+
+                var contactsByOrgAndMailOrName = groupByOrgAndMailOrName(value);
+
+                scope.mdContactsByOrgRole[key] =
+                    aggregateRoles(contactsByOrgAndMailOrName);
+              }
+            }
+          }
         }
       };
     }]

@@ -99,7 +99,7 @@ public class MetadataApi implements ApplicationContextAware {
             "When requesting a ZIP, a MEF version 2 file is returned. " +
             "When requesting HTML, the default formatter is used.",
         nickname = "getRecord")
-    @RequestMapping(value = "/{metadataUuid}",
+    @RequestMapping(value = "/{metadataUuid:.+}",
         method = RequestMethod.GET,
         consumes = {
             MediaType.ALL_VALUE

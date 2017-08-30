@@ -68,7 +68,9 @@
             'cat': 'ca',
             'fin': 'fi',
             'ice': 'is',
-            'ita' : 'it'
+            'ita' : 'it',
+            'rus': 'ru',
+            'chi': 'zh'
           }
         },
         'home': {
@@ -374,7 +376,8 @@
       $scope.langLabels = {'eng': 'English', 'dut': 'Nederlands',
         'fre': 'Français', 'ger': 'Deutsch', 'kor': '한국의',
         'spa': 'Español', 'cat': 'Català', 'cze': 'Czech',
-        'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska'};
+        'ita': 'Italiano', 'fin': 'Suomeksi', 'ice': 'Íslenska',
+        'rus': 'русский', 'chi': '中文'};
       $scope.url = '';
       $scope.gnUrl = gnGlobalSettings.gnUrl;
       $scope.gnCfg = gnGlobalSettings.gnCfg;
@@ -396,11 +399,15 @@
       $http.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
       $http.defaults.xsrfCookieName = 'XSRF-TOKEN';
       $scope.$watch(function() {
-        return $cookies.get('XSRF-TOKEN');
+        return $cookies.get($http.defaults.xsrfCookieName);
       },
       function(value) {
         $rootScope.csrf = value;
       });
+      //If no csrf, ask for one:
+      if(!$rootScope.csrf) {
+        $http.post('info?type=me');
+      }
       //Comment the upper lines if you want to remove csrf support
 
       /**

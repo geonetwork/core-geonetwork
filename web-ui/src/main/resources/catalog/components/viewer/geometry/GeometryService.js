@@ -39,8 +39,6 @@
   module.service('gnGeometryService', [
     function() {
 
-      this._layer = null;
-
       /**
        * @ngdoc method
        * @methodOf gn_geometry.service:gnGeometryService
@@ -88,9 +86,15 @@
        * @return {ol.layer.Vector} vector layer
        */
       this.getCommonLayer = function(map) {
-        if (this._layer) {
-          this._layer.setMap(map);
-          return this._layer;
+        var commonLayer = null;
+        map.getLayers().getArray().forEach(function(layer) {
+          if (layer.get('name') === 'geometry-tool-layer') {
+            commonLayer = layer;
+          }
+        });
+
+        if (commonLayer) {
+          return commonLayer;
         }
 
         // layer & source
@@ -98,7 +102,7 @@
           useSpatialIndex: true,
           features: new ol.Collection()
         });
-        this._layer = new ol.layer.Vector({
+        commonLayer = new ol.layer.Vector({
           source: source,
           name: 'geometry-tool-layer',
           style: [
@@ -131,9 +135,9 @@
         });
 
         // add our layer to the map
-        this._layer.setMap(map);
+        map.addLayer(commonLayer);
 
-        return this._layer;
+        return commonLayer;
       };
 
       /**
@@ -205,11 +209,11 @@
             });
 
             if (options.outputAsWFSFeaturesCollection) {
-              outputValue =
+              outputValue = 
                   '<wfs:FeatureCollection ' +
                   'xmlns:wfs="http://www.opengis.net/wfs">' +
                   format.writeFeatures([outputFeature]) +
-                  '</FeatureCollection>';
+                  '</wfs:FeatureCollection>';
             } else if (options.outputAsFeatures) {
               outputValue = format.writeFeatures([outputFeature]);
             } else {

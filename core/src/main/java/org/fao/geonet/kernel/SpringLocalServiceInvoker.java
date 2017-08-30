@@ -39,6 +39,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHan
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 
 public class SpringLocalServiceInvoker {
 
@@ -79,11 +80,40 @@ public class SpringLocalServiceInvoker {
         servletInvocableHandlerMethod.setHandlerMethodReturnValueHandlers(returnValueHandlers);
         servletInvocableHandlerMethod.setDataBinderFactory(webDataBinderFactory);
 
-        return servletInvocableHandlerMethod.invokeForRequest(new ServletWebRequest(request, response), null, new Object[0]);
+        Object o = servletInvocableHandlerMethod.invokeForRequest(new ServletWebRequest(request, response), null, new Object[0]);
+        // check whether we need to further process a "forward:" response
+        if (o instanceof String) {
+          String checkForward = (String)o;
+          if (checkForward.startsWith("forward:")) {
+            //
+            // if the original url ends with the first component of the fwd url, then concatenate them, otherwise
+            // just invoke it and hope for the best...
+            // eg. local://srv/api/records/urn:marlin.csiro.au:org:1_organisation_name
+            // returns forward:urn:marlin.csiro.au:org:1_organisation_name/formatters/xml
+            // so we join the original url and the forwarded url as:
+            // /api/records/urn:marlin.csiro.au:org:1_organisation_name/formatters/xml and invoke it.
+            //
+            String fwdUrl = StringUtils.substringAfter(checkForward,"forward:");
+						String lastComponent = StringUtils.substringAfterLast(request.getRequestURI(),"/");
+            if (lastComponent.length() > 0 && StringUtils.startsWith(fwdUrl, lastComponent)) {
+							return invoke(request.getRequestURI()+StringUtils.substringAfter(fwdUrl,lastComponent));
+						} else {
+							return invoke(fwdUrl);	
+           	} 
+          }
+        }
+        return o;
     }
 
+    /**
+     * prepareMockRequestFromUri will search for spring services that match
+     * the request and execute them. Typically used for the local:// xlink
+     * speed up. Accepts urls prefixed with local://<nodename> eg. 
+     * local://srv/api/records/.. 
+     * but also urls prefixed with the nodename only eg. '/srv/api/records/..'
+     */
     private MockHttpServletRequest prepareMockRequestFromUri(String uri) {
-        String requestURI = uri.replace("local://" + nodeId, "").split("\\?")[0];
+        String requestURI = uri.replace("local:/","").replace("/"+nodeId, "").split("\\?")[0];
         MockHttpServletRequest request = new MockHttpServletRequest("GET", requestURI);
         request.setSession(new MockHttpSession());
         String[] splits = uri.split("\\?");

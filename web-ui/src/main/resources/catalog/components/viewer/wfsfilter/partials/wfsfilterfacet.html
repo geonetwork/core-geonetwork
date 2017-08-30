@@ -69,9 +69,9 @@
                on-change-fn="onUpdateDate(field)"
                date-only-highlight="true"
                date-available="field.dates">
-            <input type="text" class="input-sm form-control" name="start" value="{{::output[field.name].value.from}}"/>
-            <span class="input-group-addon">to</span>
-            <input type="text" class="input-sm form-control" name="end" value="{{::output[field.name].value.to}}" />
+            <input type="text" class="input-sm form-control" name="start" value="{{::output[field.name].values.from}}"/>
+            <span class="input-group-addon" translate>dateToDate</span>
+            <input type="text" class="input-sm form-control" name="end" value="{{::output[field.name].values.to}}" />
           </div>
           <div data-ng-if="field.datesCount && field.display == 'graph'"
                gn-facet-graph field="field" callback="onUpdateDate"
@@ -92,6 +92,7 @@
            data-ng-class="{'collapse': !indexObject.geomField.expanded}">
         <gn-bbox-input data-value="ctrl.searchGeometry"
                        data-map="map"
+                       data-watch-value-change="true"
         />
       </div>
     </div>

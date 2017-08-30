@@ -106,11 +106,15 @@
                 ng-model="searchObj.params.any"
                 ng-model-options="modelOptions"
                 placeholder="{{'filter' | translate}}" autofocus=""/>
-              <span class="fa fa-times gn-input-clear"
-                ng-click="searchObj.params.any = ''"
-                ng-show="searchObj.params.any"></span>
             </div>
             &nbsp;
+
+            <button type="button"
+                    data-ng-click="resetSearch(defaultSearchObj.params);"
+                    title="{{'ClearTitle' | translate}}"
+                    class="btn btn-link">
+              <i class="fa fa-times"></i>
+            </button>
 
             <div class="btn-group">
               <button type="button"
@@ -149,10 +153,15 @@
             </div>
 
             <div class="search-options-header" ng-show="searchResults.count > 0 && !searching">
-              <div data-gn-pagination="paginationInfo"
-                    data-hits-values="[20, 50, 100]"></div>
+
+              <div data-gn-selection-widget=""
+                   data-exclude-actions-pattern="export*|validate|updateCategories"
+                   data-results="searchResults"></div>
 
               <div class="flex-spacer flex-grow"></div>
+
+              <div data-gn-pagination="paginationInfo"
+                   data-hits-values="[20, 50, 100]"></div>
 
               <div data-sortby-combo=""
                     data-params="searchObj.params"
@@ -161,20 +170,25 @@
 
             <div class="list-group directory-entries-list" ng-show="!searching">
               <li class="list-group-item clearfix"
-                  data-ng-repeat="e in searchResults.records">
+                  data-ng-repeat="md in searchResults.records">
 
                 <div class="entry-title" ng-if="!templatesShown()">
-                  <gn-md-type-widget metadata="e"></gn-md-type-widget>
+
+                  <input data-gn-selection-md type="checkbox"
+                         data-ng-model="md['geonet:info'].selected"
+                         data-ng-change="change()"/>
+
+                  <gn-md-type-widget metadata="md"></gn-md-type-widget>
                   <a href
-                     data-ng-if="user.canEditRecord(e)"
-                     ng-click="startEditing(e)" title="{{e.title || e.defaultTitle}}">
-                    {{e.title || e.defaultTitle}}</a>
-                  <span data-ng-if="!user.canEditRecord(e)">{{e.title || e.defaultTitle}}</span>
+                     data-ng-if="user.canEditRecord(md)"
+                     ng-click="startEditing(md)" title="{{md.title || md.defaultTitle}}">
+                    {{md.title || md.defaultTitle}}</a>
+                  <span data-ng-if="!user.canEditRecord(md)">{{md.title || md.defaultTitle}}</span>
                 </div>
 
                 <div class="entry-info" ng-if="!templatesShown()">
                   <small class="text-muted" translate
-                    translate-values="{ownerName: getOwnerName(e), updateDate: getChangeDate(e)}">
+                    translate-values="{ownerName: getOwnerName(md), updateDate: getChangeDate(md)}">
                     directoryEntryInfo
                   </small>
 
@@ -188,34 +202,34 @@
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
                       <li><a href
-                             data-ng-if="user.canEditRecord(e)"
-                             ng-click="startEditing(e)">
+                             data-ng-if="user.canEditRecord(md)"
+                             ng-click="startEditing(md)">
                         <i class="fa fa-pencil fa-fw" />&nbsp;
                         {{'edit' | translate}}</a>
                       </li>
-                      <li><a href ng-click="copyEntry(e)">
+                      <li><a href ng-click="copyEntry(md)">
                         <i class="fa fa-copy fa-fw" />&nbsp;
                         {{'duplicate' | translate}}</a>
                       </li>
                       <li><a href
-                             data-ng-if="user.canEditRecord(e)"
-                             ng-click="startPermissionsEdit(e)">
+                             data-ng-if="user.canEditRecord(md)"
+                             ng-click="startPermissionsEdit(md)">
                         <i class="fa fa-key fa-fw" />&nbsp;
                         {{'directoryEntryPermissions' | translate}}</a>
                       </li>
-                      <li data-ng-class="{'disabled': e.valid == '1'}">
+                      <li data-ng-class="{'disabled': md.valid == '1'}">
                         <a href
-                           data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(e)) ||
+                           data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(md)) ||
                                        (restrictValidationToAdmin && user.isAdministrator())"
-                           ng-click="validateEntry(e)">
+                           ng-click="validateEntry(md)">
                         <i class="fa fa-check fa-fw text-success" />&nbsp;
                         {{'directoryEntryValidate' | translate}}</a>
                       </li>
-                      <li data-ng-class="{'disabled': e.valid == '0'}">
+                      <li data-ng-class="{'disabled': md.valid == '0'}">
                         <a href
-                           data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(e)) ||
+                           data-ng-if="(!restrictValidationToAdmin && user.canEditRecord(md)) ||
                                        (restrictValidationToAdmin && user.isAdministrator())"
-                           ng-click="rejectEntry(e)">
+                           ng-click="rejectEntry(md)">
                         <i class="fa fa-ban fa-fw text-danger" />&nbsp;
                         {{'directoryEntryReject' | translate}}</a>
                       </li>
@@ -225,32 +239,37 @@
                   <div class="btn-group"
                     ng-if="::gnConfig[gnConfig.key.isXLinkEnabled]">
                     <button class="btn btn-default btn-sm dropdown-toggle"
-                      ng-click="e.openAssociatedMD = true"
+                      ng-click="md.openAssociatedMD = true"
                       data-toggle="dropdown">
                       {{'directoryEntryAssociatedMetadata' |  translate}}
                       &nbsp;<i class="caret"/>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
-                      <li ng-if="e.openAssociatedMD">
-                        <gn-directory-associated-md entry-uuid="e['geonet:info'].uuid" />
+                      <li ng-if="md.openAssociatedMD">
+                        <gn-directory-associated-md entry-uuid="md['geonet:info'].uuid" />
                       </li>
                     </ul>
                   </div>
 
                   <button class="btn btn-default btn-sm"
-                          data-ng-if="user.canEditRecord(e)"
-                          ng-click="delEntry(e)"
+                          data-ng-if="user.canEditRecord(md)"
+                          ng-click="delEntry(md)"
                           title="{{'delete' | translate}}">
                     <i class="fa fa-times text-danger" />
                   </button>
                 </div>
 
                 <div class="entry-title entry-is-template"
-                  ng-if="templatesShown()">
-                  <gn-md-type-widget metadata="e"></gn-md-type-widget>
+                     ng-if="templatesShown()">
 
-                  <a href ng-click="startEditing(e)" title="{{e.title}}">
-                    {{e.title || e.defaultTitle}}</a>
+                  <input data-gn-selection-md type="checkbox"
+                         data-ng-model="md['geonet:info'].selected"
+                         data-ng-change="change()"/>
+
+                  <gn-md-type-widget metadata="md"></gn-md-type-widget>
+
+                  <a href ng-click="startEditing(md)" title="{{md.title}}">
+                    {{md.title || md.defaultTitle}}</a>
 
                   <div class="flex-spacer flex-grow"></div>
 
@@ -261,22 +280,22 @@
                       &nbsp;<i class="caret"/>
                     </button>
                     <ul class="dropdown-menu pull-right" role="menu">
-                      <li><a href ng-click="startEditing(e)">
+                      <li><a href ng-click="startEditing(md)">
                         <i class="fa fa-pencil fa-fw" />&nbsp;
                         {{'edit' | translate}}</a>
                       </li>
-                      <li><a href ng-click="copyEntry(e)">
+                      <li><a href ng-click="copyEntry(md)">
                         <i class="fa fa-copy fa-fw" />&nbsp;
                         {{'duplicate' | translate}}</a>
                       </li>
-                      <li><a href ng-click="startPermissionsEdit(e)">
+                      <li><a href ng-click="startPermissionsEdit(md)">
                         <i class="fa fa-key fa-fw" />&nbsp;
                         {{'directoryEntryPermissions' | translate}}</a>
                       </li>
                     </ul>
                   </div>
 
-                  <button class="btn btn-default btn-sm" ng-click="delEntry(e)"
+                  <button class="btn btn-default btn-sm" ng-click="delEntry(md)"
                     title="{{'delete' | translate}}">
                     <i class="fa fa-times text-danger" />
                   </button>
@@ -284,7 +303,8 @@
               </li>
             </div>
 
-            <div class="search-options-header" ng-show="searchResults.count > 0 && !searching">
+            <div class="search-options-header"
+                 ng-show="searchResults.count > 0 && !searching">
               <div data-gn-pagination="paginationInfo"
                     data-hits-values="[20, 50, 100]"></div>
 

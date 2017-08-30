@@ -1126,6 +1126,9 @@ public class SearchManager implements ISearchManager {
         params.put("uuid",
         ApplicationContextHolder.get().getBean(DataManager.class)
             .getMetadataUuid(id));
+        params.put("title",
+        ApplicationContextHolder.get().getBean(DataManager.class)
+            .getMetadataTitle(id));
 
         try {
             documents = Xml.transform(xml, singleStyleSheet, params);

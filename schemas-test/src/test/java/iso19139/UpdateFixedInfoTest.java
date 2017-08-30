@@ -127,10 +127,10 @@ public class UpdateFixedInfoTest extends AbstractServiceIntegrationTest {
             "local://api/registries/vocabularies/keyword?thesaurus=external.theme.inspire-theme&id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&multiple=false&lang=ger,fre,eng,ita&textgroupOnly",
             updatedXml,
             "*//gmd:descriptiveKeywords[1]/@xlink:href", XLINK, GCO, GMD);
-        assertEqualsText("local://api/registries/vocabularies/keyword?thesaurus=local._none_.geocat.ch&id=http%3A%2F%2Fgeocat.ch%2Fconcept%231,http%3A%2F%2Fgeocat.ch%2Fconcept%2320",
+        assertEqualsText("local://api/registries/vocabularies/keyword?thesaurus=local._none_.geocat.ch&id=http%3A%2F%2Fgeocat.ch%2Fconcept%231,http%3A%2F%2Fgeocat.ch%2Fconcept%2320&multiple=true&lang=ger,fre,eng,ita&textgroupOnly=",
             updatedXml,
             "*//gmd:descriptiveKeywords[3]/@xlink:href", XLINK, GCO, GMD);
-        assertEqualsText("local://api/registries/vocabularies/keyword?thesaurus=external.theme.inspire-service-taxonomy&id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService",
+        assertEqualsText("local://api/registries/vocabularies/keyword?thesaurus=external.theme.inspire-service-taxonomy&id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&multiple=true&lang=ger,fre,eng,ita&textgroupOnly=",
             updatedXml, "*//gmd:descriptiveKeywords[4]/@xlink:href", XLINK, GCO, GMD);
         assertEqualsText("Africa", updatedXml,
             "*//gmd:descriptiveKeywords[2]//gmd:keyword[1]/gco:CharacterString", GCO, GMD);

@@ -137,7 +137,7 @@
                             select="replace(@xlink:href, '.*thesaurus=([^&amp;]+).*', '$1')"/>
 
               <xsl:variable name="currentIdentifiers"
-                            select="replace(@xlink:href, '.*id=([^&amp;]+).*', '$1')"/>
+                            select="replace(@xlink:href, '.*id=([^&amp;]*).*', '$1')"/>
 
               <xsl:variable name="newIdentifiers"
                             select="string-join(
@@ -146,10 +146,10 @@
 
               <xsl:variable name="newUrl"
                             select="replace(@xlink:href,
-                                      '(.*)id=([^&amp;]+)(.*)',
+                                      '(.*)id=([^&amp;]*)(.*)',
                                       concat(
                                         '$1id=$2',
-                                        if ($newIdentifiers != '') then ',' else '',
+                                        if ($newIdentifiers != '' and $currentIdentifiers != '') then ',' else '',
                                         $newIdentifiers,
                                         '$3'))"/>
 
@@ -248,11 +248,11 @@
         <!-- Build XLink URL common parameters (eg. lang) -->
         <xsl:variable name="uniqueParams"
                       select="distinct-values(
-                                  $params/param/key[. != 'id' and . != 'thesaurus']/text())"/>
+                                  $params/key[. != 'id' and . != 'thesaurus']/text())"/>
         <xsl:variable name="queryString">
           <xsl:for-each select="$uniqueParams">
             <xsl:variable name="p" select="."/>
-            <xsl:value-of select="concat('&amp;', $p, '=', $params/param[key/text() = $p]/val)"/>
+            <xsl:value-of select="concat('&amp;', $p, '=', $params[key/text() = $p]/val)"/>
           </xsl:for-each>
         </xsl:variable>
 
