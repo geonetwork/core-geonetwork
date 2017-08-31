@@ -108,7 +108,7 @@
     <xsl:variable name="isRequired" as="xs:boolean">
       <xsl:choose>
         <xsl:when
-          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or 
+          test="($parentEditInfo and $parentEditInfo/@min = 1 and $parentEditInfo/@max = 1) or
           (not($parentEditInfo) and $editInfo and $editInfo/@min = 1 and $editInfo/@max = 1)">
           <xsl:value-of select="true()"/>
         </xsl:when>
@@ -743,6 +743,32 @@
 
                     If only one choice, make a simple button
               -->
+              <xsl:when test="$qualifiedName = 'gfc:code' and $schema='iso19110'">
+
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle fa fa-plus gn-add" data-toggle="dropdown" title="{$i18n/addA} {$label}">
+                    <span/>
+                    <span class="caret"/>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <xsl:variable name="name" select="'gco:CharacterString'"/>
+                    <xsl:variable name="label" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
+                    <li title="{$label/description}">
+                      <a data-gn-click-and-spin="add({$parentEditInfo/@ref}, '{concat(@prefix, ':', @name)}', '{$id}', 'before');">
+                        <xsl:value-of select="$label/label"/>
+                      </a>
+                    </li>
+                    <xsl:variable name="name2" select="'gmx:Anchor'"/>
+                    <xsl:variable name="label2" select="gn-fn-metadata:getLabel($schema, $name2, $labels)"/>
+                    <li title="{$label2/description}">
+                      <a data-gn-click-and-spin="addChoice({$parentEditInfo/@ref}, '{$qualifiedName}', '{$name2}', '{$id}', 'replaceWith');">
+                        <xsl:value-of select="$label2/label"/>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </xsl:when>
+
               <xsl:when test="count($childEditInfo/gn:choose) = 1">
                 <xsl:for-each select="$childEditInfo/gn:choose">
                   <xsl:variable name="label"

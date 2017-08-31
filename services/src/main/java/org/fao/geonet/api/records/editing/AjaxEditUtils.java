@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.kernel.AddElemValue;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -339,6 +340,29 @@ public class AjaxEditUtils extends EditUtils {
         }
         //--- attach the info element to the child
         child.addContent(info);
+
+          /* When adding an gmx:Anchor to an element, due to the following code gets also a gco:CharacterString in EditLib.
+
+           Remove the gco:CharacterString subelement in this case.
+
+          } else if (isISOPlugin &&
+            type.getElementList().contains(
+                isoPlugin.getBasicTypeCharacterStringName()) &&
+            !hasSuggestion) {
+            // expand element which have no suggestion
+            // and have a gco:CharacterString substitute.
+            // gco:CharacterString is the default.
+            if (Log.isDebugEnabled(Geonet.EDITORFILLELEMENT)) {
+                Log.debug(Geonet.EDITORFILLELEMENT, "####   - Requested expansion of an OR element having gco:CharacterString substitute and no suggestion: " + element.getName());
+            }
+            Element child = isoPlugin.createBasicTypeCharacterString();
+            element.addContent(child);
+        */
+        if (childName.equals("gmx:Anchor")) {
+            if (child.getChild("CharacterString", ISO19139Namespaces.GCO) != null) {
+                child.removeChild("CharacterString", ISO19139Namespaces.GCO);
+            }
+        }
 
         //--- attach the info element to the metadata root)
         md.addContent((Element) info.clone());

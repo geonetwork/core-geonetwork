@@ -23,6 +23,9 @@
   -->
 
 <fields>
+  <field name="gmx:Anchor">
+    <suggest name="xlink:href"/>
+  </field>
   <field name="gmx:scope">
     <suggest name="gco:CharacterString"/>
     <suggest name="gmx:FileName"/>

@@ -49,6 +49,10 @@
     <name>gfc:inheritsTo</name>
   </fieldsWithFieldset>
 
+  <fieldsWithAnchorOption>
+    <name>gfc:code</name>
+  </fieldsWithAnchorOption>
+
   <!-- View configuration -->
   <views>
     <view name="default">
