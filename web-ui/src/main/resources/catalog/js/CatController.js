@@ -172,7 +172,8 @@
             'processes': true
           },
           'graticuleOgcService': {},
-          'mapExtent': [0, 0, 0, 0]
+          'mapExtent': [0, 0, 0, 0],
+          'mapBackgroundLayer': {}
         },
         'editor': {
           'enabled': true,

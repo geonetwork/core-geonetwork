@@ -67,6 +67,15 @@
                   scope.ctrl.map.getSize());
             }
 
+            // apply background layer from settings
+            var bgLayer = gnViewerSettings.mapConfig.mapBackgroundLayer;
+            if (bgLayer) {
+              gnMap.createLayerForType(bgLayer.type, {
+                name: bgLayer.layer,
+                url: bgLayer.url
+              }, null, scope.ctrl.map);
+            }
+
             scope.ctrl.initValue();
           }
         },
