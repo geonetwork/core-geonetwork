@@ -53,13 +53,11 @@ import java.util.Set;
 public class IndexingTask extends QuartzJobBean {
 
     @Autowired
-    private ConfigurableApplicationContext applicationContext;
+    protected ConfigurableApplicationContext applicationContext;
     @Autowired
-    private DataManager _dataManager;
+    protected DataManager _dataManager;
     @Autowired
-    private ConfigurableApplicationContext context;
-    @Autowired
-    private ServiceManager serviceManager;
+    protected ServiceManager serviceManager;
 
     private void indexRecords() {
         ApplicationContextHolder.set(applicationContext);
@@ -89,7 +87,7 @@ public class IndexingTask extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("indexing", context);
+        ServiceContext serviceContext = serviceManager.createServiceContext("indexing", applicationContext);
         serviceContext.setLanguage("eng");
         serviceContext.setAsThreadLocal();
 

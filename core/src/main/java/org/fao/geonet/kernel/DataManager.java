@@ -37,7 +37,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
@@ -89,7 +95,11 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.ISearchManager;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearchParameter;
+import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -104,6 +114,7 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.Updater;
@@ -116,7 +127,6 @@ import org.fao.geonet.repository.specification.MetadataStatusSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
-import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
@@ -142,6 +152,12 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -165,19 +181,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
-
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
-import jeeves.xlink.Processor;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -930,7 +933,7 @@ public class DataManager implements ApplicationEventPublisherAware {
 
     /**
      * Extract the title field from the Metadata Repository. This is only valid for subtemplates as the title
-     * can be stored with the subtemplate (since subtemplates don't have a title) - metadata records don't store the 
+     * can be stored with the subtemplate (since subtemplates don't have a title) - metadata records don't store the
      * title here as this is part of the metadata.
      *
      * @param id metadata id to retrieve
@@ -1325,7 +1328,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     }
 
     /**
-     * Set metadata type to subtemplate and set the title. Only subtemplates 
+     * Set metadata type to subtemplate and set the title. Only subtemplates
      * need to persist the title as it is used to give a meaningful title for
      * use when offering the subtemplate to users in the editor.
      *
@@ -1860,7 +1863,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadataXml);
 
-        // Notifies the metadata change to metatada notifier service
         final Metadata metadata = getMetadataRepository().findOne(metadataId);
 
         String uuid = null;
@@ -1872,10 +1874,8 @@ public class DataManager implements ApplicationEventPublisherAware {
 
         //--- write metadata to dbms
         getXmlSerializer().update(metadataId, metadataXml, changeDate, updateDateStamp, uuid, context);
-        if (metadata.getDataInfo().getType() == MetadataType.METADATA) {
-            // Notifies the metadata change to metatada notifier service
-            notifyMetadataChange(metadataXml, metadataId);
-        }
+        // Notifies the metadata change to metadata notifier service
+        notifyMetadataChange(metadataXml, metadataId);
 
         try {
             //--- do the validation last - it throws exceptions
@@ -1888,6 +1888,26 @@ public class DataManager implements ApplicationEventPublisherAware {
                 indexMetadata(metadataId, true, null);
             }
         }
+
+        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+            if (!index) {
+                indexMetadata(metadataId, true, null);
+            }
+            MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+            Element parameters =  new Element(Jeeves.Elem.REQUEST);
+            parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
+            parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+            parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
+            parameters.addContent(new Element(SearchParameter.ISTEMPLATE).addContent("y or n"));
+            ServiceConfig config = new ServiceConfig();
+            searcher.search(context, parameters, config);
+            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
+            for (Integer id: result.keySet()) {
+                IndexingList list = context.getBean(IndexingList.class);
+                list.add(id);
+            }
+        }
+
         // Return an up to date metadata record
         return getMetadataRepository().findOne(metadataId);
     }

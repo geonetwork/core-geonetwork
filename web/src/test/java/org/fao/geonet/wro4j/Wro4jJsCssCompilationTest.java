@@ -25,19 +25,17 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetMockServletContext;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.junit.Ignore;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.manager.WroManager;
 import ro.isdc.wro.manager.factory.standalone.StandaloneContext;
@@ -46,6 +44,7 @@ import ro.isdc.wro.model.group.Group;
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 
+import javax.servlet.FilterConfig;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -53,8 +52,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-
-import javax.servlet.FilterConfig;
 
 import static org.junit.Assert.assertTrue;
 
@@ -102,6 +99,11 @@ public class Wro4jJsCssCompilationTest {
         wro4jModel = wro4jManager.getModelFactory().create();
     }
 
+    @AfterClass
+    static public void tearDown() {
+        Context.destroy();
+        ApplicationContextHolder.clear();
+    }
 
     @Test
     public void testCssCompilation() throws Exception {

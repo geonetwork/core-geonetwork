@@ -1404,8 +1404,6 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             _summaryConfig = new SummaryType(_summaryConfig.getName(), requestedItems);
         }
 
-        _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
-
         if (srvContext != null) {
             @SuppressWarnings("unchecked")
             List<Element> requestedGroups = request.getChildren(SearchParameter.GROUP);

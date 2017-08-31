@@ -23,13 +23,20 @@
 
 package org.fao.geonet.kernel.schema;
 
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -46,7 +53,17 @@ import static org.junit.Assert.assertEquals;
  * <p/>
  * Created by Jesse on 1/31/14.
  */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(inheritLocations = true, locations = {"classpath*:http-request-factory-context.xml"})
 public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
+    @Autowired
+    protected ConfigurableApplicationContext _applicationContext;
+
+    @Before
+    public void setApplicationContextInApplicationHolder() {
+        ApplicationContextHolder.set(_applicationContext);
+    }
 
     @SuppressWarnings("unchecked")
     @Test
