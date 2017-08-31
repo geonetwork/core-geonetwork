@@ -38,56 +38,55 @@
 
 
   <!-- Group by role -->
-  <div data-ng-if="mode == 'role'">
-    <div class="gn-contact" data-ng-repeat="(roles, contactByRole) in mdContactsByRole">
-      <h3>
-        <i class="fa fa-envelope"></i>
-        <span>
-        {{roles}}
-        </span>
-      </h3>
+  <div class="gn-contact" data-ng-if="mode == 'role'"
+       data-ng-repeat="(roles, contactByRole) in mdContactsByRole">
+    <h3>
+      <i class="fa fa-envelope"></i>
+      <span>
+      {{roles}}
+      </span>
+    </h3>
+    <div class="row" data-ng-repeat="(org, contact) in contactByRole | groupBy:'org'">
+      <div class="col-md-8">
+        <address>
+          <strong>
+            {{org}}<br/>
+          </strong>
 
-      <div class="row" data-ng-repeat="(org, contact) in contactByRole | groupBy:'org'">
-        <div class="col-md-8">
-          <address>
-            <strong>
-              {{org}}<br/>
-            </strong>
-
-            <span data-ng-repeat="c in contact track by $index">
-              <span data-ng-if="c.email != ''">
-                <a href="mailto:{{c.email}}">
-                  <span data-ng-hide="c.name">{{c.email}}</span>
-                  <span data-ng-show="c.name">{{c.name}}</span>
-                  <span data-ng-show="c.position">({{c.position}})</span>
-                </a>
-              </span>
-              <span data-ng-if="c.email === ''">{{c.name}}
+          <span data-ng-repeat="c in contact track by $index">
+            <span data-ng-if="c.email != ''">
+              <a href="mailto:{{c.email}}">
+                <span data-ng-hide="c.name">{{c.email}}</span>
+                <span data-ng-show="c.name">{{c.name}}</span>
                 <span data-ng-show="c.position">({{c.position}})</span>
-              </span>
-              <span data-ng-if="!$last">,</span>
-            </span>
-
-            <!-- Address for organisation: display for 1st contact in organisation -->
-            <span data-ng-repeat="c in contact | limitTo:1">
-              <div data-ng-if="c.address != ''">{{c.address}}</div>
-              <a href="tel:{{c.phone}}"
-                 data-ng-if="c.phone != ''">
-                <span data-translate="">call</span> {{c.phone}}
               </a>
             </span>
+            <span data-ng-if="c.email === ''">{{c.name}}
+              <span data-ng-show="c.position">({{c.position}})</span>
+            </span>
+            <span data-ng-if="!$last">,</span>
+          </span>
 
-          </address>
-        </div>
-        <!-- Logo for organisation: display for 1st contact in organisation -->
-        <div class="col-md-4" data-ng-repeat="c in contact | limitTo:1">
-          <img data-ng-if="c.logo"
-               class="gn-source-logo"
-               data-ng-src="{{::c.logo}}"/>
-        </div>
+          <!-- Address for organisation: display for 1st contact in organisation -->
+          <span data-ng-repeat="c in contact | limitTo:1">
+            <div data-ng-if="c.address != ''">{{c.address}}</div>
+            <a href="tel:{{c.phone}}"
+               data-ng-if="c.phone != ''">
+              <span data-translate="">call</span> {{c.phone}}
+            </a>
+          </span>
+
+        </address>
       </div>
-     </div>
-  </div>
+      <!-- Logo for organisation: display for 1st contact in organisation -->
+      <div class="col-md-4" data-ng-repeat="c in contact | limitTo:1">
+        <img data-ng-if="c.logo"
+             class="gn-source-logo"
+             data-ng-src="{{::c.logo}}"/>
+      </div>
+    </div>
+   </div>
+
 
   <!-- Group by organisation/role -->
   <div class="gn-contact" data-ng-if="mode == 'org-role'"
@@ -121,8 +120,6 @@
           </span>
         </li>
       </ul>
-    </div>
-
     </div>
   </div>
 
