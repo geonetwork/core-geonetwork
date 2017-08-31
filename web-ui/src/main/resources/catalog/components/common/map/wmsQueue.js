@@ -48,7 +48,7 @@
       var idx = -1;
       for (var i = 0; i < a.length; i++) {
         var o = a[i];
-        if (o.name == layer.name && o.url == layer.url) {
+        if (o.name == layer.name && o.url == layer.url && o.map == layer.map) {
           idx = i;
         }
       }
@@ -63,11 +63,13 @@
      * Add the layer to the queue
      * @param {string} url
      * @param {string} name
+     * @param {ol.Map} map
      */
-    this.add = function(url, name) {
+    this.add = function(url, name, map) {
       queue.push({
         url: url,
-        name: name
+        name: name,
+        map: map
       });
     };
 
@@ -96,11 +98,13 @@
      *
      * @param {string} url
      * @param {string} name
+     * @param {ol.Map} map
      */
-    this.isPending = function(url, name) {
+    this.isPending = function(url, name, map) {
       var layer = {
         url: url,
-        name: name
+        name: name,
+        map: map
       };
       return getLayerIndex(queue, layer) >= 0;
     };

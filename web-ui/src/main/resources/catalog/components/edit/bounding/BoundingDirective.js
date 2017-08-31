@@ -44,9 +44,8 @@
    *  the value entered by the user
    */
   module.directive('gnBoundingPolygon', [
-    'gnViewerSettings',
     'gnMap',
-    function(gnViewerSettings, gnMap) {
+    function(gnMap) {
       return {
         restrict: 'E',
         scope: {
@@ -60,7 +59,7 @@
             scope.ctrl.map.renderSync();
 
             // apply extent from settings
-            var mapExtent = gnViewerSettings.mapConfig.mapExtent;
+            var mapExtent = gnMap.getMapConfig().mapExtent;
             if (mapExtent && ol.extent.getWidth(mapExtent) &&
               ol.extent.getHeight(mapExtent)) {
                 scope.ctrl.map.getView().fit(mapExtent,
@@ -68,8 +67,9 @@
             }
 
             // apply background layer from settings
-            var bgLayer = gnViewerSettings.mapConfig.mapBackgroundLayer;
+            var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
             if (bgLayer) {
+              scope.ctrl.map.getLayers().removeAt(0)
               gnMap.createLayerForType(bgLayer.type, {
                 name: bgLayer.layer,
                 url: bgLayer.url
@@ -87,7 +87,6 @@
           '$http',
           'gnMap',
           'gnOwsContextService',
-          'gnViewerSettings',
           'ngeoDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
@@ -96,7 +95,6 @@
               $http,
               gnMap,
               gnOwsContextService,
-              gnViewerSettings,
               ngeoDecorateInteraction,
               gnGeometryService) {
             var ctrl = this;
