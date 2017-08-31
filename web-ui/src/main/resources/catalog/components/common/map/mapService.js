@@ -324,9 +324,8 @@
            * @return {Object} defaultMapConfig mapconfig
            */
           getMapConfig: function() {
-            if (gnConfig['map.config'] &&
-                angular.isObject(gnConfig['map.config'])) {
-              return gnConfig['map.config'];
+            if (gnConfig['ui.config'].mods.map) {
+              return gnConfig['ui.config'].mods.map;
             } else {
               return defaultMapConfig;
             }
