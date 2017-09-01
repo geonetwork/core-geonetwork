@@ -1025,47 +1025,47 @@
     <!-- Added in Sextant -->
     <entry>
       <code>lessThan6Hours</code>
-      <label>Less than 6 hours</label>
+      <label>Moins de 6 heures</label>
       <description></description>
     </entry>
     <entry>
       <code>lessThan12Hours</code>
-      <label>Less than 12 hours</label>
+      <label>Moins de 12 heures</label>
       <description></description>
     </entry>
     <entry>
       <code>lessThan24Hours</code>
-      <label>Less than 24 hours</label>
+      <label>Moins de 24 heures</label>
       <description></description>
     </entry>
     <entry>
       <code>lessThan48Hours</code>
-      <label>Less than 48 hours</label>
-      <description></description>
-    </entry>
-    <entry>
-      <code>lessThan1month</code>
-      <label>Less than 1 month</label>
+      <label>Moins de 48 heures</label>
       <description></description>
     </entry>
     <entry>
       <code>lessThan3days</code>
-      <label>Less than 3 days</label>
+      <label>Moins de 3 jours</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>lessThan1month</code>
+      <label>Moins d'un mois</label>
       <description></description>
     </entry>
     <entry>
       <code>lessThan4months</code>
-      <label>Less than 4 months</label>
+      <label>Moins de 4 mois</label>
       <description></description>
     </entry>
     <entry>
       <code>every12hours</code>
-      <label>~ 12 hours</label>
+      <label>~ 12 heures</label>
       <description></description>
     </entry>
     <entry>
       <code>historical</code>
-      <label>Historical</label>
+      <label>Historique</label>
       <description></description>
     </entry>
 		<!-- ISO PROFIL CHE ONLY

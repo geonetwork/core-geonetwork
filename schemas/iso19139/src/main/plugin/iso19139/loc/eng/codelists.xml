@@ -1109,13 +1109,13 @@
       <description></description>
     </entry>
     <entry>
-      <code>lessThan1month</code>
-      <label>Less than 1 month</label>
+      <code>lessThan3days</code>
+      <label>Less than 3 days</label>
       <description></description>
     </entry>
     <entry>
-      <code>lessThan3days</code>
-      <label>Less than 3 days</label>
+      <code>lessThan1month</code>
+      <label>Less than 1 month</label>
       <description></description>
     </entry>
     <entry>
