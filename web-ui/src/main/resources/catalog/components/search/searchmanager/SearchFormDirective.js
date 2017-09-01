@@ -179,7 +179,7 @@
           }
         }
 
-        params.bucket = $scope.searchResults.selectionBucket || 'metadata';
+        finalParams.bucket = $scope.searchResults.selectionBucket || 'metadata';
 
         gnSearchManagerService.gnSearch(finalParams).then(
             function(data) {
