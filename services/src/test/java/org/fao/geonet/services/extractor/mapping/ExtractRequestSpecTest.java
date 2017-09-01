@@ -148,7 +148,7 @@ public class ExtractRequestSpecTest {
                                 + "epsg=\"4326\" xmin=\"-10.546875000000005\" ymin=\"41.50857729743939\" xmax=\"9.140624999999993\" "
                                 + "ymax=\"51.17934297928923\" mercator_lat=\"\" />")
                 && xmlSpec.contains("      <additionalInput protocol=\"WPS\" linkage=\"http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R\" "
-                        + "params=\"zone_marine_quadrige=aaa éé àà&produit_id=30140&limits=&programme_suivi=&\" identifier=\"r:extractionsurval\" "
-                        + "outputMimeType=\"text/csv\" outputIdentifier=\"output_table\" />"));
+                        + "params=\"PHdwczpFeGVjdXRlIHhtbG5zOndwcz0iaHR0cDovL3d3dy5vcGVuZ2lzLm5ldC93cHMvMS4wL")
+                && xmlSpec.contains("identifier=\"r:extractionsurval\" outputMimeType=\"\" outputIdentifier=\"\""));
     }
 }
