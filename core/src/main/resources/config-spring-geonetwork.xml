@@ -148,4 +148,14 @@
         class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
 
+        
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataOperations"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
+    <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
+
 </beans>
