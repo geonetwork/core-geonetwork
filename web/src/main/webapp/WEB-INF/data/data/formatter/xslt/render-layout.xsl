@@ -72,10 +72,21 @@
 
           <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
+
+          <div class="row">
+            <div class="gn-md-side col-md-4 col-md-offset-8">
+              <section class="links"
+                       ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
+                <h4 translate="">accessData</h4>
+                <sxt-links-btn></sxt-links-btn>
+              </section>
+            </div>
+          </div>
+
         </header>
 
         <xsl:for-each select="$viewConfig/*">
-          <xsl:sort select="@formatter-order" 
+          <xsl:sort select="@formatter-order"
                     data-type="number"/>
           <xsl:apply-templates mode="render-view"
                                select="."/>
