@@ -39,8 +39,6 @@
   module.service('gnGeometryService', [
     function() {
 
-      this._layer = null;
-
       /**
        * @ngdoc method
        * @methodOf gn_geometry.service:gnGeometryService
@@ -88,12 +86,15 @@
        * @return {ol.layer.Vector} vector layer
        */
       this.getCommonLayer = function(map) {
-        if (this._layer) {
-          // add layer to map if not already there
-          if (!map.getLayers().getArray().indexOf(this._layer) === -1) {
-            map.addLayer(this._layer);
+        var commonLayer = null;
+        map.getLayers().getArray().forEach(function(layer) {
+          if (layer.get('name') === 'geometry-tool-layer') {
+            commonLayer = layer;
           }
-          return this._layer;
+        });
+
+        if (commonLayer) {
+          return commonLayer;
         }
 
         // layer & source
@@ -101,7 +102,7 @@
           useSpatialIndex: true,
           features: new ol.Collection()
         });
-        this._layer = new ol.layer.Vector({
+        commonLayer = new ol.layer.Vector({
           source: source,
           name: 'geometry-tool-layer',
           style: [
@@ -134,9 +135,9 @@
         });
 
         // add our layer to the map
-        map.addLayer(this._layer);
+        map.addLayer(commonLayer);
 
-        return this._layer;
+        return commonLayer;
       };
 
       /**

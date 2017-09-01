@@ -88,7 +88,7 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-      $scope.searchObj = {
+      $scope.defaultSearchObj = {
         selectionBucket: 'd101',
         params: {
           _isTemplate: 's',
@@ -117,6 +117,8 @@
           }
         ]
       };
+
+      $scope.searchObj = angular.extend({}, $scope.defaultSearchObj);
       $scope.paginationInfo = {
         pages: -1,
         currentPage: 1,

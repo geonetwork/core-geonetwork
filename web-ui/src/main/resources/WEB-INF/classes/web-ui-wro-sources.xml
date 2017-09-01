@@ -88,6 +88,7 @@
     <jsSource webappPath="/catalog/lib/d3_timeseries/d3.min.js"/>
     <jsSource webappPath="/catalog/views/sextant/settings.js"/>
     <jsSource webappPath="/catalog/views/sextant/jquerypluginsnoconflict.js"/>
+    <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + ol3cesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
@@ -160,6 +161,6 @@
     <jsSource webappPath="/catalog/views/sextant/jquerypluginsnoconflict.js"/>
     <jsSource webappPath="/catalog/lib/timeline/timeline-zoomable.js"/>
     <jsSource webappPath="/catalog/lib/d3_timeseries/d3.min.js"/>
-
+    <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
   </declarative>
 </sources>

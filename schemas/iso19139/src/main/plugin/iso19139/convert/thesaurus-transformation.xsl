@@ -206,18 +206,14 @@
 
               <gmd:PT_FreeText>
                 <xsl:for-each select="$listOfLanguage">
-                  <xsl:variable name="lang" select="substring-before(., '|')"/>
-                  <xsl:variable name="langId" select="substring-after(., '|')"/>
-
-                  <xsl:if test="$textgroupOnly or $lang != $mainLang">
-                    <gmd:textGroup>
-                      <gmd:LocalisedCharacterString
-                        locale="{$langId}">
-                        <xsl:value-of
-                          select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
-                      </gmd:LocalisedCharacterString>
-                    </gmd:textGroup>
-                  </xsl:if>
+                  <xsl:variable name="lang" select="."/>
+                  <gmd:textGroup>
+                    <gmd:LocalisedCharacterString
+                      locale="#{upper-case(util:twoCharLangCode($lang))}">
+                      <xsl:value-of
+                        select="$keyword/values/value[@language = $lang]/text()"></xsl:value-of>
+                    </gmd:LocalisedCharacterString>
+                  </gmd:textGroup>
                 </xsl:for-each>
               </gmd:PT_FreeText>
             </xsl:when>

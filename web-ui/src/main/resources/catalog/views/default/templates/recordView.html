@@ -229,42 +229,7 @@
           <tr data-ng-if="mdView.current.record.getAllContacts().resource">
             <th data-translate="">resourceContact</th>
             <td>
-              <div class="gn-contact"
-                   data-ng-repeat="c in mdView.current.record.getAllContacts().resource track by $index">
-                <h3>
-                  <i class="fa fa-envelope"></i>
-                  {{c.role | translate}}
-                </h3>
-                <div class="row">
-                  <div class="col-md-8">
-                    <address>
-                      <strong>
-                        {{c.org}}<br/>
-                      </strong>
-                      <div data-ng-if="c.email != ''">
-                        <a href="mailto:{{c.email}}">
-                          <span data-ng-hide="c.name">{{c.email}}</span>
-                          <span data-ng-show="c.name">{{c.name}}</span>
-                          <span data-ng-show="c.position">({{c.position}})</span>
-                        </a>
-                      </div>
-                      <div data-ng-if="c.email === ''">{{c.name}}
-                        <span data-ng-show="c.position">({{c.position}})</span>
-                      </div>
-                      <div data-ng-if="c.address != ''">{{c.address}}</div>
-                      <a href="tel:{{c.phone}}"
-                         data-ng-if="c.phone != ''">
-                        <span data-translate="">call</span> {{c.phone}}
-                      </a>
-                    </address>
-                  </div>
-                  <div class="col-md-4">
-                    <img data-ng-if="c.logo"
-                         class="gn-source-logo"
-                         data-ng-src="{{::c.logo}}"/>
-                  </div>
-                </div>
-              </div>
+              <div data-gn-metadata-contacts="mdView.current.record.getAllContacts().resource" data-gn-mode="org-role" />
             </td>
           </tr>
           <tr data-ng-if="mdView.current.record.credit">
@@ -392,42 +357,7 @@
           <tr data-ng-if="::mdView.current.record.getAllContacts()">
             <th data-translate="">contact</th>
             <td>
-              <div class="gn-contact"
-                   data-ng-repeat="c in ::mdView.current.record.getAllContacts().metadata track by $index">
-                <h3>
-                  <i class="fa fa-envelope"></i>
-                  {{c.role | translate}}
-                </h3>
-                <div class="row">
-                  <div class="col-md-8">
-                    <address>
-                      <strong>
-                        {{c.org}}<br/>
-                      </strong>
-                      <div data-ng-if="c.email != ''">
-                        <a href="mailto:{{c.email}}">
-                          <span data-ng-hide="c.name">{{c.email}}</span>
-                          <span data-ng-show="c.name">{{c.name}}</span>
-                          <span data-ng-show="c.position">({{c.position}})</span>
-                        </a>
-                      </div>
-                      <div data-ng-if="c.email === ''">{{c.name}}
-                        <span data-ng-show="c.position">({{c.position}})</span>
-                      </div>
-                      <p data-ng-if="c.address != ''">{{c.address}}</p>
-                      <a href="tel:{{c.phone}}"
-                         data-ng-if="c.phone != ''">
-                        <span data-translate="">call</span> {{c.phone}}
-                      </a>
-                    </address>
-                  </div>
-                  <div class="col-md-4">
-                    <img data-ng-if="c.logo"
-                         class="gn-source-logo"
-                         data-ng-src="{{::c.logo}}"/>
-                  </div>
-                </div>
-              </div>
+              <div data-gn-metadata-contacts="::mdView.current.record.getAllContacts().metadata" data-gn-mode="org-role" />
             </td>
           </tr>
           <tr data-ng-if="::mdView.current.record.mdLanguage">

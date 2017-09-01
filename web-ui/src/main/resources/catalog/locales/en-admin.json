@@ -1132,5 +1132,9 @@
     "switchLangTo": "Switch language...",
     "showResultsCount": "Show {{count}} results",
     "keywordMissingValue": "missing value",
-    "editKeyword": "Edit keyword"
+    "editKeyword": "Edit keyword",
+    "allLanguage": "All",
+    "allLanguage-help": "Display all languages",
+    "oneLanguage": "One",
+    "oneLanguage-help": "Choose one language to edit using the selector"
 }

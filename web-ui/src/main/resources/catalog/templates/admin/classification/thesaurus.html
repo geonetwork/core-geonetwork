@@ -411,42 +411,30 @@
             addKeyword</h4>
         </div>
         <div class="modal-body">
-          <form id="gn-edit-keyword" name="gn-edit-keyword">
+          <form id="gn-edit-keyword" name="gn-edit-keyword"
+            ng-if="keywordSelected">
             <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
             <div class="form-group">
               <label class="control-label" translate>keywordLabel</label>
-              <input type="text" name="name" class="form-control"
-                ng-disabled="isExternal()"
-                ng-keyup="computeKeywordId()"
-                ng-model="keywordSelected.values[currentKeywordEditorLang]"/>
-              <ul class="lang-selector nav nav-pills">
-                <li ng-repeat="(lang3, lang2) in availableLangs"
-                  ng-class="{ active: lang3 === currentKeywordEditorLang }">
-                  <a href ng-click="switchKeywordEditorLang(lang3)"
-                    ng-class="{ 'text-muted': !keywordSelected.values[lang3] }">
-                    <span ng-if="lang3 !== lang" translate>{{ lang3 }}</span>
-                    <strong ng-if="lang3 === lang" translate>{{ lang3 }}</strong>
-                  </a>
-                </li>
-              </ul>
+              <div gn-multilingual-field="{{langList}}"
+                main-language="{{currentLangShown}}">
+                <input ng-repeat="(lang3, lang2) in availableLangs" type="text"
+                  name="name" class="form-control" lang="{{lang2}}"
+                  ng-disabled="isExternal()"
+                  ng-model="keywordSelected.values[lang3]"/>
+              </div>
             </div>
 
             <div class="form-group">
               <label class="control-label" translate>keywordDefinition</label>
-              <input type="text" name="name" class="form-control"
-                ng-disabled="isExternal()"
-                ng-model="keywordSelected.definitions[currentKeywordEditorLang]"/>
-              <ul class="lang-selector nav nav-pills">
-                <li ng-repeat="(lang3, lang2) in availableLangs"
-                  ng-class="{ active: lang3 === currentKeywordEditorLang }">
-                  <a href ng-click="switchKeywordEditorLang(lang3)"
-                    ng-class="{ 'text-muted': !keywordSelected.definitions[lang3] }">
-                    <span ng-if="lang3 !== lang" translate>{{ lang3 }}</span>
-                    <strong ng-if="lang3 === lang" translate>{{ lang3 }}</strong>
-                  </a>
-                </li>
-              </ul>
+              <div gn-multilingual-field="{{langList}}"
+                main-language="{{currentLangShown}}">
+                <input ng-repeat="(lang3, lang2) in availableLangs" type="text"
+                  name="name" class="form-control" lang="{{lang2}}"
+                  ng-disabled="isExternal()"
+                  ng-model="keywordSelected.definitions[lang3]"/>
+              </div>
             </div>
 
             <div class="form-group">

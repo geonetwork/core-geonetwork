@@ -157,6 +157,7 @@
         <script src="{$uiResourcesPath}lib/bootstrap-table/src/extensions/export/bootstrap-table-export.js"></script>
         <!--</xsl:if>-->
 
+        <script src="{$uiResourcesPath}lib/underscore/underscore-min.js"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
