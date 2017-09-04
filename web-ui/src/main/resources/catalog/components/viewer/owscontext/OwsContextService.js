@@ -120,6 +120,11 @@
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
+        if (projection == 'EPSG:4326') {
+          ll.reverse();
+          ur.reverse();
+        }
+
         var extent = ll.concat(ur);
         gnViewerSettings.initialExtent = extent;
 
