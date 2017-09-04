@@ -57,7 +57,6 @@
 							}
 						});
 
-
 						scope.loadComments = function(id) {
 							scope.fewCommentsList = [];   	
 							scope.rating = null;
@@ -205,6 +204,26 @@
 							}
 						});
 
+						// When the user wants to stay anonymous the credentials should be hidden,
+						// and the option to show the username should be hidden
+						scope.toggleCredentials = function() {
+
+							$('.anonymous').each(function(index) {
+							  if ($(this).is(':visible')) {
+							  	$(this).hide();
+							  } else {
+							  	$(this).show();
+							  }
+							});
+
+						};
+
+						scope,showPopover = function(info) {
+							
+alert(info);
+
+						};
+
 						scope.initPopup = function() {
 							$http({
 								method : "GET",
@@ -233,6 +252,14 @@
 							}
 							if(scope.uf.ratingFINDABILITY>0) {
 								tot = tot + scope.uf.ratingFINDABILITY;
+								i++;
+							}
+							if(scope.uf.ratingDATAQUALITY>0) {
+								tot = tot + scope.uf.ratingDATAQUALITY;
+								i++;
+							}
+							if(scope.uf.ratingSERVICEQUALITY>0) {
+								tot = tot + scope.uf.ratingSERVICEQUALITY;
 								i++;
 							}
 							if(scope.uf.ratingOTHER>0) {
