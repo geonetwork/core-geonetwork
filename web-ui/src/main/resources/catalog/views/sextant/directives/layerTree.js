@@ -280,8 +280,8 @@
     }]);
 
   module.directive('sxtLayertreeElt', [
-    '$compile', '$http', 'gnMap', 'gnMdView', 'gnIndexWfsFilterConfig',
-    function($compile, $http, gnMap, gnMdView, gnIndexWfsFilterConfig) {
+    '$compile', '$http', 'gnMap', 'gnMdView', 'wfsFilterService',
+    function($compile, $http, gnMap, gnMdView, wfsFilterService) {
       return {
         restrict: 'E',
         replace: true,
@@ -382,17 +382,13 @@
 
               if(wfsLink) {
                 scope.wfsLink = wfsLink;
-                $http.get(gnIndexWfsFilterConfig.url + '/query',  {
-                  params: {
-                    rows: 1,
-                    q: gnIndexWfsFilterConfig.docTypeIdField + ':"' +
-                    gnIndexWfsFilterConfig.idDoc({
-                      wfsUrl: wfsLink.url,
-                      featureTypeName: wfsLink.name
-                    }) + '"',
-                    wt: 'json'
-                  }}).then(function(data) {
-                  if(data.response && data.response.numFound > 0) {
+                var indexObject = wfsFilterService.registerEsObject(wfsLink.url, wfsLink.name);
+                indexObject.init({
+                  wfsUrl: wfsLink.url,
+                  featureTypeName: wfsLink.name
+                });
+                indexObject.searchWithFacets({}).then(function(data) {
+                  if(data.count > 0) {
                     scope.wfs = wfsLink;
                   }
                 });
