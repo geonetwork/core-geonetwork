@@ -608,6 +608,52 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="mapExtent">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <div class="input-group">
+          <span class="input-group-addon">MinX</span>
+          <input type="number" step="any"
+                 class="form-control"
+                 data-ng-model="mCfg[key][0]"/>
+          <span class="input-group-addon">MinY</span>
+          <input type="number" step="any"
+                 class="form-control"
+                 data-ng-model="mCfg[key][1]"/>
+          <span class="input-group-addon">MaxX</span>
+          <input type="number" step="any"
+                 class="form-control"
+                 data-ng-model="mCfg[key][2]"/>
+          <span class="input-group-addon">MaxY</span>
+          <input type="number" step="any"
+                 class="form-control"
+                 data-ng-model="mCfg[key][3]"/>
+        </div>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="mapBackgroundLayer">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <div class="input-group">
+          <span class="input-group-addon">Type </span>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key].type"/>
+          <span class="input-group-addon">Layer </span>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key].layer"/>
+          <span class="input-group-addon">Url </span>
+          <input type="text"
+                 class="form-control"
+                 data-ng-model="mCfg[key].url"/>
+        </div>
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
       <div data-ng-switch-default>
         <label class="control-label">{{('ui-' + key) | translate}}</label>
         <input type="text"

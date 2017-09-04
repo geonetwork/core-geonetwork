@@ -325,9 +325,8 @@
            * @return {Object} defaultMapConfig mapconfig
            */
           getMapConfig: function() {
-            if (gnConfig['map.config'] &&
-                angular.isObject(gnConfig['map.config'])) {
-              return gnConfig['map.config'];
+            if (gnConfig['ui.config'].mods.map) {
+              return gnConfig['ui.config'].mods.map;
             } else {
               return defaultMapConfig;
             }
@@ -1163,7 +1162,7 @@
             var $this = this;
 
             if (!isLayerInMap(map, name, url)) {
-              gnWmsQueue.add(url, name);
+              gnWmsQueue.add(url, name, map);
               gnOwsCapabilities.getWMTSCapabilities(url).then(function(capObj) {
 
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
@@ -1184,7 +1183,7 @@
                     if (!createOnly) {
                       map.addLayer(olL);
                     }
-                    gnWmsQueue.removeFromQueue(url, name);
+                    gnWmsQueue.removeFromQueue(url, name, map);
                     defer.resolve(olL);
                   };
 
@@ -1241,7 +1240,7 @@
             var defer = $q.defer();
             var $this = this;
 
-            gnWmsQueue.add(url, name);
+            gnWmsQueue.add(url, name, map);
             gnWfsService.getCapabilities(url).then(function(capObj) {
               var capL = gnOwsCapabilities.
                   getLayerInfoFromWfsCap(name, capObj, md.getUuid()),
@@ -1285,7 +1284,7 @@
                   $this.feedLayerMd(olL);
                 }
 
-                gnWmsQueue.removeFromQueue(url, name);
+                gnWmsQueue.removeFromQueue(url, name, map);
                 defer.resolve(olL);
               }
 

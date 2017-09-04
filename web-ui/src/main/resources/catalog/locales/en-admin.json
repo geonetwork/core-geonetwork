@@ -1136,5 +1136,9 @@
     "allLanguage": "All",
     "allLanguage-help": "Display all languages",
     "oneLanguage": "One",
-    "oneLanguage-help": "Choose one language to edit using the selector"
+    "oneLanguage-help": "Choose one language to edit using the selector",
+    "ui-mapExtent": "Map Extent",
+    "ui-mapExtent-help": "Extent coordinates to use for maps other that viewer and search maps.",
+    "ui-mapBackgroundLayer": "Map Background Layer",
+    "ui-mapBackgroundLayer-help": "Define here the background layer to use for maps other that viewer and search maps."
 }
