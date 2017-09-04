@@ -55,6 +55,12 @@ public class UserFeedbackDTO implements Serializable {
   /** The rating FINDABILITY. */
   private Integer ratingFINDABILITY;
 
+  /** The rating DATAQUALITY. */
+  private Integer ratingDATAQUALITY;
+
+  /** The rating SERVICEQUALITY. */
+  private Integer ratingSERVICEQUALITY;
+
   /** The rating OTHER. */
   private Integer ratingOTHER;
 
@@ -240,6 +246,24 @@ public class UserFeedbackDTO implements Serializable {
    */
   public Integer getRatingREADABILITY() {
     return ratingREADABILITY;
+  }
+
+  /**
+   * Gets the rating DATAQUALITY.
+   *
+   * @return the rating DATAQUALITY
+   */
+  public Integer getRatingDATAQUALITY() {
+    return ratingDATAQUALITY;
+  }
+
+  /**
+   * Gets the rating SERVICEQUALITY.
+   *
+   * @return the rating SERVICEQUALITY
+   */
+  public Integer getRatingSERVICEQUALITY() {
+    return ratingSERVICEQUALITY;
   }
 
   /**
@@ -456,6 +480,26 @@ public class UserFeedbackDTO implements Serializable {
    */
   public void setRatingREADABILITY(Integer ratingREADABILITY) {
     this.ratingREADABILITY = ratingREADABILITY;
+  }
+
+  /**
+   * Sets the rating DATAQUALITY.
+   *
+   * @param ratingDATAQUALITY
+   *          the new rating DATAQUALITY
+   */
+  public void setRatingDATAQUALITY(Integer ratingDATAQUALITY) {
+    this.ratingDATAQUALITY = ratingDATAQUALITY;
+  }
+
+  /**
+   * Sets the rating SERVICEQUALITY.
+   *
+   * @param ratingSERVICEQUALITY
+   *          the new rating SERVICEQUALITY
+   */
+  public void setRatingSERVICEQUALITY(Integer ratingSERVICEQUALITY) {
+    this.ratingSERVICEQUALITY = ratingSERVICEQUALITY;
   }
 
   /**

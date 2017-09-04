@@ -58,6 +58,10 @@ public class Rating implements Serializable {
         READABILITY,
         /** The findability. */
         FINDABILITY,
+        /** The dataquality. */
+        DATAQUALITY,
+        /** The servicequality. */
+        SERVICEQUALITY,
         /** The other. */
         OTHER;
     }

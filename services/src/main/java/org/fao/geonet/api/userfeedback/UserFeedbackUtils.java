@@ -64,6 +64,12 @@ public class UserFeedbackUtils {
     /** The avg FINDABILITY. */
     private int avgFINDABILITY;
 
+    /** The avg DATAQUALITY. */
+    private int avgDATAQUALITY;
+    
+    /** The avg SERVICEQUALITY. */
+    private int avgSERVICEQUALITY;
+
     /** The avg OTHER. */
     private int avgOTHER;
 
@@ -130,6 +136,24 @@ public class UserFeedbackUtils {
      */
     public Integer getAvgREADABILITY() {
       return avgREADABILITY;
+    }
+
+    /**
+     * Gets the avg DATAQUALITY.
+     *
+     * @return the avg DATAQUALITY
+     */
+    public Integer getAvgDATAQUALITY() {
+      return avgDATAQUALITY;
+    }
+
+    /**
+     * Gets the avg SERVICEQUALITY.
+     *
+     * @return the avg SERVICEQUALITY
+     */
+    public Integer getAvgSERVICEQUALITY() {
+      return avgSERVICEQUALITY;
     }
 
     /**
@@ -217,6 +241,26 @@ public class UserFeedbackUtils {
       this.avgREADABILITY = avgREADABILITY;
     }
 
+    /**
+     * Sets the avg DATAQUALITY.
+     *
+     * @param avgDATAQUALITY
+     *          the new avg DATAQUALITY
+     */
+    public void setAvgDATAQUALITY(Integer avgDATAQUALITY) {
+      this.avgDATAQUALITY = avgDATAQUALITY;
+    }
+
+        /**
+     * Sets the avg SERVICEQUALITY.
+     *
+     * @param avgSERVICEQUALITY
+     *          the new avg SERVICEQUALITY
+     */
+    public void setAvgSERVICEQUALITY(Integer avgSERVICEQUALITY) {
+      this.avgSERVICEQUALITY = avgSERVICEQUALITY;
+    }
+    
     /**
      * Sets the last comment.
      *
@@ -335,6 +379,30 @@ public class UserFeedbackUtils {
 
       ratingList.add(r);
     }
+    if (inputDto.getRatingDATAQUALITY() != null && inputDto.getRatingDATAQUALITY() != 0) {
+
+      final Rating r = new Rating();
+
+      r.setRating(inputDto.getRatingDATAQUALITY());
+      r.setCategory(Rating.Category.DATAQUALITY);
+
+      avg = avg + r.getRating();
+      avgCount++;
+
+      ratingList.add(r);
+    }
+    if (inputDto.getRatingSERVICEQUALITY() != null && inputDto.getRatingSERVICEQUALITY() != 0) {
+
+      final Rating r = new Rating();
+
+      r.setRating(inputDto.getRatingSERVICEQUALITY());
+      r.setCategory(Rating.Category.SERVICEQUALITY);
+
+      avg = avg + r.getRating();
+      avgCount++;
+
+      ratingList.add(r);
+    }
     if (inputDto.getRatingOTHER() != null && inputDto.getRatingOTHER() != 0) {
 
       final Rating r = new Rating();
@@ -439,6 +507,12 @@ public class UserFeedbackUtils {
       }
       if (rating.getCategory().equals(Rating.Category.READABILITY)) {
         userfeedbackDto.setRatingREADABILITY(rating.getRating());
+      }
+      if (rating.getCategory().equals(Rating.Category.DATAQUALITY)) {
+        userfeedbackDto.setRatingDATAQUALITY(rating.getRating());
+      }
+      if (rating.getCategory().equals(Rating.Category.SERVICEQUALITY)) {
+        userfeedbackDto.setRatingSERVICEQUALITY(rating.getRating());
       }
       if (rating.getCategory().equals(Rating.Category.OTHER)) {
         userfeedbackDto.setRatingOTHER(rating.getRating());
