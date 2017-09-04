@@ -42,11 +42,11 @@ public class BaseMetadataStatus implements IMetadataStatus {
     private SettingManager settingManager;
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-//        metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
-//        metadataIndexer = context.getBean(IMetadataIndexer.class);
-//        statusValueRepository = context.getBean(StatusValueRepository.class);
-//        groupRepository = context.getBean(GroupRepository.class);
-//        settingManager = context.getBean(SettingManager.class);
+        metadataStatusRepository = context.getBean(MetadataStatusRepository.class);
+        metadataIndexer = context.getBean(IMetadataIndexer.class);
+        statusValueRepository = context.getBean(StatusValueRepository.class);
+        groupRepository = context.getBean(GroupRepository.class);
+        settingManager = context.getBean(SettingManager.class);
     }
 
     @Override

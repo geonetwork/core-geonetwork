@@ -52,12 +52,12 @@ public class BaseMetadataOperations implements IMetadataOperations {
     private SvnManager svnManager;
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-//        userRepository = context.getBean(UserRepository.class);
-//        metadataRepository = context.getBean(MetadataRepository.class);
-//        opAllowedRepo = context.getBean(OperationAllowedRepository.class);
-//        userGroupRepo = context.getBean(UserGroupRepository.class);
-//        settingManager = context.getBean(SettingManager.class);
-//        svnManager = context.getBean(SvnManager.class);
+        userRepository = context.getBean(UserRepository.class);
+        metadataRepository = context.getBean(MetadataRepository.class);
+        opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+        userGroupRepo = context.getBean(UserGroupRepository.class);
+        settingManager = context.getBean(SettingManager.class);
+        svnManager = context.getBean(SvnManager.class);
     }
 
     /**

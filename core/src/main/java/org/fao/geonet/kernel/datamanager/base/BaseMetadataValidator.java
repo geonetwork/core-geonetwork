@@ -19,6 +19,7 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.SchematronValidator;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
@@ -56,10 +57,10 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     }
     
     public void init(ServiceContext context, Boolean force) throws Exception {
-//        metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-//        validationRepository = context.getBean(MetadataValidationRepository.class);
-//        schematronValidator = context.getBean(SchematronValidator.class);
-//        thesaurusDir = context.getBean(ThesaurusManager.class).getThesauriDirectory();
+        metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+        validationRepository = context.getBean(MetadataValidationRepository.class);
+        schematronValidator = context.getBean(SchematronValidator.class);
+        thesaurusDir = context.getBean(ThesaurusManager.class).getThesauriDirectory();
     }
 
     /**
