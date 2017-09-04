@@ -1,8 +1,45 @@
-<li class="" data-ng-class="{'active': member.showInfo, 'sxt-outofrange': !((member.getMaxResolution() >= map.getView().getResolution()) && (member.getMinResolution() <= map.getView().getResolution()))}">
-  <div ng-if="isParentNode()"><i ng-click="toggleNode($event)" class="sxt-layer-visibility fa fa-minus-square"></i>&nbsp;<span>{{member.name || member.get('label') }}</span></div>
-  <div ng-if="!isParentNode()" data-ng-class="{sublayer: member.get('fromWps')}">
+<li class=""
+  ng-class="{'active': member.showInfo, 'sxt-outofrange': isOutOfRange()}">
 
-    <div ng-if="!member.get('loading')">
+  <!-- Group heading (parent node) -->
+  <div ng-if="::isParentNode()">
+    <div class="list-group-heading" ng-click="toggleNode($event)">
+      <i class="sxt-layer-visibility fa"
+        ng-class="{'fa-minus-square': !isFolded(), 'fa-plus-square': isFolded()}">
+      </i>&nbsp;
+      <span>{{member.name || member.get('label')}}</span>
+    </div>
+
+    <sxt-layertree-col class='list-group' collection='member.nodes' map='map'
+      ng-show='!isFolded()'></sxt-layertree-col>
+  </div>
+
+  <!-- Layer (child node) -->
+  <div ng-if="::!isParentNode()" ng-class="::{sublayer: member.get('fromWps')}">
+
+    <div ng-if="!member.get('loading')" class="flex-row">
+      <!-- Visibility check box & Layer title-->
+      <label class="flex-row layer-label">
+        <i ng-if="!groupCombo" class="fa sxt-layer-visibility"
+          ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'"
+          title="{{'layerVisible'|translate}}"></i>
+        <i ng-if="groupCombo" class="fa sxt-layer-visibility"
+          ng-class="(member.visible) ? 'fa-check-circle' : 'fa-circle'"
+          title="{{'layerVisible'|translate}}"></i>
+
+        &nbsp;
+
+        <input ng-if="::!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
+        <input ng-if="::groupCombo" ng-value="member" name="{{groupCombo}}" class="hidden"
+                type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}"
+                data-ng-change="switchGroupCombo(groupCombo)" data-ng-click="setComboLayerVisibility(groupCombo, member)"/>
+
+        <span title="{{::member.get('label')}}">
+          {{::member.get('label')}}</span>
+      </label>
+
+      <div class="flex-spacer flex-grow"></div>
+
       <!--Drop down button for layer actions-->
       <div class="btn-group pull-right" sxt-popover-dropdown sxt-popover-dismiss=".sxt-layertree">
         <a role="button" tabindex="0" class="sxt-layer-dropdown-btn dropdown-toggle pull-right btn btn-default btn-xs">
@@ -63,23 +100,12 @@
         </ul>
       </div>
 
-      <!-- Visibility check box & Layer title-->
-      <label>
-        <i ng-if="!groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-square' : 'fa-square'" title="{{'layerVisible'|translate}}" ></i>
-        <i ng-if="groupCombo" class="fa sxt-layer-visibility" ng-class="(member.visible) ? 'fa-check-circle' : 'fa-circle'" title="{{'layerVisible'|translate}}" ></i>
-
-        <input ng-if="!groupCombo" type="checkbox" ng-model="member.visible" class="hidden"/>
-        <input ng-if="groupCombo" ng-value="member" name="{{groupCombo}}" class="hidden"
-               type="radio" ng-model="comboGroups[groupCombo]" title="{{'layerVisible'|translate}}"
-               data-ng-change="switchGroupCombo(groupCombo)" data-ng-click="setLayerVisibility(groupCombo, member)"/>
-        {{member.get('label')}}
-      </label>
-
       <br/>
     </div>
-    <div ng-if="member.get('loading')">
-      <span class="fa fa-spin fa-spinner"></span>
-      {{::member.get('label')}}
+    <div ng-if="member.get('loading')" class="flex-row">
+      <i class="fa fa-spin fa-spinner"/>
+      &nbsp;
+      <span class="layer-label">{{::member.get('label')}}</span>
     </div>
   </div>
 </li>

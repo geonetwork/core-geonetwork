@@ -132,19 +132,33 @@
             }
           };
 
-          var createNode = function(layer, node, g, index) {
+          var createNode = function(layer, node, g, index, initGroupAsFolded) {
             var group = g[index];
             if (group) {
               var newNode = findChild(node, group);
               if (!newNode) {
+                // init group state
+                groupPath = g.slice(0, index + 1).join('\\');
+                var state = scope.groupStates[groupPath];
+                if (!state) {
+                  scope.groupStates[groupPath] = {
+                    folded: initGroupAsFolded ? true : false
+                  };
+                  state = scope.groupStates[groupPath];
+                }
+
+                // save the state & path on the new node
+                // (path is used to track nodes uniquely)
                 newNode = {
-                  name: group
+                  name: group,
+                  state: state,
+                  path: groupPath
                 };
                 if (!node.nodes) node.nodes = [];
                 node.nodes.push(newNode);
                 node.nodes.sort(sortNodeFn);
               }
-              createNode(layer, newNode, g, index + 1);
+              createNode(layer, newNode, g, index + 1, initGroupAsFolded);
             } else {
               if (!node.nodes) node.nodes = [];
               node.nodes.push(layer);
@@ -158,11 +172,28 @@
           // (i.e 'group') that are set after layer is added to map.
           var debounce = 0;
 
+          // this holds a state of the layer collection labels
+          // keys are the path of the collection, ie: '\group A\subgroup 1'
+          // values are objects with property 'folded' (bool)
+          scope.groupStates = {};
+
           // Build the layer manager tree depending on layer groups
           var buildTree = function() {
             if(debounce > 0) {
               return;
             }
+
+            // are we loading the default context? if yes, should we load the
+            // groups as folded? (check in API settings)
+            var initGroupsAsFolded = false;
+            if (typeof sxtSettings !== 'undefined' &&
+              sxtSettings.defaultContextFolded && !scope.defaultContextLoaded) {
+            // if (!scope.defaultContextLoaded) {
+              initGroupsAsFolded = true;
+            }
+
+            // mark the default context as loaded
+            scope.defaultContextLoaded = true;
 
             // Remove active popovers
             $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
@@ -188,6 +219,7 @@
 
               for (var i = 0; i < fLayers.length; i++) {
                 var l = fLayers[i];
+
                 var groups = l.get('group');
                 if (!groups) {
                   scope.layerTree.nodes.push(l);
@@ -198,7 +230,7 @@
                     groups = '/' + groups;
                   }
                   var g = groups.split(sep);
-                  createNode(l, scope.layerTree, g, 1);
+                  createNode(l, scope.layerTree, g, 1, initGroupsAsFolded);
                 }
                 if(l.visible && l.get('groupcombo')) {
                   scope.setActiveComboGroup(l);
@@ -228,8 +260,13 @@
             }
           });
 
-           scope.$on('owsContextReseted', function() {
-             gnWmsQueue.errors.length = 0;
+          scope.$on('owsContextReseted', function() {
+            gnWmsQueue.errors.length = 0;
+
+            // if the default context is reset, mark it for the next tree
+            // rebuild & clear tree group states
+            scope.defaultContextLoaded = false;
+            scope.groupStates = {};
           });
 
           scope.failedLayers = gnWmsQueue.errors;
@@ -274,8 +311,12 @@
           collection: '=',
           map: '=map'
         },
-        template: "<ul class='sxt-layertree-node'><sxt-layertree-elt ng-repeat='member" +
-            " in collection' member='member' map='map'></sxt-layertree-elt></ul>"
+        template:
+          '<ul class="sxt-layertree-node">' +
+            '<sxt-layertree-elt ' +
+              'ng-repeat="member in collection track by (member.path || (collection.state.path + member.get(\'label\')) || $index)" ' +
+              'member="member" map="map"></sxt-layertree-elt>' +
+          '</ul>'
       };
     }]);
 
@@ -294,21 +335,17 @@
             'partials/layertreeitem.html',
         link: function(scope, element, attrs, controller) {
           var el = element;
-          if (angular.isArray(scope.member.nodes)) {
-            element.append("<sxt-layertree-col class='list-group' " +
-                "collection='member.nodes' map='map'></sxt-layertree-col>");
-            $compile(element.contents())(scope);
-          }
           scope.toggleNode = function(evt) {
-            el.find('.fa').first().toggleClass('fa-minus-square')
-                .toggleClass('fa-plus-square');
-            el.children('ul').toggle();
-            evt.stopPropagation();
+            scope.member.state.folded = !scope.member.state.folded;
+            evt && evt.stopPropagation();
             return false;
           };
           scope.isParentNode = function() {
             return angular.isDefined(scope.member.nodes);
           };
+          scope.isFolded = function () {
+            return scope.member.state && scope.member.state.folded;
+          }
 
           scope.indexWFSFeatures = function(url, type) {
             $http.get('wfs.harvest?' +
@@ -320,12 +357,6 @@
               }).error(function(response) {
               console.log(response);
             });
-            //$http.get('wfs.harvest/' + md['geonet:info'].uuid)
-            // .success(function(data) {
-            //  console.log(data);
-            //}).error(function(response) {
-            //  console.log(response);
-            //});
           };
           scope.mapService = gnMap;
 
@@ -354,7 +385,7 @@
              * @param {string} groupcombo Group id.
              * @param {ol.layer.Base} layer Node layer.
              */
-            scope.setLayerVisibility = function(groupcombo, layer) {
+            scope.setComboLayerVisibility = function(groupcombo, layer) {
               if(scope.comboGroups[groupcombo] == layer) {
                 layer.visible = !layer.visible;
               }
@@ -421,7 +452,16 @@
           scope.showWFSFilter = function() {
             controller.setWFSFilter(scope.member, wfsLink);
           };
-       }
+          scope.isOutOfRange = function () {
+            if (scope.isParentNode() ||
+              !scope.member instanceof ol.layer.Base) {
+              return false;
+            }
+            var mapRes = scope.map.getView().getResolution();
+            return scope.member.getMaxResolution() < mapRes ||
+              scope.member.getMinResolution() > mapRes;
+          }
+        }
       };
     }]);
 
