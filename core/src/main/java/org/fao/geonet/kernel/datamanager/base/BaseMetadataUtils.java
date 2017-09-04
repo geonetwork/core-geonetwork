@@ -86,16 +86,16 @@ public class BaseMetadataUtils implements IMetadataUtils {
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-        // metadataRepository = context.getBean(MetadataRepository.class);
-        // metadataNotifierManager = context.getBean(MetadataNotifierManager.class);
-        servContext = context;
-        // schemaManager = context.getBean(SchemaManager.class);
-        // searchManager = context.getBean(SearchManager.class);
-        // metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
-        // metadataIndexer = context.getBean(IMetadataIndexer.class);
-        // ratingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
-        // settingManager = context.getBean(SettingManager.class);
-        // xmlSerializer = context.getBean(XmlSerializer.class);
+         metadataRepository = context.getBean(MetadataRepository.class);
+         metadataNotifierManager = context.getBean(MetadataNotifierManager.class);
+         servContext = context;
+         schemaManager = context.getBean(SchemaManager.class);
+         searchManager = context.getBean(SearchManager.class);
+         metadataSchemaUtils = context.getBean(IMetadataSchemaUtils.class);
+         metadataIndexer = context.getBean(IMetadataIndexer.class);
+         ratingByIpRepository = context.getBean(MetadataRatingByIpRepository.class);
+         settingManager = context.getBean(SettingManager.class);
+         xmlSerializer = context.getBean(XmlSerializer.class);
 
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
         stylePath = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS);

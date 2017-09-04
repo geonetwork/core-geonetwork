@@ -28,8 +28,8 @@ public class BaseMetadataSchemaUtils implements IMetadataSchemaUtils {
     private MetadataRepository metadataRepository;
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-//        schemaManager = context.getBean(SchemaManager.class);
-//        metadataRepository = context.getBean(MetadataRepository.class);
+        schemaManager = context.getBean(SchemaManager.class);
+        metadataRepository = context.getBean(MetadataRepository.class);
     }
 
     /**

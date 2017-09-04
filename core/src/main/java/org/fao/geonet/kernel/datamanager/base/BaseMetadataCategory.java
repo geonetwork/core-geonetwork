@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.SvnManager;
@@ -14,8 +13,6 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import jeeves.server.context.ServiceContext;
 
@@ -23,14 +20,15 @@ public class BaseMetadataCategory implements IMetadataCategory {
 
     @Autowired
     private MetadataRepository metadataRepository;
-    @Autowired(required=false)
+    @Autowired(required = false)
     private SvnManager svnManager;
     @Autowired
-    private ApplicationContext _applicationContext;
+    private MetadataCategoryRepository metadataCategoryRepository;
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-//        this.metadataRepository = context.getBean(MetadataRepository.class);
-//        this.svnManager = context.getBean(SvnManager.class);
+        this.metadataRepository = context.getBean(MetadataRepository.class);
+        this.svnManager = context.getBean(SvnManager.class);
+        this.metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
     }
 
     /**
@@ -38,9 +36,8 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public void setCategory(ServiceContext context, String mdId, String categId) throws Exception {
-        final MetadataCategoryRepository categoryRepository = getApplicationContext().getBean(MetadataCategoryRepository.class);
 
-        final MetadataCategory newCategory = categoryRepository.findOne(Integer.valueOf(categId));
+        final MetadataCategory newCategory = metadataCategoryRepository.findOne(Integer.valueOf(categId));
         final boolean[] changed = new boolean[1];
         getMetadataRepository().update(Integer.valueOf(mdId), new Updater<Metadata>() {
             @Override
@@ -129,10 +126,5 @@ public class BaseMetadataCategory implements IMetadataCategory {
     private MetadataRepository getMetadataRepository() {
         return metadataRepository;
 
-    }
-
-    private ApplicationContext getApplicationContext() {
-        final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
-        return applicationContext == null ? _applicationContext : applicationContext;
     }
 }
