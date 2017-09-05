@@ -159,7 +159,7 @@
                 try {
                   return scope.activeTools.layers || scope.activeTools.import ||
                     scope.activeTools.contexts || scope.activeTools.print ||
-                    scope.mInteraction.active || scope.drawVector.inmap ||
+                    scope.mInteraction.active || scope.drawVector.active ||
                     scope.activeTools.benthique || scope.activeTools.processes;
                 }
                 catch (e) {}

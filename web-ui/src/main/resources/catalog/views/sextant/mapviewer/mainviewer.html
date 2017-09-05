@@ -36,7 +36,7 @@
         <span class="fsxt">a</span>
         <span role="tooltip" data-translate="">Measure</span>
       </button>
-      <button gi-btn="active" class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap">
+      <button gi-btn="active" class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.active">
         <span class="fa fa-pencil"></span>
         <span role="tooltip" data-translate="">Annotations</span>
       </button>
@@ -242,7 +242,7 @@
       </div>
 
       <!--Draw Panel-->
-      <div class="panel panel-default panel-tools" id="draw" ng-show="drawVector.inmap">
+      <div class="panel panel-default panel-tools" id="draw" ng-show="drawVector.active">
         <div class="panel-body">
           <div class="gn-draw-styleform" gn-draw="" map="map" vector="drawVector">
           </div>

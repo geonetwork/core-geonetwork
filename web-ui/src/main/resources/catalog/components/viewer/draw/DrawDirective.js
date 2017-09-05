@@ -150,7 +150,7 @@
             text: {
               width: 14,
               fill: {color: '#000'},
-              stroke: {color: '#fff', width: 0}
+              stroke: {color: '#fff', width: 2}
             }
           };
 
@@ -174,6 +174,7 @@
                 fill: new ol.style.Fill({
                   color: style.text.fill.color
                 })
+                // sextant don't want the text stroke
               })
             })];
           };
@@ -498,7 +499,7 @@
                   map.addLayer(vector);
                 }
               } else {
-                map.removeLayer(vector);
+                map.removeLayer(vector); // sextant
                 drawPolygon.active = false;
                 drawPoint.active = false;
                 drawLine.active = false;
