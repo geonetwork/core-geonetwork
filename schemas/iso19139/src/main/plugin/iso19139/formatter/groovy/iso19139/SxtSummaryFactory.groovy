@@ -144,7 +144,7 @@ class SxtSummaryFactory {
   }
 
   def getContactsByType(metadata, type) {
-    return metadata."**".findAll{
+    return metadata."gmd:identificationInfo"."**".findAll{
       it.name() == 'gmd:CI_ResponsibleParty' &&
         (it.'gmd:role'.'gmd:CI_RoleCode'['@codeListValue'] == type)}
   }
