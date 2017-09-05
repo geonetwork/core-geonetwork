@@ -112,7 +112,8 @@
         };
 
         var getImageSourceRatio = function(map, maxWidth) {
-          var width = map.getSize()[0] || $('.gn-full').width();
+          var width = (map.getSize() && map.getSize()[0]) ||
+            $('.gn-full').width();
           var ratio = maxWidth / width;
           ratio = Math.floor(ratio * 100) / 100;
           return Math.min(1.5, Math.max(1, ratio));
