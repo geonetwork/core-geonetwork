@@ -66,7 +66,8 @@ public class DirectoryUtils {
 
             Metadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
             if (dbSubTemplate == null) {
-                Metadata subtemplate = new Metadata().setUuid(uuid);
+                Metadata subtemplate = new Metadata();
+                subtemplate.setUuid(uuid);
                 subtemplate.getDataInfo().
                     setSchemaId(record.getDataInfo().getSchemaId()).
                     setRoot(entry.getQualifiedName()).

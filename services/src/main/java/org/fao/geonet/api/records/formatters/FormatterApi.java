@@ -363,7 +363,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             metadataEl = Xml.selectElement(metadataEl, mdPath, namespaces);
             metadataEl.detach();
         }
-        Metadata metadataInfo = new Metadata().setData(metadata).setId(1).setUuid("uuid");
+        Metadata metadataInfo = new Metadata();
+        metadataInfo.setData(metadata).setId(1).setUuid("uuid");
         metadataInfo.getDataInfo().setType(MetadataType.METADATA).setRoot(metadataEl.getQualifiedName()).setSchemaId(schema);
 
         Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, formatType, xslid, width,

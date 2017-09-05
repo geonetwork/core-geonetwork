@@ -184,7 +184,8 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/sub-OnlineResource.xml");
         Element sampleMetadataXml = Xml.loadStream(resource.openStream());
 
-        Metadata metadata = new Metadata()
+        Metadata metadata = new Metadata();
+        metadata
                 .setDataAndFixCR(sampleMetadataXml)
                 .setUuid(UUID.randomUUID().toString());
         metadata.getDataInfo()

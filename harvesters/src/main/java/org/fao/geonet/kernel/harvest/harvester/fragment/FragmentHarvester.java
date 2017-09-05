@@ -409,7 +409,8 @@ public class FragmentHarvester extends BaseAligner {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -638,7 +639,8 @@ public class FragmentHarvester extends BaseAligner {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(recUuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(recUuid);
         metadata.getDataInfo().
             setSchemaId(params.outputSchema).
             setRoot(template.getQualifiedName()).

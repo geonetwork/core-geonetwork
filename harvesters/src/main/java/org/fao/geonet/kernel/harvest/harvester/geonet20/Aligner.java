@@ -226,7 +226,8 @@ public class Aligner {
         //
         //  insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(remoteUuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(remoteUuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).

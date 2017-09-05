@@ -398,7 +398,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(uuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
@@ -724,7 +725,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             //  insert metadata
             //
             schema = dataMan.autodetectSchema(xml);
-            Metadata metadata = new Metadata().setUuid(reg.uuid);
+            Metadata metadata = new Metadata();
+            metadata.setUuid(reg.uuid);
             metadata.getDataInfo().
                 setSchemaId(schema).
                 setRoot(xml.getQualifiedName()).

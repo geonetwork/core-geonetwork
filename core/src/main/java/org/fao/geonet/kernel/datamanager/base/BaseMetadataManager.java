@@ -450,7 +450,8 @@ public class BaseMetadataManager implements IMetadataManager {
         if (templateMetadata.getDataInfo().getType() == MetadataType.METADATA) {
             xml = updateFixedInfo(schema, Optional.<Integer> absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
         }
-        final Metadata newMetadata = new Metadata().setUuid(uuid);
+        final Metadata newMetadata = new Metadata();
+        newMetadata.setUuid(uuid);
         newMetadata.getDataInfo().setChangeDate(new ISODate()).setCreateDate(new ISODate()).setSchemaId(schema)
                 .setType(MetadataType.lookup(isTemplate));
         newMetadata.getSourceInfo().setGroupOwner(Integer.valueOf(groupOwner)).setOwner(owner).setSourceId(source);
@@ -509,7 +510,8 @@ public class BaseMetadataManager implements IMetadataManager {
         if (StringUtils.isBlank(metadataType)) {
             metadataType = MetadataType.METADATA.codeString;
         }
-        final Metadata newMetadata = new Metadata().setUuid(uuid);
+        final Metadata newMetadata = new Metadata();
+        newMetadata.setUuid(uuid);
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
         final ISODate isoCreateDate = createDate != null ? new ISODate(createDate) : new ISODate();
         newMetadata.getDataInfo().setChangeDate(isoChangeDate).setCreateDate(isoCreateDate).setSchemaId(schema).setDoctype(docType)

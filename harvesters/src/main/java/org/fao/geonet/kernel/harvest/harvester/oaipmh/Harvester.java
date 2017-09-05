@@ -365,7 +365,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        Metadata metadata = new Metadata().setUuid(ri.id);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(ri.id);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).

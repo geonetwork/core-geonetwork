@@ -205,7 +205,8 @@ public class Aligner extends BaseAligner {
         // insert metadata
         //
         int userid = 1;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).
