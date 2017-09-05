@@ -85,6 +85,14 @@
               features: ctrl.features
             });
 
+            // this is used to deactivate zoom on draw end
+            ctrl.zoomInteraction = null;
+            ctrl.map.getInteractions().forEach(function(interaction) {
+              if (interaction instanceof ol.interaction.DoubleClickZoom) {
+                ctrl.zoomInteraction = interaction;
+              }
+            });
+
             // add our layer&interactions to the map
             ctrl.map.addInteraction(ctrl.drawInteraction);
             ctrl.map.addInteraction(ctrl.modifyInteraction);
@@ -134,8 +142,17 @@
             ctrl.drawInteraction.on('drawend', function(event) {
               removeMyFeatures();
               updateOutput(event.feature);
-              ctrl.drawInteraction.setActive(false);
+              ctrl.drawInteraction.active = false;
               ctrl.features.push(event.feature);
+
+              // prevent interference by zoom interaction
+              // see https://github.com/openlayers/openlayers/issues/3610
+              if (ctrl.zoomInteraction) {
+                ctrl.zoomInteraction.setActive(false);
+                setTimeout(function() {
+                  ctrl.zoomInteraction.setActive(true);
+                }, 251);
+              }
             });
 
             // update output on modify end
