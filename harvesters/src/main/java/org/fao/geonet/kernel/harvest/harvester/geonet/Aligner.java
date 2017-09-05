@@ -520,7 +520,8 @@ public class Aligner extends BaseAligner {
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
-        Metadata metadata = new Metadata().setUuid(ri.uuid);
+        Metadata metadata = new Metadata();
+        metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
             setRoot(md.getQualifiedName()).

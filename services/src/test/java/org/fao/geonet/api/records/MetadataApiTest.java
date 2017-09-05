@@ -137,7 +137,8 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
         String source = sourceRepository.findAll().get(0).getUuid();
         String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        final Metadata metadata = new Metadata().setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
+        final Metadata metadata = new Metadata();
+        metadata.setDataAndFixCR(sampleMetadataXml).setUuid(uuid);
         metadata.getDataInfo().setRoot(sampleMetadataXml.getQualifiedName()).setSchemaId(schema).setType(MetadataType.METADATA);
         metadata.getDataInfo().setPopularity(1000);
         metadata.getSourceInfo().setOwner(1).setSourceId(source);

@@ -133,7 +133,8 @@ public class LocalXLinksUpdateHaveToTriggerIndexationTest extends AbstractIntegr
     private Metadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
         loginAsAdmin(context);
 
-        Metadata metadata = new Metadata()
+        Metadata metadata = new Metadata();
+        metadata
                 .setDataAndFixCR(element)
                 .setUuid(UUID.randomUUID().toString());
         metadata.getDataInfo()
