@@ -13,11 +13,14 @@
   module.value('baselayerTemplateURL', '../../catalog/views/sextant/templates/baselayer.html');
   module.value('kmlimportTemplateURL', '../../catalog/views/sextant/templates/kmlimport.html');
 
-  module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
-    'gnGlobalSettings', 'gnMap', 'gnConfig', 'gnConfigService',
-
+  module.run([
+    'gnSearchSettings',
+    'gnViewerSettings',
+    'gnPanierSettings',
+    'gnGlobalSettings',
+    'gnMap',
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap, gnConfig, gnConfigService) {
+             gnGlobalSettings, gnMap) {
 
       if(typeof sxtSettings != 'undefined') {
         gnGlobalSettings.init({},
@@ -46,10 +49,6 @@
 
       viewerSettings.defaultContext = '../../catalog/views/sextant/data/' +
           'defaultContext.xml';
-
-      gnConfigService.loadPromise.then(function(config) {
-        viewerSettings.bingKey = config['map.bingKey'];
-      });
 
       // WMS settings
       // If 3D mode is activated, single tile WMS mode is
