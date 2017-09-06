@@ -187,13 +187,12 @@
             // groups as folded? (check in API settings)
             var initGroupsAsFolded = false;
             if (typeof sxtSettings !== 'undefined' &&
-              sxtSettings.defaultContextFolded && !scope.defaultContextLoaded) {
-            // if (!scope.defaultContextLoaded) {
+              sxtSettings.defaultContextFolded && scope.layersFromContext) {
               initGroupsAsFolded = true;
             }
 
-            // mark the default context as loaded
-            scope.defaultContextLoaded = true;
+            // do not fold layer tree for next rebuild
+            scope.layersFromContext = false;
 
             // Remove active popovers
             $('[sxt-layertree] .dropdown-toggle').each(function(i, button) {
@@ -260,12 +259,12 @@
             }
           });
 
-          scope.$on('owsContextReseted', function() {
+          scope.$on('owsContextLoaded', function() {
             gnWmsQueue.errors.length = 0;
 
-            // if the default context is reset, mark it for the next tree
+            // when a context is loaded, mark it for the next tree
             // rebuild & clear tree group states
-            scope.defaultContextLoaded = false;
+            scope.layersFromContext = true;
             scope.groupStates = {};
           });
 
