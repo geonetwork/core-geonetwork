@@ -177,6 +177,9 @@
           // values are objects with property 'folded' (bool)
           scope.groupStates = {};
 
+          // layers loaded for the first time are always from a context
+          scope.layersFromContext = true;
+
           // Build the layer manager tree depending on layer groups
           var buildTree = function() {
             if(debounce > 0) {
