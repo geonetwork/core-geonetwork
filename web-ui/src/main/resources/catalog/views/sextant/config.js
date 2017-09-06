@@ -259,8 +259,6 @@
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
       }];
-
-      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
       
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
@@ -428,7 +426,27 @@
         if(angular.isUndefined(searchSettings.tabOverflow.panier)) {
           delete searchSettings.mainTabs.panier;
         }
+        if(sxtSettings.sortBy)  {
+          searchSettings.sortbyValues = sxtSettings.sortBy.map(
+            function(criteria) {
+              var name = criteria;
+              var direction = '';
+              if (name.substring(0, 1) == '+') {
+                name = name.substring(1);
+              } else if (name.substring(0, 1) == '-') {
+                name = name.substring(1);
+                direction = 'reverse';
+              }
+              return {
+                sortBy: name,
+                sortOrder: direction
+              }
+            }
+          );
+        }
       }
+
+      searchSettings.sortbyDefault = searchSettings.sortbyValues[0];
 
       // searchSettings.hiddenParams = {
       //   type: 'dataset or series or publication or nonGeographicDataset or ' +
