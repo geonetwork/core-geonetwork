@@ -187,7 +187,7 @@
             // groups as folded? (check in API settings)
             var initGroupsAsFolded = false;
             if (typeof sxtSettings !== 'undefined' &&
-              sxtSettings.defaultContextFolded && scope.layersFromContext) {
+              sxtSettings.loadContextFolded && scope.layersFromContext) {
               initGroupsAsFolded = true;
             }
 
