@@ -1362,7 +1362,18 @@
                 matrixIds[z] = matrix.Identifier;
               }
 
-              var source;
+              var sourceConfig = {
+                layer: layer.Identifier,
+                matrixSet: matrixSet.Identifier,
+                format: layer.Format[0] || 'image/png',
+                projection: projection,
+                tileGrid: new ol.tilegrid.WMTS({
+                  origin: ol.extent.getTopLeft(projection.getExtent()),
+                  resolutions: resolutions,
+                  matrixIds: matrixIds
+                }),
+                style: style
+              };
 
               if (useRest) {
                 var urls = [];
@@ -1370,38 +1381,18 @@
                   urls.push(layer.ResourceURL[i].template);
                 }
 
-
-                source = new ol.source.WMTS({
+                angular.extend(sourceConfig, {
                   urls: urls,
-                  requestEncoding: 'REST',
-                  layer: layer.Identifier,
-                  matrixSet: matrixSet.Identifier,
-                  format: layer.Format[0] || 'image/png',
-                  projection: projection,
-                  tileGrid: new ol.tilegrid.WMTS({
-                    origin: ol.extent.getTopLeft(projection.getExtent()),
-                    resolutions: resolutions,
-                    matrixIds: matrixIds
-                  }),
-                  style: style
+                  requestEncoding: 'REST'
+                });
+              } else {
+                angular.extend(sourceConfig, {
+                  url: url
                 });
 
-              } else {
-                source = new ol.source.WMTS({
-                  url: url,
-                  layer: layer.Identifier,
-                  matrixSet: matrixSet.Identifier,
-                  format: layer.Format[0] || 'image/png',
-                  projection: projection,
-                  tileGrid: new ol.tilegrid.WMTS({
-                    origin: ol.extent.getTopLeft(projection.getExtent()),
-                    resolutions: resolutions,
-                    matrixIds: matrixIds
-                  }),
-                  style: style
-                });
               }
 
+              var source = new ol.source.WMTS(sourceConfig);
 
               var olLayer = new ol.layer.Tile({
                 extent: projection.getExtent(),
