@@ -88,8 +88,11 @@
         $translate, $rootScope, $http, $q) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/viewer/owscontext/' +
-            'partials/owscontext.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template ||
+            '../../catalog/components/viewer/owscontext/' +
+            'partials/owscontext.html';
+        },
         scope: {
           user: '=',
           map: '='
