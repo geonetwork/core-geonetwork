@@ -23,15 +23,13 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -44,7 +42,9 @@ import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.nio.file.Path;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Removes a metadata from the system.
@@ -75,7 +75,7 @@ public class Delete extends BackupFileService {
         //-----------------------------------------------------------------------
         //--- check access
 
-        Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        IMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
         if (metadata == null)
             throw new IllegalArgumentException("Metadata with identifier " + id + " not found.");

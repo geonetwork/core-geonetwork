@@ -24,25 +24,26 @@
 package org.fao.geonet.services.metadata;
 
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-import java.nio.file.Path;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Update the metadata group owner.
@@ -90,8 +91,9 @@ public class UpdateGroupOwner extends NotInReadOnlyModeService {
         }
 
         //--- Update groupOwner
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        Metadata metadata = metadataRepository.findOne(iLocalId);
+        IMetadataManager metadataRepository = context.getBean(IMetadataManager.class);
+        IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
+        IMetadata metadata = metadataUtils.findOne(iLocalId);
         metadata.getSourceInfo().setGroupOwner(iGroupOwner);
         metadataRepository.save(metadata);
 

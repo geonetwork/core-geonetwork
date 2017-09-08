@@ -23,15 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.specification.MetadataSpecs;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -50,10 +50,10 @@ public class UriMapper {
     //--------------------------------------------------------------------------
 
     public UriMapper(ServiceContext context, String harvestUuid) throws Exception {
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        final List<Metadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        final List<? extends IMetadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
 
-        for (Metadata record : metadataList) {
+        for (IMetadata record : metadataList) {
             String uri = record.getHarvestInfo().getUri();
 
             List<RecordInfo> records = hmUriRecords.get(uri);

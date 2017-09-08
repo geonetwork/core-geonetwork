@@ -23,19 +23,7 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import com.google.common.collect.Lists;
-
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.IO;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -50,7 +38,19 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.utils.IO;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.collect.Lists;
 
 /**
  * List all formatters
@@ -116,7 +116,7 @@ public class ListFormatters extends AbstractFormatService {
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         if (id != null || uuid != null) {
             try {
-                loadMetadata(applicationContext.getBean(MetadataRepository.class), Integer.parseInt(resolveId(id, uuid)));
+                loadMetadata(applicationContext.getBean(IMetadataUtils.class), Integer.parseInt(resolveId(id, uuid)));
             } catch (Throwable e) {
                 // its ok.  just can't use metadata
             }

@@ -95,7 +95,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         ISODate dateFrom = new ISODate("2014-01-01T00:00:0");
         ISODate dateTo = new ISODate("2014-04-01T00:00:0");
         Set<Integer> groupsSet = new HashSet<Integer>();
-        List<Metadata> updatedMetadata = _metadataRepository.getMetadataReports().
+        List<? extends IMetadata> updatedMetadata = _metadataRepository.getMetadataReports().
             getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(3, updatedMetadata.size());
@@ -160,7 +160,7 @@ public class ReportsQueriesTest extends AbstractSpringDataTest {
         ISODate dateFrom = new ISODate("2014-01-01T00:00:0");
         ISODate dateTo = new ISODate("2014-04-01T00:00:0");
 
-        List<Metadata> updatedMetadata = _metadataRepository.getMetadataReports().
+        List<? extends IMetadata> updatedMetadata = _metadataRepository.getMetadataReports().
             getUpdatedMetadata(dateFrom, dateTo, groupsSet);
 
         assertEquals(1, updatedMetadata.size());

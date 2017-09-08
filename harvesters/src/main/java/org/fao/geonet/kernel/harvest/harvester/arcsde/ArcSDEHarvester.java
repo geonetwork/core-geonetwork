@@ -22,13 +22,26 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.arcsde;
 
-import jeeves.server.context.ServiceContext;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.arcgis.ArcSDEConnection;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -52,23 +65,11 @@ import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-
-import com.google.common.collect.Sets;
 import org.jdom.Namespace;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import com.google.common.collect.Sets;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * Harvester from ArcSDE. Requires the propietary ESRI libraries containing their API. Since those
@@ -357,7 +358,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             changeDate = new ISODate().toString();
         }
 
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+        final IMetadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
             true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
@@ -391,7 +392,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
             createDate = new ISODate();
         }
 
-        Metadata metadata = new Metadata();
+        IMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).

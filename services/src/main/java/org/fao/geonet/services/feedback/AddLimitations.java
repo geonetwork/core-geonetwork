@@ -23,15 +23,17 @@
 
 package org.fao.geonet.services.feedback;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
@@ -44,12 +46,10 @@ import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -103,7 +103,7 @@ public class AddLimitations implements Service {
         Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 
         //--- get metadata info
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         if (info == null)
             throw new IllegalArgumentException("Metadata not found --> " + id);

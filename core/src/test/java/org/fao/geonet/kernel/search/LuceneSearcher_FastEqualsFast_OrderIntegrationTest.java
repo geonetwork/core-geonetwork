@@ -27,7 +27,7 @@ import jeeves.server.ServiceConfig;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -65,7 +65,7 @@ public class LuceneSearcher_FastEqualsFast_OrderIntegrationTest extends Abstract
         String[] titles = new String[nodes.size()];
         for (int i = 0; i < titles.length; i++) {
             final String mdId = nodes.get(i).getText();
-            final Metadata md = _metadataRepository.findOne(mdId);
+            final IMetadata md = _metadataRepository.findOne(mdId);
             final Element xmlData = md.getXmlData(false);
             titles[i] = getTitlesFromMetadataElements(_serviceContext, request, new Element("record").addContent(xmlData))[0];
         }

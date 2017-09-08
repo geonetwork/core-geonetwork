@@ -1,9 +1,21 @@
 package org.fao.geonet.api.records;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import static junit.framework.Assert.assertEquals;
+import static org.fao.geonet.domain.MetadataValidationStatus.VALID;
+import static org.fao.geonet.kernel.UpdateDatestamp.NO;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.net.URL;
+import java.util.List;
+import java.util.UUID;
+
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
@@ -28,18 +40,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.net.URL;
-import java.util.List;
-import java.util.UUID;
-
-import static junit.framework.Assert.assertEquals;
-import static org.fao.geonet.domain.MetadataValidationStatus.VALID;
-import static org.fao.geonet.kernel.UpdateDatestamp.NO;
-import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
     private static final int SUBTEMPLATE_TEST_OWNER = 42;
@@ -61,7 +63,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsTrue() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -82,7 +84,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsFalse() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -103,7 +105,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsNotSet() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -123,7 +125,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidIsTrueButNotLoggedAsAdmin() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsert();
+        IMetadata subTemplate = subTemplateOnLineResourceDbInsert();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
@@ -144,7 +146,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void subTemplateValidSetButTemplate() throws Exception {
-        Metadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
+        IMetadata subTemplate = subTemplateOnLineResourceDbInsertAsMetadata();
 
         MockMvc toTest = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
@@ -170,15 +172,15 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         this.context = createServiceContext();
     }
 
-    private Metadata subTemplateOnLineResourceDbInsert() throws Exception {
+    private IMetadata subTemplateOnLineResourceDbInsert() throws Exception {
         return subTemplateOnLineResourceDbInsert(MetadataType.SUB_TEMPLATE);
     }
 
-    private Metadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
+    private IMetadata subTemplateOnLineResourceDbInsertAsMetadata() throws Exception {
         return subTemplateOnLineResourceDbInsert(MetadataType.METADATA);
     }
 
-    private Metadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
+    private IMetadata subTemplateOnLineResourceDbInsert(MetadataType type) throws Exception {
         loginAsAdmin(context);
 
         URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/sub-OnlineResource.xml");
@@ -199,7 +201,7 @@ public class MetadataValidateApiTest extends AbstractServiceIntegrationTest {
         metadata.getHarvestInfo()
                 .setHarvested(false);
 
-        Metadata dbInsertedMetadata = dataManager.insertMetadata(
+        IMetadata dbInsertedMetadata = dataManager.insertMetadata(
                 context,
                 metadata,
                 sampleMetadataXml,

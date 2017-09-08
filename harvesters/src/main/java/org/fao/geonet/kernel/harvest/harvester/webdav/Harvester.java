@@ -22,11 +22,15 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.server.context.ServiceContext;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -49,10 +53,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -305,7 +306,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                 date = rf.getChangeDate();
             }
         }
-        Metadata metadata = new Metadata();
+        IMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -469,7 +470,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean index = false;
             String language = context.getLanguage();
 
-            final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
+            final IMetadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
                 date, false);
 
             //--- the administrator could change privileges and categories using the
