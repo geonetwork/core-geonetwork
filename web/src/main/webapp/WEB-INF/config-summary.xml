@@ -179,7 +179,7 @@
 
     <facet name="odatis_variables" indexKey="thesaurus-local.theme.odatis_variables" label="odatis_variables"/>
     <facet name="odatis_centre_donnees" indexKey="thesaurus-local.theme.odatis_centre_donnees" label="odatis_centre_donnees"/>
-    <facet name="odatis_type_jeux_donnee" indexKey="thesaurus-local.theme.odatis_type_jeux_donnee" label="odatis_type_jeux_donnee"/>
+    <facet name="odatis_type_jeux_donnee" indexKey="thesaurus-local.theme.type_jeux_donnee" label="odatis_type_jeux_donnee"/>
 
 
     <facet name="myocean_discipline" indexKey="thesaurus-local.discipline.myocean.discipline" label="myocean_discipline"/>
