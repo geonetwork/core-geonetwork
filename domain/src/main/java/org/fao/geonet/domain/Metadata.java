@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -50,29 +51,25 @@ import org.fao.geonet.entitylistener.MetadataEntityListenerManager;
 @EntityListeners(MetadataEntityListenerManager.class)
 public class Metadata extends IMetadata {
     public static final String TABLENAME = "Metadata";
+    private Set<MetadataCategory> metadataCategories = new HashSet<MetadataCategory>();
 
     public Metadata() {
         super();
     }
-    
+
     public static Metadata createFromLuceneIndexDocument(Document doc) {
         Metadata metadata = new Metadata();
         transform(doc, metadata);
         return metadata;
     }
-    
+
     /**
-     * Get the set of metadata categories this metadata is part of.  This is lazily loaded and all operations are
-     * cascaded
+     * Get the set of metadata categories this metadata is part of. This is lazily loaded and all operations are cascaded
      *
      * @return the metadata categories
      */
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
-            fetch = FetchType.EAGER)
-    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME,
-            joinColumns = @JoinColumn(name = "metadataId"),
-            inverseJoinColumns = @JoinColumn(name =
-            METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
+    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataId"), inverseJoinColumns = @JoinColumn(name = METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull
     public Set<MetadataCategory> getMetadataCategories() {
         return metadataCategories;
@@ -83,7 +80,7 @@ public class Metadata extends IMetadata {
      *
      * @param categories
      */
-    protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
+    public void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
         this.metadataCategories = categories;
     }
 }

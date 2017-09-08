@@ -23,21 +23,25 @@
 
 package org.fao.geonet.services.reports;
 
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Set;
+
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.jdom.Element;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.jdom.Element;
-
-
-import java.nio.file.Path;
-import java.util.*;
 
 /**
  * Service to return the updated metadata during a period.
@@ -82,14 +86,14 @@ public class ReportUpdatedMetadata implements Service {
         Set<Integer> groupList = ReportUtils.groupsForFilter(context, params);
 
         // Retrieve metadata
-        final List<Metadata> records = context.getBean(MetadataRepository.class).getMetadataReports().
+        final List<? extends IMetadata> records = context.getBean(IMetadataUtils.class).getMetadataReports().
             getUpdatedMetadata(beginDateIso, endDateIso, groupList);
 
         // Process metadata results for the report
         Element response = new Element(Jeeves.Elem.RESPONSE);
 
         // Process the records
-        for (Metadata metadata : records) {
+        for (IMetadata metadata : records) {
             User userOwner = context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
             final Integer mdGroupOwner = metadata.getSourceInfo().getGroupOwner();
             String groupOwnerName = "";

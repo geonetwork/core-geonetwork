@@ -23,29 +23,34 @@
 
 package org.fao.geonet.services.ownership;
 
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 
-import com.google.common.base.Optional;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.sql.SQLException;
-import java.util.*;
+import com.google.common.base.Optional;
+
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  *
@@ -76,7 +81,8 @@ public class Transfer extends NotInReadOnlyModeService {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
 
         //--- transfer privileges (if case)
 
@@ -132,9 +138,9 @@ public class Transfer extends NotInReadOnlyModeService {
 
         // Set owner for all records to be modified.
         for (Integer i : metadata) {
-            final Metadata metadata1 = metadataRepository.findOne(i);
+            final IMetadata metadata1 = metadataRepository.findOne(i);
             metadata1.getSourceInfo().setGroupOwner(targetGrp).setOwner(targetUsr);
-            metadataRepository.save(metadata1);
+            metadataManager.save(metadata1);
         }
 
         dm.flush();

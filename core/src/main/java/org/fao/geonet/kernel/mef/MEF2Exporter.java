@@ -23,7 +23,21 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.context.ServiceContext;
+import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
+import static org.fao.geonet.Constants.CHARSET;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
+import static org.fao.geonet.constants.Geonet.IndexFieldNames.UUID;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
+import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
+
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -37,6 +51,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataType;
@@ -45,7 +60,6 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.NoFilterFilter;
@@ -57,19 +71,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-
-import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
-import static org.fao.geonet.Constants.CHARSET;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.LOCALE;
-import static org.fao.geonet.constants.Geonet.IndexFieldNames.UUID;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
-import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
-import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
+import jeeves.server.context.ServiceContext;
 
 class MEF2Exporter {
     /**
@@ -232,9 +234,9 @@ class MEF2Exporter {
         final Path metadataRootDir = zipFs.getPath(uuid);
         Files.createDirectories(metadataRootDir);
 
-        Pair<Metadata, String> recordAndMetadataForExport =
+        Pair<IMetadata, String> recordAndMetadataForExport =
             MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
-        Metadata record = recordAndMetadataForExport.one();
+        IMetadata record = recordAndMetadataForExport.one();
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
         String id = "" + record.getId();
@@ -260,7 +262,7 @@ class MEF2Exporter {
         // --- save Feature Catalog
         String ftUUID = getFeatureCatalogID(context, record.getId());
         if (!ftUUID.equals("")) {
-            Pair<Metadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
+            Pair<IMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
             Path featureMdDir = metadataRootDir.resolve(SCHEMA);
             Files.createDirectories(featureMdDir);
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));

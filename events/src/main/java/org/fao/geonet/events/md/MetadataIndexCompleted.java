@@ -26,7 +26,7 @@
  */
 package org.fao.geonet.events.md;
 
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 
 /**
  * Event launched when the indexation of a metadata record is finished
@@ -40,7 +40,7 @@ public class MetadataIndexCompleted extends MetadataEvent {
     /**
      * @param metadata
      */
-    public MetadataIndexCompleted(Metadata metadata) {
+    public MetadataIndexCompleted(IMetadata metadata) {
         super(metadata);
     }
 

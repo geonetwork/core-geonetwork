@@ -22,52 +22,6 @@
  */
 package org.fao.geonet.api.records;
 
-import com.google.common.collect.Lists;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.NodeInfo;
-import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.api.records.model.related.RelatedItemType;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.SpringLocalServiceInvoker;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRelationRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
@@ -91,6 +45,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.imageio.ImageIO;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.fao.geonet.NodeInfo;
+import org.fao.geonet.api.ApiParams;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.SpringLocalServiceInvoker;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.google.common.collect.Lists;
+
+import jeeves.server.context.ServiceContext;
+
 
 /**
  * Tests for class {@link MetadataApi}.
@@ -110,15 +113,11 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     @PersistenceContext
     private EntityManager _entityManager;
 
-    @Autowired private MetadataRepository metadataRepository;
-    @Autowired
-    private MetadataRelationRepository metadataRelationRepository;
-
+    @Autowired private IMetadataUtils metadataRepository;
+    
     private String uuid;
     private int id;
-    private Metadata md;
-    private String childUuid;
-    private int childId;
+    private IMetadata md;
     private ServiceContext context;
 
 

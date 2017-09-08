@@ -26,21 +26,13 @@ package org.fao.geonet.services.inspireatom;
 import java.util.HashMap;
 import java.util.Map;
 
-import javassist.NotFoundException;
-
 import javax.servlet.http.HttpServletRequest;
 
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.http.ServletPathFinder;
-
 import org.apache.commons.lang.StringUtils;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.exceptions.ObjectNotFoundEx;
@@ -48,21 +40,19 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Text;
 import org.jdom.xpath.XPath;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -72,6 +62,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
+
+import javassist.NotFoundException;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.server.sources.http.ServletPathFinder;
 
 
 /**
@@ -147,7 +143,7 @@ public class AtomPredefinedFeed {
         SearchManager searchMan = context.getBean(SearchManager.class);
 
         // Search for the dataset identified by spIdentifier
-        Metadata datasetMd = null;
+        IMetadata datasetMd = null;
         Document dsLuceneSearchParams = createDefaultLuceneSearcherParams();
         dsLuceneSearchParams.getRootElement().addContent(new Element("identifier").setText(spIdentifier));
         dsLuceneSearchParams.getRootElement().addContent(new Element("type").setText("dataset"));
@@ -163,7 +159,7 @@ public class AtomPredefinedFeed {
             Text uuidTxt = (Text) xp.selectSingleNode(new Document(searchResult));
             String datasetMdUuid = uuidTxt.getText();
 
-            MetadataRepository repo = context.getBean(MetadataRepository.class);
+            IMetadataUtils repo = context.getBean(IMetadataUtils.class);
             datasetMd = repo.findOneByUuid(datasetMdUuid);
 
         } finally {

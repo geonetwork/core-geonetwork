@@ -23,21 +23,22 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -47,10 +48,10 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -97,7 +98,7 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
         //-----------------------------------------------------------------------
         //--- check access
 
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+		IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         if (info == null)
             throw new MetadataNotFoundEx(id);
@@ -187,14 +188,14 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
      * @throws Exception
      */
 	private boolean canPublishToAllGroup(ServiceContext context, DataManager dm, int mdId) throws Exception {
-		MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+	    IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
 		MetadataValidationRepository metadataValidationRepository = context.getBean(MetadataValidationRepository.class);
 
 		boolean hasValidation =
 				(metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(mdId)) > 0);
 
 		if (!hasValidation) {
-			Metadata metadata = metadataRepository.findOne(mdId);
+			IMetadata metadata = metadataUtils.findOne(mdId);
 
 			dm.doValidate(metadata.getDataInfo().getSchemaId(), mdId + "",
 					new Document(metadata.getXmlData(false)), context.getLanguage());

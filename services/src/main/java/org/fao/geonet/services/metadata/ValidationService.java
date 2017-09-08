@@ -23,17 +23,18 @@
 
 package org.fao.geonet.services.metadata;
 
-import com.google.common.collect.Sets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.jdom.Document;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -43,7 +44,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import com.google.common.collect.Sets;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Validate metadata records.
@@ -119,9 +123,9 @@ public class ValidationService implements ApplicationContextAware {
         DataManager dataMan = context.getBean(DataManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String uuid : setOfUuidsToValidate) {
-            Metadata record = metadataRepository.findOneByUuid(uuid);
+            IMetadata record = metadataRepository.findOneByUuid(uuid);
             if (record == null) {
                 this.report.get("notFoundRecords").add(record.getId());
             } else if (!accessMan.isOwner(serviceContext, String.valueOf(record.getId()))) {

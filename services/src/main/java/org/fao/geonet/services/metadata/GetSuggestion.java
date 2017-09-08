@@ -23,14 +23,16 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -39,11 +41,9 @@ import org.fao.geonet.services.Utils;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Get suggestion for all metadata
@@ -97,7 +97,7 @@ public class GetSuggestion implements Service {
 
         // Retrieve metadata record
         String id = Utils.getIdentifierFromParameters(params, context);
-        Metadata mdInfo = gc.getBean(MetadataRepository.class).findOne(id);
+        IMetadata mdInfo = gc.getBean(MetadataRepository.class).findOne(id);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
         Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 

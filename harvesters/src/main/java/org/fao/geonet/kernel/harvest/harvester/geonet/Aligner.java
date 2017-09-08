@@ -23,9 +23,27 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -34,6 +52,8 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -52,7 +72,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
@@ -61,23 +80,6 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -196,7 +198,7 @@ public class Aligner extends BaseAligner {
 
         localCateg = new CategoryMapper(context);
         localGroups = new GroupMapper(context);
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.getUuid());
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), params.getUuid());
 
         Pair<String, Map<String, Object>> filter =
             HarvesterUtil.parseXSLFilter(params.xslfilter, log);
@@ -520,7 +522,7 @@ public class Aligner extends BaseAligner {
         // insert metadata
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
-        Metadata metadata = new Metadata();
+        IMetadata metadata = new Metadata();
         metadata.setUuid(ri.uuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -571,7 +573,7 @@ public class Aligner extends BaseAligner {
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
-        context.getBean(MetadataRepository.class).save(metadata);
+        context.getBean(IMetadataManager.class).save(metadata);
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);
         result.addedMetadata++;
@@ -769,8 +771,9 @@ public class Aligner extends BaseAligner {
             return;
         }
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        Metadata metadata;
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
+        IMetadata metadata;
         if (!ri.isMoreRecentThan(date)) {
             if (log.isDebugEnabled())
                 log.debug("  - XML not changed for local metadata with uuid:" + ri.uuid);
@@ -833,7 +836,7 @@ public class Aligner extends BaseAligner {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
 
-        metadataRepository.save(metadata);
+        metadataManager.save(metadata);
 //        dataMan.flush();
 
         dataMan.indexMetadata(id, Math.random() < 0.01, null);

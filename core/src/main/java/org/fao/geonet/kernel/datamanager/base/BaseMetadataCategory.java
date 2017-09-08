@@ -5,10 +5,12 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.datamanager.IMetadataCategory;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
@@ -80,7 +82,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public void unsetCategory(final ServiceContext context, final String mdId, final int categId) throws Exception {
-        Metadata metadata = getMetadataRepository().findOne(mdId);
+        IMetadata metadata = getMetadataRepository().findOne(mdId);
 
         if (metadata == null) {
             return;
@@ -95,7 +97,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
         }
 
         if (changed) {
-            getMetadataRepository().save(metadata);
+            context.getBean(IMetadataManager.class).save(metadata);
             if (getSvnManager() != null) {
                 getSvnManager().setHistory(mdId + "", context);
             }
@@ -110,7 +112,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public Collection<MetadataCategory> getCategories(final String mdId) throws Exception {
-        Metadata metadata = getMetadataRepository().findOne(mdId);
+        IMetadata metadata = getMetadataRepository().findOne(mdId);
         if (metadata == null) {
             throw new IllegalArgumentException("No metadata found with id: " + mdId);
         }

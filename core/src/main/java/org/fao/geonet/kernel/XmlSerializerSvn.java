@@ -23,16 +23,16 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
+import java.sql.SQLException;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
-import java.sql.SQLException;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 /**
  * This class is responsible for reading and writing metadata extras from the database and xml from
@@ -80,7 +80,7 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    public Metadata insert(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    public IMetadata insert(final IMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         return insertDb(newMetadata, dataXml, context);
     }
 

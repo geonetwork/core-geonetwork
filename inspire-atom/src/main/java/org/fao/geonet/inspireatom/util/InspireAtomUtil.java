@@ -30,14 +30,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -52,6 +48,10 @@ import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -188,7 +188,7 @@ public class InspireAtomUtil {
 
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeeds(final DataManager dataManager,
-                                                                           final List<Metadata> iso19139Metadata,
+                                                                           final List<IMetadata> iso19139Metadata,
                                                                            final String atomProtocol)
         throws Exception {
 
@@ -196,18 +196,18 @@ public class InspireAtomUtil {
     }
 
     public static Map<String, String> retrieveServiceMetadataWithAtomFeed(final DataManager dataManager,
-                                                                          final Metadata iso19139Metadata,
+                                                                          final IMetadata iso19139Metadata,
                                                                           final String atomProtocol)
         throws Exception {
 
-        List<Metadata> iso19139MetadataList = new ArrayList<>();
+        List<IMetadata> iso19139MetadataList = new ArrayList<>();
         iso19139MetadataList.add(iso19139Metadata);
 
         return retrieveServiceMetadataWithAtomFeeds(dataManager, iso19139MetadataList, atomProtocol);
     }
 
     public static Map<String, String> retrieveDatasetMetadataWithAtomFeeds(final DataManager dataManager,
-                                                                           final List<Metadata> iso19139Metadata,
+                                                                           final List<IMetadata> iso19139Metadata,
                                                                            final String atomProtocol)
         throws Exception {
 
@@ -215,12 +215,12 @@ public class InspireAtomUtil {
     }
 
     private static Map<String, String> processAtomFeedsInternal(DataManager dataManager,
-                                                                List<Metadata> iso19139Metadata, String type,
+                                                                List<IMetadata> iso19139Metadata, String type,
                                                                 String atomProtocol) throws Exception {
 
         Map<String, String> metadataAtomFeeds = new HashMap<String, String>();
 
-        for (Metadata md : iso19139Metadata) {
+        for (IMetadata md : iso19139Metadata) {
             int id = md.getId();
             String schema = md.getDataInfo().getSchemaId();
             Element mdEl = null;
@@ -264,7 +264,7 @@ public class InspireAtomUtil {
         return atomFeed;
     }
 
-    public static List<Metadata> searchMetadataByType(ServiceContext context,
+    public static List<IMetadata> searchMetadataByType(ServiceContext context,
                                                       SearchManager searchMan,
                                                       String type) {
 
@@ -278,7 +278,7 @@ public class InspireAtomUtil {
             searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
             searcher.search(context, request, new ServiceConfig());
 
-            Map<Integer, Metadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
+            Map<Integer, IMetadata> allMdInfo = ((LuceneSearcher) searcher).getAllMdInfo(context, searcher.getSize());
             return new ArrayList<>(allMdInfo.values());
         } catch (Exception ex) {
             ex.printStackTrace();

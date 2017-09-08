@@ -23,41 +23,40 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
-
-import org.fao.geonet.Util;
-import org.fao.geonet.api.records.editing.AjaxEditUtils;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.metadata.StatusActions;
-import org.fao.geonet.kernel.metadata.StatusActionsFactory;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.MetadataValidationRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.specification.MetadataValidationSpecs;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.services.Utils;
-import org.jdom.Document;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
 import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.nio.file.Path;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.api.records.editing.AjaxEditUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.metadata.StatusActions;
+import org.fao.geonet.kernel.metadata.StatusActionsFactory;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataValidationSpecs;
+import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Document;
+import org.jdom.Element;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * For editing : update leaves information. Access is restricted.
@@ -156,8 +155,8 @@ public class Update extends NotInReadOnlyModeService {
 
 			// Save validation if the forceValidationOnMdSave is enabled
 			if (forceValidationOnMdSave && !showValidationErrors.equals("true")) {
-				final MetadataRepository metadataRepository = gc.getBean(MetadataRepository.class);
-				Metadata metadata = metadataRepository.findOne(id);
+				final IMetadataUtils metadataRepository = gc.getBean(IMetadataUtils.class);
+				IMetadata metadata = metadataRepository.findOne(id);
 
 				dataMan.doValidate(metadata.getDataInfo().getSchemaId(), metadata.getId() + "",
 						new Document(metadata.getXmlData(false)), context.getLanguage());

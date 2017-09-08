@@ -23,6 +23,22 @@
 
 package org.fao.geonet.repository;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo_;
@@ -38,21 +54,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
@@ -142,8 +143,8 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindAllByHarvestInfo_Uuid() throws Exception {
 
-        Metadata metadata = _repo.save(newMetadata());
-        Metadata metadata2 = _repo.save(newMetadata());
+        IMetadata metadata = _repo.save(newMetadata());
+        IMetadata metadata2 = _repo.save(newMetadata());
         Metadata metadata3 = newMetadata();
         metadata3.getHarvestInfo().setUuid(metadata2.getHarvestInfo().getUuid());
         _repo.save(metadata3);
@@ -174,7 +175,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
         assertEquals(2, _repo.count());
 
-        Metadata found = _repo.findOneOldestByChangeDate();
+        IMetadata found = _repo.findOneOldestByChangeDate();
         assertNotNull(found);
         assertSameContents(metadata1, found);
     }
@@ -182,9 +183,9 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     @Test
     public void testFindAllIdsAndChangeDates() throws Exception {
 
-        Metadata metadata = _repo.save(updateChangeDate(newMetadata(), "1990-12-13"));
-        Metadata metadata2 = _repo.save(updateChangeDate(newMetadata(), "1980-12-13"));
-        Metadata metadata3 = _repo.save(updateChangeDate(newMetadata(), "1995-12-13"));
+        IMetadata metadata = _repo.save(updateChangeDate(newMetadata(), "1990-12-13"));
+        IMetadata metadata2 = _repo.save(updateChangeDate(newMetadata(), "1980-12-13"));
+        IMetadata metadata3 = _repo.save(updateChangeDate(newMetadata(), "1995-12-13"));
 
         final Sort sortByIdAsc = new Sort(Sort.Direction.DESC, Metadata_.id.getName());
         PageRequest page1 = new PageRequest(0, 2, sortByIdAsc);

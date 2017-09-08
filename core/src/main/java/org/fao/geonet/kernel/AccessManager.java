@@ -23,12 +23,21 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Operation;
@@ -57,16 +66,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
@@ -255,7 +256,7 @@ public class AccessManager {
     public boolean isOwner(final ServiceContext context, final String id) throws Exception {
 
         //--- retrieve metadata info
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         if (info == null)
             return false;
@@ -347,7 +348,7 @@ public class AccessManager {
      * @param metadataId the id of the metadata
      */
     public boolean isVisibleToAll(final String metadataId) throws Exception {
-        Metadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(metadataId);
+        IMetadata metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOne(metadataId);
         if (metadata == null) {
             return false;
         } else {
@@ -396,7 +397,7 @@ public class AccessManager {
      * @param group    the group to check
      * @param opId     the id of the operation to check for
      */
-    public boolean hasPermission(final Metadata metadata, final Group group, final int opId) {
+    public boolean hasPermission(final IMetadata metadata, final Group group, final int opId) {
         OperationAllowedRepository opAllowedRepository = ApplicationContextHolder.get().getBean(OperationAllowedRepository.class);
         return opAllowedRepository.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(group.getId(), metadata.getId(), opId) != null;
     }

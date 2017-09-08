@@ -23,12 +23,21 @@
 
 package org.fao.geonet.api.processing;
 
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.transform.stream.StreamResult;
+
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
@@ -37,15 +46,7 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.server.context.ServiceContext;
-
-import javax.xml.transform.stream.StreamResult;
 
 /**
  * Created by francois on 23/05/16.
@@ -68,7 +69,7 @@ public class XslProcessUtils {
         AccessManager accessMan = context.getBean(AccessManager.class);
         DataManager dataMan = context.getBean(DataManager.class);
         SettingManager settingsMan = context.getBean(SettingManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
         report.incrementProcessedRecords();
 
@@ -80,7 +81,7 @@ public class XslProcessUtils {
         }
 
         int iId = Integer.valueOf(id);
-        Metadata info = metadataRepository.findOne(id);
+        IMetadata info = metadataRepository.findOne(id);
 
 
         if (info == null) {
@@ -181,7 +182,7 @@ public class XslProcessUtils {
         AccessManager accessMan = context.getBean(AccessManager.class);
         DataManager dataMan = context.getBean(DataManager.class);
         SettingManager settingsMan = context.getBean(SettingManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
         report.incrementProcessedRecords();
 
@@ -193,7 +194,7 @@ public class XslProcessUtils {
         }
 
         int iId = Integer.valueOf(id);
-        Metadata info = metadataRepository.findOne(id);
+        IMetadata info = metadataRepository.findOne(id);
 
 
         if (info == null) {

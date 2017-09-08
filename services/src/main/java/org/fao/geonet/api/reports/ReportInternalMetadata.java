@@ -1,22 +1,24 @@
 package org.fao.geonet.api.reports;
 
-import jeeves.server.context.ServiceContext;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * Created by jose on 31/01/17.
@@ -54,9 +56,9 @@ public class ReportInternalMetadata implements IReport {
             csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
 
             // Retrieve metadata
-            final MetadataRepository metadataRepository =
-                    context.getBean(MetadataRepository.class);
-            final List<Metadata> records =
+            final IMetadataUtils metadataRepository =
+                    context.getBean(IMetadataUtils.class);
+            final List<? extends IMetadata> records =
                     metadataRepository.getMetadataReports().
                             getInternalMetadata(
                                     reportFilter.getBeginDate(),
@@ -81,7 +83,7 @@ public class ReportInternalMetadata implements IReport {
                     context.getBean(GroupRepository.class).findAll();
 
             // Process the records
-            for (Metadata metadata : records) {
+            for (IMetadata metadata : records) {
                 String userOwnerUsername = "";
                 String userOwnerName = "";
                 String userOwnerSurname = "";

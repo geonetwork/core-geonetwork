@@ -23,26 +23,26 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.repository.MetadataRepository;
+import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
+import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_GROOVY_FILENAME;
+import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import jeeves.server.ServiceConfig;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.utils.FilePathChecker;
 
-import static org.fao.geonet.api.records.formatters.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
-import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_GROOVY_FILENAME;
-import static org.fao.geonet.api.records.formatters.FormatterConstants.VIEW_XSL_FILENAME;
+import jeeves.server.ServiceConfig;
 
 /**
  * Common constants and methods for Metadata formatter classes
@@ -79,8 +79,8 @@ abstract class AbstractFormatService {
     public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
-    protected Metadata loadMetadata(MetadataRepository metadataRepository, int id) {
-        Metadata md = metadataRepository.findOne(id);
+    protected IMetadata loadMetadata(IMetadataUtils metadataUtils, int id) {
+        IMetadata md = metadataUtils.findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("No metadata found. id = " + id);

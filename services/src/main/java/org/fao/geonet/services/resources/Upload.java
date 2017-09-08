@@ -23,21 +23,21 @@
 
 package org.fao.geonet.services.resources;
 
+import java.nio.file.Path;
+
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
+import org.jdom.Element;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
-import org.jdom.Element;
-
-import java.nio.file.Path;
 
 //=============================================================================
 
@@ -78,7 +78,7 @@ public class Upload implements Service {
             username = "unknown (this shouldn't happen?)";
 
 
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final IMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
         String mdUuid = metadata.getUuid();
 

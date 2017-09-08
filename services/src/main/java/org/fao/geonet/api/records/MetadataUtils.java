@@ -23,39 +23,6 @@
 
 package org.fao.geonet.api.records;
 
-import com.google.common.base.Joiner;
-
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Constants;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.records.model.related.RelatedItemType;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.schema.AssociatedResource;
-import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
-import org.fao.geonet.kernel.schema.SchemaPlugin;
-import org.fao.geonet.kernel.search.MetaSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.services.metadata.Show;
-import org.fao.geonet.services.relations.Get;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -70,6 +37,36 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.Constants;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.MetaSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.SearcherType;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.metadata.Show;
+import org.fao.geonet.services.relations.Get;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
+
+import com.google.common.base.Joiner;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
@@ -325,7 +322,7 @@ public class MetadataUtils {
         return content;
     }
 
-    public static void backupRecord(Metadata metadata, ServiceContext context) {
+    public static void backupRecord(IMetadata metadata, ServiceContext context) {
         Path outDir = Lib.resource.getRemovedDir(metadata.getId());
         Path outFile;
         try {

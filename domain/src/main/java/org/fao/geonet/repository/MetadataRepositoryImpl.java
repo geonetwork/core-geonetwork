@@ -37,6 +37,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,8 @@ import javax.persistence.criteria.Root;
  *
  * @author Jesse
  */
-public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
+@NoRepositoryBean
+public class MetadataRepositoryImpl implements MetadataRepositoryCustom<Metadata> {
 
     @PersistenceContext
     EntityManager _entityManager;

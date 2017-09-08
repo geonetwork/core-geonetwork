@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
@@ -401,7 +402,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
+    public IMetadata insertMetadata(ServiceContext context, IMetadata newMetadata, Element metadataXml, boolean notifyChange, boolean index,
             boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
             throws Exception {
         return metadataManager.insertMetadata(context, newMetadata, metadataXml, notifyChange, index, updateFixedInfo, updateDatestamp,
@@ -450,7 +451,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public synchronized Metadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
+    public synchronized IMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
             final boolean validate, final boolean ufo, final boolean index, final String lang, final String changeDate,
             final boolean updateDateStamp) throws Exception {
         return metadataManager.updateMetadata(context, metadataId, md, validate, ufo, index, lang, changeDate, updateDateStamp);

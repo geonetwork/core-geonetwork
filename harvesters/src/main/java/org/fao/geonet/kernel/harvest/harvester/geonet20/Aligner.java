@@ -23,37 +23,38 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.UpdateDatestamp;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.specification.MetadataCategorySpecs;
-import org.fao.geonet.utils.XmlRequest;
-import org.jdom.Element;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.specification.MetadataCategorySpecs;
+import org.fao.geonet.utils.XmlRequest;
+import org.jdom.Element;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -137,7 +138,7 @@ public class Aligner {
         //-----------------------------------------------------------------------
         //--- retrieve local uuids for given site-id
 
-        localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), siteId);
+        localUuids = new UUIDMapper(context.getBean(IMetadataUtils.class), siteId);
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
@@ -226,7 +227,7 @@ public class Aligner {
         //
         //  insert metadata
         //
-        Metadata metadata = new Metadata();
+        IMetadata metadata = new Metadata();
         metadata.setUuid(remoteUuid);
         metadata.getDataInfo().
             setSchemaId(schema).
@@ -263,7 +264,7 @@ public class Aligner {
     //---
     //--------------------------------------------------------------------------
 
-    private void addCategories(Metadata metadata, List<Element> categ) throws Exception {
+    private void addCategories(IMetadata metadata, List<Element> categ) throws Exception {
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Collection<String> catNames = Lists.transform(categ, new Function<Element, String>() {
             @Nullable

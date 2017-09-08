@@ -23,19 +23,22 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+
+import java.nio.file.Path;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
@@ -49,9 +52,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.nio.file.Path;
-
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -62,7 +63,7 @@ public class GetRecord implements OaiPmhService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager sm = gc.getBean(SchemaManager.class);
 
-        Metadata metadata = context.getBean(MetadataRepository.class).findOne(spec);
+        IMetadata metadata = context.getBean(IMetadataUtils.class).findOne(spec);
         if (metadata == null)
             throw new IdDoesNotExistException(spec.toString());
 

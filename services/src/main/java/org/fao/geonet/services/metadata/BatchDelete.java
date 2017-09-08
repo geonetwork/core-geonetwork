@@ -23,32 +23,32 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.IO;
+import org.jdom.Element;
+
 import com.google.common.collect.Sets;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.IO;
-import org.jdom.Element;
-
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Removes a metadata from the system.
@@ -89,13 +89,13 @@ public class BatchDelete extends BackupFileService {
             SelectionManager.updateSelection("metadata", session, clearSelectionParams, context);
         }
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         for (String uuid : selection) {
             if (context.isDebugEnabled()) {
                 context.debug("Deleting metadata with uuid:" + uuid);
             }
 
-            Metadata info = metadataRepository.findOneByUuid(uuid);
+            IMetadata info = metadataRepository.findOneByUuid(uuid);
             if (info == null) {
                 notFound.add(uuid);
             } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
