@@ -667,7 +667,7 @@ public class DataManager {
     }
 
     @Deprecated
-    public int batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
+    public int batchDeleteMetadataAndUpdateIndex(Specification<? extends IMetadata> specification) throws Exception {
         return metadataIndexer.batchDeleteMetadataAndUpdateIndex(specification);
     }
 

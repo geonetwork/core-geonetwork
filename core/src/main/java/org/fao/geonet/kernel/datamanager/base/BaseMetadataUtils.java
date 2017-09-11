@@ -77,7 +77,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Autowired
     private SchemaManager schemaManager;
     @Autowired
-    private MetadataRatingByIpRepository ratingByIpRepository;
+    protected MetadataRatingByIpRepository ratingByIpRepository;
     @Autowired
     @Lazy
     private SettingManager settingManager;
@@ -127,7 +127,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void notifyMetadataChange(Element md, String metadataId) throws Exception {
 
-        final IMetadata metadata = metadataRepository.findOne(metadataId);
+        final IMetadata metadata = findOne(metadataId);
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
             MetadataSchema mds = schemaManager.getSchema(metadata.getDataInfo().getSchemaId());
             Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
@@ -145,7 +145,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      * @throws Exception
      */
     public @Nullable @Override String getMetadataUuid(@Nonnull String id) throws Exception {
-        IMetadata metadata = metadataRepository.findOne(id);
+        IMetadata metadata = findOne(id);
 
         if (metadata == null)
             return null;
@@ -537,7 +537,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public boolean existsMetadata(int id) throws Exception {
-        return metadataRepository.exists(id);
+        return exists(id);
     }
 
     /**
@@ -545,7 +545,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public boolean existsMetadataUuid(String uuid) throws Exception {
-        return !metadataRepository.findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
+        return !findAllIdsBy(hasMetadataUuid(uuid)).isEmpty();
     }
 
     /**
@@ -765,7 +765,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
      */
     @Override
     public String getMetadataTitle(String id) throws Exception {
-        IMetadata md = metadataRepository.findOne(id);
+        IMetadata md = findOne(id);
 
         if (md == null) {
             throw new IllegalArgumentException("Metadata not found for id : " + id);
@@ -852,7 +852,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<? extends Metadata> findAll(Specification<? extends IMetadata> specs) {
+    public List<? extends IMetadata> findAll(Specification<? extends IMetadata> specs) {
         try {
             return metadataRepository.findAll((Specification<Metadata>) specs);
         } catch (Throwable t) {
@@ -896,5 +896,13 @@ public class BaseMetadataUtils implements IMetadataUtils {
             //Maybe it is not a Specification<Metadata>
         }
         throw new NotImplementedException("Unknown IMetadata subtype: " + specs.getClass().getName());
+    }
+    
+    protected MetadataRepository getMetadataRepository() {
+        return metadataRepository;
+    }
+    
+    protected SchemaManager getSchemaManager() {
+        return schemaManager;
     }
 }
