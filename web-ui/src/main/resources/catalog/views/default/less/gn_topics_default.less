@@ -176,13 +176,13 @@
   display: block;
   padding: 0;
   border-radius: 50%;
-  line-height: 48px;
+  line-height: 50px;
   min-width: 0;
 }
 // ----- text
 .badge-text {
   height: 100%;
-  line-height: 100%;
+  line-height: 110%;
   padding-left: 8px;
   padding-right: 4px;
   margin-top: 13px;
@@ -208,24 +208,14 @@
 @media (max-width: @screen-xs-max) {
   .gn-row-topics {
     .badge-text {
-      max-width: 30vw;
+      max-width: 56vw;
     }
   }
   .container {
     .gn-row-topics {
       .badge-text {
-        max-width: 23vw;
+        max-width: 48vw;
       }
-    }
-  }
-}
-@media (max-width: 500px) {
-  .gn-row-topics {
-    .col-xs-6 {
-      width: 100%;
-    }
-    .badge-text {
-      max-width: 60vw;
     }
   }
 }
