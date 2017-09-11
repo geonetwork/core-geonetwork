@@ -191,7 +191,6 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataIndexer.setMetadataManager(this);
     }
 
-    @SuppressWarnings("unchecked")
     public void init(ServiceContext context, Boolean force) throws Exception {
         metadataUtils = context.getBean(IMetadataUtils.class);
         metadataIndexer = context.getBean(IMetadataIndexer.class);
@@ -326,7 +325,7 @@ public class BaseMetadataManager implements IMetadataManager {
         return applicationContext == null ? _applicationContext : applicationContext;
     }
 
-    private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
+    protected void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
         // --- remove operations
         metadataOperations.deleteMetadataOper(context, id, false);
 
