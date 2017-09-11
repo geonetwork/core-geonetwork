@@ -1,11 +1,21 @@
 package org.fao.geonet.api.registries;
 
-import org.apache.http.HttpRequest;
+import static org.fao.geonet.repository.specification.MetadataSpecs.isOwnedByUser;
+import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,22 +23,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 
-import javax.servlet.http.HttpSession;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-
-import static org.fao.geonet.repository.specification.MetadataSpecs.isOwnedByUser;
-import static org.junit.Assert.assertEquals;
-
 public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegrationTest {
 
     public static final int USER_ID = 42;
 
     @Autowired
-    private MetadataRepository metadataRepo;
+    private IMetadataUtils metadataRepo;
 
     @Autowired
     private SpringLocalServiceInvoker invoker;
@@ -103,10 +103,10 @@ public class ApiImportSpatialDirectoryEntriesTest extends AbstractServiceIntegra
         assertEquals(200, response.getStatus());
         assertEquals(3, report.getNumberOfRecords());
 
-        List<Metadata> datas = metadataRepo.findAll(isOwnedByUser(USER_ID));
+        List<? extends IMetadata> datas = metadataRepo.findAll(isOwnedByUser(USER_ID));
         assertEquals(3, datas.size());
 
-        Metadata data = metadataRepo.findOneByUuid("111");
+        IMetadata data = metadataRepo.findOneByUuid("111");
         BufferedReader expectedBRForFirst = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("org/fao/geonet/api/registries/" + expectedFileName)));
         BufferedReader BRForFirst = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data.getData().getBytes())));
 

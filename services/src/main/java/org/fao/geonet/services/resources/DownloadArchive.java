@@ -23,36 +23,6 @@
 
 package org.fao.geonet.services.resources;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.FilePathChecker;
-import org.fao.geonet.ZipUtil;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.services.Utils;
-import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
-import org.fao.geonet.util.MailSender;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,6 +37,35 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
+import org.fao.geonet.util.MailSender;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -171,7 +170,7 @@ public class DownloadArchive implements Service {
         }
 
         //--- get metadata info
-        Metadata info = context.getBean(MetadataRepository.class).findOne(id);
+        IMetadata info = context.getBean(MetadataRepository.class).findOne(id);
 
         // set up zip output stream
         Path zFile = Files.createTempFile(username + "_" + info.getUuid(), ".zip");

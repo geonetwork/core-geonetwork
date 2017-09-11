@@ -22,32 +22,29 @@
 //==============================================================================
 package org.fao.geonet.services.subtemplate;
 
-import com.google.common.collect.Sets;
+import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import com.google.common.collect.Lists;
-
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
-
-import java.util.Iterator;
-
 import org.jdom.Namespace;
 
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Retrieve sub template from metadata table
@@ -81,8 +78,8 @@ public class Get implements Service {
         String uuid = Util.getParam(params, Params.UUID);
 
         // Retrieve template
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        final Metadata metadata = metadataRepository.findOneByUuid(uuid);
+        final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+        final IMetadata metadata = metadataRepository.findOneByUuid(uuid);
 
         if (metadata == null) {
             Log.error(Geonet.DATA_MANAGER, String.format("Subtemplate '%s' not found. Check records related to this directory entry.", uuid));

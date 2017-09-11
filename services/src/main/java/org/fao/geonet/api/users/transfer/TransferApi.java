@@ -23,15 +23,31 @@
 
 package org.fao.geonet.api.users.transfer;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -43,15 +59,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import springfox.documentation.annotations.ApiIgnore;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.*;
-
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
 
 @RequestMapping(value = {
     "/api/users",
@@ -84,11 +102,11 @@ public class TransferApi {
         UserSession us = ApiUtils.getUserSession(httpSession);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         List<User> users = applicationContext.getBean(UserRepository.class).findAll();
-        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
 
         List<OwnerResponse> ownerList = new ArrayList<>();
         for (User u : users) {
-            List<Metadata> userRecords = metadataRepository.findAll(
+            List<? extends IMetadata> userRecords = metadataRepository.findAll(
                 MetadataSpecs.hasOwner(u.getId())
             );
             if (userRecords.size() > 0) {
@@ -165,7 +183,8 @@ public class TransferApi {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
         DataManager dm = applicationContext.getBean(DataManager.class);
-        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+        final IMetadataUtils metadataUtils = applicationContext.getBean(IMetadataUtils.class);
+        final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
 
         //--- transfer privileges (if case)
 
@@ -217,16 +236,16 @@ public class TransferApi {
         // assign the new owner and ownerGroup for the source
         // user records.
         final List<Integer> sourceUserRecords =
-            metadataRepository.findAllIdsBy(MetadataSpecs.hasOwner(transfer.getSourceUser()));
+                metadataUtils.findAllIdsBy(MetadataSpecs.hasOwner(transfer.getSourceUser()));
         metadata.addAll(sourceUserRecords);
 
         // Set owner for all records to be modified.
         for (Integer i : metadata) {
-            final Metadata metadata1 = metadataRepository.findOne(i);
+            final IMetadata metadata1 = metadataUtils.findOne(i);
             metadata1.getSourceInfo()
                 .setGroupOwner(transfer.getTargetGroup())
                 .setOwner(transfer.getTargetUser());
-            metadataRepository.save(metadata1);
+            metadataManager.save(metadata1);
         }
 
         dm.flush();

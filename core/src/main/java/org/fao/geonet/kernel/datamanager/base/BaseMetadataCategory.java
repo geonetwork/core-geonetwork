@@ -5,10 +5,13 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.datamanager.IMetadataCategory;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
@@ -19,6 +22,8 @@ import jeeves.server.context.ServiceContext;
 public class BaseMetadataCategory implements IMetadataCategory {
 
     @Autowired
+    private IMetadataUtils metadataUtils;
+    @Autowired
     private MetadataRepository metadataRepository;
     @Autowired(required = false)
     private SvnManager svnManager;
@@ -26,7 +31,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
     private MetadataCategoryRepository metadataCategoryRepository;
 
     public void init(ServiceContext context, Boolean force) throws Exception {
-        this.metadataRepository = context.getBean(MetadataRepository.class);
+        this.metadataUtils = context.getBean(IMetadataUtils.class);
         this.svnManager = context.getBean(SvnManager.class);
         this.metadataCategoryRepository = context.getBean(MetadataCategoryRepository.class);
     }
@@ -63,7 +68,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public boolean isCategorySet(final String mdId, final int categId) throws Exception {
-        Set<MetadataCategory> categories = getMetadataRepository().findOne(mdId).getMetadataCategories();
+        Set<MetadataCategory> categories = getMetadataUtils().findOne(mdId).getMetadataCategories();
         for (MetadataCategory category : categories) {
             if (category.getId() == categId) {
                 return true;
@@ -80,7 +85,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public void unsetCategory(final ServiceContext context, final String mdId, final int categId) throws Exception {
-        Metadata metadata = getMetadataRepository().findOne(mdId);
+        IMetadata metadata = getMetadataUtils().findOne(mdId);
 
         if (metadata == null) {
             return;
@@ -95,7 +100,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
         }
 
         if (changed) {
-            getMetadataRepository().save(metadata);
+            context.getBean(IMetadataManager.class).save(metadata);
             if (getSvnManager() != null) {
                 getSvnManager().setHistory(mdId + "", context);
             }
@@ -110,7 +115,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
      */
     @Override
     public Collection<MetadataCategory> getCategories(final String mdId) throws Exception {
-        Metadata metadata = getMetadataRepository().findOne(mdId);
+        IMetadata metadata = getMetadataUtils().findOne(mdId);
         if (metadata == null) {
             throw new IllegalArgumentException("No metadata found with id: " + mdId);
         }
@@ -118,13 +123,21 @@ public class BaseMetadataCategory implements IMetadataCategory {
         return metadata.getMetadataCategories();
     }
 
-    private SvnManager getSvnManager() {
+    protected SvnManager getSvnManager() {
         return svnManager;
 
     }
 
-    private MetadataRepository getMetadataRepository() {
-        return metadataRepository;
+    protected IMetadataUtils getMetadataUtils() {
+        return metadataUtils;
 
+    }
+    
+    protected MetadataCategoryRepository getMetadataCategoryRepository() {
+        return metadataCategoryRepository;
+    }
+    
+    protected MetadataRepository getMetadataRepository() {
+        return metadataRepository;
     }
 }

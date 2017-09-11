@@ -31,10 +31,9 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
@@ -96,7 +95,7 @@ public class Insert implements Service {
         if (metadataEmail != null) {
             //Check metadata email belongs to metadata
             //security!!
-            Metadata md = gc.getBean(MetadataRepository.class).findOneByUuid(uuid);
+            IMetadata md = gc.getBean(IMetadataUtils.class).findOneByUuid(uuid);
             if(md.getData().indexOf(metadataEmail) > 0) {
                 toAddress.add(metadataEmail);
             }

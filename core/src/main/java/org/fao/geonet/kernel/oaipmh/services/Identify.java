@@ -23,12 +23,8 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.MetadataRepository;
@@ -38,9 +34,9 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.IdentifyResponse;
 import org.fao.oaipmh.responses.IdentifyResponse.DeletedRecord;
 import org.fao.oaipmh.responses.IdentifyResponse.Granularity;
-import org.jdom.Element;
 
-import java.util.List;
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -74,7 +70,7 @@ public class Identify implements OaiPmhService {
     //---------------------------------------------------------------------------
 
     private ISODate getEarliestDS(ServiceContext context) throws Exception {
-        final Metadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
+        final IMetadata oldestByChangeDate = context.getBean(MetadataRepository.class).findOneOldestByChangeDate();
 
         //--- if we don't have metadata, just return 'now'
         if (oldestByChangeDate == null)

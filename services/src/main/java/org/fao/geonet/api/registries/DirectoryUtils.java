@@ -1,19 +1,24 @@
 package org.fao.geonet.api.registries;
 
-import com.google.common.collect.Table;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.subtemplate.Get;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.util.XslUtil;
@@ -25,16 +30,12 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Text;
 
-import java.util.*;
+import com.google.common.collect.Table;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
-
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
 
 /**
  * Created by francois on 11/03/16.
@@ -52,11 +53,11 @@ public class DirectoryUtils {
                                    Integer groupOwner,
                                    boolean saveRecord) {
         DataManager dataManager = context.getBean(DataManager.class);
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
         Table<String, String, Element> entries = collectResults.getEntries();
         Iterator<String> entriesIterator =
             entries.rowKeySet().iterator();
-        Metadata record = collectResults.getRecord();
+        IMetadata record = collectResults.getRecord();
         boolean validate = false, index = false, ufo = false,
             notify = false, publicForGroup = true, refreshReaders = false;
 
@@ -67,9 +68,10 @@ public class DirectoryUtils {
             String uuid = uuidAndEntry.keySet().iterator().next();
             Element entry = uuidAndEntry.values().iterator().next();
 
-            Metadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
+            IMetadata dbSubTemplate = metadataRepository.findOneByUuid(uuid);
             if (dbSubTemplate == null) {
-                Metadata subtemplate = new Metadata().setUuid(uuid);
+                IMetadata subtemplate = new Metadata();
+                subtemplate.setUuid(uuid);
                 subtemplate.getDataInfo().
                     setSchemaId(record.getDataInfo().getSchemaId()).
                     setRoot(entry.getQualifiedName()).
@@ -124,7 +126,7 @@ public class DirectoryUtils {
      * record, and the identifier match, only one is reported (the last one).
      */
     public static CollectResults collectEntries(ServiceContext context,
-                                                Metadata record,
+                                                IMetadata record,
                                                 String xpath,
                                                 String identifierXpath) throws Exception {
         return collectEntries(context, record, xpath, identifierXpath, null, false, false, null);
@@ -136,7 +138,7 @@ public class DirectoryUtils {
      * propertiesToCopy
      */
     public static CollectResults synchronizeEntries(ServiceContext context,
-                                                    Metadata record,
+                                                    IMetadata record,
                                                     String xpath,
                                                     String identifierXpath,
                                                     List<String> propertiesToCopy,
@@ -148,7 +150,7 @@ public class DirectoryUtils {
 
 
     private static CollectResults collectEntries(ServiceContext context,
-                                                 Metadata record,
+                                                 IMetadata record,
                                                  String xpath,
                                                  String identifierXpath,
                                                  List<String> propertiesToCopy,
@@ -158,7 +160,7 @@ public class DirectoryUtils {
         CollectResults collectResults = new CollectResults(record);
         Map<String, List<Namespace>> namespaceList = new HashMap<String, List<Namespace>>();
 
-        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
 
         if (Log.isDebugEnabled(LOGGER)) {
             Log.debug(LOGGER, String.format(
@@ -265,7 +267,7 @@ public class DirectoryUtils {
                     Element subTemplateElement = null;
                     // Search in DB by UUID matching entry UUID
                     if (StringUtils.isEmpty(searchIndexField)) {
-                        Metadata subTemplate = metadataRepository.findOneByUuid(uuid);
+                        IMetadata subTemplate = metadataRepository.findOneByUuid(uuid);
                         if (subTemplate != null) {
                             subTemplateElement = subTemplate.getXmlData(false);
                         }
@@ -286,7 +288,7 @@ public class DirectoryUtils {
                         parameters.put(searchIndexField, identifier);
                         String id = search(context, parameters);
                         if (id != null) {
-                            Metadata subTemplate = metadataRepository.findOne(id);
+                            IMetadata subTemplate = metadataRepository.findOne(id);
                             if (subTemplate != null) {
                                 uuid = subTemplate.getUuid();
                                 subTemplateElement = subTemplate.getXmlData(false);

@@ -57,7 +57,7 @@ public class MetadataReportsQueries {
      * Retrieves the metadata updated during a period of time. Optionally filters metadata in
      * groups.
      */
-    public List<Metadata> getUpdatedMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups) {
+    public List<? extends IMetadata> getUpdatedMetadata(ISODate dateFrom, ISODate dateTo, Set<Integer> groups) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaQuery<Metadata> cbQuery = cb.createQuery(Metadata.class);
         final Root<Metadata> metadataRoot = cbQuery.from(Metadata.class);

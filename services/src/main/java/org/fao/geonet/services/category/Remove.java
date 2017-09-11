@@ -23,16 +23,13 @@
 
 package org.fao.geonet.services.category;
 
-import com.google.common.base.Functions;
-import com.google.common.collect.Lists;
-
-import jeeves.services.ReadWriteController;
+import java.util.List;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
@@ -41,7 +38,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
+
+import jeeves.services.ReadWriteController;
 
 /**
  * Removes a category from the system.
@@ -63,7 +63,7 @@ public class Remove {
 
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         MetadataCategoryRepository categoryRepository = appContext.getBean(MetadataCategoryRepository.class);
-        MetadataRepository metadataRepository = appContext.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = appContext.getBean(IMetadataUtils.class);
         DataManager dataManager = appContext.getBean(DataManager.class);
 
         final MetadataCategory category = categoryRepository.findOne(id);

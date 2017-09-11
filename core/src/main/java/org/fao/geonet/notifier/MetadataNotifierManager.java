@@ -22,24 +22,6 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataNotification;
-import org.fao.geonet.domain.MetadataNotificationAction;
-import org.fao.geonet.domain.MetadataNotificationId;
-import org.fao.geonet.domain.MetadataNotifier;
-import org.fao.geonet.repository.MetadataNotificationRepository;
-import org.fao.geonet.repository.MetadataNotifierRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.springframework.context.ConfigurableApplicationContext;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +29,25 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
+
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataNotification;
+import org.fao.geonet.domain.MetadataNotificationAction;
+import org.fao.geonet.domain.MetadataNotificationId;
+import org.fao.geonet.domain.MetadataNotifier;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataNotificationRepository;
+import org.fao.geonet.repository.MetadataNotifierRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import jeeves.server.context.ServiceContext;
 
 
 /**
@@ -67,12 +68,12 @@ public class MetadataNotifierManager {
         for (MetadataNotifier notifier : loadNotifiers()) {
 
             try {
-                final Map<Metadata, MetadataNotification> unregisteredMetadata = getUnnotifiedMetadata(notifier.getId(),
+                final Map<IMetadata, MetadataNotification> unregisteredMetadata = getUnnotifiedMetadata(notifier.getId(),
                     MetadataNotificationAction.UPDATE);
 
                 // process metadata
-                for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadata.entrySet()) {
-                    Metadata metadata = entry.getKey();
+                for (Map.Entry<IMetadata, MetadataNotification> entry : unregisteredMetadata.entrySet()) {
+                    IMetadata metadata = entry.getKey();
 
                     // Update/insert notification
                     client.webUpdate(notifier, metadata.getData(), metadata.getUuid());
@@ -81,11 +82,11 @@ public class MetadataNotifierManager {
                     setMetadataNotified(metadata.getId(), notifier, false);
                 }
 
-                Map<Metadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.DELETE);
+                Map<IMetadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.DELETE);
 
                 // process metadata
-                for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadataToDelete.entrySet()) {
-                    Metadata metadata = entry.getKey();
+                for (Map.Entry<IMetadata, MetadataNotification> entry : unregisteredMetadataToDelete.entrySet()) {
+                    IMetadata metadata = entry.getKey();
 
                     String uuid = metadata.getUuid();
 
@@ -144,14 +145,14 @@ public class MetadataNotifierManager {
     /**
      * Retrieves the unnotified metadata to update/insert for a notifier service
      */
-    private Map<Metadata, MetadataNotification> getUnnotifiedMetadata(int notifierId,
+    private Map<IMetadata, MetadataNotification> getUnnotifiedMetadata(int notifierId,
                                                                       MetadataNotificationAction... actions) throws Exception {
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata start");
         }
         final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
         MetadataNotificationRepository metadataNotificationRepository = applicationContext.getBean(MetadataNotificationRepository.class);
-        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+        IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
 
         List<MetadataNotification> unNotified = metadataNotificationRepository.findAllNotNotifiedForNotifier(notifierId, actions);
 
@@ -161,10 +162,10 @@ public class MetadataNotifierManager {
 
         }
 
-        final Iterable<Metadata> allMetadata = metadataRepository.findAll(idToNotification.keySet());
-        Map<Metadata, MetadataNotification> notificationMap = new HashMap<Metadata, MetadataNotification>();
+        final Iterable<? extends IMetadata> allMetadata = metadataRepository.findAll(idToNotification.keySet());
+        Map<IMetadata, MetadataNotification> notificationMap = new HashMap<IMetadata, MetadataNotification>();
 
-        for (Metadata metadata : allMetadata) {
+        for (IMetadata metadata : allMetadata) {
             notificationMap.put(metadata, idToNotification.get(metadata.getId()));
         }
 

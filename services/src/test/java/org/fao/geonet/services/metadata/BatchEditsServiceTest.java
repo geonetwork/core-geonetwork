@@ -22,17 +22,22 @@
  */
 package org.fao.geonet.services.metadata;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import jeeves.server.context.ServiceContext;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fao.geonet.api.records.model.BatchEditParameter;
 import org.fao.geonet.csw.common.util.Xml;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Before;
@@ -44,16 +49,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
-import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
-import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import jeeves.server.context.ServiceContext;
 
 public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
 
@@ -65,7 +65,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
     private WebApplicationContext wac;
 
     @Autowired
-    private MetadataRepository repository;
+    private IMetadataUtils repository;
 
     private MockMvc mockMvc;
 
@@ -147,7 +147,7 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.parseMediaType("application/json")))
                 .andExpect(status().is(201));
 
-        Metadata updatedRecord = repository.findOneByUuid(firstMetadataId);
+        IMetadata updatedRecord = repository.findOneByUuid(firstMetadataId);
         Element xml = Xml.loadString(updatedRecord.getData(), false);
 
         for (BatchEditParameter p : listOfupdates) {

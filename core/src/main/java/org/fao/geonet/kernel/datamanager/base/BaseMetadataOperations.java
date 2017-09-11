@@ -17,9 +17,9 @@ import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.datamanager.IMetadataOperations;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -38,7 +38,7 @@ import jeeves.server.context.ServiceContext;
 public class BaseMetadataOperations implements IMetadataOperations {
 
     @Autowired
-    private MetadataRepository metadataRepository;
+    private IMetadataUtils metadataUtils;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -53,7 +53,7 @@ public class BaseMetadataOperations implements IMetadataOperations {
 
     public void init(ServiceContext context, Boolean force) throws Exception {
         userRepository = context.getBean(UserRepository.class);
-        metadataRepository = context.getBean(MetadataRepository.class);
+        metadataUtils = context.getBean(IMetadataUtils.class);
         opAllowedRepo = context.getBean(OperationAllowedRepository.class);
         userGroupRepo = context.getBean(UserGroupRepository.class);
         settingManager = context.getBean(SettingManager.class);
@@ -268,7 +268,7 @@ public class BaseMetadataOperations implements IMetadataOperations {
 
     @Override
     public boolean isUserMetadataOwner(int userId) throws Exception {
-        return metadataRepository.count(MetadataSpecs.isOwnedByUser(userId)) > 0;
+        return metadataUtils.count(MetadataSpecs.isOwnedByUser(userId)) > 0;
     }
 
     @Override

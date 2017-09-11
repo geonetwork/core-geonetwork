@@ -23,23 +23,23 @@
 
 package org.fao.geonet.kernel.harvest;
 
-import jeeves.server.context.ServiceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.Logger;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 /**
  * This class helps {@link AbstractHarvester} instances to process all metadata collected on the
@@ -69,7 +69,7 @@ public abstract class BaseAligner {
      * @param saveMetadata
      * @throws Exception
      */
-    public void addCategories(Metadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
+    public void addCategories(IMetadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
                               Logger log, String serverCategory, boolean saveMetadata) {
 
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
@@ -112,7 +112,7 @@ public abstract class BaseAligner {
             }
         }
         if (saveMetadata) {
-            context.getBean(MetadataRepository.class).save(metadata);
+            context.getBean(IMetadataManager.class).save(metadata);
         }
     }
 

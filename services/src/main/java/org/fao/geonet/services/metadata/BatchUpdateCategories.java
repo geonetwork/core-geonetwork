@@ -23,53 +23,53 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.*;
-
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 
 /**
  * Assigns categories to metadata.
  */
 @Deprecated
 public class BatchUpdateCategories extends NotInReadOnlyModeService {
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
     public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
     /**
      *
@@ -87,7 +87,6 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
         AccessManager accessMan = gc.getBean(AccessManager.class);
         UserSession us = context.getUserSession();
 
-
         context.info("Get selected metadata");
         SelectionManager sm = SelectionManager.getManager(us);
 
@@ -96,26 +95,27 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
         Set<Integer> notOwner = new HashSet<Integer>();
 
         synchronized (sm.getSelection("metadata")) {
-            for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext(); ) {
+            for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
                 String uuid = (String) iter.next();
                 String id = dm.getMetadataId(uuid);
 
-                //--- check access
+                // --- check access
 
-                final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-                Metadata info = metadataRepository.findOne(id);
+                final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
+                final IMetadataManager metadataManager = context.getBean(IMetadataManager.class);
+                IMetadata info = metadataRepository.findOne(id);
                 if (info == null) {
                     notFound.add(Integer.valueOf(id));
                 } else if (!accessMan.isOwner(context, id)) {
                     notOwner.add(Integer.valueOf(id));
                 } else {
 
-                    //--- remove old operations
+                    // --- remove old operations
                     if (!"replace".equals(mode)) {
                         info.getMetadataCategories().clear();
                     }
 
-                    //--- set new ones
+                    // --- set new ones
                     @SuppressWarnings("unchecked")
                     List<Element> list = params.getChildren();
 
@@ -133,7 +133,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
                         }
                     }
 
-                    metadataRepository.save(info);
+                    metadataManager.save(info);
                     metadata.add(Integer.valueOf(id));
                 }
             }
@@ -141,13 +141,13 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 
         context.getBean(DataManager.class).flush();
 
-        //--- reindex metadata
+        // --- reindex metadata
         context.info("Re-indexing metadata");
-//      AFA we don't have a better fix
-//      https://github.com/geonetwork/core-geonetwork/issues/620
-//		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
-//		r.process();
-        //--- reindex metadata
+        // AFA we don't have a better fix
+        // https://github.com/geonetwork/core-geonetwork/issues/620
+        // BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
+        // r.process();
+        // --- reindex metadata
         List<String> list = new ArrayList<String>();
         for (int mdId : metadata) {
             list.add(Integer.toString(mdId));
@@ -155,9 +155,8 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
         dm.indexMetadata(list);
         // -- for the moment just return the sizes - we could return the ids
         // -- at a later stage for some sort of result display
-        return new Element(Jeeves.Elem.RESPONSE)
-            .addContent(new Element("done").setText(metadata.size() + ""))
-            .addContent(new Element("notOwner").setText(notOwner.size() + ""))
-            .addContent(new Element("notFound").setText(notFound.size() + ""));
+        return new Element(Jeeves.Elem.RESPONSE).addContent(new Element("done").setText(metadata.size() + ""))
+                .addContent(new Element("notOwner").setText(notOwner.size() + ""))
+                .addContent(new Element("notFound").setText(notFound.size() + ""));
     }
 }

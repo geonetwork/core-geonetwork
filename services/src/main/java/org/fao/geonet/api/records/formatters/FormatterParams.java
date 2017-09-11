@@ -23,12 +23,12 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import java.nio.file.Path;
+
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.jdom.Element;
 import org.springframework.web.context.request.WebRequest;
-
-import java.nio.file.Path;
 
 import jeeves.server.context.ServiceContext;
 
@@ -46,7 +46,7 @@ public class FormatterParams {
     public Path schemaDir;
     public ConfigFile config;
     public String url;
-    public Metadata metadataInfo;
+    public IMetadata metadataInfo;
     public FormatType formatType;
     public boolean formatterInSchemaPlugin;
     public FormatterWidth width;

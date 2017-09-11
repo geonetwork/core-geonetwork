@@ -23,35 +23,37 @@
 
 package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import jeeves.server.context.ServiceContext;
-
-import org.apache.commons.lang.time.DateUtils;
-import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.commons.lang.time.DateUtils;
+import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.harvest.BaseAligner;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
+import com.google.common.collect.Sets;
+
+import jeeves.server.context.ServiceContext;
 
 /**
  * @author Jesse on 11/6/2014.
@@ -63,7 +65,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
     private final DataManager dataMan;
     private final LocalFilesystemHarvester harvester;
     private final HarvestResult result = new HarvestResult();
-    private final MetadataRepository repo;
+    private final IMetadataUtils repo;
     private final ServiceContext context;
     private final AtomicBoolean cancelMonitor;
     private final BaseAligner aligner;
@@ -92,7 +94,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
         this.params = params;
         this.dataMan = context.getBean(DataManager.class);
         this.harvester = harvester;
-        this.repo = context.getBean(MetadataRepository.class);
+        this.repo = context.getBean(IMetadataUtils.class);
         this.startTime = System.currentTimeMillis();
         log.debug(String.format("Start visiting files at %d.",
             this.startTime));
@@ -219,7 +221,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                             if (params.checkFileLastModifiedForUpdate) {
                                 Date fileDate = new Date(Files.getLastModifiedTime(file).toMillis());
 
-                                final Metadata metadata = repo.findOne(id);
+                                final IMetadata metadata = repo.findOne(id);
                                 final ISODate modified;
                                 if (metadata != null && metadata.getDataInfo() != null) {
                                     modified = metadata.getDataInfo().getChangeDate();

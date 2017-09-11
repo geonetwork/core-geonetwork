@@ -23,26 +23,24 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import java.util.List;
-
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.Lib;
 import org.fao.geonet.kernel.oaipmh.ResumptionTokenCache;
-import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
 import org.fao.oaipmh.requests.TokenListRequest;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.fao.oaipmh.responses.ListResponse;
 import org.fao.oaipmh.util.SearchResult;
+
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -92,12 +90,11 @@ public class ListIdentifiers extends AbstractTokenLister {
     //---
     //---------------------------------------------------------------------------
 
-    @SuppressWarnings("unchecked")
     private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager sm = gc.getBean(SchemaManager.class);
 
-        final Metadata metadata = gc.getBean(MetadataRepository.class).findOne(id);
+        final IMetadata metadata = gc.getBean(IMetadataUtils.class).findOne(id);
 
         //--- maybe the metadata has been removed
 

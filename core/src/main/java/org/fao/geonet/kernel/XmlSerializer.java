@@ -23,19 +23,21 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.server.context.ServiceContext;
-import jeeves.xlink.Processor;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
@@ -43,9 +45,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import jeeves.server.context.ServiceContext;
+import jeeves.xlink.Processor;
 
 /**
  * This class is responsible of reading and writing xml on the database. It works on tables like
@@ -158,9 +159,9 @@ public abstract class XmlSerializer {
      * @param forEditing If true, then withheld elements are not removed.
      */
     protected Element internalSelect(String id, boolean isIndexingTask, boolean forEditing) throws Exception {
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadataUtils _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
-        Metadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
+        IMetadata metadata = _metadataRepository.findOne(Integer.parseInt(id));
 
         if (metadata == null)
             return null;
@@ -168,7 +169,7 @@ public abstract class XmlSerializer {
         return removeHiddenElements(isIndexingTask, metadata, forEditing);
     }
 
-    public Element removeHiddenElements(boolean isIndexingTask, Metadata metadata, boolean forEditing) throws Exception {
+    public Element removeHiddenElements(boolean isIndexingTask, IMetadata metadata, boolean forEditing) throws Exception {
         AccessManager accessManager = ApplicationContextHolder.get().getBean(AccessManager.class);
         DataManager _dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
 
@@ -222,11 +223,11 @@ public abstract class XmlSerializer {
      * @param context     a service context
      * @return the saved metadata
      */
-    protected Metadata insertDb(final Metadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
+    protected IMetadata insertDb(final IMetadata newMetadata, final Element dataXml, ServiceContext context) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(dataXml);
 
         newMetadata.setData(Xml.getString(dataXml));
-        return context.getBean(MetadataRepository.class).save(newMetadata);
+        return context.getBean(IMetadataManager.class).save(newMetadata);
     }
 
     /**
@@ -240,10 +241,11 @@ public abstract class XmlSerializer {
                             final String uuid) throws SQLException {
         if (resolveXLinks()) Processor.removeXLink(xml);
 
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadataManager _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataManager.class);
+        IMetadataUtils metadataUtils = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
 
         int metadataId = Integer.valueOf(id);
-        Metadata md = _metadataRepository.findOne(metadataId);
+        IMetadata md = metadataUtils.findOne(metadataId);
 
         md.setDataAndFixCR(xml);
 
@@ -266,7 +268,7 @@ public abstract class XmlSerializer {
      * Deletes an xml element given its id.
      */
     protected void deleteDb(String id) throws Exception {
-        MetadataRepository _metadataRepository = ApplicationContextHolder.get().getBean(MetadataRepository.class);
+        IMetadataManager _metadataRepository = ApplicationContextHolder.get().getBean(IMetadataManager.class);
 
         // TODO: Ultimately we want to remove any xlinks in this document
         // that aren't already in use from the xlink cache. For now we
@@ -286,7 +288,7 @@ public abstract class XmlSerializer {
                                 String changeDate, boolean updateDateStamp, String uuid, ServiceContext context)
         throws Exception;
 
-    public abstract Metadata insert(Metadata metadata, Element dataXml, ServiceContext context)
+    public abstract IMetadata insert(IMetadata metadata, Element dataXml, ServiceContext context)
         throws Exception;
 
     /**

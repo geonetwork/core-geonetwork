@@ -23,25 +23,26 @@
 
 package org.fao.geonet.services.metadata;
 
-import com.google.common.base.Optional;
+import static org.fao.geonet.api.records.MetadataSharingApi.retrievePrivileges;
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.services.ReadWriteController;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.OperationAllowedRepository;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,21 +50,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import static org.fao.geonet.api.records.MetadataSharingApi.retrievePrivileges;
-import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.springframework.data.jpa.domain.Specifications.where;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.services.ReadWriteController;
 
 
 /**
@@ -123,7 +113,7 @@ public class BatchNewOwner {
             context.info("Attempting to set metadata owner on: " + id);
 
             //--- check existence and access
-            Metadata info = null;
+            IMetadata info = null;
             if (id != null) {
                 info = context.getBean(MetadataRepository.class).findOne(id);
             }

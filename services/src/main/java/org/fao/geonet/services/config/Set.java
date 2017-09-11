@@ -23,11 +23,11 @@
 
 package org.fao.geonet.services.config;
 
-import jeeves.config.springutil.ServerBeanPropertyUpdater;
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.site.SiteApi;
@@ -37,20 +37,20 @@ import org.fao.geonet.domain.MetadataSourceInfo_;
 import org.fao.geonet.domain.Metadata_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.PathSpec;
 import org.jdom.Element;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
+import jeeves.config.springutil.ServerBeanPropertyUpdater;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -93,7 +93,7 @@ public class Set implements Service {
         String newUuid = values.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final IMetadataManager metadataRepository = context.getBean(IMetadataManager.class);
             final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
             final Source source = sourceRepository.findOne(currentUuid);
             Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.isLocal());

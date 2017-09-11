@@ -23,10 +23,16 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.server.context.ServiceContext;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
@@ -37,11 +43,8 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import jeeves.server.context.ServiceContext;
 
 /**
  * An extension point called to create files to export as part of the MEF export.
@@ -54,7 +57,7 @@ public class ExportFormat implements GeonetworkExtension {
      *
      * @param metadata the metadata to convert to files.
      */
-    public static Iterable<Pair<String, String>> getFormats(ServiceContext context, Metadata metadata) throws Exception {
+    public static Iterable<Pair<String, String>> getFormats(ServiceContext context, IMetadata metadata) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
@@ -93,7 +96,7 @@ public class ExportFormat implements GeonetworkExtension {
      *
      * @return ByteArrayInputStream
      */
-    public static String formatData(Metadata metadata, boolean transform, Path stylePath) throws Exception {
+    public static String formatData(IMetadata metadata, boolean transform, Path stylePath) throws Exception {
         String xmlData = metadata.getData();
 
         Element md = Xml.loadString(xmlData, false);

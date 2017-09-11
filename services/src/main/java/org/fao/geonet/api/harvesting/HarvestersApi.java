@@ -23,26 +23,27 @@
 
 package org.fao.geonet.api.harvesting;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Authorization;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.repository.HarvestHistoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 import org.joda.time.DateTime;
@@ -60,9 +61,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 
 @RequestMapping(value = {
     "/api/harvesters",
@@ -125,8 +129,9 @@ public class HarvestersApi {
                 source));
         }
 
-        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
-        final List<Metadata> allHarvestedRecords = metadataRepository.findAllByHarvestInfo_Uuid(harvesterUuid);
+        final IMetadataUtils metadataRepository = applicationContext.getBean(IMetadataUtils.class);
+        final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
+        final List<? extends IMetadata> allHarvestedRecords = metadataRepository.findAllByHarvestInfo_Uuid(harvesterUuid);
         List<String> records = new ArrayList<>(allHarvestedRecords.size());
 
         if (allHarvestedRecords.size() < 1) {
@@ -136,12 +141,12 @@ public class HarvestersApi {
                 source));
         }
 
-        for (Metadata record : allHarvestedRecords) {
+        for (IMetadata record : allHarvestedRecords) {
             record.getSourceInfo().setSourceId(source);
             record.getHarvestInfo().setHarvested(false)
                 .setUri(null)
                 .setUuid(null);
-            metadataRepository.save(record);
+            metadataManager.save(record);
             records.add(record.getId() + "");
         }
 

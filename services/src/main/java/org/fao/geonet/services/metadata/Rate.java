@@ -23,11 +23,16 @@
 
 package org.fao.geonet.services.metadata;
 
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
+
+import java.net.URL;
+import java.nio.file.Path;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -45,13 +50,8 @@ import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.net.URL;
-import java.nio.file.Path;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_LOCALRATING_ENABLE;
 
 /**
  * User rating of metadata. If the metadata was harvested using the 'GeoNetwork' protocol and the
@@ -135,7 +135,7 @@ public class Rate extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
 
     private String getHarvestingUuid(ServiceContext context, String id) throws Exception {
-        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
+        final IMetadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
         //--- if we don't have any metadata, just return
 

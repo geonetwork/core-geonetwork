@@ -22,26 +22,27 @@
  */
 package org.fao.geonet.api.selections;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.domain.IMetadata;
 import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Selection;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserSavedSelection;
 import org.fao.geonet.domain.UserSavedSelectionId;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SelectionRepository;
-import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,12 +56,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Select a list of elements stored in session.
@@ -349,11 +351,10 @@ public class UserSelectionsApi {
         }
 
         UserSavedSelectionRepository umsRepository =  appContext.getBean(UserSavedSelectionRepository.class);
-        MetadataRepository mdRepository = appContext.getBean(MetadataRepository.class);
-        ArrayList<String> notFoundRecords = new ArrayList<>();
+        IMetadataUtils mdRepository = appContext.getBean(IMetadataUtils.class);
         for (String u : uuid) {
             // Check record exist
-            Metadata md = mdRepository.findOneByUuid(u);
+            IMetadata md = mdRepository.findOneByUuid(u);
             if (md != null) {
                 UserSavedSelection e = new UserSavedSelection(selection, user, u);
                 try {

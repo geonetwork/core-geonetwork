@@ -23,26 +23,25 @@
 
 package org.fao.geonet.services.metadata;
 
-import com.google.common.collect.Sets;
+import static org.junit.Assert.assertEquals;
 
-import jeeves.server.context.ServiceContext;
+import java.util.Set;
 
-import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
-import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Set;
+import com.google.common.collect.Sets;
 
-import static org.junit.Assert.assertEquals;
+import jeeves.server.context.ServiceContext;
 
 public class BatchDeleteTest extends AbstractServiceIntegrationTest {
 
     @Autowired
-    private MetadataRepository repository;
+    private IMetadataUtils repository;
 
     @Test
     public void testExec() throws Exception {
