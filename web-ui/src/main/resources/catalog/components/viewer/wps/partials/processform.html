@@ -149,9 +149,9 @@
                       ng-repeat="format in ::output.complexOutput.supported.format"
                         ng-click="setOutput(output.identifier.value, format.mimeType)">
                       <i class="fa fa-dot-circle-o fa-fw"
-                        ng-show="selectedOutput.identifier == output.identifier.value && selectedOutput.mimeType == format.mimeType"/>
+                        ng-show="wpsLink.output.identifier == output.identifier.value && wpsLink.output.mimeType == format.mimeType"/>
                       <i class="fa fa-circle-o fa-fw"
-                        ng-show="selectedOutput.identifier != output.identifier.value || selectedOutput.mimeType != format.mimeType"/>
+                        ng-show="wpsLink.output.identifier != output.identifier.value || wpsLink.output.mimeType != format.mimeType"/>
                       {{::format.mimeType}}
                     </a>
                     <li role="separator" class="divider"
@@ -167,19 +167,19 @@
                 <div ng-class="{'collapse': true, 'in': optionsVisible}">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="lineage" ng-model="responseDocument.lineage">
+                      <input type="checkbox" id="lineage" ng-model="wpsLink.output.lineage">
                       lineage
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="storeExecuteResponse" ng-model="responseDocument.storeExecuteResponse" ng-disabled="responseDocument.status">
+                      <input type="checkbox" id="storeExecuteResponse" ng-model="wpsLink.output.storeExecuteResponse" ng-disabled="wpsLink.output.status">
                       storeExecuteResponse
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" id="status" ng-model="responseDocument.status" ng-change="responseDocumentStatusChanged()">
+                      <input type="checkbox" id="status" ng-model="wpsLink.output.status" ng-change="responseDocumentStatusChanged()">
                       status
                     </label>
                   </div>
