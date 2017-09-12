@@ -183,12 +183,13 @@
        * @param {Object} processDescription from the wps service
        * @param {Object} inputs of the process; this must be an array of
        *  objects like so: { name: 'input_name', value: 'input value' }
-       * @param {Object} options such as storeExecuteResponse,
-       * lineage and status
+       * @param {Object} output this object must hold output identifier &
+       * mimeType as well as options such as storeExecuteResponse, lineage and
+       * status
        * @return {string} XML message
        */
       this.printExecuteMessage = function(processDescription, inputs,
-          responseDocument) {
+          output) {
         var me = this;
         var description = processDescription;
 
@@ -265,12 +266,31 @@
           });
         }
 
+        // generate response document based on output info
+        var responseDocument = {
+          lineage: output.lineage || false,
+          storeExecuteResponse: output.storeExecuteResponse || true,
+          status: output.status || false,
+          output: []
+        }
+
+        // output selection based on form control
+        angular.forEach(description.processOutputs.output,
+            function(descOutput) {
+              if (descOutput.identifier.value === output.identifier) {
+                responseDocument.output.push({
+                  asReference: output.asReference !== undefined ?
+                    output.asReference : descOutput.asReference,
+                  mimeType: output.mimeType,
+                  identifier: {
+                    value: output.identifier
+                  }
+                });
+              }
+            }, {});
+
         request.value.responseForm = {
-          responseDocument: $.extend(true, {
-            lineage: false,
-            storeExecuteResponse: true,
-            status: false
-          }, responseDocument)
+          responseDocument: responseDocument
         };
 
         return marshaller.marshalString(request);
