@@ -336,7 +336,7 @@
                     // generate the XML message from the description
                     var description = data.processDescription[0];
                     var message = gnWpsService.printExecuteMessage(description,
-                      process.inputs, {});
+                      process.inputs, process.output);
 
                     process.executeMessage = message;
                 });
