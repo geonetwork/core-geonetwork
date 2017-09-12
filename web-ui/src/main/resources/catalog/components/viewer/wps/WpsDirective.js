@@ -314,6 +314,14 @@
                     }
                     );
 
+                    // if there is a mimeType containing WMS: use it instead
+                    var wmsOutput = gnWpsService.getProcessOutputWMSMimeType(
+                      scope.processDescription);
+                    if (wmsOutput) {
+                      defaultOutput = wmsOutput.outputIdentifier;
+                      defaultMimeType = wmsOutput.mimeType;
+                    }
+
                     // assign default output & mimeType
                     scope.selectedOutput.identifier = defaultOutput;
                     scope.selectedOutput.mimeType = defaultMimeType;
