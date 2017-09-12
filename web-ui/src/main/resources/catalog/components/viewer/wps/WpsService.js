@@ -395,10 +395,10 @@
         var result = null;
         var me = this;
         try {
-          var outputs = processDesc.processDescription[0].processOutputs.output;
+          var outputs = processDesc.processOutputs.output;
           outputs.forEach(function(output) {
             var outputId = output.identifier.value;
-            var mimeTypes = output.complexOutput.supporter.format;
+            var mimeTypes = output.complexOutput.supported.format;
             mimeTypes.forEach(function (mimeType) {
               if (!result && me.WMS_MIMETYPE_REGEX.test(mimeType.mimeType)) {
                 result = {
@@ -409,6 +409,7 @@
             });
           });
         } catch (e) {
+          console.warn('Failed parsing WPS process description: ', e)
         }
         return result;
       };

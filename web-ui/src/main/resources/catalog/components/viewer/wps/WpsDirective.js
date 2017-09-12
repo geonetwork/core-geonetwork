@@ -402,24 +402,7 @@
             if (invalid) { return; }
 
             var inputs = scope.wpsLink.inputs;
-
-            // output selection based on form control
-            var outputs = [];
-            angular.forEach(scope.processDescription.processOutputs.output,
-                function(output) {
-                  if (output.identifier.value ==
-                      scope.selectedOutput.identifier) {
-                    outputs.push({
-                      asReference: scope.outputAsGraph ?
-                      false : output.asReference,
-                      mimeType: scope.selectedOutput.mimeType,
-                      identifier: {
-                        value: output.identifier.value
-                      }
-                    });
-                  }
-                }, {});
-            scope.responseDocument.output = outputs;
+            var output = scope.wpsLink.output;
 
             updateStatus = function(statusLocation) {
               gnWpsService.getStatus(statusLocation).then(
