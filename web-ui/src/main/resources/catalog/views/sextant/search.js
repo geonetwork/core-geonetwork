@@ -92,12 +92,18 @@
     'gnGlobalSettings',
     'sxtPanierService',
     'gnOwsContextService',
+    'gnConfig',
     function($rootScope, $scope, $location, $window, suggestService,
              $http, gnSearchSettings, sxtService,
              gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms,
              $timeout, gnMdView, mdView, gnSearchLocation, gnMetadataActions,
              $translate, $q, gnUrlUtils, gnGlobalSettings, sxtPanierService,
-             gnOwsContextService) {
+             gnOwsContextService, gnConfig) {
+
+      // merge config in viewer settings
+      gnViewerSettings.mapConfig = angular.merge(gnViewerSettings.mapConfig,
+        gnConfig['ui.config'].mods.map);
+      gnViewerSettings.bingKey = gnViewerSettings.mapConfig.bingKey;
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
