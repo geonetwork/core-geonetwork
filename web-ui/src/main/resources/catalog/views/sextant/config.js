@@ -51,17 +51,8 @@
           'defaultContext.xml';
 
       // WMS settings
-      // If 3D mode is activated, single tile WMS mode is
-      // not supported by ol3cesium, so force tiling.
-      if (viewerSettings.mapConfig.is3DModeAllowed) {
-        viewerSettings.singleTileWMS = false;
-        // Configure Cesium to use a proxy. This is required when
-        // WMS does not have CORS headers. BTW, proxy will slow
-        // down rendering.
-        viewerSettings.cesiumProxy = true;
-      } else {
-        viewerSettings.singleTileWMS = true;
-      }
+      // force tiles WMS for sextant
+      viewerSettings.singleTileWMS = false;
 
       /** *************************************
        * Define OWS services url for Import WMS
