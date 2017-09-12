@@ -383,6 +383,38 @@
       };
 
       /**
+       * Returns an object if process description offers an output with WMS
+       * The object hold the properties outputIdentifier and mimeType
+       *
+       * @param {object} processDesc describeProcess response object.
+       * @param {string} outputIdentifier
+       * @return {string} object with outputIdentifier and mimeType; null if no
+       * matching mimeType
+       */
+      this.getProcessOutputWMSMimeType = function(processDesc) {
+        var result = null;
+        var me = this;
+        try {
+          var outputs = processDesc.processOutputs.output;
+          outputs.forEach(function(output) {
+            var outputId = output.identifier.value;
+            var mimeTypes = output.complexOutput.supported.format;
+            mimeTypes.forEach(function (mimeType) {
+              if (!result && me.WMS_MIMETYPE_REGEX.test(mimeType.mimeType)) {
+                result = {
+                  mimeType: mimeType.mimeType,
+                  outputIdentifier: outputId
+                };
+              }
+            });
+          });
+        } catch (e) {
+          console.warn('Failed parsing WPS process description: ', e)
+        }
+        return result;
+      };
+
+      /**
        * Try to see if the execute response is a reference with a WMS mimetype.
        * If yes, the href is a WMS getCapabilities, we load it and add all
        * the layers on the map.
