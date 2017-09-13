@@ -499,7 +499,6 @@
                   map.addLayer(vector);
                 }
               } else {
-                map.removeLayer(vector); // sextant
                 drawPolygon.active = false;
                 drawPoint.active = false;
                 drawLine.active = false;
