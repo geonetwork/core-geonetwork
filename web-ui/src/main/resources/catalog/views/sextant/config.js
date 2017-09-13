@@ -160,6 +160,11 @@
         })
       });
 
+      $(window).load(function() {
+        viewerMap.updateSize();
+        searchMap.updateSize();
+      });
+
       //Fix change view contraints
       //TODO: Wait for fix in ol3: https://github.com/openlayers/ol3/issues/4265
       if(mapsConfig.extent) {

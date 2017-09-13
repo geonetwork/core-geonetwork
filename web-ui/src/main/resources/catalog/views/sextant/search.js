@@ -630,9 +630,8 @@
 
   // avoid FOUC (flash of unstyled content)
   $('.gn, .g').hide();
-  window.onload = function() {
+  $(window).load(function() {
     $('.gn, .g').show();
-    $(window).trigger('resize');
-  }
+  });
 
 })();
