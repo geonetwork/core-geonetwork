@@ -62,21 +62,22 @@ public class GeonetEntity {
         Class<? extends Object> objclass = obj.getClass();
         while (objclass != null) {
             for (Method method : objclass.getDeclaredMethods()) {
-                // Process all getters
                 try {
-                    if (isGetter(method)) {
-                        if (shouldBeAdded(exclude, objclass, method)) {
+                    if (shouldBeAdded(exclude, objclass, method)) {
+                        // Then process all getters
+                        if (isGetter(method)) {
                             final String descName = method.getName().substring(3);
-                            if (isNotLabel(descName) && !objclass.equals(Localized.class)) {
+
+                            if (isLabel(descName) && !objclass.equals(Localized.class)) {
                                 addLabels(obj, record, method);
-                            } else if (!(isNotADuplicatedMethodWithAnotherReturnType(descName) || isNotLabel(descName))) {
+                            } else if (!isADuplicatedMethodWithAnotherReturnType(descName) && !isLabel(descName)) {
                                 addPropertyToElement(obj, alreadyEncoded, exclude, record, method, descName);
                             }
-                        }
-                    } else if (isBooleanGetter(method)) {
-                        if (shouldBeAdded(exclude, objclass, method)) {
+
+                        } else if (isBooleanGetter(method)) {
                             final String descName = method.getName().substring(2);
-                            if (!isNotADuplicatedMethodWithAnotherReturnType(descName)) {
+
+                            if (!isADuplicatedMethodWithAnotherReturnType(descName)) {
                                 addPropertyToElement(obj, alreadyEncoded, exclude, record, method, descName);
                             }
                         }
@@ -88,8 +89,8 @@ public class GeonetEntity {
                     throw new RuntimeException(e);
                 }
             }
-            
-            //Iterate over the parent classes of the object
+
+            // Iterate over the parent classes of the object
             objclass = getNextSignificantAncestor(objclass);
         }
         return record;
@@ -152,9 +153,8 @@ public class GeonetEntity {
     }
 
     /**
-     * Gets the parent of a class but stops when reaching GeonetEntity or Object 
-     * (Object shouldn't be accessed if it is a database object domain because 
-     * GeonetEntity should come first, but just in case.
+     * Gets the parent of a class but stops when reaching GeonetEntity or Object (Object shouldn't be accessed if it is a database object
+     * domain because GeonetEntity should come first, but just in case.
      * 
      * @param objclass
      * @return
@@ -173,7 +173,7 @@ public class GeonetEntity {
      * @param descName
      * @return
      */
-    protected static boolean isNotLabel(final String descName) {
+    protected static boolean isLabel(final String descName) {
         return descName.equals("LabelTranslations");
     }
 
@@ -183,7 +183,7 @@ public class GeonetEntity {
      * @param descName
      * @return
      */
-    protected static boolean isNotADuplicatedMethodWithAnotherReturnType(final String descName) {
+    protected static boolean isADuplicatedMethodWithAnotherReturnType(final String descName) {
         return descName.endsWith("AsInt") || descName.endsWith("AsBool");
     }
 
