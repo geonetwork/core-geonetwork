@@ -705,7 +705,7 @@ public class DirectoryApi {
             int user = context.getUserSession().getUserIdAsInt();
             String siteId = settingManager.getSiteId();
 
-            DirectoryUtils.saveEntries(
+            Map<String, Exception> errors = DirectoryUtils.saveEntries(
                 context,
                 collectResults,
                 siteId, user,
@@ -718,8 +718,18 @@ public class DirectoryApi {
             listOfRecordInternalId.addAll(
                 collectResults.getEntryIdentifiers().values()
             );
+
+            report.addInfos(String.format(
+                "%d entries saved.",
+                listOfRecordInternalId.size()
+            ));
+
             BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, listOfRecordInternalId);
             r.process();
+
+            errors.forEach((k, v) ->
+                    report.addError(v)
+            );
 
             report.close();
         } else {

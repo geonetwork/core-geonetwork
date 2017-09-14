@@ -191,9 +191,9 @@
                   if (layer.name.match(re)) {
                     var lyr = re.exec(layer.name)[1];
 
-                    if(layer.server) {
-                        var server = layer.server[0];
-                        var res = server.onlineResource[0].href;
+                    if (layer.server) {
+                      var server = layer.server[0];
+                      var res = server.onlineResource[0].href;
                     }
                     opt = {name: lyr,
                             url: res};

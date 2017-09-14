@@ -27,8 +27,8 @@
   goog.require('gn_multilingual_field_directive');
 
   var module = angular.module('gn_thesaurus_controller', [
-      'blueimp.fileupload',
-      'gn_multilingual_field_directive']);
+    'blueimp.fileupload',
+    'gn_multilingual_field_directive']);
 
 
   /**
@@ -136,7 +136,7 @@
        * Language list for gn-multilingual-directive
        */
       $scope.langList = angular.copy($scope.availableLangs);
-      angular.forEach($scope.langList, function (lang2, lang3) {
+      angular.forEach($scope.langList, function(lang2, lang3) {
         $scope.langList[lang3] = '#' + lang2;
       });
 

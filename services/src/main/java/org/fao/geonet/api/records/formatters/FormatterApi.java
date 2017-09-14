@@ -284,7 +284,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(roundedChangeDate) && context.getBean(CacheConfig.class).allowCaching(key)) {
+            if (request.checkNotModified(locale.getLanguage(), roundedChangeDate) &&
+                context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
                 }

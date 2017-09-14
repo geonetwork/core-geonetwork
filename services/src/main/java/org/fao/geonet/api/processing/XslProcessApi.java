@@ -189,7 +189,7 @@ public class XslProcessApi {
                         );
                     } else {
                         Element record = XslProcessUtils.process(ApiUtils.createServiceContext(request),
-                            id, process, true,
+                            id, process, true, true,
                             xslProcessingReport, siteURL, request.getParameterMap());
                         if (record != null) {
                             preview.addContent(record.detach());
@@ -253,6 +253,11 @@ public class XslProcessApi {
             required = false
         )
             String bucket,
+        @ApiParam(value = "Index after processing",
+            required = false,
+            example = "false")
+        @RequestParam(required = false, defaultValue = "true")
+            boolean index,
         @ApiIgnore
             HttpSession httpSession,
         @ApiIgnore
@@ -274,7 +279,7 @@ public class XslProcessApi {
             BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
                 ApiUtils.createServiceContext(request),
                 dataMan, records, process, httpSession, siteURL,
-                xslProcessingReport, request);
+                xslProcessingReport, request, index);
             m.process();
 
         } catch (Exception exception) {
@@ -288,6 +293,7 @@ public class XslProcessApi {
 
     static final class BatchXslMetadataReindexer extends
         MetadataIndexerProcessor {
+        private final boolean index;
         Set<String> records;
         String process;
         String siteURL;
@@ -303,11 +309,12 @@ public class XslProcessApi {
                                          HttpSession session,
                                          String siteURL,
                                          XsltMetadataProcessingReport xslProcessingReport,
-                                         HttpServletRequest request) {
+                                         HttpServletRequest request, boolean index) {
             super(dm);
             this.records = records;
             this.process = process;
             this.session = session;
+            this.index = index;
             this.siteURL = siteURL;
             this.request = request;
             this.xslProcessingReport = xslProcessingReport;
@@ -322,7 +329,8 @@ public class XslProcessApi {
                     "Processing metadata with id:" + id);
 
                 XslProcessUtils.process(context, id, process,
-                    true, xslProcessingReport, siteURL, request.getParameterMap());
+                    true, index, xslProcessingReport,
+                    siteURL, request.getParameterMap());
             }
         }
     }

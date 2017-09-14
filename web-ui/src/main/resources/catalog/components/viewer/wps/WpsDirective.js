@@ -139,17 +139,19 @@
             if (scope.wfsLink) {
               // this is the object holding current filter values
               var esObject = wfsFilterService.getEsObject(scope.wfsLink.url,
-                scope.wfsLink.name);
+                  scope.wfsLink.name);
 
-              // use filter values in ElasticSearch object state to overload input
+              // use filter values in ElasticSearch object state
+              // to overload input
               if (esObject) {
                 // this will hold wfs filter values
-                var currentFilters = wfsFilterService.toObjectProperties(esObject);
+                var currentFilters =
+                    wfsFilterService.toObjectProperties(esObject);
                 wfsFilterValues = {};
 
                 // remove prefix & suffix on filter keys
                 Object.keys(currentFilters).forEach(function(key) {
-                  var cleanKey = key.replace(/^ft_|_s$|_dt$/g, '')
+                  var cleanKey = key.replace(/^ft_|_s$|_dt$/g, '');
                   wfsFilterValues[cleanKey] = currentFilters[key];
                 });
               }
@@ -180,14 +182,15 @@
 
                       // look for input info in app profile
                       if (applicationProfile && applicationProfile.inputs) {
-                        applicationProfile.inputs.forEach(function (input) {
+                        applicationProfile.inputs.forEach(function(input) {
                           if (input.identifier == inputName) {
                             defaultValue = input.defaultValue;
 
-                            // check if there is a wfs filter active & apply value
+                            // check if there is a wfs filter active
+                            // & apply value
                             var linkedWfsFilter = input.linkedWfsFilter;
                             if (linkedWfsFilter && wfsFilterValues &&
-                              wfsFilterValues[linkedWfsFilter]) {
+                            wfsFilterValues[linkedWfsFilter]) {
                               wfsFilterValue = wfsFilterValues[linkedWfsFilter];
                             }
                           }
@@ -196,7 +199,7 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                        wfsFilterValue !== undefined;
+                      wfsFilterValue !== undefined;
 
                       // literal data (basic form input)
                       if (input.literalData != undefined) {
@@ -291,7 +294,7 @@
                       // no output selected yet: take this one
                       defaultOutput = outputName;
                       defaultMimeType =
-                        output.complexOutput._default.format.mimeType;
+                      output.complexOutput._default.format.mimeType;
 
                       // look for output info in app profile
                       if (applicationProfile && applicationProfile.outputs) {
@@ -299,14 +302,14 @@
                           if (output.identifier == outputName) {
                             // assign mime type if available
                             defaultMimeType = output.defaultMimeType ||
-                              defaultMimeType;
+                            defaultMimeType;
 
                             // check if we need to get into 'profile graph' mode
                             // (display graph options are defined)
                             // TODO: actually parse these options
                             if (output.displayGraphOptions) {
                               scope.outputAsGraph = output.displayGraphOptions ?
-                                true : false;
+                              true : false;
                             }
                           }
                         });
@@ -398,7 +401,7 @@
                       scope.selectedOutput.identifier) {
                     outputs.push({
                       asReference: scope.outputAsGraph ?
-                        false : output.asReference,
+                      false : output.asReference,
                       mimeType: scope.selectedOutput.mimeType,
                       identifier: {
                         value: output.identifier.value
@@ -560,9 +563,9 @@
               return input.name == name;
             });
           };
-          scope.setInputValueByName = function (name, index, value) {
+          scope.setInputValueByName = function(name, index, value) {
             var current = 0;
-            scope.wpsLink.inputs.forEach(function (input) {
+            scope.wpsLink.inputs.forEach(function(input) {
               if (input.name === name) {
                 if (current == index) {
                   input.value = value;
