@@ -286,7 +286,7 @@ public class Group extends Localized implements Serializable {
     /**
      * Default category for this group
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.REFRESH,CascadeType.MERGE}, fetch = FetchType.EAGER)
     public MetadataCategory getDefaultCategory() {
         return defaultCategory;
     }
@@ -304,7 +304,7 @@ public class Group extends Localized implements Serializable {
     /**
      * Get a list of allowed categories for metadata defined on this group.
      */
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "group_category",
         joinColumns = {
             @JoinColumn(name = "GROUP_ID", nullable = false, updatable = false)},
