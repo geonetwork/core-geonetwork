@@ -800,7 +800,7 @@
 
               // watch external change of value
               if (scope.$eval(attrs['watchValueChange'])) {
-                scope.$watch('value', function (newValue) {
+                scope.$watch('value', function(newValue) {
                   if (scope.valueInternalChange) {
                     scope.valueInternalChange = false;
                   } else {

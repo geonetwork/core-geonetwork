@@ -32,9 +32,9 @@
           return {
             restrict: 'A',
             scope: true,
-            templateUrl: function (elem, attrs) {
+            templateUrl: function(elem, attrs) {
               return attrs.template || '../../catalog/components/search/map/' +
-                'partials/mapfield.html';
+                  'partials/mapfield.html';
             },
             compile: function compile(tElement, tAttrs, transclude) {
               return {

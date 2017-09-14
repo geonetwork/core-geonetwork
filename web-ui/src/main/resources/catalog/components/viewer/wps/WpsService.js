@@ -379,7 +379,7 @@
 
         try {
           var ref = response.processOutputs.output[0].reference;
-            gnMap.addWmsAllLayersFromCap(map, ref.href, true).
+          gnMap.addWmsAllLayersFromCap(map, ref.href, true).
               then(function(layers) {
                 layers.forEach(function(l) {
                   l.set('fromWps', true);

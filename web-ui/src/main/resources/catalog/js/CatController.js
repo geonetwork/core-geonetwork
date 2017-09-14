@@ -415,7 +415,7 @@
         $rootScope.csrf = value;
       });
       //If no csrf, ask for one:
-      if(!$rootScope.csrf) {
+      if (!$rootScope.csrf) {
         $http.post('info?type=me');
       }
       //Comment the upper lines if you want to remove csrf support
