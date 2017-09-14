@@ -1020,7 +1020,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
   </codelist>
   <!-- ==================================================== -->
-  <codelist name="gmd:MD_MaintenanceFrequencyCode">
+  <codelist name="gmd:MD_MaintenanceFrequencyCode" sort="fixed">
     <entry>
       <code>continual</code>
       <label>Continue</label>

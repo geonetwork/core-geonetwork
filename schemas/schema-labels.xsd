@@ -186,10 +186,14 @@
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
-      <xs:attribute name="displayIf" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>
-            <![CDATA[
+      <xs:attribute ref="displayIf"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:attribute name="displayIf" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
           Conditional helpers which may define an xpath expression to evaluate if the xpath match.
 
         The scope of the expression is defined by a variable named "$p1" whitch is the current node.
@@ -202,11 +206,9 @@
         displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification"
 
           ]]>
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
 
   <xs:element name="option">
     <xs:complexType mixed="true">
@@ -254,20 +256,31 @@
             <xs:sequence maxOccurs="unbounded" minOccurs="0">
               <xs:element name="entry">
                 <xs:complexType>
-                  <xs:sequence>
-                    <xs:element type="xs:string" name="code"/>
-                    <xs:element type="xs:string" name="label"/>
-                    <xs:element type="xs:string" name="description"/>
-                  </xs:sequence>
+                  <xs:choice maxOccurs="unbounded">
+                    <xs:element type="xs:string" name="code" maxOccurs="1" minOccurs="1"/>
+                    <xs:element type="xs:string" name="label" maxOccurs="1" minOccurs="1"/>
+                    <xs:element type="xs:string" name="description" maxOccurs="1" minOccurs="0"/>
+                  </xs:choice>
                   <xs:attribute type="xs:boolean" name="hideInEditMode" use="optional"/>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:string" name="name" use="optional"/>
+            <xs:attribute ref="displayIf" use="optional" />
+            <xs:attribute ref="sort" use="optional" />
             <xs:attribute type="xs:string" name="alias" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:attribute type="xs:string" name="sort" fixed="fixed">
+    <xs:annotation>
+      <xs:documentation>
+        By default codelist are sorted in alphabetical order.
+        Use this attribute to sort them by the order defined
+        in the codelist definition file.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
 </xs:schema>

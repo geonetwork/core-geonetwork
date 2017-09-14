@@ -1446,7 +1446,7 @@
   <element name="gmd:nameOfMeasure" id="100.0">
     <label>Nom de la mesura</label>
     <description>Nom del test aplicat a la dada</description>
-		<!-- ISO19138 Data quality basic measures Annex C - under revision ISO 
+		<!-- ISO19138 Data quality basic measures Annex C - under revision ISO
 			19157 http://www.iso.org/iso/fr/catalogue_detail.htm?csnumber=32575 -->
     <helper rel="gmd:measureDescription">
       <option value="">- Exactitud temàtica / Exactitud de l'atribut quantitatiu -</option>
@@ -2512,10 +2512,10 @@
       <option value="OGC:WCS">Servei Web de Cobertura OGC (OGC:WCS)</option>
       <option value="W3C:HTML:DOWNLOAD">Descàrrega (W3C:HTML:DOWNLOAD)</option>
       <option value="W3C:HTML:LINK">Informació (W3C:HTML:LINK)</option>
-			<!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service 
-				type <option value="discovery">Discovery Service (discovery)</option> <option 
-				value="view">View Service (view)</option> <option value="download">Download 
-				Service (download)</option> <option value="transformation">Transformation 
+			<!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
+				type <option value="discovery">Discovery Service (discovery)</option> <option
+				value="view">View Service (view)</option> <option value="download">Download
+				Service (download)</option> <option value="transformation">Transformation
 				Service (transformation)</option> <option value="other">Other Services (other)</option> -->
     </helper>
   </element>
