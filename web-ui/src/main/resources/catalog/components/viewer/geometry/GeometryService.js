@@ -210,7 +210,7 @@
             });
 
             if (options.outputAsWFSFeaturesCollection) {
-              outputValue = 
+              outputValue =
                   '<wfs:FeatureCollection ' +
                   'xmlns:wfs="http://www.opengis.net/wfs">' +
                   format.writeFeatures([outputFeature]) +

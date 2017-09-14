@@ -42,8 +42,8 @@
 
           // merge on top of default config
           scope.jsonConfig = angular.merge(
-            gnGlobalSettings.getMergeableDefaultConfig(),
-            angular.fromJson(scope.config));
+              gnGlobalSettings.getMergeableDefaultConfig(),
+              angular.fromJson(scope.config));
 
           scope.sortOrderChoices = ['', 'reverse'];
 

@@ -228,7 +228,7 @@
       function(qParams, aggs) {
 
     if (this.initialParams.stats &&
-      Object.keys(this.initialParams.stats).length > 0) {
+        Object.keys(this.initialParams.stats).length > 0) {
       angular.forEach(this.initialParams.stats, function(value, key) {
         if (key == 'undefined') {
           delete this.initialParams.stats[key];

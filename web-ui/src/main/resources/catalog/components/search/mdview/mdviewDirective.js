@@ -60,10 +60,10 @@
     'gnMdView', 'gnSearchSettings', function(gnMdView, gnSearchSettings) {
       return {
         scope: true,
-        templateUrl: function (elem, attrs) {
+        templateUrl: function(elem, attrs) {
           return attrs.template ||
-            '../../catalog/components/search/mdview/partials/' +
-            'mdpanel.html';
+              '../../catalog/components/search/mdview/partials/' +
+              'mdpanel.html';
         },
         link: function(scope, element, attrs, controller) {
 

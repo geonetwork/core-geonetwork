@@ -581,8 +581,9 @@
                         <xsl:attribute name="disabled"/>
                       </xsl:if>
                       <option></option>
+
                       <xsl:for-each select="$codelist/entry">
-                        <xsl:sort select="label"/>
+                        <xsl:sort select="if ($codelist/@sort = 'fixed') then position() else label"/>
                         <option value="{code}" title="{normalize-space(description)}">
                           <xsl:value-of select="label"/>
                         </option>
@@ -996,7 +997,7 @@
           <xsl:when test="$listOfValues/@editorMode = 'radio'">
 
             <xsl:for-each select="$listOfValues/entry">
-              <xsl:sort select="label"/>
+              <xsl:sort select="if ($listOfValues/@sort = 'fixed') then position() else label"/>
 
               <div class="radio row">
                 <div class="col-xs-12">
@@ -1190,7 +1191,8 @@
         <xsl:attribute name="display" select="'none'"/>
       </xsl:if>
       <xsl:for-each select="$listOfValues/entry">
-        <xsl:sort select="label"/>
+        <xsl:sort select="if ($listOfValues/@sort = 'fixed') then position() else label"/>
+
         <option value="{code}" title="{normalize-space(description)}">
           <xsl:if test="code = $valueToEdit">
             <xsl:attribute name="selected"/>

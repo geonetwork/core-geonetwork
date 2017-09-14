@@ -1014,7 +1014,8 @@
   <codelist name="gmd:MD_MaintenanceFrequencyCode"
             displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'SEXTANT')]">
+              contains(gmd:metadataStandardName/gco:CharacterString, 'SEXTANT')]"
+            sort="fixed">
     <entry>
       <code>continual</code>
       <label>Continual</label>
@@ -1143,7 +1144,7 @@
   </codelist>
 
 
-	<codelist name="gmd:MD_MaintenanceFrequencyCode">
+	<codelist name="gmd:MD_MaintenanceFrequencyCode" sort="fixed">
 		<entry>
 			<code>continual</code>
 			<label>Continual</label>

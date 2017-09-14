@@ -61,15 +61,15 @@
             // apply extent from settings
             var mapExtent = gnMap.getMapConfig().mapExtent;
             if (mapExtent && ol.extent.getWidth(mapExtent) &&
-              ol.extent.getHeight(mapExtent)) {
-                scope.ctrl.map.getView().fit(mapExtent,
+                ol.extent.getHeight(mapExtent)) {
+              scope.ctrl.map.getView().fit(mapExtent,
                   scope.ctrl.map.getSize());
             }
 
             // apply background layer from settings
             var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
             if (bgLayer) {
-              scope.ctrl.map.getLayers().removeAt(0)
+              scope.ctrl.map.getLayers().removeAt(0);
               gnMap.createLayerForType(bgLayer.type, {
                 name: bgLayer.layer,
                 url: bgLayer.url

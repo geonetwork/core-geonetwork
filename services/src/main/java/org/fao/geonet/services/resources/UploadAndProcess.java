@@ -118,7 +118,7 @@ public class UploadAndProcess {
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessUtils.process(context, id, process,
-                true, report, siteURL, allParams);
+                true, true, report, siteURL, allParams);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                     + report.getNumberOfRecordNotFound() + ", Not owner:" + report.getNumberOfRecordsNotEditable()
