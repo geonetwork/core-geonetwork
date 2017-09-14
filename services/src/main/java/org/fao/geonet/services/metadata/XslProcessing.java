@@ -102,7 +102,7 @@ public class XslProcessing {
         Element processedMetadata;
         try {
             final String siteURL = settingsMan.getSiteURL(context);
-            processedMetadata = XslProcessUtils.process(context, id, process, save, report, siteURL, request.getParameterMap());
+            processedMetadata = XslProcessUtils.process(context, id, process, save, true, report, siteURL, request.getParameterMap());
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                     + report.getNumberOfRecordNotFound() +
