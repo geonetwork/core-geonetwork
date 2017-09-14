@@ -175,6 +175,7 @@
           'mapExtent': [0, 0, 0, 0],
           'mapBackgroundLayer': {}
         },
+        'geocoder': 'https://secure.geonames.org/searchJSON',
         'editor': {
           'enabled': true,
           'appUrl': '../../srv/{{lang}}/catalog.edit'
@@ -232,6 +233,7 @@
         gnViewerSettings.bingKey = this.gnCfg.mods.map.bingKey;
         gnViewerSettings.owsContext = gnViewerSettings.owsContext ||
             this.gnCfg.mods.map.context;
+        gnViewerSettings.geocoder = this.gnCfg.mods.geocoder;
       },
       getDefaultConfig: function() {
         return angular.copy(defaultConfig);

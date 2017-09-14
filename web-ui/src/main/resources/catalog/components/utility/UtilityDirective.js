@@ -172,7 +172,9 @@
    */
   module.directive('gnRegionPickerInput', [
     'gnRegionService', 'gnUrlUtils', 'gnGlobalSettings',
-    function(gnRegionService, gnUrlUtils, gnGlobalSettings) {
+    'gnViewerSettings',
+    function(gnRegionService, gnUrlUtils, gnGlobalSettings,
+        gnViewerSettings) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -191,7 +193,7 @@
 
               if (scope.regionType.id == 'geonames') {
                 $(element).typeahead('destroy');
-                var url = 'http://api.geonames.org/searchJSON';
+                var url = gnViewerSettings.geocoder;
                 url = gnUrlUtils.append(url, gnUrlUtils.toKeyValue({
                   lang: scope.lang,
                   style: 'full',

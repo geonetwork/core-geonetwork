@@ -116,8 +116,7 @@
                 return (props.length == 0) ? '' : '—' + props.join(', ');
               };
 
-              //TODO: move api url and username to config
-              var url = 'http://api.geonames.org/searchJSON';
+              var url = gnViewerSettings.geocoder;
               $http.get(url, {
                 params: {
                   lang: lang,
