@@ -21,7 +21,7 @@
   </div>
 
   <!--Linestring-->
-  <div data-ng-if="getType() == 'line'">
+  <div data-ng-if="getType().indexOf('line') == 0">
     <div class="form-group">
       <label>{{'drawWidth'|translate}}
         <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width"

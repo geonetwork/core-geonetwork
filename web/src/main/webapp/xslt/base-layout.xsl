@@ -68,6 +68,9 @@
       and a facet search to get main site information.
       -->
       <body data-ng-controller="GnCatController">
+
+        <div data-gn-alert-manager=""></div>
+
         <xsl:choose>
           <xsl:when test="ends-with($service, 'nojs')">
             <!-- No JS degraded mode ... -->

@@ -32,10 +32,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.XLink;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.SRV;
-
 /**
  * Created by francois on 11/03/16.
  */
@@ -45,12 +41,12 @@ public class DirectoryUtils {
     /**
      * Save entries and metadata
      */
-    public static void saveEntries(ServiceContext context,
-                                   CollectResults collectResults,
-                                   String sourceIdentifier,
-                                   Integer owner,
-                                   Integer groupOwner,
-                                   boolean saveRecord) {
+    public static Map<String, Exception> saveEntries(ServiceContext context,
+                                                     CollectResults collectResults,
+                                                     String sourceIdentifier,
+                                                     Integer owner,
+                                                     Integer groupOwner,
+                                                     boolean saveRecord) {
         DataManager dataManager = context.getBean(DataManager.class);
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Table<String, String, Element> entries = collectResults.getEntries();
@@ -59,6 +55,7 @@ public class DirectoryUtils {
         Metadata record = collectResults.getRecord();
         boolean validate = false, index = false, ufo = false,
             notify = false, publicForGroup = true, refreshReaders = false;
+        Map<String, Exception> errors = new HashMap<>();
 
         while (entriesIterator.hasNext()) {
             String identifier = entriesIterator.next();
@@ -91,7 +88,7 @@ public class DirectoryUtils {
                         uuid, subtemplate.getId());
                     // TODO: Set categories ? privileges
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    errors.put(uuid, e);
                 }
             } else {
                 try {
@@ -103,7 +100,7 @@ public class DirectoryUtils {
                     collectResults.getEntryIdentifiers().put(
                         uuid, dbSubTemplate.getId());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    errors.put(uuid, e);
                 }
             }
         }
@@ -117,6 +114,7 @@ public class DirectoryUtils {
                 e.printStackTrace();
             }
         }
+        return errors;
     }
 
     /**

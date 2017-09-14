@@ -2659,13 +2659,6 @@
     <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
       wird</description>
   </element>
-  <element name="gmd:characterSet" id="4">
-    <label>Zeichensatz</label>
-    <help>Empfehlung: Verwendung von UTF8</help>
-    <condition/>
-    <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
-      wird</description>
-  </element>
   <element name="gmd:characterSet" context="gmd:MD_Metadata" id="4">
     <label>Zeichensatz</label>
     <help>Empfehlung: Verwendung von UTF8</help>
@@ -2688,6 +2681,8 @@
   <element name="gmd:characterSet" id="4.0">
     <label>Zeichensatz</label>
     <help>Empfehlung: Verwendung von UTF8</help>
+    <description>Exakte Bezeichnung des Zeichencodestandards, der im Metadatensatz verwendet
+      wird</description>
   </element>
   <element name="gmd:name" context="gmd:CI_OnlineResource" id="400">
     <label>Bezeichnung</label>
