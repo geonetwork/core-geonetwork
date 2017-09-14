@@ -25,6 +25,7 @@ package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
+import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
 import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
@@ -87,6 +88,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.servlet.ServletContext;
@@ -444,7 +446,10 @@ public class Geonetwork implements ApplicationHandler {
 
                     for (String formatterName : formattersToInitialize) {
                         Log.info(Geonet.GEONETWORK, "Initializing the Formatter with id: " + formatterName);
+                        final MockHttpSession servletSession = new MockHttpSession(servletContext);
+                        servletSession.setAttribute(Jeeves.Elem.SESSION,  context.getUserSession());
                         final MockHttpServletRequest servletRequest = new MockHttpServletRequest(servletContext);
+                        servletRequest.setSession(servletSession);
                         final MockHttpServletResponse response = new MockHttpServletResponse();
                         try {
                             formatService.exec("eng", FormatType.html.toString(), mdId.toString(), null, formatterName,

@@ -1,5 +1,5 @@
 UPDATE Settings SET value='3.2.2' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
 
 -- These 2 ALTER TABLE should be performerd automatically by hibernate
 -- ALTER TABLE users ADD COLUMN isenabled CHAR(1) DEFAULT 'y';

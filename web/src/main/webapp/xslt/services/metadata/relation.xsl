@@ -93,6 +93,12 @@
               </value>
             </description>
 
+            <xsl:for-each select="$metadata/type">
+              <mdType>
+                <xsl:value-of select="."/>
+              </mdType>
+            </xsl:for-each>
+
             <xsl:if test="$type = 'siblings'">
               <associationType>
                 <xsl:value-of select="../@initiative"/>
