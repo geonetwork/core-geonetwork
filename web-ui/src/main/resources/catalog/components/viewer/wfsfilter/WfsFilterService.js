@@ -328,13 +328,18 @@
         var state = esObj.getState();
         var where;
 
+        if (!state) {
+          console.warn('WFS filter state could not be fetched');
+          return '';
+        }
+
         where = [];
         angular.forEach(state.qParams, function(fObj, fName) {
           var config = esObj.getIdxNameObj_(fName);
           var clause = [];
           var values = fObj.values;
           if (config.isDateTime) {
-            if (values.from != '' && values.to != '') {
+            if (values.from && values.to) {
               where = where.concat([
                 '(' + fName + '>' + transformDate(values.from) + ')',
                 '(' + fName + '<' + transformDate(values.to) + ')'
