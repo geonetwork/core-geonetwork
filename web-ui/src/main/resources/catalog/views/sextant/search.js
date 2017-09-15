@@ -629,9 +629,15 @@
   }]);
 
   // avoid FOUC (flash of unstyled content)
-  $('.gn, .g').hide();
+  $('.gn, .g').css({
+    'max-height': '0px',
+    'overflow': 'hidden'
+  });
   $(window).load(function() {
-    $('.gn, .g').show();
+    $('.gn, .g').css({
+      'max-height': 'none',
+      'overflow': 'auto'
+    });
   });
 
 })();
