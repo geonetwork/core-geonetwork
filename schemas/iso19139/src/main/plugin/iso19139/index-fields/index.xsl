@@ -139,17 +139,6 @@
         </standardName>
       </xsl:for-each>
 
-      <!-- Harvester details
-      <territory>GN</territory>
-      <territory>
-        <xsl:value-of select="util:getSettingValue('system/site/name')"/>
-      </territory>
-      <harvesterId>
-        <xsl:value-of select="util:getSettingValue('nodeUrl')"/>
-      </harvesterId>
-      <harvesterUuid>
-        <xsl:value-of select="util:getSettingValue('system/site/siteId')"/>
-      </harvesterUuid> -->
       <harvestedDate>
         <xsl:value-of select="format-dateTime(current-dateTime(), $dateFormat)"/>
       </harvestedDate>
@@ -258,7 +247,8 @@
               select="gmd:alternateTitle/gco:CharacterString/text()"/>
           </resourceAltTitle>
 
-          <xsl:for-each select="gmd:date/gmd:CI_Date[gmd:date/*/text() != '']">
+          <xsl:for-each select="gmd:date/gmd:CI_Date[gmd:date/*/text() != '' and
+                                  matches(gmd:date/*/text(), '[0-9]{4}.*')]">
             <xsl:variable name="dateType"
                           select="gmd:dateType[1]/gmd:CI_DateTypeCode/@codeListValue"
                           as="xs:string?"/>
@@ -356,7 +346,6 @@
                                 gmx:Anchor[. != '']">
             <xsl:variable name="inspireTheme" as="xs:string"
                           select="text()"/>
-            <!--select="solr:analyzeField('synInspireThemes', text())"/>-->
 
             <inspireTheme_syn>
               <xsl:value-of select="text()"/>
@@ -378,7 +367,6 @@
               </inspireThemeFirst>
               <inspireAnnexForFirstTheme>
                 <xsl:value-of select="$inspireTheme"/>
-                <!--select="solr:analyzeField('synInspireAnnexes', $inspireTheme)"/>-->
               </inspireAnnexForFirstTheme>
             </xsl:if>
             <inspireAnnex>
@@ -390,10 +378,10 @@
         <!-- For services, the count does not take into account
         dataset's INSPIRE themes which are transfered to the service
         by service-dataset-task. -->
-        <numberOfInspireTheme>
+        <inspireThemeNumber>
           <xsl:value-of
             select="count($inspireKeywords)"/>
-        </numberOfInspireTheme>
+        </inspireThemeNumber>
 
         <hasInspireTheme>
           <xsl:value-of
@@ -407,6 +395,11 @@
                               */gmd:MD_Keywords/
                                 gmd:keyword/gmd:PT_FreeText/gmd:textGroup/
                                   gmd:LocalisedCharacterString"/>
+
+        <tagNumber>
+          <xsl:value-of select="count($keywords)"/>
+        </tagNumber>
+
         <xsl:for-each select="$keywords">
           <tag>
             <xsl:value-of select="text()"/>
@@ -602,68 +595,39 @@
                               -90 &lt;= number($n) and number($n) &lt;= 90">
                 <xsl:choose>
                   <xsl:when test="$e = $w and $s = $n">
-                    <geom>
-                      <xsl:text>POINT(</xsl:text>
-                      <xsl:value-of select="concat($w, ' ', $s)"/>
-                      <xsl:text>)</xsl:text>
-                    </geom>
-
-                    <geojson>
-                      <xsl:text>{"type": "point",</xsl:text>
-                      <xsl:text>"coordinates": "</xsl:text><xsl:value-of select="concat($w, ' ', $s)"/>"
-                      <xsl:text>}</xsl:text>
-                    </geojson>
+                    <location><xsl:value-of select="concat($s, ',', $w)"/></location>
                   </xsl:when>
                   <xsl:when
                     test="($e = $w and $s != $n) or ($e != $w and $s = $n)">
                     <!-- Probably an invalid bbox indexing a point only -->
-                    <geom>
-                      <xsl:text>POINT(</xsl:text>
-                      <xsl:value-of select="concat($w, ' ', $s)"/>
-                      <xsl:text>)</xsl:text>
-                    </geom>
-
-                    <geojson>
-                      <xsl:text>{"type": "point",</xsl:text>
-                      <xsl:text>"coordinates": "</xsl:text><xsl:value-of select="concat($w, ' ', $s)"/>"
-                      <xsl:text>}</xsl:text>
-                    </geojson>
+                    <location><xsl:value-of select="concat($s, ',', $w)"/></location>
                   </xsl:when>
                   <xsl:otherwise>
                     <geom>
-                      <xsl:text>POLYGON((</xsl:text>
-                      <xsl:value-of select="concat($w, ' ', $s)"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat($e, ' ', $s)"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat($e, ' ', $n)"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat($w, ' ', $n)"/>
-                      <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat($w, ' ', $s)"/>
-                      <xsl:text>))</xsl:text>
-                    </geom>
-
-
-                    <geojson>
                       <xsl:text>{"type": "polygon",</xsl:text>
                       <xsl:text>"coordinates": [</xsl:text>
-                      <xsl:value-of select="concat('[', $w, ' ', $s, ']')"/>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
                       <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $e, ' ', $s, ']')"/>
+                      <xsl:value-of select="concat('[', $e, ',', $s, ']')"/>
                       <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $e, ' ', $n, ']')"/>
+                      <xsl:value-of select="concat('[', $e, ',', $n, ']')"/>
                       <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $w, ' ', $n, ']')"/>
+                      <xsl:value-of select="concat('[', $w, ',', $n, ']')"/>
                       <xsl:text>,</xsl:text>
-                      <xsl:value-of select="concat('[', $w, ' ', $s, ']')"/>
+                      <xsl:value-of select="concat('[', $w, ',', $s, ']')"/>
                       <xsl:text>]}</xsl:text>
-                    </geojson>
+                    </geom>
+
+                    <location><xsl:value-of select="concat(
+                                              (number($s) + number($n)) div 2,
+                                              ',',
+                                              (number($w) + number($e)) div 2)"/></location>
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:when>
               <xsl:otherwise></xsl:otherwise>
             </xsl:choose>
+
 
             <!--<xsl:value-of select="($e + $w) div 2"/>,<xsl:value-of select="($n + $s) div 2"/></field>-->
           </xsl:for-each>
@@ -677,8 +641,6 @@
           </serviceType>
           <xsl:variable name="inspireServiceType" as="xs:string"
                         select="text()"/>
-          <!--select="solr:analyzeField(
-            'keepInspireServiceTypes', text())"/>-->
           <xsl:if test="$inspireServiceType != ''">
             <inspireServiceType>
               <xsl:value-of select="lower-case($inspireServiceType)"/>
@@ -899,7 +861,7 @@
                   as="xs:string*"/>
 
     <xsl:variable name="role"
-                  select="*[1]/gmd:role/*/@codeListValue"
+                  select="replace(*[1]/gmd:role/*/@codeListValue, ' ', '')"
                   as="xs:string?"/>
     <xsl:if test="normalize-space($organisationName) != ''">
       <xsl:element name="Org{$fieldSuffix}">

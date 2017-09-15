@@ -502,18 +502,18 @@
               "Območja upravljanja/zaprta območja/regulirana območja in poročevalske enote => Area management/restriction/regulation zones and reporting units",
               "Zone de administrare/restricţie/reglementare şi unităţi de raportare => Area management/restriction/regulation zones and reporting units",
               "Zone de administrare/restricție/reglementare și unități de raportare => Area management/restriction/regulation zones and reporting units",
-              "Gebiedsbeheer, gebieden waar beperkingen gelden, gereguleerde gebieden en rapportage-eenheden => Area management/restriction/regulation zones and reporting units",
+              "Gebiedsbeheer gebieden waar beperkingen gelden gereguleerde gebieden en rapportage-eenheden => Area management/restriction/regulation zones and reporting units",
               "Zonas de gestão/restrição/regulamentação e unidades de referência => Area management/restriction/regulation zones and reporting units",
               "Gospodarowanie obszarem/strefy ograniczone/regulacyjne oraz jednostki sprawozdawcze => Area management/restriction/regulation zones and reporting units",
               "Apgabala pārvaldības/ierobežojumu/reglamentētas zonas un ziņošanas vienības => Area management/restriction/regulation zones and reporting units",
               "Zone sottoposte a gestione/limitazioni/regolamentazione e unità con obbligo di comunicare dati => Area management/restriction/regulation zones and reporting units",
               "Amministrazzjoni ta' żoni/restrizzjoni/żoni regolati u unitajiet ta' rapportar => Area management/restriction/regulation zones and reporting units",
-              "Tvarkomos teritorijos, ribojamos ir reglamentuojamos zonos bei vienetai, už kuriuos atsiskaitoma => Area management/restriction/regulation zones and reporting units",
+              "Tvarkomos teritorijos ribojamos ir reglamentuojamos zonos bei vienetai už kuriuos atsiskaitoma => Area management/restriction/regulation zones and reporting units",
               "Területgazdálkodási/-korlátozási/-szabályozási övezetek és adatszolgáltató egységek => Area management/restriction/regulation zones and reporting units",
-              "Zones de gestion, de restriction ou de réglementation et unités de déclaration => Area management/restriction/regulation zones and reporting units",
-              "Aluesuunnittelun, rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt => Area management/restriction/regulation zones and reporting units",
+              "Zones de gestion de restriction ou de réglementation et unités de déclaration => Area management/restriction/regulation zones and reporting units",
+              "Aluesuunnittelun rajoitusten ja sääntelyn piiriin kuuluvat alueet ja raportointiyksiköt => Area management/restriction/regulation zones and reporting units",
               "Üldplaneering/piirangu-/reguleeritud tsoonid ja aruandlusüksused => Area management/restriction/regulation zones and reporting units",
-              "Zonas sujetas a ordenación, a restricciones o reglamentaciones y unidades de notificación => Area management/restriction/regulation zones and reporting units",
+              "Zonas sujetas a ordenación a restricciones o reglamentaciones y unidades de notificación => Area management/restriction/regulation zones and reporting units",
               "Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten => Area management/restriction/regulation zones and reporting units",
               "Ζώνες διαχείρισης/περιορισμού/ρύθμισης εκτάσεων και μονάδες αναφοράς => Area management/restriction/regulation zones and reporting units",
               "Forvaltede og regulerede områder samt områder med brugsbegrænsning og indberetningsenheder => Area management/restriction/regulation zones and reporting units",
@@ -1056,7 +1056,9 @@
           "type": "date"
         },
         "document": {
-          "type": "text"
+          "type" : "string",
+          "index" : "no",
+          "doc_values": false
         },
         "documentStandard": {
           "type": "keyword"
@@ -1065,7 +1067,12 @@
           "type": "keyword"
         },
         "geom": {
-          "type": "text"
+          "type": "geo_shape",
+          "tree": "quadtree",
+          "precision": "10km"
+        },
+        "location": {
+          "type": "geo_point"
         },
         "harvesterId": {
           "type": "keyword"
@@ -1103,6 +1110,9 @@
         "lineage": {
           "type": "text"
         },
+        "resolutionScaleDenominator": {
+          "type": "integer"
+        },
         "link": {
           "type": "text"
         },
@@ -1118,7 +1128,7 @@
         "metadataIdentifier": {
           "type": "keyword"
         },
-        "numberOfInspireTheme": {
+        "inspireThemeNumber": {
           "type": "short"
         },
         "otherConstraints": {
@@ -1196,10 +1206,13 @@
         "standardName": {
           "type": "keyword"
         },
+        "tagNumber": {
+          "type": "short"
+        },
         "tag": {
           "type": "keyword"
         },
-        "territory": {
+        "scope": {
           "type": "keyword"
         },
         "topic": {
@@ -1208,6 +1221,11 @@
         "validDate": {
           "type": "date",
           "format": "date_hour_minute_second"
+        },
+        "validReport": {
+          "type" : "string",
+          "index" : "no",
+          "doc_values": false
         },
         "schemaValidDate": {
           "type": "date",
