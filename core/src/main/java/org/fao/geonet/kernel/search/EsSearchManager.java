@@ -217,7 +217,7 @@ public class EsSearchManager implements ISearchManager {
         String catalog = doc.get("source").asText();
         doc.remove("source");
         doc.put("sourceCatalogue", catalog);
-        doc.put("territory", settingManager.getSiteName());
+        doc.put("scope", settingManager.getSiteName());
         doc.put("harvesterUuid", settingManager.getSiteId());
         doc.put("harvesterId", settingManager.getNodeURL());
         Map<String, String> docListToIndex = new HashMap<>();
