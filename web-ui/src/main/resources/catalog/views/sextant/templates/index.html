@@ -1,6 +1,8 @@
 <div class="gn-search-page container-fluid" data-ng-controller="GnSearchController">
   <div class="hfull" data-ng-controller="gnsSextant" id="sxt-controller">
-    <div data-gn-alert-manager=""></div>
+
+    <!-- show alerts here only in API mode (otherwise they are in base-layout.xsl) -->
+    <div data-gn-alert-manager="" ng-if="gnUrl"></div>
 
     <tabset class="hfull" id="main-tabset" type="pills">
       <tab ng-if="mainTabs.search" heading="{{mainTabs.search.title}}" active="mainTabs.search.active" class="sxt-scroll">
