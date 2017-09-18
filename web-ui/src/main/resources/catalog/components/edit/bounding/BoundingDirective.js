@@ -68,7 +68,7 @@
 
             // apply background layer from settings
             var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
-            if (bgLayer) {
+            if (bgLayer && bgLayer.type && bgLayer.url && bgLayer.layer) {
               scope.ctrl.map.getLayers().removeAt(0);
               gnMap.createLayerForType(bgLayer.type, {
                 name: bgLayer.layer,

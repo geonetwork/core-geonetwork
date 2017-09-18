@@ -67,6 +67,9 @@
              scope.mapId = 'map-drawbbox-' +
              mapRef.substring(1, mapRef.length);
 
+             // set read only
+             scope.readOnly = scope.$eval(attrs['readOnly']);
+
              var extentTpl = {
                'iso19139': '<gmd:EX_Extent ' +
                'xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
@@ -241,7 +244,7 @@
 
              // apply background layer from settings
              var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
-             if (bgLayer) {
+             if (bgLayer && bgLayer.type && bgLayer.url && bgLayer.layer) {
                map.getLayers().removeAt(0);
                gnMap.createLayerForType(bgLayer.type, {
                  name: bgLayer.layer,
