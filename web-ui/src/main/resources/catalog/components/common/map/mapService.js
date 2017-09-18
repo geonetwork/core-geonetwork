@@ -65,19 +65,7 @@
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, viewerSettings, gnViewerService) {
-
-        var defaultMapConfig = {
-          'useOSM': 'true',
-          'projection': 'EPSG:3857',
-          'projectionList': [{
-            'code': 'EPSG:4326',
-            'label': 'WGS84 (EPSG:4326)'
-          },{
-            'code': 'EPSG:3857',
-            'label': 'Google mercator (EPSG:3857)'
-          }]
-        };
+          gnGlobalSettings, gnViewerSettings, gnViewerService) {
 
         /**
          * @description
@@ -120,6 +108,173 @@
         };
 
         return {
+
+          /**
+           * These are types used when creating a new map with createMap
+           * The keys are used in the UI config, so that config.map.<KEY>
+           * points to a description of the map context & layers.
+           */
+          VIEWER_MAP: 'viewer',
+          SEARCH_MAP: 'search',
+          EDITOR_MAP: 'editor',
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createMap
+           *
+           * @description
+           * Creates a new map according to current UI config.
+           * The map will be created using a context (if specified) as well as
+           * layers above it and an extent.
+           * The corresponding map description must be an object like so:
+           * {
+           *   context: {string} optional, path to a XML file,
+           *   extent: {ol.Extent} optional map extent,
+           *   layers: {Array.<string>} optional layers array: each layer must
+           *     be described according to the standard notation used by
+           *     createLayerFromNotation
+           * }
+           * First, the context is applied, then (if defined) extent & layers
+           * TODO: This method must become the standardized way of creating maps
+           * throughout the application.
+           *
+           * @param {string} type of map: gnMap.VIEWER_MAP, SEARCH_MAP or
+           * EDITOR_MAP
+           * 
+           * @return {ol.Map} map created with the correct parameters
+           */
+          createMap: function(type) {
+            // TODO
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createLayerFromNotation
+           *
+           * @description
+           * Creates an ol.layer based on a string notation.
+           * Layer notation is defined like so:
+           * `{type=TYPE,arg1=VALUE,arg2=VALUE,...}`
+           * Handled TYPE values are:
+           *  * `osm`: OSM, no arg required
+           *  * `bing_aerial`: Bing Aerial background, required arg: `key`
+           *  * `stamen`: Stamen layers, required arg: `name`
+           *  * `wms`: generic WMS layer, required args: `name`, `url`
+           *  * `wmts`: generic WMTS layer, required args: `name`, `url`
+           *  * `tms`: generic TMS layer, required arg: `url`
+           * This will return a promise in the case of WMS/WMTS layers, and a
+           * layer object for every other type
+           *
+           * @param {string} notation normalized layer description
+           * @param {string} title optional title
+           * @param {ol.Map} map required for WMTS and WMS
+           * @return {ol.layer} layer or promise
+           */
+          createLayerFromNotation: function(notation, title, map) {
+            var testRE = /{type=[^,]+,?(?:[^,]+=[^,]+,?)*}/;
+            var typeRE = /{type=([^,}]*)/;
+            var argsRE = /([^,(type)]+)=([^,]+)[^}]/;
+
+            // check notation validity
+            if (!testRE.test(notation)) {
+              console.error('The layer notation structure is invalid:',
+                'Expected: {type=TYPE,arg1=VALUE,arg2=VALUE}',
+                'Received: ' + notation);
+              return null;
+            }
+
+            // first parse layer notation
+            var type = notation.match(typeRE)[1];
+            var args = {};
+            var result;
+            while (result = argsRE.exec(notation)) {
+              args[result[1]] = result[2];
+            }
+
+            switch (type) {
+              case 'osm':
+                return new ol.layer.Tile({
+                  source: new ol.source.OSM(),
+                  title: title ||  'OpenStreetMap'
+                });
+
+              //ALEJO: tms support
+              case 'tms':
+                return new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        url: args.url
+                    }),
+                    title: title ||  'TMS Layer'
+                });
+
+              case 'bing_aerial':
+                return new ol.layer.Tile({
+                  preload: Infinity,
+                  source: new ol.source.BingMaps({
+                    key: args.key,
+                    imagerySet: 'Aerial'
+                  }),
+                  title: title ||  'Bing Aerial'
+                });
+
+              case 'stamen':
+                //We make watercolor the default layer
+                var type = args.name ? args.name : 'watercolor',
+                    source = new ol.source.Stamen({
+                      layer: type
+                    });
+                source.set('type', type);
+                return new ol.layer.Tile({
+                  source: source,
+                  title: title ||  'Stamen'
+                });
+
+              case 'wmts':
+                if (!args.name || !args.url) {
+                  $log.warn('One of the required parameters (name, url) ' +
+                      'is missing in the specified WMTS layer:',
+                      notation);
+                  break;
+                }
+                return this.addWmtsFromScratch(map, args.url, args.name)
+                    .then(function(layer) {
+                      if (title) {
+                        layer.set('title', title);
+                        layer.set('label', title);
+                      }
+                      return layer;
+                    });
+
+              case 'wms':
+                if (!args.name || !args.url) {
+                  $log.warn('One of the required parameters (name, url) ' +
+                      'is missing in the specified WMS layer:',
+                      notation);
+                  break;
+                }
+                return this.addWmsFromScratch(map, args.url, args.name)
+                    .then(function(layer) {
+                      if (title) {
+                        layer.set('title', title);
+                        layer.set('label', title);
+                      }
+                      return layer;
+                    });
+            }
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createOSMLayer
+           *
+           * @return {ol.layer} layer
+           */
+          createOSMLayer: function() {
+            return this.createLayerFromNotation('{type=osm}');
+          },
 
           /**
            * @ngdoc method
@@ -325,21 +480,20 @@
            * @return {Object} defaultMapConfig mapconfig
            */
           getMapConfig: function() {
-            if (gnConfig['ui.config'].mods.map) {
-              return gnConfig['ui.config'].mods.map;
-            } else {
-              return defaultMapConfig;
-            }
+            return gnViewerSettings.mapConfig;
           },
 
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#getLayersFromConfig
+           * @deprecated
            *
            * @description
            * get the DB config of the layers list that should be in the map
            * by default
+           * DO NOT USE THIS ANYMORE:
+           * When creating a new map, use createMap(<TYPE>) instead
            *
            * @return {Object} defaultMapConfig layers config
            */
@@ -527,7 +681,7 @@
             // Set proxy for Cesium to load
             // layers not accessible with CORS headers
             // This is optional if the WMS provides CORS
-            if (viewerSettings.cesiumProxy) {
+            if (gnViewerSettings.cesiumProxy) {
               source.set('olcs.proxy', function(url) {
                 return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               });
@@ -550,7 +704,7 @@
               cextent: options.extent,
               name: layerParams.LAYERS
             };
-            if (viewerSettings.singleTileWMS) {
+            if (gnViewerSettings.singleTileWMS) {
               olLayer = new ol.layer.Image(layerOptions);
             } else {
               olLayer = new ol.layer.Tile(layerOptions);
@@ -576,7 +730,7 @@
             olLayer.displayInLayerManager = true;
 
             var unregisterEventKey = olLayer.getSource().on(
-                (viewerSettings.singleTileWMS) ?
+                (gnViewerSettings.singleTileWMS) ?
                 'imageloaderror' : 'tileloaderror',
                 function(tileEvent, target) {
                   var url = tileEvent.tile && tileEvent.tile.getKey ?
@@ -1558,6 +1712,7 @@
            *
            * @description
            * Creates an ol.layer for a given type. Useful for contexts
+           * DEPRECATED: use createLayerFromNotation instead!!
            *
            * @param {string} type of the layer to create
            * @param {Object} opt for url or layer name
@@ -1584,7 +1739,7 @@
                 return new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: viewerSettings.bingKey,
+                    key: gnViewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
                   title: title ||  'Bing Aerial'
