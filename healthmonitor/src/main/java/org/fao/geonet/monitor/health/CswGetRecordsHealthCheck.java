@@ -46,7 +46,7 @@ public class CswGetRecordsHealthCheck implements HealthCheckFactory {
             @Override
             protected Result check() throws Exception {
                 try {
-                    LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetRecords&service=CSW&MaxRecords=1&constraintlanguage=FILTER&version=2.0.2&resulttype=results");
+                    LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetRecords&service=CSW&MaxRecords=1&constraintlanguage=FILTER&version=2.0.2&resulttype=results&typeNames=csw:Record");
                     request.setDebug(false);
                     request.setLanguage("eng");
                     request.setInputMethod(InputMethod.GET);
