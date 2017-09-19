@@ -108,46 +108,6 @@
         };
 
         return {
-
-          /**
-           * These are types used when creating a new map with createMap
-           * The keys are used in the UI config, so that config.map.<KEY>
-           * points to a description of the map context & layers.
-           */
-          VIEWER_MAP: 'viewer',
-          SEARCH_MAP: 'search',
-          EDITOR_MAP: 'editor',
-
-          /**
-           * @ngdoc method
-           * @methodOf gn_map.service:gnMap
-           * @name gnMap#createMap
-           *
-           * @description
-           * Creates a new map according to current UI config.
-           * The map will be created using a context (if specified) as well as
-           * layers above it and an extent.
-           * The corresponding map description must be an object like so:
-           * {
-           *   context: {string} optional, path to a XML file,
-           *   extent: {ol.Extent} optional map extent,
-           *   layers: {Array.<string>} optional layers array: each layer must
-           *     be described according to the standard notation used by
-           *     createLayerFromNotation
-           * }
-           * First, the context is applied, then (if defined) extent & layers
-           * TODO: This method must become the standardized way of creating maps
-           * throughout the application.
-           *
-           * @param {string} type of map: gnMap.VIEWER_MAP, SEARCH_MAP or
-           * EDITOR_MAP
-           * 
-           * @return {ol.Map} map created with the correct parameters
-           */
-          createMap: function(type) {
-            // TODO
-          },
-
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
@@ -164,13 +124,12 @@
            *  * `wms`: generic WMS layer, required args: `name`, `url`
            *  * `wmts`: generic WMTS layer, required args: `name`, `url`
            *  * `tms`: generic TMS layer, required arg: `url`
-           * This will return a promise in the case of WMS/WMTS layers, and a
-           * layer object for every other type
+           * This will return a promise with the layer in it
            *
            * @param {string} notation normalized layer description
            * @param {string} title optional title
            * @param {ol.Map} map required for WMTS and WMS
-           * @return {ol.layer} layer or promise
+           * @return {Promise} promise with the layer as result
            */
           createLayerFromNotation: function(notation, title, map) {
             var testRE = /{type=[^,]+,?(?:[^,]+=[^,]+,?)*}/;
@@ -192,32 +151,35 @@
             while (result = argsRE.exec(notation)) {
               args[result[1]] = result[2];
             }
+            var defer = $q.defer();
 
             switch (type) {
               case 'osm':
-                return new ol.layer.Tile({
+                defer.resolve(new ol.layer.Tile({
                   source: new ol.source.OSM(),
                   title: title ||  'OpenStreetMap'
-                });
+                }));
+                break;
 
-              //ALEJO: tms support
               case 'tms':
-                return new ol.layer.Tile({
+                defer.resolve(new ol.layer.Tile({
                     source: new ol.source.XYZ({
                         url: args.url
                     }),
                     title: title ||  'TMS Layer'
-                });
+                }));
+                break;
 
               case 'bing_aerial':
-                return new ol.layer.Tile({
+                defer.resolve(new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
                     key: args.key,
                     imagerySet: 'Aerial'
                   }),
                   title: title ||  'Bing Aerial'
-                });
+                }));
+                break;
 
               case 'stamen':
                 //We make watercolor the default layer
@@ -226,43 +188,53 @@
                       layer: type
                     });
                 source.set('type', type);
-                return new ol.layer.Tile({
+                defer.resolve(new ol.layer.Tile({
                   source: source,
                   title: title ||  'Stamen'
-                });
+                }));
+                break;
 
               case 'wmts':
                 if (!args.name || !args.url) {
                   $log.warn('One of the required parameters (name, url) ' +
                       'is missing in the specified WMTS layer:',
                       notation);
+                  defer.reject();
                   break;
                 }
-                return this.addWmtsFromScratch(map, args.url, args.name)
+                this.addWmtsFromScratch(map, args.url, args.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);
                         layer.set('label', title);
                       }
-                      return layer;
+                      defer.resolve(layer);
                     });
+                break;
 
               case 'wms':
                 if (!args.name || !args.url) {
                   $log.warn('One of the required parameters (name, url) ' +
                       'is missing in the specified WMS layer:',
                       notation);
+                  defer.reject();
                   break;
                 }
-                return this.addWmsFromScratch(map, args.url, args.name)
+                this.addWmsFromScratch(map, args.url, args.name)
                     .then(function(layer) {
                       if (title) {
                         layer.set('title', title);
                         layer.set('label', title);
                       }
-                      return layer;
+                      defer.resolve(layer);
                     });
+                break;
+
+              default:
+                defer.reject();
             }
+
+            return defer.promise;
           },
 
           /**

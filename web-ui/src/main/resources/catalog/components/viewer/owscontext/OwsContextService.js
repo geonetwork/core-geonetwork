@@ -328,7 +328,7 @@
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         //        }
-        $http.get(url, {headers: {accept: 'application/xml'}})
+        return $http.get(url, {headers: {accept: 'application/xml'}})
             .then(function(r) {
               if (r.data === '') {
                 var msg = $translate.instant('emptyMapLoadError', {
@@ -565,6 +565,7 @@
        *
        * @description
        * Create a WMS ol.Layer from context object
+       * !! DEPRECATED: use gnMap.createLayerFromNotation instead
        *
        * @param {Object} layer layer
        * @param {ol.map} map map
