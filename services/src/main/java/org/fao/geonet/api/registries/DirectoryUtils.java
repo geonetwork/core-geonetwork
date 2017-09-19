@@ -429,22 +429,4 @@ public class DirectoryUtils {
         }
         return null;
     }
-
-    public static Element removeUnsedLangsEntry(Element entry, final String[] langs) throws JDOMException {
-        List<Element> multilangElement = (List<Element>)Xml.selectNodes(entry, "*//node()[@locale]");
-
-        List<String> twoCharLangs = new ArrayList<String>();
-        for(String l : langs) {
-            twoCharLangs.add("#" + XslUtil.twoCharLangCode(l).toUpperCase());
-        }
-
-        for(Element el : multilangElement) {
-            if(!twoCharLangs.contains(el.getAttribute("locale").getValue())) {
-                Element parent = (Element)el.getParent();
-                parent.detach();
-            }
-        }
-        return entry;
-    }
-
 }

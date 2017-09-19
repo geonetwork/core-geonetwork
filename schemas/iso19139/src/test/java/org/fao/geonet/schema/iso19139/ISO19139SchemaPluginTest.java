@@ -33,6 +33,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class ISO19139SchemaPluginTest {
                 root.resolve("multilingual-contact.xml"));
 
         ISO19139SchemaPlugin plugin = new ISO19139SchemaPlugin();
-        plugin.removeTranslationFromElement(multilingualElement, "#EN");
+        plugin.removeTranslationFromElement(multilingualElement, Arrays.asList(new String[]{"#EN"}));
 
         String resultString = Xml.getString(multilingualElement);
 
