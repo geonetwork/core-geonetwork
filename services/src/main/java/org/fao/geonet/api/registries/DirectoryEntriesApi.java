@@ -54,6 +54,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -194,18 +195,17 @@ public class DirectoryEntriesApi {
                 }
             }
         }
-        // Remove all locazedString from the subtemplate for langs that are not in the metadata
-        if(langs.length > 1) {
-            DirectoryUtils.removeUnsedLangsEntry(tpl, langs);
+        // Multilingual record: Remove all localizedString from the subtemplate for langs that are not in the metadata and set the gco:CharacterString
+        // Monolingual record: Remove all localized strings and extract main gco:CharacterString
+        List<String> twoCharLangs = new ArrayList<String>();
+        for(String l : langs) {
+            twoCharLangs.add("#" + XslUtil.twoCharLangCode(l).toUpperCase());
         }
-        // Monolingual metadata: remove all localized strings and extract main characterString
-        else {
-            MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
-            if (plugin != null) {
-                plugin.removeTranslationFromElement(tpl, ("#" + XslUtil.twoCharLangCode(langs[0]).toUpperCase()));
-            }
+        MultilingualSchemaPlugin plugin = (MultilingualSchemaPlugin)schemaManager.getSchema(schema).getSchemaPlugin();
+        if (plugin != null) {
+            plugin.removeTranslationFromElement(tpl, twoCharLangs);
+        }
 
-        }
         if (transformation != null) {
             Element root = new Element("root");
             Element requestElt = new Element("request");

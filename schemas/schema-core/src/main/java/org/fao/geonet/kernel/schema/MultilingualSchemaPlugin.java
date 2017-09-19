@@ -42,6 +42,6 @@ public interface MultilingualSchemaPlugin {
 
     public abstract void addTranslationToElement(Element element, String languageIdentifier, String value);
 
-    public abstract  Element removeTranslationFromElement(Element element, String mdLang) throws JDOMException;
+    public abstract  Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
 
 }
