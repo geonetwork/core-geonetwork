@@ -1,0 +1,51 @@
+@import "../../../style/gn_search.less";
+
+// styling for a single result: metadata view
+.gn-md-view {
+  .gn-md-side {
+    .gn-img-thumbnail,
+    .gn-img-extent {
+      width: 100%;
+    }
+  }
+  .view-header {
+    border-bottom: 2px solid #e5e5e5;
+  }
+  .entry {
+    margin-left: 1em;
+    border-left: 2px solid #eeeeee;
+    padding-left: 5px;
+    dl {
+      padding-bottom: 5px;
+    }
+  }
+  input[readonly] {
+    background:#fff;
+  }
+  .extent{
+    display:inline-block;position:relative;margin:2em 0 0 90px;
+  }
+  .coord{
+    position:absolute;width:100px;
+  }
+  .coord-north{
+    top:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-south{
+    bottom:-1.25em;
+    left:50%;
+    margin-left:-75px;
+  }
+  .coord-east{
+    right:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+  .coord-west{
+    left:-75px;
+    top:50%;
+    margin-top:-1.25em;
+  }
+}
