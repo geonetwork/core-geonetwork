@@ -23,7 +23,6 @@
 
 (function() {
   goog.provide('gn_map_directive');
-  goog.require('gn_owscontext_service');
 
   var METRIC_DECIMALS = 4;
   var DEGREE_DECIMALS = 8;
@@ -32,15 +31,13 @@
     return proj == 'EPSG:4326' ? DEGREE_DECIMALS : METRIC_DECIMALS;
   };
 
-  angular.module('gn_map_directive',
-      ['gn_owscontext_service'])
-
+  angular.module('gn_map_directive', [])
       .directive(
       'gnDrawBbox',
       [
        'gnMap',
-       'gnOwsContextService',
-       function(gnMap, gnOwsContextService) {
+       'gnMapsManager',
+       function(gnMap, gnMapsManager) {
          return {
            restrict: 'A',
            replace: true,
@@ -222,35 +219,9 @@
              });
              bboxLayer.setZIndex(100);
 
-             var map = new ol.Map({
-               layers: [
-                 gnMap.getLayersFromConfig(),
-                 bboxLayer
-               ],
-               renderer: 'canvas',
-               view: new ol.View({
-                 center: [0, 0],
-                 projection: scope.projs.map,
-                 zoom: 2
-               })
-             });
+             var map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP)
+             map.addLayer(bboxLayer);
              element.data('map', map);
-
-             //Uses configuration from database
-             if (gnMap.getMapConfig().context) {
-               gnOwsContextService.
-               loadContextFromUrl(gnMap.getMapConfig().context, map);
-             }
-
-             // apply background layer from settings
-             var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
-             if (bgLayer && bgLayer.type && bgLayer.url && bgLayer.layer) {
-               map.getLayers().removeAt(0);
-               gnMap.createLayerForType(bgLayer.type, {
-                 name: bgLayer.layer,
-                 url: bgLayer.url
-               }, null, map);
-             }
 
              var dragbox = new ol.interaction.DragBox({
                style: boxStyle,
