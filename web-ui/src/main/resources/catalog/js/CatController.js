@@ -166,19 +166,19 @@
           },
           'graticuleOgcService': {},
           'map-viewer': {
-            'content': '../../map/config-viewer.xml',
+            'context': '../../map/config-viewer.xml',
             'extent': [0, 0, 0, 0],
             'layers': []
           },
           'map-search': {
-            'content': '',
+            'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [
               '{type=osm}'
             ]
           },
           'map-editor': {
-            'content': '',
+            'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [
               '{type=osm}'
