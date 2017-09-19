@@ -114,12 +114,11 @@
           <xsl:attribute name="xlink:href"
                          select="concat(
                                   $prefixUrl,
-                                  'api/registries/vocabularies/keyword?thesaurus=',
+                                  'api/registries/vocabularies/keyword?skipdescriptivekeywords=true&amp;thesaurus=',
                                    if (thesaurus/key) then thesaurus/key else /root/request/thesaurus,
                                   '&amp;id=', /root/request/id,
                                   if (/root/request/lang) then concat('&amp;lang=', /root/request/lang) else '',
                                   if ($textgroupOnly) then '&amp;textgroupOnly' else '')"/>
-          <xsl:attribute name="xlink:show">replace</xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="to-md-keywords">
