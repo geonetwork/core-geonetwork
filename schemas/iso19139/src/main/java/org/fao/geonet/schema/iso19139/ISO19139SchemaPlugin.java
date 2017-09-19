@@ -258,11 +258,11 @@ public class ISO19139SchemaPlugin
 
                 if (StringUtils.isNotEmpty(mainLangString)) {
                     mainCharacterString.setText(mainLangString);
-                } else {
-                    mainCharacterString.setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+                } else if (mainCharacterString.getAttribute("nilReason", ISO19139Namespaces.GCO) == null){
+                    ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
                 }
             } else if (StringUtils.isEmpty(mainCharacterString.getText())) {
-                mainCharacterString.setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+                ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
             }
         }
 
