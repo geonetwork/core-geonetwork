@@ -100,6 +100,9 @@
        *  after the context layers (used to add layers from the map settings)
        */
       this.loadContext = function(text, map, additionalLayers) {
+        // broadcast context load
+        $rootScope.$broadcast('owsContextLoaded');
+
         var context = unmarshaller.unmarshalString(text).value;
         // first remove any existing layer
         var layersToRemove = [];
@@ -400,8 +403,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.MapQuest) {
-            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
