@@ -2161,7 +2161,7 @@ public class DataManager implements ApplicationEventPublisherAware {
     private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
 
         Metadata metadata = getMetadataRepository().findOne(Integer.valueOf(id));
-        if (getSettingManager().getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION) &&
+        if (! getSettingManager().getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION) &&
                 metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
             MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
             Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);

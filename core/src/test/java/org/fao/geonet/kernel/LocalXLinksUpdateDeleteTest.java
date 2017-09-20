@@ -113,6 +113,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Test
     public void deleteAllowedWhenRefNotExists() throws Exception {
+        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
         Metadata contactMetadata = insertContact();
         Metadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
@@ -123,7 +124,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Test
     public void deleteHasToBeForbiddenWhenRefExistsAndSettingsSaySo() throws Exception {
-        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
+        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
@@ -138,7 +139,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Test
     public void deleteHasToBeAllowedWhenRefExistsAndSettingsSaySo() throws Exception {
-        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
+        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
@@ -190,7 +191,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         Element contactElement = Xml.loadStream(contactResource.openStream());
         return insertContact(contactElement);
     }
-    
+
     private Metadata insertContact( Element contactElement) throws Exception {
         Metadata contactMetadata = insertTemplateResourceInDb(contactElement, SUB_TEMPLATE);
 

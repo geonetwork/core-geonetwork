@@ -1130,5 +1130,8 @@
     "switchLangTo": "Changer de langue ...",
     "showResultsCount": "Afficher {{count}} résultats",
     "keywordMissingValue": "Valeur manquante",
-    "editKeyword": "Edit keyword"
+    "editKeyword": "Edit keyword",
+    "system/xlinkResolver/referencedDeletionAllowed" : "Autorise la suppression d'un subtemplate référencé par un xlink.",
+    "system/xlinkResolver/referencedDeletionAllowed-help" : "Coché signifie autorise."
+
 }
