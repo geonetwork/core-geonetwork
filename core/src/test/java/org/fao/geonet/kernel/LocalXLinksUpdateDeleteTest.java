@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.UUID;
@@ -66,6 +67,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Before
     public void setUp() throws Exception {
         this.context = createServiceContext();
+        settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
     }
 
     class MyQuartzJob extends IndexingTask {
@@ -83,20 +85,12 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Test
     public void updateHasToTriggerIndexation() throws Exception {
-        settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
-
         URL contactResource = AbstractCoreIntegrationTest.class.getResource("kernel/babarContact.xml");
         Element contactElement = Xml.loadStream(contactResource.openStream());
         Metadata contactMetadata = insertContact(contactElement);
         Metadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
-        IndexAndTaxonomy indexReader = searchManager.getIndexReader(null, -1);
-        IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
-        BooleanQuery query = new BooleanQuery();
-        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.ANY, "babar")), BooleanClause.Occur.MUST);
-        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.IS_TEMPLATE, "s")), BooleanClause.Occur.MUST_NOT);
-        TopDocs docs = searcher.search(query, 1);
-        Document document = indexReader.indexReader.document(docs.scoreDocs[0].doc);
+        Document document = searchForMetadataTagged("babar");
         assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
 
         Xml.selectElement(contactElement, "gmd:individualName/gco:CharacterString", Arrays.asList(GMD, GCO)).setText("momo");
@@ -110,23 +104,15 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
                 null,
                 false);
 
-        MyQuartzJob indexingTask = new MyQuartzJob();
-        indexingTask.execute();
-
+        new MyQuartzJob().execute();
         searchManager.forceIndexChanges();
-        query = new BooleanQuery();
-        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.ANY, "momo")), BooleanClause.Occur.MUST);
-        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.IS_TEMPLATE, "s")), BooleanClause.Occur.MUST_NOT);
-        indexReader = searchManager.getIndexReader(null, -1);
-        searcher = new IndexSearcher(indexReader.indexReader);
-        docs = searcher.search(query, 1);
-        document = indexReader.indexReader.document(docs.scoreDocs[0].doc);
+
+        document = searchForMetadataTagged("momo");
         assertEquals(vicinityMapMetadata.getUuid(), document.getField("_uuid").stringValue());
     }
 
     @Test
     public void deleteAllowedWhenRefNotExists() throws Exception {
-        settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
         Metadata contactMetadata = insertContact();
         Metadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
@@ -137,7 +123,6 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Test
     public void deleteHasToBeForbiddenWhenRefExistsAndSettingsSaySo() throws Exception {
-        settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
         settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
@@ -153,7 +138,6 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
 
     @Test
     public void deleteHasToBeAllowedWhenRefExistsAndSettingsSaySo() throws Exception {
-        settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
         settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
@@ -161,7 +145,6 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
         assertNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
-
 
     private Metadata insertTemplateResourceInDb(Element element, MetadataType type) throws Exception {
         loginAsAdmin(context);
@@ -207,13 +190,22 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         Element contactElement = Xml.loadStream(contactResource.openStream());
         return insertContact(contactElement);
     }
-
-
+    
     private Metadata insertContact( Element contactElement) throws Exception {
         Metadata contactMetadata = insertTemplateResourceInDb(contactElement, SUB_TEMPLATE);
 
         SpringLocalServiceInvoker mockInvoker = resetAndGetMockInvoker();
         when(mockInvoker.invoke(any(String.class))).thenReturn(contactElement);
         return contactMetadata;
+    }
+
+    private Document searchForMetadataTagged(String contactName) throws IOException {
+        IndexAndTaxonomy indexReader = searchManager.getIndexReader(null, -1);
+        IndexSearcher searcher = new IndexSearcher(indexReader.indexReader);
+        BooleanQuery query = new BooleanQuery();
+        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.ANY, contactName)), BooleanClause.Occur.MUST);
+        query.add(new TermQuery(new Term(Geonet.IndexFieldNames.IS_TEMPLATE, "s")), BooleanClause.Occur.MUST_NOT);
+        TopDocs docs = searcher.search(query, 1);
+        return indexReader.indexReader.document(docs.scoreDocs[0].doc);
     }
 }
