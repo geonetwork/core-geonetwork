@@ -1014,8 +1014,8 @@
                         fields[field] = e;
                       }
                       else {
-                        fields[field] = $filter('gnLocalized');
-                        (linkToEdit[fields[field]]);
+                        fields[field] =
+                          $filter('gnLocalized')(linkToEdit[fields[field]]);
                       }
                     });
 
