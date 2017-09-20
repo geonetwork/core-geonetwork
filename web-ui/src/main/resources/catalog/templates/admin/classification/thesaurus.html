@@ -450,14 +450,14 @@
 
             <!-- Only displayed for thesaurus of type place -->
             <fieldset data-ng-show="isPlaceType()">
-              <legend data-translate="">keywordCoordinates</legend>
-
+              <legend translate>keywordCoordinates</legend>
               <div data-ng-repeat="(key, value) in keywordSelected.geo track by $index">
-                <label class="control-label" data-translate="">{{key | translate}}</label>
-                <!-- TODO: use type="number" min="-180" max="180" but there is
-                        some issue in Angular - maybe https://github.com/angular/angular.js/issues/2144-->
-                <input name="{{key}}" class="form-control" type="text"
-                      data-ng-disabled="isExternal()" data-ng-model="keywordSelected.geo[key]"/>
+                <div class="input-group">
+                  <span class="input-group-addon width-33 text-right" translate>{{key}}</span>
+                  <input name="{{key}}" class="form-control" type="text"
+                        data-ng-disabled="isExternal()" data-ng-model="keywordSelected.geo[key]"/>
+                </div>
+                <br>
               </div>
             </fieldset>
 
