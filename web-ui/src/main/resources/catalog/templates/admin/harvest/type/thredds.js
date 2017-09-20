@@ -24,6 +24,7 @@ var gnHarvesterthredds = {
             "options" : {
                 "every" : "0 0 0 ? * *",
                 "oneRunOnly" : false,
+                "overrideUuid" : "SKIP",
                 "status" : "active",
                 "lang" : "eng",
                 "topic" : "",
@@ -78,6 +79,7 @@ var gnHarvesterthredds = {
                 + '  </site>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>'

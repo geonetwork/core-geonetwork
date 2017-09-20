@@ -22,7 +22,10 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.server.context.ServiceContext;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -43,16 +46,14 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
+import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -97,6 +98,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
     //--------------------------------------------------------------------------
     private DataManager dataMan;
+    
+    private MetadataRepository metadataRepository;
 
     //--------------------------------------------------------------------------
     //---
@@ -136,6 +139,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
         schemaMan = gc.getBean(SchemaManager.class);
+        metadataRepository = gc.getBean(MetadataRepository.class);
     }
 
     //---------------------------------------------------------------------------
@@ -260,7 +264,20 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         // 3.- If there is a collision of uuid with existent metadata, use a
         // random one
         if (dataMan.existsMetadataUuid(uuid)) {
-            uuid = null;
+            switch(params.getOverrideUuid()){
+            case OVERRIDE:
+                UriMapper localUris = new UriMapper(context, 
+                        metadataRepository.findOneByUuid(uuid).getHarvestInfo().getUuid());
+                List<RecordInfo> records = localUris.getRecords(rf.getPath());
+                updateMetadata(rf, records.get(0));
+                return;
+            case RANDOM:
+                uuid = null;
+                break;
+            case SKIP:
+            default:
+                return;
+            }
         }
 
         // 4.- If we still don't have a clear UUID, use a random one (backup

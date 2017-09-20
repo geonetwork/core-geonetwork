@@ -34,6 +34,7 @@ var gnHarvesterogcwxs = {
                 "useLayer" : "",
                 "useLayerMd" : "",
                 "datasetCategory" : "",
+                "overrideUuid" : "SKIP",
                 "outputSchema" : "iso19139"
             },
             "privileges" : [ {
@@ -69,6 +70,7 @@ var gnHarvesterogcwxs = {
                 + '  </site>'
                 + '  <options>'
                 + '    <oneRunOnly>' + h.options.oneRunOnly + '</oneRunOnly>'
+                + '    <overrideUuid>' + h.options.overrideUuid + '</overrideUuid>'
                 + '    <every>' + h.options.every + '</every>'
                 + '    <status>' + h.options.status + '</status>'
                 + '    <lang>' + h.options.lang + '</lang>'

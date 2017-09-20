@@ -998,6 +998,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         settingMan.add(ID_PREFIX + contentId, "importxslt", params.getImportXslt());
         settingMan.add(ID_PREFIX + contentId, "validate", params.getValidate());
 
+        //--- setup extras --------------------------------------------
+
+        settingMan.add(ID_PREFIX + optionsId, "overrideUuid", params.getOverrideUuid());
+        
         //--- setup stats node ----------------------------------------
 
         settingMan.add(ID_PREFIX + infoId, "lastRun", "");
