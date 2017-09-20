@@ -144,7 +144,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Test
     public void deleteHasToBeForbiddenWhenRefExistsAndSettingsSaySo() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
-        //settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
+        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
@@ -160,7 +160,7 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Test
     public void deleteHasToBeAllowedWhenRefExistsAndSettingsSaySo() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
-        //settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
+        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
