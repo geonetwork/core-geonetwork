@@ -37,7 +37,8 @@
       [
        'gnMap',
        'gnMapsManager',
-       function(gnMap, gnMapsManager) {
+       'ngeoDecorateInteraction',
+       function(gnMap, gnMapsManager, ngeoDecorateInteraction) {
          return {
            restrict: 'A',
            replace: true,
@@ -219,9 +220,19 @@
              });
              bboxLayer.setZIndex(100);
 
-             var map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP)
+             var map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
+             scope.map = map;
              map.addLayer(bboxLayer);
              element.data('map', map);
+
+             // initialize extent & bbox on map load
+             map.get('creationPromise').then(function () {
+               drawBbox();
+
+               if (gnMap.isValidExtent(scope.extent.map)) {
+                 map.getView().fit(scope.extent.map, map.getSize());
+               }
+             });
 
              var dragbox = new ol.interaction.DragBox({
                style: boxStyle,
@@ -248,8 +259,8 @@
              map.addInteraction(dragbox);
 
              /**
-            * Draw the map extent as a bbox onto the map.
-            */
+              * Draw the map extent as a bbox onto the map.
+              */
              var drawBbox = function() {
                var coordinates, geom;
 
@@ -274,39 +285,17 @@
              };
 
              /**
-            * When form is loaded
-            * - set map div
-            * - draw the feature with MD initial coordinates
-            * - fit map extent
-            */
-             scope.$watch('gnCurrentEdit.version', function(newValue) {
-               map.setTarget(scope.mapId);
-               drawBbox();
-
-               // apply extent from settings
-               var mapExtent = gnMap.getMapConfig().mapExtent;
-               if (mapExtent && ol.extent.getWidth(mapExtent) &&
-               ol.extent.getHeight(mapExtent)) {
-                  map.getView().fit(mapExtent, map.getSize());
-               }
-
-               if (gnMap.isValidExtent(scope.extent.map)) {
-                 map.getView().fit(scope.extent.map, map.getSize());
-               }
-             });
-
-             /**
-            * Switch mode (panning or drawing)
-            */
+              * Switch mode (panning or drawing)
+              */
              scope.drawMap = function() {
                scope.drawing = !scope.drawing;
              };
 
              /**
-            * Called on form input change.
-            * Set map and md extent from form reprojection, and draw
-            * the bbox from the map extent.
-            */
+              * Called on form input change.
+              * Set map and md extent from form reprojection, and draw
+              * the bbox from the map extent.
+              */
              scope.updateBbox = function() {
 
                reprojExtent('form', 'map');
@@ -317,10 +306,10 @@
              };
 
              /**
-            * Callback sent to gn-country-picker directive.
-            * Called on region selection from typeahead.
-            * Zoom to extent.
-            */
+              * Callback sent to gn-country-picker directive.
+              * Called on region selection from typeahead.
+              * Zoom to extent.
+              */
              scope.onRegionSelect = function(region) {
                // Manage regions service and geonames
                var bbox = region.bbox || region;

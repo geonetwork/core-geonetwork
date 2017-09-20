@@ -54,11 +54,6 @@
         },
         templateUrl: '../../catalog/components/edit/bounding/' +
             'partials/boundingpolygon.html',
-        link: {
-          post: function(scope, element) {
-            scope.ctrl.initValue();
-          }
-        },
         controllerAs: 'ctrl',
         bindToController: true,
         controller: [
@@ -84,6 +79,9 @@
 
             // init map
             ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
+            ctrl.map.get('creationPromise').then(function () {
+              ctrl.initValue();
+            });
 
             // interactions with map
             var layer = gnGeometryService.getCommonLayer(ctrl.map);

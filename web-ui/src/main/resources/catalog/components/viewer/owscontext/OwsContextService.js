@@ -565,7 +565,7 @@
        *
        * @description
        * Create a WMS ol.Layer from context object
-       * !! DEPRECATED: use gnMap.createLayerFromNotation instead
+       * !! DEPRECATED: use gnMap.createLayerFromProperties instead
        *
        * @param {Object} layer layer
        * @param {ol.map} map map

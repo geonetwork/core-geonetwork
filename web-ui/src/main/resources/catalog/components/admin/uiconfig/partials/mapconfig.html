@@ -25,12 +25,12 @@
   <tr data-ng-repeat="layer in mCfg[key]['layers'] track by $index">
   <td>
     <input type="text" class="form-control"
-    data-ng-model="layer"/>
+      gn-json-edit="layer" />
   </td>
   <td>
     <a class="btn btn-link text-danger"
-    title="{{'remove' | translate}}"
-    data-ng-click="removeItem(mCfg[key]['layers'], $index)">
+      title="{{'remove' | translate}}"
+      data-ng-click="removeItem(mCfg[key]['layers'], $index)">
     <i class="fa fa-times text-danger"/>
     </a>
   </td>
@@ -39,7 +39,7 @@
   <td>
     <a class="btn btn-link"
     title="{{'add' | translate}}"
-    data-ng-click="addItem(mCfg[key]['layers'], '{type=osm}')">
+    data-ng-click="addItem(mCfg[key]['layers'], {type: 'osm'})">
     <i class="fa fa-plus"/>
     </a>
   </td>

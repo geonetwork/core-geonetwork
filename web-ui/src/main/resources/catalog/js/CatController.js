@@ -174,14 +174,14 @@
             'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [
-              '{type=osm}'
+              { type: 'osm' }
             ]
           },
           'map-editor': {
             'context': '',
             'extent': [0, 0, 0, 0],
             'layers': [
-              '{type=osm}'
+              { type: 'osm' }
             ]
           }
         },

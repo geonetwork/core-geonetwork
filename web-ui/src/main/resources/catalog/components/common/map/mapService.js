@@ -111,62 +111,52 @@
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
-           * @name gnMap#createLayerFromNotation
+           * @name gnMap#createLayerFromProperties
            *
            * @description
-           * Creates an ol.layer based on a string notation.
-           * Layer notation is defined like so:
-           * `{type=TYPE,arg1=VALUE,arg2=VALUE,...}`
-           * Handled TYPE values are:
-           *  * `osm`: OSM, no arg required
-           *  * `bing_aerial`: Bing Aerial background, required arg: `key`
-           *  * `stamen`: Stamen layers, required arg: `name`
-           *  * `wms`: generic WMS layer, required args: `name`, `url`
-           *  * `wmts`: generic WMTS layer, required args: `name`, `url`
-           *  * `tms`: generic TMS layer, required arg: `url`
+           * Creates an ol.layer based on an object containing properties
+           * used to describe the layer. The `type` property is required, and
+           * others can be used depending on the layer type.
+           * Handled types are:
+           *  * `osm`: OSM, no other prop required
+           *  * `bing_aerial`: Bing Aerial background, required prop: `key`
+           *  * `stamen`: Stamen layers, required prop: `name`
+           *  * `wms`: generic WMS layer, required props: `name`, `url`
+           *  * `wmts`: generic WMTS layer, required props: `name`, `url`
+           *  * `tms`: generic TMS layer, required prop: `url`
+           * If a `title` property is present on the layer info obj, it will be
+           * applied on the layer.
            * This will return a promise with the layer in it
            *
-           * @param {string} notation normalized layer description
-           * @param {string} title optional title
+           * @param {Object} layerInfo object containing all the properties
            * @param {ol.Map} map required for WMTS and WMS
            * @return {Promise} promise with the layer as result
            */
-          createLayerFromNotation: function(notation, title, map) {
-            var testRE = /{type=[^,]+,?(?:[^,]+=[^,]+,?)*}/;
-            var typeRE = /{type=([^,}]*)/;
-            var argsRE = /([^,(type)]+)=([^,]+)[^}]/;
-
-            // check notation validity
-            if (!testRE.test(notation)) {
-              console.error('The layer notation structure is invalid:',
-                'Expected: {type=TYPE,arg1=VALUE,arg2=VALUE}',
-                'Received: ' + notation);
-              return null;
-            }
-
-            // first parse layer notation
-            var type = notation.match(typeRE)[1];
-            var args = {};
-            var result;
-            while (result = argsRE.exec(notation)) {
-              args[result[1]] = result[2];
-            }
+          createLayerFromProperties: function(layerInfo, map) {
+            // this will be used to return a promise (whichever the layer type)
             var defer = $q.defer();
 
-            switch (type) {
+            // check layer info validity
+            if (!layerInfo.type) {
+              console.error('The layer info object is invalid:', layerInfo);
+              defer.reject();
+              return $q.defer().promise;
+            }
+
+            switch (layerInfo.type) {
               case 'osm':
                 defer.resolve(new ol.layer.Tile({
                   source: new ol.source.OSM(),
-                  title: title ||  'OpenStreetMap'
+                  title: layerInfo.title ||  'OpenStreetMap'
                 }));
                 break;
 
               case 'tms':
                 defer.resolve(new ol.layer.Tile({
                     source: new ol.source.XYZ({
-                        url: args.url
+                        url: layerInfo.url
                     }),
-                    title: title ||  'TMS Layer'
+                    title: layerInfo.title ||  'TMS Layer'
                 }));
                 break;
 
@@ -174,63 +164,64 @@
                 defer.resolve(new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: args.key,
+                    key: layerInfo.key,
                     imagerySet: 'Aerial'
                   }),
-                  title: title ||  'Bing Aerial'
+                  title: layerInfo.title ||  'Bing Aerial'
                 }));
                 break;
 
               case 'stamen':
                 //We make watercolor the default layer
-                var type = args.name ? args.name : 'watercolor',
+                var type = layerInfo.name ? layerInfo.name : 'watercolor',
                     source = new ol.source.Stamen({
                       layer: type
                     });
                 source.set('type', type);
                 defer.resolve(new ol.layer.Tile({
                   source: source,
-                  title: title ||  'Stamen'
+                  title: layerInfo.title ||  'Stamen'
                 }));
                 break;
 
               case 'wmts':
-                if (!args.name || !args.url) {
+                if (!layerInfo.name || !layerInfo.url) {
                   $log.warn('One of the required parameters (name, url) ' +
                       'is missing in the specified WMTS layer:',
-                      notation);
+                      layerInfo);
                   defer.reject();
                   break;
                 }
-                this.addWmtsFromScratch(map, args.url, args.name)
+                this.addWmtsFromScratch(map, layerInfo.url, layerInfo.name)
                     .then(function(layer) {
-                      if (title) {
-                        layer.set('title', title);
-                        layer.set('label', title);
+                      if (layerInfo.title) {
+                        layer.set('title', layerInfo.title);
+                        layer.set('label', layerInfo.title);
                       }
                       defer.resolve(layer);
                     });
                 break;
 
               case 'wms':
-                if (!args.name || !args.url) {
+                if (!layerInfo.name || !layerInfo.url) {
                   $log.warn('One of the required parameters (name, url) ' +
                       'is missing in the specified WMS layer:',
-                      notation);
+                      layerInfo);
                   defer.reject();
                   break;
                 }
-                this.addWmsFromScratch(map, args.url, args.name)
+                this.addWmsFromScratch(map, layerInfo.url, layerInfo.name)
                     .then(function(layer) {
-                      if (title) {
-                        layer.set('title', title);
-                        layer.set('label', title);
+                      if (layerInfo.title) {
+                        layer.set('title', layerInfo.title);
+                        layer.set('label', layerInfo.title);
                       }
                       defer.resolve(layer);
                     });
                 break;
 
               default:
+                $log.warn('Unrecognized layer type: ', layerInfo.type);
                 defer.reject();
             }
 
@@ -245,7 +236,7 @@
            * @return {ol.layer} layer
            */
           createOSMLayer: function() {
-            return this.createLayerFromNotation('{type=osm}');
+            return this.createLayerFromProperties({ type: 'osm' });
           },
 
           /**
@@ -1684,7 +1675,7 @@
            *
            * @description
            * Creates an ol.layer for a given type. Useful for contexts
-           * DEPRECATED: use createLayerFromNotation instead!!
+           * DEPRECATED: use createLayerFromProperties instead!!
            *
            * @param {string} type of the layer to create
            * @param {Object} opt for url or layer name
