@@ -1141,7 +1141,7 @@
     "ui-mapExtent-help": "Extent coordinates to use for maps other that viewer and search maps.",
     "ui-mapBackgroundLayer": "Map Background Layer",
     "ui-mapBackgroundLayer-help": "Define here the background layer to use for maps other that viewer and search maps.",
-    "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink."
+    "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink.",
     "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow."
 
 }
