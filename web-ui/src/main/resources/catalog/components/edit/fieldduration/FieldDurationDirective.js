@@ -60,13 +60,13 @@
           var buildDuration = function() {
             var duration = [scope.sign === true ? '-' : '',
               'P',
-              scope.years, 'Y',
-              scope.monthes, 'M',
-              scope.days, 'D',
+              scope.years || 0, 'Y',
+              scope.monthes || 0, 'M',
+              scope.days || 0, 'D',
               'T',
-              scope.hours, 'H',
-              scope.minutes, 'M',
-              scope.secondes, 'S'];
+              scope.hours || 0, 'H',
+              scope.minutes || 0, 'M',
+              scope.secondes || 0, 'S'];
             scope.value = duration.join('');
           };
 
