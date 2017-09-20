@@ -2166,6 +2166,26 @@ public class DataManager implements ApplicationEventPublisherAware {
      * TODO Javadoc.
      */
     private void deleteMetadataFromDB(ServiceContext context, String id) throws Exception {
+
+        Metadata metadata = getMetadataRepository().findOne(Integer.valueOf(id));
+
+        if (getSettingManager().getValueAsBool(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION) &&
+                metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+            MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
+            Element parameters =  new Element(Jeeves.Elem.REQUEST);
+            parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));
+            parameters.addContent(new Element(Geonet.SearchResult.BUILD_SUMMARY).setText("false"));
+            parameters.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
+            parameters.addContent(new Element(SearchParameter.ISTEMPLATE).addContent("y or n"));
+            ServiceConfig config = new ServiceConfig();
+            searcher.search(context, parameters, config);
+            Map<Integer, Metadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 1);
+            if (result.size() > 0) {
+                throw new Exception("this template is referenced.");
+            }
+        }
+
+
         //--- remove operations
         deleteMetadataOper(context, id, false);
 

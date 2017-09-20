@@ -130,14 +130,8 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
         Metadata contactMetadata = insertContact();
         Metadata vicinityMapMetadata = insertVicinityMap(contactMetadata);
 
-        try {
-            dataManager.deleteMetadata(context,
-                    Integer.toString(vicinityMapMetadata.getId()));
-            dataManager.deleteMetadata(context,
-                    Integer.toString(contactMetadata.getId()));
-        } catch (Exception e) {
-
-        }
+        dataManager.deleteMetadata(context, Integer.toString(vicinityMapMetadata.getId()));
+        dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
         assertNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
@@ -160,16 +154,11 @@ public class LocalXLinksUpdateDeleteTest extends AbstractIntegrationTestWithMock
     @Test
     public void deleteHasToBeAllowedWhenRefExistsAndSettingsSaySo() throws Exception {
         settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
-        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, true);
+        settingManager.setValue(Settings.SYSTEM_XLINK_ALLOW_REFERENCED_DELETION, false);
         Metadata contactMetadata = insertContact();
         insertVicinityMap(contactMetadata);
 
-        try {
-            dataManager.deleteMetadata(context,
-                    Integer.toString(contactMetadata.getId()));
-        } catch (Exception e) {
-
-        }
+        dataManager.deleteMetadata(context, Integer.toString(contactMetadata.getId()));
         assertNull(dataManager.getMetadata(Integer.toString(contactMetadata.getId())));
     }
 
