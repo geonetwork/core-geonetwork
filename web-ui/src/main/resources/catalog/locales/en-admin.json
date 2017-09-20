@@ -1108,6 +1108,8 @@
     "ui-listOfServices-help": "If none defined, service metadata records are proposed to the users",
     "ui-storage": "User preference persistence",
     "ui-storage-help": "sessionStorage or localStorage",
+    "ui-isExportMapAsImageEnabled": "Export map as image",
+    "ui-isExportMapAsImageEnabled-help": "This requires CORS to be enabled on the WMS services used in the map application. If not sure, you should disable that option that may cause trouble displaying WMS layers.",
     "ui-is3DModeAllowed": "Allow 3D mode",
     "ui-is3DModeAllowed-help": "If enabled, user can switch the map to 3D mode. The map viewer need to be enabled also. If you don't want to enable the 3D mode for all users, adding 'catalog.search?with3d' in the URL will also load 3D mode.",
     "map/isMapViewerEnabled": "Enable Map Viewer",

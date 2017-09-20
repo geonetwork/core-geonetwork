@@ -1,6 +1,5 @@
 <div>
   <p class="help-block" data-translate="">ui/config-help</p>
-
   <fieldset data-ng-repeat="(m, mCfg) in jsonConfig.mods">
     <legend>
       <input type="checkbox"
@@ -548,6 +547,30 @@
 
       <!-- boolean -->
       <div data-ng-switch-when="is3DModeAllowed">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="isSaveMapInCatalogAllowed">
+        <input type="checkbox"
+               id="{{key}}-checkbox"
+               data-ng-model="mCfg[key]"/>&nbsp;
+        <label class="control-label"
+               for="{{key}}-checkbox">{{('ui-' + key) | translate}}</label>
+
+        <p class="help-block"
+           data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
+      <div data-ng-switch-when="isExportMapAsImageEnabled">
         <input type="checkbox"
                id="{{key}}-checkbox"
                data-ng-model="mCfg[key]"/>&nbsp;

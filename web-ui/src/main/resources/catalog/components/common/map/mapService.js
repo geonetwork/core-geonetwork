@@ -113,7 +113,7 @@
 
         var getImageSourceRatio = function(map, maxWidth) {
           var width = (map.getSize() && map.getSize()[0]) ||
-            $('.gn-full').width();
+              $('.gn-full').width();
           var ratio = maxWidth / width;
           ratio = Math.floor(ratio * 100) / 100;
           return Math.min(1.5, Math.max(1, ratio));
@@ -502,21 +502,26 @@
 
             var source, olLayer;
             if (viewerSettings.singleTileWMS) {
-              source = new ol.source.ImageWMS({
+              var config = {
                 params: layerParams,
                 url: options.url,
-                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 ratio: getImageSourceRatio(map, 2048)
-              });
+              };
+              source = new ol.source.ImageWMS(
+                  gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
+                  angular.extend(config, {crossOrigin: 'anonymous'}) : config
+                  );
             } else {
-              source = new ol.source.TileWMS({
+              var config = {
                 params: layerParams,
                 url: options.url,
-                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 gutter: 15
-              });
+              };
+              source = new ol.source.TileWMS(
+                  gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
+                  angular.extend(config, {crossOrigin: 'anonymous'}) : config);
             }
 
             // Set proxy for Cesium to load
