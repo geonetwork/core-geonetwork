@@ -196,7 +196,6 @@ public class Handlers {
                 }
             }
         }
-
         return hierarchy;
     }
 
