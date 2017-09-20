@@ -341,17 +341,18 @@
           if (config.isDateTime) {
             if (values.from && values.to) {
               where = where.concat([
-                '(' + fName + '>' + transformDate(values.from) + ')',
-                '(' + fName + '<' + transformDate(values.to) + ')'
+                '(' + fName + ' > ' + transformDate(values.from) + ')',
+                '(' + fName + ' < ' + transformDate(values.to) + ')'
               ]);
             }
             return;
           }
           angular.forEach(values, function(v, k) {
+            var escaped = k.replace('\'', '\\\'');
             clause.push(
                 (config.isTokenized) ?
-                '(' + fName + " LIKE '%" + k + "%')" :
-                '(' + fName + '=' + k + ')'
+                "(" + fName + " LIKE '%" + escaped + "%')" :
+                "(" + fName + " = '" + escaped + "')"
             );
           });
           if (clause.length == 0) return;
