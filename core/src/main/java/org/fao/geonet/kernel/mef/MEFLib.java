@@ -130,7 +130,15 @@ public class MEFLib {
                                     Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
         throws Exception {
         return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-            skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute, false);
+    }
+
+    public static Path doMEF2Export(ServiceContext context,
+                                    Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                    boolean removeXlinkAttribute, boolean skipError)
+        throws Exception {
+        return MEF2Exporter.doExport(context, uuids, Format.parse(format),
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute, skipError);
     }
 
     // --------------------------------------------------------------------------
