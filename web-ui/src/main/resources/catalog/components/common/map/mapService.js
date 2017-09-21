@@ -618,7 +618,7 @@
             var options = layerOptions || {};
 
             var source, olLayer;
-            if (viewerSettings.singleTileWMS) {
+            if (gnViewerSettings.singleTileWMS) {
               var config = {
                 params: layerParams,
                 url: options.url,
