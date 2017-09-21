@@ -94,15 +94,28 @@
     <xsl:value-of select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue"/>
   </xsl:template>
 
-  <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
+  <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
+    <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
+      <img class="gn-img-thumbnail img-thumbnail" src="{gmd:fileName/*}"/>
 
+      <xsl:for-each select="gmd:fileDescription">
+        <div class="gn-img-thumbnail-caption">
+          <xsl:call-template name="localised">
+            <xsl:with-param name="langId" select="$langId"/>
+          </xsl:call-template>
+        </div>
+      </xsl:for-each>
+    </xsl:for-each>
+  </xsl:template>
+
+
+  <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
 
     <link rel="stylesheet" type="text/css"
           href="{$baseUrl}../../apps/sextant/css/schema/default.css"></link>
 
     <link rel="stylesheet" type="text/css"
           href="{$baseUrl}../../apps/sextant/css/metadata-view.css"></link>
-
 
   </xsl:template>
 
@@ -515,6 +528,8 @@
       </dd>
     </dl>
   </xsl:template>
+
+
   <xsl:template mode="render-field"
                 match="gmd:graphicOverview[position() > 1]"
                 priority="100"/>

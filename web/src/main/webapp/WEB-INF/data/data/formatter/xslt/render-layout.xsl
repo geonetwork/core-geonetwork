@@ -19,6 +19,7 @@
   <xsl:template mode="getMetadataTitle" match="undefined"/>
   <xsl:template mode="getMetadataAbstract" match="undefined"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="undefined"/>
+  <xsl:template mode="getOverviews" match="undefined"/>
   <xsl:template mode="getMetadataHeader" match="undefined"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
@@ -74,7 +75,10 @@
           <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
 
           <div class="row">
-            <div class="gn-md-side col-md-4 col-md-offset-8">
+            <div class="col-md-8">
+              <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+            </div>
+            <div class="gn-md-side col-md-4">
               <section class="links"
                        ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
                 <h4 translate="">accessData</h4>
