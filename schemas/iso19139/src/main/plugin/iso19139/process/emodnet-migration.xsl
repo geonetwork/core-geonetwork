@@ -3,17 +3,17 @@
     EMODNET BATHYMETRY migration process
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:geonet="http://www.fao.org/geonetwork" 
+    xmlns:geonet="http://www.fao.org/geonetwork"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:gco="http://www.isotc211.org/2005/gco" 
+    xmlns:gco="http://www.isotc211.org/2005/gco"
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:gmx="http://www.isotc211.org/2005/gmx"
     version="2.0"
     exclude-result-prefixes="#all">
-    
+
     <xsl:output indent="yes"/>
-    
-    <!-- 
+
+    <!--
         Hierarchylevel is now only a label
          <gmd:hierarchyLevelName>
          <gmx:Anchor xlink:href="http://www.seadatanet.org/urnurl/SDN:L231:6:CPRD">SDN:L231:6:CPRD = Composite Product Record</gmx:Anchor>
@@ -24,30 +24,30 @@
             <xsl:value-of select="substring-after(., ' = ')"/>
         </gco:CharacterString>
     </xsl:template>
-    
+
     <xsl:template match="gmd:metadataStandardName/gco:CharacterString">
         <xsl:copy>
             ISO 19115:2003/19139 - EMODNET - BATHYMETRY
         </xsl:copy>
     </xsl:template>
-    
-    
+
+
     <!-- All hardcoded ids are now coming from thesaurus. Remove id prefix-->
     <xsl:template match="gco:CharacterString[
-                                starts-with(., 'SDN:') and 
+                                starts-with(., 'SDN:') and
                                 not(ancestor::gmd:fileIdentifier)]|
                         @uom[starts-with(., 'SDN:')]">
         <xsl:copy>
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:copy>
     </xsl:template>
-    
+
     <xsl:template match="@uom" priority="200">
         <xsl:attribute name="uom">
             <xsl:value-of select="substring-after(., ' = ')"/>
         </xsl:attribute>
     </xsl:template>
-    
+
     <!-- Set thesaurus depending on original list -->
     <xsl:template match="gmd:descriptiveKeywords/*[count(gmd:keyword/*[starts-with(text(), 'SDN:L05')]) > 0]/gmd:thesaurusName">
         <gmd:thesaurusName>
@@ -77,7 +77,7 @@
             </gmd:CI_Citation>
         </gmd:thesaurusName>
     </xsl:template>
-    
+
     <xsl:template match="gmd:descriptiveKeywords/*[count(gmd:keyword/*[starts-with(text(), 'SDN:P021')]) > 0]/gmd:thesaurusName">
         <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -106,9 +106,9 @@
             </gmd:CI_Citation>
         </gmd:thesaurusName>
     </xsl:template>
-    
-    
-    
+
+
+
     <xsl:template match="gmd:descriptiveKeywords/*[normalize-space(gmd:thesaurusName/*/gmd:title/*) = 'external.theme.inspire-theme']/gmd:thesaurusName">
         <gmd:thesaurusName>
             <gmd:CI_Citation>
@@ -137,7 +137,7 @@
             </gmd:CI_Citation>
         </gmd:thesaurusName>
     </xsl:template>
-    
+
     <xsl:template match="gmd:descriptiveKeywords/*[normalize-space(gmd:thesaurusName/*/gmd:alternateTitle/*) = 'EDMERP']/gmd:thesaurusName">
      <gmd:thesaurusName>
          <gmd:CI_Citation>
@@ -166,14 +166,14 @@
          </gmd:CI_Citation>
      </gmd:thesaurusName>
     </xsl:template>
-    
-    
-    
+
+
+
     <!-- Move old shoal bias -->
     <xsl:template match="gmd:report/gmd:DQ_NonQuantitativeAttributeAccuracy[gmd:nameOfMeasure/* = 'shoal bias']">
         <xsl:variable name="bias"
                       select="gmd:measureDescription/*"/>
-        
+
         <xsl:copy>
             <gmd:result>
                 <gmd:DQ_ConformanceResult>
@@ -211,8 +211,8 @@
             </gmd:result>
         </xsl:copy>
     </xsl:template>
-    
-    
+
+
     <xsl:template match="gmd:CI_ResponsibleParty[starts-with(gmd:organisationName/gco:CharacterString,
         'SDN:EDMO::EDMO')]">
         <xsl:copy>
@@ -222,8 +222,8 @@
             <xsl:apply-templates select="*"/>
         </xsl:copy>
     </xsl:template>
-    
-    
+
+
     <!-- Store language in gmd:LanguageCode instead of gco:CharacterString (INSPIRE requirements). -->
     <xsl:template match="gmd:language[gco:CharacterString]" priority="2">
         <xsl:copy>
@@ -231,8 +231,12 @@
                 codeListValue="{gco:CharacterString}"/>
         </xsl:copy>
     </xsl:template>
-    
-    
+
+    <xsl:template match="gmd:graphicOverview[
+            */gmd:fileDescription/gco:CharacterString = 'thumbnail' and
+            count(../gmd:graphicOverview[*/gmd:fileDescription/gco:CharacterString = 'large_thumbnail']) > 0]"
+                  priority="2"/>
+
     <!-- Do a copy of every nodes and attributes -->
     <xsl:template match="@*|node()">
         <xsl:copy>
