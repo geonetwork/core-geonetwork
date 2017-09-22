@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
@@ -93,7 +92,6 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
     }
 
     /**
-     *
      * @param id
      * @param node
      * @throws org.fao.geonet.exceptions.BadInputEx
@@ -132,8 +130,8 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
     //---------------------------------------------------------------------------
 
     /**
-     *
-     * @param p
+     * Stores in the harvester settings table some values not managed by {@link AbstractHarvester}
+     * @param p the harvester parameters.
      * @param path
      * @param siteId
      * @param optionsId
@@ -156,7 +154,12 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         if (params.eltSearches != null) {
             for (Element element : params.eltSearches) {
                 if (!element.getName().startsWith("parser")) {
-                    settingMan.add("id:" + searchID, element.getName(), element.getText());
+                    Element value = element.getChild("value");
+                    if (value != null) {
+                        settingMan.add("id:" + searchID, element.getName(), value.getText());
+                    } else {
+                        settingMan.add("id:" + searchID, element.getName(), element.getText());
+                    }
                 }
             }
         }
@@ -169,7 +172,6 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
     //---------------------------------------------------------------------------
 
     /**
-     *
      * @param log
      * @throws Exception
      */
