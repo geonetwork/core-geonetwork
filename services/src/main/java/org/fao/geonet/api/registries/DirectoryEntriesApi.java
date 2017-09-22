@@ -137,9 +137,9 @@ public class DirectoryEntriesApi {
         )
         throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
-        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
-        final Metadata metadata = metadataRepository.findOneByUuid(uuid);
-
+//        final MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+//        final Metadata metadata = metadataRepository.findOneByUuid(uuid);
+        final Metadata metadata = ApiUtils.getRecord(uuid);
         if (metadata == null) {
             throw new ResourceNotFoundException(String.format(
                 "Directory entry with UUID '%s' not found in this registry.",

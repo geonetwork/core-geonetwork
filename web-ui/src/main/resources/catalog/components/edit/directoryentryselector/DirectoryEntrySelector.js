@@ -268,7 +268,7 @@
                      decodeURIComponent(gnUrlUtils.toKeyValue(params));
 
                       $http.get(
-                     '../api/registries/entries/' + uuid, {
+                     '../api/registries/entries/' + id, {
                        params: params
                      })
                      .success(function(xml) {
