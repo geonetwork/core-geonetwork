@@ -13,6 +13,13 @@
 
     <xsl:output indent="yes"/>
 
+    <!-- File identifier : replace by _ for DOI-->
+    <xsl:template match="gmd:fileIdentifier/gco:CharacterString">
+      <gco:CharacterString>
+        <xsl:value-of select="replace(., ':', '_')"/>
+      </gco:CharacterString>
+    </xsl:template>
+
     <!--
         Hierarchylevel is now only a label
          <gmd:hierarchyLevelName>
@@ -235,6 +242,11 @@
     <xsl:template match="gmd:graphicOverview[
             */gmd:fileDescription/gco:CharacterString = 'thumbnail' and
             count(../gmd:graphicOverview[*/gmd:fileDescription/gco:CharacterString = 'large_thumbnail']) > 0]"
+                  priority="2"/>
+
+    <xsl:template match="gmd:graphicOverview/*/gmd:fileDescription"
+                  priority="2"/>
+    <xsl:template match="gmd:graphicOverview/*/gmd:fileType"
                   priority="2"/>
 
     <!-- Do a copy of every nodes and attributes -->
