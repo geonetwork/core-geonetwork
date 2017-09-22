@@ -69,9 +69,49 @@
   <xsl:variable name="nonMultilingualFields"
                 select="$editorConfig/editor/multilingualFields/exclude"/>
 
+  <xsl:variable name="currentUuid"
+                select="//gmd:MD_Metadata/gmd:fileIdentifier/*/text()"/>
 
+  <xsl:variable name="finalEmodnetUuid">
+    <xsl:if test="$isEmodnet">
+      <xsl:variable name="custodian"
+                    select="substring-after((
+                              //gmd:MD_Metadata/gmd:identificationInfo/*/gmd:pointOfContact/*[
+                                gmd:role/gmd:CI_RoleCode/@codeListValue = 'custodian']/
+                                @uuid)[1], 'n_code=')"/>
+      <!--<xsl:message>Emodnet uuid</xsl:message>
+      <xsl:message>HierarchyLevel: <xsl:value-of select="gmd:hierarchyLevelName/gco:CharacterString"/></xsl:message>
+      <xsl:message>Id: <xsl:value-of select="normalize-space(gmd:identificationInfo/*/gmd:citation/
+          */gmd:identifier/*/gmd:code/gco:CharacterString)"/></xsl:message>
+      <xsl:message>Custodian: <xsl:value-of select="$custodian"/> </xsl:message>
+      -->
+      <xsl:variable name="emodnetUuid">
+        <xsl:if test="
+                  //gmd:MD_Metadata/gmd:hierarchyLevelName/gco:CharacterString and
+                  normalize-space(//gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/
+                  */gmd:identifier/*/gmd:code/gco:CharacterString) != '' and
+                  $custodian != ''">
+
+          <!-- We use to create UUID for some EMODnet product based
+          on hierarchylevelname. For bathymetry only CPRD is used.
+          So this is now hardcoded. -->
+          <xsl:value-of select="concat('SDN_CPRD_',
+                    $custodian,
+                    '_',
+                    //gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/*/
+                      gmd:identifier/*/gmd:code/gco:CharacterString)"/>
+        </xsl:if>
+      </xsl:variable>
+      <xsl:value-of select="if (normalize-space($emodnetUuid) != '')
+                          then $emodnetUuid else /root/env/uuid"/>
+
+    </xsl:if>
+  </xsl:variable>
 
   <xsl:template match="/root">
+    <!--<xsl:message>Current UUID <xsl:value-of select="$currentUuid"/></xsl:message>
+    <xsl:message>Root UUID <xsl:value-of select="/root/env/uuid"/></xsl:message>
+    <xsl:message>New EMODNET UUID <xsl:value-of select="$finalEmodnetUuid"/></xsl:message>-->
     <xsl:apply-templates select="*:MD_Metadata"/>
   </xsl:template>
 
@@ -86,39 +126,7 @@
         <gco:CharacterString>
           <xsl:choose>
             <xsl:when test="$isEmodnet">
-
-              <xsl:variable name="custodian"
-                            select="substring-after((
-                              gmd:identificationInfo/*/gmd:pointOfContact/*[
-                                gmd:role/gmd:CI_RoleCode/@codeListValue = 'custodian']/
-                                @uuid)[1], 'n_code=')"/>
-              <!--<xsl:message>Emodnet uuid</xsl:message>
-              <xsl:message>HierarchyLevel: <xsl:value-of select="gmd:hierarchyLevelName/gco:CharacterString"/></xsl:message>
-              <xsl:message>Id: <xsl:value-of select="normalize-space(gmd:identificationInfo/*/gmd:citation/
-                  */gmd:identifier/*/gmd:code/gco:CharacterString)"/></xsl:message>
-              <xsl:message>Custodian: <xsl:value-of select="$custodian"/> </xsl:message>
-              -->
-              <xsl:variable name="finalEmodnetUuid">
-                <xsl:if test="
-                  gmd:hierarchyLevelName/gco:CharacterString and
-                  normalize-space(gmd:identificationInfo/*/gmd:citation/
-                  */gmd:identifier/*/gmd:code/gco:CharacterString) != '' and
-                  $custodian != ''">
-
-                  <!-- We use to create UUID for some EMODnet product based
-                  on hierarchylevelname. For bathymetry only CPRD is used.
-                  So this is now hardcoded. -->
-                  <xsl:value-of select="concat('SDN_CPRD_',
-                    $custodian,
-                    '_',
-                    gmd:identificationInfo/*/gmd:citation/*/
-                      gmd:identifier/*/gmd:code/gco:CharacterString)"/>
-                </xsl:if>
-              </xsl:variable>
-
-              <xsl:value-of select="if (normalize-space($finalEmodnetUuid) != '')
-                          then $finalEmodnetUuid else /root/env/uuid"/>
-
+              <xsl:value-of select="$finalEmodnetUuid"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="/root/env/uuid"/>
@@ -210,13 +218,13 @@
     	      contains(lower-case(string(../gmd:protocol/gco:CharacterString)), 'file')">
         <gmd:linkage gco:nilReason="withheld">
           <xsl:apply-templates select="@*"/>
-          <xsl:copy-of select="./*" />
+          <xsl:apply-templates select="./*" />
         </gmd:linkage>
       </xsl:when>
       <xsl:otherwise>
         <gmd:linkage >
           <xsl:apply-templates select="@*"/>
-          <xsl:copy-of select="./*" />
+          <xsl:apply-templates select="./*" />
         </gmd:linkage>
       </xsl:otherwise>
     </xsl:choose>
@@ -428,9 +436,7 @@
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <gmd:linkage>
-        <gmd:URL>
-          <xsl:value-of select="gmd:linkage/gmd:URL"/>
-        </gmd:URL>
+        <xsl:apply-templates select="gmd:URL"/>
       </gmd:linkage>
       <xsl:copy-of select="gmd:protocol"/>
       <xsl:copy-of select="gmd:applicationProfile"/>
@@ -454,10 +460,9 @@
         <xsl:with-param name="linkage" select="gmd:linkage/gmd:URL"/>
       </xsl:call-template>
     </xsl:variable>
-
     <xsl:copy>
       <xsl:copy-of select="@*"/>
-      <xsl:copy-of select="gmd:linkage"/>
+      <xsl:apply-templates select="gmd:linkage"/>
       <xsl:copy-of select="gmd:protocol"/>
       <xsl:copy-of select="gmd:applicationProfile"/>
       <gmd:name>

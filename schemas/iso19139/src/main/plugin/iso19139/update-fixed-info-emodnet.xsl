@@ -34,4 +34,15 @@
           'EMODNET')"/>
 
 
+
+  <!-- EMODNET -->
+  <!-- Update all text having references to previous UUID -->
+  <xsl:template match="gmd:linkage/gmd:URL[$isEmodnet and contains(., $currentUuid)]|
+                       gco:CharacterString[$isEmodnet and contains(., $currentUuid)]"
+                priority="200">
+    <xsl:copy>
+     <xsl:value-of select="replace(., $currentUuid, $finalEmodnetUuid)"/>
+   </xsl:copy>
+  </xsl:template>
+
 </xsl:stylesheet>
