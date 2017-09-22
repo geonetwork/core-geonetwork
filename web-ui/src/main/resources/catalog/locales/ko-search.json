@@ -406,5 +406,7 @@
     "processesTool": "WPS 프로세스 사용",
     "wpsGetCapError": "WPS capabilities 구문분석 오류",
     "wpsByUrl": "프로세스 검색",
-    "wpsRecent": "최근 사용한 프로세스"
+    "wpsRecent": "최근 사용한 프로세스",
+    "selection.indexing.count": "선택한 {{count}} 개의 레코드(들)의 인덱스 생성이 시작되었습니다.",
+    "selection.indexing.error": "인덱스 선택중 오류가 발생했습니다."
 }
