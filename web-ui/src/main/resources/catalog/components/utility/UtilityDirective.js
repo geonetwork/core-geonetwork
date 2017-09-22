@@ -1111,6 +1111,9 @@
           var link = attrs.gnActiveTbItem, href,
               isCurrentService = false;
 
+          // Replace lang in link
+          link = link.replace('{{lang}}', gnLangs.getCurrent());
+
           // Insert debug mode between service and route
           if (link.indexOf('#') !== -1) {
             var tokens = link.split('#');
@@ -1133,13 +1136,24 @@
           // Set the href attribute for the element
           // with the link containing the debug mode
           // or not
-          element.attr('href', href.replace('{{lang}}', gnLangs.getCurrent()));
+          element.attr('href', href);
 
           function checkActive() {
-            // Ignore the service parameters and
-            // check url contains path
-            var isActive = $location.absUrl().replace(/\?.*#/, '#').
-                match('.*' + link + '.*') !== null;
+            // regexps for getting the service & path
+            var serviceRE = /\/?([^\/\?#]*)\??[^\/]*(?:#|$)/;
+            var pathRE = /#\/?([^\?]*)/
+
+            // compare current url & input href
+            var url = $location.absUrl();
+            var currentService =
+              url.match(serviceRE) ? url.match(serviceRE)[1] : '';
+            var currentPath = $location.path().substring(1);
+            var targetService =
+              link.match(serviceRE) ? link.match(serviceRE)[1] : '';
+            var targetPath =
+              link.match(pathRE) ? link.match(pathRE)[1] : '';
+            var isActive = currentService == targetService &&
+              (!targetPath || currentPath == targetPath);
 
             if (isActive) {
               element.parent().addClass('active');
