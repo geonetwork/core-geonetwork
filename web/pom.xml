@@ -769,6 +769,125 @@
     </profile>
     
     <!-- GN-e profiles -->
+    
+    <!-- GN-e profiles -->
+    <profile>
+      <id>INSPIRE</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <groupId>org.codehaus.mojo</groupId>
+            <executions>
+        <!-- enable INSPIRE view -->
+              <execution>
+                <id>enable-inspire-view</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <message>Enable INSPIRE view</message>
+                  <executable>sed</executable>
+                  <commandlineArgs>-i -e "s#'system/inspire/enable', 'false'#'system/inspire/enable', 'true'#g" ${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql</commandlineArgs>
+                </configuration>
+              </execution>
+        <!-- Set version name -->
+              <execution>
+                <id>set-version-name</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <message>Set version name</message>
+                  <executable>sed</executable>
+                  <commandlineArgs>-i -e "s#'system/platform/subVersion', 'SNAPSHOT'#'system/platform/subVersion', 'live-INSPIRE'#g" ${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql</commandlineArgs>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- Enable schematron rules -->
+          <plugin>
+            <groupId>com.coderplus.maven.plugins</groupId>
+            <artifactId>copy-rename-maven-plugin</artifactId>
+            <version>1.0.1</version>
+            <executions>
+              <execution>
+                <id>enable-schematron</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>rename</goal>
+                </goals>
+                <configuration>
+                  <message>Enable schematron rules</message>
+                  <fileSets>
+                    <fileSet>
+                     <sourceFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.disabled.sch</sourceFile>
+                     <destinationFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch</destinationFile>
+                    </fileSet>
+                    <fileSet>
+                     <sourceFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-sds.disabled.sch</sourceFile>
+                     <destinationFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-sds.sch</destinationFile>
+                    </fileSet>
+                    <fileSet>
+                     <sourceFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.disabled.sch</sourceFile>
+                     <destinationFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.sch</destinationFile>
+                    </fileSet>
+                  </fileSets>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- Download themes -->
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.3.0</version>
+            <executions>
+              <execution>
+                <id>install-inspire-theme</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <message>Install INSPIRE theme</message>
+                  <url>https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri/inspire-theme.rdf</url>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/codelist/external/thesauri/theme/</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-gemet-theme</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <message>Install GEMET theme</message>
+                  <url>https://github.com/geonetwork/util-gemet/raw/master/thesauri/gemet.rdf</url>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/codelist/external/thesauri/theme/</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-service-taxonomy-theme</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <message>Install Service Taxonomy theme</message>
+                  <url>https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri/inspire-service-taxonomy.rdf</url>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/codelist/external/thesauri/theme/</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
     <profile>
        <id>dutch</id>
         <dependencies>
