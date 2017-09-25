@@ -67,12 +67,12 @@
   module.controller('GnAdminToolsController', [
     '$scope', '$http', '$rootScope', '$translate', '$compile',
     '$q', '$timeout', '$routeParams', '$location',
-    'gnSearchManagerService',
+    'gnSearchManagerService', 'gnConfigService',
     'gnUtilityService', 'gnSearchSettings', 'gnGlobalSettings',
 
     function($scope, $http, $rootScope, $translate, $compile,
              $q, $timeout, $routeParams, $location,
-             gnSearchManagerService,
+             gnSearchManagerService, gnConfigService,
              gnUtilityService, gnSearchSettings, gnGlobalSettings) {
       $scope.modelOptions =
           angular.copy(gnGlobalSettings.modelOptions);
@@ -544,9 +544,23 @@
             });
       };
 
+      gnConfigService.loadPromise.then(function(settings) {
+        $scope.isBackupArchiveEnabled =
+          settings['metadata.backuparchive.enable'];
+      });
 
+      $scope.triggerBackupArchive = function() {
+        return $http({method: 'GET', url: '../api/records/trigger.backup'}).
+        then(function(data) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate.instant('generatingArchiveBackup'),
+            error: data,
+            timeout: 2,
+            type: 'success'
+          });
+        });
 
-
+      };
 
       $scope.replacer = {};
       $scope.replacer.group = '';
