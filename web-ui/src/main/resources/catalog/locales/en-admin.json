@@ -1151,5 +1151,7 @@
     "ui-map-editor-help": "This configuration is used for the editor maps (bounding box and geometry editor). Every parameter is optional. The context is applied first, then the extent and layers. Supported types are: osm, bing_aerial, stamen, wmts, wms.",
     "mapConfigContext": "Path to the context file (XML)",
     "mapConfigExtent": "Extent, expressed in current projection",
-    "mapConfigLayers": "Layer objects in JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}"
+    "mapConfigLayers": "Layer objects in JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
+    "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink.",
+    "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow."
 }
