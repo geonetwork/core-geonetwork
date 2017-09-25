@@ -122,6 +122,9 @@
   <logger name="geonetwork.harvest.wfs.features">
     <level value="DEBUG"/>
   </logger>
+  <logger name="geonetwork.backup">
+    <level value="DEBUG"/>
+  </logger>
 
   <!--  Jeeves module and submodule logger configuration -->
   <logger name="jeeves" additivity="false">
