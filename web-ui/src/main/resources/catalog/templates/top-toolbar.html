@@ -38,7 +38,7 @@
           <span data-gnv-layer-indicator=""/>
         </a>
       </li>
-      <li class="dropdown" data-ng-if="gnCfg.mods.editor.enabled"
+      <li class="dropdown dropdown-hover" data-ng-if="gnCfg.mods.editor.enabled"
           data-ng-show="authenticated && user.isEditorOrMore()">
         <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}"
@@ -72,7 +72,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown" data-ng-show="user.isUserAdminOrMore()">
+      <li class="dropdown dropdown-hover" data-ng-show="user.isUserAdminOrMore()">
         <a data-gn-active-tb-item="admin.console"
            title="{{'adminConsole' | translate}}"
            class="dropdown-toggle"
