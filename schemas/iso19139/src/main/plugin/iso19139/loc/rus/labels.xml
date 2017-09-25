@@ -1101,24 +1101,6 @@
     <condition>conditional</condition>
   </element>
   <!-- ==================================================== -->
-  <element name="gmd:extent">
-    <label>Протяженность</label>
-    <description>information about the spatial, vertical and temporal
-      extent of the data specified
-      by the scope
-    </description>
-    <condition>conditional</condition>
-  </element>
-  <!-- ==================================================== -->
-  <element name="gmd:extent">
-    <label>Протяженность</label>
-    <description>information about the spatial, vertical and temporal
-      extent of the data specified
-      by the scope
-    </description>
-    <condition>conditional</condition>
-  </element>
-  <!-- ==================================================== -->
   <element name="gmd:extentTypeCode">
     <label>Extent type code</label>
     <description>Indication of whether the bounding polygon encompasses an

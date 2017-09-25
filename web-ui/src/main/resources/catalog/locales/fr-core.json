@@ -340,5 +340,6 @@
     "inputIsOverloaded": "Cette valeur est définie dans un filtre WFS",
     "insertNewInputValue": "Ajouter une valeur",
     "profileGraph": "Profile Graph",
-    "_valid": "Validité"
+    "_valid": "Validité",
+    "dateToDate": "to"
 }

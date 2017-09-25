@@ -359,5 +359,5 @@
     "inputGeometryIsInvalid": "입력한 지오메트리 오류 발견:",
     "inputGeometryHint": "선택한 포맷과 좌표체계에 해당하는 지오메트리를 여기에 붙여넣습니다.",
     "inputGeometryReadOnlyHint": "이 지오메트리는 읽기전용입니다.",
-    "selectKeyword": "Add keywords"
+    "selectKeyword": "키워드 추가"
 }

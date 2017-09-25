@@ -148,16 +148,11 @@
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
           'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
-          'bingKey':
-              'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
           'storage': 'sessionStorage',
-          'map': '../../map/config-viewer.xml',
           'listOfServices': {
             'wms': [],
             'wmts': []
           },
-          'useOSM': true,
-          'context': '',
           'projection': 'EPSG:3857',
           'projectionList': [{
             'code': 'EPSG:4326',
@@ -166,14 +161,29 @@
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }],
-          'searchMapLayers': [],
-          'viewerMapLayers': [],
           'disabledTools': {
             'processes': true
           },
           'graticuleOgcService': {},
-          'mapExtent': [0, 0, 0, 0],
-          'mapBackgroundLayer': {}
+          'map-viewer': {
+            'context': '../../map/config-viewer.xml',
+            'extent': [0, 0, 0, 0],
+            'layers': []
+          },
+          'map-search': {
+            'context': '',
+            'extent': [0, 0, 0, 0],
+            'layers': [
+              { type: 'osm' }
+            ]
+          },
+          'map-editor': {
+            'context': '',
+            'extent': [0, 0, 0, 0],
+            'layers': [
+              { type: 'osm' }
+            ]
+          }
         },
         'geocoder': 'https://secure.geonames.org/searchJSON',
         'editor': {

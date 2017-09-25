@@ -418,6 +418,15 @@
       $scope.editKeyword = function(k) {
         $scope.keywordSelected = angular.copy(k);
         $scope.keywordSelected.oldId = $scope.keywordSelected.uri;
+
+        // create geo object (if not already there)
+        $scope.keywordSelected.geo = $scope.keywordSelected.geo || {
+          east: k.coordEast,
+          north: k.coordNorth,
+          south: k.coordSouth,
+          west: k.coordWest
+        };
+
         creatingKeyword = false;
         $('#keywordModal').modal();
         searchRelation($scope.keywordSelected);
@@ -442,10 +451,10 @@
         };
         if ($scope.isPlaceType()) {
           $scope.keywordSelected.geo = {
-            west: '',
-            south: '',
-            east: '',
-            north: ''
+            west: '0',
+            south: '0',
+            east: '0',
+            north: '0'
           };
         }
         $('#keywordModal').modal();
@@ -454,7 +463,7 @@
       /**
        * Build keyword POST body message
        */
-      buildKeyword = function(keywordObject) {
+      buildKeywordXML = function(keywordObject) {
         var geoxml = $scope.isPlaceType() ?
             '<west>' + keywordObject.geo.west + '</west>' +
             '<south>' + keywordObject.geo.south + '</south>' +
@@ -488,6 +497,7 @@
             (keywordObject.oldId || keywordObject.uri) + '</oldid>' +
             localizedValues +
             localizedDefinitions +
+            geoxml +
             '</request>';
 
         return xml;
@@ -499,7 +509,7 @@
       $scope.createKeyword = function() {
         $http.post(
             'thesaurus.keyword.add?_content_type=json',
-            buildKeyword($scope.keywordSelected),
+            buildKeywordXML($scope.keywordSelected),
             { headers: {'Content-type': 'application/xml'} }
         )
             .success(function(data) {
@@ -533,7 +543,7 @@
        */
       $scope.updateKeyword = function() {
         $http.post('thesaurus.keyword.update',
-            buildKeyword($scope.keywordSelected),
+            buildKeywordXML($scope.keywordSelected),
             { headers: {'Content-type': 'application/xml'} }
         )
             .success(function(data) {
