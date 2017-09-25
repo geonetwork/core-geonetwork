@@ -353,5 +353,6 @@
     "settings": "Settings",
     "tools": "Tools",
     "collapseAllFacetLabel": "Collapse",
-    "expandAllFacetLabel": "Expand"
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "on"
 }

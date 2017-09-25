@@ -186,6 +186,14 @@ span.gn-facet-label:first-letter {
   text-transform: uppercase;
 }
 
+// fix sort-by combo case
+.gn-sort-by .btn.dropdown-toggle {
+  text-transform: lowercase;
+  &:first-letter {
+    text-transform: uppercase;
+  }
+}
+
 /* TODO: Deprecate due to change in gn-pager and gn-sort-by */
 [sortby-combo], [hitsperpage-combo] {
   display: inline-block;
