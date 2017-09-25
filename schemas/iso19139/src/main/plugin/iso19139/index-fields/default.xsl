@@ -178,11 +178,11 @@
                 gmd:identificationInfo/srv:SV_ServiceIdentification">
 
       <xsl:for-each select="gmd:citation/gmd:CI_Citation">
-        <xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
+        <xsl:for-each select="gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString|gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor">
           <Field name="identifier" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
-        <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString">
+        <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:code/gco:CharacterString|gmd:identifier/gmd:RS_Identifier/gmd:code/gmx:Anchor">
           <Field name="identifier" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
