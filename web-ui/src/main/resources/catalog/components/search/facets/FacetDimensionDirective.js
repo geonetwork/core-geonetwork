@@ -33,8 +33,10 @@
     function(gnFacetConfigService, gnLangs) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/dimension-facet-list.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/dimension-facet-list.html';
+        },
         scope: {
           dimension: '=gnFacetDimensionList',
           facetType: '=',
@@ -179,8 +181,10 @@
     function(gnFacetConfigService, RecursionHelper, $parse) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/dimension-facet-category.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/dimension-facet-category.html';
+        },
         scope: {
           category: '=gnFacetDimensionCategory',
           categoryKey: '=',

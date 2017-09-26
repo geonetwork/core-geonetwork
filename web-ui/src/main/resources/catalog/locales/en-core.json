@@ -351,5 +351,7 @@
     "classificationSystems": "Classification systems",
     "usersAndGroups": "Users and groups",
     "settings": "Settings",
-    "tools": "Tools"
+    "tools": "Tools",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand"
 }
