@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.fao.geonet.api.records.backup;
 
 import io.swagger.annotations.Api;
@@ -10,6 +33,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
@@ -37,40 +61,45 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 @RequestMapping(value = {
-        "/api/records",
+        "/api/records/backups",
         "/api/" + API.VERSION_0_1 +
-                "/records"
+                "/records/backups"
 })
 @Api(value = API_CLASS_RECORD_TAG,
         tags = API_CLASS_RECORD_TAG,
         description = API_CLASS_RECORD_OPS)
 
 @Controller
-public class DownloadBackup {
-
-    @Autowired
-    ServiceManager serviceManager;
+public class BackupArchiveApi {
 
     @Autowired
     ArchiveAllMetadataJob archiveAllMetadataJob;
 
     @ApiOperation(value = "Download MEF backup archive",
-            notes = ".",
+            notes = "The backup contains all metadata not harvested including templates.",
             nickname = "downloadBackup")
-    @RequestMapping(value="/download.backup",produces = "application/zip")
+    @PreAuthorize("hasRole('Administrator')")
+    @RequestMapping(
+            value="/latest",
+            method = RequestMethod.GET,
+            produces = "application/zip")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Resource not found.")
+    })
     @ResponseBody
     public ResponseEntity<FileSystemResource> exec(HttpServletRequest request) throws Exception {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
+        ServiceManager serviceManager = appContext.getBean(ServiceManager.class);
 
         Log.info(ArchiveAllMetadataJob.BACKUP_LOG, "User " + context.getUserSession().getUsername() + " from IP: " + context
                 .getIpAddress() + " has started to download backup archive");
 
         File backupDir = dataDirectory.getBackupDir().resolve(ArchiveAllMetadataJob.BACKUP_DIR).toFile();
         if (!backupDir.exists()) {
-            throw404();
+            throw new ResourceNotFoundException("Backup archive folder does not exist");
         }
         File[] files = backupDir.listFiles(new FileFilter() {
             @Override
@@ -79,8 +108,9 @@ public class DownloadBackup {
             }
         });
         if (files == null || files.length == 0) {
-            throw404();
+            throw new ResourceNotFoundException("Backup archive file does not yet exist");
         }
+
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add("content-disposition", "attachment; filename=" + files[0].getName());
 
@@ -90,10 +120,11 @@ public class DownloadBackup {
     }
 
     @ApiOperation(value = "Trigger MEF backup archive",
-            notes = ".",
+            notes = "The backup contains all metadata not harvested including templates.",
             nickname = "triggerBackup")
     @RequestMapping(
-            value="/trigger.backup",
+            value="/",
+            method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('Administrator')")
@@ -108,17 +139,6 @@ public class DownloadBackup {
         context.getApplicationContext().getBean("gnBackgroundJobScheduler", Scheduler.class).scheduleJob(trigger);
 
         return "{\"success\":true}";
-    }
-
-    private void throw404() throws JeevesException {
-        throw new JeevesException("Backup file does not yet exist", null) {
-            private static final long serialVersionUID = 1L;
-
-            {
-                this.code = 404;
-                this.id = "NoBackup";
-            }
-        };
     }
 
 }

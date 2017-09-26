@@ -187,7 +187,7 @@
   -->
 
   <bean id="gnBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-    <property name="schedulerName" value="geocatBackgroundJobScheduler"/>
+    <property name="schedulerName" value="gnBackgroundJobScheduler"/>
     <property name="jobFactory">
       <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
     </property>

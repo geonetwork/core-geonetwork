@@ -1070,7 +1070,7 @@
     "metadata/backuparchive/enable": "Enable",
     "metadata/backuparchive/enable-help": "Activate nightly backup archive on server. Add a download archive button in admin/tools interface.",
     "downloadBackupArchive": "Download backup archive.",
-    "downloadBackupArchiveHelp": "Download a MEF file containing all inner metadatas of the catalog.",
+    "downloadBackupArchiveHelp": "Download a MEF file containing all inner metadatas of the catalog (non harvested including templates).",
     "triggerBackupArchive": "Generate backup archive",
     "triggerBackupArchiveHelp": "Backup archive are done nightly but you can trigger it manually.",
     "generatingArchiveBackup": "The generation of backup archive have started.",
