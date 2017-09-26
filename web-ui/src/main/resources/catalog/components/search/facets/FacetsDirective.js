@@ -34,8 +34,10 @@
         restrict: 'A',
         require: '^ngSearchForm',
         replace: true,
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/facet-item.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/facet-item.html';
+        },
         scope: {
           facetResults: '=gnFacet',
           facet: '@',
@@ -80,8 +82,10 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/facet-list.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/facet-list.html';
+        },
         scope: {
           facets: '=gnFacetList',
           summaryType: '=facetConfig',
@@ -113,8 +117,10 @@
         replace: true,
         scope: true,
         require: '^ngSearchForm',
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/facet-breadcrumb.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/facet-breadcrumb.html';
+        },
         link: function(scope, element, attrs, controller) {
           scope.remove = function(f) {
             gnFacetService.remove(scope.currentFacets, f);
@@ -148,8 +154,10 @@
       return {
         restrict: 'A',
         replace: true,
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/facet-multiselect.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/facet-multiselect.html';
+        },
         scope: true,
         compile: function compile(tElement, tAttrs, transclude) {
           return {
@@ -262,8 +270,10 @@
     return {
       restrict: 'A',
       replace: true,
-      templateUrl: '../../catalog/components/search/facets/' +
-          'partials/facet-graph.html',
+      templateUrl: function(elem, attrs) {
+        return attrs.template || '../../catalog/components/search/facets/' +
+          'partials/facet-graph.html';
+      },
       scope: {
         field: '=',
         callback: '='
