@@ -1519,7 +1519,7 @@ public class SchemaManager {
         Element schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_NS);
         if (schemaLocElem == null)
             schemaLocElem = root.getChild("schemaLocation", GEONET_SCHEMA_PREFIX_NS);
-        return schemaLocElem.getText();
+        return schemaLocElem.getTextNormalize();
     }
 
     /**
