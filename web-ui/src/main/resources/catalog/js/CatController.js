@@ -358,10 +358,6 @@
       $scope.version = '0.0.1';
 
 
-      //Display or not the admin menu
-      if ($location.absUrl().indexOf('/admin.console') != -1) {
-        $scope.viewMenuAdmin = true;
-      }else {$scope.viewMenuAdmin = false}
       //Update Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.$on('$locationChangeSuccess', function(event) {
