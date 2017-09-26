@@ -73,6 +73,11 @@
       'gnUrlUtils', 'gnGlobalSettings',
       function($http, $q, gnUrlUtils, gnGlobalSettings) {
 
+      //Some services don't work with all languages  
+      //FIXME this is ugly, but how do we know which services break?
+      $http.defaults.headers
+        .common['Accept-Language'] = "en-US";
+
         var displayFileContent = function(data) {
           var parser = new ol.format.WMSCapabilities();
           var result = parser.read(data);
