@@ -38,7 +38,7 @@
           <span data-gnv-layer-indicator=""/>
         </a>
       </li>
-      <li class="dropdown dropdown-hover" data-ng-if="gnCfg.mods.editor.enabled"
+      <li class="dropdown dropdown-hover open" data-ng-if="gnCfg.mods.editor.enabled"
           data-ng-show="authenticated && user.isEditorOrMore()">
         <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}"
            title="{{'editorBoard' | translate}}"
@@ -47,7 +47,7 @@
           <i class="fa fa-pencil"></i>
           <span class="hidden-sm" data-translate="">contribute</span>
         </a>
-        <ul class="dropdown-menu hidden-xs" role="menu">
+        <ul class="dropdown-menu" role="menu">
           <li>
             <a data-gn-active-tb-item="{{gnCfg.mods.editor.appUrl}}#/create">
               <i class="fa fa-fw fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
@@ -72,7 +72,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown dropdown-hover" data-ng-show="user.isUserAdminOrMore()">
+      <li class="dropdown dropdown-hover open" data-ng-show="user.isUserAdminOrMore()">
         <a data-gn-active-tb-item="admin.console"
            title="{{'adminConsole' | translate}}"
            class="dropdown-toggle"
@@ -80,14 +80,14 @@
           <i class="fa fa-wrench"></i>
           <span class="hidden-sm" data-translate="">adminConsole</span>
         </a>
-        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu hidden-xs" role="menu">
+        <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in userAdminMenu">
             <a data-gn-active-tb-item="admin.console{{t.route}}">
               <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
             </a>
           </li>
         </ul>
-        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu hidden-xs" role="menu">
+        <ul data-ng-if="user.isAdministrator()" class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in adminMenu">
             <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}{{t.route}}">
               <i class="fa fa-fw {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
@@ -99,7 +99,7 @@
 
 
     <form class="navbar-form navbar-right" role="language">
-      <div class="form-group pull-right"
+      <div class="form-group"
            data-gn-language-switcher="lang"
            data-langs="langs"
            data-lang-labels="langLabels"/>
@@ -107,7 +107,7 @@
 
     <ul data-ng-if="gnCfg.mods.signin.enabled"
         class="nav navbar-nav navbar-right">
-      <li class="dropdown dropdown-hover" data-ng-show="authenticated">
+      <li class="dropdown dropdown-hover open" data-ng-show="authenticated">
         <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
           title="{{'userDetails' | translate}}"
           class="dropdown-toggle"
@@ -136,7 +136,7 @@
           </li>
         </ul>
       </li>
-      <li class="dropdown dropdown-hover signin-dropdown"
+      <li class="dropdown dropdown-hover open signin-dropdown"
         data-ng-show="!authenticated && service !== 'catalog.signin' && !shibbolethEnabled">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
