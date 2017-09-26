@@ -1,7 +1,6 @@
 <div>
-  <div class="gn-pager"
-       data-ng-show="config.pages > 1">
-    <ul class="pager gn-pager-start">
+  <div class="gn-pager">
+    <ul class="pagination">
       <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''">
         <a href="" data-ng-click="first()">
           <i class="fa fa-angle-double-left"></i>
@@ -12,26 +11,23 @@
           <i class="fa fa-angle-left"></i>
         </a>
       </li>
-    </ul>
+      <li class="btn-group">
     <!-- A dropdown button to select the number of page
     and indicating the current page info -->
-    <span data-ng-hide="values && values.length > 1">
-    {{config.from}} - {{config.to}}
-    <em data-translate="">on</em>
-    {{config.resultsCount}}
-  </span>
-    <div class="btn-group"
-         data-ng-show="values && values.length > 1"
-         title="{{'chooseRecordsPerPage' | translate}}">
-      <button type="button"
-              class="btn btn-default dropdown-toggle"
-              data-toggle="dropdown"
-              aria-expanded="false">
-        {{config.from}} - {{config.to}}
-        <em data-translate="">on</em>
-        {{config.resultsCount}}
+      <a href class="dropdown-toggle"
+        data-toggle="dropdown"
+        aria-expanded="false">
+        <span ng-show="config.pages > 1">
+          {{config.from}} - {{config.to}}
+          <span translate>resultXonY</span>
+          {{config.resultsCount}}
+        </span>
+        <span ng-show="config.pages <= 1">
+          {{config.to}}
+          <span translate>results</span>
+        </span>
         <span class="caret"></span>
-      </button>
+      </a>
       <ul class="dropdown-menu" role="menu">
         <li role="presentation"
             class="dropdown-header" data-translate="">hitsPerPage
@@ -41,8 +37,7 @@
           <a data-ng-click="updateSearch(nb)">{{nb}}</a>
         </li>
       </ul>
-    </div>
-    <ul class="pager gn-pager-end">
+    </li>
       <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''">
         <a href="" data-ng-click="next()">
           <i class="fa fa-angle-right"></i>
@@ -54,11 +49,5 @@
         </a>
       </li>
     </ul>
-  </div>
-  <div class="gn-sort-by">
-    <div class="btn-group"
-         data-ng-show="config.pages == 1">
-      <button class="btn btn-default">{{config.to}}&nbsp;<span translate="">results</span></button>
-    </div>
   </div>
 </div>

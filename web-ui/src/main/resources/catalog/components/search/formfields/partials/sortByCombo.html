@@ -4,11 +4,10 @@
             class="btn btn-default dropdown-toggle"
             data-toggle="dropdown"
             aria-expanded="false">
-      <i class="fa fa-sort"/>&nbsp;
       <span data-translate=""
             data-translate-values="{field: '{{params.sortBy | translate}}'}"
-            class="hidden-xs">sortedBy</span>
-      <span class="caret"></span>
+            class="">sortedBy</span>
+      <i class="fa fa-sort"/>
     </button>
     <ul class="dropdown-menu" role="menu">
       <li data-ng-repeat="v in ::values"
