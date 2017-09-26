@@ -118,7 +118,7 @@
               var field = $(element).tagsinput('input');
               field.typeahead({
                 minLength: 0,
-                hint: true,
+                hint: scope.$eval(attrs.gnTypeaheadDisableHint) ? false : true,
                 highlight: true
               }, angular.extend({
                 name: 'datasource',

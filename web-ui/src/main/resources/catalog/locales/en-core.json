@@ -342,5 +342,14 @@
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
     "_valid": "Validity",
-    "dateToDate": "to"
+    "dateToDate": "to",
+    "batchEditing": "Batch editing",
+    "harvesters": "Harvesting",
+    "metadatasAndTemplates": "Metadata and templates",
+    "statisticsAndStatus": "Statistics and status",
+    "reports": "Reports",
+    "classificationSystems": "Classification systems",
+    "usersAndGroups": "Users and groups",
+    "settings": "Settings",
+    "tools": "Tools"
 }
