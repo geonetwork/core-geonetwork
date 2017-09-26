@@ -429,7 +429,7 @@
     "harvesterGroup": "Group",
     "harvesterUser": "User",
     "harvesterUserHelp": "User who owns the harvested records",
-    "harvesterGroupHelp": "Only the catalog administrator or user admin of this group can manage this node.",
+    "harvesterGroupHelp": "Group which owns the harvested records. Only the catalog administrator or user admin of this group can manage this node.",
     "harvesterHistory": "Harvester history",
     "harvesterIcon": "Logo",
     "harvesterIconHelp": "Image describing the remote node.",

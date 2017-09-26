@@ -529,7 +529,8 @@ public class Aligner extends BaseAligner {
             setChangeDate(new ISODate(changeDate));
         metadata.getSourceInfo().
             setSourceId(siteId).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(params.getOwnerId())).
+            setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
