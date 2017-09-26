@@ -5,6 +5,20 @@
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
 
+
+@import "../lib/style/bootstrap/less/glyphicons.less";
+
+//url is wrong on original file
+// Import the fonts
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot')";
+  src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot?#iefix') format('embedded-opentype')",
+       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.woff') format('woff')",
+       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.ttf') format('truetype')",
+       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg')";
+}
+
 body {
 }
 

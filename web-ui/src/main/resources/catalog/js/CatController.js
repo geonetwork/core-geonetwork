@@ -221,6 +221,7 @@
         }
       },
       current: null,
+      shibbolethEnabled: false,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -407,6 +408,7 @@
       $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
+      $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
 
 
       $scope.layout = {

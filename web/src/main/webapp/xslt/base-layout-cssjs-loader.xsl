@@ -204,6 +204,17 @@
           gnViewerSettings.layerName = '<xsl:value-of select="$layerName"/>';
           gnViewerSettings.layerGroup = '<xsl:value-of select="$layerGroup"/>';
         </xsl:if>
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
+        }]);
+      </script>
+    </xsl:if>
+
+    <xsl:if test="$angularApp = 'gn_login'">
+      <script type="text/javascript">
+        var module = angular.module('gn_login');
+        module.config(['gnGlobalSettings',
+        function(gnGlobalSettings) {
+        gnGlobalSettings.shibbolethEnabled = <xsl:value-of select="$shibbolethOn"/>;
         }]);
       </script>
     </xsl:if>
