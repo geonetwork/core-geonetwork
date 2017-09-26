@@ -1024,8 +1024,8 @@
                         fields[field] = e;
                       }
                       else {
-                        fields[field] = $filter('gnLocalized');
-                        (linkToEdit[fields[field]]);
+                        fields[field] =
+                          $filter('gnLocalized')(linkToEdit[fields[field]]);
                       }
                     });
 
@@ -1382,14 +1382,9 @@
                       url: rsrc.url
                     };
                     ['url', 'name'].forEach(function(pName) {
-                      var value = o[pName];
-                      if (scope.isFieldMultilingual(pName)) {
-                        scope.params[pName][scope.ctrl.urlCurLang] = value;
-                      }
-                      else {
-                        scope.params[pName] = value;
-                      }
+                      setParameterValue(pName, o[pName]);
                     });
+                    scope.params.protocol = 'WWW:DOWNLOAD-1.0-http--download';
                   }
                 });
 

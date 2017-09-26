@@ -243,14 +243,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "output",
             required = false)
-        final String output,
+        FormatType formatType,
         @ApiIgnore
         final NativeWebRequest request,
         final HttpServletRequest servletRequest) throws Exception {
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
-
 
         // TODO :
         // if text/html > xsl_view
@@ -259,11 +258,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         // Force PDF ouutput when URL parameter is set.
         // This is useful when making GET link to PDF which
         // can not use headers.
-        if ("pdf".equals(output)) {
-            acceptHeader = "application/pdf";
+        if(formatType == null) {
+            formatType = FormatType.find(acceptHeader);
         }
-
-        FormatType formatType = FormatType.find(acceptHeader);
         if (formatType == null) {
             formatType = FormatType.xml;
         }

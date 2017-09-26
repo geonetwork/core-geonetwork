@@ -95,7 +95,7 @@
         remove: function(criteria, group) {
           $http({
             method: 'GET',
-            url: 'admin.schematroncriteria.delete@json',
+            url: 'admin.schematroncriteria.delete?_content_type=json',
             params: {
               id: criteria.id
             }
@@ -114,7 +114,7 @@
         update: function(updated, original, group) {
           $http({
             method: 'POST',
-            url: 'admin.schematroncriteria.update@json',
+            url: 'admin.schematroncriteria.update?_content_type=',
             params: {
               id: original.id,
               type: updated.type,
@@ -133,7 +133,7 @@
         add: function(criteria, original, group) {
           $http({
             method: 'POST',
-            url: 'admin.schematroncriteria.add@json',
+            url: 'admin.schematroncriteria.add?_content_type=json',
             params: {
               type: criteria.type,
               value: criteria.value,
@@ -163,7 +163,7 @@
         remove: function(group, groupList, successCallback) {
           $http({
             method: 'GET',
-            url: 'admin.schematroncriteriagroup.delete@json',
+            url: 'admin.schematroncriteriagroup.delete?_content_type=json',
             params: {
               groupName: group.id.name,
               schematronId: group.id.schematronid
@@ -193,7 +193,7 @@
           }
           $http({
             method: 'GET',
-            url: 'admin.schematroncriteriagroup.update@json',
+            url: 'admin.schematroncriteriagroup.update?_content_type=json',
             params: params
           }).success(function() {
             original.id.name = updated.id.name;
@@ -206,7 +206,7 @@
         add: function(group, groupList, successCallback) {
           $http({
             method: 'GET',
-            url: 'admin.schematroncriteriagroup.add@json',
+            url: 'admin.schematroncriteriagroup.add?_content_type=json',
             params: {
               groupName: group.id.name,
               schematronId: group.id.schematronid,
@@ -227,7 +227,7 @@
           } else {
             $http({
               method: 'GET',
-              url: 'admin.schematroncriteriagroup.list@json',
+              url: 'admin.schematroncriteriagroup.list?_content_type=json',
               params: {
                 includeCriteria: true,
                 schematronId: schematronId
@@ -252,7 +252,7 @@
           oldPriority = lowerPriority.displaypriority;
           update1 = $http({
             method: 'GET',
-            url: 'admin.schematron.update@json',
+            url: 'admin.schematron.update?_content_type=json',
             params: {
               id: higherPriority.id,
               displaypriority: oldPriority
@@ -260,7 +260,7 @@
           });
           update2 = $http({
             method: 'GET',
-            url: 'admin.schematron.update@json',
+            url: 'admin.schematron.update?_content_type=json',
             params: {
               id: lowerPriority.id,
               displaypriority: newPriority
@@ -280,7 +280,7 @@
           if (cachedCriteriaTypes) {
             successCallback(cachedCriteriaTypes);
           } else {
-            $http.get('admin.schematrontype@json').
+            $http.get('admin.schematrontype?_content_type=json').
                 success(function(data) {
                   putDataIntoCache('criteriaTypes', data);
                   angular.forEach(data.schemas, function(schema) {
@@ -289,7 +289,7 @@
                   successCallback(data);
                 }).error(function(data) {
                   alert('An Error occurred with the ' +
-                      'admin.schematrontype@json ' +
+                      'admin.schematrontype ' +
                       ' request:' + data);
                 });
           }

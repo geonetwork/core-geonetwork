@@ -408,5 +408,11 @@
     "wpsRecent": "Derniers traitements",
     "wfsDownloadDataInstruction": "Choisir un format de téléchargement :",
     "wfsTypenameNotAvailable": "The featuretype '{{typename}}' is not available in the WFS service. You can select from available featuretypes instead",
-    "wfsChooseFeatureTypeToDownload": "Sélectionner une couche à télécharger"
+    "wfsChooseFeatureTypeToDownload": "Sélectionner une couche à télécharger",
+    "processesTool": "Traitements (WPS)",
+    "wpsGetCapError": "Erreur lors de la lecture des capacités du service WPS :",
+    "wpsByUrl": "Recherche un processus",
+    "wpsRecent": "Derniers traitements",
+    "selection.indexing.count": "Indexing started for the {{count}} record(s) selected.",
+    "selection.indexing.error": "Error during selection indexing."
 }

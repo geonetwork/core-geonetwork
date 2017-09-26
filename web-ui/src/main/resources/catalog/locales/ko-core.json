@@ -340,5 +340,6 @@
     "inputIsOverloaded": "이 값은 WFS 필터로 설정됩니다",
     "insertNewInputValue": "이 입력에 대한 값 추가",
     "profileGraph": "프로파일 그래프",
-    "_valid": "유효성"
+    "_valid": "유효성",
+    "dateToDate": "to"
 }

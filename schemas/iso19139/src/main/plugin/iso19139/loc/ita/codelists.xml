@@ -251,7 +251,7 @@
     <entry>
       <code>principalInvestigator</code>
       <label>Ricercatore principale</label>
-      <description>Gruppo principale incaricata di raccogliere informazioni e di effettuare
+      <description>Gruppo principale incaricato di raccogliere informazioni e di effettuare
         ricerche
       </description>
     </entry>
@@ -272,7 +272,7 @@
     <entry>
       <code>author</code>
       <label>Autore</label>
-      <description>Gruppo autore della risorso</description>
+      <description>Gruppo autore della risorsa</description>
     </entry>
     <!-- ISO PROFIL CHE ONLY
         <entry>

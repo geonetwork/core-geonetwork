@@ -54,31 +54,6 @@
         },
         templateUrl: '../../catalog/components/edit/bounding/' +
             'partials/boundingpolygon.html',
-        link: {
-          post: function(scope, element) {
-            scope.ctrl.map.renderSync();
-
-            // apply extent from settings
-            var mapExtent = gnMap.getMapConfig().mapExtent;
-            if (mapExtent && ol.extent.getWidth(mapExtent) &&
-                ol.extent.getHeight(mapExtent)) {
-              scope.ctrl.map.getView().fit(mapExtent,
-                  scope.ctrl.map.getSize());
-            }
-
-            // apply background layer from settings
-            var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
-            if (bgLayer) {
-              scope.ctrl.map.getLayers().removeAt(0);
-              gnMap.createLayerForType(bgLayer.type, {
-                name: bgLayer.layer,
-                url: bgLayer.url
-              }, null, scope.ctrl.map);
-            }
-
-            scope.ctrl.initValue();
-          }
-        },
         controllerAs: 'ctrl',
         bindToController: true,
         controller: [
@@ -86,7 +61,7 @@
           '$attrs',
           '$http',
           'gnMap',
-          'gnOwsContextService',
+          'gnMapsManager',
           'ngeoDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
@@ -94,7 +69,7 @@
               $attrs,
               $http,
               gnMap,
-              gnOwsContextService,
+              gnMapsManager,
               ngeoDecorateInteraction,
               gnGeometryService) {
             var ctrl = this;
@@ -103,15 +78,9 @@
             ctrl.readOnly = $scope.$eval($attrs['readOnly']);
 
             // init map
-            ctrl.map = new ol.Map({
-              layers: [
-                gnMap.getLayersFromConfig()
-              ],
-              view: new ol.View({
-                center: [0, 0],
-                projection: gnMap.getMapConfig().projection,
-                zoom: 2
-              })
+            ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
+            ctrl.map.get('creationPromise').then(function () {
+              ctrl.initValue();
             });
 
             // interactions with map

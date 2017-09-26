@@ -1,0 +1,47 @@
+<label class="control-label" translate>mapConfigContext</label>
+<input type="text" class="form-control"
+  data-ng-model="mCfg[key]['context']"/>
+<label class="control-label" translate>mapConfigExtent</label>
+<div class="input-group">
+  <span class="input-group-addon">MinX</span>
+  <input type="number" step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][0]"/>
+  <span class="input-group-addon">MinY</span>
+  <input type="number" step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][1]"/>
+  <span class="input-group-addon">MaxX</span>
+  <input type="number" step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][2]"/>
+  <span class="input-group-addon">MaxY</span>
+  <input type="number" step="any"
+      class="form-control"
+      data-ng-model="mCfg[key]['extent'][3]"/>
+</div>
+<label class="control-label" translate>mapConfigLayers</label>
+<table class="table table-striped">
+  <tr data-ng-repeat="layer in mCfg[key]['layers'] track by $index">
+  <td>
+    <input type="text" class="form-control"
+      gn-json-edit="layer" />
+  </td>
+  <td>
+    <a class="btn btn-link text-danger"
+      title="{{'remove' | translate}}"
+      data-ng-click="removeItem(mCfg[key]['layers'], $index)">
+    <i class="fa fa-times text-danger"/>
+    </a>
+  </td>
+  </tr>
+  <tr>
+  <td>
+    <a class="btn btn-link"
+    title="{{'add' | translate}}"
+    data-ng-click="addItem(mCfg[key]['layers'], {type: 'osm'})">
+    <i class="fa fa-plus"/>
+    </a>
+  </td>
+  </tr>
+</table>

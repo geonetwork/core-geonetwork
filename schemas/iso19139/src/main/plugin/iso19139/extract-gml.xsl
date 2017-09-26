@@ -23,9 +23,13 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml"
-                xmlns:gco="http://www.isotc211.org/2005/gco" version="1.0">
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gml="http://www.opengis.net/gml"
+                xmlns:gco="http://www.isotc211.org/2005/gco"
+                version="2.0">
+
   <xsl:output method="xml" indent="no"/>
+
   <xsl:template match="/" priority="2">
     <gml:GeometryCollection>
       <xsl:apply-templates/>
@@ -41,16 +45,19 @@
   <xsl:template
     match="gmd:EX_BoundingPolygon[string(gmd:extentTypeCode/gco:Boolean) != 'false' and string(gmd:extentTypeCode/gco:Boolean) != '0']"
     priority="2">
-    <!-- Index geometries which are not multicurve and not empty.
-          Empty geometry cause issue with shapefile index
-          (https://github.com/geonetwork/core-geonetwork/issues/259)
+    <!-- Index geometries which are
+    * not multicurve
+    * not empty (Empty geometry cause issue with shapefile index https://github.com/geonetwork/core-geonetwork/issues/259)
           -->
-    <xsl:for-each select="gmd:polygon/gml:*[name() != 'gml:MultiCurve' and count(*) > 0]">
+    <xsl:for-each select="gmd:polygon/gml:*[
+                            name() != 'gml:MultiCurve' and
+                            count(*) > 0 and
+                            .//gml:posList != '']">
       <xsl:copy-of select="."/>
     </xsl:for-each>
   </xsl:template>
 
-  <xsl:template match="gmd:EX_GeographicBoundingBox" priority="2">
+  <xsl:template match="gmd:EX_GeographicBoundingBox[not(../../gmd:geographicElement/gmd:EX_BoundingPolygon)]" priority="2">
     <xsl:variable name="w" select="./gmd:westBoundLongitude/gco:Decimal/text()"/>
     <xsl:variable name="e" select="./gmd:eastBoundLongitude/gco:Decimal/text()"/>
     <xsl:variable name="n" select="./gmd:northBoundLatitude/gco:Decimal/text()"/>

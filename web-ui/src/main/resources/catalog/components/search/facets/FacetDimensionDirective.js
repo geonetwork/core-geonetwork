@@ -33,8 +33,10 @@
     function(gnFacetConfigService, gnLangs) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/dimension-facet-list.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/dimension-facet-list.html';
+        },
         scope: {
           dimension: '=gnFacetDimensionList',
           facetType: '=',
@@ -179,8 +181,10 @@
     function(gnFacetConfigService, RecursionHelper, $parse) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/search/facets/' +
-            'partials/dimension-facet-category.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template || '../../catalog/components/search/facets/' +
+            'partials/dimension-facet-category.html';
+        },
         scope: {
           category: '=gnFacetDimensionCategory',
           categoryKey: '=',
@@ -247,7 +251,7 @@
 
                 scope.toggleNode = function(evt) {
                   el = evt ?
-                      $(evt.currentTarget).parent() :
+                      $(evt.currentTarget).parent().parent() :
                       element.find('span.fa');
                   el.find('.fa').first()
                   .toggleClass('fa-minus-square')
@@ -259,7 +263,7 @@
 
                 scope.toggleAllNode = function(evt) {
                   el = evt ?
-                  $(evt.currentTarget).parent() :
+                  $(evt.currentTarget).parent().parent() :
                   element.find('span.fa');
                   var isExpanded = undefined;
                   el.find('.fa').each(function(idx, e) {

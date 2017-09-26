@@ -237,6 +237,8 @@
                                   gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/(gmx:Anchor|gco:CharacterString)"/>
         <xsl:variable name="description"
                       select="../preceding-sibling::gmd:description/gco:CharacterString"/>
+        <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
+
         <div gn-draw-bbox=""
              data-hleft="{gmd:westBoundLongitude/gco:Decimal}"
              data-hright="{gmd:eastBoundLongitude/gco:Decimal}"
@@ -246,7 +248,8 @@
              data-hright-ref="_{gmd:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
              data-hbottom-ref="_{gmd:southBoundLatitude/gco:Decimal/gn:element/@ref}"
              data-htop-ref="_{gmd:northBoundLatitude/gco:Decimal/gn:element/@ref}"
-             data-lang="lang">
+             data-lang="lang"
+             data-read-only="{$readonly}">
           <xsl:if test="$identifier and $isFlatMode">
             <xsl:attribute name="data-identifier"
                            select="$identifier"/>

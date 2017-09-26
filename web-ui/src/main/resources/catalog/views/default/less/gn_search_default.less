@@ -1,23 +1,27 @@
 @import "../../../style/gn_search.less";
 @import "../../../style/gn_metadata.less";
+@import "gn_facets_default.less";
+@import "gn_pagination_default.less";
 @import "gn_feedback_default.less";
+// page layout
+@import "gn_layout_default.less";
+// topics, categories and Inspire
+@import "gn_topics_default.less";
+// navigation
+@import "gn_navbar_default.less";
+// styling for a single result: metadata view
+@import "gn_result_default.less";
+// styling for all search results
+@import "gn_results_default.less";
+// main map and minimap
+@import "gn_map_default.less";
+// footer and bottombar
+@import "gn_footer_default.less";
 
 /* Hide the tabset selector because tab
    switch is available in the top tool bar */
 #main-tabset > ul:nth-child(1) {
   display: none;
-}
-
-
-
-.navbar {
-  margin-bottom: 14px;
-  .navbar-brand {
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 50px;
-    font-size: 16px;
-  }
 }
 
 .jumbotron {
@@ -26,51 +30,12 @@
   }
 }
 
-
-/* Pagination */
-.gn-pager {
-  /* Hide the first/last page button */
-  .gn-pager-start {
-    li:nth-child(1) {
-      display: none;
-    }
-  }
-  .gn-pager-end {
-    li:nth-child(2) {
-      display: none;
-    }
-  }
-
-
-  /* Button on the right, current page info on the left */
-  .btn-group {
-    float: left;
-
-    /* Drop down to select hits is a simple link */
-    button {
-      .btn-link();
-    }
-
-    /* Inline hits options */
-    li {
-      a {
-        padding: 2px 10px;
-      }
-      display: inline-block;
-    }
-    li.dropdown-header {
-      display: block;
-    }
-  }
-}
-
-
-
 .gn-sort-by {
   .btn-group > button {
     .btn-link();
   }
 }
+
 .gn-search-page {
   clear: both;
   flex-grow: 1;
@@ -100,201 +65,7 @@
   max-width: 60px;
   max-height: 60px;
 }
-ul.gn-resultview {
-  @thumbnail-width: 170px;
-  margin-right: -15px;
 
-  .metadata {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    width: 100%;
-    height: 100%;
-    z-index: 2050;
-  }
-  li.list-group-item {
-    margin-right: 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    border: none;
-    &:hover {
-      background-color: rgba(10, 10, 10, 0.05);
-      cursor: default;
-    }
-    .row:first-of-type {
-      padding-left: 3px;
-    }
-
-    .gn-md-thumbnail {
-      .gn-img-thumbnail {
-        max-width: @thumbnail-width;
-        max-height: 140px;
-        min-height: 40px;
-        height: auto;
-      }
-    }
-    .media {
-      a {
-        margin-left: 0;
-        &.gn-md-edit-btn {
-          //width: 12px;
-          margin-left: 10px;
-
-        }
-      }
-      h4 {
-        margin-top: 0;
-        font-weight: 700;
-        a {
-          color: rgb(51, 51, 51);
-        }
-      }
-    }
-  }
-
-  li.gn-grid {
-    @grid-bottom-margin: 2px;
-
-    float: left;
-    border: 1px solid @list-group-border;
-    //box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
-    min-width: 300px;
-    max-width: 500px;
-    width: calc(~"100% - 15px");
-    height: 20.5em;
-    padding: 14px;
-    .gn-md-details {
-      //margin-left: @thumbnail-width;
-      color: #6a6a6a;
-      max-height: 50px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    /* Properly align category icons */
-    .fa img {
-      vertical-align: text-bottom;
-    }
-    .gn-md-title {
-      margin-top: 2px;
-      min-height: 3.5em;
-      max-height: 3.5em;
-      overflow: hidden;
-      cursor: pointer;
-      h3 {
-
-        /* Leave space for selection checkbox */
-        //padding-left: 20px;
-        margin-top: 0px;
-        a {
-          //text-transform: uppercase;
-          font-weight: normal;
-          font-size: 80%;
-          color: #333333;
-          max-height: 82px;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          display: block;
-        }
-        a:hover {
-          color: #428bca;
-          text-decoration: none;
-        }
-      }
-    }
-    .gn-source-logo {
-      z-index: 10;
-      height: 20px;
-      float: right;
-    }
-    .gn-md-thumbnail {
-      //position: absolute;
-      //top: 82px;
-      //opacity: .8;
-      overflow: hidden;
-      cursor: pointer;
-      .gn-img-thumbnail {
-        max-width: @thumbnail-width;
-        max-height: 140px;
-        min-height: 40px;
-        //margin: @grid-bottom-margin;
-        height: auto;
-      }
-    }
-    .gn-md-abstract {
-      cursor: pointer;
-      color: @gray-light;
-    }
-    .gn-md-abstract.ellipsis:after {
-      background: none;
-    }
-    .gn-md-links {
-      //position: absolute;
-      //bottom: @grid-bottom-margin;
-      background: none;
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
-      padding: 5px;
-    }
-    input {
-      float: left;
-    }
-    .gn-md-category {
-      display: block;
-      float: left;
-      margin-left: 18px;
-    }
-  }
-}
-
-.gn-md-view {
-  .gn-md-side {
-    .gn-img-thumbnail,
-    .gn-img-extent {
-      width: 100%;
-    }
-  }
-  .view-header {
-    border-bottom: 2px solid #e5e5e5;
-  }
-  .entry {
-    margin-left: 1em;
-    border-left: 2px solid #eeeeee;
-    padding-left: 5px;
-    dl {
-      padding-bottom: 5px;
-    }
-  }
-  input[readonly] {
-    background:#fff;
-  }
-  .extent{
-    display:inline-block;position:relative;margin:2em 0 0 90px;
-  }
-  .coord{
-    position:absolute;width:100px;
-  }
-  .coord-north{
-    top:-1.25em;
-    left:50%;
-    margin-left:-75px;
-  }
-  .coord-south{
-    bottom:-1.25em;
-    left:50%;
-    margin-left:-75px;
-  }
-  .coord-east{
-    right:-75px;
-    top:50%;
-    margin-top:-1.25em;
-  }
-  .coord-west{
-    left:-75px;
-    top:50%;
-    margin-top:-1.25em;
-  }
-}
 [data-ng-search-form] {
   .gn-top-search {
     border-bottom: 1px solid @panel-default-border;
@@ -355,24 +126,6 @@ ul.gn-resultview {
     }
   }
 }
-
-[data-gn-map-field] > [ngeo-map] {
-  //height: 89.9vh;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  right: 0;
-  bottom: 0;
-  position: fixed !important;
-  z-index: 99;
-  width: 250px !important;
-  heigth: 250px !important;
-  margin: 5px;
-}
-.gn-row-main {
-  margin: 2em 0 4em;
-}
-
-.gn-row-info {}
 
 .gn-row-filters {
   padding-bottom: 5px;
@@ -456,177 +209,4 @@ ul.gn-resultview {
   }
 }
 
-[gn-main-viewer] {
-  position: absolute;
-  top: -14px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-
-  .panel-tools {
-    .panel-heading {
-      background-color: transparent;
-    }
-
-    .processes-list .list-group-item {
-      &.active {
-        background-color: @btn-primary-bg;
-        * { color: @btn-primary-color; }
-      }
-    }
-  }
-
-  .nav-tabs {
-    > li {
-      cursor: pointer;
-    }
-  }
-
-  .nav {
-    > li {
-      > a {
-        padding: 10px 10px;
-      }
-    }
-  }
-
-  [gn-kml-import] {
-    input {
-      margin-top: 15px;
-    }
-  }
-
-  [ngeo-map] {
-    height: 100%;
-  }
-}
-/*
-    Place bottom-bar at the bottom of page; approach is based on http://matthewjamestaylor.com/blog/bottom-footer-demo.htm
-*/
-.gn-bottom-bar {
-  height:50px;
-  position:relative;
-  overflow:hidden;
-  width:100%;
-  margin-bottom:0px;
-  border-radius: 0px;
-}
-
-.cookie-warning {
-  .alert;
-  .alert-info;
-}
-
-.gn-full {
-  min-height: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-html, body {
-  height:100%;
-}
-
-.navbar-form {
-  border:none;
-}
-
-/* Facet / this is a hack to hide a facet
- not to be displayed because used to get complex
- field for rendering properly INSPIRE theme icons
- only. It may be more relevant to have this at the
- facetsConfigService ? */
-[data-facet=inspireThemesWithAc] {
-  display: none;
-}
-
-/* Extra small devices (phones, less than 768px) */
-/* No media query since this is the default in Bootstrap */
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: @screen-sm-min) {
-  ul.gn-resultview li.gn-grid {
-    width: calc(~"100% - 15px");
-  }
-}
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: @screen-md-min) {
-
-  ul.gn-resultview li.gn-grid {
-    width: calc(~"50% - 15px");
-  }
-}
-
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: @screen-lg-min) {
-
-  ul.gn-resultview li.gn-grid {
-    //width: calc(~"33% - 15px");
-  }
-}
-
 @import "gn_view.less";
-
-.gn-footer-text {
-  margin-top: 15px;
-}
-.gn-footer-text > span {
-  padding-right: 5px;
-  padding-left: 15px;
-  color: #777;
-}
-.socialmedia {
-  margin-top: 15px;
-  margin-right: 15px;
-}
-.socialmedia a{
-  margin-top: 15px;
-  display:inline !important;
-  padding-left: 4px !important;
-  padding-right: 4px !important;
-  color: #777;
-}
-
-.gn-toggle {
-  background-color: @brand-primary;
-  color: white !important;
-  -webkit-border-radius: 25px;
-  border-width: 0px;
-  &:hover {
-    background-color: darken(@link-color, 15%);
-    color: white !important;
-  }
-}
-.gn-minimap-toggle {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 999;
-}
-.gn-minimap-button {
-  padding: 7px;
-  right: 0px;
-  bottom: 52px;
-}
-.gn-minimap-text {
-  text-decoration: blink;
-  transform: translate(100%) rotate(270deg);
-  transform-origin: left bottom;
-  bottom: 87px;
-  color: @brand-primary;
-  right:0;
-  text-transform: uppercase;
-}
-.gn-facet-toggle {
-  padding: 2px;
-  margin-top: -4px;
-  left: -5px;
-}
-
-gn-wps-process-form {
-  .panel-body {
-    padding: 0px;
-  }
-}

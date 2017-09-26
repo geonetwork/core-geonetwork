@@ -34,7 +34,7 @@
     french.
     Update the doc in the schema folders and in the manuals.
   </description>
-  <version>3.3.0-SNAPSHOT</version>
+  <version>3.4.0-SNAPSHOT</version>
   <licenses>
     <license>
       <name>General Public License (GPL)</name>

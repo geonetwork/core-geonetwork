@@ -196,13 +196,13 @@ public class Handlers {
                 }
             }
         }
-
         return hierarchy;
     }
 
     private Element getRelatedReport(int id, String uuid) {
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
         def RelatedItemType[] types = ["parent","children", "sources", "hassources"];
+//        def RelatedItemType[] types = ["parent","children", "services", "datasets"];
         def raw = MetadataUtils.getRelated(ServiceContext.get(), id, uuid, types, 1, 1000, true)
         def withGui = new Element("root").addContent(Arrays.asList(
                 new Element("gui").addContent(Arrays.asList(

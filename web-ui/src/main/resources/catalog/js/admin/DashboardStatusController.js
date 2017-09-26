@@ -47,8 +47,8 @@
    *
    */
   module.controller('GnDashboardStatusController', [
-    '$scope', '$routeParams', '$http',
-    function($scope, $routeParams, $http) {
+    '$scope', '$routeParams', '$http', '$rootScope', '$translate',
+    function($scope, $routeParams, $http, $rootScope, $translate) {
       $scope.healthy = undefined;
       $scope.nowarnings = undefined;
       $scope.threadSortField = undefined;
@@ -175,6 +175,29 @@
         });
       };
 
+      $scope.indexRecordsWithErrors = function() {
+        // Search records
+        $http.get('qi?_content_type=json&' +
+          '_indexingError=1&bucket=ie&summaryOnly=true&_isTemplate=y or n').then(
+            function () {
+              // Select
+              $http.put('../api/selections/ie').then(
+                function () {
+                  $http.get('../api/records/index?bucket=ie').then(
+                    function (response) {
+                      var res = response.data;
+                      $rootScope.$broadcast('StatusUpdated', {
+                        msg: $translate.instant('selection.indexing.count', res),
+                        timeout: 2,
+                        type: res.success ? 'success' : 'danger'});
+                    }
+                  );
+                }
+              );
+            }
+        );
+      };
+
       $scope.indexMessages = function(md) {
         if (angular.isArray(md.idxMsg)) {
           return md.idxMsg;
@@ -240,6 +263,7 @@
       $scope.searchObj = {
         params: {
           _indexingError: 1,
+          _isTemplate: 'y or n',
           sortBy: 'changeDate'
         }
       };

@@ -57,7 +57,7 @@
     cursor: not-allowed;
   }
   .nav li:hover {
-    background-color: red;
+    cursor: pointer;;
   }
 
   h1 {
@@ -169,6 +169,9 @@
   .entry {
     border-left: 2px solid @gray-lighter;
     padding-left: 1em;
+    .btn-default:focus {
+      border: none;
+    }
   }
   .entry .entry {
     margin-left: 1em;
