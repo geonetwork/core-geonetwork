@@ -107,13 +107,17 @@
 
     <ul data-ng-if="gnCfg.mods.signin.enabled"
         class="nav navbar-nav navbar-right">
-      <li data-ng-show="authenticated">
+      <li class="dropdown dropdown-hover" data-ng-show="authenticated">
         <a data-gn-active-tb-item="{{gnCfg.mods.admin.appUrl}}#/organization/users?userOrGroup={{user.username}}"
-           title="{{'userDetails' | translate}}"
-           class="hidden-xs">
+          title="{{'userDetails' | translate}}"
+          class="dropdown-toggle"
+          role="button" aria-expanded="false">
           <img class="img-circle"
-               data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>
-          {{user.name}} {{user.surname}} ({{user.profile | translate}})
+            data-ng-src="//gravatar.com/avatar/{{user.email | md5}}?s=18"/>&nbsp;
+          <div class="gn-user-info">
+            {{user.name}} {{user.surname}}<br>
+            <span class="gn-user-role">{{user.profile | lowercase | translate}}</span>
+          </div>
           <span class="alert alert-danger ng-hide"
                 data-ng-show="session.remainingTime > 0 &&
                     session.remainingTime < session.alertInTitleWhen"
@@ -122,21 +126,52 @@
             sessionWillExpireIn
           </span>
         </a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href="{{gnCfg.mods.signout.appUrl}}"
+                title="{{'signout' | translate}}">
+              <i class="fa fa-sign-out"></i>&nbsp;
+              {{'signout' | translate}}
+            </a>
+          </li>
+        </ul>
       </li>
-      <li data-ng-show="authenticated">
-        <a href="{{gnCfg.mods.signout.appUrl}}"
-           title="{{'signout' | translate}}">
-          <i class="fa fa-sign-out"></i>&nbsp;
-          {{'signout' | translate}}
-        </a>
-      </li>
-      <li data-ng-show="!authenticated && service !== 'catalog.signin' && !shibbolethEnabled"">
+      <li class="dropdown dropdown-hover signin-dropdown"
+        data-ng-show="!authenticated && service !== 'catalog.signin' && !shibbolethEnabled">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
+           class="dropdown-toggle"
            data-ng-keypress="$event">
           <i class="fa fa-sign-in"/>&nbsp;
           {{'signIn' | translate}}
         </a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <form name="gnSigninForm" class="navbar-form flex-row"
+              action="{{signInFormAction}}" method="post" role="form">
+              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+              <div class="form-group form-group-sm">
+                <label class="sr-only" for="inputUsername" data-translate="">username</label>
+                <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
+                  placeholder="{{'username' | translate}}" data-ng-model="signinUsername"
+                  required=""/>
+              </div>
+              <div class="flex-spacer"></div>
+              <div class="form-group form-group-sm">
+                <label class="sr-only"for="inputPassword" data-translate="">password</label>
+                  <input type="password" class="form-control" id="inputPassword" name="password"
+                    autocomplete="off"
+                    data-ng-model="signinPassword" placeholder="{{'password' | translate}}"
+                    required=""/>
+              </div>
+              <div class="flex-spacer"></div>
+              <button type="submit" class="btn btn-primary btn-sm pull-right"
+                      data-ng-disabled="!gnSigninForm.$valid">
+                <i class="fa fa-sign-in"/>
+              </button>
+            </form>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>

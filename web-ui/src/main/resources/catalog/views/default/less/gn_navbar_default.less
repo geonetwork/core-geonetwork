@@ -16,7 +16,7 @@
           font-family: FontAwesome;
           content: "\f0d7";
           position: absolute;
-          bottom: -2px;
+          bottom: -5px;
           left: 50%;
           transform: translate(-50%, 0);
           font-size: 0.9em;
@@ -25,9 +25,21 @@
       ul {
         display: none;
       }
-      &:hover ul {
+      &:hover ul, &:focus ul, &:active ul {
         display: block;
       }
+    }
+  }
+
+  .gn-user-info {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -6px 0px;
+    line-height: 1em;
+    .gn-user-role {
+      text-transform: uppercase;
+      opacity: 0.7;
+      font-size: 0.8em;
     }
   }
 }

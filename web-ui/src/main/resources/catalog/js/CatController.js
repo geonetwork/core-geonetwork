@@ -463,6 +463,9 @@
         }
       });
 
+      // login url for inline signin form in top toolbar
+      $scope.signInFormAction = '../../signin#' + $location.path();
+
       /**
        * Catalog facet summary providing
        * a global overview of the catalog content.
