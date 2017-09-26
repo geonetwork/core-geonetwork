@@ -550,7 +550,7 @@
       });
 
       $scope.triggerBackupArchive = function() {
-        return $http({method: 'PUT', url: '../api/records/backups/'}).
+        return $http({method: 'PUT', url: '../api/records/backups'}).
         then(function(data) {
           $rootScope.$broadcast('StatusUpdated', {
             title: $translate.instant('generatingArchiveBackup'),

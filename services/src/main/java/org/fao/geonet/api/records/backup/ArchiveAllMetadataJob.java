@@ -85,7 +85,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
-        ServiceContext serviceContext = serviceManager.createServiceContext("unpublishMetadata", context);
+        ServiceContext serviceContext = serviceManager.createServiceContext("backuparchive", context);
         serviceContext.setLanguage("eng");
         serviceContext.setAsThreadLocal();
 

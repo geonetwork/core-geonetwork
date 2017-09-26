@@ -123,7 +123,6 @@ public class BackupArchiveApi {
             notes = "The backup contains all metadata not harvested including templates.",
             nickname = "triggerBackup")
     @RequestMapping(
-            value="/",
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
