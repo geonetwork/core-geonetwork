@@ -235,7 +235,8 @@ public class Aligner {
             setCreateDate(new ISODate(createDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId()));
+            setOwner(Integer.parseInt(params.getOwnerId())).
+            setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
