@@ -313,8 +313,9 @@
 
     // get an update index request url with geometry filter based on a point
     var url = this.indexObject.baseUrl;
-    var state = this.indexObject.getState();
-    var searchQuery = this.indexObject.getSearhQuery(state);
+    var state = angular.extend({}, this.indexObject.getState());
+    state.params = state.qParams;
+    var coordinates = this.coordinates;
 
     this.loading = true;
     defer.resolve({
@@ -322,61 +323,16 @@
       contentType: 'application/json',
       method: 'POST',
       queryParams: function(p) {
-
-        // TODO: Should use indexObject.search_ ?
-        var params = angular.extend({},
-            {
-              query: {query_string: {query: searchQuery}}},
-            {
-              size: p.limit,
-              from: p.offset
-            });
+        var queryObject = this.indexObject.buildESParams(state, {},
+          p.offset || 0, p.limit || 10000);
         if (p.sort) {
-          params.sort = [];
+          queryObject.sort = [];
           var sort = {};
           sort[p.sort] = {'order' : p.order};
-          params.sort.push(sort);
+          queryObject.sort.push(sort);
         }
-
-
-        if (state.geometry || this.coordinates) {
-          var geomFilter = {};
-          if (state.geometry) {
-            geomFilter = {'geo_shape': {
-              'geom': {
-                'shape': {
-                  'type': 'envelope',
-                  'coordinates': state.geometry
-                },
-                'relation': 'intersects'
-              }
-            }
-            };
-          } else if (this.coordinates) {
-            var coords = ol.proj.transform(this.coordinates,
-                map.getView().getProjection(), 'EPSG:4326');
-            geomFilter = {'geo_distance' : {
-              'distance': map.getView().getResolution() / 400 + 'km',
-              'geom': {
-                'lat': coords[1],
-                'lon': coords[0]
-              }
-            }
-            };
-          }
-          params.query = {
-            'bool': {
-              'must': {
-                'query_string': params.query.query_string || '*:*'
-              },
-              'filter': geomFilter
-            }
-          };
-        }
-
-        return JSON.stringify(params);
-      },
-      //data: scope.data.response.docs,
+        return JSON.stringify(queryObject);
+      }.bind(this),
       responseHandler: function(res) {
         this.count = res.hits.total;
         var rows = [];
