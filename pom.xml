@@ -1267,8 +1267,8 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>5.5.0</es.version>
-    <es.version.md5>01b2f91ed7a572139f4a06cb2505b679</es.version.md5>
+    <es.version>5.6.1</es.version>
+    <es.version.md5>9b426819d29ef8dd499c593629feede8</es.version.md5>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
     <es.url>http://${es.host}:${es.port}</es.url>
@@ -1284,7 +1284,7 @@
     <es.username></es.username>
     <es.password></es.password>
 
-    <kb.version.md5>1eabb59278f3fbe2115a8cb30b993070</kb.version.md5>
+    <kb.version.md5>e44777c3fb7ccfa4300884ce72869180</kb.version.md5>
     <kb.port>5601</kb.port>
     <kb.url>http://localhost:${kb.port}</kb.url>
 
