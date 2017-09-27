@@ -153,7 +153,7 @@
   <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
     <property name="jobDetail">
       <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-        <property name="jobClass" value="org.fao.geonet.api.records.backup.ArchiveAllMetadataJob"/>
+        <property name="jobClass" value="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob"/>
         <property name="name" value="archiveAllMetadata" />
         <property name="group" value="gnBackgroundTasks" />
       </bean>

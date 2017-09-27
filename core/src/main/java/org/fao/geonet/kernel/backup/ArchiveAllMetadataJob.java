@@ -21,7 +21,7 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.records.backup;
+package org.fao.geonet.kernel.backup;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -78,7 +78,7 @@ public class ArchiveAllMetadataJob extends QuartzJobBean {
     private SettingManager settingManager;
 
     static final String CATALOG_ARCHIVE_BACKUP_FILE_PREFIX = "gn_backup";
-    static final String BACKUP_DIR = "backup_archive";
+    public static final String BACKUP_DIR = "backup_archive";
     public static final String BACKUP_LOG = Geonet.GEONETWORK + ".backup";
     private AtomicBoolean backupIsRunning = new AtomicBoolean(false);
 
