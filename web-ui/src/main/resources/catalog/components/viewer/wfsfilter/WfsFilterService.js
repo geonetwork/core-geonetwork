@@ -348,7 +348,7 @@
             return;
           }
           angular.forEach(values, function(v, k) {
-            var escaped = k.replace('\'', '\\\'');
+            var escaped = k.replace(/'/g, '\\\'');
             clause.push(
                 (config.isTokenized) ?
                 "(" + fName + " LIKE '%" + escaped + "%')" :
