@@ -523,6 +523,7 @@ div.help ul li {
 
 .gn-metadata-view h4.view-header {
     font-size: 140%;
+    font-weight: bold;
     margin: 6px 0px 2px;
 }
 /* Hide select predefined regions */
