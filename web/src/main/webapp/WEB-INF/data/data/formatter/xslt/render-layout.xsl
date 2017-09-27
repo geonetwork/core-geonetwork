@@ -333,6 +333,7 @@
 
   <!-- Forgot all none matching elements -->
   <xsl:template mode="render-view" match="*|@*"/>
+  <xsl:template mode="getOverviews" match="*|@*"/>
   <xsl:template mode="render-field" match="*|@*|text()"/>
 
 </xsl:stylesheet>
