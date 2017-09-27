@@ -93,6 +93,7 @@
                 <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
+                <Field name="individual_name" string="{$name}" store="true" index="true"/>
                 <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
@@ -114,8 +115,8 @@
                               select="normalize-space(gmd:individualName/gco:CharacterString)"/>
                <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
-
-              <Field name="_title"
+               <Field name="individual_name" string="{$name}" store="true" index="true"/>
+               <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
@@ -168,8 +169,7 @@
                           select="gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]"/>
               <xsl:variable name="nonEmptyDesc"
                           select="(gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[./text()!=''])[1]"/>
-              <Field name="_title"
-                     string="{if ($title != '') then $title else if ($localizedDesc != '') then $localizedDesc
+              <Field name="_title" string="{if ($title != '') then $title else if ($localizedDesc != '') then $localizedDesc
                              else $nonEmptyDesc}"
                      store="true" index="true"/>
             </xsl:when>

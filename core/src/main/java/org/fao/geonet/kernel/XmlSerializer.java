@@ -25,7 +25,6 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -134,7 +133,7 @@ public abstract class XmlSerializer {
             return false;
         }
     }
-    
+
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table'
      * and the string read is converted into xml.

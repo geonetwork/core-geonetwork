@@ -1161,5 +1161,7 @@
     "mapConfigExtent": "Étendue exprimée dans la projection courante",
     "mapConfigLayers": "Description des couches en JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
     "system/xlinkResolver/referencedDeletionAllowed": "Autoriser la suppression de sous-modèles référencés par un XLink.",
-    "system/xlinkResolver/referencedDeletionAllowed-help": "Cocher la case pour autoriser la suppression."
+    "system/xlinkResolver/referencedDeletionAllowed-help": "Cocher la case pour autoriser la suppression.",
+    "system/xlinkResolver/templatesToOperateOnAtInsert": "Liste des templates à substituer à l'import.",
+    "system/xlinkResolver/templatesToOperateOnAtInsert-help": "A l'import d'une metadonnée, pour chaque template d'un de ces types contenu, le template sera substitué par un xlink vers le template correspondant, déjà existant en base. Si le template n'existe pas encore, l'insertion de la métadonnée échoue."
 }

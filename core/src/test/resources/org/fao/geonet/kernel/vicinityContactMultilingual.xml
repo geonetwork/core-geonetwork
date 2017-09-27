@@ -4,10 +4,31 @@
                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                          xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd&#xA;                  http://www.isotc211.org/2005/gmx http://www.isotc211.org/2005/gmx/gmx.xsd&#xA;                  http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd&#xA;  ">
   <gmd:individualName>
-      <gco:CharacterString>babar</gco:CharacterString>
+      <gmd:PT_FreeText>
+          <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#EN">McDuck</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#DE">Dagobert</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#FR">Picsou</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+      </gmd:PT_FreeText>
   </gmd:individualName>
   <gmd:organisationName>
-      <gco:CharacterString>csc</gco:CharacterString>
+      <gmd:PT_FreeText>
+          <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#EN">csc</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#DE">csc</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+          <gmd:textGroup>
+              <gmd:LocalisedCharacterString locale="#FR">csc</gmd:LocalisedCharacterString>
+          </gmd:textGroup>
+      </gmd:PT_FreeText>
+
   </gmd:organisationName>
   <gmd:positionName>
       <gco:CharacterString/>
@@ -42,7 +63,17 @@
                   <gco:CharacterString>Country of the physical address</gco:CharacterString>
                </gmd:country>
                <gmd:electronicMailAddress>
-                  <gco:CharacterString>Address of the electronic mailbox of the responsible organization or individual</gco:CharacterString>
+                   <gmd:PT_FreeText>
+                       <gmd:textGroup>
+                           <gmd:LocalisedCharacterString locale="#EN">mcduck@csc.org</gmd:LocalisedCharacterString>
+                       </gmd:textGroup>
+                       <gmd:textGroup>
+                           <gmd:LocalisedCharacterString locale="#DE">dagobert@csc.org</gmd:LocalisedCharacterString>
+                       </gmd:textGroup>
+                       <gmd:textGroup>
+                           <gmd:LocalisedCharacterString locale="#FR">picsou@csc.org</gmd:LocalisedCharacterString>
+                       </gmd:textGroup>
+                   </gmd:PT_FreeText>
                </gmd:electronicMailAddress>
             </gmd:CI_Address>
          </gmd:address>

@@ -2210,7 +2210,7 @@ public class DataManager implements ApplicationEventPublisherAware {
         getXmlSerializer().delete(id, context);
     }
 
-    private MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {
+    public MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {
         MetaSearcher searcher = context.getBean(SearchManager.class).newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
         Element parameters =  new Element(Jeeves.Elem.REQUEST);
         parameters.addContent(new Element(Geonet.IndexFieldNames.XLINK).addContent("*" + metadata.getUuid() + "*"));

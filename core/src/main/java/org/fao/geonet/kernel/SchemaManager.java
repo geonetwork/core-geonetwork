@@ -29,11 +29,16 @@ package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import com.vividsolutions.jts.geom.Geometry;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
 
+import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Filter;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
@@ -46,6 +51,11 @@ import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SearchManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
@@ -152,6 +162,8 @@ public class SchemaManager {
                         get().
                         getBean(schemaBeanIdentifier);
                 }
+
+                lazyInitializePluginIfSubtemplateAware(schemaIdentifier, schemaPlugin);
             }
         } catch (Exception e) {
             // No bean for this schema
@@ -1852,4 +1864,53 @@ public class SchemaManager {
         }
         return listOfTypenames;
     }
+
+    private static void lazyInitializePluginIfSubtemplateAware(String schemaIdentifier, SchemaPlugin schemaPlugin) {
+        if (schemaPlugin instanceof SubtemplateAwareSchemaPlugin && !((SubtemplateAwareSchemaPlugin) schemaPlugin).isInitialised()) {
+            SearchManager searchManager = ApplicationContextHolder.get().getBean(SearchManager.class);
+            SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
+            ((SubtemplateAwareSchemaPlugin) schemaPlugin).init(
+                    new SchemaManagerProxy() {
+                        @Override
+                        public Path getSchemaDir() {
+                            return schemaManager.getSchemaDir(schemaIdentifier);
+                        }
+                    },
+                    new SearchManagerProxy() {
+                        @Override
+                        public IndexReader getIndexReader(String lang) throws IOException {
+                            return searchManager.getIndexReader(lang, -1).indexReader;
+                        }
+                    },
+                    CONSTANT_PROXY);
+        }
+    }
+
+    private static final ConstantsProxy CONSTANT_PROXY = new ConstantsProxy() {
+
+        @Override
+        public String getIndexFieldNamesANY() {
+            return Geonet.IndexFieldNames.ANY;
+        }
+
+        @Override
+        public String getIndexFieldNamesIS_TEMPLATE() {
+            return Geonet.IndexFieldNames.IS_TEMPLATE;
+        }
+
+        @Override
+        public String searchResultRelationEQUAL() {
+            return Geonet.SearchResult.Relation.EQUAL;
+        }
+
+        @Override
+        public String searchResultRELATION() {
+            return Geonet.SearchResult.RELATION;
+        }
+
+        @Override
+        public Namespace getNAMESPACE_XLINK() {
+            return XLink.NAMESPACE_XLINK;
+        }
+    };
 }

@@ -49,6 +49,8 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -1178,9 +1180,19 @@ public class MetadataInsertDeleteApi {
         final List<Element> md = new ArrayList<Element>();
         md.add(xmlElement);
 
+        // Substitute xlinks
+        MetadataSchema schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class)
+                .getSchema(schema);
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+
+        if (schemaManager.getSchemaPlugin() instanceof SubtemplateAwareSchemaPlugin) {
+            ((SubtemplateAwareSchemaPlugin)schemaManager.getSchemaPlugin())
+                    .replaceSubtemplatesByLocalXLinks(
+                            xmlElement,
+                            settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT));
+        }
 
         // Import record
-        SettingManager settingManager = appContext.getBean(SettingManager.class);
         Map<String, String> sourceTranslations = Maps.newHashMap();
         try {
             Importer.importRecord(uuid, uuidProcessing, md, schema, 0,

@@ -26,7 +26,16 @@ package org.fao.geonet.schema.iso19139;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.kernel.schema.*;
+import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.ExportablePlugin;
+import org.fao.geonet.kernel.schema.ISOPlugin;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SearchManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
+import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -35,9 +44,13 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 
 /**
@@ -49,12 +62,15 @@ public class ISO19139SchemaPlugin
     AssociatedResourcesSchemaPlugin,
     MultilingualSchemaPlugin,
     ExportablePlugin,
-    ISOPlugin {
-    public static final String IDENTIFIER = "iso19139";
+    ISOPlugin,
+    SubtemplateAwareSchemaPlugin {
 
+    public static final String IDENTIFIER = "iso19139";
     public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
+
+    private SubtemplatesByLocalXLinksReplacer subtemplatesByLocalXLinksReplacer;
 
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
@@ -306,5 +322,28 @@ public class ISO19139SchemaPlugin
     @Override
     public Map<String, String> getExportFormats() {
         return allExportFormats;
+    }
+
+    @Override
+    public Element replaceSubtemplatesByLocalXLinks(
+            Element dataXml,
+            String templatesToOperateOn) {
+        return subtemplatesByLocalXLinksReplacer.replaceSubtemplatesByLocalXLinks(
+                dataXml,
+                templatesToOperateOn);
+    }
+
+    @Override
+    public void init(SchemaManagerProxy schemaManagerProxy, SearchManagerProxy searchManagerProxy, ConstantsProxy constantsProxy) {
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(searchManagerProxy);
+        List<Namespace> namespaces = new ArrayList<>(allNamespaces);
+        subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, schemaManagerProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, schemaManagerProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, schemaManagerProxy, constantsProxy));
+    }
+
+    @Override
+    public boolean isInitialised() {
+        return subtemplatesByLocalXLinksReplacer!=null;
     }
 }
