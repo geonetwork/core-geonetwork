@@ -439,7 +439,7 @@
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
                           response, scope.map, scope.wpsLink.layer, {
-                            exclude: /^OUTPUT_/
+                            exclude: /^OUTPUT_/i
                           }
                       );
                     }
