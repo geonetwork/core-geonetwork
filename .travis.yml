@@ -3,4 +3,5 @@ language: java
 jdk:
   - oraclejdk8
 before_install:
+  - unset _JAVA_OPTIONS
   - export MAVEN_OPTS="-Xmx512M -XX:MaxPermSize=256M"
