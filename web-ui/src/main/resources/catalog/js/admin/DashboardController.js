@@ -41,7 +41,9 @@
   module.controller('GnDashboardController', [
     '$scope', '$http', 'gnGlobalSettings',
     function($scope, $http, gnGlobalSettings) {
-
+      $scope.pageMenu = {tabs: {}};
+      $scope.info = {};
+      $scope.gnUrl = gnGlobalSettings.gnUrl;
 
       var tabs = [{
         type: 'status',
@@ -83,19 +85,26 @@
             '5b407790-4fa1-11e7-a577-3197d1592a1d?embed=true&_g=()')
       }];
 
-
-      tabs = tabs.concat(dashboards);
-
-      $scope.pageMenu = {
-        folder: 'dashboard/',
-        defaultTab: 'status',
-        tabs: tabs
-      };
-
-
-
-      $scope.info = {};
-      $scope.gnUrl = gnGlobalSettings.gnUrl;
+      $scope.isDashboardAvailable = false;
+      $http.get('../../warninghealthcheck').success(function(data) {
+        angular.forEach(data, function(o) {
+          if (o.name === 'DashboardAppHealthCheck' &&
+              o.status === 'OK') {
+            tabs = tabs.concat(dashboards);
+          }
+          $scope.pageMenu = {
+            folder: 'dashboard/',
+            defaultTab: 'status',
+            tabs: tabs
+          };
+        });
+      }).error(function(data) {
+        $scope.pageMenu = {
+          folder: 'dashboard/',
+          defaultTab: 'status',
+          tabs: tabs
+        };
+      });
 
       $http.get('../api/site/info').
           success(function(data) {
