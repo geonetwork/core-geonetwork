@@ -318,47 +318,51 @@
         });
       };
 
-      this.toCQL = function(esObj) {
-
+      // formats current filter state as a CQL request
+      // if useActualParamName is true, param names will be stripped of their
+      // prefixes & suffixes (used only for the index)
+      this.toCQL = function(esObj, useActualParamName) {
         var state = esObj.getState();
         var where;
 
-        if (!state.any) {
-          where = [];
-          angular.forEach(state.qParams, function(fObj, fName) {
-            var config = esObj.getIdxNameObj_(fName);
-            console.log(config);
-            var clause = [];
-            var values = fObj.values;
-            if (config.isDate) {
-              where.concat([
-                '(' + fName + '>' + values.from + ')',
-                '(' + fName + '<' + values.to + ')'
-              ]);
-              return;
-            }
-            angular.forEach(values, function(v, k) {
-              clause.push(
-                  (config.isTokenized) ?
-                  '(' + fName + " LIKE '%" + k + "%')" :
-                  '(' + fName + '=' + k + ')'
-              );
-            });
-            if (clause.length == 0) return;
-            where.push('(' + clause.join(' OR ') + ')');
-          });
-          return where.join(' AND ');
-        } else {
-          esObj.search_es({
-            size: scope.count || 10000,
-            aggs: {}
-          }).then(function(data) {
-            var where = data.hits.hits.map(function(res) {
-              return res._id;
-            });
-            return where.join(' OR ');
-          });
+        if (!state) {
+          console.warn('WFS filter state could not be fetched');
+          return '';
         }
+
+        where = [];
+        angular.forEach(state.qParams, function(fObj, fName) {
+          var config = esObj.getIdxNameObj_(fName);
+          var clause = [];
+          var values = fObj.values;
+          var paramName = fName;
+
+          if (useActualParamName) {
+            var fieldInfo = paramName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
+            paramName = fieldInfo ? fieldInfo[1] : paramName;
+          }
+
+          if (config.isDateTime) {
+            if (values.from && values.to) {
+              where = where.concat([
+                '(' + paramName + ' > ' + transformDate(values.from) + ')',
+                '(' + paramName + ' < ' + transformDate(values.to) + ')'
+              ]);
+            }
+            return;
+          }
+          angular.forEach(values, function(v, k) {
+            var escaped = k.replace(/'/g, '\\\'');
+            clause.push(
+                (config.isTokenized) ?
+                "(" + paramName + " LIKE '%" + escaped + "%')" :
+                "(" + paramName + " = '" + escaped + "')"
+            );
+          });
+          if (clause.length == 0) return;
+          where.push('(' + clause.join(' OR ') + ')');
+        });
+        return where.join(' AND ');
       };
 
       this.toUrlParams = function(esObj) {
