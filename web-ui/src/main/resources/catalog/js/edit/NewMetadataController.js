@@ -49,6 +49,7 @@
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
       $scope.mdList = null;
+      $scope.restrictedToUserOnly = true;
 
       // Used for the metadata identifier fields
       $scope.mdIdentifierTemplateTokens = {};
@@ -87,6 +88,23 @@
         return icons[type] || 'fa-square-o';
       };
 
+      $scope.$watchCollection('user', function(n, o) {
+        if (n.id) {
+          $http.get('../api/users/' + $scope.user.id + '/groups')
+            .success(function(data) {
+              $scope.userEditorGroups = {};
+              for (var i = 0; i < data.length; i ++) {
+                $scope.userEditorGroups[data[i].id.groupId] = data[i].id.profile;
+              }
+            });
+        }
+      });
+      $scope.$watch('ownerGroup', function(n, o) {
+        if (n !== o) {
+          $scope.restrictedToUserOnly = $scope.userEditorGroups[n] === 'Editor';
+        }
+      });
+
       var init = function() {
         if ($routeParams.id) {
           gnMetadataManager.create(
@@ -106,6 +124,7 @@
           } else {
             query = 'template=y';
           }
+
 
 
           // TODO: Better handling of lots of templates
