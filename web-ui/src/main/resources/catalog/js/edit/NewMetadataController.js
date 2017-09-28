@@ -247,7 +247,11 @@
         return gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
-            isPublic || false,
+            // IsPublic is defined if user can select the button
+            // in the dropdown ie. Reviewer only.
+            // Else, it depends on the type of profile for the
+            // group selected.
+            isPublic === false ? false : !$scope.restrictedToUserOnly,
             $scope.isTemplate,
             $routeParams.childOf ? true : false,
             undefined,

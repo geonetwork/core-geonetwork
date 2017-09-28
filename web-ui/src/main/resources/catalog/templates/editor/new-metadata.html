@@ -88,23 +88,30 @@
           </div>
         </div>
       </div>
-      <!-- In Sextant we always create a metadata record and
-      publish it for all group members. -->
-      <button type="button" class="btn btn-success btn-block"
-              data-gn-click-and-spin="createNewMetadata(true)"
-              title="{{'createMetadata-help' | translate}}"
-              data-ng-class="{'disabled': (restrictedToUserOnly || !activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
-        <i class="fa fa-plus"/>
-        <span data-translate="">createMetadata</span>
-      </button>
-      <br/>
-       <button type="button" class="btn btn-success btn-block"
-               data-gn-click-and-spin="createNewMetadata(false)"
-               title="{{'createMetadataRestricted-help' | translate}}"
-               data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
-        <i class="fa fa-plus"/>
-        <span data-translate="">createMetadataRestricted</span>
-      </button>
+      <!-- In Sextant, when creating a new metadata record
+      privileges are assigned depending on the user profile for
+      the selected group. If Editor, edit privileges is not
+      set for the group. If Reviewer, user can choose. -->
+      <div class="btn-group">
+        <button type="button" class="btn btn-success btn-lg"
+                data-gn-click-and-spin="createNewMetadata()"
+                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}">
+          <i class="fa fa-plus"/>
+          <span data-translate="">createMetadata</span>
+        </button>
+        <button type="button"
+                class="btn btn-success btn-lg dropdown-toggle"
+                data-ng-class="{'disabled': (restrictedToUserOnly || !activeType || !activeTpl || !ownerGroup || ((!generateUuid) && (!isMdIdentifierFilled())) )}"
+                data-toggle="dropdown">
+          <span class="caret"></span>&nbsp;
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li><a title="{{'createMetadataRestricted-help' | translate}}"
+                 data-gn-click-and-spin="createNewMetadata(false)"
+                 href="" data-translate="">createMetadataRestricted
+          </a></li>
+        </ul>
+      </div>
 
     </div>
   </div>
