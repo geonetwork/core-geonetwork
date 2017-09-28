@@ -633,10 +633,12 @@
     'maxHeight': '0px',
     'overflow': 'hidden'
   });
-  $(window).load(function() {
-    $('.gn, .g').css({
-      'maxHeight': '',
-      'overflow': 'auto'
+  $(window).load(function () {
+    setTimeout(function() {
+      $('.gn, .g').css({
+        'maxHeight': '',
+        'overflow': 'auto'
+      });
     });
   });
 
