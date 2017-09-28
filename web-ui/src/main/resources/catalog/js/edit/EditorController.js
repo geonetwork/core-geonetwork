@@ -454,16 +454,7 @@
           // when the editor was not opened by a script.
         }
 
-        var lastPage = document.referrer;
-        if(lastPage && /\/catalog\.search/.test(lastPage)) {
-          var debug = /(&|\?)debug/.test(window.location) ? '?debug' : '';
-          var url = lastPage.split('?')[0] + debug + '#/metadata/' +
-            gnCurrentEdit.uuid;
-          window.location = url;
-        }
-        else {
-          window.history.back();
-        }
+        window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {
