@@ -96,6 +96,33 @@ public class ExtractRequestSpecTest {
     }
 
     @Test
+    public void testSurvalSpecWithBbox() throws Exception {
+        String f = ExtractRequestSpecTest.class.getResource("surval-spec-with-bbox.json").getFile();
+
+        String jsonString = FileUtils.readFileToString(new File(f));
+        ObjectMapper mapper = new ObjectMapper();
+        TypeFactory fac = mapper.getTypeFactory();
+        ExtractRequestSpec s = mapper.readValue(jsonString, ExtractRequestSpec.class);
+        assertTrue(s.getLayers().get(0).getAdditionalInput() != null);
+
+        AdditionalInputSpec spec = s.getLayers().get(0).getAdditionalInput().get(0);
+        /* All these parameters are optional and are not filled in into surval-spec-with-bbox.json */
+        assertTrue("Unexpected additional input", spec.getIdentifier().equals("") &&
+                spec.getOutputIdentifier().equals("") &&
+                spec.getOutputMimeType().equals(""));
+        assertTrue("Wrong protocol in additional input, expected WPS", spec.getProtocol().equals("WPS"));
+        /* ensures there is actually a bounding box in the parsed parameters */
+        assertTrue("No bounding box found in the additional input",
+                spec.getParams().contains("limits=-5.5591,46.6193,-1.2085,49.4396"));
+
+        // Serializes back the object to XML
+        SextantExtractor se = new SextantExtractor();
+        String xmlSpec = se.createXmlSpecification(s, false, null, null);
+        assertTrue("Invalid XML specification generated", xmlSpec.contains("zone_marine_quadrige=abcd&"
+                + "produit_id=30140&limits=-5.5591,46.6193,-1.2085,49.4396&programme_suivi=1234&"));
+    }
+
+    @Test
     public void testSurvalExtractionSpec() throws Exception {
         String f = ExtractRequestSpecTest.class.getResource("extract-surval-spec.json").getFile();
 
@@ -105,9 +132,10 @@ public class ExtractRequestSpecTest {
         List<LayerSpec> l = s.getLayers();
 
         assertTrue("unexpected number of layers, expected 1", l.size() == 1);
-        assertNotNull("additional input is null", s.getLayers().get(0).getAdditionalInput());
-        assertTrue("additional input is empty", s.getLayers().get(0).getAdditionalInput().size() > 0);
-
+        assertNotNull("additional input is null", l.get(0).getAdditionalInput());
+        assertTrue("additional input is empty", l.get(0).getAdditionalInput().size() > 0);
+        assertTrue("Unexpected additionalInput's identifier", l.get(0).getAdditionalInput()
+                .get(0).getIdentifier().equals("r:extractionsurval"));
         // Then serializes back the object to XML consumed by the Python
         // Extractor
         SextantExtractor se = new SextantExtractor();
@@ -119,6 +147,8 @@ public class ExtractRequestSpecTest {
                         "<output format=\"ESRI Shapefile\" name=\"surval_30140_all_point_12_12_2016_postgis\" "
                                 + "epsg=\"4326\" xmin=\"-10.546875000000005\" ymin=\"41.50857729743939\" xmax=\"9.140624999999993\" "
                                 + "ymax=\"51.17934297928923\" mercator_lat=\"\" />")
-                && xmlSpec.contains(" <additionalInput protocol=\"WPS\" linkage=\"http://sextant-test.ifremer.fr"));
+                && xmlSpec.contains("      <additionalInput protocol=\"WPS\" linkage=\"http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R\" "
+                        + "params=\"PHdwczpFeGVjdXRlIHhtbG5zOndwcz0iaHR0cDovL3d3dy5vcGVuZ2lzLm5ldC93cHMvMS4wL")
+                && xmlSpec.contains("identifier=\"r:extractionsurval\" outputMimeType=\"\" outputIdentifier=\"\""));
     }
 }
