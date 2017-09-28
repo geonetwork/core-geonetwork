@@ -125,7 +125,24 @@
       <xsl:when test="$directive != ''">
         <div class="form-group" id="gn-el-{$editInfo/@ref}">
           <div class="col-lg-10">
-            <xsl:attribute name="data-{$directive}" select="$value"/>
+            <xsl:choose>
+              <xsl:when test="$isMultilingual">
+                <xsl:attribute name="data-{$directive}">
+                {
+                <xsl:for-each select="$value/values/value">
+                  <xsl:sort select="@lang"/>
+                  "<xsl:value-of select="@lang" />":
+                  {"ref" : "<xsl:value-of select="@ref" />", "value": "<xsl:value-of select="." />"}
+                  <xsl:if test="position() != last()">,</xsl:if>
+                </xsl:for-each>
+                }
+                </xsl:attribute>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:attribute name="data-{$directive}" select="$value"/>
+              </xsl:otherwise>
+            </xsl:choose>
+
             <xsl:attribute name="data-ref" select="concat('_', $editInfo/@ref)"/>
             <xsl:attribute name="data-label" select="$label/label"/>
           </div>

@@ -47,7 +47,7 @@
         function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils) {
           return {
             request: function(config) {
-              if (gnLangs.current) {
+              if (gnLangs.current && !config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = gnLangs.current;
               }
               // For HTTP url and those which
