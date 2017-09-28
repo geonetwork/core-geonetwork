@@ -11,12 +11,18 @@
     version="2.0"
     exclude-result-prefixes="#all">
 
-    <xsl:output indent="yes"/>
+  <xsl:output indent="yes"/>
+
+  <xsl:variable name="oldIdentifier"
+                select="//gmd:fileIdentifier/gco:CharacterString"/>
+  <xsl:variable name="newIdentifier"
+                select="replace($oldIdentifier, ':', '_')"/>
+
 
     <!-- File identifier : replace by _ for DOI-->
     <xsl:template match="gmd:fileIdentifier/gco:CharacterString">
       <gco:CharacterString>
-        <xsl:value-of select="replace(., ':', '_')"/>
+        <xsl:value-of select="$newIdentifier"/>
       </gco:CharacterString>
     </xsl:template>
 
@@ -237,6 +243,12 @@
             <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/"
                 codeListValue="{gco:CharacterString}"/>
         </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="gco:CharacterString[contains(., $oldIdentifier)]">
+      <xsl:copy>
+        <xsl:value-of select="replace(., $oldIdentifier, $newIdentifier)"/>
+      </xsl:copy>
     </xsl:template>
 
     <xsl:template match="gmd:graphicOverview[
