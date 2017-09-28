@@ -454,8 +454,7 @@
           // when the editor was not opened by a script.
         }
 
-        // Go to editor home
-        $location.path('');
+        window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {
