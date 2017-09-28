@@ -2,10 +2,7 @@ package org.fao.geonet.services.extractor;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,15 +12,10 @@ import javax.naming.NamingEnumeration;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.SearchResult;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.services.extractor.mapping.ExtractRequestSpec;
 import org.fao.geonet.services.extractor.mapping.LayerSpec;
 import org.fao.geonet.services.extractor.mapping.UserSpec;
@@ -38,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.common.annotations.VisibleForTesting;
 
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 
 //=============================================================================
 
@@ -79,9 +70,8 @@ public class SextantExtractor {
         Map<String, Object> status = new HashMap<String, Object>();
         try {
 
-            final ServiceContext serviceContext = ServiceContext.get();
             UserSpec usr = jsonExtractionSpec.getUser();
-            UserSession us = serviceContext.getUserSession();
+            UserSession us = ApiUtils.getUserSession(request.getSession());
 
             if (us.isAuthenticated()) {
                 // Some infos in the XML should come from the LDAP
@@ -100,13 +90,9 @@ public class SextantExtractor {
                     Attribute uidNumber = r.getAttributes().get("uidNumber");
                     uidNumberStr = uidNumber.get().toString();
                 }
-                String lastname, firstname, mail;
-                if (us.getPrincipal().isGeneric()) {
-                    lastname = usr.getLastname();
-                    firstname = usr.getFirstname();
-                    mail = usr.getMail();
-                } else {
-                    // User is not "generic", we trust info coming from the LDAP
+                // if the user is not "generic", then we trust the infos coming from the LDAP
+                // instead of user provided ones.
+                if (us.getPrincipal().isGeneric() == false) {
                     usr.setLastname(us.getSurname());
                     usr.setFirstname(us.getName());
                     usr.setMail(us.getEmailAddr());
@@ -115,6 +101,7 @@ public class SextantExtractor {
 
                 FileUtils.writeStringToFile(new File(panierXmlPathLogged, us.getEmailAddr() + "_" + UUID.randomUUID()
                 + ".xml"), xmlString);
+
             } else {
                 // using data provided by the user
                 if (usr == null) {

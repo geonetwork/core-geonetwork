@@ -137,8 +137,8 @@
 
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
-            extent: extent,
-            projection: projection
+            projection: projection,
+            zoom: 2
           });
           map.setView(view);
         }
@@ -365,6 +365,13 @@
       this.writeContext = function(map) {
 
         var extent = map.getView().calculateExtent(map.getSize());
+        var ll = [extent[0], extent[1]];
+        var ur = [extent[2], extent[3]];
+        var projection = map.getView().getProjection().getCode();
+        if (projection == 'EPSG:4326') {
+          ll.reverse();
+          ur.reverse();
+        }
 
         var general = {
           boundingBox: {
@@ -373,9 +380,9 @@
               'localPart': 'BoundingBox'
             },
             value: {
-              crs: map.getView().getProjection().getCode(),
-              lowerCorner: [extent[0], extent[1]],
-              upperCorner: [extent[2], extent[3]]
+              crs: projection,
+              lowerCorner: ll,
+              upperCorner: ur
             }
           }
         };

@@ -129,7 +129,7 @@
        * Define maps
        */
       var mapsConfig = {
-        zoom: 0,
+        zoom: 2,
         maxResolution: 78271.51696402048
       };
 
@@ -264,7 +264,7 @@
         tree: true,
         label: {eng: 'Sextant', fre: 'Sextant'}
       }];
-      
+
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
         viewerMap: viewerMap,
