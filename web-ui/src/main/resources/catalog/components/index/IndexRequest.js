@@ -812,7 +812,7 @@
     return this.buildQParam_(qParams) +
         this.parseKeyValue_(indexParams);
   };
-  geonetwork.gnIndexRequest.prototype.getSearhQuery =
+  geonetwork.gnIndexRequest.prototype.getSearchQuery =
       function(params) {
     return this.buildQParam_(params, params.qParams);
   };
@@ -837,11 +837,11 @@
    *     values
    */
   geonetwork.gnIndexRequest.prototype.buildESParams =
-      function(qParams, aggs) {
+      function(qParams, aggs, start, rows) {
 
     var params = {
-      from: this.page.start,
-      size: this.page.rows,
+      from: start !== undefined ? start : this.page.start,
+      size: rows !== undefined ? rows : this.page.rows,
       aggs: aggs
     };
 
@@ -986,7 +986,13 @@
 
     angular.forEach(qParams.qParams, function(field, fieldName) {
       var valuesQ = [];
+      if (field.type == 'date') {
+        return;
+      }
       for (var p in field.values) {
+        // ignore undefined values
+        if (field.values[p] === undefined) { continue; }
+
         if (field.type == 'histogram' || field.type == 'range') {
           valuesQ.push(fieldName +
               ':[' + p.replace(FACET_RANGE_DELIMITER, ' TO ') + '}');

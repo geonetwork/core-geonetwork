@@ -323,8 +323,10 @@
         });
       };
 
-      this.toCQL = function(esObj) {
-
+      // formats current filter state as a CQL request
+      // if useActualParamName is true, param names will be stripped of their
+      // prefixes & suffixes (used only for the index)
+      this.toCQL = function(esObj, useActualParamName) {
         var state = esObj.getState();
         var where;
 
@@ -338,21 +340,28 @@
           var config = esObj.getIdxNameObj_(fName);
           var clause = [];
           var values = fObj.values;
+          var paramName = fName;
+
+          if (useActualParamName) {
+            var fieldInfo = paramName.match(/ft_(.*)_([a-z]{1})?([a-z]{1})?$/);
+            paramName = fieldInfo ? fieldInfo[1] : paramName;
+          }
+
           if (config.isDateTime) {
             if (values.from && values.to) {
               where = where.concat([
-                '(' + fName + ' > ' + transformDate(values.from) + ')',
-                '(' + fName + ' < ' + transformDate(values.to) + ')'
+                '(' + paramName + ' > ' + transformDate(values.from) + ')',
+                '(' + paramName + ' < ' + transformDate(values.to) + ')'
               ]);
             }
             return;
           }
           angular.forEach(values, function(v, k) {
-            var escaped = k.replace('\'', '\\\'');
+            var escaped = k.replace(/'/g, '\\\'');
             clause.push(
                 (config.isTokenized) ?
-                "(" + fName + " LIKE '%" + escaped + "%')" :
-                "(" + fName + " = '" + escaped + "')"
+                "(" + paramName + " LIKE '%" + escaped + "%')" :
+                "(" + paramName + " = '" + escaped + "')"
             );
           });
           if (clause.length == 0) return;

@@ -630,12 +630,12 @@
 
   // avoid FOUC (flash of unstyled content)
   $('.gn, .g').css({
-    'max-height': '0px',
+    'maxHeight': '0px',
     'overflow': 'hidden'
   });
   $(window).load(function() {
     $('.gn, .g').css({
-      'max-height': 'none',
+      'maxHeight': '',
       'overflow': 'auto'
     });
   });
