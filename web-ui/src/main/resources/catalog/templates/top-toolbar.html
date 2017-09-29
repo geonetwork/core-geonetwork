@@ -83,7 +83,7 @@
         <ul data-ng-if="user.isUserAdmin()" class="dropdown-menu" role="menu">
           <li data-ng-repeat="t in userAdminMenu">
             <a data-gn-active-tb-item="admin.console{{t.route}}">
-              <i class="fa {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
+              <i class="fa fa-fw {{t.icon}}"/>&nbsp;<span data-translate="">{{t.name | translate}}</span>
             </a>
           </li>
         </ul>
@@ -137,7 +137,7 @@
         </ul>
       </li>
       <li class="dropdown dropdown-hover open signin-dropdown"
-        data-ng-show="!authenticated && service !== 'catalog.signin' && !shibbolethEnabled">
+        data-ng-show="!authenticated && service !== 'catalog.signin' && service !== 'new.account' && !shibbolethEnabled">
         <a href="{{gnCfg.mods.signin.appUrl | signInLink}}"
            title="{{'signIn'|translate}}"
            class="dropdown-toggle"
