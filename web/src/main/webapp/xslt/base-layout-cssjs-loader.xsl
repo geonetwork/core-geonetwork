@@ -67,9 +67,13 @@
       </script>
     </xsl:if>
 
+
+    <xsl:if test="$isRecaptchaEnabled and $service = 'new.account'">
+      <script src='https://www.google.com/recaptcha/api.js'></script>
+    </xsl:if>
+
     <xsl:choose>
       <xsl:when test="$isDebugMode">
-
         <script src="{$uiResourcesPath}lib/modernizr.js"></script>
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
 
@@ -155,6 +159,7 @@
         <!--</xsl:if>-->
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js"></script>
+        <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -224,6 +229,7 @@
       <script type="text/javascript" src="{$uiResourcesPath}lib/ace/ace.js"></script>
       <script type="text/javascript" src="{$uiResourcesPath}lib/angular.ext/ui-ace.js"></script>
     </xsl:if>
+
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');

@@ -31,7 +31,8 @@
 
   var module = angular.module('gn_login_controller', [
     'gn_utility',
-    'gn_catalog_service'
+    'gn_catalog_service',
+    'vcRecaptcha'
   ]);
 
   /**
@@ -40,10 +41,12 @@
   module.controller('GnLoginController',
       ['$scope', '$http', '$rootScope', '$translate',
        '$location', '$window', '$timeout',
-       'gnUtilityService', 'gnConfig', 'gnGlobalSettings', 
+       'gnUtilityService', 'gnConfig', 'gnGlobalSettings',
+       'vcRecaptchaService', '$q',
        function($scope, $http, $rootScope, $translate,
            $location, $window, $timeout,
-               gnUtilityService, gnConfig, gnGlobalSettings) {
+               gnUtilityService, gnConfig, gnGlobalSettings,
+               vcRecaptchaService, $q) {
           $scope.formAction = '../../signin#' +
          $location.path();
           $scope.registrationStatus = null;
@@ -52,6 +55,12 @@
           $scope.passwordCheck = null;
           $scope.userToRemind = null;
           $scope.changeKey = null;
+
+          $scope.recaptchaEnabled =
+         gnConfig['system.userSelfRegistration.recaptcha.enable'];
+          $scope.recaptchaKey =
+         gnConfig['system.userSelfRegistration.recaptcha.publickey'];
+          $scope.resolveRecaptcha = false;
 
           $scope.redirectUrl = gnUtilityService.getUrlParameter('redirect');
           $scope.signinFailure = gnUtilityService.getUrlParameter('failure');
@@ -88,19 +97,35 @@
            username: '',
            surname: '',
            name: '',
-           emailAddresses: [''],
+           email: '',
            organisation: '',
            profile: 'RegisteredUser',
-           addresses: [{
+           address: {
              address: '',
              city: '',
              country: '',
              state: '',
              zip: ''
-           }]
+           }
          };
+
+
          $scope.register = function() {
-           $scope.userInfo.emailAddresses[0] = $scope.userInfo.username;
+           if ($scope.recaptchaEnabled) {
+             if (vcRecaptchaService.getResponse() === '') {
+               $scope.resolveRecaptcha = true;
+
+               var deferred = $q.defer();
+               deferred.resolve('');
+               return deferred.promise;
+             }
+
+             $scope.resolveRecaptcha = false;
+             $scope.userInfo.captcha = vcRecaptchaService.getResponse();
+           }
+
+           $scope.userInfo.email = $scope.userInfo.username;
+
            return $http.put('../api/0.1/user/actions/register', $scope.userInfo)
            .success(function(data) {
              $rootScope.$broadcast('StatusUpdated', {

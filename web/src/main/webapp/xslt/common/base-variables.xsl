@@ -126,6 +126,9 @@
                         then true()
                         else false()"/>
 
+  <xsl:variable name="isRecaptchaEnabled"
+                select="$env/system/userSelfRegistration/recaptcha/enable = 'true'" />
+
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"
                 select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
