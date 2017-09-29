@@ -354,5 +354,6 @@
     "tools": "Tools",
     "collapseAllFacetLabel": "Collapse",
     "expandAllFacetLabel": "Expand",
-    "resultXonY": "on"
+    "resultXonY": "on",
+    "resolveCaptcha": "Resolve the captcha"
 }
