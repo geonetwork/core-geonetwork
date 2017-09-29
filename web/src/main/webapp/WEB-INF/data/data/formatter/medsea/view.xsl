@@ -152,13 +152,13 @@
       <body>
 
         <link rel="stylesheet" type="text/css"
-              href="{/root/url}../../apps/sextant/css/schema/reset.css"/>
+          href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/reset.css" />
         <link rel="stylesheet" type="text/css"
-              href="{/root/url}../../apps/sextant/css/schema/default.css"/>
+          href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/default.css" />
         <link rel="stylesheet" type="text/css"
-              href="{/root/url}../../apps/sextant/css/schema/emodnet.css"/>
+          href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/emodnet.css" />
         <link rel="stylesheet" type="text/css"
-              href="{/root/url}../../apps/sextant/css/schema/medsea.css"/>
+          href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/medsea.css" />
         <div class="tpl-emodnet">
           <div class="ui-layout-content mdshow-tabpanel">
             <a class="file-link" title="Export HTML" href="{/root/url}metadata.formatter.html?uuid={$identifier}&amp;xsl=medsea"></a>

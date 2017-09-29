@@ -53,11 +53,11 @@
 			<body>
 
 				<link rel="stylesheet" type="text/css"
-              href="{root/url}../../apps/sextant/css/schema/reset.css"/>
+					href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/reset.css" />
 				<link rel="stylesheet" type="text/css"
-              href="{root/url}../../apps/sextant/css/schema/default.css"/>
+					href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/default.css" />
 				<link rel="stylesheet" type="text/css"
-              href="{root/url}../../apps/sextant/css/schema/emodnet.css"/>
+					href="{replace(/root/url, 'http:', '')}../../apps/sextant/css/schema/emodnet.css" />
 
 				<div class="tpl-emodnet">
 					<!--<div class="ui-layout-content">-->
