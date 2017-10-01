@@ -57,19 +57,20 @@
         return session;
       };
       function getRemainingTime() {
-        session.start = moment(parseInt($cookies.serverTime));
+        session.start = moment(parseInt($cookies.get('serverTime')));
         // 0 session length means user is not authenticated.
         session.length =
-            ($cookies.sessionExpiry - $cookies.serverTime) / 1000;
+            ($cookies.get('sessionExpiry') - $cookies.get('serverTime')) / 1000;
         session.remainingTime =
             Math.round(
-            moment(parseInt($cookies.sessionExpiry)).diff(
+            moment(parseInt($cookies.get('sessionExpiry'))).diff(
             moment()) / 1000);
+
         return session.remainingTime;
       };
       function check(user) {
         // User is not yet authenticated
-        if ($cookies.sessionExpiry === $cookies.serverTime) {
+        if ($cookies.get('sessionExpiry') === $cookies.get('serverTime')) {
           return;
         }
 
