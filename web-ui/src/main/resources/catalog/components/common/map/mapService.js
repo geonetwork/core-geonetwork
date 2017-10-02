@@ -834,13 +834,16 @@
 
               if (angular.isArray(getCapLayer.Dimension)) {
                 for (var i = 0; i < getCapLayer.Dimension.length; i++) {
-                  if (getCapLayer.Dimension[i].name == 'elevation') {
-                    layer.set('elevation',
-                        getCapLayer.Dimension[i].values.split(','));
+                  var dimension = getCapLayer.Dimension[i];
+                  if (dimension.name == 'elevation') {
+                    layer.set('elevation', {
+                      units: dimension.units,
+                      values: dimension.values.split(',')
+                  });
                   }
-                  if (getCapLayer.Dimension[i].name == 'time') {
+                  if (dimension.name == 'time') {
                     layer.set('time',
-                        getCapLayer.Dimension[i].values.split(','));
+                      dimension.values.split(','));
                   }
                 }
               }
