@@ -63,20 +63,22 @@
                gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
           </div>
 
-          <div data-ng-if="field.dates && field.display == 'form'"
-               class="input-daterange input-group input-group-sm"
-               gn-bootstrap-datepicker="output[field.name].values"
-               data-date-format="dd-mm-yyyy"
-               on-change-fn="onUpdateDate(field)"
-               date-only-highlight="true"
-               date-available="field.dates">
+          <div data-ng-if="field.display == 'graph'"
+               gn-facet-graph="output[field.name].values"
+               field="field" callback="onUpdateDate"
+               class="list-group"></div>
+
+          <div data-ng-if="field.dates"
+              class="input-daterange input-group input-group-sm"
+              gn-bootstrap-datepicker="output[field.name].values"
+              data-date-format="dd-mm-yyyy"
+              on-change-fn="onUpdateDate(field)"
+              date-only-highlight="true"
+              date-available="field.dates">
             <input type="text" class="input-sm form-control" name="start" value="{{::output[field.name].values.from}}"/>
             <span class="input-group-addon" translate>dateToDate</span>
             <input type="text" class="input-sm form-control" name="end" value="{{::output[field.name].values.to}}" />
           </div>
-          <div data-ng-if="field.display == 'graph'"
-               gn-facet-graph field="field" callback="onUpdateDate"
-               class="list-group"></div>
         </div>
         <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
       </div>

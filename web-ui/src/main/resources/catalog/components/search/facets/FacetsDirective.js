@@ -322,6 +322,7 @@
           'partials/facet-graph.html';
       },
       scope: {
+        dates: '=gnFacetGraph',
         field: '=',
         callback: '='
       },
@@ -330,6 +331,18 @@
 
         var tm = new TimeLine(element.find('.ui-timeline')[0],
             scope.field, scope.callback);
+
+        var refreshGraphLimits = function() {
+          if (!scope.dates || !scope.dates.from || !scope.dates.to) {
+            return;
+          }
+          var current = scope.field.model;
+          var dates = scope.dates;
+          if (!current ||
+            (dates.from != current.from || dates.to != current.to)) {
+            tm.setDateRange(dates.from, dates.to);
+          }
+        };
 
         // dates must be sorted ASC
         scope.$watch('field.datesCount', function(counts) {
@@ -347,6 +360,7 @@
 
             // apply data to graph
             tm.setTimeline(data);
+            refreshGraphLimits();
           }
         });
 
@@ -355,9 +369,19 @@
           if (exp) {
             setTimeout(function() {
               tm.recomputeSize();
+              refreshGraphLimits();
             });
           }
         });
+
+        // update view if dates are changed from outside
+        scope.$watch(function() {
+          // do not take into account if timeline is not initialized
+          if (!tm.initialized || !scope.dates) {
+            return '';
+          }
+          return scope.dates.from + ' ' + scope.dates.to;
+        }, refreshGraphLimits);
       }
     };
 

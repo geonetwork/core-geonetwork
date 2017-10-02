@@ -14,6 +14,7 @@ function TimeLine(element, field, callback) {
   var timelineXScale = 1;
   var svg;
   var lastQuery = null;
+  var maxDomain;
 
   this.initialized = false;
   this.graphMaxData = null;
@@ -60,6 +61,7 @@ function TimeLine(element, field, callback) {
     timelineX = d3.time.scale()
       .range([0, timelineWidth * timelineScale])
       .domain(timeExtent);
+    maxDomain = timeExtent;
 
     var timeFormat = d3.time.format.multi([
       [".%L", function(d) {
@@ -268,7 +270,6 @@ function TimeLine(element, field, callback) {
     var context = container.select('svg').select('g');
     container.select('svg').select(".x.axis").call(timelineXAxis);
     context.select("path.areaAll").attr("transform", "translate(" + translate + ",0)scale(" + scale + ", 1)");
-
   }
 
   function refreshGraphMaxData() {
@@ -309,5 +310,29 @@ function TimeLine(element, field, callback) {
     } else {
       refreshGraphData();
     }
+  }
+
+  // set the dates range; `from` and `to` are dates in DD-MM-YYYY format
+  this.setDateRange = function (from, to) {
+    if (!this.initialized) { return; }
+
+    var begin = moment(from, 'DD-MM-YYYY').valueOf();
+    var end = moment(to, 'DD-MM-YYYY').valueOf();
+
+    var graphCenter = [timelineWidth / 2, timelineHeight / 2];
+    var domain = maxDomain;
+    var targetCenter = (begin + end) / 2;
+    var targetScale = (domain[1] - domain[0]) / (end - begin);
+    var targetTranslate = [
+      - (begin - domain[0]) / (domain[1] - domain[0]) * timelineWidth * targetScale,
+      graphCenter[1]
+    ];
+
+    // apply scale & translate
+    zoom.scale(targetScale).translate(targetTranslate);
+    timelineZoom();
+    timelineXTranslate = targetTranslate[0];
+    timelineXScale = targetScale;
+    applyZoom();
   }
 }
