@@ -73,7 +73,7 @@
       </div>
     </div>
     <div class="form-group gn-required" ng-if="::ctrl.isOceanotron">
-      <label class="col-sm-4" for="ncwmselevation"><span translate="">elevation</span></label>
+      <label class="col-sm-4" for="ncwmselevation"><span translate="">elevation</span><br><em>{{::elevRange}}</em></label>
       <div class="col-sm-4">
         Min: <input class="form-control input-sm" name="elevMin" ng-model-options="{ getterSetter: true, debounce: 400 }" ng-model="ctrl.elevationMinFn" type="number" required/>
       </div>

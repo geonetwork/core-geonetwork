@@ -49,6 +49,8 @@
     function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnGlobalSettings,
              $q) {
 
+    this.DATE_INPUT_FORMAT = 'DD-MM-YYYY';
+
       /**
        * @ngdoc method
        * @methodOf gn_viewer.service:gnNcWms
@@ -97,12 +99,36 @@
             .success(function(json) {
               if (angular.isObject(json)) {
                 layer.ncInfo = json;
+                layer.set('oceanotron', !!layer.ncInfo.multiFeature);
+                if(layer.get('oceanotron')) {
+                  this.initOceanotronParams(layer);
+                }
               }
-            });
+            }.bind(this));
         }
         else {
           return $q.resolve();
         }
+
+      };
+
+      this.initOceanotronParams = function(layer) {
+        var ncInfo = layer.ncInfo;
+        var elevation = '0/1';
+        var palettes = this.parseStyles(ncInfo);
+        var styles = palettes[ncInfo.defaultPalette || ncInfo.palettes[0]];
+
+        var day = new Date();
+        day.setDate(day.getDate() - 5);
+        var to = moment(day).format(this.DATE_INPUT_FORMAT);
+        day.setDate(day.getDate() - 1);
+        var from = moment(day).format(this.DATE_INPUT_FORMAT);
+
+        layer.getSource().updateParams({
+          STYLES: styles,
+          ELEVATION: elevation,
+          TIME: this.formatTimeSeries(from, to)
+        })
 
       };
 

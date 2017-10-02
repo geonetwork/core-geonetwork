@@ -179,7 +179,7 @@
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
 
-            isOceanotron = !!ncInfo.multiFeature;
+            isOceanotron = scope.layer.get('oceanotron');
             scope.ctrl.isOceanotron = isOceanotron;
 
             var proj = map.getView().getProjection();
@@ -218,8 +218,15 @@
 
             // Set default STYLES= to WMS
             if(isOceanotron) {
-              scope.layer.set('oceanotron', true);
               scope.ctrl.palette = ncInfo.defaultPalette || ncInfo.palettes[0];
+              var elevation = scope.layer.get('elevation');
+              if(elevation) {
+                var range = elevation.values[0];
+                if(angular.isString(range)) {
+                  scope.elevRange = range.replace('/', elevation.units + ' / ')
+                  + elevation.units;
+                }
+              }
 
               scope.ctrl.elevationMinFn = function(elev) {
                 if(elev) {
@@ -239,19 +246,11 @@
               };
               scope.params.ELEVATION = elevationMin + '/' + elevationMax;
 
-              // Init mendatory time range with day and day before
-              var day = new Date();
-              day.setDate(day.getDate() - 5);
-              var to = moment(day).format(DATE_INPUT_FORMAT);
-              day.setDate(day.getDate() - 1);
-              var from = moment(day).format(DATE_INPUT_FORMAT);
-
+              var timeP = scope.layer.getSource().getParams().TIME.split('/');
               scope.ncTime.value = {
-                from: from,
-                to: to
+                from: moment(timeP[0]).format(gnNcWms.DATE_INPUT_FORMAT),
+                to: moment(timeP[1]).format(gnNcWms.DATE_INPUT_FORMAT)
               };
-
-              scope.updateStyle();
             }
           };
 
@@ -300,11 +299,15 @@
               }
 
               if(timeA.length) {
-                scope.params.TIME = timeA.map(function(t){
+                var newTime = timeA.map(function(t){
                   return moment(t, 'DD-MM-YYYY').format(
                     'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]')
                 }).join('/');
-                scope.updateLayerParams();
+
+                if(newTime != scope.params.TIME) {
+                  scope.params.TIME = newTime;
+                  scope.updateLayerParams();
+                }
               }
             }
           }, true);
