@@ -134,22 +134,7 @@ public abstract class XmlSerializer {
             return false;
         }
     }
-
-    public boolean isLoggingEmptyWithHeld() {
-        SettingManager _settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
-        if (_settingManager == null) {
-            return false;
-        }
-
-        String enableLogging = _settingManager.getValue(Settings.SYSTEM_HIDEWITHHELDELEMENTS_ENABLE_LOGGING);
-        if (enableLogging != null) {
-            return enableLogging.equals("true");
-        } else {
-            return false;
-        }
-    }
-
+    
     /**
      * Retrieves the xml element which id matches the given one. The element is read from 'table'
      * and the string read is converted into xml.

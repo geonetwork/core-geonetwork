@@ -352,11 +352,7 @@ public class MetadataSchema {
      */
     @JsonIgnore
     public List<Namespace> getNamespaces() {
-        List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
-        for (Namespace ns : hmNameSpaces.values()) {
-            list.add(ns);
-        }
-        return list;
+        return new ArrayList(hmNameSpaces.values());
     }
 
     //---------------------------------------------------------------------------

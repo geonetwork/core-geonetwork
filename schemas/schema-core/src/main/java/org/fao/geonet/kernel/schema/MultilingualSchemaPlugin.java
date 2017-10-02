@@ -38,10 +38,10 @@ public interface MultilingualSchemaPlugin {
      * @param element            The element to search in
      * @param languageIdentifier The translation language to search for
      */
-    public abstract List<Element> getTranslationForElement(Element element, String languageIdentifier);
+    public List<Element> getTranslationForElement(Element element, String languageIdentifier);
 
-    public abstract void addTranslationToElement(Element element, String languageIdentifier, String value);
+    public void addTranslationToElement(Element element, String languageIdentifier, String value);
 
-    public abstract  Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
+    public Element removeTranslationFromElement(Element element, List<String> mdLang) throws JDOMException;
 
 }

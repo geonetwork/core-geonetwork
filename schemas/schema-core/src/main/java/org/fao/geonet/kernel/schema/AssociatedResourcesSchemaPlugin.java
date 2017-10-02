@@ -35,17 +35,17 @@ public interface AssociatedResourcesSchemaPlugin {
     /**
      * Analyse a metadata record and extract associated resources.
      */
-    public abstract Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata);
+    public Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata);
 
     /**
      * Analyze a metadata record and extract associated parents
      */
-    public abstract Set<String> getAssociatedParentUUIDs(Element metadata);
+    public Set<String> getAssociatedParentUUIDs(Element metadata);
 
 
-    public abstract Set<String> getAssociatedDatasetUUIDs(Element metadata);
+    public Set<String> getAssociatedDatasetUUIDs(Element metadata);
 
-    public abstract Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata);
+    public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata);
 
-    public abstract Set<String> getAssociatedSourceUUIDs(Element metadata);
+    public Set<String> getAssociatedSourceUUIDs(Element metadata);
 }
