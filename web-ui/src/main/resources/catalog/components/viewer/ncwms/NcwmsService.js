@@ -45,7 +45,9 @@
     'gnOwsCapabilities',
     '$http',
     'gnGlobalSettings',
-    function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnGlobalSettings) {
+    '$q',
+    function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnGlobalSettings,
+             $q) {
 
       /**
        * @ngdoc method
@@ -87,16 +89,21 @@
        * @param {Object} capLayer layer ob from capabilities
        */
       this.feedOlLayer = function(layer) {
-        var url = this.getMetadataUrl(layer);
-        var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
+        if (layer.get('advanced') == true) {
+          var url = this.getMetadataUrl(layer);
+          var proxyUrl = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
 
-        $http.get(proxyUrl)
+          return $http.get(proxyUrl)
             .success(function(json) {
               if (angular.isObject(json)) {
                 layer.ncInfo = json;
               }
             });
-        return layer;
+        }
+        else {
+          return $q.resolve();
+        }
+
       };
 
       /**

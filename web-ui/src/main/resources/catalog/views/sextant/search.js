@@ -180,12 +180,8 @@
       };
 
       //Check if a added layer is NcWMS
-      viewerMap.getLayers().on('add', function(e) {
-        var layer = e.element;
-        if (layer.get('advanced') == true) {
-          gnNcWms.feedOlLayer(layer);
-        }
-      });
+      gnViewerSettings.getPreAddLayerPromise =
+        gnNcWms.feedOlLayer.bind(gnNcWms);
 
       // Manage sextantTheme thesaurus translation
       sxtGlobals.keywords['sextantThemePromise'] =
@@ -543,6 +539,7 @@
       });
 
       $scope.facetConfig = searchSettings.facetConfig;
+
     }]);
 
   module.directive('sxtFixMdlinks', [ 'sxtService',
