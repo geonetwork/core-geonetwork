@@ -97,7 +97,7 @@
     is provided, then CharacterString or Anchor are created.
     If more than one language is provided, then PT_FreeText
     with or without CharacterString can be created. -->
-    <xsl:variable name="listOfLanguage" select="tokenize(/root/request/langWithId, ',')"/>
+    <xsl:variable name="listOfLanguage" select="tokenize(/root/request/lang, ',')"/>
     <xsl:variable name="textgroupOnly"
                   as="xs:boolean"
                   select="if (/root/request/textgroupOnly and normalize-space(/root/request/textgroupOnly) != '')

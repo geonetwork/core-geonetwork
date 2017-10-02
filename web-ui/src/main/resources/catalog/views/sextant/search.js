@@ -453,7 +453,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap,
         panier: [],
-        hiddenParams: gnSearchSettings.hiddenParams
+        filters: gnSearchSettings.filters
       });
 
       /**
