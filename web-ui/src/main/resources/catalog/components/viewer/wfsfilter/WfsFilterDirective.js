@@ -427,7 +427,7 @@
                   angular.isString(date)) {
                 output[fieldName] = {
                   type: field.type || 'date',
-                  value: date
+                  values: date
                 };
               }
               else {
