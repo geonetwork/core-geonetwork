@@ -123,9 +123,15 @@
         var ur = bbox.upperCorner;
         var projection = bbox.crs;
 
+        // sextant specific
+        // to be removed when managed in settings
+        var maxResolution = 78271.51696402048;
+        // --
+
         if (projection == 'EPSG:4326') {
           ll.reverse();
           ur.reverse();
+          maxResolution = 0.3515625;
         }
 
         var extent = ll.concat(ur);
@@ -138,7 +144,8 @@
         if (map.getView().getProjection().getCode() != projection) {
           var view = new ol.View({
             projection: projection,
-            zoom: 2
+            zoom: 2,
+            maxResolution: maxResolution
           });
           map.setView(view);
         }
