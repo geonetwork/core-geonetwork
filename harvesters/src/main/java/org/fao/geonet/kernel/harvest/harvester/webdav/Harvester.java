@@ -135,6 +135,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         this.params = params;
 
         result = new HarvestResult();
+        result.addedMetadata = 0;
+        result.uuidSkipped = 0;
+        result.datasetUuidExist = 0;
+        result.couldNotInsert = 0;
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         dataMan = gc.getBean(DataManager.class);
@@ -264,17 +268,23 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         // 3.- If there is a collision of uuid with existent metadata, use a
         // random one
         if (dataMan.existsMetadataUuid(uuid)) {
+            result.datasetUuidExist++;
             switch(params.getOverrideUuid()){
             case OVERRIDE:
                 UriMapper localUris = new UriMapper(context, 
                         metadataRepository.findOneByUuid(uuid).getHarvestInfo().getUuid());
                 List<RecordInfo> records = localUris.getRecords(rf.getPath());
                 updateMetadata(rf, records.get(0));
+                log.debug("Overriding record with uuid " + uuid);
+                result.updatedMetadata++;
                 return;
             case RANDOM:
+                log.debug("Generating random uuid for remote record with uuid " + uuid);
                 uuid = null;
                 break;
             case SKIP:
+                log.debug("Skipping record with uuid " + uuid);
+                result.uuidSkipped++;
             default:
                 return;
             }
@@ -290,10 +300,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             // --- set uuid inside metadata and get new xml
             try {
                 md = dataMan.setUUID(schema, uuid, md);
+                result.addedMetadata++;
             } catch (Exception e) {
                 log.error("  - Failed to set uuid for metadata with remote path : "
                     + rf.getPath());
                 errors.add(new HarvestError(context, e, this.log));
+                result.couldNotInsert++;
                 return;
             }
         }
@@ -501,7 +513,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             dataMan.flush();
 
             dataMan.indexMetadata(record.id, true, null);
-            result.updatedMetadata++;
         }
     }
 
