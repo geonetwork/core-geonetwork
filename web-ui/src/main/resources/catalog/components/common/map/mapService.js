@@ -1812,7 +1812,7 @@
                 if (data.metadata.length == 1) {
                   var md = new Metadata(data.metadata[0]);
                   layer.set('md', md);
- 
+
                   var mdLinks = md.getLinksByType('#OGC:WMTS',
                       '#OGC:WMS', '#OGC:WMS-1.1.1-http-get-map');
 
@@ -1899,5 +1899,10 @@
     };
   });
 
-
+  // isInteger polyfill for IE
+  Number.isInteger = Number.isInteger || function(value) {
+    return typeof value === 'number' &&
+      isFinite(value) &&
+      Math.floor(value) === value;
+  };
 })();
