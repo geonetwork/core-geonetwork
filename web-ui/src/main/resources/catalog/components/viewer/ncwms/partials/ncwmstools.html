@@ -92,19 +92,19 @@
       </div>
     </div>
     <div class="btn-group">
-      <button class="btn btn-default btn-sm" data-ng-if="layer.get('time')" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
+      <button class="btn btn-default btn-sm" data-ng-if="(!ctrl.isOceanotron && layer.get('time')) || ctrl.oceanotronType == 'time'" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
         <span class="fa fa-history"></span> Temps
       </button>
-      <button ng-if="elevations.length > 0" class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
+      <button ng-if="elevations.length > 0 || ctrl.oceanotronType == 'profile'" class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
         <span class="fa fa-crop"></span> Profil
       </button>
-      <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
+      <button ng-if="!ctrl.isOceanotron" class="btn btn-default btn-sm" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
         <span class="fa fa-image"></span> Transect
       </button>
     </div>
 
     <!--Times input only visible if time series button is enabled-->
-    <div class="form-group" data-ng-if="layer.get('time')" data-ng-show="activeTool=='time'">
+    <div class="form-group" data-ng-if="layer.get('time') && !ctrl.isOceanotron" data-ng-show="activeTool=='time'">
       <label class="col-sm-4">Dates</label>
       <div class="col-sm-8">
         <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"

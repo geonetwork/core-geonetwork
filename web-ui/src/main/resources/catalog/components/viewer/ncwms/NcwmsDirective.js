@@ -44,7 +44,9 @@
     'gnHttp',
     'gnNcWms',
     'gnPopup',
-    function(gnHttp, gnNcWms, gnPopup) {
+    '$http',
+    '$q',
+    function(gnHttp, gnNcWms, gnPopup, $http, $q) {
       return {
         restrict: 'A',
         scope: {
@@ -52,7 +54,7 @@
           map: '='
         },
         templateUrl: '../../catalog/components/viewer/ncwms/' +
-            'partials/ncwmstools.html',
+        'partials/ncwmstools.html',
         link: function(scope, element, attrs) {
 
           var drawInteraction, featureOverlay;
@@ -118,45 +120,67 @@
             });
 
             drawInteraction.on('drawend',
-                function(evt) {
+              function(evt) {
 
-                  var url;
-                  if (activeTool == 'time') {
-                    url = scope.layer.getSource().getGetFeatureInfoUrl(
-                        evt.feature.getGeometry().getCoordinates(),
-                        map.getView().getResolution(),
-                        map.getView().getProjection(), {
-                          TIME: gnNcWms.formatTimeSeries(
-                              scope.timeSeries.tsfromD,
-                              scope.timeSeries.tstoD),
-                          //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
-                          //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
-                          INFO_FORMAT: 'image/png'
-                        });
-                  } else {
-                    url = gnNcWms.getNcwmsServiceUrl(
-                        scope.layer,
-                        scope.map.getView().getProjection(),
-                        evt.feature.getGeometry().getCoordinates(),
-                        activeTool);
+                var promiseUrl;
+                if (isOceanotron || activeTool == 'time') {
+
+                  var layerParams = {
+                    INFO_FORMAT: isOceanotron ? 'text/xml' : 'image/png'
+                  };
+                  if(!isOceanotron) {
+                    layerParams.TIME = gnNcWms.formatTimeSeries(
+                      scope.timeSeries.tsfromD,
+                      scope.timeSeries.tstoD);
                   }
 
-                  gnPopup.create({
-                    title: activeTool,
-                    url: url,
-                    content: '<div class="gn-popup-iframe ' +
-                        activeTool + '">' +
-                        '<img style="width:100%;height:100%;" ' +
-                        'src="{{options.url}}" />' +
-                        '</div>'
-                  });
-                  scope.$apply(function() {
-                    scope.activeTool = undefined;
-                  });
+                  promiseUrl = scope.layer.getSource().getGetFeatureInfoUrl(
+                    evt.feature.getGeometry().getCoordinates(),
+                    map.getView().getResolution(),
+                    map.getView().getProjection(), layerParams);
+
+                  if(isOceanotron) {
+                    promiseUrl = $http.get(promiseUrl).then(
+                      function(response) {
+                        var ids =
+                          gnNcWms.parseOceanotronXmlCapabilities(response.data);
+
+                        if(!ids) return null;
+                        return gnNcWms.getNcwmsServiceUrl(
+                          scope.layer,
+                          scope.map.getView().getProjection(),
+                          evt.feature.getGeometry().getCoordinates(),
+                          activeTool, {
+                            LAYER: ids
+                          });
+                      });
+                  }
+                } else {
+                  promiseUrl = gnNcWms.getNcwmsServiceUrl(
+                    scope.layer,
+                    scope.map.getView().getProjection(),
+                    evt.feature.getGeometry().getCoordinates(),
+                    activeTool);
+                }
+
+                $q.when(promiseUrl, function(url) {
+                  if(url){
+                    gnPopup.create({
+                      title: activeTool,
+                      url: url,
+                      content: '<div class="gn-popup-iframe ' +
+                      activeTool + '">' +
+                      '<img style="width:100%;height:100%;" ' +
+                      'src="{{options.url}}" />' +
+                      '</div>'
+                    });
+                  }
+                  scope.activeTool = undefined;
                   setTimeout(function() {
                     resetInteraction();
                   }, 300);
-                }, this);
+                });
+              }, this);
 
             map.addInteraction(drawInteraction);
 
@@ -224,7 +248,7 @@
                 var range = elevation.values[0];
                 if(angular.isString(range)) {
                   scope.elevRange = range.replace('/', elevation.units + ' / ')
-                  + elevation.units;
+                    + elevation.units;
                 }
               }
 
@@ -251,6 +275,10 @@
                 from: moment(timeP[0]).format(gnNcWms.DATE_INPUT_FORMAT),
                 to: moment(timeP[1]).format(gnNcWms.DATE_INPUT_FORMAT)
               };
+
+              gnNcWms.getOceanotronInfo(scope.layer).then(function(type) {
+                scope.ctrl.oceanotronType = type;
+              });
             }
           };
 
@@ -262,14 +290,14 @@
           scope.setAutoColorranges = function(evt) {
             $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
-                ol.proj.transformExtent(
+              ol.proj.transformExtent(
                 map.getView().calculateExtent(map.getSize()),
                 map.getView().getProjection(), 'EPSG:4326').join(',')).
-                success(function(data) {
-                  scope.colorscalerange = [data.min, data.max];
-                  scope.onColorscaleChange(scope.colorscalerange);
-                  $(evt.target).removeClass('fa-spinner');
-                });
+            success(function(data) {
+              scope.colorscalerange = [data.min, data.max];
+              scope.onColorscaleChange(scope.colorscalerange);
+              $(evt.target).removeClass('fa-spinner');
+            });
           };
 
           /**
@@ -330,10 +358,10 @@
             scope.layer.getSource().updateParams(scope.params);
 
             scope.layer.set('legend',
-                gnNcWms.updateLengendUrl(scope.layer.get('legend'),
-                    angular.extend({
-                      PALETTE: scope.ctrl.palette
-                    }, scope.params)));
+              gnNcWms.updateLengendUrl(scope.layer.get('legend'),
+                angular.extend({
+                  PALETTE: scope.ctrl.palette
+                }, scope.params)));
           };
 
           element.bind('$destroy', function(e) {

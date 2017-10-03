@@ -26,6 +26,9 @@
 
   var module = angular.module('gn_ncwms_service', []);
 
+  var OCEANOTRON_INFO_URL_TEMPLATE =
+    'http://www.ifremer.fr/oceanotron/OPENDAP/opendap/**layer**.dds';
+
   /**
    * @ngdoc service
    * @kind function
@@ -231,12 +234,13 @@
        * @param {string} service param
        * @return {string} url
        */
-      this.getNcwmsServiceUrl = function(layer, proj, geom, service) {
-        var p = {
+      this.getNcwmsServiceUrl = function(layer, proj, geom, service, options) {
+        var p = angular.extend({
           FORMAT: 'image/png',
           CRS: proj.getCode(),
           LAYER: layer.getSource().getParams().LAYERS
-        };
+        }, options);
+
         var time = layer.getSource().getParams().TIME;
         if (time) {
           p.TIME = time;
@@ -244,6 +248,10 @@
 
         if (service == 'profile') {
           p.REQUEST = 'GetVerticalProfile';
+          p.POINT = gnMap.getTextFromCoordinates(geom);
+
+        } else if (service == 'time') {
+          p.REQUEST = 'GetTimeseries';
           p.POINT = gnMap.getTextFromCoordinates(geom);
 
         } else if (service == 'transect') {
@@ -332,6 +340,47 @@
         var sP = gnUrlUtils.toKeyValue(p);
         return gnUrlUtils.append(parts[0], sP);
       };
+
+
+      /**
+       * Exemple
+       * http://www.ifremer.fr/oceanotron/OPENDAP/opendap/INS-CORIOLIS-GLO-NRT-OBS_TRAJECTORIES_LATEST.dds
+       * @param {string} layerName
+       * @returns {string}
+       */
+      this.getOceanotronInfoUrl = function(layerName) {
+        return OCEANOTRON_INFO_URL_TEMPLATE.replace('**layer**', layerName);
+      };
+
+      this.getOceanotronInfo = function(layer) {
+
+        return $http.get(
+          this.getOceanotronInfoUrl(
+            layer.getSource().getParams().LAYERS.split('/')[0]
+          )
+        ).then(function(response) {
+
+          var type;
+          if(/}\s*trajectory|time_series\s*;/.test(response.data)) {
+            type = 'time';
+          }
+          else if(/}\s*profile\s*;/.test(response.data)) {
+            type = 'profile';
+          }
+          return type;
+        });
+      };
+
+      this.parseOceanotronXmlCapabilities = function(text) {
+        var doc = ol.xml.parse(text);
+        var fIds = doc.getElementsByTagName('id');
+        var ids = [].map.call(fIds, function(node) {
+          return ol.xml.getAllTextContent(node);
+        }).join(',');
+
+        return ids;
+
+      }
     }
   ]);
 })();
