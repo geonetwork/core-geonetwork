@@ -46,7 +46,8 @@
     'gnPopup',
     '$http',
     '$q',
-    function(gnHttp, gnNcWms, gnPopup, $http, $q) {
+    'ngeoDecorateInteraction',
+    function(gnHttp, gnNcWms, gnPopup, $http, $q, ngeoDecorateInteraction) {
       return {
         restrict: 'A',
         scope: {
@@ -182,6 +183,7 @@
                 });
               }, this);
 
+            ngeoDecorateInteraction(drawInteraction);
             map.addInteraction(drawInteraction);
 
           };
