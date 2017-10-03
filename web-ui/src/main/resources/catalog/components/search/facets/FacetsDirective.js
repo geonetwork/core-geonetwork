@@ -330,18 +330,15 @@
         if (!scope.field) { return; }
 
         var tm = new TimeLine(element.find('.ui-timeline')[0],
-            scope.field, scope.callback);
+            scope.field, scope.callback, {
+              showAsHistogram: true
+            });
 
         var refreshGraphLimits = function() {
           if (!scope.dates || !scope.dates.from || !scope.dates.to) {
             return;
           }
-          var current = scope.field.model;
-          var dates = scope.dates;
-          if (!current ||
-            (dates.from != current.from || dates.to != current.to)) {
-            tm.setDateRange(dates.from, dates.to);
-          }
+          tm.setDateRange(scope.dates.from, scope.dates.to);
         };
 
         // dates must be sorted ASC
