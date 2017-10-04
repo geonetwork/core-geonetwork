@@ -126,12 +126,13 @@
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
             var applicationProfile = scope.wpsLink.applicationProfile;
-            if (typeof applicationProfile === 'string') {
+            if (applicationProfile && typeof applicationProfile === 'string') {
               try {
                 applicationProfile = JSON.parse(applicationProfile);
               }
               catch (e) {
-                console.warn('Error while loading application profile.');
+                console.warn('Error while loading application profile.',
+                  applicationProfile);
               }
             }
 
@@ -438,7 +439,7 @@
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
                           response, scope.map, scope.wpsLink.layer, {
-                            exclude: /^OUTPUT_/
+                            exclude: /^OUTPUT_/i
                           }
                       );
                     }
