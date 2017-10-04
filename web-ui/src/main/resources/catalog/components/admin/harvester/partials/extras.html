@@ -1,5 +1,5 @@
 <div>
-  <div data-ng-show="harvester['@type'] == 'webdav'">
+  <div data-ng-show="harvester['@type'] == 'webdav' || harvester['@type'] == 'geonetwork' || harvester['@type'] == 'csw' ">
     <label class="control-label"> 
       <span data-translate="">{{"harvesterOverrideUUID" | translate}}</span>
     </label> 

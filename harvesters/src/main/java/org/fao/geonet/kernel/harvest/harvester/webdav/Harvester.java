@@ -275,15 +275,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
                         metadataRepository.findOneByUuid(uuid).getHarvestInfo().getUuid());
                 List<RecordInfo> records = localUris.getRecords(rf.getPath());
                 updateMetadata(rf, records.get(0));
-                log.debug("Overriding record with uuid " + uuid);
+                log.info("Overriding record with uuid " + uuid);
                 result.updatedMetadata++;
                 return;
             case RANDOM:
-                log.debug("Generating random uuid for remote record with uuid " + uuid);
+                log.info("Generating random uuid for remote record with uuid " + uuid);
                 uuid = null;
                 break;
             case SKIP:
-                log.debug("Skipping record with uuid " + uuid);
+                log.info("Skipping record with uuid " + uuid);
                 result.uuidSkipped++;
             default:
                 return;
