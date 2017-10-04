@@ -316,7 +316,7 @@
         template:
           '<ul class="sxt-layertree-node">' +
             '<sxt-layertree-elt ' +
-              'ng-repeat="member in collection track by (member.path || (collection.state.path + member.get(\'label\')) || $index)" ' +
+              'ng-repeat="member in collection track by (member.ol_uid || member.path || $index)" ' +
               'member="member" map="map"></sxt-layertree-elt>' +
           '</ul>'
       };

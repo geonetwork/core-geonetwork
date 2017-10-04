@@ -27,7 +27,7 @@
   var module = angular.module('gn_ncwms_service', []);
 
   var OCEANOTRON_INFO_URL_TEMPLATE =
-    'http://www.ifremer.fr/oceanotron/OPENDAP/opendap/**layer**.dds';
+    '**path**/OPENDAP/opendap/**layer**.dds';
 
   /**
    * @ngdoc service
@@ -122,9 +122,9 @@
         var styles = palettes[ncInfo.defaultPalette || ncInfo.palettes[0]];
 
         var day = new Date();
-        day.setDate(day.getDate() - 5);
+        day.setDate(day.getDate());
         var to = moment(day).format(this.DATE_INPUT_FORMAT);
-        day.setDate(day.getDate() - 1);
+        day.setDate(day.getDate() - 2);
         var from = moment(day).format(this.DATE_INPUT_FORMAT);
 
         layer.getSource().updateParams({
@@ -348,16 +348,18 @@
        * @param {string} layerName
        * @returns {string}
        */
-      this.getOceanotronInfoUrl = function(layerName) {
-        return OCEANOTRON_INFO_URL_TEMPLATE.replace('**layer**', layerName);
+      this.getOceanotronInfoUrl = function(layer) {
+        var name = layer.getSource().getParams().LAYERS.split('/')[0];
+        var u = gnUrlUtils.urlResolve(layer.get('url'));
+        var path = u.protocol + '://' + u.host + '/' +
+          u.pathname.split('/')[1];
+        return OCEANOTRON_INFO_URL_TEMPLATE.replace('**layer**', name)
+          .replace('**path**', path);
       };
 
       this.getOceanotronInfo = function(layer) {
 
-        return $http.get(
-          this.getOceanotronInfoUrl(
-            layer.getSource().getParams().LAYERS.split('/')[0]
-          )
+        return $http.get(this.getOceanotronInfoUrl(layer)
         ).then(function(response) {
 
           var type;
