@@ -21,15 +21,17 @@
       <i class="fa fa-spinner fa-spin" />
     </div>
 
-    <div class="associated-md-list">
-      <li class="associated-md"
+    <div class="associated-md-list" ng-show="!searching">
+      <li class="associated-md flex-row"
         data-ng-repeat="e in searchResults.records">
           <gn-md-type-widget metadata="e"></gn-md-type-widget>
 
           <a href="catalog.search#/metadata/{{e['geonet:info'].uuid}}"
-            class="spacer"
+            class="flex-shrink text-ellipsis"
             title="{{e.title || e.defaultTitle}}">
             {{e.title || e.defaultTitle}}</a>
+
+          <div class="flex-spacer flex-grow"></div>
 
           <a class="btn btn-primary btn-sm"
              data-ng-href="#/metadata/{{e['geonet:info'].id}}"
