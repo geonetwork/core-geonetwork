@@ -690,7 +690,7 @@
               this.loadContext(c, map);
             }.bind(this));
           } else if (gnViewerSettings.defaultContext) {
-            initContextPromise = gnOwsContextService.loadContextFromUrl(
+            initContextPromise = this.loadContextFromUrl(
               gnViewerSettings.defaultContext,
               map,
               gnViewerSettings.additionalMapLayers);
