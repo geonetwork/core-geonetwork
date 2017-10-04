@@ -287,32 +287,11 @@
 
   <!-- ================================================================= -->
 
-  <!-- Do not allow to expand operatesOn sub-elements
-        and constrain users to use uuidref attribute to link
-        service metadata to datasets. This will avoid to have
-        error on XSD validation. -->
-
-  <xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
-    <xsl:copy>
-      <xsl:copy-of select="@uuidref"/>
-      <xsl:if test="@uuidref">
-        <xsl:choose>
-          <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
-            <xsl:attribute name="xlink:href">
-              <xsl:value-of
-                select="concat($serviceUrl,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
-            </xsl:attribute>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="@xlink:href"/>
-          </xsl:otherwise>
-        </xsl:choose>
-
-      </xsl:if>
-    </xsl:copy>
-
-  </xsl:template>
-
+	<xsl:template match="srv:operatesOn|gmd:featureCatalogueCitation">
+		<xsl:copy>
+			<xsl:copy-of select="@*"/>
+		</xsl:copy>
+	</xsl:template>
 
   <!-- ================================================================= -->
   <!-- Set local identifier to the first 3 letters of iso code. Locale ids
