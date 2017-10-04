@@ -159,11 +159,7 @@
               $q.all(loadLayerPromises).finally(function() {
                 var extent = ol.extent.createEmpty();
                 for(var i=0;i<waitingLayers.length;++i) {
-                  var layerExtent = gnMap.reprojExtent(
-                    waitingLayers[i].get('cextent'),
-                    'EPSG:3857', viewerMap.getView().getProjection()
-                  );
-                  ol.extent.extend(extent, layerExtent);
+                  ol.extent.extend(extent, waitingLayers[i].get('cextent'));
                 }
                 if (!ol.extent.isEmpty(extent)) {
                   viewerMap.getView().fit(extent, viewerMap.getSize());
@@ -378,23 +374,25 @@
       // Manage layer url parameters
       $timeout(function() {
         if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-          var loadLayerPromise =
+          gnOwsContextService.initFirstContext(viewerMap).then(function(){
+            var loadLayerPromise =
               gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
-                  gnViewerSettings.layerName, true).
+                gnViewerSettings.layerName, true).
 
-                  then(function(layer) {
-                    if(layer) {
-                      layer.set('group', gnViewerSettings.layerGroup);
-                      layer.set('fromUrlParams', true);
-                      viewerMap.addLayer(layer);
-                      if(waitingLayers) waitingLayers.push(layer);
-                      $scope.addLayerPopover('map');
-                      if (!$scope.mainTabs.map.active) {
-                        $scope.mainTabs.map.titleInfo += 1;
-                      }
-                    }
-                  });
-          if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+              then(function(layer) {
+                if(layer) {
+                  layer.set('group', gnViewerSettings.layerGroup);
+                  layer.set('fromUrlParams', true);
+                  viewerMap.addLayer(layer);
+                  if(waitingLayers) waitingLayers.push(layer);
+                  $scope.addLayerPopover('map');
+                  if (!$scope.mainTabs.map.active) {
+                    $scope.mainTabs.map.titleInfo += 1;
+                  }
+                }
+              });
+            if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+          });
         }
       },0);
 
