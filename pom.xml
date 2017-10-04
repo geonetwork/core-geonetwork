@@ -1185,6 +1185,25 @@
         <module>jmeter</module>
       </modules>
     </profile>
+    
+    
+    <!-- GN-e profiles -->
+    <profile>
+      <id>Live</id>
+      <properties>
+        <db.type>postgres</db.type>
+        <db.host>db</db.host>
+        <db.password>LfmbPNzpQJdKh2w4qr</db.password>
+        <db.pool.maxActive>33</db.pool.maxActive>
+      </properties>
+    </profile>
+    <profile>
+      <id>postgis</id>
+      <properties>
+        <db.type>postgres-postgis</db.type>
+      </properties>
+    </profile>
+   
   </profiles>
 
   <distributionManagement>

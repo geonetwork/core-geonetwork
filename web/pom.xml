@@ -769,8 +769,6 @@
     </profile>
     
     <!-- GN-e profiles -->
-    
-    <!-- GN-e profiles -->
     <profile>
       <id>INSPIRE</id>
       <build>
