@@ -159,7 +159,11 @@
               $q.all(loadLayerPromises).finally(function() {
                 var extent = ol.extent.createEmpty();
                 for(var i=0;i<waitingLayers.length;++i) {
-                  ol.extent.extend(extent, waitingLayers[i].get('cextent'));
+                  var layerExtent = gnMap.reprojExtent(
+                    waitingLayers[i].get('cextent'),
+                    'EPSG:3857', viewerMap.getView().getProjection()
+                  );
+                  ol.extent.extend(extent, layerExtent);
                 }
                 if (!ol.extent.isEmpty(extent)) {
                   viewerMap.getView().fit(extent, viewerMap.getSize());
