@@ -347,8 +347,8 @@
                   type: 'danger'});
               }
 
-              self.loadContext(r.data, map, additionalLayers);
-            }, function(r) {
+              this.loadContext(r.data, map, additionalLayers);
+            }.bind(this), function(r) {
               var msg = $translate.instant('mapLoadError', {
                 url: url
               });
@@ -673,6 +673,33 @@
         return re = new RegExp(par + '\\s*=\\s*([^,|^}|^\\s]*)');
       };
 
+      this.initFirstContext = function(map) {
+        if(!this.initContextPromise) {
+          var initContextPromise;
+          var key = 'owsContext_' +
+            window.location.host + window.location.pathname;
+          var storage = gnViewerSettings.storage ?
+            window[gnViewerSettings.storage] : window.localStorage;
+
+          if (gnViewerSettings.owsContext) {
+            initContextPromise = this.loadContextFromUrl(
+              gnViewerSettings.owsContext, map);
+          } else if (storage.getItem(key)) {
+            var c = storage.getItem(key);
+            initContextPromise = $q.resolve().then(function() {
+              this.loadContext(c, map);
+            }.bind(this));
+          } else if (gnViewerSettings.defaultContext) {
+            initContextPromise = gnOwsContextService.loadContextFromUrl(
+              gnViewerSettings.defaultContext,
+              map,
+              gnViewerSettings.additionalMapLayers);
+          }
+          this.initContextPromise = initContextPromise;
+        }
+        return this.initContextPromise;
+
+      }
     }
   ]);
 })();
