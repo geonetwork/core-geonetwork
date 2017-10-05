@@ -72,7 +72,6 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
-import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.history.RecordImportedEvent;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -774,7 +773,11 @@ public class MetadataInsertDeleteApi {
 
         if (rejectIfInvalid) {
             try {
-                DataManager.validateMetadata(schema, xmlElement, context);
+                Integer groupId = null;
+                if (StringUtils.isNotEmpty(group)) {
+                    groupId = Integer.parseInt(group);
+                }
+                DataManager.validateExternalMetadata(schema, xmlElement, context, groupId);
             } catch (XSDValidationErrorEx e) {
                 throw new IllegalArgumentException(e);
             }

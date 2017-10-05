@@ -38,6 +38,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang.StringUtils;
 import jeeves.server.context.ServiceContext;
+
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -281,12 +283,12 @@ public class Aligner extends BaseAligner<CswParams> {
                 mdUuid = ri.uuid;
             }
         }
-        
+
         //
         // insert metadata
         //
          ownerId = Integer.parseInt(StringUtils.isNumeric(params.getOwnerIdUser()) ? params.getOwnerIdUser() : params.getOwnerId());
-       
+
 
         AbstractMetadata metadata = new Metadata();
         metadata.setUuid(uuid);
@@ -344,7 +346,7 @@ public class Aligner extends BaseAligner<CswParams> {
                     result.unchangedMetadata++;
                     return;
                 }
-                
+
                 if (!params.xslfilter.equals("")) {
                     md = processMetadata(context, md, processName, processParams);
                 }
@@ -358,7 +360,7 @@ public class Aligner extends BaseAligner<CswParams> {
                 String language = context.getLanguage();
 
                 final AbstractMetadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
-                
+
                 if(force) {
                     //change ownership of metadata to new harvester
                     metadata.getHarvestInfo().setUuid(params.getUuid());
@@ -427,7 +429,12 @@ public class Aligner extends BaseAligner<CswParams> {
 
 
             try {
-                params.getValidate().validate(dataMan, context, response);
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
                 log.info("Ignoring invalid metadata with uuid " + uuid);
                 result.doesNotValidate++;
@@ -436,14 +443,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
             if (params.rejectDuplicateResource) {
                 if (foundDuplicateForResource(uuid, response)) {
-                    result.unchangedMetadata++;
                     return null;
                 }
             }
 
             return response;
         } catch (Exception e) {
-            log.warning("Raised exception while getting record : " +  e);
+            log.warning("Raised exception while getting record : " + e);
             e.printStackTrace();
             result.unretrievable++;
 

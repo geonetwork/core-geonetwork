@@ -251,10 +251,10 @@ public class Aligner extends BaseAligner<GeonetParams> {
                         result.datasetUuidExist++;
                         switch(params.getOverrideUuid()){
                         case OVERRIDE:
-                            updateMetadata(ri, 
-                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()), 
-                                    localRating.equals(RatingsSetting.BASIC), 
-                                    params.useChangeDateForUpdate(), 
+                            updateMetadata(ri,
+                                    Integer.toString(metadataRepository.findOneByUuid(ri.uuid).getId()),
+                                    localRating.equals(RatingsSetting.BASIC),
+                                    params.useChangeDateForUpdate(),
                                     localUuids.getChangeDate(ri.uuid), true);
                             log.info("Overriding record with uuid " + ri.uuid);
                             result.updatedMetadata++;
@@ -272,12 +272,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
                     } else {
                         //record exists and belongs to this harvester
                         log.debug("Updating record with uuid " + ri.uuid);
-                        updateMetadata(ri, id, 
-                                localRating.equals(RatingsSetting.BASIC), 
-                                params.useChangeDateForUpdate(), 
+                        updateMetadata(ri, id,
+                                localRating.equals(RatingsSetting.BASIC),
+                                params.useChangeDateForUpdate(),
                                 localUuids.getChangeDate(ri.uuid), false);
                     }
-                        
+
                 }
             } catch (Throwable t) {
                 log.error("Couldn't insert or update metadata with uuid " + ri.uuid);
@@ -521,7 +521,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
         if (log.isDebugEnabled()) log.debug("  - Adding metadata with remote uuid:" + ri.uuid);
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + uuid);
             result.doesNotValidate++;
@@ -789,13 +794,18 @@ public class Aligner extends BaseAligner<GeonetParams> {
         }
     }
 
-    private void updateMetadata(RecordInfo ri, String id, Element md, 
+    private void updateMetadata(RecordInfo ri, String id, Element md,
             Element info, boolean localRating, boolean force) throws Exception {
         String date = localUuids.getChangeDate(ri.uuid);
 
 
         try {
-            params.getValidate().validate(dataMan, context, md);
+            Integer groupIdVal = null;
+            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+            }
+
+            params.getValidate().validate(dataMan, context, md, groupIdVal);
         } catch (Exception e) {
             log.info("Ignoring invalid metadata uuid: " + ri.uuid);
             result.doesNotValidate++;
@@ -831,12 +841,12 @@ public class Aligner extends BaseAligner<GeonetParams> {
                 updateDateStamp);
             metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
-        
+
             if(force) {
                 //change ownership of metadata to new harvester
                 metadata.getHarvestInfo().setUuid(params.getUuid());
                 metadata.getSourceInfo().setSourceId(params.getUuid());
-    
+
                 metadataManager.save(metadata);
             }
         }
