@@ -115,6 +115,19 @@
 
       gnViewerSettings.storage = 'sessionStorage';
 
+      /**
+       * API, get the url params to get layers or OWC
+       */
+      if(typeof sxtSettings != 'undefined') {
+        var params = gnUrlUtils.parseKeyValue(window.location.search.
+        replace(/^\?/, ''));
+        gnViewerSettings.owsContext = params.owscontext &&
+          decodeURIComponent(params.owscontext);
+        gnViewerSettings.wmsUrl = params.wmsurl;
+        gnViewerSettings.layerName = params.layername;
+        gnViewerSettings.layerGroup = params.layergroup;
+      }
+
       if(angular.isDefined(gnSearchSettings.tabOverflow.search)) {
         var updateTabVisibility = function() {
           if(gnSearchLocation.isMdView()) {
@@ -134,8 +147,8 @@
       // make sure search map is correctly rendered
       var unregisterMapsize = $scope.$on('locationBackToSearch', function() {
         if (angular.isUndefined(searchMap.getSize()) ||
-            searchMap.getSize()[0] == 0 ||
-            searchMap.getSize()[1] == 0) {
+          searchMap.getSize()[0] == 0 ||
+          searchMap.getSize()[1] == 0) {
           $timeout(function() {searchMap.updateSize()}, 100);
         }
         unregisterMapsize();
@@ -145,31 +158,82 @@
       var waitingLayers = []; // Layers added from catalog but not visited yet
       var loadLayerPromises = []; // Promises to know when all layers are loaded
 
+      // Manage layer url parameters
+      if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
+        gnOwsContextService.initFirstContext(viewerMap).then(function() {
+          if(!gnMap.isLayerInMap(viewerMap, gnViewerSettings.layerName,
+              gnViewerSettings.wmsUrl)) {
+
+            var loadLayerPromise =
+              gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
+                gnViewerSettings.layerName, true).
+
+              then(function(layer) {
+                if(layer) {
+                  layer.set('group', gnViewerSettings.layerGroup);
+                  layer.set('fromUrlParams', true);
+                  viewerMap.addLayer(layer);
+                  if(waitingLayers) waitingLayers.push(layer);
+                  $scope.addLayerPopover('map');
+                  if (!$scope.mainTabs.map.active) {
+                    $scope.mainTabs.map.titleInfo += 1;
+                  }
+                }
+              });
+            if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
+          }
+        });
+      }
+
       $scope.displayMapTab = function() {
 
-        // Make sure viewer map is correctly rendered
-        if (angular.isUndefined(viewerMap.getSize()) ||
-            viewerMap.getSize()[0] == 0 ||
-            viewerMap.getSize()[1] == 0) {
-          $timeout(function() {
-            viewerMap.updateSize();
+        if(mapVisited) return;
+        mapVisited = true;
 
-            // Zoom to last added layer on first visit to viewer map
-            if(loadLayerPromises) {
-              $q.all(loadLayerPromises).finally(function() {
-                var extent = ol.extent.createEmpty();
-                for(var i=0;i<waitingLayers.length;++i) {
-                  ol.extent.extend(extent, waitingLayers[i].get('cextent'));
+        gnOwsContextService.initFirstContext(viewerMap).then(function() {
+
+          if(loadLayerPromises) {
+            return $q.all(loadLayerPromises).finally(function() {
+              var extent = ol.extent.createEmpty();
+              for(var i=0;i<waitingLayers.length;++i) {
+                ol.extent.extend(extent, waitingLayers[i].get('cextent'));
+              }
+              if (!ol.extent.isEmpty(extent)) {
+                viewerMap.set('lastExtent', extent);
+              }
+              if (loadLayerPromises) delete loadLayerPromises;
+              if (waitingLayers) delete waitingLayers;
+            });
+          }
+          return true;
+        }).then(function() {
+
+            var intervalId ;
+            var loadAttempt = 0;
+            intervalId = setInterval(function() {
+
+              if (loadAttempt > (25)) {
+                clearInterval(intervalId);
+              }
+              if(!viewerMap.getSize() || (
+                viewerMap.getSize()[0] == 0 && viewerMap.getSize()[1] == 0 )) {
+                loadAttempt += 1;
+              }
+              if($(viewerMap.getTarget()).width()) {
+                viewerMap.updateSize();
+                if(viewerMap.get('lastExtent')) {
+                  viewerMap.getView().fit(
+                    viewerMap.get('lastExtent'),
+                    viewerMap.getSize(), { nearest: true });
                 }
-                if (!ol.extent.isEmpty(extent)) {
-                  viewerMap.getView().fit(extent, viewerMap.getSize());
-                }
-                if (loadLayerPromises) delete loadLayerPromises;
-                if (waitingLayers) delete waitingLayers;
-              });
-            }
-          }, 0);
-        }
+                clearInterval(intervalId);
+              }
+              else {
+                loadAttempt += 1;
+
+              }
+            }, 100);
+        });
         $scope.mainTabs.map.titleInfo = 0;
       };
 
@@ -185,17 +249,17 @@
 
       // Manage sextantTheme thesaurus translation
       sxtGlobals.keywords['sextantThemePromise'] =
-      gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
-        gnGlobalSettings.locale.iso3lang, 200).then(function(data) {
-            sxtGlobals.keywords.sextantTheme = data;
-            return data;
-          });
+        gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme',
+          gnGlobalSettings.locale.iso3lang, 200).then(function(data) {
+          sxtGlobals.keywords.sextantTheme = data;
+          return data;
+        });
 
       ///////////////////////////////////////////////////////////////////
       ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
-            ('STARTSWITHONLY'));
+          ('STARTSWITHONLY'));
 
         return $http.get(url, {
         }).then(function(res) {
@@ -342,7 +406,7 @@
 
         addMdLayerToPanier: function(link, md, $event) {
           if(link.protocol.match(
-                  "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
+              "WWW:FTP|WWW:DOWNLOAD-1.0-link--download|WWW:OPENDAP|MYO:MOTU-SUB") != null) {
             if (link.protocol == 'MYO:MOTU-SUB') {
               link.url = link.url.replace('action=describeproduct', 'action=productdownloadhome');
             }
@@ -370,32 +434,6 @@
           });
         }
       };
-
-      // Manage layer url parameters
-      $timeout(function() {
-        if (gnViewerSettings.wmsUrl && gnViewerSettings.layerName) {
-          gnOwsContextService.initFirstContext(viewerMap).then(function(){
-            var loadLayerPromise =
-              gnMap.addWmsFromScratch(viewerMap, gnViewerSettings.wmsUrl,
-                gnViewerSettings.layerName, true).
-
-              then(function(layer) {
-                if(layer) {
-                  layer.set('group', gnViewerSettings.layerGroup);
-                  layer.set('fromUrlParams', true);
-                  viewerMap.addLayer(layer);
-                  if(waitingLayers) waitingLayers.push(layer);
-                  $scope.addLayerPopover('map');
-                  if (!$scope.mainTabs.map.active) {
-                    $scope.mainTabs.map.titleInfo += 1;
-                  }
-                }
-              });
-            if (loadLayerPromises) loadLayerPromises.push(loadLayerPromise);
-          });
-        }
-      },0);
-
 
       // Manage tabs height for api
       $scope.tabOverflow = gnSearchSettings.tabOverflow;
@@ -428,21 +466,6 @@
             }
           }, 0);
         }
-
-        // resize viewer map for corresponding view
-        if (tab == 'map' && (!angular.isArray(
-            viewerMap.getSize()) || viewerMap.getSize().indexOf(0) >= 0)) {
-          setTimeout(function() {
-            viewerMap.updateSize();
-
-            // if an extent was obtained from a loaded context, apply it
-            if(viewerMap.get('lastExtent')) {
-              viewerMap.getView().fit(
-                viewerMap.get('lastExtent'),
-                viewerMap.getSize(), { nearest: true });
-            }
-          }, 0);
-        }
       });
 
 
@@ -458,18 +481,6 @@
         filters: gnSearchSettings.filters
       });
 
-      /**
-       * API, get the url params to get layers or OWC
-       */
-      if(typeof sxtSettings != 'undefined') {
-        var params = gnUrlUtils.parseKeyValue(window.location.search.
-            replace(/^\?/, ''));
-        gnViewerSettings.owsContext = params.owscontext &&
-            decodeURIComponent(params.owscontext);
-        gnViewerSettings.wmsUrl = params.wmsurl;
-        gnViewerSettings.layerName = params.layername;
-        gnViewerSettings.layerGroup = params.layergroup;
-      }
 
       $scope.$watch('mainTabs.panier.active', function(a) {
         if(a === true) {
@@ -618,9 +629,9 @@
   module.directive('sxtFixLinks', [ '$filter', '$sce',
     function($filter, $sce) {
       var icon = '<span class="fa-stack fa-lg">' +
-          '<i class="fa fa-square fa-stack-2x"></i>' +
-          '<i class="fa fa-link fa-stack-1x fa-inverse"></i>' +
-          '</span>';
+        '<i class="fa fa-square fa-stack-2x"></i>' +
+        '<i class="fa fa-link fa-stack-1x fa-inverse"></i>' +
+        '</span>';
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
