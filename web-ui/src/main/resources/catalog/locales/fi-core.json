@@ -341,5 +341,18 @@
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
     "_valid": "Validity",
-    "dateToDate": "to"
+    "dateToDate": "to",
+    "batchEditing": "Erämuokkaus",
+    "harvesters": "Harvestointi",
+    "metadatasAndTemplates": "Metatiedot ja mallit",
+    "statisticsAndStatus": "Tilastot ja tila",
+    "reports": "Raportit",
+    "classificationSystems": "Luokitusjärjestelmät",
+    "usersAndGroups": "Käyttäjät ja ryhmät",
+    "settings": "Asetukset",
+    "tools": "Työkalut",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": " sijaintina",
+    "resolveCaptcha": "Resolve the captcha"
 }
