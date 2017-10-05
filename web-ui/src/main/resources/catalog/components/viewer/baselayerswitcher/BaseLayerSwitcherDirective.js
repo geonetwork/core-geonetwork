@@ -42,8 +42,8 @@
    * given map
    */
   module.directive('gnBaselayerswitcher', [
-    'gnViewerSettings', 'baselayerTemplateURL',
-    function(gnViewerSettings, baselayerTemplateURL) {
+    'gnViewerSettings', 'baselayerTemplateURL', 'gnOwsContextService',
+    function(gnViewerSettings, baselayerTemplateURL, gnOwsContextService) {
       return {
         restrict: 'A',
         templateUrl: baselayerTemplateURL,
@@ -53,7 +53,6 @@
         link: function(scope, element, attrs) {
           scope.layers = gnViewerSettings.bgLayers;
           scope.dropup = angular.isDefined(attrs.dropup);
-          scope.map.getLayers().insertAt(0, scope.layers[0]);
           scope.setBgLayer = function(layer) {
             layer.setVisible(true);
             var layers = scope.map.getLayers();
