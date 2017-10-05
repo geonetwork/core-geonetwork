@@ -30,7 +30,7 @@ import org.jdom.Element;
 public enum HarvestValidationEnum {
 
     NOVALIDATION {
-        public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
+        public void validate(DataManager dataMan, ServiceContext context, Element xml, Integer groupOwnerId) throws Exception {
         }
     },
 
@@ -38,7 +38,7 @@ public enum HarvestValidationEnum {
      * Process validation against schema
      */
     XSDVALIDATION {
-        public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
+        public void validate(DataManager dataMan, ServiceContext context, Element xml, Integer groupOwnerId) throws Exception {
             DataManager.setNamespacePrefix(xml);
 
             String schema = context.getBean(SchemaManager.class).autodetectSchema(xml);
@@ -52,9 +52,9 @@ public enum HarvestValidationEnum {
      * Process validation against schematron and XSD
      */
     SCHEMATRONVALIDATION {
-        public void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception {
+        public void validate(DataManager dataMan, ServiceContext context, Element xml, Integer groupOwnerId) throws Exception {
             String schema = context.getBean(SchemaManager.class).autodetectSchema(xml);
-            DataManager.validateMetadata(schema, xml, context);
+            DataManager.validateExternalMetadata(schema, xml, context, groupOwnerId);
         }
 
     };
@@ -78,5 +78,5 @@ public enum HarvestValidationEnum {
         return HarvestValidationEnum.NOVALIDATION;
     }
 
-    public abstract void validate(DataManager dataMan, ServiceContext context, Element xml) throws Exception;
+    public abstract void validate(DataManager dataMan, ServiceContext context, Element xml, Integer groupOwnerId) throws Exception;
 }

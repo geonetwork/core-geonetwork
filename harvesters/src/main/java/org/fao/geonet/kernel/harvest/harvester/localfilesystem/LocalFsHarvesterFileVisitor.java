@@ -41,6 +41,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -130,7 +131,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
 
                 if (LOGGER.isDebugEnabled() && result.totalMetadata % 1000 == 0) {
                     long elapsedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-                    LOGGER.debug(result.totalMetadata + "records inserted in " + elapsedTime 
+                    LOGGER.debug(result.totalMetadata + "records inserted in " + elapsedTime
                     		+ " s (" + result.totalMetadata / elapsedTime + " records/s).");
                 }
 
@@ -182,8 +183,14 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     return FileVisitResult.CONTINUE;
                 }
 
+
                 try {
-                    params.getValidate().validate(dataMan, context, xml);
+                    Integer groupIdVal = null;
+                    if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                        groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                    }
+
+                    params.getValidate().validate(dataMan, context, xml, groupIdVal);
                 } catch (Exception e) {
                     LOGGER.debug("Cannot validate XML from file " + filePath + ", ignoring. Error was: " + e.getMessage());
                     result.doesNotValidate++;

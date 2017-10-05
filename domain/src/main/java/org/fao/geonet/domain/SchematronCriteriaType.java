@@ -63,7 +63,24 @@ public enum SchematronCriteriaType {
             final Specifications<Metadata> finalSpec = Specifications.where(correctId).and(correctOwner);
             return applicationContext.getBean(MetadataRepository.class).count(finalSpec) > 0;
         }
+
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
+
+            String[] values = value.split(",");
+            Integer[] ids = new Integer[values.length];
+            for (int i = 0; i < values.length; i++) {
+                ids[i] = Integer.valueOf(values[i]);
+            }
+
+            // used to evaluate an external metadata to import, metadataGroupOwner should be provided
+            // with the destination metadata group owner
+            return Arrays.asList(ids).contains(metadataGroupOwner);
+        }
     }),
+
+
     /**
      * An always true criteria.
      */
@@ -71,6 +88,12 @@ public enum SchematronCriteriaType {
         @Override
         public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                                List<Namespace> metadataNamespaces) {
+            return true;
+        }
+
+        @Override
+        public boolean accepts(ApplicationContext applicationContext, String value,Element metadata,
+                               List<Namespace> metadataNamespaces, Integer metadataGroupOwner) {
             return true;
         }
     }),
@@ -88,5 +111,10 @@ public enum SchematronCriteriaType {
     public boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
                            List<Namespace> metadataNamespaces) {
         return evaluator.accepts(applicationContext, value, metadataId, metadata, metadataNamespaces);
+    }
+
+    public boolean accepts(ApplicationContext applicationContext, String value, Element metadata,
+                           List<Namespace> metadataNamespaces, Integer groupOwnerId ) {
+        return evaluator.accepts(applicationContext, value, metadata, metadataNamespaces, groupOwnerId);
     }
 }

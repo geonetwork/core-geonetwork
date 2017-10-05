@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2017 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,25 +21,31 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.domain;
+package org.fao.geonet.kernel;
 
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.springframework.context.ApplicationContext;
-
-import java.util.List;
+import org.fao.geonet.domain.Schematron;
+import org.fao.geonet.domain.SchematronRequirement;
 
 /**
- * A strategy object that evaluates schematron criteria.
  *
- * Created by Jesse on 2/6/14.
+ * Class to model a schematron requirement and the related
+ * schematron to apply if the requirement succeeds.
+ *
  */
-public interface SchematronCriteriaEvaluator {
-    public abstract boolean accepts(ApplicationContext applicationContext, String value, int metadataId, Element metadata,
-                                    List<Namespace> metadataNamespaces);
+public class ApplicableSchematron {
+    final SchematronRequirement requirement;
+    final Schematron schematron;
 
-    // Used for metadata that is not in the catalogue, should be provided the groupOwner for the metadata
-    // to evaluate the SchemaCriteriaType.GROUP
-    public abstract boolean accepts(ApplicationContext applicationContext, String value,Element metadata,
-                                    List<Namespace> metadataNamespaces,  Integer groupOwnerId);
+    public SchematronRequirement getRequirement() {
+        return requirement;
+    }
+
+    public Schematron getSchematron() {
+        return schematron;
+    }
+
+    ApplicableSchematron(SchematronRequirement requirement, Schematron schematron) {
+        this.requirement = requirement;
+        this.schematron = schematron;
+    }
 }
