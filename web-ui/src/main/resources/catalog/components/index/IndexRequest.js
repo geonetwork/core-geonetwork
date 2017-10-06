@@ -555,7 +555,6 @@
       }
       // date types
       else if (fieldId.endsWith('_dt') || facetField.type == 'rangeDate') {
-
         if (facetField.type == 'rangeDate') {
           var rangebuckets = [];
           for (var p in respAgg.buckets) {
@@ -568,26 +567,33 @@
         else {
           facetField.type = 'date';
         }
-        facetField.display = facetField.display || 'form';
-        var bucketDates = respAgg.buckets.sort(function(a, b) {
-          return a.key - b.key;
-        });
 
-        if (!fNameObj.allDates) {
-          fNameObj.allDates = bucketDates.map(function(b) {
-            return b.key;
-          });
-        }
-        facetField.dates = fNameObj.allDates;
-
-        if (facetField.display == 'graph' && bucketDates.length > 0) {
+        // no date in bucket: do nothing
+        if (!respAgg.buckets.length) {
+          facetField.dates = [];
           facetField.datesCount = [];
-          for (var i = 0; i < bucketDates.length; i++) {
-            facetField.datesCount.push({
-              value: bucketDates[i].key,
-              values: bucketDates[i].key,
-              count: bucketDates[i].doc_count
+        } else {
+          facetField.display = facetField.display || 'form';
+          var bucketDates = respAgg.buckets.sort(function(a, b) {
+            return a.key - b.key;
+          });
+
+          if (!fNameObj.allDates) {
+            fNameObj.allDates = bucketDates.map(function(b) {
+              return b.key;
             });
+          }
+          facetField.dates = fNameObj.allDates;
+
+          if (facetField.display == 'graph' && bucketDates.length > 0) {
+            facetField.datesCount = [];
+            for (var i = 0; i < bucketDates.length; i++) {
+              facetField.datesCount.push({
+                value: bucketDates[i].key,
+                values: bucketDates[i].key,
+                count: bucketDates[i].doc_count
+              });
+            }
           }
         }
       }
