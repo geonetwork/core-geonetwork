@@ -798,7 +798,7 @@
           var isRange = ($(element).find('input').length == 2);
           var highlight = attrs['dateOnlyHighlight'] === 'true';
 
-          if (isRange && ! scope.date) {
+          if (isRange && !scope.date) {
             scope.date = {};
           }
 
@@ -878,10 +878,17 @@
                   scope.date = date !== '' ? date : undefined;
                 }
                 else {
-                  var from = $(element).find('input')[0].value;
-                  scope.date.from = from !== '' ? from : undefined;
-                  var to = $(element).find('input')[1].value;
-                  scope.date.to = to !== '' ? to : undefined;
+                  var target = ev.target;
+                  var pickers = $(element).find('input');
+
+                  // only apply the date which was modified
+                  if (target === pickers[0]) {
+                    var dateFrom = pickers[0].value;
+                    scope.date.from = dateFrom !== '' ? dateFrom : undefined;
+                  } else if (target === pickers[1]) {
+                    var dateTo = pickers[1].value;
+                    scope.date.to = dateTo !== '' ? dateTo : undefined;
+                  }
                 }
               });
             });
@@ -913,20 +920,28 @@
               }
               if (v != o) {
                 $(element).find('input')[0].value = v || '';
-
               }
             });
           }
           else {
-            scope.$watchCollection('date', function(v, o) {
-              if (angular.isUndefined(v)) {
+            scope.$watchCollection('date', function(newValue, oldValue) {
+              if (angular.isUndefined(newValue)) {
                 scope.date = {};
                 return;
               }
-              if (v != o) {
-                scope.onChangeFn();
-                $(element).find('input')[0].value = (v && v.from) || '';
-                $(element).find('input')[1].value = (v && v.to) || '';
+              var dateFrom = (newValue && newValue.from) || '';
+              var dateTo = (newValue && newValue.to) || '';
+              var previousFrom = (oldValue && oldValue.from) || '';
+              var previousTo = (oldValue && oldValue.to) || '';
+              if (dateFrom != previousFrom || dateTo != previousTo) {
+                $timeout(function() {
+                  var picker = $(element).data('datepicker');
+                  $(element).find('input')[0].value = dateFrom;
+                  $(element).find('input')[1].value = dateTo;
+                  picker.pickers[0].update();
+                  picker.pickers[1].update();
+                  scope.onChangeFn();
+                });
               }
             });
           }
