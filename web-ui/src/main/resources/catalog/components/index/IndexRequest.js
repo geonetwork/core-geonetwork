@@ -568,9 +568,10 @@
           facetField.type = 'date';
         }
 
-        // no date in bucket: skip field
+        // no date in bucket: do nothing
         if (!respAgg.buckets.length) {
-          facetField = null;
+          facetField.dates = [];
+          facetField.datesCount = [];
         } else {
           facetField.display = facetField.display || 'form';
           var bucketDates = respAgg.buckets.sort(function(a, b) {
