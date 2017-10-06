@@ -5,6 +5,20 @@
 @import (less) "../lib/jquery.ext/jquery.fileupload-ui.css";
 @import "gn.less";
 
+
+@import "../lib/style/bootstrap/less/glyphicons.less";
+
+//url is wrong on original file
+// Import the fonts
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot')";
+  src: ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.eot?#iefix') format('embedded-opentype')",
+       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.woff') format('woff')",
+       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.ttf') format('truetype')",
+       ~"url('../catalog/lib/style/bootstrap/fonts/@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg')";
+}
+
 body {
 }
 
@@ -135,8 +149,14 @@ input[type=text], input[type=number], select {
     }
   }
 
+  .search-options-header.row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
   .directory-entries-list {
-    margin: 0 1em;
+    margin: 0.7em 0em;
+    padding: 0px;
 
     & > li {
       display: flex;
@@ -179,11 +199,6 @@ input[type=text], input[type=number], select {
     }
   }
 
-  .search-options-header {
-    display: flex;
-    flex-direction: row;
-  }
-
   .entry-editor {
     .panel-heading {
       position: relative;
@@ -224,7 +239,6 @@ input[type=text], input[type=number], select {
 
   .dropdown-menu {
     max-width: 40em;
-    width: 100%;
   }
 }
 
@@ -757,11 +771,11 @@ gn-md-type-widget {
 
   & > div {
     border-radius: 1000px;
-    width: 1.8em;
-    height: 1.8em;
-    line-height: 2em;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
     text-align: center;
-    font-size: 0.9em;
+    font-size: 14px;
     position: relative;
     color: white;
     margin-top: -0.2em;

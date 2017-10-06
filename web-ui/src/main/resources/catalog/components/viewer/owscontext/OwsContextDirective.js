@@ -88,8 +88,11 @@
         $translate, $rootScope, $http, $q) {
       return {
         restrict: 'A',
-        templateUrl: '../../catalog/components/viewer/owscontext/' +
-            'partials/owscontext.html',
+        templateUrl: function(elem, attrs) {
+          return attrs.template ||
+            '../../catalog/components/viewer/owscontext/' +
+            'partials/owscontext.html';
+        },
         scope: {
           user: '=',
           map: '='
@@ -105,14 +108,18 @@
 
           function getMapAsImage($event) {
             var defer = $q.defer();
-            scope.mapFileName = getMapFileName();
+            if (scope.isExportMapAsImageEnabled) {
+              scope.mapFileName = getMapFileName();
 
-            scope.map.once('postcompose', function(event) {
-              var canvas = event.context.canvas;
-              var data = canvas.toDataURL('image/png');
-              defer.resolve(data);
-            });
-            scope.map.renderSync();
+              scope.map.once('postcompose', function(event) {
+                var canvas = event.context.canvas;
+                var data = canvas.toDataURL('image/png');
+                defer.resolve(data);
+              });
+              scope.map.renderSync();
+            } else {
+              defer.resolve(null);
+            }
             return defer.promise;
           };
 
@@ -145,7 +152,9 @@
 
 
           scope.isSaveMapInCatalogAllowed =
-              gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed || true;
+              gnGlobalSettings.gnCfg.mods.map.isSaveMapInCatalogAllowed === true;
+          scope.isExportMapAsImageEnabled =
+              gnGlobalSettings.gnCfg.mods.map.isExportMapAsImageEnabled === true;
 
           scope.mapUuid = null;
 
@@ -169,9 +178,11 @@
               scope.mapProps.filename = getMapFileName() + '.ows';
 
               // Map as image
-              scope.mapProps.overviewFilename = getMapFileName() + '.png';
-              scope.mapProps.overview =
+              if (scope.isExportMapAsImageEnabled) {
+                scope.mapProps.overviewFilename = getMapFileName() + '.png';
+                scope.mapProps.overview =
                   data.replace('data:image/png;base64,', '');
+              }
 
               return $http.post('../api/records/importfrommap',
                   $.param(scope.mapProps), {
@@ -193,6 +204,7 @@
 
             return defer.promise;
           };
+
 
           scope.reset = function() {
             $rootScope.$broadcast('owsContextReseted');

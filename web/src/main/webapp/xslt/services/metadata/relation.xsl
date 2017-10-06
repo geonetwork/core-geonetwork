@@ -73,11 +73,16 @@
 
           <xsl:variable name="uuid"
                         select="if ($metadata/uuid != '') then $metadata/uuid else geonet:info/uuid"/>
+          <xsl:variable name="id"
+                        select="if ($metadata/id != '') then $metadata/id else geonet:info/id"/>
 
           <item>
             <id>
               <xsl:value-of select="$uuid"/>
             </id>
+            <mdid>
+              <xsl:value-of select="$id"/>
+            </mdid>
             <title>
               <value lang="{$lang}">
                 <xsl:value-of select="$metadata/title"/>

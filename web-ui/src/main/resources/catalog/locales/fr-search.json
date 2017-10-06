@@ -401,10 +401,12 @@
     "print_legend": "Légende",
     "print_legend_field": "Inclure la légende",
     "wfsDownloadDataInstruction": "Choisir un format de téléchargement :",
-    "wfsTypenameNotAvailable": "The featuretype '{{typename}}' is not available in the WFS service. You can select from available featuretypes instead",
+    "wfsTypenameNotAvailable": "Le type d'entité '{{typename}}' n'est pas disponible dans le service WFS. Vous pouvez cependant sélectionner un autre type d'entité parmi ceux disponibles.",
     "wfsChooseFeatureTypeToDownload": "Sélectionner une couche à télécharger",
-    "processesTool": "Utiliser un service WPS",
+    "processesTool": "Traitements (services WPS)",
     "wpsGetCapError": "Erreur lors de la lecture des capacités du service WPS :",
     "wpsByUrl": "Recherche un processus",
-    "wpsRecent": "Processus récents"
+    "wpsRecent": "Derniers traitements",
+    "selection.indexing.count": "L'indexation a commencé pour les {{count}} fiches sélectionnées.",
+    "selection.indexing.error": "Une erreur est survenue durant l'indexation."
 }

@@ -42,21 +42,31 @@
     padding-left: 1em;
     margin-bottom: 0;
     font-size: 13px;
+
+    .list-group {
+      margin-left: 0.2em;
+    }
   }
   .list-group-item {
     padding: 0.1em;
     color: #555555;
     border: none;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     flex-direction: row;
     * { flex-shrink: 0; }
+
+    [data-gn-facet-dimension-category] {
+      width: 100%;
+    }
 
     label {
       margin-bottom: 0px;
       font-weight: 500;
       cursor: pointer;
       display: flex;
+      align-items: center;
       flex-direction: row;
       min-width: 0px;
       flex-shrink: 1;
@@ -65,8 +75,8 @@
       }
     }
     input {
-      margin-right: 4px;
-      margin-top: 3px;
+      margin: 0px;
+      margin-top: 1px;
     }
     button {
       margin: 0px;
@@ -75,7 +85,7 @@
     }
     .gn-facet-label {
       flex-shrink: 1;
-      flex-grow: 1;
+      flex-grow: 0;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
@@ -174,6 +184,14 @@ span.gn-facet-label {
 [data-gn-period-chooser] ul > li > a:first-letter,
 span.gn-facet-label:first-letter {
   text-transform: uppercase;
+}
+
+// fix sort-by combo case
+.gn-sort-by .btn.dropdown-toggle {
+  text-transform: lowercase;
+  &:first-letter {
+    text-transform: uppercase;
+  }
 }
 
 /* TODO: Deprecate due to change in gn-pager and gn-sort-by */

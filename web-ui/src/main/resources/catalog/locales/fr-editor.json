@@ -18,9 +18,9 @@
     "addFromThesaurus": "ou sélectionner les depuis un thésaurus",
     "addKeywordNotFromThesaurus": "Ajouter des mots clés",
     "addLinks": "Ajouter les liens",
-    "addOnlinesrc": "Ajouter un lien",
+    "addOnlinesrc": "Ajouter une ressource en ligne",
     "updateOnlinesrc": "Mettre à jour le lien",
-    "addOnlinesrcTitle": "Ajouter une ressource en ligne",
+    "addOnlinesrcTitle": "Créer un lien vers une ressource en ligne",
     "addThumbnail": "Ajouter un aperçu",
     "addThumbnailTitle": "Ajouter un aperçu",
     "allChangesCanceled": "Tous les changements ont été annulés.",
@@ -36,7 +36,6 @@
     "chooseEntry": "Rechercher",
     "clickToAddResource": "Cliquer pour sélectionner la ressource",
     "beforeUnloadEditor": "Vous pourriez avoir des modifications non sauvées depuis la dernière sauvegarde {{timeAgo}}.",
-    "batchEditing": "Édition en série",
     "fieldIsRemoved": "Ce champ sera supprimé",
     "editRecords": "Éditer la sélection",
     "removeField": "Supprimé ce champ",
@@ -157,7 +156,6 @@
     "linkUrl": "URL à supprimer",
     "fileStore": "Dépôt de fichiers",
     "openResource": "Ouvrir la ressource",
-    "addDocument": "Ajouter un document (eg. aperçu, fichier, site)",
     "linkMetadata": "Associer une fiche",
     "setResourceStatus": "Modifier la visibilité du fichier.",
     "resourceUploadError": "Erreur lors de l'envoi du fichier",
@@ -359,5 +357,5 @@
     "inputGeometryIsInvalid": "Il y a une erreur dans la géométrie :",
     "inputGeometryHint": "Copier ici une géométrie dans le format et la projection choisi. ",
     "inputGeometryReadOnlyHint": "La géométrie est en lecture-seule.",
-    "selectKeyword": "Add keywords"
+    "selectKeyword": "Ajouter des mots-clés"
 }

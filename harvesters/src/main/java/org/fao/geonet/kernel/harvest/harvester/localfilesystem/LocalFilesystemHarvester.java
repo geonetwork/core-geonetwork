@@ -58,9 +58,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Harvester for local filesystem.
@@ -295,7 +293,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 			return;  // Nothing to run
 		}
 		log.info("Running the before script: " + params.beforeScript);
-		Process process = new ProcessBuilder(params.beforeScript).
+        List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));
+        Process process = new ProcessBuilder(args).
 				redirectError(ProcessBuilder.Redirect.INHERIT).
 				redirectOutput(ProcessBuilder.Redirect.INHERIT).
 				start();

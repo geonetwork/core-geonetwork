@@ -7,20 +7,7 @@
 
 <!-- draw tool & select boxes -->
 <div class="row">
-  <div class="col-xs-6 col-md-6 form-inline">
-    <label class="text-muted control-label" translate>
-      selectFormatAndProjection</label>
-    <br />
-    <select class="form-control" ng-model="ctrl.currentFormat"
-      ng-options="format for format in ctrl.formats"
-      ng-change="ctrl.handleInputOptionsChange()">
-    </select>
-    <select class="form-control" ng-model="ctrl.currentProjection"
-      ng-options="proj.code as proj.label for proj in ctrl.projections"
-      ng-change="ctrl.handleInputOptionsChange()">
-    </select>
-  </div>
-  <div class="col-xs-6 col-md-6" ng-if="!ctrl.readOnly">
+  <div class="col-xs-12 col-sm-6 col-sm-push-6" ng-if="!ctrl.readOnly">
     <label class="text-muted control-label" translate>drawOnMap</label>
     <br />
     <div gi-btn-group>
@@ -28,21 +15,41 @@
         <div class="btn-group">
           <button class="btn btn-default btn-warning"
             gi-btn="active" ng-model="ctrl.drawInteraction.active">
-            <span class="fa fa-pencil"></span>
+            <span class="fa fa-pencil"></span>&nbsp;
             <span translate>Polygon</span>
           </button>
           <button class="btn btn-default btn-warning"
             gi-btn="active" ng-model="ctrl.drawLineInteraction.active">
-            <span class="fa fa-pencil"></span>
+            <span class="fa fa-pencil"></span>&nbsp;
             <span translate>Line</span>
           </button>
         </div>
       </div>
       <button class="btn btn-default btn-warning"
         gi-btn="active" ng-model="ctrl.modifyInteraction.active">
-        <span class="fa fa-pencil"></span>
+        <span class="fa fa-pencil"></span>&nbsp;
         <span translate>modifyGeometry</span>
       </button>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-sm-pull-6">
+    <label class="text-muted control-label" translate>
+      selectFormatAndProjection</label>
+    <br />
+    <div class="flex-row width-100">
+      <div class="flex-nogrow">
+        <select ng-model="ctrl.currentFormat"
+          ng-options="format for format in ctrl.formats"
+          ng-change="ctrl.handleInputOptionsChange()">
+        </select>
+      </div>
+      <div class="flex-spacer"></div>
+      <div class="flex-shrink">
+        <select ng-model="ctrl.currentProjection"
+          ng-options="proj.code as proj.label for proj in ctrl.projections"
+          ng-change="ctrl.handleInputOptionsChange()">
+        </select>
+      </div>
     </div>
   </div>
 </div>
@@ -71,7 +78,7 @@
         inputGeometryHint</small>
       <small class="text-muted"
         ng-show="ctrl.readOnly" translate>
-        inputGeometryRedOnlyHint</small>
+        inputGeometryReadOnlyHint</small>
     </div>
   </div>
 </div>

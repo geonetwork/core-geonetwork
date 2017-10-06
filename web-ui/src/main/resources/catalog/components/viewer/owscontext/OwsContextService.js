@@ -100,6 +100,9 @@
        *  after the context layers (used to add layers from the map settings)
        */
       this.loadContext = function(text, map, additionalLayers) {
+        // broadcast context load
+        $rootScope.$broadcast('owsContextLoaded');
+
         var context = unmarshaller.unmarshalString(text).value;
         // first remove any existing layer
         var layersToRemove = [];
@@ -325,7 +328,7 @@
         //        if (/^(f|ht)tps?:\/\//i.test(url)) {
         //          url = gnGlobalSettings.proxyUrl + encodeURIComponent(url);
         //        }
-        $http.get(url, {headers: {accept: 'application/xml'}})
+        return $http.get(url, {headers: {accept: 'application/xml'}})
             .then(function(r) {
               if (r.data === '') {
                 var msg = $translate.instant('emptyMapLoadError', {
@@ -400,8 +403,6 @@
 
           if (source instanceof ol.source.OSM) {
             name = '{type=osm}';
-          } else if (source instanceof ol.source.MapQuest) {
-            name = '{type=mapquest}';
           } else if (source instanceof ol.source.BingMaps) {
             name = '{type=bing_aerial}';
           } else if (source instanceof ol.source.Stamen) {
@@ -564,6 +565,7 @@
        *
        * @description
        * Create a WMS ol.Layer from context object
+       * !! DEPRECATED: use gnMap.createLayerFromProperties instead
        *
        * @param {Object} layer layer
        * @param {ol.map} map map

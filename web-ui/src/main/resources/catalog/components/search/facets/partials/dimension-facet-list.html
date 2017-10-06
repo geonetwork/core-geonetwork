@@ -1,20 +1,18 @@
 <div class="gn-facet-list">
 
   <!--Collapse all button for first panel-->
-  <a class=""
-     href
-     data-ng-hide="isTabMode"
-     data-ng-click="collapseAll()"
-     title="{{'collapseAllFacet' | translate}}">
-    <i class="fa fa-lg fa-caret-square-o-right"></i>
-  </a>
-  <a class=""
-     href
-     data-ng-hide="isTabMode"
-     data-ng-click="expandAll()"
-     title="{{'expandAllFacet' | translate}}">
-    <i class="fa fa-lg fa-caret-square-o-down"></i>
-  </a>
+  <div class="btn-group width-100 flex-row flex-center" ng-hide="isTabMode">
+    <button type="button" class="btn btn-default btn-sm gn-facet-toggle-btn"
+      ng-click="expandAll()" title="{{'expandAllFacet' | translate}}">
+      <i class="fa fa-plus-circle"/>
+      <span translate>expandAllFacetLabel</span>
+    </button>
+    <button type="button" class="btn btn-default btn-sm gn-facet-toggle-btn"
+      ng-click="collapseAll()" title="{{'collapseAllFacet' | translate}}">
+      <i class="fa fa-minus-circle"/>
+      <span translate>collapseAllFacetLabel</span>
+    </button>
+  </div>
 
   <div data-ng-if="!isTabMode"
        data-ng-repeat="f in dimension"

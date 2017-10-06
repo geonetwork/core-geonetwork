@@ -54,7 +54,7 @@
           function($scope, $http, gnGetCoordinate) {
 
             var parent = $scope.$parent;
-            var lang = parent.langs[parent.lang];
+            var lang = gnGlobalSettings.lang;
 
             $scope.modelOptions =
                 angular.copy(gnGlobalSettings.modelOptions);

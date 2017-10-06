@@ -160,8 +160,7 @@
                 New URL: <xsl:value-of select="$newUrl"/>
               </xsl:message>-->
 
-              <gmd:descriptiveKeywords xlink:href="{$newUrl}"
-                                       xlink:show="replace"/>
+              <gmd:descriptiveKeywords xlink:href="{$newUrl}"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:copy>
@@ -240,8 +239,7 @@
                            thesaurus=external.none.allThesaurus&amp;
                            id=http://org.fao.geonet.thesaurus.all/external.place.regions@@@
                               http%3A%2F%2Fwww.naturalearthdata.com%2Fne_admin%23Country%2FDependency%2FASM&amp;
-                              lang=eng"
-                         xlink:show="replace"/>
+                              lang=eng"/>
            -->
       <xsl:if test="$isAllThesaurusXlinked and count($keywordIdentifiers/*) > 0">
 
@@ -273,10 +271,9 @@
             <gmd:descriptiveKeywords
                         xlink:href="{concat(
                                       $hrefPrefix,
-                                      'thesaurus=', current-grouping-key(),
+                                      'skipdescriptivekeywords=true&amp;thesaurus=', current-grouping-key(),
                                       '&amp;id=', string-join(current-group()/id[. != ''], ','),
-                                      $queryString)}"
-                        xlink:show="replace"/>
+                                      $queryString)}"/>
           </xsl:if>
         </xsl:for-each-group>
       </xsl:if>

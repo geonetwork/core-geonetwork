@@ -1,51 +1,58 @@
 <div class="context">
   <fieldset>
-    <legend data-gn-slide-toggle="" data-translate="">loadAMap</legend>
-    <div>
-      <form class="form-horizontal"
-            role="nav"
-            data-ng-controller="gnsMapSearchController"
-            data-ng-search-form=""
-            data-runSearch="true">
-        <input type="hidden" name="_csrf" value="{{csrf}}"/>
+    <form class="form-horizontal"
+          role="nav"
+          data-ng-controller="gnsMapSearchController"
+          data-ng-search-form=""
+          data-runSearch="true">
+      <legend data-gn-slide-toggle="">
+        <span data-translate="">loadAMap</span>&nbsp;
+        <div class="btn btn-link"
+             data-ng-click="triggerSearch(); $event.stopPropagation();">
+          <i class="fa fa-refresh"/>
+        </div>
+      </legend>
+      <div>
 
-        <ul class="list-group gn-resultview gn-resultview-sumup">
-          <li class="list-group-item gn-grid">
-            <div data-ng-click="reset($event)">
-              <div class="gn-md-thumbnail">
-                <br/>
-                <i class="fa fa-map fa-5x"></i>
-                <br/>
-                <span class="gn-img-thumbnail-caption"
-                      data-translate="">resetContext</span>
+          <input type="hidden" name="_csrf" value="{{csrf}}"/>
+
+          <ul class="list-group gn-resultview gn-resultview-sumup">
+            <li class="list-group-item gn-grid">
+              <div data-ng-click="reset($event)">
+                <div class="gn-md-thumbnail">
+                  <br/>
+                  <i class="fa fa-map fa-5x"></i>
+                  <br/>
+                  <span class="gn-img-thumbnail-caption"
+                        data-translate="">resetContext</span>
+                </div>
               </div>
-            </div>
-          </li>
-          <li class="list-group-item gn-grid import">
-            <div>
-              <div class="gn-md-thumbnail">
-                <br/>
-                <i class="fa fa-upload fa-5x"></i>
-                <br/>
-                <span class="gn-img-thumbnail-caption"
-                      data-translate="">uploadContext</span>
+            </li>
+            <li class="list-group-item gn-grid import">
+              <div>
+                <div class="gn-md-thumbnail">
+                  <br/>
+                  <i class="fa fa-upload fa-5x"></i>
+                  <br/>
+                  <span class="gn-img-thumbnail-caption"
+                        data-translate="">uploadContext</span>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
 
 
-        <div data-ng-show="searchResults.records.length > 0"
-             data-gn-results-container=""
-             data-search-results="searchResults"
-             data-template-url="resultTemplate"></div>
+          <div data-ng-show="searchResults.records.length > 0"
+               data-gn-results-container=""
+               data-search-results="searchResults"
+               data-template-url="resultTemplate"></div>
 
-        <div class="pull-right"
-             data-gn-pagination="paginationInfo"
-             data-hits-values="searchObj.hitsperpageValues"></div>
-      </form>
-    </div>
-  </fieldset>
+          <div class="pull-right"
+               data-gn-pagination="paginationInfo"
+               data-hits-values="searchObj.hitsperpageValues"></div>
+      </div>
+    </fieldset>
+  </form>
 
   <fieldset>
     <legend data-gn-slide-toggle="" data-translate="">saveMap</legend>
@@ -60,6 +67,7 @@
           <span data-translate="">saveMapAsContext</span>
         </a>
         <a class="btn btn-default"
+           data-ng-if="isExportMapAsImageEnabled"
            data-ng-click="saveMapAsImage($event)"
            download="{{mapFileName}}.png">
           <i class="fa fa-file-image-o"></i>&nbsp;

@@ -340,5 +340,19 @@
     "inputIsOverloaded": "This value is set in a WFS filter",
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
-    "_valid": "Validity"
+    "_valid": "Validity",
+    "dateToDate": "to",
+    "batchEditing": "Batch-Bearbeitung",
+    "harvesters": "Harvesting",
+    "metadatasAndTemplates": "Metadaten und Vorlagen",
+    "statisticsAndStatus": "Statistiken und Status",
+    "reports": "Berichte",
+    "classificationSystems": "Thesauri",
+    "usersAndGroups": "Benutzer und Gruppen",
+    "settings": "Einstellungen",
+    "tools": "Werkzeuge",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "on",
+    "resolveCaptcha": "Resolve the captcha"
 }

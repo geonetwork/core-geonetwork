@@ -148,16 +148,11 @@
           'appUrl': '../../srv/{{lang}}/catalog.search#/map',
           'is3DModeAllowed': true,
           'isSaveMapInCatalogAllowed': true,
-          'bingKey':
-              'AnElW2Zqi4fI-9cYx1LHiQfokQ9GrNzcjOh_p_0hkO1yo78ba8zTLARcLBIf8H6D',
           'storage': 'sessionStorage',
-          'map': '../../map/config-viewer.xml',
           'listOfServices': {
             'wms': [],
             'wmts': []
           },
-          'useOSM': true,
-          'context': '',
           'projection': 'EPSG:3857',
           'projectionList': [{
             'code': 'EPSG:4326',
@@ -166,14 +161,29 @@
             'code': 'EPSG:3857',
             'label': 'Google mercator (EPSG:3857)'
           }],
-          'searchMapLayers': [],
-          'viewerMapLayers': [],
           'disabledTools': {
             'processes': true
           },
           'graticuleOgcService': {},
-          'mapExtent': [0, 0, 0, 0],
-          'mapBackgroundLayer': {}
+          'map-viewer': {
+            'context': '../../map/config-viewer.xml',
+            'extent': [0, 0, 0, 0],
+            'layers': []
+          },
+          'map-search': {
+            'context': '',
+            'extent': [0, 0, 0, 0],
+            'layers': [
+              { type: 'osm' }
+            ]
+          },
+          'map-editor': {
+            'context': '',
+            'extent': [0, 0, 0, 0],
+            'layers': [
+              { type: 'osm' }
+            ]
+          }
         },
         'geocoder': 'https://secure.geonames.org/searchJSON',
         'editor': {
@@ -211,6 +221,7 @@
         }
       },
       current: null,
+      shibbolethEnabled: false,
       init: function(config, gnUrl, gnViewerSettings, gnSearchSettings) {
         // start from the default config to make sure every field is present
         // and override with config arg if required
@@ -347,10 +358,6 @@
       $scope.version = '0.0.1';
 
 
-      //Display or not the admin menu
-      if ($location.absUrl().indexOf('/admin.console') != -1) {
-        $scope.viewMenuAdmin = true;
-      }else {$scope.viewMenuAdmin = false}
       //Update Links for social media
       $scope.socialMediaLink = $location.absUrl();
       $scope.$on('$locationChangeSuccess', function(event) {
@@ -397,6 +404,7 @@
       $scope.logoPath = gnGlobalSettings.gnUrl + '../images/harvesting/';
       $scope.isMapViewerEnabled = gnGlobalSettings.isMapViewerEnabled;
       $scope.isDebug = window.location.search.indexOf('debug') !== -1;
+      $scope.shibbolethEnabled = gnGlobalSettings.shibbolethEnabled;
 
 
       $scope.layout = {
@@ -454,6 +462,9 @@
           });
         }
       });
+
+      // login url for inline signin form in top toolbar
+      $scope.signInFormAction = '../../signin#' + $location.path();
 
       /**
        * Catalog facet summary providing

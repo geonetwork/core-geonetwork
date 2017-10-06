@@ -36,7 +36,6 @@
     "chooseEntry": "디렉토리 검색",
     "clickToAddResource": "이 자원을 선택하기 위해 클릭",
     "beforeUnloadEditor": "마지막 저장 {{timeAgo}} 이후로 변경 내용을 저장하지 않았습니다.",
-    "batchEditing": "일괄 편집",
     "fieldIsRemoved": "이 필드가 제거됩니다",
     "editRecords": "선택 편집",
     "removeField": "이 필드 제거",
@@ -157,7 +156,6 @@
     "linkUrl": "삭제할 URL",
     "fileStore": "메타데이터 파일 저장소",
     "openResource": "자원 열기",
-    "addDocument": "문서 추가 (예. 미리보기, 파일, 웹 링크)",
     "linkMetadata": "메타데이터 연결",
     "setResourceStatus": "자원 상태 변경. 이 작업은 메타데이터 문서에 포함된 참조정보를 갱신하지는 않습니다.",
     "resourceUploadError": "자원 업로드 오류",
@@ -359,5 +357,5 @@
     "inputGeometryIsInvalid": "입력한 지오메트리 오류 발견:",
     "inputGeometryHint": "선택한 포맷과 좌표체계에 해당하는 지오메트리를 여기에 붙여넣습니다.",
     "inputGeometryReadOnlyHint": "이 지오메트리는 읽기전용입니다.",
-    "selectKeyword": "Add keywords"
+    "selectKeyword": "키워드 추가"
 }

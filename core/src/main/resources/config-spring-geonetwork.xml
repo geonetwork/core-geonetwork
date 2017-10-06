@@ -115,7 +115,8 @@
 
 
 
-  <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+  <bean id="gnBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="schedulerName" value="gnBackgroundJobScheduler"/>
     <property name="jobFactory">
       <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
     </property>
@@ -123,6 +124,7 @@
       <list>
         <ref bean="indexingTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
+        <ref bean="backupMetadataCronTrigger" />
       </list>
     </property>
     <property name="quartzProperties">
@@ -148,7 +150,18 @@
         class="org.fao.geonet.notifier.MetadataNotifierClient"
         lazy-init="true" scope="prototype"/>
 
-        
+  <bean id="backupMetadataCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail">
+      <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob"/>
+        <property name="name" value="archiveAllMetadata" />
+        <property name="group" value="gnBackgroundTasks" />
+      </bean>
+    </property>
+    <property name="cronExpression" value="0 0 6 ? * *" />
+  </bean>
+
+
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataIndexer"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataManager"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataValidator"/>

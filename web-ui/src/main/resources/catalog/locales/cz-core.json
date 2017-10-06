@@ -340,5 +340,19 @@
     "inputIsOverloaded": "This value is set in a WFS filter",
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
-    "_valid": "Validity"
+    "_valid": "Validity",
+    "dateToDate": "to",
+    "batchEditing": "Batch editing",
+    "harvesters": "Shromažďuji",
+    "metadatasAndTemplates": "Metadata a šablony",
+    "statisticsAndStatus": "Statistiky a stav",
+    "reports": "Zprávy",
+    "classificationSystems": "Systémy klasifikace",
+    "usersAndGroups": "Uživatelé a skupiny",
+    "settings": "Nastavení",
+    "tools": "Nástroje",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "on",
+    "resolveCaptcha": "Resolve the captcha"
 }

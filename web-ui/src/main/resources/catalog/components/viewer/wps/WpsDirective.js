@@ -114,8 +114,9 @@
               scope.wpsLink.layer.set('wpsfilter-el', element);
             }
 
-            // prepare inputs object (use existing one if available)
+            // prepare inputs & output object (use existing one if available)
             scope.wpsLink.inputs = scope.wpsLink.inputs || [];
+            scope.wpsLink.output = scope.wpsLink.output || {};
 
             // inputs overriden by wfs filters are saved here
             scope.inputWfsOverride = {};
@@ -125,12 +126,13 @@
             // parse application profile as JSON (if not already an object)
             // application profile holds 2 arrays: inputs and outputs
             var applicationProfile = scope.wpsLink.applicationProfile;
-            if (typeof applicationProfile === 'string') {
+            if (applicationProfile && typeof applicationProfile === 'string') {
               try {
                 applicationProfile = JSON.parse(applicationProfile);
               }
               catch (e) {
-                console.warn('Error while loading application profile.');
+                console.warn('Error while loading application profile.',
+                  applicationProfile);
               }
             }
 
@@ -283,7 +285,6 @@
                     angular.forEach(
                     scope.processDescription.processOutputs.output,
                     function(output) {
-                      output.asReference = true;
                       var outputName = output.identifier.value;
 
                       // output already selected yet: leave
@@ -317,17 +318,27 @@
                     }
                     );
 
+                    // if there is a mimeType containing WMS: use it instead
+                    var wmsOutput = gnWpsService.getProcessOutputWMSMimeType(
+                      scope.processDescription);
+                    if (wmsOutput) {
+                      defaultOutput = wmsOutput.outputIdentifier;
+                      defaultMimeType = wmsOutput.mimeType;
+                    }
+
                     // assign default output & mimeType
-                    scope.selectedOutput.identifier = defaultOutput;
-                    scope.selectedOutput.mimeType = defaultMimeType;
+                    scope.wpsLink.output.identifier = defaultOutput;
+                    scope.wpsLink.output.mimeType = defaultMimeType;
+
+                    // use output as reference unless doing a profile graph
+                    scope.wpsLink.output.asReference = scope.outputAsGraph ?
+                      false : true;
 
                     scope.outputsVisible = true;
 
-                    scope.responseDocument = {
-                      lineage: false,
-                      storeExecuteResponse: false,
-                      status: false
-                    };
+                    scope.wpsLink.output.lineage = false;
+                    scope.wpsLink.output.storeExecuteResponse = false;
+                    scope.wpsLink.output.status = false;
                     scope.optionsVisible = true;
 
                     // use existing process desc if available
@@ -392,24 +403,7 @@
             if (invalid) { return; }
 
             var inputs = scope.wpsLink.inputs;
-
-            // output selection based on form control
-            var outputs = [];
-            angular.forEach(scope.processDescription.processOutputs.output,
-                function(output) {
-                  if (output.identifier.value ==
-                      scope.selectedOutput.identifier) {
-                    outputs.push({
-                      asReference: scope.outputAsGraph ?
-                      false : output.asReference,
-                      mimeType: scope.selectedOutput.mimeType,
-                      identifier: {
-                        value: output.identifier.value
-                      }
-                    });
-                  }
-                }, {});
-            scope.responseDocument.output = outputs;
+            var output = scope.wpsLink.output;
 
             updateStatus = function(statusLocation) {
               gnWpsService.getStatus(statusLocation).then(
@@ -445,7 +439,7 @@
                         gnWpsService.responseHasWmsService(response)) {
                       gnWpsService.extractWmsLayerFromResponse(
                           response, scope.map, scope.wpsLink.layer, {
-                            exclude: /^OUTPUT_/
+                            exclude: /^OUTPUT_/i
                           }
                       );
                     }
@@ -456,6 +450,7 @@
 
               // save raw graph data on view controller & hide it in wps form
               if (scope.outputAsGraph && response.processOutputs) {
+                output.asReference = false;
                 try {
                   var jsonData = JSON.parse(response.processOutputs.output[0]
                       .data.complexData.content);
@@ -488,7 +483,7 @@
                 processUri,
                 processId,
                 inputs,
-                scope.responseDocument
+                output
             ).then(
                 function(response) {
                   processResponse(response);
@@ -537,16 +532,16 @@
           };
 
           scope.responseDocumentStatusChanged = function() {
-            if (scope.responseDocument.status == true) {
-              scope.responseDocument.storeExecuteResponse = true;
+            if (scope.wpsLink.output.status == true) {
+              scope.wpsLink.output.storeExecuteResponse = true;
             }
           };
 
           // Guess the mimeType associated with the selected output.
           // scope.$watch('selectedOutput.identifier', function(v) {
           scope.setOutput = function(identifier, mimeType) {
-            scope.selectedOutput.identifier = identifier;
-            scope.selectedOutput.mimeType = mimeType;
+            scope.wpsLink.output.identifier = identifier;
+            scope.wpsLink.output.mimeType = mimeType;
           };
 
           // returns a valid input type (for literal data)

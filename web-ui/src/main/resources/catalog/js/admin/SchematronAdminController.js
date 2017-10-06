@@ -138,9 +138,7 @@
             if (dupName) {
               $scope.editGroup.nameInput.addClass('ng-invalid');
               $scope.editGroup.nameInput.removeClass('ng-valid');
-              console.log('invalid');
             } else {
-              console.log('valid');
               $scope.editGroup.nameInput.addClass('ng-valid');
               $scope.editGroup.nameInput.removeClass('ng-invalid');
             }

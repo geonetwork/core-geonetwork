@@ -340,5 +340,19 @@
     "inputIsOverloaded": "이 값은 WFS 필터로 설정됩니다",
     "insertNewInputValue": "이 입력에 대한 값 추가",
     "profileGraph": "프로파일 그래프",
-    "_valid": "유효성"
+    "_valid": "유효성",
+    "dateToDate": "to",
+    "batchEditing": "일괄 편집",
+    "harvesters": "수집",
+    "metadatasAndTemplates": "메타데이타 그리고 템플릿",
+    "statisticsAndStatus": "통계 그리고 상태",
+    "reports": "보고",
+    "classificationSystems": "분류 시스템",
+    "usersAndGroups": "사용자 와 그룹",
+    "settings": "설정",
+    "tools": "TOOLs",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "켜기",
+    "resolveCaptcha": "Resolve the captcha"
 }

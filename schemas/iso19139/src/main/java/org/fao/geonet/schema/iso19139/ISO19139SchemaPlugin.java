@@ -25,6 +25,7 @@ package org.fao.geonet.schema.iso19139;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -51,7 +52,7 @@ public class ISO19139SchemaPlugin
     ISOPlugin {
     public static final String IDENTIFIER = "iso19139";
 
-    private static ImmutableSet<Namespace> allNamespaces;
+    public static ImmutableSet<Namespace> allNamespaces;
     private static Map<String, Namespace> allTypenames;
     private static Map<String, String> allExportFormats;
 
@@ -222,37 +223,70 @@ public class ISO19139SchemaPlugin
     }
 
     /**
-     * Remove all multingual aspect of an element. Keep the md language localized strings
+     * Remove all multilingual aspect of an element. Keep the md language localized strings
      * as default gco:CharacterString for the element.
      *
      * @param element
-     * @param mdLang Metadata lang encoded as #EN
+     * @param langs Metadata languages. The main language MUST be the first one.
      * @return
      * @throws JDOMException
      */
     @Override
-    public Element removeTranslationFromElement(Element element, String mdLang) throws JDOMException {
+    public Element removeTranslationFromElement(Element element, List<String> langs) throws JDOMException {
+        String mainLanguage = langs != null && langs.size() > 0 ? langs.get(0) : "#EN";
 
-        List<Element> multilangElement = (List<Element>)Xml.selectNodes(element, "*//gmd:PT_FreeText", Arrays.asList(GMD));
+        List<Element> nodesWithStrings = (List<Element>) Xml.selectNodes(element, "*//gmd:PT_FreeText", Arrays.asList(GMD));
 
-        for(Element el : multilangElement) {
-            String filterAttribute = "*//node()[@locale='" + mdLang + "']";
-            List<Element> localizedElement = (List<Element>)Xml.selectNodes(el, filterAttribute, Arrays.asList(GMD));
-            if(localizedElement.size() == 1) {
-                String mainLangString = localizedElement.get(0).getText();
-                Element mainCharacterString = ((Element)el.getParent()).getChild("CharacterString", GCO);
-                if (mainCharacterString != null) {
-                    mainCharacterString.setText(mainLangString);
-                } else {
-                    ((Element) el.getParent()).addContent(
-                        new Element("CharacterString", GCO).setText(mainLangString)
-                    );
-                }
+        for(Element e : nodesWithStrings) {
+            // Retrieve or create the main language element
+            Element mainCharacterString = ((Element)e.getParent()).getChild("CharacterString", ISO19139Namespaces.GCO);
+            if (mainCharacterString == null) {
+                // create it if it does not exist
+                mainCharacterString = new Element("CharacterString", ISO19139Namespaces.GCO);
+                ((Element)e.getParent()).addContent(0, mainCharacterString);
             }
-            el.detach();
+
+            // Retrieve the main language value if exist
+            List<Element> mainLangElement = (List<Element>) Xml.selectNodes(
+                e,
+                "*//gmd:LocalisedCharacterString[@locale='" + mainLanguage + "']",
+                Arrays.asList(ISO19139Namespaces.GMD));
+
+            // Set the main language value
+            if (mainLangElement.size() == 1) {
+                String mainLangString = mainLangElement.get(0).getText();
+
+                if (StringUtils.isNotEmpty(mainLangString)) {
+                    mainCharacterString.setText(mainLangString);
+                } else if (mainCharacterString.getAttribute("nilReason", ISO19139Namespaces.GCO) == null){
+                    ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+                }
+            } else if (StringUtils.isEmpty(mainCharacterString.getText())) {
+                ((Element)mainCharacterString.getParent()).setAttribute("nilReason", "missing", ISO19139Namespaces.GCO);
+            }
         }
+
+        // Remove unused lang entries
+        List<Element> translationNodes = (List<Element>)Xml.selectNodes(element, "*//node()[@locale]");
+        for(Element el : translationNodes) {
+            // Remove all translations if there is no or only one language requested
+            if(langs.size() <= 1 ||
+                !langs.contains(el.getAttribute("locale").getValue())) {
+                Element parent = (Element)el.getParent();
+                parent.detach();
+            }
+        }
+
+        // Remove PT_FreeText which might be emptied by above processing
+        for(Element el : nodesWithStrings) {
+            if (el.getChildren().size() == 0) {
+                el.detach();
+            }
+        }
+
         return element;
     }
+
 
     @Override
     public String getBasicTypeCharacterStringName() {

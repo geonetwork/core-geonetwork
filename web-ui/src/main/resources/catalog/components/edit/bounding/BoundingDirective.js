@@ -54,31 +54,6 @@
         },
         templateUrl: '../../catalog/components/edit/bounding/' +
             'partials/boundingpolygon.html',
-        link: {
-          post: function(scope, element) {
-            scope.ctrl.map.renderSync();
-
-            // apply extent from settings
-            var mapExtent = gnMap.getMapConfig().mapExtent;
-            if (mapExtent && ol.extent.getWidth(mapExtent) &&
-                ol.extent.getHeight(mapExtent)) {
-              scope.ctrl.map.getView().fit(mapExtent,
-                  scope.ctrl.map.getSize());
-            }
-
-            // apply background layer from settings
-            var bgLayer = gnMap.getMapConfig().mapBackgroundLayer;
-            if (bgLayer) {
-              scope.ctrl.map.getLayers().removeAt(0);
-              gnMap.createLayerForType(bgLayer.type, {
-                name: bgLayer.layer,
-                url: bgLayer.url
-              }, null, scope.ctrl.map);
-            }
-
-            scope.ctrl.initValue();
-          }
-        },
         controllerAs: 'ctrl',
         bindToController: true,
         controller: [
@@ -86,7 +61,7 @@
           '$attrs',
           '$http',
           'gnMap',
-          'gnOwsContextService',
+          'gnMapsManager',
           'ngeoDecorateInteraction',
           'gnGeometryService',
           function BoundingPolygonController(
@@ -94,7 +69,7 @@
               $attrs,
               $http,
               gnMap,
-              gnOwsContextService,
+              gnMapsManager,
               ngeoDecorateInteraction,
               gnGeometryService) {
             var ctrl = this;
@@ -103,15 +78,9 @@
             ctrl.readOnly = $scope.$eval($attrs['readOnly']);
 
             // init map
-            ctrl.map = new ol.Map({
-              layers: [
-                gnMap.getLayersFromConfig()
-              ],
-              view: new ol.View({
-                center: [0, 0],
-                projection: gnMap.getMapConfig().projection,
-                zoom: 2
-              })
+            ctrl.map = gnMapsManager.createMap(gnMapsManager.EDITOR_MAP);
+            ctrl.map.get('creationPromise').then(function () {
+              ctrl.initValue();
             });
 
             // interactions with map
@@ -130,25 +99,44 @@
               features: source.getFeaturesCollection()
             });
 
+            // this is used to deactivate zoom on draw end
+            ctrl.zoomInteraction = null;
+            ctrl.map.getInteractions().forEach(function(interaction) {
+              if (interaction instanceof ol.interaction.DoubleClickZoom) {
+                ctrl.zoomInteraction = interaction;
+              }
+            });
+
             // add our layer&interactions to the map
-            ctrl.map.addInteraction(ctrl.drawInteraction);
-            ctrl.map.addInteraction(ctrl.drawLineInteraction);
-            ctrl.map.addInteraction(ctrl.modifyInteraction);
-            ctrl.drawInteraction.setActive(false);
-            ctrl.drawLineInteraction.setActive(false);
-            ctrl.modifyInteraction.setActive(false);
             ngeoDecorateInteraction(ctrl.drawInteraction);
             ngeoDecorateInteraction(ctrl.drawLineInteraction);
             ngeoDecorateInteraction(ctrl.modifyInteraction);
+            ctrl.drawInteraction.active = false;
+            ctrl.drawLineInteraction.active = false;
+            ctrl.modifyInteraction.active = false;
+
+            // add interactions to map
+            ctrl.map.addInteraction(ctrl.drawInteraction);
+            ctrl.map.addInteraction(ctrl.drawLineInteraction);
+            ctrl.map.addInteraction(ctrl.modifyInteraction);
 
             // clear existing features on draw end & save feature
             function handleDrawEnd(event) {
               ctrl.fromTextInput = false;
               source.clear(event.feature);
               ctrl.updateOutput(event.feature);
-              ctrl.drawInteraction.setActive(false);
-              ctrl.drawLineInteraction.setActive(false);
+              ctrl.drawInteraction.active = false;
+              ctrl.drawLineInteraction.active = false;
               $scope.$digest();
+
+              // prevent interference by zoom interaction
+              // see https://github.com/openlayers/openlayers/issues/3610
+              if (ctrl.zoomInteraction) {
+                ctrl.zoomInteraction.setActive(false);
+                setTimeout(function() {
+                  ctrl.zoomInteraction.setActive(true);
+                }, 251);
+              }
             }
             ctrl.drawInteraction.on('drawend', handleDrawEnd);
             ctrl.drawLineInteraction.on('drawend', handleDrawEnd);
@@ -204,14 +192,15 @@
                 source.clear();
                 source.addFeature(feature);
 
-                ctrl.updateOutput(feature);
+                ctrl.updateOutput(feature, true);
               }
             };
 
             // update output with gml
-            ctrl.updateOutput = function(feature) {
+            ctrl.updateOutput = function(feature, forceFitView) {
               // fit view if geom is valid & not empty
-              if (feature.getGeometry() &&
+              if ((forceFitView || ctrl.fromTextInput) &&
+                  feature.getGeometry() &&
                   !ol.extent.isEmpty(feature.getGeometry().getExtent())) {
                 ctrl.map.getView().fit(feature.getGeometry(),
                     ctrl.map.getSize());

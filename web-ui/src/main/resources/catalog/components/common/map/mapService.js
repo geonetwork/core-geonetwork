@@ -65,19 +65,7 @@
       function(ngeoDecorateLayer, gnOwsCapabilities, gnConfig, $log,
           gnSearchLocation, $rootScope, gnUrlUtils, $q, $translate,
           gnWmsQueue, gnSearchManagerService, Metadata, gnWfsService,
-          gnGlobalSettings, viewerSettings, gnViewerService) {
-
-        var defaultMapConfig = {
-          'useOSM': 'true',
-          'projection': 'EPSG:3857',
-          'projectionList': [{
-            'code': 'EPSG:4326',
-            'label': 'WGS84 (EPSG:4326)'
-          },{
-            'code': 'EPSG:3857',
-            'label': 'Google mercator (EPSG:3857)'
-          }]
-        };
+          gnGlobalSettings, gnViewerSettings, gnViewerService) {
 
         /**
          * @description
@@ -113,13 +101,143 @@
 
         var getImageSourceRatio = function(map, maxWidth) {
           var width = (map.getSize() && map.getSize()[0]) ||
-            $('.gn-full').width();
+              $('.gn-full').width();
           var ratio = maxWidth / width;
           ratio = Math.floor(ratio * 100) / 100;
           return Math.min(1.5, Math.max(1, ratio));
         };
 
         return {
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createLayerFromProperties
+           *
+           * @description
+           * Creates an ol.layer based on an object containing properties
+           * used to describe the layer. The `type` property is required, and
+           * others can be used depending on the layer type.
+           * Handled types are:
+           *  * `osm`: OSM, no other prop required
+           *  * `bing_aerial`: Bing Aerial background, required prop: `key`
+           *  * `stamen`: Stamen layers, required prop: `name`
+           *  * `wms`: generic WMS layer, required props: `name`, `url`
+           *  * `wmts`: generic WMTS layer, required props: `name`, `url`
+           *  * `tms`: generic TMS layer, required prop: `url`
+           * If a `title` property is present on the layer info obj, it will be
+           * applied on the layer.
+           * This will return a promise with the layer in it
+           *
+           * @param {Object} layerInfo object containing all the properties
+           * @param {ol.Map} map required for WMTS and WMS
+           * @return {Promise} promise with the layer as result
+           */
+          createLayerFromProperties: function(layerInfo, map) {
+            // this will be used to return a promise (whichever the layer type)
+            var defer = $q.defer();
+
+            // check layer info validity
+            if (!layerInfo.type) {
+              console.error('The layer info object is invalid:', layerInfo);
+              defer.reject();
+              return $q.defer().promise;
+            }
+
+            switch (layerInfo.type) {
+              case 'osm':
+                defer.resolve(new ol.layer.Tile({
+                  source: new ol.source.OSM(),
+                  title: layerInfo.title ||  'OpenStreetMap'
+                }));
+                break;
+
+              case 'tms':
+                defer.resolve(new ol.layer.Tile({
+                    source: new ol.source.XYZ({
+                        url: layerInfo.url
+                    }),
+                    title: layerInfo.title ||  'TMS Layer'
+                }));
+                break;
+
+              case 'bing_aerial':
+                defer.resolve(new ol.layer.Tile({
+                  preload: Infinity,
+                  source: new ol.source.BingMaps({
+                    key: layerInfo.key,
+                    imagerySet: 'Aerial'
+                  }),
+                  title: layerInfo.title ||  'Bing Aerial'
+                }));
+                break;
+
+              case 'stamen':
+                //We make watercolor the default layer
+                var type = layerInfo.name ? layerInfo.name : 'watercolor',
+                    source = new ol.source.Stamen({
+                      layer: type
+                    });
+                source.set('type', type);
+                defer.resolve(new ol.layer.Tile({
+                  source: source,
+                  title: layerInfo.title ||  'Stamen'
+                }));
+                break;
+
+              case 'wmts':
+                if (!layerInfo.name || !layerInfo.url) {
+                  $log.warn('One of the required parameters (name, url) ' +
+                      'is missing in the specified WMTS layer:',
+                      layerInfo);
+                  defer.reject();
+                  break;
+                }
+                this.addWmtsFromScratch(map, layerInfo.url, layerInfo.name, true)
+                    .then(function(layer) {
+                      if (layerInfo.title) {
+                        layer.set('title', layerInfo.title);
+                        layer.set('label', layerInfo.title);
+                      }
+                      defer.resolve(layer);
+                    });
+                break;
+
+              case 'wms':
+                if (!layerInfo.name || !layerInfo.url) {
+                  $log.warn('One of the required parameters (name, url) ' +
+                      'is missing in the specified WMS layer:',
+                      layerInfo);
+                  defer.reject();
+                  break;
+                }
+                this.addWmsFromScratch(map, layerInfo.url, layerInfo.name, true)
+                    .then(function(layer) {
+                      if (layerInfo.title) {
+                        layer.set('title', layerInfo.title);
+                        layer.set('label', layerInfo.title);
+                      }
+                      defer.resolve(layer);
+                    });
+                break;
+
+              default:
+                $log.warn('Unrecognized layer type: ', layerInfo.type);
+                defer.reject();
+            }
+
+            return defer.promise;
+          },
+
+          /**
+           * @ngdoc method
+           * @methodOf gn_map.service:gnMap
+           * @name gnMap#createOSMLayer
+           *
+           * @return {ol.layer} layer
+           */
+          createOSMLayer: function() {
+            return this.createLayerFromProperties({ type: 'osm' });
+          },
 
           /**
            * @ngdoc method
@@ -246,6 +364,7 @@
           getBboxFeatureFromMd: function(md, proj) {
             var feat = new ol.Feature();
             var extent = this.getBboxFromMd(md);
+            var projExtent = proj.getExtent();
             if (extent) {
               var geometry;
               // If is composed of one geometry of type point
@@ -258,12 +377,10 @@
                 geometry = new ol.geom.MultiPolygon(null);
                 for (var j = 0; j < extent.length; j++) {
                   // TODO: Point will not be supported in multi geometry
-                  var projectedExtent =
-                      ol.extent.containsExtent(
-                      proj.getWorldExtent(),
-                      extent[j]) ?
-                      ol.proj.transformExtent(extent[j], 'EPSG:4326', proj) :
-                      proj.getExtent();
+                  var projectedExtent = ol.extent.getIntersection(
+                    ol.proj.transformExtent(extent[j], 'EPSG:4326', proj),
+                    projExtent
+                  );
                   var coords = this.getPolygonFromExtent(projectedExtent);
                   geometry.appendPolygon(new ol.geom.Polygon(coords));
                 }
@@ -325,21 +442,20 @@
            * @return {Object} defaultMapConfig mapconfig
            */
           getMapConfig: function() {
-            if (gnConfig['ui.config'].mods.map) {
-              return gnConfig['ui.config'].mods.map;
-            } else {
-              return defaultMapConfig;
-            }
+            return gnViewerSettings.mapConfig;
           },
 
           /**
            * @ngdoc method
            * @methodOf gn_map.service:gnMap
            * @name gnMap#getLayersFromConfig
+           * @deprecated
            *
            * @description
            * get the DB config of the layers list that should be in the map
            * by default
+           * DO NOT USE THIS ANYMORE:
+           * When creating a new map, use createMap(<TYPE>) instead
            *
            * @return {Object} defaultMapConfig layers config
            */
@@ -501,28 +617,33 @@
             var options = layerOptions || {};
 
             var source, olLayer;
-            if (viewerSettings.singleTileWMS) {
-              source = new ol.source.ImageWMS({
+            if (gnViewerSettings.singleTileWMS) {
+              var config = {
                 params: layerParams,
                 url: options.url,
-                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 ratio: getImageSourceRatio(map, 2048)
-              });
+              };
+              source = new ol.source.ImageWMS(
+                  gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
+                  angular.extend(config, {crossOrigin: 'anonymous'}) : config
+                  );
             } else {
-              source = new ol.source.TileWMS({
+              var config = {
                 params: layerParams,
                 url: options.url,
-                crossOrigin: 'anonymous',
                 projection: layerOptions.projection,
                 gutter: 15
-              });
+              };
+              source = new ol.source.TileWMS(
+                  gnViewerSettings.mapConfig.isExportMapAsImageEnabled ?
+                  angular.extend(config, {crossOrigin: 'anonymous'}) : config);
             }
 
             // Set proxy for Cesium to load
             // layers not accessible with CORS headers
             // This is optional if the WMS provides CORS
-            if (viewerSettings.cesiumProxy) {
+            if (gnViewerSettings.cesiumProxy) {
               source.set('olcs.proxy', function(url) {
                 return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               });
@@ -545,7 +666,7 @@
               cextent: options.extent,
               name: layerParams.LAYERS
             };
-            if (viewerSettings.singleTileWMS) {
+            if (gnViewerSettings.singleTileWMS) {
               olLayer = new ol.layer.Image(layerOptions);
             } else {
               olLayer = new ol.layer.Tile(layerOptions);
@@ -571,7 +692,7 @@
             olLayer.displayInLayerManager = true;
 
             var unregisterEventKey = olLayer.getSource().on(
-                (viewerSettings.singleTileWMS) ?
+                (gnViewerSettings.singleTileWMS) ?
                 'imageloaderror' : 'tileloaderror',
                 function(tileEvent, target) {
                   var url = tileEvent.tile && tileEvent.tile.getKey ?
@@ -712,13 +833,16 @@
 
               if (angular.isArray(getCapLayer.Dimension)) {
                 for (var i = 0; i < getCapLayer.Dimension.length; i++) {
-                  if (getCapLayer.Dimension[i].name == 'elevation') {
-                    layer.set('elevation',
-                        getCapLayer.Dimension[i].values.split(','));
+                  var dimension = getCapLayer.Dimension[i];
+                  if (dimension.name == 'elevation') {
+                    layer.set('elevation', {
+                      units: dimension.units,
+                      values: dimension.values.split(',')
+                  });
                   }
-                  if (getCapLayer.Dimension[i].name == 'time') {
+                  if (dimension.name == 'time') {
                     layer.set('time',
-                        getCapLayer.Dimension[i].values.split(','));
+                      dimension.values.split(','));
                   }
                 }
               }
@@ -1066,21 +1190,25 @@
                   olL = $this.createOlWMSFromCap(map, capL, url);
 
                   var finishCreation = function() {
-                    if (!createOnly) {
-                      map.addLayer(olL);
-                    }
-                    gnWmsQueue.removeFromQueue(url, name);
-                    defer.resolve(olL);
+
+                    $q.resolve(olL).
+                    then(gnViewerSettings.getPreAddLayerPromise).
+                    finally(
+                      function(){
+                        if (!createOnly) {
+                          map.addLayer(olL);
+                        }
+                        gnWmsQueue.removeFromQueue(url, name);
+                        defer.resolve(olL);
+                      });
                   };
 
-                  // attach the md object to the layer
-                  if (md) {
-                    olL.set('md', md);
-                    finishCreation();
-                  }
-                  else {
-                    $this.feedLayerMd(olL).finally(finishCreation);
-                  }
+                  var feedMdPromise = md ?
+                    $q.resolve(md).then(function(md) {
+                      olL.set('md', md);
+                    }) : $this.feedLayerMd(olL);
+
+                  feedMdPromise.then(finishCreation);
                 }
 
               }, function() {
@@ -1553,6 +1681,7 @@
            *
            * @description
            * Creates an ol.layer for a given type. Useful for contexts
+           * DEPRECATED: use createLayerFromProperties instead!!
            *
            * @param {string} type of the layer to create
            * @param {Object} opt for url or layer name
@@ -1579,7 +1708,7 @@
                 return new ol.layer.Tile({
                   preload: Infinity,
                   source: new ol.source.BingMaps({
-                    key: viewerSettings.bingKey,
+                    key: gnViewerSettings.bingKey,
                     imagerySet: 'Aerial'
                   }),
                   title: title ||  'Bing Aerial'

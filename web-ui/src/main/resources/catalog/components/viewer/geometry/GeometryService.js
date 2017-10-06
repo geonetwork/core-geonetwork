@@ -221,11 +221,12 @@
               var nodes = format.writeFeaturesNode([outputFeature])
                   .firstChild.childNodes;
               var geom = null;
-              nodes.forEach(function(node) {
+              for (var i = 0; i < nodes.length; i++) {
+                var node = nodes.item(0);
                 if (node.localName === outputFeature.getGeometryName()) {
                   geom = node;
                 }
-              });
+              }
               if (!geom) {
                 console.warn('No geometry found for feature', feature);
                 return null;

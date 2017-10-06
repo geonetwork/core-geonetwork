@@ -83,6 +83,7 @@
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>
     <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
   </declarative>
   <!-- Same as previous + ol3cesium -->
   <declarative name="lib3d" pathOnDisk="web-ui/src/main/resources">
@@ -152,5 +153,6 @@
     <jsSource webappPath="/catalog/lib/zip/include.js"/>
     <jsSource webappPath="/catalog/lib/base64.js"/>
     <jsSource webappPath="/catalog/lib/underscore/underscore-min.js" minimize="false"/>
+    <jsSource webappPath="/catalog/lib/recaptcha/angular-recaptcha.min.js" minimize="false"/>
   </declarative>
 </sources>

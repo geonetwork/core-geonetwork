@@ -848,22 +848,30 @@
             if (rendered) {
               $(element).datepicker('destroy');
             }
-            $(element).datepicker(angular.isDefined(scope.dates) ? {
-              beforeShowDay: function(dt, a, b) {
-                var isEnable = available(dt);
-                return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
-                    isEnable;
-              },
-              startDate: limits.min,
-              endDate: limits.max,
+
+            var datepickConfig = {
               container: typeof sxtSettings != 'undefined' ?
-                  '.g' : 'body',
+                '.g' : 'body',
               autoclose: true,
               keepEmptyValues: true,
               clearBtn: true,
               todayHighlight: false,
               language: gnLangs.getIso2Lang(gnLangs.getCurrent())
-            } : {}).on('changeDate clearDate', function(ev) {
+            };
+
+            if(angular.isDefined(scope.dates)) {
+              angular.extend(datepickConfig, {
+                beforeShowDay: function(dt, a, b) {
+                  var isEnable = available(dt);
+                  return highlight ? (isEnable ? 'gn-date-hl' : undefined) :
+                    isEnable;
+                },
+                startDate: limits.min,
+                endDate: limits.max
+              });
+            }
+            $(element).datepicker(datepickConfig)
+              .on('changeDate clearDate', function(ev) {
               // view -> model
               scope.$apply(function() {
                 if (!isRange) {
@@ -1111,6 +1119,9 @@
           var link = attrs.gnActiveTbItem, href,
               isCurrentService = false;
 
+          // Replace lang in link
+          link = link.replace('{{lang}}', gnLangs.getCurrent());
+
           // Insert debug mode between service and route
           if (link.indexOf('#') !== -1) {
             var tokens = link.split('#');
@@ -1133,13 +1144,24 @@
           // Set the href attribute for the element
           // with the link containing the debug mode
           // or not
-          element.attr('href', href.replace('{{lang}}', gnLangs.getCurrent()));
+          element.attr('href', href);
 
           function checkActive() {
-            // Ignore the service parameters and
-            // check url contains path
-            var isActive = $location.absUrl().replace(/\?.*#/, '#').
-                match('.*' + link + '.*') !== null;
+            // regexps for getting the service & path
+            var serviceRE = /\/?([^\/\?#]*)\??[^\/]*(?:#|$)/;
+            var pathRE = /#\/?([^\?]*)/
+
+            // compare current url & input href
+            var url = $location.absUrl();
+            var currentService =
+              url.match(serviceRE) ? url.match(serviceRE)[1] : '';
+            var currentPath = $location.path().substring(1);
+            var targetService =
+              link.match(serviceRE) ? link.match(serviceRE)[1] : '';
+            var targetPath =
+              link.match(pathRE) ? link.match(pathRE)[1] : '';
+            var isActive = currentService == targetService &&
+              (!targetPath || currentPath.indexOf(targetPath) > -1);
 
             if (isActive) {
               element.parent().addClass('active');

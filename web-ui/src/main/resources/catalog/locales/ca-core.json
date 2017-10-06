@@ -340,5 +340,19 @@
     "inputIsOverloaded": "This value is set in a WFS filter",
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
-    "_valid": "Validity"
+    "_valid": "Validity",
+    "dateToDate": "to",
+    "batchEditing": "Edició massiva",
+    "harvesters": "Harvesting",
+    "metadatasAndTemplates": "Metadades i plantilles",
+    "statisticsAndStatus": "Estadístiques i estats",
+    "reports": "Informes",
+    "classificationSystems": "Sistemes de classificació",
+    "usersAndGroups": "Usuaris i grups",
+    "settings": "Configuració",
+    "tools": "Eines",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "on",
+    "resolveCaptcha": "Resolve the captcha"
 }
