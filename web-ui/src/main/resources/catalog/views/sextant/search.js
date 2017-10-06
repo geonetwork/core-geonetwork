@@ -491,14 +491,11 @@
         }
       });
 
-      // avoid FOUC (see end of file)
-      $('.gn, .g').css({
-        'maxHeight': '',
-        'overflow': 'auto'
+      // attempt to update map sizes
+      $(window).load(function() {
+        viewerMap.updateSize();
+        searchMap.updateSize();
       });
-
-      viewerMap.updateSize();
-      searchMap.updateSize();
     }]);
 
   module.controller('gnsSextantSearch', [
@@ -673,9 +670,20 @@
   }]);
 
   // avoid FOUC (flash of unstyled content)
-  $('.gn, .g').css({
-    'maxHeight': '0px',
-    'overflow': 'hidden'
+  $('.gn').css({
+    'overflow': 'hidden',
+    'position': 'relative'
+  });
+
+  // clear loading screen and restore main frame overflow
+  // use timeout to make this work with FF
+  $(window).load(function() {
+    setTimeout(function() {
+      $('.gn .sxt-loading').remove();
+      $('.gn').css({
+        'overflow': 'auto'
+      });
+    }, 500)
   });
 
 })();

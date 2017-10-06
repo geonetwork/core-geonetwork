@@ -91,3 +91,22 @@
     </tabset>
   </div>
 </div>
+
+<!-- this will hide the page while it is loading, and is removed on window.load
+  everything is specified inline because the stylesheet is not available yet -->
+<div class="sxt-loading"
+  style="position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #F3F3F3;
+  color: #818181;
+  z-index: 1000;">
+  <span style="margin-bottom: 8px">Loading...</span>
+  <i class="fa fa-spinner fa-spin fa-lg"/>
+</div>
