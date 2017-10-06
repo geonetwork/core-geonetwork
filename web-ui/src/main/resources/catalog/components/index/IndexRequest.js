@@ -674,7 +674,7 @@
 
     var histograms = {};
     for (var fieldProp in aggs) {
-      if (fieldProp.indexOf('_stats')) {
+      if (fieldProp.indexOf('_stats') > -1) {
         var fieldName = fieldProp.substr(0, fieldProp.length - 6);
         var field = aggs[fieldProp];
         var interval = (field.max - field.min) /
