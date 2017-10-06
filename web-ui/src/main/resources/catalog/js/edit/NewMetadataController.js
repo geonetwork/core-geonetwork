@@ -94,7 +94,12 @@
             .success(function(data) {
               $scope.userEditorGroups = {};
               for (var i = 0; i < data.length; i ++) {
-                $scope.userEditorGroups[data[i].id.groupId] = data[i].id.profile;
+                if ($scope.userEditorGroups[data[i].id.groupId] === 'Reviewer' &&
+                    data[i].id.profile === 'Editor') {
+                  // Keep highest profile
+                } else {
+                  $scope.userEditorGroups[data[i].id.groupId] = data[i].id.profile;
+                }
               }
             });
         }
