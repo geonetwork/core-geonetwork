@@ -580,11 +580,12 @@
           if (scope.size == 'auto') {
             var htmlS = document.documentElement.style;
             var bodyS = document.body.style;
-            if (htmlS.height=='' && htmlS.height=='') {
+            if (htmlS.height=='') {
               htmlS.height = '100%';
             }
-            if (bodyS.height=='' && bodyS.height=='') {
+            if (bodyS.height=='') {
               bodyS.minHeight = '100%';
+              bodyS.height = '100%';
             }
             var fitHeight = function() {
               var height = $(document.body).height() - $(element).offset().top;
