@@ -335,10 +335,10 @@
             });
 
         var refreshGraphLimits = function() {
-          if (!scope.dates || !scope.dates.from || !scope.dates.to) {
+          if (!scope.dates) {
             return;
           }
-          tm.setDateRange(scope.dates.from, scope.dates.to);
+          tm.setDateRange(scope.dates.from || null, scope.dates.to || null);
         };
 
         // dates must be sorted ASC

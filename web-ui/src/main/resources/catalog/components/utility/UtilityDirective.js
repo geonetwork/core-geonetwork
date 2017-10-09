@@ -784,6 +784,11 @@
         };
       };
 
+      // check that the date is in dd-mm-yyyy string format
+      function isDateValid(date) {
+        return moment(date, 'DD-MM-YYYY', true).isValid();
+      }
+
       return {
         restrict: 'A',
         scope: {
@@ -880,13 +885,16 @@
                 else {
                   var target = ev.target;
                   var pickers = $(element).find('input');
+                  var dateFrom = pickers[0].value;
+                  var dateTo = pickers[1].value;
 
-                  // only apply the date which was modified
-                  if (target === pickers[0]) {
-                    var dateFrom = pickers[0].value;
+                  // only apply the date which was modified if it is valid
+                  // (or cleared)
+                  if (target === pickers[0] &&
+                    (isDateValid(dateFrom) || dateFrom == '')) {
                     scope.date.from = dateFrom !== '' ? dateFrom : undefined;
-                  } else if (target === pickers[1]) {
-                    var dateTo = pickers[1].value;
+                  } else if (target === pickers[1] &&
+                    (isDateValid(dateTo) || dateTo == '')) {
                     scope.date.to = dateTo !== '' ? dateTo : undefined;
                   }
                 }

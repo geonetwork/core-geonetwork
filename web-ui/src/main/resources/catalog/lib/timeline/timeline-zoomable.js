@@ -367,20 +367,21 @@ function TimeLine(element, field, callback, options) {
   }
 
   // set the dates range; `from` and `to` are dates in DD-MM-YYYY format
+  // if a date is null it is assumed to be the min/max boundary
   this.setDateRange = function (from, to) {
     if (!this.initialized) { return; }
 
+    var domain = maxDomain;
     var currentBegin = moment(timelineX.domain()[0]).startOf('day').valueOf();
     var currentEnd = moment(timelineX.domain()[1]).startOf('day').valueOf();
-    var begin = moment(from, 'DD-MM-YYYY').valueOf();
-    var end = moment(to, 'DD-MM-YYYY').valueOf();
+    var begin = from === null ? domain[0] : moment(from, 'DD-MM-YYYY').valueOf();
+    var end = to === null ? domain[1] : moment(to, 'DD-MM-YYYY').valueOf();
 
     if (currentBegin == begin && currentEnd == end) {
       return;
     }
 
     var graphCenter = [timelineWidth / 2, timelineHeight / 2];
-    var domain = maxDomain;
     var targetCenter = (begin + end) / 2;
     var targetScale = (domain[1] - domain[0]) / (end - begin);
     var targetTranslate = [
