@@ -532,6 +532,82 @@
 
   <build>
     <plugins>
+    
+      <!-- Generate a properties file with the commit hash to be displayed on the admin.console -->
+	    <plugin>
+	        <groupId>pl.project13.maven</groupId>
+	        <artifactId>git-commit-id-plugin</artifactId>
+	        <version>2.2.1</version>
+	        <executions>
+	            <execution>
+	                <id>get-the-git-infos</id>
+	                <goals>
+	                    <goal>revision</goal>
+	                </goals>
+	            </execution>
+	        </executions>
+	
+	        <configuration>
+	            <dotGitDirectory>${project.basedir}/../.git</dotGitDirectory>
+	            <prefix>git</prefix>
+	            <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+	            <dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+	            <verbose>false</verbose>
+	            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+	            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+	            <!-- Denotes the format to save properties in. Valid options are "properties" (default) and "json". Properties will be saved to the generateGitPropertiesFilename if generateGitPropertiesFile is set to `true`. -->
+	            <format>properties</format>
+	            <skipPoms>true</skipPoms>
+	            <injectAllReactorProjects>false</injectAllReactorProjects>
+	            <failOnNoGitDirectory>false</failOnNoGitDirectory>
+	            <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+	            <skip>false</skip>
+	            <runOnlyOnce>true</runOnlyOnce>
+	            <excludeProperties>
+	            </excludeProperties>
+	            <includeOnlyProperties>
+	            </includeOnlyProperties>
+	            <replacementProperties>
+	            </replacementProperties>
+	            <useNativeGit>false</useNativeGit>
+	            <abbrevLength>7</abbrevLength>
+	            <commitIdGenerationMode>flat</commitIdGenerationMode>
+	            <gitDescribe>
+	                <skip>false</skip>
+	                <always>false</always>
+	                <abbrev>7</abbrev>
+	                <dirty>-dirty</dirty>
+	                <match>*</match>
+	                <tags>true</tags>
+	                <forceLongFormat>false</forceLongFormat>
+	            </gitDescribe>
+	            <!-- @since 2.2.2 -->
+	            <!-- 
+	                Since version **2.2.2** the maven-git-commit-id-plugin comes equipped with an additional validation utility which can be used to verify if your project properties are set as you would like to have them set.
+	                *Note*: This configuration will only be taken into account when the additional goal `validateRevision` is configured inside an execution.
+	            -->
+	            <validationProperties>
+	                <validationProperty>
+	                    <!--
+	                         A descriptive name that will be used to be able to identify the validation that does not match up (will be displayed in the error message).
+	                    -->
+	                    <name>validating project version</name>
+	                    <!-- 
+	                         the value that needs the validation
+	                         *Note* : In order to be able to validate the generated git-properties inside the pom itself you may need to set the configuration `<injectAllReactorProjects>true</injectAllReactorProjects>`. 
+	                    -->
+	                    <value>${project.version}</value>
+	                    <!--
+	                        the expected value
+	                    -->
+	                    <shouldMatchTo><![CDATA[^.*(?<!-SNAPSHOT)$]]></shouldMatchTo>
+	                </validationProperty>
+	                <!-- the next validationProperty you would like to validate -->
+	            </validationProperties>
+	            <validationShouldFailIfNoMatch>false</validationShouldFailIfNoMatch>
+	        </configuration>
+	
+	    </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -795,6 +871,198 @@
         <es.spring.profile>es</es.spring.profile>
       </properties>
     </profile>
+    
+    <!-- GN-e profiles -->
+    <profile>
+      <id>INSPIRE</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <groupId>org.codehaus.mojo</groupId>
+            <executions>
+        <!-- enable INSPIRE view -->
+              <execution>
+                <id>enable-inspire-view</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <message>Enable INSPIRE view</message>
+                  <executable>sed</executable>
+                  <commandlineArgs>-i -e "s#'system/inspire/enable', 'false'#'system/inspire/enable', 'true'#g" ${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql</commandlineArgs>
+                </configuration>
+              </execution>
+        <!-- Set version name -->
+              <execution>
+                <id>set-version-name</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <message>Set version name</message>
+                  <executable>sed</executable>
+                  <commandlineArgs>-i -e "s#'system/platform/subVersion', 'SNAPSHOT'#'system/platform/subVersion', 'live-INSPIRE'#g" ${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/data/data-db-default.sql</commandlineArgs>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- Enable schematron rules -->
+          <plugin>
+            <groupId>com.coderplus.maven.plugins</groupId>
+            <artifactId>copy-rename-maven-plugin</artifactId>
+            <version>1.0.1</version>
+            <executions>
+              <execution>
+                <id>enable-schematron</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>rename</goal>
+                </goals>
+                <configuration>
+                  <message>Enable schematron rules</message>
+                  <fileSets>
+                    <fileSet>
+                     <sourceFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.disabled.sch</sourceFile>
+                     <destinationFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch</destinationFile>
+                    </fileSet>
+                    <fileSet>
+                     <sourceFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-sds.disabled.sch</sourceFile>
+                     <destinationFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-sds.sch</destinationFile>
+                    </fileSet>
+                    <fileSet>
+                     <sourceFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.disabled.sch</sourceFile>
+                     <destinationFile>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.sch</destinationFile>
+                    </fileSet>
+                  </fileSets>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- Download themes -->
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.3.0</version>
+            <executions>
+              <execution>
+                <id>install-inspire-theme</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <message>Install INSPIRE theme</message>
+                  <url>https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri/inspire-theme.rdf</url>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/codelist/external/thesauri/theme/</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-gemet-theme</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <message>Install GEMET theme</message>
+                  <url>https://github.com/geonetwork/util-gemet/raw/master/thesauri/gemet.rdf</url>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/codelist/external/thesauri/theme/</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-service-taxonomy-theme</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <message>Install Service Taxonomy theme</message>
+                  <url>https://raw.githubusercontent.com/geonetwork/util-gemet/master/thesauri/inspire-service-taxonomy.rdf</url>
+                  <outputDirectory>${basedir}/src/main/webapp/WEB-INF/data/config/codelist/external/thesauri/theme/</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <profile>
+       <id>dutch</id>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>schema-iso19139.nl.geografie.1.3.1</artifactId>
+            <!-- TODO should make sure we update this with project.version -->
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>schema-iso19139.nl.services.1.2.1</artifactId>
+            <!-- TODO should make sure we update this with project.version -->
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>schema-iso19115-3</artifactId>
+            <!-- TODO should make sure we update this with project.version -->
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+        
+        <build>
+          <plugins>
+		      <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-resources-plugin</artifactId>
+		        <version>2.5</version>
+		        <executions>
+		          <execution>
+		            <id>copy-schemas</id>
+		            <phase>process-resources</phase>
+		            <goals>
+		              <goal>copy-resources</goal>
+		            </goals>
+		            <configuration>
+		              <includeEmptyDirs>true</includeEmptyDirs>
+		              <overwrite>true</overwrite>
+		              <outputDirectory>${build.webapp.resources}</outputDirectory>
+		              <resources>
+		                <!-- Copy the schema folder to the webapp folder source directory
+		                in order to be loaded by the application when running mvn jetty:run.
+		                -->
+                    <resource>
+                      <directory>${project.basedir}/../schemas/iso19115-3/src/main/plugin</directory>
+                      <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
+                      </targetPath>
+                    </resource>
+                    <resource>
+                      <directory>${project.basedir}/../schemas/iso19139.nl.geografie.1.3.1/src/main/plugin</directory>
+                      <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
+                      </targetPath>
+                    </resource>
+                    <resource>
+                      <directory>${project.basedir}/../schemas/iso19139.nl.services.1.2.1/src/main/plugin</directory>
+                      <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins
+                      </targetPath>
+                    </resource>
+		                <!-- Copy the documentation in the webapp. -->
+		                <resource>
+		                  <directory>${project.basedir}/../docs/manuals/target/doc</directory>
+		                  <targetPath>${basedir}/src/main/webapp/doc</targetPath>
+		                </resource>
+		              </resources>
+		            </configuration>
+		          </execution>
+		        </executions>
+		      </plugin>
+	      </plugins>
+	    </build>
+		</profile>
+    <!-- GN-e profiles -->
   </profiles>
 
   <properties>
