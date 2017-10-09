@@ -342,7 +342,7 @@
 
   <servlet>
     <servlet-name>HttpProxy</servlet-name>
-    <servlet-class>org.mitre.dsmiley.httpproxy.URITemplateProxyServlet</servlet-class>
+    <servlet-class>org.fao.geonet.proxy.URITemplateProxyServlet</servlet-class>
     <init-param>
       <param-name>targetUri</param-name>
       <param-value>{url}</param-value>
