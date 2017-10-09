@@ -2650,6 +2650,8 @@ public class DataManager implements ApplicationEventPublisherAware {
         //--- store access operations for group
 
         setOperation(context, id, groupId, ReservedOperation.view);
+        setOperation(context, id, groupId, ReservedOperation.download);
+        setOperation(context, id, groupId, ReservedOperation.dynamic);
         setOperation(context, id, groupId, ReservedOperation.notify);
         //
         // Restrictive: new and inserted records should not be editable,
@@ -2657,8 +2659,6 @@ public class DataManager implements ApplicationEventPublisherAware {
         // displayed by users in the same group
         if (fullRightsForGroup) {
             setOperation(context, id, groupId, ReservedOperation.editing);
-            setOperation(context, id, groupId, ReservedOperation.download);
-            setOperation(context, id, groupId, ReservedOperation.dynamic);
         }
         // Ultimately this should be configurable elsewhere
     }
