@@ -2944,6 +2944,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             result.addContent(md);
             // add 'environment' to result
             env.addContent(new Element("siteURL").setText(getSettingManager().getSiteURL(context)));
+            env.addContent(new Element("nodeURL").setText(getSettingManager().getNodeURL()));
             env.addContent(new Element("node").setText(context.getNodeId()));
 
             // Settings were defined as an XML starting with root named config
