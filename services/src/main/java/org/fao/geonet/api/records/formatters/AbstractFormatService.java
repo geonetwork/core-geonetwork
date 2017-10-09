@@ -184,6 +184,11 @@ abstract class AbstractFormatService {
                 "UUID can't be null or empty.", uuid);
         }
 
+        // Remap old UUID to new one
+        if (uuid.startsWith("SDN:")) {
+            uuid = uuid.replace(":", "_");
+        }
+
         String resolvedId = ApplicationContextHolder.get()
             .getBean(DataManager.class)
             .getMetadataId(uuid);
