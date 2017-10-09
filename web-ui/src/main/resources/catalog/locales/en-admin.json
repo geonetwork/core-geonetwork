@@ -1063,5 +1063,11 @@
     "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
     "serviceTypeHelp": "Service type",
     "metadata/editor/schemaConfig": "Standard configuration",
-    "selectExistingLogo": "Select from existing logos"
+    "selectExistingLogo": "Select from existing logos",
+    "versionInformation": "Version Information",
+    "git.tags": "Current git tag (if any)",
+    "git.commit.id": "Commit hash",
+    "git.branch": "Branch base for the build",
+    "git.commit.id.describe-short": "Inferred version",
+    "git.build.time": "Timestamp of the build"
 }
