@@ -122,6 +122,9 @@ function TimeLine(element, callback, options) {
       .y(timelineY)
       .scaleExtent([1, timelineWidth])
       .on("zoom", timelineZoom)
+      .on('zoomstart', function() {
+        clearTimeout(changeRequest);
+      })
       .on('zoomend', function() {
         clearTimeout(changeRequest);
         timelineSelection = timelineX.domain();
@@ -279,18 +282,46 @@ function TimeLine(element, callback, options) {
     }
   }
 
+  // will be used to filter out invisible blocks
+  function isVisible(d) {
+    var x = timelineX(d.event);
+    return x >= 0 && x <= timelineWidth;
+  };
+
   function refreshGraphMaxData() {
     if (me.initialized && !me.options.showAsHistogram) {
       return;
     }
 
     var container = d3.select(element);
-    var context = container.select('svg').select('g');
-    context
-      .append("path")
-      .datum(me.graphMaxData)
-      .attr("class", "areaAll")
-      .attr("d", timelineArea);
+    var context = container.select('svg').select('g.all-data-root');
+
+    if (me.options.showAsHistogram) {
+      var all = context.selectAll('rect.areaAll')
+        .data(me.graphMaxData, function(d) { return d.event; });
+      all.enter()
+        .append('rect').attr('class', 'areaAll');
+      all.style('display', 'none')
+        .filter(isVisible).style('display', 'block')
+        .attr("x", function(d) { return timelineX(d.event); })
+        .attr("width", function(d) {
+          // one day is 86400000 ms; min width is 2px
+          return Math.max(
+            timelineX(d.event) - timelineX(d.event - 86400000),
+            3 / timelineScale
+          );
+        })
+        .attr("y", function(d) { return timelineY(d.value); })
+        .attr("height", function(d) { return timelineHeight - timelineY(d.value); });
+      all.exit()
+        .remove();
+    } else {
+      context
+        .append("path")
+        .datum(me.graphMaxData)
+        .attr("class", "areaAll")
+        .attr("d", timelineArea);
+    }
 
     var valueExtent = d3.extent(me.graphMaxData, function(d) {
       return d.value;
@@ -302,13 +333,36 @@ function TimeLine(element, callback, options) {
 
   function refreshGraphData() {
     var container = d3.select(element);
-    var context = container.select('svg').select('g');
-    context.selectAll('path.area').remove();
-    context
-      .append("path")
-      .datum(me.graphData)
-      .attr("class", "area")
-      .attr("d", timelineArea);
+    var context = container.select('svg').select('g.data-root');
+
+
+    if (me.options.showAsHistogram) {
+      var all = context.selectAll('rect.area')
+        .data(me.graphData, function(d) { return d.event; });
+      all.enter()
+        .append('rect').attr('class', 'area');
+      all.style('display', 'none')
+        .filter(isVisible).style('display', 'block')
+        .attr("x", function(d) { return timelineX(d.event); })
+        .attr("width", function(d) {
+          // one day is 86400000 ms; min width is 2px
+          return Math.max(
+            timelineX(d.event) - timelineX(d.event - 86400000),
+            3 / timelineScale
+          );
+        })
+        .attr("y", function(d) { return timelineY(d.value); })
+        .attr("height", function(d) { return timelineHeight - timelineY(d.value); });
+      all.exit()
+        .remove();
+    } else {
+      context.selectAll('path.area').remove();
+      context
+        .append("path")
+        .datum(me.graphData)
+        .attr("class", "area")
+        .attr("d", timelineArea);
+    }
   }
 
   this.setTimeline = function (data) {
