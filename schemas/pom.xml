@@ -53,14 +53,4 @@
     <rootProjectDir>../..</rootProjectDir>
   </properties>
   
-  <profiles>
-	  <profile>
-	     <id>dutch</id>
-	     <modules>
-	        <module>iso19139.nl.geografie.1.3.1</module>
-	        <module>iso19139.nl.services.1.2.1</module>
-	        <module>iso19115-3</module>
-	     </modules>
-	  </profile>
-  </profiles>
 </project>
