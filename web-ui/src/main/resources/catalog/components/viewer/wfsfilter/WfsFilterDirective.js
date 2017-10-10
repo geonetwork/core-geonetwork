@@ -149,6 +149,8 @@
             searchGeometry: undefined
           };
 
+          scope.output = {};  // initialize object as it is not supposed to be undefined
+
           // if true, the "apply filters" button will be available
           scope.filtersChanged = false;
           scope.previousFilterState = {
@@ -632,8 +634,8 @@
                     SLD: sldURL
                   });
                 }
-                scope.filtersChanged = false;   // reset 'apply filters' button
               }).finally(function() {
+                scope.filtersChanged = false;   // reset 'apply filters' button
                 defer.resolve();
               });
             } else {

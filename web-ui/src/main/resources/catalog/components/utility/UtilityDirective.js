@@ -875,7 +875,8 @@
               // view -> model
               scope.$apply(function() {
                 if (!isRange) {
-                  scope.date = $(element).find('input')[0].value;
+                  var date = $(element).find('input')[0].value;
+                  scope.date = date !== '' ? date : undefined;
                 }
                 else {
                   scope.date.from = $(element).find('input')[0].value;
