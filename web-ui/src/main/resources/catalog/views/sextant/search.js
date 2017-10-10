@@ -186,6 +186,7 @@
       }
 
       $scope.displayMapTab = function() {
+        $scope.mainTabs.map.titleInfo = 0;
 
         if(mapVisited) return;
         mapVisited = true;
@@ -234,7 +235,6 @@
               }
             }, 100);
         });
-        $scope.mainTabs.map.titleInfo = 0;
       };
 
       $scope.displayPanierTab = function() {
