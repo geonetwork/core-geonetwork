@@ -1,14 +1,13 @@
 /**
  *
  * @param {HTMLElement} element graph container
- * @param {Object} field object that will hold the model with `from` and `to`
- * values in DD-MM-YYYY format
  * @param {Function} callback this callback will be called when values are
  * changed, ie the graph is zoomed or panned using mouse or buttons
+ * Arguments are the updated `from` and `to` values in DD-MM-YYYY format
  * @param {Object} options
  * @param {bool} options.showAsHistogram
  */
-function TimeLine(element, field, callback, options) {
+function TimeLine(element, callback, options) {
   var me = this;
 
   var timelineSelection = null;
@@ -29,7 +28,7 @@ function TimeLine(element, field, callback, options) {
   this.initialized = false;
   this.graphMaxData = null;
   this.graphData = null;
-  this.fieldInfo = field;
+  this.model = {};
   this.callback = callback;
   this.options = options || {};
 
@@ -133,10 +132,9 @@ function TimeLine(element, field, callback, options) {
           }
           if (lastQuery != timeQuery) {
             lastQuery = timeQuery;
-            me.fieldInfo.model = me.fieldInfo.model || {};
-            me.fieldInfo.model.from = moment(timelineSelection[0]).format('DD-MM-YYYY');
-            me.fieldInfo.model.to = moment(timelineSelection[1]).format('DD-MM-YYYY');
-            me.callback(me.fieldInfo);
+            me.model.from = moment(timelineSelection[0]).format('DD-MM-YYYY');
+            me.model.to = moment(timelineSelection[1]).format('DD-MM-YYYY');
+            me.callback(me.model.from, me.model.to);
           }
         }, 500);
 
@@ -189,7 +187,7 @@ function TimeLine(element, field, callback, options) {
   this.recomputeSize = function () {
     // if we have never been initialized: do it now
     if (!this.initialized) {
-      this.initialize(this.graphData, this.fieldInfo, this.callback);
+      this.initialize(this.graphData, this.callback);
     }
   }
 
@@ -359,7 +357,7 @@ function TimeLine(element, field, callback, options) {
 
     // initialize if it hasn't been done
     if (!this.initialized) {
-      this.initialize(data, this.fieldInfo, this.callback);
+      this.initialize(data, this.callback);
     } else {
       refreshGraphMaxData();
       refreshGraphData();

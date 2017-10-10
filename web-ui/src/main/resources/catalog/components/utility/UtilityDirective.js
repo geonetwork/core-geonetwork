@@ -727,6 +727,10 @@
 
   /**
    * Use to initialize bootstrap datepicker
+   * Can handle two pickers to select a range
+   * The change callback will be called when the value is updated from the
+   * calendar component. When modified from outside, the internal value of the
+   * picker will be updated accordingly so that the calendar stays in sync.
    */
   module.directive('gnBootstrapDatepicker', ['$timeout', 'gnLangs',
     function($timeout, gnLangs) {
@@ -803,13 +807,10 @@
           var isRange = ($(element).find('input').length == 2);
           var highlight = attrs['dateOnlyHighlight'] === 'true';
 
-          if (isRange && !scope.date) {
-            scope.date = {};
-          }
+          // TODO: handle available dates change?
+          // scope.$watch('dates', function(dates, old) {
+          // });
 
-          scope.$watch('dates', function(dates, old) {
-
-          });
           var init = function() {
             if (scope.dates) {
               // Time epoch
@@ -887,15 +888,23 @@
                   var pickers = $(element).find('input');
                   var dateFrom = pickers[0].value;
                   var dateTo = pickers[1].value;
+                  var changed = false;
 
                   // only apply the date which was modified if it is valid
                   // (or cleared)
                   if (target === pickers[0] &&
                     (isDateValid(dateFrom) || dateFrom == '')) {
                     scope.date.from = dateFrom !== '' ? dateFrom : undefined;
+                    changed = true;
                   } else if (target === pickers[1] &&
                     (isDateValid(dateTo) || dateTo == '')) {
                     scope.date.to = dateTo !== '' ? dateTo : undefined;
+                    changed = true;
+                  }
+
+                  // call the change function if the value was changed
+                  if (changed) {
+                    scope.onChangeFn();
                   }
                 }
               });
@@ -933,7 +942,7 @@
           }
           else {
             scope.$watchCollection('date', function(newValue, oldValue) {
-              if (angular.isUndefined(newValue)) {
+              if (!scope.date) {
                 scope.date = {};
                 return;
               }
@@ -948,7 +957,6 @@
                   $(element).find('input')[1].value = dateTo;
                   picker.pickers[0].update();
                   picker.pickers[1].update();
-                  scope.onChangeFn();
                 });
               }
             });
