@@ -316,9 +316,19 @@
         template:
           '<ul class="sxt-layertree-node">' +
             '<sxt-layertree-elt ' +
-              'ng-repeat="member in collection track by (member.ol_uid || member.path || $index)" ' +
+              'ng-repeat="member in collection track by tracker(member)" ' +
               'member="member" map="map"></sxt-layertree-elt>' +
-          '</ul>'
+          '</ul>',
+        link: function(scope) {
+          // this function computes a unique id for the node
+          scope.tracker = function(member) {
+            // the node is a group header: return path
+            if (member.path) { return member.path; }
+
+            // the node is an ol layer: use url & name
+            return member.get('name') + '@' + member.get('url');
+          }
+        }
       };
     }]);
 
