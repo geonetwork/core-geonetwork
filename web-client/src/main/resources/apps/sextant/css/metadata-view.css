@@ -526,6 +526,12 @@ div.help ul li {
     font-weight: bold;
     margin: 6px 0px 2px;
 }
+
+.gn-metadata-view h5.view-header {
+  font-size: 120%;
+  font-weight: bold;
+}
+
 /* Hide select predefined regions */
 #gn-tab-spatialCoverage h4.view-header {
     display: none;

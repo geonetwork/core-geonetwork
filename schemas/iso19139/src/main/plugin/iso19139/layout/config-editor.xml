@@ -86,7 +86,7 @@
     thesaurus. The configuration to create the challenge field
     was done in layout-custom-fields-medsea.xsl.
     <for name="gmd:hierarchyLevelName" use="data-gn-keyword-picker"/>-->
-    <!-- 
+    <!--
     Enable the following to use subtemplates for extent type.
     <for name="gmd:extent" addDirective="data-gn-directory-entry-selector">
       <directiveAttributes
@@ -1411,15 +1411,15 @@
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
-                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <!-- -Need a *  or // for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                 <key label="beginPosition"
-                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:beginPosition"
                      use="gn-date-picker"
                      tooltip="gmd:extent|gmd:EX_TemporalExtent">
                   <directiveAttributes data-tag-name="gml:beginPosition"/>
                 </key>
                 <key label="endPosition"
-                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod//gml:endPosition"
                      use="gn-date-picker"
                      tooltip="gmd:extent|gmd:EX_TemporalExtent"
                 >

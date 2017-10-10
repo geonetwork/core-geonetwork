@@ -119,6 +119,26 @@
 
   </xsl:template>
 
+  <xsl:template mode="render-field"
+                priority="2000"
+                match="gmd:report[
+                          contains(
+                            */gmd:nameOfMeasure/*/text(),
+                            'emodnet-bathymetry.QI')]">
+
+    <xsl:variable name="name" select="*/gmd:nameOfMeasure/*/text()"/>
+
+    <dl>
+      <dt>
+        <xsl:value-of select="$schemaStrings/*[name() = $name]"/>
+      </dt>
+      <dd>
+        <xsl:value-of select="*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record"/>
+      </dd>
+    </dl>
+  </xsl:template>
+
+
 
   <!-- Most of the elements are ... -->
   <xsl:template mode="render-field"
@@ -130,7 +150,8 @@
        gco:Date|gco:DateTime|*/@codeListValue]"
                 priority="50">
     <xsl:param name="fieldName" select="''" as="xs:string"/>
-    <xsl:if test="normalize-space(*|*/@codeListValue) != ''">
+
+    <xsl:if test="normalize-space(string-join(*|*/@codeListValue, '')) != ''">
       <dl>
         <dt>
           <xsl:value-of select="if ($fieldName)
@@ -165,7 +186,8 @@
 
   <!-- Some elements are only containers so bypass them -->
   <xsl:template mode="render-field"
-                match="*[count(gmd:*[name() != 'gmd:PT_FreeText']) = 1]"
+                match="*[count(gmd:*[name() != 'gmd:PT_FreeText']) = 1 and
+                         count(*/@codeListValue) = 0]"
                 priority="50">
 
     <xsl:apply-templates mode="render-value" select="@*"/>
@@ -456,10 +478,10 @@
         <xsl:apply-templates mode="render-value"
                              select="*/gmd:thesaurusName/gmd:CI_Citation/gmd:title/*"/>
 
-        <xsl:if test="*/gmd:type/*[@codeListValue != '']">
+        <!--<xsl:if test="*/gmd:type/*[@codeListValue != '']">
           (<xsl:apply-templates mode="render-value"
                                 select="*/gmd:type/*/@codeListValue"/>)
-        </xsl:if>
+        </xsl:if>-->
       </dt>
       <dd>
         <div>
@@ -687,6 +709,11 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="normalize-space(.)"/>
+
+        <!-- -->
+        <xsl:if test="@uom">
+          &#160;<xsl:value-of select="@uom"/>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -700,6 +727,19 @@
   </xsl:template>
 
   <!-- ... Dates - formatting is made on the client side by the directive  -->
+  <xsl:template mode="render-field"
+                match="gco:Date|gml:beginPosition|gml:endPosition">
+    <xsl:param name="fieldName"/>
+    <dl>
+      <dt>
+        <xsl:value-of select="$fieldName"/>
+      </dt>
+      <dd>
+        <xsl:apply-templates mode="render-value"/>
+      </dd>
+    </dl>
+  </xsl:template>
+
   <xsl:template mode="render-value"
                 match="gco:Date[matches(., '[0-9]{4}')]">
     <span data-gn-humanize-time="{.}" data-format="YYYY"></span>
