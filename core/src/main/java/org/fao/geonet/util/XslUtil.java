@@ -540,13 +540,8 @@ public final class XslUtil {
     /**
      * Returns the HTTP code  or error message if error occurs during URL connection.
      *
-<<<<<<< HEAD
-     * @param url The URL to ckeck
-     * @return
-=======
      * @param url The URL to ckeck.
      * @return the numeric code of the HTTP request or a String with an error.
->>>>>>> upstream/es
      */
     public static String getUrlStatus(String url) {
         return getUrlStatus(url, 5);
