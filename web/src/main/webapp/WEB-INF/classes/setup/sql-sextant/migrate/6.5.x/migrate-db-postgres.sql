@@ -12,3 +12,24 @@ DELETE FROM Settings WHERE  name = 'map/bingKey';
 UPDATE Settings SET value='3.4.0' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
+
+-- Fix multilingual record in italian Cannot convert ita to 2 char iso lang code
+UPDATE isolanguages SET shortcode = 'it' WHERE code = 'ita';
+UPDATE isolanguages SET shortcode = 'cpf' WHERE code = 'cp';
+
+
+-- Do not use 3 letters id in language identifier
+UPDATE metadata SET data = replace(data, 'locale="#ITA"', 'locale="#IT"') WHERE data LIKE '%locale="#ITA"%';
+UPDATE metadata SET data = replace(data, 'locale="#FRE"', 'locale="#FR"') WHERE data LIKE '%locale="#FRE"%';
+UPDATE metadata SET data = replace(data, 'locale="#ENG"', 'locale="#EN"') WHERE data LIKE '%locale="#ENG"%';
+UPDATE metadata SET data = replace(data, 'locale="#SPA"', 'locale="#ES"') WHERE data LIKE '%locale="#SPA"%';
+UPDATE metadata SET data = replace(data, 'locale="#CPF"', 'locale="#CP"') WHERE data LIKE '%locale="#CPF"%';
+
+UPDATE metadata SET data = replace(data, 'PT_Locale id="ITA"', 'PT_Locale id="IT"') WHERE data LIKE '%PT_Locale id="ITA"%';
+UPDATE metadata SET data = replace(data, 'PT_Locale id="FRE"', 'PT_Locale id="FR"') WHERE data LIKE '%PT_Locale id="FRE"%';
+UPDATE metadata SET data = replace(data, 'PT_Locale id="ENG"', 'PT_Locale id="EN"') WHERE data LIKE '%PT_Locale id="ENG"%';
+UPDATE metadata SET data = replace(data, 'PT_Locale id="SPA"', 'PT_Locale id="ES"') WHERE data LIKE '%PT_Locale id="SPA"%';
+UPDATE metadata SET data = replace(data, 'PT_Locale id="CPF"', 'PT_Locale id="CP"') WHERE data LIKE '%PT_Locale id="CPF"%';
+
+-- Fix some strange codelist value in language code causing indexing errors.
+UPDATE metadata SET data = replace(data, 'codeListValue="France"', 'codeListValue="fre"') WHERE data LIKE '%codeListValue="France"%';

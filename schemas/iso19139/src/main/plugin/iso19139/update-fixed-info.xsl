@@ -517,8 +517,8 @@
     -->
   <xsl:template match="gmd:PT_Locale">
     <xsl:element name="gmd:{local-name()}">
-      <xsl:variable name="id" select="upper-case(
-				substring(gmd:languageCode/gmd:LanguageCode/@codeListValue, 1, 3))"/>
+      <xsl:variable name="id"
+                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
 
       <xsl:apply-templates select="@*"/>
 
