@@ -240,6 +240,13 @@
 
         if (gnUrl) {
           this.gnUrl = gnUrl + this.iso3lang + '/';
+
+          // add current protocol if the specified api.gn.url has none
+          if (this.gnUrl.substr(0, 2) === '//') {
+            var protocol = window.location.href.substr(0, 5) === 'https' ?
+              'https:' : 'http:';
+            this.gnUrl = protocol + this.gnUrl;
+          }
         }
         this.proxyUrl = this.gnUrl + '../../proxy?url=';
         gnViewerSettings.mapConfig = this.gnCfg.mods.map;
