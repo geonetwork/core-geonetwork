@@ -184,18 +184,35 @@ abstract class AbstractFormatService {
                 "UUID can't be null or empty.", uuid);
         }
 
-        // Remap old UUID to new one
-        if (uuid.startsWith("SDN:")) {
-            uuid = uuid.replace(":", "_");
-        }
+        final DataManager dataManager = ApplicationContextHolder.get()
+            .getBean(DataManager.class);
 
-        String resolvedId = ApplicationContextHolder.get()
-            .getBean(DataManager.class)
-            .getMetadataId(uuid);
-        if (resolvedId == null) {
-            throw new ResourceNotFoundEx(
-                "No record found with uuid '" + uuid + "'.");
+        String resolvedId;
+
+        // Check all type of SDN UUID old one with : and new ones At some point this should be removed.
+        if (uuid.startsWith("SDN")) {
+            resolvedId = dataManager.getMetadataId(uuid);
+            if (resolvedId == null) {
+                if (uuid.startsWith("SDN:")) {
+                    uuid = uuid.replace(":", "_");
+                } else {
+                    uuid = uuid.replace("_", ":");
+                }
+                resolvedId = dataManager.getMetadataId(uuid);
+            }
+            if (resolvedId == null) {
+                throw new ResourceNotFoundEx(
+                    "No record found with SDN uuid '" + uuid + "'.");
+            }
+            return resolvedId;
+        } else {
+            resolvedId = dataManager
+                .getMetadataId(uuid);
+            if (resolvedId == null) {
+                throw new ResourceNotFoundEx(
+                    "No record found with uuid '" + uuid + "'.");
+            }
+            return resolvedId;
         }
-        return resolvedId;
     }
 }
