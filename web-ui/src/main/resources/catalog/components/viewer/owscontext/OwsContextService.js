@@ -281,9 +281,13 @@
                 // create WMS layer
                 if (server.service == 'urn:ogc:serviceType:WMS') {
 
+                  // generate a unique id for the layer tree
+                  var id = layer.name + '-loading' + i;
+
                   var loadingLayer = new ol.layer.Image({
                     loading: true,
                     label: layer.name || 'loading',
+                    name: id,
                     url: '',
                     visible: false,
                     group: layer.group
