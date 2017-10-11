@@ -478,7 +478,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap,
         panier: [],
-        filters: gnSearchSettings.filters
+        hiddenParams: gnSearchSettings.filters
       });
 
 
@@ -525,7 +525,7 @@
 
 
       if (searchSettings.filters) {
-        $scope.searchObj.filters = searchSettings.filters;
+        $scope.searchObj.hiddenParams = searchSettings.filters;
       }
 
       // Get Thesaurus config and set first one as active
