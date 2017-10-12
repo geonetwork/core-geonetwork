@@ -58,6 +58,16 @@
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
   <noThesaurusName>Keywords</noThesaurusName>
   <bboxesSection>Geographic coverage</bboxesSection>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
+  <linkToPortal>Access to the portal</linkToPortal>
+  <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
+  <citationProposal>Citation proposal</citationProposal>
+  <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>
+  <associatedResources>Associated resources</associatedResources>
 
   <!-- XSD error translation -->
   <invalidElement>Invalid element. Invalid content was found starting with element:</invalidElement>

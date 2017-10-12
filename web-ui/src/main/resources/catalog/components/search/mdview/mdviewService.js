@@ -237,6 +237,7 @@
           // Attach the md to the grid element scope
           if (!scope.md) {
             scope.$parent.md = md;
+            scope.md = md;
           }
           return url;
         });

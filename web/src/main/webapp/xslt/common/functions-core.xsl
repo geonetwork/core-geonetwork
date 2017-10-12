@@ -56,7 +56,7 @@
   </xsl:function>
 
   <xsl:function name="gn-fn-core:translate" as="xs:string">
-    <xsl:param name="key" as="xs:string"/>
+    <xsl:param name="key" as="xs:string?"/>
     <xsl:param name="t" as="node()"/>
 
     <xsl:value-of select="if ($t/*[name() = $key]/text() != '')

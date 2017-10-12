@@ -41,6 +41,11 @@
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <inspire_sds>SDS</inspire_sds>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
 
   <resource>Resource</resource>
   <xml>XML</xml>

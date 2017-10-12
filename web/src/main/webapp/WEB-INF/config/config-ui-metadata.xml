@@ -47,7 +47,7 @@
       <error sheet="../xslt/common/error.xsl"/>
     </service>
 
-    <service name="md.viewer">
+    <service name="display">
       <documentation>View a metadata record using one of the formatters</documentation>
       <output sheet="../xslt/ui-metadata/view/formatter-viewer.xsl">
         <xml name="i18n" file="xml/i18n.xml"/>
