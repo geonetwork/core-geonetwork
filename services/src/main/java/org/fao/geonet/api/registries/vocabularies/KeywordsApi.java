@@ -297,10 +297,20 @@ public class KeywordsApi {
             langs = context.getLanguage().split(",");
         }
         String[] iso3langCodes = Arrays.copyOf(langs, langs.length);
+        Set<String> allLangs = new HashSet<>(iso3langCodes.length);
         for (int i = 0; i < langs.length; i++) {
             if (StringUtils.isNotEmpty(langs[i])) {
-                langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
+                if (langs[i].contains(",")) {
+                    allLangs.addAll(Arrays.asList(langs[i].split(",")));
+                } else {
+                    allLangs.add(langs[i]);
+                }
             }
+        }
+
+        langs = allLangs.toArray(new String[allLangs.size()]);
+        for (int i = 0; i < langs.length; i++) {
+            langs[i] = mapper.iso639_2_to_iso639_1(langs[i], langs[i].substring(2));
         }
 
         Element descKeys;
@@ -353,7 +363,7 @@ public class KeywordsApi {
         for (Map.Entry<String, String> e : allRequestParams.entrySet()) {
             if (e.getKey().equals("lang")) {
                 requestParams.addContent(new Element(e.getKey())
-                    .setText(String.join(",", iso3langCodes)));
+                    .setText(String.join(",", allLangs)));
             } else {
                 requestParams.addContent(new Element(e.getKey()).setText(e.getValue()));
             }
