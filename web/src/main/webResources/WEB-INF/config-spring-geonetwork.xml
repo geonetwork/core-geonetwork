@@ -175,10 +175,10 @@
 
 
   <bean id="extractorLdapUserSearchBase" class="java.lang.String">
-    <constructor-arg value="ou=annuaire" />
+    <constructor-arg value="${ldap.base.search.base}" />
   </bean>
   <bean id="extractorLdapUserSearchAttribute" class="java.lang.String">
-    <constructor-arg value="(uid={0})" />
+    <constructor-arg value="${ldap.base.search.filter}" />
   </bean>
 
 
