@@ -15,7 +15,7 @@ UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
 
 -- Fix multilingual record in italian Cannot convert ita to 2 char iso lang code
 UPDATE isolanguages SET shortcode = 'it' WHERE code = 'ita';
-UPDATE isolanguages SET shortcode = 'cpf' WHERE code = 'cp';
+UPDATE isolanguages SET shortcode = 'cp' WHERE code = 'cpf';
 
 
 -- Do not use 3 letters id in language identifier
