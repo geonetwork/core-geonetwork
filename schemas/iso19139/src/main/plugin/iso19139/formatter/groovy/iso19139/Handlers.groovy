@@ -535,13 +535,13 @@ public class Handlers {
         def orgs = []
         def idx = 0
         els.each { el ->
-            def name = el.'gmd:individualName'
+            def name = this.isofunc.isoText(el.'gmd:individualName')
             def mails = []
             el.'gmd:contactInfo'.'gmd:CI_Contact'
                     .'gmd:address'.'gmd:CI_Address'.'gmd:electronicMailAddress'.each {
-                m -> mails.push(m)
+                m -> mails.push(this.isofunc.isoText(m))
             }
-            def org = el.'gmd:organisationName'
+            def org = this.isofunc.isoText(el.'gmd:organisationName')
             def contact = [
               name : name,
               link: el['@uuid'],
@@ -597,7 +597,7 @@ public class Handlers {
             useConstraintsLabel = f.nodeLabel(el."gmd:useConstraints")
             otherConstraintsLabel = f.nodeLabel(el."gmd:otherConstraints")
 
-            useLimitation = el."gmd:useLimitation"
+            useLimitation = this.isofunc.isoText(el."gmd:useLimitation")
             accessConstraints = f.codelistValueLabel(el."gmd:accessConstraints"."gmd:MD_RestrictionCode")
             useConstraints = f.codelistValueLabel(el."gmd:useConstraints"."gmd:MD_RestrictionCode")
             otherConstraints = []
