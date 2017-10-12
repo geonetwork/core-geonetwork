@@ -91,7 +91,6 @@
         It's recommended to use it in order to have the thesaurus widget inline editor
         which use the thesaurus identifier for initialization. -->
     <xsl:param name="withThesaurusAnchor" select="true()"/>
-
     <!-- The lang parameter contains a list of languages
     with the main one as the first element. If only one element
     is provided, then CharacterString or Anchor are created.
@@ -194,12 +193,11 @@
             <xsl:when test="count($listOfLanguage) > 1">
               <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
               <xsl:variable name="keyword" select="."/>
-              <xsl:variable name="mainLang" select="substring-before($listOfLanguage[1], '|')"/>
-              <xsl:variable name="langId" select="substring-after($listOfLanguage[1], '|')"/>
+
               <xsl:if test="not($textgroupOnly)">
                 <gco:CharacterString>
                   <xsl:value-of
-                    select="$keyword/values/value[@language = $mainLang]/text()"></xsl:value-of>
+                    select="$keyword/values/value[@language = $listOfLanguage[1]]/text()"></xsl:value-of>
                 </gco:CharacterString>
               </xsl:if>
 
