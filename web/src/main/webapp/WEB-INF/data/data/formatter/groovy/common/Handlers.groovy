@@ -258,7 +258,7 @@ public class Handlers {
         if (uuid.trim().isEmpty()) {
             return "javascript:alert('" + this.f.translate("noUuidInLink") + "');"
         } else {
-            return this.env.localizedUrl + "md.viewer#/full_view/" + URLEncoder.encode(uuid, "UTF-8")
+            return this.env.localizedUrl + "display#/" + URLEncoder.encode(uuid, "UTF-8") + "/formatters/full_view"
         }
     }
 

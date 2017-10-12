@@ -129,6 +129,7 @@
 
         <xsl:if test="$angularApp = 'gn_search' or
                       $angularApp = 'gn_editor' or
+                      $angularApp = 'gn_formatter_viewer' or
                       $angularApp = 'gn_admin'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
           <!-- Jsonix resources (OWS Context) -->

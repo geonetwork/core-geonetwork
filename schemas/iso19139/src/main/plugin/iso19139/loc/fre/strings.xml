@@ -31,6 +31,13 @@
   <temporalRef>Référence(s) temporelle(s)</temporalRef>
   <refDate>Date(s) de référence</refDate>
   <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
+  <overviews>Aperçus</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Fourni par</providedBy>
+  <shareOnSocialSite>Partager</shareOnSocialSite>
+  <viewMode>Mode d'affichage</viewMode>
+  <linkToPortal>Lien vers le portal</linkToPortal>
+  <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
 
 
   <advanced>Complète</advanced>
@@ -52,6 +59,9 @@
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
   <noThesaurusName>Mots clés</noThesaurusName>
   <bboxesSection>Zone géographique</bboxesSection>
+  <citationProposal>Proposition de citation</citationProposal>
+  <citationProposal-help>Cette proposition de citation a été générée automatiquement selon le format suggéré par DataCite. Nous vous invitons à vérifier dans les métadonnées si les auteurs n'ont pas imposé un format de citation spécifique.</citationProposal-help>
+  <associatedResources>Ressources associées</associatedResources>
 
   <keywordFrom>Mots clés - </keywordFrom>
   <!-- XSD error translation -->

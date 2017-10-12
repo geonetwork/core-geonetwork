@@ -13,10 +13,13 @@
   <xsl:import href="render-functions.xsl"/>
   <xsl:import href="render-layout-fields.xsl"/>
 
+  <xsl:output method="html"/>
+
   <!-- Those templates should be overriden in the schema plugin - start -->
   <xsl:template mode="getMetadataTitle" match="undefined"/>
   <xsl:template mode="getMetadataAbstract" match="undefined"/>
   <xsl:template mode="getMetadataHierarchyLevel" match="undefined"/>
+  <xsl:template mode="getOverviews" match="undefined"/>
   <xsl:template mode="getMetadataHeader" match="undefined"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
@@ -50,27 +53,144 @@
       <xsl:variable name="type">
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
       </xsl:variable>
+
+      <xsl:variable name="title">
+        <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
+      </xsl:variable>
+
+
       <article id="gn-metadata-view-{$metadataId}"
+               class="gn-md-view gn-metadata-display"
                itemscope="itemscope"
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
-        <header>
-          <h1>
-            <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
-          </h1>
-          <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
-          <!-- TODO : Add thumbnail to header -->
 
-          <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
-          <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
-        </header>
 
-        <xsl:for-each select="$viewConfig/*">
-          <xsl:sort select="@formatter-order" 
-                    data-type="number"/>
-          <xsl:apply-templates mode="render-view"
-                               select="."/>
-        </xsl:for-each>
 
+        <div class="row">
+          <div class="col-md-8">
+
+            <header>
+              <h1>
+                <i class="fa gn-icon-{$type}">&#160;</i>
+                <xsl:value-of select="$title"/>
+              </h1>
+
+              <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
+
+              <div gn-related="md"
+                   data-user="user"
+                   data-types="onlines"/>
+
+              <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
+            </header>
+
+
+            <xsl:for-each select="$viewConfig/*">
+              <xsl:sort select="@formatter-order"
+                        data-type="number"/>
+              <xsl:apply-templates mode="render-view"
+                                   select="."/>
+            </xsl:for-each>
+          </div>
+          <div class="gn-md-side col-md-4">
+            <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+
+            <br/>
+
+            <section>
+              <h4>
+                <i class="fa fa-fw fa-cog">&#160;</i>&#160;
+                <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
+              </h4>
+              <img class="gn-source-logo"
+                   src="{$nodeUrl}../images/logos/{$source}.png">&#160;</img>
+            </section>
+
+            <br/>
+
+            <section>
+              <h4>
+                <i class="fa fa-fw fa-share-square-o">&#160;</i>&#160;
+                <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
+              </h4>
+              <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                 target="_blank" class="btn btn-default">
+                <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
+              </a>
+              <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                 target="_blank" class="btn btn-default">
+                <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
+              </a>
+              <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                 target="_blank" class="btn btn-default">
+                <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
+              </a>
+              <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                 target="_blank" class="btn btn-default">
+                <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
+              </a>
+              <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                 target="_blank" class="btn btn-default">
+                <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
+              </a>
+            </section>
+
+            <br/>
+
+            <section>
+              <h4>
+                <i class="fa fa-fw fa-eye">&#160;</i>&#160;
+                <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
+              </h4>
+              <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
+                <ul>
+                  <li>
+                    <a>
+                      <xsl:attribute name="href">
+                        <xsl:choose>
+                          <xsl:when test="@name = 'xml'">
+                            <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xml')"/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xsl-view?view=', @name, '&amp;portalLink=', $portalLink)"/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:attribute>
+                      <xsl:variable name="name" select="@name"/>
+                      <xsl:value-of select="$schemaStrings/*[name(.) = $name]"/>
+                    </a>
+                  </li>
+                </ul>
+              </xsl:for-each>
+            </section>
+
+            <br/>
+
+            <div class="well text-center">
+              <a class="btn btn-block btn-primary"
+                 href="{if ($portalLink != '')
+                        then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                        else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                <i class="fa fa-link">&#160;</i>
+                <xsl:value-of select="$schemaStrings/linkToPortal"/>
+              </a>
+              <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
+            </div>
+
+
+            <section>
+              <h4>
+                <i class="fa fa-fw fa-link">&#160;</i>&#160;
+                <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
+              </h4>
+              <div gn-related="md"
+                   data-user="user"
+                   data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
+                Not available
+              </div>
+            </section>
+          </div>
+        </div>
 
         <!--
         TODO: scrollspy or tabs on header ?
@@ -120,10 +240,19 @@
                     select="gn-fn-render:get-schema-strings($schemaStrings, @id)"/>
 
       <div id="gn-tab-{@id}">
-        <h3 class="view-header">
-          <xsl:value-of select="$title"/>
-        </h3>
-        <xsl:copy-of select="$content"/>
+        <xsl:if test="count(following-sibling::tab) > 0">
+          <h1 class="view-header">
+            <xsl:value-of select="$title"/>
+          </h1>
+        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="normalize-space($content) = ''">
+            No information
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="$content"/>&#160;
+          </xsl:otherwise>
+        </xsl:choose>
       </div>
     </xsl:if>
   </xsl:template>
