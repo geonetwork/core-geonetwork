@@ -118,10 +118,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     private ServiceContext servContext;
 
     private ApplicationEventPublisher publisher;
-
-    public BaseMetadataIndexer() {
-    }
-
+    
     public void init(ServiceContext context, Boolean force) throws Exception {
         searchManager = context.getBean(SearchManager.class);
         geonetworkDataDirectory = context.getBean(GeonetworkDataDirectory.class);
@@ -350,23 +347,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             // get metadata, extracting and indexing any xlinks
             Element md = getXmlSerializer().selectNoXLinkResolver(metadataId, true, false);
-            if (getXmlSerializer().resolveXLinks()) {
-                List<Attribute> xlinks = Processor.getXLinks(md);
-                if (xlinks.size() > 0) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "1", true, true));
-                    StringBuilder sb = new StringBuilder();
-                    for (Attribute xlink : xlinks) {
-                        sb.append(xlink.getValue());
-                        sb.append(" ");
-                    }
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, sb.toString(), true, true));
-                    Processor.detachXLink(md, getServiceContext());
-                } else {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
-                }
-            } else {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
-            }
+            addXLinks(moreFields, md);
 
             fullMd = metadataUtils.findOne(id$);
 
@@ -387,32 +368,14 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); // DEBUG
-                Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")"); // DEBUG
+                Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")");
+                Log.debug(Geonet.DATA_MANAGER, "record createDate (" + createDate + ")");
             }
 
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT, root, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA, schema, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE, source, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID, uuid, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OWNER, owner, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0", false, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING, rating, true, true));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder, true, false));
-            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
+            addBasicFields(moreFields, schema, createDate, changeDate, source, metadataType, root, uuid, extra, isHarvested, owner,
+                    popularity, rating, displayOrder);
 
-            // If the metadata has an atom document, index related information
-            InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
-
-            if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
-                moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
-                moreFields.add(SearchManager.makeField("any", feed.getAtom(), false, true));
-            }
+            addAtom(moreFields, id$);
 
             if (owner != null) {
                 User user = userRepository.findOne(fullMd.getSourceInfo().getOwner());
@@ -422,95 +385,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 }
             }
 
-            String logoUUID = null;
-            if (groupOwner != null) {
-                final Group group = groupRepository.findOne(groupOwner);
-                if (group != null) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
-                    final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
-                    if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
-                    }
-                    if (group.getLogo() != null && preferGroup) {
-                        logoUUID = group.getLogo();
-                    }
-                }
-            }
+            addThumbnail(moreFields, source, groupOwner);
 
-            // Group logo are in the harvester folder and contains extension in file name
-            final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(getServiceContext());
-            boolean added = false;
-            if (StringUtils.isNotEmpty(logoUUID)) {
-                final Path logoPath = harvesterLogosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    added = true;
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/harvesting/" + logoPath.getFileName(),
-                            true, false));
-                }
-            }
+            addPrivileges(moreFields, id$);
 
-            // If not available, use the local catalog logo
-            if (!added) {
-                logoUUID = source + ".png";
-                final Path logosDir = Resources.locateLogosDir(getServiceContext());
-                final Path logoPath = logosDir.resolve(logoUUID);
-                if (Files.exists(logoPath)) {
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID, true, false));
-                }
-            }
+            addCategories(fullMd, moreFields);
 
-            // get privileges
-            List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
+            addStatus(moreFields, id$);
 
-            for (OperationAllowed operationAllowed : operationsAllowed) {
-                OperationAllowedId operationAllowedId = operationAllowed.getId();
-                int groupId = operationAllowedId.getGroupId();
-                int operationId = operationAllowedId.getOperationId();
+            addValidation(moreFields, id$);
 
-                moreFields
-                        .add(SearchManager.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId), true, true));
-                if (operationId == ReservedOperation.view.getId()) {
-                    Group g = groupRepository.findOne(groupId);
-                    if (g != null) {
-                        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName(), true, true));
-                    }
-                }
-            }
-
-            for (MetadataCategory category : fullMd.getMetadataCategories()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
-            }
-
-            // get status
-            Sort statusSort = new Sort(Sort.Direction.DESC, MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
-            List<MetadataStatus> statuses = statusRepository.findAllById_MetadataId(id$, statusSort);
-            if (!statuses.isEmpty()) {
-                MetadataStatus stat = statuses.get(0);
-                String status = String.valueOf(stat.getId().getStatusId());
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
-                String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate, true, true));
-            }
-
-            // getValidationInfo
-            // -1 : not evaluated
-            // 0 : invalid
-            // 1 : valid
-            List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
-            if (validationInfo.isEmpty()) {
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
-            } else {
-                String isValid = "1";
-                for (MetadataValidation vi : validationInfo) {
-                    String type = vi.getId().getValidationType();
-                    MetadataValidationStatus status = vi.getStatus();
-                    if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
-                        isValid = "0";
-                    }
-                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
-                }
-                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
-            }
+            addExtraFields(fullMd, moreFields);
 
             if (searchManager == null) {
                 searchManager = servContext.getBean(SearchManager.class);
@@ -532,6 +417,164 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         }
         if (fullMd != null) {
             this.publisher.publishEvent(new MetadataIndexCompleted(fullMd));
+        }
+    }
+
+    /**
+     * To be overrided
+     * 
+     * @param fullMd
+     * @param moreFields
+     */
+    protected void addExtraFields(IMetadata fullMd, Vector<Element> moreFields) {
+
+    }
+
+    protected void addCategories(IMetadata fullMd, Vector<Element> moreFields) {
+        for (MetadataCategory category : fullMd.getMetadataCategories()) {
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.CAT, category.getName(), true, true));
+        }
+    }
+
+    protected void addStatus(Vector<Element> moreFields, int id$) {
+        // get status
+        Sort statusSort = new Sort(Sort.Direction.DESC, MetadataStatus_.id.getName() + "." + MetadataStatusId_.changeDate.getName());
+        List<MetadataStatus> statuses = statusRepository.findAllById_MetadataId(id$, statusSort);
+        if (!statuses.isEmpty()) {
+            MetadataStatus stat = statuses.get(0);
+            String status = String.valueOf(stat.getId().getStatusId());
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS, status, true, true));
+            String statusChangeDate = stat.getId().getChangeDate().getDateAndTime();
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.STATUS_CHANGE_DATE, statusChangeDate, true, true));
+        }
+    }
+
+    protected void addXLinks(Vector<Element> moreFields, Element md) {
+        if (getXmlSerializer().resolveXLinks()) {
+            List<Attribute> xlinks = Processor.getXLinks(md);
+            if (xlinks.size() > 0) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "1", true, true));
+                StringBuilder sb = new StringBuilder();
+                for (Attribute xlink : xlinks) {
+                    sb.append(xlink.getValue());
+                    sb.append(" ");
+                }
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.XLINK, sb.toString(), true, true));
+                Processor.detachXLink(md, getServiceContext());
+            } else {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
+            }
+        } else {
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.HASXLINKS, "0", true, true));
+        }
+    }
+
+    protected void addAtom(Vector<Element> moreFields, int id$) {
+        // If the metadata has an atom document, index related information
+        InspireAtomFeed feed = inspireAtomFeedRepository.findByMetadataId(id$);
+
+        if ((feed != null) && StringUtils.isNotEmpty(feed.getAtom())) {
+            moreFields.add(SearchManager.makeField("has_atom", "y", true, true));
+            moreFields.add(SearchManager.makeField("any", feed.getAtom(), false, true));
+        }
+    }
+
+    protected void addBasicFields(Vector<Element> moreFields, final String schema, final String createDate, final String changeDate,
+            final String source, final MetadataType metadataType, final String root, final String uuid, final String extra,
+            final String isHarvested, final String owner, final String popularity, final String rating, final String displayOrder) {
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.ROOT, root, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SCHEMA, schema, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.SOURCE, source, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.UUID, uuid, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.IS_HARVESTED, isHarvested, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OWNER, owner, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DUMMY, "0", false, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.POPULARITY, popularity, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.RATING, rating, true, true));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.DISPLAY_ORDER, displayOrder, true, false));
+        moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.EXTRA, extra, false, true));
+    }
+
+    protected void addValidation(Vector<Element> moreFields, int id$) {
+        // getValidationInfo
+        // -1 : not evaluated
+        // 0 : invalid
+        // 1 : valid
+        List<MetadataValidation> validationInfo = metadataValidationRepository.findAllById_MetadataId(id$);
+        if (validationInfo.isEmpty()) {
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, "-1", true, true));
+        } else {
+            String isValid = "1";
+            for (MetadataValidation vi : validationInfo) {
+                String type = vi.getId().getValidationType();
+                MetadataValidationStatus status = vi.getStatus();
+                if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
+                    isValid = "0";
+                }
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID + "_" + type, status.getCode(), true, true));
+            }
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.VALID, isValid, true, true));
+        }
+    }
+
+    protected void addPrivileges(Vector<Element> moreFields, int id$) {
+        // get privileges
+        List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
+
+        for (OperationAllowed operationAllowed : operationsAllowed) {
+            OperationAllowedId operationAllowedId = operationAllowed.getId();
+            int groupId = operationAllowedId.getGroupId();
+            int operationId = operationAllowedId.getOperationId();
+
+            moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.OP_PREFIX + operationId, String.valueOf(groupId), true, true));
+            if (operationId == ReservedOperation.view.getId()) {
+                Group g = groupRepository.findOne(groupId);
+                if (g != null) {
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_PUBLISHED, g.getName(), true, true));
+                }
+            }
+        }
+    }
+
+    protected void addThumbnail(Vector<Element> moreFields, final String source, final Integer groupOwner) {
+        String logoUUID = null;
+        if (groupOwner != null) {
+            final Group group = groupRepository.findOne(groupOwner);
+            if (group != null) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_OWNER, String.valueOf(groupOwner), true, true));
+                final boolean preferGroup = settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true);
+                if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
+                    moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite(), true, false));
+                }
+                if (group.getLogo() != null && preferGroup) {
+                    logoUUID = group.getLogo();
+                }
+            }
+        }
+
+        // Group logo are in the harvester folder and contains extension in file name
+        final Path harvesterLogosDir = Resources.locateHarvesterLogosDir(getServiceContext());
+        boolean added = false;
+        if (StringUtils.isNotEmpty(logoUUID)) {
+            final Path logoPath = harvesterLogosDir.resolve(logoUUID);
+            if (Files.exists(logoPath)) {
+                added = true;
+                moreFields.add(
+                        SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/harvesting/" + logoPath.getFileName(), true, false));
+            }
+        }
+
+        // If not available, use the local catalog logo
+        if (!added) {
+            logoUUID = source + ".png";
+            final Path logosDir = Resources.locateLogosDir(getServiceContext());
+            final Path logoPath = logosDir.resolve(logoUUID);
+            if (Files.exists(logoPath)) {
+                moreFields.add(SearchManager.makeField(Geonet.IndexFieldNames.LOGO, "/images/logos/" + logoUUID, true, false));
+            }
         }
     }
 
@@ -580,5 +623,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
+    }
+    
+    protected IMetadataUtils getMetadataUtils() {
+        return metadataUtils;
     }
 }

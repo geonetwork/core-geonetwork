@@ -170,5 +170,11 @@
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils"/>
     <bean class="org.fao.geonet.kernel.datamanager.base.BaseMetadataCategory"/>
-
+    
+    <!-- Comment to get non draft metadata -->
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataManager"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataUtils"/>
+    <bean primary="true" class="org.fao.geonet.kernel.datamanager.draft.DraftMetadataCategory"/>
+     
 </beans>

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -122,7 +123,7 @@ import jeeves.xlink.Processor;
 public class BaseMetadataManager implements IMetadataManager {
 
     @Autowired
-    private IMetadataUtils metadataUtils;
+    protected IMetadataUtils metadataUtils;
     @Autowired
     private IMetadataIndexer metadataIndexer;
     @Autowired
@@ -229,7 +230,7 @@ public class BaseMetadataManager implements IMetadataManager {
 
         Sort sortByMetadataChangeDate = SortUtils.createSort(Metadata_.dataInfo, MetadataDataInfo_.changeDate);
         int currentPage = 0;
-        Page<Pair<Integer, ISODate>> results = metadataRepository
+        Page<Pair<Integer, ISODate>> results = metadataUtils
                 .findAllIdsAndChangeDates(new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
 
         // index all metadata in DBMS if needed
@@ -271,7 +272,7 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             currentPage++;
-            results = metadataRepository
+            results = metadataUtils
                     .findAllIdsAndChangeDates(new PageRequest(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
         }
 
@@ -297,7 +298,7 @@ public class BaseMetadataManager implements IMetadataManager {
         }
     }
 
-    private SearchManager getSearchManager() {
+    protected SearchManager getSearchManager() {
         return searchManager;
     }
 
@@ -759,7 +760,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
-     *  buildInfoElem contains similar portion of code with indexMetadata
+     * buildInfoElem contains similar portion of code with indexMetadata
      */
     private Element buildInfoElem(ServiceContext context, String id, String version) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOne(id);
@@ -1076,42 +1077,59 @@ public class BaseMetadataManager implements IMetadataManager {
         final Set<Integer> downloadableByGuest = loadOperationsAllowed(context,
                 where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId()))
                         .and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
-        final Map<Integer, MetadataSourceInfo> allSourceInfo = metadataRepository
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = metadataUtils
                 .findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
 
         for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
-            Element infoEl = entry.getValue();
-            final Integer mdId = Integer.valueOf(entry.getKey());
-            MetadataSourceInfo sourceInfo = allSourceInfo.get(mdId);
-            Set<ReservedOperation> operations = operationsPerMetadata.get(mdId);
-            if (operations == null) {
-                operations = Collections.emptySet();
-            }
+            addbasicFieldsPrivileges(context, operationsPerMetadata, visibleToAll, downloadableByGuest, allSourceInfo, entry);
+            addExtendedFieldsPrivileges(context, entry);
+        }
+    }
 
-            boolean isOwner = accessManager.isOwner(context, sourceInfo);
+    /**
+     * To be overrided by child classes
+     * 
+     * @param context
+     * @param entry
+     */
+    protected void addExtendedFieldsPrivileges(ServiceContext context, Entry<String, Element> entry) {
 
-            if (isOwner) {
-                operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
-            }
+    }
 
-            if (isOwner || operations.contains(ReservedOperation.editing)) {
-                addElement(infoEl, Edit.Info.Elem.EDIT, "true");
-            }
+    private void addbasicFieldsPrivileges(ServiceContext context, final SetMultimap<Integer, ReservedOperation> operationsPerMetadata,
+            final Set<Integer> visibleToAll, final Set<Integer> downloadableByGuest, final Map<Integer, MetadataSourceInfo> allSourceInfo,
+            Map.Entry<String, Element> entry) throws Exception {
+        Element infoEl = entry.getValue();
+        final Integer mdId = Integer.valueOf(entry.getKey());
+        MetadataSourceInfo sourceInfo = allSourceInfo.get(mdId);
+        Set<ReservedOperation> operations = operationsPerMetadata.get(mdId);
+        if (operations == null) {
+            operations = Collections.emptySet();
+        }
 
-            if (isOwner) {
-                addElement(infoEl, Edit.Info.Elem.OWNER, "true");
-            }
+        boolean isOwner = accessManager.isOwner(context, sourceInfo);
 
-            addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, visibleToAll.contains(mdId));
-            addElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
-            addElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
-            addElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));
-            addElement(infoEl, ReservedOperation.dynamic.name(), operations.contains(ReservedOperation.dynamic));
-            addElement(infoEl, ReservedOperation.featured.name(), operations.contains(ReservedOperation.featured));
+        if (isOwner) {
+            operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
+        }
 
-            if (!operations.contains(ReservedOperation.download)) {
-                addElement(infoEl, Edit.Info.Elem.GUEST_DOWNLOAD, downloadableByGuest.contains(mdId));
-            }
+        if (isOwner || operations.contains(ReservedOperation.editing)) {
+            addElement(infoEl, Edit.Info.Elem.EDIT, "true");
+        }
+
+        if (isOwner) {
+            addElement(infoEl, Edit.Info.Elem.OWNER, "true");
+        }
+
+        addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, visibleToAll.contains(mdId));
+        addElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
+        addElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
+        addElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));
+        addElement(infoEl, ReservedOperation.dynamic.name(), operations.contains(ReservedOperation.dynamic));
+        addElement(infoEl, ReservedOperation.featured.name(), operations.contains(ReservedOperation.featured));
+
+        if (!operations.contains(ReservedOperation.download)) {
+            addElement(infoEl, Edit.Info.Elem.GUEST_DOWNLOAD, downloadableByGuest.contains(mdId));
         }
     }
 
@@ -1207,8 +1225,10 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataRepository.delete(id);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void createBatchUpdateQuery(PathSpec<Metadata, String> servicesPath, String newUuid, Specification<Metadata> harvested) {
-        metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, harvested);
+    public void createBatchUpdateQuery(PathSpec<? extends AbstractMetadata, String> servicesPath, String newUuid,
+            Specification<? extends AbstractMetadata> harvested) {
+        metadataRepository.createBatchUpdateQuery((PathSpec<Metadata, String>) servicesPath, newUuid, (Specification<Metadata>) harvested);
     }
 }
