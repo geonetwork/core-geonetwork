@@ -1308,7 +1308,7 @@
           <field xpath="/gmd:MD_Metadata/gmd:language" />
 
           <action type="add"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language) = 0"
+                  if="count(gmd:MD_Metadata/gmd:language) = 0"
                   name="language" or="language"
                   in="/gmd:MD_Metadata">
             <template>
