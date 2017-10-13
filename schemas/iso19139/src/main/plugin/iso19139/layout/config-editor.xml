@@ -400,6 +400,42 @@
             </template>
           </action>
 
+
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language"
+          />
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType" />
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType) = 0"
+                  name="spatialRepresentationType" or="spatialRepresentationType"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:spatialRepresentationType>
+                  <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"
+                                                        codeListValue="vector"/>
+                </gmd:spatialRepresentationType>
+              </snippet>
+            </template>
+          </action>
+
+          <field
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory" />
+
+          <action type="add"
+                  name="topicCategory" or="topicCategory"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <template>
+              <snippet>
+                <gmd:topicCategory>
+                  <gmd:MD_TopicCategoryCode></gmd:MD_TopicCategoryCode>
+                </gmd:topicCategory>
+              </snippet>
+            </template>
+          </action>
+
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
 
@@ -521,6 +557,7 @@
                   <helper name="gmd:name" context="gmd:MD_Format"/>
                 </key>
                 <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
+                <key label="format_specification" xpath="gmd:MD_Format/gmd:specification/gco:CharacterString" />
               </values>
               <snippet>
                 <gmd:distributionFormat>
@@ -533,7 +570,9 @@
                       <gco:CharacterString>{{format_version}}</gco:CharacterString>
                     </gmd:version>
                     <gn:copy select="gmd:amendmentNumber"/>
-                    <gn:copy select="gmd:specification"/>
+                    <gmd:specification>
+                      <gco:CharacterString>{{format_specification}}</gco:CharacterString>
+                    </gmd:specification>
                     <gn:copy select="gmd:fileDecompressionTechnique"/>
                     <gn:copy select="gmd:formatDistributor"/>
                   </gmd:MD_Format>
@@ -1265,6 +1304,21 @@
               data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
           </action>
 
+
+          <field xpath="/gmd:MD_Metadata/gmd:language" />
+
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language) = 0"
+                  name="language" or="language"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:language>
+                  <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+                </gmd:language>
+              </snippet>
+            </template>
+          </action>
 
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
         </section>
