@@ -166,11 +166,11 @@
   </util:map>
 
   <bean id="panierXmlPathLogged" class="java.io.File">
-    <constructor-arg index="0" type="java.lang.String" value="/tmp/sextant-extractor/logged"/>
+    <constructor-arg index="0" type="java.lang.String" value="${panier.xml.path.logged}"/>
   </bean>
 
   <bean id="panierXmlPathAnonymous" class="java.io.File">
-    <constructor-arg index="0" type="java.lang.String" value="/tmp/sextant-extractor/anonymous"/>
+    <constructor-arg index="0" type="java.lang.String" value="${panier.xml.path.anonymous}"/>
   </bean>
 
 
