@@ -81,36 +81,35 @@
           var url = result.Capability.Request.GetMap.
               DCPType[0].HTTP.Get.OnlineResource;
 
-          // Push all leaves into a flat array of Layers.
-          var getFlatLayers = function(layer) {
-            if (angular.isArray(layer)) {
-              for (var i = 0, len = layer.length; i < len; i++) {
-                getFlatLayers(layer[i]);
-              }
-            } else if (angular.isDefined(layer)) {
-              layer.url = url;
-              layers.push(layer);
-              getFlatLayers(layer.Layer);
+          // Push all leaves into a flat array of Layers
+          // Also adjust crs (by inheritance) and url
+          var getFlatLayers = function(node, parentCrs) {
+            // current inherited crs (w/o dupes)
+            var crs = (parentCrs || []).concat(node.CRS || [])
+              .filter(function(value, index, array) {
+                return array.indexOf(value) === index;
+              });
+
+            // add to flat layer array if we're on a leave (layer w/o child)
+            if (!node.Layer) {
+              node.url = url;
+              node.CRS = crs;
+              layers.push(node);
+              return;
+            }
+
+            // make sure Layer element is an array
+            if (node.Layer && !angular.isArray(node.Layer)) {
+              node.Layer = [node.Layer];
+            }
+
+            // process children recursively
+            for (var i = 0, len = node.Layer.length; i < len; i++) {
+              getFlatLayers(node.Layer[i], crs);
             }
           };
 
-          // Make sur Layer property is an array even if
-          // there is only one element.
-          var setLayerAsArray = function(node) {
-            if (node) {
-              if (angular.isDefined(node.Layer) &&
-                  !angular.isArray(node.Layer)) {
-                node.Layer = [node.Layer];
-              }
-              if (angular.isDefined(node.Layer)) {
-                for (var i = 0; i < node.Layer.length; i++) {
-                  setLayerAsArray(node.Layer[i]);
-                }
-              }
-            }
-          };
           getFlatLayers(result.Capability.Layer);
-          setLayerAsArray(result.Capability);
           result.Capability.layers = layers;
           result.Capability.version = result.version;
           return result.Capability;
