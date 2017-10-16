@@ -1147,5 +1147,8 @@
     "ui-mapBackgroundLayer": "Map Background Layer",
     "ui-mapBackgroundLayer-help": "Define here the background layer to use for maps other that viewer and search maps.",
     "system/xlinkResolver/referencedDeletionAllowed": "Autorise la suppression d'un subtemplate référencé par un xlink.",
-    "system/xlinkResolver/referencedDeletionAllowed-help": "Coché signifie autorise."
+    "system/xlinkResolver/referencedDeletionAllowed-help": "Coché signifie autorise.",
+    "ui-grid": "Configuration des résultats de recherche",
+    "gridConfigRelatedTypes": "Types de métadonnées associées à afficher",
+    "gridConfigRelatedTypes-help": "Valeurs possibles : children, parent, services, fcats, datasets, sibling"
 }
