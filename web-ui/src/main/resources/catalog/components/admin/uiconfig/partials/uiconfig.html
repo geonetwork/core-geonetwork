@@ -534,6 +534,34 @@
           {{('ui-' + key + '-help') | translate}} </p>
       </div>
 
+      <div data-ng-switch-when="grid">
+        <label class="control-label">{{('ui-' + key) | translate}}</label>
+        <h3 translate>gridConfigRelatedTypes</h3>
+        <table class="table table-striped">
+          <tr data-ng-repeat="relatedType in mCfg[key]['related'] track by $index">
+            <td>
+              <input type="text" class="form-control" ng-model="mCfg[key]['related'][$index]" />
+            </td>
+            <td>
+              <a class="btn btn-link text-danger" title="{{'remove' | translate}}" data-ng-click="removeItem(mCfg[key]['related'], $index)">
+                <i class="fa fa-times text-danger"/>
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a class="btn btn-link" title="{{'add' | translate}}" data-ng-click="addItem(mCfg[key]['related'], '')">
+                <i class="fa fa-plus"/>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <p class="help-block">{{ 'gridConfigRelatedTypes-help' | translate }}</p>
+        <p class="help-block"
+            data-ng-show="(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')">
+          {{('ui-' + key + '-help') | translate}} </p>
+      </div>
+
       <!-- map configs -->
       <div data-ng-switch-when="map-viewer">
         <h3>{{('ui-' + key) | translate}}</h3>
