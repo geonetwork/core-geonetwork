@@ -266,6 +266,7 @@
       getMergeableDefaultConfig: function() {
         var copy = angular.copy(defaultConfig);
         copy.mods.header.languages = {};
+        copy.mods.search.grid.related = [];
         return copy;
       }
     };
