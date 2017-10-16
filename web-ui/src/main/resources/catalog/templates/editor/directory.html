@@ -413,7 +413,7 @@
             </div>
 
             <button type="button" class="btn btn-default"
-                ng-click="startPermissionsEdit()"
+                ng-click="startPermissionsEdit(activeEntry)"
                 ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
                 title="{{'directoryEntryPermissions' | translate}}">
               <i class="fa fa-key"/>&nbsp;

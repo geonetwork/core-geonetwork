@@ -109,7 +109,7 @@
           },
           {
             sortBy: 'changeDate',
-            sortOrder: 'reverse'
+            sortOrder: ''
           },
           {
             sortBy: '_valid',
@@ -512,9 +512,14 @@
         });
 
         $scope.gnCurrentEdit = gnCurrentEdit;
-        $scope.editorFormUrl = gnEditor
-            .buildEditUrlPrefix('editor') +
-            '&starteditingsession=yes&random=' + i++;
+        $scope.editorFormUrl = '';
+
+        // put this out of the flow to clear the form first
+        setTimeout(function() {
+          $scope.editorFormUrl = gnEditor
+              .buildEditUrlPrefix('editor') +
+              '&starteditingsession=yes&random=' + i++;
+        });
       };
 
       $scope.closeEditor = function(e) {
@@ -528,7 +533,10 @@
         $('#gn-share').modal('show');
       };
       $scope.$on('PrivilegesUpdated', function() {
-        $scope.activeEntry = null;
+        // clear active entry if privileges were updated from the list
+        if (!$scope.currentEditorAction) {
+          $scope.activeEntry = null;
+        }
         $('#gn-share').modal('hide');
       });
 
