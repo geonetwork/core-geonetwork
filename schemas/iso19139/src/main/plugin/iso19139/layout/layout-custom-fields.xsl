@@ -281,7 +281,11 @@
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="subTreeSnippet">
 
-        <xsl:variable name="geometry" select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"/>
+        <xsl:variable name="geometry">
+          <xsl:apply-templates select="gmd:polygon/gml:MultiSurface|gmd:polygon/gml:LineString"
+                               mode="gn-element-cleaner"/>
+        </xsl:variable>
+        
         <xsl:variable name="identifier"
                       select="concat('_X', gmd:polygon/gn:element/@ref, '_replace')"/>
         <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
