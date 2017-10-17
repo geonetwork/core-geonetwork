@@ -1,0 +1,64 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default"
+			data-ng-controller="GnCssStyleSettingsController">
+			<div class="panel-heading">
+				<span data-translate="">cssstyle</span>
+				<div class="btn-toolbar">
+					<form class="form-inline pull-right">
+						<button class="btn btn-primary"
+							data-ng-click="saveCssStyleSettings(gnCssStyle)">
+							<span class="fa fa-save"></span> {{"saveSettings"|translate}}
+						</button>
+					</form>
+				</div>
+			</div>
+			<div class="panel-body">
+				<form id="gn-settings" name="gnSettings" class="form-horizontal">
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">basicCssProps</span>
+						</legend>
+						<label for="gnCssStyle.backgroudColor">Background</label>
+						<color-picker ng-model="gnCssStyle.backgroudColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<label for="gnCssStyle.fontColor">Font Color</label>
+						<color-picker ng-model="gnCssStyle.fontColor"
+							color-picker-format="'hex'" color-picker-alpha="false"></color-picker>
+						<br />
+					</fieldset>
+					<br /> <label for="gnCssStyle.colorScheme">Load a color
+						scheme</label> <select class="form-control"
+						data-ng-model="gnCssStyle.colorScheme">
+						<option>Default</option>
+						<option>Light Style</option>
+						<option>Dark Style</option>
+					</select> <label for="gnCssStyle.fontCombo">Select a font style</label> <select
+						class="form-control" data-ng-model="gnCssStyle.fontCombo">
+						<option>Classic</option>
+						<option>Modern</option>
+						<option>Experimental</option>
+					</select> <br />
+					</fieldset>
+					<br />
+					<fieldset>
+						<legend class="ng-binding" id="gn-settings-spy-target-0-0">
+							<span data-translate="">advancedCssProps</span>
+						</legend>
+						<label for="gnCssStyle.customCss">Custom Css</label>
+						<textarea rows="8"
+							class="form-control ng-pristine ng-valid ng-empty ng-touched"
+							data-ng-model="gnCssStyle.customCss">
+
+					</textarea>
+						<br />
+					</fieldset>
+				</form>
+
+				<div
+					data-gn-need-help="administrator-guide/configuring-the-catalog/system-configuration.html"
+					class="pull-right"></div>
+			</div>
+		</div>
+	</div>
+</div>

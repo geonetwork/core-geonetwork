@@ -123,4 +123,7 @@
   <bean id="SpringLocalServiceInvoker" class="org.fao.geonet.kernel.SpringLocalServiceInvoker"
         init-method="init">
   </bean>
+  
+    <bean id="cssStyleSettingService" class="org.fao.geonet.api.cssstyle.service.CssStyleSettingDatabaseService">
+  </bean>
 </beans>
