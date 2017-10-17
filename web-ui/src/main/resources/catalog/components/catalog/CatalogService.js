@@ -560,6 +560,7 @@
                 });
               }
               record[field] = thesaurusList;
+            }
           } catch (e) {}
         }
       });
