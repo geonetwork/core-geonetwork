@@ -158,7 +158,7 @@ public class Handlers {
             def association = rel.getAttributeValue("association")
 
             rel.getChildren("item").each { item ->
-                if (type == "sibling") {
+                if (type == "siblings") {
                     if (association != null && association != '') {
                         type = association;
                         direction = Direction.PARENT
@@ -170,6 +170,8 @@ public class Handlers {
                     if (aggIndexEl != null) {
                         type = aggIndexEl.name.substring(4)
                     }
+                } else if (type == "onlines" || type == "thumbnails") {
+                    return;
                 }
 
                 def relatedIdInfo = addRelation(hierarchy, uuid, item, type, direction)
@@ -201,7 +203,7 @@ public class Handlers {
 
     private Element getRelatedReport(int id, String uuid) {
         def relatedXsl = this.env.getBean(GeonetworkDataDirectory).getWebappDir().resolve("xslt/services/metadata/relation.xsl");
-        def RelatedItemType[] types = ["parent","children", "services", "datasets"];
+        def RelatedItemType[] types = [];
         def raw = MetadataUtils.getRelated(ServiceContext.get(), id, uuid, types, 1, 1000, true)
         def withGui = new Element("root").addContent(Arrays.asList(
                 new Element("gui").addContent(Arrays.asList(
