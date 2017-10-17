@@ -30,6 +30,7 @@
   goog.require('gn_logo_settings_controller');
   goog.require('gn_mapserver_controller');
   goog.require('gn_metadata_identifier_templates_controller');
+  goog.require('gn_cssstyle_settings_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_sources_controller');
   goog.require('gn_system_settings_controller');
@@ -43,6 +44,7 @@
        'gn_logo_settings_controller',
        'gn_sources_controller',
        'gn_metadata_identifier_templates_controller',
+       'gn_cssstyle_settings_controller',
        'gn_scroll_spy']
       );
 
@@ -64,6 +66,11 @@
               icon: 'fa-puzzle-piece',
               href: '#/settings/ui'
             },{
+              type: 'cssstyle',
+              label: 'cssstyle',
+              icon: 'fa-camera',
+              href: '#/settings/cssstyle'
+            },{
               type: 'logo',
               label: 'manageLogo',
               icon: 'fa-picture-o',
@@ -76,14 +83,17 @@
             },{
               type: 'csw',
               label: 'manageCSW',
+              icon: 'fa-server',
               href: '#/settings/csw'
             },{
               type: 'csw-virtual',
               label: 'manageVirtualCSW',
+              icon: 'fa-server',
               href: '#/settings/csw-virtual'
             },{
               type: 'csw-test',
               label: 'testCSW',
+              icon: 'fa-server',
               href: '#/settings/csw-test'
             },{
               type: 'mapservers',

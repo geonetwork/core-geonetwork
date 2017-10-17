@@ -56,6 +56,8 @@
     <link href="{/root/gui/url}/static/ng-skos.css" rel="stylesheet" media="screen"></link>
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}"
           rel="stylesheet" media="screen"/>
+    <link href="{/root/gui/url}/srv/api/0.1/cssstyle/custom.css"
+          rel="stylesheet" media="screen"/>
   </xsl:template>
 
 
