@@ -1516,7 +1516,7 @@
                           context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_FormatConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"/>
                 </key>
                 <key label="conformity_date" use="gn-date-picker"
-                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date"/>
+                     xpath="gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 <key label="explanation" use="text"
                      xpath="gmd:DQ_ConformanceResult/gmd:explanation/gco:CharacterString"/>
               </values>
@@ -1532,7 +1532,7 @@
                         <gmd:date>
                           <gmd:CI_Date>
                             <gmd:date>
-                              <gco:Date>{{conformity_date}}</gco:Date>
+                              {{conformity_date}}
                             </gmd:date>
                             <gmd:dateType>
                               <gmd:CI_DateTypeCode
