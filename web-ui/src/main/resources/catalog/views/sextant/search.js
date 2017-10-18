@@ -103,7 +103,7 @@
       // merge config in viewer settings
       if (gnConfig['ui.config']) {
         angular.merge(gnViewerSettings.mapConfig,
-          gnConfig['ui.config'].mods.map);
+          gnGlobalSettings.getMergeableDefaultConfig().mods.map);
       }
       gnViewerSettings.bingKey = gnViewerSettings.mapConfig.bingKey;
 
