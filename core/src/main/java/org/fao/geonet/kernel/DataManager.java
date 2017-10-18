@@ -2883,7 +2883,7 @@ public class DataManager implements ApplicationEventPublisherAware {
             Metadata metadata = null;
             if (metadataId.isPresent()) {
                 metadata = getMetadataRepository().findOne(metadataId.get());
-                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() != MetadataType.METADATA;
+                boolean isTemplate = metadata != null && metadata.getDataInfo().getType() == MetadataType.TEMPLATE;
 
                 // don't process templates
                 if (isTemplate) {
@@ -2957,7 +2957,11 @@ public class DataManager implements ApplicationEventPublisherAware {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
-            Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
+            Path styleSheet = getSchemaDir(schema).resolve(
+                                metadata != null && metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE ?
+                                Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
+                                Geonet.File.UPDATE_FIXED_INFO);
+
             result = Xml.transform(result, styleSheet);
             return result;
         } else {

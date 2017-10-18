@@ -37,6 +37,7 @@
   <xsl:include href="update-fixed-info-keywords.xsl"/>
   <xsl:include href="layout/utility-fn.xsl"/>
 
+
   <xsl:variable name="serviceUrl" select="/root/env/siteURL"/>
   <xsl:variable name="node" select="/root/env/node"/>
 
