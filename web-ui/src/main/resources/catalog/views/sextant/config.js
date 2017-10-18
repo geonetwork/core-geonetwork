@@ -350,8 +350,8 @@
         map: false
       };
 
-      searchSettings.gridRelated = ['parent', 'children',
-        'sources', 'hassources'];
+      // overwrite settings
+      searchSettings.grid.related = ['parent', 'children', 'sources', 'fcats'];
 
       viewerSettings.menuExpanded = true;
 
