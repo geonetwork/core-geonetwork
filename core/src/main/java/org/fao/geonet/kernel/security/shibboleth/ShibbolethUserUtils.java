@@ -24,12 +24,14 @@ import jeeves.component.ProfileManager;
 
 import org.apache.batik.util.resources.ResourceManager;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -140,7 +142,7 @@ public class ShibbolethUserUtils {
                     ldapUserDetails = (LDAPUser) userDetailsManager
                         .loadUserByUsername(username);
                 } catch (Throwable t) {
-                    t.printStackTrace();
+                    Log.error(Geonet.GEONETWORK, "Shibboleth setupUser error: " + t.getMessage(), t);
                 }
 
                 if (ldapUserDetails == null) {

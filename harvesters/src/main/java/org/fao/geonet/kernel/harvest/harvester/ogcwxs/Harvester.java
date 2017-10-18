@@ -842,7 +842,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             }
         } catch (Exception e) {
             log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
-            e.printStackTrace();
+            log.error(e);
             result.thumbnailsFailed++;
         }
 

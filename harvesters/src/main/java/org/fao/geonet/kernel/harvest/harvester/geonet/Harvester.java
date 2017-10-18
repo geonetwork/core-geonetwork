@@ -163,7 +163,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t, log));
             }
         }
@@ -182,7 +182,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 error = true;
                 log.fatal("Something unknown and terrible happened while harvesting");
                 log.fatal(t.getMessage());
-                t.printStackTrace();
+                log.error(t);
                 errors.add(new HarvestError(context, t, log));
             }
         }

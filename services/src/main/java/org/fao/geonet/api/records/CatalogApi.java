@@ -30,7 +30,9 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.rdf.RdfOutputManager;
 import org.fao.geonet.api.records.rdf.RdfSearcher;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -113,9 +115,9 @@ public class CatalogApi {
                 out.write(bytes, 0, bytesRead);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME,"Get catalog content as RDF. Error: " + e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(API.LOG_MODULE_NAME,"Get catalog content as RDF. Error: " + e.getMessage(), e);
         }
     }
 }

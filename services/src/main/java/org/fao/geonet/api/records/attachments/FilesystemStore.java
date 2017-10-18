@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
@@ -38,6 +39,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -195,7 +197,7 @@ public class FilesystemStore implements Store {
         try {
             fileSize = Files.size(filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, e.getMessage(), e);
         }
         return new FilesystemStoreResource(
             metadataUuid + "/attachments/" + filePath.getFileName(),

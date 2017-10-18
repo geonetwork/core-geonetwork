@@ -33,6 +33,7 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.services.util.SearchDefaults;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
@@ -149,7 +150,7 @@ public class SearchApi {
                 model.addContent(searcher.present(context, params, config));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.GEONETWORK, e.getMessage(), e);
         }
         return model;
     }

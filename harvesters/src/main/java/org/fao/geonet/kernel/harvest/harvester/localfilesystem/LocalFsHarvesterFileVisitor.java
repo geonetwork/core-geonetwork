@@ -125,12 +125,12 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     xml = Xml.loadFile(file);
                 } catch (JDOMException e) { // JDOM problem
                     log.debug("Error loading XML from file " + filePath + ", ignoring");
-                    e.printStackTrace();
+                    log.error(e);
                     result.badFormat++;
                     return FileVisitResult.CONTINUE; // skip this one
                 } catch (Throwable e) { // some other error
                     log.debug("Error retrieving XML from file " + filePath + ", ignoring");
-                    e.printStackTrace();
+                    log.error(e);
                     result.unretrievable++;
                     return FileVisitResult.CONTINUE; // skip this one
                 }

@@ -33,8 +33,7 @@
     "class": "<xsl:value-of select="root/error/class"/>",
     "service": "<xsl:value-of select="root/error/request/service"/>",
     "message": "<xsl:value-of
-    select="normalize-space(replace(replace(translate(root/error/message, '&quot;', ''), '&lt;script&gt;', '', 'i'), '&lt;/script&gt;', '', 'i'))"/>",
-    "stack": "<xsl:apply-templates select="root/error/stack"/>"
+    select="normalize-space(replace(replace(translate(root/error/message, '&quot;', ''), '&lt;script&gt;', '', 'i'), '&lt;/script&gt;', '', 'i'))"/>"
     }
   </xsl:template>
 

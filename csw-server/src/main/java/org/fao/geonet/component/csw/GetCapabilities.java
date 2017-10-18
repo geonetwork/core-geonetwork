@@ -475,8 +475,8 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             Lib.element.substitute(capabilities, vars);
 
         } catch (Exception ex) {
+            Log.error(Geonet.CSW, ex.getMessage(), ex);
             // TODO: handle exception
-            ex.printStackTrace();
         }
 
     }

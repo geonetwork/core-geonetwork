@@ -129,7 +129,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             }
         } catch (ClassNotFoundException e) {
             _logger.error(String.format("DB Migration / '%s' is an invalid value for initAfter. Class not found. Error is %s", initAfter, e.getMessage()));
-            e.printStackTrace();
+            _logger.error(e);
         }
         return bean;
     }
@@ -191,7 +191,7 @@ public class DatabaseMigration implements BeanPostProcessor {
             to = parseVersionNumber(webappVersion);
         } catch (Exception e) {
             _logger.warning("      Error parsing version numbers: " + e.getMessage());
-            e.printStackTrace();
+            _logger.error(e);
         }
 
         switch (from.compareTo(to)) {
@@ -229,7 +229,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                                     Lib.db.insertData(servletContext, statement, path, filePath, filePrefix);
                                 } catch (Exception e) {
                                     _logger.info("          Errors occurs during SQL migration file: " + e.getMessage());
-                                    e.printStackTrace();
+                                    _logger.error(e);
                                     anyMigrationError = true;
                                 }
                             }
@@ -298,7 +298,8 @@ public class DatabaseMigration implements BeanPostProcessor {
             _logger.error("          Errors occurs during Java migration file: " + error);
             return true;
         } catch (Throwable e) {
-            e.printStackTrace();
+            _logger.error("          Errors occurs during Java migration file: " +  e.getMessage());
+            _logger.error(e);
             return true;
         }
     }

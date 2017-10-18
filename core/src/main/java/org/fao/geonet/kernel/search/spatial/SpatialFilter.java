@@ -277,7 +277,7 @@ public abstract class SpatialFilter extends Filter {
                 try {
                     geom = WORLD_BOUNDS;
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    Log.error(Geonet.SPATIAL,"unrefinedSpatialMatches error: " + ex.getMessage(), ex);
                     return _unrefinedMatches;
                 }
 

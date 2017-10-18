@@ -109,7 +109,7 @@ public class ThesaurusRequest extends Request {
                 categoryIdParam = results.get(0).getUriCode();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.THESAURUS, e.getMessage(), e);
         }
         return categoryIdParam;
     }

@@ -347,8 +347,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         detected = true;
                     }
                 } catch (Exception x) {
-                    Log.error(Geonet.LUCENE, "Error auto-detecting language: " + x.getMessage());
-                    x.printStackTrace();
+                    Log.error(Geonet.LUCENE, "Error auto-detecting language: " + x.getMessage(), x);
                 }
 
 
@@ -658,7 +657,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             // too dangerous to do this only for logging, as it may throw NPE if Query was not constructed correctly
             // However if you need to see what Lucene queries are really used, print the rewritten query instead
             // Query rw = query.rewrite(reader);
-            // System.out.println("Lucene query: " + rw.toString());
+            // Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + rw.toString());
             if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
                 Log.debug(Geonet.SEARCH_ENGINE, "Lucene query: " + query.toString());
             }
@@ -676,8 +675,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             try {
                 buildFacetSummary(elSummary, summaryConfig, facetConfiguration, facetCollector, taxonomyReader, langCode);
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage());
+                Log.warning(Geonet.FACET_ENGINE, "BuildFacetSummary error. " + e.getMessage(), e);
             }
 
         } else {
@@ -731,8 +729,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             for (String facet : configurationErrors.keySet()) {
                 message.append("\n  * ").append(facet);
             }
-            Log.error(Geonet.FACET_ENGINE, message);
-            configurationErrors.values().iterator().next().printStackTrace();
+            Log.error(Geonet.FACET_ENGINE, message, configurationErrors.values().iterator().next());
         }
     }
 
@@ -1048,13 +1045,13 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
         } catch (Exception e) {
             // TODO why swallow
-            e.printStackTrace();
+            Log.error(Geonet.SEARCH_ENGINE, "analyzeText error:" + e.getMessage(), e);
         } finally {
             if (ts != null) {
                 try {
                     ts.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.error(Geonet.SEARCH_ENGINE, "analyzeText error closing TokenStream:" + e.getMessage(), e);
                 }
             }
         }
@@ -1569,12 +1566,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                         _query = c.newInstance(inParamsArrayAll);
                     } catch (Exception e) {
                         Log.warning(Geonet.SEARCH_ENGINE, " Failed to create boosting query: " + e.getMessage()
-                            + ". Check Lucene configuration");
-                        e.printStackTrace();
+                            + ". Check Lucene configuration", e);
                     }
                 } catch (Exception e1) {
                     Log.warning(Geonet.SEARCH_ENGINE, " Error on boosting query initialization: " + e1.getMessage()
-                        + ". Check Lucene configuration");
+                        + ". Check Lucene configuration", e1);
                 }
             }
 

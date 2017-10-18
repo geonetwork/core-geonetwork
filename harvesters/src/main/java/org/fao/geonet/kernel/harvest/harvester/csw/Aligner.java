@@ -426,7 +426,7 @@ public class Aligner extends BaseAligner {
             return response;
         } catch (Exception e) {
             log.warning("Raised exception while getting record : " + e);
-            e.printStackTrace();
+            log.error(e);
             result.unretrievable++;
 
             //--- we don't raise any exception here. Just try to go on
@@ -494,7 +494,7 @@ public class Aligner extends BaseAligner {
                 }
             } catch (Throwable e) {
                 log.warning("      - Error when searching for resource duplicate " + uuid + ". Error is: " + e.getMessage());
-                e.printStackTrace();
+                log.error(e);
             }
         }
         return false;

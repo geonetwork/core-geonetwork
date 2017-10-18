@@ -348,8 +348,7 @@ public class SchemaManager {
                 realDeletePluginSchema(name, doDependencies);
             } catch (Exception e) {
                 String errStr = "Could not update schema " + name + ", remove of outdated schema failed. Exception message if any is " + e.getMessage();
-                Log.error(Geonet.SCHEMA_MANAGER, errStr);
-                e.printStackTrace();
+                Log.error(Geonet.SCHEMA_MANAGER, errStr, e);
                 throw new OperationAbortedEx(errStr, e);
             }
 
@@ -894,7 +893,7 @@ public class SchemaManager {
 
             writeSchemaPluginCatalog(schemaPluginCatRoot);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, e.getMessage(), e);
             hmSchemas.remove(name);
             IO.deleteFileOrDirectory(schemaDir);
             throw new OperationAbortedEx("Failed to add schema " + name + " : " + e.getMessage(), e);
@@ -1108,7 +1107,7 @@ public class SchemaManager {
         try {
             baseNrInt = Integer.parseInt(baseNr);
         } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, "Cannot decode blank number from " + baseBlank, nfe);
             throw new IllegalArgumentException("Cannot decode blank number from " + baseBlank);
         }
         return baseNrInt;
@@ -1282,8 +1281,7 @@ public class SchemaManager {
             }
         } catch (Exception e) {
             String errStr = "Failed whilst " + stage + ". Exception message if any is " + e.getMessage();
-            Log.error(Geonet.SCHEMA_MANAGER, errStr);
-            e.printStackTrace();
+            Log.error(Geonet.SCHEMA_MANAGER, errStr, e);
             throw new OperationAbortedEx(errStr, e);
         }
 

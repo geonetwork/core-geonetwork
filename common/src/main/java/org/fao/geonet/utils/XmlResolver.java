@@ -127,10 +127,10 @@ public class XmlResolver extends XMLCatalogResolver {
                 }
             }
         } catch (MalformedURLException e) { // leave this to someone else?
-            e.printStackTrace();
+            Log.error(Log.XML_RESOLVER, e.getMessage(), e);
             return result;
         } catch (URISyntaxException e) { // leave this to someone else?
-            e.printStackTrace();
+            Log.error(Log.XML_RESOLVER, e.getMessage(), e);
             return result;
         }
 
@@ -141,8 +141,7 @@ public class XmlResolver extends XMLCatalogResolver {
             try {
                 elResult = isXmlInCache(externalRef.toString());
             } catch (CacheException e) {
-                Log.error(Log.XML_RESOLVER, "Request to cache for " + externalRef + " failed.");
-                e.printStackTrace();
+                Log.error(Log.XML_RESOLVER, "Request to cache for " + externalRef + " failed.", e);
             }
 
             if (elResult == null) { // use XMLRequest to get the XML

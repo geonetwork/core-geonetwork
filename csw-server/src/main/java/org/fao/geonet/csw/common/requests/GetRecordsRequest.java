@@ -25,6 +25,7 @@ package org.fao.geonet.csw.common.requests;
 
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.ConstraintLanguage;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ElementSetName;
@@ -32,6 +33,7 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -305,7 +307,7 @@ public class GetRecordsRequest extends CatalogRequest {
         try {
             constr.addContent(Xml.loadString(constraint, false));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.error(Geonet.CSW_SEARCH, "CSW filter error: " + e.getMessage(), e);
         }
     }
 }

@@ -26,7 +26,9 @@ package org.fao.geonet.kernel.search;
 import com.google.common.io.Resources;
 
 import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.Log;
 import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -101,7 +103,7 @@ public final class JSONLocCacheLoader implements Callable<Map<String, String>> {
                     translation.put(key, json.getString(key));
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.error(Geonet.GEONETWORK, "addJSONLocalizationFile error:" + e.getMessage(), e);
             }
         }
     }

@@ -22,6 +22,8 @@
 //==============================================================================
 package org.fao.geonet.util;
 
+import org.fao.geonet.utils.Log;
+
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -106,7 +108,6 @@ public class JavaMailer {
      */
     public void send(String subject, String text, String html, String sender, String... recipients) throws MessagingException {
         try {
-            System.out.println("mailer start");
             MimeMessage message = new MimeMessage(mailSession);
             message.setSubject(subject);
             message.setFrom(new InternetAddress(sender));
@@ -165,10 +166,8 @@ public class JavaMailer {
             String password = this.password;
             int smtpPort = this.smtpPort;
             if (this.authentication) {
-                System.out.println("Using authentication");
                 transport.connect(host, smtpPort, username, password);
             } else {
-                System.out.println("Not using authentication");
                 transport.connect(host, smtpPort, null, null);
             }
 
@@ -176,7 +175,6 @@ public class JavaMailer {
             System.arraycopy(message.getRecipients(Message.RecipientType.TO), 0, addresses, 0, message.getRecipients(Message.RecipientType.TO).length);
             transport.sendMessage(message, addresses);
         } finally {
-            System.out.println("mailer end");
             transport.close();
         }
     }
