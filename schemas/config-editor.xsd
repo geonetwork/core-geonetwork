@@ -809,6 +809,7 @@ A section is a group of fields.
       </xs:attribute>
       <xs:attribute ref="or"/>
       <xs:attribute ref="in"/>
+      <xs:attribute ref="displayIfRecord"/>
     </xs:complexType>
     <xs:unique name="avoidDuplicateFieldWithSameXPath">
       <xs:annotation>
