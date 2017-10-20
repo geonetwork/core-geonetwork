@@ -28,6 +28,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.BadServerResponseEx;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
@@ -111,9 +112,9 @@ public class Rate extends NotInReadOnlyModeService {
 
         // look up value of localrating/enable
         SettingManager settingManager = gc.getBean(SettingManager.class);
-        boolean localRating = settingManager.getValueAsBool(SYSTEM_LOCALRATING_ENABLE, false);
+        String localRating = settingManager.getValue(SYSTEM_LOCALRATING_ENABLE);
 
-        if (localRating || harvUuid == null)
+        if (localRating.equals(RatingsSetting.BASIC) || harvUuid == null)
             //--- metadata is local, just rate it
             rating = dm.rateMetadata(Integer.valueOf(id), ip, rating);
         else {

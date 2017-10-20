@@ -31,6 +31,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
@@ -256,12 +257,12 @@ public class Aligner extends BaseAligner {
 
                     // look up value of localrating/enable
                     SettingManager settingManager = context.getBean(SettingManager.class);
-                    boolean localRating = settingManager.getValueAsBool(Settings.SYSTEM_LOCALRATING_ENABLE, false);
+                    String localRating = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
                     if (id == null) {
-                        addMetadata(ri, localRating);
+                        addMetadata(ri, localRating.equals(RatingsSetting.BASIC));
                     } else {
-                        updateMetadata(ri, id, localRating, params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
+                        updateMetadata(ri, id, localRating.equals(RatingsSetting.BASIC), params.useChangeDateForUpdate(), localUuids.getChangeDate(ri.uuid));
                     }
                 }
             } catch (Throwable t) {

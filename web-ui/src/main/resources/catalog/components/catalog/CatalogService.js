@@ -356,6 +356,7 @@
           isXLinkEnabled: 'system.xlinkResolver.enable',
           isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
           isFeedbackEnabled: 'system.userFeedback.enable',
+          isRatingUserFeedbackEnabled: 'system.localratinguserfeedback.enable',
           isSearchStatEnabled: 'system.searchStats.enable',
           isHideWithHelEnabled: 'system.hidewithheldelements.enable'
         },
@@ -371,6 +372,7 @@
       isXLinkLocal: 'system.xlinkResolver.localXlinkEnable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
       isFeedbackEnabled: 'system.userFeedback.enable',
+      isRatingUserFeedbackEnabled: 'system.localrating.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
     },

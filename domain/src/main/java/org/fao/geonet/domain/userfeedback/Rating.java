@@ -37,8 +37,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * One single aspect that could be evalueted in a user feedback: 
- * it's a (n:1) relation with a User feedback (so not directly related to metadata)
+ * One single aspect that could be evalueted in a user feedback: it's a (n:1) relation with a User feedback (so not directly related to
+ * metadata)
  */
 @Entity(name = "GUF_Rating")
 @Table(name = "GUF_Rating")
@@ -131,8 +131,7 @@ public class Rating implements Serializable {
     /**
      * Sets the category.
      *
-     * @param category
-     *            the new category
+     * @param category the new category
      */
     public void setCategory(Category category) {
         this.category = category;
@@ -141,8 +140,7 @@ public class Rating implements Serializable {
     /**
      * Sets the id.
      *
-     * @param id
-     *            the new id
+     * @param id the new id
      */
     public void setId(long id) {
         this.id = id;
@@ -151,8 +149,7 @@ public class Rating implements Serializable {
     /**
      * Sets the rating.
      *
-     * @param rating
-     *            the new rating
+     * @param rating the new rating
      */
     public void setRating(Integer rating) {
         this.rating = rating;
@@ -161,8 +158,7 @@ public class Rating implements Serializable {
     /**
      * Sets the userfeedback.
      *
-     * @param userfeedback
-     *            the new userfeedback
+     * @param userfeedback the new userfeedback
      */
     public void setUserfeedback(UserFeedback userfeedback) {
         this.userfeedback = userfeedback;

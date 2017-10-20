@@ -51,7 +51,7 @@ UPDATE Settings SET name = 'system/shib/firstname', datatype = 0 WHERE id = 176;
 UPDATE Settings SET name = 'system/shib/profile', datatype = 0 WHERE id = 177;
 UPDATE Settings SET name = 'system/userSelfRegistration/enable', datatype = 2, internal = 'n' WHERE id = 191;
 UPDATE Settings SET name = 'system/clickablehyperlinks/enable', datatype = 2 WHERE id = 201;
-UPDATE Settings SET name = 'system/localrating/enable', datatype = 2 WHERE id = 211;
+UPDATE Settings SET name = 'system/localrating/enable', datatype = 0 WHERE id = 211;
 UPDATE Settings SET name = 'system/downloadservice/leave', datatype = 0 WHERE id = 221;
 UPDATE Settings SET name = 'system/downloadservice/simple', datatype = 0 WHERE id = 222;
 UPDATE Settings SET name = 'system/downloadservice/withdisclaimer', datatype = 0 WHERE id = 223;

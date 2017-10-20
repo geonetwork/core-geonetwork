@@ -1,7 +1,8 @@
 <div>
 
 	<button class="btn btn-default btn-sm" data-toggle="modal"
-		data-target="#gn-userfeedback-addcomment" data-ng-click="initPopup()" data-translate="">GUFplusAddRating</button>
+		data-target="#gn-userfeedback-addcomment" data-ng-click="initPopup()"
+		data-translate="">GUFplusAddRating</button>
 
 	<!-- Add comment Modal -->
 	<div class="modal gn-userfeedback-modal"
@@ -27,7 +28,8 @@
 									<h4 class="panel-title">
 										<a role="button" data-toggle="collapse"
 											data-parent="#accordion" data-target="#collapseOne"
-											aria-expanded="true" aria-controls="collapseOne" data-translate="">GUFgiveYourOpinionOnDifferentCategories</a>
+											aria-expanded="true" aria-controls="collapseOne"
+											data-translate="">GUFgiveYourOpinionOnDifferentCategories</a>
 									</h4>
 								</div>
 								<div id="collapseOne" class="panel-collapse collapse in"
@@ -37,8 +39,9 @@
 											<h3 data-translate="">GUFcategories</h3>
 										</div>
 										<h3>
-											<span data-translate="">GUFcomplete</span>
-											<span class="fa fa-info-circle" data-title="{{'GUFcompleteInfo' | translate}}"></span>
+											<span data-translate="">GUFcomplete</span> <span
+												class="fa fa-info-circle"
+												data-title="{{'GUFcompleteInfo' | translate}}"></span>
 										</h3>
 										<div data-rating="" data-ng-model="uf.ratingCOMPLETE"
 											data-max="5" data-state-on="'fa fa-fw fa-star'"
@@ -49,8 +52,9 @@
 											class="text-muted"
 											title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
 										<h3>
-											<span data-translate="">GUFfindability</span>
-											<span class="fa fa-info-circle" data-title="{{'GUFfindabilityInfo' | translate}}"></span>
+											<span data-translate="">GUFfindability</span> <span
+												class="fa fa-info-circle"
+												data-title="{{'GUFfindabilityInfo' | translate}}"></span>
 										</h3>
 										<div data-rating="" data-ng-model="uf.ratingFINDABILITY"
 											data-max="5" data-state-on="'fa fa-fw fa-star'"
@@ -60,7 +64,11 @@
 											data-ng-click="rateForRecord(rate); updateRate()"
 											class="text-muted"
 											title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-										<h3><span data-translate="">GUFreadability</span> <span class="fa fa-info-circle" data-title="{{'GUFreadabilityInfo' | translate}}"></span></h3>
+										<h3>
+											<span data-translate="">GUFreadability</span> <span
+												class="fa fa-info-circle"
+												data-title="{{'GUFreadabilityInfo' | translate}}"></span>
+										</h3>
 										<div data-rating="" data-ng-model="uf.ratingREADABILITY"
 											data-max="5" data-state-on="'fa fa-fw fa-star'"
 											data-state-off="'fa fa-fw fa-star-o'"
@@ -69,7 +77,11 @@
 											data-ng-click="rateForRecord(rate); updateRate()"
 											class="text-muted"
 											title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-										<h3><span data-translate="">GUFdataquality</span> <span class="fa fa-info-circle" data-title="{{'GUFdataqualityInfo' | translate}}"></span></h3>
+										<h3>
+											<span data-translate="">GUFdataquality</span> <span
+												class="fa fa-info-circle"
+												data-title="{{'GUFdataqualityInfo' | translate}}"></span>
+										</h3>
 										<div data-rating="" data-ng-model="uf.ratingDATAQUALITY"
 											data-max="5" data-state-on="'fa fa-fw fa-star'"
 											data-state-off="'fa fa-fw fa-star-o'"
@@ -78,7 +90,11 @@
 											data-ng-click="rateForRecord(rate); updateRate()"
 											class="text-muted"
 											title="{{readonly ? '' : ('clickToRate' | translate)}}"></div>
-										<h3><span data-translate="">GUFservicequality</span> <span class="fa fa-info-circle" data-title="{{'GUFservicequalityInfo' | translate}}"></span></h3>
+										<h3>
+											<span data-translate="">GUFservicequality</span> <span
+												class="fa fa-info-circle"
+												data-title="{{'GUFservicequalityInfo' | translate}}"></span>
+										</h3>
 										<div data-rating="" data-ng-model="uf.ratingSERVICEQUALITY"
 											data-max="5" data-state-on="'fa fa-fw fa-star'"
 											data-state-off="'fa fa-fw fa-star-o'"
@@ -96,7 +112,8 @@
 									<h4 class="panel-title">
 										<a class="collapsed" role="button" data-toggle="collapse"
 											data-parent="#accordion" data-target="#collapseTwo"
-											aria-expanded="false" aria-controls="collapseTwo" data-translate="">GUFgiveYourOpinionAboutTheDataset</a>
+											aria-expanded="false" aria-controls="collapseTwo"
+											data-translate="">GUFgiveYourOpinionAboutTheDataset</a>
 									</h4>
 								</div>
 								<div id="collapseTwo" class="panel-collapse collapse"
@@ -144,45 +161,51 @@
 						<div class="gn-userfeedback-title">
 							<h3 data-translate="">GUFcurrentScore</h3>
 						</div>
-						<div class="gn-userfeedback-score gn-userfeedback-score-{{uf.ratingAVG}}">
+						<div
+							class="gn-userfeedback-score gn-userfeedback-score-{{uf.ratingAVG}}">
 							{{uf.ratingAVG}} / 5 <span class="fa fa-fw fa-star">&nbsp;</span>
 						</div>
 						<div class="gn-userfeedback-title">
 							<h3 data-translate="">GUFuserInformation</h3>
 						</div>
 						<div class="gn-userfeedback-loggedin" data-ng-show="loggedIn">
-							<p data-translate="" data-translate-values="{authorNameValue:'{{authorNameValue}}'}" >GUFyouAreLoggedInAs</p>
+							<p data-translate=""
+								data-translate-values="{authorNameValue:'{{authorNameValue}}'}">GUFyouAreLoggedInAs</p>
 						</div>
 						<div class="gn-userfeedback-loggedout" data-ng-hide="loggedIn">
 							<div id="GUFcredentials" class="anonymous">
-							<p data-translate="">GUFyouAreNotLoggedInPleaseFillIn</p>
-							<input type="text" name="authorName" class="form-control"
-								placeholder="Your Name" data-ng-model="uf.authorName"
-								data-ng-maxlength="64" required>
-							<p data-ng-show="authorNameError" class="help-block">{{authorNameError}}</p>
+								<p data-translate="">GUFyouAreNotLoggedInPleaseFillIn</p>
+								<input type="text" name="authorName" class="form-control"
+									placeholder="Your Name" data-ng-model="uf.authorName"
+									data-ng-maxlength="64" required>
+								<p data-ng-show="authorNameError" class="help-block">{{authorNameError}}</p>
 
-							<input type="email" name="authorEmail" class="form-control"
-								placeholder="Your Email" data-ng-model="uf.authorEmail"
-								data-ng-maxlength="64" required>
-							<p data-ng-show="authorEmailError" class="help-block">{{authorEmailError}}</p>
+								<input type="email" name="authorEmail" class="form-control"
+									placeholder="Your Email" data-ng-model="uf.authorEmail"
+									data-ng-maxlength="64" required>
+								<p data-ng-show="authorEmailError" class="help-block">{{authorEmailError}}</p>
 
-							<input type="text" name="authorOrganization" class="form-control"
-								placeholder="Your Organization"
-								data-ng-model="uf.authorOrganization" data-ng-maxlength="64">
-							<p data-ng-show="authorOrganizationError" class="help-block">{{authorOrganizationError}}</p>
+								<input type="text" name="authorOrganization"
+									class="form-control" placeholder="Your Organization"
+									data-ng-model="uf.authorOrganization" data-ng-maxlength="64">
+								<p data-ng-show="authorOrganizationError" class="help-block">{{authorOrganizationError}}</p>
 							</div>
 							<p>
 							<div class="checkbox">
-								<label> <input type="checkbox" value="1" data-ng-click="toggleCredentials()"> <span data-translate="">GUFanonymous</span>
+								<label> <input type="checkbox" value="1"
+									data-ng-click="toggleCredentials()"> <span
+									data-translate="">GUFanonymous</span>
 								</label>
 							</div>
 							<div class="checkbox anonymous">
 								<label> <input type="checkbox"
-									data-ng-model="uf.optionPrivacy" value="1"> <span data-translate="">GUFshowUserNameInComments</span>
+									data-ng-model="uf.optionPrivacy" value="1"> <span
+									data-translate="">GUFshowUserNameInComments</span>
 								</label>
 							</div>
 							<div class="checkbox">
-								<label> <input type="checkbox" value="1"> <span data-translate="">GUFhideUserNameInPublic</span>
+								<label> <input type="checkbox" value="1"> <span
+									data-translate="">GUFhideUserNameInPublic</span>
 								</label>
 							</div>
 							</p>
@@ -192,7 +215,8 @@
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" data-ng-model="uf.ratingAVG">
-					<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="">GUFclose</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						data-translate="">GUFclose</button>
 					<button type="button" class="btn btn-primary"
 						data-ng-click="submitForm(uf, modal)" data-translate="">GUFsave</button>
 				</div>

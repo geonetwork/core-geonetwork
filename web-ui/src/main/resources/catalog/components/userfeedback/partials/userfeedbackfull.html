@@ -1,6 +1,7 @@
 <div>
 	<button class="btn btn-default btn-sm" data-toggle="modal"
-		data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments" data-translate="">GUFseeAllFeedbacks</button>
+		data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments"
+		data-translate="">GUFseeAllFeedbacks</button>
 
 
 	<!-- All comments modal -->
@@ -20,14 +21,16 @@
 					<div class="row">
 						<div class="col-md-12">
 							<h2>{{rating.metadataTitle}}</h2>
-							<p data-translate="" data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}', date:'{{rating.lastComment | date:'medium'}}'}">GUFcommentsLastCommentOn</p>
+							<p data-translate=""
+								data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}', date:'{{rating.lastComment | date:'medium'}}'}">GUFcommentsLastCommentOn</p>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-7">
 
 							<div class="gn-userfeedback-title">
-								<h3 data-translate="" data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}'}">countReviews</h3>
+								<h3 data-translate=""
+									data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}'}">countReviews</h3>
 							</div>
 							<ul class="gn-userfeedback-list">
 
@@ -38,15 +41,18 @@
 									</div>
 									<div class="pull-left gn-userfeedback-comment-user">
 										<a>{{row.authorName}}</a>
-										<p><q>{{row.comment}}</q></p>
-										<span class="gn-userfeedback-score-{{row.ratingAVG}}" data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/
-											5 <span class="fa fa-fw fa-star">&nbsp;</span>
+										<p>
+											<q>{{row.comment}}</q>
+										</p>
+										<span class="gn-userfeedback-score-{{row.ratingAVG}}"
+											data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/ 5 <span
+											class="fa fa-fw fa-star">&nbsp;</span>
 										</span>
 										<p class="gn-userfeedback-reply" data-ng-show="loggedIn">
 											{{row.date | date:'medium'}}&nbsp;-&nbsp; <span
 												data-ng-hide="{{row.published}}"><a
-												data-ng-click="publish(row.uuid)" data-translate="">GUFpublishUserFeedback</a>&nbsp;|&nbsp;</span> <a
-												data-ng-click="deleteC(row.uuid)" data-translate="">GUFdeleteUserFeedback</a>
+												data-ng-click="publish(row.uuid)" data-translate="">GUFpublishUserFeedback</a>&nbsp;|&nbsp;</span>
+											<a data-ng-click="deleteC(row.uuid)" data-translate="">GUFdeleteUserFeedback</a>
 										</p>
 										<p class="gn-userfeedback-reply" data-ng-hide="loggedIn">
 											{{row.date | date:'medium'}}</p>
@@ -78,7 +84,8 @@
               <li><a href="">Add rating</a></li>
             </ul>
           </div> -->
-					<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="">GUFclose</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						data-translate="">GUFclose</button>
 				</div>
 			</div>
 		</div>

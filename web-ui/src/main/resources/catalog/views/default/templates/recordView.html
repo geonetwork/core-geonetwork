@@ -422,10 +422,17 @@
 				</section>
 				</br>
 
-				<div data-gn-userfeedback='{{mdView.current.record.getUuid()}}' data-gn-user={{user.username}}></div>
-				<div class="gn-md-feedback-buttons clearfix">				
-					<div class="pull-left" data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}' data-gn-user={{user.username}}></div>
-					<div class="pull-left" data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}' data-gn-user={{user.username}}></div>
+				<div data-gn-userfeedback='{{mdView.current.record.getUuid()}}'
+					data-gn-user={{user.username}} data-ng-show="isUserFeedbackEnabled"></div>
+				<div class="gn-md-feedback-buttons clearfix">
+					<div class="pull-left"
+						data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}'
+						data-gn-user={{user.username}}
+						data-ng-show="isUserFeedbackEnabled"></div>
+					<div class="pull-left"
+						data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}'
+						data-gn-user={{user.username}}
+						data-ng-show="isUserFeedbackEnabled"></div>
 				</div>
 
 				<section data-ng-if="mdView.current.record.geoBox.length > 0">
@@ -569,6 +576,14 @@
 						class="fa fa-fw fa-link"></i></a>
 				</section>
 				</br>
+				 <section data-ng-show="isRatingEnabled">
+          <h4>
+            <i class="fa fa-fw"></i>
+            <span data-translate="">rate</span>
+          </h4>
+          <div data-gn-metadata-rate="mdView.current.record"/>
+
+          </section>
 
 			</div>
 

@@ -92,8 +92,7 @@ public class Citation extends GeonetEntity implements Serializable {
     /**
      * Sets the date.
      *
-     * @param date
-     *            the new date
+     * @param date the new date
      */
     public void setDate(Date date) {
         this.date = date;
@@ -102,8 +101,7 @@ public class Citation extends GeonetEntity implements Serializable {
     /**
      * Sets the id.
      *
-     * @param id
-     *            the new id
+     * @param id the new id
      */
     public void setId(long id) {
         this.id = id;
@@ -112,8 +110,7 @@ public class Citation extends GeonetEntity implements Serializable {
     /**
      * Sets the title.
      *
-     * @param title
-     *            the new title
+     * @param title the new title
      */
     public void setTitle(String title) {
         this.title = title;
