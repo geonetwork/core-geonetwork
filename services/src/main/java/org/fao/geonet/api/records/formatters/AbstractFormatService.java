@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.utils.FilePathChecker;
@@ -194,9 +195,19 @@ abstract class AbstractFormatService {
             resolvedId = dataManager.getMetadataId(uuid);
             if (resolvedId == null) {
                 if (uuid.startsWith("SDN:")) {
-                    uuid = uuid.replace(":", "_");
+                    final String[] strings = uuid.split(":");
+                    if (strings.length >= 4) {
+                        uuid =
+                            String.join("_", Arrays.copyOfRange(strings, 0, 3)) +
+                                "_" + String.join(":", Arrays.copyOfRange(strings, 3, strings.length));
+                    }
                 } else {
-                    uuid = uuid.replace("_", ":");
+                    final String[] strings = uuid.split("_");
+                    if (strings.length >= 4) {
+                        uuid =
+                            String.join(":", Arrays.copyOfRange(strings, 0, 3)) +
+                                ":" + String.join("_", Arrays.copyOfRange(strings, 3, strings.length));
+                    }
                 }
                 resolvedId = dataManager.getMetadataId(uuid);
             }
