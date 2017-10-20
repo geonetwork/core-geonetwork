@@ -110,6 +110,18 @@
                         {{'system/oai/mdmode-valueModificationDate' | translate}}
                       </option>
                     </select>
+                    <select data-ng-switch-when="system/localrating/enable" class="form-control"
+                            name="{{s.name}}">
+                      <option value=""
+                              ng-selected="'' == s.value">{{'off' | translate}}
+                      </option>
+                      <option value="basic"
+                              ng-selected="'basic' == s.value">{{'basic' | translate}}
+                      </option>
+                      <option value="advanced"
+                              ng-selected="'advanced' == s.value">{{'advanced' | translate}}
+                      </option>
+                    </select>
                     <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
                             name="{{s.name}}">
                       <option value="off"

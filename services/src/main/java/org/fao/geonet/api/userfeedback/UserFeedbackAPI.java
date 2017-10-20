@@ -39,8 +39,12 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.userfeedback.UserFeedbackUtils.RatingAverage;
 import org.fao.geonet.api.userfeedback.service.IUserFeedbackService;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.userfeedback.RatingsSetting;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,334 +72,349 @@ import jeeves.server.UserSession;
 @Controller("userfeedback")
 public class UserFeedbackAPI {
 
-  /** The Constant API_PARAM_CSW_SERVICE_IDENTIFIER. */
-  public static final String API_PARAM_CSW_SERVICE_IDENTIFIER = "Service identifier";
+    /** The Constant API_PARAM_CSW_SERVICE_IDENTIFIER. */
+    public static final String API_PARAM_CSW_SERVICE_IDENTIFIER = "Service identifier";
 
-  /** The Constant API_PARAM_CSW_SERVICE_DETAILS. */
-  public static final String API_PARAM_CSW_SERVICE_DETAILS = "Service details";
+    /** The Constant API_PARAM_CSW_SERVICE_DETAILS. */
+    public static final String API_PARAM_CSW_SERVICE_DETAILS = "Service details";
 
-  /**
-   * Delete user feedback.
-   *
-   * @param uuid
-   *          the uuid
-   * @param request
-   *          the request
-   * @param response
-   *          the response
-   * @param httpSession
-   *          the http session
-   * @return the response entity
-   * @throws Exception
-   *           the exception
-   */
-  // DELETE
-  @ApiOperation(value = "Removes a user feedback", notes = "Removes a user feedback", nickname = "deleteUserFeedback")
-  @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  @PreAuthorize("hasRole('Reviewer')")
-  @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback removed."),
-      @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
-  @ResponseBody
-  public ResponseEntity deleteUserFeedback(@PathVariable(value = "uuid") final String uuid,
-      final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
-      throws Exception {
+    /**
+     * Delete user feedback.
+     *
+     * @param uuid the uuid
+     * @param request the request
+     * @param response the response
+     * @param httpSession the http session
+     * @return the response entity
+     * @throws Exception the exception
+     */
+    // DELETE
+    @ApiOperation(value = "Removes a user feedback", notes = "Removes a user feedback", nickname = "deleteUserFeedback")
+    @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('Reviewer')")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback removed."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
+    @ResponseBody
+    public ResponseEntity deleteUserFeedback(@PathVariable(value = "uuid")
+    final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+            throws Exception {
 
-    Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "deleteUserFeedback");
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
-    final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
 
-    userFeedbackService.removeUserFeedback(uuid);
+        Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "deleteUserFeedback");
 
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
-  }
+        final IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-  /**
-   * Gets the metadata rating.
-   *
-   * @param metadataUuid
-   *          the metadata uuid
-   * @param request
-   *          the request
-   * @param response
-   *          the response
-   * @param httpSession
-   *          the http session
-   * @return the metadata rating
-   * @throws Exception
-   *           the exception
-   */
-  @ApiOperation(value = "Provides an average rating for a metadata record", notes = "Provides an average rating for a metadata record", nickname = "getMetadataUserComments")
-  @RequestMapping(value = "/metadata/{uuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-  @ResponseStatus(value = HttpStatus.OK)
-  @ResponseBody
-  public RatingAverage getMetadataRating(@PathVariable(value = "uuid") final String metadataUuid,
-      final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
-      throws Exception {
+        userFeedbackService.removeUserFeedback(uuid);
 
-    try {
-      Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
-
-      // Check permission for metadata
-      final Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-      if (metadata == null) {
-        printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-        return null;
-      }
-
-      final UserSession session = ApiUtils.getUserSession(httpSession);
-
-      boolean published = true; // Takes only published comments
-
-      // showing not published comments only to logged users (maybe better
-      // restrict to Reviewers)
-      if (session != null && session.isAuthenticated()) {
-        published = false;
-      }
-
-      final IUserFeedbackService userFeedbackService = getUserFeedbackService();
-
-      final UserFeedbackUtils utils = new UserFeedbackUtils();
-
-      return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, -1, published));
-    } catch (final Exception e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * Gets the user comment.
-   *
-   * @param uuid
-   *          the uuid
-   * @param request
-   *          the request
-   * @param response
-   *          the response
-   * @param httpSession
-   *          the http session
-   * @return the user comment
-   * @throws Exception
-   *           the exception
-   */
-  @ApiOperation(value = "Finds a specific usercomment", notes = "Finds a specific usercomment", nickname = "getUserComment")
-  @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-  @ResponseStatus(value = HttpStatus.OK)
-  @ResponseBody
-  public UserFeedbackDTO getUserComment(@PathVariable(value = "uuid") final String uuid,
-      final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
-      throws Exception {
-
-    Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComment");
-
-    final IUserFeedbackService userFeedbackService = (IUserFeedbackService) ApplicationContextHolder.get()
-        .getBean("userFeedbackService");
-
-    final UserSession session = ApiUtils.getUserSession(httpSession);
-
-    boolean published = true; // Takes only published comments
-
-    // showing not published comments only to logged users (maybe better
-    // restrict to Reviewers)
-    if (session != null && session.isAuthenticated()) {
-      published = false;
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    final UserFeedback userfeedback = userFeedbackService.retrieveUserFeedback(uuid, published);
+    /**
+     * Gets the metadata rating.
+     *
+     * @param metadataUuid the metadata uuid
+     * @param request the request
+     * @param response the response
+     * @param httpSession the http session
+     * @return the metadata rating
+     * @throws Exception the exception
+     */
+    @ApiOperation(value = "Provides an average rating for a metadata record", nickname = "getMetadataUserComments")
+    @RequestMapping(value = "/metadata/{uuid}/userfeedbackrating", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public RatingAverage getMetadataRating(@PathVariable(value = "uuid")
+    final String metadataUuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+            throws Exception {
 
-    UserFeedbackDTO dto = null;
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
-    if (userfeedback != null) {
-      dto = UserFeedbackUtils.convertToDto(userfeedback);
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        }
+
+        try {
+            Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
+
+            // Check permission for metadata
+            final Metadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+            if (metadata == null) {
+                printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+                return null;
+            }
+
+            final UserSession session = ApiUtils.getUserSession(httpSession);
+
+            boolean published = true; // Takes only published comments
+
+            // showing not published comments only to logged users (maybe better
+            // restrict to Reviewers)
+            if (session != null && session.isAuthenticated()) {
+                published = false;
+            }
+
+            final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+            final UserFeedbackUtils utils = new UserFeedbackUtils();
+
+            return utils.getAverage(userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, -1, published));
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    // Check permission for metadata
-    final Metadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
-    if (metadata == null) {
-      printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-      return null;
+    /**
+     * Gets the user comment.
+     *
+     * @param uuid the uuid
+     * @param request the request
+     * @param response the response
+     * @param httpSession the http session
+     * @return the user comment
+     * @throws Exception the exception
+     */
+    @ApiOperation(value = "Finds a specific usercomment", nickname = "getUserComment")
+    @RequestMapping(value = "/userfeedback/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public UserFeedbackDTO getUserComment(@PathVariable(value = "uuid")
+    final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+            throws Exception {
+
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        }
+
+        Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComment");
+
+        final IUserFeedbackService userFeedbackService = (IUserFeedbackService) ApplicationContextHolder.get()
+                .getBean("userFeedbackService");
+
+        final UserSession session = ApiUtils.getUserSession(httpSession);
+
+        boolean published = true; // Takes only published comments
+
+        // showing not published comments only to logged users (maybe better
+        // restrict to Reviewers)
+        if (session != null && session.isAuthenticated()) {
+            published = false;
+        }
+
+        final UserFeedback userfeedback = userFeedbackService.retrieveUserFeedback(uuid, published);
+
+        UserFeedbackDTO dto = null;
+
+        if (userfeedback != null) {
+            dto = UserFeedbackUtils.convertToDto(userfeedback);
+        }
+
+        // Check permission for metadata
+        final Metadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
+        if (metadata == null) {
+            printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
+            return null;
+        }
+
+        return dto;
     }
 
-    return dto;
-  }
+    /**
+     * Gets the user comments.
+     *
+     * @param request the request
+     * @param response the response
+     * @param httpSession the http session
+     * @return the user comments
+     * @throws Exception the exception
+     */
+    // GET
+    @ApiOperation(value = "Finds a list of user feedback records. ", 
+            notes = " This list will include also the draft uf if the client is logged as reviewer. "
+            + " target={metadata uuid} maxnumber={max result size} "
+            , nickname = "getUserComments")
+    @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public List<UserFeedbackDTO> getUserComments(final HttpServletRequest request, final HttpServletResponse response,
+            final HttpSession httpSession) throws Exception {
 
-  /**
-   * Gets the user comments.
-   *
-   * @param request
-   *          the request
-   * @param response
-   *          the response
-   * @param httpSession
-   *          the http session
-   * @return the user comments
-   * @throws Exception
-   *           the exception
-   */
-  // GET
-  @ApiOperation(value = "Finds a list of usercomment records", notes = "Finds a list of usercomment records, filtered by: target={uuid}"
-      + " any={searchstring} " + " From To user={userid} Orderby Sortorder Published Ownergroup "
-      + " (filter feedbacks on metadata owned by group x) ", nickname = "getUserComments")
-  @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-  @ResponseStatus(value = HttpStatus.OK)
-  @ResponseBody
-  public List<UserFeedbackDTO> getUserComments(final HttpServletRequest request, final HttpServletResponse response,
-      final HttpSession httpSession) throws Exception {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
 
-    try {
-      Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComments");
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        }
 
-      final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+        try {
+            Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getUserComments");
 
-      final String uuid = request.getParameter("target");
+            final IUserFeedbackService userFeedbackService = getUserFeedbackService();
 
-      final String maxnumber = request.getParameter("maxnumber");
+            final String uuid = request.getParameter("target");
 
-      int maxsize = -1;
+            final String maxnumber = request.getParameter("maxnumber");
 
-      if (maxnumber != null) {
-        maxsize = Integer.parseInt(maxnumber);
-      }
+            int maxsize = -1;
 
-      final UserSession session = ApiUtils.getUserSession(httpSession);
+            if (maxnumber != null) {
+                maxsize = Integer.parseInt(maxnumber);
+            }
 
-      boolean published = true; // Takes only published comments
+            final UserSession session = ApiUtils.getUserSession(httpSession);
 
-      // showing not published comments only to logged users (maybe better
-      // restrict to Reviewers)
-      if (session != null && session.isAuthenticated()) {
-        published = false;
-      }
+            boolean published = true; // Takes only published comments
 
-      List<UserFeedback> listUserfeedback = null;
+            // showing not published comments only to logged users (maybe better
+            // restrict to Reviewers)
+            if (session != null && session.isAuthenticated()) {
+                published = false;
+            }
 
-      if (uuid == null || uuid.equals("")) {
-        listUserfeedback = userFeedbackService.retrieveUserFeedback(maxsize, published);
-      } else {
-        listUserfeedback = userFeedbackService.retrieveUserFeedbackForMetadata(uuid, maxsize, published);
-      }
+            List<UserFeedback> listUserfeedback = null;
 
-      return listUserfeedback.stream().map(feedback -> UserFeedbackUtils.convertToDto(feedback))
-          .collect(Collectors.toList());
-    } catch (final Exception e) {
-      e.printStackTrace();
-      response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-      return null;
-    }
-  }
+            if (uuid == null || uuid.equals("")) {
+                listUserfeedback = userFeedbackService.retrieveUserFeedback(maxsize, published);
+            } else {
+                listUserfeedback = userFeedbackService.retrieveUserFeedbackForMetadata(uuid, maxsize, published);
+            }
 
-  /**
-   * Gets the user feedback service.
-   *
-   * @return the user feedback service
-   */
-  // POST
-  private IUserFeedbackService getUserFeedbackService() {
-    return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
-  }
-
-  /**
-   * New user feedback.
-   *
-   * @param userFeedbackDto
-   *          the user feedback dto
-   * @param request
-   *          the request
-   * @param response
-   *          the response
-   * @param httpSession
-   *          the http session
-   * @return the response entity
-   * @throws Exception
-   *           the exception
-   */
-  @ApiOperation(value = "Create a userfeedback (draft), send notification to owner ", notes = "Create a userfeedback (draft), send notification to owner ", nickname = "newUserFeedback")
-  @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-  @ResponseStatus(HttpStatus.CREATED)
-  @ResponseBody
-  public ResponseEntity newUserFeedback(@ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
-      final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
-      throws Exception {
-
-    try {
-
-      final UserSession session = ApiUtils.getUserSession(httpSession);
-
-      Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "newUserFeedback");
-
-      final IUserFeedbackService userFeedbackService = getUserFeedbackService();
-
-      userFeedbackService.saveUserFeedback(
-          UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null));
-
-      return new ResponseEntity(HttpStatus.CREATED);
-    } catch (final Exception e) {
-      e.printStackTrace();
-      throw e;
-    }
-  }
-
-  /**
-   * Prints the output message.
-   *
-   * @param response
-   *          the response
-   * @param code
-   *          the code
-   * @param message
-   *          the message
-   * @throws IOException
-   *           Signals that an I/O exception has occurred.
-   */
-  private void printOutputMessage(final HttpServletResponse response, final HttpStatus code, final String message)
-      throws IOException {
-    response.setStatus(code.value());
-    final PrintWriter out = response.getWriter();
-    response.setContentType("text/html");
-    out.println(message);
-    response.flushBuffer();
-  }
-
-  /**
-   * Publish.
-   *
-   * @param uuid
-   *          the uuid
-   * @param request
-   *          the request
-   * @param response
-   *          the response
-   * @param httpSession
-   *          the http session
-   * @return the response entity
-   * @throws Exception
-   *           the exception
-   */
-  @ApiOperation(value = "Publishes a record, send notification ", notes = "Publishes a record, send notification ", nickname = "publish")
-  @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  @PreAuthorize("hasRole('Reviewer')")
-  @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback published."),
-      @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
-  @ResponseBody
-  public ResponseEntity publish(@PathVariable(value = "uuid") final String uuid, final HttpServletRequest request,
-      final HttpServletResponse response, final HttpSession httpSession) throws Exception {
-
-    Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "publish");
-
-    try {
-      final UserSession session = ApiUtils.getUserSession(httpSession);
-
-      final IUserFeedbackService userFeedbackService = getUserFeedbackService();
-
-      userFeedbackService.publishUserFeedback(uuid, session.getPrincipal());
-    } catch (final Exception e) {
-      e.printStackTrace();
+            return listUserfeedback.stream().map(feedback -> UserFeedbackUtils.convertToDto(feedback)).collect(Collectors.toList());
+        } catch (final Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return null;
+        }
     }
 
-    return new ResponseEntity(HttpStatus.NO_CONTENT);
+    /**
+     * Gets the user feedback service.
+     *
+     * @return the user feedback service
+     */
+    // POST
+    private IUserFeedbackService getUserFeedbackService() {
+        return (IUserFeedbackService) ApplicationContextHolder.get().getBean("userFeedbackService");
+    }
 
-  }
+    /**
+     * New user feedback.
+     *
+     * @param userFeedbackDto the user feedback dto
+     * @param request the request
+     * @param response the response
+     * @param httpSession the http session
+     * @return the response entity
+     * @throws Exception the exception
+     */
+    @ApiOperation(value = "Creates a userfeedback", notes = "Creates a userfeedback in draft status if the user is not logged in.", nickname = "newUserFeedback")
+    @RequestMapping(value = "/userfeedback", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity newUserFeedback(@ApiParam(name = "uf") @RequestBody UserFeedbackDTO userFeedbackDto,
+            final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession) throws Exception {
+
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
+        try {
+
+            final UserSession session = ApiUtils.getUserSession(httpSession);
+
+            Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "newUserFeedback");
+
+            final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+            userFeedbackService
+                    .saveUserFeedback(UserFeedbackUtils.convertFromDto(userFeedbackDto, session != null ? session.getPrincipal() : null));
+
+            return new ResponseEntity(HttpStatus.CREATED);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    /**
+     * Prints the output message.
+     *
+     * @param response the response
+     * @param code the code
+     * @param message the message
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private void printOutputMessage(final HttpServletResponse response, final HttpStatus code, final String message) throws IOException {
+        response.setStatus(code.value());
+        final PrintWriter out = response.getWriter();
+        response.setContentType("text/html");
+        out.println(message);
+        response.flushBuffer();
+    }
+
+    /**
+     * Publish.
+     *
+     * @param uuid the uuid
+     * @param request the request
+     * @param response the response
+     * @param httpSession the http session
+     * @return the response entity
+     * @throws Exception the exception
+     */
+    @ApiOperation(value = "Publishes a record", notes = "For reviewers", nickname = "publish")
+    @RequestMapping(value = "/userfeedback/{uuid}/publish", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('Reviewer')")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "User feedback published."),
+            @ApiResponse(code = 403, message = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER) })
+    @ResponseBody
+    public ResponseEntity publish(@PathVariable(value = "uuid")
+    final String uuid, final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession)
+            throws Exception {
+
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        final SettingManager settingManager = appContext.getBean(SettingManager.class);
+        final String functionEnabled = settingManager.getValue(Settings.SYSTEM_LOCALRATING_ENABLE);
+
+        if (!functionEnabled.equals(RatingsSetting.ADVANCED)) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            final UserSession session = ApiUtils.getUserSession(httpSession);
+
+            final IUserFeedbackService userFeedbackService = getUserFeedbackService();
+
+            userFeedbackService.publishUserFeedback(uuid, session.getPrincipal());
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+    }
 
 }
