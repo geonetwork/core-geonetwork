@@ -24,7 +24,7 @@ dockerBuild {
 
     def mavenOpts = "-B -Dmaven.repo.local=./.m2_repo"
     def containerName = "sextant-geonetwork-builder"
-    def containerImage = "3-jdk-8"
+    def containerImage = "maven:3-jdk-8"
 
     stage('Getting the sources') {
         git url: 'git@github.com:camptocamp/sextant-geonetwork.git', branch: env.BRANCH_NAME, credentialsId: 'sextant-geonetwork-deploy-key'
