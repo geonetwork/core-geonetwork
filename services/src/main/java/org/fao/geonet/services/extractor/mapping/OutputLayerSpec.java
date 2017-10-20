@@ -19,7 +19,7 @@ public class OutputLayerSpec {
     private String epsg = "";
     @JacksonXmlProperty(isAttribute = true)
     @JsonProperty
-    private String xmin, ymin, xmax, ymax;
+    private String xmin = "", ymin = "", xmax = "", ymax = "";
 
     @JacksonXmlProperty(isAttribute = true)
     @JsonProperty

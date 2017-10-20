@@ -1,0 +1,23 @@
+{
+    "user": {
+        "lastname": "admin",
+        "firstname": "admin",
+        "mail": "admin@test.com",
+        "org": "camptocamp"
+    },
+    "layers": [{
+        "id": "94c01d83-ca59-4411-bae8-7db3e0b7181b",
+        "input": {
+            "format": "",
+            "epsg": "",
+            "protocol": "COPYFILE",
+            "linkage": "file:///home/sextant/data/ocean_indien/Hydrorun/BATHY/St_Pierre"
+        },
+        "output": {
+            "format": "",
+            "epsg": "",
+            "name": "HYDRORUN_MNT_STPIERRE_R"
+        },
+        "additionalInput": []
+    }]
+}

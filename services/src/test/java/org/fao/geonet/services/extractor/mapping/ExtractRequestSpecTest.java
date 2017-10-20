@@ -2,6 +2,7 @@ package org.fao.geonet.services.extractor.mapping;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.util.List;
@@ -150,5 +151,26 @@ public class ExtractRequestSpecTest {
                 && xmlSpec.contains("      <additionalInput protocol=\"WPS\" linkage=\"http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R\" "
                         + "params=\"PHdwczpFeGVjdXRlIHhtbG5zOndwcz0iaHR0cDovL3d3dy5vcGVuZ2lzLm5ldC93cHMvMS4wL")
                 && xmlSpec.contains("identifier=\"r:extractionsurval\" outputMimeType=\"\" outputIdentifier=\"\""));
+    }
+    
+    /**
+     * https://forge.ifremer.fr/mantis/view.php?id=38409
+     * 
+     * In case the JSON spec does not define a bounding box, we end up with xmin="null" instead of xmin="".
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testMantisIssue38409() throws Exception {
+        String f = ExtractRequestSpecTest.class.getResource("mantis-38409.json").getFile();
+
+        String jsonString = FileUtils.readFileToString(new File(f));
+        ObjectMapper mapper = new ObjectMapper();
+        ExtractRequestSpec s = mapper.readValue(jsonString, ExtractRequestSpec.class);
+
+        SextantExtractor se = new SextantExtractor();
+        String xmlSpec = se.createXmlSpecification(s, false, null, null);
+        assertFalse("XML specification contains xmin=\"null\"", xmlSpec.contains("xmin=\"null\""));
+
     }
 }
