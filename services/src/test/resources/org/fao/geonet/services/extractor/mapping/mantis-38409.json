@@ -8,23 +8,16 @@
     "layers": [{
         "id": "94c01d83-ca59-4411-bae8-7db3e0b7181b",
         "input": {
-            "format": "vector",
-            "epsg": "4326",
-            "protocol": "OGC:WFS",
-            "linkage": "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/ows/surval",
-            "filter": "((ft_date_min_dt=2016-05-04) OR (ft_date_min_dt=2017-05-05)) AND ((ft_date_max_dt=2016-05-04) OR (ft_date_max_dt=2016-05-08)) AND ((ft_param_group_liste_s LIKE '%Contaminants chimiques - Mesures physiques sur le support et autres paramètres normalisateurs%')) AND ((ft_matrix_liste_s=Support : Sédiment - Fraction totale - Niveau de prélèvement : 1er cm superficiel))"
+            "format": "",
+            "epsg": "",
+            "protocol": "COPYFILE",
+            "linkage": "file:///home/sextant/data/ocean_indien/Hydrorun/BATHY/St_Pierre"
         },
         "output": {
-            "format": "ESRI Shapefile",
-            "epsg": "4326",
-            "name": "surval_30140_all_point_12_12_2016_postgis",
-            "mercator_lat": ""
+            "format": "",
+            "epsg": "",
+            "name": "HYDRORUN_MNT_STPIERRE_R"
         },
-        "additionalInput": [{
-            "protocol": "WPS",
-            "linkage": "http://sextant-test.ifremer.fr/cgi-bin/sextant/qgis-server/wps/R",
-            "params":  "PHdwczpFeGVjdXRlIHhtbG5zOndwcz0iaHR0cDovL3d3dy5vcGVuZ2lzLm5ldC93cHMvMS4wLjAiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpvd3M9Imh0dHA6Ly93d3cub3Blbmdpcy5uZXQvb3dzLzEuMSIgeG1sbnM6Z21sPSJodHRwOi8vd3d3Lm9wZW5naXMubmV0L2dtbCIgc2VydmljZT0iV1BTIiB2ZXJzaW9uPSIxLjAuMCI+PG93czpJZGVudGlmaWVyPnI6ZXh0cmFjdGlvbnN1cnZhbDwvb3dzOklkZW50aWZpZXI+PHdwczpEYXRhSW5wdXRzPjx3cHM6SW5wdXQ+PG93czpJZGVudGlmaWVyPnpvbmVfbWFyaW5lX3F1YWRyaWdlPC9vd3M6SWRlbnRpZmllcj48d3BzOkRhdGE+PHdwczpMaXRlcmFsRGF0YT56b25lIG1hcmluZTwvd3BzOkxpdGVyYWxEYXRhPjwvd3BzOkRhdGE+PC93cHM6SW5wdXQ+PHdwczpJbnB1dD48b3dzOklkZW50aWZpZXI+cHJvZHVpdF9pZDwvb3dzOklkZW50aWZpZXI+PHdwczpEYXRhPjx3cHM6TGl0ZXJhbERhdGE+cHJvZHVpdCBpZDwvd3BzOkxpdGVyYWxEYXRhPjwvd3BzOkRhdGE+PC93cHM6SW5wdXQ+PHdwczpJbnB1dD48b3dzOklkZW50aWZpZXI+bGltaXRzPC9vd3M6SWRlbnRpZmllcj48d3BzOkRhdGE+PHdwczpCb3VuZGluZ0JveERhdGEgZGltZW5zaW9ucz0iMiI+PG93czpMb3dlckNvcm5lcj4tMiAtMTwvb3dzOkxvd2VyQ29ybmVyPjxvd3M6VXBwZXJDb3JuZXI+MSAyPC9vd3M6VXBwZXJDb3JuZXI+PC93cHM6Qm91bmRpbmdCb3hEYXRhPjwvd3BzOkRhdGE+PC93cHM6SW5wdXQ+PHdwczpJbnB1dD48b3dzOklkZW50aWZpZXI+cHJvZ3JhbW1lX3N1aXZpPC9vd3M6SWRlbnRpZmllcj48d3BzOkRhdGE+PHdwczpMaXRlcmFsRGF0YT50ZXN0IHByb2c8L3dwczpMaXRlcmFsRGF0YT48L3dwczpEYXRhPjwvd3BzOklucHV0Pjwvd3BzOkRhdGFJbnB1dHM+PHdwczpSZXNwb25zZUZvcm0+PHdwczpSZXNwb25zZURvY3VtZW50IHN0b3JlRXhlY3V0ZVJlc3BvbnNlPSJmYWxzZSIgbGluZWFnZT0iZmFsc2UiIHN0YXR1cz0iZmFsc2UiPjx3cHM6T3V0cHV0IG1pbWVUeXBlPSJ0ZXh0L2NzdiIgYXNSZWZlcmVuY2U9InRydWUiPjxvd3M6SWRlbnRpZmllcj5vdXRwdXRfdGFibGU8L293czpJZGVudGlmaWVyPjwvd3BzOk91dHB1dD48L3dwczpSZXNwb25zZURvY3VtZW50Pjwvd3BzOlJlc3BvbnNlRm9ybT48L3dwczpFeGVjdXRlPg==",
-            "identifier": "r:extractionsurval"
-        }]
+        "additionalInput": []
     }]
 }
