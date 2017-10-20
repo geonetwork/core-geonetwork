@@ -23,6 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import com.google.common.base.Optional;
 
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -117,14 +119,40 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
         @SuppressWarnings("unchecked")
         Iterator<Element> ids = request.getChildren("Id", Csw.NAMESPACE_CSW).iterator();
 
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        final DataManager dataManager = gc.getBean(DataManager.class);
+
         if (!ids.hasNext())
             throw new MissingParameterValueEx("id");
 
         try {
             while (ids.hasNext()) {
                 String uuid = ids.next().getText();
-                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-                String id = gc.getBean(DataManager.class).getMetadataId(uuid);
+                String id = null;
+                if (uuid.startsWith("SDN")) {
+                    id = dataManager.getMetadataId(uuid);
+                    if (id == null) {
+                        if (uuid.startsWith("SDN:")) {
+                            final String[] strings = uuid.split(":");
+                            if (strings.length >= 4) {
+                                uuid =
+                                    String.join("_", Arrays.copyOfRange(strings, 0, 3)) +
+                                        "_" + String.join(":", Arrays.copyOfRange(strings, 3, strings.length));
+                            }
+                        } else {
+                            final String[] strings = uuid.split("_");
+                            if (strings.length >= 4) {
+                                uuid =
+                                    String.join(":", Arrays.copyOfRange(strings, 0, 3)) +
+                                        ":" + String.join("_", Arrays.copyOfRange(strings, 3, strings.length));
+                            }
+                        }
+                        id = dataManager.getMetadataId(uuid);
+                    }
+                } else {
+                    id = dataManager.getMetadataId(uuid);
+                }
+
 
                 // Metadata not found, search for next ids
                 if (id == null)
@@ -180,7 +208,7 @@ public class GetRecordById extends AbstractOperation implements CatalogService {
                     response.addContent(md);
 
                     if (_catalogConfig.isIncreasePopularity()) {
-                        gc.getBean(DataManager.class).increasePopularity(context, id);
+                        dataManager.increasePopularity(context, id);
                     }
                 }
             }
