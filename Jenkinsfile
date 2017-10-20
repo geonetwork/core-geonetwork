@@ -22,7 +22,7 @@ def executeInContainer(def containerName, def cmd) {
 
 dockerBuild {
 
-    def mavenOpts = "-B -Dmaven.repo.local=./.m2_repo"
+    def mavenOpts = "-B -Penv-dev -Dmaven.repo.local=./.m2_repo"
     def containerName = "sextant-geonetwork-builder"
     def containerImage = "maven:3-jdk-8"
 
