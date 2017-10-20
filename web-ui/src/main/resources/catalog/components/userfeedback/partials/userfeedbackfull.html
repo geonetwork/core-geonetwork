@@ -1,73 +1,79 @@
 <div>
-	<button class="btn btn-default btn-sm" data-toggle="modal"
-		data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments" data-translate="">GUFseeAllFeedbacks</button>
+  <button class="btn btn-default btn-sm" data-toggle="modal"
+    data-ng-click="initPopup()" data-target="#gn-userfeedback-allcomments"
+    data-translate="">GUFseeAllFeedbacks</button>
 
 
-	<!-- All comments modal -->
-	<div class="modal gn-userfeedback-modal"
-		id="gn-userfeedback-allcomments" tabindex="-1" role="dialog"
-		aria-labelledby="gn-userfeedback-allcomments">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel" data-translate="">GUFratingsComments</h4>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<h2>{{rating.metadataTitle}}</h2>
-							<p data-translate="" data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}', date:'{{rating.lastComment | date:'medium'}}'}">GUFcommentsLastCommentOn</p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-7">
+  <!-- All comments modal -->
+  <div class="modal gn-userfeedback-modal"
+    id="gn-userfeedback-allcomments" tabindex="-1" role="dialog"
+    aria-labelledby="gn-userfeedback-allcomments">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"
+            aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel" data-translate="">GUFratingsComments</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <h2>{{rating.metadataTitle}}</h2>
+              <p data-translate=""
+                data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}', date:'{{rating.lastComment | date:'medium'}}'}">GUFcommentsLastCommentOn</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-7">
 
-							<div class="gn-userfeedback-title">
-								<h3 data-translate="" data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}'}">countReviews</h3>
-							</div>
-							<ul class="gn-userfeedback-list">
+              <div class="gn-userfeedback-title">
+                <h3 data-translate=""
+                  data-translate-values="{userfeedbackCount:'{{rating.userfeedbackCount}}'}">countReviews</h3>
+              </div>
+              <ul class="gn-userfeedback-list">
 
-								<li class="gn-userfeedback-item clearfix"
-									data-ng-repeat="row in fullCommentsList">
-									<div class="pull-left btn btn-warning gn-userfeedback-image">
-										<span class="fa fa-user"></span>
-									</div>
-									<div class="pull-left gn-userfeedback-comment-user">
-										<a>{{row.authorName}}</a>
-										<p><q>{{row.comment}}</q></p>
-										<span class="gn-userfeedback-score-{{row.ratingAVG}}" data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/
-											5 <span class="fa fa-fw fa-star">&nbsp;</span>
-										</span>
-										<p class="gn-userfeedback-reply" data-ng-show="loggedIn">
-											{{row.date | date:'medium'}}&nbsp;-&nbsp; <span
-												data-ng-hide="{{row.published}}"><a
-												data-ng-click="publish(row.uuid)" data-translate="">GUFpublishUserFeedback</a>&nbsp;|&nbsp;</span> <a
-												data-ng-click="deleteC(row.uuid)" data-translate="">GUFdeleteUserFeedback</a>
-										</p>
-										<p class="gn-userfeedback-reply" data-ng-hide="loggedIn">
-											{{row.date | date:'medium'}}</p>
-									</div>
-								</li>
-							</ul>
+                <li class="gn-userfeedback-item clearfix"
+                  data-ng-repeat="row in fullCommentsList">
+                  <div class="pull-left btn btn-warning gn-userfeedback-image">
+                    <span class="fa fa-user"></span>
+                  </div>
+                  <div class="pull-left gn-userfeedback-comment-user">
+                    <a>{{row.authorName}}</a>
+                    <p>
+                      <q>{{row.comment}}</q>
+                    </p>
+                    <span class="gn-userfeedback-score-{{row.ratingAVG}}"
+                      data-ng-show="row.ratingAVG"> {{row.ratingAVG}}/ 5 <span
+                      class="fa fa-fw fa-star">&nbsp;</span>
+                    </span>
+                    <p class="gn-userfeedback-reply" data-ng-show="loggedIn">
+                      {{row.date | date:'medium'}}&nbsp;-&nbsp; <span
+                        data-ng-hide="{{row.published}}"><a
+                        data-ng-click="publish(row.uuid)" data-translate="">GUFpublishUserFeedback</a>&nbsp;|&nbsp;</span>
+                      <a data-ng-click="deleteC(row.uuid)" data-translate="">GUFdeleteUserFeedback</a>
+                    </p>
+                    <p class="gn-userfeedback-reply" data-ng-hide="loggedIn">
+                      {{row.date | date:'medium'}}</p>
+                  </div>
+                </li>
+              </ul>
 
-						</div>
-						<div class="col-md-5 hidden">
-							<div class="gn-userfeedback-title">
-								<h3 data-translate="">GUFaddReview</h3>
-							</div>
-							<textarea class="form-control gn-userfeedback-comment-area">
+            </div>
+            <div class="col-md-5 hidden">
+              <div class="gn-userfeedback-title">
+                <h3 data-translate="">GUFaddReview</h3>
+              </div>
+              <textarea class="form-control gn-userfeedback-comment-area">
                 
               </textarea>
-							<button type="button" class="btn btn-primary" data-translate="">GUFaddRating</button>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<!-- <div class="dropdown">
+              <button type="button" class="btn btn-primary" data-translate="">GUFaddRating</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <div class="dropdown">
             <button id="gn-userfeedback-add" type="button"
               data-toggle="dropdown"
               class="btn btn-danger btn-round btn-lg pull-left">
@@ -78,11 +84,12 @@
               <li><a href="">Add rating</a></li>
             </ul>
           </div> -->
-					<button type="button" class="btn btn-default" data-dismiss="modal" data-translate="">GUFclose</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /#gn-userfeedback-allcomments -->
+          <button type="button" class="btn btn-default" data-dismiss="modal"
+            data-translate="">GUFclose</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /#gn-userfeedback-allcomments -->
 
 </div>

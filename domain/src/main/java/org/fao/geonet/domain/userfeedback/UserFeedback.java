@@ -48,8 +48,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 
 /**
- * A user feedback associated to a metadata (n:1) record 
- * or to another user feedback (n:1).
+ * A user feedback associated to a metadata (n:1) record or to another user feedback (n:1).
  */
 @Entity(name = "GUF_UserFeedback")
 @Table(name = "GUF_UserFeedbacks")
@@ -316,8 +315,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the approver.
      *
-     * @param approver
-     *            the new approver
+     * @param approver the new approver
      */
     public void setApprover(User approver) {
         this.approver = approver;
@@ -326,8 +324,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the author email.
      *
-     * @param authorEmail
-     *            the new author email
+     * @param authorEmail the new author email
      */
     public void setAuthorEmail(String authorEmail) {
         this.authorEmail = authorEmail;
@@ -336,8 +333,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the author id.
      *
-     * @param authorId
-     *            the new author id
+     * @param authorId the new author id
      */
     public void setAuthorId(User authorId) {
         this.authorId = authorId;
@@ -346,8 +342,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the author name.
      *
-     * @param authorName
-     *            the new author name
+     * @param authorName the new author name
      */
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
@@ -356,8 +351,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the author organization.
      *
-     * @param authorOrganization
-     *            the new author organization
+     * @param authorOrganization the new author organization
      */
     public void setAuthorOrganization(String authorOrganization) {
         this.authorOrganization = authorOrganization;
@@ -366,8 +360,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the author privacy.
      *
-     * @param authorPrivacy
-     *            the new author privacy
+     * @param authorPrivacy the new author privacy
      */
     public void setAuthorPrivacy(int authorPrivacy) {
         this.authorPrivacy = authorPrivacy;
@@ -376,8 +369,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the citation.
      *
-     * @param citation
-     *            the new citation
+     * @param citation the new citation
      */
     public void setCitation(Citation citation) {
         this.citation = citation;
@@ -386,8 +378,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the comment.
      *
-     * @param comment
-     *            the new comment
+     * @param comment the new comment
      */
     public void setComment(String comment) {
         this.comment = comment;
@@ -396,8 +387,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the date.
      *
-     * @param date
-     *            the new date
+     * @param date the new date
      */
     public void setDate(Date date) {
         this.date = date;
@@ -406,8 +396,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the detailed rating list.
      *
-     * @param detailedRatingList
-     *            the new detailed rating list
+     * @param detailedRatingList the new detailed rating list
      */
     public void setDetailedRatingList(List<Rating> detailedRatingList) {
         this.detailedRatingList = detailedRatingList;
@@ -416,8 +405,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the keywords.
      *
-     * @param keywords
-     *            the new keywords
+     * @param keywords the new keywords
      */
     public void setKeywords(Set<Keyword> keywords) {
         this.keywords = keywords;
@@ -426,8 +414,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the metadata.
      *
-     * @param metadata
-     *            the new metadata
+     * @param metadata the new metadata
      */
     public void setMetadata(Metadata metadata) {
         this.metadata = metadata;
@@ -436,8 +423,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the parent.
      *
-     * @param parent
-     *            the new parent
+     * @param parent the new parent
      */
     public void setParent(UserFeedback parent) {
         this.parent = parent;
@@ -446,8 +432,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the status.
      *
-     * @param status
-     *            the new status
+     * @param status the new status
      */
     public void setStatus(UserRatingStatus status) {
         this.status = status;
@@ -456,8 +441,7 @@ public class UserFeedback extends GeonetEntity implements Serializable {
     /**
      * Sets the uuid.
      *
-     * @param uuid
-     *            the new uuid
+     * @param uuid the new uuid
      */
     public void setUuid(String uuid) {
         if (uuid == null || uuid.equals("")) {

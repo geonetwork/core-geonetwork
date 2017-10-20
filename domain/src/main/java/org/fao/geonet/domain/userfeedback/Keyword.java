@@ -93,8 +93,7 @@ public class Keyword extends GeonetEntity implements Serializable {
     /**
      * Sets the id.
      *
-     * @param id
-     *            the new id
+     * @param id the new id
      */
     public void setId(long id) {
         this.id = id;
@@ -103,8 +102,7 @@ public class Keyword extends GeonetEntity implements Serializable {
     /**
      * Sets the userfeedbacks.
      *
-     * @param userfeedbacks
-     *            the new userfeedbacks
+     * @param userfeedbacks the new userfeedbacks
      */
     public void setUserfeedbacks(List<UserFeedback> userfeedbacks) {
         this.userfeedbacks = userfeedbacks;
@@ -113,8 +111,7 @@ public class Keyword extends GeonetEntity implements Serializable {
     /**
      * Sets the value.
      *
-     * @param value
-     *            the new value
+     * @param value the new value
      */
     public void setValue(String value) {
         this.value = value;
