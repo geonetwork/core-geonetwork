@@ -13,16 +13,23 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 xmlns:opensearchextensions="http://example.com/opensearchextensions/1.0/"
                 xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
                 exclude-result-prefixes="gmx xsl gmd gco srv java">
-                
+    <xsl:output method="xml" indent="no" encoding="utf-8"/>
 
     <xsl:param name="isLocal" select="false()" />
-    <xsl:param name="guiLang" select="string('eng')" />
     <xsl:param name="baseUrl" />
+    <xsl:param name="nodeUrl" />
+    <xsl:param name="guiLang" select="string('eng')" />
+    <xsl:param name="opensearchUrlSuffix" select="'opensearch'"/>
+    <xsl:param name="opensearchDescriptionFileName" select="'OpenSearchDescription.xml'"/>
+    <xsl:param name="atomDescribeServiceUrlSuffix" select="'describe'"/>
+    <xsl:param name="atomDescribeDatasetUrlSuffix" select="'describe'"/>
     <xsl:param name="nodeName" select="string('srv')" />
+    <xsl:param name="searchTerms" select="''"/>
     <xsl:param name="requestedCRS" select="''"/>
 
     <!-- parameters used in case of dataset feed generation -->
-    <xsl:param name="serviceFeedTitle" select="'The parent service feed'" />
+    <xsl:variable name="serviceFeedTitle" select="'The parent service feed'" />
+    <xsl:variable name="gemetThesaurusTitle" select="'GEMET - INSPIRE themes, version 1.0'" />
 
 
     <xsl:template match="/root">
@@ -62,7 +69,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 6: described-by -->
            <xsl:call-template name="csw-link">
             <xsl:with-param name="lang" select="$guiLang"/>
-            <xsl:with-param name="baseUrl" select="$baseUrl"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
           </xsl:call-template>
 
@@ -70,7 +76,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:call-template name="atom-link">
             <xsl:with-param name="title" select="$title"/>
             <xsl:with-param name="lang" select="$guiLang"/>
-            <xsl:with-param name="baseUrl" select="$baseUrl"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
             <xsl:with-param name="rel">self</xsl:with-param>
         </xsl:call-template>
@@ -83,7 +88,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 </xsl:call-template>
                 <xsl:value-of select="$title"/>
              </xsl:attribute>
-             <xsl:attribute name="href" select="concat($baseUrl,'/opensearch/',$guiLang,'/',$fileIdentifier,'/OpenSearchDescription.xml')"/>
+             <xsl:attribute name="href">
+                 <xsl:if test="$isLocal">
+                     <xsl:value-of select="concat($nodeUrl,$guiLang,'/',$opensearchUrlSuffix,'/', $opensearchDescriptionFileName, '?uuid=',$fileIdentifier)"/>
+                 </xsl:if>
+                 <xsl:if test="not($isLocal)">
+                     <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',$guiLang,'/',$fileIdentifier,'/',$opensearchDescriptionFileName)"/>
+                 </xsl:if>
+             </xsl:attribute>
         </link>
 
         <!-- REQ 36, 38: multilang -->
@@ -96,7 +108,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                         </xsl:apply-templates>
                     </xsl:with-param>
                     <xsl:with-param name="lang" select="."/>
-                    <xsl:with-param name="baseUrl" select="$baseUrl"/>
                     <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
                     <xsl:with-param name="rel">
                         <xsl:if test="$guiLang=.">self</xsl:if>
@@ -113,7 +124,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     </xsl:apply-templates>
                 </xsl:with-param>
                 <xsl:with-param name="lang" select="$docLang"/>
-                <xsl:with-param name="baseUrl" select="$baseUrl"/>
                 <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
                 <xsl:with-param name="rel">alternate</xsl:with-param>
             </xsl:call-template>
@@ -123,7 +133,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <id>
             <xsl:call-template name="atom-link-href">
                 <xsl:with-param name="lang" select="$guiLang"/>
-                <xsl:with-param name="baseUrl" select="$baseUrl"/>
                 <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
             </xsl:call-template>
         </id>
@@ -171,8 +180,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
         <!-- Take the first one of the referenceSystemInfo and handle it as the default CRS for download resources -->
         <xsl:variable name="defaultCRS" select="normalize-space(.//gmd:referenceSystemInfo[1]/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString)"/>
+        <xsl:call-template name="add-category">
+            <xsl:with-param name="crs" select="$defaultCRS"/>
+        </xsl:call-template>
 
+				<xsl:message><xsl:value-of select="concat('Default CRS for dataset = ', $defaultCRS)"/></xsl:message>
         <xsl:for-each select=".//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue='download']">
+						<xsl:message><xsl:value-of select="concat('Feed found for dataset with identifier ',$identifierCode)"/></xsl:message>
             <xsl:variable name="crs">
                 <xsl:call-template name="get-download-crs">
                     <xsl:with-param name="defaultCRS" select="$defaultCRS"/>
@@ -180,9 +194,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 </xsl:call-template>
             </xsl:variable>
             <!-- REQ 20: category (CRS) -->
-            <xsl:call-template name="add-category">
-                <xsl:with-param name="crs" select="$crs"/>
-            </xsl:call-template>
+            <xsl:if test="$defaultCRS!=$crs">
+								<xsl:message><xsl:value-of select="concat('Other CRS found for dataset with identifier ',$identifierCode)"/></xsl:message>
+                <xsl:call-template name="add-category">
+                    <xsl:with-param name="crs" select="$crs"/>
+                </xsl:call-template>
+            </xsl:if>
+						<xsl:message><xsl:value-of select="concat('Is defaultCRS equal to found CRS for dataset with identifier ',$identifierCode, '? ', $defaultCRS=$crs)"/></xsl:message>
         </xsl:for-each>
 
         <!-- REC 4: author -->
@@ -194,7 +212,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <id>
             <xsl:call-template name="atom-link-href">
                 <xsl:with-param name="lang" select="$guiLang"/>
-                <xsl:with-param name="baseUrl" select="$baseUrl"/>
                 <xsl:with-param name="identifier" select="$identifierCode"/>
                 <xsl:with-param name="codeSpace"  select="$identifierCodeSpace"/>
             </xsl:call-template>
@@ -203,7 +220,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 14: describedby -->
         <xsl:call-template name="csw-link">
             <xsl:with-param name="lang" select="$guiLang"/>
-            <xsl:with-param name="baseUrl" select="$baseUrl"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
         </xsl:call-template>
 
@@ -215,7 +231,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 </xsl:apply-templates>
             </xsl:with-param>
             <xsl:with-param name="lang" select="$guiLang"/>
-            <xsl:with-param name="baseUrl" select="$baseUrl"/>
             <xsl:with-param name="identifier" select="$identifierCode"/>
             <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
             <xsl:with-param name="rel">alternate</xsl:with-param>
@@ -239,11 +254,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <xsl:value-of select="$rights"/>
             </rights>
         </xsl:if>
-
-        <!-- REC 4: author -->
-        <xsl:call-template name="add-author">
-            <xsl:with-param name="pocs" select="gmd:identificationInfo//gmd:pointOfContact"/>
-        </xsl:call-template>
 
         <!-- REC 5: summary -->
         <summary>
@@ -298,6 +308,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                                                     ./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
         <xsl:variable name="identifierCodeSpace" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:MD_Identifier/gmd:codeSpace/gco:CharacterString|
                                                     ./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
+        <xsl:variable name="keywords" select=".//gmd:keyword/gco:CharacterString[../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString=$gemetThesaurusTitle]"/>
 
         <!-- REQ 21: title -->
         <title>
@@ -323,7 +334,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <id>
             <xsl:call-template name="atom-link-href">
                 <xsl:with-param name="lang" select="$guiLang"/>
-                <xsl:with-param name="baseUrl" select="$baseUrl"/>
                 <xsl:with-param name="identifier" select="$identifierCode"/>
                 <xsl:with-param name="codeSpace"  select="$identifierCodeSpace"/>
             </xsl:call-template>
@@ -332,7 +342,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- describedby -->
         <xsl:call-template name="csw-link">
             <xsl:with-param name="lang" select="$guiLang"/>
-            <xsl:with-param name="baseUrl" select="$baseUrl"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
         </xsl:call-template>
 
@@ -344,7 +353,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 </xsl:apply-templates>
             </xsl:with-param>
             <xsl:with-param name="lang" select="$guiLang"/>
-            <xsl:with-param name="baseUrl" select="$baseUrl"/>
             <xsl:with-param name="identifier" select="$identifierCode"/>
             <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
             <xsl:with-param name="rel">self</xsl:with-param>
@@ -359,7 +367,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                         </xsl:apply-templates>
                     </xsl:with-param>
                     <xsl:with-param name="lang" select="."/>
-                    <xsl:with-param name="baseUrl" select="$baseUrl"/>
                     <xsl:with-param name="identifier" select="$identifierCode"/>
                     <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
                     <xsl:with-param name="rel"><xsl:if test="$guiLang=.">self</xsl:if><xsl:if test="$guiLang!=.">alternate</xsl:if></xsl:with-param>
@@ -375,7 +382,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     </xsl:apply-templates>
                 </xsl:with-param>
                 <xsl:with-param name="lang" select="$docLang"/>
-                <xsl:with-param name="baseUrl" select="$baseUrl"/>
                 <xsl:with-param name="identifier" select="$identifierCode"/>
                 <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
                 <xsl:with-param name="rel">alternate</xsl:with-param>
@@ -389,7 +395,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 <xsl:attribute name="href">
                     <xsl:call-template name="atom-link-href">
                         <xsl:with-param name="lang" select="$guiLang"/>
-                        <xsl:with-param name="baseUrl" select="$baseUrl"/>
                         <xsl:with-param name="fileIdentifier" select="$serviceIdentifier"/>
                     </xsl:call-template>
                 </xsl:attribute>
@@ -416,8 +421,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:call-template name="add-author">
             <xsl:with-param name="pocs" select="gmd:identificationInfo//gmd:pointOfContact"/>
         </xsl:call-template>
-
-        <!-- REQ 28: TODO implement thesaurus to be used in editor to select one or more INSPIRE Spatial Object Types and based on selection show here the links -->
 
         <xsl:variable name="defaultCRS" select="normalize-space(.//gmd:referenceSystemInfo[1]/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gco:CharacterString)"/>
 
@@ -461,25 +464,27 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     </xsl:variable>
 
                     <xsl:variable name="mimeFileType" select="normalize-space(gmd:name/gmx:MimeFileType/@type)"/>
-                    <!-- Uncommented next part because the mimeFileType is already set based on the filename by a getMimeTypeFile template used in the update-fixed-info.xsl file of the schema plugin -->
-                    <!--
-                    <xsl:variable name="mimeFileType">
+                    
+                    <xsl:variable name="infer-mimetype">
                         <xsl:call-template name="infer-mimetype">
                             <xsl:with-param name="onlineresource" select="."/>
                         </xsl:call-template>
                     </xsl:variable>
-                    -->
+                    
                     <xsl:variable name="inspireMimeType">
                         <xsl:choose>
                             <xsl:when test="$mimeFileType='multipart/x-zip'">
                                 <xsl:value-of select="string('application/x-gmz')"/>
+                            </xsl:when>
+                            <xsl:when test="$mimeFileType='' and $infer-mimetype!=''">
+                                <xsl:value-of select="$infer-mimetype"/>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:value-of select="$mimeFileType"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
-                    
+
                     <xsl:variable name="entryTitle" select="concat($datasetTitle,' in ', $crsLabel, ' - ', /root/gui/strings/mimetypeChoice[@value=$mimeFileType])"/>
 
                     <inspire_dls:spatial_dataset_identifier_code><xsl:value-of select="$identifierCode"/></inspire_dls:spatial_dataset_identifier_code>
@@ -493,6 +498,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     <id>
                         <xsl:value-of select="./gmd:linkage/gmd:URL" />
                     </id>
+
+                    <!-- REQ 28: TODO implement thesaurus to be used in editor to select one or more INSPIRE Spatial Object Types and based on selection show here the links -->
+                    <xsl:for-each select="$keywords">
+                        <xsl:call-template name="get-inspire-spatial-object-types">
+                            <xsl:with-param name="keyword" select="."/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+
                     <!-- REQ 29: alternate: link to data -->
                     <!-- REQ 30: mimetype -->
                     <!-- REQ 31: hreflang -->
@@ -506,9 +519,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                           href="{gmd:linkage/gmd:URL}"
                           hreflang="{$guiLang}">
 
+                        <xsl:variable name="units" select="../../gmd:unitsOfDistribution/gco:CharacterString"/>
                         <xsl:variable name="length" select="../../gmd:transferSize/gco:Real"/>
                         <xsl:if test="number($length) = number($length)">
-                            <xsl:attribute name="length" select="number($length) * 1000000" />
+                            <xsl:attribute name="length" select="number($length) * (if ($units='MB') then 1000000 else 1)" />
                         </xsl:if>
                     </link>
                     <updated><xsl:value-of select="$updated"/>Z</updated>
@@ -592,16 +606,14 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     <xsl:template name="csw-link">
         <xsl:param name="lang"/>
-        <xsl:param name="baseUrl"/>
         <xsl:param name="fileIdentifier"/>
         <link rel="describedby" type="application/xml">
-            <xsl:attribute name="href" select="concat($baseUrl,'/', $nodeName, '/',$lang,'/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',$fileIdentifier)"/>
+            <xsl:attribute name="href" select="concat($baseUrl, $nodeName, '/',$lang,'/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',$fileIdentifier)"/>
            </link>
     </xsl:template>
 
     <xsl:template name="atom-link">
         <xsl:param name="lang"/>
-        <xsl:param name="baseUrl"/>
         <xsl:param name="fileIdentifier"/>
         <xsl:param name="identifier"/>
         <xsl:param name="codeSpace"/>
@@ -628,7 +640,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             <xsl:attribute name="href">
                 <xsl:call-template name="atom-link-href">
                     <xsl:with-param name="lang" select="$lang"/>
-                    <xsl:with-param name="baseUrl" select="$baseUrl"/>
                     <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
                     <xsl:with-param name="identifier" select="$identifier"/>
                     <xsl:with-param name="codeSpace" select="$codeSpace"/>
@@ -639,40 +650,25 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     <xsl:template name="atom-link-href">
         <xsl:param name="lang"/>
-        <xsl:param name="baseUrl"/>
         <xsl:param name="fileIdentifier"/>
         <xsl:param name="identifier"/>
         <xsl:param name="codeSpace"/>
-        <xsl:choose>
-            <!-- remote ATOM service -->
-            <xsl:when test="not($isLocal)">
-                <xsl:if test="$fileIdentifier!=''">
-                    <xsl:value-of select="concat($baseUrl,'/opensearch/',$lang,'/',$fileIdentifier,'/describe')" />
-                </xsl:if>
-            </xsl:when>
-            <!-- local ATOM service -->
-            <xsl:otherwise>
-                <xsl:choose>
-                    <xsl:when test="$fileIdentifier != ''">
-                        <xsl:value-of select="concat($baseUrl, '/', $nodeName, '/', $lang, '/atom.predefined.service?uuid=',$fileIdentifier)" />
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:if test="$fileIdentifier!=''">
+            <xsl:if test="$isLocal">
+                <xsl:value-of select="concat($nodeUrl,$lang,'/',$atomDescribeServiceUrlSuffix,'?uuid=',$fileIdentifier)" />
+            </xsl:if>
+            <xsl:if test="not($isLocal)">
+                <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',$lang,'/',$fileIdentifier,'/',$atomDescribeServiceUrlSuffix)" />
+            </xsl:if>
+        </xsl:if>
         <xsl:if test="$identifier != ''">
-            <!-- Could we have more than one dataset identifier? -->
-            <xsl:variable name="tmpIdentifier" select="if(count($identifier) > 1) then $identifier[1] else $identifier" />
-            <xsl:variable name="requestParams" select="concat('spatial_dataset_identifier_code=',$tmpIdentifier,if($codeSpace != '') then concat('&amp;spatial_dataset_identifier_namespace=',$codeSpace) else '')" />
-            <xsl:choose>
-                <!-- remote ATOM service -->
-                <xsl:when test="not($isLocal)">
-                    <xsl:value-of select="concat($baseUrl,'/opensearch/',$lang,'/describe?',$requestParams)" />
-                </xsl:when>
-                <!-- local ATOM service -->
-                <xsl:otherwise>
-                    <xsl:value-of select="concat($baseUrl, '/', $nodeName, '/', $lang, '/atom.predefined.dataset?',$requestParams)" />
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:variable name="requestParams" select="concat('spatial_dataset_identifier_code=',$identifier,if($codeSpace != '') then concat('&amp;spatial_dataset_identifier_namespace=',$codeSpace) else '')" />
+            <xsl:if test="$isLocal">
+                <xsl:value-of select="concat($nodeUrl,$lang,'/',$atomDescribeDatasetUrlSuffix,'?',$requestParams)" />
+            </xsl:if>
+            <xsl:if test="not($isLocal)">
+                <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',$lang,'/', $atomDescribeDatasetUrlSuffix,'?',$requestParams)" />
+            </xsl:if>
         </xsl:if>
     </xsl:template>
 
@@ -720,9 +716,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:variable name="filename" select="lower-case(normalize-space($onlineresource/gmd:linkage/gmd:URL/text()))"/>
 
         <xsl:choose>
-            <xsl:when test="$onlineresource/gmd:name/gmx:MimeFileType/@type">
-                <xsl:value-of select="$onlineresource/gmd:name/gmx:MimeFileType/@type"/>
-            </xsl:when>
             <xsl:when test="ends-with($filename, '.bz')">application/x-bzip</xsl:when>
             <xsl:when test="ends-with($filename, '.bz2')">application/x-bzip2</xsl:when>
             <xsl:when test="ends-with($filename, '.cdf')">application/x-netcdf</xsl:when>
@@ -799,8 +792,8 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     </xsl:template>
 
     <xsl:template name="get-crs-label">
-        <xsl:param name="crs"/>
         <xsl:param name="epsgCode"/>
+        <xsl:param name="crs"/>
 
         <xsl:choose>
             <xsl:when test="$epsgCode = '2154'">RGF93 / Lambert-93</xsl:when>
@@ -847,4 +840,51 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             <xsl:value-of select="$defaultCRS"/>
         </xsl:if>
     </xsl:template>
+
+    <!--  TODO Implement a case for doing the mapping between the download links and the INSPIRE Spatial Object Types, for now only mentioned some examples -->
+    <xsl:template name="get-inspire-spatial-object-types">
+        <xsl:param name="keyword"/>
+        <xsl:variable name="spatialObjectType">
+            <xsl:choose>
+                <xsl:when test="$keyword='Addresses'">Address</xsl:when>
+                <xsl:when test="$keyword='Administrative units'">AdministrativeUnit</xsl:when>
+                <xsl:when test="$keyword='Coordinate reference systems'"></xsl:when>
+                <xsl:when test="$keyword='Geographical grid systems'"></xsl:when>
+                <xsl:when test="$keyword='Cadastral parcels'"></xsl:when>
+                <xsl:when test="$keyword='Geographical names'"></xsl:when>
+                <xsl:when test="$keyword='Hydrography'"></xsl:when>
+                <xsl:when test="$keyword='Protected sites'">ProtectedSite</xsl:when>
+                <xsl:when test="$keyword='Transport networks'"></xsl:when>
+                <xsl:when test="$keyword='Elevation'"></xsl:when>
+                <xsl:when test="$keyword='Geology'"></xsl:when>
+                <xsl:when test="$keyword='Land cover'"></xsl:when>
+                <xsl:when test="$keyword='Orthoimagery'"></xsl:when>
+                <xsl:when test="$keyword='Agricultural and aquaculture facilities'"></xsl:when>
+                <xsl:when test="$keyword='Area management/restriction/regulation zones and reporting units'"></xsl:when>
+                <xsl:when test="$keyword='Atmospheric conditions'"></xsl:when>
+                <xsl:when test="$keyword='Bio-geographical regions'"></xsl:when>
+                <xsl:when test="$keyword='Buildings'"></xsl:when>
+                <xsl:when test="$keyword='Energy resources'"></xsl:when>
+                <xsl:when test="$keyword='Environmental monitoring facilities'"></xsl:when>
+                <xsl:when test="$keyword='Habitats and biotopes'"></xsl:when>
+                <xsl:when test="$keyword='Human health and safety'"></xsl:when>
+                <xsl:when test="$keyword='Land use'"></xsl:when>
+                <xsl:when test="$keyword='Mineral resources'"></xsl:when>
+                <xsl:when test="$keyword='Natural risk zones'"></xsl:when>
+                <xsl:when test="$keyword='Oceanographic geographical features'"></xsl:when>
+                <xsl:when test="$keyword='Population distribution - demography'"></xsl:when>
+                <xsl:when test="$keyword='Production and industrial facilities'"></xsl:when>
+                <xsl:when test="$keyword='Sea regions'"></xsl:when>
+                <xsl:when test="$keyword='Soil'"></xsl:when>
+                <xsl:when test="$keyword='Species distribution'"></xsl:when>
+                <xsl:when test="$keyword='Statistical units'"></xsl:when>
+                <xsl:when test="$keyword='Utility and governmental services'"></xsl:when>
+                <xsl:when test="$keyword='Meteorological geographical features'"></xsl:when>
+                <xsl:when test="$keyword='Atmospheric Conditions and meteorological geographical features'"></xsl:when>
+                <xsl:otherwise/>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:if test="$spatialObjectType!=''"><link href="{concat('http://inspire.ec.europa.eu/featureconcept/',$spatialObjectType)}" rel="describedby" type="text/html" /></xsl:if>
+    </xsl:template>
+
 </xsl:stylesheet>

@@ -173,6 +173,10 @@
           <Field name="identifier" string="{string(.)}" store="true" index="true"/>
         </xsl:for-each>
 
+        <xsl:for-each select="gmd:identifier/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString">
+        <!-- For local atom feed services -->
+          <Field name="identifierNamespace" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
 
         <xsl:for-each select="gmd:title/gco:CharacterString">
           <Field name="title" string="{string(.)}" store="true" index="true"/>
@@ -658,6 +662,11 @@
       <xsl:for-each select="gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString">
         <Field name="format" string="{string(.)}" store="true" index="true"/>
       </xsl:for-each>
+
+      <!-- For local atom feed services -->
+      <xsl:if test="count(gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue='download'])>0">
+        <Field name="has_atom" string="true" store="false" index="true"/>
+      </xsl:if>
 
       <!-- index online protocol -->
       <xsl:for-each select="gmd:transferOptions/gmd:MD_DigitalTransferOptions">
