@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 
+import jeeves.xlink.Processor;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
@@ -645,9 +646,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
     public Pair<Element, Metadata> getMetadata(ServiceContext context, int id,
                                                Boolean hide_withheld) throws Exception {
 
-        Metadata md = loadMetadata(context.getBean(MetadataRepository.class), id);
-        Element metadata = context.getBean(XmlSerializer.class).removeHiddenElements(false, md, false);
+        XmlSerializer serializer = context.getBean(XmlSerializer.class);
+        boolean doXLinks = serializer.resolveXLinks();
 
+        Metadata md = loadMetadata(context.getBean(MetadataRepository.class), id);
+
+        Element metadata = serializer.removeHiddenElements(false, md, false);
+        if (doXLinks) Processor.processXLink(metadata, context);
 
         boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
         if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
