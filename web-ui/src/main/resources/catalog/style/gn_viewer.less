@@ -159,17 +159,6 @@
     }
     .list-group-item {
       transition: max-height @transition-params;
-      .btn-cog {
-         float: right;
-         margin-right: -.6em;
-         margin-top: -.5em;
-         background: inherit;
-         padding: 6px 8px;
-       }
-      .btn-cog-left {
-        float: left;
-        padding: 6px 14px;
-      }
       &:hover {
         .fa-arrows-alt, .gn-layer-ordering {
           opacity: 1
@@ -181,21 +170,6 @@
       & > label {
         font-size: 90%;
         max-width: 72%;
-      }
-      &.active {
-        background: rgba(255,255,255,.6);
-        & > label {
-          font-weight: bold;
-        }
-        .glyphicon-cog:before {
-          content: "";
-        }
-        .details {
-          display: block;
-        }
-        .btn-group {
-          margin-top: 1em;
-        }
       }
     }
     .btn-group.gn-layer-btn {
@@ -211,9 +185,13 @@
       margin: .2em;
     }
     .baselayer {
-      margin: 0 15px;
       .dropdown-menu {
         width: 100%;
+      }
+    }
+    .gn-layer-actions {
+      [ngeo-popover-anchor] {
+        text-decoration: none;
       }
     }
     .unfold {
@@ -232,7 +210,9 @@
     .details {
       font-size: 90%;
       margin: 0 0 .5em 0;
-      display: none;
+      p {
+        overflow: auto;
+      }
       .delete {
         .btn-xs;
         .pull-right;
@@ -247,20 +227,15 @@
       max-height: 44em;
       overflow-y: auto;
       .gn-layer-ordering {
-        position: absolute;
-        right: 4em;
+        margin-top: -4px;
+        margin-right: -10px;
         .fa {
-          display: block;
-          color: #666;
-          font-size: 12px;
-          &:hover, &:focus {
-            text-decoration: none;
-            color: @link-color;
-          }
-          &:only-child {
-            margin-top: .4em;
-          }
+          padding: 0px 10px;
+          font-size: 0.8em;
         }
+      }
+      ul {
+        margin-bottom: 4px;
       }
     }
     .metadata {
