@@ -351,7 +351,7 @@
       };
 
       // overwrite settings
-      searchSettings.grid.related = ['parent', 'children', 'sources', 'fcats'];
+      searchSettings.grid.related = ['parent', 'children', 'sources', 'hassources'];
 
       viewerSettings.menuExpanded = true;
 

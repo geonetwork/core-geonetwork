@@ -56,6 +56,10 @@
 
   <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
   <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
+  <xsl:variable name="sextant-thesaurus"
+                select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
+  <xsl:variable name="sextant-theme"
+                select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
 
   <!-- ========================================================================================= -->
   <xsl:variable name="isoDocLangId">
@@ -291,6 +295,16 @@
           <xsl:variable name="keyword" select="string(.)"/>
 
           <Field name="keyword" string="{$keyword}" store="true" index="true"/>
+
+          <!-- Add Sextant theme -->
+          <xsl:variable name="sextantThemeKey">
+            <xsl:call-template name="getSextantThemeKey">
+              <xsl:with-param name="keyword" select="string(.)"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:if test="normalize-space($sextantThemeKey)">
+            <Field name="sextantTheme" string="{normalize-space($sextantThemeKey)}" store="true" index="true"/>
+          </xsl:if>
 
           <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
                  and index annex, theme and theme in english. -->
@@ -841,6 +855,17 @@
         <Field name="cl_{concat(local-name(), '_text')}"
                string="{util:getCodelistTranslation(name(*), string(*/@codeListValue), string($isoLangId))}"
                store="true" index="true"/>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!--Sextant specific-->
+  <xsl:template name="getSextantThemeKey">
+    <xsl:param name="keyword"/>
+
+    <xsl:for-each select="$sextant-theme/skos:prefLabel">
+      <xsl:if test="text() = $keyword">
+        <xsl:value-of select="../@rdf:about"/>
+      </xsl:if>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
