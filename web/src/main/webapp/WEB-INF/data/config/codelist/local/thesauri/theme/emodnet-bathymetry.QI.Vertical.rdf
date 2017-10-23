@@ -7,6 +7,12 @@
     <dcterms:issued>2017-06-19</dcterms:issued>
     <dcterms:modified>2017-06-19</dcterms:modified>
   </skos:ConceptScheme>
+  <skos:Concept rdf:about="http://www.emodnet.eu/thesaurus/QI_Vertical/-1">
+    <skos:prefLabel xml:lang="en">-1 - Multisources</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">-1 - Multisources</skos:prefLabel>
+    <skos:definition xml:lang="en"/>
+    <skos:definition xml:lang="fr"/>
+  </skos:Concept>
   <skos:Concept rdf:about="http://www.emodnet.eu/thesaurus/QI_Vertical/0">
     <skos:prefLabel xml:lang="en">0 - Unknown, plummet, leadline, GEBCO</skos:prefLabel>
     <skos:prefLabel xml:lang="fr">0 - Unknown, plummet, leadline, GEBCO</skos:prefLabel>

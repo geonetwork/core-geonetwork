@@ -9,8 +9,8 @@
   </skos:ConceptScheme>
 
   <skos:Concept rdf:about="http://www.emodnet.eu/thesaurus/QI_Purpose/0">
-    <skos:prefLabel xml:lang="en">0 - Unknown</skos:prefLabel>
-    <skos:prefLabel xml:lang="fr">0 - Unknown</skos:prefLabel>
+    <skos:prefLabel xml:lang="en">0 - Undefined</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">0 - Undefined</skos:prefLabel>
     <skos:definition xml:lang="en"/>
     <skos:definition xml:lang="fr"/>
   </skos:Concept>
