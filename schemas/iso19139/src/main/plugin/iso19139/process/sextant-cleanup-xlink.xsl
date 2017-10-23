@@ -23,7 +23,7 @@
     <xsl:message>Replace <xsl:value-of select="."/> by xlink <xsl:value-of select="$newXlink"/>.</xsl:message>
 
     <xsl:attribute name="xlink:href"
-                   select="concat($newXlink, '&amp;lang=', $mainLanguage,
+                   select="concat($newXlink, '&amp;skipdescriptivekeywords=true&amp;lang=', $mainLanguage,
                    if (count($locales) > 0)
                    then concat('&amp;lang=', string-join(
                           $locales,
