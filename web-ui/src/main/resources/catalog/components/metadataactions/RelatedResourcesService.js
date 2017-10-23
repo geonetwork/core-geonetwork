@@ -206,7 +206,7 @@
 
           var openLink = function(record, link) {
             var url = $filter('gnLocalized')(record.url) || record.url;
-            if (url && (record.url.indexOf('\\') == 0 ||
+            if (url && (url.indexOf('\\') == 0 ||
                url.indexOf('http') == 0 ||
                url.indexOf('ftp') == 0)) {
               return window.open(url, '_blank');
