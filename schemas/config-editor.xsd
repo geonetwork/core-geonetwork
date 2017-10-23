@@ -716,6 +716,7 @@ eg. only 2 INSPIRE themes.
           <xs:complexType>
             <xs:attribute name="key" type="xs:string" use="required"/>
             <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
+            <xs:attribute name="orderById" type="xs:boolean" use="optional"/>
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
           </xs:complexType>
@@ -1086,6 +1087,7 @@ eg. The gmd:MD_Identifier may contain a gmd:authority node which needs to be pre
     </snippet>
 
 Warning: Template based field does not support multilingual editing for ISO standards (ie. only the main language is edited - therefore, multilingual elements will be preserved).
+
 
         ]]></xs:documentation>
     </xs:annotation>

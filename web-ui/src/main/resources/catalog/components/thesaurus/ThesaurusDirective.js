@@ -194,6 +194,7 @@
              transformations: '@',
              currentTransformation: '@',
              lang: '@',
+             orderById: '@',
              textgroupOnly: '@',
 
              // Max number of tags allowed. Use 1 to restrict to only
@@ -370,7 +371,8 @@
                      gnThesaurusService.getKeywordAutocompleter({
                        thesaurusKey: scope.thesaurusKey,
                        dataToExclude: scope.selected,
-                       lang: gnLangs.current
+                       lang: gnLangs.current,
+                       orderById: scope.orderById
                      });
 
                      // Init typeahead
@@ -482,7 +484,7 @@
                gnThesaurusService
                 .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation, scope.langs,
-               scope.textgroupOnly).then(
+                   scope.textgroupOnly).then(
                function(data) {
                  scope.snippet = data;
                });
@@ -518,6 +520,7 @@
         scope: {},
         link: function(scope, element, attrs) {
           scope.thesaurusKey = attrs.thesaurusKey || '';
+          scope.orderById = attrs.orderById || 'false';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           var initialized = false;
 
@@ -555,7 +558,8 @@
             var keywordsAutocompleter =
                 gnThesaurusService.getKeywordAutocompleter({
                   thesaurusKey: scope.thesaurusKey,
-                  lang: scope.lang
+                  lang: scope.lang,
+                  orderById: scope.orderById
                 });
 
             // Init typeahead

@@ -221,6 +221,11 @@
                       select="if ($thesaurusConfig/@maxtags)
                               then $thesaurusConfig/@maxtags
                               else ''"/>
+        <xsl:variable name="orderById"
+                      as="xs:string"
+                      select="if ($thesaurusConfig/@orderById)
+                              then $thesaurusConfig/@orderById
+                              else 'false'"/>
         <!--
           Example: to restrict number of keyword to 1 for INSPIRE
           <xsl:variable name="maxTags"
@@ -237,7 +242,7 @@
           -->
 
         <xsl:variable name="allLanguages"
-                      select="concat($metadataLanguage, ',', $metadataOtherLanguages)"></xsl:variable>
+                      select="concat($metadataLanguage, ',', $metadataOtherLanguages)"/>
         <div data-gn-keyword-selector="{$widgetMode}"
              data-metadata-id="{$metadataId}"
              data-element-ref="{concat('_X', ../gn:element/@ref, '_replace')}"
@@ -247,6 +252,7 @@
              data-transformations="{$transformations}"
              data-current-transformation="{$transformation}"
              data-max-tags="{$maxTags}"
+             data-order-by-id="{$orderById}"
              data-lang="{$metadataOtherLanguagesAsJson}"
              data-textgroup-only="false">
         </div>
