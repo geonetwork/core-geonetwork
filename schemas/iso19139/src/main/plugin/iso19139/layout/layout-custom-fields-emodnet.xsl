@@ -53,6 +53,7 @@
                value="{*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record}"
                name="_{*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record/gn:element/@ref}"
                data-gn-keyword-picker=""
+               data-order-by-id="true"
                data-thesaurus-key="local.theme.{$name}"
                type="text"/>
       </div>

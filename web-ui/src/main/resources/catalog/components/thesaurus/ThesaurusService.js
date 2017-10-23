@@ -181,7 +181,7 @@
                 var keywordsAutocompleter = new Bloodhound({
                   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                   queryTokenizer: Bloodhound.tokenizers.whitespace,
-                  sorter: config.thesaurusKey.indexOf('local.theme.emodnet-bathymetry.QI') === -1 ? null :
+                  sorter: config.orderById == 'true' ?
                     function (a, b) {
                       var nameA = a.props.uri.toUpperCase();
                       var nameB = b.props.uri.toUpperCase();
@@ -192,7 +192,7 @@
                         return 1;
                       }
                       return 0;
-                    },
+                    } : null,
                   limit: config.max || this.DEFAULT_NUMBER_OF_RESULTS,
                   remote: {
                     wildcard: 'QUERY',

@@ -938,14 +938,28 @@
           'EMODNET')">
 
       <thesaurusList>
-        <thesaurus key="external.theme.NVS.L23" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.NVS.L05" fieldset="false" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.theme.NVS.L05POS" fieldset="false" transformations="to-iso19139-keyword"/>
-        <thesaurus key="local.theme.emodnet-bathymetry.QI.Horizontal" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="local.theme.emodnet-bathymetry.QI.Vertical" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="local.theme.emodnet-bathymetry.QI.Purpose" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
-        <thesaurus key="external.parameter.NVS.P02" fieldset="false" transformations="to-iso19139-keyword"/>
-        <thesaurus key="local.theme.emodnet-bathymetry.projectname" fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L23"
+                   fieldset="false" maxtags="1" transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L05"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.theme.NVS.L05POS"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.emodnet-bathymetry.QI.Horizontal"
+                   fieldset="false" maxtags="1" orderById="true"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.emodnet-bathymetry.QI.Vertical"
+                   fieldset="false" maxtags="1" orderById="true" transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.emodnet-bathymetry.QI.Purpose"
+                   fieldset="false" maxtags="1" orderById="true"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="external.parameter.NVS.P02"
+                   fieldset="false"
+                   transformations="to-iso19139-keyword"/>
+        <thesaurus key="local.theme.emodnet-bathymetry.projectname"
+                   fieldset="false" maxtags="1"
+                   transformations="to-iso19139-keyword"/>
       </thesaurusList>
 
 
