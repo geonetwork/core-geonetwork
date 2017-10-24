@@ -148,6 +148,17 @@
                      value="{{::r.url | gnLocalized: lang}}"/>
             </p>
           </div>
+          
+          <div data-ng-switch-when="MDFCATS">
+          <p class="text-muted">
+            <h2>{{(r.title | gnLocalized: lang) }}</h2>
+            
+           <h2 data-translate="">technicalInformation</h2>
+           
+           <div data-gn-attribute-table-renderer="r.featureType.attributeTable.element">
+	        </div>
+            </p>
+          </div>
 
           <div data-ng-switch-default>
             <p class="text-muted"
@@ -155,7 +166,7 @@
               <a href="#/metadata/{{r.id}}">
                 {{(r.title | gnLocalized: lang) }}
               </a> ({{(config.getLabel(mainType, type)) | translate}})<br/>
-              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}" data-translate="">moreInfoOnRecord</a>
+              {{ (r.description | gnLocalized: lang | striptags | words:35)}} <a href="#/metadata/{{r.id}}">{{'more' | translate}}...</a>
             </p>
 
             <p class="text-muted"

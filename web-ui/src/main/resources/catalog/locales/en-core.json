@@ -329,6 +329,8 @@
     "attributeName": "Attribute name",
     "attributeDefinition": "Definition",
     "attributeValues": "List of values",
+    "attributeType": "Type",
+    "attributeCode": "Code",
     "transfertPrivilegesFinished": "{{metadata}} record(s) transfered.",
     "valueName": "Name",
     "xmlView": "XML view",
