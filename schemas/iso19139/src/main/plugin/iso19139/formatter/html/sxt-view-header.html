@@ -69,9 +69,10 @@
 
       <div class="col-md-3 gn-md-side">
 
-        <section class="links" ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
+        <section class="links" ng-show="downloads.length > 0 || links.length > 0 || layers.length > 0 || hasRelations">
           <h3 translate="">accessData</h3>
           <div gn-related="md" types="parent|children|sources|hassources"
+               has-results="hasRelations"
                template="../../catalog/views/sextant/templates/related.html">
           </div><sxt-links-btn></sxt-links-btn>
         </section>
