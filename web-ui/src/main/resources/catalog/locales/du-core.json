@@ -341,5 +341,18 @@
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
     "_valid": "Validity",
-    "dateToDate": "to"
+    "dateToDate": "to",
+    "batchEditing": "Batch editing",
+    "harvesters": "Harvesters",
+    "metadatasAndTemplates": "Metagegevens en templates",
+    "statisticsAndStatus": "Statistieken en status",
+    "reports": "rapporten",
+    "classificationSystems": "Classificatiesystemen",
+    "usersAndGroups": "Gebruikers en groepen",
+    "settings": "instellingen",
+    "tools": "gereedschap",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "van",
+    "resolveCaptcha": "Resolve the captcha"
 }

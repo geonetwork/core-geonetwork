@@ -1194,7 +1194,7 @@
             var targetPath =
               link.match(pathRE) ? link.match(pathRE)[1] : '';
             var isActive = currentService == targetService &&
-              (!targetPath || currentPath == targetPath);
+              (!targetPath || currentPath.indexOf(targetPath) > -1);
 
             if (isActive) {
               element.parent().addClass('active');

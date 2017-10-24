@@ -341,5 +341,18 @@
     "insertNewInputValue": "Add a value for this input",
     "profileGraph": "Profile Graph",
     "_valid": "Validity",
-    "dateToDate": "to"
+    "dateToDate": "to",
+    "batchEditing": "Bunkabreytingar",
+    "harvesters": "Söfnun",
+    "metadatasAndTemplates": "Lýsigögn og sniðmát",
+    "statisticsAndStatus": "Tölfræði og staða",
+    "reports": "Skýrslur",
+    "classificationSystems": "Flokkunarkerfi",
+    "usersAndGroups": "Notendur og hópar",
+    "settings": "Stillingar",
+    "tools": "Verkfæri",
+    "collapseAllFacetLabel": "Collapse",
+    "expandAllFacetLabel": "Expand",
+    "resultXonY": "on",
+    "resolveCaptcha": "Resolve the captcha"
 }

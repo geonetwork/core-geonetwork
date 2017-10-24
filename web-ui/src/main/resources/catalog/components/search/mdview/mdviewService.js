@@ -230,23 +230,20 @@
         }
 
         return promiseMd.then(function(md) {
-          if (md['geonet:info']) {
-            if (angular.isString(fUrl)) {
-              url = fUrl.replace('{{uuid}}', md.getUuid());
-            }
-            else if (angular.isFunction(fUrl)) {
-              url = fUrl(md);
-            }
-
-            // Attach the md to the grid element scope
-            if (!scope.md) {
-              scope.$parent.md = md;
-              sxtService.feedMd(scope.$parent);
-            }
-            return url;
-          } else {
-            return null;
+          if (angular.isString(fUrl)) {
+            url = fUrl.replace('{{uuid}}', md.getUuid());
           }
+          else if (angular.isFunction(fUrl)) {
+            url = fUrl(md);
+          }
+
+          // Attach the md to the grid element scope
+          if (!scope.md) {
+            scope.$parent.md = md;
+            scope.md = md;
+            sxtService.feedMd(scope.$parent);
+          }
+          return url;
         });
       };
 

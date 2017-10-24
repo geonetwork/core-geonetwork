@@ -64,9 +64,6 @@
     font-size: 18px;
   }
 
-  font-family: Arial @font-family-sans-serif;
-  font-size: 13px;
-
   .property {
     @media (min-width: @screen-sm-min) {
       text-align: right;
@@ -193,7 +190,6 @@
     }
     h3 {
       border: none;
-      padding-left: .65em;
       i {
         transform: rotate(0deg);
       }
@@ -202,11 +198,9 @@
       }
     }
     .offseted {
-      margin-left: @large-offset;
       padding-bottom: 1.5em;
     }
     dd, .offseted {
-      border-left: 1px solid @gray-light;
       padding-left: 1em;
       dd {
         border: none;
@@ -418,5 +412,11 @@ ul.container-list {
         padding-left: 0;
       }
     }
+  }
+}
+
+[data-gn-metadata-contacts], [gn-metadata-contacts] {
+  .gn-contact {
+    margin-left: -1.7em;
   }
 }

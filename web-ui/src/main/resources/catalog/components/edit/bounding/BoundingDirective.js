@@ -154,6 +154,7 @@
             // projection list
             ctrl.projections = gnMap.getMapConfig().projectionList;
             ctrl.currentProjection = ctrl.projections[0].code;
+            ctrl.dataProjection = 'EPSG:4326';
 
             // available input formats
             // GML is not available as it cannot be parsed
@@ -161,23 +162,46 @@
             ctrl.formats = ['WKT', 'GeoJSON', 'GML'];
             ctrl.currentFormat = ctrl.formats[0];
 
+            function isProjAvailable(code) {
+              for(var i = 0; i < ctrl.projections.length; i++) {
+                if (ctrl.projections[i].code === code) {
+                  return true;
+                }
+              }
+              return false;
+            };
+
             // parse initial input coordinates to display shape
             ctrl.initValue = function() {
               if (ctrl.polygonXml) {
+                var srsName = ctrl.polygonXml.match(
+                  new RegExp("srsName=\"(EPSG:[0-9]*)\""));
+                ctrl.dataProjection = srsName && srsName.length === 2 ?
+                  srsName[1] : 'EPSG:4326';
+
+                if (!isProjAvailable(ctrl.dataProjection)) {
+                  ctrl.projections.push({
+                    code: ctrl.dataProjection,
+                    label: ctrl.dataProjection
+                  });
+                }
+
+                ctrl.currentProjection = ctrl.dataProjection;
+
                 // parse first feature from source XML & set geometry name
-                var correctedXml = ctrl.polygonXml
-                    .replace(/<gml:LinearRingTypeCHOICE_ELEMENT0>/g, '')
-                    .replace(/<\/gml:LinearRingTypeCHOICE_ELEMENT0>/g, '')
-                    .replace(/<gml:LineStringTypeCHOICE_ELEMENT1>/g, '')
-                    .replace(/<\/gml:LineStringTypeCHOICE_ELEMENT1>/g, '');
-                var geometry = gnGeometryService.parseGeometryInput(
-                    ctrl.map,
-                    correctedXml,
-                    {
-                      crs: 'EPSG:4326',
-                      format: 'gml'
-                    }
+                try {
+                  var geometry = gnGeometryService.parseGeometryInput(
+                      ctrl.map,
+                      ctrl.polygonXml,
+                      {
+                        crs: ctrl.currentProjection,
+                        format: 'gml'
+                      }
                     );
+                } catch(e) {
+                  console.warn('Could not parse geometry');
+                  console.warn(e);
+                }
 
                 if (!geometry) {
                   console.warn('Could not parse geometry from extent polygon');
@@ -214,7 +238,7 @@
                     ctrl.map,
                     feature,
                     {
-                      crs: 'EPSG:4326',
+                      crs: ctrl.currentProjection,
                       format: 'gml'
                     }
                     ) +
@@ -269,6 +293,8 @@
                 ctrl.handleInputChange();
               } else {
                 ctrl.updateInputTextFromGeometry();
+                // Update output if projection change
+                ctrl.updateOutput(source.getFeatures()[0]);
               }
             };
 

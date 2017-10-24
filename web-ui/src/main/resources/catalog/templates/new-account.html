@@ -50,7 +50,7 @@
               <label class="control-label col-lg-4" data-translate="">address</label>
               <div class="col-lg-8">
                 <input type="text" name="address"
-                       data-ng-model="userInfo.addresses[0].address"
+                       data-ng-model="userInfo.address.address"
                        class="form-control"/>
               </div>
             </div>
@@ -58,26 +58,26 @@
               <label class="control-label col-lg-4" data-translate="">zip</label>
               <div class="col-lg-8">
                 <input type="text" name="zip" class="form-control"
-                       data-ng-model="userInfo.addresses[0].zip"/>
+                       data-ng-model="userInfo.address.zip"/>
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-lg-4" data-translate="">state</label>
               <div class="col-lg-8">
                 <input type="text" name="state" class="form-control"
-                       data-ng-model="userInfo.addresses[0].state"/>
+                       data-ng-model="userInfo.address.state"/>
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-lg-4" data-translate="">city</label>
               <div class="col-lg-8">
                 <input type="text" name="city" class="form-control"
-                       data-ng-model="userInfo.addresses[0].city"/>
+                       data-ng-model="userInfo.address.city"/>
               </div>
             </div>
             <div class="form-group">
               <label class="control-label col-lg-4" data-translate=""
-                     data-ng-model="userInfo.addresses[0].country">country</label>
+                     data-ng-model="userInfo.address.country">country</label>
               <div class="col-lg-8">
                 <!-- TODO : Add country list -->
                 <input type="text" name="country" class="form-control"/>
@@ -94,6 +94,16 @@
                 <option data-ng-repeat="p in profiles" value="{{p}}">{{p | translate}}</option>
               </select>
             </div>
+          </div>
+
+          <div class="form-group" data-ng-if="recaptchaEnabled">
+            <div vc-recaptcha class="col-lg-8"
+               theme="'light'"
+               key="recaptchaKey"></div>
+
+            <span class="col-lg-8" style="color: red;" data-ng-show="resolveRecaptcha" data-translate="">
+              resolveCaptcha
+            </span>
           </div>
         </form>
         <button data-gn-click-and-spin="register('#userinfo')" class="btn btn-primary btn-block"

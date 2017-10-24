@@ -42,6 +42,11 @@
   <inspire>INSPIRE</inspire>
   <resource>Risorsa</resource>
   <xml>XML</xml>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
   <metadata>Metadato</metadata>
   <identificationInfo>Identificazione</identificationInfo>
   <distributionInfo>Distribuzione</distributionInfo>
