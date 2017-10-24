@@ -17,7 +17,7 @@ public class URITemplateProxyServlet extends org.mitre.dsmiley.httpproxy.URITemp
      * parent
      */
     static {
-        String[] headers = new String[] { "X-XSRF-TOKEN" };
+        String[] headers = new String[] { "X-XSRF-TOKEN", "Access-Control-Allow-Origin", "Vary", "Access-Control-Allow-Credentials" };
         for (String header : headers) {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }
