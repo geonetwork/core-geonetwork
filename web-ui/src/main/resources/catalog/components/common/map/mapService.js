@@ -106,6 +106,35 @@
           }
           return null;
         };
+        
+        /**
+         * @description
+         * Returns a Layer already added to the map.
+         *
+         * @param {ol.Map} map obj
+         * @param {string} name of the layer
+         * @param {string} url of the service
+         */
+        var getTheLayerFromMap = function(map, name, url) {
+          for (var i = 0; i < map.getLayers().getLength(); i++) {
+            var l = map.getLayers().item(i);
+            var source = l.getSource();
+            if (source instanceof ol.source.WMTS &&
+                l.get('url') == url) {
+              if (l.get('name') == name) {
+                return l;
+              }
+            }
+            else if (source instanceof ol.source.TileWMS ||
+                source instanceof ol.source.ImageWMS) {
+              if (source.getParams().LAYERS == name &&
+                  l.get('url').split('?')[0] == url.split('?')[0]) {
+                return l;
+              }
+            }
+          }
+          return null;
+        };
 
         var getImageSourceRatio = function(map, maxWidth) {
           var width = (map.getSize() && map.getSize()[0]) ||
@@ -1194,6 +1223,7 @@
                 var capL = gnOwsCapabilities.getLayerInfoFromCap(
                     name, capObj, md && md.getUuid && md.getUuid()),
                     olL;
+
                 if (!capL) {
                   // If layer not found in the GetCapabilities
                   // Try to add the layer from the metadata
@@ -1214,6 +1244,10 @@
                     o.version = version;
                   }
                   olL = $this.addWmsToMap(map, o);
+                  
+                  if(!angular.isUndefined(md['geonet:info']['uuid'])) {
+                	  olL.set('MDuuid', md['geonet:info']['uuid']);
+                  } 
 
                   if (!angular.isArray(olL.get('errors'))) {
                     olL.set('errors', []);
@@ -1244,9 +1278,12 @@
                   };
 
                   var feedMdPromise = md ?
-                      $q.resolve(md).then(function(md) {
-                        olL.set('md', md);
-                      }) : $this.feedLayerMd(olL);
+                    $q.resolve(md).then(function(md) {
+                      olL.set('md', md);
+                      if(!angular.isUndefined(md['geonet:info']['uuid'])) {
+                    	  olL.set('MDuuid', md['geonet:info']['uuid']);
+                      }
+                    }) : $this.feedLayerMd(olL);
 
                   feedMdPromise.then(finishCreation);
                 }
@@ -1260,6 +1297,15 @@
                 gnWmsQueue.error(o);
                 defer.reject(o);
               });
+            } else {
+            	var olL = getTheLayerFromMap(map, name, url);
+            	
+            	  $q.resolve(md).then(function(md) {
+                      if(!angular.isUndefined(md['geonet:info']['uuid'])) {
+                  	    olL.set('MDuuid', md['geonet:info']['uuid']);
+                      }
+                    });
+            	
             }
             return defer.promise;
           },
