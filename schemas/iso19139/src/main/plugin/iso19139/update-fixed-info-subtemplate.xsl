@@ -94,8 +94,14 @@
 
   <xsl:template mode="compute-bbox-for-polygon"
                 match="gmd:polygon">
+
+    <xsl:variable name="polygonWithNs">
+      <xsl:apply-templates select="./gml:*"/>
+    </xsl:variable>
     <xsl:variable name="bbox"
-                  select="java:geomToBbox(saxon:serialize(./gml:*, 'default-serialize-mode'))"/>
+                  select="java:geomToBbox(
+                                    saxon:serialize($polygonWithNs,
+                                    'default-serialize-mode'))"/>
     <xsl:if test="$bbox != ''">
       <xsl:variable name="bboxCoordinates"
                     select="tokenize($bbox, '\|')"/>
@@ -119,6 +125,71 @@
     </xsl:if>
   </xsl:template>
 
+
+
+
+  <!-- Add gmd:id attribute to all gml elements which required one. -->
+  <xsl:template match="gml:MultiSurface[not(@gml:id)]|gml:Polygon[not(@gml:id)]">
+    <xsl:copy>
+      <xsl:attribute name="gml:id">
+        <xsl:value-of select="generate-id(.)"/>
+      </xsl:attribute>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="@gml:id">
+    <xsl:choose>
+      <xsl:when test="normalize-space(.)=''">
+        <xsl:attribute name="gml:id">
+          <xsl:value-of select="generate-id(.)"/>
+        </xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  
+
+  <xsl:template name="correct_ns_prefix">
+    <xsl:param name="element"/>
+    <xsl:param name="prefix"/>
+    <xsl:choose>
+      <xsl:when test="local-name($element)=name($element) and $prefix != '' ">
+        <xsl:element name="{$prefix}:{local-name($element)}">
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="gmd:*">
+    <xsl:call-template name="correct_ns_prefix">
+      <xsl:with-param name="element" select="."/>
+      <xsl:with-param name="prefix" select="'gmd'"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="gco:*">
+    <xsl:call-template name="correct_ns_prefix">
+      <xsl:with-param name="element" select="."/>
+      <xsl:with-param name="prefix" select="'gco'"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template match="gml:*">
+    <xsl:call-template name="correct_ns_prefix">
+      <xsl:with-param name="element" select="."/>
+      <xsl:with-param name="prefix" select="'gml'"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <xsl:template match="@*|node()">
     <xsl:copy>
