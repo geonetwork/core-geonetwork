@@ -34,7 +34,7 @@
   <xml_iso19139>Desar aquestes metadades com un arxiu XML ISO19139</xml_iso19139>
   <xml_iso19139Tooai_dc>Desar aquestes metadades com un arxiu XML OAI Dublin Core
   </xml_iso19139Tooai_dc>
-  
+
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Complet</advanced>
@@ -43,6 +43,11 @@
   <inspire>INSPIRE</inspire>
   <inspire_sds>SDS</inspire_sds>
 
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
   <resource>Recurs</resource>
   <xml>XML</xml>
   <metadata>Metadada</metadata>

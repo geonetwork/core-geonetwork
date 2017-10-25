@@ -32,4 +32,9 @@
   <temporalRef>Informacje o odniesieniu czasowym</temporalRef>
   <constraintInfo>Ograniczenia dostępu</constraintInfo>
   <xml_iso19139>Zapisz plik metadanych jako XML zgodny z ISO19139</xml_iso19139>
+  <overviews>Overviews</overviews>
+  <metadataInXML>XML</metadataInXML>
+  <providedBy>Provided by</providedBy>
+  <shareOnSocialSite>Share on social sites</shareOnSocialSite>
+  <viewMode>Views</viewMode>
 </strings>

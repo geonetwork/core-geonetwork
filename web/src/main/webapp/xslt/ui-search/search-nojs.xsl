@@ -33,27 +33,27 @@
   <xsl:import href="../base-layout-nojs.xsl"/>
   <xsl:import href="../common/functions-core.xsl"/>
 
-
-
   <xsl:template mode="content" match="/">
 
     <xsl:variable name="count"
                   select="/root/search/response[1]/summary[1]/@count"/>
 
 
-    <div class="row" style="padding-bottom:20px">
-      <div class="col-md-3">&#160;
 
+    <div class="row">
+      <div class="col-md-3 gn-facet">
+
+        <div>
           <xsl:variable name="parameters"
                         select="/root/search/params/*[
-                                    name(.) != 'fast' and name(.) != 'resultType'
-                                  ]"/>
+                                  name(.) != 'fast' and name(.) != 'resultType'
+                                ]"/>
 
           <!-- If only one parameter set, the page provides a summary
           for this criteria. For contact, source catalog, an extra panel
           is added with some details about this resource. -->
           <xsl:if test="count($parameters) = 1">
-            <div class="gn-resource-info">
+            <div class="thumbnail text-center">
               <xsl:variable name="parameterName"
                             select="$parameters[1]/name()"/>
               <xsl:variable name="parameterLabel"
@@ -68,11 +68,11 @@
               <xsl:choose>
                 <xsl:when test="$parameterName = '_groupPublished'">
                   <img  class="gn-logo-lg"
-                        src="{/root/gui/url}/images/harvesting/{$parameterValue}.png"/>
+                        src="{nodeUrl}../images/harvesting/{$parameterValue}.png"/>
                 </xsl:when>
                 <xsl:when test="$parameterName = '_source'">
                   <img  class="gn-logo-lg"
-                        src="{/root/gui/url}/images/logos/{$parameterValue}.png"/>
+                        src="{nodeUrl}../images/logos/{$parameterValue}.png"/>
                 </xsl:when>
                 <xsl:when test="$parameterName = 'responsiblePartyEmail'">
                   <img src="//gravatar.com/avatar/{util:md5Hex($parameterValue)}?s=200"/>
@@ -99,42 +99,10 @@
               </h4>
             </div>
           </xsl:if>
-      </div>
-      <div class="col-md-9">
-        <div style="padding-top: 19px;">
-          <form action="{/root/gui/nodeUrl}search"
-                class="form-inline">
-            <div class="input-group gn-form-any">
-              <input type="text"
-                     name="any"
-                     id="fldAny"
-                     placeholder="{$t/anyPlaceHolder}"
-                     value="{/root/request/any}"
-                     class="form-control input-lg"
-                     autofocus=""/>
-              <div class="input-group-btn">
-                <button type="submit"
-                        class="btn btn-primary btn-lg">
-                  &#160;&#160;
-                  <i class="fa fa-search">&#160;</i>
-                  &#160;&#160;
-                </button>
-                <a href="{/root/gui/nodeUrl}search"
-                   class="btn btn-link btn-lg">
-                  <i class="fa fa-times">&#160;</i>
-                </a>
-              </div>
-            </div>
-            <input type="hidden" name="fast" value="index"/>
-          </form>
+          &#160;
         </div>
-      </div>
-    </div>
 
-
-    <xsl:if test="$count > 0">
-      <div class="row">
-        <div class="col-md-3 gn-facet">
+        <xsl:if test="$count > 0">
           <xsl:for-each select="/root/search/response[1]/summary">
             <xsl:for-each select="dimension[category]">
               <h4><xsl:value-of select="gn-fn-core:translate(@label, $t)"/></h4>
@@ -150,7 +118,7 @@
                                             else if ($field = 'maintenanceAndUpdateFrequency')
                                             then 'cl_maintenanceAndUpdateFrequency'
                                             else $field"/>
-                      <a href="{/root/gui/nodeUrl}search?{$luceneField}={@value}">
+                      <a href="{$nodeUrl}search?{$luceneField}={@value}">
                         <span class="gn-facet-label">
                         <xsl:value-of select="gn-fn-core:translate(@label, $t)"/>
                         </span>
@@ -164,7 +132,9 @@
               </ul>
             </xsl:for-each>
           </xsl:for-each>
-        </div>
+        </xsl:if>
+      </div>
+      <xsl:if test="$count > 0">
         <div class="col-md-9">
           <xsl:for-each select="/root/search/response[@from]">
 
@@ -178,7 +148,7 @@
                 <b>
                   <xsl:value-of select="@to"/>
                 </b>
-                <xsl:value-of select="$t/on"/>
+                /
                 <b>
                   <xsl:value-of select="$count"/>
                 </b>
@@ -189,14 +159,14 @@
               <xsl:for-each select="metadata">
                <li class="list-group-item gn-grid"
                    itemscope="itemscope"
-                   itemtype="{gn-fn-core:get-schema-org-class(type)}">
+                   itemtype="{gn-fn-core:get-schema-org-class(type[1])}">
                  <div class="row">
                    <xsl:if test="count(category) > 0">
                      <div class="gn-md-category">
                        <span><xsl:value-of select="$t/categories"/></span>
                        <xsl:for-each select="category">
                          <a title="{.}"
-                            href="{/root/gui/nodeUrl}search?_cat=maps">
+                            href="{$nodeUrl}search?_cat=maps">
                            <i class="fa">
                              <span class="fa gn-icon-{.}">&#160;</span>
                            </i>
@@ -208,10 +178,17 @@
 
                  <div class="row gn-md-title">
                    <h3 itemprop="name">
-                     <a href="{/root/gui/nodeUrl}api/records/{*[name()='geonet:info']/uuid}"
+                     <a href="{$nodeUrl}api/records/{*[name()='geonet:info']/uuid}"
                         itemprop="url">
                        <i class="fa gn-icon-{type}" title="{type}">&#160;</i>
-                       <xsl:value-of select="title|defaultTitle"/>
+                       <xsl:choose>
+                         <xsl:when test="title != ''">
+                           <xsl:value-of select="title"/>
+                         </xsl:when>
+                         <xsl:otherwise>
+                           <xsl:value-of select="defaultTitle"/>
+                         </xsl:otherwise>
+                       </xsl:choose>
                      </a>
                    </h3>
                  </div>
@@ -239,8 +216,8 @@
             </ul>
           </xsl:for-each>
         </div>
-      </div>
-    </xsl:if>
+      </xsl:if>
+    </div>
   </xsl:template>
 
 </xsl:stylesheet>

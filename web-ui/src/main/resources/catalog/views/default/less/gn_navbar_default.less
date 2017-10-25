@@ -1,3 +1,5 @@
+@import "../../../style/gn_bootstrap.less";
+
 .navbar {
   margin-bottom: 14px;
   .navbar-brand {
@@ -22,13 +24,13 @@
           font-size: 0.9em;
         }
       }
-      &.open > .dropdown-toggle {
+      &.open:not(.active) > .dropdown-toggle {
         background: none;
       }
       ul {
         display: none;
       }
-      &:hover ul, &:focus ul, &:active ul {
+      &:hover ul, & > a:focus + ul, & > a:active + ul {
         display: block;
       }
     }

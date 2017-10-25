@@ -40,31 +40,47 @@
   <xsl:template mode="form-builder" match="section[@name]|fieldset">
     <xsl:param name="base" as="node()"/>
 
-    <xsl:variable name="sectionName" select="@name"/>
+    <xsl:variable name="match">
+      <xsl:choose>
+        <xsl:when test="@displayIfRecord">
+          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+            <xsl:with-param name="base" select="$metadata"/>
+            <xsl:with-param name="in" select="concat('/../', @displayIfRecord)"/>
+          </saxon:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 
-    <xsl:choose>
-      <xsl:when test="$sectionName">
-        <fieldset data-gn-field-highlight="" class="gn-{@name}">
-          <!-- Get translation for labels.
-          If labels contains ':', search into labels.xml. -->
-          <legend data-gn-slide-toggle="">
-            <xsl:value-of
-              select="if (contains($sectionName, ':'))
-                then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
-                else $strings/*[name() = $sectionName]"
-            />
-          </legend>
-          <xsl:apply-templates mode="form-builder" select="@*|*">
+    <xsl:if test="$match = true()">
+      <xsl:variable name="sectionName" select="@name"/>
+
+      <xsl:choose>
+        <xsl:when test="$sectionName">
+          <fieldset data-gn-field-highlight="" class="gn-{@name}">
+            <!-- Get translation for labels.
+            If labels contains ':', search into labels.xml. -->
+            <legend data-gn-slide-toggle="">
+              <xsl:value-of
+                select="if (contains($sectionName, ':'))
+                  then gn-fn-metadata:getLabel($schema, $sectionName, $labels)/label
+                  else $strings/*[name() = $sectionName]"
+              />
+            </legend>
+            <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
+              <xsl:with-param name="base" select="$base"/>
+            </xsl:apply-templates>
+          </fieldset>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates mode="form-builder" select="@*[name() != 'displayIfRecord']|*">
             <xsl:with-param name="base" select="$base"/>
           </xsl:apply-templates>
-        </fieldset>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="form-builder" select="@*|*">
-          <xsl:with-param name="base" select="$base"/>
-        </xsl:apply-templates>
-      </xsl:otherwise>
-    </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
 

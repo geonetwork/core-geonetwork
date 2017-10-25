@@ -50,8 +50,15 @@
         function($q, $injector, gnGlobalSettings, gnLangs, gnUrlUtils) {
           return {
             request: function(config) {
-              if (gnLangs.current) {
+              var isGnUrl =
+                config.url.indexOf(gnGlobalSettings.gnUrl) === 0 ||
+                (config.url.indexOf('http') !== 0 &&
+                config.url.indexOf('//') !== 0);
+              if (isGnUrl && gnLangs.current &&
+                  !config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = gnLangs.current;
+              } else {
+                config.headers['Accept-Language'] = navigator.language;
               }
               // For HTTP url and those which
               // are not targeting the catalog

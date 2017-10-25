@@ -32,7 +32,6 @@
     e.preventDefault();
 
     var visible = $('#' + thisEl.attr('target')).toggle().is(':visible');
-    console.log();
     return visible;
   };
 

@@ -5,7 +5,7 @@
   <addA>Aggiungi</addA>
   <nojs>Javascript non è attivo. Attiva JavaScript oppure
     <a
-      href="catalog.search.nojs">clicca qui
+      href="../search">clicca qui
     </a>
     per effettuare una ricerca in modalità minimale.
   </nojs>

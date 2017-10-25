@@ -473,8 +473,7 @@
           // when the editor was not opened by a script.
         }
 
-        // Go to editor home
-        $location.path('');
+        window.history.back();
       };
 
       $scope.cancel = function(refreshForm) {
@@ -519,16 +518,32 @@
         }
       };
 
+      function parseXmlError(error) {
+        if (error.indexOf('<?xml') === 0) {
+          var x = jQuery.parseXML(error),
+            d = x.getElementsByTagName('description'),
+            m = d[0].textContent;
+          return m;
+        }
+        return null;
+      };
+
       $scope.close = function() {
         var promise = gnEditor.save(false, null, true)
             .then(function(form) {
               closeEditor();
             }, function(error) {
+              // When closing editor and if error occurs,
+              // the response is in XML. Try to get the message
+              message = parseXmlError(error);
+
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate.instant('saveMetadataError'),
-                error: error,
+                title: message ?
+                  message : $translate.instant('saveMetadataError'),
+                error: message ? undefined : error,
                 timeout: 0,
                 type: 'danger'});
+              closeEditor();
             });
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         return promise;

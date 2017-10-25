@@ -206,7 +206,8 @@
             format = new ol.format.GML({
               featureNS: options.gmlFeatureNS ||
                   'http://mapserver.gis.umn.edu/mapserver',
-              featureType: options.gmlFeatureElement || 'features'
+              featureType: options.gmlFeatureElement || 'features',
+              srsName: options.crs
             });
 
             if (options.outputAsWFSFeaturesCollection) {
@@ -221,11 +222,12 @@
               var nodes = format.writeFeaturesNode([outputFeature])
                   .firstChild.childNodes;
               var geom = null;
-              nodes.forEach(function(node) {
+              for (var i = 0; i < nodes.length; i++) {
+                var node = nodes.item(0);
                 if (node.localName === outputFeature.getGeometryName()) {
                   geom = node;
                 }
-              });
+              }
               if (!geom) {
                 console.warn('No geometry found for feature', feature);
                 return null;
@@ -306,6 +308,7 @@
                 '<gml:feature xmlns:gml="http://www.opengis.net/gml">' +
                 '<geometry>' +
                 input + '</geometry></gml:feature></featureMembers>';
+
             var feature = format.readFeatures(fullXml, {
               dataProjection: options.crs,
               featureProjection: outputProjection

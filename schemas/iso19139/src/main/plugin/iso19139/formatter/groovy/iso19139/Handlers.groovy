@@ -217,7 +217,7 @@ public class Handlers {
                 tip = this.f.translate("noUuidInLink")
                 cls = 'text-muted'
             } else {
-                href = env.localizedUrl + 'md.viewer#/full_view/' + identifier
+                href = env.localizedUrl + 'display#/' + identifier + '/formatters/full_view/'
                 tip = href
             }
             def category = opName.trim().isEmpty() ? 'uncategorized' : opName
