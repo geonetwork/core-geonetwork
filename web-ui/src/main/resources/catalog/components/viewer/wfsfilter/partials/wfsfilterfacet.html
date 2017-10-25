@@ -1,5 +1,5 @@
 <form name="wfsFilterForm">
-              <input type="hidden" name="_csrf" value="{{csrf}}"/>
+  <input type="hidden" name="_csrf" value="{{csrf}}"/>
 
   <!--WFS not available alert-->
   <div data-ng-show="isWfsAvailable == false" class="alert alert-warning">
@@ -17,6 +17,13 @@
   </div>
 
   <div>
+
+    <!--Facet count-->
+    <div data-ng-if="isFeaturesIndexed" class="count text-center"
+         data-ng-if="showCount">
+      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
+    </div>
+
     <!--search input-->
     <div data-ng-show="isFeaturesIndexed"
          class="gn-layertree-filter">
@@ -29,29 +36,22 @@
              data-ng-change="filterFacets()"
              data-ng-model-options="{ debounce: 400 }"
              class="layerfilter form-control input-sm"
-             placeholder="{{'filter'|translate}}"/>
-    </div>
-
-    <!--Facet count-->
-    <div data-ng-if="isFeaturesIndexed" class="count"
-         data-ng-if="showCount">
-      {{count | number}}&nbsp;/&nbsp;{{countTotal | number}}&nbsp;<span translate="">features</span>
+             placeholder="{{'filter'|translate}}..."/>
     </div>
 
     <!--Facet fields-->
     <div data-ng-if="isFeaturesIndexed"
          class="gn-facet"
-         data-ng-repeat="field in fields track by field.name"
-         data-ng-show="field.values.length > 0 || field.dates.length > 0 || field.tree.nodes.length > 0">
+         data-ng-repeat="field in fields track by field.name">
       <h5 gn-collapsible="field.expanded">
         <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name] || !(output[field.name].type == 'date' && output[field.name].value.from && output[field.name].value.to)}"></span>
+              data-ng-class="{'fa-rotate-90': field.expanded, 'gn-field-empty': !output[field.name] || !output[field.name].type || (output[field.name].type == 'date' && !output[field.name].values.from && !output[field.name].values.to)}"></span>
         {{field.label}}
       </h5>
-      <div data-ng-class="{'collapse': !field.expanded}">
+      <div data-ng-class="{'collapse': !field.expanded, 'is-date': !!field.dates}">
         <div class="list-group">
           <div class="list-group-item"
-               data-ng-repeat="facet in field.values | filter:searchInput"
+               data-ng-repeat="facet in field.values"
                data-ng-click="onCheckboxClick(field, facet)"
                data-ng-class="{'selected': isFacetSelected(field.name, facet.value)}">
             <i class="fa"
@@ -62,20 +62,14 @@
                gn-wfs-filter-facets-tree-isselected="isFacetSelected(name, value)">
           </div>
 
-          <div data-ng-if="field.dates && field.display == 'form'"
-               class="input-daterange input-group input-group-sm"
-               gn-bootstrap-datepicker="output[field.name].value"
-               data-date-format="dd-mm-yyyy"
-               on-change-fn="onUpdateDate(field)"
-               date-only-highlight="true"
-               date-available="field.dates">
-            <input type="text" class="input-sm form-control" name="start" value="{{::output[field.name].values.from}}"/>
-            <span class="input-group-addon" translate>dateToDate</span>
-            <input type="text" class="input-sm form-control" name="end" value="{{::output[field.name].values.to}}" />
+          <div ng-if="field.dates"
+              gn-facet-daterange="output[field.name].values"
+              available-dates="field.dates"
+              show-graph="{{field.display == 'graph'}}"
+              graph-expanded="field.expanded"
+              dates-count="field.datesCount"
+              callback="onUpdateDateRange(field, from, to)">
           </div>
-          <div data-ng-if="field.datesCount && field.display == 'graph'"
-               gn-facet-graph field="field" callback="onUpdateDate"
-               class="list-group"></div>
         </div>
         <a href="" data-ng-click="getMore(field)" data-ng-if="field.more && !field.dates && !field.tree">more</a>
       </div>
@@ -85,8 +79,8 @@
          ng-if="isFeaturesIndexed && indexObject.geomField">
       <h5 gn-collapsible="indexObject.geomField.expanded">
         <span class="fa fa-arrow-circle-right"
-              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !output[indexObject.geomField.name]}"></span>
-        {{'spatialExtent' | translate}}
+              data-ng-class="{'fa-rotate-90': indexObject.geomField.expanded, 'gn-field-empty': !ctrl.searchGeometry || ctrl.searchGeometry == ',,,'}"></span>
+        {{'gnbbox' | translate}}
       </h5>
       <div class="list-group"
            data-ng-class="{'collapse': !indexObject.geomField.expanded}">
@@ -97,36 +91,38 @@
       </div>
     </div>
 
-    <div class="btn-group dropup">
-      <a class="btn btn-default btn-xs"
-         data-ng-if="!isFeaturesIndexed && (user.canEditRecord(md) || md.isHarvested == 'y')"
-         data-ng-click="indexWFSFeatures('1.0.0')">
-        <i class="fa fa-codiepie"></i>&nbsp;
-        <span data-translate="">indexWFSFeatures</span>
-      </a>
-      <a class="btn btn-default btn-xs"
-         title="{{'refresh' | translate}}"
-         data-ng-click="initIndexRequest()">
-        <i class="fa fa-refresh"></i>
-      </a>
-      <button data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'"
+    <!--admin buttons-->
+    <div class="btn-group dropup wfs-filter-group">
+      <button class="btn btn-default btn-xs" ng-class="{ disabled: !filtersChanged }"
+        data-gn-click-and-spin="filterWMS()"
+        data-gn-click-and-spin-stay-disabled="true">
+        <i class="fa fa-filter"></i>&nbsp;
+        <span data-translate="">applyFilter</span>
+      </button>
+      <button data-ng-if="::user.canEditRecord(md) || md.isHarvested == 'y'"
               type="button" class="btn btn-default btn-xs dropdown-toggle"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-cog"></i>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
-          data-ng-show="user.canEditRecord(md) || md.isHarvested == 'y'">
+          data-ng-if="::user.canEditRecord(md) || md.isHarvested == 'y'">
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.0.0')">
-            <i class="fa fa-fw"></i>&nbsp;
+            <i class="fa fa-pie-chart"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span> (WFS 1.0.0)
           </a>
         </li>
         <li>
           <a href="" data-ng-click="indexWFSFeatures('1.1.0')">
-            <i class="fa fa-fw"></i>&nbsp;
+            <i class="fa fa-pie-chart"></i>&nbsp;
             <span data-translate="">reindexWFSFeatures</span> (WFS 1.1.0)
+          </a>
+        </li>
+        <li>
+          <a href="" data-ng-click="initIndexRequest()">
+            <i class="fa fa-refresh"></i>&nbsp;
+            <span data-translate="">refresh</span>
           </a>
         </li>
         <li>
@@ -136,39 +132,28 @@
           </a>
         </li>
       </ul>
-      <button class="btn btn-default btn-xs" ng-class="{ disabled: !filtersChanged }"
-        data-gn-click-and-spin="filterWMS()"
-        data-gn-click-and-spin-stay-disabled="true">
-        <i class="fa fa-filter"></i>&nbsp;
-        <span data-translate="">applyFilter</span>
-      </button>
       <button class="btn btn-default btn-xs"
               data-ng-if="isFeaturesIndexed"
               ng-click="showTable()">
         <i class="fa fa-table"></i>&nbsp;
         <span data-translate="">Table</span>
       </button>
-      <button data-gn-click-and-spin="resetFacets()"
-              data-ng-if="isFeaturesIndexed"
-              class="btn btn-default btn-xs gn-reset-facets">
-        <i class="fa fa-eraser"></i>&nbsp;
-        <span translate>reset</span>
-      </button>
-      <button data-gn-click-and-spin="toSqlOgr()"
-              data-ng-if="isFeaturesIndexed"
-              class="btn btn-default btn-xs gn-reset-facets">
-        <i class="fa fa-eraser"></i>&nbsp;
-        <span translate>SQL</span>
-      </button>
-      <div data-ng-show="hmActive"
-           data-ng-if="isFeaturesIndexed">
-        <label data-ng-show="map"
-               data-ng-show="source.getFeatures().length > 0">
-          <input type="checkbox"
-                 data-ng-model="isHeatMapVisible"/>
-          <span data-translate="">displayHeatMap</span>
-        </label>
-      </div>
     </div>
+
+    <div data-ng-show="hmActive">
+      <label data-ng-show="map" data-ng-show="source.getFeatures().length > 0">
+        <input type="checkbox"
+               data-ng-model="isHeatMapVisible"/>
+        <span data-translate="">displayHeatMap</span>
+      </label>
+    </div>
+
+
+    <hr>
+    <button data-gn-click-and-spin="resetFacets()" class="btn btn-primary gn-reset-facets">
+      <span translate>reset</span>
+    </button>
+
   </div>
+
 </form>

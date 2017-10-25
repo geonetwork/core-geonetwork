@@ -1156,5 +1156,8 @@
     "mapConfigExtent": "Extent, expressed in current projection",
     "mapConfigLayers": "Layer objects in JSON: {\"type\"=\"XXX\",\"arg1\":\"YYY\",...}",
     "system/xlinkResolver/referencedDeletionAllowed": "Allow deletion of subtemplates referenced through an xlink.",
-    "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow."
+    "system/xlinkResolver/referencedDeletionAllowed-help": "Checked means allow.",
+    "ui-grid": "Search results configuration",
+    "gridConfigRelatedTypes": "Related metadata types to query",
+    "gridConfigRelatedTypes-help": "Possible types include children, parent, services, fcats, datasets, sibling."
 }
