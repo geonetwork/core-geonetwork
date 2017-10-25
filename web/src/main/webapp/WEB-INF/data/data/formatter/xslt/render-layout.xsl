@@ -79,7 +79,7 @@
 
               <div gn-related="md"
                    data-user="user"
-                   data-types="onlines"/>
+                   data-types="onlines">&#160;</div>
 
               <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
