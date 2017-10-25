@@ -16,11 +16,11 @@
   <xsl:output method="html"/>
 
   <!-- Those templates should be overriden in the schema plugin - start -->
-  <xsl:template mode="getMetadataTitle" match="undefined"/>
-  <xsl:template mode="getMetadataAbstract" match="undefined"/>
-  <xsl:template mode="getMetadataHierarchyLevel" match="undefined"/>
-  <xsl:template mode="getOverviews" match="undefined"/>
-  <xsl:template mode="getMetadataHeader" match="undefined"/>
+  <xsl:template mode="getMetadataTitle" match="*"/>
+  <xsl:template mode="getMetadataAbstract" match="*"/>
+  <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
+  <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getMetadataHeader" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
