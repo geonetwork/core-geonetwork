@@ -706,7 +706,8 @@
               crs: '=?',
               value: '=',
               required: '=',
-              map: '='
+              map: '=',
+              readOnly: '<'
             },
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/bboxInput.html',
