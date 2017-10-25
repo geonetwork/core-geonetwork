@@ -266,7 +266,7 @@
   <xsl:template mode="render-view"
                 match="section[@xpath]">
     <div id="gn-view-{generate-id()}">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>
+      <xsl:apply-templates mode="render-view" select="@xpath"/>&#160;
     </div>
   </xsl:template>
 
@@ -284,7 +284,7 @@
         </xsl:element>
       </xsl:if>
       <xsl:apply-templates mode="render-view"
-                           select="section|field"/>
+                           select="section|field"/>&#160;
     </div>
   </xsl:template>
 
