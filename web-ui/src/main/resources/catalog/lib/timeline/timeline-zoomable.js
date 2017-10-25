@@ -120,7 +120,7 @@ function TimeLine(element, callback, options) {
     var changeRequest;
     zoom = d3.behavior.zoom().x(timelineX)
       .y(timelineY)
-      .scaleExtent([1, timelineWidth])
+      .scaleExtent([0.5, timelineWidth])
       .on("zoom", timelineZoom)
       .on('zoomstart', function() {
         clearTimeout(changeRequest);

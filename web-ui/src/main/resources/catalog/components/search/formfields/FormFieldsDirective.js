@@ -713,7 +713,9 @@
             scope: {
               crs: '=?',
               value: '=',
-              map: '='
+              required: '=',
+              map: '=',
+              readOnly: '<'
             },
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/bboxInput.html',

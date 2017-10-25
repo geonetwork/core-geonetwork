@@ -190,10 +190,27 @@
 
                             // check if there is a wfs filter active
                             // & apply value
-                            var linkedWfsFilter = input.linkedWfsFilter;
-                            if (linkedWfsFilter && wfsFilterValues &&
-                            wfsFilterValues[linkedWfsFilter]) {
-                              wfsFilterValue = wfsFilterValues[linkedWfsFilter];
+                            var wfsFilter = input.linkedWfsFilter || '';
+
+                            // handle the case where the link points to "from"
+                            // or "to" dates of a filter
+                            var valueIndex = -1;
+                            if (wfsFilter.substr(-5) === '.from') {
+                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 5);
+                              valueIndex = 0;
+                            } else if (wfsFilter.substr(-3) === '.to') {
+                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 3);
+                              valueIndex = 1;
+                            }
+
+                            if (wfsFilter && wfsFilterValues &&
+                            wfsFilterValues[wfsFilter]) {
+                              // take value at specific index, or all values
+                              if (valueIndex >= 0) {
+                                wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
+                              } else {
+                                wfsFilterValue = wfsFilterValues[wfsFilter];
+                              }
                             }
                           }
                         });
@@ -201,7 +218,7 @@
 
                       // display field as overriden
                       scope.inputWfsOverride[inputName] =
-                      wfsFilterValue !== undefined;
+                      wfsFilterValue && wfsFilterValue.length > 0;
 
                       // literal data (basic form input)
                       if (input.literalData != undefined) {
@@ -261,20 +278,49 @@
                         }
                       }
 
-                      // add input fields if required (add 1 by default)
+                      // add missing input fields (add 1 by default)
                       var minCount = Math.max(1, input.minOccurs);
-                      var count = scope.getInputsByName(inputName).length;
+                      var maxCount = input.maxOccurs || 1;
+                      var inputs = scope.getInputsByName(inputName);
+
+                      // add enough fields to hold all default values
+                      if (Array.isArray(defaultValue)) {
+                        minCount = Math.max(minCount,
+                          Math.min(maxCount, defaultValue.length));
+                      }
+                      var count = inputs.length;
                       while (count < minCount) {
                         count++;
                         scope.wpsLink.inputs.push({
                           name: inputName,
-                          value: defaultValue
+                          value: ''
                         });
                       }
 
-                      // force value if a wfs filter is present
-                      if (wfsFilterValue !== undefined) {
-                        scope.setInputValueByName(inputName, 0, wfsFilterValue);
+                      // force values if a wfs filter is present
+                      // note: wfs filter value is an array of values
+                      if (wfsFilterValue && wfsFilterValue.length) {
+                        scope.removeAllInputValuesByName(inputName);
+                        wfsFilterValue.filter(function(value, index) {
+                          return index < maxCount;
+                        }).forEach(function(value) {
+                          scope.wpsLink.inputs.push({
+                            name: inputName,
+                            value: value
+                          });
+                        });
+                      }
+                      // apply default values if any
+                      else if (defaultValue) {
+                        inputs = scope.getInputsByName(inputName);
+                        var defaultValueArray = Array.isArray(defaultValue) ?
+                          defaultValue : [defaultValue];
+                        for(var i = 0; i < inputs.length; i++) {
+                          if (!inputs[i].value && defaultValueArray[i]) {
+                            scope.setInputValueByName(inputName, i,
+                              defaultValueArray[i]);
+                          }
+                        }
                       }
                     }
                     );
@@ -588,6 +634,11 @@
             if (realIndex > -1) {
               scope.wpsLink.inputs.splice(realIndex, 1);
             }
+          };
+          scope.removeAllInputValuesByName = function(name) {
+            scope.wpsLink.inputs = scope.wpsLink.inputs.filter(function(input) {
+              return input.name !== name;
+            });
           };
         }
       };
