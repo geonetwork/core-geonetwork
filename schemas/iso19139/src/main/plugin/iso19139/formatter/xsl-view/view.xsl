@@ -153,9 +153,6 @@
         <xsl:value-of select="*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record"/>
       </dd>
     </dl>
-      <br/>
-
-    </xsl:for-each>
   </xsl:template>
 
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">

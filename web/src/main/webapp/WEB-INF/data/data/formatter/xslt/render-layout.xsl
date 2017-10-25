@@ -17,11 +17,11 @@
   <xsl:output method="html"/>
 
   <!-- Those templates should be overriden in the schema plugin - start -->
-  <xsl:template mode="getMetadataTitle" match="undefined"/>
-  <xsl:template mode="getMetadataAbstract" match="undefined"/>
-  <xsl:template mode="getMetadataHierarchyLevel" match="undefined"/>
-  <xsl:template mode="getOverviews" match="undefined"/>
-  <xsl:template mode="getMetadataHeader" match="undefined"/>
+  <xsl:template mode="getMetadataTitle" match="*"/>
+  <xsl:template mode="getMetadataAbstract" match="*"/>
+  <xsl:template mode="getMetadataHierarchyLevel" match="*"/>
+  <xsl:template mode="getOverviews" match="*"/>
+  <xsl:template mode="getMetadataHeader" match="*"/>
   <!-- Those templates should be overriden in the schema plugin - end -->
 
   <!-- Starting point -->
@@ -85,7 +85,7 @@
 
               <div gn-related="md"
                    data-user="user"
-                   data-types="onlines"/>
+                   data-types="onlines">&#160;</div>
 
               <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
             </header>
@@ -106,103 +106,105 @@
             <section class="links"
                      ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
               <h4 translate="">accessData</h4>
-              <sxt-links-btn></sxt-links-btn>
+              <sxt-links-btn>&#160;</sxt-links-btn>
             </section>
 
             <br/>
+            <xsl:if test="$css != 'checkpoint'">
 
-            <section>
-              <h4>
-                <i class="fa fa-fw fa-cog">&#160;</i>&#160;
-                <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
-              </h4>
-              <img class="gn-source-logo"
-                   src="{$nodeUrl}../images/logos/{$source}.png">&#160;</img>
-            </section>
+              <section>
+                <h4>
+                  <i class="fa fa-fw fa-cog">&#160;</i>&#160;
+                  <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
+                </h4>
+                <img class="gn-source-logo"
+                     src="{$nodeUrl}../images/logos/{$source}.png">&#160;</img>
+              </section>
 
-            <br/>
+              <br/>
 
-            <section>
-              <h4>
-                <i class="fa fa-fw fa-share-square-o">&#160;</i>&#160;
-                <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
-              </h4>
-              <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
-              </a>
-              <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
-              </a>
-              <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
-              </a>
-              <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
-              </a>
-              <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
-                 target="_blank" class="btn btn-default">
-                <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
-              </a>
-            </section>
+              <section>
+                <h4>
+                  <i class="fa fa-fw fa-share-square-o">&#160;</i>&#160;
+                  <span><xsl:value-of select="$schemaStrings/shareOnSocialSite"/></span>
+                </h4>
+                <a href="https://twitter.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                   target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-twitter">&#160;</i>&#160;
+                </a>
+                <a href="https://plus.google.com/share?url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                   target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-google-plus">&#160;</i>&#160;
+                </a>
+                <a href="https://www.facebook.com/sharer.php?u={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                   target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-facebook">&#160;</i>&#160;
+                </a>
+                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;summary=Hydrological Basins in Africa (Sample record, please remove!)&amp;url={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                   target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-linkedin">&#160;</i>&#160;
+                </a>
+                <a href="mailto:?subject={$title}&amp;body={encode-for-uri($nodeUrl)}api%2Frecords%2F{$metadataUuid}"
+                   target="_blank" class="btn btn-default">
+                  <i class="fa fa-fw fa-envelope-o">&#160;</i>&#160;
+                </a>
+              </section>
 
-            <br/>
+              <br/>
 
-            <section>
-              <h4>
-                <i class="fa fa-fw fa-eye">&#160;</i>&#160;
-                <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
-              </h4>
-              <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
-                <ul>
-                  <li>
-                    <a>
-                      <xsl:attribute name="href">
-                        <xsl:choose>
-                          <xsl:when test="@name = 'xml'">
-                            <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xml')"/>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xsl-view?view=', @name, '&amp;portalLink=', $portalLink)"/>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </xsl:attribute>
-                      <xsl:variable name="name" select="@name"/>
-                      <xsl:value-of select="$schemaStrings/*[name(.) = $name]"/>
-                    </a>
-                  </li>
-                </ul>
-              </xsl:for-each>
-            </section>
+              <section>
+                <h4>
+                  <i class="fa fa-fw fa-eye">&#160;</i>&#160;
+                  <span><xsl:value-of select="$schemaStrings/viewMode"/></span>
+                </h4>
+                <xsl:for-each select="$configuration/editor/views/view[not(@disabled)]">
+                  <ul>
+                    <li>
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:choose>
+                            <xsl:when test="@name = 'xml'">
+                              <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xml')"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                              <xsl:value-of select="concat($nodeUrl, 'api/records/', $metadataUuid, '/formatters/xsl-view?view=', @name, '&amp;portalLink=', $portalLink)"/>
+                            </xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:attribute>
+                        <xsl:variable name="name" select="@name"/>
+                        <xsl:value-of select="$schemaStrings/*[name(.) = $name]"/>
+                      </a>
+                    </li>
+                  </ul>
+                </xsl:for-each>
+              </section>
 
-            <br/>
+              <br/>
 
-            <div class="well text-center">
-              <a class="btn btn-block btn-primary"
-                 href="{if ($portalLink != '')
-                        then replace($portalLink, '\$\{uuid\}', $metadataUuid)
-                        else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
-                <i class="fa fa-link">&#160;</i>
-                <xsl:value-of select="$schemaStrings/linkToPortal"/>
-              </a>
-              <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
-            </div>
-
-
-            <section>
-              <h4>
-                <i class="fa fa-fw fa-link">&#160;</i>&#160;
-                <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
-              </h4>
-              <div gn-related="md"
-                   data-user="user"
-                   data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
-                Not available
+              <div class="well text-center">
+                <a class="btn btn-block btn-primary"
+                   href="{if ($portalLink != '')
+                          then replace($portalLink, '\$\{uuid\}', $metadataUuid)
+                          else concat($nodeUrl, $language, '/catalog.search#/metadata/', $metadataUuid)}">
+                  <i class="fa fa-link">&#160;</i>
+                  <xsl:value-of select="$schemaStrings/linkToPortal"/>
+                </a>
+                <xsl:value-of select="$schemaStrings/linkToPortal-help"/>
               </div>
-            </section>
+
+
+              <section>
+                <h4>
+                  <i class="fa fa-fw fa-link">&#160;</i>&#160;
+                  <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
+                </h4>
+                <div gn-related="md"
+                     data-user="user"
+                     data-types="parent|children|services|datasets|hassources|sources|fcats|siblings|associated">
+                  Not available
+                </div>
+              </section>
+            </xsl:if>
           </div>
         </div>
 
@@ -313,7 +315,7 @@
   <xsl:template mode="render-view"
                 match="section[@xpath]">
     <div id="gn-view-{generate-id()}">
-      <xsl:apply-templates mode="render-view" select="@xpath"/>
+      <xsl:apply-templates mode="render-view" select="@xpath"/>&#160;
     </div>
   </xsl:template>
 
@@ -331,7 +333,7 @@
         </xsl:element>
       </xsl:if>
       <xsl:apply-templates mode="render-view"
-                           select="section|field"/>
+                           select="section|field"/>&#160;
     </div>
   </xsl:template>
 
@@ -451,7 +453,6 @@
 
   <!-- Forgot all none matching elements -->
   <xsl:template mode="render-view" match="*|@*"/>
-  <xsl:template mode="getOverviews" match="*|@*"/>
   <xsl:template mode="render-field" match="*|@*|text()"/>
 
 </xsl:stylesheet>
