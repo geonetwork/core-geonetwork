@@ -306,6 +306,43 @@
           });
         });
       };
+
+
+
+
+      this.loadGn = function(uuid, selector, scope, opt_url) {
+        $rootScope.$broadcast('mdLoadingStart');
+        var newscope = scope ? scope.$new() :
+          angular.element($(selector)).scope().$new();
+
+        this.getFormatterUrl(opt_url || gnSearchSettings.formatter.defaultUrl,
+          newscope, uuid, opt_url).then(function(url) {
+          $http.get(url, {
+            headers: {
+              Accept: 'text/html'
+            }
+          }).then(function(response) {
+            $rootScope.$broadcast('mdLoadingEnd');
+
+            var newscope = scope ? scope.$new() :
+              angular.element($(selector)).scope().$new();
+
+            newscope.fragment =
+              $compile(angular.element(response.data))(newscope);
+
+            var el = document.createElement('div');
+            el.setAttribute('gn-metadata-display', '');
+            $(selector).append(el);
+            $compile(el)(newscope);
+          }, function() {
+            $rootScope.$broadcast('mdLoadingEnd');
+            gnAlertService.addAlert({
+              msg: 'Erreur de chargement de la métadonnée.',
+              type: 'danger'
+            });
+          });
+        });
+      };
     }
   ]);
 

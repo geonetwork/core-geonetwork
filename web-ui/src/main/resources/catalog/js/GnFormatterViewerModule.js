@@ -106,9 +106,9 @@
            $scope.loading = false;
          });
 
-         var url = '../api/records/' + $location.url();
+         var url = '../api/records' + $location.url();
 
-         gnMdFormatter.load(mdId, '.formatter-container', $scope, url);
+         gnMdFormatter.loadGn(mdId, '.formatter-container', $scope, url);
        }]);
 
   module.config(['$routeProvider', function($routeProvider) {
