@@ -104,10 +104,6 @@
   </xsl:template>
 
   <xsl:template mode="getOverviews" match="gmd:MD_Metadata">
-<<<<<<< HEAD
-    <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
-      <img class="gn-img-thumbnail img-thumbnail" src="{gmd:fileName/*}"/>
-=======
     <h4>
       <i class="fa fa-fw fa-image">&#160;</i>&#160;
       <span>
@@ -118,7 +114,6 @@
     <xsl:for-each select="gmd:identificationInfo/*/gmd:graphicOverview/*">
       <img class="gn-img-thumbnail center-block"
            src="{gmd:fileName/*}"/>
->>>>>>> upstream/3.4.x
 
       <xsl:for-each select="gmd:fileDescription">
         <div class="gn-img-thumbnail-caption">
@@ -127,11 +122,10 @@
           </xsl:call-template>
         </div>
       </xsl:for-each>
-<<<<<<< HEAD
     </xsl:for-each>
   </xsl:template>
 
-
+<!--
   <xsl:template mode="getMetadataHeader" match="gmd:MD_Metadata">
 
     <link rel="stylesheet" type="text/css"
@@ -141,7 +135,7 @@
           href="{$baseUrl}../../apps/sextant/css/metadata-view.css"></link>
 
   </xsl:template>
-
+-->
   <xsl:template mode="render-field"
                 priority="2000"
                 match="gmd:report[
@@ -159,7 +153,6 @@
         <xsl:value-of select="*/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record"/>
       </dd>
     </dl>
-=======
       <br/>
 
     </xsl:for-each>
@@ -238,18 +231,14 @@
         </td>
       </tr>
     </table>
->>>>>>> upstream/3.4.x
   </xsl:template>
 
 
 
-<<<<<<< HEAD
-=======
 
 
 
 
->>>>>>> upstream/3.4.x
   <!-- Most of the elements are ... -->
   <xsl:template mode="render-field"
                 match="*[gco:Integer|gco:Decimal|
@@ -296,15 +285,10 @@
 
   <!-- Some elements are only containers so bypass them -->
   <xsl:template mode="render-field"
-<<<<<<< HEAD
-                match="*[count(gmd:*[name() != 'gmd:PT_FreeText']) = 1 and
-                         count(*/@codeListValue) = 0]"
-=======
                 match="*[
                           count(gmd:*[name() != 'gmd:PT_FreeText']) = 1 and
                           count(*/@codeListValue) = 0
                         ]"
->>>>>>> upstream/3.4.x
                 priority="50">
 
     <xsl:apply-templates mode="render-value" select="@*"/>
@@ -656,41 +640,6 @@
     </dl>
   </xsl:template>
 
-<<<<<<< HEAD
-  <!-- Display all graphic overviews in one block -->
-  <xsl:template mode="render-field"
-                match="gmd:graphicOverview[1]"
-                priority="100">
-    <dl>
-      <dt>
-        <xsl:value-of select="tr:node-label(tr:create($schema), name(), null)"/>
-      </dt>
-      <dd>
-        <ul>
-          <xsl:for-each select="parent::node()/gmd:graphicOverview">
-            <xsl:variable name="label">
-              <xsl:apply-templates mode="localised"
-                                   select="gmd:MD_BrowseGraphic/gmd:fileDescription"/>
-            </xsl:variable>
-            <li>
-              <img src="{gmd:MD_BrowseGraphic/gmd:fileName/*}"
-                   alt="{$label}"
-                   class="img-thumbnail"/>
-            </li>
-          </xsl:for-each>
-        </ul>
-      </dd>
-    </dl>
-  </xsl:template>
-
-
-  <xsl:template mode="render-field"
-                match="gmd:graphicOverview[position() > 1]"
-                priority="100"/>
-=======
-
-
->>>>>>> upstream/3.4.x
 
 
   <xsl:template mode="render-field"

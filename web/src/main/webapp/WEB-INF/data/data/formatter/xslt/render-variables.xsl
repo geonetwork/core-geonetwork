@@ -20,6 +20,7 @@
   -->
   <xsl:param name="portalLink" select="''"/>
 
+  <xsl:param name="css" select="''"/>
 
   <!-- TODO: schema is not part of the XML -->
   <xsl:variable name="schema"

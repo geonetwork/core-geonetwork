@@ -62,54 +62,15 @@
         <xsl:apply-templates mode="getMetadataHierarchyLevel" select="$metadata"/>
       </xsl:variable>
 
-<<<<<<< HEAD
-=======
       <xsl:variable name="title">
         <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
       </xsl:variable>
 
 
->>>>>>> upstream/3.4.x
       <article id="gn-metadata-view-{$metadataId}"
                class="gn-md-view gn-metadata-display"
                itemscope="itemscope"
                itemtype="{gn-fn-core:get-schema-org-class($type)}">
-<<<<<<< HEAD
-        <header>
-          <h1>
-            <xsl:apply-templates mode="getMetadataTitle" select="$metadata"/>
-          </h1>
-          <!--<p><xsl:apply-templates mode="getMetadataAbstract" select="$metadata"/></p>-->
-          <!-- TODO : Add thumbnail to header -->
-
-          <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
-          <!--<xsl:apply-templates mode="render-toc" select="$viewConfig"/>-->
-
-          <div class="row">
-            <div class="col-md-8">
-              <xsl:apply-templates mode="getOverviews" select="$metadata"/>
-            </div>
-            <div class="gn-md-side col-md-4">
-              <section class="links"
-                       ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
-                <h4 translate="">accessData</h4>
-                <sxt-links-btn></sxt-links-btn>
-              </section>
-            </div>
-          </div>
-
-        </header>
-
-        <xsl:for-each select="$viewConfig/*">
-          <xsl:sort select="@formatter-order"
-                    data-type="number"/>
-          <xsl:apply-templates mode="render-view"
-                               select="."/>
-        </xsl:for-each>
-=======
->>>>>>> upstream/3.4.x
-
-
 
         <div class="row">
           <div class="col-md-8">
@@ -139,6 +100,14 @@
           </div>
           <div class="gn-md-side col-md-4">
             <xsl:apply-templates mode="getOverviews" select="$metadata"/>
+
+            <br/>
+
+            <section class="links"
+                     ng-show="downloads.length > 0 || links.length > 0 ||layers.length > 0">
+              <h4 translate="">accessData</h4>
+              <sxt-links-btn></sxt-links-btn>
+            </section>
 
             <br/>
 
