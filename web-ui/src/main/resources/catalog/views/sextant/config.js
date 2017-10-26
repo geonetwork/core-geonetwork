@@ -19,13 +19,20 @@
     'gnPanierSettings',
     'gnGlobalSettings',
     'gnMap',
+    'gnConfigService',
     function(searchSettings, viewerSettings, gnPanierSettings,
-             gnGlobalSettings, gnMap) {
+             gnGlobalSettings, gnMap, gnConfigService) {
 
       if(typeof sxtSettings != 'undefined') {
         gnGlobalSettings.init({},
           (typeof sxtGnUrl != 'undefined') ? sxtGnUrl : undefined,
           viewerSettings, searchSettings);
+
+        // use bing key from settings (this should be integrated into a larger
+        // refactoring of the way settings are loaded in API mode)
+        gnConfigService.loadPromise.then(function(data) {
+          viewerSettings.bingKey = data['ui.config'].mods.map.bingKey;
+        });
       }
 
 

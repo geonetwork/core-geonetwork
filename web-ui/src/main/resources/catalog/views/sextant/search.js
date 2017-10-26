@@ -100,13 +100,6 @@
              $translate, $q, gnUrlUtils, gnGlobalSettings, sxtPanierService,
              gnOwsContextService, gnConfig) {
 
-      // merge config in viewer settings
-      if (gnConfig['ui.config']) {
-        angular.merge(gnViewerSettings.mapConfig,
-          gnGlobalSettings.getMergeableDefaultConfig().mods.map);
-      }
-      gnViewerSettings.bingKey = gnViewerSettings.mapConfig.bingKey;
-
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
       $scope.mainTabs = gnSearchSettings.mainTabs;
