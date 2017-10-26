@@ -374,7 +374,8 @@
        * takes an ElasticSearch request object as input and ouputs a simplified
        * object with properties describing names and values of the defined
        * filters.
-       * note: only qParams are taken into account.
+       * Values are always an array holding the different values if any.
+       * note: the bbox filter is set in the 'geometry' key
        *
        * @param {Object} elasticSearchObject
        */
@@ -387,26 +388,34 @@
           angular.forEach(state.qParams, function(fObj, fName) {
             var config = esObject.getIdxNameObj_(fName);
 
-            // special case: date time, use 'from' property
+            // init array
+            result[fName] = [];
+
+            // special case: date time, use 'from' and 'to' properties
             if (config.isDateTime) {
               if (fObj.values.from) {
-                result[fName] = transformDate(fObj.values.from);
+                result[fName].push(transformDate(fObj.values.from));
+              }
+              if (fObj.values.to) {
+                result[fName].push(transformDate(fObj.values.to));
               }
               return;
             }
 
-            // only the last value found will be kept
+            // adding all values to the array
             angular.forEach(fObj.values, function(value, key) {
-              result[fName] = key;
+              result[fName].push(key);
             });
           });
 
-          // add geometry
+          // add geometry (array with only one value)
           if (state.geometry) {
-            result.geometry = state.geometry[0][0] + ',' +
+            result.geometry = [
+                state.geometry[0][0] + ',' +
                 state.geometry[1][1] + ',' +
                 state.geometry[1][0] + ',' +
-                state.geometry[0][1];
+                state.geometry[0][1]
+            ];
           }
         }
 
