@@ -93,14 +93,14 @@
                 <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
-                <Field name="individual_name" string="{$name}" store="true" index="true"/>
+                <Field name="individualName" string="{lower-case($name)}" store="true" index="true"/>
                 <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
-                <Field name="orgName" string="{$org}" store="true" index="true"/>
+                <Field name="orgName" string="{lower-case($org)}" store="true" index="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
@@ -115,14 +115,14 @@
                               select="normalize-space(gmd:individualName/gco:CharacterString)"/>
                <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
-               <Field name="individual_name" string="{$name}" store="true" index="true"/>
+               <Field name="individualName" string="{lower-case($name)}" store="true" index="true"/>
                <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
-                <Field name="orgName" string="{$org}" store="true" index="true"/>
+                <Field name="orgName" string="{lower-case($org)}" store="true" index="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
@@ -184,7 +184,7 @@
           <Field name="_title"
                  string="{if ($title != '') then $title
                           else if (normalize-space(gmd:description/gco:CharacterString) != '')
-                          then gmd:description/gco:CharacterString
+                          then lower-case(gmd:description/gco:CharacterString)
                           else string-join(.//gco:Decimal, ', ')}"
                  store="true" index="true"/>
         </xsl:otherwise>

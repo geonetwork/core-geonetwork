@@ -1185,13 +1185,15 @@ public class MetadataInsertDeleteApi {
                 .getSchema(schema);
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
-        if (schemaManager.getSchemaPlugin() instanceof SubtemplateAwareSchemaPlugin) {
-            ((SubtemplateAwareSchemaPlugin)schemaManager.getSchemaPlugin())
-                    .replaceSubtemplatesByLocalXLinks(
-                            xmlElement,
-                            settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT));
+        if (metadataType != MetadataType.SUB_TEMPLATE &&
+                metadataType != MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+            if (schemaManager.getSchemaPlugin() instanceof SubtemplateAwareSchemaPlugin) {
+                ((SubtemplateAwareSchemaPlugin) schemaManager.getSchemaPlugin())
+                        .replaceSubtemplatesByLocalXLinks(
+                                xmlElement,
+                                settingManager.getValue(Settings.SYSTEM_XLINK_TEMPLATES_TO_OPERATE_ON_AT_INSERT));
+            }
         }
-
         // Import record
         Map<String, String> sourceTranslations = Maps.newHashMap();
         try {

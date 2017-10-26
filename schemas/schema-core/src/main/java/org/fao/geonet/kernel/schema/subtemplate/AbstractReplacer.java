@@ -23,7 +23,12 @@
 
 package org.fao.geonet.kernel.schema.subtemplate;
 
-import org.apache.lucene.analysis.standard.UAX29URLEmailAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.KeywordTokenizer;
+import org.apache.lucene.analysis.core.LowerCaseFilter;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
+import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -41,9 +46,14 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 
 public abstract class AbstractReplacer {
+
+    private static final QueryParser PHRASE_QUERY_PARSER =
+            new QueryParser(Version.LUCENE_4_9, null, new PhraseAnalyzer());
 
     protected List<Namespace> namespaces;
     protected SchemaManagerProxy schemaManagerProxy;
@@ -101,7 +111,7 @@ public abstract class AbstractReplacer {
     }
 
     protected Query createSubQuery(String indexFieldNames, String value) {
-        return new TermQuery(new Term(indexFieldNames, value));
+        return PHRASE_QUERY_PARSER.createPhraseQuery(indexFieldNames, value);
     }
 
     public abstract String getAlias();
@@ -111,4 +121,22 @@ public abstract class AbstractReplacer {
     protected abstract Query queryAddExtraClauses(BooleanQuery query, Element element) throws Exception;
 
     protected abstract StringBuffer xlinkAddExtraParams(Element element, StringBuffer params) throws JDOMException;
+
+    static final class PhraseAnalyzer extends Analyzer {
+
+        @Override
+        protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
+            final Tokenizer source = new KeywordTokenizer(reader);
+            LowerCaseFilter input = new LowerCaseFilter(Version.LUCENE_4_9,
+                    new StandardFilter(Version.LUCENE_4_9, source));
+            ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(input);
+
+            return new TokenStreamComponents(source, asciiFoldingFilter) {
+                @Override
+                protected void setReader(final Reader reader) throws IOException {
+                    super.setReader(reader);
+                }
+            };
+        }
+    }
 }

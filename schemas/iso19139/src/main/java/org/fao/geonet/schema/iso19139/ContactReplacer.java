@@ -42,7 +42,8 @@ import java.util.List;
 
 public class ContactReplacer extends AbstractReplacer {
 
-    private QueryParser mailQueryParser = new QueryParser(Version.LUCENE_4_9, null, new UAX29URLEmailAnalyzer(Version.LUCENE_4_9));
+    private QueryParser MAIL_QUERY_PARSER = new QueryParser(Version.LUCENE_4_9,
+            null, new UAX29URLEmailAnalyzer(Version.LUCENE_4_9));
 
     public ContactReplacer(List<Namespace> namespaces,
                            SchemaManagerProxy schemaManagerProxy,
@@ -66,9 +67,9 @@ public class ContactReplacer extends AbstractReplacer {
         String organisationName = Xml.selectString(contact, ".//gmd:organisationName/gco:CharacterString", namespaces);
         String email = Xml.selectString(contact, ".//gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString", namespaces);
 
-        query.add(createSubQuery("individual_name", individualName), BooleanClause.Occur.MUST);
+        query.add(createSubQuery("individualName", individualName), BooleanClause.Occur.MUST);
         query.add(createSubQuery("orgName", organisationName), BooleanClause.Occur.MUST);
-        query.add(mailQueryParser.createPhraseQuery("email", email), BooleanClause.Occur.MUST);
+        query.add(MAIL_QUERY_PARSER.createPhraseQuery("email", email), BooleanClause.Occur.MUST);
 
         return query;
     }

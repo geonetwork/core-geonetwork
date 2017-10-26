@@ -132,9 +132,8 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         assertVicinityMapXLinkTo(format, vicinityMapUuid);
     }
 
-
     @Test
-    public void multilingualContact() throws Exception {
+    public void multilingualContactEn() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
@@ -142,26 +141,32 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
                     ".//gmd:individualName/gco:CharacterString")
-                    .setText("McDuck");
+                    .setText("mcDuCk");
             Xml.selectElement(element,
                     ".//gmd:electronicMailAddress/gco:CharacterString")
-                    .setText("McDuck@csc.org");
+                    .setText("mcduck@csc.org");
         });
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
     }
 
     @Test
-    public void contactAndIndividualNameWithSpaces() throws Exception {
+    public void multilingualContactGer() throws Exception {
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
-        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
-                ".//gmd:individualName/gco:CharacterString")
-                .setText("jean regis"));
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
 
-        String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
-                ".//gmd:individualName/gco:CharacterString")
-                .setText("jean regis"));
+        String vicinityMapUuid = insertVicinityMap(element -> {
+            Xml.selectElement(element,
+                    ".//gmd:individualName/gco:CharacterString")
+                    .setText("dagObert");
+            Xml.selectElement(element,
+                    ".//gmd:electronicMailAddress/gco:CharacterString")
+                    .setText("dagobert@csc.org");
+            Xml.selectElement(element,
+                    ".//gmd:LanguageCode")
+                    .setAttribute("codeListValue", "ger");
+        });
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
     }
@@ -180,27 +185,11 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     }
 
     @Test
-    public void contactAndOrgWithSpaces() throws Exception {
-        expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individual_name:babar +orgName:générale d'électricité +email:info@csc.org");
-        insertSubtemplate(FORMAT_RESOURCE);
-        insertSubtemplate(EXTENT_RESOURCE);
-        insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
-                ".//gmd:organisationName/gco:CharacterString")
-                .setText("générale des eaux"));
-
-        insertVicinityMap(element -> Xml.selectElement(element,
-                ".//gmd:organisationName/gco:CharacterString")
-                .setText("générale d'électricité"));
-
-    }
-
-    @Test
     public void insertMetadataCanReplaceExtentButMissContactAndFormat() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
                 "||format-found no match for query: +_isTemplate:s +any:shapefile +any:\"grass version 6.1\"" + "" +
-                        "||contact-found no match for query: +_isTemplate:s +individual_name:babar +orgName:csc +email:info@csc.org");
+                        "||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:csc +email:info@csc.org");
 
         URL extentResource = AbstractCoreIntegrationTest.class.getResource(EXTENT_RESOURCE);
         Element subtemplateElement = Xml.loadStream(extentResource.openStream());
@@ -227,7 +216,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void insertMetadataCantReplaceContactNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individual_name:babar +orgName:csc +email:info@csc.org");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:csc +email:info@csc.org");
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:individualName/gco:CharacterString")
@@ -254,7 +243,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void insertMetadataCantReplaceContactWhenToManyMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s +individual_name:babar +orgName:csc +email:info@csc.org");
+        expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s +individualName:babar +orgName:csc +email:info@csc.org");
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
         Metadata contactClone = insertSubtemplate(CONTACT_RESOURCE);
         Metadata format = insertSubtemplate(FORMAT_RESOURCE);
@@ -279,6 +268,84 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
                 ".//gmd:extent").addContent(new Element("description", GMD).addContent(
                 new Element("CharacterString", GCO).setText("description avec des espaces"))));
+
+        assertVicinityMapXLinkTo(extent, vicinityMapUuid);
+    }
+
+    @Test
+    public void contactOrgNameWithCaseShift() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText("SwissTOpo"));
+
+        String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText("sWissToPo"));
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
+    public void contactOrgWithSpacesNoMatch() throws Exception {
+        expectedEx.expect(Exception.class);
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:generale d'electricite +email:info@csc.org");
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText("générale des eaux"));
+
+        insertVicinityMap(element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText("générale d'électricité"));
+
+    }
+
+    @Test
+    public void contactOrgWithSpaces() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText("generale des eaux"));
+
+        String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText("générale des eaux"));
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+
+    }
+
+    @Test
+    public void contactIndividualNameWithSpacesAndCaseShift() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+                ".//gmd:/gco:CharacterString")
+                .setText("jeaN regis"));
+
+        String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
+                ".//gmd:individualName/gco:CharacterString")
+                .setText("jean Régis"));
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
+    public void extentDescriptionWithCaseShift() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(CONTACT_RESOURCE);
+        Metadata extent = insertSubtemplate(EXTENT_RESOURCE, element -> {
+            element.addContent(new Element("description", GMD).addContent(
+                    new Element("CharacterString", GCO).setText("description avec des espaces")));
+        });
+
+        String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
+                ".//gmd:extent").addContent(new Element("description", GMD).addContent(
+                new Element("CharacterString", GCO).setText("dEscription avec des espaces"))));
 
         assertVicinityMapXLinkTo(extent, vicinityMapUuid);
     }
