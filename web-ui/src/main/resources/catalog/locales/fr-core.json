@@ -65,7 +65,6 @@
     "validStatus--1": "Non validé",
     "edmerp": "Program/Project name",
     "edmo": "Data provider",
-    "originator": "Data originator",
     "emodnet-checkpoint.level.of.characteristics": "Level of characteristics",
     "emodnet-checkpoint.production.mode": "Production mode",
     "checkpointType": "Checkpoint resource",
@@ -173,10 +172,7 @@
     "topicCats": "Thèmes",
     "organisation": "Organisation",
     "organization": "Organisation",
-<<<<<<< HEAD
-=======
     "originator": "A l’origine de",
->>>>>>> upstream/3.4.x
     "owner": "Propriétaire",
     "mapLoadError": "Échec du chargement de la carte à partir de '{{url}}'.",
     "emptyMapLoadError": "La carte '{{url}}' est vide.\n",
