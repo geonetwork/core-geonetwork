@@ -233,7 +233,7 @@
                   (md.standardName === 'ISO 19115-3 - Emodnet Checkpoint - Data Product Specification' ?
                   'checkpoint-dps' : 'default'
                 ));
-            url = 'md.format.xml?root=div&xsl=xsl-view&view=' + view +
+            url = 'md.format.xml?root=div&css=checkpoint&xsl=xsl-view&view=' + view +
                     '&uuid=' + md.getUuid();
           } else {
             if (md.standardName === 'ISO 19115:2003/19139 - EMODNET - BATHYMETRY' ||
