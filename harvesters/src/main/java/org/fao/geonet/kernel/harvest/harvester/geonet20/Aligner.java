@@ -235,11 +235,15 @@ public class Aligner {
             setCreateDate(new ISODate(createDate));
         metadata.getSourceInfo().
             setSourceId(params.getUuid()).
-            setOwner(Integer.parseInt(params.getOwnerId())).
-            setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+            setOwner(Integer.parseInt(params.getOwnerId()));
         metadata.getHarvestInfo().
             setHarvested(true).
             setUuid(params.getUuid());
+
+        try {
+            metadata.getSourceInfo().setGroupOwner(Integer.valueOf(params.getOwnerIdGroup()));
+        } catch (NumberFormatException e) {
+        }
 
         @SuppressWarnings("unchecked")
         List<Element> categories = info.getChildren("category");

@@ -312,6 +312,7 @@
       };
     }]);
 
+
   /**
    * @ngdoc directive
    * @name gn_facets_directive.directive:gnFacetDaterange
