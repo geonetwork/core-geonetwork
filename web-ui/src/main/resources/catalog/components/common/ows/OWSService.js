@@ -109,7 +109,7 @@
             }
           };
 
-          getFlatLayers(result.Capability.Layer);
+          getFlatLayers(result.Capability);
           result.Capability.layers = layers;
           result.Capability.version = result.version;
           return result.Capability;
