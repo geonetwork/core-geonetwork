@@ -141,7 +141,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
                     ".//gmd:individualName/gco:CharacterString")
-                    .setText("mcDuCk");
+                    .setText("mcDûCk");
             Xml.selectElement(element,
                     ".//gmd:electronicMailAddress/gco:CharacterString")
                     .setText("mcduck@csc.org");
@@ -159,7 +159,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         String vicinityMapUuid = insertVicinityMap(element -> {
             Xml.selectElement(element,
                     ".//gmd:individualName/gco:CharacterString")
-                    .setText("dagObert");
+                    .setText("dâgObert");
             Xml.selectElement(element,
                     ".//gmd:electronicMailAddress/gco:CharacterString")
                     .setText("dagobert@csc.org");
@@ -262,12 +262,12 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
                     "gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal")
                     .setText("-61.79842");
             element.addContent(new Element("description", GMD).addContent(
-                    new Element("CharacterString", GCO).setText("description avec des espaces")));
+                    new Element("CharacterString", GCO).setText("descriptïon Avec des espaces")));
         });
 
         String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
                 ".//gmd:extent").addContent(new Element("description", GMD).addContent(
-                new Element("CharacterString", GCO).setText("description avec des espaces"))));
+                new Element("CharacterString", GCO).setText("description avec des Espâces"))));
 
         assertVicinityMapXLinkTo(extent, vicinityMapUuid);
     }
@@ -278,11 +278,11 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         insertSubtemplate(EXTENT_RESOURCE);
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
-                .setText("SwissTOpo"));
+                .setText("SwissTOpô"));
 
         String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
-                .setText("sWissToPo"));
+                .setText("sWissTôPo"));
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
     }
@@ -290,7 +290,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void contactOrgWithSpacesNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:generale d'electricite +email:info@csc.org");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:\"generale d'electricite\" +email:info@csc.org");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
@@ -309,11 +309,11 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         insertSubtemplate(EXTENT_RESOURCE);
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
-                .setText("generale des eaux"));
+                .setText("genérale des eaux"));
 
         String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
                 ".//gmd:organisationName/gco:CharacterString")
-                .setText("générale des eaux"));
+                .setText("génerale des eaux"));
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
 
@@ -325,7 +325,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         insertSubtemplate(EXTENT_RESOURCE);
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
                 ".//gmd:/gco:CharacterString")
-                .setText("jeaN regis"));
+                .setText("jéaN regis"));
 
         String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
                 ".//gmd:individualName/gco:CharacterString")

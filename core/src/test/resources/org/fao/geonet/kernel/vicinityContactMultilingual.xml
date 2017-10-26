@@ -6,13 +6,13 @@
   <gmd:individualName>
       <gmd:PT_FreeText>
           <gmd:textGroup>
-              <gmd:LocalisedCharacterString locale="#EN">McDuck</gmd:LocalisedCharacterString>
+              <gmd:LocalisedCharacterString locale="#EN">McDück</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-              <gmd:LocalisedCharacterString locale="#DE">Dagobert</gmd:LocalisedCharacterString>
+              <gmd:LocalisedCharacterString locale="#DE">Dâgobert</gmd:LocalisedCharacterString>
           </gmd:textGroup>
           <gmd:textGroup>
-              <gmd:LocalisedCharacterString locale="#FR">Picsou</gmd:LocalisedCharacterString>
+              <gmd:LocalisedCharacterString locale="#FR">Picsôu</gmd:LocalisedCharacterString>
           </gmd:textGroup>
       </gmd:PT_FreeText>
   </gmd:individualName>

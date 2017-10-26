@@ -29,6 +29,7 @@ import org.apache.lucene.analysis.core.KeywordTokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
@@ -126,7 +127,7 @@ public abstract class AbstractReplacer {
 
         @Override
         protected TokenStreamComponents createComponents(final String fieldName, final Reader reader) {
-            final Tokenizer source = new KeywordTokenizer(reader);
+            final Tokenizer source = new StandardTokenizer(Version.LUCENE_4_9, reader);
             LowerCaseFilter input = new LowerCaseFilter(Version.LUCENE_4_9,
                     new StandardFilter(Version.LUCENE_4_9, source));
             ASCIIFoldingFilter asciiFoldingFilter = new ASCIIFoldingFilter(input);

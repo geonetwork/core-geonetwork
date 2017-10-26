@@ -1366,11 +1366,12 @@ public class SearchManager implements ISearchManager {
             if (string.trim().length() > 0) {
                 String sStore = field.getAttributeValue(LuceneFieldAttribute.STORE.toString());
                 String sIndex = field.getAttributeValue(LuceneFieldAttribute.INDEX.toString());
+                String sToken = field.getAttributeValue(LuceneFieldAttribute.ANALYZE.toString());
 
                 boolean bStore = sStore != null && sStore.equals("true");
                 boolean bIndex = sIndex != null && sIndex.equals("true");
-                boolean token = luceneConfig.isTokenizedField(name);
                 boolean isNumeric = luceneConfig.isNumericField(name);
+                boolean token = (sToken != null && sToken.equals("true")) || luceneConfig.isTokenizedField(name);
 
                 FieldType fieldType = new FieldType();
                 fieldType.setStored(bStore);
@@ -1550,6 +1551,12 @@ public class SearchManager implements ISearchManager {
             @Override
             public String toString() {
                 return "index";
+            }
+        },
+        ANALYZE {
+            @Override
+            public String toString() {
+                return "analyze";
             }
         }
     }

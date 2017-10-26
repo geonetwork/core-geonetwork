@@ -93,14 +93,14 @@
                 <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
 
-                <Field name="individualName" string="{lower-case($name)}" store="true" index="true"/>
+                <Field name="individualName" string="{$name}" store="true" index="true" analyze="true"/>
                 <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
-                <Field name="orgName" string="{lower-case($org)}" store="true" index="true"/>
+                <Field name="orgName" string="{$org}" store="true" index="true" analyze="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
@@ -115,14 +115,14 @@
                               select="normalize-space(gmd:individualName/gco:CharacterString)"/>
                <xsl:variable name="mail"
                               select="normalize-space(gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress[1]/gco:CharacterString)"/>
-               <Field name="individualName" string="{lower-case($name)}" store="true" index="true"/>
+               <Field name="individualName" string="{$name}" store="true" index="true" analyze="true"/>
                <Field name="_title"
                        string="{if ($title != '') then $title
                                 else if ($name != '') then concat($org, ' (', $name, ')')
                                 else if ($mail != '') then concat($org, ' (', $mail, ')')
                                 else $org}"
                        store="true" index="true"/>
-                <Field name="orgName" string="{lower-case($org)}" store="true" index="true"/>
+                <Field name="orgName" string="{$org}" store="true" index="true" analyze="true"/>
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
@@ -171,12 +171,12 @@
                           select="(gmd:description/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[./text()!=''])[1]"/>
               <Field name="_title" string="{if ($title != '') then $title else if ($localizedDesc != '') then $localizedDesc
                              else $nonEmptyDesc}"
-                     store="true" index="true"/>
+                     store="true" index="true" analyze="true"/>
             </xsl:when>
             <xsl:otherwise>
               <Field name="_title"
                      string="{if ($title != '') then $title else gmd:description/gco:CharacterString}"
-                     store="true" index="true"/>
+                     store="true" index="true" analyze="true"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
@@ -184,9 +184,13 @@
           <Field name="_title"
                  string="{if ($title != '') then $title
                           else if (normalize-space(gmd:description/gco:CharacterString) != '')
-                          then lower-case(gmd:description/gco:CharacterString)
+                          then gmd:description/gco:CharacterString
                           else string-join(.//gco:Decimal, ', ')}"
-                 store="true" index="true"/>
+                 store="true" index="true"
+                 analyze="{if ($title != '') then 'true'
+                          else if (normalize-space(gmd:description/gco:CharacterString) != '')
+                          then 'true'
+                          else 'false'}"/>
         </xsl:otherwise>
       </xsl:choose>
 
