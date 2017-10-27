@@ -23,12 +23,9 @@
 
 package org.fao.geonet.schema.iso19139;
 
-import org.apache.lucene.analysis.standard.UAX29URLEmailAnalyzer;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
 import org.fao.geonet.kernel.schema.subtemplate.AbstractReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
@@ -41,9 +38,6 @@ import org.jdom.Namespace;
 import java.util.List;
 
 public class ContactReplacer extends AbstractReplacer {
-
-    private QueryParser MAIL_QUERY_PARSER = new QueryParser(Version.LUCENE_4_9,
-            null, new UAX29URLEmailAnalyzer(Version.LUCENE_4_9));
 
     public ContactReplacer(List<Namespace> namespaces,
                            ManagersProxy managersProxy,
@@ -69,7 +63,7 @@ public class ContactReplacer extends AbstractReplacer {
 
         query.add(createSubQuery("individualName", individualName), BooleanClause.Occur.MUST);
         query.add(createSubQuery("orgName", organisationName), BooleanClause.Occur.MUST);
-        query.add(MAIL_QUERY_PARSER.createPhraseQuery("email", email), BooleanClause.Occur.MUST);
+        query.add(createSubQuery("email", email), BooleanClause.Occur.MUST);
 
         return query;
     }

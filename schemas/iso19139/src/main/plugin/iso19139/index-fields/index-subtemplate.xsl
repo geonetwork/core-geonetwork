@@ -104,7 +104,7 @@
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress">
-                    <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true"/>
+                    <Field name="email" string="{gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $locale]}" store="true" index="true" analyze="true"/>
                 </xsl:for-each>
 
             </xsl:when>
@@ -126,7 +126,7 @@
                 <Field name="orgNameTree" string="{$org}" store="true" index="true"/>
                 <xsl:for-each
                         select="gmd:contactInfo/*/gmd:address/*/gmd:electronicMailAddress/gco:CharacterString">
-                    <Field name="email" string="{.}" store="true" index="true"/>
+                    <Field name="email" string="{.}" store="true" index="true" analyze="true"/>
                 </xsl:for-each>
 
             </xsl:otherwise>

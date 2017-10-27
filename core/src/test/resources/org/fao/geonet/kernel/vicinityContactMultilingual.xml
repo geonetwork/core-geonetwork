@@ -68,10 +68,10 @@
                            <gmd:LocalisedCharacterString locale="#EN">mcduck@csc.org</gmd:LocalisedCharacterString>
                        </gmd:textGroup>
                        <gmd:textGroup>
-                           <gmd:LocalisedCharacterString locale="#DE">dagobert@csc.org</gmd:LocalisedCharacterString>
+                           <gmd:LocalisedCharacterString locale="#DE">dâgoBert@csc.org</gmd:LocalisedCharacterString>
                        </gmd:textGroup>
                        <gmd:textGroup>
-                           <gmd:LocalisedCharacterString locale="#FR">picsou@csc.org</gmd:LocalisedCharacterString>
+                           <gmd:LocalisedCharacterString locale="#FR">picsOu@csc.org</gmd:LocalisedCharacterString>
                        </gmd:textGroup>
                    </gmd:PT_FreeText>
                </gmd:electronicMailAddress>

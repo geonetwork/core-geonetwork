@@ -23,12 +23,9 @@
 
 package org.fao.geonet.schema.iso19139;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
 import org.fao.geonet.kernel.schema.subtemplate.AbstractReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
@@ -40,8 +37,6 @@ import org.jdom.Namespace;
 import java.util.List;
 
 public class FormatReplacer extends AbstractReplacer {
-
-    private QueryParser tokenizedIndexQueryParser = new QueryParser(Version.LUCENE_4_9, null, new StandardAnalyzer(Version.LUCENE_4_9));
 
     public FormatReplacer(List<Namespace> namespaces,
                           ManagersProxy managersProxy,
@@ -64,8 +59,8 @@ public class FormatReplacer extends AbstractReplacer {
         String name = getFieldValue(format, ".//gmd:name", lang);
         String version = getFieldValue(format, ".//gmd:version", lang);
 
-        query.add(tokenizedIndexQueryParser.createPhraseQuery(constantsProxy.getIndexFieldNamesANY(), name), BooleanClause.Occur.MUST);
-        query.add(tokenizedIndexQueryParser.createPhraseQuery(constantsProxy.getIndexFieldNamesANY(), version), BooleanClause.Occur.MUST);
+        query.add(createSubQuery(constantsProxy.getIndexFieldNamesANY(), name), BooleanClause.Occur.MUST);
+        query.add(createSubQuery(constantsProxy.getIndexFieldNamesANY(), version), BooleanClause.Occur.MUST);
 
         return query;
     }

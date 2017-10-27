@@ -113,7 +113,10 @@ public abstract class AbstractReplacer {
     }
 
     protected Query createSubQuery(String indexFieldNames, String value) {
-        return PHRASE_QUERY_PARSER.createPhraseQuery(indexFieldNames, value);
+        if (value.length() > 0)
+            return PHRASE_QUERY_PARSER.createPhraseQuery(indexFieldNames, value);
+        else
+            return new TermQuery(new Term(indexFieldNames, ""));
     }
 
     protected String getFieldValue(Element elem, String path, String localisedCharacterStringLanguageCode) throws JDOMException {

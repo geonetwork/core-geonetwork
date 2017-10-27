@@ -43,6 +43,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -183,7 +184,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
                     .setText("dâgObert");
             Xml.selectElement(element,
                     ".//gmd:electronicMailAddress/gco:CharacterString")
-                    .setText("dagobert@csc.org");
+                    .setText("dagôbErt@csc.org");
             Xml.selectElement(element,
                     ".//gmd:LanguageCode")
                     .setAttribute("codeListValue", "eng");
@@ -202,22 +203,8 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
             Xml.selectElement(element,
                     ".//gmd:LanguageCode")
                     .setAttribute("codeListValue", "fre");
-            Element nameElem = Xml.selectElement(element,
-                    ".//gmd:individualName");
-            nameElem.removeContent();
-            nameElem.addContent(new Element("PT_FreeText", GMD)
-                .addContent(new Element("textGroup", GMD)
-                    .addContent(new Element("LocalisedCharacterString", GMD)
-                            .setText("mcduck")
-                            .setAttribute("locale", "#FR"))));
-            Element mailElem = Xml.selectElement(element,
-                    ".//gmd:electronicMailAddress");
-            mailElem.removeContent();
-            mailElem.addContent(new Element("PT_FreeText", GMD)
-                    .addContent(new Element("textGroup", GMD)
-                            .addContent(new Element("LocalisedCharacterString", GMD)
-                                    .setText("mcduck@csc.org")
-                                    .setAttribute("locale", "#FR"))));
+            replaceCharacterStringThruLocalised(element, ".//gmd:individualName", "mcducK", "#FR");
+            replaceCharacterStringThruLocalised(element, ".//gmd:electronicMailAddress", "mCdùck@csc.org", "#FR");
         });
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
@@ -233,22 +220,26 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
             Xml.selectElement(element,
                     ".//gmd:LanguageCode")
                     .setAttribute("codeListValue", "ger");
-            Element nameElem = Xml.selectElement(element,
-                    ".//gmd:individualName");
-            nameElem.removeContent();
-            nameElem.addContent(new Element("PT_FreeText", GMD)
-                    .addContent(new Element("textGroup", GMD)
-                            .addContent(new Element("LocalisedCharacterString", GMD)
-                                    .setText("mcduck")
-                                    .setAttribute("locale", "#DE"))));
-            Element mailElem = Xml.selectElement(element,
-                    ".//gmd:electronicMailAddress");
-            mailElem.removeContent();
-            mailElem.addContent(new Element("PT_FreeText", GMD)
-                    .addContent(new Element("textGroup", GMD)
-                            .addContent(new Element("LocalisedCharacterString", GMD)
-                                    .setText("mcduck@csc.org")
-                                    .setAttribute("locale", "#DE"))));
+            replaceCharacterStringThruLocalised(element, ".//gmd:individualName", "Mcduck", "#DE");
+            replaceCharacterStringThruLocalised(element, ".//gmd:electronicMailAddress", "mcDück@csc.org", "#DE");
+        });
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
+    public void metaDataInFrenchButKindOfGermanTranslationAvailable() throws Exception {
+        expectedEx.expect(Exception.class);
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName: +orgName:csc +email:");
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+
+        String vicinityMapUuid = insertVicinityMap(element -> {
+            Xml.selectElement(element,
+                    ".//gmd:LanguageCode")
+                    .setAttribute("codeListValue", "fre");
+            replaceCharacterStringThruLocalised(element, ".//gmd:individualName", "mcduck", "#DE");
+            replaceCharacterStringThruLocalised(element, ".//gmd:electronicMailAddress", "mcduck@csc.org", "#DE");
         });
 
         assertVicinityMapXLinkTo(contact, vicinityMapUuid);
@@ -272,7 +263,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage(
                 "||format-found no match for query: +_isTemplate:s +any:shapefile +any:\"grass version 6.1\"" + "" +
-                        "||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:csc +email:info@csc.org");
+                        "||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:csc +email:\"info csc.org\"");
 
         URL extentResource = AbstractCoreIntegrationTest.class.getResource(EXTENT_RESOURCE);
         Element subtemplateElement = Xml.loadStream(extentResource.openStream());
@@ -299,7 +290,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void insertMetadataCantReplaceContactNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:csc +email:info@csc.org");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:csc +email:\"info csc.org\"");
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE,
                 element -> Xml.selectElement(element,
                         "gmd:individualName/gco:CharacterString")
@@ -326,7 +317,7 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     @Test
     public void insertMetadataCantReplaceContactWhenToManyMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s +individualName:babar +orgName:csc +email:info@csc.org");
+        expectedEx.expectMessage("||contact-found too many matches for query: +_isTemplate:s +individualName:babar +orgName:csc +email:\"info csc.org\"");
         Metadata contact = insertSubtemplate(CONTACT_RESOURCE);
         Metadata contactClone = insertSubtemplate(CONTACT_RESOURCE);
         Metadata format = insertSubtemplate(FORMAT_RESOURCE);
@@ -371,9 +362,25 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     }
 
     @Test
+    @Ignore // -> setting a rating and sorting lucene result according to it should help such tests to pass
+    public void contactOrgNameEmpty() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText(""));
+
+        String vicinityMapUuid = insertVicinityMap(element -> Xml.selectElement(element,
+                ".//gmd:organisationName/gco:CharacterString")
+                .setText(""));
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
     public void contactOrgWithSpacesNoMatch() throws Exception {
         expectedEx.expect(Exception.class);
-        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:\"generale d'electricite\" +email:info@csc.org");
+        expectedEx.expectMessage("||contact-found no match for query: +_isTemplate:s +individualName:babar +orgName:\"generale d'electricite\" +email:\"info csc.org\"");
         insertSubtemplate(FORMAT_RESOURCE);
         insertSubtemplate(EXTENT_RESOURCE);
         insertSubtemplate(CONTACT_RESOURCE, element -> Xml.selectElement(element,
@@ -515,5 +522,16 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
         MetaSearcher referencingContactSearcher = dataManager.searcherForReferencingMetadata(context, contactMetadata);
         Map<Integer, Metadata> result = ((LuceneSearcher) referencingContactSearcher).getAllMdInfo(context, 1);
         assertEquals(vicinityMapUuid, result.values().iterator().next().getUuid());
+    }
+
+    private void replaceCharacterStringThruLocalised(Element element, String fieldKey, String Value, String locale) throws JDOMException {
+        Element nameElem = Xml.selectElement(element,
+                fieldKey);
+        nameElem.removeContent();
+        nameElem.addContent(new Element("PT_FreeText", GMD)
+                .addContent(new Element("textGroup", GMD)
+                        .addContent(new Element("LocalisedCharacterString", GMD)
+                                .setText("mcduck")
+                                .setAttribute("locale", locale))));
     }
 }
