@@ -1908,14 +1908,7 @@ public class SchemaManager {
         }
 
         @Override
-        public String searchResultRelationEQUAL() {
-            return Geonet.SearchResult.Relation.EQUAL;
-        }
-
-        @Override
-        public String searchResultRELATION() {
-            return Geonet.SearchResult.RELATION;
-        }
+        public String getIndexFieldNamesVALID() { return Geonet.IndexFieldNames.VALID; }
 
         @Override
         public Namespace getNAMESPACE_XLINK() {

@@ -29,8 +29,6 @@ public interface ConstantsProxy {
 
     String getIndexFieldNamesANY();
     String getIndexFieldNamesIS_TEMPLATE();
-    String searchResultRelationEQUAL();
-    String searchResultRELATION();
+    String getIndexFieldNamesVALID();
     Namespace getNAMESPACE_XLINK();
-
 }

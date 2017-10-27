@@ -84,6 +84,7 @@ public abstract class AbstractReplacer {
         try {
             IndexSearcher searcher = new IndexSearcher(indexReader);
             query.add(new TermQuery(new Term(constantsProxy.getIndexFieldNamesIS_TEMPLATE(), "s")), BooleanClause.Occur.MUST);
+            query.add(new TermQuery(new Term(constantsProxy.getIndexFieldNamesVALID(), "1")), BooleanClause.Occur.MUST);
             TopDocs docs = searcher.search(
                     queryAddExtraClauses(query, element, localisedCharacterStringLanguageCode),
                     1000);
