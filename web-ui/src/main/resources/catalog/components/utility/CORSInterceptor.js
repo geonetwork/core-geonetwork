@@ -54,7 +54,7 @@
               if (isGnUrl && gnLangs.current &&
                   !config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = gnLangs.current;
-              } else {
+              } else if (!config.headers['Accept-Language']) {
                 config.headers['Accept-Language'] = navigator.language;
               }
               // For HTTP url and those which
