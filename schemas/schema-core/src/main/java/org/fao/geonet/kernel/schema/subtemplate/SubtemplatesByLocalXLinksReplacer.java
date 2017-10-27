@@ -48,14 +48,15 @@ public class SubtemplatesByLocalXLinksReplacer  {
 
     public Element replaceSubtemplatesByLocalXLinks(Element dataXml,
                                                     String templatesToOperateOn) {
+
+        String localXlinkUrlPrefix = "local://srv/api/registries/entries/";
+
         String lang = null;
         try {
             lang = Xml.selectElement(dataXml, ".//gmd:language/gmd:LanguageCode").getAttributeValue("codeListValue");
         } catch (JDOMException e) {
             e.printStackTrace();
         }
-        final String localisedCharacterStringLanguageCode =
-                String.format("#%S", managersProxy.getIso1LangCode(lang));
 
         IndexReader indexReader;
         try {
@@ -63,24 +64,38 @@ public class SubtemplatesByLocalXLinksReplacer  {
         } catch (IOException e) {
             throw new RuntimeException("IOException, SubtemplatesByLocalXLinksReplacer, unable to init index reader.");
         }
-        String localXlinkUrlPrefix = "local://srv/api/registries/entries/";
 
-        Status status = Arrays.stream(templatesToOperateOn.split(";"))
-                .filter(replacersDict::containsKey)
-                .map(replacersDict::get)
-                .map(replacer -> replacer.replaceAll(dataXml,
-                        localXlinkUrlPrefix,
-                        indexReader,
-                        localisedCharacterStringLanguageCode))
-                .collect(Status.STATUS_COLLECTOR);
-        if (status.isError()) {
-            throw new RuntimeException(status.msg);
+        try {
+
+            final String localisedCharacterStringLanguageCode =
+                String.format("#%S", managersProxy.getIso1LangCode(lang));
+
+            Status status = Arrays.stream(templatesToOperateOn.split(";"))
+                    .filter(replacersDict::containsKey)
+                    .map(replacersDict::get)
+                    .map(replacer -> replacer.replaceAll(dataXml,
+                            localXlinkUrlPrefix,
+                            indexReader,
+                            localisedCharacterStringLanguageCode))
+                    .collect(Status.STATUS_COLLECTOR);
+
+            if (status.isError()) {
+                throw new RuntimeException(status.msg);
+            } else {
+                return dataXml;
+            }
+        } finally {
+            try {
+                managersProxy.releaseIndexReader(indexReader);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        return dataXml;
     }
 
     public void addReplacer(AbstractReplacer replacer) {
         replacersDict.put(replacer.getAlias(), replacer);
     }
-
 }

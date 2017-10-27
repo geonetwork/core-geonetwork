@@ -34,5 +34,7 @@ public interface ManagersProxy {
 
     IndexReader getIndexReader(String lang) throws IOException;
 
+    void releaseIndexReader(IndexReader reader) throws IOException, InterruptedException;
+
     String getIso1LangCode(String Iso2LangCode);
 }

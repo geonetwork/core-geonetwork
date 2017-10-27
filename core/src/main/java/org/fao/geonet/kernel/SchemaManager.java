@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
 import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -1876,6 +1877,8 @@ public class SchemaManager {
             IsoLanguagesMapper isoLanguagesMapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
             ((SubtemplateAwareSchemaPlugin) schemaPlugin).init(
                     new ManagersProxy() {
+                        Map<IndexReader, IndexAndTaxonomy> openedReader = new HashMap<>();
+
                         @Override
                         public Path getSchemaDir() {
                             return schemaManager.getSchemaDir(schemaIdentifier);
@@ -1883,7 +1886,16 @@ public class SchemaManager {
 
                         @Override
                         public IndexReader getIndexReader(String lang) throws IOException {
-                            return searchManager.getIndexReader(lang, -1).indexReader;
+                            IndexAndTaxonomy indexAndTaxonomy = searchManager.getIndexReader(lang, -1);
+                            openedReader.put(indexAndTaxonomy.indexReader, indexAndTaxonomy);
+                            return indexAndTaxonomy.indexReader;
+                        }
+
+                        @Override
+                        public void releaseIndexReader(IndexReader reader) throws IOException, InterruptedException {
+                            IndexAndTaxonomy indexAndTaxonomy = openedReader.remove(reader);
+                            searchManager.releaseIndexReader(indexAndTaxonomy);
+
                         }
 
                         @Override
