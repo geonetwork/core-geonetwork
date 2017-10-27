@@ -23,9 +23,16 @@
 
 package org.fao.geonet.kernel.schema.subtemplate;
 
+import org.apache.lucene.index.IndexReader;
+
+import java.io.IOException;
 import java.nio.file.Path;
 
-public interface SchemaManagerProxy {
+public interface ManagersProxy {
 
     Path getSchemaDir();
+
+    IndexReader getIndexReader(String lang) throws IOException;
+
+    String getIso1LangCode(String Iso2LangCode);
 }

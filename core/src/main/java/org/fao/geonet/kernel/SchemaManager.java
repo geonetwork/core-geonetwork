@@ -28,17 +28,12 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import com.vividsolutions.jts.geom.Geometry;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
-
 import jeeves.xlink.XLink;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Filter;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.ZipUtil;
@@ -52,11 +47,11 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaLoader;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SearchManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
@@ -65,13 +60,22 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.PrefixUrlRewrite;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.nio.NioPathAwareCatalogResolver;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1869,17 +1873,22 @@ public class SchemaManager {
         if (schemaPlugin instanceof SubtemplateAwareSchemaPlugin && !((SubtemplateAwareSchemaPlugin) schemaPlugin).isInitialised()) {
             SearchManager searchManager = ApplicationContextHolder.get().getBean(SearchManager.class);
             SchemaManager schemaManager = ApplicationContextHolder.get().getBean(SchemaManager.class);
+            IsoLanguagesMapper isoLanguagesMapper = ApplicationContextHolder.get().getBean(IsoLanguagesMapper.class);
             ((SubtemplateAwareSchemaPlugin) schemaPlugin).init(
-                    new SchemaManagerProxy() {
+                    new ManagersProxy() {
                         @Override
                         public Path getSchemaDir() {
                             return schemaManager.getSchemaDir(schemaIdentifier);
                         }
-                    },
-                    new SearchManagerProxy() {
+
                         @Override
                         public IndexReader getIndexReader(String lang) throws IOException {
                             return searchManager.getIndexReader(lang, -1).indexReader;
+                        }
+
+                        @Override
+                        public String getIso1LangCode(String iso2LangCode) {
+                            return isoLanguagesMapper.iso639_2_to_iso639_1(iso2LangCode);
                         }
                     },
                     CONSTANT_PROXY);

@@ -32,8 +32,7 @@ import org.fao.geonet.kernel.schema.ExportablePlugin;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SearchManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplateAwareSchemaPlugin;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
 import org.fao.geonet.utils.Log;
@@ -334,12 +333,12 @@ public class ISO19139SchemaPlugin
     }
 
     @Override
-    public void init(SchemaManagerProxy schemaManagerProxy, SearchManagerProxy searchManagerProxy, ConstantsProxy constantsProxy) {
-        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(searchManagerProxy);
+    public void init(ManagersProxy managersProxy, ConstantsProxy constantsProxy) {
+        subtemplatesByLocalXLinksReplacer = new SubtemplatesByLocalXLinksReplacer(managersProxy);
         List<Namespace> namespaces = new ArrayList<>(allNamespaces);
-        subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, schemaManagerProxy, constantsProxy));
-        subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, schemaManagerProxy, constantsProxy));
-        subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, schemaManagerProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new FormatReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ContactReplacer(namespaces, managersProxy, constantsProxy));
+        subtemplatesByLocalXLinksReplacer.addReplacer(new ExtentReplacer(namespaces, managersProxy, constantsProxy));
     }
 
     @Override

@@ -31,7 +31,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.fao.geonet.kernel.schema.subtemplate.AbstractReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -46,9 +46,9 @@ public class ContactReplacer extends AbstractReplacer {
             null, new UAX29URLEmailAnalyzer(Version.LUCENE_4_9));
 
     public ContactReplacer(List<Namespace> namespaces,
-                           SchemaManagerProxy schemaManagerProxy,
+                           ManagersProxy managersProxy,
                            ConstantsProxy constantsProxy) {
-        super(namespaces, schemaManagerProxy, constantsProxy);
+        super(namespaces, managersProxy, constantsProxy);
     }
 
     @Override
@@ -62,10 +62,10 @@ public class ContactReplacer extends AbstractReplacer {
     }
 
     @Override
-    protected Query queryAddExtraClauses(BooleanQuery query, Element contact) throws JDOMException {
-        String individualName = Xml.selectString(contact, ".//gmd:individualName/gco:CharacterString", namespaces);
-        String organisationName = Xml.selectString(contact, ".//gmd:organisationName/gco:CharacterString", namespaces);
-        String email = Xml.selectString(contact, ".//gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString", namespaces);
+    protected Query queryAddExtraClauses(BooleanQuery query, Element contact, String lang) throws JDOMException {
+        String individualName = getFieldValue(contact, ".//gmd:individualName", lang);
+        String organisationName = getFieldValue(contact, ".//gmd:organisationName", lang);
+        String email = getFieldValue(contact, ".//gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress", lang);
 
         query.add(createSubQuery("individualName", individualName), BooleanClause.Occur.MUST);
         query.add(createSubQuery("orgName", organisationName), BooleanClause.Occur.MUST);

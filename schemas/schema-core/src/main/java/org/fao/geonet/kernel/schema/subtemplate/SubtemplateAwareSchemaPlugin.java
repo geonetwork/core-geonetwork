@@ -31,8 +31,7 @@ public interface SubtemplateAwareSchemaPlugin {
             Element dataXml,
             String templatesToOperateOn);
 
-    void init(SchemaManagerProxy schemaManagerProxy,
-              SearchManagerProxy searchManagerProxy,
+    void init(ManagersProxy managersProxy,
               ConstantsProxy constantsProxy);
 
     boolean isInitialised();

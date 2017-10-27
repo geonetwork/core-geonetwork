@@ -172,6 +172,89 @@ public class LocalXLinksSubstituedAtInsertTest extends AbstractServiceIntegratio
     }
 
     @Test
+    public void templateInEngButCharacterStringInGer() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+
+        String vicinityMapUuid = insertVicinityMap(element -> {
+            Xml.selectElement(element,
+                    ".//gmd:individualName/gco:CharacterString")
+                    .setText("dâgObert");
+            Xml.selectElement(element,
+                    ".//gmd:electronicMailAddress/gco:CharacterString")
+                    .setText("dagobert@csc.org");
+            Xml.selectElement(element,
+                    ".//gmd:LanguageCode")
+                    .setAttribute("codeListValue", "eng");
+        });
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
+    public void noCharacterStringButKindOfFrenchTranslationAvailable() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+
+        String vicinityMapUuid = insertVicinityMap(element -> {
+            Xml.selectElement(element,
+                    ".//gmd:LanguageCode")
+                    .setAttribute("codeListValue", "fre");
+            Element nameElem = Xml.selectElement(element,
+                    ".//gmd:individualName");
+            nameElem.removeContent();
+            nameElem.addContent(new Element("PT_FreeText", GMD)
+                .addContent(new Element("textGroup", GMD)
+                    .addContent(new Element("LocalisedCharacterString", GMD)
+                            .setText("mcduck")
+                            .setAttribute("locale", "#FR"))));
+            Element mailElem = Xml.selectElement(element,
+                    ".//gmd:electronicMailAddress");
+            mailElem.removeContent();
+            mailElem.addContent(new Element("PT_FreeText", GMD)
+                    .addContent(new Element("textGroup", GMD)
+                            .addContent(new Element("LocalisedCharacterString", GMD)
+                                    .setText("mcduck@csc.org")
+                                    .setAttribute("locale", "#FR"))));
+        });
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
+    public void noCharacterStringButKindOfGermanTranslationAvailable() throws Exception {
+        insertSubtemplate(FORMAT_RESOURCE);
+        insertSubtemplate(EXTENT_RESOURCE);
+        Metadata contact = insertSubtemplate(CONTACT_RESOURCE_MULTILINGUAL);
+
+        String vicinityMapUuid = insertVicinityMap(element -> {
+            Xml.selectElement(element,
+                    ".//gmd:LanguageCode")
+                    .setAttribute("codeListValue", "ger");
+            Element nameElem = Xml.selectElement(element,
+                    ".//gmd:individualName");
+            nameElem.removeContent();
+            nameElem.addContent(new Element("PT_FreeText", GMD)
+                    .addContent(new Element("textGroup", GMD)
+                            .addContent(new Element("LocalisedCharacterString", GMD)
+                                    .setText("mcduck")
+                                    .setAttribute("locale", "#DE"))));
+            Element mailElem = Xml.selectElement(element,
+                    ".//gmd:electronicMailAddress");
+            mailElem.removeContent();
+            mailElem.addContent(new Element("PT_FreeText", GMD)
+                    .addContent(new Element("textGroup", GMD)
+                            .addContent(new Element("LocalisedCharacterString", GMD)
+                                    .setText("mcduck@csc.org")
+                                    .setAttribute("locale", "#DE"))));
+        });
+
+        assertVicinityMapXLinkTo(contact, vicinityMapUuid);
+    }
+
+    @Test
     public void formatWithSpaces() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("||format-found no match for query: +_isTemplate:s +any:shapefile +any:\"grass version 6.1\"");

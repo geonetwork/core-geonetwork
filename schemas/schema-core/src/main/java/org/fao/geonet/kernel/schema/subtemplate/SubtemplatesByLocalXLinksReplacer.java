@@ -36,10 +36,10 @@ import java.util.Map;
 public class SubtemplatesByLocalXLinksReplacer  {
 
     private Map<String, AbstractReplacer> replacersDict = new HashMap<>();
-    private SearchManagerProxy searchManagerProxy;
+    private ManagersProxy managersProxy;
 
-    public SubtemplatesByLocalXLinksReplacer(SearchManagerProxy searchManagerProxy) {
-        this.searchManagerProxy = searchManagerProxy;
+    public SubtemplatesByLocalXLinksReplacer(ManagersProxy managersProxy) {
+        this.managersProxy = managersProxy;
     }
 
     public static String FORMAT = "format";
@@ -48,15 +48,18 @@ public class SubtemplatesByLocalXLinksReplacer  {
 
     public Element replaceSubtemplatesByLocalXLinks(Element dataXml,
                                                     String templatesToOperateOn) {
-        IndexReader indexReader;
         String lang = null;
         try {
             lang = Xml.selectElement(dataXml, ".//gmd:language/gmd:LanguageCode").getAttributeValue("codeListValue");
         } catch (JDOMException e) {
             e.printStackTrace();
         }
+        final String localisedCharacterStringLanguageCode =
+                String.format("#%S", managersProxy.getIso1LangCode(lang));
+
+        IndexReader indexReader;
         try {
-            indexReader = searchManagerProxy.getIndexReader(lang);
+            indexReader = managersProxy.getIndexReader(lang);
         } catch (IOException e) {
             throw new RuntimeException("IOException, SubtemplatesByLocalXLinksReplacer, unable to init index reader.");
         }
@@ -65,7 +68,10 @@ public class SubtemplatesByLocalXLinksReplacer  {
         Status status = Arrays.stream(templatesToOperateOn.split(";"))
                 .filter(replacersDict::containsKey)
                 .map(replacersDict::get)
-                .map(replacer -> replacer.replaceAll(dataXml, localXlinkUrlPrefix, indexReader))
+                .map(replacer -> replacer.replaceAll(dataXml,
+                        localXlinkUrlPrefix,
+                        indexReader,
+                        localisedCharacterStringLanguageCode))
                 .collect(Status.STATUS_COLLECTOR);
         if (status.isError()) {
             throw new RuntimeException(status.msg);

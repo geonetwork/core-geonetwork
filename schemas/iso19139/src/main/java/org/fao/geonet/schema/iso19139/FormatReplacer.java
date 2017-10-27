@@ -31,9 +31,8 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.fao.geonet.kernel.schema.subtemplate.AbstractReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -45,9 +44,9 @@ public class FormatReplacer extends AbstractReplacer {
     private QueryParser tokenizedIndexQueryParser = new QueryParser(Version.LUCENE_4_9, null, new StandardAnalyzer(Version.LUCENE_4_9));
 
     public FormatReplacer(List<Namespace> namespaces,
-                          SchemaManagerProxy schemaManagerProxy,
+                          ManagersProxy managersProxy,
                           ConstantsProxy constantsProxy) {
-        super(namespaces, schemaManagerProxy, constantsProxy);
+        super(namespaces, managersProxy, constantsProxy);
     }
 
     @Override
@@ -61,9 +60,9 @@ public class FormatReplacer extends AbstractReplacer {
     }
 
     @Override
-    protected Query queryAddExtraClauses(BooleanQuery query, Element format) throws JDOMException {
-        String name = Xml.selectString(format, ".//gmd:name/gco:CharacterString", namespaces);
-        String version = Xml.selectString(format, ".//gmd:version/gco:CharacterString", namespaces);
+    protected Query queryAddExtraClauses(BooleanQuery query, Element format, String lang) throws JDOMException {
+        String name = getFieldValue(format, ".//gmd:name", lang);
+        String version = getFieldValue(format, ".//gmd:version", lang);
 
         query.add(tokenizedIndexQueryParser.createPhraseQuery(constantsProxy.getIndexFieldNamesANY(), name), BooleanClause.Occur.MUST);
         query.add(tokenizedIndexQueryParser.createPhraseQuery(constantsProxy.getIndexFieldNamesANY(), version), BooleanClause.Occur.MUST);

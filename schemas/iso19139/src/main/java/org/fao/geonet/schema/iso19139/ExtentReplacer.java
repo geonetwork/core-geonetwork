@@ -30,7 +30,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.fao.geonet.kernel.schema.subtemplate.AbstractReplacer;
 import org.fao.geonet.kernel.schema.subtemplate.ConstantsProxy;
-import org.fao.geonet.kernel.schema.subtemplate.SchemaManagerProxy;
+import org.fao.geonet.kernel.schema.subtemplate.ManagersProxy;
 import org.fao.geonet.kernel.schema.subtemplate.SubtemplatesByLocalXLinksReplacer;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -42,9 +42,9 @@ import java.util.stream.Collectors;
 public class ExtentReplacer extends AbstractReplacer {
 
     public ExtentReplacer(List<Namespace> namespaces,
-                          SchemaManagerProxy schemaManagerProxy,
+                          ManagersProxy managersProxy,
                           ConstantsProxy constantsProxy) {
-        super(namespaces, schemaManagerProxy, constantsProxy);
+        super(namespaces, managersProxy, constantsProxy);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class ExtentReplacer extends AbstractReplacer {
     }
 
     @Override
-    protected Query queryAddExtraClauses(BooleanQuery query, Element extent) throws Exception {
-        String title = Xml.selectString(extent, ".//gmd:description/gco:CharacterString", namespaces);
+    protected Query queryAddExtraClauses(BooleanQuery query, Element extent, String lang) throws Exception {
+        String title = getFieldValue(extent, ".//gmd:description", lang);
         if (title.length() != 0) {
             query.add(createSubQuery("_title", title), BooleanClause.Occur.MUST);
         } else {

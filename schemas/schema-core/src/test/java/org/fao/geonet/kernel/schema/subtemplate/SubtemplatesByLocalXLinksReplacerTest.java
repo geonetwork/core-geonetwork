@@ -49,7 +49,7 @@ public class SubtemplatesByLocalXLinksReplacerTest {
     private static String EXPECTED_XLINK_URL_PREFIX = "local://srv/api/registries/entries/";
 
     Element dataXml;
-    SearchManagerProxy proxy;
+    ManagersProxy proxy;
     IndexReader reader;
     SubtemplatesByLocalXLinksReplacer toTest;
     AbstractReplacer formatReplacer;
@@ -59,20 +59,21 @@ public class SubtemplatesByLocalXLinksReplacerTest {
     @Before
     public void prepareToTest() throws IOException {
         dataXml = mock(Element.class);
-        proxy = mock(SearchManagerProxy.class);
+        proxy = mock(ManagersProxy.class);
         reader = mock(IndexReader.class);
         when(proxy.getIndexReader(anyString())).thenReturn(reader);
+        when(proxy.getIso1LangCode(anyString())).thenReturn("en");
         formatReplacer = mock(AbstractReplacer.class);
         extentReplacer = mock(AbstractReplacer.class);
         contactReplacer = mock(AbstractReplacer.class);
         when(formatReplacer.getAlias()).thenReturn(FORMAT);
         when(extentReplacer.getAlias()).thenReturn(EXTENT);
         when(contactReplacer.getAlias()).thenReturn(CONTACT);
-        when(formatReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class)))
+        when(formatReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString()))
                 .thenReturn(new Status());
-        when(extentReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class)))
+        when(extentReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString()))
                 .thenReturn(new Status());
-        when(contactReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class)))
+        when(contactReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString()))
                 .thenReturn(new Status());
         toTest = new SubtemplatesByLocalXLinksReplacer(proxy);
         toTest.addReplacer(formatReplacer);
@@ -89,9 +90,9 @@ public class SubtemplatesByLocalXLinksReplacerTest {
 
         toTest.replaceSubtemplatesByLocalXLinks(dataXml, templatesToOperateOn);
 
-        Mockito.verify(formatReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(extentReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(contactReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
+        Mockito.verify(formatReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(extentReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(contactReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
     }
 
     @Test
@@ -100,29 +101,29 @@ public class SubtemplatesByLocalXLinksReplacerTest {
 
         toTest.replaceSubtemplatesByLocalXLinks(dataXml, templatesToOperateOn);
 
-        Mockito.verify(formatReplacer, never()).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
+        Mockito.verify(formatReplacer, never()).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
         Mockito.verify(extentReplacer, times(1))
-                .replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(contactReplacer, never()).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
+                .replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(contactReplacer, never()).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
     }
 
     @Test
     public void statusCollectorExceptions() throws IOException {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("|A|C");
-        when(formatReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class)))
+        when(formatReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString()))
                 .thenReturn(new Failure("A"));
-        when(extentReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class)))
+        when(extentReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString()))
                 .thenReturn(new Status());
-        when(contactReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class)))
+        when(contactReplacer.replaceAll(any(Element.class), anyString(), any(IndexReader.class), anyString()))
                 .thenReturn(new Failure("C"));
         String templatesToOperateOn = FORMAT + ";" + EXTENT + ";" + CONTACT;
 
         toTest.replaceSubtemplatesByLocalXLinks(dataXml, templatesToOperateOn);
 
-        Mockito.verify(formatReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(extentReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(contactReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
+        Mockito.verify(formatReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(extentReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(contactReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
     }
 
     @Test
@@ -131,8 +132,8 @@ public class SubtemplatesByLocalXLinksReplacerTest {
 
         toTest.replaceSubtemplatesByLocalXLinks(dataXml, templatesToOperateOn);
 
-        Mockito.verify(formatReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(extentReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
-        Mockito.verify(contactReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader);
+        Mockito.verify(formatReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(extentReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader, "#EN");
+        Mockito.verify(contactReplacer).replaceAll(dataXml, EXPECTED_XLINK_URL_PREFIX, reader,"#EN");
     }
 }

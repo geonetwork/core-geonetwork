@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.schema.subtemplate;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.core.KeywordTokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
@@ -57,18 +56,18 @@ public abstract class AbstractReplacer {
             new QueryParser(Version.LUCENE_4_9, null, new PhraseAnalyzer());
 
     protected List<Namespace> namespaces;
-    protected SchemaManagerProxy schemaManagerProxy;
+    protected ManagersProxy managersProxy;
     protected ConstantsProxy constantsProxy;
 
     public AbstractReplacer(List<Namespace> namespaces,
-                            SchemaManagerProxy schemaManagerProxy,
+                            ManagersProxy managersProxy,
                             ConstantsProxy constantsProxy) {
         this.constantsProxy = constantsProxy;
-        this.schemaManagerProxy = schemaManagerProxy;
+        this.managersProxy = managersProxy;
         this.namespaces = namespaces;
     }
 
-    public Status replaceAll(Element dataXml, String localXlinkUrlPrefix, IndexReader indexReader) {
+    public Status replaceAll(Element dataXml, String localXlinkUrlPrefix, IndexReader indexReader, String localisedCharacterStringLanguageCode) {
         List<?> nodes = null;
         try {
             nodes = Xml.selectNodes(dataXml, getElemXPath(), namespaces);
@@ -76,16 +75,18 @@ public abstract class AbstractReplacer {
             return new Failure(String.format("%s- selectNodes JDOMEx: %s", getAlias(), getElemXPath()));
         }
         return nodes.stream()
-                .map((element) -> replace((Element) element, localXlinkUrlPrefix, indexReader))
+                .map((element) -> replace((Element) element, localXlinkUrlPrefix, indexReader, localisedCharacterStringLanguageCode))
                 .collect(Status.STATUS_COLLECTOR);
     }
 
-    protected Status replace(Element element, String localXlinkUrlPrefix, IndexReader indexReader) {
+    protected Status replace(Element element, String localXlinkUrlPrefix, IndexReader indexReader, String localisedCharacterStringLanguageCode) {
         BooleanQuery query = new BooleanQuery();
         try {
             IndexSearcher searcher = new IndexSearcher(indexReader);
             query.add(new TermQuery(new Term(constantsProxy.getIndexFieldNamesIS_TEMPLATE(), "s")), BooleanClause.Occur.MUST);
-            TopDocs docs = searcher.search(queryAddExtraClauses(query, element), 1000);
+            TopDocs docs = searcher.search(
+                    queryAddExtraClauses(query, element, localisedCharacterStringLanguageCode),
+                    1000);
 
             if (docs.totalHits == 1) {
                 Document document = indexReader.document(docs.scoreDocs[0].doc);
@@ -115,11 +116,19 @@ public abstract class AbstractReplacer {
         return PHRASE_QUERY_PARSER.createPhraseQuery(indexFieldNames, value);
     }
 
+    protected String getFieldValue(Element elem, String path, String localisedCharacterStringLanguageCode) throws JDOMException {
+        String value = Xml.selectString(elem, String.format("%s/gco:CharacterString", path), namespaces);
+        if (value.length() > 0) {
+            return value;
+        }
+        return Xml.selectString(elem, String.format("%s/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='%s']", path, localisedCharacterStringLanguageCode), namespaces);
+    }
+
     public abstract String getAlias();
 
     protected abstract String getElemXPath();
 
-    protected abstract Query queryAddExtraClauses(BooleanQuery query, Element element) throws Exception;
+    protected abstract Query queryAddExtraClauses(BooleanQuery query, Element element, String lang) throws Exception;
 
     protected abstract StringBuffer xlinkAddExtraParams(Element element, StringBuffer params) throws JDOMException;
 
