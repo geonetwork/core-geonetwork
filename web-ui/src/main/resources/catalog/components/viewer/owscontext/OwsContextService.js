@@ -150,6 +150,13 @@
           map.setView(view);
         }
 
+        // $timeout used to avoid map no rendered (eg: null size)
+        $timeout(function() {
+          if(map.getSize()) {
+            map.getView().fit(extent, map.getSize(), { nearest: true });
+          }
+        }, 0, false);
+
         // load the resources & add additional layers if available
         var layers = context.resourceList.layer;
         if (additionalLayers) {
