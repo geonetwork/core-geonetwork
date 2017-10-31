@@ -17,6 +17,352 @@
     font-size: 14px;
   }
 }
+.gn-md-feedback-buttons {
+  margin-bottom: 20px;
+}
+.gn-md-feedback-buttons button:first-child {
+  margin-right: 5px;
+}
 .gn-md-feedback-btn {
   margin-right: 5px;
+}
+
+.gn-userfeedback {
+  .bootstrap-table {
+    margin-top: 10px;
+    margin-bottom: 10px;          
+  }
+  .fixed-table-container {
+    border: 0;
+  }
+}
+
+// general
+// 
+// ----- quotes
+q, blockquote {
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+// ----- feedback styles
+.gn-userfeedback-title {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+  h3 {
+    border-bottom: 3px solid #ddd;
+    margin-bottom: 0;
+    padding-bottom: 8px;
+    display: inline-block;
+  }
+}
+.gn-userfeedback-score {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+// colors for scores
+.gn-userfeedback-score-1 {
+  color: @brand-danger;
+}
+.gn-userfeedback-score-2, .gn-userfeedback-score-3 {
+  color: @brand-warning;
+}
+.gn-userfeedback-score-4, .gn-userfeedback-score-5 {
+  color: @brand-success;
+}
+
+// buttonbar for reply links and buttons
+.gn-userfeedback-reply {
+  a {
+    color: #999;
+  }
+}
+
+// homepage
+.gn-userfeedback-card {
+  width: calc(~"50% - 20px");
+  float: left;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+  h4 {
+    font-size: 15px;
+    a {
+      cursor: pointer;
+      color: #333;
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+  q, blockquote {
+    padding-left: 18px;
+    display: block;
+    margin-bottom: 20px;
+    margin-top: 15px;
+    font-size: 20px;
+  }
+  q:before, blockquote:before {
+    font-size: 30px;
+    margin: 0;
+    position: absolute;
+    margin-left: -18px;
+    margin-top: -8px;
+  }
+  q:after, blockquote:after {
+    font-size: 30px;
+    position: absolute;
+    margin-left: 4px;
+    margin-top: -7px;
+  }
+  .gn-userfeedback-pre-title {
+    color: #5d5b5b;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+  .gn-userfeedback-score {
+    float: left;
+    margin-bottom: 0;
+    font-size: 20px;
+    line-height: 36px;
+    color: #5d5b5b;
+  }
+  // colors for scores
+  .gn-userfeedback-score-1 {
+    background-color: @brand-danger;
+  }
+  .gn-userfeedback-score-2, .gn-userfeedback-score-3 {
+    background-color: @brand-warning;
+  }
+  .gn-userfeedback-score-4, .gn-userfeedback-score-5 {
+    background-color: @brand-success;
+  }
+  .gn-userfeedback-badge {
+    color: #fff;
+    margin-right: 5px;
+    padding: 1px 16px;
+  }
+  .gn-userfeedback-reply {
+    float: left;
+    border-left: 1px solid #ddd;
+    margin-left: 10px;
+    padding-left: 10px;
+    a {
+      color: @brand-primary;
+    }
+  }
+}
+
+// detailpage - sidebar
+.gn-userfeedback-sidebar {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  h1 {
+    margin: 10px 0;
+    font-size: 24px;
+  }
+}
+
+.gn-userfeedback-list {
+  list-style: none;
+  padding: 0;
+  .gn-userfeedback-item {
+    margin-bottom: 10px;
+    .gn-userfeedback-image {
+      margin: 4px 8px 0 0;
+    }
+    .gn-userfeedback-comment-user {
+      width: 70%;
+    }
+    .gn-userfeedback-comment {
+      border: 1px solid #ccc;
+      background-color: #efefef;
+      padding: 10px;
+      q {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+    }
+    .gn-userfeedback-user {
+      margin-top: 25px;
+      span {
+        display: block;
+        line-height: 1.5em;
+      }
+    }
+    // list in list
+    .gn-userfeedback-list {
+      padding-left: 43px;
+    }
+
+    // arrows
+    .gn-arrow-bottom {
+      position: relative;
+      background: #efefef;
+      border: 1px solid #cccccc;
+    }
+    .gn-arrow-bottom:after, .gn-arrow-bottom:before {
+      top: 100%;
+      left: 10%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    .gn-arrow-bottom:after {
+      border-color: rgba(239, 239, 239, 0);
+      border-top-color: #efefef;
+      border-width: 15px;
+      margin-left: -15px;
+    }
+    .gn-arrow-bottom:before {
+      border-color: rgba(204, 204, 204, 0);
+      border-top-color: #cccccc;
+      border-width: 16px;
+      margin-left: -16px;
+    }
+  }
+}
+
+// slight modifations for the standard modal dialog
+.gn-userfeedback-modal {
+  .modal-dialog {
+    width: 80%;
+    max-width: 1000px;
+    .modal-footer {
+      // dropdown in the footer (dropup)
+      .dropdown {
+        margin-top: -5px;
+        margin-left: 12px
+      }
+      .dropdown-menu {
+        text-align: left;
+        top: auto;
+        bottom: 5px;
+      }
+    }
+  }
+  .gn-userfeedback-list {
+    max-height: 450px;
+    overflow: auto;
+    .gn-userfeedback-item {
+      .gn-userfeedback-comment-user {
+        a {
+          display: block;
+          padding: 4px 0;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  // panels
+  .panel {
+    border: 0;
+  }
+  // heading
+  .panel-heading {
+    padding: 10px 0px;
+    height: auto;
+    background-color: #fff;
+    border: 0;
+    .btn-round {
+      padding: 7px 14px;
+      margin-right: 5px;
+      margin-left: -45px;
+    }
+    a {
+      color: #555;
+      padding-left: 45px;
+      display: block;
+      line-height: 8px;
+      &:hover {
+        text-decoration: none;
+        color: #000;
+        cursor: pointer;
+      }
+    }
+  }
+  // body
+  .panel-body {
+    border: 0;
+    h3 {
+      .fa {
+        color: #999;
+        margin-left: 5px;
+      }
+      .fa[data-title]:hover:after {
+        content: attr(data-title);
+        margin-top: -10px;
+        margin-left: 10px;
+        color: #333;
+        position: absolute;
+        z-index: 20;
+        background-color: #d9edf7;
+        padding: 10px;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+      }
+    }
+  }
+  .panel-group .panel-heading + .panel-collapse .panel-body {
+    border-top-color: #f5f5f5;
+  }
+}
+
+// text area for adding a review
+.gn-userfeedback-comment-area {
+  min-height: 100px;
+  margin-bottom: 10px;
+}
+
+// user is not logged in
+// 
+// inputs for entering user data
+.gn-userfeedback-loggedout {
+  .form-control {
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+}
+
+// list with categories to review
+.gn-userfeedback-categories {
+  padding-top: 10px;
+  .list-group-item {
+    border: 0;
+    padding: 0;
+    .progress {
+      height: 15px;
+      margin-bottom: 10px;
+      border-radius: 2px;
+    }
+  }
+}
+
+// styling for the scrollbar
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+// ----- track
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1); 
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+// ----- handle
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  background: #efefef; 
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0,0,0,0.4); 
 }

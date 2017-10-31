@@ -1,0 +1,37 @@
+<div>
+  <section>
+    <h2>
+      <span data-translate="">GUFrate</span>
+    </h2>
+
+  </section>
+
+  <section class="gn-userfeedback-sidebar">
+    <h1 data-ng-show="rating.ratingAverage">
+      {{rating.ratingAverage}} / 5 <span class="fa fa-fw fa-star">&nbsp;</span>
+    </h1>
+    <h1 data-ng-hide="rating.ratingAverage" data-translate="">GUFnoRatings</h1>
+    <p data-ng-show="rating.ratingAverage" data-translate=""
+      data-translate-values="{ratingCount:'{{rating.ratingCount}}'}">GUFfromRatingCountRatings</p>
+
+    <ul class="gn-userfeedback-list" data-ng-show="fewCommentsList.length">
+      <li class="gn-userfeedback-item"
+        data-ng-repeat="row in fewCommentsList">
+        <div class="gn-userfeedback-comment gn-arrow-bottom">
+          <q data-ng-show="row.comment">{{row.comment}}</q> <span
+            class="gn-userfeedback-score-{{row.ratingAVG}}"
+            data-ng-show="row.ratingAVG"> {{row.ratingAVG}} / 5 <span
+            class="fa fa-fw fa-star">&nbsp;</span>
+          </span> on {{row.date | date:'medium'}} <span
+            data-ng-hide="{{row.published}}"> - <strong
+            data-translate="">GUFwaitingForApproval</strong></span>
+        </div>
+        <div class="gn-userfeedback-user">
+          <span><strong>{{row.authorName}}</strong></span> <span>{{row.authorOrganization}}</span>
+
+        </div>
+      </li>
+    </ul>
+  </section>
+
+</div>

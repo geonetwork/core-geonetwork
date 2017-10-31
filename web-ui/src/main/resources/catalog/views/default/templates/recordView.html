@@ -1,24 +1,24 @@
 <div data-ng-controller="GnMdViewController" class="container">
-  <div class="alert alert-warning"
+  <div class="alert alert-warning" 
        data-ng-hide="mdView.current.record"
        data-translate=""
        data-translate-values="{uuid: '{{recordIdentifierRequested | htmlToPlaintext}}'}">
     recordNotFound
   </div>
 
-  <div class="row gn-md-view"
+  <div class="row gn-md-view" 
        data-ng-show="mdView.current.record">
     <button class="btn btn-primary"
             data-ng-click="closeRecord(mdView.current.record)">
-      <i class="fa fa-search"></i>
-      <span><span>{{'backTo' + (fromView || 'search') | translate}}</span></span>
+      <i class="fa fa-search"></i> <span><span>
+      {{'backTo' + (fromView || 'search') | translate}}</span></span>
     </button>
 
     <button class="btn btn-link"
             data-ng-class="searchObj.params.from == (mdView.current.index + 1) ? 'disabled' : ''"
             data-ng-show="mdView.records.length > 1"
             data-ng-click="previousRecord()">
-      <i class="fa fa-angle-left"></i>
+      <i class="fa fa-angle-left"></i> 
       <span data-ng-show="mdView.current.index === 0" data-translate="">previousPage</span>
       <span data-ng-hide="mdView.current.index === 0" data-translate="">previous</span>
     </button>
@@ -130,17 +130,19 @@
           <tbody>
           <tr data-ng-if="mdView.current.record.inspirethemewithac.length > 0 ||
                           mdView.current.record.inspirethemewithac.length > 0">
-            <th data-translate="">inspireThemes</th>
-            <td>
-              <button data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
-                   data-ng-click="search({'inspirethemewithac': cat})"
-                   class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
-                   title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
-                <span class="iti-{{cat.split('|')[0]}}"></span>
-              </button>
-            </td>
-          </tr>
-          <tr data-ng-if="mdView.current.record.category.length > 0 ||
+              <th data-translate="">inspireThemes</th>
+              <td>
+                <button
+                  data-ng-repeat="cat in mdView.current.record.inspirethemewithac"
+                  data-ng-click="search({'inspirethemewithac': cat})"
+                  class="btn btn-sm btn-default {{cat.split('|')[0]}} {{cat.split('|')[0]}}-{{langs[lang]}}"
+                  title="{{'clickToFilterOn' | translate}} {{cat.split('|')[1]}}">
+                  <span class="iti-{{cat.split('|')[0]}}"></span>
+                </button>
+              </td>
+            </tr>
+            <tr
+              data-ng-if="mdView.current.record.category.length > 0 ||
                       mdView.current.record.topicCat.length > 0">
             <th data-translate="">listOfCategories</th>
             <td>
@@ -397,6 +399,22 @@
           </div>
         </section>
         </br>
+        
+        <div data-gn-userfeedback='{{mdView.current.record.getUuid()}}'
+                  data-gn-user={{user.username}} data-ng-show="isUserFeedbackEnabled">
+        </div>
+        <div class="gn-md-feedback-buttons clearfix">
+          <div class="pull-left"
+                  data-gn-userfeedbackfull='{{mdView.current.record.getUuid()}}'
+                  data-gn-user={{user.username}}
+                  data-ng-show="isUserFeedbackEnabled">
+          </div>
+          <div class="pull-left"
+                  data-gn-userfeedbacknew='{{mdView.current.record.getUuid()}}'
+                  data-gn-user={{user.username}}
+                  data-ng-show="isUserFeedbackEnabled">
+          </div>
+        </div>
 
 
         <section data-ng-if="mdView.current.record.geoBox.length > 0">
@@ -424,7 +442,7 @@
                              mdView.current.record.tempExtentBegin ||
                              mdView.current.record.tempExtentEnd">
           <h4>
-            <i class="fa fa-fw fa-clock-o"></i>
+            <i class="fa fa-fw fa-clock-o"></i> 
             <span data-translate="">tempExtent</span>
           </h4>
 
@@ -432,23 +450,27 @@
           <dl data-ng-show="mdView.current.record.creationDate">
             <dt data-translate>creationDate</dt>
             <dd data-gn-humanize-time="{{mdView.current.record.creationDate}}"
-                data-format="YYYY-MM-DD"/>
+                data-format="YYYY-MM-DD" />
           </dl>
           <dl data-ng-show="mdView.current.record.publicationDate">
             <dt data-translate>publicationDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
-                data-format="YYYY-MM-DD"/>
+            <dd
+              data-gn-humanize-time="{{mdView.current.record.publicationDate}}"
+              data-format="YYYY-MM-DD" />
           </dl>
           <dl data-ng-show="mdView.current.record.revisionDate">
             <dt data-translate>revisionDate</dt>
-            <dd data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
-                data-format="YYYY-MM-DD"/>
+            <dd 
+              data-gn-humanize-time="{{mdView.current.record.revisionDate}}"
+              data-format="YYYY-MM-DD" />
           </dl>
-          <dl data-ng-show="mdView.current.record.tempExtentBegin ||
+          <dl
+            data-ng-show="mdView.current.record.tempExtentBegin ||
                               mdView.current.record.tempExtentEnd">
             <dt data-translate>tempExtentBegin</dt>
             <dd>
-              <span data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}"/>
+              <span
+                data-gn-humanize-time="{{mdView.current.record.tempExtentBegin}}" />
               &nbsp;<i class="fa fa-forward"></i>&nbsp;
               <span data-gn-humanize-time="{{mdView.current.record.tempExtentEnd}}"/>
             </dd>
@@ -548,14 +570,15 @@
         </section>
         </br>
 
-        <section>
+        <section data-ng-show="isRatingEnabled">
           <h4>
             <i class="fa fa-fw"></i>
             <span data-translate="">rate</span>
           </h4>
           <div data-gn-metadata-rate="mdView.current.record"/>
 
-        </section>
+          </section>
+
       </div>
 
     </div>

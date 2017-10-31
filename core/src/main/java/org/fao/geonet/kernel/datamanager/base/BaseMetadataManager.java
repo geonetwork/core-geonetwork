@@ -45,6 +45,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.HarvestInfoProvider;
@@ -85,6 +86,7 @@ import org.fao.geonet.repository.UserSavedSelectionRepository;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -334,6 +336,9 @@ public class BaseMetadataManager implements IMetadataManager {
         }
         // --- remove operations
         metadataOperations.deleteMetadataOper(context, id, false);
+        
+        //--- remove user comments
+        deleteMetadataUserFeedback_byMetadataId(context, id);
 
         int intId = Integer.parseInt(id);
         metadataRatingByIpRepository.deleteAllById_MetadataId(intId);
@@ -354,6 +359,27 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- remove metadata
         getXmlSerializer().delete(id, context);
+    }
+    
+    /**
+     * Removes all userfeedbacks associated with metadata.
+     */
+    private void deleteMetadataUserFeedback_byMetadataId(ServiceContext context, String metadataId) throws Exception {
+        
+        UserFeedbackRepository userfeedbackRepository = context.getBean(UserFeedbackRepository.class);
+        MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+
+        Metadata metadata = metadataRepository.findOne(metadataId);
+        
+        List<UserFeedback> list = userfeedbackRepository.findByMetadata_Uuid(metadata.getUuid());
+        
+        if(list.size() > 0) {
+            
+            for (UserFeedback userFeedback : list) {
+                userfeedbackRepository.delete(userFeedback);
+            }
+            
+        }
     }
     
     private MetaSearcher searcherForReferencingMetadata(ServiceContext context, Metadata metadata) throws Exception {
