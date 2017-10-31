@@ -251,6 +251,9 @@
 
           scope.map.getLayers().on('change:length', buildTree);
 
+          // initial tree build
+          buildTree();
+
           // Swap the loaded layer with the loading layer after tree is created
           scope.map.getLayers().on('remove', function(event) {
             var loadingLayer = event.element;
