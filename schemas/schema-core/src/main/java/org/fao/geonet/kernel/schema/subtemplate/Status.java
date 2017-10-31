@@ -44,6 +44,10 @@ public class Status {
         return this;
     }
 
+    public String getMsg() {
+        return this.msg;
+    }
+
     static public class Failure extends Status {
 
         public Failure(String msg) {

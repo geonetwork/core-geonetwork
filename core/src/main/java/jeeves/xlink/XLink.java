@@ -23,6 +23,7 @@
 
 package jeeves.xlink;
 
+import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.net.URL;
@@ -136,6 +137,12 @@ public class XLink {
 
     public void setActuate(String actuate) {
         this.actuate = actuate;
+    }
+
+    public static boolean isXLink(Element elem)
+    {
+        if( elem==null ) return false;
+        return elem.getAttribute(HREF, NAMESPACE_XLINK) != null;
     }
 
 

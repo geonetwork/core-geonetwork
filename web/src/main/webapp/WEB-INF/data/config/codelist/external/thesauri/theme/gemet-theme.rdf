@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:gemet="http://www.eionet.europa.eu/gemet/2004/06/gemet-schema.rdf#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:exslt="http://exslt.org/common">
+<skos:ConceptScheme rdf:about="http://geonetwork-opensource.org/gemet-theme">
+<dc:title>GEMET themes</dc:title>
+<dc:description>GEMET themes thesaurus for GeoNetwork opensource.</dc:description>
+<dc:creator>
+<foaf:Organization>
+<foaf:name>EEA</foaf:name>
+</foaf:Organization>
+</dc:creator>
+<dc:uri>http://www.eionet.europa.eu/gemet/about?langcode=en</dc:uri>
+<dc:rights>http://www.eionet.europa.eu/gemet/about?langcode=en</dc:rights>
+<dcterms:issued>2009-09-22 07:57:15</dcterms:issued>
+<dcterms:modified>2009-09-22 07:57:15</dcterms:modified>
+</skos:ConceptScheme>
+<skos:Concept rdf:about="theme/40">
+<skos:prefLabel xml:lang="en">water</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">eau</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Wasser</skos:prefLabel>
+<skos:prefLabel xml:lang="it">acqua</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/2">
+<skos:prefLabel xml:lang="en">agriculture</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">agriculture</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Landwirtschaft</skos:prefLabel>
+<skos:prefLabel xml:lang="it">agricoltura</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/13">
+<skos:prefLabel xml:lang="en">food, drinking water</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">alimentation, eau potable</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Nahrungsmittel, Trinkwasser</skos:prefLabel>
+<skos:prefLabel xml:lang="it">alimenti, acqua potabile</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/18">
+<skos:prefLabel xml:lang="en">animal husbandry</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">élevage</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Tierzucht</skos:prefLabel>
+<skos:prefLabel xml:lang="it">allevamento</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/38">
+<skos:prefLabel xml:lang="en">urban environment, urban stress</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">environnement urbain, stress urbain</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Urbane Umwelt, urbane Belastungen</skos:prefLabel>
+<skos:prefLabel xml:lang="it">ambiente urbano, stress urbano</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/1">
+<skos:prefLabel xml:lang="en">administration</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">administration</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Verwaltung, Organisation, Institutionen, Planung, Politik und -vollzug, immaterielle Massnahmen</skos:prefLabel>
+<skos:prefLabel xml:lang="it">amministrazione</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/23">
+<skos:prefLabel xml:lang="en">natural areas, landscape, ecosystems</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">zones naturelles, paysages, écosystèmes</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Natürliche Lebensräume, Landschaft, Ökosysteme</skos:prefLabel>
+<skos:prefLabel xml:lang="it">aree naturali, paesaggio, ecosistemi</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/3">
+<skos:prefLabel xml:lang="en">air</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">air</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Luft, Atmosphäre</skos:prefLabel>
+<skos:prefLabel xml:lang="it">aria</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/22">
+<skos:prefLabel xml:lang="en">military aspects</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">aspects militaires</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Militär und Umwelt</skos:prefLabel>
+<skos:prefLabel xml:lang="it">aspetti militari</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/34">
+<skos:prefLabel xml:lang="en">social aspects, population</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">aspects sociaux, population</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Soziale Aspekte, Bevölkerung</skos:prefLabel>
+<skos:prefLabel xml:lang="it">aspetti sociali, popolazione</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/4">
+<skos:prefLabel xml:lang="en">biology</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">biologie</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Biosphäre - Organismen, biologische Systeme und Prozesse</skos:prefLabel>
+<skos:prefLabel xml:lang="it">biologia</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/6">
+<skos:prefLabel xml:lang="en">chemistry</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">chimie</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Chemische Stoffe und Prozesse</skos:prefLabel>
+<skos:prefLabel xml:lang="it">chimica</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/7">
+<skos:prefLabel xml:lang="en">climate</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">climat</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Klima</skos:prefLabel>
+<skos:prefLabel xml:lang="it">clima</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/33">
+<skos:prefLabel xml:lang="en">trade, services</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">commerce, services</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Handel, Dienstleistungen</skos:prefLabel>
+<skos:prefLabel xml:lang="it">commercio, servizi</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/8">
+<skos:prefLabel xml:lang="en">natural dynamics</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">dynamique naturelle</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Naturprozesse, Naturereignisse</skos:prefLabel>
+<skos:prefLabel xml:lang="it">dinamica naturale</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/32">
+<skos:prefLabel xml:lang="en">disasters, accidents, risk</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">catastrophes, accidents, risques</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Katastrophen, Unfälle, Risiken</skos:prefLabel>
+<skos:prefLabel xml:lang="it">disastri, incidenti, rischi</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/9">
+<skos:prefLabel xml:lang="en">economics</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">économie</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Wirtschaft, Ökonomie und Finanzen</skos:prefLabel>
+<skos:prefLabel xml:lang="it">economia</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/5">
+<skos:prefLabel xml:lang="en">building</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">bâtiment</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Bauwesen und gebaute Umwelt</skos:prefLabel>
+<skos:prefLabel xml:lang="it">edilizia</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/10">
+<skos:prefLabel xml:lang="en">energy</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">énergie</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Energie</skos:prefLabel>
+<skos:prefLabel xml:lang="it">energia</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/25">
+<skos:prefLabel xml:lang="en">physics</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">physique</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Physikalische Erscheinungen und Prozesse</skos:prefLabel>
+<skos:prefLabel xml:lang="it">fisica</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/14">
+<skos:prefLabel xml:lang="en">forestry</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">sylviculture</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Forstwirtschaft</skos:prefLabel>
+<skos:prefLabel xml:lang="it">forestazione</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/15">
+<skos:prefLabel xml:lang="en">general</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">généralités</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Allgemeine Angelegenheiten</skos:prefLabel>
+<skos:prefLabel xml:lang="it">generale</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/16">
+<skos:prefLabel xml:lang="en">geography</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">géographie</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Geographie</skos:prefLabel>
+<skos:prefLabel xml:lang="it">geografia</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/19">
+<skos:prefLabel xml:lang="en">industry</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">industrie</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Industrie, Aktivitäten und Prozesse</skos:prefLabel>
+<skos:prefLabel xml:lang="it">industria</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/20">
+<skos:prefLabel xml:lang="en">information</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">information</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Information, Ausbildung, Kultur</skos:prefLabel>
+<skos:prefLabel xml:lang="it">informazione</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/26">
+<skos:prefLabel xml:lang="en">pollution</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">pollution</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Umweltverschmutzung, Schadstoffe</skos:prefLabel>
+<skos:prefLabel xml:lang="it">inquinamento</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/21">
+<skos:prefLabel xml:lang="en">legislation</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">législation</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Gesetzgebung</skos:prefLabel>
+<skos:prefLabel xml:lang="it">legislazione</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/27">
+<skos:prefLabel xml:lang="en">materials</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">matériaux</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Produkte, Materialien, Werkstoffe</skos:prefLabel>
+<skos:prefLabel xml:lang="it">materiali</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/12">
+<skos:prefLabel xml:lang="en">fishery</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">pêche</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Fischerei</skos:prefLabel>
+<skos:prefLabel xml:lang="it">pesca</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/11">
+<skos:prefLabel xml:lang="en">environmental policy</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">politique environnementale</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Umweltpolitik</skos:prefLabel>
+<skos:prefLabel xml:lang="it">politica ambientale</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/28">
+<skos:prefLabel xml:lang="en">radiations</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">rayonnements</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Strahlungen</skos:prefLabel>
+<skos:prefLabel xml:lang="it">radiazioni</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/30">
+<skos:prefLabel xml:lang="en">research</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">recherche</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Wissen, Wissenschaft, Forschung, Informationsgewinnung</skos:prefLabel>
+<skos:prefLabel xml:lang="it">ricerca</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/39">
+<skos:prefLabel xml:lang="en">waste</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">déchets</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Abfall</skos:prefLabel>
+<skos:prefLabel xml:lang="it">rifiuti</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/31">
+<skos:prefLabel xml:lang="en">resources</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">ressources</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Ressourcen, Ressourcennutzung</skos:prefLabel>
+<skos:prefLabel xml:lang="it">risorse</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/24">
+<skos:prefLabel xml:lang="en">noise, vibrations</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">bruit, vibrations</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Lärm, Erschütterungen</skos:prefLabel>
+<skos:prefLabel xml:lang="it">rumore, vibrazioni</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/17">
+<skos:prefLabel xml:lang="en">human health</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">santé humaine</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Gesundheit, Hygiene, Ernährung</skos:prefLabel>
+<skos:prefLabel xml:lang="it">salute umana</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/36">
+<skos:prefLabel xml:lang="en">space</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">espace</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Weltraum</skos:prefLabel>
+<skos:prefLabel xml:lang="it">spazio</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/35">
+<skos:prefLabel xml:lang="en">soil</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">sol</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Boden</skos:prefLabel>
+<skos:prefLabel xml:lang="it">suolo</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/37">
+<skos:prefLabel xml:lang="en">transport</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">transport</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Verkehr</skos:prefLabel>
+<skos:prefLabel xml:lang="it">trasporti</skos:prefLabel>
+</skos:Concept>
+<skos:Concept rdf:about="theme/29">
+<skos:prefLabel xml:lang="en">tourism</skos:prefLabel>
+<skos:prefLabel xml:lang="fr">tourisme</skos:prefLabel>
+<skos:prefLabel xml:lang="de">Tourismus und Freizeit</skos:prefLabel>
+<skos:prefLabel xml:lang="it">turismo</skos:prefLabel>
+</skos:Concept>
+</rdf:RDF>

@@ -75,6 +75,8 @@
         scope="singleton"/>
   <bean id="schematronValidator" class="org.fao.geonet.kernel.SchematronValidator" lazy-init="false"
         scope="singleton"/>
+  <bean id="keywordReplacer" class="org.fao.geonet.kernel.xlink.ISO19139KeywordReplacer" lazy-init="false"
+        scope="singleton"/>
 
 
   <!-- List of records to index in a moment ...-->
