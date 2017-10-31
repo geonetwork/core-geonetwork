@@ -38,7 +38,7 @@
     var DPI = 72;
     var MM_PER_INCHES = 25.4;
     var UNITS_RATIO = 39.37;
-    var METERS_PER_DEGREE = 222638.98158654716;
+    var METERS_PER_DEGREE = 111319.49079327358;
 
     /**
      * Get the map coordinates of the center of the given print rectangle.
