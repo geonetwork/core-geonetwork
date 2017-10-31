@@ -322,8 +322,14 @@
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
       <!-- Add nileason if text is empty -->
+      <xsl:variable name="isEmpty"
+                    select="if ($isMultilingual)
+                            then normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
+                                                  @locale = concat('#', $mainLanguageId)]) = ''
+                            else normalize-space(gco:CharacterString) = ''"/>
+
       <xsl:choose>
-        <xsl:when test="normalize-space(gco:CharacterString)=''">
+        <xsl:when test="$isEmpty">
           <xsl:attribute name="gco:nilReason">
             <xsl:choose>
               <xsl:when test="@gco:nilReason"><xsl:value-of select="@gco:nilReason"/></xsl:when>
@@ -331,7 +337,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="@gco:nilReason!='missing' and normalize-space(gco:CharacterString)!=''">
+        <xsl:when test="@gco:nilReason != 'missing' and not($isEmpty)">
           <xsl:copy-of select="@gco:nilReason"/>
         </xsl:when>
       </xsl:choose>
@@ -371,7 +377,7 @@
                 <xsl:value-of select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                             @locale = concat('#', $mainLanguageId)]/text()"/>
               </gco:CharacterString>
-              <xsl:apply-templates select="gmd:PT_FreeText"/>
+              <xsl:apply-templates select="gmd:PT_FreeText[normalize-space(.) != '']"/>
             </xsl:when>
             <xsl:otherwise>
               <!-- Populate PT_FreeText for default language if not existing. -->
@@ -495,7 +501,7 @@
             <xsl:when test="not(string(@xlink:href)) or starts-with(@xlink:href, $serviceUrl)">
               <xsl:attribute name="xlink:href">
                 <xsl:value-of
-                        select="concat($serviceUrl,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
+                  select="concat($serviceUrl,'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',@uuidref)"/>
               </xsl:attribute>
             </xsl:when>
             <xsl:otherwise>
@@ -538,7 +544,7 @@
   <xsl:template match="gmd:textGroup">
     <xsl:variable name="elementLocalId"
                   select="replace(gmd:LocalisedCharacterString/@locale, '^#', '')"/>
-   <xsl:choose>
+    <xsl:choose>
       <xsl:when test="count($locales[@id = $elementLocalId]) > 0">
         <gmd:textGroup>
           <gmd:LocalisedCharacterString>
