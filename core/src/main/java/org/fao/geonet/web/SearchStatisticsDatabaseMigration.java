@@ -25,23 +25,15 @@
 
 package org.fao.geonet.web;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.DatabaseMigrationTask;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.search.log.QueryRequest;
 import org.fao.geonet.kernel.search.log.SearchRequestParam;
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
+import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
 import org.joda.time.DateTime;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,6 +51,8 @@ public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask 
     @Override
     public void update(Connection connection) throws SQLException {
         Log.debug(Geonet.DB, "SearchStatisticsDatabaseMigration");
+
+        SearcherLogger searcherLogger = ApplicationContextHolder.get().getBean(SearcherLogger.class);
 
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
@@ -114,7 +108,7 @@ public class SearchStatisticsDatabaseMigration implements DatabaseMigrationTask 
                 queryRequest.setSpatialFilter(resultSet.getString(8));
                 queryRequest.isSimpleQuery();
 
-                if (!queryRequest.storeToEs()) {
+                if (!queryRequest.storeToEs(searcherLogger.getIndex())) {
                     Log.warning(Geonet.SEARCH_LOGGER, "unable to log query into database...");
                 } else {
                     if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
