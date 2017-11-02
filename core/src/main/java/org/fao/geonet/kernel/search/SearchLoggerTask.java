@@ -24,9 +24,9 @@
 package org.fao.geonet.kernel.search;
 
 import jeeves.server.context.ServiceContext;
-
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 
 /**
@@ -58,8 +58,8 @@ public class SearchLoggerTask implements Runnable {
 
     public void run() {
         try {
-            SearcherLogger searchLogger = new SearcherLogger(srvContext);
-            searchLogger.logSearch(query, numHits, sort, geomWKT, value);
+            SearcherLogger searchLogger = ApplicationContextHolder.get().getBean(SearcherLogger.class);
+            searchLogger.logSearch(srvContext, query, numHits, sort, geomWKT, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
