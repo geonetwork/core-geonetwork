@@ -1,6 +1,8 @@
 <label>
-  <input type="checkbox"
+  <!--<input type="checkbox"
          name="dummy"
-         data-ng-model="covered"/>
-    Component is covered?
+         data-ng-model="covered"/>-->
+  Component is covered?
+  <select data-ng-model="covered"
+          data-ng-options="o.label for o in options"/>
 </label>

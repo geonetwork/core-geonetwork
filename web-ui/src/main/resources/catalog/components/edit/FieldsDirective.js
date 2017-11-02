@@ -41,25 +41,49 @@
             abstractId: '@'
           },
           link: function(scope, element, attrs) {
+            scope.options = [
+              {'label': 'Component is covered', 'status': true},
+              {'label': 'Component is not covered because existing data not available', 'status': false},
+              {'label': 'Component is not covered because data does not exist', 'status': false}
+            ];
+
+            var title =  $('#gn-field-' + scope.titleId),
+              abs = $('#gn-field-' + scope.abstractId);
+
             function update() {
-              $('#' + scope.id).toggleClass('hidden', scope.covered);
+              $('#' + scope.id)
+                .toggleClass('hidden', scope.covered.status);
               $('#' + scope.id + '-table')
-              .toggleClass('hidden', !scope.covered);
-              $('#gn-field-' + scope.titleId)
-              .val(scope.covered ? '' : 'Component not covered');
-              var abs = $('#gn-field-' + scope.abstractId);
+                .toggleClass('hidden', scope.covered.status);
+              if (scope.covered.label) {
+                title.val(scope.covered.label);
+              }
+              if (scope.covered.status) {
+                abs.val('');
+              }
               if (abs.val() === '') {
-                abs.val(scope.covered ? '' : '-- Explain why --');
+                abs.val(scope.covered.status ? '' : '-- Explain why --');
               }
             }
-            scope.$watch('covered', function(n, o) {
+
+
+            scope.$watchCollection('covered', function(n, o) {
               if (n !== o) {
                 update();
               }
             });
 
-            // parse boolean
-            scope.covered = attrs.gnCheckpointCptCovered == 'true';
+            // Set initial value
+            if (title.val() !== '') {
+              for(var i = 0; i < scope.options.length; i++) {
+                if (scope.options[i].label === title.val()) {
+                  scope.covered = scope.options[i];
+                  break;
+                }
+              }
+            } else {
+              scope.covered = {status: attrs.gnCheckpointCptCovered == 'true'};
+            }
             update();
           }
         };
