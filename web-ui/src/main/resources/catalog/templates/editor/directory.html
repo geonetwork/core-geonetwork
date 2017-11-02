@@ -173,17 +173,20 @@
 
             <div class="directory-entries-list col-xs-12"
               ng-show="!searching">
+
+              <!-- result item -->
               <li class="list-group-item clearfix"
                   data-ng-repeat="md in searchResults.records">
 
-                <div class="entry-title" ng-if="!templatesShown()">
-
-                  <input data-gn-selection-md type="checkbox"
+                <div class="flex-row" ng-if="!templatesShown()">
+                  <input class="flex-no-shrink" type="checkbox"
+                         data-gn-selection-md
                          data-ng-model="md['geonet:info'].selected"
                          data-ng-change="change()"/>
 
                   <gn-md-type-widget metadata="md"></gn-md-type-widget>
-                  <a href
+
+                  <a href class="text-ellipsis"
                      data-ng-if="user.canEditRecord(md)"
                      ng-click="startEditing(md)" title="{{md.title || md.defaultTitle}}">
                     {{md.title || md.defaultTitle}}</a>
@@ -305,6 +308,7 @@
                   </button>
                 </div>
               </li>
+              <!-- end result item -->
             </div>
 
             <div class="search-options-header"
@@ -503,10 +507,10 @@
     </div>
   </div>
 
-  <div gn-modal class="gn-share"
-       gn-popup-options="{title:'sharingSettings'}"
+  <div gn-modal class="gn-share gn-privileges-popup"
+       gn-popup-options="{title:'sharingSettings', closeCallback: closePermissionsEdit}"
        id="gn-share">
-    <div gn-share="activeEntry['geonet:info'].id"></div>
+    <div ng-if="activeEntry" gn-share="activeEntry['geonet:info'].id"></div>
   </div>
 
   <div gn-modal class="gn-confirm-delete"
@@ -514,7 +518,6 @@
        id="gn-confirm-delete">
     <p translate>confirmDeleteEntry</p>
   </div>
-
 </div>
 
 <div data-ng-include="'../../catalog/templates/info.html'">
