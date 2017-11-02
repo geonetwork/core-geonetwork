@@ -10,12 +10,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
-                xmlns:opensearchextensions="http://example.com/opensearchextensions/1.0/"
                 xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
-                exclude-result-prefixes="gmx xsl gmd gco srv java">
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                exclude-result-prefixes="#all">
     <xsl:output method="xml" indent="no" encoding="utf-8"/>
 
     <xsl:param name="isLocal" select="false()" />
+    <xsl:param name="thesauriDir"/>
+    <xsl:param name="inspire" select="false()" />
     <xsl:param name="baseUrl" />
     <xsl:param name="nodeUrl" />
     <xsl:param name="guiLang" select="string('eng')" />
@@ -29,8 +33,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     <!-- parameters used in case of dataset feed generation -->
     <xsl:variable name="serviceFeedTitle" select="'The parent service feed'" />
-    <xsl:variable name="gemetThesaurusTitle" select="'GEMET - INSPIRE themes, version 1.0'" />
-
+    <xsl:variable name="featureconceptThesaurus"
+        select="if ($inspire!='false') then document(concat('file:///', replace($thesauriDir, '\\', '/'), '/external/thesauri/theme/featureconcept.en.skos.rdf')) else ''"/>
+    <xsl:variable name="featureconcepts"
+                select="if ($inspire!='false') then $featureconceptThesaurus//skos:Concept else ''"/>
+    <xsl:variable name="featureconceptThesaurusTitle" select="'INSPIRE feature concept dictionary'" />
+    <xsl:variable name="featureconceptBaseUrl" select="'http://inspire.ec.europa.eu/featureconcept/'" />
 
     <xsl:template match="/root">
         <feed xsi:schemaLocation="http://www.w3.org/2005/Atom http://inspire-geoportal.ec.europa.eu/schemas/inspire/atom/1.0/atom.xsd" xml:lang="en">
@@ -67,10 +75,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         </subtitle>
 
         <!-- REQ 6: described-by -->
-           <xsl:call-template name="csw-link">
+        <xsl:call-template name="csw-link">
             <xsl:with-param name="lang" select="$guiLang"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
-          </xsl:call-template>
+        </xsl:call-template>
 
         <!-- REQ 7: self -->
         <xsl:call-template name="atom-link">
@@ -80,7 +88,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             <xsl:with-param name="rel">self</xsl:with-param>
         </xsl:call-template>
         <!-- REQ 8: search -->
-        <link rel="search" type="application/opensearchdescription+xml">
+        <!-- The hreflang attribute that is referred to in the TG seems to be unnecessary. The MIWP-5 workgroup recommends the TG editors to remove the part regarding the hreflang attribute from requirement 8. -->
+        <!--
+        <link rel="search" type="application/opensearchdescription+xml" hreflang="{java:twoCharLangCode($guiLang)}">
+        -->
+        <link rel="search" type="application/opensearchdescription+xml" hreflang="{java:twoCharLangCode($guiLang)}">
             <xsl:attribute name="title">
                 <xsl:call-template name="translated-description">
                     <xsl:with-param name="lang" select="$guiLang"/>
@@ -184,9 +196,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             <xsl:with-param name="crs" select="$defaultCRS"/>
         </xsl:call-template>
 
-				<xsl:message><xsl:value-of select="concat('Default CRS for dataset = ', $defaultCRS)"/></xsl:message>
         <xsl:for-each select=".//gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue='download']">
-						<xsl:message><xsl:value-of select="concat('Feed found for dataset with identifier ',$identifierCode)"/></xsl:message>
             <xsl:variable name="crs">
                 <xsl:call-template name="get-download-crs">
                     <xsl:with-param name="defaultCRS" select="$defaultCRS"/>
@@ -195,12 +205,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </xsl:variable>
             <!-- REQ 20: category (CRS) -->
             <xsl:if test="$defaultCRS!=$crs">
-								<xsl:message><xsl:value-of select="concat('Other CRS found for dataset with identifier ',$identifierCode)"/></xsl:message>
                 <xsl:call-template name="add-category">
                     <xsl:with-param name="crs" select="$crs"/>
                 </xsl:call-template>
             </xsl:if>
-						<xsl:message><xsl:value-of select="concat('Is defaultCRS equal to found CRS for dataset with identifier ',$identifierCode, '? ', $defaultCRS=$crs)"/></xsl:message>
         </xsl:for-each>
 
         <!-- REC 4: author -->
@@ -308,7 +316,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                                                     ./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
         <xsl:variable name="identifierCodeSpace" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:MD_Identifier/gmd:codeSpace/gco:CharacterString|
                                                     ./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:RS_Identifier/gmd:codeSpace/gco:CharacterString"/>
-        <xsl:variable name="keywords" select=".//gmd:keyword/gco:CharacterString[../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString=$gemetThesaurusTitle]"/>
 
         <!-- REQ 21: title -->
         <title>
@@ -330,14 +337,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </xsl:apply-templates>
         </subtitle>
         
-        <!-- REQ 22: id -->
-        <id>
-            <xsl:call-template name="atom-link-href">
-                <xsl:with-param name="lang" select="$guiLang"/>
-                <xsl:with-param name="identifier" select="$identifierCode"/>
-                <xsl:with-param name="codeSpace"  select="$identifierCodeSpace"/>
+        <!-- REQ 28: TODO implement thesaurus to be used in editor to select one or more INSPIRE Spatial Object Types and based on selection show here the links -->
+        <xsl:for-each select=".//gmd:keyword/gco:CharacterString[../../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString=$featureconceptThesaurusTitle]">
+            <xsl:variable name="concept" select="."/>
+            <link href="{$featureconcepts[skos:prefLabel = $concept]/@rdf:about}" rel="describedby" type="text/html" />
+        </xsl:for-each>
+        <xsl:for-each select=".//gmd:keyword/gmx:Anchor/@xlink:href[contains(.,'featureconcept')]">
+            <xsl:call-template name="get-inspire-spatial-object-type-link">
+                <xsl:with-param name="anchorhref" select="."/>
             </xsl:call-template>
-        </id>
+        </xsl:for-each>
 
         <!-- describedby -->
         <xsl:call-template name="csw-link">
@@ -391,7 +400,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REC 9: upward link to download service feed -->
         <xsl:variable name="serviceIdentifier" select="normalize-space(/root/serviceIdentifier)"/>
         <xsl:if test="$serviceIdentifier">
-            <link rel="up" title="{$serviceFeedTitle}" type="application/atom+xml" hreflang="{$guiLang}">
+            <link rel="up" title="{$serviceFeedTitle}" type="application/atom+xml" hreflang="{java:twoCharLangCode($guiLang)}">
                 <xsl:attribute name="href">
                     <xsl:call-template name="atom-link-href">
                         <xsl:with-param name="lang" select="$guiLang"/>
@@ -401,6 +410,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </link>
         </xsl:if>
  
+        <!-- REQ 22: id -->
+        <id>
+            <xsl:call-template name="atom-link-href">
+                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="identifier" select="$identifierCode"/>
+                <xsl:with-param name="codeSpace"  select="$identifierCodeSpace"/>
+            </xsl:call-template>
+        </id>
+
         <!-- REQ 23: rights -->
         <rights>
             <xsl:apply-templates mode="translated-rights" select="gmd:identificationInfo/gmd:MD_DataIdentification"/>
@@ -449,44 +467,50 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     <xsl:with-param name="downloadCRS" select="normalize-space(gmd:description/gco:CharacterString)"/>
                 </xsl:call-template>
             </xsl:variable>
-            <xsl:if test="$requestedCRS='' or $requestedCRS=$crs">
+            <xsl:variable name="epsgCode">
+                <xsl:call-template name="get-epsg-code">
+                    <xsl:with-param name="crs" select="$crs"/>
+                </xsl:call-template>
+            </xsl:variable>
+            <xsl:variable name="crsLabel">
+                <xsl:call-template name="get-crs-label">
+                    <xsl:with-param name="epsgCode" select="$epsgCode"/>
+                    <xsl:with-param name="crs" select="$crs"/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="mimeFileType" select="normalize-space(gmd:name/gmx:MimeFileType/@type)"/>
+
+            <xsl:variable name="infer-mimetype">
+                <xsl:call-template name="infer-mimetype">
+                    <xsl:with-param name="onlineresource" select="."/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="inspireMimeType">
+                <xsl:choose>
+                    <xsl:when test="$mimeFileType='multipart/x-zip' or $mimeFileType='application/zip'">
+                        <xsl:value-of select="string('application/x-gmz')"/>
+                    </xsl:when>
+                    <xsl:when test="$mimeFileType='' and $infer-mimetype!=''">
+                        <xsl:value-of select="$infer-mimetype"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$mimeFileType"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+
+            <xsl:variable name="mimeTypeLabel">
+                <xsl:call-template name="get-mimetype-label">
+                    <xsl:with-param name="mimeType" select="$inspireMimeType"/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <xsl:variable name="entryTitle" select="concat($datasetTitle,' in ', $crsLabel, if ($mimeTypeLabel!='') then concat(' - ', $mimeTypeLabel) else '')"/>
+
+            <xsl:if test="($requestedCRS='' or $requestedCRS=$crs) and ($searchTerms='' or contains(lower-case($entryTitle),$searchTerms))">
                 <entry>                
-                    <xsl:variable name="epsgCode">
-                        <xsl:call-template name="get-epsg-code">
-                            <xsl:with-param name="crs" select="$crs"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-                    <xsl:variable name="crsLabel">
-                        <xsl:call-template name="get-crs-label">
-                            <xsl:with-param name="epsgCode" select="$epsgCode"/>
-                            <xsl:with-param name="crs" select="$crs"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-
-                    <xsl:variable name="mimeFileType" select="normalize-space(gmd:name/gmx:MimeFileType/@type)"/>
-                    
-                    <xsl:variable name="infer-mimetype">
-                        <xsl:call-template name="infer-mimetype">
-                            <xsl:with-param name="onlineresource" select="."/>
-                        </xsl:call-template>
-                    </xsl:variable>
-                    
-                    <xsl:variable name="inspireMimeType">
-                        <xsl:choose>
-                            <xsl:when test="$mimeFileType='multipart/x-zip'">
-                                <xsl:value-of select="string('application/x-gmz')"/>
-                            </xsl:when>
-                            <xsl:when test="$mimeFileType='' and $infer-mimetype!=''">
-                                <xsl:value-of select="$infer-mimetype"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="$mimeFileType"/>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:variable>
-
-                    <xsl:variable name="entryTitle" select="concat($datasetTitle,' in ', $crsLabel, ' - ', /root/gui/strings/mimetypeChoice[@value=$mimeFileType])"/>
-
                     <inspire_dls:spatial_dataset_identifier_code><xsl:value-of select="$identifierCode"/></inspire_dls:spatial_dataset_identifier_code>
                     <inspire_dls:spatial_dataset_identifier_namespace><xsl:value-of select="$identifierCodeSpace"/></inspire_dls:spatial_dataset_identifier_namespace>
 
@@ -499,13 +523,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                         <xsl:value-of select="./gmd:linkage/gmd:URL" />
                     </id>
 
-                    <!-- REQ 28: TODO implement thesaurus to be used in editor to select one or more INSPIRE Spatial Object Types and based on selection show here the links -->
-                    <xsl:for-each select="$keywords">
-                        <xsl:call-template name="get-inspire-spatial-object-types">
-                            <xsl:with-param name="keyword" select="."/>
-                        </xsl:call-template>
-                    </xsl:for-each>
-
                     <!-- REQ 29: alternate: link to data -->
                     <!-- REQ 30: mimetype -->
                     <!-- REQ 31: hreflang -->
@@ -517,14 +534,15 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                           rel="alternate"
                           type="{$inspireMimeType}"
                           href="{gmd:linkage/gmd:URL}"
-                          hreflang="{$guiLang}">
+                          hreflang="{java:twoCharLangCode($guiLang)}">
 
                         <xsl:variable name="units" select="../../gmd:unitsOfDistribution/gco:CharacterString"/>
                         <xsl:variable name="length" select="../../gmd:transferSize/gco:Real"/>
                         <xsl:if test="number($length) = number($length)">
-                            <xsl:attribute name="length" select="number($length) * (if ($units='MB') then 1000000 else 1)" />
+                            <xsl:attribute name="length" select="format-number(number($length) * (if ($units='MB') then 1000000 else 1),'#')" />
                         </xsl:if>
                     </link>
+                    <title><xsl:value-of select="$entryTitle" /></title>
                     <updated><xsl:value-of select="$updated"/>Z</updated>
 
                     <!-- check REQ 34: media types -->
@@ -627,9 +645,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                    <xsl:attribute name="rel" select="$rel"/>
             </xsl:if>
             <!-- REQ 38: the hreflang attribute indicates the language of the alternative representation -->
-            <xsl:if test="$rel!='self'">
-               <xsl:attribute name="hreflang" select="$lang"/>
-            </xsl:if>
+<!--            <xsl:if test="$rel!='self'">-->
+               <xsl:attribute name="hreflang" select="java:twoCharLangCode($lang)"/>
+<!--            </xsl:if>-->
             <xsl:attribute name="title">
                 <xsl:call-template name="translated-description">
                     <xsl:with-param name="lang" select="$lang"/>
@@ -733,6 +751,41 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     </xsl:template>
 
+    <xsl:template name="get-mimetype-label">
+        <xsl:param name="mimeType"/>
+        <xsl:choose>
+            <xsl:when test="$mimeType='application/atom+xml'">INSPIRE Atom Service/Dataset feed</xsl:when>
+            <xsl:when test="$mimeType='application/gml+xml'">GML files</xsl:when>
+            <xsl:when test="$mimeType='application/pdf'">PDF files</xsl:when>
+            <xsl:when test="$mimeType='application/vnd.google-earth.kml+xml'">KML files</xsl:when>
+            <xsl:when test="$mimeType='application/vnd.google-earth.kmz'">KMZ files</xsl:when>
+            <xsl:when test="$mimeType='application/word'">Word files</xsl:when>
+            <xsl:when test="$mimeType='application/x-ascii-grid'">ASCII GRID files</xsl:when>
+            <xsl:when test="$mimeType='application/x-ecw'">Enhanced Compressed Wavelet (ECW) files</xsl:when>
+            <xsl:when test="$mimeType='application/x-filegdb'">Esri file geodatabases</xsl:when>
+            <xsl:when test="$mimeType='application/x-gmz'">Zipped GML files</xsl:when>
+            <xsl:when test="$mimeType='application/x-las'">LASer file format (LAS)</xsl:when>
+            <xsl:when test="$mimeType='application/x-laz'">Zipped LAS files</xsl:when>
+            <xsl:when test="$mimeType='application/xls'">Excel files</xsl:when>
+            <xsl:when test="$mimeType='application/x-oracledump'">Oracle dumps</xsl:when>
+            <xsl:when test="$mimeType='application/x-shapefile'">Zipped Esri shape files</xsl:when>
+            <xsl:when test="$mimeType='application/x-tab'">MapInfo TAB format</xsl:when>
+            <xsl:when test="$mimeType='application/x-tab-raster'">MapInfo Raster TAB format</xsl:when>
+            <xsl:when test="$mimeType='application/x-worldfile'">Wereld files</xsl:when>
+            <xsl:when test="$mimeType='application/zip'">Zip files</xsl:when>
+            <xsl:when test="$mimeType='image/gif'">GIF files</xsl:when>
+            <xsl:when test="$mimeType='image/jp2'">JPEG 2000 files</xsl:when>
+            <xsl:when test="$mimeType='image/jpeg'">JPG files</xsl:when>
+            <xsl:when test="$mimeType='image/png'">PNG files</xsl:when>
+            <xsl:when test="$mimeType='image/tiff'">TIFF/GeoTIFF files</xsl:when>
+            <xsl:when test="$mimeType='text/csv'">CSV files</xsl:when>
+            <xsl:when test="$mimeType='text/html'">HTML files</xsl:when>
+            <xsl:when test="$mimeType='text/plain'">Tekst files</xsl:when>
+            <xsl:when test="$mimeType='text/xml'">XML files</xsl:when>
+            <xsl:otherwise/>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="add-category">
         <xsl:param name="crs"/>
         
@@ -771,7 +824,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             <xsl:otherwise>
                 <category term="http://www.opengis.net/def/crs/EPSG/0/unknown" label="Unknown" />
             </xsl:otherwise>
-	        
         </xsl:choose>
         
     </xsl:template>
@@ -841,50 +893,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         </xsl:if>
     </xsl:template>
 
-    <!--  TODO Implement a case for doing the mapping between the download links and the INSPIRE Spatial Object Types, for now only mentioned some examples -->
-    <xsl:template name="get-inspire-spatial-object-types">
-        <xsl:param name="keyword"/>
-        <xsl:variable name="spatialObjectType">
-            <xsl:choose>
-                <xsl:when test="$keyword='Addresses'">Address</xsl:when>
-                <xsl:when test="$keyword='Administrative units'">AdministrativeUnit</xsl:when>
-                <xsl:when test="$keyword='Coordinate reference systems'"></xsl:when>
-                <xsl:when test="$keyword='Geographical grid systems'"></xsl:when>
-                <xsl:when test="$keyword='Cadastral parcels'"></xsl:when>
-                <xsl:when test="$keyword='Geographical names'"></xsl:when>
-                <xsl:when test="$keyword='Hydrography'"></xsl:when>
-                <xsl:when test="$keyword='Protected sites'">ProtectedSite</xsl:when>
-                <xsl:when test="$keyword='Transport networks'"></xsl:when>
-                <xsl:when test="$keyword='Elevation'"></xsl:when>
-                <xsl:when test="$keyword='Geology'"></xsl:when>
-                <xsl:when test="$keyword='Land cover'"></xsl:when>
-                <xsl:when test="$keyword='Orthoimagery'"></xsl:when>
-                <xsl:when test="$keyword='Agricultural and aquaculture facilities'"></xsl:when>
-                <xsl:when test="$keyword='Area management/restriction/regulation zones and reporting units'"></xsl:when>
-                <xsl:when test="$keyword='Atmospheric conditions'"></xsl:when>
-                <xsl:when test="$keyword='Bio-geographical regions'"></xsl:when>
-                <xsl:when test="$keyword='Buildings'"></xsl:when>
-                <xsl:when test="$keyword='Energy resources'"></xsl:when>
-                <xsl:when test="$keyword='Environmental monitoring facilities'"></xsl:when>
-                <xsl:when test="$keyword='Habitats and biotopes'"></xsl:when>
-                <xsl:when test="$keyword='Human health and safety'"></xsl:when>
-                <xsl:when test="$keyword='Land use'"></xsl:when>
-                <xsl:when test="$keyword='Mineral resources'"></xsl:when>
-                <xsl:when test="$keyword='Natural risk zones'"></xsl:when>
-                <xsl:when test="$keyword='Oceanographic geographical features'"></xsl:when>
-                <xsl:when test="$keyword='Population distribution - demography'"></xsl:when>
-                <xsl:when test="$keyword='Production and industrial facilities'"></xsl:when>
-                <xsl:when test="$keyword='Sea regions'"></xsl:when>
-                <xsl:when test="$keyword='Soil'"></xsl:when>
-                <xsl:when test="$keyword='Species distribution'"></xsl:when>
-                <xsl:when test="$keyword='Statistical units'"></xsl:when>
-                <xsl:when test="$keyword='Utility and governmental services'"></xsl:when>
-                <xsl:when test="$keyword='Meteorological geographical features'"></xsl:when>
-                <xsl:when test="$keyword='Atmospheric Conditions and meteorological geographical features'"></xsl:when>
-                <xsl:otherwise/>
-            </xsl:choose>
+    <xsl:template name="get-inspire-spatial-object-type-link">
+        <xsl:param name="anchorhref"/>
+        <xsl:variable name="inspireSpatialObjectType">
+            <xsl:analyze-string select="$anchorhref" regex="featureconcept/[a-zA-Z]+" >
+                <xsl:matching-substring>
+                    <xsl:value-of select="substring-after(., 'featureconcept/')"/>
+                </xsl:matching-substring>
+            </xsl:analyze-string>
         </xsl:variable>
-        <xsl:if test="$spatialObjectType!=''"><link href="{concat('http://inspire.ec.europa.eu/featureconcept/',$spatialObjectType)}" rel="describedby" type="text/html" /></xsl:if>
+        <xsl:if test="$inspireSpatialObjectType!=''">
+            <link href="{concat($featureconceptBaseUrl,$inspireSpatialObjectType)}" rel="describedby" type="text/html" />
+        </xsl:if>
     </xsl:template>
-
 </xsl:stylesheet>

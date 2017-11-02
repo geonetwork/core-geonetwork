@@ -1,24 +1,24 @@
 //=============================================================================
-//===	Copyright (C) 2001-2017 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
+//===    Copyright (C) 2001-2017 Food and Agriculture Organization of the
+//===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===    and United Nations Environment Programme (UNEP)
 //===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
+//===    This program is free software; you can redistribute it and/or modify
+//===    it under the terms of the GNU General Public License as published by
+//===    the Free Software Foundation; either version 2 of the License, or (at
+//===    your option) any later version.
 //===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
+//===    This program is distributed in the hope that it will be useful, but
+//===    WITHOUT ANY WARRANTY; without even the implied warranty of
+//===    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===    General Public License for more details.
 //===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===    You should have received a copy of the GNU General Public License
+//===    along with this program; if not, write to the Free Software
+//===    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 //===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
+//===    Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===    Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 package org.fao.geonet.inspireatom.util;
 
@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.search.SearcherType;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -488,7 +489,8 @@ public class InspireAtomUtil {
 
         String serviceMdUuid = null;
         Document luceneParamSearch = createDefaultLuceneSearcherParams();
-        luceneParamSearch.getRootElement().addContent(new Element("operatesOn").setText(datasetMd.getUuid()));
+        luceneParamSearch.getRootElement().addContent(new Element("operatesOn").setText(datasetMd.getUuid() + " or " + spIdentifier));
+        luceneParamSearch.getRootElement().addContent(new Element("serviceType").setText("download"));
 
         try (MetaSearcher searcher = searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE)) {
             searcher.search(context, luceneParamSearch.getRootElement(), config);
@@ -554,90 +556,90 @@ public class InspireAtomUtil {
             try {
                 datasetAtomFeed = InspireAtomUtil.getDatasetFeed(context, datasetIdCode, datasetIdNs, params);
             } catch(Exception e) {
-				Log.error(Geonet.ATOM, "No dataset metadata found with uuid:"
-						+ fileIdentifier);
-				continue;
+                Log.error(Geonet.ATOM, "No dataset metadata found with uuid:"
+                        + fileIdentifier);
+                continue;
             }
-			Element datasetEl = buildDatasetInfo(datasetIdCode,datasetIdNs);
-			datasetsEl.addContent(datasetEl);
-			Element author = datasetAtomFeed.getChild("author",ns);
-			if (author!=null) {
-				String authorName = author.getChildText("name",ns);
-				if (StringUtils.isNotBlank(authorName)) {
-					datasetEl.addContent(new Element("authorName").setText(authorName));
-				}
-			}
+            Element datasetEl = buildDatasetInfo(datasetIdCode,datasetIdNs);
+            datasetsEl.addContent(datasetEl);
+            Element author = datasetAtomFeed.getChild("author",ns);
+            if (author!=null) {
+                String authorName = author.getChildText("name",ns);
+                if (StringUtils.isNotBlank(authorName)) {
+                    datasetEl.addContent(new Element("authorName").setText(authorName));
+                }
+            }
             Map<String, Integer> downloadsCountByCrs = new HashMap<String, Integer>();
             Iterator<Element> entries = (datasetAtomFeed.getChildren("entry", ns)).iterator();
             while(entries.hasNext()) {
-            	Element entry = entries.next();
-            	Element category = entry.getChild("category",ns);
-            	if (category!=null) {
-	            	String term = category.getAttributeValue("term");
-	                Integer count = downloadsCountByCrs.get(term);
-	                if (count == null) {
-	                	count = new Integer(0);
-	                }
-	                downloadsCountByCrs.put(term, count + 1);
-            	}
-            	Element link = entry.getChild("link", ns);
-            	if (link!=null) {
-            		String fileType = link.getAttributeValue("type");
-            		if (!fileTypes.contains(fileType)) {
-            			fileTypes.add(fileType);
-            		}
-            	}
+                Element entry = entries.next();
+                Element category = entry.getChild("category",ns);
+                if (category!=null) {
+                    String term = category.getAttributeValue("term");
+                    Integer count = downloadsCountByCrs.get(term);
+                    if (count == null) {
+                        count = new Integer(0);
+                    }
+                    downloadsCountByCrs.put(term, count + 1);
+                }
+                Element link = entry.getChild("link", ns);
+                if (link!=null) {
+                    String fileType = link.getAttributeValue("type");
+                    if (!fileTypes.contains(fileType)) {
+                        fileTypes.add(fileType);
+                    }
+                }
             }
             entries = (datasetAtomFeed.getChildren("entry", ns)).iterator();
             while(entries.hasNext()) {
-            	Element entry = entries.next();
-            	Element category = entry.getChild("category",ns);
-            	if (category!=null) {
-	            	String term = category.getAttributeValue("term");
-	                Integer count = downloadsCountByCrs.get(term);
-	                if (count != null) {
-	                    Element downloadEl = new Element("file");
-                    	Element link = entry.getChild("link", ns);
-                    	if (link!=null) {
-    	                    String title = link.getAttributeValue("title");
-    	                    if (title!=null) {
-        	                    int iPos = title.indexOf(" in  -");
-        	                    if (iPos>-1) {
-        	                    	title = title.substring(0,iPos);
-        	                    }
-    	                    }
-    	                    downloadEl.addContent(new Element("title").setText(title));
-                    	}
-                    	Element lang = new Element("lang");
-                    	if (link!=null) {
-                    		lang.setText(link.getAttributeValue("hreflang"));
-                    	} else {
-    	                    lang.setText(context.getLanguage());
-                    	}
-	                    downloadEl.addContent(lang);
-	                    downloadEl.addContent(new Element("url").setText(entry.getChildText("id",ns)));
-	                    if (count > 1) {
-	                        downloadEl.addContent(new Element("type").setText("application/atom+xml"));
-	                    } else {
-	                    	if (link!=null) {
-	                    		downloadEl.addContent(new Element("type").setText(link.getAttributeValue("type")));
-	                    	}
-	                    }
-	                    downloadEl.addContent(new Element("crs").setText(term));
-	                    downloadEl.addContent(new Element("crsCount").setText("" + count));
-	                    datasetEl.addContent(downloadEl);
+                Element entry = entries.next();
+                Element category = entry.getChild("category",ns);
+                if (category!=null) {
+                    String term = category.getAttributeValue("term");
+                    Integer count = downloadsCountByCrs.get(term);
+                    if (count != null) {
+                        Element downloadEl = new Element("file");
+                        Element link = entry.getChild("link", ns);
+                        if (link!=null) {
+                            String title = link.getAttributeValue("title");
+                            if (title!=null) {
+                                int iPos = title.indexOf(" in  -");
+                                if (iPos>-1) {
+                                    title = title.substring(0,iPos);
+                                }
+                            }
+                            downloadEl.addContent(new Element("title").setText(title));
+                        }
+                        Element lang = new Element("lang");
+                        if (link!=null && StringUtils.isNotBlank(link.getAttributeValue("hreflang"))) {
+                            lang.setText(XslUtil.threeCharLangCode(link.getAttributeValue("hreflang")));
+                        } else {
+                            lang.setText(context.getLanguage());
+                        }
+                        downloadEl.addContent(lang);
+                        downloadEl.addContent(new Element("url").setText(entry.getChildText("id",ns)));
+                        if (count > 1) {
+                            downloadEl.addContent(new Element("type").setText("application/atom+xml"));
+                        } else {
+                            if (link!=null) {
+                                downloadEl.addContent(new Element("type").setText(link.getAttributeValue("type")));
+                            }
+                        }
+                        downloadEl.addContent(new Element("crs").setText(term));
+                        downloadEl.addContent(new Element("crsCount").setText("" + count));
+                        datasetEl.addContent(downloadEl);
 
-	                    // Remove from map to not process further downloads with same CRS,
-	                    // only 1 entry with type= is added in result
-	                    downloadsCountByCrs.remove(term);
-	                }
-            	}
+                        // Remove from map to not process further downloads with same CRS,
+                        // only 1 entry with type= is added in result
+                        downloadsCountByCrs.remove(term);
+                    }
+                }
             }
         }
-    	response.addContent(new Element("keywords").setText(StringUtils.join(keywords,' ')));
+        response.addContent(new Element("keywords").setText(StringUtils.join(keywords,' ')));
         Element fileTypesEl = new Element("fileTypes");
         for(String fileType : fileTypes) {
-        	fileTypesEl.addContent(new Element("fileType").setText(fileType));
+            fileTypesEl.addContent(new Element("fileType").setText(fileType));
         }
         response.addContent(fileTypesEl);
         return doc.getRootElement();
@@ -651,7 +653,7 @@ public class InspireAtomUtil {
 
     private static Path getOpenSearchDesciptionXSLStylesheet(final ServiceContext context) {
         return context.getAppPath().resolve(Geonet.Path.XSLT_FOLDER)
-        		.resolve("services/inspire-atom/")
+                .resolve("services/inspire-atom/")
                 .resolve(TRANSFORM_ATOM_TO_OPENSEARCHDESCRIPTION);
     }
 
@@ -676,8 +678,8 @@ public class InspireAtomUtil {
         return datasetEl;
     }
 
-	public static List<String> retrieveKeywordsFromFileIdentifier(ServiceContext context, String fileIdentifier) {
-		List<String> keywordsList = new ArrayList<String>();
+    public static List<String> retrieveKeywordsFromFileIdentifier(ServiceContext context, String fileIdentifier) {
+        List<String> keywordsList = new ArrayList<String>();
         Element request = new Element(Jeeves.Elem.REQUEST);
         request.addContent(new Element("fileId").setText(fileIdentifier));
         //request.addContent(new Element("has_atom").setText("y"));
@@ -700,6 +702,6 @@ public class InspireAtomUtil {
         }
 
         return keywordsList;
-	}
+    }
 }
 

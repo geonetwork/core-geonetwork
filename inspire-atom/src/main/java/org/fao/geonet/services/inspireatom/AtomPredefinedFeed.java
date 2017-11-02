@@ -24,6 +24,7 @@
 package org.fao.geonet.services.inspireatom;
 
 import java.net.URI;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +45,7 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.inspireatom.util.InspireAtomUtil;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -99,7 +101,7 @@ public class AtomPredefinedFeed {
         }
 
         Element feed = getServiceFeed(context, uuid);
-        return writeOutResponse(Xml.getString(feed));
+        return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
     }
 
     /**
@@ -133,10 +135,10 @@ public class AtomPredefinedFeed {
 
         Map<String, Object> params = getDefaultXSLParams(sm, context);
         if (StringUtils.isNotBlank(searchTerms)) {
-            params.put("searchTems", searchTerms);
+            params.put("searchTerms", searchTerms.toLowerCase());
         }
         Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params);
-        return writeOutResponse(Xml.getString(feed));
+        return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
     }
 
     private Element getServiceFeed(ServiceContext context, final String uuid) throws Exception {
@@ -174,6 +176,8 @@ public class AtomPredefinedFeed {
     private Map<String, Object> getDefaultXSLParams(SettingManager settingManager, ServiceContext context) {
         Map<String, Object> params = new HashMap<>();
         params.put("isLocal", true);
+        params.put("inspire", context.getBean(SettingManager.class).getValue(Settings.SYSTEM_INSPIRE_ENABLE));
+        params.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
         params.put("guiLang", context.getLanguage());
         params.put("baseUrl", settingManager.getBaseURL());
         params.put("nodeUrl", settingManager.getNodeURL());
@@ -190,12 +194,12 @@ public class AtomPredefinedFeed {
         return serviceManager.createServiceContext("atom.service", lang, request);
     }
 
-    private HttpEntity<byte[]> writeOutResponse(String content) throws Exception {
+    private HttpEntity<byte[]> writeOutResponse(String content, String contentType, String contentSubType) throws Exception {
         byte[] documentBody = content.getBytes(Constants.ENCODING);
 
         HttpHeaders header = new HttpHeaders();
         // TODO: character-set encoding ?
-        header.setContentType(new MediaType("application", "atom+xml", Charset.forName(Constants.ENCODING)));
+        header.setContentType(new MediaType(contentType, contentSubType, Charset.forName(Constants.ENCODING)));
         header.setContentLength(documentBody.length);
         return new HttpEntity<>(documentBody, header);
     }
@@ -233,12 +237,13 @@ public class AtomPredefinedFeed {
 
         Map<String, Object> params = getDefaultXSLParams(sm, context);
         if (StringUtils.isNotBlank(crs)) {
+        	crs = URLDecoder.decode(crs,Constants.ENCODING);
             params.put("requestedCrs", crs);
         }
         if (StringUtils.isNotBlank(searchTerms)) {
-            params.put("searchTems", searchTerms);
+            params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, getDefaultXSLParams(sm, context));
+        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params);
         Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
         Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
         if (crs!=null) {
@@ -254,7 +259,7 @@ public class AtomPredefinedFeed {
 
         // No download  for the CRS specified
         if (downloadCount == 0) {
-            throw new Exception("No downloads available for dataset (spatial_dataset_identifier_code: " + spIdentifier + ", spatial_dataset_identifier_namespace: " + spNamespace + ", crs: " + crs + ")");
+            throw new Exception("No downloads available for dataset (spatial_dataset_identifier_code: " + spIdentifier + ", spatial_dataset_identifier_namespace: " + spNamespace + ", crs: " + crs + ", searchTerms: " + searchTerms + ")");
 
         // Only one download for the CRS specified
         } else if (downloadCount == 1) {
@@ -271,7 +276,7 @@ public class AtomPredefinedFeed {
         } else {
             // Filter the dataset feed by CRS code.
             InspireAtomUtil.filterDatasetFeedByCrs(feed, crs);
-            return writeOutResponse(Xml.getString(feed));
+            return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
         }
     }
 
@@ -327,7 +332,7 @@ public class AtomPredefinedFeed {
         }
 
         Element description = getOpenSearchDescription(context, uuid);
-        return writeOutResponse(Xml.getString(description));
+        return writeOutResponse(Xml.getString(description), "application", "opensearchdescription+xml");
     }
 
     private Element getOpenSearchDescription(ServiceContext context, final String uuid) throws Exception {

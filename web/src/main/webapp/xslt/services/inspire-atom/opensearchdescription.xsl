@@ -10,7 +10,6 @@
                 xmlns:gml="http://www.opengis.net/gml"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
-                xmlns:opensearchextensions="http://example.com/opensearchextensions/1.0/"
                 xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
                 exclude-result-prefixes="gmx xsl gmd gco srv java">
   <xsl:param name="nodeUrl" />
@@ -24,7 +23,7 @@
   <xsl:output method="xml" indent="no" encoding="utf-8"/>
 
   <xsl:template match="/root">
-    <OpenSearchDescription>
+    <OpenSearchDescription xsi:schemaLocation="http://a9.com/-/spec/opensearch/1.1/ http://inspire-geoportal.ec.europa.eu/schemas/inspire/atom/1.0/opensearch.xsd">
       <xsl:apply-templates mode="service" select="response"/>
     </OpenSearchDescription>
   </xsl:template>
@@ -34,15 +33,7 @@
       <xsl:choose>
         <xsl:when test="string(fileId)">
           <ShortName>INSPIRE Download</ShortName>
-          <LongName><xsl:value-of select="substring(title,1,48)"/></LongName>
           <Description><xsl:value-of select="title"/>: <xsl:value-of select="subtitle"/></Description>
-          <Tags>
-            <xsl:value-of select="substring(keywords,1,256)"/>
-          </Tags>
-          <Contact>
-            <xsl:value-of select="authorEmail" />
-          </Contact>
-
           <!-- TG Requirement 40 -->
           <!--URL of this document-->
           <Url type="application/opensearchdescription+xml" rel="self">
@@ -78,6 +69,11 @@
       <!-- TG Requirement 43 -->
       <!-- Get Spatial Data Set Operation request URL template to be used in order
            to retrieve a Spatial Data Set-->
+      <Url type="application/atom+xml" rel="results">
+        <xsl:attribute name="template">
+          <xsl:value-of select="concat($nodeUrl, $guiLang, '/',$atomDescribeDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
+        </xsl:attribute>
+      </Url>
       <xsl:for-each select="fileTypes/fileType">
         <xsl:variable name="inspireMimeType">
           <xsl:choose>
@@ -91,11 +87,18 @@
         </xsl:variable>
         <Url type="{$inspireMimeType}" rel="results">
           <xsl:attribute name="template">
-            <xsl:value-of select="concat($nodeUrl, $guiLang, '/',$atomDownloadDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
+            <xsl:value-of select="concat($nodeUrl, $guiLang, '/',$atomDownloadDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
           </xsl:attribute>
         </Url>
       </xsl:for-each>
 
+      <Contact>
+        <xsl:value-of select="authorEmail" />
+      </Contact>
+      <Tags>
+        <xsl:value-of select="substring(keywords,1,256)"/>
+      </Tags>
+      <LongName><xsl:value-of select="substring(title,1,48)"/></LongName>
       <!-- TG Requirement 44 -->
       <!-- List of available Spatial Dataset Identifiers -->
       <xsl:for-each select="datasets/dataset">
@@ -113,18 +116,12 @@
       <xsl:choose>
         <xsl:when test="string(fileId)">
           <Developer>
-            <xsl:value-of select="authorName"/>
+            <xsl:value-of select="/authorName"/>
           </Developer>
-          <xsl:variable name="datasetAuthors" select="distinct-values(//authorName)"/>
-          <xsl:for-each select="$datasetAuthors">
-            <Developer>
-              <xsl:value-of select="."/>
-            </Developer>
-          </xsl:for-each>
           <!-- TG Requirement 45 -->
           <!-- Supported Languages, Default Language -->
           <!--Languages supported by the service. The first language is the Default Language-->
-          <xsl:variable name="languages" select="distinct-values(//lang)"/>
+          <xsl:variable name="languages" select="distinct-values(//dataset/file/lang)"/>
           <xsl:for-each select="$languages">
             <Language>
               <xsl:value-of select="."/>
