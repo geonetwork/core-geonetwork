@@ -49,6 +49,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -82,6 +83,7 @@ public class AtomPredefinedFeed {
      * Main entry point for local service ATOM feed description
      *
      * @param uiLang the language parameter
+     * @param language the language to be used for translation of title, etc. in the resulting service ATOM feed
      * @param uuid identifier of the metadata of service (this could be made optional once a system-wide top level metadata could be set)
      */
     @RequestMapping(value = "/{uiLang}/" + InspireAtomUtil.LOCAL_DESCRIBE_SERVICE_URL_SUFFIX)
@@ -89,6 +91,7 @@ public class AtomPredefinedFeed {
     public HttpEntity<byte[]> localServiceDescribe(
             @PathVariable String uiLang,
             @RequestParam("uuid") String uuid,
+            @RequestParam(value = "language", required = false) String language,
             NativeWebRequest webRequest) throws Exception {
 
         ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
@@ -100,7 +103,7 @@ public class AtomPredefinedFeed {
             throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
         }
 
-        Element feed = getServiceFeed(context, uuid);
+        Element feed = getServiceFeed(context, uuid, language);
         return writeOutResponse(Xml.getString(feed),"application", "atom+xml");
     }
 
@@ -110,6 +113,7 @@ public class AtomPredefinedFeed {
      * @param uiLang the language parameter
      * @param spIdentifier the spatial dataset identifier
      * @param spNamespace the spatial dataset namespace (not used for the moment)
+     * @param language the language to be used for translation of title, etc. in the resulting dataset ATOM feed
      * @param q the searchTerms for filtering of the spatial datasets
      * @param webRequest the request object
      * @return
@@ -121,6 +125,7 @@ public class AtomPredefinedFeed {
             @PathVariable String uiLang,
             @RequestParam("spatial_dataset_identifier_code") String spIdentifier,
             @RequestParam(value = "spatial_dataset_identifier_namespace", required = false) String spNamespace,
+            @RequestParam(value = "language", required = false) String language,
             @RequestParam(value = "q", required = false) String searchTerms,
             NativeWebRequest webRequest) throws Exception
     {
@@ -133,7 +138,7 @@ public class AtomPredefinedFeed {
             throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
         }
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context);
+        Map<String, Object> params = getDefaultXSLParams(sm, context, StringUtils.isNotBlank(language) ? XslUtil.threeCharLangCode(language) : context.getLanguage());
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
@@ -141,7 +146,7 @@ public class AtomPredefinedFeed {
         return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
     }
 
-    private Element getServiceFeed(ServiceContext context, final String uuid) throws Exception {
+    private Element getServiceFeed(ServiceContext context, final String uuid, final String language) throws Exception {
 
         Log.debug(Geonet.ATOM, "Processing service feed  ( uuid : " + uuid + " )");
 
@@ -169,15 +174,16 @@ public class AtomPredefinedFeed {
 
         Element inputDoc = InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm);
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context);
+        Map<String, Object> params = getDefaultXSLParams(sm, context, StringUtils.isNotBlank(language) ? XslUtil.threeCharLangCode(language) : context.getLanguage());
         return InspireAtomUtil.convertDatasetMdToAtom("iso19139", inputDoc, dm, params);
     }
 
-    private Map<String, Object> getDefaultXSLParams(SettingManager settingManager, ServiceContext context) {
+    private Map<String, Object> getDefaultXSLParams(SettingManager settingManager, ServiceContext context, String guiLang) {
         Map<String, Object> params = new HashMap<>();
         params.put("isLocal", true);
         params.put("inspire", context.getBean(SettingManager.class).getValue(Settings.SYSTEM_INSPIRE_ENABLE));
         params.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
+        params.put("requestedLanguage", guiLang);
         params.put("guiLang", context.getLanguage());
         params.put("baseUrl", settingManager.getBaseURL());
         params.put("nodeUrl", settingManager.getNodeURL());
@@ -235,7 +241,7 @@ public class AtomPredefinedFeed {
             throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
         }
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context);
+        Map<String, Object> params = getDefaultXSLParams(sm, context, context.getLanguage());
         if (StringUtils.isNotBlank(crs)) {
         	crs = URLDecoder.decode(crs,Constants.ENCODING);
             params.put("requestedCrs", crs);
@@ -361,9 +367,9 @@ public class AtomPredefinedFeed {
             throw new NotFoundException("No service metadata found with uuid:" + uuid);
         }
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context);
+        Map<String, Object> params = getDefaultXSLParams(sm, context, context.getLanguage());
 
-        Element inputDoc = InspireAtomUtil.prepareOpenSearchDescriptionEltBeforeTransform(context, params, uuid, schema, InspireAtomUtil.convertDatasetMdToAtom("iso19139", InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm), dm, params), dm);
+        Element inputDoc = InspireAtomUtil.prepareOpenSearchDescriptionEltBeforeTransform(context, params, uuid, schema, InspireAtomUtil.convertDatasetMdToAtom("iso19139", InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm), dm, params), dm.extractDefaultLanguage(schema, md), dm);
 
         return InspireAtomUtil.convertServiceMdToOpenSearchDescription(context, inputDoc, params);
     }

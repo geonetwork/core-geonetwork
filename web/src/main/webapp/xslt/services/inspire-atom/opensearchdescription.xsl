@@ -116,13 +116,11 @@
       <xsl:choose>
         <xsl:when test="string(fileId)">
           <Developer>
-            <xsl:value-of select="/authorName"/>
+            <xsl:value-of select="authorName"/>
           </Developer>
           <!-- TG Requirement 45 -->
-          <!-- Supported Languages, Default Language -->
-          <!--Languages supported by the service. The first language is the Default Language-->
-          <xsl:variable name="languages" select="distinct-values(//dataset/file/lang)"/>
-          <xsl:for-each select="$languages">
+          <!-- Languages supported by the service. The first language is the Default Language-->
+          <xsl:for-each select="languages/language">
             <Language>
               <xsl:value-of select="."/>
             </Language>

@@ -29,6 +29,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     <xsl:param name="atomDescribeDatasetUrlSuffix" select="'describe'"/>
     <xsl:param name="nodeName" select="string('srv')" />
     <xsl:param name="searchTerms" select="''"/>
+    <xsl:param name="requestedLanguage" select="''"/>
     <xsl:param name="requestedCRS" select="''"/>
 
     <!-- parameters used in case of dataset feed generation -->
@@ -56,7 +57,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:variable name="titleNode" select="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
         <xsl:variable name="title">
             <xsl:apply-templates mode="get-translation" select="$titleNode">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </xsl:variable>
 
@@ -70,7 +71,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REC 1: subtitle -->
         <subtitle>
             <xsl:apply-templates mode="get-translation" select="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </subtitle>
 
@@ -92,10 +93,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!--
         <link rel="search" type="application/opensearchdescription+xml" hreflang="{java:twoCharLangCode($guiLang)}">
         -->
-        <link rel="search" type="application/opensearchdescription+xml" hreflang="{java:twoCharLangCode($guiLang)}">
+        <link rel="search" type="application/opensearchdescription+xml">
             <xsl:attribute name="title">
                 <xsl:call-template name="translated-description">
-                    <xsl:with-param name="lang" select="$guiLang"/>
+                    <xsl:with-param name="lang" select="$requestedLanguage"/>
                     <xsl:with-param name="type" select="1"/>
                 </xsl:call-template>
                 <xsl:value-of select="$title"/>
@@ -121,10 +122,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     </xsl:with-param>
                     <xsl:with-param name="lang" select="."/>
                     <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
-                    <xsl:with-param name="rel">
-                        <xsl:if test="$guiLang=.">self</xsl:if>
-                        <xsl:if test="$guiLang!=.">alternate</xsl:if>
-                    </xsl:with-param>
+                    <xsl:with-param name="rel">alternate</xsl:with-param>
                 </xsl:call-template>
             </xsl:if>
         </xsl:for-each>
@@ -178,7 +176,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:variable name="datasetTitleNode" select="./gmd:identificationInfo[1]//gmd:citation[1]/gmd:CI_Citation/gmd:title"/>
         <xsl:variable name="datasetTitle">
             <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="identifierCode" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:MD_Identifier/gmd:code/gco:CharacterString|
@@ -235,7 +233,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:call-template name="atom-link">
             <xsl:with-param name="title">
                 <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
-                    <xsl:with-param name="lang" select="$guiLang"/>
+                    <xsl:with-param name="lang" select="$requestedLanguage"/>
                 </xsl:apply-templates>
             </xsl:with-param>
             <xsl:with-param name="lang" select="$guiLang"/>
@@ -266,7 +264,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REC 5: summary -->
         <summary>
             <xsl:apply-templates mode="get-translation" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </summary>
 
@@ -309,7 +307,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:variable name="datasetTitleNode" select="./gmd:identificationInfo[1]//gmd:citation[1]/gmd:CI_Citation/gmd:title"/>
         <xsl:variable name="datasetTitle">
             <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </xsl:variable>
         <xsl:variable name="identifierCode" select="./gmd:identificationInfo[1]//gmd:citation/gmd:CI_Citation/gmd:identifier[1]/gmd:MD_Identifier/gmd:code/gco:CharacterString|
@@ -320,7 +318,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 21: title -->
         <title>
             <xsl:call-template name="translated-description">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
                 <xsl:with-param name="type" select="3"/>
             </xsl:call-template>
             <xsl:value-of select="$datasetTitle"/>
@@ -329,11 +327,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REC 8: subtitle -->
         <subtitle>
             <xsl:call-template name="translated-description">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
                 <xsl:with-param name="type" select="3"/>
             </xsl:call-template>
             <xsl:apply-templates mode="get-translation" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
             </xsl:apply-templates>
         </subtitle>
         
@@ -358,7 +356,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:call-template name="atom-link">
             <xsl:with-param name="title">
                 <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
-                    <xsl:with-param name="lang" select="$guiLang"/>
+                    <xsl:with-param name="lang" select="$requestedLanguage"/>
                 </xsl:apply-templates>
             </xsl:with-param>
             <xsl:with-param name="lang" select="$guiLang"/>
@@ -378,7 +376,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     <xsl:with-param name="lang" select="."/>
                     <xsl:with-param name="identifier" select="$identifierCode"/>
                     <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
-                    <xsl:with-param name="rel"><xsl:if test="$guiLang=.">self</xsl:if><xsl:if test="$guiLang!=.">alternate</xsl:if></xsl:with-param>
+                    <xsl:with-param name="rel">alternate</xsl:with-param>
                 </xsl:call-template>
             </xsl:if>
         </xsl:for-each>
@@ -534,7 +532,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                           rel="alternate"
                           type="{$inspireMimeType}"
                           href="{gmd:linkage/gmd:URL}"
-                          hreflang="{java:twoCharLangCode($guiLang)}">
+                          hreflang="{java:twoCharLangCode($docLang)}">
 
                         <xsl:variable name="units" select="../../gmd:unitsOfDistribution/gco:CharacterString"/>
                         <xsl:variable name="length" select="../../gmd:transferSize/gco:Real"/>

@@ -26,6 +26,8 @@ public interface IMetadataUtils {
 
         String extractUUID(String schema, Element md) throws Exception;
 
+        String extractDefaultLanguage(String schema, Element md) throws Exception;
+
         String extractDateModified(String schema, Element md) throws Exception;
 
         Element setUUID(String schema, String uuid, Element md) throws Exception;
@@ -81,6 +83,7 @@ public interface IMetadataUtils {
         public String getMetadataTitle(String id) throws Exception;
 
         public void setSubtemplateTypeAndTitleExt(int id, String title) throws Exception;
+
 }
 
   

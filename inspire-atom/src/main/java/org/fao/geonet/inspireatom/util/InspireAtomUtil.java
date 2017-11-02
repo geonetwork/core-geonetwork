@@ -524,7 +524,7 @@ public class InspireAtomUtil {
         return luceneParamSearch;
     }
 
-    public static Element prepareOpenSearchDescriptionEltBeforeTransform(final ServiceContext context, final Map<String, Object> params, final String fileIdentifier, final String schema, final Element serviceAtomFeed,
+    public static Element prepareOpenSearchDescriptionEltBeforeTransform(final ServiceContext context, final Map<String, Object> params, final String fileIdentifier, final String schema, final Element serviceAtomFeed, final String defaultLanguage, 
             final DataManager dataManager) throws Exception {
 
         List<String> keywords = retrieveKeywordsFromFileIdentifier(context, fileIdentifier);
@@ -535,7 +535,23 @@ public class InspireAtomUtil {
         response.addContent(new Element("fileId").setText(fileIdentifier));
         response.addContent(new Element("title").setText(serviceAtomFeed.getChildText("title",ns)));
         response.addContent(new Element("subtitle").setText(serviceAtomFeed.getChildText("subtitle",ns)));
-        response.addContent(new Element("lang").setText(context.getLanguage()));
+        List<String> languages = new ArrayList<String>();
+        languages.add(XslUtil.twoCharLangCode(defaultLanguage));
+        Iterator<Element> linksChildren = (serviceAtomFeed.getChildren("link", ns)).iterator();
+        while(linksChildren.hasNext()) {
+            Element entry = linksChildren.next();
+            if ("application/atom+xml".equals(entry.getAttributeValue("type"))) {
+                String language = entry.getAttributeValue("hreflang");
+                if (language!=null && !languages.contains(language)) {
+                    languages.add(language);
+                }
+            }
+        }
+        Element languagesEl = new Element("languages");
+        for(String language : languages) {
+        	languagesEl.addContent(new Element("language").setText(language));
+        }
+        response.addContent(languagesEl);
         Element serviceAuthor = serviceAtomFeed.getChild("author",ns); 
         if (serviceAuthor!=null) {
             response.addContent(new Element("authorName").setText(serviceAuthor.getChildText("name",ns)));
@@ -612,9 +628,9 @@ public class InspireAtomUtil {
                         }
                         Element lang = new Element("lang");
                         if (link!=null && StringUtils.isNotBlank(link.getAttributeValue("hreflang"))) {
-                            lang.setText(XslUtil.threeCharLangCode(link.getAttributeValue("hreflang")));
+                            lang.setText(link.getAttributeValue("hreflang"));
                         } else {
-                            lang.setText(context.getLanguage());
+                            lang.setText(XslUtil.twoCharLangCode(context.getLanguage()));
                         }
                         downloadEl.addContent(lang);
                         downloadEl.addContent(new Element("url").setText(entry.getChildText("id",ns)));
