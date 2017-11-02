@@ -101,7 +101,7 @@
                 return {
                   name: scope.qm[i][3] + ' (' + scope.qm[i][2] + ')',
                   value: scope.qm[i][5] !== '' ?
-                    scope.qm[i][5] + ' ' + scope.qm[i][6] : ''
+                    Math.round(scope.qm[i][5]*100)/100 + ' ' + scope.qm[i][6] : ''
                 };
               }
             }
@@ -236,7 +236,7 @@
                         qmName: value[3] + ' (' + value[2] + ')',
                         qmDefinition: value[7],
                         qmStatement: value[8],
-                        qm: value[5] != '' ? value[5] + ' ' + value[6] : '',
+                        qm: value[5] != '' ? Math.round(value[5]*100)/100 + ' ' + value[6] : '',
                         qeName: qe.name,
                         qe: qe.value,
                         fuName: fu.name,
