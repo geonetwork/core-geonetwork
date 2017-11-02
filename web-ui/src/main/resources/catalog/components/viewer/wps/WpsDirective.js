@@ -190,10 +190,27 @@
 
                             // check if there is a wfs filter active
                             // & apply value
-                            var linkedWfsFilter = input.linkedWfsFilter;
-                            if (linkedWfsFilter && wfsFilterValues &&
-                            wfsFilterValues[linkedWfsFilter]) {
-                              wfsFilterValue = wfsFilterValues[linkedWfsFilter];
+                            var wfsFilter = input.linkedWfsFilter || '';
+
+                            // handle the case where the link points to "from"
+                            // or "to" dates of a filter
+                            var valueIndex = -1;
+                            if (wfsFilter.substr(-5) === '.from') {
+                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 5);
+                              valueIndex = 0;
+                            } else if (wfsFilter.substr(-3) === '.to') {
+                              wfsFilter = wfsFilter.substr(0, wfsFilter.length - 3);
+                              valueIndex = 1;
+                            }
+
+                            if (wfsFilter && wfsFilterValues &&
+                            wfsFilterValues[wfsFilter]) {
+                              // take value at specific index, or all values
+                              if (valueIndex >= 0) {
+                                wfsFilterValue = [wfsFilterValues[wfsFilter][valueIndex]];
+                              } else {
+                                wfsFilterValue = wfsFilterValues[wfsFilter];
+                              }
                             }
                           }
                         });
@@ -267,7 +284,7 @@
                       var inputs = scope.getInputsByName(inputName);
 
                       // add enough fields to hold all default values
-                      if (defaultValue && defaultValue.length) {
+                      if (Array.isArray(defaultValue)) {
                         minCount = Math.max(minCount,
                           Math.min(maxCount, defaultValue.length));
                       }
@@ -296,10 +313,12 @@
                       // apply default values if any
                       else if (defaultValue) {
                         inputs = scope.getInputsByName(inputName);
+                        var defaultValueArray = Array.isArray(defaultValue) ?
+                          defaultValue : [defaultValue];
                         for(var i = 0; i < inputs.length; i++) {
-                          if (!inputs[i].value && (defaultValue[i] || defaultValue)) {
+                          if (!inputs[i].value && defaultValueArray[i]) {
                             scope.setInputValueByName(inputName, i,
-                              defaultValue[i] || defaultValue);
+                              defaultValueArray[i]);
                           }
                         }
                       }
