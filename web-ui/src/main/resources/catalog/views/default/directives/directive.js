@@ -95,6 +95,7 @@
           };
           function getDerivatedValues(cptId, qm, codePrefix) {
               var qmId = qm.replace('AP', '');
+
             for (var i = 0; i < scope.qm.length; i++) {
               if (scope.qm[i][0].replace('#QE', '') === cptId &&
                 scope.qm[i][2].indexOf(codePrefix + qmId) !== -1) {
@@ -229,8 +230,16 @@
                         };
                       }
 
-                      var qe = getQe(cptId, value[2]);
-                      var fu = getFu(cptId, value[2]);
+                      // Do not compute indicator for
+                      // measure 3.4
+                      var qe, fu;
+                      if (value[2] === 'AP.3.4') {
+                        qe = {value: null};
+                        fu = {value: null};
+                      } else {
+                        qe = getQe(cptId, value[2]);
+                        fu = getFu(cptId, value[2]);
+                      }
                       getDpsOrTdpValues(cptId, value[2], {
                         checkpoint: value[1].split('_')[0],
                         qmName: value[3] + ' (' + value[2] + ')',
