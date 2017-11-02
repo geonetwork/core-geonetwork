@@ -532,11 +532,15 @@
         $scope.activeEntry = e;
         $('#gn-share').modal('show');
       };
-      $scope.$on('PrivilegesUpdated', function() {
+      $scope.closePermissionsEdit = function() {
         // clear active entry if privileges were updated from the list
         if (!$scope.currentEditorAction) {
           $scope.activeEntry = null;
+          $scope.$apply();
         }
+      };
+      // close modal on privileges update
+      $scope.$on('PrivilegesUpdated', function() {
         $('#gn-share').modal('hide');
       });
 

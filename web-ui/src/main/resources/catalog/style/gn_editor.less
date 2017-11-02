@@ -159,8 +159,6 @@ input[type=text], input[type=number], select {
     padding: 0px;
 
     & > li {
-      display: flex;
-      flex-direction: column;
       @padding: 6px;
 
       & > *:not(:last-child) {
@@ -169,23 +167,6 @@ input[type=text], input[type=number], select {
 
       & > * > *:not(:last-child) {
         margin-right: @padding;
-      }
-
-      .entry-title {
-        display: flex;
-        flex-direction: row;
-
-        a {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          min-width: 0px;
-        }
-
-        .badge {
-          flex-shrink: 0;
-          border-radius: 3px;
-        }
       }
 
       .entry-info {
