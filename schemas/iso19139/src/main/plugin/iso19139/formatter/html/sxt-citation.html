@@ -13,7 +13,11 @@
         <span class="fa fa-info-circle"></span>
       </a></h2>
 
-    <p>{{contacts}} ({{year}}). {{title}}. {{publishers}}
+    <p fmt-if="mainPublicationDescription">
+      {{mainPublicationDescription}}
+    </p>
+    <p fmt-if="!mainPublicationDescription">
+      {{contacts}} ({{year}}). {{title}}. {{publishers}}
       <br><a class="main_link" href="{{url}}">{{url}}</a></br>
     </p>
 

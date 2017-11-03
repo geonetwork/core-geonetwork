@@ -162,10 +162,20 @@ class SxtSummaryFactory {
       it.name() == 'gmd:CI_OnlineResource' &&
         it.'gmd:protocol'.'gco:CharacterString' == 'WWW:LINK-1.0-http--metadata-URL'
     }
+    def mainPublicationElts = metadata."**".findAll{
+      it.name() == 'gmd:CI_OnlineResource' &&
+        it.'gmd:protocol'.'gco:CharacterString' == 'WWW:LINK-1.0-http--publication-URL'
+    }
 
-    if(doiElts.size() < 1) {
+    if(doiElts.size() < 1 && mainPublicationElts.size() < 1) {
       summary.citation = ''
       return
+    }
+
+    def mainPublicationDescription = null
+    if (mainPublicationElts.size() >= 1) {
+      mainPublicationDescription =
+        mainPublicationElts[0].'gmd:description'.'gco:CharacterString'.text()
     }
 
     def el = doiElts[0]
@@ -238,7 +248,9 @@ class SxtSummaryFactory {
       citationPOTitle: this.f.translate('citationPOTitle'),
       citationPOContent: this.f.translate('citationPOContent'),
       contacts: String.join(', ', contacts),
-      publishers: publishers
+      publishers: publishers,
+      mainPublicationDescription: mainPublicationDescription != null ?
+        isoHandlers.commonHandlers.func.urlToHtml(mainPublicationDescription) : null
     ]
 
     summary.citation = this.handlers.fileResult("html/sxt-citation.html", replacements)
