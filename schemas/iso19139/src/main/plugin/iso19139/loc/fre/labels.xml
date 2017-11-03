@@ -3119,6 +3119,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <condition/>
     <helper>
       <option value="WWW:LINK">Adresse internet (URL)</option>
+      <option value="WWW:LINK-1.0-http--publication-URL">Lien vers une publication principale</option>
       <option value="WWW:LINK-1.0-http--metadata-URL">Adresse internet vers la métadonnée</option>
       <option value="OGC:WMS">Visualiser (WMS)</option>
       <option value="OGC:WMTS">Visualiser (WMTS)</option>
