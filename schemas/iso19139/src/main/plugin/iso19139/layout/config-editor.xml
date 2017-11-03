@@ -174,6 +174,8 @@
               data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
     </for>
     -->
+
+
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
       <!--
       Example of configuration to disable free text keywords in the thesaurus selector
@@ -2112,6 +2114,7 @@
         <section name="metadata">
           <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
           <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
           <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
                  in="/gmd:MD_Metadata"/>
@@ -2124,7 +2127,6 @@
           <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
           <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
           <field xpath="/gmd:MD_Metadata/gmd:series"/>
           <field xpath="/gmd:MD_Metadata/gmd:describes"/>
           <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>

@@ -420,7 +420,11 @@ public final class XslUtil {
     @Nonnull
     String twoCharLangCode(String iso3LangCode, String defaultValue) {
         if (iso3LangCode == null || iso3LangCode.length() == 0) {
-            return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+            if (defaultValue != null) {
+                return defaultValue;
+            } else {
+                return twoCharLangCode(Geonet.DEFAULT_LANGUAGE);
+            }
         } else {
             if (iso3LangCode.equalsIgnoreCase("FRA")) {
                 return "FR";
