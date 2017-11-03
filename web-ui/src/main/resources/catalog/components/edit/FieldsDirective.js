@@ -54,7 +54,7 @@
               $('#' + scope.id)
                 .toggleClass('hidden', scope.covered.status);
               $('#' + scope.id + '-table')
-                .toggleClass('hidden', scope.covered.status);
+                .toggleClass('hidden', !scope.covered.status);
               if (scope.covered.label) {
                 title.val(scope.covered.label);
               }
@@ -89,6 +89,56 @@
         };
       });
 
+  module.directive('gnCheckpointLineage',
+    function() {
+      return {
+        restrict: 'A',
+        templateUrl: '../../catalog/components/edit/partials/' +
+        'checkpoint-lineage.html',
+        transclude: true,
+        scope: {
+          ref: '@'
+        },
+        link: function(scope, element, attrs) {
+          var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(O);
+          scope.isMandatory = true;
+
+          function init() {
+            var tokens = field.value.match(/(.*) \((optional|mandatory)\)/);
+
+            // Old style fields or new value from helper
+            if (tokens == null) {
+              scope.lineage = field.value.trim();
+              field.value = buildValue();
+            } else {
+              scope.isMandatory = tokens.length === 3 ?
+                tokens[2] === 'mandatory' : true;
+              scope.lineage = tokens.length === 3 ?
+                tokens[1].trim() : field.value.trim();
+            }
+          };
+
+          function buildValue() {
+            if (scope.lineage == '') {
+              return '';
+            } else {
+              return scope.lineage +
+                ' (' + (scope.isMandatory ? 'mandatory' : 'optional' )+ ')';
+            }
+          }
+
+          scope.$watch('isMandatory', function (n, o) {
+            if (n !== o) {
+              field.value = buildValue();
+            }
+          });
+
+          $(field).on('change', init);
+
+          init();
+        }
+      };
+    });
   module.directive('gnTitle',
       ['$http', '$rootScope', '$translate',
        'gnCurrentEdit', 'gnSearchManagerService',
