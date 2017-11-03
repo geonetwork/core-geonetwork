@@ -1555,6 +1555,27 @@
                                               else concat('_', */gn:element/@ref)"/>
 
                         <xsl:choose>
+                          <xsl:when test="@type = 'select'">
+                            <select class="form-control"
+                                      name="{$name}">
+                              <xsl:variable name="value"
+                                            select="*/text()"/>
+                              <option></option>
+                              <xsl:for-each select="options/option">
+                                <option value="{@value}">
+                                  <xsl:if test="@value = $value">
+                                    <xsl:attribute name="selected">selected</xsl:attribute>
+                                  </xsl:if>
+                                  <xsl:value-of select="."/>
+                                </option>
+                              </xsl:for-each>
+                              <xsl:if test="count(options/option[@value = $value]) = 0">
+                                <option value="{$value}">
+                                  <xsl:value-of select="$value"/>
+                                </option>
+                              </xsl:if>
+                            </select>
+                          </xsl:when>
                           <xsl:when test="@type = 'textarea'">
                             <!-- TODO: Multilingual, codelist, date ... -->
                             <textarea class="form-control"
