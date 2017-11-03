@@ -322,11 +322,16 @@
       <xsl:apply-templates select="@*[not(name() = 'gco:nilReason') and not(name() = 'xsi:type')]"/>
 
       <!-- Add nileason if text is empty -->
+      <xsl:variable name="excluded"
+                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+
+
       <xsl:variable name="isEmpty"
-                    select="if ($isMultilingual)
+                    select="if ($isMultilingual and not($excluded))
                             then normalize-space(gmd:PT_FreeText/*/gmd:LocalisedCharacterString[
                                                   @locale = concat('#', $mainLanguageId)]) = ''
                             else normalize-space(gco:CharacterString) = ''"/>
+
 
       <xsl:choose>
         <xsl:when test="$isEmpty">
@@ -350,8 +355,6 @@
       <xsl:variable name="element" select="name()"/>
 
 
-      <xsl:variable name="excluded"
-                    select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
       <xsl:choose>
         <xsl:when test="not($isMultilingual) or
                         $excluded">
@@ -525,7 +528,7 @@
   <xsl:template match="gmd:PT_Locale">
     <xsl:element name="gmd:{local-name()}">
       <xsl:variable name="id"
-                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+                    select="upper-case(java:twoCharLangCode(gmd:languageCode/gmd:LanguageCode/@codeListValue, ''))"/>
 
       <xsl:apply-templates select="@*"/>
 
@@ -553,7 +556,7 @@
             <xsl:variable name="ptLocale"
                           select="$locales[@id = string($currentLocale)]"/>
             <xsl:variable name="id"
-                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue))"/>
+                          select="upper-case(java:twoCharLangCode($ptLocale/gmd:languageCode/gmd:LanguageCode/@codeListValue[. != '']))"/>
             <xsl:apply-templates select="@*"/>
             <xsl:if test="$id != ''">
               <xsl:attribute name="locale">
