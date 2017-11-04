@@ -97,13 +97,13 @@ public class InspireAtomUtil {
     public static final String LOCAL_OPENSEARCH_URL_SUFFIX = "opensearch";
 
     /** The describe url suffix for service atom feeds. **/
-    public static final String LOCAL_DESCRIBE_SERVICE_URL_SUFFIX = "atom.predefined.service";
+    public static final String LOCAL_DESCRIBE_SERVICE_URL_SUFFIX = "atom/describe/service";
 
     /** The describe url suffix for dataset atom feeds. **/
-    public static final String LOCAL_DESCRIBE_DATASET_URL_SUFFIX = "atom.predefined.dataset";
+    public static final String LOCAL_DESCRIBE_DATASET_URL_SUFFIX = "atom/describe/dataset";
 
     /** The download url suffix for download of dataset atom feeds. **/
-    public static final String LOCAL_DOWNLOAD_DATASET_URL_SUFFIX = "atom.predefined.download";
+    public static final String LOCAL_DOWNLOAD_DATASET_URL_SUFFIX = "atom/download/dataset";
 
     /**
      * Issue an http request to retrieve the remote Atom feed document.
@@ -437,7 +437,7 @@ public class InspireAtomUtil {
                 .resolve(TRANSFORM_MD_TO_ATOM_FEED);
     }
 
-    public static Element getDatasetFeed(final ServiceContext context, final String spIdentifier, final String spNamespace, final Map<String,Object> params) throws Exception {
+    public static Element getDatasetFeed(final ServiceContext context, final String spIdentifier, final String spNamespace, final Map<String,Object> params, String requestedLanguage) throws Exception {
 
         ServiceConfig config = new ServiceConfig();
         SearchManager searchMan = context.getBean(SearchManager.class);
@@ -509,9 +509,15 @@ public class InspireAtomUtil {
 
         DataManager dm = context.getBean(DataManager.class);
         SettingManager sm = context.getBean(SettingManager.class);
+        Element md = datasetMd.getXmlData(false);
+        if (StringUtils.isBlank(requestedLanguage)) {
+            String schema = dm.getMetadataSchema(String.valueOf(datasetMd.getId()));
+            String defaultLanguage = dm.extractDefaultLanguage(schema, md);
+            requestedLanguage =  XslUtil.twoCharLangCode(defaultLanguage); 
+        }
+        Element inputDoc = InspireAtomUtil.prepareDatasetFeedEltBeforeTransform(md, serviceMdUuid);
 
-        Element inputDoc = InspireAtomUtil.prepareDatasetFeedEltBeforeTransform(datasetMd.getXmlData(false), serviceMdUuid);
-
+        params.put("requestedLanguage", requestedLanguage);
         return InspireAtomUtil.convertDatasetMdToAtom("iso19139", inputDoc, dm, params);
     }
 
@@ -570,7 +576,7 @@ public class InspireAtomUtil {
 
             Element datasetAtomFeed = null;
             try {
-                datasetAtomFeed = InspireAtomUtil.getDatasetFeed(context, datasetIdCode, datasetIdNs, params);
+                datasetAtomFeed = InspireAtomUtil.getDatasetFeed(context, datasetIdCode, datasetIdNs, params, XslUtil.twoCharLangCode(defaultLanguage));
             } catch(Exception e) {
                 Log.error(Geonet.ATOM, "No dataset metadata found with uuid:"
                         + fileIdentifier);

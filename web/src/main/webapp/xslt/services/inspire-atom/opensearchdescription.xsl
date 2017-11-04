@@ -13,7 +13,7 @@
                 xmlns:inspire_dls="http://inspire.ec.europa.eu/schemas/inspire_dls/1.0"
                 exclude-result-prefixes="gmx xsl gmd gco srv java">
   <xsl:param name="nodeUrl" />
-  <xsl:param name="guiLang" select="string('eng')" />
+  <xsl:param name="requestedLanguage" select="string('eng')" />
   <xsl:param name="opensearchDescriptionFileName" select="'OpenSearchDescription.xml'"/>
   <xsl:param name="opensearchUrlSuffix" />
   <xsl:param name="atomDescribeServiceUrlSuffix" />
@@ -39,7 +39,7 @@
           <Url type="application/opensearchdescription+xml" rel="self">
             <xsl:attribute name="template">
               <xsl:value-of
-                select="concat($nodeUrl, $guiLang, '/', $opensearchUrlSuffix, '/', $opensearchDescriptionFileName, '?uuid=', fileId)"/>
+                select="concat($nodeUrl, $opensearchUrlSuffix, '/', $opensearchDescriptionFileName, '?uuid=', fileId)"/>
             </xsl:attribute>
           </Url>
         </xsl:when>
@@ -52,7 +52,7 @@
       <Url type="text/html" rel="results">
         <xsl:attribute name="template">
           <xsl:value-of
-            select="concat($nodeUrl, $guiLang, '/', $opensearchUrlSuffix, '/htmlsearch?q={searchTerms?}')"/>
+            select="concat($nodeUrl, $requestedLanguage, '/', $opensearchUrlSuffix, '/htmlsearch?q={searchTerms?}')"/>
         </xsl:attribute>
       </Url>
 
@@ -62,7 +62,7 @@
            Dataset-->
       <Url type="application/atom+xml" rel="describedby">
         <xsl:attribute name="template">
-          <xsl:value-of select="concat($nodeUrl, $guiLang, '/',$atomDescribeDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;language={language?}&amp;q={searchTerms?}')"/>
+          <xsl:value-of select="concat($nodeUrl, $atomDescribeDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;language={language?}&amp;q={searchTerms?}')"/>
         </xsl:attribute>
       </Url>
 
@@ -71,7 +71,7 @@
            to retrieve a Spatial Data Set-->
       <Url type="application/atom+xml" rel="results">
         <xsl:attribute name="template">
-          <xsl:value-of select="concat($nodeUrl, $guiLang, '/',$atomDescribeDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
+          <xsl:value-of select="concat($nodeUrl, $atomDescribeDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
         </xsl:attribute>
       </Url>
       <xsl:for-each select="fileTypes/fileType">
@@ -87,7 +87,7 @@
         </xsl:variable>
         <Url type="{$inspireMimeType}" rel="results">
           <xsl:attribute name="template">
-            <xsl:value-of select="concat($nodeUrl, $guiLang, '/',$atomDownloadDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
+            <xsl:value-of select="concat($nodeUrl, $atomDownloadDatasetUrlSuffix,'?spatial_dataset_identifier_code={inspire_dls:spatial_dataset_identifier_code?}&amp;spatial_dataset_identifier_namespace={inspire_dls:spatial_dataset_identifier_namespace?}&amp;crs={inspire_dls:crs?}&amp;language={language?}&amp;q={searchTerms?}')"/>
           </xsl:attribute>
         </Url>
       </xsl:for-each>

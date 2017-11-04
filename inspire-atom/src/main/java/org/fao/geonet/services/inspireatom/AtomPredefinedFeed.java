@@ -65,6 +65,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javassist.NotFoundException;
+import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 
@@ -82,19 +83,17 @@ public class AtomPredefinedFeed {
     /**
      * Main entry point for local service ATOM feed description
      *
-     * @param uiLang the language parameter
      * @param language the language to be used for translation of title, etc. in the resulting service ATOM feed
      * @param uuid identifier of the metadata of service (this could be made optional once a system-wide top level metadata could be set)
      */
-    @RequestMapping(value = "/{uiLang}/" + InspireAtomUtil.LOCAL_DESCRIBE_SERVICE_URL_SUFFIX)
+    @RequestMapping(value = "/" + InspireAtomUtil.LOCAL_DESCRIBE_SERVICE_URL_SUFFIX)
     @ResponseBody
     public HttpEntity<byte[]> localServiceDescribe(
-            @PathVariable String uiLang,
             @RequestParam("uuid") String uuid,
             @RequestParam(value = "language", required = false) String language,
             NativeWebRequest webRequest) throws Exception {
 
-        ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
+        ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
 
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -110,7 +109,6 @@ public class AtomPredefinedFeed {
     /**
      * Main entry point for local dataset ATOM feed description.
      *
-     * @param uiLang the language parameter
      * @param spIdentifier the spatial dataset identifier
      * @param spNamespace the spatial dataset namespace (not used for the moment)
      * @param language the language to be used for translation of title, etc. in the resulting dataset ATOM feed
@@ -119,17 +117,16 @@ public class AtomPredefinedFeed {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{uiLang}/" + InspireAtomUtil.LOCAL_DESCRIBE_DATASET_URL_SUFFIX)
+    @RequestMapping(value = "/" + InspireAtomUtil.LOCAL_DESCRIBE_DATASET_URL_SUFFIX)
     @ResponseBody
     public HttpEntity<byte[]> localDatasetDescribe(
-            @PathVariable String uiLang,
             @RequestParam("spatial_dataset_identifier_code") String spIdentifier,
             @RequestParam(value = "spatial_dataset_identifier_namespace", required = false) String spNamespace,
             @RequestParam(value = "language", required = false) String language,
             @RequestParam(value = "q", required = false) String searchTerms,
             NativeWebRequest webRequest) throws Exception
     {
-        ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
+        ServiceContext context = createServiceContext("eng", webRequest.getNativeRequest(HttpServletRequest.class));
 
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -138,11 +135,11 @@ public class AtomPredefinedFeed {
             throw new OperationNotAllowedEx("INSPIRE option is not enabled on this catalog.");
         }
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context, StringUtils.isNotBlank(language) ? XslUtil.threeCharLangCode(language) : context.getLanguage());
+        Map<String, Object> params = getDefaultXSLParams(sm, context, XslUtil.twoCharLangCode(context.getLanguage()));
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params);
+        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
         return writeOutResponse(Xml.getString(feed), "application", "atom+xml");
     }
 
@@ -172,19 +169,20 @@ public class AtomPredefinedFeed {
             throw new NotFoundException("No service metadata found with uuid:" + uuid);
         }
 
+        String defaultLanguage = dm.extractDefaultLanguage(schema, md);
+        String requestedLanguage = StringUtils.isNotBlank(language) ? language : XslUtil.twoCharLangCode(defaultLanguage); 
         Element inputDoc = InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm);
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context, StringUtils.isNotBlank(language) ? XslUtil.threeCharLangCode(language) : context.getLanguage());
+        Map<String, Object> params = getDefaultXSLParams(sm, context, requestedLanguage);
         return InspireAtomUtil.convertDatasetMdToAtom("iso19139", inputDoc, dm, params);
     }
 
-    private Map<String, Object> getDefaultXSLParams(SettingManager settingManager, ServiceContext context, String guiLang) {
+    private Map<String, Object> getDefaultXSLParams(SettingManager settingManager, ServiceContext context, String requestedLanguage) {
         Map<String, Object> params = new HashMap<>();
         params.put("isLocal", true);
         params.put("inspire", context.getBean(SettingManager.class).getValue(Settings.SYSTEM_INSPIRE_ENABLE));
         params.put("thesauriDir", context.getApplicationContext().getBean(GeonetworkDataDirectory.class).getThesauriDir().toAbsolutePath().toString());
-        params.put("requestedLanguage", guiLang);
-        params.put("guiLang", context.getLanguage());
+        params.put("requestedLanguage", requestedLanguage);
         params.put("baseUrl", settingManager.getBaseURL());
         params.put("nodeUrl", settingManager.getNodeURL());
         params.put("opensearchUrlSuffix", InspireAtomUtil.LOCAL_OPENSEARCH_URL_SUFFIX);
@@ -213,26 +211,26 @@ public class AtomPredefinedFeed {
     /**
      * Main entry point for local dataset ATOM feed download.
      *
-     * @param uiLang the language parameter
      * @param spIdentifier the spatial dataset identifier
      * @param spNamespace the spatial dataset namespace (not used for the moment)
      * @param crs the crs of the dataset
+     * @param language the language to be used for translation of title, etc. in the resulting dataset ATOM feed
      * @param q the searchTerms for filtering of the spatial datasets
      * @param webRequest the request object
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{uiLang}/" + InspireAtomUtil.LOCAL_DOWNLOAD_DATASET_URL_SUFFIX)
+    @RequestMapping(value = "/" + InspireAtomUtil.LOCAL_DOWNLOAD_DATASET_URL_SUFFIX)
     @ResponseBody
     public HttpEntity<byte[]> localDatasetDownload(
-            @PathVariable String uiLang,
             @RequestParam("spatial_dataset_identifier_code") String spIdentifier,
             @RequestParam(value = "spatial_dataset_identifier_namespace", required = false) String spNamespace,
             @RequestParam(value = "crs", required = false) String crs,
+            @RequestParam(value = "language", required = false) String language,
             @RequestParam(value = "q", required = false) String searchTerms,
             NativeWebRequest webRequest) throws Exception
     {
-        ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
+        ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
 
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -249,7 +247,7 @@ public class AtomPredefinedFeed {
         if (StringUtils.isNotBlank(searchTerms)) {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
-        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params);
+        Element feed = InspireAtomUtil.getDatasetFeed(context, spIdentifier, spNamespace, params, language);
         Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
         Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
         if (crs!=null) {
@@ -318,17 +316,17 @@ public class AtomPredefinedFeed {
     /**
      * Main entry point for local open search description
      *
-     * @param uiLang the language parameter
+     * @param language the language to be used for translation of title, etc. in the resulting opensearchdescription
      * @param uuid identifier of the metadata of service (this could be made optional once a system-wide top level metadata could be set)
      */
-    @RequestMapping(value = "/{uiLang}/" + InspireAtomUtil.LOCAL_OPENSEARCH_URL_SUFFIX + "/" + InspireAtomUtil.LOCAL_OPENSEARCH_DESCRIPTION_FILE_NAME)
+    @RequestMapping(value = "/" + InspireAtomUtil.LOCAL_OPENSEARCH_URL_SUFFIX + "/" + InspireAtomUtil.LOCAL_OPENSEARCH_DESCRIPTION_FILE_NAME)
     @ResponseBody
     public HttpEntity<byte[]> localOpenSearchDescription(
-            @PathVariable String uiLang,
             @RequestParam("uuid") String uuid,
+            @RequestParam(value = "language", required = false) String language,
             NativeWebRequest webRequest) throws Exception {
 
-        ServiceContext context = createServiceContext(uiLang, webRequest.getNativeRequest(HttpServletRequest.class));
+        ServiceContext context = createServiceContext(Geonet.DEFAULT_LANGUAGE, webRequest.getNativeRequest(HttpServletRequest.class));
 
         SettingManager sm = context.getBean(SettingManager.class);
         boolean inspireEnable = sm.getValueAsBool(Settings.SYSTEM_INSPIRE_ENABLE);
@@ -367,9 +365,10 @@ public class AtomPredefinedFeed {
             throw new NotFoundException("No service metadata found with uuid:" + uuid);
         }
 
-        Map<String, Object> params = getDefaultXSLParams(sm, context, context.getLanguage());
+        String defaultLanguage = dm.extractDefaultLanguage(schema, md);
+        Map<String, Object> params = getDefaultXSLParams(sm, context, XslUtil.twoCharLangCode(defaultLanguage));
 
-        Element inputDoc = InspireAtomUtil.prepareOpenSearchDescriptionEltBeforeTransform(context, params, uuid, schema, InspireAtomUtil.convertDatasetMdToAtom("iso19139", InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm), dm, params), dm.extractDefaultLanguage(schema, md), dm);
+        Element inputDoc = InspireAtomUtil.prepareOpenSearchDescriptionEltBeforeTransform(context, params, uuid, schema, InspireAtomUtil.convertDatasetMdToAtom("iso19139", InspireAtomUtil.prepareServiceFeedEltBeforeTransform(schema, md, dm), dm, params), defaultLanguage, dm);
 
         return InspireAtomUtil.convertServiceMdToOpenSearchDescription(context, inputDoc, params);
     }

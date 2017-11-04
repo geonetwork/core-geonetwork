@@ -22,14 +22,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     <xsl:param name="inspire" select="false()" />
     <xsl:param name="baseUrl" />
     <xsl:param name="nodeUrl" />
-    <xsl:param name="guiLang" select="string('eng')" />
     <xsl:param name="opensearchUrlSuffix" select="'opensearch'"/>
     <xsl:param name="opensearchDescriptionFileName" select="'OpenSearchDescription.xml'"/>
     <xsl:param name="atomDescribeServiceUrlSuffix" select="'describe'"/>
     <xsl:param name="atomDescribeDatasetUrlSuffix" select="'describe'"/>
     <xsl:param name="nodeName" select="string('srv')" />
     <xsl:param name="searchTerms" select="''"/>
-    <xsl:param name="requestedLanguage" select="''"/>
+    <xsl:param name="requestedLanguage" select="string('eng')" />
     <xsl:param name="requestedCRS" select="''"/>
 
     <!-- parameters used in case of dataset feed generation -->
@@ -53,7 +52,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     <xsl:template mode="service" match="gmd:MD_Metadata">
         <!-- Get first element. TODO: Check if can be several -->
         <xsl:variable name="fileIdentifier" select="gmd:fileIdentifier/gco:CharacterString"/>
-        <xsl:variable name="docLang" select="gmd:language/gmd:LanguageCode/@codeListValue"/>
+        <xsl:variable name="docLang" select="java:twoCharLangCode(gmd:language/gmd:LanguageCode/@codeListValue)"/>
         <xsl:variable name="titleNode" select="gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
         <xsl:variable name="title">
             <xsl:apply-templates mode="get-translation" select="$titleNode">
@@ -77,21 +76,21 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
         <!-- REQ 6: described-by -->
         <xsl:call-template name="csw-link">
-            <xsl:with-param name="lang" select="$guiLang"/>
+            <xsl:with-param name="lang" select="$requestedLanguage"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
         </xsl:call-template>
 
         <!-- REQ 7: self -->
         <xsl:call-template name="atom-link">
             <xsl:with-param name="title" select="$title"/>
-            <xsl:with-param name="lang" select="$guiLang"/>
+            <xsl:with-param name="lang" select="$requestedLanguage"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
             <xsl:with-param name="rel">self</xsl:with-param>
         </xsl:call-template>
         <!-- REQ 8: search -->
         <!-- The hreflang attribute that is referred to in the TG seems to be unnecessary. The MIWP-5 workgroup recommends the TG editors to remove the part regarding the hreflang attribute from requirement 8. -->
         <!--
-        <link rel="search" type="application/opensearchdescription+xml" hreflang="{java:twoCharLangCode($guiLang)}">
+        <link rel="search" type="application/opensearchdescription+xml" hreflang="{$docLang}">
         -->
         <link rel="search" type="application/opensearchdescription+xml">
             <xsl:attribute name="title">
@@ -103,30 +102,30 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
              </xsl:attribute>
              <xsl:attribute name="href">
                  <xsl:if test="$isLocal">
-                     <xsl:value-of select="concat($nodeUrl,$guiLang,'/',$opensearchUrlSuffix,'/', $opensearchDescriptionFileName, '?uuid=',$fileIdentifier)"/>
+                     <xsl:value-of select="concat($nodeUrl,$opensearchUrlSuffix,'/', $opensearchDescriptionFileName, '?uuid=',$fileIdentifier)"/>
                  </xsl:if>
                  <xsl:if test="not($isLocal)">
-                     <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',$guiLang,'/',$fileIdentifier,'/',$opensearchDescriptionFileName)"/>
+                     <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',java:threeCharLangCode($requestedLanguage),'/',$fileIdentifier,'/',$opensearchDescriptionFileName)"/>
                  </xsl:if>
              </xsl:attribute>
         </link>
 
         <!-- REQ 36, 38: multilang -->
         <xsl:for-each select="gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue">
-            <xsl:if test="$guiLang!=.">
+            <xsl:if test="$requestedLanguage!=.">
                 <xsl:call-template name="atom-link">
                     <xsl:with-param name="title">
                         <xsl:apply-templates mode="get-translation" select="$titleNode">
                             <xsl:with-param name="lang" select="."/>
                         </xsl:apply-templates>
                     </xsl:with-param>
-                    <xsl:with-param name="lang" select="."/>
+                    <xsl:with-param name="lang" select="java:twoCharLangCode(.)"/>
                     <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
                     <xsl:with-param name="rel">alternate</xsl:with-param>
                 </xsl:call-template>
             </xsl:if>
         </xsl:for-each>
-        <xsl:if test="$guiLang!=$docLang">
+        <xsl:if test="$requestedLanguage!=$docLang">
             <xsl:call-template name="atom-link">
                 <xsl:with-param name="title">
                     <xsl:apply-templates mode="get-translation" select="$titleNode">
@@ -142,7 +141,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 9: id -->
         <id>
             <xsl:call-template name="atom-link-href">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
                 <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
             </xsl:call-template>
         </id>
@@ -172,7 +171,6 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     <xsl:template mode="dataset_entry" match="gmd:MD_Metadata">
         <xsl:variable name="fileIdentifier" select="./gmd:fileIdentifier/gco:CharacterString"/>
-        <xsl:variable name="docLang" select="./gmd:language/gmd:LanguageCode/@codeListValue"/>
         <xsl:variable name="datasetTitleNode" select="./gmd:identificationInfo[1]//gmd:citation[1]/gmd:CI_Citation/gmd:title"/>
         <xsl:variable name="datasetTitle">
             <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
@@ -217,7 +215,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 17: id -->
         <id>
             <xsl:call-template name="atom-link-href">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
                 <xsl:with-param name="identifier" select="$identifierCode"/>
                 <xsl:with-param name="codeSpace"  select="$identifierCodeSpace"/>
             </xsl:call-template>
@@ -225,7 +223,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
         <!-- REQ 14: describedby -->
         <xsl:call-template name="csw-link">
-            <xsl:with-param name="lang" select="$guiLang"/>
+            <xsl:with-param name="lang" select="$requestedLanguage"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
         </xsl:call-template>
 
@@ -236,7 +234,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     <xsl:with-param name="lang" select="$requestedLanguage"/>
                 </xsl:apply-templates>
             </xsl:with-param>
-            <xsl:with-param name="lang" select="$guiLang"/>
+            <xsl:with-param name="lang" select="$requestedLanguage"/>
             <xsl:with-param name="identifier" select="$identifierCode"/>
             <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
             <xsl:with-param name="rel">alternate</xsl:with-param>
@@ -271,7 +269,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 18: title -->
         <title>
             <xsl:value-of select="$datasetTitle" />
-            <!--<xsl:call-template name="translated-description"><xsl:with-param name="lang" select="$guiLang"/><xsl:with-param name="type" select="3"/></xsl:call-template><xsl:value-of select="$datasetTitle"/>-->
+            <!--<xsl:call-template name="translated-description"><xsl:with-param name="lang" select="$requestedLanguage"/><xsl:with-param name="type" select="3"/></xsl:call-template><xsl:value-of select="$datasetTitle"/>-->
         </title>
 
         <!-- REQ 19: updated -->
@@ -303,7 +301,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
     <xsl:template mode="dataset" match="gmd:MD_Metadata">
         <xsl:variable name="fileIdentifier" select="./gmd:fileIdentifier/gco:CharacterString"/>
-        <xsl:variable name="docLang" select="./gmd:language/gmd:LanguageCode/@codeListValue"/>
+        <xsl:variable name="docLang" select="java:twoCharLangCode(./gmd:language/gmd:LanguageCode/@codeListValue)"/>
         <xsl:variable name="datasetTitleNode" select="./gmd:identificationInfo[1]//gmd:citation[1]/gmd:CI_Citation/gmd:title"/>
         <xsl:variable name="datasetTitle">
             <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
@@ -348,7 +346,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
 
         <!-- describedby -->
         <xsl:call-template name="csw-link">
-            <xsl:with-param name="lang" select="$guiLang"/>
+            <xsl:with-param name="lang" select="$requestedLanguage"/>
             <xsl:with-param name="fileIdentifier" select="$fileIdentifier"/>
         </xsl:call-template>
 
@@ -359,18 +357,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                     <xsl:with-param name="lang" select="$requestedLanguage"/>
                 </xsl:apply-templates>
             </xsl:with-param>
-            <xsl:with-param name="lang" select="$guiLang"/>
+            <xsl:with-param name="lang" select="$requestedLanguage"/>
             <xsl:with-param name="identifier" select="$identifierCode"/>
             <xsl:with-param name="codeSpace" select="$identifierCodeSpace"/>
             <xsl:with-param name="rel">self</xsl:with-param>
         </xsl:call-template>
 
         <xsl:for-each select="gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue">
-            <xsl:if test="$guiLang!=.">
+            <xsl:if test="$requestedLanguage!=.">
                 <xsl:call-template name="atom-link">
                     <xsl:with-param name="title">
                         <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
-                            <xsl:with-param name="lang" select="."/>
+                            <xsl:with-param name="lang" select="java:twoCharLangCode(.)"/>
                         </xsl:apply-templates>
                     </xsl:with-param>
                     <xsl:with-param name="lang" select="."/>
@@ -381,7 +379,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </xsl:if>
         </xsl:for-each>
  
-        <xsl:if test="$guiLang!=$docLang">
+        <xsl:if test="$requestedLanguage!=$docLang">
             <xsl:call-template name="atom-link">
                 <xsl:with-param name="title">
                     <xsl:apply-templates mode="get-translation" select="$datasetTitleNode">
@@ -398,10 +396,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REC 9: upward link to download service feed -->
         <xsl:variable name="serviceIdentifier" select="normalize-space(/root/serviceIdentifier)"/>
         <xsl:if test="$serviceIdentifier">
-            <link rel="up" title="{$serviceFeedTitle}" type="application/atom+xml" hreflang="{java:twoCharLangCode($guiLang)}">
+            <link rel="up" title="{$serviceFeedTitle}" type="application/atom+xml" hreflang="{$requestedLanguage}">
                 <xsl:attribute name="href">
                     <xsl:call-template name="atom-link-href">
-                        <xsl:with-param name="lang" select="$guiLang"/>
+                        <xsl:with-param name="lang" select="$requestedLanguage"/>
                         <xsl:with-param name="fileIdentifier" select="$serviceIdentifier"/>
                     </xsl:call-template>
                 </xsl:attribute>
@@ -411,7 +409,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <!-- REQ 22: id -->
         <id>
             <xsl:call-template name="atom-link-href">
-                <xsl:with-param name="lang" select="$guiLang"/>
+                <xsl:with-param name="lang" select="$requestedLanguage"/>
                 <xsl:with-param name="identifier" select="$identifierCode"/>
                 <xsl:with-param name="codeSpace"  select="$identifierCodeSpace"/>
             </xsl:call-template>
@@ -532,7 +530,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                           rel="alternate"
                           type="{$inspireMimeType}"
                           href="{gmd:linkage/gmd:URL}"
-                          hreflang="{java:twoCharLangCode($docLang)}">
+                          hreflang="{$docLang}">
 
                         <xsl:variable name="units" select="../../gmd:unitsOfDistribution/gco:CharacterString"/>
                         <xsl:variable name="length" select="../../gmd:transferSize/gco:Real"/>
@@ -575,7 +573,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
     
     <xsl:template mode="translated-rights" match="srv:SV_ServiceIdentification|gmd:MD_DataIdentification">
 <!--        <xsl:variable name="useLimitation" select="normalize-space(gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gco:CharacterString)"/>
-        <xsl:variable name="translated-useLimitation" select="normalize-space(gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case($guiLang))])"/>
+        <xsl:variable name="translated-useLimitation" select="normalize-space(gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case(java:threeCharLangCode($requestedLanguage)))])"/>
         <xsl:choose>
             <xsl:when test="$translated-useLimitation!=''"><xsl:value-of select="$translated-useLimitation"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="$useLimitation"/></xsl:otherwise>
@@ -585,7 +583,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints">
             <xsl:variable name="accessConstraints" select="gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue"/>
             <xsl:variable name="otherConstraints" select="normalize-space(gmd:otherConstraints/gco:CharacterString)"/>
-            <xsl:variable name="translated-otherConstraints" select="normalize-space(gmd:otherConstraints/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case($guiLang))])"/>
+            <xsl:variable name="translated-otherConstraints" select="normalize-space(gmd:otherConstraints/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=concat('#',upper-case(java:threeCharLangCode($requestedLanguage)))])"/>
             <xsl:variable name="resultValue">
                 <xsl:choose>
                     <xsl:when test="$accessConstraints='otherRestrictions' and $otherConstraints!=''">
@@ -624,7 +622,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:param name="lang"/>
         <xsl:param name="fileIdentifier"/>
         <link rel="describedby" type="application/xml">
-            <xsl:attribute name="href" select="concat($baseUrl, $nodeName, '/',$lang,'/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',$fileIdentifier)"/>
+            <xsl:attribute name="href" select="concat($baseUrl, $nodeName, '/',java:threeCharLangCode($lang),'/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputschema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=',$fileIdentifier)"/>
            </link>
     </xsl:template>
 
@@ -644,7 +642,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
             </xsl:if>
             <!-- REQ 38: the hreflang attribute indicates the language of the alternative representation -->
 <!--            <xsl:if test="$rel!='self'">-->
-               <xsl:attribute name="hreflang" select="java:twoCharLangCode($lang)"/>
+               <xsl:attribute name="hreflang" select="$lang"/>
 <!--            </xsl:if>-->
             <xsl:attribute name="title">
                 <xsl:call-template name="translated-description">
@@ -671,19 +669,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
         <xsl:param name="codeSpace"/>
         <xsl:if test="$fileIdentifier!=''">
             <xsl:if test="$isLocal">
-                <xsl:value-of select="concat($nodeUrl,$lang,'/',$atomDescribeServiceUrlSuffix,'?uuid=',$fileIdentifier)" />
+                <xsl:value-of select="concat($nodeUrl,$atomDescribeServiceUrlSuffix,'?uuid=',$fileIdentifier,'&amp;language=',$lang)" />
             </xsl:if>
             <xsl:if test="not($isLocal)">
-                <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',$lang,'/',$fileIdentifier,'/',$atomDescribeServiceUrlSuffix)" />
+                <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',java:threeCharLangCode($lang),'/',$fileIdentifier,'/',$atomDescribeServiceUrlSuffix)" />
             </xsl:if>
         </xsl:if>
         <xsl:if test="$identifier != ''">
             <xsl:variable name="requestParams" select="concat('spatial_dataset_identifier_code=',$identifier,if($codeSpace != '') then concat('&amp;spatial_dataset_identifier_namespace=',$codeSpace) else '')" />
             <xsl:if test="$isLocal">
-                <xsl:value-of select="concat($nodeUrl,$lang,'/',$atomDescribeDatasetUrlSuffix,'?',$requestParams)" />
+                <xsl:value-of select="concat($nodeUrl,$atomDescribeDatasetUrlSuffix,'?',$requestParams,'&amp;language=',$lang)" />
             </xsl:if>
             <xsl:if test="not($isLocal)">
-                <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',$lang,'/', $atomDescribeDatasetUrlSuffix,'?',$requestParams)" />
+                <xsl:value-of select="concat($baseUrl,$opensearchUrlSuffix,'/',java:threeCharLangCode($lang),'/', $atomDescribeDatasetUrlSuffix,'?',$requestParams)" />
             </xsl:if>
         </xsl:if>
     </xsl:template>

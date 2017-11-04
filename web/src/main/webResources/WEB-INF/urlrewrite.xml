@@ -379,6 +379,21 @@
     <to type="forward">/srv/$1/atom.describe</to>
   </rule>
 
+  <rule>
+    <note>
+      INSPIRE Atom Predefined Service Describe
+    </note>
+    <from>^/(.*)/atom.predefined.service?(.*)$</from>
+    <to type="forward">/srv/atom/describe/service?$2</to>
+  </rule>
+
+  <rule>
+    <note>
+      INSPIRE Atom Predefined Dataset Describe
+    </note>
+    <from>^/(.*)/atom.predefined.dataset?(.*)$</from>
+    <to type="forward">/srv/atom/describe/dataset?$2</to>
+  </rule>
 
   <rule>
     <note>
