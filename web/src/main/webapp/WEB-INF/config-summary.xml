@@ -181,11 +181,13 @@
     <facet name="odatis_centre_donnees" indexKey="thesaurus-local.theme.odatis_centre_donnees" label="odatis_centre_donnees"/>
     <facet name="odatis_type_jeux_donnee" indexKey="thesaurus-local.theme.type_jeux_donnee" label="odatis_type_jeux_donnee"/>
 
+    <facet name="mdActions" indexKey="_mdActions" label="mdActions"/>
   </facets>
 
   <summaryTypes>
     <summaryType name="details" format="DIMENSION">
       <item facet="type" translator="codelist:gmd:MD_ScopeCode"/>
+      <item facet="mdActions"/>
       <item facet="topicCat" translator="codelist:gmd:MD_TopicCategoryCode" max="20"/>
       <item facet="inspireThemeURI" sortBy="value" sortOrder="asc" max="35" translator="term:http://geonetwork-opensource.org/inspire-theme"/>
       <!--<item facet="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>-->
