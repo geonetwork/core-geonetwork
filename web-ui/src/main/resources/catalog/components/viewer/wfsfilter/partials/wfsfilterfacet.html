@@ -165,6 +165,8 @@
                data-ng-model="isHeatMapVisible"/>
         <span data-translate="">displayHeatMap</span>
       </label>
+      <gn-heatmap ng-if="map" map="map" feature-type="featureTypeName"
+        enabled="isHeatMapVisible"/>
     </div>
 
 
