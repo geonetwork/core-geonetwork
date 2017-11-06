@@ -48,8 +48,12 @@
   ]);
 
 
-  module.config(['$LOCALES', function($LOCALES) {
+  module.config(['$LOCALES','gnGlobalSettings', 
+    function($LOCALES, gnGlobalSettings) { 
     $LOCALES.push('search');
+    //searchView is defined on base-layout-cssjs-loader.xsl
+    $LOCALES.push('/../../catalog/views/'+searchView+
+        '/locales/'+gnGlobalSettings.lang+'-core.json')};
     $LOCALES.push('/../api/0.1/tools/i18n/db?' +
         'type=MetadataCategory&type=Operation&type=Group');
     $LOCALES.push('/../api/0.1/standards/iso19139/' +

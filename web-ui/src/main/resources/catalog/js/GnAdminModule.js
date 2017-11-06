@@ -42,8 +42,11 @@
   ]);
 
 
-  module.config(['$LOCALES',
+  module.config(['$LOCALES','gnGlobalSettings', 
     function($LOCALES) {
       $LOCALES.push('admin');
+      //searchView is defined on base-layout-cssjs-loader.xsl
+      $LOCALES.push('/../../catalog/views/'+searchView+
+          '/locales/'+gnGlobalSettings.lang+'-core.json')};
     }]);
 })();
