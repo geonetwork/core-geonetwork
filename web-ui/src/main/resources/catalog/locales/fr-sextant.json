@@ -66,5 +66,6 @@
   "wpsSaveForm": "Sauvegarder et fermer",
   "inputIsOverloaded": "Cette valeur provient d'un filtre WFS",
   "fullTextSearch": "Filtre",
-  "sxtBack": "Retour"
+  "sxtBack": "Retour",
+  "mainPublicationIntroduction": "Pour toute utilisation de cette donnée dans une publication, merci de citer également les travaux suivants :"
 }
