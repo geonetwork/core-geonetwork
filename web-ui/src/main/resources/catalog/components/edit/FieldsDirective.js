@@ -133,6 +133,12 @@
             }
           });
 
+          scope.$watch('lineage', function (n, o) {
+            if (n !== o) {
+              field.value = buildValue();
+            }
+          });
+
           $(field).on('change', init);
 
           init();
