@@ -410,5 +410,9 @@
   "selection.indexing.count": "Indexing started for the {{count}} record(s) selected.",
   "selection.indexing.error": "Error during selection indexing.",
   "showLegend": "Show legend",
-  "hideLegend": "Hide legend"
+  "hideLegend": "Hide legend",
+  "mdActions": "Available actions",
+  "mdActions-view": "Viewable",
+  "mdActions-download": "Downloadable",
+  "mdActions-process": "Processable"
 }

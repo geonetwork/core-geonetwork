@@ -708,10 +708,16 @@
 
           <xsl:if test="contains($protocol, 'WWW:DOWNLOAD')">
             <Field name="download" string="true" store="false" index="true"/>
+            <Field name="_mdActions" string="mdActions-download" store="false" index="true"/>
           </xsl:if>
 
           <xsl:if test="contains($protocol, 'OGC:WMS') or $wmsLinkNoProtocol">
             <Field name="dynamic" string="true" store="false" index="true"/>
+            <Field name="_mdActions" string="mdActions-view" store="false" index="true"/>
+          </xsl:if>
+
+          <xsl:if test="contains($protocol, 'OGC:WPS')">
+            <Field name="_mdActions" string="mdActions-process" store="false" index="true"/>
           </xsl:if>
 
           <!-- ignore WMS links without protocol (are indexed below with mimetype application/vnd.ogc.wms_xml) -->
