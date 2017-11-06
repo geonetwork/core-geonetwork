@@ -161,6 +161,7 @@
 
         <script src="{$uiResourcesPath}lib/underscore/underscore-min.js"></script>
         <script src="{$uiResourcesPath}lib/recaptcha/angular-recaptcha.min.js"></script>
+        <script src="{$uiResourcesPath}lib/geohash.js"></script>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>

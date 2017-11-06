@@ -116,6 +116,7 @@
   goog.require('gn_featurestable');
   goog.require('gn_geometry');
   goog.require('gn_graticule');
+  goog.require('gn_heatmap');
   goog.require('gn_index');
   goog.require('gn_layermanager');
   goog.require('gn_localisation');
@@ -166,7 +167,8 @@
     'gn_wps',
     'gn_featurestable',
     'gn_geometry',
-    'gn_profile'
+    'gn_profile',
+    'gn_heatmap'
   ]);
 
   module.controller('gnViewerController', [
