@@ -60,7 +60,7 @@
       $LOCALES.push('editor');
       //searchView is defined on base-layout-cssjs-loader.xsl
       $LOCALES.push('/../../catalog/views/'+searchView+
-          '/locales/'+gnGlobalSettings.lang+'-core.json')};
+          '/locales/'+gnGlobalSettings.lang+'-core.json');
       $LOCALES.push('/../api/0.1/tools/i18n/db?' +
           'type=StatusValue&type=Operation&type=Group');
 

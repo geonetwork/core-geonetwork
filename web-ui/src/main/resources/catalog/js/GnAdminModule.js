@@ -47,6 +47,6 @@
       $LOCALES.push('admin');
       //searchView is defined on base-layout-cssjs-loader.xsl
       $LOCALES.push('/../../catalog/views/'+searchView+
-          '/locales/'+gnGlobalSettings.lang+'-core.json')};
+          '/locales/'+gnGlobalSettings.lang+'-core.json');
     }]);
 })();
