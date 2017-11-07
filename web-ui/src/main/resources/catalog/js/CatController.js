@@ -59,7 +59,7 @@
           'enabled': true,
           'languages': {
             'eng': 'en',
-            'dut': 'du',
+            'dut': 'nl',
             'fre': 'fr',
             'ger': 'ge',
             'kor': 'ko',
