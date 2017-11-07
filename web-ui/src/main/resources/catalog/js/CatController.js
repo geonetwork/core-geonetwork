@@ -188,7 +188,8 @@
         'geocoder': 'https://secure.geonames.org/searchJSON',
         'editor': {
           'enabled': true,
-          'appUrl': '../../srv/{{lang}}/catalog.edit'
+          'appUrl': '../../srv/{{lang}}/catalog.edit',
+          'isUserRecordsOnly': false
         },
         'admin': {
           'enabled': true,
