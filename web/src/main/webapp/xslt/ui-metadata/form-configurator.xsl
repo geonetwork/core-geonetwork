@@ -33,6 +33,12 @@
     Build the form from the schema plugin form configuration.
     -->
 
+  <xsl:template mode="form-builder" match="directive">
+    <div>
+      <xsl:copy-of select="@*"/>
+    </div>
+  </xsl:template>
+
 
   <!-- Create a fieldset in the editor with custom
     legend if attribute name is defined or default

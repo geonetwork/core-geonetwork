@@ -1075,7 +1075,6 @@
     "logActivity" : "Activity",
     "serviceUrlHelp": "Web service URL without GetCapabilities parameters",
     "serviceTypeHelp": "Service type",
-    "metadata/editor/schemaConfig": "Standard configuration",
     "selectExistingLogo": "Select from existing logos",
     "testClientConfig": "Test client configuration",
     "resetDefaultConfig": "Reset configuration",
