@@ -81,12 +81,16 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/onlinesrcList.html',
-            scope: {},
+            scope: {
+              types: '@'
+            },
             link: function(scope, element, attrs) {
               scope.onlinesrcService = gnOnlinesrc;
               scope.gnCurrentEdit = gnCurrentEdit;
               scope.allowEdits = true;
               scope.lang = scope.$parent.lang;
+              scope.readonly = attrs['readonly'] || false;
+              scope.relations = {};
 
               /**
                * Calls service 'relations.get' to load
@@ -114,18 +118,8 @@
                     });
               };
               scope.isCategoryEnable = function(category) {
-                var config = gnCurrentEdit.schemaConfig.related;
-                if (config.readonly === true) {
-                  return false;
-                } else {
-                  if (config.categories &&
-                      config.categories.length > 0 &&
-                      $.inArray(category, config.categories) === -1) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                }
+                return angular.isUndefined(scope.types) ? true :
+                        category.match(scope.types) !== null;
               };
 
               // Reload relations when a directive requires it
@@ -136,13 +130,8 @@
                 }
               });
 
-              // When saving is done, refresh related resources
-              scope.$watch('gnCurrentEdit.version',
-                  function(newValue, oldValue) {
-                    if (parseInt(newValue || 0) > parseInt(oldValue || 0)) {
-                      loadRelations();
-                    }
-                  });
+              loadRelations();
+
               scope.sortLinks = function(g) {
                 return $filter('gnLocalized')(g.title);
               };
